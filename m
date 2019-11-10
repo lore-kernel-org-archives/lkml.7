@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E5EC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D15DC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B118208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0338B208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355572;
-	bh=ByuvaCReSwTbqx+/Op8hRookNfLer/LSlYjAuurYbG8=;
+	s=default; t=1573355576;
+	bh=qkicH2MlqzIN3/RdNN9n93QUaq2lEpRbMdN3DpJxfkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qhzMnkKMlc75EJx1HMp3nvujqAsKnbtHvIutYNFdQyYL62UoJMehig4mAO6K9wwj6
-	 vaStXMlGZHRyOAd45TwFump7QLlIgiEq6KWaQRIrn48Ux/fK7dcMPliBYUM7OygxEI
-	 fl6KJRobC6qB9k/1JkxqmEHR33p+MNVh4l0qoww8=
+	b=Gw3v62TldN0hrEYk+U6ejCJy8j2r63YNQ29VfK532uWkCgZRRVKGE1uDgYLWm+wd0
+	 5dXVwNDQnGY55SPBfj0oClV3mqCX7kIsNGReAkVHpghk/wTTaoDchnOVVzEkn7bJuc
+	 Cd6McS1uFr33ugQopF3iEebTkldsO5MsQgq7x6uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbfKJDMv (ORCPT
+        id S1728160AbfKJCnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:12:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbfKJCnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:10 -0500
+        id S1728134AbfKJCnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CC421D7F;
-        Sun, 10 Nov 2019 02:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB5AF215EA;
+        Sun, 10 Nov 2019 02:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353789;
-        bh=ByuvaCReSwTbqx+/Op8hRookNfLer/LSlYjAuurYbG8=;
+        s=default; t=1573353784;
+        bh=qkicH2MlqzIN3/RdNN9n93QUaq2lEpRbMdN3DpJxfkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1SDzlpRSQRNmiANasaQXKkpjWOcpSnlufs//xqMoWLeTBLLheWmR5hM9xVsGDdvBZ
-         D6IPH0KSw8Fs/74RiXSuDKlqrkx4pXv+OubuSxe0nKr08rtEEu7GDNoKow2+5LSPwG
-         Cd0+3Jd2D25x7xjtqC0r4mrqO9kzlcNjVKmIJR58=
+        b=gCzAYOLkjU2oPjPejUfUqvqRxPjiimvtKaHhvyUnd3DZV4Ef0/S6atpcQ3MW0+cQ7
+         uyBvmBmSGIlLFCFTX6LIClH/a6txS48SAtOKqWzeVCIQS0YZad+BbmRcFmjgxrACyz
+         0KD6OBp384K1l65rNyVYNB/h4Z8zSFKjLUo6EST0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 090/191] arm64: dts: rockchip: Fix microSD in rk3399 sapphire board
-Date:   Sat,  9 Nov 2019 21:38:32 -0500
-Message-Id: <20191110024013.29782-90-sashal@kernel.org>
+Cc:     Matthew Whitehead <tedheadster@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 087/191] x86/CPU: Change query logic so CPUID is enabled before testing
+Date:   Sat,  9 Nov 2019 21:38:29 -0500
+Message-Id: <20191110024013.29782-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,94 +65,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vicente Bergas <vicencb@gmail.com>
+From: Matthew Whitehead <tedheadster@gmail.com>
 
-[ Upstream commit 88a20edf76091ee7f1bb459b89d714d53f0f8940 ]
+[ Upstream commit 2893cc8ff892fa74972d8dc0e1d0dc65116daaa3 ]
 
-The microSD card slot in the Sapphire board is not working because of
-several issues:
- 1.- The vmmc power supply is missing in the DTS. It is capable of 3.0V
- and has a GPIO-based enable control.
- 2.- The vqmmc power supply can provide up to 3.3V, but it is capped in
- the DTS to just 3.0V because of the vmmc capability. This results in a
- conflict from the mmc driver requesting an unsupportable voltage range
- from 3.3V to 3.0V (min > max) as reported in dmesg. So, extend the
- range up to 3.3V. The hw should be able to stand this 0.3V tolerance.
- See mmc_regulator_set_vqmmc in drivers/mmc/core/core.c.
- 3.- The card detect signal is non-working. There is a known conflict
- with jtag, but the workaround in drivers/soc/rockchip/grf.c does not
- work. Adding the broken-cd attribute to the DTS fixes the issue.
+Presently we check first if CPUID is enabled. If it is not already
+enabled, then we next call identify_cpu_without_cpuid() and clear
+X86_FEATURE_CPUID.
 
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Unfortunately, identify_cpu_without_cpuid() is the function where CPUID
+becomes _enabled_ on Cyrix 6x86/6x86L CPUs.
+
+Reverse the calling sequence so that CPUID is first enabled, and then
+check a second time to see if the feature has now been activated.
+
+[ bp: Massage commit message and remove trailing whitespace. ]
+
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
+Signed-off-by: Matthew Whitehead <tedheadster@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Andy Lutomirski <luto@amacapital.net>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20180921212041.13096-3-tedheadster@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/rockchip/rk3399-sapphire.dtsi    | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/common.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-index 36b60791c156d..780e5e298d8bd 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-@@ -93,6 +93,19 @@
- 		vin-supply = <&vcc_1v8>;
- 	};
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index b33fdfa0ff49e..04622625f8e22 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1104,6 +1104,9 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 	memset(&c->x86_capability, 0, sizeof c->x86_capability);
+ 	c->extended_cpuid_level = 0;
  
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc0_pwr_h>;
-+		regulator-always-on;
-+		regulator-max-microvolt = <3000000>;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-name = "vcc3v0_sd";
-+		vin-supply = <&vcc3v3_sys>;
-+	};
++	if (!have_cpuid_p())
++		identify_cpu_without_cpuid(c);
 +
- 	vcc3v3_sys: vcc3v3-sys {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_sys";
-@@ -310,7 +323,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
- 					regulator-suspend-microvolt = <3000000>;
-@@ -469,6 +482,13 @@
- 		};
- 	};
+ 	/* cyrix could have cpuid enabled via c_identify()*/
+ 	if (have_cpuid_p()) {
+ 		cpu_detect(c);
+@@ -1121,7 +1124,6 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 		if (this_cpu->c_bsp_init)
+ 			this_cpu->c_bsp_init(c);
+ 	} else {
+-		identify_cpu_without_cpuid(c);
+ 		setup_clear_cpu_cap(X86_FEATURE_CPUID);
+ 	}
  
-+	sd {
-+		sdmmc0_pwr_h: sdmmc0-pwr-h {
-+			rockchip,pins =
-+				<RK_GPIO0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	usb2 {
- 		vcc5v0_host_en: vcc5v0-host-en {
- 			rockchip,pins =
-@@ -499,6 +519,7 @@
- };
- 
- &sdmmc {
-+	broken-cd;
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
-@@ -507,6 +528,7 @@
- 	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc3v0_sd>;
- 	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
 -- 
 2.20.1
 
