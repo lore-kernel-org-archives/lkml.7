@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E9C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A517C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09A221850
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2F421924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354025;
-	bh=olP18mzLHEq5aeklcBEE1+hOx3ydda638HvyajAvQIc=;
+	s=default; t=1573354029;
+	bh=yf2g5LS7CSR6EimOmXLQw28lqB88ShIVUmK5hDk1gAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jykcsz3mSDgFB7yN15AcuQXB9OxeBV2bOichYECP8TDpNL2fk52yz1LusJcgwr973
-	 GH+lJizgSvlSS4kaPQNrcls1aUWrkWgGyJcER5BjWQ5OWsd2nRhbxR7fIG1uh7fxJJ
-	 Gdlr1S+6/2dFgfMKfdttKOHWSC3psr22Ivy28K/4=
+	b=EmS7Nrvi4VeO8DVS3wcRDJlUAnEQqMENl0Hjk5IEyGiubBtPvxRSADZVefbvJCOus
+	 yG0u2hTlaPmI2Ra7IorNGiypmBTPpb2KMNdopKFqw9X6ixStAy6hZilXibZt/rDUk7
+	 I3vjcCAInhAmQ85Xcvj54GDuU/Z2UznsC0PDU9M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbfKJCrE (ORCPT
+        id S1729275AbfKJCrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:47:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51706 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:47:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729205AbfKJCq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:46:58 -0500
+        id S1729251AbfKJCrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:47:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E821D2184C;
-        Sun, 10 Nov 2019 02:46:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957B12184C;
+        Sun, 10 Nov 2019 02:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354017;
-        bh=olP18mzLHEq5aeklcBEE1+hOx3ydda638HvyajAvQIc=;
+        s=default; t=1573354026;
+        bh=yf2g5LS7CSR6EimOmXLQw28lqB88ShIVUmK5hDk1gAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bD1FU/xKyvS0qxqmWs40p6NX4foElJX1e+PkytFqnnULPWm3lbGni+3l1yvALFOud
-         FOyS/WDWL3JJf1Vub3JyWQOaOeelqAekhqiF60y+/6Z5lmIG6e1B7zlheq9hlbywq6
-         gAG0N4NnTRotBvERXUhWd1b1ItFJma+kp8OO30JY=
+        b=OFOJyyFWc389jqEZ1ficCWuebwV11rGjDWMDzH1au/4aJ3Sw+HwPtiTJouAcPNXyu
+         tdZTYblTlmeQ/RXGW+kep0ojEFvm3iX98tMlP7NXXL+4+awroS2PU1QLPL5pNbWqzF
+         8lcxqkmz6Hy6sQAhKR2MEh/93DPt7edgV87JSars=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shahed Shaikh <Shahed.Shaikh@cavium.com>,
-        Ariel Elior <ariel.elior@cavium.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 041/109] bnx2x: Ignore bandwidth attention in single function mode
-Date:   Sat,  9 Nov 2019 21:44:33 -0500
-Message-Id: <20191110024541.31567-41-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 045/109] net: freescale: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:44:37 -0500
+Message-Id: <20191110024541.31567-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,45 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shahed Shaikh <Shahed.Shaikh@cavium.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 75a110a1783ef8324ffd763b24f4ac268253cbca ]
+[ Upstream commit 06983aa526c759ebdf43f202d8d0491d9494e2f4 ]
 
-This is a workaround for FW bug -
-MFW generates bandwidth attention in single function mode, which
-is only expected to be generated in multi function mode.
-This undesired attention in SF mode results in incorrect HW
-configuration and resulting into Tx timeout.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Signed-off-by: Shahed Shaikh <Shahed.Shaikh@cavium.com>
-Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c        | 3 ++-
+ drivers/net/ethernet/freescale/fec_mpc52xx.c          | 3 ++-
+ drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c | 3 ++-
+ drivers/net/ethernet/freescale/gianfar.c              | 4 ++--
+ drivers/net/ethernet/freescale/ucc_geth.c             | 3 ++-
+ 5 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index 8f0c9f6de893d..dbe8feec456c2 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -3540,6 +3540,16 @@ static void bnx2x_drv_info_iscsi_stat(struct bnx2x *bp)
-  */
- static void bnx2x_config_mf_bw(struct bnx2x *bp)
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index d5f8bf87519ac..39b8b6730e77c 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2036,7 +2036,8 @@ static inline int dpaa_xmit(struct dpaa_priv *priv,
+ 	return 0;
+ }
+ 
+-static int dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
++static netdev_tx_t
++dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
  {
-+	/* Workaround for MFW bug.
-+	 * MFW is not supposed to generate BW attention in
-+	 * single function mode.
-+	 */
-+	if (!IS_MF(bp)) {
-+		DP(BNX2X_MSG_MCP,
-+		   "Ignoring MF BW config in single function mode\n");
-+		return;
-+	}
-+
- 	if (bp->link_vars.link_up) {
- 		bnx2x_cmng_fns_init(bp, true, CMNG_FNS_MINMAX);
- 		bnx2x_link_sync_notify(bp);
+ 	const int queue_mapping = skb_get_queue_mapping(skb);
+ 	bool nonlinear = skb_is_nonlinear(skb);
+diff --git a/drivers/net/ethernet/freescale/fec_mpc52xx.c b/drivers/net/ethernet/freescale/fec_mpc52xx.c
+index 6d7269d87a850..b90bab72efdb3 100644
+--- a/drivers/net/ethernet/freescale/fec_mpc52xx.c
++++ b/drivers/net/ethernet/freescale/fec_mpc52xx.c
+@@ -305,7 +305,8 @@ static int mpc52xx_fec_close(struct net_device *dev)
+  * invariant will hold if you make sure that the netif_*_queue()
+  * calls are done at the proper times.
+  */
+-static int mpc52xx_fec_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++mpc52xx_fec_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct mpc52xx_fec_priv *priv = netdev_priv(dev);
+ 	struct bcom_fec_bd *bd;
+diff --git a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
+index 28bd4cf61741b..708082c255d09 100644
+--- a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
++++ b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
+@@ -481,7 +481,8 @@ static struct sk_buff *tx_skb_align_workaround(struct net_device *dev,
+ }
+ #endif
+ 
+-static int fs_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++fs_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct fs_enet_private *fep = netdev_priv(dev);
+ 	cbd_t __iomem *bdp;
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index 63daae120b2d4..27d0e3b9833cd 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -112,7 +112,7 @@
+ const char gfar_driver_version[] = "2.0";
+ 
+ static int gfar_enet_open(struct net_device *dev);
+-static int gfar_start_xmit(struct sk_buff *skb, struct net_device *dev);
++static netdev_tx_t gfar_start_xmit(struct sk_buff *skb, struct net_device *dev);
+ static void gfar_reset_task(struct work_struct *work);
+ static void gfar_timeout(struct net_device *dev);
+ static int gfar_close(struct net_device *dev);
+@@ -2334,7 +2334,7 @@ static inline bool gfar_csum_errata_76(struct gfar_private *priv,
+ /* This is called by the kernel when a frame is ready for transmission.
+  * It is pointed to by the dev->hard_start_xmit function pointer
+  */
+-static int gfar_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t gfar_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct gfar_private *priv = netdev_priv(dev);
+ 	struct gfar_priv_tx_q *tx_queue = NULL;
+diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
+index 94df1ddc5dcba..bddf4c25ee6ea 100644
+--- a/drivers/net/ethernet/freescale/ucc_geth.c
++++ b/drivers/net/ethernet/freescale/ucc_geth.c
+@@ -3085,7 +3085,8 @@ static int ucc_geth_startup(struct ucc_geth_private *ugeth)
+ 
+ /* This is called by the kernel when a frame is ready for transmission. */
+ /* It is pointed to by the dev->hard_start_xmit function pointer */
+-static int ucc_geth_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++ucc_geth_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct ucc_geth_private *ugeth = netdev_priv(dev);
+ #ifdef CONFIG_UGETH_TX_ON_DEMAND
 -- 
 2.20.1
 
