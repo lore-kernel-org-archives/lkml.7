@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A69C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB6DC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB1A21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD9721019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354483;
-	bh=tyo6kBRBm1QkQkkx+3ckrmLBrKm+CEEt7pqVzB1udDs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ULD5yPlD2yilD/qq7kStj5QjdSiKYE8NNfXKS56a0Mzt/UkMexdwK2LQg3fwS12tg
-	 GX8fOYwTnGhyxICMLWCd+RdQWexzHqrOmJC+AkFfqD+Sy8FxsEaqm+OwJbFOIrrgB8
-	 e4vo8j7J8Q4u7+7vFgJ3dNCGP5L6glIt3PYc5FJc=
+	s=default; t=1573354489;
+	bh=pxt1YofAycmysn7tu9QwKJyk9fK/iiHWj7DixH23XiM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gHWFzzFEAaYlH0coGllThHA0ZluPHw5UaH3YyDhjmbVNWTYUBLmnwhfd3BrDX/wSZ
+	 dDUm/+A+IxqXlJ+uWavA935qxxYFNFFiDVAb5SR1v26xHVt6ud0TqKl2t8ek7e0O+K
+	 kbJYpSTj12zotgWsQvO3qofGyE6xq3eWhNSV1lv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfKJCym (ORCPT
+        id S1728809AbfKJCys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:54:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34228 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:54:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728386AbfKJCuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:35 -0500
+        id S1728638AbfKJCua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE8A822583;
-        Sun, 10 Nov 2019 02:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFCC522594;
+        Sun, 10 Nov 2019 02:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354234;
-        bh=tyo6kBRBm1QkQkkx+3ckrmLBrKm+CEEt7pqVzB1udDs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Gh+WIAt2KsO/ffpW0zSBlZBBIxXFYggUhLyO5z/Hrf7buZ8NkejEoIMtlLFEf/Ji6
-         Jmu7Ag5mFALdVet+48ZzscgMoV6NOgQDtTVO+kdFtS8sWoq3695nyY5LzlYTXHxlDL
-         hFGFSF+WUW4ZE90G6Njiz3/tHIV8I7agSrq/+F9s=
+        s=default; t=1573354229;
+        bh=pxt1YofAycmysn7tu9QwKJyk9fK/iiHWj7DixH23XiM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lIXDJeeLx5Qhbj8fzTYTocgihy1dSvx3dKT3vb1l99k17RpG9UUqMQA8FwazqAdNF
+         MwOGcfwzYtdCu7wXizZTkiZuYRcC5H3QHd8/kw304pH5Tx3akWuYJ3SYevEyRtStVE
+         IfrxINz1D1sl7nCVR4HpRGJ33f4fklpVfRlwESug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/40] s390/qeth: invoke softirqs after napi_schedule()
-Date:   Sat,  9 Nov 2019 21:49:53 -0500
-Message-Id: <20191110025032.827-1-sashal@kernel.org>
+Cc:     Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 66/66] IB/iser: Fix possible NULL deref at iser_inv_desc()
+Date:   Sat,  9 Nov 2019 21:48:45 -0500
+Message-Id: <20191110024846.32598-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
+References: <20191110024846.32598-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,60 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Israel Rukshin <israelr@mellanox.com>
 
-[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
+[ Upstream commit 65f07f5a09dacf3b60619f196f096ea3671a5eda ]
 
-Calling napi_schedule() from process context does not ensure that the
-NET_RX softirq is run in a timely fashion. So trigger it manually.
+In case target remote invalidates bogus rkey and signature is not used,
+pi_ctx is NULL deref.
 
-This is no big issue with current code. A call to ndo_open() is usually
-followed by a ndo_set_rx_mode() call, and for qeth this contains a
-spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
-early.
-Nevertheless it's best to not depend on this behaviour, and just fix
-the issue at its source like all other drivers do. For instance see
-commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
+The commit also fails the connection on bogus remote invalidation.
 
-Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 59caaed7a72a ("IB/iser: Support the remote invalidation exception")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 3 +++
- drivers/s390/net/qeth_l3_main.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/infiniband/ulp/iser/iser_initiator.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 22045e7d78ac3..97211f7f0cf02 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -996,7 +996,10 @@ static int __qeth_l2_open(struct net_device *dev)
+diff --git a/drivers/infiniband/ulp/iser/iser_initiator.c b/drivers/infiniband/ulp/iser/iser_initiator.c
+index 81ae2e30dd125..27a7e4406f343 100644
+--- a/drivers/infiniband/ulp/iser/iser_initiator.c
++++ b/drivers/infiniband/ulp/iser/iser_initiator.c
+@@ -590,13 +590,19 @@ void iser_login_rsp(struct ib_cq *cq, struct ib_wc *wc)
+ 	ib_conn->post_recv_buf_count--;
+ }
  
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 2cc9bc1ef1e38..0d71d2e6419af 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -3031,7 +3031,10 @@ static int __qeth_l3_open(struct net_device *dev)
+-static inline void
++static inline int
+ iser_inv_desc(struct iser_fr_desc *desc, u32 rkey)
+ {
+-	if (likely(rkey == desc->rsc.mr->rkey))
++	if (likely(rkey == desc->rsc.mr->rkey)) {
+ 		desc->rsc.mr_valid = 0;
+-	else if (likely(rkey == desc->pi_ctx->sig_mr->rkey))
++	} else if (likely(desc->pi_ctx && rkey == desc->pi_ctx->sig_mr->rkey)) {
+ 		desc->pi_ctx->sig_mr_valid = 0;
++	} else {
++		iser_err("Bogus remote invalidation for rkey %#x\n", rkey);
++		return -EINVAL;
++	}
++
++	return 0;
+ }
  
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
+ static int
+@@ -624,12 +630,14 @@ iser_check_remote_inv(struct iser_conn *iser_conn,
+ 
+ 			if (iser_task->dir[ISER_DIR_IN]) {
+ 				desc = iser_task->rdma_reg[ISER_DIR_IN].mem_h;
+-				iser_inv_desc(desc, rkey);
++				if (unlikely(iser_inv_desc(desc, rkey)))
++					return -EINVAL;
+ 			}
+ 
+ 			if (iser_task->dir[ISER_DIR_OUT]) {
+ 				desc = iser_task->rdma_reg[ISER_DIR_OUT].mem_h;
+-				iser_inv_desc(desc, rkey);
++				if (unlikely(iser_inv_desc(desc, rkey)))
++					return -EINVAL;
+ 			}
+ 		} else {
+ 			iser_err("failed to get task for itt=%d\n", hdr->itt);
 -- 
 2.20.1
 
