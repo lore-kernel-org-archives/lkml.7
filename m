@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF2FC17444
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DA9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80F8215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3E5215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355206;
-	bh=RRoVybARuoCg+kCC3+TjStz3qLWGD7rDOiQeSGC0dmE=;
+	s=default; t=1573355213;
+	bh=FsKtONwnJ0E+3juQFQYvpQtt820kG0TE5BDmYoercLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ceGXPL4myl9uFlDSc0WM2jymAdTzawlY565s0oxtHeVuE/0sKO1GiZ0Cs/tHrydw/
-	 UnYqZrU7KYcWeLApguuyfRYvtSVNY2i5S1RWmvn8EHd4W5gT6Y/E5yjKAUdxSrsvtr
-	 HMysSEPplx965jqbgvc+jD8ZCWAQL4VV7WWxtk3U=
+	b=ZYmLUBCqxP1bxPNYZPocHtvQjHOomiSHrPyc6qv8UxQvi11kZ4/b4r8vTJ+TW+7bu
+	 TJSRyw5tYqeYPTUAZoCyOMU9R7vY5RACTNQurDmUrESCjn+Si/oPKEy7uI3kZxc1RK
+	 /H0rZJ+22Gd6ftm1FqxSadGcO8G74EbFVWYFen4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbfKJCpo (ORCPT
+        id S1728871AbfKJCpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46368 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbfKJCpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:18 -0500
+        id S1727104AbfKJCpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB8BD21D7F;
-        Sun, 10 Nov 2019 02:45:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B3521D7E;
+        Sun, 10 Nov 2019 02:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353917;
-        bh=RRoVybARuoCg+kCC3+TjStz3qLWGD7rDOiQeSGC0dmE=;
+        s=default; t=1573353911;
+        bh=FsKtONwnJ0E+3juQFQYvpQtt820kG0TE5BDmYoercLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3XerMSuQxmtIiwIW1TXJlIqo6mq0bY0I4IUz8lNdbNHCzXC8rzp4iGe9LKmwy4QV
-         G2ksM5J/jDI8C1kPqUraUUJEtyyVhgQEkl6ai4cJLjQYCK1HWVtUhEFpzQMk2SKOCi
-         mejhBneoBNx7Zq2wQq/j1lHLbFZVkWiOHc2U5v1s=
+        b=AvqADmnaK5GnSbvtR9G4lNkj8QV0hiR6RFa9FXtNaSuocC8AaJtqWOUi1rh9JE5+C
+         DLEHPWORjAoGOpo1DkgXJ09CX0Tl+Nqf5oCVkRkBE0byk3/CS3I2JxeQROnoYVAOTH
+         9D3BWHXoU55otZqy84ujQXub9I2dQHawx7f+uSAQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Denis Osterland <Denis.Osterland@diehl.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 180/191] rtc: isl1208: avoid possible sysfs race
-Date:   Sat,  9 Nov 2019 21:40:02 -0500
-Message-Id: <20191110024013.29782-180-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 175/191] scsi: NCR5380: Handle BUS FREE during reselection
+Date:   Sat,  9 Nov 2019 21:39:57 -0500
+Message-Id: <20191110024013.29782-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,127 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 1b4c794fda583edabe864ac466e9cd43c707be80 ]
+[ Upstream commit ca694afad707cb3ae2fdef3b28454444d9ac726e ]
 
-Use rtc_add_group to add the common sysfs group to avoid a possible race
-condition.
+The X3T9.2 specification (draft) says, under "6.1.4.2 RESELECTION time-out
+procedure", that a target may assert RST or go to BUS FREE phase if the
+initiator does not respond within 200 us. Something like this has been
+observed with AztecMonster II target. When it happens, all we can do is wait
+for the target to try again.
 
-[Denis.Osterland@diehl.com: use to_i2c_client(dev->parent)]
-Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
-The move of atrim, dtrim usr sysfs properties from i2c device
-to rtc device require to access them via dev->parent.
-This patch also aligns timestamp0.
-
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-isl1208.c | 27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+ drivers/scsi/NCR5380.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
-index ea18a8f4bce06..033f65aef5788 100644
---- a/drivers/rtc/rtc-isl1208.c
-+++ b/drivers/rtc/rtc-isl1208.c
-@@ -518,7 +518,7 @@ static ssize_t timestamp0_store(struct device *dev,
- 				struct device_attribute *attr,
- 				const char *buf, size_t count)
- {
--	struct i2c_client *client = dev_get_drvdata(dev);
-+	struct i2c_client *client = to_i2c_client(dev->parent);
- 	int sr;
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 5c3ffb466bb10..bce6c990d060a 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2039,6 +2039,9 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
  
- 	sr = isl1208_i2c_get_sr(client);
-@@ -540,7 +540,7 @@ static ssize_t timestamp0_store(struct device *dev,
- static ssize_t timestamp0_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	struct i2c_client *client = dev_get_drvdata(dev);
-+	struct i2c_client *client = to_i2c_client(dev->parent);
- 	u8 regs[ISL1219_EVT_SECTION_LEN] = { 0, };
- 	struct rtc_time tm;
- 	int sr;
-@@ -650,7 +650,7 @@ static ssize_t
- isl1208_sysfs_show_atrim(struct device *dev,
- 			 struct device_attribute *attr, char *buf)
- {
--	int atr = isl1208_i2c_get_atr(to_i2c_client(dev));
-+	int atr = isl1208_i2c_get_atr(to_i2c_client(dev->parent));
- 	if (atr < 0)
- 		return atr;
- 
-@@ -663,7 +663,7 @@ static ssize_t
- isl1208_sysfs_show_dtrim(struct device *dev,
- 			 struct device_attribute *attr, char *buf)
- {
--	int dtr = isl1208_i2c_get_dtr(to_i2c_client(dev));
-+	int dtr = isl1208_i2c_get_dtr(to_i2c_client(dev->parent));
- 	if (dtr < 0)
- 		return dtr;
- 
-@@ -676,7 +676,7 @@ static ssize_t
- isl1208_sysfs_show_usr(struct device *dev,
- 		       struct device_attribute *attr, char *buf)
- {
--	int usr = isl1208_i2c_get_usr(to_i2c_client(dev));
-+	int usr = isl1208_i2c_get_usr(to_i2c_client(dev->parent));
- 	if (usr < 0)
- 		return usr;
- 
-@@ -701,7 +701,10 @@ isl1208_sysfs_store_usr(struct device *dev,
- 	if (usr < 0 || usr > 0xffff)
- 		return -EINVAL;
- 
--	return isl1208_i2c_set_usr(to_i2c_client(dev), usr) ? -EIO : count;
-+	if (isl1208_i2c_set_usr(to_i2c_client(dev->parent), usr))
-+		return -EIO;
-+
-+	return count;
- }
- 
- static DEVICE_ATTR(usr, S_IRUGO | S_IWUSR, isl1208_sysfs_show_usr,
-@@ -765,7 +768,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	rtc->ops = &isl1208_rtc_ops;
- 
- 	i2c_set_clientdata(client, rtc);
--	dev_set_drvdata(&rtc->dev, client);
- 
- 	rc = isl1208_i2c_get_sr(client);
- 	if (rc < 0) {
-@@ -804,7 +806,7 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		evdet_irq = of_irq_get_byname(np, "evdet");
- 	}
- 
--	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
-+	rc = rtc_add_group(rtc, &isl1208_rtc_sysfs_files);
- 	if (rc)
- 		return rc;
- 
-@@ -821,14 +823,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	return rtc_register_device(rtc);
- }
- 
--static int
--isl1208_remove(struct i2c_client *client)
--{
--	sysfs_remove_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
--
--	return 0;
--}
--
- static const struct i2c_device_id isl1208_id[] = {
- 	{ "isl1208", TYPE_ISL1208 },
- 	{ "isl1218", TYPE_ISL1218 },
-@@ -851,7 +845,6 @@ static struct i2c_driver isl1208_driver = {
- 		.of_match_table = of_match_ptr(isl1208_of_match),
- 	},
- 	.probe = isl1208_probe,
--	.remove = isl1208_remove,
- 	.id_table = isl1208_id,
- };
- 
+ 	if (NCR5380_poll_politely(hostdata,
+ 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
++		if ((NCR5380_read(STATUS_REG) & (SR_BSY | SR_SEL)) == 0)
++			/* BUS FREE phase */
++			return;
+ 		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
+ 		do_abort(instance);
+ 		return;
 -- 
 2.20.1
 
