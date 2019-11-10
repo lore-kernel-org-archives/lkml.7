@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80751C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2E0C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F34B215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEF121019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354636;
-	bh=zLBMsUvrWZHV7E188F4FwrNzMEHGylV/Lj4NfRV7Mao=;
+	s=default; t=1573354645;
+	bh=BpnwpGuXXtlyoebxNxuNBkJRbnnyc53jKXJmL7lQueM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=akwFVZNXFB8Z5F4fJjx9GqeTla+6qJK95FigABSPPSe5aZHBJSLKOBL8rHqLJeVk7
-	 YTCp6rOEnNf7HB84Kvv2iFmsvgPbtzOjhBFXo3z5lTicbEHeyMYZx5MpPt+lDcdYzV
-	 GBhnnCXF8iRk/ahLkCPIhgFKB9ocC2r0mOrHkgCo=
+	b=ydMzmwoucBSpJYCI2cXWwxbUbj6A0fNEQRW1DFDemyuQc5NYN0+2CAKmjl4RM0Nar
+	 5IbuG2KifjUqdITWHvM7G0GXnuZY3QtYZfkOjlRvVaQPNusCrj8ansp5S/kwfKV7wY
+	 U4ZaW6JV43m9pt3qtajdRN+glsOpr1gw5/WIt+tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfKJC46 (ORCPT
+        id S1728417AbfKJC5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47202 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:57:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:56:46 -0500
+        id S1729445AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33A3C2255A;
-        Sun, 10 Nov 2019 02:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 169BD22491;
+        Sun, 10 Nov 2019 02:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354115;
-        bh=zLBMsUvrWZHV7E188F4FwrNzMEHGylV/Lj4NfRV7Mao=;
+        s=default; t=1573354083;
+        bh=BpnwpGuXXtlyoebxNxuNBkJRbnnyc53jKXJmL7lQueM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Be8prusP4u4LOh+eNAW0qALV62DFxQKKFBoW+poBy/aE42B4r0qR4LRdkfBm//Pw
-         pPnZjG4bhK7tUY/qXb23jyHKeTjjjx914ER3SV9fWmuHu7aE5Ut4zl5b6riNNzXZhW
-         cbhGVyBLtVWpQyAbH5E7z+5ZI0eUUKjgEK0Z0WNM=
+        b=2k7OeUkdOR9b6Mcfq7mQLAQJ+1APzuk9FlGyTIrtSrDGJKeJg0wc/0Q64mecuGMxQ
+         uFSTjWFqbfhHzSfRM7nmZd2TuWDhonrNAewdGzOSND5dltwl6FzWGqyblFK/OMkeMu
+         4e2Q6Scrrv6wZ5tDMODD26OqH2IsjlxLl4I1Jp/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 104/109] rtc: armada38x: fix possible race condition
-Date:   Sat,  9 Nov 2019 21:45:36 -0500
-Message-Id: <20191110024541.31567-104-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 081/109] ARM: dts: realview: Fix SPI controller node names
+Date:   Sat,  9 Nov 2019 21:45:13 -0500
+Message-Id: <20191110024541.31567-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -58,82 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 7d61cbb945a753af08e247b5f10bdd5dbb8d6c80 ]
+[ Upstream commit 016add12977bcc30f77d7e48fc9a3a024cb46645 ]
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-before requesting the IRQ.
-
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-armada38x.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/arm-realview-eb.dtsi    | 2 +-
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pbx.dtsi   | 2 +-
+ arch/arm/boot/dts/versatile-ab.dts        | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/rtc/rtc-armada38x.c b/drivers/rtc/rtc-armada38x.c
-index 21f355c37eab5..10b5c85490392 100644
---- a/drivers/rtc/rtc-armada38x.c
-+++ b/drivers/rtc/rtc-armada38x.c
-@@ -390,7 +390,6 @@ MODULE_DEVICE_TABLE(of, armada38x_rtc_of_match_table);
+diff --git a/arch/arm/boot/dts/arm-realview-eb.dtsi b/arch/arm/boot/dts/arm-realview-eb.dtsi
+index e2e9599596e25..05379b6c1c13b 100644
+--- a/arch/arm/boot/dts/arm-realview-eb.dtsi
++++ b/arch/arm/boot/dts/arm-realview-eb.dtsi
+@@ -334,7 +334,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
- static __init int armada38x_rtc_probe(struct platform_device *pdev)
- {
--	const struct rtc_class_ops *ops;
- 	struct resource *res;
- 	struct armada38x_rtc *rtc;
- 	const struct of_device_id *match;
-@@ -427,6 +426,11 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "no irq\n");
- 		return rtc->irq;
- 	}
-+
-+	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(rtc->rtc_dev))
-+		return PTR_ERR(rtc->rtc_dev);
-+
- 	if (devm_request_irq(&pdev->dev, rtc->irq, armada38x_rtc_alarm_irq,
- 				0, pdev->name, rtc) < 0) {
- 		dev_warn(&pdev->dev, "Interrupt not available.\n");
-@@ -436,28 +440,24 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index c789564f28033..c1fd5615ddfe3 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -343,7 +343,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
  
- 	if (rtc->irq != -1) {
- 		device_init_wakeup(&pdev->dev, 1);
--		ops = &armada38x_rtc_ops;
-+		rtc->rtc_dev->ops = &armada38x_rtc_ops;
- 	} else {
- 		/*
- 		 * If there is no interrupt available then we can't
- 		 * use the alarm
- 		 */
--		ops = &armada38x_rtc_ops_noirq;
-+		rtc->rtc_dev->ops = &armada38x_rtc_ops_noirq;
- 	}
- 	rtc->data = (struct armada38x_rtc_data *)match->data;
+-		pb1176_ssp: ssp@1010b000 {
++		pb1176_ssp: spi@1010b000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1010b000 0x1000>;
+ 			interrupt-parent = <&intc_dc1176>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+index 3944765ac4b06..e306f1cceb4ec 100644
+--- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
++++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+@@ -480,7 +480,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
--
- 	/* Update RTC-MBUS bridge timing parameters */
- 	rtc->data->update_mbus_timing(rtc);
+-		ssp@1000d000 {
++		spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			interrupt-parent = <&intc_pb11mp>;
+diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+index aeb49c4bd773f..2bf3958b2e6b9 100644
+--- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
++++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+@@ -318,7 +318,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
--	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
--						ops, THIS_MODULE);
--	if (IS_ERR(rtc->rtc_dev)) {
--		ret = PTR_ERR(rtc->rtc_dev);
-+	ret = rtc_register_device(rtc->rtc_dev);
-+	if (ret)
- 		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
--		return ret;
--	}
--	return 0;
-+
-+	return ret;
- }
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index 4a51612996bc2..a9000d22b2c00 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -304,7 +304,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
  
- #ifdef CONFIG_PM_SLEEP
+-		ssp@101f4000 {
++		spi@101f4000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x101f4000 0x1000>;
+ 			interrupts = <11>;
 -- 
 2.20.1
 
