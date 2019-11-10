@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCAAC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0B9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCF3214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9001B222C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354612;
-	bh=s+qDWJiCsCOtUONRrtoz3ETIwaa58Xm2dheg+889mKw=;
+	s=default; t=1573354616;
+	bh=l2juZTLHselRSV+UkyHgPIziKlXPN/x9vhH96gkWGgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMaX/uuFG8ajYS8nSVVJittHiEQReVjKe9u2qhMPIsGqnCLZA30FRgXY2amTbvOfz
-	 hN233loMxTyKmr6I2gOiLK49/IPzOBr1BjCL5XjcvMlrCvmvpOtR0IeLu9HlwXa4rb
-	 xtcl/INKfF20uOynmuKLht5vfb9RTUTPeZ17IWBE=
+	b=W2kBUfsJOCV3cypH+B6R3OGRBMOfDz+HEclP427nD9eecDIG+7+9WdcQzARvSF737
+	 s16Qq6i4PGxlBZ0w4izwYiyyq1nlZJBkcCzDn7RZT86deNagf69wFPqDqWeLhTcn1p
+	 XZq704Xl5R4jhwq0DQUIv9tYd8sA11AIPKB4jpL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbfKJC4v (ORCPT
+        id S1729545AbfKJC4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:56:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47170 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:56:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728947AbfKJC4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728943AbfKJC4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F5322558;
-        Sun, 10 Nov 2019 02:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 064962247A;
+        Sun, 10 Nov 2019 02:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354111;
-        bh=s+qDWJiCsCOtUONRrtoz3ETIwaa58Xm2dheg+889mKw=;
+        s=default; t=1573354067;
+        bh=l2juZTLHselRSV+UkyHgPIziKlXPN/x9vhH96gkWGgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aqQwFawfZL06YkQKZsmjK0mgiyelE6EcDW7P3G+SIUyufTCYdy3BDZlvZSe4q/Vx1
-         oHjD3F9K5DjWz7u21T32nVtQlQATuWQuJVWzLfNbg224kcu3JIBnwJjQ2GlPXBhQ5y
-         KBrEPjY4eb6CiuxubNbmsSL7S/MCR9PAu3bb55h8=
+        b=zmkq+J9uk8XBtf+yasAvBbbDeiDxRfgAGomp+KEEOMuXclEB5GyccTQ4M10GVEdft
+         I/slpvWtN/Xx9XS/xqlHrFkSLFYPocI7NSe0BdZhmm8oQtjdr8xjIT6thR8FHOPm9m
+         XjFz65H39Fjy0VQRXnIrqvA1ZJQPRJfW1vWxm61c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Chanho Min <chanho.min@lge.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 101/109] arm64: dts: lg: Fix SPI controller node names
-Date:   Sat,  9 Nov 2019 21:45:33 -0500
-Message-Id: <20191110024541.31567-101-sashal@kernel.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        chenxiang <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Tomas Henzl <thenzl@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 071/109] scsi: libsas: always unregister the old device if going to discover new
+Date:   Sat,  9 Nov 2019 21:45:03 -0500
+Message-Id: <20191110024541.31567-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -59,64 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Jason Yan <yanaijie@huawei.com>
 
-[ Upstream commit 09bae3b64cb580c95329bd8d16f08f0a5cb81ec9 ]
+[ Upstream commit 32c850bf587f993b2620b91e5af8a64a7813f504 ]
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+If we went into sas_rediscover_dev() the attached_sas_addr was already insured
+not to be zero. So it's unnecessary to check if the attached_sas_addr is zero.
 
-Cc: Chanho Min <chanho.min@lge.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+And although if the sas address is not changed, we always have to unregister
+the old device when we are going to register a new one. We cannot just leave
+the device there and bring up the new.
+
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+CC: chenxiang <chenxiang66@hisilicon.com>
+CC: John Garry <john.garry@huawei.com>
+CC: Johannes Thumshirn <jthumshirn@suse.de>
+CC: Ewan Milne <emilne@redhat.com>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Tomas Henzl <thenzl@redhat.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/lg/lg1312.dtsi | 4 ++--
- arch/arm64/boot/dts/lg/lg1313.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
-index 860c8fb107950..4bde7b6f2b113 100644
---- a/arch/arm64/boot/dts/lg/lg1312.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
-@@ -168,14 +168,14 @@
- 			clock-names = "apb_pclk";
- 			status="disabled";
- 		};
--		spi0: ssp@fe800000 {
-+		spi0: spi@fe800000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe800000 0x1000>;
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_bus>;
- 			clock-names = "apb_pclk";
- 		};
--		spi1: ssp@fe900000 {
-+		spi1: spi@fe900000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe900000 0x1000>;
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
-index 1887af654a7db..16ced1ff1ad36 100644
---- a/arch/arm64/boot/dts/lg/lg1313.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
-@@ -168,14 +168,14 @@
- 			clock-names = "apb_pclk";
- 			status="disabled";
- 		};
--		spi0: ssp@fe800000 {
-+		spi0: spi@fe800000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe800000 0x1000>;
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_bus>;
- 			clock-names = "apb_pclk";
- 		};
--		spi1: ssp@fe900000 {
-+		spi1: spi@fe900000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe900000 0x1000>;
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 259ee0d3c3e61..7f2d00354a850 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -2060,14 +2060,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
+ 		return res;
+ 	}
+ 
+-	/* delete the old link */
+-	if (SAS_ADDR(phy->attached_sas_addr) &&
+-	    SAS_ADDR(sas_addr) != SAS_ADDR(phy->attached_sas_addr)) {
+-		SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
+-			    SAS_ADDR(dev->sas_addr), phy_id,
+-			    SAS_ADDR(phy->attached_sas_addr));
+-		sas_unregister_devs_sas_addr(dev, phy_id, last);
+-	}
++	/* we always have to delete the old device when we went here */
++	SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
++		    SAS_ADDR(dev->sas_addr), phy_id,
++		    SAS_ADDR(phy->attached_sas_addr));
++	sas_unregister_devs_sas_addr(dev, phy_id, last);
+ 
+ 	return sas_discover_new(dev, phy_id);
+ }
 -- 
 2.20.1
 
