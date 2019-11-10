@@ -3,34 +3,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547E0C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA07C17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259AD2085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B752085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfKJKYH (ORCPT
+        id S1726853AbfKJKYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 05:24:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54405 "EHLO
+        Sun, 10 Nov 2019 05:24:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54413 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfKJKYF (ORCPT
+        with ESMTP id S1726800AbfKJKYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 05:24:05 -0500
+        Sun, 10 Nov 2019 05:24:08 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iTkO2-0004Xf-PZ; Sun, 10 Nov 2019 11:24:03 +0100
+        id 1iTkO4-0004Xs-VE; Sun, 10 Nov 2019 11:24:05 +0100
 Date:   Sun, 10 Nov 2019 10:21:53 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] perf/urgent for v5.4-rc7
+Subject: [GIT pull] timers/urgent for v5.4-rc7
 References: <157338131323.14789.2179255265964358886.tglx@nanos.tec.linutronix.de>
-Message-ID: <157338131324.14789.15657972801854961625.tglx@nanos.tec.linutronix.de>
+Message-ID: <157338131324.14789.9347520189915553665.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -41,167 +41,211 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest perf-urgent-for-linus git tree from:
+please pull the latest timers-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-for-linus
 
-up to:  485c05351312: Merge tag 'perf-urgent-for-mingo-5.4-20191105' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
+up to:  52338415cf4d: timekeeping/vsyscall: Update VDSO data unconditionally
 
-Fixes for perf tooling:
+A small set of fixes for timekeepoing and clocksource drivers:
 
-   - Fix the time sorting algorithm which was broken due to truncation of
-     big numbers.
+  - VDSO data was updated conditional on the availability of a VDSO capable
+    clocksource. This causes the VDSO functions which do not depend on a
+    VDSO capable clocksource to operate on stale data. Always update
+    unconditionally.
 
-   - Fix the python script generator fail caused by a broken tracepoint
-     array iterator.
+  - Prevent a double free in the mediatek driver
+
+  - Use the proper helper in the sh_mtu2 driver so it won't attempt to
+    initialize non-existing interrupts.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Jiri Olsa (1):
-      perf tools: Fix time sorting
+Fabien Parent (1):
+      clocksource/drivers/mediatek: Fix error handling
 
-Steven Rostedt (VMware) (2):
-      perf scripting engines: Iterate on tep event arrays directly
-      perf tools: Remove unused trace_find_next_event()
+Geert Uytterhoeven (1):
+      clocksource/drivers/sh_mtu2: Do not loop using platform_get_irq_by_name()
+
+Huacai Chen (1):
+      timekeeping/vsyscall: Update VDSO data unconditionally
 
 
- tools/perf/util/hist.c                             |  2 +-
- .../perf/util/scripting-engines/trace-event-perl.c |  8 ++++--
- .../util/scripting-engines/trace-event-python.c    |  9 +++++--
- tools/perf/util/trace-event-parse.c                | 31 ----------------------
- tools/perf/util/trace-event.h                      |  2 --
- 5 files changed, 14 insertions(+), 38 deletions(-)
+ arch/arm64/include/asm/vdso/vsyscall.h |  7 -------
+ arch/mips/include/asm/vdso/vsyscall.h  |  7 -------
+ drivers/clocksource/sh_mtu2.c          | 16 +++++++++++-----
+ drivers/clocksource/timer-mediatek.c   | 10 ++--------
+ include/asm-generic/vdso/vsyscall.h    |  7 -------
+ kernel/time/vsyscall.c                 |  9 +++------
+ 6 files changed, 16 insertions(+), 40 deletions(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 679a1d75090c..7b6eaf5e0bda 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1625,7 +1625,7 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
+diff --git a/arch/arm64/include/asm/vdso/vsyscall.h b/arch/arm64/include/asm/vdso/vsyscall.h
+index 0c731bfc7c8c..0c20a7c1bee5 100644
+--- a/arch/arm64/include/asm/vdso/vsyscall.h
++++ b/arch/arm64/include/asm/vdso/vsyscall.h
+@@ -30,13 +30,6 @@ int __arm64_get_clock_mode(struct timekeeper *tk)
+ }
+ #define __arch_get_clock_mode __arm64_get_clock_mode
+ 
+-static __always_inline
+-int __arm64_use_vsyscall(struct vdso_data *vdata)
+-{
+-	return !vdata[CS_HRES_COARSE].clock_mode;
+-}
+-#define __arch_use_vsyscall __arm64_use_vsyscall
+-
+ static __always_inline
+ void __arm64_update_vsyscall(struct vdso_data *vdata, struct timekeeper *tk)
+ {
+diff --git a/arch/mips/include/asm/vdso/vsyscall.h b/arch/mips/include/asm/vdso/vsyscall.h
+index 195314732233..00d41b94ba31 100644
+--- a/arch/mips/include/asm/vdso/vsyscall.h
++++ b/arch/mips/include/asm/vdso/vsyscall.h
+@@ -28,13 +28,6 @@ int __mips_get_clock_mode(struct timekeeper *tk)
+ }
+ #define __arch_get_clock_mode __mips_get_clock_mode
+ 
+-static __always_inline
+-int __mips_use_vsyscall(struct vdso_data *vdata)
+-{
+-	return (vdata[CS_HRES_COARSE].clock_mode != VDSO_CLOCK_NONE);
+-}
+-#define __arch_use_vsyscall __mips_use_vsyscall
+-
+ /* The asm-generic header needs to be included after the definitions above */
+ #include <asm-generic/vdso/vsyscall.h>
+ 
+diff --git a/drivers/clocksource/sh_mtu2.c b/drivers/clocksource/sh_mtu2.c
+index 354b27d14a19..62812f80b5cc 100644
+--- a/drivers/clocksource/sh_mtu2.c
++++ b/drivers/clocksource/sh_mtu2.c
+@@ -328,12 +328,13 @@ static int sh_mtu2_register(struct sh_mtu2_channel *ch, const char *name)
  	return 0;
  }
  
--static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-+static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
- {
- 	struct hists *hists = a->hists;
- 	struct perf_hpp_fmt *fmt;
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 15961854ba67..741f040648b5 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -539,10 +539,11 @@ static int perl_stop_script(void)
- 
- static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.pl", outfile);
-@@ -603,8 +604,11 @@ sub print_backtrace\n\
- }\n\n\
- ");
- 
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
- 		fprintf(ofp, "\tmy (");
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 5d341efc3237..93c03b39cd9c 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1687,10 +1687,11 @@ static int python_stop_script(void)
- 
- static int python_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.py", outfile);
-@@ -1735,7 +1736,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
- 	fprintf(ofp, "def trace_end():\n");
- 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
++static const unsigned int sh_mtu2_channel_offsets[] = {
++	0x300, 0x380, 0x000,
++};
 +
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "def %s__%s(", event->system, event->name);
- 		fprintf(ofp, "event_name, ");
- 		fprintf(ofp, "context, ");
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index 5d6bfc70b210..9634f0ae57be 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -173,37 +173,6 @@ int parse_event_file(struct tep_handle *pevent,
- 	return tep_parse_event(pevent, buf, size, sys);
+ static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
+ 				 struct sh_mtu2_device *mtu)
+ {
+-	static const unsigned int channel_offsets[] = {
+-		0x300, 0x380, 0x000,
+-	};
+ 	char name[6];
+ 	int irq;
+ 	int ret;
+@@ -356,7 +357,7 @@ static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
+ 		return ret;
+ 	}
+ 
+-	ch->base = mtu->mapbase + channel_offsets[index];
++	ch->base = mtu->mapbase + sh_mtu2_channel_offsets[index];
+ 	ch->index = index;
+ 
+ 	return sh_mtu2_register(ch, dev_name(&mtu->pdev->dev));
+@@ -408,7 +409,12 @@ static int sh_mtu2_setup(struct sh_mtu2_device *mtu,
+ 	}
+ 
+ 	/* Allocate and setup the channels. */
+-	mtu->num_channels = 3;
++	ret = platform_irq_count(pdev);
++	if (ret < 0)
++		goto err_unmap;
++
++	mtu->num_channels = min_t(unsigned int, ret,
++				  ARRAY_SIZE(sh_mtu2_channel_offsets));
+ 
+ 	mtu->channels = kcalloc(mtu->num_channels, sizeof(*mtu->channels),
+ 				GFP_KERNEL);
+diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
+index a562f491b0f8..9318edcd8963 100644
+--- a/drivers/clocksource/timer-mediatek.c
++++ b/drivers/clocksource/timer-mediatek.c
+@@ -268,15 +268,12 @@ static int __init mtk_syst_init(struct device_node *node)
+ 
+ 	ret = timer_of_init(node, &to);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
+ 					TIMER_SYNC_TICKS, 0xffffffff);
+ 
+ 	return 0;
+-err:
+-	timer_of_cleanup(&to);
+-	return ret;
  }
  
--struct tep_event *trace_find_next_event(struct tep_handle *pevent,
--					struct tep_event *event)
+ static int __init mtk_gpt_init(struct device_node *node)
+@@ -293,7 +290,7 @@ static int __init mtk_gpt_init(struct device_node *node)
+ 
+ 	ret = timer_of_init(node, &to);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	/* Configure clock source */
+ 	mtk_gpt_setup(&to, TIMER_CLK_SRC, GPT_CTRL_OP_FREERUN);
+@@ -311,9 +308,6 @@ static int __init mtk_gpt_init(struct device_node *node)
+ 	mtk_gpt_enable_irq(&to, TIMER_CLK_EVT);
+ 
+ 	return 0;
+-err:
+-	timer_of_cleanup(&to);
+-	return ret;
+ }
+ TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
+ TIMER_OF_DECLARE(mtk_mt6765, "mediatek,mt6765-timer", mtk_syst_init);
+diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
+index e94b19782c92..ce4103208619 100644
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -25,13 +25,6 @@ static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
+ }
+ #endif /* __arch_get_clock_mode */
+ 
+-#ifndef __arch_use_vsyscall
+-static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
 -{
--	static int idx;
--	int events_count;
--	struct tep_event *all_events;
--
--	all_events = tep_get_first_event(pevent);
--	events_count = tep_get_events_count(pevent);
--	if (!pevent || !all_events || events_count < 1)
--		return NULL;
--
--	if (!event) {
--		idx = 0;
--		return all_events;
--	}
--
--	if (idx < events_count && event == (all_events + idx)) {
--		idx++;
--		if (idx == events_count)
--			return NULL;
--		return (all_events + idx);
--	}
--
--	for (idx = 1; idx < events_count; idx++) {
--		if (event == (all_events + (idx - 1)))
--			return (all_events + idx);
--	}
--	return NULL;
+-	return 1;
 -}
+-#endif /* __arch_use_vsyscall */
 -
- struct flag {
- 	const char *name;
- 	unsigned long long value;
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 2e158387b3d7..72fdf2a3577c 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -47,8 +47,6 @@ void parse_saved_cmdline(struct tep_handle *pevent, char *file, unsigned int siz
+ #ifndef __arch_update_vsyscall
+ static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
+ 						   struct timekeeper *tk)
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index 4bc37ac3bb05..5ee0f7709410 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -110,8 +110,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+ 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
  
- ssize_t trace_report(int fd, struct trace_event *tevent, bool repipe);
+-	if (__arch_use_vsyscall(vdata))
+-		update_vdso_data(vdata, tk);
++	update_vdso_data(vdata, tk);
  
--struct tep_event *trace_find_next_event(struct tep_handle *pevent,
--					struct tep_event *event);
- unsigned long long read_size(struct tep_event *event, void *ptr, int size);
- unsigned long long eval_flag(const char *flag);
+ 	__arch_update_vsyscall(vdata, tk);
  
+@@ -124,10 +123,8 @@ void update_vsyscall_tz(void)
+ {
+ 	struct vdso_data *vdata = __arch_get_k_vdso_data();
+ 
+-	if (__arch_use_vsyscall(vdata)) {
+-		vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
+-		vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
+-	}
++	vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
++	vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
+ 
+ 	__arch_sync_vdso_data(vdata);
+ }
 
 
