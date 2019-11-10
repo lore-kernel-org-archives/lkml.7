@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61675C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2DEC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3180E21850
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06F621850
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353951;
-	bh=6zIYvAQLeAqmRqLZCnOGn1hGP8lmOux0Wh75nSABTTI=;
+	s=default; t=1573353954;
+	bh=O3mFNZoIUng350Ipl4qr82fCz1yUrnK9uVXdJCEkPLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GNWVaxF+en6S7cGs+wLgOg1R4hODPrY+2aBvKHHZoAJXqGZgkiutKhBdS8nxzJRay
-	 SeBTmFRJ9IP1INgQ1U5Nq1N0lixa3oDrnfTifDfzL8w2OOhrTwcU9MOMN23Fy4iDKY
-	 PKXOAO2pmSAcPCCAmkguuf5EiVetzhEseiDkaxaU=
+	b=iVLaVapkFM7BkML3srBGiFlRDl0BSo4ttgZ1oBpo7i6mUlk0Bo30rVh8eoRXkF3nX
+	 AjmzWD22oYp2UkAG2BXfzjYoMHtRPuX1WDIJ8zGL8ARxm1oLwltTG65A8n3Tpm6MPJ
+	 s3NHXTRoAcLUg+sNTLHhrRM1FNXca+AnHR3ad5+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfKJCpt (ORCPT
+        id S1728002AbfKJCpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728788AbfKJCpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:20 -0500
+        id S1728803AbfKJCpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC388222BE;
-        Sun, 10 Nov 2019 02:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B243214E0;
+        Sun, 10 Nov 2019 02:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353919;
-        bh=6zIYvAQLeAqmRqLZCnOGn1hGP8lmOux0Wh75nSABTTI=;
+        s=default; t=1573353921;
+        bh=O3mFNZoIUng350Ipl4qr82fCz1yUrnK9uVXdJCEkPLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=isbFdRsoULsWqnRqnukhJf5Y2YP710nsKXd3zs+1YUabLu+RYjqiqI4OjoJErJsT7
-         E/SsXg09h+220/pu7SIw59KGUzWhcRdhcpeGKbyS9mkFlpc+hQA7jPwQ449qsaCOb9
-         MfJkrJzIXaWVYrKwKtIvyVD9j8O39ZIkRT6BDUfw=
+        b=KQpshlpWWEEm34QMbzlQm3PB5R+xaKMgcqngyhQzRdm5Y/06bUBBpcfCQibtCxAr6
+         +aJlTLosAb7s/K24bRXUvJJS+2D/cHz+1hR7WHv/gKP51KOqs5RW+2zSgaRbF00Coi
+         oHtc1HhEkd5nSVKPH81nlvCyWgPwejPqOAlTuCM4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 182/191] rtc: armada38x: fix possible race condition
-Date:   Sat,  9 Nov 2019 21:40:04 -0500
-Message-Id: <20191110024013.29782-182-sashal@kernel.org>
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 184/191] usb: xhci-mtk: fix ISOC error when interval is zero
+Date:   Sat,  9 Nov 2019 21:40:06 -0500
+Message-Id: <20191110024013.29782-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -58,82 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-[ Upstream commit 7d61cbb945a753af08e247b5f10bdd5dbb8d6c80 ]
+[ Upstream commit 87173acc0d8f0987bda8827da35fff67f52ad15d ]
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
+If the interval equal zero, needn't round up to power of two
+for the number of packets in each ESIT, so fix it.
 
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-before requesting the IRQ.
-
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-armada38x.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/usb/host/xhci-mtk-sch.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-armada38x.c b/drivers/rtc/rtc-armada38x.c
-index bde53c8ccee2c..b74338d6dde60 100644
---- a/drivers/rtc/rtc-armada38x.c
-+++ b/drivers/rtc/rtc-armada38x.c
-@@ -514,7 +514,6 @@ MODULE_DEVICE_TABLE(of, armada38x_rtc_of_match_table);
+diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
+index fa33d6e5b1cbd..d04fdd173ed2e 100644
+--- a/drivers/usb/host/xhci-mtk-sch.c
++++ b/drivers/usb/host/xhci-mtk-sch.c
+@@ -113,7 +113,9 @@ static void setup_sch_info(struct usb_device *udev,
+ 		}
  
- static __init int armada38x_rtc_probe(struct platform_device *pdev)
- {
--	const struct rtc_class_ops *ops;
- 	struct resource *res;
- 	struct armada38x_rtc *rtc;
- 	const struct of_device_id *match;
-@@ -551,6 +550,11 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "no irq\n");
- 		return rtc->irq;
- 	}
-+
-+	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(rtc->rtc_dev))
-+		return PTR_ERR(rtc->rtc_dev);
-+
- 	if (devm_request_irq(&pdev->dev, rtc->irq, armada38x_rtc_alarm_irq,
- 				0, pdev->name, rtc) < 0) {
- 		dev_warn(&pdev->dev, "Interrupt not available.\n");
-@@ -560,28 +564,24 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
- 
- 	if (rtc->irq != -1) {
- 		device_init_wakeup(&pdev->dev, 1);
--		ops = &armada38x_rtc_ops;
-+		rtc->rtc_dev->ops = &armada38x_rtc_ops;
- 	} else {
- 		/*
- 		 * If there is no interrupt available then we can't
- 		 * use the alarm
- 		 */
--		ops = &armada38x_rtc_ops_noirq;
-+		rtc->rtc_dev->ops = &armada38x_rtc_ops_noirq;
- 	}
- 	rtc->data = (struct armada38x_rtc_data *)match->data;
- 
--
- 	/* Update RTC-MBUS bridge timing parameters */
- 	rtc->data->update_mbus_timing(rtc);
- 
--	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
--						ops, THIS_MODULE);
--	if (IS_ERR(rtc->rtc_dev)) {
--		ret = PTR_ERR(rtc->rtc_dev);
-+	ret = rtc_register_device(rtc->rtc_dev);
-+	if (ret)
- 		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
--		return ret;
--	}
--	return 0;
-+
-+	return ret;
- }
- 
- #ifdef CONFIG_PM_SLEEP
+ 		if (ep_type == ISOC_IN_EP || ep_type == ISOC_OUT_EP) {
+-			if (esit_pkts <= sch_ep->esit)
++			if (sch_ep->esit == 1)
++				sch_ep->pkts = esit_pkts;
++			else if (esit_pkts <= sch_ep->esit)
+ 				sch_ep->pkts = 1;
+ 			else
+ 				sch_ep->pkts = roundup_pow_of_two(esit_pkts)
 -- 
 2.20.1
 
