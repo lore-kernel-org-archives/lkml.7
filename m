@@ -2,120 +2,272 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876F1C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E766C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF7020659
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658912077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfKJVWA (ORCPT
+        id S1727050AbfKJVbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 16:22:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55043 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbfKJVV7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 16:21:59 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iTuef-0003aT-RX; Sun, 10 Nov 2019 22:21:54 +0100
-Date:   Sun, 10 Nov 2019 22:21:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch 7/9] x86/iopl: Restrict iopl() permission scope
-In-Reply-To: <CALCETrXLNub_pTMKvVQiq26=8VQPnx865+w0e-ZnHEg9a397_A@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1911102214250.12583@nanos.tec.linutronix.de>
-References: <20191106193459.581614484@linutronix.de> <20191106202806.425388355@linutronix.de> <a1afc4bb-c90e-db58-42f2-da91a50b1872@kernel.org> <alpine.DEB.2.21.1911102125110.12583@nanos.tec.linutronix.de>
- <CALCETrXLNub_pTMKvVQiq26=8VQPnx865+w0e-ZnHEg9a397_A@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 10 Nov 2019 16:31:04 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26860 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbfKJVbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 16:31:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 13:31:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,290,1569308400"; 
+   d="scan'208";a="405018231"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Nov 2019 13:30:58 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iTunR-000Fxb-Sm; Mon, 11 Nov 2019 05:30:57 +0800
+Date:   Mon, 11 Nov 2019 05:30:49 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     kbuild-all@lists.01.org, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        alex.kogan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v6 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <201911110540.8p3UoQAR%lkp@intel.com>
+References: <20191107174622.61718-4-alex.kogan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107174622.61718-4-alex.kogan@oracle.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 Nov 2019, Andy Lutomirski wrote:
-> On Sun, Nov 10, 2019 at 12:31 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Sun, 10 Nov 2019, Andy Lutomirski wrote:
-> > > On 11/6/19 11:35 AM, Thomas Gleixner wrote:
-> > > > +
-> > > > +   if (IS_ENABLED(CONFIG_X86_IOPL_EMULATION)) {
-> > > > +           struct tss_struct *tss;
-> > > > +           unsigned int tss_base;
-> > > > +
-> > > > +           /* Prevent racing against a task switch */
-> > > > +           preempt_disable();
-> > > > +           tss = this_cpu_ptr(&cpu_tss_rw);
-> > > > +           if (level == 3) {
-> > > > +                   /* Grant access to all I/O ports */
-> > > > +                   set_thread_flag(TIF_IO_BITMAP);
-> > > > +                   tss_base = IO_BITMAP_OFFSET_VALID_ALL;
-> > >
-> > > Where is the actual TSS updated?
-> >
-> > Here. It sets the offset to the all zero bitmap. That's all it needs.
-> 
-> Ah, I see.
-> 
-> > > I think what you need to do is have a single function, called by
-> > > exit_thread(), switch_to(), and here, that updates the TSS to match a
-> > > given task's IO bitmap state.  This is probably switch_to_bitmap() or
-> > > similar.
-> >
-> > Well, no. exit_thread() and this here actually fiddle with the TIF bit
-> > which is not what the switch to case does. There is some stuff which can be
-> > shared.
-> 
-> I was thinking that the code that read iopl_emul and t->io_bitmap_ptr
-> and updated x86_tss.io_bitmap_base could be factored out of
-> switch_to().  Suppose you call that tss_update_io_bitmap().  And you
-> could have another tiny helper:
-> 
-> static void update_tif_io_bitmap(void)
-> {
->   if (...->iopl_emul || ...->io_bitmap_ptr)
->     set_thread_flag(TIF_IO_BITMAP);
->   else
->     clear_thread_flag(TIF_IO_BITMAP);
-> }
-> 
-> Then the whole iopl emulation path becomes:
+Hi Alex,
 
-Yes. I'm almost done with that already :)
-> > It's in that very same patch:
-> >
-> > > -static void tss_update_io_bitmap(struct tss_struct *tss,
-> > > -                                struct thread_struct *thread)
-> 
-> But where did the line you just deleted come from?  I'm obviously just
-> bad at reading emails somewhere.
+Thank you for the patch! Perhaps something to improve:
 
-patch 5/9 :)
- 
-Let me finish that stuff and send out another version which has that reuse
-of the switch to code in a separate patch.
+[auto build test WARNING on linus/master]
+[cannot apply to v5.4-rc6 next-20191108]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-There is another new detail in the series. I split out all the io bitmap
-data into a separate data struct, which also allows me to stick a refcount
-into it which removes the kmemdup() from the fork path.
+url:    https://github.com/0day-ci/linux/commits/Alex-Kogan/locking-qspinlock-Rename-mcs-lock-unlock-macros-and-make-them-more-generic/20191109-180535
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0058b0a506e40d9a2c62015fe92eb64a44d78cd9
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-21-gb31adac-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Thanks,
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-	tglx
+
+sparse warnings: (new ones prefixed by >>)
+
+   kernel/locking/qspinlock.c:450:14: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *[assigned] node @@    got ct mcs_spinlock *[assigned] node @@
+   kernel/locking/qspinlock.c:450:14: sparse:    expected struct mcs_spinlock *[assigned] node
+   kernel/locking/qspinlock.c:450:14: sparse:    got struct mcs_spinlock [pure] *
+   kernel/locking/qspinlock.c:498:22: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *prev @@    got struct struct mcs_spinlock *prev @@
+   kernel/locking/qspinlock.c:498:22: sparse:    expected struct mcs_spinlock *prev
+   kernel/locking/qspinlock.c:498:22: sparse:    got struct mcs_spinlock [pure] *
+>> kernel/locking/qspinlock_cna.h:141:60: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct mcs_spinlock *tail_2nd @@    got struct struct mcs_spinlock *tail_2nd @@
+>> kernel/locking/qspinlock_cna.h:141:60: sparse:    expected struct mcs_spinlock *tail_2nd
+>> kernel/locking/qspinlock_cna.h:141:60: sparse:    got struct mcs_spinlock [pure] *
+   kernel/locking/qspinlock.c:450:14: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *[assigned] node @@    got ct mcs_spinlock *[assigned] node @@
+   kernel/locking/qspinlock.c:450:14: sparse:    expected struct mcs_spinlock *[assigned] node
+   kernel/locking/qspinlock.c:450:14: sparse:    got struct mcs_spinlock [pure] *
+   kernel/locking/qspinlock.c:498:22: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *prev @@    got struct struct mcs_spinlock *prev @@
+   kernel/locking/qspinlock.c:498:22: sparse:    expected struct mcs_spinlock *prev
+   kernel/locking/qspinlock.c:498:22: sparse:    got struct mcs_spinlock [pure] *
+>> kernel/locking/qspinlock_cna.h:107:18: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *tail_2nd @@    got struct struct mcs_spinlock *tail_2nd @@
+   kernel/locking/qspinlock_cna.h:107:18: sparse:    expected struct mcs_spinlock *tail_2nd
+   kernel/locking/qspinlock_cna.h:107:18: sparse:    got struct mcs_spinlock [pure] *
+>> kernel/locking/qspinlock_cna.h:240:61: sparse: sparse: incorrect type in argument 2 (different modifiers) @@    expected struct mcs_spinlock *pred_start @@    got struct struct mcs_spinlock *pred_start @@
+>> kernel/locking/qspinlock_cna.h:240:61: sparse:    expected struct mcs_spinlock *pred_start
+   kernel/locking/qspinlock_cna.h:240:61: sparse:    got struct mcs_spinlock [pure] *
+   kernel/locking/qspinlock_cna.h:252:26: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *tail_2nd @@    got struct struct mcs_spinlock *tail_2nd @@
+   kernel/locking/qspinlock_cna.h:252:26: sparse:    expected struct mcs_spinlock *tail_2nd
+   kernel/locking/qspinlock_cna.h:252:26: sparse:    got struct mcs_spinlock [pure] *
+   kernel/locking/qspinlock.c:450:14: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *[assigned] node @@    got ct mcs_spinlock *[assigned] node @@
+   kernel/locking/qspinlock.c:450:14: sparse:    expected struct mcs_spinlock *[assigned] node
+   kernel/locking/qspinlock.c:450:14: sparse:    got struct mcs_spinlock [pure] *
+   kernel/locking/qspinlock.c:498:22: sparse: sparse: incorrect type in assignment (different modifiers) @@    expected struct mcs_spinlock *prev @@    got struct struct mcs_spinlock *prev @@
+   kernel/locking/qspinlock.c:498:22: sparse:    expected struct mcs_spinlock *prev
+   kernel/locking/qspinlock.c:498:22: sparse:    got struct mcs_spinlock [pure] *
+
+vim +141 kernel/locking/qspinlock_cna.h
+
+    90	
+    91	static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
+    92					       struct mcs_spinlock *node)
+    93	{
+    94		struct mcs_spinlock *head_2nd, *tail_2nd;
+    95		u32 new;
+    96	
+    97		/* If the secondary queue is empty, do what MCS does. */
+    98		if (node->locked <= 1)
+    99			return __try_clear_tail(lock, val, node);
+   100	
+   101		/*
+   102		 * Try to update the tail value to the last node in the secondary queue.
+   103		 * If successful, pass the lock to the first thread in the secondary
+   104		 * queue. Doing those two actions effectively moves all nodes from the
+   105		 * secondary queue into the main one.
+   106		 */
+ > 107		tail_2nd = decode_tail(node->locked);
+   108		head_2nd = tail_2nd->next;
+   109		new = ((struct cna_node *)tail_2nd)->encoded_tail + _Q_LOCKED_VAL;
+   110	
+   111		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
+   112			/*
+   113			 * Try to reset @next in tail_2nd to NULL, but no need to check
+   114			 * the result - if failed, a new successor has updated it.
+   115			 */
+   116			cmpxchg_relaxed(&tail_2nd->next, head_2nd, NULL);
+   117			arch_mcs_pass_lock(&head_2nd->locked, 1);
+   118			return true;
+   119		}
+   120	
+   121		return false;
+   122	}
+   123	
+   124	/*
+   125	 * cna_splice_tail -- splice nodes in the main queue between [first, last]
+   126	 * onto the secondary queue.
+   127	 */
+   128	static void cna_splice_tail(struct mcs_spinlock *node,
+   129				    struct mcs_spinlock *first,
+   130				    struct mcs_spinlock *last)
+   131	{
+   132		/* remove [first,last] */
+   133		node->next = last->next;
+   134	
+   135		/* stick [first,last] on the secondary queue tail */
+   136		if (node->locked <= 1) { /* if secondary queue is empty */
+   137			/* create secondary queue */
+   138			last->next = first;
+   139		} else {
+   140			/* add to the tail of the secondary queue */
+ > 141			struct mcs_spinlock *tail_2nd = decode_tail(node->locked);
+   142			struct mcs_spinlock *head_2nd = tail_2nd->next;
+   143	
+   144			tail_2nd->next = first;
+   145			last->next = head_2nd;
+   146		}
+   147	
+   148		node->locked = ((struct cna_node *)last)->encoded_tail;
+   149	}
+   150	
+   151	/*
+   152	 * cna_scan_main_queue - scan the main waiting queue looking for the first
+   153	 * thread running on the same NUMA node as the lock holder. If found (call it
+   154	 * thread T), move all threads in the main queue between the lock holder and
+   155	 * T to the end of the secondary queue and return 0; otherwise, return the
+   156	 * encoded pointer of the last scanned node in the primary queue (so a
+   157	 * subsequent scan can be resumed from that node)
+   158	 *
+   159	 * Schematically, this may look like the following (nn stands for numa_node and
+   160	 * et stands for encoded_tail).
+   161	 *
+   162	 *   when cna_scan_main_queue() is called (the secondary queue is empty):
+   163	 *
+   164	 *  A+------------+   B+--------+   C+--------+   T+--------+
+   165	 *   |mcs:next    | -> |mcs:next| -> |mcs:next| -> |mcs:next| -> NULL
+   166	 *   |mcs:locked=1|    |cna:nn=0|    |cna:nn=2|    |cna:nn=1|
+   167	 *   |cna:nn=1    |    +--------+    +--------+    +--------+
+   168	 *   +----------- +
+   169	 *
+   170	 *   when cna_scan_main_queue() returns (the secondary queue contains B and C):
+   171	 *
+   172	 *  A+----------------+    T+--------+
+   173	 *   |mcs:next        | ->  |mcs:next| -> NULL
+   174	 *   |mcs:locked=C.et | -+  |cna:nn=1|
+   175	 *   |cna:nn=1        |  |  +--------+
+   176	 *   +--------------- +  +-----+
+   177	 *                             \/
+   178	 *          B+--------+   C+--------+
+   179	 *           |mcs:next| -> |mcs:next| -+
+   180	 *           |cna:nn=0|    |cna:nn=2|  |
+   181	 *           +--------+    +--------+  |
+   182	 *               ^                     |
+   183	 *               +---------------------+
+   184	 *
+   185	 * The worst case complexity of the scan is O(n), where n is the number
+   186	 * of current waiters. However, the amortized complexity is close to O(1),
+   187	 * as the immediate successor is likely to be running on the same node once
+   188	 * threads from other nodes are moved to the secondary queue.
+   189	 */
+   190	static u32 cna_scan_main_queue(struct mcs_spinlock *node,
+   191				       struct mcs_spinlock *pred_start)
+   192	{
+   193		struct cna_node *cn = (struct cna_node *)node;
+   194		struct cna_node *cni = (struct cna_node *)READ_ONCE(pred_start->next);
+   195		struct cna_node *last;
+   196		int my_numa_node = cn->numa_node;
+   197	
+   198		/* find any next waiter on 'our' NUMA node */
+   199		for (last = cn;
+   200		     cni && cni->numa_node != my_numa_node;
+   201		     last = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
+   202			;
+   203	
+   204		/* if found, splice any skipped waiters onto the secondary queue */
+   205		if (cni) {
+   206			if (last != cn)	/* did we skip any waiters? */
+   207				cna_splice_tail(node, node->next,
+   208						(struct mcs_spinlock *)last);
+   209			return 0;
+   210		}
+   211	
+   212		return last->encoded_tail;
+   213	}
+   214	
+   215	__always_inline u32 cna_pre_scan(struct qspinlock *lock,
+   216					  struct mcs_spinlock *node)
+   217	{
+   218		struct cna_node *cn = (struct cna_node *)node;
+   219	
+   220		cn->pre_scan_result = cna_scan_main_queue(node, node);
+   221	
+   222		return 0;
+   223	}
+   224	
+   225	static inline void cna_pass_lock(struct mcs_spinlock *node,
+   226					 struct mcs_spinlock *next)
+   227	{
+   228		struct cna_node *cn = (struct cna_node *)node;
+   229		struct mcs_spinlock *next_holder = next, *tail_2nd;
+   230		u32 val = 1;
+   231	
+   232		u32 scan = cn->pre_scan_result;
+   233	
+   234		/*
+   235		 * check if a successor from the same numa node has not been found in
+   236		 * pre-scan, and if so, try to find it in post-scan starting from the
+   237		 * node where pre-scan stopped (stored in @pre_scan_result)
+   238		 */
+   239		if (scan > 0)
+ > 240			scan = cna_scan_main_queue(node, decode_tail(scan));
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
