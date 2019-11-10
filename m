@@ -5,68 +5,73 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F7BC17442
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 19:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F1C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B46120818
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 19:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604442075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQ8/92fp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nc3+0FJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKJTnH (ORCPT
+        id S1727012AbfKJUPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 14:43:07 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54133 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfKJTnH (ORCPT
+        Sun, 10 Nov 2019 15:15:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42796 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfKJUPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 14:43:07 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u18so3504470wmc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 11:43:03 -0800 (PST)
+        Sun, 10 Nov 2019 15:15:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id a15so12386447wrf.9;
+        Sun, 10 Nov 2019 12:14:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0ERIbyU+62RDKkuyfUPzZUSe1FFHvxlCgQktwAbE+sA=;
-        b=gQ8/92fpg3vcqG02QlEM6gFMXSpp9Ph9D2+nj0qwCKurqR6YhPnxrqFAjRIJvE0lrx
-         QvhOS81QZ8U0SLJaQfN9xJgWxt8hv/pI2PyYRhIiJBJF8KPC/TN8cnS5PBj+rFFwaF/b
-         O0kfMDmJKovijb9kgGSUQRC2nA3/L0wWRImGV64Sbcs2WacXpzfENtkhZuRYOU1k1L0I
-         BifJsSQsffT5rjAqn0YPltjHC2R0RpD/zsZA0FjxSdRAHjl7rG5qHQBmt+W3dTMlZEbl
-         xk0DfAvn0jFR7JOI8QyfItmeLLGSq8FIl3WIyi0tUBtv9E8roINSuR+ENCyat7T0s7Uh
-         DI9g==
+        bh=quKcGUOxBX/EpAZRL1w9/S/Fbg+9kzJyGXf32cZprXs=;
+        b=nc3+0FJt/Z4B79GZFUL46cFs/E6csANbAwdtqzP1SFZTtM21B3r5MniiROvwgulfQp
+         SJlmishPqPCYwFxkiT1S1+mW0wlQle+yw07MDqyl7m2KFo3M6NJpdsS50Lu9eXauvz8g
+         qhRdjgEjYpO6I0g7+Q4llvv/9KRRCWJbl026RhURdkj7o5r8h/vOQ0NRjE48ZJA8L1uw
+         pJ60vkpLhJPlcj31FwCBbvnp+2dAh1N8uJJz4DQcQocWan6qTDPnF0+GbYG/2S8W8GGQ
+         AbfsncpZgbEDzT9yy2KAzPXXFDDWjLMrcqJUx8Wdlbuw+LnH0XFZi6ALi1btivkwxsVJ
+         p/cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=0ERIbyU+62RDKkuyfUPzZUSe1FFHvxlCgQktwAbE+sA=;
-        b=LFR8X1ml1LH1UqqtBIZIbnmfIBH0IS6CSmDflsSRDEUOy6wFJmvaX9QmvXw516P0G7
-         OBrRfQ47qZpn11yQSY2Dpo/GQtUgaH8GJeUC3i/QNoP/WsfN6thoXq5VETxZq74HbJ3C
-         Y5YR25kB5txjdJK0v8EWq8bzML7tteX5vI616y7zft+ZMSJOuk3BR5dj21ts1diivHql
-         RynRtswR0PAvDbTwX3xbNBTdT6tfdBegIFvBAHOc6DzosiObDGSFNGQBK0Lt9D10lW9d
-         B5SD0qx584UgH973DSE0RK+gIQ3VR5UEFBvqCxNRBL5JW0le2e51T1fl0d7Q+5Z2Zbsg
-         rvFQ==
-X-Gm-Message-State: APjAAAVzR+6C5ASMfN0rCFU43HXrzlYMs5ye4Y0N4/eeLnSP/pwrA982
-        ALbhljkG+j1i5bAS9t2z1Cs=
-X-Google-Smtp-Source: APXvYqxU+z4FOp9Y3j/HWJpJGGZDN36lb/Gvc1apgoOLKuG1pccbejXbQ+6Iltqxrzyx1hfd4qf9OA==
-X-Received: by 2002:a1c:5fc4:: with SMTP id t187mr18344973wmb.142.1573414982196;
-        Sun, 10 Nov 2019 11:43:02 -0800 (PST)
+        bh=quKcGUOxBX/EpAZRL1w9/S/Fbg+9kzJyGXf32cZprXs=;
+        b=q8rwOGjYWLWO8YooVWaabsCH+xlZcpPrxXYwqvMgohuzrg4uP9hVtUxAj4IR8LMCvL
+         Ne7nPGT3OV6iCged8Fc8KQJD2HQ1Gsg7ksLaDgcWYAZOGeD9tn1yZJ5yveFuhR8qAu9U
+         GH020jo96oH5gVdIgiGdTKBggmj1HVFjQRDvFuxEnCGrjR3S24e7UkbGj7BE9Mf0HQiT
+         GGefGw5vHbDbC1NP68EsmgcTOEXCfHGrJjBT0vDxRZBRbD86l3NkDa2+yyZQr0CsR2ka
+         LuRvKKb0o4Thd2Doig+h8NtuBlmUFpq2GBT+q+fBlvzl0YZXnsIYs8VjRTSyavLKbxU1
+         /9hQ==
+X-Gm-Message-State: APjAAAXTufxZKVA35Z7uvid9fDJtiGRq6bHTI0O4wZO16URn+2uCsP8N
+        +Jjy+mlxI9aDWeWE8P1P2Pw=
+X-Google-Smtp-Source: APXvYqzzVfvoGrxeL/ZrXA4zG4dubPqDHPgl8238wrVlxG2TLmM1QxC379GshQ6MY5gAbu9hTs6EUg==
+X-Received: by 2002:a5d:570a:: with SMTP id a10mr12343444wrv.107.1573416897732;
+        Sun, 10 Nov 2019 12:14:57 -0800 (PST)
 Received: from ziggy.stardust ([95.169.226.39])
-        by smtp.gmail.com with ESMTPSA id k14sm376055wrw.46.2019.11.10.11.43.00
+        by smtp.gmail.com with ESMTPSA id z189sm19599662wmc.25.2019.11.10.12.14.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 11:43:01 -0800 (PST)
-Subject: Re: [PATCHi v3 1/3] arm64: dts: mt8183: add dsi node
-To:     Jitao Shi <jitao.shi@mediatek.com>,
+        Sun, 10 Nov 2019 12:14:56 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] dt-bindings: mediatek: update bindings for MT8183
+ systimer
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Dehui Sun <dehui.sun@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     srv_heupstream@mediatek.com
-References: <20191028115039.96555-1-jitao.shi@mediatek.com>
- <20191028115039.96555-2-jitao.shi@mediatek.com>
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        erin.lo@mediatek.com, weiyi.lu@mediatek.com
+References: <1572242984-30460-1-git-send-email-dehui.sun@mediatek.com>
+ <1572242984-30460-2-git-send-email-dehui.sun@mediatek.com>
+ <e28e1419-a259-45d9-fd23-32ccc9aa8021@linaro.org>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -141,12 +146,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  Y1aFdU79pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlI
  FZ6fsEKIAN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+
  r2JwH1CJjrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <50c4f50d-f0ca-da0d-bfad-d2fabacfb5ed@gmail.com>
-Date:   Sun, 10 Nov 2019 20:43:00 +0100
+Message-ID: <a9682f28-1ea0-efb3-c2f2-bb0e2173c827@gmail.com>
+Date:   Sun, 10 Nov 2019 21:14:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191028115039.96555-2-jitao.shi@mediatek.com>
+In-Reply-To: <e28e1419-a259-45d9-fd23-32ccc9aa8021@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -157,58 +162,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 28/10/2019 12:50, Jitao Shi wrote:
-> Add dsi and mipitx nodes to the mt8183
+On 28/10/2019 10:34, Daniel Lezcano wrote:
+> On 28/10/2019 07:09, Dehui Sun wrote:
+>> This commit adds mt8183 compatible node in mtk-timer binding document.
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Dehui Sun <dehui.sun@mediatek.com>
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 2857583f5d60..bb0d53be6a25 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -649,6 +649,16 @@
->  			#clock-cells = <1>;
->  		};
->  
-> +		mipi_tx0: mipi-dphy@11e50000 {
-> +			compatible = "mediatek,mt8183-mipi-tx";
-> +			reg = <0 0x11e50000 0 0x1000>;
-> +			clocks = <&apmixedsys CLK_APMIXED_MIPID0_26M>;
-> +			clock-names = "ref_clk";
-> +			#clock-cells = <0>;
-> +			#phy-cells = <0>;
-> +			clock-output-names = "mipi_tx0_pll";
-> +		};
-> +
->  		efuse: efuse@11f10000 {
->  			compatible = "mediatek,mt8183-efuse",
->  				     "mediatek,efuse";
-> @@ -670,6 +680,20 @@
->  			#clock-cells = <1>;
->  		};
->  
-> +		dsi0: dsi@14014000 {
-> +			compatible = "mediatek,mt8183-dsi";
-> +			reg = <0 0x14014000 0 0x1000>;
-> +			interrupts = <GIC_SPI 236 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			mediatek,syscon-dsi = <&mmsys 0x140>;
 
-mediatek,syscon-dsi isn't defined anywhere and not used in the driver. Please
-delete.
+Applied
 
-> +			clocks = <&mmsys CLK_MM_DSI0_MM>,
-> +				<&mmsys CLK_MM_DSI0_IF>,
-> +				<&mipi_tx0>;
-> +			clock-names = "engine", "digital", "hs";
-> +			phys = <&mipi_tx0>;
-> +			phy-names = "dphy";
-> +		};
-> +
->  		imgsys: syscon@15020000 {
->  			compatible = "mediatek,mt8183-imgsys", "syscon";
->  			reg = <0 0x15020000 0 0x1000>;
+>> ---
+>>  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+>> index 74c3ead..0d25648 100644
+>> --- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+>> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+>> @@ -21,6 +21,7 @@ Required properties:
+>>  	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers (GPT)
+>>  
+>>  	For those SoCs that use SYST
+>> +	* "mediatek,mt8183-timer" for MT8183 compatible timers (SYST)
+>>  	* "mediatek,mt7629-timer" for MT7629 compatible timers (SYST)
+>>  	* "mediatek,mt6765-timer" for MT6765 and all above compatible timers (SYST)
+>>  
+>>
+> 
 > 
