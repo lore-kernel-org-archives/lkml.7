@@ -2,207 +2,96 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80837C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB47C17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564252085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E016A20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfKJNxx (ORCPT
+        id S1726897AbfKJN4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 08:53:53 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:38460 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726436AbfKJNxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 08:53:52 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0ThdvM89_1573394021;
-Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0ThdvM89_1573394021)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 10 Nov 2019 21:53:42 +0800
-Subject: Re: [PATCH] net: core: fix unbalanced qdisc_run_begin/qdisc_run_end
-To:     davem@davemloft.net
-Cc:     zhiche.yy@alibaba-inc.com, xlpang@linux.alibaba.com,
-        Eric Dumazet <edumazet@google.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Kevin Athey <kda@google.com>,
-        Xiaotian Pei <xiaotian@google.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191110020149.65307-1-wenyang@linux.alibaba.com>
-From:   Wen Yang <wenyang@linux.alibaba.com>
-Message-ID: <be7dd49a-0da9-1dd1-0fec-3f6485531fb6@linux.alibaba.com>
-Date:   Sun, 10 Nov 2019 21:53:41 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.1.1
+        Sun, 10 Nov 2019 08:56:03 -0500
+Received: from vps-vb.mhejs.net ([37.28.154.113]:51690 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbfKJN4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 08:56:03 -0500
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1iTngz-0000Y5-23; Sun, 10 Nov 2019 14:55:49 +0100
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Keerthy <j-keerthy@ti.com>, Stephen Boyd <swboyd@chromium.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] random: Don't freeze in add_hwgenerator_randomness() if stopping kthread
+Date:   Sun, 10 Nov 2019 14:55:42 +0100
+Message-Id: <20191110135543.3476097-1-mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191110020149.65307-1-wenyang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, after analyzing the assembly code of this function,
+Since commit 59b569480dc8
+("random: Use wait_event_freezable() in add_hwgenerator_randomness()")
+there is a race in add_hwgenerator_randomness() between freezing and
+stopping the calling kthread.
 
-the semantics of the short circuit, there is no problem in this place.
+This commit changed wait_event_interruptible() call with
+kthread_freezable_should_stop() as a condition into wait_event_freezable()
+with just kthread_should_stop() as a condition to fix a warning that
+kthread_freezable_should_stop() might sleep inside the wait.
 
-we will continue to analyze, please ignore this patch, thank you.
+wait_event_freezable() ultimately calls __refrigerator() with its
+check_kthr_stop argument set to false, which causes it to keep the kthread
+frozen even if somebody calls kthread_stop() on it.
 
---
+Calling wait_event_freezable() with kthread_should_stop() as a condition
+is racy because it doesn't take into account the situation where this
+condition becomes true on a kthread marked for freezing only after this
+condition has already been checked.
 
-Regards,
+Calling freezing() should avoid the issue that the commit 59b569480dc8 has
+fixed, as it is only a checking function, it doesn't actually do the
+freezing.
 
-Wen
+add_hwgenerator_randomness() has two post-boot users: in khwrng the
+kthread will be frozen anyway by call to kthread_freezable_should_stop()
+in its main loop, while its second user (ath9k-hwrng) is not freezable at
+all.
 
+This change allows a VM with virtio-rng loaded to write s2disk image
+successfully.
 
-On 2019/11/10 10:01 上午, Wen Yang wrote:
-> 3598 static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
-> 3599                                  struct net_device *dev,
-> 3600                                  struct netdev_queue *txq)
-> 3601 {
-> ...
-> 3650         } else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
-> 3651                    qdisc_run_begin(q)) {
->
-> ---> Those multiple *and conditions* in this if statement are not
->       necessarily executed sequentially. If the qdisc_run_begin(q)
->       statement is executed first and the other conditions are not
->       satisfied, qdisc_run_end will have no chance to be executed,
->       and the lowest bit of q->running will always be 1.
->       This may lead to a softlockup:
->       https://bugzilla.kernel.org/show_bug.cgi?id=205427
-> ...
-> 3657
-> 3658                 qdisc_bstats_update(q, skb);
-> ...
-> 3661                         if (unlikely(contended)) {
-> 3662                                 spin_unlock(&q->busylock);
-> 3663                                 contended = false;
-> 3664                         }
-> 3665                         __qdisc_run(q);
-> 3666                 }
-> 3667
-> 3668                 qdisc_run_end(q);
-> 3669                 rc = NET_XMIT_SUCCESS;
-> 3670         }
-> ...
->
-> We ensure the correct execution order by explicitly
-> specifying those dependencies.
-> Fixes: edb09eb17ed8 ("net: sched: do not acquire qdisc spinlock in qdisc/class stats dump")
-> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Cong Wang <xiyou.wangcong@gmail.com>
-> Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-> Cc: John Fastabend <john.fastabend@gmail.com>
-> Cc: Kevin Athey <kda@google.com>
-> Cc: Xiaotian Pei <xiaotian@google.com>
-> Cc: netdev@vger.kernel.org
-> Cc: bpf@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   net/core/dev.c | 63 ++++++++++++++++++++++++++++++----------------------------
->   1 file changed, 33 insertions(+), 30 deletions(-)
->
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index 20c7a67..d2690ee 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -3602,27 +3602,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
->   	spinlock_t *root_lock = qdisc_lock(q);
->   	struct sk_buff *to_free = NULL;
->   	bool contended;
-> -	int rc;
-> +	int rc = NET_XMIT_SUCCESS;
->   
->   	qdisc_calculate_pkt_len(skb, q);
->   
->   	if (q->flags & TCQ_F_NOLOCK) {
-> -		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty &&
-> -		    qdisc_run_begin(q)) {
-> -			if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
-> -					      &q->state))) {
-> -				__qdisc_drop(skb, &to_free);
-> -				rc = NET_XMIT_DROP;
-> -				goto end_run;
-> -			}
-> -			qdisc_bstats_cpu_update(q, skb);
-> +		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty) {
-> +			if (qdisc_run_begin(q)) {
-> +				if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
-> +						      &q->state))) {
-> +					__qdisc_drop(skb, &to_free);
-> +					rc = NET_XMIT_DROP;
-> +					goto end_run;
-> +				}
-> +				qdisc_bstats_cpu_update(q, skb);
->   
-> -			rc = NET_XMIT_SUCCESS;
-> -			if (sch_direct_xmit(skb, q, dev, txq, NULL, true))
-> -				__qdisc_run(q);
-> +				if (sch_direct_xmit(skb, q, dev, txq, NULL,
-> +						    true))
-> +					__qdisc_run(q);
->   
->   end_run:
-> -			qdisc_run_end(q);
-> +				qdisc_run_end(q);
-> +			}
->   		} else {
->   			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
->   			qdisc_run(q);
-> @@ -3647,26 +3648,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
->   	if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
->   		__qdisc_drop(skb, &to_free);
->   		rc = NET_XMIT_DROP;
-> -	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
-> -		   qdisc_run_begin(q)) {
-> -		/*
-> -		 * This is a work-conserving queue; there are no old skbs
-> -		 * waiting to be sent out; and the qdisc is not running -
-> -		 * xmit the skb directly.
-> -		 */
-> +	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q)) {
-> +		if (qdisc_run_begin(q)) {
-> +			/* This is a work-conserving queue;
-> +			 * there are no old skbs waiting to be sent out;
-> +			 * and the qdisc is not running -
-> +			 * xmit the skb directly.
-> +			 */
->   
-> -		qdisc_bstats_update(q, skb);
-> +			qdisc_bstats_update(q, skb);
->   
-> -		if (sch_direct_xmit(skb, q, dev, txq, root_lock, true)) {
-> -			if (unlikely(contended)) {
-> -				spin_unlock(&q->busylock);
-> -				contended = false;
-> +			if (sch_direct_xmit(skb, q, dev, txq, root_lock,
-> +					    true)) {
-> +				if (unlikely(contended)) {
-> +					spin_unlock(&q->busylock);
-> +					contended = false;
-> +				}
-> +				__qdisc_run(q);
->   			}
-> -			__qdisc_run(q);
-> -		}
->   
-> -		qdisc_run_end(q);
-> -		rc = NET_XMIT_SUCCESS;
-> +			qdisc_run_end(q);
-> +			rc = NET_XMIT_SUCCESS;
-> +		}
->   	} else {
->   		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
->   		if (qdisc_run_begin(q)) {
+Fixes: 59b569480dc8 ("random: Use wait_event_freezable() in add_hwgenerator_randomness()")
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+---
+ drivers/char/random.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index de434feb873a..2f87910dd498 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2500,8 +2500,8 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
+ 	 * We'll be woken up again once below random_write_wakeup_thresh,
+ 	 * or when the calling thread is about to terminate.
+ 	 */
+-	wait_event_freezable(random_write_wait,
+-			kthread_should_stop() ||
++	wait_event_interruptible(random_write_wait,
++			kthread_should_stop() || freezing(current) ||
+ 			ENTROPY_BITS(&input_pool) <= random_write_wakeup_bits);
+ 	mix_pool_bytes(poolp, buffer, count);
+ 	credit_entropy_bits(poolp, entropy);
