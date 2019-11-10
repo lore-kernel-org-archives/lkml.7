@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33864C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764A8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0217920854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486AC20854
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355774;
-	bh=VHiTryP+MU+PLdWreCOV2vP2vxJ3anEvXl6BhTjOKbg=;
+	s=default; t=1573355782;
+	bh=q+cN5ok+VrAZGQOSbtWyaOQZIbwaK+5NNW/nn9cFBnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tojvdf5c5aTZx6kaNHaUoT3PzlkzrlemJiGtW02GYapv9bCuzLiapeeYQMyG92zoE
-	 bbjoaPTJkqjaU+zZVsc++s55P3EBN9XqMX9bZe8rBphciq60vRFbmE/GhuDy1kKwon
-	 JqkEvDXKdMCYmZzC/yNXvzLdOPjqvLZvJOoxoQvo=
+	b=lWX2GfbP54d5y0zEcFhOVbnohnHSM3kx3xwxerQOAeRnlvheUQib+s9ghtlt9hiJ/
+	 QPOQCXV6Q14PbeG8yXcitqqjzzOZiPVywiQMASsu+YkfiNJqm1ooI76UEDvWSGN+0Q
+	 kKHxfPCcEP0YFEXYS93UaQyKkQ3/tjZYJYAiWijw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbfKJDQN (ORCPT
+        id S1728420AbfKJDQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:16:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34852 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:16:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727187AbfKJClD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:03 -0500
+        id S1727161AbfKJCk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A121C214E0;
-        Sun, 10 Nov 2019 02:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C16832196F;
+        Sun, 10 Nov 2019 02:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353662;
-        bh=VHiTryP+MU+PLdWreCOV2vP2vxJ3anEvXl6BhTjOKbg=;
+        s=default; t=1573353658;
+        bh=q+cN5ok+VrAZGQOSbtWyaOQZIbwaK+5NNW/nn9cFBnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PEMdlO6wRyUZOiiZ7TFFB5V7IQmoMrPpt+4xWlRessOKHAEwGy9D/GOpD4YHoXJ5x
-         fWPnxLrnuzl9jrzlTdcivDzveXwK+4Cf7y4myHyR/tMsqCwrWlMeHVrjlkwnmkVnOh
-         ZWTJbw5a9PXloewg9f7zGUjoeoHZWWKFChFaea6A=
+        b=SmrSCTRw4hzoI7Jre2VI8gHXC6rDwmP7sFtp0yDUD6eFHgGqf3csTbFiAQb2UdC9s
+         EB3Ok5SVAbnuoK/lK1WJaZmaPprJM+w+N4ZMqn1Zq5RcyBIjhNGkY+zIQNzB7Zp0Mo
+         dnB6ISlO3LovTreQiKf/Zr86grmUmyVupNl+AIfg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 034/191] OPP: Protect dev_list with opp_table lock
-Date:   Sat,  9 Nov 2019 21:37:36 -0500
-Message-Id: <20191110024013.29782-34-sashal@kernel.org>
+Cc:     Anton Blanchard <anton@samba.org>, Joel Stanley <joel@jms.id.au>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 031/191] powerpc: Fix duplicate const clang warning in user access code
+Date:   Sat,  9 Nov 2019 21:37:33 -0500
+Message-Id: <20191110024013.29782-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,134 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Anton Blanchard <anton@samba.org>
 
-[ Upstream commit 3d2556992a878a2210d3be498416aee39e0c32aa ]
+[ Upstream commit e00d93ac9a189673028ac125a74b9bc8ae73eebc ]
 
-The dev_list needs to be protected with a lock, else we may have
-simultaneous access (addition/removal) to it and that would be racy.
-Extend scope of the opp_table lock to protect dev_list as well.
+This re-applies commit b91c1e3e7a6f ("powerpc: Fix duplicate const
+clang warning in user access code") (Jun 2015) which was undone in
+commits:
+  f2ca80905929 ("powerpc/sparse: Constify the address pointer in __get_user_nosleep()") (Feb 2017)
+  d466f6c5cac1 ("powerpc/sparse: Constify the address pointer in __get_user_nocheck()") (Feb 2017)
+  f84ed59a612d ("powerpc/sparse: Constify the address pointer in __get_user_check()") (Feb 2017)
 
-Tested-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+We see a large number of duplicate const errors in the user access
+code when building with llvm/clang:
+
+  include/linux/pagemap.h:576:8: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+        ret = __get_user(c, uaddr);
+
+The problem is we are doing const __typeof__(*(ptr)), which will hit
+the warning if ptr is marked const.
+
+Removing const does not seem to have any effect on GCC code
+generation.
+
+Signed-off-by: Anton Blanchard <anton@samba.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/core.c | 21 +++++++++++++++++++--
- drivers/opp/cpu.c  |  2 ++
- drivers/opp/opp.h  |  2 +-
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/uaccess.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index f3433bf47b100..14d4ef5943741 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -48,9 +48,14 @@ static struct opp_device *_find_opp_dev(const struct device *dev,
- static struct opp_table *_find_opp_table_unlocked(struct device *dev)
- {
- 	struct opp_table *opp_table;
-+	bool found;
- 
- 	list_for_each_entry(opp_table, &opp_tables, node) {
--		if (_find_opp_dev(dev, opp_table)) {
-+		mutex_lock(&opp_table->lock);
-+		found = !!_find_opp_dev(dev, opp_table);
-+		mutex_unlock(&opp_table->lock);
-+
-+		if (found) {
- 			_get_opp_table_kref(opp_table);
- 
- 			return opp_table;
-@@ -766,6 +771,8 @@ struct opp_device *_add_opp_dev(const struct device *dev,
- 
- 	/* Initialize opp-dev */
- 	opp_dev->dev = dev;
-+
-+	mutex_lock(&opp_table->lock);
- 	list_add(&opp_dev->node, &opp_table->dev_list);
- 
- 	/* Create debugfs entries for the opp_table */
-@@ -773,6 +780,7 @@ struct opp_device *_add_opp_dev(const struct device *dev,
- 	if (ret)
- 		dev_err(dev, "%s: Failed to register opp debugfs (%d)\n",
- 			__func__, ret);
-+	mutex_unlock(&opp_table->lock);
- 
- 	return opp_dev;
- }
-@@ -791,6 +799,7 @@ static struct opp_table *_allocate_opp_table(struct device *dev)
- 	if (!opp_table)
- 		return NULL;
- 
-+	mutex_init(&opp_table->lock);
- 	INIT_LIST_HEAD(&opp_table->dev_list);
- 
- 	opp_dev = _add_opp_dev(dev, opp_table);
-@@ -812,7 +821,6 @@ static struct opp_table *_allocate_opp_table(struct device *dev)
- 
- 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
- 	INIT_LIST_HEAD(&opp_table->opp_list);
--	mutex_init(&opp_table->lock);
- 	kref_init(&opp_table->kref);
- 
- 	/* Secure the device table modification */
-@@ -854,6 +862,10 @@ static void _opp_table_kref_release(struct kref *kref)
- 	if (!IS_ERR(opp_table->clk))
- 		clk_put(opp_table->clk);
- 
-+	/*
-+	 * No need to take opp_table->lock here as we are guaranteed that no
-+	 * references to the OPP table are taken at this point.
-+	 */
- 	opp_dev = list_first_entry(&opp_table->dev_list, struct opp_device,
- 				   node);
- 
-@@ -1719,6 +1731,9 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_table, struct device *dev,
- {
- 	struct dev_pm_opp *opp, *tmp;
- 
-+	/* Protect dev_list */
-+	mutex_lock(&opp_table->lock);
-+
- 	/* Find if opp_table manages a single device */
- 	if (list_is_singular(&opp_table->dev_list)) {
- 		/* Free static OPPs */
-@@ -1736,6 +1751,8 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_table, struct device *dev,
- 	} else {
- 		_remove_opp_dev(_find_opp_dev(dev, opp_table), opp_table);
- 	}
-+
-+	mutex_unlock(&opp_table->lock);
- }
- 
- void _dev_pm_opp_find_and_remove_table(struct device *dev, bool remove_all)
-diff --git a/drivers/opp/cpu.c b/drivers/opp/cpu.c
-index 0c09107094350..2868a022a0407 100644
---- a/drivers/opp/cpu.c
-+++ b/drivers/opp/cpu.c
-@@ -222,8 +222,10 @@ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
- 	cpumask_clear(cpumask);
- 
- 	if (opp_table->shared_opp == OPP_TABLE_ACCESS_SHARED) {
-+		mutex_lock(&opp_table->lock);
- 		list_for_each_entry(opp_dev, &opp_table->dev_list, node)
- 			cpumask_set_cpu(opp_dev->dev->id, cpumask);
-+		mutex_unlock(&opp_table->lock);
- 	} else {
- 		cpumask_set_cpu(cpu_dev->id, cpumask);
- 	}
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 7c540fd063b2d..e0866b1c1f1b2 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -126,7 +126,7 @@ enum opp_table_access {
-  * @dev_list:	list of devices that share these OPPs
-  * @opp_list:	table of opps
-  * @kref:	for reference count of the table.
-- * @lock:	mutex protecting the opp_list.
-+ * @lock:	mutex protecting the opp_list and dev_list.
-  * @np:		struct device_node pointer for opp's DT node.
-  * @clock_latency_ns_max: Max clock latency in nanoseconds.
-  * @shared_opp: OPP is shared between multiple devices.
+diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+index 1ca9e37f7cc99..38a25ff8afb76 100644
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -260,7 +260,7 @@ do {								\
+ ({								\
+ 	long __gu_err;						\
+ 	__long_type(*(ptr)) __gu_val;				\
+-	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
++	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
+ 	__chk_user_ptr(ptr);					\
+ 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
+ 		might_fault();					\
+@@ -274,7 +274,7 @@ do {								\
+ ({									\
+ 	long __gu_err = -EFAULT;					\
+ 	__long_type(*(ptr)) __gu_val = 0;				\
+-	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
++	__typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
+ 	might_fault();							\
+ 	if (access_ok(VERIFY_READ, __gu_addr, (size))) {		\
+ 		barrier_nospec();					\
+@@ -288,7 +288,7 @@ do {								\
+ ({								\
+ 	long __gu_err;						\
+ 	__long_type(*(ptr)) __gu_val;				\
+-	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
++	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
+ 	__chk_user_ptr(ptr);					\
+ 	barrier_nospec();					\
+ 	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
 -- 
 2.20.1
 
