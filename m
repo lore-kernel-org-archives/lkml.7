@@ -2,65 +2,97 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66519C17442
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1730FC17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4702B2085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A2220869
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfKJOgQ (ORCPT
+        id S1726733AbfKJOnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 09:36:16 -0500
-Received: from sauhun.de ([88.99.104.3]:58556 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfKJOgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 09:36:15 -0500
-Received: from localhost (p54B3382A.dip0.t-ipconnect.de [84.179.56.42])
-        by pokefinder.org (Postfix) with ESMTPSA id ED5C02C0114;
-        Sun, 10 Nov 2019 15:36:12 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-media@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: v4l2-subdev: remove wrong @cond from kdocs
-Date:   Sun, 10 Nov 2019 15:36:07 +0100
-Message-Id: <20191110143607.7989-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 10 Nov 2019 09:43:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45656 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726402AbfKJOnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 09:43:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EE954AEF1;
+        Sun, 10 Nov 2019 14:43:09 +0000 (UTC)
+Message-ID: <1573396023.2662.4.camel@suse.com>
+Subject: Re: [PATCH 4.19 114/149] UAS: Revert commit 3ae62a42090f ("UAS: fix
+ alignment of scatter/gather segments")
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Date:   Sun, 10 Nov 2019 15:27:03 +0100
+In-Reply-To: <Pine.LNX.4.44L0.1911081029440.1498-100000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.1911081029440.1498-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4l2_subdev_call() is unconditional, so don't mention in the docs a
-@cond parameter which does not exist.
+Am Freitag, den 08.11.2019, 10:35 -0500 schrieb Alan Stern:
+> On Fri, 8 Nov 2019, Greg Kroah-Hartman wrote:
+> 
+> > On Thu, Nov 07, 2019 at 12:32:45PM +0100, Oliver Neukum wrote:
+> > > Am Dienstag, den 05.11.2019, 17:38 +0100 schrieb Greg Kroah-Hartman:
+> > > > > > Given this information, perhaps you will decide that the revert is 
+> > > > > > worthwhile.
+> > > > > 
+> > > > > Damned if I do, damned if I do not.
+> > > > > Check for usbip and special case it?
+> > > > 
+> > > > We should be able to do that in the host controller driver for usbip,
+> > > > right?  What is the symptom if you use a UAS device with usbip and this
+> > > > commit?
+> > > 
+> > > Yes, that patch should then also be applied. Then it will work.
+> > > Without it, commands will fail, as transfers will end prematurely.
+> > 
+> > Ok, I'm confused now.  I just checked, and I really have no idea what
+> > needs to be backported anymore.  3ae62a42090f ("UAS: fix alignment of
+> > scatter/gather segments") was backported to all of the stable kernels,
+> > and now we reverted it.
+> > 
+> > So what else needs to be done here?
+> 
+> In one sense, nothing needs to be done.  3ae62a42090f was intended to
+> fix a long-standing problem with USBIP, but people reported a
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- include/media/v4l2-subdev.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK, now I am a bit confused. AFAICT 3ae62a42090f actually did fix the
+issue. So if you simply revert it, the issue will reappear.
 
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index 71f1f2f0da53..761aa83a3f3c 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -1090,7 +1090,7 @@ extern const struct v4l2_subdev_ops v4l2_subdev_call_wrappers;
-  * @sd: pointer to the &struct v4l2_subdev
-  * @o: name of the element at &struct v4l2_subdev_ops that contains @f.
-  *     Each element there groups a set of callbacks functions.
-- * @f: callback function that will be called if @cond matches.
-+ * @f: callback function to be called.
-  *     The callback functions are defined in groups, according to
-  *     each element at &struct v4l2_subdev_ops.
-  * @args...: arguments for @f.
--- 
-2.20.1
+> regression in performance.  (Admittedly, the report was about the
+> correponding change to usb-storage, not the change to uas, but it's
+> reasonable to think the effect would be the same.)  So in line with the
+
+Yes.
+
+> no-regressions policy, we only need to revert the commit -- which you 
+> have already done.
+
+But that breaks UAS over USBIP, doesn't it?
+
+> On the other hand, the long-standing problem in USBIP can be fixed by
+> back-porting commit ea44d190764b.  But since that commit isn't a
+> bug-fix (and since it's rather large), you may question whether it is
+> appropriate for the -stable kernel series.
+
+It certainly is large. But without it UAS won't work over USBIP, will
+it? I think that is the central question we need to answer here.
+
+	Regards
+		Oliver
 
