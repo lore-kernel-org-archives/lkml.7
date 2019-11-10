@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD787C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91498C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0A122583
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D296214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354375;
-	bh=Tik0EWfm5twA3EXhRij08vvU2oYPRatM0s6wZOkrKlY=;
+	s=default; t=1573354383;
+	bh=BpAp6XH2uSlXE1JsPhrWmKuprZOOpZwsT4hO8c9rf1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y1CBP3nZtY1bHoqJk1HRT2FB+volXxuPWijNy0ejARAykXOnfB+Cg3DauS9bVjwyX
-	 ZCozCGxZGyk+QHi594poon8h9bbkmiBtrs+E1/a5XTqOrY8JZ+FXh5EAyRLIgvBevf
-	 v+kQcaQvNld0Yr9BTcgFuybEO+Ryr4GGV8MUodKc=
+	b=whvcSz7HisvMl1P2iIfzDlUzTqh5niOCdbqp7K8U8tvQPuJoisgoIIcwnQJ3UJsnH
+	 OU5hwZc1Es5zJx2xNHwwzGoo8T2Nu9lUWrF3PKVECbiMcyEMR05UTYgNEGvJqm2Rej
+	 ycLt0ukA8K+zfbCoaqHLK0+BtrXVyE7F+Ji++wsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfKJCwy (ORCPT
+        id S1728760AbfKJCxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:52:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36186 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:53:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730005AbfKJCva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:51:30 -0500
+        id S1729993AbfKJCv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:51:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 299F6225AD;
-        Sun, 10 Nov 2019 02:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 096FF22595;
+        Sun, 10 Nov 2019 02:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354289;
-        bh=Tik0EWfm5twA3EXhRij08vvU2oYPRatM0s6wZOkrKlY=;
+        s=default; t=1573354288;
+        bh=BpAp6XH2uSlXE1JsPhrWmKuprZOOpZwsT4hO8c9rf1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l+fV/11f8XKBNMhorDNoC4ccVtiebdGlltrINgth5S2qc+e5wlpJ37zsKNOmMnZfD
-         KTFki6fHqfUHqRt96MFkbS/+xaEwClRS97/SfrolfBEQsbcI16qWkJRiIA4ZfKZljC
-         zCP4Lw58TlzQY0AvKzr/zJGDZHfz/huj7dpIBD44=
+        b=ZHdwmJIpTwkONjtWhQeqtQ4KkoVC+y49y0dWZ2AZ10uxgOJ9nwrMVHVyxOEVfQGfq
+         s0MKQpWz+q0Pn8hnvRnyKbjBeRGzdi0QnS3TI1B4drveggjb9XIfdzqqakNfjIlxpS
+         JebYjxvnsrgMhWDZfr2v4SB2VmWxwsb8HvCyxclQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhong jiang <zhongjiang@huawei.com>,
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 31/40] misc: genwqe: should return proper error value.
-Date:   Sat,  9 Nov 2019 21:50:23 -0500
-Message-Id: <20191110025032.827-31-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 30/40] misc: kgdbts: Fix restrict error
+Date:   Sat,  9 Nov 2019 21:50:22 -0500
+Message-Id: <20191110025032.827-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,80 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Laura Abbott <labbott@redhat.com>
 
-[ Upstream commit 02241995b004faa7d9ff628e97f24056190853f8 ]
+[ Upstream commit fa0218ef733e6f247a1a3986e3eb12460064ac77 ]
 
-The function should return -EFAULT when copy_from_user fails. Even
-though the caller does not distinguish them. but we should keep backward
-compatibility.
+kgdbts current fails when compiled with restrict:
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+drivers/misc/kgdbts.c: In function ‘configure_kgdbts’:
+drivers/misc/kgdbts.c:1070:2: error: ‘strcpy’ source argument is the same as destination [-Werror=restrict]
+  strcpy(config, opt);
+  ^~~~~~~~~~~~~~~~~~~
+
+As the error says, config is being used in both the source and destination.
+Refactor the code to avoid the extra copy and put the parsing closer to
+the actual location.
+
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/genwqe/card_utils.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/misc/kgdbts.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/misc/genwqe/card_utils.c b/drivers/misc/genwqe/card_utils.c
-index d4c719683a8a8..d8961f35a9ec3 100644
---- a/drivers/misc/genwqe/card_utils.c
-+++ b/drivers/misc/genwqe/card_utils.c
-@@ -298,7 +298,7 @@ static int genwqe_sgl_size(int num_pages)
- int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 			  void __user *user_addr, size_t user_size)
- {
--	int rc;
-+	int ret = -ENOMEM;
- 	struct pci_dev *pci_dev = cd->pci_dev;
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index bb3a76ad80da2..fc8cb855c6e66 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -979,6 +979,12 @@ static void kgdbts_run_tests(void)
+ 	int nmi_sleep = 0;
+ 	int i;
  
- 	sgl->fpage_offs = offset_in_page((unsigned long)user_addr);
-@@ -317,7 +317,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	if (get_order(sgl->sgl_size) > MAX_ORDER) {
- 		dev_err(&pci_dev->dev,
- 			"[%s] err: too much memory requested!\n", __func__);
--		return -ENOMEM;
-+		return ret;
- 	}
- 
- 	sgl->sgl = __genwqe_alloc_consistent(cd, sgl->sgl_size,
-@@ -325,7 +325,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	if (sgl->sgl == NULL) {
- 		dev_err(&pci_dev->dev,
- 			"[%s] err: no memory available!\n", __func__);
--		return -ENOMEM;
-+		return ret;
- 	}
- 
- 	/* Only use buffering on incomplete pages */
-@@ -338,7 +338,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 		/* Sync with user memory */
- 		if (copy_from_user(sgl->fpage + sgl->fpage_offs,
- 				   user_addr, sgl->fpage_size)) {
--			rc = -EFAULT;
-+			ret = -EFAULT;
- 			goto err_out;
- 		}
- 	}
-@@ -351,7 +351,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 		/* Sync with user memory */
- 		if (copy_from_user(sgl->lpage, user_addr + user_size -
- 				   sgl->lpage_size, sgl->lpage_size)) {
--			rc = -EFAULT;
-+			ret = -EFAULT;
- 			goto err_out2;
- 		}
- 	}
-@@ -373,7 +373,8 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	sgl->sgl = NULL;
- 	sgl->sgl_dma_addr = 0;
- 	sgl->sgl_size = 0;
--	return -ENOMEM;
++	verbose = 0;
++	if (strstr(config, "V1"))
++		verbose = 1;
++	if (strstr(config, "V2"))
++		verbose = 2;
 +
-+	return ret;
+ 	ptr = strchr(config, 'F');
+ 	if (ptr)
+ 		fork_test = simple_strtol(ptr + 1, NULL, 10);
+@@ -1062,13 +1068,6 @@ static int kgdbts_option_setup(char *opt)
+ 		return -ENOSPC;
+ 	}
+ 	strcpy(config, opt);
+-
+-	verbose = 0;
+-	if (strstr(config, "V1"))
+-		verbose = 1;
+-	if (strstr(config, "V2"))
+-		verbose = 2;
+-
+ 	return 0;
  }
  
- int genwqe_setup_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+@@ -1080,9 +1079,6 @@ static int configure_kgdbts(void)
+ 
+ 	if (!strlen(config) || isspace(config[0]))
+ 		goto noconfig;
+-	err = kgdbts_option_setup(config);
+-	if (err)
+-		goto noconfig;
+ 
+ 	final_ack = 0;
+ 	run_plant_and_detach_test(1);
 -- 
 2.20.1
 
