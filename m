@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81846C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1446C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB3421019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703CC22581
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354470;
-	bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
+	s=default; t=1573354473;
+	bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BpNMibAgYXtwTrKBcHMJc4zCYhM0242nHEf7Tu4BqrMRwaN3yYD9bQsrbxaNjRTGN
-	 9JImLSRkZ9RG1V9BQI6A7DRWWRPXdsUpAgjinnFFLlv+7a7I2PqqlnuBm3Xok77IUv
-	 jDfCV2MSRntqaDz602sMNdDDbnEqlWs15KZjvRaQ=
+	b=oU8qgGwB82mirkFOiDHLp4BbILVAadxGd6YhWB0tkcWRwD/e3xjG8OnhyDI3JSk7k
+	 tLNFDTFh6Vm2qQjtAQAW9FoVJ53HJNDz1bvw0YGLPpE2KWkPkEhjxx3UDZecyA5Nw1
+	 3+MzJG6uTHzwGwsjN8EyMr6Yj8fHHRD7Q3BrKby0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfKJCy3 (ORCPT
+        id S1729782AbfKJCup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:54:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729793AbfKJCur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:47 -0500
+        id S1728517AbfKJCuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 752D622583;
-        Sun, 10 Nov 2019 02:50:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBA0E229EF;
+        Sun, 10 Nov 2019 02:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354246;
-        bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
+        s=default; t=1573354215;
+        bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7YKZ+UEa8YCzk9LgdCmrh8s71NSYeAiNhXDpFUGvujfMw4uDAhvHRdJ71tG4vLBg
-         rLmnQ7EgQZctkJxHiom+aNcY9KZPZ1FPw8df7AB4QSynlznp5MstSErV5dsiTlxdv8
-         yPUNOLWSWtixTy8Lvu+pIWmmzGKg7Gh6Tr1x+Fuk=
+        b=IsCsycMFTxQPXQpaGzznz1cSjrDPjJxtohI52dLmsrzVgAve+qRvpkhmMok3hu6Rk
+         bTaWxwD3pvCSZ0GNG6pLFwrzDD9+Xwliuv5G0N7jbbZm0wj/9MqdmLWxsGH9j9GT7i
+         qmNXEtSSmm3c7w7JwdrA6ySoL30geJSOLyn6Uccw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 07/40] libfdt: Ensure INT_MAX is defined in libfdt_env.h
-Date:   Sat,  9 Nov 2019 21:49:59 -0500
-Message-Id: <20191110025032.827-7-sashal@kernel.org>
+Cc:     Dan Aloni <dan@kernelim.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 54/66] crypto: fix a memory leak in rsa-kcs1pad's encryption mode
+Date:   Sat,  9 Nov 2019 21:48:33 -0500
+Message-Id: <20191110024846.32598-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
-References: <20191110025032.827-1-sashal@kernel.org>
+In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
+References: <20191110024846.32598-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,66 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Dan Aloni <dan@kernelim.com>
 
-[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
+[ Upstream commit 3944f139d5592790b70bc64f197162e643a8512b ]
 
-The next update of libfdt has a new dependency on INT_MAX. Update the
-instances of libfdt_env.h in the kernel to either include the necessary
-header with the definition or define it locally.
+The encryption mode of pkcs1pad never uses out_sg and out_buf, so
+there's no need to allocate the buffer, which presently is not even
+being freed.
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+CC: Herbert Xu <herbert@gondor.apana.org.au>
+CC: linux-crypto@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>
+Signed-off-by: Dan Aloni <dan@kernelim.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/libfdt_env.h | 2 ++
- arch/powerpc/boot/libfdt_env.h        | 2 ++
- include/linux/libfdt_env.h            | 1 +
- 3 files changed, 5 insertions(+)
+ crypto/rsa-pkcs1pad.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-index 17ae0f3efac8e..005bf4ff1b4cb 100644
---- a/arch/arm/boot/compressed/libfdt_env.h
-+++ b/arch/arm/boot/compressed/libfdt_env.h
-@@ -5,6 +5,8 @@
- #include <linux/string.h>
- #include <asm/byteorder.h>
+diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
+index 7830d304dff6f..d58224d808675 100644
+--- a/crypto/rsa-pkcs1pad.c
++++ b/crypto/rsa-pkcs1pad.c
+@@ -267,15 +267,6 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
+ 	pkcs1pad_sg_set_buf(req_ctx->in_sg, req_ctx->in_buf,
+ 			ctx->key_size - 1 - req->src_len, req->src);
  
-+#define INT_MAX			((int)(~0U>>1))
-+
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
- typedef __be64 fdt64_t;
-diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-index 7e3789ea396b8..0b3db6322c793 100644
---- a/arch/powerpc/boot/libfdt_env.h
-+++ b/arch/powerpc/boot/libfdt_env.h
-@@ -4,6 +4,8 @@
- #include <types.h>
- #include <string.h>
- 
-+#define INT_MAX			((int)(~0U>>1))
-+
- #include "of.h"
- 
- typedef u32 uint32_t;
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-index 2a663c6bb4285..8850e243c9406 100644
---- a/include/linux/libfdt_env.h
-+++ b/include/linux/libfdt_env.h
-@@ -1,6 +1,7 @@
- #ifndef _LIBFDT_ENV_H
- #define _LIBFDT_ENV_H
- 
-+#include <linux/kernel.h>	/* For INT_MAX */
- #include <linux/string.h>
- 
- #include <asm/byteorder.h>
+-	req_ctx->out_buf = kmalloc(ctx->key_size, GFP_KERNEL);
+-	if (!req_ctx->out_buf) {
+-		kfree(req_ctx->in_buf);
+-		return -ENOMEM;
+-	}
+-
+-	pkcs1pad_sg_set_buf(req_ctx->out_sg, req_ctx->out_buf,
+-			ctx->key_size, NULL);
+-
+ 	akcipher_request_set_tfm(&req_ctx->child_req, ctx->child);
+ 	akcipher_request_set_callback(&req_ctx->child_req, req->base.flags,
+ 			pkcs1pad_encrypt_sign_complete_cb, req);
 -- 
 2.20.1
 
