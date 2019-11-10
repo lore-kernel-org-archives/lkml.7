@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407CFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED6BC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1609221655
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F0D21655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355740;
-	bh=0o0S7Wo9i1/gjx7t8f6sdM3bNtyEYb15PcbUreEvHys=;
+	s=default; t=1573355748;
+	bh=SXNKvy0fhdk/59LQap0bFKFWEbNXfleA9TbgtbVruJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1dyb9NIQZhQRowmSCv7hashiNrfT08F6rOoBobbZdlu30jMPYRLTgj8kV1iL+WkPR
-	 eGMw5D3P+FJ2NkxdK7Bt4hSZm8mC/e/nD8vQZyXoTMSkD4Re+E1Rl41NcE6Yyx2rk6
-	 SXleLMcF3bH3EniPLubnq5JQLXI26LegwcgixP8k=
+	b=cB2lrlpBePYrhj0o3ibfqTACwkAcQljJjpFdE2ai52aIfYiKe8x2RvEdpfRQAKOZS
+	 hfcTCD/2GlRP2vEnXl8fZELG5ov+jEeNN1NuNPG/+ILwHk0UR7xQ1NNCqKVxJcVoAZ
+	 xNHZdTRFU33XFwyyX0nVQI7KL8Ac01gv5HMjGUyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfKJClf (ORCPT
+        id S1727398AbfKJClX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35386 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727329AbfKJClR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:17 -0500
+        id S1727097AbfKJCkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 345D9215EA;
-        Sun, 10 Nov 2019 02:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2409321019;
+        Sun, 10 Nov 2019 02:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353675;
-        bh=0o0S7Wo9i1/gjx7t8f6sdM3bNtyEYb15PcbUreEvHys=;
+        s=default; t=1573353650;
+        bh=SXNKvy0fhdk/59LQap0bFKFWEbNXfleA9TbgtbVruJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XJluvpAJJdVSQVMKsuIaa4lhcLeV6s+1wiVN5/9lybCdkOn12+XgrwyLJet2naS4o
-         Dc/IDZUhgGzBIUwRlu3+VN7OowyEQGKj4oieisKOCuHDXI6Un5/V7maEgCTkXUupYX
-         v89ZFSd7HM69CjLXNUZ3bv4M3hKY95aGCeZxL6eQ=
+        b=aUgvQYh+fuRLDOri81VJlLlITr8Ko/e1d5ZKURvdnBHMuXmOn7RvmNbj0Hu8+6z98
+         uw7EmyknBukMbHmZdJuqng9pMphRqAXplgUOLnaaLZPnZ/RCIu66vKU6/td88FDv2S
+         2/tSRyoW14r3C6+4xh7yT7cYUD0ZziPviZ8rjhqg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 039/191] net: mvpp2: fix the number of queues per cpu for PPv2.2
-Date:   Sat,  9 Nov 2019 21:37:41 -0500
-Message-Id: <20191110024013.29782-39-sashal@kernel.org>
+Cc:     Breno Leitao <leitao@debian.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 027/191] selftests/powerpc: Do not fail with reschedule
+Date:   Sat,  9 Nov 2019 21:37:29 -0500
+Message-Id: <20191110024013.29782-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,68 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
+From: Breno Leitao <leitao@debian.org>
 
-[ Upstream commit 70afb58e9856a70ff9e45760af2d0ebeb7c46ac2 ]
+[ Upstream commit 44d947eff19d64384efc06069509db7a0a1103b0 ]
 
-The Marvell PPv2.2 engine only has 8 Rx queues per CPU, while PPv2.1 has
-16 of them. This patch updates the code so that the Rx queues mask width
-is selected given the version of the network controller used.
+There are cases where the test is not expecting to have the transaction
+aborted, but, the test process might have been rescheduled, either in the
+OS level or by KVM (if it is running on a KVM guest machine). The process
+reschedule will cause a treclaim/recheckpoint which will cause the
+transaction to doom, aborting the transaction as soon as the process is
+rescheduled back to the CPU. This might cause the test to fail, but this is
+not a failure in essence.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+If that is the case, TEXASR[FC] is indicated with either
+TM_CAUSE_RESCHEDULE or TM_CAUSE_KVM_RESCHEDULE for KVM interruptions.
+
+In this scenario, ignore these two failures and avoid the whole test to
+return failure.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Gustavo Romero <gromero@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h      | 3 ++-
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 7 ++++---
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ tools/testing/selftests/powerpc/tm/tm-unavailable.c | 9 ++++++---
+ tools/testing/selftests/powerpc/tm/tm.h             | 9 +++++++++
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index 67b9e81b7c024..46911b67b0398 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -253,7 +253,8 @@
- #define     MVPP2_ISR_ENABLE_INTERRUPT(mask)	((mask) & 0xffff)
- #define     MVPP2_ISR_DISABLE_INTERRUPT(mask)	(((mask) << 16) & 0xffff0000)
- #define MVPP2_ISR_RX_TX_CAUSE_REG(port)		(0x5480 + 4 * (port))
--#define     MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK	0xffff
-+#define     MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(version) \
-+					((version) == MVPP21 ? 0xffff : 0xff)
- #define     MVPP2_CAUSE_TXQ_OCCUP_DESC_ALL_MASK	0xff0000
- #define     MVPP2_CAUSE_TXQ_OCCUP_DESC_ALL_OFFSET	16
- #define     MVPP2_CAUSE_RX_FIFO_OVERRUN_MASK	BIT(24)
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 9b608d23ff7ee..29f1260535325 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -908,7 +908,7 @@ static void mvpp2_interrupts_unmask(void *arg)
- 	u32 val;
- 
- 	val = MVPP2_CAUSE_MISC_SUM_MASK |
--		MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK;
-+		MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(port->priv->hw_version);
- 	if (port->has_tx_irqs)
- 		val |= MVPP2_CAUSE_TXQ_OCCUP_DESC_ALL_MASK;
- 
-@@ -928,7 +928,7 @@ mvpp2_shared_interrupt_mask_unmask(struct mvpp2_port *port, bool mask)
- 	if (mask)
- 		val = 0;
- 	else
--		val = MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK;
-+		val = MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(MVPP22);
- 
- 	for (i = 0; i < port->nqvecs; i++) {
- 		struct mvpp2_queue_vector *v = port->qvecs + i;
-@@ -3059,7 +3059,8 @@ static int mvpp2_poll(struct napi_struct *napi, int budget)
+diff --git a/tools/testing/selftests/powerpc/tm/tm-unavailable.c b/tools/testing/selftests/powerpc/tm/tm-unavailable.c
+index 156c8e750259b..09894f4ff62e6 100644
+--- a/tools/testing/selftests/powerpc/tm/tm-unavailable.c
++++ b/tools/testing/selftests/powerpc/tm/tm-unavailable.c
+@@ -236,7 +236,8 @@ void *tm_una_ping(void *input)
  	}
  
- 	/* Process RX packets */
--	cause_rx = cause_rx_tx & MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK;
-+	cause_rx = cause_rx_tx &
-+		   MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(port->priv->hw_version);
- 	cause_rx <<= qv->first_rxq;
- 	cause_rx |= qv->pending_cause_rx;
- 	while (cause_rx && budget > 0) {
+ 	/* Check if we were not expecting a failure and a it occurred. */
+-	if (!expecting_failure() && is_failure(cr_)) {
++	if (!expecting_failure() && is_failure(cr_) &&
++	    !failure_is_reschedule()) {
+ 		printf("\n\tUnexpected transaction failure 0x%02lx\n\t",
+ 			failure_code());
+ 		return (void *) -1;
+@@ -244,9 +245,11 @@ void *tm_una_ping(void *input)
+ 
+ 	/*
+ 	 * Check if TM failed due to the cause we were expecting. 0xda is a
+-	 * TM_CAUSE_FAC_UNAV cause, otherwise it's an unexpected cause.
++	 * TM_CAUSE_FAC_UNAV cause, otherwise it's an unexpected cause, unless
++	 * it was caused by a reschedule.
+ 	 */
+-	if (is_failure(cr_) && !failure_is_unavailable()) {
++	if (is_failure(cr_) && !failure_is_unavailable() &&
++	    !failure_is_reschedule()) {
+ 		printf("\n\tUnexpected failure cause 0x%02lx\n\t",
+ 			failure_code());
+ 		return (void *) -1;
+diff --git a/tools/testing/selftests/powerpc/tm/tm.h b/tools/testing/selftests/powerpc/tm/tm.h
+index df4204247d45c..5518b1d4ef8b2 100644
+--- a/tools/testing/selftests/powerpc/tm/tm.h
++++ b/tools/testing/selftests/powerpc/tm/tm.h
+@@ -52,6 +52,15 @@ static inline bool failure_is_unavailable(void)
+ 	return (failure_code() & TM_CAUSE_FAC_UNAV) == TM_CAUSE_FAC_UNAV;
+ }
+ 
++static inline bool failure_is_reschedule(void)
++{
++	if ((failure_code() & TM_CAUSE_RESCHED) == TM_CAUSE_RESCHED ||
++	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED)
++		return true;
++
++	return false;
++}
++
+ static inline bool failure_is_nesting(void)
+ {
+ 	return (__builtin_get_texasru() & 0x400000);
 -- 
 2.20.1
 
