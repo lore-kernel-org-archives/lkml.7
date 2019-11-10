@@ -2,489 +2,214 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3210EC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E050C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE122085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+QT+PUh"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1D32085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKJSgR (ORCPT
+        id S1726994AbfKJSjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 13:36:17 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38921 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfKJSgR (ORCPT
+        Sun, 10 Nov 2019 13:39:11 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40179 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfKJSjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 13:36:17 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z24so5184952lfh.6;
-        Sun, 10 Nov 2019 10:36:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bEN5UGp+S72kB8ILOpR3/KY8Sc7HD6hL2R/jbxl/gHA=;
-        b=O+QT+PUhk3o1Bu/RSAfuSruxlVHxcflEHhsFEGLSf4encN1i4AancZjRrX9fflx4kD
-         f7kj4PzUV1Y+vrJxrwPBq0jGhvXtBXiKUw/00Uc44VDHJmzbSNbgGyUY/Z9Vlab4fIK5
-         0bobc+OkxN1lp5PYRrP7FP1tKVOwiHsKIKGRgeHLGrLnCCxdFP/nMmn68NjTtFW1pQJY
-         lxQ4o4uUVnchrAS/5bI+zOHhYk5l5YFk3xjFfZxXDSnfGJDcyBMW3QJquHwVzxddfud9
-         hZK1AKlw7IDk0dpsTTUaO9frZnHj+KPxpGuDIHSfzJ78M2MrF5Fb2SLw0Z/QOjMmVuau
-         Tn9A==
+        Sun, 10 Nov 2019 13:39:10 -0500
+Received: by mail-io1-f69.google.com with SMTP id 125so11573299iou.7
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 10:39:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bEN5UGp+S72kB8ILOpR3/KY8Sc7HD6hL2R/jbxl/gHA=;
-        b=lSa8OmRIRABUFesRt2YfaX2XHlRGAQ2Cnk/2sE89w5Z+wPHZou0UULvzST2DA1yZu5
-         5URUqinqkhkn56lb+q5C+kvaUIdXp8eEA03C94iqsVb8mfQGHbG2t0JiWH7iVgM8FEYz
-         p81atErJm/0raXKmTJ1jj+T3D5/9xUAJ9ZMhcGlbmv/XctMk+eaZ6Y2TiJ0XFjInS8Ba
-         vSdRV/9fGSKH7t2248T3EgWR+zaHyp6kRatol0V42VIWT3fBzNddINSAD6mh5Aa7RGXv
-         2pCEECQiQ/SnCokGYSn48A5vgAqdjpT1VTIZgarfxGgUXOK1sdrFXr3VYQ2ltry075Cp
-         yG5Q==
-X-Gm-Message-State: APjAAAXlUgOKquEu8F92fROcPUzAVJ7ToAfMal+YBcpckkJ2XNt/WmNx
-        jlaz+P/g8/h0f/1OiI8H7to1Eu3WHxuw5QMmfW7rrvw5cJk=
-X-Google-Smtp-Source: APXvYqx5yfJG5AFogJ8VheiHpoolsZvRlHq6/7u3Wktz0cq94/MUsHL3t/aj4Oad4eLV8t3njNhlZkX7FWJOA9QA3q8=
-X-Received: by 2002:ac2:4c86:: with SMTP id d6mr13046119lfl.106.1573410974357;
- Sun, 10 Nov 2019 10:36:14 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bBjX1/WZV5dVArm8R4gMtXyuCmnSCpxSDT2V+2yMP80=;
+        b=Wr+Wln1Mt5L9IrVBCKT41iWJbP0y5xmM9I2EOmc/S1UFwCBSL2Wd3m2s446ghY7LW3
+         l8RsWE7TMrON1JZNtPcw6MnANx+OZTCE7zUkTwl8HWnnGuQ/2OSFtK+WllW3g8gQ8dd2
+         cTgRzjY+1VyCXOu+w9AFTpVLJE78JttFpnS2FLsBBa+5/M6V9eqSsL796lGiGB0Lj5x0
+         cmFP97hfvNz/LwpJZtOG8980ouYhuK67VL+K0v4LqNsOS0bqg8OlTEDbMcbfjUYquSnS
+         3pvNtjnyJFYz1n4CaIeYOyJs7sDwbm3HcwcmtJ7VvY80Vb5HCrXnqAbNz6+rGBLZW7qQ
+         LC8Q==
+X-Gm-Message-State: APjAAAV9Ez1wP9/eTfCC7ijqKeKtzPq6ON+//GHBE5Sdfcy57axM0AYT
+        dOg6B4KG2SR/SET4tau8qj0BR7zA2B2j+8ztV47WIbtIYSJe
+X-Google-Smtp-Source: APXvYqwemlfoW7unzmZY2i6t+gp24Xpq87u+OV/GMdRMxyTxEwUG+Zf+JS9W58A0Tt4KBk5nBky/Zx1ZQbjYPwf0SYPI/qj0eI/T
 MIME-Version: 1.0
-References: <20191108024509.13067-1-gagallo7@gmail.com> <012e37dc-a307-9e77-2973-e17d2abe4b2d@xs4all.nl>
-In-Reply-To: <012e37dc-a307-9e77-2973-e17d2abe4b2d@xs4all.nl>
-From:   Guilherme Alcarde Gallo <gagallo7@gmail.com>
-Date:   Sun, 10 Nov 2019 15:35:37 -0300
-Message-ID: <CAF2jNbiDNDUJi2hNoy+XL6=ziUhmw1qGjOCc+4y8VYkP=gYy1g@mail.gmail.com>
-Subject: Re: [PATCH v4] media: vimc: Implement get/set selection in sink
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        pedro@terraco.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a92:5c4f:: with SMTP id q76mr25453059ilb.158.1573411149300;
+ Sun, 10 Nov 2019 10:39:09 -0800 (PST)
+Date:   Sun, 10 Nov 2019 10:39:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a3cc890597025437@google.com>
+Subject: KASAN: use-after-free Read in j1939_sk_recv
+From:   syzbot <syzbot+07ca5bce8530070a5650@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kernel@pengutronix.de,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
+        robin@protonic.nl, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+Hello,
 
-Thanks for testing the compilation.
+syzbot found the following crash on:
 
-I didn't know that -Wunused-but-set-variable flag was not being
-employed in the default kernel compilation.
+HEAD commit:    5591cf00 Add linux-next specific files for 20191108
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=106b7c3ce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e1036c6ef52866f9
+dashboard link: https://syzkaller.appspot.com/bug?extid=07ca5bce8530070a5650
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165ad206e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14cf9c3ce00000
 
-I just sent a v5 fixing this warning.
-This variable was unnecessary since vimc_sca_adjust_sink_crop function
-already creates an internal v4l2_rect to be adjusted to the crop
-region.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+07ca5bce8530070a5650@syzkaller.appspotmail.com
 
-On Sat, Nov 9, 2019 at 8:50 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrot=
-e:
->
-> On 11/8/19 3:45 AM, Guilherme Alcarde Gallo wrote:
-> > Add support for the sink pad of scaler subdevice to respond
-> > VIDIOC_G_SELECTION and VIDIOC_S_SELECTION ioctls with the following
-> > targets: V4L2_SEL_TGT_COMPOSE_BOUNDS and V4L2_SEL_TGT_CROP.
-> >
-> > * Add new const struct crop_rect_default to initialize subdev scaler
-> >   properly.
-> > * Make changes in sink pad format reflect to the crop rectangle. E.g.
-> >   changing the frame format to a smaller size one can make the former
-> >   crop rectangle selects a non existing frame area. To solve this
-> >   situation the crop rectangle is clamped to the frame boundaries.
-> > * Clamp crop rectangle respecting the sink bounds during set_selection
-> >   ioctl.
-> >
-> > Signed-off-by: Guilherme Alcarde Gallo <gagallo7@gmail.com>
-> > Co-developed-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
-> > Signed-off-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
-> > Acked-by: Helen Koike <helen.koike@collabora.com>
-> >
-> > ---
-> > Changes in V4:
-> > * Revert an unnecessary change in headers include order.
-> > * Sort the declaration order for local variables in function by the siz=
-e
-> >   descending.
-> >
-> > Changes in V3:
-> > * Sort the headers in alphabetical order.
-> > * Change all functions prefix to 'vimc_sca_'.
-> > * Remove useless case.
-> > * Change commit message subject.
-> >
-> > Changes in V2:
-> > * Use v4l2_rect_map_inside to clamp the crop rectangle.
-> > * Do the crop rectangle clamping after changing sink format.
-> > * Implement try ioctls for selection with CROP* targets.
-> > * Treat tiny rectangles with area smaller than minimal dimensions of
-> >   vimc frames.
-> > * Allow user to get selection when the streaming is on.
-> > * Reuse bound rectangle generation in a static function.
-> > * Disable get_selection for Source pads as we did before with
-> >   set_selection.
-> > ---
-> > ---
-> >  drivers/media/platform/vimc/vimc-scaler.c | 168 ++++++++++++++++++++--
-> >  1 file changed, 153 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/=
-platform/vimc/vimc-scaler.c
-> > index 2f88a7d9d67b..36425cffc0ad 100644
-> > --- a/drivers/media/platform/vimc/vimc-scaler.c
-> > +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/moduleparam.h>
-> >  #include <linux/vmalloc.h>
-> >  #include <linux/v4l2-mediabus.h>
-> > +#include <media/v4l2-rect.h>
-> >  #include <media/v4l2-subdev.h>
-> >
-> >  #include "vimc-common.h"
-> > @@ -18,6 +19,9 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplie=
-r");
-> >
-> >  #define MAX_ZOOM     8
-> >
-> > +#define VIMC_SCA_FMT_WIDTH_DEFAULT  640
-> > +#define VIMC_SCA_FMT_HEIGHT_DEFAULT 480
-> > +
-> >  struct vimc_sca_device {
-> >       struct vimc_ent_device ved;
-> >       struct v4l2_subdev sd;
-> > @@ -25,6 +29,7 @@ struct vimc_sca_device {
-> >        * with the width and hight multiplied by mult
-> >        */
-> >       struct v4l2_mbus_framefmt sink_fmt;
-> > +     struct v4l2_rect crop_rect;
-> >       /* Values calculated when the stream starts */
-> >       u8 *src_frame;
-> >       unsigned int src_line_size;
-> > @@ -33,22 +38,64 @@ struct vimc_sca_device {
-> >  };
-> >
-> >  static const struct v4l2_mbus_framefmt sink_fmt_default =3D {
-> > -     .width =3D 640,
-> > -     .height =3D 480,
-> > +     .width =3D VIMC_SCA_FMT_WIDTH_DEFAULT,
-> > +     .height =3D VIMC_SCA_FMT_HEIGHT_DEFAULT,
-> >       .code =3D MEDIA_BUS_FMT_RGB888_1X24,
-> >       .field =3D V4L2_FIELD_NONE,
-> >       .colorspace =3D V4L2_COLORSPACE_DEFAULT,
-> >  };
-> >
-> > +static const struct v4l2_rect crop_rect_default =3D {
-> > +     .width =3D VIMC_SCA_FMT_WIDTH_DEFAULT,
-> > +     .height =3D VIMC_SCA_FMT_HEIGHT_DEFAULT,
-> > +     .top =3D 0,
-> > +     .left =3D 0,
-> > +};
-> > +
-> > +static const struct v4l2_rect crop_rect_min =3D {
-> > +     .width =3D VIMC_FRAME_MIN_WIDTH,
-> > +     .height =3D VIMC_FRAME_MIN_HEIGHT,
-> > +     .top =3D 0,
-> > +     .left =3D 0,
-> > +};
-> > +
-> > +static struct v4l2_rect
-> > +vimc_sca_get_crop_bound_sink(const struct v4l2_mbus_framefmt *sink_fmt=
-)
-> > +{
-> > +     /* Get the crop bounds to clamp the crop rectangle correctly */
-> > +     struct v4l2_rect r =3D {
-> > +             .left =3D 0,
-> > +             .top =3D 0,
-> > +             .width =3D sink_fmt->width,
-> > +             .height =3D sink_fmt->height,
-> > +     };
-> > +     return r;
-> > +}
-> > +
-> > +static void vimc_sca_adjust_sink_crop(struct v4l2_rect *r,
-> > +                                   const struct v4l2_mbus_framefmt *si=
-nk_fmt)
-> > +{
-> > +     const struct v4l2_rect sink_rect =3D
-> > +             vimc_sca_get_crop_bound_sink(sink_fmt);
-> > +
-> > +     /* Disallow rectangles smaller than the minimal one. */
-> > +     v4l2_rect_set_min_size(r, &crop_rect_min);
-> > +     v4l2_rect_map_inside(r, &sink_rect);
-> > +}
-> > +
-> >  static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
-> >                            struct v4l2_subdev_pad_config *cfg)
-> >  {
-> >       struct v4l2_mbus_framefmt *mf;
-> > +     struct v4l2_rect *r;
-> >       unsigned int i;
-> >
-> >       mf =3D v4l2_subdev_get_try_format(sd, cfg, 0);
-> >       *mf =3D sink_fmt_default;
-> >
-> > +     r =3D v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +     *r =3D crop_rect_default;
-> > +
-> >       for (i =3D 1; i < sd->entity.num_pads; i++) {
-> >               mf =3D v4l2_subdev_get_try_format(sd, cfg, i);
-> >               *mf =3D sink_fmt_default;
-> > @@ -107,16 +154,21 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *s=
-d,
-> >                           struct v4l2_subdev_format *format)
-> >  {
-> >       struct vimc_sca_device *vsca =3D v4l2_get_subdevdata(sd);
-> > +     struct v4l2_rect *crop_rect;
-> >
-> >       /* Get the current sink format */
-> > -     format->format =3D (format->which =3D=3D V4L2_SUBDEV_FORMAT_TRY) =
-?
-> > -                      *v4l2_subdev_get_try_format(sd, cfg, 0) :
-> > -                      vsca->sink_fmt;
-> > +     if (format->which =3D=3D V4L2_SUBDEV_FORMAT_TRY) {
-> > +             format->format =3D *v4l2_subdev_get_try_format(sd, cfg, 0=
-);
-> > +             crop_rect =3D v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +     } else {
-> > +             format->format =3D vsca->sink_fmt;
-> > +             crop_rect =3D &vsca->crop_rect;
-> > +     }
-> >
-> >       /* Scale the frame size for the source pad */
-> >       if (VIMC_IS_SRC(format->pad)) {
-> > -             format->format.width =3D vsca->sink_fmt.width * sca_mult;
-> > -             format->format.height =3D vsca->sink_fmt.height * sca_mul=
-t;
-> > +             format->format.width =3D crop_rect->width * sca_mult;
-> > +             format->format.height =3D crop_rect->height * sca_mult;
-> >       }
-> >
-> >       return 0;
-> > @@ -148,6 +200,7 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
-> >  {
-> >       struct vimc_sca_device *vsca =3D v4l2_get_subdevdata(sd);
-> >       struct v4l2_mbus_framefmt *sink_fmt;
-> > +     struct v4l2_rect *crop_rect;
-> >
-> >       if (fmt->which =3D=3D V4L2_SUBDEV_FORMAT_ACTIVE) {
-> >               /* Do not change the format while stream is on */
-> > @@ -155,8 +208,10 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd=
-,
-> >                       return -EBUSY;
-> >
-> >               sink_fmt =3D &vsca->sink_fmt;
-> > +             crop_rect =3D &vsca->crop_rect;
-> >       } else {
-> >               sink_fmt =3D v4l2_subdev_get_try_format(sd, cfg, 0);
-> > +             crop_rect =3D v4l2_subdev_get_try_crop(sd, cfg, 0);
-> >       }
-> >
-> >       /*
-> > @@ -165,8 +220,8 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
-> >        */
-> >       if (VIMC_IS_SRC(fmt->pad)) {
-> >               fmt->format =3D *sink_fmt;
-> > -             fmt->format.width =3D sink_fmt->width * sca_mult;
-> > -             fmt->format.height =3D sink_fmt->height * sca_mult;
-> > +             fmt->format.width =3D crop_rect->width * sca_mult;
-> > +             fmt->format.height =3D crop_rect->height * sca_mult;
-> >       } else {
-> >               /* Set the new format in the sink pad */
-> >               vimc_sca_adjust_sink_fmt(&fmt->format);
-> > @@ -184,6 +239,80 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd=
-,
-> >                       fmt->format.xfer_func, fmt->format.ycbcr_enc);
-> >
-> >               *sink_fmt =3D fmt->format;
-> > +
-> > +             /* Do the crop, but respect the current bounds */
-> > +             vimc_sca_adjust_sink_crop(crop_rect, sink_fmt);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int vimc_sca_get_selection(struct v4l2_subdev *sd,
-> > +                               struct v4l2_subdev_pad_config *cfg,
-> > +                               struct v4l2_subdev_selection *sel)
-> > +{
-> > +     struct vimc_sca_device *vsca =3D v4l2_get_subdevdata(sd);
-> > +     struct v4l2_mbus_framefmt *sink_fmt;
-> > +     struct v4l2_rect *crop_rect;
-> > +
-> > +     if (VIMC_IS_SRC(sel->pad))
-> > +             return -EINVAL;
-> > +
-> > +     if (sel->which =3D=3D V4L2_SUBDEV_FORMAT_ACTIVE) {
-> > +             sink_fmt =3D &vsca->sink_fmt;
-> > +             crop_rect =3D &vsca->crop_rect;
-> > +     } else {
-> > +             sink_fmt =3D v4l2_subdev_get_try_format(sd, cfg, 0);
-> > +             crop_rect =3D v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +     }
-> > +
-> > +     switch (sel->target) {
-> > +     case V4L2_SEL_TGT_CROP:
-> > +             sel->r =3D *crop_rect;
-> > +             break;
-> > +     case V4L2_SEL_TGT_CROP_BOUNDS:
-> > +             sel->r =3D vimc_sca_get_crop_bound_sink(sink_fmt);
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int vimc_sca_set_selection(struct v4l2_subdev *sd,
-> > +                               struct v4l2_subdev_pad_config *cfg,
-> > +                               struct v4l2_subdev_selection *sel)
-> > +{
-> > +     struct vimc_sca_device *vsca =3D v4l2_get_subdevdata(sd);
-> > +     struct v4l2_mbus_framefmt *sink_fmt;
-> > +     struct v4l2_rect *crop_rect;
-> > +     struct v4l2_rect sink_rect;
-> > +
-> > +     if (VIMC_IS_SRC(sel->pad))
-> > +             return -EINVAL;
-> > +
-> > +     if (sel->which =3D=3D V4L2_SUBDEV_FORMAT_ACTIVE) {
-> > +             /* Do not change the format while stream is on */
-> > +             if (vsca->src_frame)
-> > +                     return -EBUSY;
-> > +
-> > +             crop_rect =3D &vsca->crop_rect;
-> > +             sink_fmt =3D &vsca->sink_fmt;
-> > +     } else {
-> > +             crop_rect =3D v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +             sink_fmt =3D v4l2_subdev_get_try_format(sd, cfg, 0);
-> > +     }
-> > +
-> > +     switch (sel->target) {
-> > +     case V4L2_SEL_TGT_CROP:
-> > +             /* Do the crop, but respect the current bounds */
-> > +             sink_rect =3D vimc_sca_get_crop_bound_sink(sink_fmt);
-> > +             vimc_sca_adjust_sink_crop(&sel->r, sink_fmt);
-> > +             *crop_rect =3D sel->r;
->
-> drivers/media/platform/vimc/vimc-scaler.c: In function =E2=80=98vimc_sca_=
-set_selection=E2=80=99:
-> drivers/media/platform/vimc/vimc-scaler.c:290:19: warning: variable =E2=
-=80=98sink_rect=E2=80=99 set but not used [-Wunused-but-set-variable]
->   290 |  struct v4l2_rect sink_rect;
->       |                   ^~~~~~~~~
->
-> Something is wrong here.
->
-> Regards,
->
->         Hans
->
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> >       }
-> >
-> >       return 0;
-> > @@ -195,6 +324,8 @@ static const struct v4l2_subdev_pad_ops vimc_sca_pa=
-d_ops =3D {
-> >       .enum_frame_size        =3D vimc_sca_enum_frame_size,
-> >       .get_fmt                =3D vimc_sca_get_fmt,
-> >       .set_fmt                =3D vimc_sca_set_fmt,
-> > +     .get_selection          =3D vimc_sca_get_selection,
-> > +     .set_selection          =3D vimc_sca_set_selection,
-> >  };
-> >
-> >  static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
-> > @@ -213,11 +344,11 @@ static int vimc_sca_s_stream(struct v4l2_subdev *=
-sd, int enable)
-> >               vsca->bpp =3D vpix->bpp;
-> >
-> >               /* Calculate the width in bytes of the src frame */
-> > -             vsca->src_line_size =3D vsca->sink_fmt.width *
-> > +             vsca->src_line_size =3D vsca->crop_rect.width *
-> >                                     sca_mult * vsca->bpp;
-> >
-> >               /* Calculate the frame size of the source pad */
-> > -             frame_size =3D vsca->src_line_size * vsca->sink_fmt.heigh=
-t *
-> > +             frame_size =3D vsca->src_line_size * vsca->crop_rect.heig=
-ht *
-> >                            sca_mult;
-> >
-> >               /* Allocate the frame buffer. Use vmalloc to be able to
-> > @@ -259,9 +390,10 @@ static void vimc_sca_fill_pix(u8 *const ptr,
-> >  }
-> >
-> >  static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsc=
-a,
-> > -                            const unsigned int lin, const unsigned int=
- col,
-> > +                            unsigned int lin, unsigned int col,
-> >                              const u8 *const sink_frame)
-> >  {
-> > +     const struct v4l2_rect crop_rect =3D vsca->crop_rect;
-> >       unsigned int i, j, index;
-> >       const u8 *pixel;
-> >
-> > @@ -278,8 +410,10 @@ static void vimc_sca_scale_pix(const struct vimc_s=
-ca_device *const vsca,
-> >       /* point to the place we are going to put the first pixel
-> >        * in the scaled src frame
-> >        */
-> > +     lin -=3D crop_rect.top;
-> > +     col -=3D crop_rect.left;
-> >       index =3D VIMC_FRAME_INDEX(lin * sca_mult, col * sca_mult,
-> > -                              vsca->sink_fmt.width * sca_mult, vsca->b=
-pp);
-> > +                              crop_rect.width * sca_mult, vsca->bpp);
-> >
-> >       dev_dbg(vsca->ved.dev, "sca: %s: scale_pix src pos %dx%d, index %=
-d\n",
-> >               vsca->sd.name, lin * sca_mult, col * sca_mult, index);
-> > @@ -307,12 +441,13 @@ static void vimc_sca_scale_pix(const struct vimc_=
-sca_device *const vsca,
-> >  static void vimc_sca_fill_src_frame(const struct vimc_sca_device *cons=
-t vsca,
-> >                                   const u8 *const sink_frame)
-> >  {
-> > +     const struct v4l2_rect r =3D vsca->crop_rect;
-> >       unsigned int i, j;
-> >
-> >       /* Scale each pixel from the original sink frame */
-> >       /* TODO: implement scale down, only scale up is supported for now=
- */
-> > -     for (i =3D 0; i < vsca->sink_fmt.height; i++)
-> > -             for (j =3D 0; j < vsca->sink_fmt.width; j++)
-> > +     for (i =3D r.top; i < r.top + r.height; i++)
-> > +             for (j =3D r.left; j < r.left + r.width; j++)
-> >                       vimc_sca_scale_pix(vsca, i, j, sink_frame);
-> >  }
-> >
-> > @@ -384,5 +519,8 @@ struct vimc_ent_device *vimc_sca_add(struct vimc_de=
-vice *vimc,
-> >       /* Initialize the frame format */
-> >       vsca->sink_fmt =3D sink_fmt_default;
-> >
-> > +     /* Initialize the crop selection */
-> > +     vsca->crop_rect =3D crop_rect_default;
-> > +
-> >       return &vsca->ved;
-> >  }
-> >
->
+==================================================================
+BUG: KASAN: use-after-free in __lock_acquire+0x3a8b/0x4a00  
+kernel/locking/lockdep.c:3828
+Read of size 8 at addr ffff88808d6ad0c0 by task syz-executor171/8825
+
+CPU: 1 PID: 8825 Comm: syz-executor171 Not tainted 5.4.0-rc6-next-20191108  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __lock_acquire+0x3a8b/0x4a00 kernel/locking/lockdep.c:3828
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  j1939_sk_recv+0x2f/0x370 net/can/j1939/socket.c:345
+  j1939_can_recv+0x4e5/0x620 net/can/j1939/main.c:105
+  deliver net/can/af_can.c:568 [inline]
+  can_rcv_filter+0x292/0x8e0 net/can/af_can.c:602
+  can_receive+0x2e7/0x530 net/can/af_can.c:659
+  can_rcv+0x133/0x1b0 net/can/af_can.c:685
+  __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:5150
+  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5264
+  process_backlog+0x206/0x750 net/core/dev.c:6096
+  napi_poll net/core/dev.c:6533 [inline]
+  net_rx_action+0x508/0x1110 net/core/dev.c:6601
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+  </IRQ>
+RIP: 0010:__sanitizer_cov_trace_switch+0x44/0x80 kernel/kcov.c:310
+Code: 3a 48 83 f8 08 74 46 48 83 f8 10 75 27 bf 03 00 00 00 4d 8b 2c 24 31  
+db 4d 85 ed 74 17 49 8b 74 dc 10 48 83 c3 01 48 8b 4d 08 <e8> 47 fe ff ff  
+49 39 dd 75 e9 5b 41 5c 41 5d 5d c3 48 83 f8 40 bf
+RSP: 0018:ffff88809caefbe8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: ffffffff8168173c
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000005
+RBP: ffff88809caefc00 R08: ffff8880a19f82c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff87ae1780
+R13: 000000000000000c R14: 0000000000000000 R15: ffff88809caefdf0
+  do_futex+0x2bc/0x1de0 kernel/futex.c:3639
+  __do_sys_futex kernel/futex.c:3705 [inline]
+  __se_sys_futex kernel/futex.c:3673 [inline]
+  __x64_sys_futex+0x3f7/0x590 kernel/futex.c:3673
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x450699
+Code: e8 2c d4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 ab cc fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd88d336cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: ffffffffffffffda RBX: 00000000006e2ca8 RCX: 0000000000450699
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006e2ca8
+RBP: 00000000006e2ca0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e2cac
+R13: 00007ffc9e1c600f R14: 00007fd88d3379c0 R15: 0000000000000000
+
+Allocated by task 8825:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:670 [inline]
+  j1939_priv_create net/can/j1939/main.c:122 [inline]
+  j1939_netdev_start+0xa4/0x550 net/can/j1939/main.c:251
+  j1939_sk_bind+0x65a/0x8e0 net/can/j1939/socket.c:438
+  __sys_bind+0x239/0x290 net/socket.c:1648
+  __do_sys_bind net/socket.c:1659 [inline]
+  __se_sys_bind net/socket.c:1657 [inline]
+  __x64_sys_bind+0x73/0xb0 net/socket.c:1657
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8824:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  __j1939_priv_release net/can/j1939/main.c:154 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  j1939_priv_put+0x8b/0xb0 net/can/j1939/main.c:159
+  j1939_netdev_stop+0x45/0x190 net/can/j1939/main.c:291
+  j1939_sk_release+0x3bd/0x5c0 net/can/j1939/socket.c:580
+  __sock_release+0xce/0x280 net/socket.c:591
+  sock_close+0x1e/0x30 net/socket.c:1269
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88808d6ac000
+  which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 4288 bytes inside of
+  8192-byte region [ffff88808d6ac000, ffff88808d6ae000)
+The buggy address belongs to the page:
+page:ffffea000235ab00 refcount:1 mapcount:0 mapping:ffff8880aa4021c0  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002289508 ffffea0002246008 ffff8880aa4021c0
+raw: 0000000000000000 ffff88808d6ac000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88808d6acf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808d6ad000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88808d6ad080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                            ^
+  ffff88808d6ad100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808d6ad180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
