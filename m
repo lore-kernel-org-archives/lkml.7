@@ -7,48 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52F6C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DCCC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760AE21655
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2D6214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353764;
-	bh=UI1J+tDPK+dDqNQkuwW+1DwMI88CGJiKXEB/ID8jN98=;
+	s=default; t=1573353767;
+	bh=NBNBvP45RE2ewafMBBNQHhDvHIX7XZ6vY2f8zsAHmcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=azSABxTtp4aEQHaDaN9xhXnP10u/qPZjC/Duzjz/fpprgaHb12lrIZahmPy/Ze1DZ
-	 FZSR+z5QLVT8pp198wh4Op9W/sVhUE12UdHhaKFWGc4ZU/xsTFjJUYiDb0c8mOsUII
-	 N9thORunPLo3FiHBEiIen6DYCJovXsoRCkXjjopU=
+	b=IFqkUFGfyn1rnoTW89Ud/pKnp4nNndUPDruMfFVoKzcxKpLO6/PEc6HlNYChJjcQI
+	 ScYrVePxHFTPkbRajLKB3m7jipsiOeAy+lgTIEmSGlI8X3Gcg7AycgaJylYAa+irN6
+	 Q3j4/xxBoKkPQImh/tyP0KFSGMaQSxI0dBe57iUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfKJCmm (ORCPT
+        id S1727995AbfKJCmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38956 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727949AbfKJCmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:39 -0500
+        id S1727967AbfKJCmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE8A21848;
-        Sun, 10 Nov 2019 02:42:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD06621848;
+        Sun, 10 Nov 2019 02:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353759;
-        bh=UI1J+tDPK+dDqNQkuwW+1DwMI88CGJiKXEB/ID8jN98=;
+        s=default; t=1573353762;
+        bh=NBNBvP45RE2ewafMBBNQHhDvHIX7XZ6vY2f8zsAHmcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSnRYy3xG5Q+N1jgvNScsJbUspgi6j2hj2VBqA8emsR0Y2TARKo+lv2n9R/G5CPhJ
-         bqTqkEe6zJADX9SteUpqK6mAtsky4a8htQxHotJC/3j+20Im89axFTFZtZnQhbSBsv
-         uq6TVSQzrNL8p7X8a566uo6pAnqTJCE9bm02V704=
+        b=oCjQ2fOqYtN3eTmBl+n8EyzaMWt4uH1y4dlLFwFYCR/eLZsWMPessgxWnhI7+OW7s
+         iSgBuONtecP/LVh5kixyWRSTPIW+PhhsJr7lAPkPHFF/KJvd1SEerB81uh2vEgB19d
+         blYlD3h3JIpZrOy2j7rgMBstll0SbZ28jk2ObUQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan@agner.ch>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 072/191] crypto: arm/crc32 - avoid warning when compiling with Clang
-Date:   Sat,  9 Nov 2019 21:38:14 -0500
-Message-Id: <20191110024013.29782-72-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 074/191] x86/mce-inject: Reset injection struct after injection
+Date:   Sat,  9 Nov 2019 21:38:16 -0500
+Message-Id: <20191110024013.29782-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,44 +57,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit cd560235d8f9ddd94aa51e1c4dabdf3212b9b241 ]
+[ Upstream commit 7401a633c34adc7aefd3edfec60074cb0475a3e8 ]
 
-The table id (second) argument to MODULE_DEVICE_TABLE is often
-referenced otherwise. This is not the case for CPU features. This
-leads to a warning when building the kernel with Clang:
-  arch/arm/crypto/crc32-ce-glue.c:239:33: warning: variable
-    'crc32_cpu_feature' is not needed and will not be emitted
-    [-Wunneeded-internal-declaration]
-  static const struct cpu_feature crc32_cpu_feature[] = {
-                                  ^
+Clear the MCE struct which is used for collecting the injection details
+after injection.
 
-Avoid warnings by using __maybe_unused, similar to commit 1f318a8bafcf
-("modules: mark __inittest/__exittest as __maybe_unused").
+Also, populate it with more details from the machine.
 
-Fixes: 2a9faf8b7e43 ("crypto: arm/crc32 - enable module autoloading based on CPU feature bits")
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20180905081954.10391-1-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/crc32-ce-glue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mcheck/mce-inject.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/crypto/crc32-ce-glue.c b/arch/arm/crypto/crc32-ce-glue.c
-index 96e62ec105d06..cd9e93b46c2dd 100644
---- a/arch/arm/crypto/crc32-ce-glue.c
-+++ b/arch/arm/crypto/crc32-ce-glue.c
-@@ -236,7 +236,7 @@ static void __exit crc32_pmull_mod_exit(void)
- 				  ARRAY_SIZE(crc32_pmull_algs));
+diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
+index ff1c00b695aed..1ceccc4a5472c 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
++++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
+@@ -106,6 +106,9 @@ static void setup_inj_struct(struct mce *m)
+ 	memset(m, 0, sizeof(struct mce));
+ 
+ 	m->cpuvendor = boot_cpu_data.x86_vendor;
++	m->time	     = ktime_get_real_seconds();
++	m->cpuid     = cpuid_eax(1);
++	m->microcode = boot_cpu_data.microcode;
  }
  
--static const struct cpu_feature crc32_cpu_feature[] = {
-+static const struct cpu_feature __maybe_unused crc32_cpu_feature[] = {
- 	{ cpu_feature(CRC32) }, { cpu_feature(PMULL) }, { }
- };
- MODULE_DEVICE_TABLE(cpu, crc32_cpu_feature);
+ /* Update fake mce registers on current CPU. */
+@@ -580,6 +583,9 @@ static int inj_bank_set(void *data, u64 val)
+ 	m->bank = val;
+ 	do_inject();
+ 
++	/* Reset injection struct */
++	setup_inj_struct(&i_mce);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
