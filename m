@@ -2,76 +2,101 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBAFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9565C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6005E20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4CF20818
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:32:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0kwJ4ih0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfKJK6X (ORCPT
+        id S1726731AbfKJLcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 05:58:23 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5758 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726609AbfKJK6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 05:58:22 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8B782BC5F4735ABA30E0;
-        Sun, 10 Nov 2019 18:58:21 +0800 (CST)
-Received: from localhost.localdomain (10.175.104.82) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 10 Nov 2019 18:58:15 +0800
-From:   Zheng Yongjun <zhengyongjun3@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <dri-devel@lists.freedesktop.org>,
-        <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhengyongjun3@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] staging: fbtft: Remove set but not used variable 'ret'
-Date:   Sun, 10 Nov 2019 18:57:07 +0800
-Message-ID: <20191110105707.136956-1-zhengyongjun3@huawei.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.82]
-X-CFilter-Loop: Reflected
+        Sun, 10 Nov 2019 06:32:14 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43222 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfKJLcN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 06:32:13 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n1so11598479wra.10
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 03:32:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=eqtZaRSTf6xIkwuPq1/HFHXXUlATMq/NHIIuhCWeknE=;
+        b=0kwJ4ih0MBW94wtyqcnSiEUWwf7e4nSsn7yZjt1Ih7C14XjKqudwbSRuNuRXNwioYK
+         yRsvj0cK1ELFBUaF6SP4LZ36SsDk8pgOVRo2dUc2h/mtmUckG1TbphQzWu6iYxj6aT2A
+         GJS8Ps8Dbc9bT4z6oFAVtpKz7/qzKzbeeSxpWG1SND6foE6Vm4K9uUQtECf4P+G0C1vw
+         oaJr6SdzCoLyCX4D8NIhIexfeRZWjPJGzTN+O5wiPRpzLhCokFbACXrvkbaR/okV2KKU
+         XwI3jRTFPtsnCNh9E8fx/T9UmSXGX75Ws1ZDqOIVD39sT16TArR4eJqBukqx2bFlF5Kt
+         O1Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eqtZaRSTf6xIkwuPq1/HFHXXUlATMq/NHIIuhCWeknE=;
+        b=LKjad2eQSHZVujczfFW3xkwMycSL1Kr34a+Jpf5aFBijB4I5e7NvoVUBRSlDeLUE7c
+         rjmZOx0nAvehpJd/iW3D8ehYYPXTaROKISbEqFTG6DT4OtlVPOV8LU+7N+7gy1ctRJfs
+         RrP/CEcEA55CqU2a8TCT2f5hEhGdoOEVtcLbt1EYkm3ko7CJ5CsyOb9sXEpLclXyKrVp
+         z6yaQ5cKMlTxno63Rm061KpRG7UnbcVJvV2dVvOiGMYuDRuxewKw9YciFoCs4616+TdK
+         7Ns/kxuchVe0kvsBIT+mVvj9P4NTIrfm2+6YpNnogI4PJGsbJNw8CXkIts4eU8ksUkjr
+         pC5A==
+X-Gm-Message-State: APjAAAVogtax0KwBGXgg19hD4G2odnpSaQqoUxqEebZSle41FXEDHe1X
+        kUTrgb6utMZBo2l1zF6YjcVZoQ==
+X-Google-Smtp-Source: APXvYqwVMKPltIJcxfYK5pX/jgL4O+v5P+oIZIcn6bHiA4cAV1wqJtXljV3PMLaASgLhKqeraItTfg==
+X-Received: by 2002:adf:fe8d:: with SMTP id l13mr172966wrr.287.1573385530196;
+        Sun, 10 Nov 2019 03:32:10 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id p4sm13440238wrx.71.2019.11.10.03.32.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 10 Nov 2019 03:32:09 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
+        mripard@kernel.org, peppe.cavallaro@st.com, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>,
+        "# v4 . 15+" <stable@vger.kernel.org>
+Subject: [PATCH] net: ethernet: dwmac-sun8i: Use the correct function in exit path
+Date:   Sun, 10 Nov 2019 11:30:48 +0000
+Message-Id: <1573385448-30282-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When PHY is not powered, the probe function fail and some resource are
+still unallocated.
+Furthermore some BUG happens:
+dwmac-sun8i 5020000.ethernet: EMAC reset timeout
+------------[ cut here ]------------
+kernel BUG at /linux-next/net/core/dev.c:9844!
 
-drivers/staging/fbtft/fb_ili9320.c: In function read_devicecode:
-drivers/staging/fbtft/fb_ili9320.c:25:6: warning: variable ret set but not used [-Wunused-but-set-variable]
+So let's use the right function (stmmac_pltfr_remove) in the error path.
 
-ret is never used, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+Cc: <stable@vger.kernel.org> # v4.15+
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- drivers/staging/fbtft/fb_ili9320.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/fbtft/fb_ili9320.c b/drivers/staging/fbtft/fb_ili9320.c
-index f2e72d14431d..f0ebc40857b3 100644
---- a/drivers/staging/fbtft/fb_ili9320.c
-+++ b/drivers/staging/fbtft/fb_ili9320.c
-@@ -22,11 +22,10 @@
- 
- static unsigned int read_devicecode(struct fbtft_par *par)
- {
--	int ret;
- 	u8 rxbuf[8] = {0, };
- 
- 	write_reg(par, 0x0000);
--	ret = par->fbtftops.read(par, rxbuf, 4);
-+	par->fbtftops.read(par, rxbuf, 4);
- 	return (rxbuf[2] << 8) | rxbuf[3];
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index eefb06d918c8..1c8d84ed8410 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -1227,7 +1227,7 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
+ dwmac_mux:
+ 	sun8i_dwmac_unset_syscon(gmac);
+ dwmac_exit:
+-	sun8i_dwmac_exit(pdev, plat_dat->bsp_priv);
++	stmmac_pltfr_remove(pdev);
+ return ret;
  }
  
 -- 
