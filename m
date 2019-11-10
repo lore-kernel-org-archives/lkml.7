@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812E4C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D715C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C22F208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3939208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355521;
-	bh=p6r+QGUnfn2ffH/1ck6OW/KCJMN+5kOwAu34b+yJ69o=;
+	s=default; t=1573355525;
+	bh=byiQ1KJydIEPDJZeT7ApWnKgaGGor+z5jzj2loxTwys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OXUZRuzxGAl3XdQoR1NOWP5//mIFWUnWxAuHdAXCSTQZtlcn9colGlZamWci5o0ZW
-	 rW67L6VE8OmmLz+uVQfzOFX4b/CRhVl58XKJkAHKeeUegBYM4J/ZefKjgiU9JHDge2
-	 FWpAlW+Q/lXwXqTuLQXr5XSoj3QRd+BNgVHZwle0=
+	b=GzhcIcUwQVr9Bl/nBCOsStv8rXfvVcqp8NuB5/ypR5MtxE2bEXoEi2qrRdaiO6rJg
+	 Sbc/kWFGlD3DN4HutwMm0WDryvLKRiE8Kis9oLNaFrnq2tkAtbWhqqvIXBOXexGtCy
+	 7sFclcPP3uniVLaOLAc0fvn/+Ny+Egt7Adbkaw4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfKJDMA (ORCPT
+        id S1728301AbfKJCnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:12:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41478 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbfKJCnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:25 -0500
+        id S1728269AbfKJCnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6428F21655;
-        Sun, 10 Nov 2019 02:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F29621882;
+        Sun, 10 Nov 2019 02:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353805;
-        bh=p6r+QGUnfn2ffH/1ck6OW/KCJMN+5kOwAu34b+yJ69o=;
+        s=default; t=1573353800;
+        bh=byiQ1KJydIEPDJZeT7ApWnKgaGGor+z5jzj2loxTwys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mp3tq539kQ0Isth3KGE0QTHuOyUPmhfoPpF0uxcMxdLAy57jxb72icAYHQ/wmbH0P
-         GChWxV8cK1aCiEWPsvFfhQ3LPVsPnbDStL/uBlSsjM6XWq+5xbFBsSvihpyluDyExD
-         b6ntQVemwItDzvPV1ZKt76wTpjpH3QIx6G05w6FE=
+        b=Og0te/iNx8Wm9km9QtVQ3w73JkF+SWNGrS1dXTPBnidhDt0xywRU9iWQ3Wf7zQPpU
+         pn4CHTElKKNVUEa9KPc3Op1Vsf8z3pizyJGO3BQViL2lQ6vLldosd6VM6CS92PUTO0
+         Mkbz4DvB61zqsBHNeiWAXrL6hSeRfcO/fhX7NYu8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhong jiang <zhongjiang@huawei.com>,
-        Claudiu Beznea <Claudiu.Beznea@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 103/191] ARM: at91: pm: call put_device instead of of_node_put in at91_pm_config_ws
-Date:   Sat,  9 Nov 2019 21:38:45 -0500
-Message-Id: <20191110024013.29782-103-sashal@kernel.org>
+Cc:     Paul Elder <paul.elder@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 099/191] usb: gadget: uvc: configfs: Sort frame intervals upon writing
+Date:   Sat,  9 Nov 2019 21:38:41 -0500
+Message-Id: <20191110024013.29782-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,48 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Paul Elder <paul.elder@ideasonboard.com>
 
-[ Upstream commit 95590a6286c547b7287d01c55515fb96b904aa03 ]
+[ Upstream commit 89969a842e72b1b653140a4bbddd927b242736d0 ]
 
-of_find_device_by_node takes a reference to the struct device when it
-finds a match via get_device. but it fails to put_device in
-at91_pm_config_ws, for_each_matching_node_and_match will get and put
-the node properly, there is no need to call the of_put_node. Therefore,
-just call put_device instead of of_node_put in at91_pm_config_ws.
+There is an issue where the host is unable to tell the gadget what frame
+rate it wants if the dwFrameIntervals in the interface descriptors are
+not in ascending order. This means that when instantiating a uvc gadget
+via configfs the user must make sure the dwFrameIntervals are in
+ascending order.
 
-Fixes: d7484f5c6b3b ("ARM: at91: pm: configure wakeup sources for ULP1 mode")
-Suggested-by: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Instead of silently failing the breaking of this rule, we sort the
+dwFrameIntervals upon writing to configfs.
+
+Signed-off-by: Paul Elder <paul.elder@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/uvc_configfs.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 0921e2c10edfd..e2e4df3d11e53 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -143,15 +143,15 @@ static int at91_pm_config_ws(unsigned int pm_mode, bool set)
+diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
+index 9478a7cdb1433..2e4c0391b5836 100644
+--- a/drivers/usb/gadget/function/uvc_configfs.c
++++ b/drivers/usb/gadget/function/uvc_configfs.c
+@@ -9,6 +9,9 @@
+  *
+  * Author: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+  */
++
++#include <linux/sort.h>
++
+ #include "u_uvc.h"
+ #include "uvc_configfs.h"
  
- 			/* Check if enabled on SHDWC. */
- 			if (wsi->shdwc_mr_bit && !(val & wsi->shdwc_mr_bit))
--				goto put_node;
-+				goto put_device;
+@@ -31,6 +34,14 @@ static struct configfs_attribute prefix##attr_##cname = { \
+ 	.show		= prefix##cname##_show,				\
+ }
  
- 			mode |= wsi->pmc_fsmr_bit;
- 			if (wsi->set_polarity)
- 				polarity |= wsi->pmc_fsmr_bit;
- 		}
++static int uvcg_config_compare_u32(const void *l, const void *r)
++{
++	u32 li = *(const u32 *)l;
++	u32 ri = *(const u32 *)r;
++
++	return li < ri ? -1 : li == ri ? 0 : 1;
++}
++
+ static inline struct f_uvc_opts *to_f_uvc_opts(struct config_item *item)
+ {
+ 	return container_of(to_config_group(item), struct f_uvc_opts,
+@@ -1134,6 +1145,8 @@ static ssize_t uvcg_frame_dw_frame_interval_store(struct config_item *item,
+ 	kfree(ch->dw_frame_interval);
+ 	ch->dw_frame_interval = frm_intrv;
+ 	ch->frame.b_frame_interval_type = n;
++	sort(ch->dw_frame_interval, n, sizeof(*ch->dw_frame_interval),
++	     uvcg_config_compare_u32, NULL);
+ 	ret = len;
  
--put_node:
--		of_node_put(np);
-+put_device:
-+		put_device(&pdev->dev);
- 	}
- 
- 	if (mode) {
+ end:
 -- 
 2.20.1
 
