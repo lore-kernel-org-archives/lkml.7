@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179C8C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EF9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48B321924
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E87C21655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353825;
-	bh=isimNGV8EFFjgRGHPfCqxbiGejExCGEYIzUjW3Qx7LU=;
+	s=default; t=1573353829;
+	bh=LC+E78fvu722VluQCYlasBmdFrh1pt4nmBi4TrD9/8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wu1yUENaQ4VT668G52ICEJEehzcAt7tpMWyctgQ4cmqNQm0a1PwrtDCyQaqbsPUzm
-	 Icp6VXfBDWZ1cD+xiD3eArcUsu4bNUjAQk4KY+pxvy2/dlbnjCdMdh4ncM5lhDC0wK
-	 HU7zXj3XyDp/ln+HN0Z1V9dYKqoeJX6tzpDgS5wQ=
+	b=ce1sXvPSBpRs457Q06EIo/NC2o8WbTqIbxTnyhO1WWvaZ1GqdXvYSzMXJAiscD2ds
+	 sLwtGEq+CccjdHK9bFBc4/63IXAaVP5lJ+W8eGUkq4tNmQ02J+5XUd27A/TJqQQ4+Z
+	 BGWMwjvkEeimnhrRKfGbWUCokRc7ZevT+TWtUStw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfKJCno (ORCPT
+        id S1727141AbfKJCns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42028 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbfKJCni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:38 -0500
+        id S1728380AbfKJCnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ABF821D7E;
-        Sun, 10 Nov 2019 02:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D9321655;
+        Sun, 10 Nov 2019 02:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353816;
-        bh=isimNGV8EFFjgRGHPfCqxbiGejExCGEYIzUjW3Qx7LU=;
+        s=default; t=1573353818;
+        bh=LC+E78fvu722VluQCYlasBmdFrh1pt4nmBi4TrD9/8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hv+HQ5MWFxQknIki2nTZYiJrDS/uIFZl7aKPHPr7jOzkGg94YtWJm9mYmigppi9Jy
-         cYNqoAut5QFPOZPdhztDspyWMXvt5AQT6BJ1gB4TZqMUai9JUpnqagBoiETBxEWs8d
-         AUJEuYINy02wqBXkKXOH37E4YL6waytw8JTbGZ0w=
+        b=PFtPAGJ6Tsyu6Z8pa3CYHU+1UPvk6HFulZI5Fip/DI1ckfHZEiLjF6hCvlDanO15i
+         P3+zwBl1oD7dzv7M4EODkcmsk/NhS1S9J+SrqaSS9Rgv8iJM25zoqixlJ6bLmnd327
+         8WUiiZStPGwmrViW3hBFDydsbeG1CpNJCEgH4rZM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 112/191] coresight: perf: Fix per cpu path management
-Date:   Sat,  9 Nov 2019 21:38:54 -0500
-Message-Id: <20191110024013.29782-112-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 114/191] coresight: tmc-etr: Handle driver mode specific ETR buffers
+Date:   Sat,  9 Nov 2019 21:38:56 -0500
+Message-Id: <20191110024013.29782-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -62,17 +62,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 5ecabe4a76e8cdb61fa3e24862d9ca240a1c4ddf ]
+[ Upstream commit 96a7f644006ecc05eaaa1a5d09373d0ee63beb0a ]
 
-We create a coresight trace path for each online CPU when
-we start the event. We rely on the number of online CPUs
-and then go on to allocate an array matching the "number of
-online CPUs" for holding the path and then uses normal
-CPU id as the index to the array. This is problematic as
-we could have some offline CPUs causing us to access beyond
-the actual array size (e.g, on a dual SMP system, if CPU0 is
-offline, CPU1 could be really accessing beyond the array).
-The solution is to switch to per-cpu array for holding the path.
+Since the ETR could be driven either by SYSFS or by perf, it
+becomes complicated how we deal with the buffers used for each
+of these modes. The ETR driver cannot simply free the current
+attached buffer without knowing the provider (i.e, sysfs vs perf).
+
+To solve this issue, we provide:
+1) the driver-mode specific etr buffer to be retained in the drvdata
+2) the etr_buf for a session should be passed on when enabling the
+   hardware, which will be stored in drvdata->etr_buf. This will be
+   replaced (not free'd) as soon as the hardware is disabled, after
+   necessary sync operation.
+
+The advantages of this are :
+
+1) The common code path doesn't need to worry about how to dispose
+   an existing buffer, if it is about to start a new session with a
+   different buffer, possibly in a different mode.
+2) The driver mode can control its buffers and can get access to the
+   saved session even when the hardware is operating in a different
+   mode. (e.g, we can still access a trace buffer from a sysfs mode
+   even if the etr is now used in perf mode, without disrupting the
+   current session.)
+
+Towards this, we introduce a sysfs specific data which will hold the
+etr_buf used for sysfs mode of operation, controlled solely by the
+sysfs mode handling code.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
@@ -80,180 +97,188 @@ Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../hwtracing/coresight/coresight-etm-perf.c  | 55 ++++++++++++++-----
- 1 file changed, 40 insertions(+), 15 deletions(-)
+ .../hwtracing/coresight/coresight-tmc-etr.c   | 58 ++++++++++++-------
+ drivers/hwtracing/coresight/coresight-tmc.h   |  2 +
+ 2 files changed, 40 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 0f5e03e4df22c..4b53d55788a07 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -12,6 +12,7 @@
- #include <linux/mm.h>
- #include <linux/init.h>
- #include <linux/perf_event.h>
-+#include <linux/percpu-defs.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/workqueue.h>
-@@ -33,7 +34,7 @@ struct etm_event_data {
- 	struct work_struct work;
- 	cpumask_t mask;
- 	void *snk_config;
--	struct list_head **path;
-+	struct list_head * __percpu *path;
- };
- 
- static DEFINE_PER_CPU(struct perf_output_handle, ctx_handle);
-@@ -61,6 +62,18 @@ static const struct attribute_group *etm_pmu_attr_groups[] = {
- 	NULL,
- };
- 
-+static inline struct list_head **
-+etm_event_cpu_path_ptr(struct etm_event_data *data, int cpu)
-+{
-+	return per_cpu_ptr(data->path, cpu);
-+}
-+
-+static inline struct list_head *
-+etm_event_cpu_path(struct etm_event_data *data, int cpu)
-+{
-+	return *etm_event_cpu_path_ptr(data, cpu);
-+}
-+
- static void etm_event_read(struct perf_event *event) {}
- 
- static int etm_addr_filters_alloc(struct perf_event *event)
-@@ -120,23 +133,26 @@ static void free_event_data(struct work_struct *work)
- 	 */
- 	if (event_data->snk_config) {
- 		cpu = cpumask_first(mask);
--		sink = coresight_get_sink(event_data->path[cpu]);
-+		sink = coresight_get_sink(etm_event_cpu_path(event_data, cpu));
- 		if (sink_ops(sink)->free_buffer)
- 			sink_ops(sink)->free_buffer(event_data->snk_config);
- 	}
- 
- 	for_each_cpu(cpu, mask) {
--		if (!(IS_ERR_OR_NULL(event_data->path[cpu])))
--			coresight_release_path(event_data->path[cpu]);
-+		struct list_head **ppath;
-+
-+		ppath = etm_event_cpu_path_ptr(event_data, cpu);
-+		if (!(IS_ERR_OR_NULL(*ppath)))
-+			coresight_release_path(*ppath);
-+		*ppath = NULL;
- 	}
- 
--	kfree(event_data->path);
-+	free_percpu(event_data->path);
- 	kfree(event_data);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 11963647e19ae..2d6f428176ff8 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -895,10 +895,15 @@ static void tmc_sync_etr_buf(struct tmc_drvdata *drvdata)
+ 		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
  }
  
- static void *alloc_event_data(int cpu)
+-static void tmc_etr_enable_hw(struct tmc_drvdata *drvdata)
++static void tmc_etr_enable_hw(struct tmc_drvdata *drvdata,
++			      struct etr_buf *etr_buf)
  {
--	int size;
- 	cpumask_t *mask;
- 	struct etm_event_data *event_data;
- 
-@@ -147,7 +163,6 @@ static void *alloc_event_data(int cpu)
- 
- 	/* Make sure nothing disappears under us */
- 	get_online_cpus();
--	size = num_online_cpus();
- 
- 	mask = &event_data->mask;
- 	if (cpu != -1)
-@@ -164,8 +179,8 @@ static void *alloc_event_data(int cpu)
- 	 * unused memory when dealing with single CPU trace scenarios is small
- 	 * compared to the cost of searching through an optimized array.
- 	 */
--	event_data->path = kcalloc(size,
--				   sizeof(struct list_head *), GFP_KERNEL);
-+	event_data->path = alloc_percpu(struct list_head *);
+ 	u32 axictl, sts;
+-	struct etr_buf *etr_buf = drvdata->etr_buf;
 +
- 	if (!event_data->path) {
- 		kfree(event_data);
- 		return NULL;
-@@ -213,6 +228,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
- 
- 	/* Setup the path for each CPU in a trace session */
- 	for_each_cpu(cpu, mask) {
-+		struct list_head *path;
- 		struct coresight_device *csdev;
- 
- 		csdev = per_cpu(csdev_src, cpu);
-@@ -224,9 +240,11 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
- 		 * list of devices from source to sink that can be
- 		 * referenced later when the path is actually needed.
- 		 */
--		event_data->path[cpu] = coresight_build_path(csdev, sink);
--		if (IS_ERR(event_data->path[cpu]))
-+		path = coresight_build_path(csdev, sink);
-+		if (IS_ERR(path))
- 			goto err;
-+
-+		*etm_event_cpu_path_ptr(event_data, cpu) = path;
- 	}
- 
- 	if (!sink_ops(sink)->alloc_buffer)
-@@ -255,6 +273,7 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	struct etm_event_data *event_data;
- 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
- 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
-+	struct list_head *path;
- 
- 	if (!csdev)
- 		goto fail;
-@@ -267,8 +286,9 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	if (!event_data)
- 		goto fail;
- 
-+	path = etm_event_cpu_path(event_data, cpu);
- 	/* We need a sink, no need to continue without one */
--	sink = coresight_get_sink(event_data->path[cpu]);
-+	sink = coresight_get_sink(path);
- 	if (WARN_ON_ONCE(!sink || !sink_ops(sink)->set_buffer))
- 		goto fail_end_stop;
- 
-@@ -278,7 +298,7 @@ static void etm_event_start(struct perf_event *event, int flags)
- 		goto fail_end_stop;
- 
- 	/* Nothing will happen without a path */
--	if (coresight_enable_path(event_data->path[cpu], CS_MODE_PERF))
-+	if (coresight_enable_path(path, CS_MODE_PERF))
- 		goto fail_end_stop;
- 
- 	/* Tell the perf core the event is alive */
-@@ -306,6 +326,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
- 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
- 	struct etm_event_data *event_data = perf_get_aux(handle);
-+	struct list_head *path;
- 
- 	if (event->hw.state == PERF_HES_STOPPED)
- 		return;
-@@ -313,7 +334,11 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 	if (!csdev)
- 		return;
- 
--	sink = coresight_get_sink(event_data->path[cpu]);
-+	path = etm_event_cpu_path(event_data, cpu);
-+	if (!path)
++	/* Callers should provide an appropriate buffer for use */
++	if (WARN_ON(!etr_buf || drvdata->etr_buf))
 +		return;
++	drvdata->etr_buf = etr_buf;
+ 
+ 	/*
+ 	 * If this ETR is connected to a CATU, enable it before we turn
+@@ -960,13 +965,16 @@ static void tmc_etr_enable_hw(struct tmc_drvdata *drvdata)
+  * also updating the @bufpp on where to find it. Since the trace data
+  * starts at anywhere in the buffer, depending on the RRP, we adjust the
+  * @len returned to handle buffer wrapping around.
++ *
++ * We are protected here by drvdata->reading != 0, which ensures the
++ * sysfs_buf stays alive.
+  */
+ ssize_t tmc_etr_get_sysfs_trace(struct tmc_drvdata *drvdata,
+ 				loff_t pos, size_t len, char **bufpp)
+ {
+ 	s64 offset;
+ 	ssize_t actual = len;
+-	struct etr_buf *etr_buf = drvdata->etr_buf;
++	struct etr_buf *etr_buf = drvdata->sysfs_buf;
+ 
+ 	if (pos + actual > etr_buf->len)
+ 		actual = etr_buf->len - pos;
+@@ -996,7 +1004,14 @@ tmc_etr_free_sysfs_buf(struct etr_buf *buf)
+ 
+ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
+ {
+-	tmc_sync_etr_buf(drvdata);
++	struct etr_buf *etr_buf = drvdata->etr_buf;
 +
-+	sink = coresight_get_sink(path);
- 	if (!sink)
- 		return;
- 
-@@ -344,7 +369,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 	}
- 
- 	/* Disabling the path make its elements available to other sessions */
--	coresight_disable_path(event_data->path[cpu]);
-+	coresight_disable_path(path);
++	if (WARN_ON(drvdata->sysfs_buf != etr_buf)) {
++		tmc_etr_free_sysfs_buf(drvdata->sysfs_buf);
++		drvdata->sysfs_buf = NULL;
++	} else {
++		tmc_sync_etr_buf(drvdata);
++	}
  }
  
- static int etm_event_add(struct perf_event *event, int mode)
+ static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+@@ -1017,6 +1032,8 @@ static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+ 
+ 	/* Disable CATU device if this ETR is connected to one */
+ 	tmc_etr_disable_catu(drvdata);
++	/* Reset the ETR buf used by hardware */
++	drvdata->etr_buf = NULL;
+ }
+ 
+ static int tmc_enable_etr_sink_sysfs(struct coresight_device *csdev)
+@@ -1024,7 +1041,7 @@ static int tmc_enable_etr_sink_sysfs(struct coresight_device *csdev)
+ 	int ret = 0;
+ 	unsigned long flags;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+-	struct etr_buf *new_buf = NULL, *free_buf = NULL;
++	struct etr_buf *sysfs_buf = NULL, *new_buf = NULL, *free_buf = NULL;
+ 
+ 	/*
+ 	 * If we are enabling the ETR from disabled state, we need to make
+@@ -1035,7 +1052,8 @@ static int tmc_enable_etr_sink_sysfs(struct coresight_device *csdev)
+ 	 * with the lock released.
+ 	 */
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+-	if (!drvdata->etr_buf || (drvdata->etr_buf->size != drvdata->size)) {
++	sysfs_buf = READ_ONCE(drvdata->sysfs_buf);
++	if (!sysfs_buf || (sysfs_buf->size != drvdata->size)) {
+ 		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 		/* Allocate memory with the locks released */
+@@ -1064,14 +1082,14 @@ static int tmc_enable_etr_sink_sysfs(struct coresight_device *csdev)
+ 	 * If we don't have a buffer or it doesn't match the requested size,
+ 	 * use the buffer allocated above. Otherwise reuse the existing buffer.
+ 	 */
+-	if (!drvdata->etr_buf ||
+-	    (new_buf && drvdata->etr_buf->size != new_buf->size)) {
+-		free_buf = drvdata->etr_buf;
+-		drvdata->etr_buf = new_buf;
++	sysfs_buf = READ_ONCE(drvdata->sysfs_buf);
++	if (!sysfs_buf || (new_buf && sysfs_buf->size != new_buf->size)) {
++		free_buf = sysfs_buf;
++		drvdata->sysfs_buf = new_buf;
+ 	}
+ 
+ 	drvdata->mode = CS_MODE_SYSFS;
+-	tmc_etr_enable_hw(drvdata);
++	tmc_etr_enable_hw(drvdata, drvdata->sysfs_buf);
+ out:
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+@@ -1156,13 +1174,13 @@ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata)
+ 		goto out;
+ 	}
+ 
+-	/* If drvdata::etr_buf is NULL the trace data has been read already */
+-	if (drvdata->etr_buf == NULL) {
++	/* If sysfs_buf is NULL the trace data has been read already */
++	if (!drvdata->sysfs_buf) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+-	/* Disable the TMC if need be */
++	/* Disable the TMC if we are trying to read from a running session */
+ 	if (drvdata->mode == CS_MODE_SYSFS)
+ 		tmc_etr_disable_hw(drvdata);
+ 
+@@ -1176,7 +1194,7 @@ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata)
+ int tmc_read_unprepare_etr(struct tmc_drvdata *drvdata)
+ {
+ 	unsigned long flags;
+-	struct etr_buf *etr_buf = NULL;
++	struct etr_buf *sysfs_buf = NULL;
+ 
+ 	/* config types are set a boot time and never change */
+ 	if (WARN_ON_ONCE(drvdata->config_type != TMC_CONFIG_TYPE_ETR))
+@@ -1191,22 +1209,22 @@ int tmc_read_unprepare_etr(struct tmc_drvdata *drvdata)
+ 		 * buffer. Since the tracer is still enabled drvdata::buf can't
+ 		 * be NULL.
+ 		 */
+-		tmc_etr_enable_hw(drvdata);
++		tmc_etr_enable_hw(drvdata, drvdata->sysfs_buf);
+ 	} else {
+ 		/*
+ 		 * The ETR is not tracing and the buffer was just read.
+ 		 * As such prepare to free the trace buffer.
+ 		 */
+-		etr_buf =  drvdata->etr_buf;
+-		drvdata->etr_buf = NULL;
++		sysfs_buf = drvdata->sysfs_buf;
++		drvdata->sysfs_buf = NULL;
+ 	}
+ 
+ 	drvdata->reading = false;
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	/* Free allocated memory out side of the spinlock */
+-	if (etr_buf)
+-		tmc_free_etr_buf(etr_buf);
++	if (sysfs_buf)
++		tmc_etr_free_sysfs_buf(sysfs_buf);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index 7027bd60c4cc8..872f63e3651ba 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -170,6 +170,7 @@ struct etr_buf {
+  * @trigger_cntr: amount of words to store after a trigger.
+  * @etr_caps:	Bitmask of capabilities of the TMC ETR, inferred from the
+  *		device configuration register (DEVID)
++ * @sysfs_data:	SYSFS buffer for ETR.
+  */
+ struct tmc_drvdata {
+ 	void __iomem		*base;
+@@ -189,6 +190,7 @@ struct tmc_drvdata {
+ 	enum tmc_mem_intf_width	memwidth;
+ 	u32			trigger_cntr;
+ 	u32			etr_caps;
++	struct etr_buf		*sysfs_buf;
+ };
+ 
+ struct etr_buf_operations {
 -- 
 2.20.1
 
