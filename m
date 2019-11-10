@@ -2,155 +2,232 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69BFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EEEC17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F042077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:00:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0LpdoVm"
+	by mail.kernel.org (Postfix) with ESMTP id 76F2A20842
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573409289;
+	bh=Iy2b0BLoEpJJ3FJrObwjG9UebOiSl83wXA50KeI6NjQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=blSyEV1FYdNSsIGnEovoo58eiYSo6+2kojbwOK9rJoDYozik+V1UsO9dx3Ok1koO+
+	 zaJfEy2uWGReDDowCdV+UuxUzS2iVbwKsdptLEbq3AYcH9AOxvyz4S3Ao2+2p68Cav
+	 lMkroU5O15qaIqk+vumRlCKk/FFhYjFhT2DR/BgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfKJSAT (ORCPT
+        id S1726950AbfKJSII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 13:00:19 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53740 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726800AbfKJSAT (ORCPT
+        Sun, 10 Nov 2019 13:08:08 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:40758 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726684AbfKJSII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 13:00:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573408817;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Hixz/IzNhB0JpEt6Ya+nzMEp0JX0n9HHRljmP2H+u7k=;
-        b=D0LpdoVmmNrPKpfZoR/SlXNnE1+S9dMHjULcfWQ96A+BwAirOWXABHgDyDVUmyqZ/UnhFz
-        LOQndWPDiwTZsnycNdkpEYdcZjZnfEv5tuZ24kDoaaKP6iaL2KrWEQomQouXUO/ZKXsfmX
-        fGCLF6jODld2OeBHgYGT/e4y+vIcwZ0=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-251-jlxO3uNUNXaIlyT9tSvhCw-1; Sun, 10 Nov 2019 13:00:13 -0500
-Received: by mail-pl1-f199.google.com with SMTP id a11so8880186plp.21
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 10:00:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=Um2+4ViHEGLtX+G0u5WhQV8LmjxfVLK7h3RGaAChVEk=;
-        b=fi8HqtVwUXpvCFHIgOWQGuwWTG+H/M315QkSkCbORra+M17uNxoJ/C9UrLvwIMtFY3
-         aJclJ/zHIPED10h/oo9KWDXa03Sh2wNUFLvn9Pgj0mLf4eKpHn9ByZE+z1msHqGmXu9E
-         XzO0m7MH2u6ULO9qrXyG6fgULHBJU6EbXCbP4fdd9K/+x6Zbp4iSxc7Q5EhQUx8qp9X9
-         80V9dwCwjq7bpixXLay4j0OubYLcSZCxITuohWqwaTnzcWtMscueFbMJ+B2oco7jxizc
-         RHn1cPDN3QLxdzyqlRle/chIIZjU5I4fswIhEaJUXysXeFASPRq6VVI3G8ehAE64zTL4
-         STHg==
-X-Gm-Message-State: APjAAAWGLlxEmIfNyO6SOfLh2XJjmojz2tQm2m1UzGcealmOo07lNLXY
-        j8eGXgs2dSuWsms33zeFO98KNbdc+7KNcAQFL/yYVPOh5XCP3AuQEnRoqdNoXC+M16lj0XDkV+C
-        Ib77c/9b5XCfq0S4JmyG3okVn
-X-Received: by 2002:a17:902:b20b:: with SMTP id t11mr22199287plr.211.1573408812856;
-        Sun, 10 Nov 2019 10:00:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyfWm4OglYklA+A7wQRUWJBtP0mHnD6YYVjbFQFg9Q6GxMN0YxEL0MKIhZn8HxYbk8Q0luQ3A==
-X-Received: by 2002:a17:902:b20b:: with SMTP id t11mr22199248plr.211.1573408812514;
-        Sun, 10 Nov 2019 10:00:12 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id 27sm12289493pgx.23.2019.11.10.10.00.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Nov 2019 10:00:11 -0800 (PST)
-Date:   Sun, 10 Nov 2019 11:00:10 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     amirmizi6@gmail.comg, Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
-        amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v1 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
-Message-ID: <20191110180010.xyvv4gf6jiqyrac3@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: amirmizi6@gmail.comg,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>, Eyal.Cohen@nuvoton.com,
-        jarkko.sakkinen@linux.intel.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
-        amir.mizinski@nuvoton.com
-References: <20191110162137.230913-1-amirmizi6@gmail.com>
- <20191110162137.230913-4-amirmizi6@gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <20191110162137.230913-4-amirmizi6@gmail.com>
-X-MC-Unique: jlxO3uNUNXaIlyT9tSvhCw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Sun, 10 Nov 2019 13:08:08 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iTrd6-0005BB-Gi; Sun, 10 Nov 2019 19:08:04 +0100
+Date:   Sun, 10 Nov 2019 18:08:03 +0000
+Message-ID: <86d0dzy58c.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.19 133/191] efi: honour memory reservations passed via a linux specific config table
+In-Reply-To: <CAKv+Gu_uGKKQrkvHXhoKCY6dqEWka6qVpjXBit5Ggjbk6+_c7A@mail.gmail.com>
+References: <20191110024013.29782-1-sashal@kernel.org>
+        <20191110024013.29782-133-sashal@kernel.org>
+        <CAKv+Gu-PawCS_Wq3Hm+gm_f=6-ihXarkQqP9prkj4CLt=pAnvg@mail.gmail.com>
+        <20191110132726.GN4787@sasha-vm>
+        <CAKv+Gu_Pg-j6C0iRqa8wSr+=vk3rMQ=KHFykZGNGWMfcYfAjtg@mail.gmail.com>
+        <20191110155655.GO4787@sasha-vm>
+        <CAKv+Gu_uGKKQrkvHXhoKCY6dqEWka6qVpjXBit5Ggjbk6+_c7A@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ard.biesheuvel@linaro.org, sashal@kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, jeremy.linton@arm.com, linux-efi@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun Nov 10 19, amirmizi6@gmail.com wrote:
->From: Amir Mizinski <amirmizi6@gmail.com>
->
->using this function while read/write data resulted in aborted operation.
->after investigating according to TCG TPM Profile (PTP) Specifications,
->i found cancel should happen only if TPM_STS.commandReady bit is lit
->and couldn't find a case when the current condition is valid.
->also only cmdReady bit need to be compared instead of the full lower statu=
-s register byte.
->
->Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
->---
-> drivers/char/tpm/tpm_tis_core.c | 12 +-----------
-> 1 file changed, 1 insertion(+), 11 deletions(-)
->
->diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_co=
-re.c
->index ce7f8a1..9016f06 100644
->--- a/drivers/char/tpm/tpm_tis_core.c
->+++ b/drivers/char/tpm/tpm_tis_core.c
->@@ -627,17 +627,7 @@ static int probe_itpm(struct tpm_chip *chip)
->
-> static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
-> {
->-=09struct tpm_tis_data *priv =3D dev_get_drvdata(&chip->dev);
->-
->-=09switch (priv->manufacturer_id) {
->-=09case TPM_VID_WINBOND:
->-=09=09return ((status =3D=3D TPM_STS_VALID) ||
->-=09=09=09(status =3D=3D (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
->-=09case TPM_VID_STM:
->-=09=09return (status =3D=3D (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+On Sun, 10 Nov 2019 16:26:15 +0000,
+Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> 
+> (adding Marc, the GIC maintainer)
+> 
+> On Sun, 10 Nov 2019 at 15:57, Sasha Levin <sashal@kernel.org> wrote:
+> >
+> > On Sun, Nov 10, 2019 at 02:16:57PM +0000, Ard Biesheuvel wrote:
+> > >On Sun, 10 Nov 2019 at 13:27, Sasha Levin <sashal@kernel.org> wrote:
+> > >>
+> > >> On Sun, Nov 10, 2019 at 08:33:47AM +0100, Ard Biesheuvel wrote:
+> > >> >On Sun, 10 Nov 2019 at 03:44, Sasha Levin <sashal@kernel.org> wrote:
+> > >> >>
+> > >> >> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > >> >>
+> > >> >> [ Upstream commit 71e0940d52e107748b270213a01d3b1546657d74 ]
+> > >> >>
+> > >> >> In order to allow the OS to reserve memory persistently across a
+> > >> >> kexec, introduce a Linux-specific UEFI configuration table that
+> > >> >> points to the head of a linked list in memory, allowing each kernel
+> > >> >> to add list items describing memory regions that the next kernel
+> > >> >> should treat as reserved.
+> > >> >>
+> > >> >> This is useful, e.g., for GICv3 based ARM systems that cannot disable
+> > >> >> DMA access to the LPI tables, forcing them to reuse the same memory
+> > >> >> region again after a kexec reboot.
+> > >> >>
+> > >> >> Tested-by: Jeremy Linton <jeremy.linton@arm.com>
+> > >> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > >> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > >> >
+> > >> >NAK
+> > >> >
+> > >> >This doesn't belong in -stable, and I'd be interested in understanding
+> > >> >how this got autoselected, and how I can prevent this from happening
+> > >> >again in the future.
+> > >>
+> > >> It was selected because it's part of a fix for a real issue reported by
+> > >> users:
+> > >>
+> > >
+> > >For my understanding, are you saying your AI is reading launchpad bug
+> > >reports etc? Because it is marked AUTOSEL.
+> >
+> > Not quite. This review set was me feeding all the patches Ubuntu has on
+> > top of stable trees into AUTOSEL, and sending out the output for review.
+> > I doesn't look into launchpad bug reports on it's own, but in my
+> > experience one can find a bug report for mostly everything AUTOSEL
+> > considers to be a bug.
+> >
+> 
+> So the assumption is that taking an arbitrary subset of what Ubuntu
+> backported (and tested extensively), and letting that subset be chosen
+> by a bot is a process that improves the quality of stable trees? I'm
+> rather skeptical of that tbh.
+> 
+> > >> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1806766
+> > >>
+> > >
+> > >That pages mentions
+> > >
+> > >"""
+> > >2 upstream patch series are required to fix this:
+> > > https://<email address hidden>/msg10328.html
+> > >Which provides an EFI facility consumed by:
+> > > https://lkml.org/lkml/2018/9/21/1066
+> > >There were also some follow-on fixes to deal with ARM-specific
+> > >problems associated with this usage:
+> > > https://www.spinics.net/lists/arm-kernel/msg685751.html
+> > >"""
+> > >
+> > >and without the other patches, we only add bugs and don't fix any.
+> > >
+> > >> Besides ubuntu, it is also carried by:
+> > >>
+> > >> SUSE: https://www.suse.com/support/update/announcement/2019/suse-su-20191530-1/
+> > >> CentOS: https://koji.mbox.centos.org/koji/buildinfo?buildID=4558
+> > >>
+> > >> As a way to resolve the reported bug.
+> > >>
+> > >
+> > >Backporting a feature/fix like this requires careful consideration of
+> > >the patches involved, and doing actual testing on hardware.
+> > >
+> > >> Any reason this *shouldn't* be in stable?
+> > >
+> > >Yes. By itself, it causes crashes at early boot and does not actually
+> > >solve the problem.
+> >
+> > Sure, let's work on gathering all the needed patches then and testing it
+> > out.
+> >
+> 
+> No, let's not. This is a feature that was introduced to address a
+> shortcoming in some hardware that makes kexec/kdump problematic on
+> them. If you want kexec/kdump on that hardware, use a newer kernel.
 
-Stefan were these cases you found that were deviating from the spec? Wonder=
-ing
-if dropping these will cause issues for these devices.
+That's my position as well. This isn't a bug fix at all, but a
+workaround for a HW defect with complex dependencies. It wasn't cc'd
+stable for good reasons, and I wish stable maintainers would respect
+this decision.
 
->-=09default:
->-=09=09return (status =3D=3D TPM_STS_COMMAND_READY);
->-=09}
->+=09return ((status & TPM_STS_COMMAND_READY) =3D=3D TPM_STS_COMMAND_READY)=
-;
-> }
->
-> static irqreturn_t tis_int_handler(int dummy, void *dev_id)
->--=20
->2.7.4
->
+> > >> I'm aware that there might be
+> > >> dependencies that are not obvious to me, but the solution here is to
+> > >> take those dependencies as well rather than ignore the process
+> > >> completely.
+> > >>
+> > >
+> > >This is not a bugfix. kexec/kdump never worked correctly on the
+> > >hardware involved, and backporting a feature like that goes way beyond
+> > >what I am willing to accept for stable backports affecting the EFI
+> > >subsystem.
+> >
+> > I'm a bit confused. The bug report starts with:
+> >
+> >         [Impact]
+> >         kdump support isn't usable on HiSilicon D05 systems. This
+> >         previously worked in bionic.
+> >
+> > So it seems like it did use to work, but not anymore?
+> >
+> 
+> I have no idea what Ubuntu shipped in the previous kernel, but
+> labelling this as a software regression is dubious at least, and
+> wholly inaccurate for upstream.
 
+I have this exact machine keeping my feet warm, and kexec never worked
+on it (nor on any GICv3 machine that is LPI-capable) before we added
+this workaround.  Whatever distros carried as hacks to make it work at
+the time, I don't want to know. What is more likely is that they always
+kexec'd a kernel with the exact same allocation layout and that it
+worked by luck (or maybe resulted in silent memory corruption).
+
+If anything, I'd merge a patch *disabling* kexec altogether on these
+systems, because pretending that it ever worked is a damn lie.
+
+> > Either way, I understand that you want to keep the stable tree
+> > conservative, but keep in mind that the flip side of not taking fixes
+> > that users ask for means that distros end up having to carry them
+> > anyway, which means that they don't get the review and testing they
+> > need.
+> >
+> 
+> I'd say it is the opposite. At least the distros test their backports
+> on actual hardware. Taking any part of this set without testing it by
+> doing kexec/kdump on an affected ARM system, and regression testing it
+> on the hardware that got broken by it (with hundreds of cores IIRC) is
+> totally irresponsible, and I don't have the time or the hardware to do
+> the testing.
+> 
+> > We can argue all we want around whether it's a fix or not, but if most
+> > distros carry it then I think our argument is moot.
+> >
+> 
+> If someone cares enough to backport these as a coherent set, with boot
+> tests on the affected hardware etc, then I am not going to object.
+
+Ideally, I'd like the distros to test these backports, because only them
+have access to the variety of HW that's required. But they'd have to
+majorly up their game, if the above is anything to go by...
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
