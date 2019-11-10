@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDFFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49B3C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F61121655
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79FB121D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353776;
-	bh=5ZDLL2jzO0bYUJZZV6wHwNTMpEYiGBSQOV5StXzn/1U=;
+	s=default; t=1573353780;
+	bh=m6fIGk2f8vaLLz+v7jVvYjREXcJWMYr3qzHcOjDW0jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWtzgl1k1JmowmH8iQHOVr77hXL7J60CmtyS83pB+GfcDaP+ZaXcCRi/R4f+0B6Pw
-	 9OL9dzbxBqqvfZgmhxIVALnvRUq1ARcWW7S/dej4+B1oVt84Vk0kvmFq19YO86JKIy
-	 V8/euMxjHRYLPaGtgb2n9mPFZ4ywgVngi+FHEpck=
+	b=gIlGtlB3IgZhSWWIRIhyrZtib0RXBms/pn9KT97aqUobkDX99wfD+c5EYxndWEql9
+	 3j7uDaSZewVNXGPstGlMD36H5rbpfsJ0eSPK3Q+SWgrF/WZSNTo4t0B5tduTPCCtV2
+	 uSrELoOSb+tAt3clS+8ydk73mr+4vjp2pnvraAmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfKJCmz (ORCPT
+        id S1728106AbfKJCm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbfKJCmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:52 -0500
+        id S1727974AbfKJCm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CC721882;
-        Sun, 10 Nov 2019 02:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A41A21019;
+        Sun, 10 Nov 2019 02:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353771;
-        bh=5ZDLL2jzO0bYUJZZV6wHwNTMpEYiGBSQOV5StXzn/1U=;
+        s=default; t=1573353776;
+        bh=m6fIGk2f8vaLLz+v7jVvYjREXcJWMYr3qzHcOjDW0jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZqIEXh01Redyj5gTHP/XPqjaA3ZcqVbfmoOj7zu5enkShekz80JENK06SkzXqPCQ
-         jYAPTuTedvk74t6jHXmO+9nKdmdk7Z5tpxC93EsNTFhM8dxRgOXWPLVqi3tiJSGbEy
-         EcRaTHnwDA2vdaG6aVIgzw+lxXXMNTyOs3Njdb2M=
+        b=x6/KWR/5mNsI1yyRkhy5pBmsmd8Jk63rFRrmxExCxfHnM2X+uox/Dq61WidSyDcKd
+         YXjvkLw8ZAd1hY/It8ljDxpZ0aT8qj36m7OzF0GSuLH1LLbOnRsKEowiB5kb7hKVgw
+         qgBZ2IFjIQOeYSvtJtjojm59wEFThS2rfbXmI00U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 082/191] samples/bpf: fix compilation failure
-Date:   Sat,  9 Nov 2019 21:38:24 -0500
-Message-Id: <20191110024013.29782-82-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 084/191] net: micrel: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:38:26 -0500
+Message-Id: <20191110024013.29782-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,145 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 32c009798385ce21080beaa87a9b95faad3acd1e ]
+[ Upstream commit 2b49117a5abee8478b0470cba46ac74f93b4a479 ]
 
-following commit:
-commit d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
-added struct bpf_flow_keys which conflicts with the struct with
-same name in sockex2_kern.c and sockex3_kern.c
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-similar to commit:
-commit 534e0e52bc23 ("samples/bpf: fix a compilation failure")
-we tried the rename it "flow_keys" but it also conflicted with struct
-having same name in include/net/flow_dissector.h. Hence renaming the
-struct to "flow_key_record". Also, this commit doesn't fix the
-compilation error completely because the similar struct is present in
-sockex3_kern.c. Hence renaming it in both files sockex3_user.c and
-sockex3_kern.c
+Found by coccinelle.
 
-Signed-off-by: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/sockex2_kern.c | 11 ++++++-----
- samples/bpf/sockex3_kern.c |  8 ++++----
- samples/bpf/sockex3_user.c |  4 ++--
- 3 files changed, 12 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/micrel/ks8695net.c  | 2 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/samples/bpf/sockex2_kern.c b/samples/bpf/sockex2_kern.c
-index f58acfc925561..f2f9dbc021b0d 100644
---- a/samples/bpf/sockex2_kern.c
-+++ b/samples/bpf/sockex2_kern.c
-@@ -14,7 +14,7 @@ struct vlan_hdr {
- 	__be16 h_vlan_encapsulated_proto;
- };
- 
--struct bpf_flow_keys {
-+struct flow_key_record {
- 	__be32 src;
- 	__be32 dst;
- 	union {
-@@ -59,7 +59,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
- }
- 
- static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
--			     struct bpf_flow_keys *flow)
-+			     struct flow_key_record *flow)
+diff --git a/drivers/net/ethernet/micrel/ks8695net.c b/drivers/net/ethernet/micrel/ks8695net.c
+index bd51e057e9150..b881f5d4a7f9e 100644
+--- a/drivers/net/ethernet/micrel/ks8695net.c
++++ b/drivers/net/ethernet/micrel/ks8695net.c
+@@ -1164,7 +1164,7 @@ ks8695_timeout(struct net_device *ndev)
+  *	sk_buff and adds it to the TX ring. It then kicks the TX DMA
+  *	engine to ensure transmission begins.
+  */
+-static int
++static netdev_tx_t
+ ks8695_start_xmit(struct sk_buff *skb, struct net_device *ndev)
  {
- 	__u64 verlen;
- 
-@@ -83,7 +83,7 @@ static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto
- }
- 
- static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
--			       struct bpf_flow_keys *flow)
-+			       struct flow_key_record *flow)
+ 	struct ks8695_priv *ksp = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 0e9719fbc6243..35f8c9ef204d9 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -1021,9 +1021,9 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
+  * spin_lock_irqsave is required because tx and rx should be mutual exclusive.
+  * So while tx is in-progress, prevent IRQ interrupt from happenning.
+  */
+-static int ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
  {
- 	*ip_proto = load_byte(skb,
- 			      nhoff + offsetof(struct ipv6hdr, nexthdr));
-@@ -96,7 +96,8 @@ static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_pro
- 	return nhoff;
- }
+-	int retv = NETDEV_TX_OK;
++	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
  
--static inline bool flow_dissector(struct __sk_buff *skb, struct bpf_flow_keys *flow)
-+static inline bool flow_dissector(struct __sk_buff *skb,
-+				  struct flow_key_record *flow)
- {
- 	__u64 nhoff = ETH_HLEN;
- 	__u64 ip_proto;
-@@ -198,7 +199,7 @@ struct bpf_map_def SEC("maps") hash_map = {
- SEC("socket2")
- int bpf_prog2(struct __sk_buff *skb)
- {
--	struct bpf_flow_keys flow = {};
-+	struct flow_key_record flow = {};
- 	struct pair *value;
- 	u32 key;
- 
-diff --git a/samples/bpf/sockex3_kern.c b/samples/bpf/sockex3_kern.c
-index 95907f8d2b17d..c527b57d3ec8a 100644
---- a/samples/bpf/sockex3_kern.c
-+++ b/samples/bpf/sockex3_kern.c
-@@ -61,7 +61,7 @@ struct vlan_hdr {
- 	__be16 h_vlan_encapsulated_proto;
- };
- 
--struct bpf_flow_keys {
-+struct flow_key_record {
- 	__be32 src;
- 	__be32 dst;
- 	union {
-@@ -88,7 +88,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
- }
- 
- struct globals {
--	struct bpf_flow_keys flow;
-+	struct flow_key_record flow;
- };
- 
- struct bpf_map_def SEC("maps") percpu_map = {
-@@ -114,14 +114,14 @@ struct pair {
- 
- struct bpf_map_def SEC("maps") hash_map = {
- 	.type = BPF_MAP_TYPE_HASH,
--	.key_size = sizeof(struct bpf_flow_keys),
-+	.key_size = sizeof(struct flow_key_record),
- 	.value_size = sizeof(struct pair),
- 	.max_entries = 1024,
- };
- 
- static void update_stats(struct __sk_buff *skb, struct globals *g)
- {
--	struct bpf_flow_keys key = g->flow;
-+	struct flow_key_record key = g->flow;
- 	struct pair *value;
- 
- 	value = bpf_map_lookup_elem(&hash_map, &key);
-diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
-index 22f74d0e14934..9d02e0404719a 100644
---- a/samples/bpf/sockex3_user.c
-+++ b/samples/bpf/sockex3_user.c
-@@ -13,7 +13,7 @@
- #define PARSE_IP_PROG_FD (prog_fd[0])
- #define PROG_ARRAY_FD (map_fd[0])
- 
--struct flow_keys {
-+struct flow_key_record {
- 	__be32 src;
- 	__be32 dst;
- 	union {
-@@ -64,7 +64,7 @@ int main(int argc, char **argv)
- 	(void) f;
- 
- 	for (i = 0; i < 5; i++) {
--		struct flow_keys key = {}, next_key;
-+		struct flow_key_record key = {}, next_key;
- 		struct pair value;
- 
- 		sleep(1);
+ 	disable_irq(netdev->irq);
 -- 
 2.20.1
 
