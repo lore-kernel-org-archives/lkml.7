@@ -2,132 +2,103 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9533CC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F34FC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707B120842
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="07Cyvr+i"
+	by mail.kernel.org (Postfix) with ESMTP id 1D08520818
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfKJSJp (ORCPT
+        id S1726973AbfKJSOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 13:09:45 -0500
-Received: from cmta19.telus.net ([209.171.16.92]:38569 "EHLO cmta19.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbfKJSJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 13:09:45 -0500
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id TrediPHO2hFQMTreeiGfM1; Sun, 10 Nov 2019 11:09:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1573409383; bh=gj08HGEqmkT/0cGDv2qmCQ//pYLBwSO+2JKJf+eW4U4=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=07Cyvr+iMNj5MCuegNCNNHwQjdSHOa1zff5t/Y58vhrewsSwVGjeeGldkpb8jPa23
-         T6ChU/09f4Q50tO6DU6eot7HSf0WFF28N0JZQSRqgadeKfs/PMAF9tq9yb9M5Bjss4
-         R7xc5cWTDd9d69g9YBBMUxarX+H3zF9agfeS4ze16zVm+MzNryjVsx1x/4rtTNN+s4
-         HB8WpsAo8a07YGegyOuBs2KTjWG+gK/Cy76v4FBelzk6btiDAKXJWVwh8cjol4C4pn
-         ltW3oqn0FO5qLsxY3aH//Oz/OyuySo5WBrMkvgjEzBo1+Bpr1CuHtapo7jXkinB8Qm
-         Kvx+BK0IDr5lQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=ZPWpZkzb c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=aatUQebYAAAA:8 a=SOqZnydbTP_Q-9HgpewA:9 a=CjuIK1q_8ugA:10
- a=7715FyvI7WU-l6oqrZBK:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <10494959.bKODIZ00nm@kreacher> <000a01d59656$99798710$cc6c9530$@net> <CAJZ5v0gZDJ2=PiiGw2mcCcVKBM2OyM1G9nRvJ+iWLFUQcXqZuw@mail.gmail.com> <6163696.37NBKbymtj@kreacher>
-In-Reply-To: <6163696.37NBKbymtj@kreacher>
-Subject: RE: [PATCH v2] cpuidle: Use nanoseconds as the unit of time
-Date:   Sun, 10 Nov 2019 10:09:37 -0800
-Message-ID: <000b01d597f2$06403a50$12c0aef0$@net>
+        Sun, 10 Nov 2019 13:14:09 -0500
+Received: from smtprelay0069.hostedemail.com ([216.40.44.69]:34071 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726684AbfKJSOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 13:14:08 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 088A3181D3417;
+        Sun, 10 Nov 2019 18:14:07 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: hope08_5dfd750254439
+X-Filterd-Recvd-Size: 2710
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 10 Nov 2019 18:14:05 +0000 (UTC)
+Message-ID: <61e165241e4b98cd655ac79cd110f3f08e389838.camel@perches.com>
+Subject: Re: [PATCH] lkdtm: Remove set but not used variable 'byte'
+From:   Joe Perches <joe@perches.com>
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>, keescook@chromium.org,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Date:   Sun, 10 Nov 2019 10:13:50 -0800
+In-Reply-To: <20191110092249.182210-1-zhengyongjun3@huawei.com>
+References: <20191110092249.182210-1-zhengyongjun3@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdWX66lAJM+ky/tcQb2CPZRo9UbwKwABGLgg
-X-CMAE-Envelope: MS4wfH0yeQTuFgCuT2lePGLlPVHJwEhh7Z0xA0QQHd7DmhZJCDnoiLU32O3K2kU28f3KDj7iVfgmpyBHvRM4DgdTweCbxSZPp/OIW9ZfZEZBfr1sq03hXNu5
- vlSiKKWGpZB+gLQILsEpGc8pWfWfbuDoquEov7+KndXRux+I5eLR9TKYSME5fXfxa+gSFn/F3cePTNl/MzyyVI6uxAjHk+16wAAl7Fxr26HpsUw8fx3PxcAp
- SPC1j3DnBTUWtpji5J56O75lZ6LOvCRrlOYq0jbaasjden87eKS91kJt+LmeqJr+U16BvOJuVrznqhX9x3oV1935rDLRAIkhdfTf76mH6Uc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.11.10 09:24 Rafael J. Wysocki wrote:
-> On Sunday, November 10, 2019 5:48:21 PM CET Rafael J. Wysocki wrote:
->> On Fri, Nov 8, 2019 at 6:04 PM Doug Smythies <dsmythies@telus.net> wrote:
->>>
->>> On 2019.11.08 01:45 Rafael J. Wysocki wrote:
->>>> On Fri, Nov 8, 2019 at 9:45 AM Doug Smythies <dsmythies@telus.net> wrote:
->>>>
->>> ...
->>>>> I have been running this v2 today, with both menu and teo
->>>>> governors. Acquiring some baseline reference data to compare
->>>>> to now. The menu governor response seems different (Supporting
->>>>> information/graphs will come later).
->>>>
->>>> That may be good or bad, depending in what way it is different. :-)
->>>
->>> My thinking was that the differences should be minimal between
->>> the baseline (linux-next as of 2019.11.07) and plus your two patches.
->>> Because this was a change of units, but not functionality.
->>> Such is the case with the teo governor, but not the menu governor.
->>> I have not tried the ladder or haltpoll governors, and don't intend to.
->>>
->>> Now to attempt to isolate the issue in the code, which might take
->>> considerable time.
->> 
->> Thanks!
->> 
->> It looks like I have overlooked a unit conversion in menu or done a
->> unit conversion twice somewhere.
->
-> I have found a bug, which should be addressed by the patch below.
->
-> If it still doesn't reduce the discrepancy, we'll need to look further.
->
-> ---
-> drivers/cpuidle/governors/menu.c |    4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
-> Index: linux-pm/drivers/cpuidle/governors/menu.c
-> ===================================================================
-> --- linux-pm.orig/drivers/cpuidle/governors/menu.c
-> +++ linux-pm/drivers/cpuidle/governors/menu.c
-> @@ -516,8 +516,8 @@ static void menu_update(struct cpuidle_d
-> 	new_factor -= new_factor / DECAY;
+On Sun, 2019-11-10 at 17:22 +0800, Zheng Yongjun wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> 	if (data->next_timer_ns > 0 && measured_ns < MAX_INTERESTING)
-> -		new_factor += RESOLUTION * div64_u64(measured_ns,
-> -						     data->next_timer_ns);
-> +		new_factor += div64_u64(RESOLUTION * measured_ns,
-> +					data->next_timer_ns);
-> 	else
-> 		/*
-> 		 * we were idle so long that we count it as a perfect
+> drivers/misc/lkdtm/bugs.c: In function lkdtm_STACK_GUARD_PAGE_LEADING:
+> drivers/misc/lkdtm/bugs.c:236:25: warning: variable byte set but not used [-Wunused-but-set-variable]
+> drivers/misc/lkdtm/bugs.c: In function lkdtm_STACK_GUARD_PAGE_TRAILING:
+> drivers/misc/lkdtm/bugs.c:250:25: warning: variable byte set but not used [-Wunused-but-set-variable]
+> 
+> byte is never used, so remove it.
 
-Yes, that was the exact bit of code I focused on yesterday.
-However, my attempt to fix was different, and made no difference,
-with the new graph being exactly on top of the old bad one.
-I had defined new_factor as u64 and RESOLUTION as ULL.
-Note: I didn't care about the most efficient code, in these attempts
-to just get to the answer.
+I believe "hulk robot" needs to be updated instead.
 
-I'll try yours and report back.
+It seems a generically bad idea to elide as byte
+is in fact used because it's volatile and the
+compiler was forced to perform the access of *ptr.
 
-... Doug
 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> ---
+>  drivers/misc/lkdtm/bugs.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+> index 7284a22b1a09..fcd943725b66 100644
+> --- a/drivers/misc/lkdtm/bugs.c
+> +++ b/drivers/misc/lkdtm/bugs.c
+> @@ -249,12 +249,9 @@ void lkdtm_STACK_GUARD_PAGE_LEADING(void)
+>  {
+>  	const unsigned char *stack = task_stack_page(current);
+>  	const unsigned char *ptr = stack - 1;
+> -	volatile unsigned char byte;
+>  
+>  	pr_info("attempting bad read from page below current stack\n");
+>  
+> -	byte = *ptr;
+> -
+>  	pr_err("FAIL: accessed page before stack!\n");
+>  }
+>  
+> @@ -263,12 +260,9 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+>  {
+>  	const unsigned char *stack = task_stack_page(current);
+>  	const unsigned char *ptr = stack + THREAD_SIZE;
+> -	volatile unsigned char byte;
+>  
+>  	pr_info("attempting bad read from page above current stack\n");
+>  
+> -	byte = *ptr;
+> -
+>  	pr_err("FAIL: accessed page after stack!\n");
+>  }
+>  
 
