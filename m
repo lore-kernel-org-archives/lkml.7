@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AB2C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FF0C17444
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B31E21882
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2740621D7B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353786;
-	bh=MVEB1rulFVTgLvp4viPo/jogXx9ZW15pj8a72RY3pU0=;
+	s=default; t=1573353790;
+	bh=8c60UcOuLaLaEMv9/jm2csBMtwnh7BkgFOxAkkxWLEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aX5WqltUrqvjr7WJ6uL/Y4PrNP3RpQ6lus1yrYuOVXlnDYCNPkFf6kv4aNQv6tFiV
-	 LE9u6ypE6yekYevGFDEViqehMfXiZT4/kSiZfAvboIiaMhPMJkfZttJs3/4k6IGpQU
-	 SsXjDOluYqZTFRC/2CEUcmiHu0hTgSscRxxCzXp8=
+	b=G7BtqvcEeO4xpsaSkztllQNg4DD83rmcL0wuA44LioNpuzR1cbbAArFh7HFqjAOV9
+	 oylxdQRKd9V4JT3hjH70ffkEo+uBWu4ZEcsARcDqgIAu2lklsDgVnVv/IjZxMYRG5I
+	 RigivjKDhqaS4WtJ+KeKqiHhjLeM4NjyCTjx2/FE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfKJCnF (ORCPT
+        id S1728184AbfKJCnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbfKJCnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:02 -0500
+        id S1728149AbfKJCnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD6221848;
-        Sun, 10 Nov 2019 02:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A35121D7F;
+        Sun, 10 Nov 2019 02:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353781;
-        bh=MVEB1rulFVTgLvp4viPo/jogXx9ZW15pj8a72RY3pU0=;
+        s=default; t=1573353785;
+        bh=8c60UcOuLaLaEMv9/jm2csBMtwnh7BkgFOxAkkxWLEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MRbEeP5qUuoZYCXxvj9qc3asQSj0eo8RbxdozybSWzQJK5njKbyJPNTNExwTRWp/o
-         JVV3sbmSwHa80IALx5fVYskSHyYY2LxUlE8gp/gggpoDzOg4OQyCXHtiL2oH/UKKWy
-         +DCKe8/xOIY2kzADLN1IzDtM5rvt5tHwKvMwarUo=
+        b=xba1LZ86fReb2h4TuaSd/TFnH6fNRBfU/7mLpVMtHJLGUR8KbD2W/GCCRJuRDCCw0
+         zlwFkmEMOrtlhTOPuhHkwKLot3qRrCKeU2Yu+dkzgk8MygI4O9zm3khsWjQ/LbA21j
+         4xw5YsdRxD/Ha3GQZNuBFPW1eDANvydCbPtShm5g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Whitehead <tedheadster@gmail.com>,
+Cc:     Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Tony Luck <tony.luck@intel.com>,
         Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        Jia Zhang <qianyue.zj@alibaba-inc.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 086/191] x86/CPU: Use correct macros for Cyrix calls
-Date:   Sat,  9 Nov 2019 21:38:28 -0500
-Message-Id: <20191110024013.29782-86-sashal@kernel.org>
+        Aristeu Rozanski <aris@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 088/191] EDAC: Correct DIMM capacity unit symbol
+Date:   Sat,  9 Nov 2019 21:38:30 -0500
+Message-Id: <20191110024013.29782-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -66,65 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Whitehead <tedheadster@gmail.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-[ Upstream commit 03b099bdcdf7125d4a63dc9ddeefdd454e05123d ]
+[ Upstream commit 6f6da136046294a1e8d2944336eb97412751f653 ]
 
-There are comments in processor-cyrix.h advising you to _not_ make calls
-using the deprecated macros in this style:
+The {i3200|i7core|sb|skx}_edac drivers show DIMM capacity using the
+wrong unit symbol: 'Mb' - megabit. Fix them by replacing 'Mb' with
+'MiB' - mebibyte.
 
-  setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
+[Tony: These are all "edac_dbg()" messages, so this won't break scripts
+       that parse console logs.]
 
-This is because it expands the macro into a non-functioning calling
-sequence. The calling order must be:
-
-  outb(CX86_CCR2, 0x22);
-  inb(0x23);
-
-From the comments:
-
- * When using the old macros a line like
- *   setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
- * gets expanded to:
- *  do {
- *    outb((CX86_CCR2), 0x22);
- *    outb((({
- *        outb((CX86_CCR2), 0x22);
- *        inb(0x23);
- *    }) | 0x88), 0x23);
- *  } while (0);
-
-The new macros fix this problem, so use them instead.
-
-Signed-off-by: Matthew Whitehead <tedheadster@gmail.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Andy Lutomirski <luto@amacapital.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Jia Zhang <qianyue.zj@alibaba-inc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20180921212041.13096-2-tedheadster@gmail.com
+Acked-by: Aristeu Rozanski <aris@redhat.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac@vger.kernel.org
+Link: https://lkml.kernel.org/r/20180919003433.16475-1-tony.luck@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/cyrix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/i3200_edac.c  | 2 +-
+ drivers/edac/i7core_edac.c | 2 +-
+ drivers/edac/sb_edac.c     | 2 +-
+ drivers/edac/skx_edac.c    | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
-index fa61c870ada94..1d9b8aaea06c8 100644
---- a/arch/x86/kernel/cpu/cyrix.c
-+++ b/arch/x86/kernel/cpu/cyrix.c
-@@ -437,7 +437,7 @@ static void cyrix_identify(struct cpuinfo_x86 *c)
- 			/* enable MAPEN  */
- 			setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);
- 			/* enable cpuid  */
--			setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
-+			setCx86(CX86_CCR4, getCx86(CX86_CCR4) | 0x80);
- 			/* disable MAPEN */
- 			setCx86(CX86_CCR3, ccr3);
- 			local_irq_restore(flags);
+diff --git a/drivers/edac/i3200_edac.c b/drivers/edac/i3200_edac.c
+index d92d56cee1017..299b441647cd5 100644
+--- a/drivers/edac/i3200_edac.c
++++ b/drivers/edac/i3200_edac.c
+@@ -399,7 +399,7 @@ static int i3200_probe1(struct pci_dev *pdev, int dev_idx)
+ 			if (nr_pages == 0)
+ 				continue;
+ 
+-			edac_dbg(0, "csrow %d, channel %d%s, size = %ld Mb\n", i, j,
++			edac_dbg(0, "csrow %d, channel %d%s, size = %ld MiB\n", i, j,
+ 				 stacked ? " (stacked)" : "", PAGES_TO_MiB(nr_pages));
+ 
+ 			dimm->nr_pages = nr_pages;
+diff --git a/drivers/edac/i7core_edac.c b/drivers/edac/i7core_edac.c
+index f1d19504a0281..4a3300c2da333 100644
+--- a/drivers/edac/i7core_edac.c
++++ b/drivers/edac/i7core_edac.c
+@@ -597,7 +597,7 @@ static int get_dimm_config(struct mem_ctl_info *mci)
+ 			/* DDR3 has 8 I/O banks */
+ 			size = (rows * cols * banks * ranks) >> (20 - 3);
+ 
+-			edac_dbg(0, "\tdimm %d %d Mb offset: %x, bank: %d, rank: %d, row: %#x, col: %#x\n",
++			edac_dbg(0, "\tdimm %d %d MiB offset: %x, bank: %d, rank: %d, row: %#x, col: %#x\n",
+ 				 j, size,
+ 				 RANKOFFSET(dimm_dod[j]),
+ 				 banks, ranks, rows, cols);
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index 72cea3cb86224..acb9db55f5700 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -1622,7 +1622,7 @@ static int __populate_dimms(struct mem_ctl_info *mci,
+ 				size = ((u64)rows * cols * banks * ranks) >> (20 - 3);
+ 				npages = MiB_TO_PAGES(size);
+ 
+-				edac_dbg(0, "mc#%d: ha %d channel %d, dimm %d, %lld Mb (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
++				edac_dbg(0, "mc#%d: ha %d channel %d, dimm %d, %lld MiB (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
+ 					 pvt->sbridge_dev->mc, pvt->sbridge_dev->dom, i, j,
+ 					 size, npages,
+ 					 banks, ranks, rows, cols);
+diff --git a/drivers/edac/skx_edac.c b/drivers/edac/skx_edac.c
+index 4ba92f1dd0f74..dd209e0dd9abb 100644
+--- a/drivers/edac/skx_edac.c
++++ b/drivers/edac/skx_edac.c
+@@ -364,7 +364,7 @@ static int get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
+ 	size = ((1ull << (rows + cols + ranks)) * banks) >> (20 - 3);
+ 	npages = MiB_TO_PAGES(size);
+ 
+-	edac_dbg(0, "mc#%d: channel %d, dimm %d, %lld Mb (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
++	edac_dbg(0, "mc#%d: channel %d, dimm %d, %lld MiB (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
+ 		 imc->mc, chan, dimmno, size, npages,
+ 		 banks, 1 << ranks, rows, cols);
+ 
+@@ -424,7 +424,7 @@ static int get_nvdimm_info(struct dimm_info *dimm, struct skx_imc *imc,
+ 	dimm->mtype = MEM_NVDIMM;
+ 	dimm->edac_mode = EDAC_SECDED; /* likely better than this */
+ 
+-	edac_dbg(0, "mc#%d: channel %d, dimm %d, %llu Mb (%u pages)\n",
++	edac_dbg(0, "mc#%d: channel %d, dimm %d, %llu MiB (%u pages)\n",
+ 		 imc->mc, chan, dimmno, size >> 20, dimm->nr_pages);
+ 
+ 	snprintf(dimm->label, sizeof(dimm->label), "CPU_SrcID#%u_MC#%u_Chan#%u_DIMM#%u",
 -- 
 2.20.1
 
