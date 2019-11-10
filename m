@@ -2,181 +2,117 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3216AC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FB0C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B642080F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="GXUH/Zuc"
+	by mail.kernel.org (Postfix) with ESMTP id 7B0352080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573420263;
+	bh=iWZwTfYgxn8ONPQ9TtbJkN/r5joAryjZhtfnsnBXHS0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KdEyWCBbUsL7o7zTLT5AHwQhlLV+LquyX0HrFkOAzGn9DmACqSL9V88ycvzj822s+
+	 PxVq5dz19YT9py7H8QhFKpJMxIcmE+2juNXbN/Gb/vXEE/yvrx6Uq2VrtSA8NqzUoH
+	 osRdW/0OgzXhgoP+ApAnbjLkvH0ifu4y2gTwbKTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKJVKu (ORCPT
+        id S1727149AbfKJVLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 16:10:50 -0500
-Received: from ozlabs.org ([203.11.71.1]:47885 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbfKJVKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 16:10:50 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 47B69g21Jbz9sPK; Mon, 11 Nov 2019 08:10:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1573420247;
-        bh=sgl6XwaqQKuWwNLFcxgCVCJd1ny8a3Y5WhLWIZgRB+w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GXUH/ZucMTSO8lUMwgX4o1MuQVS9+ZQ/DD/1O8usLKlRKOyhuj/4hI8/57w/C9XLP
-         SnmdxtnIbeEhqXifQjE5gJSakdwrJwzIk2m0e2GOxJZ7fI2ctXgvC+WP6SVSAFn6M4
-         Rwg/wedGqEhGy8Ca+ER2oTOv+sJZHGOBeMj9j3os=
-Date:   Sun, 10 Nov 2019 19:40:06 +0000
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
-        hch@lst.de, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com,
-        mst@redhat.com, ram.n.pai@gmail.com, aik@ozlabs.ru, cai@lca.pw,
-        tglx@linutronix.de, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC v2 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
- with the hypervisor.
-Message-ID: <20191110194006.GQ2461@umbus.Home>
-References: <1573254011-1604-1-git-send-email-linuxram@us.ibm.com>
- <1573254011-1604-2-git-send-email-linuxram@us.ibm.com>
+        Sun, 10 Nov 2019 16:11:02 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33007 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfKJVLB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 16:11:01 -0500
+Received: by mail-lj1-f194.google.com with SMTP id t5so11612293ljk.0
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 13:11:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sw0pGWOp+H0Cc/o3nartd+rrdu30v5KC8Ks0EukSTW0=;
+        b=RAfCRzWXqkBygzjvTQF7B/q3F9bZcWhNFKa+vgcKxcPhwpgR7QOlK6Eii8RWszMJSj
+         /GKxKFp6PJbUk5mDWk1Rs08zEWAX5Km6Ng5cuqqTumC+Wxu94ZiBemBAFzFqqkBvwDF2
+         D0F/g+SzyQvat+TyfcmfcY6DipCQs83wis1FY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sw0pGWOp+H0Cc/o3nartd+rrdu30v5KC8Ks0EukSTW0=;
+        b=A49Dho0UMSVLkQuQ3hbiVNu4CRJVCR6rv0uroUpJFUNY4ei6Ll1YXE67NEqsZTlo5a
+         KTfiUmkwUKW+olpbLHAKwMFJWO9BN8yKcKtm4xY61mP3eOHWRnPfnU6ET3YqReGBNt7H
+         CvADslccT3kxiS07c9qeUOy4QnBBwdp1EkV6qE8IjPziCJortPXjIWz077JdehL4ySn9
+         RGkp7lWKqW4rIQ3uw50lQijDiUNyR0/bmiAYhmUX0PFXqM9o7T/TzWBHswgWdNMMy6yl
+         r2mj1BCM+vYlx9yuXJ0AJAZ9l56A/WA666tzMjx2JCORIF/gv8wsNw4nFnx7XAZqE/p8
+         j6HA==
+X-Gm-Message-State: APjAAAUgCgAzW7X9b91efotPAZJGpENWp9J4tR6Xwg0SH4ZiPXJrRT8q
+        d68RCYxmZndaLH/XUgNFz2O5XUFLh+c=
+X-Google-Smtp-Source: APXvYqxaIkM/1M9CjQZbYkfFuN289ZoIiU20DYO/vOkizEnMzllUgfvEc0IfZwvHoA/Itd/1OuFaSA==
+X-Received: by 2002:a2e:b4eb:: with SMTP id s11mr13566744ljm.38.1573420258326;
+        Sun, 10 Nov 2019 13:10:58 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id u2sm11915600ljg.34.2019.11.10.13.10.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 10 Nov 2019 13:10:56 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id e9so11543348ljp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 13:10:56 -0800 (PST)
+X-Received: by 2002:a2e:8809:: with SMTP id x9mr13861151ljh.82.1573420256107;
+ Sun, 10 Nov 2019 13:10:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="63aIh6YiuHX+oBFP"
-Content-Disposition: inline
-In-Reply-To: <1573254011-1604-2-git-send-email-linuxram@us.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAHk-=wjB61GNmqpX0BLA5tpL4tsjWV7akaTc2Roth7uGgax+mw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911101034180.29192-100000@netrider.rowland.org>
+ <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
+ <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com> <20191110204442.GA2865@paulmck-ThinkPad-P72>
+In-Reply-To: <20191110204442.GA2865@paulmck-ThinkPad-P72>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 10 Nov 2019 13:10:39 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjm40mcf7tk9DZQXd=dftZw_VpmE837c7pTZ1_cR+t4Mw@mail.gmail.com>
+Message-ID: <CAHk-=wjm40mcf7tk9DZQXd=dftZw_VpmE837c7pTZ1_cR+t4Mw@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Marco Elver <elver@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Nov 10, 2019 at 12:44 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> But will "one size fits all" be practical and useful?
 
---63aIh6YiuHX+oBFP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh, I do agree that if KCSAN has some mode where it says "I'll ignore
+repeated writes with the same value" (or whatever), it could/should
+likely be behind some flag.
 
-On Fri, Nov 08, 2019 at 03:00:10PM -0800, Ram Pai wrote:
-> The hypervisor needs to access the contents of the page holding the TCE
-> entries while setting up the TCE entries in the IOMMU's TCE table.
->=20
-> For SecureVMs, since this page is encrypted, the hypervisor cannot
-> access valid entries. Share the page with the hypervisor. This ensures
-> that the hypervisor sees those valid entries.
->=20
-> Why is this safe?
->    The page contains only TCE entries; not any sensitive data
->    belonging to the Secure VM. The hypervisor has a genuine need to know
->    the value of the TCE entries, without which it will not be able to
->    DMA to/from the pages pointed to by the TCE entries. In a Secure
->    VM the TCE entries point to pages that are also shared with the
->    hypervisor; example: pages containing bounce buffers.
+I don't think it should be a subsystem flag, though. More of a "I'm
+willing to actually analyze and ignore false positives" flag. Because
+I don't think it's so much about the code, as it is about the person
+who looks at the results.
 
-The bit that may not be obvious to reviewers from the above is this:
+For example, we're already getting push-back from people on some of
+the KCSAN-inspired patches. If we have people sending patches to add
+READ_ONCE/WRITE_ONCE to random places to shut up KCSAN reports, I
+don't think that's good.
 
-This is *not* a page of "live" TCEs which are actively used for
-translation.  Instead this is just a transient buffer with a batch of
-TCEs to set, passed to the hypervisor with the H_PUT_TCE_INDIRECT call.
+But if we have people who _work_ on memory ordering issues etc, and
+want to see a strict mode, knowing there are false positives and able
+to handle them, that's a completely different thing..
 
->=20
-> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-> ---
->  arch/powerpc/platforms/pseries/iommu.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platfo=
-rms/pseries/iommu.c
-> index 8d9c2b1..a302aaa 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -37,6 +37,7 @@
->  #include <asm/mmzone.h>
->  #include <asm/plpar_wrappers.h>
->  #include <asm/svm.h>
-> +#include <asm/ultravisor.h>
-> =20
->  #include "pseries.h"
-> =20
-> @@ -179,6 +180,23 @@ static int tce_build_pSeriesLP(struct iommu_table *t=
-bl, long tcenum,
-> =20
->  static DEFINE_PER_CPU(__be64 *, tce_page);
-> =20
-> +/*
-> + * Allocate a tce page.  If secure VM, share the page with the hyperviso=
-r.
-> + *
-> + * NOTE: the TCE page is shared with the hypervisor explicitly and remai=
-ns
-> + * shared for the lifetime of the kernel. It is implicitly unshared at k=
-ernel
-> + * shutdown through a UV_UNSHARE_ALL_PAGES ucall.
-> + */
-> +static __be64 *alloc_tce_page(void)
-> +{
-> +	__be64 *tcep =3D (__be64 *)__get_free_page(GFP_ATOMIC);
-> +
-> +	if (tcep && is_secure_guest())
-> +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
-> +
-> +	return tcep;
-> +}
-> +
->  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  				     long npages, unsigned long uaddr,
->  				     enum dma_data_direction direction,
-> @@ -206,8 +224,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_tabl=
-e *tbl, long tcenum,
->  	 * from iommu_alloc{,_sg}()
->  	 */
->  	if (!tcep) {
-> -		tcep =3D (__be64 *)__get_free_page(GFP_ATOMIC);
-> -		/* If allocation fails, fall back to the loop implementation */
-> +		tcep =3D alloc_tce_page();
->  		if (!tcep) {
->  			local_irq_restore(flags);
->  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
-> @@ -405,7 +422,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long=
- start_pfn,
->  	tcep =3D __this_cpu_read(tce_page);
-> =20
->  	if (!tcep) {
-> -		tcep =3D (__be64 *)__get_free_page(GFP_ATOMIC);
-> +		tcep =3D alloc_tce_page();
->  		if (!tcep) {
->  			local_irq_enable();
->  			return -ENOMEM;
+No?
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---63aIh6YiuHX+oBFP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl3IZ5MACgkQbDjKyiDZ
-s5K+kQ/+PKlvYDKC8LlZl7hGJs9oVVlDQG/Q3tWSAsQWzhygYK+NhJxNT1t0AF0I
-0HnXRPw673myMED+6+j/cIS6zKg3N9GoOwBnaIxh+CzpsbzGtG+4XpCPcrAVO5+k
-9vBX6Bhr+UmvI4V1tfW6Q3c7MEMEtH4VX57ZSZe9Poq5p39NVyX3nggrIZxlsgjC
-SI90Vj/iGgfs3lyT+bIq9TU9N7pduaW6+JvNArThePpmUMgwc+EbVSGEh851wsGe
-Uav8B7Axg8ZlKsA1XSf+WfHU4Z+/fsYYOBMSfecs1SvyxizGaWoGXayKe1aaGWSj
-amPV9YZYecLkDPZG558cvT20KGnJ6JpJwebhVVzKIv8b/oLOzIjrHEku7Jy1OR+o
-PfYzfpt2Ddc2NGQjsq8ppB6FuAAMRcn5FXtXnxWqS0AbIo+nJ7r9R2gYk1TD+VF7
-S/7LmPh1Cd/xBZyxJFruj0qL21lGA9J0ff1MY7/qZ/8tySd0qJ4ehfQElJAFGSQC
-4JFQFXrC6GLyHdAgF3jCr7AVIcSEy7Zwt4ueNYtPoFFXYqR29UXzGngVUXSb1+90
-nZ9AJDRbFwtQo0ySgMYrchZw9ZOcRkDVuU730lwznf9+n0XpEdBjCauCuV0AK4PY
-yrrBbg8WWdqOYmtgafVuQmUQhX2NFMVYx98wTFJWLT9FaJVBoo4=
-=zGQn
------END PGP SIGNATURE-----
-
---63aIh6YiuHX+oBFP--
+              Linus
