@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD674C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD92C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1716215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBE2215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355394;
-	bh=Sg8qrQudyXGXbUZiWMaBT0NuDvDe+WK1N9/ihXre3Q4=;
+	s=default; t=1573355398;
+	bh=hYB5w+UMz/UqauZuigYfxBQ7rra5sbV9A9cqsKXHT6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t9ovjYe4qjJb2MYfi7VpGAKCu2XNmuWORWeNd8fFyyy/6ZKGXPTuCMpvlFttfeA7l
-	 7uPJafuP9rHEZ5hR/u8bxoDYm5wsr7DEhKyoS8CAFbxfkUQJ/Jw9zrLbP5mfUJA3xI
-	 bluBeQubuwHolunN2vEPct2tIJeYE5zaJMJcgZI0=
+	b=gD5chgqagOa6URVIlO/SN4t24DPc+JTMMwd7kN/4R1REWjKhiypb1aEVepPOmU26l
+	 90MkQo/IkE9mhWrLPmkMEvRA6h70choImQzsiYe3ua0xYAsWYyV3SczMowfCXqbTYS
+	 b/mMzh7M/bOt5s609cXm0L929S/ltmDMn2I+DnTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbfKJDJs (ORCPT
+        id S1728535AbfKJCoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:09:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43742 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbfKJCo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:26 -0500
+        id S1727041AbfKJCoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B78921655;
-        Sun, 10 Nov 2019 02:44:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5941E21655;
+        Sun, 10 Nov 2019 02:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353866;
-        bh=Sg8qrQudyXGXbUZiWMaBT0NuDvDe+WK1N9/ihXre3Q4=;
+        s=default; t=1573353847;
+        bh=hYB5w+UMz/UqauZuigYfxBQ7rra5sbV9A9cqsKXHT6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kwALOfWONzGrUrbGac1CiV62VxHO1ob3YKkADF2sqtxlUP5y45ya3M3rsSXEg1SF
-         ljia4BaUBV6VRiDOQb3dmM1SZCLxpeuHFx3vWewmrSHF25SEL7kaSSeCRFOExTn0tw
-         EfAlC+wvz4kntbyrWZab8kK2sDK7tFgHiT16Z1LE=
+        b=bkEFTMyhLkJJ801OtcSM6/KETlxymbF0+m6lMOb3YJ2+WMIt/dl+uyRj1sLJ9qe69
+         lUlm6PU03f0OZnjkb7vZncMERFF7KtXgJHcNsXaFv1kCejIccHKP0tdkKVzrY97TeO
+         BFI7ydqQR9V+HYupiRFyuQCkTWblI4gVk9kD0aYg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 146/191] f2fs: update i_size after DIO completion
-Date:   Sat,  9 Nov 2019 21:39:28 -0500
-Message-Id: <20191110024013.29782-146-sashal@kernel.org>
+Cc:     Sai Praneeth <sai.praneeth.prakhya@intel.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 134/191] efi: Make efi_rts_work accessible to efi page fault handler
+Date:   Sat,  9 Nov 2019 21:39:16 -0500
+Message-Id: <20191110024013.29782-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,83 +61,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Sai Praneeth <sai.praneeth.prakhya@intel.com>
 
-[ Upstream commit 0a4daae5ffea39f5015334e4d18a6a80b447cae4 ]
+[ Upstream commit 9dbbedaa6171247c4c7c40b83f05b200a117c2e0 ]
 
-This is related to
-ee70daaba82d ("xfs: update i_size after unwritten conversion in dio completion")
+After the kernel has booted, if any accesses by firmware causes a page
+fault, the efi page fault handler would freeze efi_rts_wq and schedules
+a new process. To do this, the efi page fault handler needs
+efi_rts_work. Hence, make it accessible.
 
-If we update i_size during dio_write, dio_read can read out stale data, which
-breaks xfstests/465.
+There will be no race conditions in accessing this structure, because
+all the calls to efi runtime services are already serialized.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+Suggested-by: Matt Fleming <matt@codeblueprint.co.uk>
+Based-on-code-from: Ricardo Neri <ricardo.neri@intel.com>
+Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 15 +++++++--------
- fs/f2fs/f2fs.h |  1 +
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/firmware/efi/runtime-wrappers.c | 53 +++++--------------------
+ include/linux/efi.h                     | 36 +++++++++++++++++
+ 2 files changed, 45 insertions(+), 44 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 9511466bc7857..c0d0744a52a55 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -887,7 +887,6 @@ static int __allocate_data_block(struct dnode_of_data *dn, int seg_type)
- 	struct f2fs_summary sum;
- 	struct node_info ni;
- 	block_t old_blkaddr;
--	pgoff_t fofs;
- 	blkcnt_t count = 1;
- 	int err;
+diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
+index 1606abead22cc..b31e3d3729a6d 100644
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -45,39 +45,7 @@
+ #define __efi_call_virt(f, args...) \
+ 	__efi_call_virt_pointer(efi.systab->runtime, f, args)
  
-@@ -916,12 +915,10 @@ static int __allocate_data_block(struct dnode_of_data *dn, int seg_type)
- 					old_blkaddr, old_blkaddr);
- 	f2fs_set_data_blkaddr(dn);
+-/* efi_runtime_service() function identifiers */
+-enum efi_rts_ids {
+-	GET_TIME,
+-	SET_TIME,
+-	GET_WAKEUP_TIME,
+-	SET_WAKEUP_TIME,
+-	GET_VARIABLE,
+-	GET_NEXT_VARIABLE,
+-	SET_VARIABLE,
+-	QUERY_VARIABLE_INFO,
+-	GET_NEXT_HIGH_MONO_COUNT,
+-	UPDATE_CAPSULE,
+-	QUERY_CAPSULE_CAPS,
+-};
+-
+-/*
+- * efi_runtime_work:	Details of EFI Runtime Service work
+- * @arg<1-5>:		EFI Runtime Service function arguments
+- * @status:		Status of executing EFI Runtime Service
+- * @efi_rts_id:		EFI Runtime Service function identifier
+- * @efi_rts_comp:	Struct used for handling completions
+- */
+-struct efi_runtime_work {
+-	void *arg1;
+-	void *arg2;
+-	void *arg3;
+-	void *arg4;
+-	void *arg5;
+-	efi_status_t status;
+-	struct work_struct work;
+-	enum efi_rts_ids efi_rts_id;
+-	struct completion efi_rts_comp;
+-};
++struct efi_runtime_work efi_rts_work;
  
--	/* update i_size */
--	fofs = f2fs_start_bidx_of_node(ofs_of_node(dn->node_page), dn->inode) +
--							dn->ofs_in_node;
--	if (i_size_read(dn->inode) < ((loff_t)(fofs + 1) << PAGE_SHIFT))
--		f2fs_i_size_write(dn->inode,
--				((loff_t)(fofs + 1) << PAGE_SHIFT));
-+	/*
-+	 * i_size will be updated by direct_IO. Otherwise, we'll get stale
-+	 * data from unwritten block via dio_read.
-+	 */
- 	return 0;
- }
- 
-@@ -1087,6 +1084,8 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
- 					last_ofs_in_node = dn.ofs_in_node;
- 				}
- 			} else {
-+				WARN_ON(flag != F2FS_GET_BLOCK_PRE_DIO &&
-+					flag != F2FS_GET_BLOCK_DIO);
- 				err = __allocate_data_block(&dn,
- 							map->m_seg_type);
- 				if (!err)
-@@ -1266,7 +1265,7 @@ static int get_data_block_dio(struct inode *inode, sector_t iblock,
- 			struct buffer_head *bh_result, int create)
+ /*
+  * efi_queue_work:	Queue efi_runtime_service() and wait until it's done
+@@ -91,7 +59,6 @@ struct efi_runtime_work {
+  */
+ #define efi_queue_work(_rts, _arg1, _arg2, _arg3, _arg4, _arg5)		\
+ ({									\
+-	struct efi_runtime_work efi_rts_work;				\
+ 	efi_rts_work.status = EFI_ABORTED;				\
+ 									\
+ 	init_completion(&efi_rts_work.efi_rts_comp);			\
+@@ -191,18 +158,16 @@ extern struct semaphore __efi_uv_runtime_lock __alias(efi_runtime_lock);
+  */
+ static void efi_call_rts(struct work_struct *work)
  {
- 	return __get_data_block(inode, iblock, bh_result, create,
--						F2FS_GET_BLOCK_DEFAULT, NULL,
-+						F2FS_GET_BLOCK_DIO, NULL,
- 						f2fs_rw_hint_to_seg_type(
- 							inode->i_write_hint));
+-	struct efi_runtime_work *efi_rts_work;
+ 	void *arg1, *arg2, *arg3, *arg4, *arg5;
+ 	efi_status_t status = EFI_NOT_FOUND;
+ 
+-	efi_rts_work = container_of(work, struct efi_runtime_work, work);
+-	arg1 = efi_rts_work->arg1;
+-	arg2 = efi_rts_work->arg2;
+-	arg3 = efi_rts_work->arg3;
+-	arg4 = efi_rts_work->arg4;
+-	arg5 = efi_rts_work->arg5;
++	arg1 = efi_rts_work.arg1;
++	arg2 = efi_rts_work.arg2;
++	arg3 = efi_rts_work.arg3;
++	arg4 = efi_rts_work.arg4;
++	arg5 = efi_rts_work.arg5;
+ 
+-	switch (efi_rts_work->efi_rts_id) {
++	switch (efi_rts_work.efi_rts_id) {
+ 	case GET_TIME:
+ 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
+ 				       (efi_time_cap_t *)arg2);
+@@ -260,8 +225,8 @@ static void efi_call_rts(struct work_struct *work)
+ 		 */
+ 		pr_err("Requested executing invalid EFI Runtime Service.\n");
+ 	}
+-	efi_rts_work->status = status;
+-	complete(&efi_rts_work->efi_rts_comp);
++	efi_rts_work.status = status;
++	complete(&efi_rts_work.efi_rts_comp);
  }
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index fb216488d67a9..6beda9147d3a0 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -600,6 +600,7 @@ enum {
- 	F2FS_GET_BLOCK_DEFAULT,
- 	F2FS_GET_BLOCK_FIEMAP,
- 	F2FS_GET_BLOCK_BMAP,
-+	F2FS_GET_BLOCK_DIO,
- 	F2FS_GET_BLOCK_PRE_DIO,
- 	F2FS_GET_BLOCK_PRE_AIO,
- 	F2FS_GET_BLOCK_PRECACHE,
+ 
+ static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index f43fc61fbe2c9..9d4c25090fd04 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1666,6 +1666,42 @@ struct linux_efi_tpm_eventlog {
+ 
+ extern int efi_tpm_eventlog_init(void);
+ 
++/* efi_runtime_service() function identifiers */
++enum efi_rts_ids {
++	GET_TIME,
++	SET_TIME,
++	GET_WAKEUP_TIME,
++	SET_WAKEUP_TIME,
++	GET_VARIABLE,
++	GET_NEXT_VARIABLE,
++	SET_VARIABLE,
++	QUERY_VARIABLE_INFO,
++	GET_NEXT_HIGH_MONO_COUNT,
++	UPDATE_CAPSULE,
++	QUERY_CAPSULE_CAPS,
++};
++
++/*
++ * efi_runtime_work:	Details of EFI Runtime Service work
++ * @arg<1-5>:		EFI Runtime Service function arguments
++ * @status:		Status of executing EFI Runtime Service
++ * @efi_rts_id:		EFI Runtime Service function identifier
++ * @efi_rts_comp:	Struct used for handling completions
++ */
++struct efi_runtime_work {
++	void *arg1;
++	void *arg2;
++	void *arg3;
++	void *arg4;
++	void *arg5;
++	efi_status_t status;
++	struct work_struct work;
++	enum efi_rts_ids efi_rts_id;
++	struct completion efi_rts_comp;
++};
++
++extern struct efi_runtime_work efi_rts_work;
++
+ /* Workqueue to queue EFI Runtime Services */
+ extern struct workqueue_struct *efi_rts_wq;
+ 
 -- 
 2.20.1
 
