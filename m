@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F5C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20466C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB0422573
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E009B22573
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354450;
-	bh=PZRlICB5aO4OWvYpbx6HZcXJmevUP+PXMNBT0wS6Slc=;
+	s=default; t=1573354460;
+	bh=qFMPdXUEH6vwVV5eu/FaLP6bhy2xtehholYH6iinTzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJos+m23pO9zUVCVY5sSs68wsXuLiGedJYXF1CxmDzNcbIeluvBa0+1z3Df5aZU3e
-	 /k2FQ0Uk2kFtcxbmGh5TJHIVbv+cwe/hxSkNzJ12w44Nonv9/oQ3U4W9t+ZJl5go1/
-	 mrE7qqG5u/RIhAgIt2h6Q3BtYRsLQQZd3zzXRSOk=
+	b=YJTOZ+O+ugWjfUAUX+oYMQh8W4uh3s+miUcF+AoAny7X3kSduLhxE1X2/B6KaLh4I
+	 OmOvRxVN4+hc608rrxAJ3XiDv+nuEiRk8CLQionVBMrfd4PCKmRsolkQZujUS9IGa8
+	 WJAvHo7bbjVKKjxFP8HAlsfK1Cm3SC9a6n4hLNq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfKJCyJ (ORCPT
+        id S1727804AbfKJCuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:54:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35094 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729849AbfKJCu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:56 -0500
+        id S1729708AbfKJCuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DD7A22583;
-        Sun, 10 Nov 2019 02:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9A2822794;
+        Sun, 10 Nov 2019 02:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354255;
-        bh=PZRlICB5aO4OWvYpbx6HZcXJmevUP+PXMNBT0wS6Slc=;
+        s=default; t=1573354223;
+        bh=qFMPdXUEH6vwVV5eu/FaLP6bhy2xtehholYH6iinTzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BT3ISpP35usGZWfpG6yeQFllUjyVifZUg9a4W3JvS/u+LoXDrioRE69OwJZZGSJE7
-         NW5X/BDVEvFOpg6+kSbWaHhLi3VM6Yb2dfErS880Yc4ROskQabWNuCtaJ7MD7Uud0/
-         LgwyOc3mteYJaPtAN0vg33W2KS3ODSSOUda9MaKA=
+        b=wKSp+CNMFkbsc3+BA4qWnNOfLlWA2oEcDTAruq17bJu98XrutNhymkGJ4nvsrHOf6
+         HxnkD+ZsaZmsUsXT5AIFtu6oDOzBR7eXsyj3BboHJbC4n0KHC/LNqdi6UuVcJ/xk2h
+         n1lRLQ2mamyYmLtwSkoAa1Lemx7MjvdX0YgEWbG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/40] net: xilinx: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:50:03 -0500
-Message-Id: <20191110025032.827-11-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Brijesh Singh <brijeshkumar.singh@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 61/66] arm64: dts: amd: Fix SPI bus warnings
+Date:   Sat,  9 Nov 2019 21:48:40 -0500
+Message-Id: <20191110024846.32598-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
-References: <20191110025032.827-1-sashal@kernel.org>
+In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
+References: <20191110024846.32598-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,89 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 81255af8d9d5565004792c295dde49344df450ca ]
+[ Upstream commit e9f0878c4b2004ac19581274c1ae4c61ae3ca70e ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+dtc has new checks for SPI buses. Fix the warnings in node names.
 
-Found by coccinelle.
+arch/arm64/boot/dts/amd/amd-overdrive.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
+arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
+arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c       | 3 ++-
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 3 ++-
- drivers/net/ethernet/xilinx/xilinx_emaclite.c     | 9 +++++----
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 5a1068df7038c..ed6a88cf3281c 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -673,7 +673,8 @@ static inline int temac_check_tx_bd_space(struct temac_local *lp, int num_frag)
- 	return 0;
- }
+diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+index bd3adeac374f4..2973a14523eaf 100644
+--- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
++++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+@@ -106,7 +106,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
--static int temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t
-+temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	struct temac_local *lp = netdev_priv(ndev);
- 	struct cdmac_bd *cur_p;
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index f1e969128a4ee..7f1a57bb2ab10 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -656,7 +656,8 @@ static inline int axienet_check_tx_bd_space(struct axienet_local *lp,
-  * start the transmission. Additionally if checksum offloading is supported,
-  * it populates AXI Stream Control fields with appropriate values.
-  */
--static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t
-+axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	u32 ii;
- 	u32 num_frag;
-diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-index 4cb8b85cbf2c2..909a008f99276 100644
---- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-@@ -1008,9 +1008,10 @@ static int xemaclite_close(struct net_device *dev)
-  * deferred and the Tx queue is stopped so that the deferred socket buffer can
-  * be transmitted when the Emaclite device is free to transmit data.
-  *
-- * Return:	0, always.
-+ * Return:	NETDEV_TX_OK, always.
-  */
--static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
-+static netdev_tx_t
-+xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- {
- 	struct net_local *lp = netdev_priv(dev);
- 	struct sk_buff *new_skb;
-@@ -1031,7 +1032,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- 		/* Take the time stamp now, since we can't do this in an ISR. */
- 		skb_tx_timestamp(new_skb);
- 		spin_unlock_irqrestore(&lp->reset_lock, flags);
--		return 0;
-+		return NETDEV_TX_OK;
- 	}
- 	spin_unlock_irqrestore(&lp->reset_lock, flags);
+-		spi0: ssp@e1020000 {
++		spi0: spi@e1020000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0 0xe1020000 0 0x1000>;
+@@ -116,7 +116,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
  
-@@ -1040,7 +1041,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- 	dev->stats.tx_bytes += len;
- 	dev_consume_skb_any(new_skb);
- 
--	return 0;
-+	return NETDEV_TX_OK;
- }
- 
- /**
+-		spi1: ssp@e1030000 {
++		spi1: spi@e1030000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0 0xe1030000 0 0x1000>;
 -- 
 2.20.1
 
