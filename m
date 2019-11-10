@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649D0C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E252AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4E521D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53B321848
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353753;
-	bh=VHqwNr/2MI7GULDENmCysXqgEJ5Gz68MXJ5DolXPSlw=;
+	s=default; t=1573353757;
+	bh=SYK3cbFOH5p92qBycnjfraI6rejI7ktNpDJLkusLl1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUSorWzqkemv2/pgAaWurs7RLXM1SlPlzEJ/grwzaCPB2tIPeXEWt1mPNha6+tmUF
-	 2DVjGRzUkloJ/RPsLqQbNSB6PfiOvdVMrZhYqPTK20pijT11CqAEZ5Oq1PbyCI3Vpa
-	 VeJ/YThBGQbWtQ7riygOdTGX+4vsqplhmD9HYU5w=
+	b=yoT1A87xmYPygIyYlXg//nJeywrgT28gs15VGG9m/VpEBSOtkRVDFPtxyT3jQH8RQ
+	 5EOErC1Auy5gxEdmoUBuzTrZ0WKAXAarnzGpouP1N2BSkdHxoGpaW2nCUdiROGO8m2
+	 M8oIg9jTTMXt38aphoELb2cjEawSHJw6jBCIHrwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfKJCmb (ORCPT
+        id S1727929AbfKJCmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38262 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfKJCm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:26 -0500
+        id S1727875AbfKJCmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D491521848;
-        Sun, 10 Nov 2019 02:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC2321848;
+        Sun, 10 Nov 2019 02:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353745;
-        bh=VHqwNr/2MI7GULDENmCysXqgEJ5Gz68MXJ5DolXPSlw=;
+        s=default; t=1573353750;
+        bh=SYK3cbFOH5p92qBycnjfraI6rejI7ktNpDJLkusLl1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2fR0Fa6Qn35UHDPNgsGlxTO8MQOmDjmWsL+rAMFheTF9L8+x80h+Avg775wz//RtG
-         Uo8urarWzT8az3ggU2kDVCHg9nv6HmZ9LQqJ7he5Ts0QTz7m8trwZs5r9Rv2+jdcFb
-         0j13pdIAoWhObWZ2j9185ItwYhSOU1eW+jahLG1E=
+        b=iVT8cjSiV54u3qlbSWB6zlMQwhrJfwu2az0BVjpL+Iis2Gvs01p13nz1+fnp1e0vH
+         zeJjeJOhSH78u9xLS0Ubug8CeS8yuKzWvCetjX/tSxocuyn5n8pmdpME/tquHXO9fi
+         hTAq+RKJhMJWq+LdKhjSiVb/U6/ofGTRrcdabMi8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 062/191] ARM: dts: am335x-evm: fix number of cpsw
-Date:   Sat,  9 Nov 2019 21:38:04 -0500
-Message-Id: <20191110024013.29782-62-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 066/191] ARM: dts: ux500: Correct SCU unit address
+Date:   Sat,  9 Nov 2019 21:38:08 -0500
+Message-Id: <20191110024013.29782-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,57 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit dcbf6b18d81bcdc51390ca1b258c17e2e13b7d0c ]
+[ Upstream commit 2f217d24ecaec2012e628d21e244eef0608656a4 ]
 
-am335x-evm has only one CPSW external port physically wired, but DT defines
-2 ext. ports. As result, PHY connection failure reported for the second
-ext. port.
+The unit address of the Cortex-A9 SCU device node contains one zero too
+many.  Remove it.
 
-Update DT to reflect am335x-evm board HW configuration, and, while here,
-switch to use phy-handle instead of phy_id.
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 20bbb899b3b76..cc59e42c91342 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -731,6 +731,7 @@
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
- 	status = "okay";
-+	slaves = <1>;
- };
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 2310a4e97768c..3dc0028e108b3 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -197,7 +197,7 @@
+ 			      <0xa0410100 0x100>;
+ 		};
  
- &davinci_mdio {
-@@ -738,15 +739,14 @@
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
- 	status = "okay";
--};
- 
--&cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
--	phy-mode = "rgmii-txid";
-+	ethphy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
- };
- 
--&cpsw_emac1 {
--	phy_id = <&davinci_mdio>, <1>;
-+&cpsw_emac0 {
-+	phy-handle = <&ethphy0>;
- 	phy-mode = "rgmii-txid";
- };
- 
+-		scu@a04100000 {
++		scu@a0410000 {
+ 			compatible = "arm,cortex-a9-scu";
+ 			reg = <0xa0410000 0x100>;
+ 		};
 -- 
 2.20.1
 
