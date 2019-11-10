@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3635C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4824CC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A576A21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E62E21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354890;
-	bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
+	s=default; t=1573354893;
+	bh=oHMUJSdY6GTcK8AEGZQrARA28E+MfxcypOGkikh7IlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPTJ6EeQi9IbV6x2ikUW4pt63Pws0MBG46ZKNHNE0iN7zoiJ6J72xCUOWImg3+0Wx
-	 SmWI8DOkB0xnOUMPp6gGQG38tTcesVRm3D2A4yH+VDRq6EoR1nxXI5F4OhCjb3ADAx
-	 JTmWslK/JHxT95MZG7CRXFjl8ePcixles+P0qNEM=
+	b=N7ojOG7c4mpHOKLhbnCaUzWeUrFK80ULQ4dcEcbADwsmNWk/o9aQgMjf2dS+TMxHL
+	 3yb4AVT4DR65EpqTeNGtkPLzyu3waL86AnBYXEM2bHZxTbIYkKoYJoKkTkbisWuTcT
+	 ZGgJnm5+dAbwOVbDtLb6AEO6FvoKVZg/sH06yCHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfKJDB3 (ORCPT
+        id S1728297AbfKJDB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:01:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:01:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729194AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C40A3222CB;
-        Sun, 10 Nov 2019 02:47:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FCB22246A;
+        Sun, 10 Nov 2019 02:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354050;
-        bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
+        s=default; t=1573354056;
+        bh=oHMUJSdY6GTcK8AEGZQrARA28E+MfxcypOGkikh7IlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gnISEUGN/D0N4m22eMtUUK9QwIa8cZUg3yQNZ397Iu+9rwQpn5HvHfD1mIjVb+d97
-         M2UblNad/iPOnS1y/2ECycqEAtV5hfeQRdt2dZSRMwYSEWMFzfAsSGB/NsLbSzX7Xz
-         Exuq99bbSlcik9rFOoOSiTdMF/Q7kudCgh2LRv9w=
+        b=PSRAYwkoYT3oxwFIYtIKAh4f3wNth5Q7/rRCcgz6IARd1QTN37+qZtmSDyfYC4Lpq
+         Af8YlaK4oQD701Ks9Oy/PssZJxyMyZDWBNd7k8Hvl1CcF4m6aBmATLbHJfbH77Eulh
+         wNHKMA5biGXRNxeg086fUnkD7Ul6uF5sqyHdBgCI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Elder <paul.elder@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 060/109] usb: gadget: uvc: Factor out video USB request queueing
-Date:   Sat,  9 Nov 2019 21:44:52 -0500
-Message-Id: <20191110024541.31567-60-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 066/109] coresight: tmc: Fix byte-address alignment for RRP
+Date:   Sat,  9 Nov 2019 21:44:58 -0500
+Message-Id: <20191110024541.31567-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,85 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 9d1ff5dcb3cd3390b1e56f1c24ae42c72257c4a3 ]
+[ Upstream commit e7753f3937610633a540f2be81be87531f96ff04 ]
 
-USB requests for video data are queued from two different locations in
-the driver, with the same code block occurring twice. Factor it out to a
-function.
+>From the comment in the code, it claims the requirement for byte-address
+alignment for RRP register: 'for 32-bit, 64-bit and 128-bit wide trace
+memory, the four LSBs must be 0s. For 256-bit wide trace memory, the
+five LSBs must be 0s'.  This isn't consistent with the program, the
+program sets five LSBs as zeros for 32/64/128-bit wide trace memory and
+set six LSBs zeros for 256-bit wide trace memory.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
-Tested-by: Paul Elder <paul.elder@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+After checking with the CoreSight Trace Memory Controller technical
+reference manual (ARM DDI 0461B, section 3.3.4 RAM Read Pointer
+Register), it proves the comment is right and the program does wrong
+setting.
+
+This patch fixes byte-address alignment for RRP by following correct
+definition in the technical reference manual.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_video.c | 30 ++++++++++++++++---------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index 0f01c04d7cbd8..540917f54506a 100644
---- a/drivers/usb/gadget/function/uvc_video.c
-+++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -129,6 +129,19 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
-  * Request handling
-  */
- 
-+static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
-+{
-+	int ret;
-+
-+	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+	if (ret < 0) {
-+		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
-+		usb_ep_set_halt(video->ep);
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * I somehow feel that synchronisation won't be easy to achieve here. We have
-  * three events that control USB requests submission:
-@@ -193,14 +206,13 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
- 
- 	video->encode(req, video, buf);
- 
--	if ((ret = usb_ep_queue(ep, req, GFP_ATOMIC)) < 0) {
--		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
--		usb_ep_set_halt(ep);
--		spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+	ret = uvcg_video_ep_queue(video, req);
-+	spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+
-+	if (ret < 0) {
- 		uvcg_queue_cancel(queue, 0);
- 		goto requeue;
- 	}
--	spin_unlock_irqrestore(&video->queue.irqlock, flags);
- 
- 	return;
- 
-@@ -320,15 +332,13 @@ int uvcg_video_pump(struct uvc_video *video)
- 		video->encode(req, video, buf);
- 
- 		/* Queue the USB request */
--		ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+		ret = uvcg_video_ep_queue(video, req);
-+		spin_unlock_irqrestore(&queue->irqlock, flags);
-+
- 		if (ret < 0) {
--			printk(KERN_INFO "Failed to queue request (%d)\n", ret);
--			usb_ep_set_halt(video->ep);
--			spin_unlock_irqrestore(&queue->irqlock, flags);
- 			uvcg_queue_cancel(queue, 0);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index e2513b7862427..336194d059fed 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -442,10 +442,10 @@ static void tmc_update_etf_buffer(struct coresight_device *csdev,
+ 		case TMC_MEM_INTF_WIDTH_32BITS:
+ 		case TMC_MEM_INTF_WIDTH_64BITS:
+ 		case TMC_MEM_INTF_WIDTH_128BITS:
+-			mask = GENMASK(31, 5);
++			mask = GENMASK(31, 4);
+ 			break;
+ 		case TMC_MEM_INTF_WIDTH_256BITS:
+-			mask = GENMASK(31, 6);
++			mask = GENMASK(31, 5);
  			break;
  		}
--		spin_unlock_irqrestore(&queue->irqlock, flags);
- 	}
  
- 	spin_lock_irqsave(&video->req_lock, flags);
 -- 
 2.20.1
 
