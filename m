@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C7CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B3BC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E512621D7B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000F721848
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353810;
-	bh=nQTEW2sPLQXF4S3Lvl9L5CzIUmUDreOj4jlhRJhdpGw=;
+	s=default; t=1573353813;
+	bh=2enzXx7lcGEUB/VfRd3pDz675b+yj6Xt/n4BUBuGZ00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wczk4p693ytPWUI4D3KxvIp0C5eiqcJMVjSva9vr9Bg7LtBhzxqLOfpXXn1QFawfO
-	 krbD8buj+2tEK1J94fIzGkCu6Bx21yw48W5mJyY3FrOqN2ZOD3/JLQETXFVEyV4XOU
-	 iX5MJVn9sQqQ11zRMkDwgjLkUOsXWx/ab3P7YfaY=
+	b=zuG7XCXmwEbo94loSE4DNscjURt/9wW4809znuUapR27jAB4gYUI66JfwtueKYIGJ
+	 hgqrONIRvfaaNdEVp78dFiakG4t39EhRJW5tACgK0SjEshGY/3kaUura6lFMZVc8AS
+	 lt5r5R5AYhmCAM5M73Ntu2aap4pjsh1zngLzzHYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfKJCn1 (ORCPT
+        id S1728340AbfKJCnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbfKJCnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:24 -0500
+        id S1726754AbfKJCn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE15214E0;
-        Sun, 10 Nov 2019 02:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 711B421882;
+        Sun, 10 Nov 2019 02:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353803;
-        bh=nQTEW2sPLQXF4S3Lvl9L5CzIUmUDreOj4jlhRJhdpGw=;
+        s=default; t=1573353808;
+        bh=2enzXx7lcGEUB/VfRd3pDz675b+yj6Xt/n4BUBuGZ00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kcBEOtl7Fit125725A+ZL76V0Qnc7fI48HQJorNakWupPVzWTTiQPafayaqcfMw/w
-         a9JkLodVeR+I/ohlkaVCpqoptdbQDLefRvPGK7mRJos7dCylA8T9p1mQ13H/SIzeK5
-         vuGeYGVL7EeuLkggdV86w8Otl4cb+mrp38VxegMg=
+        b=btd9Y6OdlC0+lxy/F58LWhj3bqBK67H6Vv/vuOFIoDcJN8ZbQrotLuwFv+XeioNe3
+         81Wi6DHxjkGvtfqPQeJLdT7GdIhGj9E9LtY6gY402pXZV9iPB1Fr/XB/thqsxwfqHI
+         4KHRmix5fmjlGTManY1pZUKH/NX18kSLMQ8+OMC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 101/191] i2c: aspeed: fix invalid clock parameters for very large divisors
-Date:   Sat,  9 Nov 2019 21:38:43 -0500
-Message-Id: <20191110024013.29782-101-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 105/191] phy: renesas: rcar-gen3-usb2: fix vbus_ctrl for role sysfs
+Date:   Sat,  9 Nov 2019 21:38:47 -0500
+Message-Id: <20191110024013.29782-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,164 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 17ccba67109cd0631f206cf49e17986218b47854 ]
+[ Upstream commit 09938ea9d136243e8d1fed6d4d7a257764f28f6d ]
 
-The function that computes clock parameters from divisors did not
-respect the maximum size of the bitfields that the parameters were
-written to. This fixes the bug.
+This patch fixes and issue that the vbus_ctrl is disabled by
+rcar_gen3_init_from_a_peri_to_a_host(), so a usb host cannot
+supply the vbus.
 
-This bug can be reproduced with (and this fix verified with) the test
-at: https://kunit-review.googlesource.com/c/linux/+/1035/
+Note that this condition will exit when the otg irq happens
+even if we don't apply this patch.
 
-Discovered-by-KUnit: https://kunit-review.googlesource.com/c/linux/+/1035/
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 9bb86777fb71 ("phy: rcar-gen3-usb2: add sysfs for usb role swap")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-aspeed.c | 65 +++++++++++++++++++++++----------
- 1 file changed, 45 insertions(+), 20 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-index a19fbff168617..d9401b5191069 100644
---- a/drivers/i2c/busses/i2c-aspeed.c
-+++ b/drivers/i2c/busses/i2c-aspeed.c
-@@ -137,7 +137,8 @@ struct aspeed_i2c_bus {
- 	/* Synchronizes I/O mem access to base. */
- 	spinlock_t			lock;
- 	struct completion		cmd_complete;
--	u32				(*get_clk_reg_val)(u32 divisor);
-+	u32				(*get_clk_reg_val)(struct device *dev,
-+							   u32 divisor);
- 	unsigned long			parent_clk_frequency;
- 	u32				bus_frequency;
- 	/* Transaction state. */
-@@ -686,16 +687,27 @@ static const struct i2c_algorithm aspeed_i2c_algo = {
- #endif /* CONFIG_I2C_SLAVE */
- };
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 6fb2b69695905..d22b1ec2e58c7 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -199,7 +199,7 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
+ 	val = readl(usb2_base + USB2_OBINTEN);
+ 	writel(val & ~USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
  
--static u32 aspeed_i2c_get_clk_reg_val(u32 clk_high_low_max, u32 divisor)
-+static u32 aspeed_i2c_get_clk_reg_val(struct device *dev,
-+				      u32 clk_high_low_mask,
-+				      u32 divisor)
- {
--	u32 base_clk, clk_high, clk_low, tmp;
-+	u32 base_clk_divisor, clk_high_low_max, clk_high, clk_low, tmp;
-+
-+	/*
-+	 * SCL_high and SCL_low represent a value 1 greater than what is stored
-+	 * since a zero divider is meaningless. Thus, the max value each can
-+	 * store is every bit set + 1. Since SCL_high and SCL_low are added
-+	 * together (see below), the max value of both is the max value of one
-+	 * them times two.
-+	 */
-+	clk_high_low_max = (clk_high_low_mask + 1) * 2;
+-	rcar_gen3_enable_vbus_ctrl(ch, 0);
++	rcar_gen3_enable_vbus_ctrl(ch, 1);
+ 	rcar_gen3_init_for_host(ch);
  
- 	/*
- 	 * The actual clock frequency of SCL is:
- 	 *	SCL_freq = APB_freq / (base_freq * (SCL_high + SCL_low))
- 	 *		 = APB_freq / divisor
- 	 * where base_freq is a programmable clock divider; its value is
--	 *	base_freq = 1 << base_clk
-+	 *	base_freq = 1 << base_clk_divisor
- 	 * SCL_high is the number of base_freq clock cycles that SCL stays high
- 	 * and SCL_low is the number of base_freq clock cycles that SCL stays
- 	 * low for a period of SCL.
-@@ -705,47 +717,59 @@ static u32 aspeed_i2c_get_clk_reg_val(u32 clk_high_low_max, u32 divisor)
- 	 *	SCL_low	 = clk_low + 1
- 	 * Thus,
- 	 *	SCL_freq = APB_freq /
--	 *		((1 << base_clk) * (clk_high + 1 + clk_low + 1))
-+	 *		((1 << base_clk_divisor) * (clk_high + 1 + clk_low + 1))
- 	 * The documentation recommends clk_high >= clk_high_max / 2 and
- 	 * clk_low >= clk_low_max / 2 - 1 when possible; this last constraint
- 	 * gives us the following solution:
- 	 */
--	base_clk = divisor > clk_high_low_max ?
-+	base_clk_divisor = divisor > clk_high_low_max ?
- 			ilog2((divisor - 1) / clk_high_low_max) + 1 : 0;
--	tmp = (divisor + (1 << base_clk) - 1) >> base_clk;
--	clk_low = tmp / 2;
--	clk_high = tmp - clk_low;
- 
--	if (clk_high)
--		clk_high--;
-+	if (base_clk_divisor > ASPEED_I2CD_TIME_BASE_DIVISOR_MASK) {
-+		base_clk_divisor = ASPEED_I2CD_TIME_BASE_DIVISOR_MASK;
-+		clk_low = clk_high_low_mask;
-+		clk_high = clk_high_low_mask;
-+		dev_err(dev,
-+			"clamping clock divider: divider requested, %u, is greater than largest possible divider, %u.\n",
-+			divisor, (1 << base_clk_divisor) * clk_high_low_max);
-+	} else {
-+		tmp = (divisor + (1 << base_clk_divisor) - 1)
-+				>> base_clk_divisor;
-+		clk_low = tmp / 2;
-+		clk_high = tmp - clk_low;
-+
-+		if (clk_high)
-+			clk_high--;
- 
--	if (clk_low)
--		clk_low--;
-+		if (clk_low)
-+			clk_low--;
-+	}
- 
- 
- 	return ((clk_high << ASPEED_I2CD_TIME_SCL_HIGH_SHIFT)
- 		& ASPEED_I2CD_TIME_SCL_HIGH_MASK)
- 			| ((clk_low << ASPEED_I2CD_TIME_SCL_LOW_SHIFT)
- 			   & ASPEED_I2CD_TIME_SCL_LOW_MASK)
--			| (base_clk & ASPEED_I2CD_TIME_BASE_DIVISOR_MASK);
-+			| (base_clk_divisor
-+			   & ASPEED_I2CD_TIME_BASE_DIVISOR_MASK);
- }
- 
--static u32 aspeed_i2c_24xx_get_clk_reg_val(u32 divisor)
-+static u32 aspeed_i2c_24xx_get_clk_reg_val(struct device *dev, u32 divisor)
- {
- 	/*
- 	 * clk_high and clk_low are each 3 bits wide, so each can hold a max
- 	 * value of 8 giving a clk_high_low_max of 16.
- 	 */
--	return aspeed_i2c_get_clk_reg_val(16, divisor);
-+	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(2, 0), divisor);
- }
- 
--static u32 aspeed_i2c_25xx_get_clk_reg_val(u32 divisor)
-+static u32 aspeed_i2c_25xx_get_clk_reg_val(struct device *dev, u32 divisor)
- {
- 	/*
- 	 * clk_high and clk_low are each 4 bits wide, so each can hold a max
- 	 * value of 16 giving a clk_high_low_max of 32.
- 	 */
--	return aspeed_i2c_get_clk_reg_val(32, divisor);
-+	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(3, 0), divisor);
- }
- 
- /* precondition: bus.lock has been acquired. */
-@@ -758,7 +782,7 @@ static int aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus)
- 	clk_reg_val &= (ASPEED_I2CD_TIME_TBUF_MASK |
- 			ASPEED_I2CD_TIME_THDSTA_MASK |
- 			ASPEED_I2CD_TIME_TACST_MASK);
--	clk_reg_val |= bus->get_clk_reg_val(divisor);
-+	clk_reg_val |= bus->get_clk_reg_val(bus->dev, divisor);
- 	writel(clk_reg_val, bus->base + ASPEED_I2C_AC_TIMING_REG1);
- 	writel(ASPEED_NO_TIMEOUT_CTRL, bus->base + ASPEED_I2C_AC_TIMING_REG2);
- 
-@@ -874,7 +898,8 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
- 	if (!match)
- 		bus->get_clk_reg_val = aspeed_i2c_24xx_get_clk_reg_val;
- 	else
--		bus->get_clk_reg_val = (u32 (*)(u32))match->data;
-+		bus->get_clk_reg_val = (u32 (*)(struct device *, u32))
-+				match->data;
- 
- 	/* Initialize the I2C adapter */
- 	spin_lock_init(&bus->lock);
+ 	writel(val | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
 -- 
 2.20.1
 
