@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FE1C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E28C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F5920854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CED20854
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355722;
-	bh=SnSXXWbCh4DGjwAfNxcppyi0n+IUynSU9WgHWmixTn8=;
+	s=default; t=1573355728;
+	bh=TWMtyGoTPlsTVwTgBV9Um9JUDKWHvmdAk1nWhp7XC/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSkBEogqz4J/b0xv2Fp2s5o5skK6woMuQWHHt9T8zXNvBUHE74jaBjWzWUSuY/C7v
-	 qdfKKsyKzvZe2iCfQj1hbHjjlgtxcZjM9JqBLjbUJnCeXBTZuSKSb6maSxu8Q6nBYF
-	 XvjlwWDrTwMCKt968Mu3fSWxhPqPYIBCFwUosUMk=
+	b=TvN4hriDwXOdvpV6KeieImMbVFksJyaRdhEO4bKBzEJw9Cje/otC8r6MgsIA4tvbS
+	 O+1Pqgjei28MZTnr+yMDtbW72Fhw7A8zltP1EH7BtSdNBBkyoHp8fnjKx0q/A/nwhN
+	 C+AsA6LC72BWkuJrhocWH/tMVR0r06o5DkR8A540=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfKJDPV (ORCPT
+        id S1727575AbfKJClp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:15:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36570 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbfKJClq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:46 -0500
+        id S1727451AbfKJCl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F2621882;
-        Sun, 10 Nov 2019 02:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3795721850;
+        Sun, 10 Nov 2019 02:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353706;
-        bh=SnSXXWbCh4DGjwAfNxcppyi0n+IUynSU9WgHWmixTn8=;
+        s=default; t=1573353687;
+        bh=TWMtyGoTPlsTVwTgBV9Um9JUDKWHvmdAk1nWhp7XC/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oGzySkuveJAksPLxd9DdP0SdcMwojqsQfj/UBZxNujerA4Zf1WiCgIq2+F/nLm8+U
-         EJPZFCJOZENrn9S56c4hdeF+yRANkU9bwRHZqNZZeQ4R61bSAV7BpdC+YROwdhlrYz
-         ibYHvYYZ9mKHesrisY+F0mc2nFgHk3mN6NoQ4Yt4=
+        b=H8yrPZZ3yKyRct/SVz+z4m6/HLI+ByhdxNiDEB76S0HFs7+c5oUwKQ4Tq3zTLqOmF
+         sHmOCcWSDrIoOXaU1BIrH4ihxMoYLOMBffo4xyKk+mH2JY5aOkloLyGKY3tqjKZxYQ
+         4h//6Onr0lFLvZMro8qeftplQTIX3WrfgyZqqCCQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian Shen <shenjian15@huawei.com>, Peng Li <lipeng321@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 047/191] net: hns3: Fix cmdq registers initialization issue for vf
-Date:   Sat,  9 Nov 2019 21:37:49 -0500
-Message-Id: <20191110024013.29782-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 043/191] net: broadcom: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:37:45 -0500
+Message-Id: <20191110024013.29782-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,49 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 37dc9cdbdc1bd64bd3b6ea285a9c2e811404dc82 ]
+[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
 
-According to hardware's description, the head pointer register should
-be written before the tail pointer register while initializing the vf
-command queue. Otherwise, it may trigger an interrupt even though there
-is no command received.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Fixes: fedd0c15d288 ("net: hns3: Add HNS3 VF IMP(Integrated Management Proc) cmd interface")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
+ drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index fb471fe2c4946..d8c0cc8e04c9d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -132,8 +132,8 @@ static int hclgevf_init_cmd_queue(struct hclgevf_dev *hdev,
- 		reg_val |= HCLGEVF_NIC_CMQ_ENABLE;
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CSQ_DEPTH_REG, reg_val);
+diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+index 897302adc38ec..50f8a377596e1 100644
+--- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
++++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+@@ -568,12 +568,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
+ /*
+  * tx request callback
+  */
+-static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct bcm_enet_priv *priv;
+ 	struct bcm_enet_desc *desc;
+ 	u32 len_stat;
+-	int ret;
++	netdev_tx_t ret;
  
--		hclgevf_write_dev(hw, HCLGEVF_NIC_CSQ_TAIL_REG, 0);
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CSQ_HEAD_REG, 0);
-+		hclgevf_write_dev(hw, HCLGEVF_NIC_CSQ_TAIL_REG, 0);
- 		break;
- 	case HCLGEVF_TYPE_CRQ:
- 		reg_val = (u32)ring->desc_dma_addr;
-@@ -145,8 +145,8 @@ static int hclgevf_init_cmd_queue(struct hclgevf_dev *hdev,
- 		reg_val |= HCLGEVF_NIC_CMQ_ENABLE;
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CRQ_DEPTH_REG, reg_val);
+ 	priv = netdev_priv(dev);
  
--		hclgevf_write_dev(hw, HCLGEVF_NIC_CRQ_TAIL_REG, 0);
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CRQ_HEAD_REG, 0);
-+		hclgevf_write_dev(hw, HCLGEVF_NIC_CRQ_TAIL_REG, 0);
- 		break;
- 	}
- 
+diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
+index ef4a0c326736d..7e3f9642ba6c5 100644
+--- a/drivers/net/ethernet/broadcom/sb1250-mac.c
++++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
+@@ -299,7 +299,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
+ static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
+ static uint64_t sbmac_addr2reg(unsigned char *ptr);
+ static irqreturn_t sbmac_intr(int irq, void *dev_instance);
+-static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
++static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
+ static void sbmac_setmulti(struct sbmac_softc *sc);
+ static int sbmac_init(struct platform_device *pldev, long long base);
+ static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
+@@ -2028,7 +2028,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
+  *  Return value:
+  *  	   nothing
+  ********************************************************************* */
+-static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct sbmac_softc *sc = netdev_priv(dev);
+ 	unsigned long flags;
 -- 
 2.20.1
 
