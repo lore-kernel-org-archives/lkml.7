@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9060CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C92DC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DB0208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FED9208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355367;
-	bh=cOvdCOcKRIUMA17RsSGKk8JBcOVGa9f5VjXMvf73OFc=;
+	s=default; t=1573355374;
+	bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QK8g05ouNhKp+zQF1PjoW96BOh7k7x6qhiF310dBcaSBIhXibmTbERYEY5683Ct6Y
-	 g+KK9/1wAwCJNU2r+Bx+aNfSPmUAs8k/ufC1P7s76XaQt/SxVjWaJWOtJQkGwT+geJ
-	 BRprK9y7q3V4nXKEDCKEqQzu8YuyEFKnIrpOUINY=
+	b=tEvA7uLJAl9pwSEiz5U/Z5D/aRWCRIqK7CoSzReAJTKniwLsiPD0BCi8G2tlPHqUE
+	 aIP05PYaENeMZXZu/JmL7fRjLbVcj/Z9H5U5i86p98E40ofZpMW6ZYoY4cIUnpJQ71
+	 EpfwxuMsAJfaNcA84DrL8A1uZhSCBw9SYgVSoqos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfKJDJ0 (ORCPT
+        id S1728584AbfKJCoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:09:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44178 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbfKJCoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:37 -0500
+        id S1728488AbfKJCoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AB3321850;
-        Sun, 10 Nov 2019 02:44:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B6D21D7E;
+        Sun, 10 Nov 2019 02:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353877;
-        bh=cOvdCOcKRIUMA17RsSGKk8JBcOVGa9f5VjXMvf73OFc=;
+        s=default; t=1573353851;
+        bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RaEIL+Qk+easAasPKTvVz/VfgbQ9qQ7vSQiUuOvUFYxN6XzS05z5nnIVxMcWOQGMJ
-         y841AtFviWFJizRNmFOtIcBDXiTZdcqa40tKbCmGAHZJvqRdVSCOVCZJB6OFw+X9m5
-         mNnQIbZRil0ULyCO7gMTBMArTKa9uT4spBUkQo3A=
+        b=nFre0IZe3Rd3jzKJ/9jVotB3E+D15l3i8QqYJnfjOIOs9wJbV2rCDyum1QFL32w8D
+         qpfGQLFl4zc83IA2d+m186FlyDUTbONYP5MKGh1eqTjm9aOkruZnAxvJkxX2hsrCzn
+         A6eax5FvZNXMDiVooUQ4joqzRyPH6lBd0sZ0FZXs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay Kumar Konduri <sanjay.konduri@redpinesignals.com>,
-        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 155/191] Bluetooth: btrsi: fix bt tx timeout issue
-Date:   Sat,  9 Nov 2019 21:39:37 -0500
-Message-Id: <20191110024013.29782-155-sashal@kernel.org>
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 137/191] ARM: dts: tegra30: fix xcvr-setup-use-fuses
+Date:   Sat,  9 Nov 2019 21:39:19 -0500
+Message-Id: <20191110024013.29782-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,60 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay Kumar Konduri <sanjay.konduri@redpinesignals.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit 7cbfd1e2aad410d96fa6162aeb3f9cff1fecfc58 ]
+[ Upstream commit 564706f65cda3de52b09e51feb423a43940fe661 ]
 
-observed sometimes data is coming with unaligned address from kernel
-BT stack. If unaligned address is passed, some data in payload is
-stripped when packet is loading to firmware and this results, BT
-connection timeout is happening.
+There was a dot instead of a comma. Fix this.
 
-sh# hciconfig hci0 up
-Can't init device hci0: hci0 command 0x0c03 tx timeout
-
-Fixed this by moving the data to aligned address.
-
-Signed-off-by: Sanjay Kumar Konduri <sanjay.konduri@redpinesignals.com>
-Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btrsi.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/tegra30.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/bluetooth/btrsi.c b/drivers/bluetooth/btrsi.c
-index 60d1419590bab..3951f7b238404 100644
---- a/drivers/bluetooth/btrsi.c
-+++ b/drivers/bluetooth/btrsi.c
-@@ -21,8 +21,9 @@
- #include <net/rsi_91x.h>
- #include <net/genetlink.h>
- 
--#define RSI_HEADROOM_FOR_BT_HAL	16
-+#define RSI_DMA_ALIGN	8
- #define RSI_FRAME_DESC_SIZE	16
-+#define RSI_HEADROOM_FOR_BT_HAL	(RSI_FRAME_DESC_SIZE + RSI_DMA_ALIGN)
- 
- struct rsi_hci_adapter {
- 	void *priv;
-@@ -70,6 +71,16 @@ static int rsi_hci_send_pkt(struct hci_dev *hdev, struct sk_buff *skb)
- 		bt_cb(new_skb)->pkt_type = hci_skb_pkt_type(skb);
- 		kfree_skb(skb);
- 		skb = new_skb;
-+		if (!IS_ALIGNED((unsigned long)skb->data, RSI_DMA_ALIGN)) {
-+			u8 *skb_data = skb->data;
-+			int skb_len = skb->len;
-+
-+			skb_push(skb, RSI_DMA_ALIGN);
-+			skb_pull(skb, PTR_ALIGN(skb->data,
-+						RSI_DMA_ALIGN) - skb->data);
-+			memmove(skb->data, skb_data, skb_len);
-+			skb_trim(skb, skb_len);
-+		}
- 	}
- 
- 	return h_adapter->proto_ops->coex_send_pkt(h_adapter->priv, skb,
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index a6781f6533105..5a04ddefb71f6 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -896,7 +896,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <1>;
+ 		nvidia,xcvr-lsrslew = <1>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -933,7 +933,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -969,7 +969,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
 -- 
 2.20.1
 
