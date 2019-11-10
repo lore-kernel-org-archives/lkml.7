@@ -2,131 +2,78 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1974C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5CDC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B793520818
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573418685;
-	bh=1iqOUBcdh7DyckRU3VPhp09v1maKIjzw8vQ9PdG0m70=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=qr76IBA4MCBNwigeazOs0LGfB7zk1qydh1LW7FPGXlfmCHsed4InoFFUjFLGVs9f9
-	 n8AChyFeeauQqh01lodu639PRSDoab0NykcUiGNq5whh4xpr1xsSro2TMle9h+jqgY
-	 sr0GwhRQgbUCkW3Lyy+Ma8AvZ6xUkMkeRk4Zrrg8=
+	by mail.kernel.org (Postfix) with ESMTP id C8FB5207FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:45:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KtlviDbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKJUoo (ORCPT
+        id S1727149AbfKJUpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 15:44:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbfKJUoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 15:44:44 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [65.158.186.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39EC6207FA;
-        Sun, 10 Nov 2019 20:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573418683;
-        bh=1iqOUBcdh7DyckRU3VPhp09v1maKIjzw8vQ9PdG0m70=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cUCmCq2XylTdVkatdo9pl2I1JUHE04hvIGm7uwvDCy4EP0ENHbsAwBuHy0L338xw0
-         w1Q93JNnhS+3YWgyXmzjwkQn0YUGxnSprabFmdi8E1LjcCCur4P3ILTru3JTC1IENq
-         Er4NZiNNj0xfGd7A52Ird04GTUlYuX5BrvnXE080=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CC00635227E6; Sun, 10 Nov 2019 12:44:42 -0800 (PST)
-Date:   Sun, 10 Nov 2019 12:44:42 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-Message-ID: <20191110204442.GA2865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CAHk-=wjB61GNmqpX0BLA5tpL4tsjWV7akaTc2Roth7uGgax+mw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911101034180.29192-100000@netrider.rowland.org>
- <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
- <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com>
+        Sun, 10 Nov 2019 15:45:01 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46499 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbfKJUpA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 15:45:00 -0500
+Received: by mail-io1-f66.google.com with SMTP id c6so12208794ioo.13;
+        Sun, 10 Nov 2019 12:44:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yaSU/J7wlwhTU7SEKEjJAOkDsbzoJGXODvxt454XJLw=;
+        b=KtlviDbx5K8fQa8EmJ8dUdQnS1D25sFLvv2BnO2y7dXoCuUhulaZO74INtMIofaTnK
+         VSVZztuWWj7q4rrcrHVu3cnF2vmzUckJjbtc5el/QxweFP48BFjiaaNA19BC5VG9zsHf
+         c6aeY/UjfmFSeehd0ik8DWnkOufaXDmX6Sykm+HJzLofRSOFzbN0dGTSvsocWi7A7wpo
+         dxeq6+AQu484WIh/EWR4zlREMoUXumyCY82AsEZOdIpJ1YPJXtAUejzCJ0NT4bVu8c2t
+         CsLdoHuV3G/OO41dQBMANVf0QE1VdqLwQZe+91mkuxG8vARrlqF1YAieAYJX+14kYlJP
+         Y3kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yaSU/J7wlwhTU7SEKEjJAOkDsbzoJGXODvxt454XJLw=;
+        b=eQ12r9rVr33emIBwsiJDT0BZ9ew1ai7S2reCvR/Vg2uxzUQZYRQ3Bl1YkKnxrhlOyy
+         6TIgfY3sz0qVzGBVr1wHHablqU9H9PufijSkX2J6O34qyUeXxv4AhreS6TztgRY2TkvQ
+         NcWGSzOrMdkafOzJu4bG3vOzLDqu/6jcIMsnTdR8shaTkdlFDq7IHlZ7+vnHZq1JcC0Q
+         +uYbOaEaibn5Q4qQlJiPsCQlKnKyPixXnYZ/5fQe5tRP4dNPUOUlL9Kc+RYepnFOldk4
+         snu4/R1fJbHuTv+h413rXNYCwjlVEV1wA7qo1yHcEk27SU4Fk0cCBHMt1t1dSQyS4HHj
+         6zOw==
+X-Gm-Message-State: APjAAAXR+qcjkqkmvr9QH2dzKDfnEezf0Fc5onFBlERd38ptlarKIASC
+        4yWqtJAJTBeMd0QA4IFv44tUWT5txT7q0vPF76Y=
+X-Google-Smtp-Source: APXvYqxUtHARm63QIbtf3dnp/mGo21LjhNNOLCCRMHawHaZzV1Uw/kjAiyImL9JKD0L6y84nu5mO5CwtpN3rCYvInds=
+X-Received: by 2002:a02:a402:: with SMTP id c2mr8814473jal.5.1573418699329;
+ Sun, 10 Nov 2019 12:44:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191108203435.112759-1-arnd@arndb.de> <20191108203435.112759-2-arnd@arndb.de>
+In-Reply-To: <20191108203435.112759-2-arnd@arndb.de>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Sun, 10 Nov 2019 12:44:47 -0800
+Message-ID: <CABeXuvqFmQU+Qr_2nqTwDO_mKWdcym=DP+4v4ray=GYgUFRetw@mail.gmail.com>
+Subject: Re: [PATCH 1/8] y2038: timex: remove incorrect time_t truncation
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux Network Devel Mailing List <netdev@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 11:20:53AM -0800, Linus Torvalds wrote:
-> On Sun, Nov 10, 2019 at 11:12 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > And this is where WRITE_IDEMPOTENT would make a possible difference.
-> > In particular, if we make the optimization to do the "read and only
-> > write if changed"
-> 
-> It might be useful for checking too. IOW, something like KCSAN could
-> actually check that if a field has an idempotent write to it, all
-> writes always have the same value.
-> 
-> Again, there's the issue with lifetime.
-> 
-> Part of that is "initialization is different". Those writes would not
-> be marked idempotent, of course, and they'd write another value.
-> 
-> There's also the issue of lifetime at the _end_ of the use, of course.
-> There _are_ interesting data races at the end of the lifetime, both
-> reads and writes.
-> 
-> In particular, if it's a sticky flag, in order for there to not be any
-> races, all the writes have to happen with a refcount held, and the
-> final read has to happen after the final refcount is dropped (and the
-> refcounts have to have atomicity and ordering, of course). I'm not
-> sure how easy something like that is model in KSAN. Maybe it already
-> does things like that for all the other refcount stuff we do.
-> 
-> But the lifetime can be problematic for other reasons too - in this
-> particular case we have a union for that sticky flag (which is used
-> under the refcount), and then when the final refcount is released we
-> read that value (thus no data race) but because of the union we will
-> now start using that field with *different* data. It becomes that RCU
-> list head instead.
-> 
-> That kind of "it used to be a sticky flag, but now the lifetime of the
-> flag is over, and it's something entirely different" might be a
-> nightmare for something like KCSAN. It sounds complicated to check
-> for, but I have no idea what KCSAN really considers complicated or
-> not.
+Thanks for fixing the bug.
 
-But will "one size fits all" be practical and useful?
-
-For my code, I would be happy to accept a significant "false positive"
-rate to get even a probabilistic warning of other-task accesses to some
-of RCU's fields.  Even if the accesses were perfect from a functional
-viewpoint, they could be problematic from a performance and scalability
-viewpoint.  And for something like RCU, real bugs, even those that are
-very improbable, need to be fixed.
-
-But other code (and thus other developers and maintainers) are going to
-have different needs.  For all I know, some might have good reasons to
-exclude their code from KCSAN analysis entirely.
-
-Would it make sense for KCSAN to have per-file/subsystem/whatever flags
-specifying the depth of the analysis?
-
-							Thanx, Paul
+Acked-by: Deepa Dinamani <deepa.kernel@gmail.com>
