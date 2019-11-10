@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF066C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6930C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B69215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5AE215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355305;
-	bh=8YwN1mIPCq0li5Fv10AaqXAk7tANchOV30SvSfyabI8=;
+	s=default; t=1573355309;
+	bh=gVTsy2X/Boc1lOy/CBFbZPqx8JwkISsTPMr6yfiOJYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qFd8bOD1VIZJ0+RgW+TvMA5hNQbGGMIwR5zM7J0LUrSeL4KC0skjYjltvt/FgkQiK
-	 IcZD5BsCkNOC1quex0ieJPYIlYaKnB9+Y3uM5o+Sf4MF57zRZKVZ4bztICOZFKRKBp
-	 XifONvtLlyCmzcYmFIzr+nbPxHRCXa9ZfZ/tk/JE=
+	b=g56oE90RfwIbybLkgwtO3razHYjSYP+kX1+USEr3AW903W+I+W1P/1v/88mKBVUxi
+	 XbtxIll8gEpBcRdJnDe1zbYsLuLadxHf0ytiY2s0os4MTTMnmcmV6G8Q/9TIMCruL1
+	 FmYHfyfi2WXekGnlhIkYIcoYIz8Yw3jMT3kgwqSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfKJCpD (ORCPT
+        id S1727747AbfKJDI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43916 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbfKJCob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:31 -0500
+        id S1728702AbfKJCpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE29D21848;
-        Sun, 10 Nov 2019 02:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A652215EA;
+        Sun, 10 Nov 2019 02:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353870;
-        bh=8YwN1mIPCq0li5Fv10AaqXAk7tANchOV30SvSfyabI8=;
+        s=default; t=1573353900;
+        bh=gVTsy2X/Boc1lOy/CBFbZPqx8JwkISsTPMr6yfiOJYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHG3rCPgP6Pk3voZK1r4IQ8tSdJI3+Cf9Z6EkTuM98PvbZStLr/wGO50T7q4gGJyG
-         3sV86Qlvt+nHgse103iyN7x4TufnqgsNOIircR3W6QVlHeGiwSl9lztgQL9ZbUTVyq
-         /Ow/zeAdxIjHwtocmuG0BkoysJYo7FYHbyWfzXjo=
+        b=NZASaktVV/DAICGjQfl6PyM7Txi0VvhdfaXAOqz6MgPZaFIEBdtKgDTTjTID5VshL
+         20KJsrdxaIU8kUJ2X68AVa930JRHGb9z6YzgUk73h+yTGk3mgVjdGjOY73179kqSV9
+         /8J/+VY3m4zuCbuxumeLcWqeTMrR8iz10ohymD14=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Justin Ernst <justin.ernst@hpe.com>, Borislav Petkov <bp@suse.de>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 150/191] EDAC: Raise the maximum number of memory controllers
-Date:   Sat,  9 Nov 2019 21:39:32 -0500
-Message-Id: <20191110024013.29782-150-sashal@kernel.org>
+Cc:     Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 166/191] iwlwifi: mvm: use correct FIFO length
+Date:   Sat,  9 Nov 2019 21:39:48 -0500
+Message-Id: <20191110024013.29782-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,61 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Ernst <justin.ernst@hpe.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 6b58859419554fb824e09cfdd73151a195473cbc ]
+[ Upstream commit 7126b6f2bbdf8e25f85e7ca6d91d49ea4ce9f6a6 ]
 
-We observe an oops in the skx_edac module during boot:
+Current FIFO size calculation is wrong for two reasons:
+- We access lmac 0 by default
+- We don't take 11ax into consideration.
+Fix both.
 
-  EDAC MC0: Giving out device to module skx_edac controller Skylake Socket#0 IMC#0
-  EDAC MC1: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC2: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  ...
-  EDAC MC13: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC14: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  EDAC MC15: Giving out device to module skx_edac controller Skylake Socket#1 IMC#1
-  Too many memory controllers: 16
-  EDAC MC: Removed device 0 for skx_edac Skylake Socket#0 IMC#0
-
-We observe there are two memory controllers per socket, with a limit
-of 16. Raise the maximum number of memory controllers from 16 to 2 *
-MAX_NUMNODES (1024).
-
-[ bp: This is just a band-aid fix until we've sorted out the whole issue
-  with the bus_type association and handling in EDAC and can get rid of
-  this arbitrary limit. ]
-
-Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Russ Anderson <russ.anderson@hpe.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac@vger.kernel.org
-Link: https://lkml.kernel.org/r/20180925143449.284634-1-justin.ernst@hpe.com
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/edac.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  4 ++
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c   | 47 +++++++++++++------
+ 2 files changed, 36 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index bffb97828ed67..958d69332c1d5 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -17,6 +17,7 @@
- #include <linux/completion.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
-+#include <linux/numa.h>
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+index b3fd20502abb3..d90d58309bf0e 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+@@ -85,6 +85,10 @@ const u8 iwl_mvm_ac_to_gen2_tx_fifo[] = {
+ 	IWL_GEN2_EDCA_TX_FIFO_VI,
+ 	IWL_GEN2_EDCA_TX_FIFO_BE,
+ 	IWL_GEN2_EDCA_TX_FIFO_BK,
++	IWL_GEN2_TRIG_TX_FIFO_VO,
++	IWL_GEN2_TRIG_TX_FIFO_VI,
++	IWL_GEN2_TRIG_TX_FIFO_BE,
++	IWL_GEN2_TRIG_TX_FIFO_BK,
+ };
  
- #define EDAC_DEVICE_NAME_LEN	31
+ struct iwl_mvm_mac_iface_iterator_data {
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 5615ce55cef56..c222ab30f660d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -778,6 +778,36 @@ iwl_mvm_tx_tso_segment(struct sk_buff *skb, unsigned int num_subframes,
+ 	return 0;
+ }
  
-@@ -670,6 +671,6 @@ struct mem_ctl_info {
- /*
-  * Maximum number of memory controllers in the coherent fabric.
-  */
--#define EDAC_MAX_MCS	16
-+#define EDAC_MAX_MCS	2 * MAX_NUMNODES
++static unsigned int iwl_mvm_max_amsdu_size(struct iwl_mvm *mvm,
++					   struct ieee80211_sta *sta,
++					   unsigned int tid)
++{
++	struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
++	enum nl80211_band band = mvmsta->vif->bss_conf.chandef.chan->band;
++	u8 ac = tid_to_mac80211_ac[tid];
++	unsigned int txf;
++	int lmac = IWL_LMAC_24G_INDEX;
++
++	if (iwl_mvm_is_cdb_supported(mvm) &&
++	    band == NL80211_BAND_5GHZ)
++		lmac = IWL_LMAC_5G_INDEX;
++
++	/* For HE redirect to trigger based fifos */
++	if (sta->he_cap.has_he && !WARN_ON(!iwl_mvm_has_new_tx_api(mvm)))
++		ac += 4;
++
++	txf = iwl_mvm_mac_ac_to_tx_fifo(mvm, ac);
++
++	/*
++	 * Don't send an AMSDU that will be longer than the TXF.
++	 * Add a security margin of 256 for the TX command + headers.
++	 * We also want to have the start of the next packet inside the
++	 * fifo to be able to send bursts.
++	 */
++	return min_t(unsigned int, mvmsta->max_amsdu_len,
++		     mvm->fwrt.smem_cfg.lmac[lmac].txfifo_size[txf] - 256);
++}
++
+ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 			  struct ieee80211_tx_info *info,
+ 			  struct ieee80211_sta *sta,
+@@ -790,7 +820,7 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 	u16 snap_ip_tcp, pad;
+ 	unsigned int dbg_max_amsdu_len;
+ 	netdev_features_t netdev_flags = NETIF_F_CSUM_MASK | NETIF_F_SG;
+-	u8 tid, txf;
++	u8 tid;
  
- #endif
+ 	snap_ip_tcp = 8 + skb_transport_header(skb) - skb_network_header(skb) +
+ 		tcp_hdrlen(skb);
+@@ -829,20 +859,7 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 	    !(mvmsta->amsdu_enabled & BIT(tid)))
+ 		return iwl_mvm_tx_tso_segment(skb, 1, netdev_flags, mpdus_skb);
+ 
+-	max_amsdu_len = mvmsta->max_amsdu_len;
+-
+-	/* the Tx FIFO to which this A-MSDU will be routed */
+-	txf = iwl_mvm_mac_ac_to_tx_fifo(mvm, tid_to_mac80211_ac[tid]);
+-
+-	/*
+-	 * Don't send an AMSDU that will be longer than the TXF.
+-	 * Add a security margin of 256 for the TX command + headers.
+-	 * We also want to have the start of the next packet inside the
+-	 * fifo to be able to send bursts.
+-	 */
+-	max_amsdu_len = min_t(unsigned int, max_amsdu_len,
+-			      mvm->fwrt.smem_cfg.lmac[0].txfifo_size[txf] -
+-			      256);
++	max_amsdu_len = iwl_mvm_max_amsdu_size(mvm, sta, tid);
+ 
+ 	if (unlikely(dbg_max_amsdu_len))
+ 		max_amsdu_len = min_t(unsigned int, max_amsdu_len,
 -- 
 2.20.1
 
