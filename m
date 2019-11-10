@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFABAC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817ECC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC93E21924
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEA221783
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355649;
-	bh=WcxXUNBUSv0CfufluOGxMfubxgccM0aLRAa4a4l2zR8=;
+	s=default; t=1573355654;
+	bh=XPxPE1qZQJ1Y0fI2f8ZMRJh22vddh15YP8MIS/si918=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ie5YDWzA9wj9VCQIkmgE7hVhEm5wmJIgaFvWCf9siv3eej3l5zR9CsLVQcmKax7E/
-	 mBi815HqzI3SZS1Mjov/MSvqCW/UcQUMA4VVHUQUqQ5fcf3iIHZu1M+G3S3BSwm8gG
-	 xsdNhwjr4u9j4onX8Iym6L5KbZHzTGD9yNWkdos0=
+	b=JDI2VxXKacAmoZs9FRL74ycby09BByNo08+4fLWszAwvOq5XQ8Ws3Ii3GsLMgx7p1
+	 qKPExngPmMq8uL//4RftZrB1noyJgN/s77kUqPSJNBSV91LZcbEm2tawi1aZXTTQJ6
+	 eED4tcAw41jUBKjI2GXVqtuhSYlzqDPBnW4HAHy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfKJCmd (ORCPT
+        id S1729371AbfKJDOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:14:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbfKJCm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:28 -0500
+        id S1727898AbfKJCmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C57F21924;
-        Sun, 10 Nov 2019 02:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E575A21655;
+        Sun, 10 Nov 2019 02:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353748;
-        bh=WcxXUNBUSv0CfufluOGxMfubxgccM0aLRAa4a4l2zR8=;
+        s=default; t=1573353752;
+        bh=XPxPE1qZQJ1Y0fI2f8ZMRJh22vddh15YP8MIS/si918=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AvB5/bTFEJ3NIita8ZjU2u9T9mu2E9GbSjLsePvGDk1+gxxTG8DNHUoGkvz5mrYep
-         9EgskcdnVWjU75doBiIX4IMvcvxh2ouMzWJjyyJxPyMjdQEX5ZWCD3I9JzNUBysyqw
-         FXuprZF4kizDI5fXKp6VN/kcEahlU8W1337u8mOg=
+        b=NSygapK6xtyA6IGVckfFoAnOgNMXaUqo3b+/elGSmuURKQu/XttJj34e5KVWeSFpC
+         /+Gr+/OVkD1RhD3raWf+vekf3yPg7Mgv3YkvszdzCQ2Ike0zONPhAJQse/7L4lg4e8
+         sPvAz40BWsphG1/n7xG7i6lxFlXSuYJnMzrXUhb8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>, Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 064/191] f2fs: avoid infinite loop in f2fs_alloc_nid
-Date:   Sat,  9 Nov 2019 21:38:06 -0500
-Message-Id: <20191110024013.29782-64-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 068/191] ARM: dts: ste: Fix SPI controller node names
+Date:   Sat,  9 Nov 2019 21:38:10 -0500
+Message-Id: <20191110024013.29782-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,37 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit f84262b0862d43b71b3e80a036cdd9d82e620367 ]
+[ Upstream commit 2f967f9e9fa076affb711da1a8389b5d33814fc6 ]
 
-If we have an error in f2fs_build_free_nids, we're able to fall into a loop
-to find free nids.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Suggested-by: Chao Yu <chao@kernel.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ste-dbx5x0.dtsi     | 4 ++--
+ arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
+ arch/arm/boot/dts/ste-snowball.dts    | 2 +-
+ arch/arm/boot/dts/ste-u300.dts        | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index aa8f19e1bdb3d..e5d474681471c 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2367,8 +2367,9 @@ bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid)
- 	spin_unlock(&nm_i->nid_list_lock);
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 3dc0028e108b3..986767735e249 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -878,7 +878,7 @@
+ 			power-domains = <&pm_domains DOMAIN_VAPE>;
+ 		};
  
- 	/* Let's scan nat pages and its caches to get free nids */
--	f2fs_build_free_nids(sbi, true, false);
--	goto retry;
-+	if (!f2fs_build_free_nids(sbi, true, false))
-+		goto retry;
-+	return false;
- }
+-		ssp@80002000 {
++		spi@80002000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x80002000 0x1000>;
+ 			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+@@ -892,7 +892,7 @@
+ 			power-domains = <&pm_domains DOMAIN_VAPE>;
+ 		};
  
- /*
+-		ssp@80003000 {
++		spi@80003000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x80003000 0x1000>;
+ 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+index 3f14b4df69b4e..94eeb7f1c9478 100644
+--- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
++++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+@@ -57,7 +57,7 @@
+ 			};
+ 		};
+ 
+-		ssp@80002000 {
++		spi@80002000 {
+ 			/*
+ 			 * On the first generation boards, this SSP/SPI port was connected
+ 			 * to the AB8500.
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index b0b94d0530985..603890461ae0f 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -376,7 +376,7 @@
+ 			pinctrl-1 = <&i2c3_sleep_mode>;
+ 		};
+ 
+-		ssp@80002000 {
++		spi@80002000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&ssp0_snowball_mode>;
+ 		};
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index 62ecb6a2fa39e..1bd1aba3322f1 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -442,7 +442,7 @@
+ 			dma-names = "rx";
+ 		};
+ 
+-		spi: ssp@c0006000 {
++		spi: spi@c0006000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0xc0006000 0x1000>;
+ 			interrupt-parent = <&vica>;
 -- 
 2.20.1
 
