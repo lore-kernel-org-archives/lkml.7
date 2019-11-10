@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CE6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF84C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970D2208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4AC208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354953;
-	bh=/NIyCPyZeLdBwZL2f6/XlX7dwDQA8o09yF4PJxAG3WA=;
+	s=default; t=1573354958;
+	bh=u5HAUch/zt0qKhz/JRb40yB5Wv5KwFM6XhDO9ftbcdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJafmc/X3HHzdZQrV9rSbMLn4MLXk4eEkssy9j3WafqsbzRaNBUFlTvVcus9XeqZ1
-	 TFEqVBI8s0/wpLJQhJFsWOaPLdXdLlTivlmtsHjbsSpgwSfMK3LGAbyRtZNKgy9K60
-	 452gIkv3HWHXGpGnBTymdos8C7spGXTEjIN6Z2yE=
+	b=VgfpxCXIxhS7cKIvDgcu6ZVzrFYjdi3DV1Ow7ofSb6u5iazb2XXw6IBS/QUO5khjx
+	 ePCipkMb1nLDcSKqTtEebica21G7xNBtrxihoO6hy5xiin/Fin+UOkvC48oMHxfXV5
+	 WMP0gP0CCTGdpcGxoy9yzgv81LCpKnA3oh1IFFEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbfKJDCc (ORCPT
+        id S1726847AbfKJCtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:02:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58212 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:49:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727453AbfKJCtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:19 -0500
+        id S1727121AbfKJCtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 659E122582;
-        Sun, 10 Nov 2019 02:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6075422593;
+        Sun, 10 Nov 2019 02:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354159;
-        bh=/NIyCPyZeLdBwZL2f6/XlX7dwDQA8o09yF4PJxAG3WA=;
+        s=default; t=1573354143;
+        bh=u5HAUch/zt0qKhz/JRb40yB5Wv5KwFM6XhDO9ftbcdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W4sEBqFeeiAGr09JDze/6JiJB7qDj28m4AzeLwhOcOdLNuY3IfathY9MpGdRpVvca
-         JU7l3Fa1v/Jn74XeDdTI8sII6etwWrKBLMYLiMJ7uH5VK8bylQC83AaZ3/lr2+3UOo
-         U9vfKt44uII2sGHnXH5vWa8gWtdvwlCojbYL2b3k=
+        b=uz5p0NwrZHIorEZg2qPkIjAxRlhHtFMaXSAJvOGhA+q15EQnHlwEY5lBLN1ZCy7nV
+         6sc0vrydPA4ULPApMkVuy+DfPySvdiLcGYuUGWVTw+uVojGKNy8okTLodqKq11eGvE
+         FDPmfBCLNrfDP02DYhjOAOE08hmFyJtDyC24zjqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Peter Chen <peter.chen@nxp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 16/66] usb: chipidea: Fix otg event handler
-Date:   Sat,  9 Nov 2019 21:47:55 -0500
-Message-Id: <20191110024846.32598-16-sashal@kernel.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/66] power: supply: twl4030_charger: disable eoc interrupt on linear charge
+Date:   Sat,  9 Nov 2019 21:47:49 -0500
+Message-Id: <20191110024846.32598-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -59,46 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 59739131e0ca06db7560f9073fff2fb83f6bc2a5 ]
+[ Upstream commit 079cdff3d0a09c5da10ae1be35def7a116776328 ]
 
-At OTG work running time, it's possible that several events need to be
-addressed (e.g. ID and VBUS events). The current implementation handles
-only one event at a time which leads to ignoring the other one. Fix it.
+This avoids getting woken up from suspend after power interruptions
+when the bci wrongly thinks the battery is full just because
+of input current going low because of low input power
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/otg.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/power/supply/twl4030_charger.c | 27 +++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
-index f36a1ac3bfbdf..b8650210be0f7 100644
---- a/drivers/usb/chipidea/otg.c
-+++ b/drivers/usb/chipidea/otg.c
-@@ -206,14 +206,17 @@ static void ci_otg_work(struct work_struct *work)
- 	}
+diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
+index 14fed11e8f6e3..5b1f147b11cb0 100644
+--- a/drivers/power/supply/twl4030_charger.c
++++ b/drivers/power/supply/twl4030_charger.c
+@@ -469,6 +469,7 @@ static void twl4030_current_worker(struct work_struct *data)
+ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
+ {
+ 	int ret;
++	u32 reg;
  
- 	pm_runtime_get_sync(ci->dev);
-+
- 	if (ci->id_event) {
- 		ci->id_event = false;
- 		ci_handle_id_switch(ci);
--	} else if (ci->b_sess_valid_event) {
-+	}
-+
-+	if (ci->b_sess_valid_event) {
- 		ci->b_sess_valid_event = false;
- 		ci_handle_vbus_change(ci);
--	} else
--		dev_err(ci->dev, "unexpected event occurs at %s\n", __func__);
-+	}
-+
- 	pm_runtime_put_sync(ci->dev);
+ 	if (bci->usb_mode == CHARGE_OFF)
+ 		enable = false;
+@@ -482,14 +483,38 @@ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
+ 			bci->usb_enabled = 1;
+ 		}
  
- 	enable_irq(ci->irq);
+-		if (bci->usb_mode == CHARGE_AUTO)
++		if (bci->usb_mode == CHARGE_AUTO) {
++			/* Enable interrupts now. */
++			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_ICHGEOC |
++					TWL4030_TBATOR2 | TWL4030_TBATOR1 |
++					TWL4030_BATSTS);
++			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
++				       TWL4030_INTERRUPTS_BCIIMR1A);
++			if (ret < 0) {
++				dev_err(bci->dev,
++					"failed to unmask interrupts: %d\n",
++					ret);
++				return ret;
++			}
+ 			/* forcing the field BCIAUTOUSB (BOOT_BCI[1]) to 1 */
+ 			ret = twl4030_clear_set_boot_bci(0, TWL4030_BCIAUTOUSB);
++		}
+ 
+ 		/* forcing USBFASTMCHG(BCIMFSTS4[2]) to 1 */
+ 		ret = twl4030_clear_set(TWL_MODULE_MAIN_CHARGE, 0,
+ 			TWL4030_USBFASTMCHG, TWL4030_BCIMFSTS4);
+ 		if (bci->usb_mode == CHARGE_LINEAR) {
++			/* Enable interrupts now. */
++			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_TBATOR2 |
++					TWL4030_TBATOR1 | TWL4030_BATSTS);
++			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
++				       TWL4030_INTERRUPTS_BCIIMR1A);
++			if (ret < 0) {
++				dev_err(bci->dev,
++					"failed to unmask interrupts: %d\n",
++					ret);
++				return ret;
++			}
+ 			twl4030_clear_set_boot_bci(TWL4030_BCIAUTOAC|TWL4030_CVENAC, 0);
+ 			/* Watch dog key: WOVF acknowledge */
+ 			ret = twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE, 0x33,
 -- 
 2.20.1
 
