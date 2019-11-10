@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44407C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0DEC17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE1821850
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF6221924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354915;
-	bh=ikEzlp6skgbt7ucgJUk6QMGS3qo27ru8EhTypd6fYVY=;
+	s=default; t=1573354918;
+	bh=gtx+21LnuuVEvzEgRNUs8bf/q7NwwX/2OoYioDv49Go=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xyhwY6ELzJUvGGcuImXX4tYZbxHKHN+W1k6P7kKUj0gnUDW2kDsl1Gu3FOSx7m1yS
-	 XCh0zSimhazHOjEjsF81rIPJwa85oQ1nrKRiqqiUa/kEFGnlfTz8E0pUfv7auvNnbG
-	 ch/z7c63Y37x6Q+WtcRLhxyLO76e3aOHTgL27QAU=
+	b=bL9LGS0/q98NSWPD6Zrm5FO4/O+h6rPDciHD9vLyYBin11HtyHUoiIp06GVmhLIRe
+	 q0DPYBsUP5rZhhV5rvNwvS9gl/FUGnZ1vaMPp+cly4ta03ODzLldKgOjDVs5QgDKSA
+	 IC3RMT1f4MDfUEoZRqF6xgkWQMZKKdxIWoYoAkh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfKJCth (ORCPT
+        id S1728092AbfKJDB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58392 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:01:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727162AbfKJCtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:22 -0500
+        id S1729479AbfKJCth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D53B22583;
-        Sun, 10 Nov 2019 02:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997B522582;
+        Sun, 10 Nov 2019 02:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354161;
-        bh=ikEzlp6skgbt7ucgJUk6QMGS3qo27ru8EhTypd6fYVY=;
+        s=default; t=1573354176;
+        bh=gtx+21LnuuVEvzEgRNUs8bf/q7NwwX/2OoYioDv49Go=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWKofGFqq42s/otkwJyzehSIYgqPdl4FQx4gjvr2fDthFLn0UzzbOTCVpIbuc9RbF
-         MsgI+RRdZy5bhn1W27i23BzXa8XRAPilPCkBcID/PXnlJvBv7bntdhSygM8h89R8o3
-         9r0sZrNDhJbyNrpUE0gtp0wyQUrK39+K+j1LIQF8=
+        b=a0oo6V9TSY2ZxTVuaWbtGB2u0MMiZw9LH+FvY0Wo0eSdCZNsvVHscJaBZVjoaOEMR
+         zHs4ir93wfCLHejNfbZzdYOZ1j1Nv/cpGeF0DoB/QMbd+msIFzsHUbwQV7SoxbmWr4
+         jenFyJF3F3tLRzkWcfaJGxIYBrxhzr3UyPl65itI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/66] ARM: dts: am335x-evm: fix number of cpsw
-Date:   Sat,  9 Nov 2019 21:47:57 -0500
-Message-Id: <20191110024846.32598-18-sashal@kernel.org>
+Cc:     Matthew Whitehead <tedheadster@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 28/66] x86/CPU: Use correct macros for Cyrix calls
+Date:   Sat,  9 Nov 2019 21:48:07 -0500
+Message-Id: <20191110024846.32598-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -60,57 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Matthew Whitehead <tedheadster@gmail.com>
 
-[ Upstream commit dcbf6b18d81bcdc51390ca1b258c17e2e13b7d0c ]
+[ Upstream commit 03b099bdcdf7125d4a63dc9ddeefdd454e05123d ]
 
-am335x-evm has only one CPSW external port physically wired, but DT defines
-2 ext. ports. As result, PHY connection failure reported for the second
-ext. port.
+There are comments in processor-cyrix.h advising you to _not_ make calls
+using the deprecated macros in this style:
 
-Update DT to reflect am335x-evm board HW configuration, and, while here,
-switch to use phy-handle instead of phy_id.
+  setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+This is because it expands the macro into a non-functioning calling
+sequence. The calling order must be:
+
+  outb(CX86_CCR2, 0x22);
+  inb(0x23);
+
+From the comments:
+
+ * When using the old macros a line like
+ *   setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+ * gets expanded to:
+ *  do {
+ *    outb((CX86_CCR2), 0x22);
+ *    outb((({
+ *        outb((CX86_CCR2), 0x22);
+ *        inb(0x23);
+ *    }) | 0x88), 0x23);
+ *  } while (0);
+
+The new macros fix this problem, so use them instead.
+
+Signed-off-by: Matthew Whitehead <tedheadster@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Andy Lutomirski <luto@amacapital.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Jia Zhang <qianyue.zj@alibaba-inc.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20180921212041.13096-2-tedheadster@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/cyrix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index e82432c79f85f..3f3ad09c7cd5f 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -701,6 +701,7 @@
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
- 	status = "okay";
-+	slaves = <1>;
- };
- 
- &davinci_mdio {
-@@ -708,15 +709,14 @@
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
- 	status = "okay";
--};
- 
--&cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
--	phy-mode = "rgmii-txid";
-+	ethphy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
- };
- 
--&cpsw_emac1 {
--	phy_id = <&davinci_mdio>, <1>;
-+&cpsw_emac0 {
-+	phy-handle = <&ethphy0>;
- 	phy-mode = "rgmii-txid";
- };
- 
+diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
+index 311d0fad17e6b..a4f6e0ec4ba0f 100644
+--- a/arch/x86/kernel/cpu/cyrix.c
++++ b/arch/x86/kernel/cpu/cyrix.c
+@@ -434,7 +434,7 @@ static void cyrix_identify(struct cpuinfo_x86 *c)
+ 			/* enable MAPEN  */
+ 			setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);
+ 			/* enable cpuid  */
+-			setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
++			setCx86(CX86_CCR4, getCx86(CX86_CCR4) | 0x80);
+ 			/* disable MAPEN */
+ 			setCx86(CX86_CCR3, ccr3);
+ 			local_irq_restore(flags);
 -- 
 2.20.1
 
