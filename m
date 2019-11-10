@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4824CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEECBC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E62E21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC0221019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354893;
-	bh=oHMUJSdY6GTcK8AEGZQrARA28E+MfxcypOGkikh7IlM=;
+	s=default; t=1573354898;
+	bh=1i+vQmOAwXrZq0x2DsTWc7B130SaqeQXm6f1QAqJXH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N7ojOG7c4mpHOKLhbnCaUzWeUrFK80ULQ4dcEcbADwsmNWk/o9aQgMjf2dS+TMxHL
-	 3yb4AVT4DR65EpqTeNGtkPLzyu3waL86AnBYXEM2bHZxTbIYkKoYJoKkTkbisWuTcT
-	 ZGgJnm5+dAbwOVbDtLb6AEO6FvoKVZg/sH06yCHY=
+	b=anZiEoVPUeU3P+GDzP3kn7Kg2kibIWtJdti3v9k/s+cI/cjYlFPNNUD51BPq/yw2y
+	 G6tgfSVUEm/JwSmQB8TtfaniSDF+f9F8IuVtwOnmnNn6B+caHtAvP/27ub1b4/Xcpt
+	 4yemhNyfF0/qihBZEjX3x880IJxjktKawVl113Ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfKJDB1 (ORCPT
+        id S1729923AbfKJDBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:01:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47214 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:01:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729194AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729150AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FCB22246A;
-        Sun, 10 Nov 2019 02:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E70A215EA;
+        Sun, 10 Nov 2019 02:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354056;
-        bh=oHMUJSdY6GTcK8AEGZQrARA28E+MfxcypOGkikh7IlM=;
+        s=default; t=1573354043;
+        bh=1i+vQmOAwXrZq0x2DsTWc7B130SaqeQXm6f1QAqJXH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSRAYwkoYT3oxwFIYtIKAh4f3wNth5Q7/rRCcgz6IARd1QTN37+qZtmSDyfYC4Lpq
-         Af8YlaK4oQD701Ks9Oy/PssZJxyMyZDWBNd7k8Hvl1CcF4m6aBmATLbHJfbH77Eulh
-         wNHKMA5biGXRNxeg086fUnkD7Ul6uF5sqyHdBgCI=
+        b=MSrsDd6EAbg3/CrFP7NADjpRmeqrJpoVrWeIHrUIjoNKdgJ1NIhiXNYDo1LXmFygi
+         XmG6E+IVeZ4uVVfmh3JV7aT5KdplPH07eIZW0ymnSZmNoDPq/zjK5bGaiwADYZdyjL
+         3e88oY+0phmCOHqlDnjYvsOFXdUrSjj0ndDWXc+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 066/109] coresight: tmc: Fix byte-address alignment for RRP
-Date:   Sat,  9 Nov 2019 21:44:58 -0500
-Message-Id: <20191110024541.31567-66-sashal@kernel.org>
+Cc:     Joel Pepper <joel.pepper@rwth-aachen.de>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 055/109] usb: gadget: uvc: configfs: Prevent format changes after linking header
+Date:   Sat,  9 Nov 2019 21:44:47 -0500
+Message-Id: <20191110024541.31567-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -61,52 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Joel Pepper <joel.pepper@rwth-aachen.de>
 
-[ Upstream commit e7753f3937610633a540f2be81be87531f96ff04 ]
+[ Upstream commit cb2200f7af8341aaf0c6abd7ba37e4c667c41639 ]
 
->From the comment in the code, it claims the requirement for byte-address
-alignment for RRP register: 'for 32-bit, 64-bit and 128-bit wide trace
-memory, the four LSBs must be 0s. For 256-bit wide trace memory, the
-five LSBs must be 0s'.  This isn't consistent with the program, the
-program sets five LSBs as zeros for 32/64/128-bit wide trace memory and
-set six LSBs zeros for 256-bit wide trace memory.
+While checks are in place to avoid attributes and children of a format
+being manipulated after the format is linked into the streaming header,
+the linked flag was never actually set, invalidating the protections.
+Update the flag as appropriate in the header link calls.
 
-After checking with the CoreSight Trace Memory Controller technical
-reference manual (ARM DDI 0461B, section 3.3.4 RAM Read Pointer
-Register), it proves the comment is right and the program does wrong
-setting.
-
-This patch fixes byte-address alignment for RRP by following correct
-definition in the technical reference manual.
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Joel Pepper <joel.pepper@rwth-aachen.de>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/uvc_configfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index e2513b7862427..336194d059fed 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -442,10 +442,10 @@ static void tmc_update_etf_buffer(struct coresight_device *csdev,
- 		case TMC_MEM_INTF_WIDTH_32BITS:
- 		case TMC_MEM_INTF_WIDTH_64BITS:
- 		case TMC_MEM_INTF_WIDTH_128BITS:
--			mask = GENMASK(31, 5);
-+			mask = GENMASK(31, 4);
- 			break;
- 		case TMC_MEM_INTF_WIDTH_256BITS:
--			mask = GENMASK(31, 6);
-+			mask = GENMASK(31, 5);
+diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
+index fc604439b25a1..57f6e8a668cf5 100644
+--- a/drivers/usb/gadget/function/uvc_configfs.c
++++ b/drivers/usb/gadget/function/uvc_configfs.c
+@@ -765,6 +765,7 @@ static int uvcg_streaming_header_allow_link(struct config_item *src,
+ 	format_ptr->fmt = target_fmt;
+ 	list_add_tail(&format_ptr->entry, &src_hdr->formats);
+ 	++src_hdr->num_fmt;
++	++target_fmt->linked;
+ 
+ out:
+ 	mutex_unlock(&opts->lock);
+@@ -802,6 +803,8 @@ static void uvcg_streaming_header_drop_link(struct config_item *src,
  			break;
  		}
  
++	--target_fmt->linked;
++
+ out:
+ 	mutex_unlock(&opts->lock);
+ 	mutex_unlock(su_mutex);
 -- 
 2.20.1
 
