@@ -8,68 +8,62 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744FDC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41E1C17444
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41009207FA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703A5206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKQpSFu5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0Qji0b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKJUP2 (ORCPT
+        id S1727083AbfKJUSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 15:15:28 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38075 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfKJUP1 (ORCPT
+        Sun, 10 Nov 2019 15:18:44 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39288 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfKJUSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 15:15:27 -0500
-Received: by mail-wr1-f66.google.com with SMTP id i12so5502462wro.5;
-        Sun, 10 Nov 2019 12:15:23 -0800 (PST)
+        Sun, 10 Nov 2019 15:18:43 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t26so11189581wmi.4;
+        Sun, 10 Nov 2019 12:18:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hnA+DGRSH+UJ48bHZH8NzolNWEJgQsv7XrV6s0qnF/M=;
-        b=WKQpSFu5bTmtvP4e2tCMap23TVwRZZzxnziApAFk1JaLkwMWETka988iSGf7B6iY8p
-         W4vozok0bIUDzPPW9PaOW0lpv3JFQ6sN3gZvhXt9Vo7mWFaKBUbQWCKY8r8KT1JS0rX4
-         mqcwMQ/GtsZsraRYSpG/O97TKehxT6iDpFJzW9+ITl/teseEfOXhPR//3z5J4GgiaZI0
-         53SsAGNuz2rB6+L1ZgCtOm7iovf0Y7WUxRfWw6KQFVtckMTTPvPj59h0TTPo7xzzhAkz
-         p5n2z5vDpDBBKFDq+/xVPCz/f8DpkRlmd87kB9l1+c39JQUFWW1XF1th8Prx5mCEg7jl
-         S05Q==
+        bh=nCBsmwqdT3AvPL78TXyccFIFOh8t+1Pa2nkMeu4O5qI=;
+        b=G0Qji0b0N/VKYe8A+J0i3I8XN5VJ+yrxPZxXDqskMqI1kws9QhJBhX6wnQmr5gBrKM
+         mvIo6Q47+xTk64paK4yZenPZS64Vtxefv3GaE62iQ2pVLjfiT/2iJL/iOZDePqT6/E1S
+         DIWAdwH05AmFQ8XuZeC2tsXt+XJ7HZnL7sPCE+SlG5x+JySxE/QbhhWVGvR4ZDomJj3b
+         ffkJ6vGmTAumoJ/cg6WMTLIf4G5Qbim9lQT8UuBCnJ4sOkCJOk6nGsh26LkkKjYkBCkg
+         5ie0EbL/MuGqiJTJ5/U4Lgh9C8K61v02aV9IRCHt7QoXooEgCwFH9+HVwUSZFFSWDXSz
+         bJuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=hnA+DGRSH+UJ48bHZH8NzolNWEJgQsv7XrV6s0qnF/M=;
-        b=SnFG+LIzM/Jrd/67MsOZ9JszOGXBzkUcii7I1Ne4Z0nvW3DbEx2XG9memcm8NxavFc
-         9RjzX+XVc9XYonOV+0tC5tkqNVuYPNAtTfN9Tn6H89jTGiRT5d/siqk3iYhsAdnbb75l
-         ZWNDb529fKKJYlLIiLc7w3Jj4gdLNOJVdFrh4QzQo1ICiJsViaPSIpQy8gAgO1xVwfnN
-         0vKpgnB0usWf74hmefbFw419jI5/sEZd7RzZJLzTYk7syyQFTnrJTZlIez8IXAePN5Jx
-         atT18zXWyBlzOoNNEfOGCTAh+6TiLIIJzA8/zPKBgdaO06DAQYzB52izhXeJq2RShiFt
-         Uzbw==
-X-Gm-Message-State: APjAAAWzwUhluhF3j+nGVMFrn7zxnpeCYK1g4o3h8STxjizzMs9EslV6
-        l1nwOKYH7zLU5OomIvdwKGM=
-X-Google-Smtp-Source: APXvYqwwdBnAls0tUi6VQ5lXIPAsQMsuAKpE/eOrUpd+D4s1gXdKbzJp//o6c6Jq1rWfJm36322gig==
-X-Received: by 2002:adf:f743:: with SMTP id z3mr17107172wrp.200.1573416923118;
-        Sun, 10 Nov 2019 12:15:23 -0800 (PST)
+        bh=nCBsmwqdT3AvPL78TXyccFIFOh8t+1Pa2nkMeu4O5qI=;
+        b=FUvk4dOVgOowiZsRC5r0Ut86rz2npToo1g6XwTx64TL8wxBnvyXS/gvbIq60ULDar1
+         wWadt585GAKIiyU4dHuR/oFAXhPTkD3+aAFJZhLxI7+N6MnYsaAwWh17SWJJNw2jCo2Q
+         EVTx+THXeO9DMPAG1UsQ3kkxiAjgc7mgY+21DmfnDi7OtIQKMTWRfMvLBzvf1wYYfcwC
+         y1a+cQGa2NlsotdalbitYIv9Eh8cGEtDwzuy74O9IVlRFAgNjEMbLAQyJDs+sBdbtEbE
+         2q7Hg5HJCB1F+yJLbeVTo/5HXBZo8NykkEYblBuQhlIPiUsfZedWoX09RnL+wPNQPoK5
+         HdPw==
+X-Gm-Message-State: APjAAAUhlnnkDTgIxcacY2SnbqtBMvjFbsIxPSgf2Ekcz23o2onSy6hr
+        lKsWsYSbeQjpIskA5etZ9ds=
+X-Google-Smtp-Source: APXvYqxpNBe51NsHPQE8Ab0o4C4xhws5Z9NH/wLWqTZuZIRBKBwOPMWcr+CQLTdRqQz/rxCk4On9zg==
+X-Received: by 2002:a05:600c:2312:: with SMTP id 18mr62245wmo.51.1573417120401;
+        Sun, 10 Nov 2019 12:18:40 -0800 (PST)
 Received: from ziggy.stardust ([95.169.226.39])
-        by smtp.gmail.com with ESMTPSA id j22sm22467428wrd.41.2019.11.10.12.15.21
+        by smtp.gmail.com with ESMTPSA id t1sm18182533wrn.81.2019.11.10.12.18.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 12:15:22 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] arm64: dts: mt8183: add systimer0 device node
-To:     Dehui Sun <dehui.sun@mediatek.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        erin.lo@mediatek.com, weiyi.lu@mediatek.com
-References: <1572242984-30460-1-git-send-email-dehui.sun@mediatek.com>
- <1572242984-30460-3-git-send-email-dehui.sun@mediatek.com>
+        Sun, 10 Nov 2019 12:18:39 -0800 (PST)
+Subject: Re: [PATCH v1 1/1] soc: mediatek: add SMC fid table for SIP interface
+To:     Eason Yen <eason.yen@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+References: <1572247749-4276-1-git-send-email-eason.yen@mediatek.com>
+ <1572247749-4276-2-git-send-email-eason.yen@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -144,12 +138,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  Y1aFdU79pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlI
  FZ6fsEKIAN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+
  r2JwH1CJjrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <18a0f55b-9371-f741-52a3-cff4eced55f9@gmail.com>
-Date:   Sun, 10 Nov 2019 21:15:20 +0100
+Message-ID: <44bddcd1-457d-bde6-791f-def248f787b3@gmail.com>
+Date:   Sun, 10 Nov 2019 21:18:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <1572242984-30460-3-git-send-email-dehui.sun@mediatek.com>
+In-Reply-To: <1572247749-4276-2-git-send-email-eason.yen@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -160,37 +154,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 28/10/2019 07:09, Dehui Sun wrote:
-> Add systimer0 device node for MT8183.
-
-I renamed systemer0 to systimer.
-
-Applied, thanks!
-
+On 28/10/2019 08:29, Eason Yen wrote:
+> 1. Add a header file to provide SIP interface to ATF
+> 2. Add AUDIO SMC fid
 > 
-> Signed-off-by: Dehui Sun <dehui.sun@mediatek.com>
+> Change-Id: I218e9f571cea079268a5414725a81e9b35702e33
+
+Please delete Change-Id entry.
+Apart from that, I don't really get the reason for this patch. Which driver is
+supposed to use this header file?
+
+Please provide more background information.
+
+Regards,
+Matthias
+
+> Signed-off-by: Eason Yen <eason.yen@mediatek.com>
 > ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  include/linux/soc/mediatek/mtk_sip_svc.h |   28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 7e23179..40145dc 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -326,6 +326,15 @@
->  			clock-names = "spi", "wrap";
->  		};
->  
-> +		systimer: timer@10017000 {
-> +			compatible = "mediatek,mt8183-timer",
-> +				     "mediatek,mt6765-timer";
-> +			reg = <0 0x10017000 0 0x1000>;
-> +			interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&topckgen CLK_TOP_CLK13M>;
-> +			clock-names = "clk13m";
-> +		};
+> diff --git a/include/linux/soc/mediatek/mtk_sip_svc.h b/include/linux/soc/mediatek/mtk_sip_svc.h
+> new file mode 100644
+> index 0000000..00ee0f4
+> --- /dev/null
+> +++ b/include/linux/soc/mediatek/mtk_sip_svc.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
 > +
->  		auxadc: auxadc@11001000 {
->  			compatible = "mediatek,mt8183-auxadc",
->  				     "mediatek,mt8173-auxadc";
+> +#ifndef __MTK_SIP_SVC_H__
+> +#define __MTK_SIP_SVC_H__
+> +
+> +#include <linux/kernel.h>
+> +
+> +/* Error Code */
+> +#define SIP_SVC_E_SUCCESS               0
+> +#define SIP_SVC_E_NOT_SUPPORTED         -1
+> +#define SIP_SVC_E_INVALID_PARAMS        -2
+> +#define SIP_SVC_E_INVALID_Range         -3
+> +#define SIP_SVC_E_PERMISSION_DENY       -4
+> +
+> +#ifdef CONFIG_ARM64
+> +#define MTK_SIP_SMC_AARCH_BIT			0x40000000
+> +#else
+> +#define MTK_SIP_SMC_AARCH_BIT			0x00000000
+> +#endif
+> +
+> +/* AUDIO related SMC call */
+> +#define MTK_SIP_AUDIO_CONTROL \
+> +	(0x82000517 | MTK_SIP_SMC_AARCH_BIT)
+> +#endif
+> +/* __MTK_SIP_SVC_H__ */
 > 
