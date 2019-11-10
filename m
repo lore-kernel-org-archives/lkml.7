@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A23C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDFFC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBF021848
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F61121655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353772;
-	bh=8GO4XkRygHmVTWKvH9SbwPX3T6ChRn2RDaOvhj0FWc0=;
+	s=default; t=1573353776;
+	bh=5ZDLL2jzO0bYUJZZV6wHwNTMpEYiGBSQOV5StXzn/1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ITsW5OGOzQ28MT4lrCBaVx1WlOUFlGdKU2/pH7/zCgilbuVCrQY6frN6xCAmDmzYP
-	 dHlq/gMyrqvxahnX6eOEiZMo29G0TPXnUCXlBMehLQ1hnExWRXOgZYfV1R9O2HhlNp
-	 DSxbn1X3syZuUcvHKFOXF2G2cW+w/14m4LP8R4/Q=
+	b=EWtzgl1k1JmowmH8iQHOVr77hXL7J60CmtyS83pB+GfcDaP+ZaXcCRi/R4f+0B6Pw
+	 9OL9dzbxBqqvfZgmhxIVALnvRUq1ARcWW7S/dej4+B1oVt84Vk0kvmFq19YO86JKIy
+	 V8/euMxjHRYLPaGtgb2n9mPFZ4ywgVngi+FHEpck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfKJCmv (ORCPT
+        id S1728081AbfKJCmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39420 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbfKJCms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:48 -0500
+        id S1727974AbfKJCmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA54F21848;
-        Sun, 10 Nov 2019 02:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9CC721882;
+        Sun, 10 Nov 2019 02:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353767;
-        bh=8GO4XkRygHmVTWKvH9SbwPX3T6ChRn2RDaOvhj0FWc0=;
+        s=default; t=1573353771;
+        bh=5ZDLL2jzO0bYUJZZV6wHwNTMpEYiGBSQOV5StXzn/1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IgFSrB+yh4W0GvXVRhb3f2yzSKXf7Yt61ofrKRC57OCrhkQjoOUwrIjaebs5nekhC
-         fdsQsXOkTlQ4W2eBU2yastYGtG0osWFlJuWYDxquWZR9450hKxaWqWVwRD67Cq8/gD
-         d88eo51RF2n3Q/b/ZP6Sw4korhj7n9pfpdxO1U7E=
+        b=OZqIEXh01Redyj5gTHP/XPqjaA3ZcqVbfmoOj7zu5enkShekz80JENK06SkzXqPCQ
+         jYAPTuTedvk74t6jHXmO+9nKdmdk7Z5tpxC93EsNTFhM8dxRgOXWPLVqi3tiJSGbEy
+         EcRaTHnwDA2vdaG6aVIgzw+lxXXMNTyOs3Njdb2M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sinan Kaya <okaya@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 079/191] PCI/AER: Take reference on error devices
-Date:   Sat,  9 Nov 2019 21:38:21 -0500
-Message-Id: <20191110024013.29782-79-sashal@kernel.org>
+Cc:     Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 082/191] samples/bpf: fix compilation failure
+Date:   Sat,  9 Nov 2019 21:38:24 -0500
+Message-Id: <20191110024013.29782-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,43 +61,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
 
-[ Upstream commit 60271ab044a53edb9dcbe76bebea2221c4ff04d9 ]
+[ Upstream commit 32c009798385ce21080beaa87a9b95faad3acd1e ]
 
-Error handling may be running in parallel with a hot removal.  Reference
-count the device during AER handling so the device can not be freed while
-AER wants to reference it.
+following commit:
+commit d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
+added struct bpf_flow_keys which conflicts with the struct with
+same name in sockex2_kern.c and sockex3_kern.c
 
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
+similar to commit:
+commit 534e0e52bc23 ("samples/bpf: fix a compilation failure")
+we tried the rename it "flow_keys" but it also conflicted with struct
+having same name in include/net/flow_dissector.h. Hence renaming the
+struct to "flow_key_record". Also, this commit doesn't fix the
+compilation error completely because the similar struct is present in
+sockex3_kern.c. Hence renaming it in both files sockex3_user.c and
+sockex3_kern.c
+
+Signed-off-by: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ samples/bpf/sockex2_kern.c | 11 ++++++-----
+ samples/bpf/sockex3_kern.c |  8 ++++----
+ samples/bpf/sockex3_user.c |  4 ++--
+ 3 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 637d638f73da5..ffbbd759683c5 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -866,7 +866,7 @@ void cper_print_aer(struct pci_dev *dev, int aer_severity,
- static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
- {
- 	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
--		e_info->dev[e_info->error_dev_num] = dev;
-+		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
- 		e_info->error_dev_num++;
- 		return 0;
- 	}
-@@ -1013,6 +1013,7 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
- 		pcie_do_nonfatal_recovery(dev);
- 	else if (info->severity == AER_FATAL)
- 		pcie_do_fatal_recovery(dev, PCIE_PORT_SERVICE_AER);
-+	pci_dev_put(dev);
+diff --git a/samples/bpf/sockex2_kern.c b/samples/bpf/sockex2_kern.c
+index f58acfc925561..f2f9dbc021b0d 100644
+--- a/samples/bpf/sockex2_kern.c
++++ b/samples/bpf/sockex2_kern.c
+@@ -14,7 +14,7 @@ struct vlan_hdr {
+ 	__be16 h_vlan_encapsulated_proto;
+ };
+ 
+-struct bpf_flow_keys {
++struct flow_key_record {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -59,7 +59,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
  }
  
- #ifdef CONFIG_ACPI_APEI_PCIEAER
+ static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
+-			     struct bpf_flow_keys *flow)
++			     struct flow_key_record *flow)
+ {
+ 	__u64 verlen;
+ 
+@@ -83,7 +83,7 @@ static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto
+ }
+ 
+ static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
+-			       struct bpf_flow_keys *flow)
++			       struct flow_key_record *flow)
+ {
+ 	*ip_proto = load_byte(skb,
+ 			      nhoff + offsetof(struct ipv6hdr, nexthdr));
+@@ -96,7 +96,8 @@ static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_pro
+ 	return nhoff;
+ }
+ 
+-static inline bool flow_dissector(struct __sk_buff *skb, struct bpf_flow_keys *flow)
++static inline bool flow_dissector(struct __sk_buff *skb,
++				  struct flow_key_record *flow)
+ {
+ 	__u64 nhoff = ETH_HLEN;
+ 	__u64 ip_proto;
+@@ -198,7 +199,7 @@ struct bpf_map_def SEC("maps") hash_map = {
+ SEC("socket2")
+ int bpf_prog2(struct __sk_buff *skb)
+ {
+-	struct bpf_flow_keys flow = {};
++	struct flow_key_record flow = {};
+ 	struct pair *value;
+ 	u32 key;
+ 
+diff --git a/samples/bpf/sockex3_kern.c b/samples/bpf/sockex3_kern.c
+index 95907f8d2b17d..c527b57d3ec8a 100644
+--- a/samples/bpf/sockex3_kern.c
++++ b/samples/bpf/sockex3_kern.c
+@@ -61,7 +61,7 @@ struct vlan_hdr {
+ 	__be16 h_vlan_encapsulated_proto;
+ };
+ 
+-struct bpf_flow_keys {
++struct flow_key_record {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -88,7 +88,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
+ }
+ 
+ struct globals {
+-	struct bpf_flow_keys flow;
++	struct flow_key_record flow;
+ };
+ 
+ struct bpf_map_def SEC("maps") percpu_map = {
+@@ -114,14 +114,14 @@ struct pair {
+ 
+ struct bpf_map_def SEC("maps") hash_map = {
+ 	.type = BPF_MAP_TYPE_HASH,
+-	.key_size = sizeof(struct bpf_flow_keys),
++	.key_size = sizeof(struct flow_key_record),
+ 	.value_size = sizeof(struct pair),
+ 	.max_entries = 1024,
+ };
+ 
+ static void update_stats(struct __sk_buff *skb, struct globals *g)
+ {
+-	struct bpf_flow_keys key = g->flow;
++	struct flow_key_record key = g->flow;
+ 	struct pair *value;
+ 
+ 	value = bpf_map_lookup_elem(&hash_map, &key);
+diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
+index 22f74d0e14934..9d02e0404719a 100644
+--- a/samples/bpf/sockex3_user.c
++++ b/samples/bpf/sockex3_user.c
+@@ -13,7 +13,7 @@
+ #define PARSE_IP_PROG_FD (prog_fd[0])
+ #define PROG_ARRAY_FD (map_fd[0])
+ 
+-struct flow_keys {
++struct flow_key_record {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -64,7 +64,7 @@ int main(int argc, char **argv)
+ 	(void) f;
+ 
+ 	for (i = 0; i < 5; i++) {
+-		struct flow_keys key = {}, next_key;
++		struct flow_key_record key = {}, next_key;
+ 		struct pair value;
+ 
+ 		sleep(1);
 -- 
 2.20.1
 
