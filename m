@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95521C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAACC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A7E214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D3421848
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353743;
-	bh=c8KsAEiMdXpU+ct8AoP47mQ6yVted/wuYpqdIaHF2vo=;
+	s=default; t=1573353749;
+	bh=OrrCHY8Eb1hCpT3SlqZk2rbNYKGd6CpzIxk0LlUp0U8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dqZ3Tk8VrRlEd2cxwB9KP/JeZbrapu2Pz7SgoE6ko4gRbV+mYBkbbA2o1CaiH2ORw
-	 8qbgJzVoih4yKl0krnKqKGBb74WgZrBgAypDeOIlueq+upUQZiIrSuLJJPCiKkCr1v
-	 HjEyi3S7+L6WabAh+vRaTuPaT3wEdDFyBkryEDcw=
+	b=BoDwCzvJo7fhNR3BF4uLIEmUQX0IyzqTScPgJ4jUhtoIRobJHShNR8ddf8Kq7cYo0
+	 fMMny8h24zFuriF0d8lOs2yeyp4Wr4P6SXz8GNCz2c4He22SIJBKFI/s0pp+/bN7ac
+	 cbHbs4iNloFaHq6HZv79YKBPL2XRMQvFaR7I1jk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfKJCmW (ORCPT
+        id S1727865AbfKJCm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37948 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfKJCmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:19 -0500
+        id S1726582AbfKJCm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D4C0214E0;
-        Sun, 10 Nov 2019 02:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E41021850;
+        Sun, 10 Nov 2019 02:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353738;
-        bh=c8KsAEiMdXpU+ct8AoP47mQ6yVted/wuYpqdIaHF2vo=;
+        s=default; t=1573353744;
+        bh=OrrCHY8Eb1hCpT3SlqZk2rbNYKGd6CpzIxk0LlUp0U8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AVLDOoxsba7wiX3JtfjGwpu677bkq75X0dup6/NYfOuiS6XIUtrSeoDrXOx0+Xikp
-         IYea8kN9gRfBKwtzmG6E0yCarVjFMyQHHnHBg1KfdCmkswJAESni8rbZcOaavhtohP
-         APVk3UCoBcN3ZVQiO4Ngy+NMJe6em81GBQEO0eY0=
+        b=XfZw0KTv/PHCE0RNuR+gaBcweveMxJawMT1aCzJ4wNkLL4UUHJwcCx1b0Jz27vd2F
+         epPRpXahxjgua48EH9vfVdjV/f6qDYAx7wM1d9ViT60ImCIwssg8FbFyVQa++CgtMu
+         5ZpIrciH6dp2c6B0ctFg/R3h+8n2OJxMlbGAj2Lg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Machata <petrm@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 060/191] mlxsw: spectrum: Init shaper for TCs 8..15
-Date:   Sat,  9 Nov 2019 21:38:02 -0500
-Message-Id: <20191110024013.29782-60-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sinan Kaya <okaya@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 061/191] PCI: portdrv: Initialize service drivers directly
+Date:   Sat,  9 Nov 2019 21:38:03 -0500
+Message-Id: <20191110024013.29782-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,46 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit a9f36656b519a9a21309793c306941a3cd0eeb8f ]
+[ Upstream commit c29de84149aba5f74e87b6491c13ac7203c12f55 ]
 
-With introduction of MC-aware mode to mlxsw, it became necessary to
-configure TCs above 7 as well. There is now code in mlxsw to disable ETS
-for these higher classes, but disablement of max shaper was neglected.
+The PCI port driver saves the PCI state after initializing the device with
+the applicable service devices.  This was, however, before the service
+drivers were even registered because PCI probe happens before the
+device_initcall initialized those service drivers.  The config space state
+that the services set up were not being saved.  The end result would cause
+PCI devices to not react to events that the drivers think they did if the
+PCI state ever needed to be restored.
 
-By default, max shaper is currently disabled to begin with, so the
-problem is just cosmetic. However, for symmetry, do like we do for ETS
-configuration, and call mlxsw_sp_port_ets_maxrate_set() for both TC i
-and i + 8.
+Fix this by changing the service drivers from using the init calls to
+having the portdrv driver calling the services directly.  This will get the
+state saved as desired, while making the relationship between the port
+driver and the services under it more explicit in the code.
 
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pci/hotplug/pciehp_core.c |  3 +--
+ drivers/pci/pcie/aer.c            |  3 +--
+ drivers/pci/pcie/dpc.c            |  3 +--
+ drivers/pci/pcie/pme.c            |  3 +--
+ drivers/pci/pcie/portdrv.h        | 24 ++++++++++++++++++++++++
+ drivers/pci/pcie/portdrv_pci.c    |  9 +++++++++
+ 6 files changed, 37 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index ccd9aca281b37..1c170a0fd2cc9 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -2815,6 +2815,13 @@ static int mlxsw_sp_port_ets_init(struct mlxsw_sp_port *mlxsw_sp_port)
- 						    MLXSW_REG_QEEC_MAS_DIS);
- 		if (err)
- 			return err;
-+
-+		err = mlxsw_sp_port_ets_maxrate_set(mlxsw_sp_port,
-+						    MLXSW_REG_QEEC_HIERARCY_TC,
-+						    i + 8, i,
-+						    MLXSW_REG_QEEC_MAS_DIS);
-+		if (err)
-+			return err;
- 	}
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index ec48c9433ae50..518c46f8e63b7 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -348,7 +348,7 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
+ #endif	/* PM */
+ };
  
- 	/* Map all priorities to traffic class 0. */
+-static int __init pcied_init(void)
++int __init pcie_hp_init(void)
+ {
+ 	int retval = 0;
+ 
+@@ -359,4 +359,3 @@ static int __init pcied_init(void)
+ 
+ 	return retval;
+ }
+-device_initcall(pcied_init);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 83180edd6ed47..637d638f73da5 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1569,10 +1569,9 @@ static struct pcie_port_service_driver aerdriver = {
+  *
+  * Invoked when AER root service driver is loaded.
+  */
+-static int __init aer_service_init(void)
++int __init pcie_aer_init(void)
+ {
+ 	if (!pci_aer_available() || aer_acpi_firmware_first())
+ 		return -ENXIO;
+ 	return pcie_port_service_register(&aerdriver);
+ }
+-device_initcall(aer_service_init);
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 1908dd2978d3c..118b5bcae42ea 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -307,8 +307,7 @@ static struct pcie_port_service_driver dpcdriver = {
+ 	.reset_link	= dpc_reset_link,
+ };
+ 
+-static int __init dpc_service_init(void)
++int __init pcie_dpc_init(void)
+ {
+ 	return pcie_port_service_register(&dpcdriver);
+ }
+-device_initcall(dpc_service_init);
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index 6ac17f0c40775..54d593d10396f 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -455,8 +455,7 @@ static struct pcie_port_service_driver pcie_pme_driver = {
+ /**
+  * pcie_pme_service_init - Register the PCIe PME service driver.
+  */
+-static int __init pcie_pme_service_init(void)
++int __init pcie_pme_init(void)
+ {
+ 	return pcie_port_service_register(&pcie_pme_driver);
+ }
+-device_initcall(pcie_pme_service_init);
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index d59afa42fc14b..2498b2d340095 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -23,6 +23,30 @@
+ 
+ #define PCIE_PORT_DEVICE_MAXSERVICES   4
+ 
++#ifdef CONFIG_PCIEAER
++int pcie_aer_init(void);
++#else
++static inline int pcie_aer_init(void) { return 0; }
++#endif
++
++#ifdef CONFIG_HOTPLUG_PCI_PCIE
++int pcie_hp_init(void);
++#else
++static inline int pcie_hp_init(void) { return 0; }
++#endif
++
++#ifdef CONFIG_PCIE_PME
++int pcie_pme_init(void);
++#else
++static inline int pcie_pme_init(void) { return 0; }
++#endif
++
++#ifdef CONFIG_PCIE_DPC
++int pcie_dpc_init(void);
++#else
++static inline int pcie_dpc_init(void) { return 0; }
++#endif
++
+ /* Port Type */
+ #define PCIE_ANY_PORT			(~0)
+ 
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index eef22dc29140c..23a5a0c2c3fe9 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -226,11 +226,20 @@ static const struct dmi_system_id pcie_portdrv_dmi_table[] __initconst = {
+ 	 {}
+ };
+ 
++static void __init pcie_init_services(void)
++{
++	pcie_aer_init();
++	pcie_pme_init();
++	pcie_dpc_init();
++	pcie_hp_init();
++}
++
+ static int __init pcie_portdrv_init(void)
+ {
+ 	if (pcie_ports_disabled)
+ 		return -EACCES;
+ 
++	pcie_init_services();
+ 	dmi_check_system(pcie_portdrv_dmi_table);
+ 
+ 	return pci_register_driver(&pcie_portdriver);
 -- 
 2.20.1
 
