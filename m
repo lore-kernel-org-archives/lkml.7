@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FF0C17444
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FA0C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2740621D7B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC37215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353790;
-	bh=8c60UcOuLaLaEMv9/jm2csBMtwnh7BkgFOxAkkxWLEE=;
+	s=default; t=1573353794;
+	bh=8DD4osZh3pqSw/v3Z8lBeKCbS7/Ml7qR65jLNRSZyrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G7BtqvcEeO4xpsaSkztllQNg4DD83rmcL0wuA44LioNpuzR1cbbAArFh7HFqjAOV9
-	 oylxdQRKd9V4JT3hjH70ffkEo+uBWu4ZEcsARcDqgIAu2lklsDgVnVv/IjZxMYRG5I
-	 RigivjKDhqaS4WtJ+KeKqiHhjLeM4NjyCTjx2/FE=
+	b=stihMrR1sw7qaestW5XLqQGdOj26WcsFwsJ7bNYpdsMh5/qzmXe6xZRAi6G+21gFh
+	 OsCe8Ag+PxC0W0UqK41Y3D+FAGg39b2G7Y3zs3ZElx6ZP5SbKmEDfB1yHk3eMze8nL
+	 YCdJbXoVrIInVx0Jt99vD3BUUqpETHNMxsax9tCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfKJCnJ (ORCPT
+        id S1728208AbfKJCnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40380 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfKJCnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:06 -0500
+        id S1728162AbfKJCnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A35121D7F;
-        Sun, 10 Nov 2019 02:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957D321882;
+        Sun, 10 Nov 2019 02:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353785;
-        bh=8c60UcOuLaLaEMv9/jm2csBMtwnh7BkgFOxAkkxWLEE=;
+        s=default; t=1573353787;
+        bh=8DD4osZh3pqSw/v3Z8lBeKCbS7/Ml7qR65jLNRSZyrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xba1LZ86fReb2h4TuaSd/TFnH6fNRBfU/7mLpVMtHJLGUR8KbD2W/GCCRJuRDCCw0
-         zlwFkmEMOrtlhTOPuhHkwKLot3qRrCKeU2Yu+dkzgk8MygI4O9zm3khsWjQ/LbA21j
-         4xw5YsdRxD/Ha3GQZNuBFPW1eDANvydCbPtShm5g=
+        b=QsYVMkQbEo5udnkXSa3Ydq9O20Fc/+IQO3nM6p1vkfIunxVnPvstudIjiKQdSk2T0
+         JohdIwrtu1GLG36Y9BGNO7FdsPb8Odc+274OKURPh9M3tdeVTE38AsbxNDmQJZen5F
+         NjLIooxGHaiGFfPv9GtYvp0RWl5uidDw6sdy9lm0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 088/191] EDAC: Correct DIMM capacity unit symbol
-Date:   Sat,  9 Nov 2019 21:38:30 -0500
-Message-Id: <20191110024013.29782-88-sashal@kernel.org>
+Cc:     Dengcheng Zhu <dzhu@wavecomp.com>,
+        Rachel Mozes <rachel.mozes@intel.com>,
+        Paul Burton <paul.burton@mips.com>, pburton@wavecomp.com,
+        ralf@linux-mips.org, linux-mips@linux-mips.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 089/191] MIPS: kexec: Relax memory restriction
+Date:   Sat,  9 Nov 2019 21:38:31 -0500
+Message-Id: <20191110024013.29782-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,93 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+From: Dengcheng Zhu <dzhu@wavecomp.com>
 
-[ Upstream commit 6f6da136046294a1e8d2944336eb97412751f653 ]
+[ Upstream commit a6da4d6fdf8bd512c98d3ac7f1d16bc4bb282919 ]
 
-The {i3200|i7core|sb|skx}_edac drivers show DIMM capacity using the
-wrong unit symbol: 'Mb' - megabit. Fix them by replacing 'Mb' with
-'MiB' - mebibyte.
+We can rely on the system kernel and the dump capture kernel themselves in
+memory usage.
 
-[Tony: These are all "edac_dbg()" messages, so this won't break scripts
-       that parse console logs.]
+Being restrictive with 512MB limit may cause kexec tool failure on some
+platforms.
 
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Aristeu Rozanski <aris@redhat.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac@vger.kernel.org
-Link: https://lkml.kernel.org/r/20180919003433.16475-1-tony.luck@intel.com
+Tested-by: Rachel Mozes <rachel.mozes@intel.com>
+Reported-by: Rachel Mozes <rachel.mozes@intel.com>
+Signed-off-by: Dengcheng Zhu <dzhu@wavecomp.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20568/
+Cc: pburton@wavecomp.com
+Cc: ralf@linux-mips.org
+Cc: linux-mips@linux-mips.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/i3200_edac.c  | 2 +-
- drivers/edac/i7core_edac.c | 2 +-
- drivers/edac/sb_edac.c     | 2 +-
- drivers/edac/skx_edac.c    | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ arch/mips/include/asm/kexec.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/edac/i3200_edac.c b/drivers/edac/i3200_edac.c
-index d92d56cee1017..299b441647cd5 100644
---- a/drivers/edac/i3200_edac.c
-+++ b/drivers/edac/i3200_edac.c
-@@ -399,7 +399,7 @@ static int i3200_probe1(struct pci_dev *pdev, int dev_idx)
- 			if (nr_pages == 0)
- 				continue;
+diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
+index 493a3cc7c39ad..cfdbe66575f4d 100644
+--- a/arch/mips/include/asm/kexec.h
++++ b/arch/mips/include/asm/kexec.h
+@@ -12,11 +12,11 @@
+ #include <asm/stacktrace.h>
  
--			edac_dbg(0, "csrow %d, channel %d%s, size = %ld Mb\n", i, j,
-+			edac_dbg(0, "csrow %d, channel %d%s, size = %ld MiB\n", i, j,
- 				 stacked ? " (stacked)" : "", PAGES_TO_MiB(nr_pages));
+ /* Maximum physical address we can use pages from */
+-#define KEXEC_SOURCE_MEMORY_LIMIT (0x20000000)
++#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
+ /* Maximum address we can reach in physical address mode */
+-#define KEXEC_DESTINATION_MEMORY_LIMIT (0x20000000)
++#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
+  /* Maximum address we can use for the control code buffer */
+-#define KEXEC_CONTROL_MEMORY_LIMIT (0x20000000)
++#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
+ /* Reserve 3*4096 bytes for board-specific info */
+ #define KEXEC_CONTROL_PAGE_SIZE (4096 + 3*4096)
  
- 			dimm->nr_pages = nr_pages;
-diff --git a/drivers/edac/i7core_edac.c b/drivers/edac/i7core_edac.c
-index f1d19504a0281..4a3300c2da333 100644
---- a/drivers/edac/i7core_edac.c
-+++ b/drivers/edac/i7core_edac.c
-@@ -597,7 +597,7 @@ static int get_dimm_config(struct mem_ctl_info *mci)
- 			/* DDR3 has 8 I/O banks */
- 			size = (rows * cols * banks * ranks) >> (20 - 3);
- 
--			edac_dbg(0, "\tdimm %d %d Mb offset: %x, bank: %d, rank: %d, row: %#x, col: %#x\n",
-+			edac_dbg(0, "\tdimm %d %d MiB offset: %x, bank: %d, rank: %d, row: %#x, col: %#x\n",
- 				 j, size,
- 				 RANKOFFSET(dimm_dod[j]),
- 				 banks, ranks, rows, cols);
-diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
-index 72cea3cb86224..acb9db55f5700 100644
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -1622,7 +1622,7 @@ static int __populate_dimms(struct mem_ctl_info *mci,
- 				size = ((u64)rows * cols * banks * ranks) >> (20 - 3);
- 				npages = MiB_TO_PAGES(size);
- 
--				edac_dbg(0, "mc#%d: ha %d channel %d, dimm %d, %lld Mb (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
-+				edac_dbg(0, "mc#%d: ha %d channel %d, dimm %d, %lld MiB (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
- 					 pvt->sbridge_dev->mc, pvt->sbridge_dev->dom, i, j,
- 					 size, npages,
- 					 banks, ranks, rows, cols);
-diff --git a/drivers/edac/skx_edac.c b/drivers/edac/skx_edac.c
-index 4ba92f1dd0f74..dd209e0dd9abb 100644
---- a/drivers/edac/skx_edac.c
-+++ b/drivers/edac/skx_edac.c
-@@ -364,7 +364,7 @@ static int get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
- 	size = ((1ull << (rows + cols + ranks)) * banks) >> (20 - 3);
- 	npages = MiB_TO_PAGES(size);
- 
--	edac_dbg(0, "mc#%d: channel %d, dimm %d, %lld Mb (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
-+	edac_dbg(0, "mc#%d: channel %d, dimm %d, %lld MiB (%d pages) bank: %d, rank: %d, row: %#x, col: %#x\n",
- 		 imc->mc, chan, dimmno, size, npages,
- 		 banks, 1 << ranks, rows, cols);
- 
-@@ -424,7 +424,7 @@ static int get_nvdimm_info(struct dimm_info *dimm, struct skx_imc *imc,
- 	dimm->mtype = MEM_NVDIMM;
- 	dimm->edac_mode = EDAC_SECDED; /* likely better than this */
- 
--	edac_dbg(0, "mc#%d: channel %d, dimm %d, %llu Mb (%u pages)\n",
-+	edac_dbg(0, "mc#%d: channel %d, dimm %d, %llu MiB (%u pages)\n",
- 		 imc->mc, chan, dimmno, size >> 20, dimm->nr_pages);
- 
- 	snprintf(dimm->label, sizeof(dimm->label), "CPU_SrcID#%u_MC#%u_Chan#%u_DIMM#%u",
 -- 
 2.20.1
 
