@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB621C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1DFC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8774A21848
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E8621924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353942;
-	bh=jIFlpl/wQMGI9GNYRcwXiD1YCvrHp52FADOVP/p53Gc=;
+	s=default; t=1573353948;
+	bh=gOAVXjwy6vR30WXWpwBc3912Jaop/VrTFamikl0hOYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QW6n3xmzGO70MbgQl7veyxYz8Yg1ao9yvsSDm3Mn1M1VtTg8qh8fjqT+PqIU+Zjtv
-	 myz3EY1BDCP8NhBOzldIvHFLUhifCu1TGewZg40DNrh8JPBo+RblhDe1Hibiv9BtQt
-	 tita6p0uoYOXZhZzB3LCQRUDewSR7FfnxRqRXcFY=
+	b=A6iqQtxwD/PPjXQl42Q8l1j9m/qtJ+bF6ifbKEFoXM7HGzmLqGAyzJJe24efKs8+B
+	 GneEaJDLt7q1th18T/T9Z1MuoD7WOCiIJ94cx7jj1wCt/SL7fYPj/wUlRjZ5awa46q
+	 q/DJ8nulYHR5xu+HNmSua1bqAHoOrUOBu/bjJCfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKJCpl (ORCPT
+        id S1728912AbfKJCpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46308 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbfKJCpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:17 -0500
+        id S1728784AbfKJCpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD3021848;
-        Sun, 10 Nov 2019 02:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA1DC21655;
+        Sun, 10 Nov 2019 02:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353916;
-        bh=jIFlpl/wQMGI9GNYRcwXiD1YCvrHp52FADOVP/p53Gc=;
+        s=default; t=1573353918;
+        bh=gOAVXjwy6vR30WXWpwBc3912Jaop/VrTFamikl0hOYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Sdd0Q9RBFFJ+ZB/2YF0wEo2t3U7YWTRaq7LFgkOhgzvH8LO0qsExsZcmkDJza/jj
-         ZqCqt97qvHlExFcQxdaPm0qmuR4l/9GYMgBkCSGEdNZbGBzBIuDXBFTegaTICDejoj
-         bUZCcuxnjlBGn/X7EIv9RIxHkqNCa0ZH1qkdoLRA=
+        b=SqUILZXyLDJCkg9Ojn6zg1ubl6lNiwijkxOA41cyw/8fqgJVp+UFy9PDDz0NX1aJC
+         3dz7V4iWONrp+oD7gNe3J59claQQ7GVPuOBtqSpxC+YngnQ9Uzn7NpAGrCtUVOakAQ
+         +vX/BwnGCo7vNOE3RJaRt45wD/ffWixdghWGjJyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 179/191] ARM: dts: lpc32xx: Fix SPI controller node names
-Date:   Sat,  9 Nov 2019 21:40:01 -0500
-Message-Id: <20191110024013.29782-179-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 181/191] rtc: tx4939: fixup nvmem name and register size
+Date:   Sat,  9 Nov 2019 21:40:03 -0500
+Message-Id: <20191110024013.29782-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,44 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 11236ef582b8d66290bb3b3710e03ca1d85d8ad8 ]
+[ Upstream commit 2ab78755e93a10f6216c860a2012f3592f395603 ]
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+The default word_size and stride of 1 are correct for the tx4939. Also fix
+the nvmem folder name.
 
-Cc: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-tx4939.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 4981741377f3a..ed0d6fb20122a 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -179,7 +179,7 @@
- 			 * ssp0 and spi1 are shared pins;
- 			 * enable one in your board dts, as needed.
- 			 */
--			ssp0: ssp@20084000 {
-+			ssp0: spi@20084000 {
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x20084000 0x1000>;
- 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-@@ -199,7 +199,7 @@
- 			 * ssp1 and spi2 are shared pins;
- 			 * enable one in your board dts, as needed.
- 			 */
--			ssp1: ssp@2008c000 {
-+			ssp1: spi@2008c000 {
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x2008c000 0x1000>;
- 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/rtc/rtc-tx4939.c b/drivers/rtc/rtc-tx4939.c
+index 08dbefc79520e..61c110b2045f8 100644
+--- a/drivers/rtc/rtc-tx4939.c
++++ b/drivers/rtc/rtc-tx4939.c
+@@ -253,9 +253,7 @@ static int __init tx4939_rtc_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	int irq, ret;
+ 	struct nvmem_config nvmem_cfg = {
+-		.name = "rv8803_nvram",
+-		.word_size = 4,
+-		.stride = 4,
++		.name = "tx4939_nvram",
+ 		.size = TX4939_RTC_REG_RAMSIZE,
+ 		.reg_read = tx4939_nvram_read,
+ 		.reg_write = tx4939_nvram_write,
 -- 
 2.20.1
 
