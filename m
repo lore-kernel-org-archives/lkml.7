@@ -2,51 +2,52 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43912C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6EBC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170412196E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04A221924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355642;
-	bh=WlfZxGvFtSLI+pDvBdYGRlWued5mo0mUhIgQQNCXeqE=;
+	s=default; t=1573355646;
+	bh=fMAtgmI930Z8gUhddQonnfxS9dGC3YaYHi8d80VubaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IYa5BXAIwkAlCj0jUL0ka2on4jsI9ydjO6Voci5EVK78JbqHCXnV7EosKQ6Lfd1mr
-	 TplaWi4F5+t4ZdWa5OZMr9fNFNk6usqPbBeGGz4OLqo9rEO6G4upNXoWKO4v67B66E
-	 xtiwgP2CYrLqmx8b2UBwEVO3FD0C/yUiUJhCoNm8=
+	b=VQ1DcEcuJpiZ7n+cvgErzm17b2ifyklOIjvhpTN2XBMKHwUfHqyDl3DREYzSNxmwb
+	 YThml2z51ss2L+USwmt81HeXt38CnDXPKim24kTzOtXcwQo2405bu6O/NADxmtioO6
+	 AHtFJ7TnqLl7AvsRheSHnKNywCtmZK53GVT50H3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfKJCmf (ORCPT
+        id S1729549AbfKJDOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38422 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:14:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727870AbfKJCm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:29 -0500
+        id S1727905AbfKJCme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEFF5214E0;
-        Sun, 10 Nov 2019 02:42:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECAE221850;
+        Sun, 10 Nov 2019 02:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353749;
-        bh=WlfZxGvFtSLI+pDvBdYGRlWued5mo0mUhIgQQNCXeqE=;
+        s=default; t=1573353753;
+        bh=fMAtgmI930Z8gUhddQonnfxS9dGC3YaYHi8d80VubaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPn3WViVcnS+QtD7yxdGqBcrqqJKQL2bNe2arfBuIRlCI9CwZHwlgX5kVVa9+Jsyp
-         szF0xl3xIVMha+bNVbArT3SOcHosrJPhxVE7nqaXIDFr5mBo7YOPFC+EnpJuOpYD6E
-         WVhMniM12gs/RmC2pX+/8cCW3LBeeyYxpW6Op7Ck=
+        b=iT7uIdoTUGWNNerBq14UUNWZjckRdPz5m8LnLNF3WkAbvYf9GHE/PTlF5Xln8s8oG
+         SJlq309R9UKfjxOg8AuCC0wA0cBaDTxV9Ximg6WxAdqCG+TELgfwnivKzqIyrnn86j
+         JB/hiVKahe+IYpWIA8ZPUet/jo6jmDTJx+eB8mWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 065/191] f2fs: fix to recover inode's uid/gid during POR
-Date:   Sat,  9 Nov 2019 21:38:07 -0500
-Message-Id: <20191110024013.29782-65-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 069/191] spi: pic32: Use proper enum in dmaengine_prep_slave_rg
+Date:   Sat,  9 Nov 2019 21:38:11 -0500
+Message-Id: <20191110024013.29782-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,43 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit dc4cd1257c86451cec3e8e352cc376348e4f4af4 ]
+[ Upstream commit 8cfde7847d5ed0bb77bace41519572963e43cd17 ]
 
-Step to reproduce this bug:
-1. logon as root
-2. mount -t f2fs /dev/sdd /mnt;
-3. touch /mnt/file;
-4. chown system /mnt/file; chgrp system /mnt/file;
-5. xfs_io -f /mnt/file -c "fsync";
-6. godown /mnt;
-7. umount /mnt;
-8. mount -t f2fs /dev/sdd /mnt;
+Clang warns when one enumerated type is converted implicitly to another:
 
-After step 8) we will expect file's uid/gid are all system, but during
-recovery, these two fields were not been recovered, fix it.
+drivers/spi/spi-pic32.c:323:8: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+                                          DMA_FROM_DEVICE,
+                                          ^~~~~~~~~~~~~~~
+drivers/spi/spi-pic32.c:333:8: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+                                          DMA_TO_DEVICE,
+                                          ^~~~~~~~~~~~~
+2 warnings generated.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Use the proper enums from dma_transfer_direction (DMA_FROM_DEVICE =
+DMA_DEV_TO_MEM = 2, DMA_TO_DEVICE = DMA_MEM_TO_DEV = 1) to satify Clang.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/159
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-pic32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 2c3be4c3c626f..2c5d2c25d37e3 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -216,6 +216,8 @@ static void recover_inode(struct inode *inode, struct page *page)
- 	char *name;
- 
- 	inode->i_mode = le16_to_cpu(raw->i_mode);
-+	i_uid_write(inode, le32_to_cpu(raw->i_uid));
-+	i_gid_write(inode, le32_to_cpu(raw->i_gid));
- 	f2fs_i_size_write(inode, le64_to_cpu(raw->i_size));
- 	inode->i_atime.tv_sec = le64_to_cpu(raw->i_atime);
- 	inode->i_ctime.tv_sec = le64_to_cpu(raw->i_ctime);
+diff --git a/drivers/spi/spi-pic32.c b/drivers/spi/spi-pic32.c
+index f8a45af1fa9f2..288002f6c613e 100644
+--- a/drivers/spi/spi-pic32.c
++++ b/drivers/spi/spi-pic32.c
+@@ -320,7 +320,7 @@ static int pic32_spi_dma_transfer(struct pic32_spi *pic32s,
+ 	desc_rx = dmaengine_prep_slave_sg(master->dma_rx,
+ 					  xfer->rx_sg.sgl,
+ 					  xfer->rx_sg.nents,
+-					  DMA_FROM_DEVICE,
++					  DMA_DEV_TO_MEM,
+ 					  DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc_rx) {
+ 		ret = -EINVAL;
+@@ -330,7 +330,7 @@ static int pic32_spi_dma_transfer(struct pic32_spi *pic32s,
+ 	desc_tx = dmaengine_prep_slave_sg(master->dma_tx,
+ 					  xfer->tx_sg.sgl,
+ 					  xfer->tx_sg.nents,
+-					  DMA_TO_DEVICE,
++					  DMA_MEM_TO_DEV,
+ 					  DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc_tx) {
+ 		ret = -EINVAL;
 -- 
 2.20.1
 
