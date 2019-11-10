@@ -2,214 +2,139 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E050C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387A6C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1D32085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE0B2085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKJSjL (ORCPT
+        id S1726971AbfKJSpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 13:39:11 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40179 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfKJSjK (ORCPT
+        Sun, 10 Nov 2019 13:45:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40290 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfKJSps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 13:39:10 -0500
-Received: by mail-io1-f69.google.com with SMTP id 125so11573299iou.7
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 10:39:10 -0800 (PST)
+        Sun, 10 Nov 2019 13:45:48 -0500
+Received: by mail-ot1-f65.google.com with SMTP id m15so9477561otq.7;
+        Sun, 10 Nov 2019 10:45:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bBjX1/WZV5dVArm8R4gMtXyuCmnSCpxSDT2V+2yMP80=;
-        b=Wr+Wln1Mt5L9IrVBCKT41iWJbP0y5xmM9I2EOmc/S1UFwCBSL2Wd3m2s446ghY7LW3
-         l8RsWE7TMrON1JZNtPcw6MnANx+OZTCE7zUkTwl8HWnnGuQ/2OSFtK+WllW3g8gQ8dd2
-         cTgRzjY+1VyCXOu+w9AFTpVLJE78JttFpnS2FLsBBa+5/M6V9eqSsL796lGiGB0Lj5x0
-         cmFP97hfvNz/LwpJZtOG8980ouYhuK67VL+K0v4LqNsOS0bqg8OlTEDbMcbfjUYquSnS
-         3pvNtjnyJFYz1n4CaIeYOyJs7sDwbm3HcwcmtJ7VvY80Vb5HCrXnqAbNz6+rGBLZW7qQ
-         LC8Q==
-X-Gm-Message-State: APjAAAV9Ez1wP9/eTfCC7ijqKeKtzPq6ON+//GHBE5Sdfcy57axM0AYT
-        dOg6B4KG2SR/SET4tau8qj0BR7zA2B2j+8ztV47WIbtIYSJe
-X-Google-Smtp-Source: APXvYqwemlfoW7unzmZY2i6t+gp24Xpq87u+OV/GMdRMxyTxEwUG+Zf+JS9W58A0Tt4KBk5nBky/Zx1ZQbjYPwf0SYPI/qj0eI/T
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X7RxE/BazI2gRsZmHHf8yqp4EBp/qq8k5WFLD1WnxYw=;
+        b=CjO6WcTn0ntAxWwXuQOmGtSbfA68inrxD1O9JHFAFrX/WEbjg3otkaOKB/2A0XeOre
+         obK/v64PBxeKshaIzLLhBe4nCUOssZRvLdf4az5n4XGQsxBP9Y1ePzwfK3KQns5RsPdC
+         1u7yogXJqcFZaHYNXfg4vG0u4cQA2aNa3gRUU/v7Rk/bSngUXVjHMey97uG1KqmOcg6q
+         gMPg+vgK1XCynplyMEkaKgDWKi4L1noZGrmQHAbZpbRV1Kc5TCQlKT9mGFmXZPMKUGZG
+         fWGCO1JqRBcBd12HyNZEIpdmRPqoin458dEH4Jsal4Av82NzhfwDP2ZQM5+5UUvrM2HW
+         mqJA==
+X-Gm-Message-State: APjAAAXsPqO5YF22TisPawoa5HdQK0EiGi46S32Xky3fKnNMoTiAji5F
+        A4v/ulHKs7uHTcbqXr0mamiI1qAm7LY5I2EtHQzv/P84
+X-Google-Smtp-Source: APXvYqzLP8LcuTja0Clj3td6JbemJKYcwEC0kjAJD/jSW1ZL2lUYItqjqe1rcP4GsTtZADBzqsEQwcwF/4KfuHKFckc=
+X-Received: by 2002:a9d:191e:: with SMTP id j30mr16528977ota.297.1573411547410;
+ Sun, 10 Nov 2019 10:45:47 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:5c4f:: with SMTP id q76mr25453059ilb.158.1573411149300;
- Sun, 10 Nov 2019 10:39:09 -0800 (PST)
-Date:   Sun, 10 Nov 2019 10:39:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a3cc890597025437@google.com>
-Subject: KASAN: use-after-free Read in j1939_sk_recv
-From:   syzbot <syzbot+07ca5bce8530070a5650@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191016102520.124370-1-jacopo+renesas@jmondi.org> <CAMuHMdUH0LrZ6iEuN1aWCTt_-jpgp=EjxubMAVdp11HLL=ayyQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUH0LrZ6iEuN1aWCTt_-jpgp=EjxubMAVdp11HLL=ayyQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sun, 10 Nov 2019 19:45:36 +0100
+Message-ID: <CAMuHMdULSOOmcoKrQ40TJaNVOAuBsCA=bgC3pMB8jOGpRCAMhg@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: max9611: Defer probe on POR read
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     linux-iio@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Oct 17, 2019 at 2:55 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, Oct 16, 2019 at 12:23 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > The max9611 driver tests communications with the chip by reading the die
+> > temperature during the probe function. If the temperature register
+> > POR (power-on reset) value is returned from the test read, defer probe to
+> > give the chip a bit more time to properly exit from reset.
+> >
+> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>
+> Thanks for your patch!
+>
+> > Geert,
+> >   I've not been able to reproduce the issue on my boards (M3-N
+> > Salvator-XS and M3-W Salvator-X). As you reported the issue you might be
+> > able to reproduce it, could you please test this?
+>
+> I can reproduce it on Salvator-XS with R-Car H3 ES2.0.
+> According to my logs, I've seen the issue on all Salvator-X(S) boards,
+> but not with the same frequency.  Probability is highest on H3 ES2.0
+> (ca. 5% of the boots since I first saw the issue), followed by H3 ES1.0,
+> M3-W, and M3-N.
+>
+> After more investigation, my findings are:
+>   1. I cannot reproduce the issue if the max9611 driver is modular.
+>      Is it related to using max9611 "too soon" after i2c bus init?
+>      How can "i2c bus init" impact a slave device?
+>      Perhaps due to pin configuration, e.g. changing from another pin
+>      function or GPIO to function i2c4?
+>   2. Adding a delay at the top of max9611_init() fixes the issue.
+>      This would explain why the issue is less likely to happy on slower
+>      SoCs like M3-N.
+>   3. Disabling all other i2c slaves on i2c4 in DTS fixes the issue.
+>      Before, max9611 was initialized last, so this moves init earlier,
+>      contradicting theory #1.
+>   4. Just disabling the adv7482 (which registers 11 dummies i2c slaves)
+>      in DTS does not fix the issue.
+>
+> Unfortunately i2c4 is exposed on a 60-pin Samtec QSH connector only,
+> for which I have no breakout adapter.
 
-syzbot found the following crash on:
+Some soldering fixed that. Still investigating.
+Here's a status update:
 
-HEAD commit:    5591cf00 Add linux-next specific files for 20191108
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=106b7c3ce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e1036c6ef52866f9
-dashboard link: https://syzkaller.appspot.com/bug?extid=07ca5bce8530070a5650
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165ad206e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14cf9c3ce00000
+  A. I can reproduce the issue at 100 kHz instead of 400 kHz.
+  B. 3 above doesn't seem to be true: I can reproduce it with all other
+     slaves disabled.
+  C. The code says:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+07ca5bce8530070a5650@syzkaller.appspotmail.com
+        /*
+         * need a delay here to make register configuration
+         * stabilize. 1 msec at least, from empirical testing.
+         */
+        usleep_range(1000, 2000);
 
-==================================================================
-BUG: KASAN: use-after-free in __lock_acquire+0x3a8b/0x4a00  
-kernel/locking/lockdep.c:3828
-Read of size 8 at addr ffff88808d6ad0c0 by task syz-executor171/8825
+     However, the datasheet says:
 
-CPU: 1 PID: 8825 Comm: syz-executor171 Not tainted 5.4.0-rc6-next-20191108  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __lock_acquire+0x3a8b/0x4a00 kernel/locking/lockdep.c:3828
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  j1939_sk_recv+0x2f/0x370 net/can/j1939/socket.c:345
-  j1939_can_recv+0x4e5/0x620 net/can/j1939/main.c:105
-  deliver net/can/af_can.c:568 [inline]
-  can_rcv_filter+0x292/0x8e0 net/can/af_can.c:602
-  can_receive+0x2e7/0x530 net/can/af_can.c:659
-  can_rcv+0x133/0x1b0 net/can/af_can.c:685
-  __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:5150
-  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5264
-  process_backlog+0x206/0x750 net/core/dev.c:6096
-  napi_poll net/core/dev.c:6533 [inline]
-  net_rx_action+0x508/0x1110 net/core/dev.c:6601
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:__sanitizer_cov_trace_switch+0x44/0x80 kernel/kcov.c:310
-Code: 3a 48 83 f8 08 74 46 48 83 f8 10 75 27 bf 03 00 00 00 4d 8b 2c 24 31  
-db 4d 85 ed 74 17 49 8b 74 dc 10 48 83 c3 01 48 8b 4d 08 <e8> 47 fe ff ff  
-49 39 dd 75 e9 5b 41 5c 41 5d 5d c3 48 83 f8 40 bf
-RSP: 0018:ffff88809caefbe8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: ffffffff8168173c
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000005
-RBP: ffff88809caefc00 R08: ffff8880a19f82c0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff87ae1780
-R13: 000000000000000c R14: 0000000000000000 R15: ffff88809caefdf0
-  do_futex+0x2bc/0x1de0 kernel/futex.c:3639
-  __do_sys_futex kernel/futex.c:3705 [inline]
-  __se_sys_futex kernel/futex.c:3673 [inline]
-  __x64_sys_futex+0x3f7/0x590 kernel/futex.c:3673
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x450699
-Code: e8 2c d4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 ab cc fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd88d336cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: ffffffffffffffda RBX: 00000000006e2ca8 RCX: 0000000000450699
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006e2ca8
-RBP: 00000000006e2ca0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e2cac
-R13: 00007ffc9e1c600f R14: 00007fd88d3379c0 R15: 0000000000000000
+        Parameter            MIN     TYP     MAX
+        Conversion Time      -       2 ms    -
 
-Allocated by task 8825:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:670 [inline]
-  j1939_priv_create net/can/j1939/main.c:122 [inline]
-  j1939_netdev_start+0xa4/0x550 net/can/j1939/main.c:251
-  j1939_sk_bind+0x65a/0x8e0 net/can/j1939/socket.c:438
-  __sys_bind+0x239/0x290 net/socket.c:1648
-  __do_sys_bind net/socket.c:1659 [inline]
-  __se_sys_bind net/socket.c:1657 [inline]
-  __x64_sys_bind+0x73/0xb0 net/socket.c:1657
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+     So 1 ms is definitely too short.
+     Unfortunately the datasheet has no maximum value.
 
-Freed by task 8824:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3757
-  __j1939_priv_release net/can/j1939/main.c:154 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  j1939_priv_put+0x8b/0xb0 net/can/j1939/main.c:159
-  j1939_netdev_stop+0x45/0x190 net/can/j1939/main.c:291
-  j1939_sk_release+0x3bd/0x5c0 net/can/j1939/socket.c:580
-  __sock_release+0xce/0x280 net/socket.c:591
-  sock_close+0x1e/0x30 net/socket.c:1269
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  D. For 2: msleep(1) is sufficient, usleep_range(200, 500) is not.
+     And this is still not explained by C.
+     I also don't know yet who's resetting the chip on reboot, as it
+     does not have a reset line, but all registers are zeroed (except
+     for the POR temperature value).
 
-The buggy address belongs to the object at ffff88808d6ac000
-  which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 4288 bytes inside of
-  8192-byte region [ffff88808d6ac000, ffff88808d6ae000)
-The buggy address belongs to the page:
-page:ffffea000235ab00 refcount:1 mapcount:0 mapping:ffff8880aa4021c0  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002289508 ffffea0002246008 ffff8880aa4021c0
-raw: 0000000000000000 ffff88808d6ac000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
+To be investigated more...
 
-Memory state around the buggy address:
-  ffff88808d6acf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808d6ad000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808d6ad080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                            ^
-  ffff88808d6ad100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808d6ad180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Gr{oetje,eeting}s,
 
+                        Geert
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
