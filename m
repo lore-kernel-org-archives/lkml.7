@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA3C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E477C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AED721855
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EEF2184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKJKYN (ORCPT
+        id S1726908AbfKJKYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 05:24:13 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54417 "EHLO
+        Sun, 10 Nov 2019 05:24:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54409 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfKJKYJ (ORCPT
+        with ESMTP id S1726758AbfKJKYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 10 Nov 2019 05:24:09 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iTkO6-0004YA-Lb; Sun, 10 Nov 2019 11:24:07 +0100
+        id 1iTkO3-0004Xl-Sn; Sun, 10 Nov 2019 11:24:04 +0100
 Date:   Sun, 10 Nov 2019 10:21:53 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/urgent for v5.4-rc7
+Subject: [GIT pull] sched/urgent for v5.4-rc7
 References: <157338131323.14789.2179255265964358886.tglx@nanos.tec.linutronix.de>
-Message-ID: <157338131324.14789.8363441947094006311.tglx@nanos.tec.linutronix.de>
+Message-ID: <157338131324.14789.7419190771030534276.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -41,144 +41,467 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest x86-urgent-for-linus git tree from:
+please pull the latest sched-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
 
-up to:  63ec58b44fcc: x86/tsc: Respect tsc command line paraemeter for clocksource_tsc_early
+up to:  6e2df0581f56: sched: Fix pick_next_task() vs 'change' pattern race
 
-A small set of fixes for x86:
+Two fixes for scheduler regressions:
 
-  - Make the tsc=reliable/nowatchdog command line parameter work again. It was broken
-    with the introduction of the early TSC clocksource.
+   - Plug a subtle race condition which was introduced with the rework of
+     the next task selection functionality. The change of task properties
+     became unprotected which can be observed inconsistently causing state
+     corruption.
 
-  - Prevent the evaluation of exception stacks before they are set up. This
-    causes a crash in dumpstack because the stack walk termination gets
-    screwed up.
-
-  - Prevent a NULL pointer dereference in the rescource control file
-    system.
-
-  - Avoid bogus warnings about APIC id mismatch related to the LDR which
-    can happen when the LDR is not in use and therefore not initialized.
-    Only evaluate that when the APIC is in logical destination mode.
+   - A trivial compile fix for CONFIG_CGROUPS=n
 
 Thanks,
 
 	tglx
 
 ------------------>
-Jan Beulich (1):
-      x86/apic/32: Avoid bogus LDR warnings
+Peter Zijlstra (1):
+      sched: Fix pick_next_task() vs 'change' pattern race
 
-Michael Zhivich (1):
-      x86/tsc: Respect tsc command line paraemeter for clocksource_tsc_early
-
-Thomas Gleixner (1):
-      x86/dumpstack/64: Don't evaluate exception stacks before setup
-
-Xiaochen Shen (1):
-      x86/resctrl: Prevent NULL pointer dereference when reading mondata
+Qais Yousef (1):
+      sched/core: Fix compilation error when cgroup not selected
 
 
- arch/x86/kernel/apic/apic.c               | 28 +++++++++++++++-------------
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  4 ++++
- arch/x86/kernel/dumpstack_64.c            |  7 +++++++
- arch/x86/kernel/tsc.c                     |  3 +++
- 4 files changed, 29 insertions(+), 13 deletions(-)
+ kernel/sched/core.c      | 23 ++++++++++++++++-------
+ kernel/sched/deadline.c  | 40 ++++++++++++++++++++--------------------
+ kernel/sched/fair.c      | 15 ++++++++++++---
+ kernel/sched/idle.c      |  9 ++++++++-
+ kernel/sched/rt.c        | 37 +++++++++++++++++++------------------
+ kernel/sched/sched.h     | 30 +++++++++++++++++++++++++++---
+ kernel/sched/stop_task.c | 18 +++++++++++-------
+ 7 files changed, 113 insertions(+), 59 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 9e2dd2b296cd..2b0faf86da1b 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1586,9 +1586,6 @@ static void setup_local_APIC(void)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index dd05a378631a..0f2eb3629070 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1073,6 +1073,7 @@ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
+ 	task_rq_unlock(rq, p, &rf);
+ }
+ 
++#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static inline void
+ uclamp_update_active_tasks(struct cgroup_subsys_state *css,
+ 			   unsigned int clamps)
+@@ -1091,7 +1092,6 @@ uclamp_update_active_tasks(struct cgroup_subsys_state *css,
+ 	css_task_iter_end(&it);
+ }
+ 
+-#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static void cpu_util_update_eff(struct cgroup_subsys_state *css);
+ static void uclamp_update_root_tg(void)
  {
- 	int cpu = smp_processor_id();
- 	unsigned int value;
--#ifdef CONFIG_X86_32
--	int logical_apicid, ldr_apicid;
--#endif
- 
- 	if (disable_apic) {
- 		disable_ioapic_support();
-@@ -1626,16 +1623,21 @@ static void setup_local_APIC(void)
- 	apic->init_apic_ldr();
- 
- #ifdef CONFIG_X86_32
--	/*
--	 * APIC LDR is initialized.  If logical_apicid mapping was
--	 * initialized during get_smp_config(), make sure it matches the
--	 * actual value.
--	 */
--	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
--	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
--	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
--	/* always use the value from LDR */
--	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	if (apic->dest_logical) {
-+		int logical_apicid, ldr_apicid;
-+
-+		/*
-+		 * APIC LDR is initialized.  If logical_apicid mapping was
-+		 * initialized during get_smp_config(), make sure it matches
-+		 * the actual value.
-+		 */
-+		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
-+		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
-+		if (logical_apicid != BAD_APICID)
-+			WARN_ON(logical_apicid != ldr_apicid);
-+		/* Always use the value from LDR. */
-+		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	}
- #endif
- 
- 	/*
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index efbd54cc4e69..055c8613b531 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -522,6 +522,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 	int ret = 0;
- 
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
-+	if (!rdtgrp) {
-+		ret = -ENOENT;
-+		goto out;
-+	}
- 
- 	md.priv = of->kn->priv;
- 	resid = md.u.rid;
-diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-index 753b8cfe8b8a..87b97897a881 100644
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -94,6 +94,13 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
- 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
- 
- 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
-+	/*
-+	 * Handle the case where stack trace is collected _before_
-+	 * cea_exception_stacks had been initialized.
-+	 */
-+	if (!begin)
-+		return false;
-+
- 	end = begin + sizeof(struct cea_exception_stacks);
- 	/* Bail if @stack is outside the exception stack area. */
- 	if (stk < begin || stk >= end)
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index c59454c382fd..7e322e2daaf5 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1505,6 +1505,9 @@ void __init tsc_init(void)
- 		return;
+@@ -3929,13 +3929,22 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
  	}
  
-+	if (tsc_clocksource_reliable || no_tsc_watchdog)
-+		clocksource_tsc_early.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
+ restart:
++#ifdef CONFIG_SMP
+ 	/*
+-	 * Ensure that we put DL/RT tasks before the pick loop, such that they
+-	 * can PULL higher prio tasks when we lower the RQ 'priority'.
++	 * We must do the balancing pass before put_next_task(), such
++	 * that when we release the rq->lock the task is in the same
++	 * state as before we took rq->lock.
++	 *
++	 * We can terminate the balance pass as soon as we know there is
++	 * a runnable task of @class priority or higher.
+ 	 */
+-	prev->sched_class->put_prev_task(rq, prev, rf);
+-	if (!rq->nr_running)
+-		newidle_balance(rq, rf);
++	for_class_range(class, prev->sched_class, &idle_sched_class) {
++		if (class->balance(rq, prev, rf))
++			break;
++	}
++#endif
 +
- 	clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
- 	detect_art();
++	put_prev_task(rq, prev);
+ 
+ 	for_each_class(class) {
+ 		p = class->pick_next_task(rq, NULL, NULL);
+@@ -6201,7 +6210,7 @@ static struct task_struct *__pick_migrate_task(struct rq *rq)
+ 	for_each_class(class) {
+ 		next = class->pick_next_task(rq, NULL, NULL);
+ 		if (next) {
+-			next->sched_class->put_prev_task(rq, next, NULL);
++			next->sched_class->put_prev_task(rq, next);
+ 			return next;
+ 		}
+ 	}
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 2dc48720f189..a8a08030a8f7 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1691,6 +1691,22 @@ static void check_preempt_equal_dl(struct rq *rq, struct task_struct *p)
+ 	resched_curr(rq);
  }
+ 
++static int balance_dl(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
++{
++	if (!on_dl_rq(&p->dl) && need_pull_dl_task(rq, p)) {
++		/*
++		 * This is OK, because current is on_cpu, which avoids it being
++		 * picked for load-balance and preemption/IRQs are still
++		 * disabled avoiding further scheduler activity on it and we've
++		 * not yet started the picking loop.
++		 */
++		rq_unpin_lock(rq, rf);
++		pull_dl_task(rq);
++		rq_repin_lock(rq, rf);
++	}
++
++	return sched_stop_runnable(rq) || sched_dl_runnable(rq);
++}
+ #endif /* CONFIG_SMP */
+ 
+ /*
+@@ -1758,45 +1774,28 @@ static struct task_struct *
+ pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+ 	struct sched_dl_entity *dl_se;
++	struct dl_rq *dl_rq = &rq->dl;
+ 	struct task_struct *p;
+-	struct dl_rq *dl_rq;
+ 
+ 	WARN_ON_ONCE(prev || rf);
+ 
+-	dl_rq = &rq->dl;
+-
+-	if (unlikely(!dl_rq->dl_nr_running))
++	if (!sched_dl_runnable(rq))
+ 		return NULL;
+ 
+ 	dl_se = pick_next_dl_entity(rq, dl_rq);
+ 	BUG_ON(!dl_se);
+-
+ 	p = dl_task_of(dl_se);
+-
+ 	set_next_task_dl(rq, p);
+-
+ 	return p;
+ }
+ 
+-static void put_prev_task_dl(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
++static void put_prev_task_dl(struct rq *rq, struct task_struct *p)
+ {
+ 	update_curr_dl(rq);
+ 
+ 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 1);
+ 	if (on_dl_rq(&p->dl) && p->nr_cpus_allowed > 1)
+ 		enqueue_pushable_dl_task(rq, p);
+-
+-	if (rf && !on_dl_rq(&p->dl) && need_pull_dl_task(rq, p)) {
+-		/*
+-		 * This is OK, because current is on_cpu, which avoids it being
+-		 * picked for load-balance and preemption/IRQs are still
+-		 * disabled avoiding further scheduler activity on it and we've
+-		 * not yet started the picking loop.
+-		 */
+-		rq_unpin_lock(rq, rf);
+-		pull_dl_task(rq);
+-		rq_repin_lock(rq, rf);
+-	}
+ }
+ 
+ /*
+@@ -2442,6 +2441,7 @@ const struct sched_class dl_sched_class = {
+ 	.set_next_task		= set_next_task_dl,
+ 
+ #ifdef CONFIG_SMP
++	.balance		= balance_dl,
+ 	.select_task_rq		= select_task_rq_dl,
+ 	.migrate_task_rq	= migrate_task_rq_dl,
+ 	.set_cpus_allowed       = set_cpus_allowed_dl,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 682a754ea3e1..22a2fed29054 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6570,6 +6570,15 @@ static void task_dead_fair(struct task_struct *p)
+ {
+ 	remove_entity_load_avg(&p->se);
+ }
++
++static int
++balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++{
++	if (rq->nr_running)
++		return 1;
++
++	return newidle_balance(rq, rf) != 0;
++}
+ #endif /* CONFIG_SMP */
+ 
+ static unsigned long wakeup_gran(struct sched_entity *se)
+@@ -6746,7 +6755,7 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
+ 	int new_tasks;
+ 
+ again:
+-	if (!cfs_rq->nr_running)
++	if (!sched_fair_runnable(rq))
+ 		goto idle;
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+@@ -6884,7 +6893,7 @@ done: __maybe_unused;
+ /*
+  * Account for a descheduled task:
+  */
+-static void put_prev_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++static void put_prev_task_fair(struct rq *rq, struct task_struct *prev)
+ {
+ 	struct sched_entity *se = &prev->se;
+ 	struct cfs_rq *cfs_rq;
+@@ -10414,11 +10423,11 @@ const struct sched_class fair_sched_class = {
+ 	.check_preempt_curr	= check_preempt_wakeup,
+ 
+ 	.pick_next_task		= pick_next_task_fair,
+-
+ 	.put_prev_task		= put_prev_task_fair,
+ 	.set_next_task          = set_next_task_fair,
+ 
+ #ifdef CONFIG_SMP
++	.balance		= balance_fair,
+ 	.select_task_rq		= select_task_rq_fair,
+ 	.migrate_task_rq	= migrate_task_rq_fair,
+ 
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 8dad5aa600ea..f65ef1e2f204 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -365,6 +365,12 @@ select_task_rq_idle(struct task_struct *p, int cpu, int sd_flag, int flags)
+ {
+ 	return task_cpu(p); /* IDLE tasks as never migrated */
+ }
++
++static int
++balance_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++{
++	return WARN_ON_ONCE(1);
++}
+ #endif
+ 
+ /*
+@@ -375,7 +381,7 @@ static void check_preempt_curr_idle(struct rq *rq, struct task_struct *p, int fl
+ 	resched_curr(rq);
+ }
+ 
+-static void put_prev_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++static void put_prev_task_idle(struct rq *rq, struct task_struct *prev)
+ {
+ }
+ 
+@@ -460,6 +466,7 @@ const struct sched_class idle_sched_class = {
+ 	.set_next_task          = set_next_task_idle,
+ 
+ #ifdef CONFIG_SMP
++	.balance		= balance_idle,
+ 	.select_task_rq		= select_task_rq_idle,
+ 	.set_cpus_allowed	= set_cpus_allowed_common,
+ #endif
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index ebaa4e619684..9b8adc01be3d 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1469,6 +1469,22 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
+ 	resched_curr(rq);
+ }
+ 
++static int balance_rt(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
++{
++	if (!on_rt_rq(&p->rt) && need_pull_rt_task(rq, p)) {
++		/*
++		 * This is OK, because current is on_cpu, which avoids it being
++		 * picked for load-balance and preemption/IRQs are still
++		 * disabled avoiding further scheduler activity on it and we've
++		 * not yet started the picking loop.
++		 */
++		rq_unpin_lock(rq, rf);
++		pull_rt_task(rq);
++		rq_repin_lock(rq, rf);
++	}
++
++	return sched_stop_runnable(rq) || sched_dl_runnable(rq) || sched_rt_runnable(rq);
++}
+ #endif /* CONFIG_SMP */
+ 
+ /*
+@@ -1552,21 +1568,18 @@ static struct task_struct *
+ pick_next_task_rt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+ 	struct task_struct *p;
+-	struct rt_rq *rt_rq = &rq->rt;
+ 
+ 	WARN_ON_ONCE(prev || rf);
+ 
+-	if (!rt_rq->rt_queued)
++	if (!sched_rt_runnable(rq))
+ 		return NULL;
+ 
+ 	p = _pick_next_task_rt(rq);
+-
+ 	set_next_task_rt(rq, p);
+-
+ 	return p;
+ }
+ 
+-static void put_prev_task_rt(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
++static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+ {
+ 	update_curr_rt(rq);
+ 
+@@ -1578,18 +1591,6 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p, struct rq_fla
+ 	 */
+ 	if (on_rt_rq(&p->rt) && p->nr_cpus_allowed > 1)
+ 		enqueue_pushable_task(rq, p);
+-
+-	if (rf && !on_rt_rq(&p->rt) && need_pull_rt_task(rq, p)) {
+-		/*
+-		 * This is OK, because current is on_cpu, which avoids it being
+-		 * picked for load-balance and preemption/IRQs are still
+-		 * disabled avoiding further scheduler activity on it and we've
+-		 * not yet started the picking loop.
+-		 */
+-		rq_unpin_lock(rq, rf);
+-		pull_rt_task(rq);
+-		rq_repin_lock(rq, rf);
+-	}
+ }
+ 
+ #ifdef CONFIG_SMP
+@@ -2366,8 +2367,8 @@ const struct sched_class rt_sched_class = {
+ 	.set_next_task          = set_next_task_rt,
+ 
+ #ifdef CONFIG_SMP
++	.balance		= balance_rt,
+ 	.select_task_rq		= select_task_rq_rt,
+-
+ 	.set_cpus_allowed       = set_cpus_allowed_common,
+ 	.rq_online              = rq_online_rt,
+ 	.rq_offline             = rq_offline_rt,
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 0db2c1b3361e..c8870c5bd7df 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1727,10 +1727,11 @@ struct sched_class {
+ 	struct task_struct * (*pick_next_task)(struct rq *rq,
+ 					       struct task_struct *prev,
+ 					       struct rq_flags *rf);
+-	void (*put_prev_task)(struct rq *rq, struct task_struct *p, struct rq_flags *rf);
++	void (*put_prev_task)(struct rq *rq, struct task_struct *p);
+ 	void (*set_next_task)(struct rq *rq, struct task_struct *p);
+ 
+ #ifdef CONFIG_SMP
++	int (*balance)(struct rq *rq, struct task_struct *prev, struct rq_flags *rf);
+ 	int  (*select_task_rq)(struct task_struct *p, int task_cpu, int sd_flag, int flags);
+ 	void (*migrate_task_rq)(struct task_struct *p, int new_cpu);
+ 
+@@ -1773,7 +1774,7 @@ struct sched_class {
+ static inline void put_prev_task(struct rq *rq, struct task_struct *prev)
+ {
+ 	WARN_ON_ONCE(rq->curr != prev);
+-	prev->sched_class->put_prev_task(rq, prev, NULL);
++	prev->sched_class->put_prev_task(rq, prev);
+ }
+ 
+ static inline void set_next_task(struct rq *rq, struct task_struct *next)
+@@ -1787,8 +1788,12 @@ static inline void set_next_task(struct rq *rq, struct task_struct *next)
+ #else
+ #define sched_class_highest (&dl_sched_class)
+ #endif
++
++#define for_class_range(class, _from, _to) \
++	for (class = (_from); class != (_to); class = class->next)
++
+ #define for_each_class(class) \
+-   for (class = sched_class_highest; class; class = class->next)
++	for_class_range(class, sched_class_highest, NULL)
+ 
+ extern const struct sched_class stop_sched_class;
+ extern const struct sched_class dl_sched_class;
+@@ -1796,6 +1801,25 @@ extern const struct sched_class rt_sched_class;
+ extern const struct sched_class fair_sched_class;
+ extern const struct sched_class idle_sched_class;
+ 
++static inline bool sched_stop_runnable(struct rq *rq)
++{
++	return rq->stop && task_on_rq_queued(rq->stop);
++}
++
++static inline bool sched_dl_runnable(struct rq *rq)
++{
++	return rq->dl.dl_nr_running > 0;
++}
++
++static inline bool sched_rt_runnable(struct rq *rq)
++{
++	return rq->rt.rt_queued > 0;
++}
++
++static inline bool sched_fair_runnable(struct rq *rq)
++{
++	return rq->cfs.nr_running > 0;
++}
+ 
+ #ifdef CONFIG_SMP
+ 
+diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
+index 7e1cee4e65b2..c0640739e05e 100644
+--- a/kernel/sched/stop_task.c
++++ b/kernel/sched/stop_task.c
+@@ -15,6 +15,12 @@ select_task_rq_stop(struct task_struct *p, int cpu, int sd_flag, int flags)
+ {
+ 	return task_cpu(p); /* stop tasks as never migrate */
+ }
++
++static int
++balance_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++{
++	return sched_stop_runnable(rq);
++}
+ #endif /* CONFIG_SMP */
+ 
+ static void
+@@ -31,16 +37,13 @@ static void set_next_task_stop(struct rq *rq, struct task_struct *stop)
+ static struct task_struct *
+ pick_next_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+-	struct task_struct *stop = rq->stop;
+-
+ 	WARN_ON_ONCE(prev || rf);
+ 
+-	if (!stop || !task_on_rq_queued(stop))
++	if (!sched_stop_runnable(rq))
+ 		return NULL;
+ 
+-	set_next_task_stop(rq, stop);
+-
+-	return stop;
++	set_next_task_stop(rq, rq->stop);
++	return rq->stop;
+ }
+ 
+ static void
+@@ -60,7 +63,7 @@ static void yield_task_stop(struct rq *rq)
+ 	BUG(); /* the stop task should never yield, its pointless. */
+ }
+ 
+-static void put_prev_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++static void put_prev_task_stop(struct rq *rq, struct task_struct *prev)
+ {
+ 	struct task_struct *curr = rq->curr;
+ 	u64 delta_exec;
+@@ -129,6 +132,7 @@ const struct sched_class stop_sched_class = {
+ 	.set_next_task          = set_next_task_stop,
+ 
+ #ifdef CONFIG_SMP
++	.balance		= balance_stop,
+ 	.select_task_rq		= select_task_rq_stop,
+ 	.set_cpus_allowed	= set_cpus_allowed_common,
+ #endif
 
 
