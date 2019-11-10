@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F04C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F028C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8943321924
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5740E21D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353902;
-	bh=xscJ7EClHwitBaxZMa5jBEldDG3fG8cJaiC13LZuq10=;
+	s=default; t=1573353914;
+	bh=r64Ku2WpgWZ33C/ouKN9RgAuvGGM6d+Ynye61UfTUIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5Og8AuKDOpxdmqzj5uTsHrZDLQ6jbCSjFI0ieS/zNgrAHjCbrsxAF0HyO2WAewsU
-	 hUlFDKmQ89POMu0nasXDl5ebYAJ7OfSDlQ5S1EH4lW3OZ+jnm2maP/UtMTlwdBewh3
-	 h1pgM2p/Uxu4wBLak4Df4eVRPyCySR2DD4bskShw=
+	b=xQEmFAmzEvYTd847dlMvUcywURSJ5pjwZYBunOdtoUF2uwUp5xd/XqRo+g/WVoHYC
+	 B+zqKAmZhxXBr59Kmr+9q1NOj2RWUHCnmIaC7J/AcbietstZU19y7XzH0VbG27ik5r
+	 pUYLsPdEKRW7dWc0O/uN/UFJT6xTs0r8B9jrzSd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfKJCpB (ORCPT
+        id S1728763AbfKJCpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43868 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbfKJCoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:30 -0500
+        id S1727585AbfKJCog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2E8C222BE;
-        Sun, 10 Nov 2019 02:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D57721655;
+        Sun, 10 Nov 2019 02:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353869;
-        bh=xscJ7EClHwitBaxZMa5jBEldDG3fG8cJaiC13LZuq10=;
+        s=default; t=1573353875;
+        bh=r64Ku2WpgWZ33C/ouKN9RgAuvGGM6d+Ynye61UfTUIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MfLJIDYfNRw+8U99Mpg5RLuBQb4OPIBz30RJHxU0TnFtqn7oZi4EWx9l3MBewDUqG
-         55YtaOT4SYPTJ24UVsVb6tsfGLX2OaJ5HxzQeKHi+NVzdcNoL0iGxHAI7sX/IxW7wd
-         i31QvPyr1W19Q/OtH7ewZWevwq5MctwbSiLRCUOI=
+        b=gfYPUb1iz3k4vnUSbDZ7ogTd6QxwrmaYkV6Rr1jb1d28U+ZUzpns4TabVSYP7naq1
+         WTbgpCasANM4VWN9/Bo4gkSymGwwvBB6w8mvFaf2HV/K5kx3E4kuxaQOBn9jGCO1C2
+         G0ltCabgoc+HdpTeq5wMIX99UMI5rYs39FG54bvU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 149/191] RDMA: Fix dependencies for rdma_user_mmap_io
-Date:   Sat,  9 Nov 2019 21:39:31 -0500
-Message-Id: <20191110024013.29782-149-sashal@kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 154/191] Bluetooth: L2CAP: Detect if remote is not able to use the whole MPS
+Date:   Sat,  9 Nov 2019 21:39:36 -0500
+Message-Id: <20191110024013.29782-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -58,56 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 46bdf777685677c1cc6b3da9220aace9da690731 ]
+[ Upstream commit a5c3021bb62b970713550db3f7fd08aa70665d7e ]
 
-The mlx4 driver produces a link error when it is configured
-as built-in while CONFIG_INFINIBAND_USER_ACCESS is set to =m:
+If the remote is not able to fully utilize the MPS choosen recalculate
+the credits based on the actual amount it is sending that way it can
+still send packets of MTU size without credits dropping to 0.
 
-drivers/infiniband/hw/mlx4/main.o: In function `mlx4_ib_mmap':
-main.c:(.text+0x1af4): undefined reference to `rdma_user_mmap_io'
-
-The same function is called from mlx5, which already has a
-dependency to ensure we can call it, and from hns, which
-appears to suffer from the same problem.
-
-This adds the same dependency that mlx5 uses to the other two.
-
-Fixes: 6745d356ab39 ("RDMA/hns: Use rdma_user_mmap_io")
-Fixes: c282da4109e4 ("RDMA/mlx4: Use rdma_user_mmap_io")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/Kconfig  | 1 +
- drivers/infiniband/hw/mlx4/Kconfig | 1 +
- 2 files changed, 2 insertions(+)
+ net/bluetooth/l2cap_core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
-index fddb5fdf92de8..21c2100b2ea98 100644
---- a/drivers/infiniband/hw/hns/Kconfig
-+++ b/drivers/infiniband/hw/hns/Kconfig
-@@ -1,6 +1,7 @@
- config INFINIBAND_HNS
- 	tristate "HNS RoCE Driver"
- 	depends on NET_VENDOR_HISILICON
-+	depends on INFINIBAND_USER_ACCESS || !INFINIBAND_USER_ACCESS
- 	depends on ARM64 || (COMPILE_TEST && 64BIT)
- 	---help---
- 	  This is a RoCE/RDMA driver for the Hisilicon RoCE engine. The engine
-diff --git a/drivers/infiniband/hw/mlx4/Kconfig b/drivers/infiniband/hw/mlx4/Kconfig
-index db4aa13ebae0c..d1de3285fd885 100644
---- a/drivers/infiniband/hw/mlx4/Kconfig
-+++ b/drivers/infiniband/hw/mlx4/Kconfig
-@@ -1,6 +1,7 @@
- config MLX4_INFINIBAND
- 	tristate "Mellanox ConnectX HCA support"
- 	depends on NETDEVICES && ETHERNET && PCI && INET
-+	depends on INFINIBAND_USER_ACCESS || !INFINIBAND_USER_ACCESS
- 	depends on MAY_USE_DEVLINK
- 	select NET_VENDOR_MELLANOX
- 	select MLX4_CORE
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 260ef5426e0ca..974c1b8a689c1 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -6819,6 +6819,16 @@ static int l2cap_le_data_rcv(struct l2cap_chan *chan, struct sk_buff *skb)
+ 		chan->sdu_len = sdu_len;
+ 		chan->sdu_last_frag = skb;
+ 
++		/* Detect if remote is not able to use the selected MPS */
++		if (skb->len + L2CAP_SDULEN_SIZE < chan->mps) {
++			u16 mps_len = skb->len + L2CAP_SDULEN_SIZE;
++
++			/* Adjust the number of credits */
++			BT_DBG("chan->mps %u -> %u", chan->mps, mps_len);
++			chan->mps = mps_len;
++			l2cap_chan_le_send_credits(chan);
++		}
++
+ 		return 0;
+ 	}
+ 
 -- 
 2.20.1
 
