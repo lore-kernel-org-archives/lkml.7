@@ -2,254 +2,207 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8BAC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80837C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DC5214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="JgFPNM+f"
+	by mail.kernel.org (Postfix) with ESMTP id 564252085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfKJNxX (ORCPT
+        id S1726882AbfKJNxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 08:53:23 -0500
-Received: from onstation.org ([52.200.56.107]:41736 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbfKJNxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 08:53:23 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id DCE553E953;
-        Sun, 10 Nov 2019 13:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1573394002;
-        bh=kwwxYsI+7PWQmNARlHVg5LcR+LYdXJkJFNO4dbdDESA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JgFPNM+fUNVENhg2ZYTapQmtDnzIIl7vBGSW5GDy0L3LsG9HN7TfjET4vdnWrU6Ca
-         HAYEjwBYKBbSj305ZPtTH5TnB3u3/AGrlQDusOe9c3LvCyAqoT27I39BCi9V7yDoLi
-         glX6i8b8HNJsP9BCbsT+xu8PSu/pkoWvsUIWXfrY=
-Date:   Sun, 10 Nov 2019 08:53:21 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async
- commit changes
-Message-ID: <20191110135321.GA6728@onstation.org>
-References: <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
- <20191106091335.GA16729@onstation.org>
- <CAF6AEGuEO1jg6KhOFWEMUjq4ZQy5w61dWJk6uLWRzHnMZYZv=g@mail.gmail.com>
- <CAOCk7NomH2MsZ+FvPFAMWeabOFpyOwODCb_Ro07v+2k2v_C4NA@mail.gmail.com>
- <CAF6AEGsZkJJTNZ8SzHsSioEnkpekr1Texu5_EeBW1hP-bsOyjQ@mail.gmail.com>
- <20191107111019.GA24028@onstation.org>
- <CAF6AEGtbP=X2+DELajQq9zMZYGgmhyUhe62ncvHvyFnyZexTXg@mail.gmail.com>
- <CAOCk7NrPdGqc4vo70NmTuyszkPaPe41-e89ym2vAYBY+GTt9BA@mail.gmail.com>
- <CAJs_Fx4UJYd-k3_3AAGJo-8udThhvf6t-J=OZi3jappWjTNnFQ@mail.gmail.com>
- <CAOCk7Nq7rPmraofy+o8vWTwSAd1+dTRsoZ4QN0mRAOOz7u7TUg@mail.gmail.com>
+        Sun, 10 Nov 2019 08:53:53 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:38460 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbfKJNxw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 08:53:52 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0ThdvM89_1573394021;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0ThdvM89_1573394021)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 10 Nov 2019 21:53:42 +0800
+Subject: Re: [PATCH] net: core: fix unbalanced qdisc_run_begin/qdisc_run_end
+To:     davem@davemloft.net
+Cc:     zhiche.yy@alibaba-inc.com, xlpang@linux.alibaba.com,
+        Eric Dumazet <edumazet@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Kevin Athey <kda@google.com>,
+        Xiaotian Pei <xiaotian@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191110020149.65307-1-wenyang@linux.alibaba.com>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <be7dd49a-0da9-1dd1-0fec-3f6485531fb6@linux.alibaba.com>
+Date:   Sun, 10 Nov 2019 21:53:41 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7Nq7rPmraofy+o8vWTwSAd1+dTRsoZ4QN0mRAOOz7u7TUg@mail.gmail.com>
+In-Reply-To: <20191110020149.65307-1-wenyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 07:56:25AM -0700, Jeffrey Hugo wrote:
-> On Thu, Nov 7, 2019 at 7:03 PM Rob Clark <robdclark@chromium.org> wrote:
-> >
-> > On Thu, Nov 7, 2019 at 9:40 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> > >
-> > > On Thu, Nov 7, 2019 at 9:17 AM Rob Clark <robdclark@gmail.com> wrote:
-> > > >
-> > > > On Thu, Nov 7, 2019 at 3:10 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > >
-> > > > > On Wed, Nov 06, 2019 at 08:58:59AM -0800, Rob Clark wrote:
-> > > > > > On Wed, Nov 6, 2019 at 8:47 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> > > > > > >
-> > > > > > > On Wed, Nov 6, 2019 at 9:30 AM Rob Clark <robdclark@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > On Wed, Nov 6, 2019 at 1:13 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Tue, Nov 05, 2019 at 08:23:27AM -0800, Rob Clark wrote:
-> > > > > > > > > > On Tue, Nov 5, 2019 at 2:08 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > > > > > > > > The 'pp done time out' errors go away if I revert the following three
-> > > > > > > > > > > commits:
-> > > > > > > > > > >
-> > > > > > > > > > > cd6d923167b1 ("drm/msm/dpu: async commit support")
-> > > > > > > > > > > d934a712c5e6 ("drm/msm: add atomic traces")
-> > > > > > > > > > > 2d99ced787e3 ("drm/msm: async commit support")
-> > > > > > > > > > >
-> > > > > > > > > > > I reverted the first one to fix a compiler error, and the second one so
-> > > > > > > > > > > that the last patch can be reverted without any merge conflicts.
-> > > > > > > > > > >
-> > > > > > > > > > > I see that crtc_flush() calls mdp5_ctl_commit(). I tried to use
-> > > > > > > > > > > crtc_flush_all() in mdp5_flush_commit() and the contents of the frame
-> > > > > > > > > > > buffer dance around the screen like its out of sync. I renamed
-> > > > > > > > > > > crtc_flush_all() to mdp5_crtc_flush_all() and removed the static
-> > > > > > > > > > > declaration. Here's the relevant part of what I tried:
-> > > > > > > > > > >
-> > > > > > > > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > > > > > > > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > > > > > > > > > > @@ -171,7 +171,15 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
-> > > > > > > > > > >
-> > > > > > > > > > >  static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
-> > > > > > > > > > >  {
-> > > > > > > > > > > -       /* TODO */
-> > > > > > > > > > > +       struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
-> > > > > > > > > > > +       struct drm_crtc *crtc;
-> > > > > > > > > > > +
-> > > > > > > > > > > +       for_each_crtc_mask(mdp5_kms->dev, crtc, crtc_mask) {
-> > > > > > > > > > > +               if (!crtc->state->active)
-> > > > > > > > > > > +                       continue;
-> > > > > > > > > > > +
-> > > > > > > > > > > +               mdp5_crtc_flush_all(crtc);
-> > > > > > > > > > > +       }
-> > > > > > > > > > >  }
-> > > > > > > > > > >
-> > > > > > > > > > > Any tips would be appreciated.
-> > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > I think this is along the lines of what we need to enable async commit
-> > > > > > > > > > for mdp5 (but also removing the flush from the atomic-commit path)..
-> > > > > > > > > > the principle behind the async commit is to do all the atomic state
-> > > > > > > > > > commit normally, but defer writing the flush bits.  This way, if you
-> > > > > > > > > > get another async update before the next vblank, you just apply it
-> > > > > > > > > > immediately instead of waiting for vblank.
-> > > > > > > > > >
-> > > > > > > > > > But I guess you are on a command mode panel, if I remember?  Which is
-> > > > > > > > > > a case I didn't have a way to test.  And I'm not entirely about how
-> > > > > > > > > > kms_funcs->vsync_time() should be implemented for cmd mode panels.
-> > > > > > > > >
-> > > > > > > > > Yes, this is a command-mode panel and there's no hardware frame counter
-> > > > > > > > > available. The key to getting the display working on this phone was this
-> > > > > > > > > patch:
-> > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2bab52af6fe68c43b327a57e5ce5fc10eefdfadf
-> > > > > > > > >
-> > > > > > > > > > That all said, I think we should first fix what is broken, before
-> > > > > > > > > > worrying about extending async commit support to mdp5.. which
-> > > > > > > > > > shouldn't hit the async==true path, due to not implementing
-> > > > > > > > > > kms_funcs->vsync_time().
-> > > > > > > > > >
-> > > > > > > > > > What I think is going on is that, in the cmd mode case,
-> > > > > > > > > > mdp5_wait_flush() (indirectly) calls mdp5_crtc_wait_for_pp_done(),
-> > > > > > > > > > which waits for a pp-done irq regardless of whether there is a flush
-> > > > > > > > > > in progress.  Since there is no flush pending, the irq never comes.
-> > > > > > > > > > But the expectation is that kms_funcs->wait_flush() returns
-> > > > > > > > > > immediately if there is nothing to wait for.
-> > > > > > > > >
-> > > > > > > > > I don't think that's happening in this case. I added some pr_info()
-> > > > > > > > > statements to request_pp_done_pending() and mdp5_crtc_pp_done_irq().
-> > > > > > > > > Here's the first two sets of messages that appear in dmesg:
-> > > > > > > > >
-> > > > > > > > > [   14.018907] msm fd900000.mdss: pp done time out, lm=0
-> > > > > > > > > [   14.018993] request_pp_done_pending: HERE
-> > > > > > > > > [   14.074208] mdp5_crtc_pp_done_irq: HERE
-> > > > > > > > > [   14.074368] Console: switching to colour frame buffer device 135x120
-> > > > > > > > > [   14.138938] msm fd900000.mdss: pp done time out, lm=0
-> > > > > > > > > [   14.139021] request_pp_done_pending: HERE
-> > > > > > > > > [   14.158097] mdp5_crtc_pp_done_irq: HERE
-> > > > > > > > >
-> > > > > > > > > The messages go on like this with the same pattern.
-> > > > > > > > >
-> > > > > > > > > I tried two different changes:
-> > > > > > > > >
-> > > > > > > > > 1) I moved the request_pp_done_pending() and corresponding if statement
-> > > > > > > > >    from mdp5_crtc_atomic_flush() and into mdp5_crtc_atomic_begin().
-> > > > > > > > >
-> > > > > > > > > 2) I increased the timeout in wait_for_completion_timeout() by several
-> > > > > > > > >    increments; all the way to 5 seconds.
-> > > > > > > >
-> > > > > > > > increasing the timeout won't help, because the pp-done irq has already
-> > > > > > > > come at the point where we wait for it..
-> > > > > > > >
-> > > > > > > > maybe the easy thing is just add mdp5_crtc->needs_pp, set to true
-> > > > > > > > before requesting, and false when we get the irq.. and then
-> > > > > > > > mdp5_crtc_wait_for_pp_done() just returns if needs_pp==false..
-> > > > > > >
-> > > > > > > On the otherhand, what about trying to make command mode panels
-> > > > > > > resemble video mode panels slightly?  Video mode panels have a vsync
-> > > > > > > counter in hardware, which is missing from command mode - however it
-> > > > > > > seems like the driver/drm framework would prefer such a counter.
-> > > > > > > Would it be a reasonable idea to make a software counter, and just
-> > > > > > > increment it every time the pp_done irq is triggered?
-> > > > > > >
-> > > > > > > I'm just thinking that we'll avoid issues long term by trying to make
-> > > > > > > the code common, rather than diverging it for the two modes.
-> > > > > > >
-> > > > > >
-> > > > > > *possibly*, but I think we want to account somehow periods where
-> > > > > > display is not updated.
-> > > > > >
-> > > > > > fwiw, it isn't that uncommon for userspace to use vblanks to "keep
-> > > > > > time" (drive animations for desktop switch, window
-> > > > > > maximize/unmaximize, etc).. it could be a surprise when "vblank" is
-> > > > > > not periodic.
-> > > > >
-> > > > > What do you think about using some variation of the current value of
-> > > > > jiffies in the kernel + the number of pp_done IRQs as the software
-> > > > > counter for command-mode panels?
-> > > > >
-> > > >
-> > > > jiffies is probably too coarse.. but we could use monotonic clock, I guess.
-> > > >
-> > > > But I suppose even a cmd mode panel has a "vblank", it is just
-> > > > internal the panel.  Do we get the TE interrupt at regular intervals?
-> > > > AFAIU this would be tied to the panel's internal vblank.
-> > >
-> > > The TE interrupt was first implemented in MDP 1.7.0 (msm8996).  8974
-> > > predates that.
-> > > You can get it from the WR_PTR interrupt, but you have to understand
-> > > details about your panel to configure that correctly.
-> >
-> > oh, sad.. I kinda assumed it was a pretty common DSI irq since
-> > forever.. I guess the hw is just managing the flow control to prevent
-> > tearing?
-> >
-> > Well, anyways, I guess we could just use a free-running timer based on
-> > refresh rate of the panel?
-> 
-> That would work.  One more alternative (just want to make sure we've
-> evaluated all options) is to use the autorefresh feature.  How I would
-> put it simply, is that autorefresh turns a command mode panel into a
-> video mode panel.  If autorefresh is enabled, the MDP will
-> automatically send a frame to the panel every time the panel invokes
-> the TE signal.  I'm pretty sure this will automatically trigger the
-> PP_DONE irq, so essentially PP_DONE is now analogous to vsync.  The
-> downside is that the START trigger and autorefresh are basically
-> mutually exclusive.  I see the autorefresh config register in MDP 1.0,
-> so it would be applicable to all platforms supported by the mdp5
-> driver.
+Sorry, after analyzing the assembly code of this function,
 
-There's a REG_MDP5_PP_AUTOREFRESH_CONFIG() macro upstream here:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/msm/disp/mdp5/mdp5.xml.h#n1383
+the semantics of the short circuit, there is no problem in this place.
 
-I'm not sure what to put in that register but I tried configuring it
-with a 1 this way and still have the same issue.
+we will continue to analyze, please ignore this patch, thank you.
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-index eeef41fcd4e1..6b9acf68fd2c 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-@@ -80,6 +80,7 @@ static int pingpong_tearcheck_setup(struct drm_encoder *encoder,
-        mdp5_write(mdp5_kms, REG_MDP5_PP_SYNC_THRESH(pp_id),
-                        MDP5_PP_SYNC_THRESH_START(4) |
-                        MDP5_PP_SYNC_THRESH_CONTINUE(4));
-+       mdp5_write(mdp5_kms, REG_MDP5_PP_AUTOREFRESH_CONFIG(pp_id), 1);
- 
-        return 0;
- }
+--
 
-Brian
+Regards,
+
+Wen
+
+
+On 2019/11/10 10:01 上午, Wen Yang wrote:
+> 3598 static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+> 3599                                  struct net_device *dev,
+> 3600                                  struct netdev_queue *txq)
+> 3601 {
+> ...
+> 3650         } else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
+> 3651                    qdisc_run_begin(q)) {
+>
+> ---> Those multiple *and conditions* in this if statement are not
+>       necessarily executed sequentially. If the qdisc_run_begin(q)
+>       statement is executed first and the other conditions are not
+>       satisfied, qdisc_run_end will have no chance to be executed,
+>       and the lowest bit of q->running will always be 1.
+>       This may lead to a softlockup:
+>       https://bugzilla.kernel.org/show_bug.cgi?id=205427
+> ...
+> 3657
+> 3658                 qdisc_bstats_update(q, skb);
+> ...
+> 3661                         if (unlikely(contended)) {
+> 3662                                 spin_unlock(&q->busylock);
+> 3663                                 contended = false;
+> 3664                         }
+> 3665                         __qdisc_run(q);
+> 3666                 }
+> 3667
+> 3668                 qdisc_run_end(q);
+> 3669                 rc = NET_XMIT_SUCCESS;
+> 3670         }
+> ...
+>
+> We ensure the correct execution order by explicitly
+> specifying those dependencies.
+> Fixes: edb09eb17ed8 ("net: sched: do not acquire qdisc spinlock in qdisc/class stats dump")
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: Kevin Athey <kda@google.com>
+> Cc: Xiaotian Pei <xiaotian@google.com>
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   net/core/dev.c | 63 ++++++++++++++++++++++++++++++----------------------------
+>   1 file changed, 33 insertions(+), 30 deletions(-)
+>
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 20c7a67..d2690ee 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -3602,27 +3602,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+>   	spinlock_t *root_lock = qdisc_lock(q);
+>   	struct sk_buff *to_free = NULL;
+>   	bool contended;
+> -	int rc;
+> +	int rc = NET_XMIT_SUCCESS;
+>   
+>   	qdisc_calculate_pkt_len(skb, q);
+>   
+>   	if (q->flags & TCQ_F_NOLOCK) {
+> -		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty &&
+> -		    qdisc_run_begin(q)) {
+> -			if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
+> -					      &q->state))) {
+> -				__qdisc_drop(skb, &to_free);
+> -				rc = NET_XMIT_DROP;
+> -				goto end_run;
+> -			}
+> -			qdisc_bstats_cpu_update(q, skb);
+> +		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty) {
+> +			if (qdisc_run_begin(q)) {
+> +				if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
+> +						      &q->state))) {
+> +					__qdisc_drop(skb, &to_free);
+> +					rc = NET_XMIT_DROP;
+> +					goto end_run;
+> +				}
+> +				qdisc_bstats_cpu_update(q, skb);
+>   
+> -			rc = NET_XMIT_SUCCESS;
+> -			if (sch_direct_xmit(skb, q, dev, txq, NULL, true))
+> -				__qdisc_run(q);
+> +				if (sch_direct_xmit(skb, q, dev, txq, NULL,
+> +						    true))
+> +					__qdisc_run(q);
+>   
+>   end_run:
+> -			qdisc_run_end(q);
+> +				qdisc_run_end(q);
+> +			}
+>   		} else {
+>   			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+>   			qdisc_run(q);
+> @@ -3647,26 +3648,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+>   	if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
+>   		__qdisc_drop(skb, &to_free);
+>   		rc = NET_XMIT_DROP;
+> -	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
+> -		   qdisc_run_begin(q)) {
+> -		/*
+> -		 * This is a work-conserving queue; there are no old skbs
+> -		 * waiting to be sent out; and the qdisc is not running -
+> -		 * xmit the skb directly.
+> -		 */
+> +	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q)) {
+> +		if (qdisc_run_begin(q)) {
+> +			/* This is a work-conserving queue;
+> +			 * there are no old skbs waiting to be sent out;
+> +			 * and the qdisc is not running -
+> +			 * xmit the skb directly.
+> +			 */
+>   
+> -		qdisc_bstats_update(q, skb);
+> +			qdisc_bstats_update(q, skb);
+>   
+> -		if (sch_direct_xmit(skb, q, dev, txq, root_lock, true)) {
+> -			if (unlikely(contended)) {
+> -				spin_unlock(&q->busylock);
+> -				contended = false;
+> +			if (sch_direct_xmit(skb, q, dev, txq, root_lock,
+> +					    true)) {
+> +				if (unlikely(contended)) {
+> +					spin_unlock(&q->busylock);
+> +					contended = false;
+> +				}
+> +				__qdisc_run(q);
+>   			}
+> -			__qdisc_run(q);
+> -		}
+>   
+> -		qdisc_run_end(q);
+> -		rc = NET_XMIT_SUCCESS;
+> +			qdisc_run_end(q);
+> +			rc = NET_XMIT_SUCCESS;
+> +		}
+>   	} else {
+>   		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+>   		if (qdisc_run_begin(q)) {
