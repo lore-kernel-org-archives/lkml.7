@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B734C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADCAC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01C5215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02CC21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354851;
-	bh=D9BMxha0RO46131/kkwWGslWAShKLwmYASEHjQQUC7w=;
+	s=default; t=1573354860;
+	bh=qX0frf5V4JFJGYGpyYcZ1RuX4317DQq5x9AahDUvJEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Vg8u0scI9RUJU2t/wuE3xBAOfGDQDvtLrseBiR+L5LdjgrmKiftzyejub+7NQPUb
-	 fk9arDwDnD9ixtkqFo0gFtmbbhpUhFIu+DmsBnZUg8nxQ5r/fyorG3H5y1306ajdNG
-	 8l1zdZja0Dvb7UpNXkigJobbQaN3fQs1dEKt2BVM=
+	b=d3SdPjUwX2H9p1xrGrsQOwv2/FdOnhunVH/e/LcW5NFCTPHw2JI06YOXfEjEItB70
+	 LruLd41ehYgeEHzFjJQeecxT5B6ijaqXXd13WdIBzhVwyon/mA9E5pA8ol9p351Eh4
+	 CgFBFYvgyTZXfN8C8bm9j8ycl8LW2jkGzWlGyhkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfKJDAo (ORCPT
+        id S1729566AbfKJDA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:00:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47212 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:00:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729206AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ABBE22501;
-        Sun, 10 Nov 2019 02:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3621E224D3;
+        Sun, 10 Nov 2019 02:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354109;
-        bh=D9BMxha0RO46131/kkwWGslWAShKLwmYASEHjQQUC7w=;
+        s=default; t=1573354099;
+        bh=qX0frf5V4JFJGYGpyYcZ1RuX4317DQq5x9AahDUvJEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ogBsKBSaKivmTLLUbl7g9cGoxhLnGcSyn38j/nbwICrTkcmVgMi8zxBN8gs6rvKi6
-         m16gZlguEZqhZnY6day0JUFIQl0dOb97Qa0CrMjwf24UstomyUxEFiJgodvJBC43xI
-         c+z9CGmtfp8ybBVczr/dlgLZCWKEml5lFbTF2HNY=
+        b=cU8e3hl8kaCUzfJ1j/+0oVHea2Ht55HA0Q7z5Pxl5PLFOErMzce12xiAlV3QPhr8b
+         Wf2QiGh6DLH4UyDwFLx79n/sTI03BD+2CcMfTy3ZgoZogh0eXOI1KPgtnp27jmc2eA
+         2D1X0Kuma24+e6VtO5SUb8089AUZrR7TYmUWGxI0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 099/109] scsi: NCR5380: Check for bus reset
-Date:   Sat,  9 Nov 2019 21:45:31 -0500
-Message-Id: <20191110024541.31567-99-sashal@kernel.org>
+Cc:     Ilan Peer <ilan.peer@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 090/109] iwlwifi: mvm: Allow TKIP for AP mode
+Date:   Sat,  9 Nov 2019 21:45:22 -0500
+Message-Id: <20191110024541.31567-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,141 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Ilan Peer <ilan.peer@intel.com>
 
-[ Upstream commit 6b0e87a6aafe12d75c2bea6fc8e49e88b98b3083 ]
+[ Upstream commit 6f3df8c1192c873a6ad9a76328920f6f85af90a8 ]
 
-The SR_RST bit isn't latched. Hence, detecting a bus reset isn't reliable.
-When it is detected, the right thing to do is to drop all connected and
-disconnected commands. The code for that is already present so refactor it and
-call it when SR_RST is set.
+Support for setting keys for TKIP cipher suite was mistakenly removed
+for AP mode. Fix this.
 
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 85aeb58cec1a ("iwlwifi: mvm: Enable security on new TX API")
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 74 +++++++++++++++++++++++++-----------------
- 1 file changed, 45 insertions(+), 29 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index a85c5155fcf40..21377ac71168c 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -131,6 +131,7 @@
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index d31d84eebc5d0..d16e2ed4419fe 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -3067,10 +3067,6 @@ static int __iwl_mvm_set_sta_key(struct iwl_mvm *mvm,
  
- static int do_abort(struct Scsi_Host *);
- static void do_reset(struct Scsi_Host *);
-+static void bus_reset_cleanup(struct Scsi_Host *);
- 
- /**
-  * initialize_SCp - init the scsi pointer field
-@@ -885,7 +886,14 @@ static irqreturn_t __maybe_unused NCR5380_intr(int irq, void *dev_id)
- 			/* Probably Bus Reset */
- 			NCR5380_read(RESET_PARITY_INTERRUPT_REG);
- 
--			dsprintk(NDEBUG_INTR, instance, "unknown interrupt\n");
-+			if (sr & SR_RST) {
-+				/* Certainly Bus Reset */
-+				shost_printk(KERN_WARNING, instance,
-+					     "bus reset interrupt\n");
-+				bus_reset_cleanup(instance);
-+			} else {
-+				dsprintk(NDEBUG_INTR, instance, "unknown interrupt\n");
-+			}
- #ifdef SUN3_SCSI_VME
- 			dregs->csr |= CSR_DMA_ENABLE;
- #endif
-@@ -2303,31 +2311,12 @@ static int NCR5380_abort(struct scsi_cmnd *cmd)
- }
- 
- 
--/**
-- * NCR5380_host_reset - reset the SCSI host
-- * @cmd: SCSI command undergoing EH
-- *
-- * Returns SUCCESS
-- */
--
--static int NCR5380_host_reset(struct scsi_cmnd *cmd)
-+static void bus_reset_cleanup(struct Scsi_Host *instance)
- {
--	struct Scsi_Host *instance = cmd->device->host;
- 	struct NCR5380_hostdata *hostdata = shost_priv(instance);
- 	int i;
--	unsigned long flags;
- 	struct NCR5380_cmd *ncmd;
- 
--	spin_lock_irqsave(&hostdata->lock, flags);
--
--#if (NDEBUG & NDEBUG_ANY)
--	shost_printk(KERN_INFO, instance, __func__);
--#endif
--	NCR5380_dprint(NDEBUG_ANY, instance);
--	NCR5380_dprint_phase(NDEBUG_ANY, instance);
--
--	do_reset(instance);
--
- 	/* reset NCR registers */
- 	NCR5380_write(MODE_REG, MR_BASE);
- 	NCR5380_write(TARGET_COMMAND_REG, 0);
-@@ -2339,14 +2328,6 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
- 	 * commands!
- 	 */
- 
--	list_for_each_entry(ncmd, &hostdata->unissued, list) {
--		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
--
--		cmd->result = DID_RESET << 16;
--		cmd->scsi_done(cmd);
--	}
--	INIT_LIST_HEAD(&hostdata->unissued);
--
- 	if (hostdata->selecting) {
- 		hostdata->selecting->result = DID_RESET << 16;
- 		complete_cmd(instance, hostdata->selecting);
-@@ -2380,6 +2361,41 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
- 
- 	queue_work(hostdata->work_q, &hostdata->main_task);
- 	maybe_release_dma_irq(instance);
-+}
-+
-+/**
-+ * NCR5380_host_reset - reset the SCSI host
-+ * @cmd: SCSI command undergoing EH
-+ *
-+ * Returns SUCCESS
-+ */
-+
-+static int NCR5380_host_reset(struct scsi_cmnd *cmd)
-+{
-+	struct Scsi_Host *instance = cmd->device->host;
-+	struct NCR5380_hostdata *hostdata = shost_priv(instance);
-+	unsigned long flags;
-+	struct NCR5380_cmd *ncmd;
-+
-+	spin_lock_irqsave(&hostdata->lock, flags);
-+
-+#if (NDEBUG & NDEBUG_ANY)
-+	shost_printk(KERN_INFO, instance, __func__);
-+#endif
-+	NCR5380_dprint(NDEBUG_ANY, instance);
-+	NCR5380_dprint_phase(NDEBUG_ANY, instance);
-+
-+	list_for_each_entry(ncmd, &hostdata->unissued, list) {
-+		struct scsi_cmnd *scmd = NCR5380_to_scmd(ncmd);
-+
-+		scmd->result = DID_RESET << 16;
-+		scmd->scsi_done(scmd);
-+	}
-+	INIT_LIST_HEAD(&hostdata->unissued);
-+
-+	do_reset(instance);
-+	bus_reset_cleanup(instance);
-+
- 	spin_unlock_irqrestore(&hostdata->lock, flags);
- 
- 	return SUCCESS;
+ 	switch (keyconf->cipher) {
+ 	case WLAN_CIPHER_SUITE_TKIP:
+-		if (vif->type == NL80211_IFTYPE_AP) {
+-			ret = -EINVAL;
+-			break;
+-		}
+ 		addr = iwl_mvm_get_mac_addr(mvm, vif, sta);
+ 		/* get phase 1 key from mac80211 */
+ 		ieee80211_get_key_rx_seq(keyconf, 0, &seq);
 -- 
 2.20.1
 
