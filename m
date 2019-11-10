@@ -2,144 +2,93 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DC2C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 09:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97505C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 09:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF0420854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 09:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Slsbj5jF"
+	by mail.kernel.org (Postfix) with ESMTP id 59366207FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 09:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfKJJQW (ORCPT
+        id S1726710AbfKJJYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 04:16:22 -0500
-Received: from mout.web.de ([212.227.15.4]:39523 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfKJJQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 04:16:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573377369;
-        bh=dmkasPD5KcB3hT25UbInY3ZEqQ5F55qpJk75IzR7b+M=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=Slsbj5jFktzGyQsRpSN1tp8GGAiYCZv/yuUtPEy+FIS/pzCEnAw3xp5Oa/jSjM5bq
-         cWAtqEhzXLba/AzyHbEMK46a19rracdc1MuxeFyn7swSEFk2Lj5q+Tf2tuSx8so1nH
-         7j3dt/3LYwT5svfWc4IEvHL5hw4p47SwObtgENRg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.170.66]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MF3Rz-1iiKaQ2DwB-00GJzN; Sun, 10
- Nov 2019 10:16:09 +0100
-Subject: Re: [PATCH 1/3] fsl/fman: Add missing put_device() calls in
- mac_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        Wen Yang <yellowriver2010@hotmail.com>
-References: <132e8369-c4da-249f-76b8-834e394dc6d5@web.de>
- <63d9c06f-7cb8-1c44-1666-12d31f937a31@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1efec196-bec0-c15d-03a6-0d7a448add8d@web.de>
-Date:   Sun, 10 Nov 2019 10:15:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sun, 10 Nov 2019 04:24:09 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5756 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726641AbfKJJYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 04:24:09 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BD90F7E4D92C20F97566;
+        Sun, 10 Nov 2019 17:24:04 +0800 (CST)
+Received: from localhost.localdomain (10.175.104.82) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Sun, 10 Nov 2019 17:23:56 +0800
+From:   Zheng Yongjun <zhengyongjun3@huawei.com>
+To:     <keescook@chromium.org>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <zhengyongjun3@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] lkdtm: Remove set but not used variable 'byte'
+Date:   Sun, 10 Nov 2019 17:22:49 +0800
+Message-ID: <20191110092249.182210-1-zhengyongjun3@huawei.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <63d9c06f-7cb8-1c44-1666-12d31f937a31@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KiY/LeVuD380w8GV87lLXda01B2k55wfehsXqC2dmUK2EYE1xzG
- JVBTtlLlk6+92Toqc8E9jZCOrAoEW8btX4gpBQ8MwN7XotbXpvlZ/QX/dzxDNGJWmQoN6+B
- nYLHnMOUmX0WhT2SWUbTLvfrvoKfN0bGlhX7cInEvgStNUv/CiEQzIcQRCvRrAvxLDnrP0N
- /Il1PB0mp0VPnh1vtnzPw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HVPc5C1JJtw=:tZXA5H/XpuDB++K2qO1DaZ
- C05thr/vAfdpZRIFhCjrFtzzdd3/aRt6NuKCSUaXj0q8nccrJZVWLua4ctqNFas+7sEliW5x6
- bBY4fgmSmySHbRyyQaGBxQ05R2QlJIRUth3SACeL7jbBPFPQ9PS5CpM34XUSL5o3gsFk8JzHE
- aWgA+aqCN+QmyJ0ESJDkbvf/G9p+acQCVfbT+W+6BS0z2qE1WoOKKKcKvzdAk+1yrlpKUsIWR
- xsyWDJXLSsfCnd5+0Zx4qlMfX9rDOxLedzrKEOjOBkwpWldS74JB3fCiEFgwFmk0Yqc+Qzhtl
- P6ynbyRpspPeTCgHZV4XD9yDjUO9nC1gLfvRenZQ3RHZhrrtVaLrDyrlSl4H6Wp39J80crnVG
- C8Xf4qgoSD3JhCLsQgd4ZWeqJHQKvabWovSQtreQ3IN2URCkMfvG+n0J+pFEz4mPalemriWQB
- rHF5FytXnifOLTrMnStOhFlY9kEwPx475FIVBUn5ghEJKM0Nq/V362vRuS7w/QoquXsKFB3UQ
- 2kqx0YDFJKoNcAQEC0M9duvWQ/9sbqlsM/qDMAjQ1CGt8mXAOxn8eIWSL4Zm8ofjyAmYfYnxR
- uefX5xdi9LKGZd2MiHQG4m1XFZkNV4jGd8WdaE5TmFwczQIl1tgajwrzr8TxqeFbFmSxFNxP5
- I28ejyKKggsaRn48Gm9nZ3014IjJZmuJcwYHtN8K9K9POQ7xQ9c3z68bNqcb3+E6KSzMebKJ+
- Mv2GlHykYsHnTksdNy8KSheRqWcv4sVz9tm8KgHR5crqeEgmy7/wYe9ZB1k6XJ+PCmoeyc/Ia
- t3Eg179aP0RMgnKyL+DuNf8VqNgzynZcRQQsQuLmksh7VQBciFC2ihbVfGn5UzBf42bjfZ0AO
- 7Y3RDPi11IXELsRsVTzDGOsBaCsWCwQAmtCF6xePUUFvmv1+b9T9xC0ZMYyq/CM+AVVYViQJq
- XvDZl9C+uSQV/soJ5maPTQjAden2ilzpye3AjMdV0IADGO1tRSRwAMBChGbYYZs39IU4ES+tN
- yWVZG3RYVseFLJDgB/zVh/X3t3NkV0s3i0+GMw4rjwDB9DqtxBqzciK4bI7qsd90/O0qQPVvh
- 6drVYjZpp8D2ruiMYumxDo0j8AT6X0ub2c8Kqk87NdVSnwQckI7MWKRO1GmbwnRjBjVbyv8GO
- rjz+XJimWOsdw5AJZt6wwm2zdhafA9y9o+8KvsnSVHgKm863kO1fInM4c0K0O54M7UPCP5AN3
- sYbDUi3pXsmsc5IBseoIVE+OBgU4nGVEGNVfmiN1URfQ9H+H7rKMgPvtNF7o=
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.82]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Generated by: scripts/coccinelle/free/put_device.cocci
->
-> Thus adjust jump targets to fix the exception handling for this
-> function implementation.
->
-> Fixes: 3933961682a30ae7d405cda344c040a129fea422 ("fsl/fman: Add FMan MAC=
- driver")
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Hello,
+drivers/misc/lkdtm/bugs.c: In function lkdtm_STACK_GUARD_PAGE_LEADING:
+drivers/misc/lkdtm/bugs.c:236:25: warning: variable byte set but not used [-Wunused-but-set-variable]
+drivers/misc/lkdtm/bugs.c: In function lkdtm_STACK_GUARD_PAGE_TRAILING:
+drivers/misc/lkdtm/bugs.c:250:25: warning: variable byte set but not used [-Wunused-but-set-variable]
 
-The information =E2=80=9CState 	Rejected=E2=80=9D is displayed for this pa=
-tch
-at the moment.
-https://patchwork.ozlabs.org/patch/1192385/
+byte is never used, so remove it.
 
-How do you think about to clarify the development situation for
-the affected software module a bit more?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+---
+ drivers/misc/lkdtm/bugs.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Regards,
-Markus
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 7284a22b1a09..fcd943725b66 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -249,12 +249,9 @@ void lkdtm_STACK_GUARD_PAGE_LEADING(void)
+ {
+ 	const unsigned char *stack = task_stack_page(current);
+ 	const unsigned char *ptr = stack - 1;
+-	volatile unsigned char byte;
+ 
+ 	pr_info("attempting bad read from page below current stack\n");
+ 
+-	byte = *ptr;
+-
+ 	pr_err("FAIL: accessed page before stack!\n");
+ }
+ 
+@@ -263,12 +260,9 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+ {
+ 	const unsigned char *stack = task_stack_page(current);
+ 	const unsigned char *ptr = stack + THREAD_SIZE;
+-	volatile unsigned char byte;
+ 
+ 	pr_info("attempting bad read from page above current stack\n");
+ 
+-	byte = *ptr;
+-
+ 	pr_err("FAIL: accessed page after stack!\n");
+ }
+ 
+-- 
+2.23.0
+
