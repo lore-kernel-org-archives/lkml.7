@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E9C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749EDC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B03C21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4866F2184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354683;
-	bh=355OjtmtRv93XyHT/1hfDWzGXWO13YE85GdtD4/dVCc=;
+	s=default; t=1573354685;
+	bh=6A8AMzApxeD633JBTo2GcM4Q0z+6kicVCh4alMGaeGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IHuHcd52CK2lOR0b0roXQSTxghB/TKxsS6nxqm3t9jtzhTcY23+FcAcWZYkPD2QI0
-	 YLoPFqkO2cszgbEJQnU389HMNrGk7IxwMqOnKUNd5trf4PKtbNIZFTcRvVSvF3h7/z
-	 6SHM5yWZIsgXNLhtAUHvcoUwlXA/NL/uCHZqxR5s=
+	b=GrVNj/sGowzGB7HKiEog6ITEqbyCcPCQfnq9IwvyWx11N54IZMU/639EDlTX2TuU7
+	 P6TQYA0dard6x5zVXw5m8xDmmV8jfjVHZJT7GjvR+wKeRbqYDKL+0gcjsGu+6TDRWh
+	 Wn9idJz/KEni/u4bRu0TnWRt3jsS44IdDZesV9bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfKJC5s (ORCPT
+        id S1729680AbfKJC5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:57:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:57:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729411AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C71D1224F1;
-        Sun, 10 Nov 2019 02:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303D82256C;
+        Sun, 10 Nov 2019 02:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354102;
-        bh=355OjtmtRv93XyHT/1hfDWzGXWO13YE85GdtD4/dVCc=;
+        s=default; t=1573354117;
+        bh=6A8AMzApxeD633JBTo2GcM4Q0z+6kicVCh4alMGaeGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oyyGPJ/uLhmta7aHH1IQUUMUVxDniA8iShhmv1RZy0pVWf0Df/T23uxHHPz6bcE8m
-         qTXWXxJvVIFM4xuSbTSzue9hAL3szNxg2tmNjnMVfv8YJfrsmsPgynSN+m/VWyb6jw
-         bH9kyU3/sY9h1sLpxqkXxw6aka2fCBln1oraEV1A=
+        b=kZjaBEQ9ZgqYfScvNWKnHhnt8vYWTtTplqj3ZEDiyRBeCgOW/+YfOOZZj2qhRIRbH
+         DMnTwb0HkGa0eFdZdOQKLCa1N4++qS71jxVX7SZZvmEh2s4WQlepAjJgtMiK3j3PZx
+         r1xhOl71tXILjrUARig8yg3m+acREg8+nivlauEY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 093/109] scsi: NCR5380: Withhold disconnect privilege for REQUEST SENSE
-Date:   Sat,  9 Nov 2019 21:45:25 -0500
-Message-Id: <20191110024541.31567-93-sashal@kernel.org>
+Cc:     Tan Hu <tan.hu@zte.com.cn>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 105/109] netfilter: masquerade: don't flush all conntracks if only one address deleted on device
+Date:   Sat,  9 Nov 2019 21:45:37 -0500
+Message-Id: <20191110024541.31567-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,44 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Tan Hu <tan.hu@zte.com.cn>
 
-[ Upstream commit 7c8ed783c2faa1e3f741844ffac41340338ea0f4 ]
+[ Upstream commit 097f95d319f817e651bd51f8846aced92a55a6a1 ]
 
-This is mostly needed because an AztecMonster II target has been observed
-disconnecting REQUEST SENSE commands and then failing to reselect properly.
+We configured iptables as below, which only allowed incoming data on
+established connections:
 
-Suggested-by: Michael Schmitz <schmitzmic@gmail.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+iptables -t mangle -A PREROUTING -m state --state ESTABLISHED -j ACCEPT
+iptables -t mangle -P PREROUTING DROP
+
+When deleting a secondary address, current masquerade implements would
+flush all conntracks on this device. All the established connections on
+primary address also be deleted, then subsequent incoming data on the
+connections would be dropped wrongly because it was identified as NEW
+connection.
+
+So when an address was delete, it should only flush connections related
+with the address.
+
+Signed-off-by: Tan Hu <tan.hu@zte.com.cn>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv4/netfilter/nf_nat_masquerade_ipv4.c | 22 ++++++++++++++++++---
+ net/ipv6/netfilter/nf_nat_masquerade_ipv6.c | 19 +++++++++++++++---
+ 2 files changed, 35 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 60e051c249a6f..5f26aa2875bd9 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -938,6 +938,8 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
- 	int len;
- 	int err;
- 	bool ret = true;
-+	bool can_disconnect = instance->irq != NO_IRQ &&
-+			      cmd->cmnd[0] != REQUEST_SENSE;
+diff --git a/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c b/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c
+index 0c366aad89cb4..b531fe204323d 100644
+--- a/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c
++++ b/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c
+@@ -105,12 +105,26 @@ static int masq_device_event(struct notifier_block *this,
+ 	return NOTIFY_DONE;
+ }
  
- 	NCR5380_dprint(NDEBUG_ARBITRATION, instance);
- 	dsprintk(NDEBUG_ARBITRATION, instance, "starting arbitration, id = %d\n",
-@@ -1157,7 +1159,7 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
++static int inet_cmp(struct nf_conn *ct, void *ptr)
++{
++	struct in_ifaddr *ifa = (struct in_ifaddr *)ptr;
++	struct net_device *dev = ifa->ifa_dev->dev;
++	struct nf_conntrack_tuple *tuple;
++
++	if (!device_cmp(ct, (void *)(long)dev->ifindex))
++		return 0;
++
++	tuple = &ct->tuplehash[IP_CT_DIR_REPLY].tuple;
++
++	return ifa->ifa_address == tuple->dst.u3.ip;
++}
++
+ static int masq_inet_event(struct notifier_block *this,
+ 			   unsigned long event,
+ 			   void *ptr)
+ {
+ 	struct in_device *idev = ((struct in_ifaddr *)ptr)->ifa_dev;
+-	struct netdev_notifier_info info;
++	struct net *net = dev_net(idev->dev);
  
- 	dsprintk(NDEBUG_SELECTION, instance, "target %d selected, going into MESSAGE OUT phase.\n",
- 	         scmd_id(cmd));
--	tmp[0] = IDENTIFY(((instance->irq == NO_IRQ) ? 0 : 1), cmd->device->lun);
-+	tmp[0] = IDENTIFY(can_disconnect, cmd->device->lun);
+ 	/* The masq_dev_notifier will catch the case of the device going
+ 	 * down.  So if the inetdev is dead and being destroyed we have
+@@ -120,8 +134,10 @@ static int masq_inet_event(struct notifier_block *this,
+ 	if (idev->dead)
+ 		return NOTIFY_DONE;
  
- 	len = 1;
- 	data = tmp;
+-	netdev_notifier_info_init(&info, idev->dev);
+-	return masq_device_event(this, event, &info);
++	if (event == NETDEV_DOWN)
++		nf_ct_iterate_cleanup_net(net, inet_cmp, ptr, 0, 0);
++
++	return NOTIFY_DONE;
+ }
+ 
+ static struct notifier_block masq_dev_notifier = {
+diff --git a/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c b/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c
+index 98f61fcb91088..b0f3745d1bee9 100644
+--- a/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c
++++ b/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c
+@@ -88,18 +88,30 @@ static struct notifier_block masq_dev_notifier = {
+ struct masq_dev_work {
+ 	struct work_struct work;
+ 	struct net *net;
++	struct in6_addr addr;
+ 	int ifindex;
+ };
+ 
++static int inet_cmp(struct nf_conn *ct, void *work)
++{
++	struct masq_dev_work *w = (struct masq_dev_work *)work;
++	struct nf_conntrack_tuple *tuple;
++
++	if (!device_cmp(ct, (void *)(long)w->ifindex))
++		return 0;
++
++	tuple = &ct->tuplehash[IP_CT_DIR_REPLY].tuple;
++
++	return ipv6_addr_equal(&w->addr, &tuple->dst.u3.in6);
++}
++
+ static void iterate_cleanup_work(struct work_struct *work)
+ {
+ 	struct masq_dev_work *w;
+-	long index;
+ 
+ 	w = container_of(work, struct masq_dev_work, work);
+ 
+-	index = w->ifindex;
+-	nf_ct_iterate_cleanup_net(w->net, device_cmp, (void *)index, 0, 0);
++	nf_ct_iterate_cleanup_net(w->net, inet_cmp, (void *)w, 0, 0);
+ 
+ 	put_net(w->net);
+ 	kfree(w);
+@@ -148,6 +160,7 @@ static int masq_inet_event(struct notifier_block *this,
+ 		INIT_WORK(&w->work, iterate_cleanup_work);
+ 		w->ifindex = dev->ifindex;
+ 		w->net = net;
++		w->addr = ifa->addr;
+ 		schedule_work(&w->work);
+ 
+ 		return NOTIFY_DONE;
 -- 
 2.20.1
 
