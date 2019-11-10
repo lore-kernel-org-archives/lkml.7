@@ -2,410 +2,213 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620FEC17442
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3159C17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D132085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573403177;
-	bh=p6NUH2GFWSSWxKqAf6LKwGLZgtIr9Y6I8XmXKcLLfxg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=c1zx8rzsHZaeemJU5T6wxJlzcixxHDwRxt2aHC6DA2tydu1rVMtYMlJLThykG6Nqj
-	 n28r4yCgk5l9MAjDhbNJjfzreBQRJvZY+0Qg2TOMQWH9ctli0v0LlTBGT7+RL/inWV
-	 B/SDvf0Yrd2nmCcqQ4h3eTXvS5xgmMJ2qQMsfaXE=
+	by mail.kernel.org (Postfix) with ESMTP id BEA5F20854
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAulYa8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKJQ0Q (ORCPT
+        id S1727036AbfKJQ0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:26:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfKJQ0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:26:15 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC16520854;
-        Sun, 10 Nov 2019 16:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573403174;
-        bh=p6NUH2GFWSSWxKqAf6LKwGLZgtIr9Y6I8XmXKcLLfxg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OEqvq5xNaKPIK8kb1vLP9p2hqt2Q6kVgKYRkjX2mDZuaDe4UeRdNNdZsRBsuZ3yhG
-         PM2wzzIgr4LISQuWgplBEpay1ws+hJwxuAjoOD8eRc1d0VIVSMOrw7VFlaFtH9r1JH
-         yGR2waiYGzpxmcchOHs09P1QFPPkHXpsCcdEz6EA=
-Date:   Sun, 10 Nov 2019 16:26:08 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Song Qiang <songqiang1304521@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: add support for AD5940
-Message-ID: <20191110162608.21b40714@archlinux>
-In-Reply-To: <20191108130946.14740-1-songqiang1304521@gmail.com>
-References: <20191108130946.14740-1-songqiang1304521@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 10 Nov 2019 11:26:31 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39228 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbfKJQ0b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 11:26:31 -0500
+Received: by mail-wr1-f66.google.com with SMTP id l7so478302wrp.6
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 08:26:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EnozZYgq48Ub7OErRTAS6opwPFw2ErTB4hRiw3ntfu8=;
+        b=cAulYa8QWiLTC+LYVwikv9Xp1DhQdoEHRTmBbVMBcK/Q60V2ZXtiiA4Un15UQ0gACg
+         3k7UZ1IX9aHV8oMhci+9UWIYl+pv1bbNWsL+MNDoC5NOGhSq4CfmiiMMxLQEl624gCDc
+         c7ZGX4OfFLckujkKjO3PTUvTBelBdqcakvQzqSiPf7qtlCyQT/3+KlSqaqlpgsxOGNFK
+         1jF6JcZT7t7faoB1aMYHsE5DBWB/nB3VB1zXCPc+bT8pH6rEOiSNZSGC30sh3w6Oocdy
+         /Xoin/AIElFI07xPeTkPOkLQz5z/3SPjGyWMkN+KohtSlJdRj/aeB9/+QMh8kLFlRJ1k
+         Fsgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EnozZYgq48Ub7OErRTAS6opwPFw2ErTB4hRiw3ntfu8=;
+        b=PMswAm9RIR6ZX0qNuNpQTexG4OT54jLlWCorMkbA8VIXtaAHDAnxB5+jZ7CfgpxYPw
+         RPAJwlZAA6z+Dt+Bdxodl+BXvjME2DLiUpmty3hzjTJZG9z1ULr/RIgKMjrpKkAgALU0
+         I2xeIDymL7BXsPX7MS/Bd0cseuv6RH01tKVL2Xi6n7eaqGKNojlJFl8McBaXt8PYOUk/
+         mHu5XfK9a4wKbwdJZodHLRVNsCIXYkXgiTV42tcomesIo1cQEJREcoRJuBCl+CZTkXfU
+         pt/UmgJiWbscI/y0FyQYdz/D65xGtktQUmeh1CcYejZemkYpOUS5fI+MG9a7OnsJ8taR
+         H1+g==
+X-Gm-Message-State: APjAAAWRHy3F1jWUEMCOw2ux4wmAAdsi4obdYZz5slflITj0ay0RnJ7U
+        FFb9JDThW4dP5xUJGvDhJ/fofNFIwpJ/uYHUXbbTqQ==
+X-Google-Smtp-Source: APXvYqz/qVyZzKKEiMD5Kn0/CYQ5KiLilJu8C+o/QOePighWGP9/mMPGB5cxpk0QCuszSvTL/cE/a/1ffSaZ3SoYRWs=
+X-Received: by 2002:adf:f743:: with SMTP id z3mr16510655wrp.200.1573403187573;
+ Sun, 10 Nov 2019 08:26:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191110024013.29782-1-sashal@kernel.org> <20191110024013.29782-133-sashal@kernel.org>
+ <CAKv+Gu-PawCS_Wq3Hm+gm_f=6-ihXarkQqP9prkj4CLt=pAnvg@mail.gmail.com>
+ <20191110132726.GN4787@sasha-vm> <CAKv+Gu_Pg-j6C0iRqa8wSr+=vk3rMQ=KHFykZGNGWMfcYfAjtg@mail.gmail.com>
+ <20191110155655.GO4787@sasha-vm>
+In-Reply-To: <20191110155655.GO4787@sasha-vm>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sun, 10 Nov 2019 16:26:15 +0000
+Message-ID: <CAKv+Gu_uGKKQrkvHXhoKCY6dqEWka6qVpjXBit5Ggjbk6+_c7A@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 133/191] efi: honour memory reservations
+ passed via a linux specific config table
+To:     Sasha Levin <sashal@kernel.org>, Marc Zyngier <maz@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 Nov 2019 21:09:44 +0800
-Song Qiang <songqiang1304521@gmail.com> wrote:
+(adding Marc, the GIC maintainer)
 
-> Add yaml devicetree description file and a header file for
-> helping configure positive and negtive input of AD5940.
-> 
-> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-Ouch. This is a very complex device, so I'm guessing this is the tip
-of the iceberg when it comes to the eventual binding.
-For reference of others this has a similarly complex DAC and
-TIA + some excitation voltage generators (DDS).
+On Sun, 10 Nov 2019 at 15:57, Sasha Levin <sashal@kernel.org> wrote:
+>
+> On Sun, Nov 10, 2019 at 02:16:57PM +0000, Ard Biesheuvel wrote:
+> >On Sun, 10 Nov 2019 at 13:27, Sasha Levin <sashal@kernel.org> wrote:
+> >>
+> >> On Sun, Nov 10, 2019 at 08:33:47AM +0100, Ard Biesheuvel wrote:
+> >> >On Sun, 10 Nov 2019 at 03:44, Sasha Levin <sashal@kernel.org> wrote:
+> >> >>
+> >> >> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >> >>
+> >> >> [ Upstream commit 71e0940d52e107748b270213a01d3b1546657d74 ]
+> >> >>
+> >> >> In order to allow the OS to reserve memory persistently across a
+> >> >> kexec, introduce a Linux-specific UEFI configuration table that
+> >> >> points to the head of a linked list in memory, allowing each kernel
+> >> >> to add list items describing memory regions that the next kernel
+> >> >> should treat as reserved.
+> >> >>
+> >> >> This is useful, e.g., for GICv3 based ARM systems that cannot disable
+> >> >> DMA access to the LPI tables, forcing them to reuse the same memory
+> >> >> region again after a kexec reboot.
+> >> >>
+> >> >> Tested-by: Jeremy Linton <jeremy.linton@arm.com>
+> >> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> >> >
+> >> >NAK
+> >> >
+> >> >This doesn't belong in -stable, and I'd be interested in understanding
+> >> >how this got autoselected, and how I can prevent this from happening
+> >> >again in the future.
+> >>
+> >> It was selected because it's part of a fix for a real issue reported by
+> >> users:
+> >>
+> >
+> >For my understanding, are you saying your AI is reading launchpad bug
+> >reports etc? Because it is marked AUTOSEL.
+>
+> Not quite. This review set was me feeding all the patches Ubuntu has on
+> top of stable trees into AUTOSEL, and sending out the output for review.
+> I doesn't look into launchpad bug reports on it's own, but in my
+> experience one can find a bug report for mostly everything AUTOSEL
+> considers to be a bug.
+>
 
-Anyhow, a few comments inline but I'll definitely be looking for
-a dt maintainer input on this one.
+So the assumption is that taking an arbitrary subset of what Ubuntu
+backported (and tested extensively), and letting that subset be chosen
+by a bot is a process that improves the quality of stable trees? I'm
+rather skeptical of that tbh.
 
-Thanks,
+> >> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1806766
+> >>
+> >
+> >That pages mentions
+> >
+> >"""
+> >2 upstream patch series are required to fix this:
+> > https://<email address hidden>/msg10328.html
+> >Which provides an EFI facility consumed by:
+> > https://lkml.org/lkml/2018/9/21/1066
+> >There were also some follow-on fixes to deal with ARM-specific
+> >problems associated with this usage:
+> > https://www.spinics.net/lists/arm-kernel/msg685751.html
+> >"""
+> >
+> >and without the other patches, we only add bugs and don't fix any.
+> >
+> >> Besides ubuntu, it is also carried by:
+> >>
+> >> SUSE: https://www.suse.com/support/update/announcement/2019/suse-su-20191530-1/
+> >> CentOS: https://koji.mbox.centos.org/koji/buildinfo?buildID=4558
+> >>
+> >> As a way to resolve the reported bug.
+> >>
+> >
+> >Backporting a feature/fix like this requires careful consideration of
+> >the patches involved, and doing actual testing on hardware.
+> >
+> >> Any reason this *shouldn't* be in stable?
+> >
+> >Yes. By itself, it causes crashes at early boot and does not actually
+> >solve the problem.
+>
+> Sure, let's work on gathering all the needed patches then and testing it
+> out.
+>
 
-Jonathan
+No, let's not. This is a feature that was introduced to address a
+shortcoming in some hardware that makes kexec/kdump problematic on
+them. If you want kexec/kdump on that hardware, use a newer kernel.
 
-> ---
->  .../bindings/iio/adc/adi,ad5940.yaml          | 240 ++++++++++++++++++
->  include/dt-bindings/iio/adc/adi,ad5940.h      |  52 ++++
->  2 files changed, 292 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
->  create mode 100644 include/dt-bindings/iio/adc/adi,ad5940.h
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
-> new file mode 100644
-> index 000000000000..f7f034fdd8ec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
-> @@ -0,0 +1,240 @@
-> +# SPDX-License-Identifier: GPL-2.0
-For new bindings, preference is to include a dual license
-(GPL-2.0-only OR BSD-2-Clause)
+> >> I'm aware that there might be
+> >> dependencies that are not obvious to me, but the solution here is to
+> >> take those dependencies as well rather than ignore the process
+> >> completely.
+> >>
+> >
+> >This is not a bugfix. kexec/kdump never worked correctly on the
+> >hardware involved, and backporting a feature like that goes way beyond
+> >what I am willing to accept for stable backports affecting the EFI
+> >subsystem.
+>
+> I'm a bit confused. The bug report starts with:
+>
+>         [Impact]
+>         kdump support isn't usable on HiSilicon D05 systems. This
+>         previously worked in bionic.
+>
+> So it seems like it did use to work, but not anymore?
+>
 
-If Analog is fine doing this that would be great.
+I have no idea what Ubuntu shipped in the previous kernel, but
+labelling this as a software regression is dubious at least, and
+wholly inaccurate for upstream.
 
-> +# Copyright 2019 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5940.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD5940 Device Tree Bindings
-> +
-> +maintainers:
-> +  - Song Qiang <songqiang1304521@gmail.com>
-> +
-> +description: |
-> +  Analog Devices AD5940 High Precision, Impedance, and Electrochemical Front End.
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5940.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad5940
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vref-supply:
-> +    description:
-> +      The regulator to be used to supply the reference voltage.
-> +    maxItems: 1
+> Either way, I understand that you want to keep the stable tree
+> conservative, but keep in mind that the flip side of not taking fixes
+> that users ask for means that distros end up having to carry them
+> anyway, which means that they don't get the review and testing they
+> need.
+>
 
-It's worth taking a look at similar patch reviews to pick up on things
-that are common issues.  Rob has pointed out a few times recently that
-vref-supply can only ever have one item, so no need for maxItems.
+I'd say it is the opposite. At least the distros test their backports
+on actual hardware. Taking any part of this set without testing it by
+doing kexec/kdump on an affected ARM system, and regression testing it
+on the hardware that got broken by it (with hundreds of cores IIRC) is
+totally irresponsible, and I don't have the time or the hardware to do
+the testing.
 
-> +
-> +  adi,interrupt-io:
-> +    description:
-> +      Output GPIO index of interrupt controller of AD5940.
-> +    maxItems: 1
+> We can argue all we want around whether it's a fix or not, but if most
+> distros carry it then I think our argument is moot.
+>
 
-I'm fairly sure an enum can only have one entry so don't think this is
-needed.
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 3, 6, 7]
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - adi,interrupt-io
-> +
-> +patternProperties:
-> +  # 'channel@0-255'
-
-Really?  That is a lot of channels.  Superficially it looks like a much
-smaller number of possibilities from the datasheet.
-
-> +  "^channel@([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$":
-> +    type: object
-> +    description: |
-> +      Represents the external channels which are connected to the ADC.
-> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> +    properties:
-> +      reg:
-> +        description:
-> +          Index of this channel, must be starting from 0.
-> +        maxItems: 1
-> +
-> +      diff-channels:
-> +        description:
-> +          Positive input and negtive input of the ADC buffer of this channel.
-> +          Input candidates are defined in include/dt-bindings/iio/adc/adi,ad5940.h.
-> +        minItems: 2
-> +        maxItems: 2
-> +        items:
-> +          - description: Positive input channel
-> +          - enum:
-> +            - AD5940_ADC_INPUTP_EXCITATION
-> +            - AD5940_ADC_INPUTP_FLOATING
-> +            - AD5940_ADC_INPUTP_HSTIA
-> +            - AD5940_ADC_INPUTP_LPTIA_LP
-> +            - AD5940_ADC_INPUTP_AIN0
-> +            - AD5940_ADC_INPUTP_AIN1
-> +            - AD5940_ADC_INPUTP_AIN2
-> +            - AD5940_ADC_INPUTP_AIN3
-> +            - AD5940_ADC_INPUTP_AVDD_2
-> +            - AD5940_ADC_INPUTP_DVDD_2
-> +            - AD5940_ADC_INPUTP_AVDD_REG_2
-> +            - AD5940_ADC_INPUTP_TEMP
-> +            - AD5940_ADC_INPUTP_VBIAS_CAP
-> +            - AD5940_ADC_INPUTP_DE0
-> +            - AD5940_ADC_INPUTP_SE0
-> +            - AD5940_ADC_INPUTP_VREF_2V5_2
-> +            - AD5940_ADC_INPUTP_VREF_1V82
-> +            - AD5940_ADC_INPUTP_P_TEMP_N
-> +            - AD5940_ADC_INPUTP_AIN4
-> +            - AD5940_ADC_INPUTP_AIN6
-> +            - AD5940_ADC_INPUTP_VZERO
-> +            - AD5940_ADC_INPUTP_VBIAS0
-> +            - AD5940_ADC_INPUTP_VCE0
-> +            - AD5940_ADC_INPUTP_VRE0
-> +            - AD5940_ADC_INPUTP_VCE0_2
-> +            - AD5940_ADC_INPUTP_LPTIA
-> +            - AD5940_ADC_INPUTP_AGND_REF
-> +
-> +          - description: Negtive input channel
-> +          - enum:
-> +              # Negtive input candidates
-> +              - AD5940_ADC_INPUTN_FLOATING
-> +              - AD5940_ADC_INPUTN_HSTIA
-> +              - AD5940_ADC_INPUTN_LPTIA
-> +              - AD5940_ADC_INPUTN_AIN0
-> +              - AD5940_ADC_INPUTN_AIN1
-> +              - AD5940_ADC_INPUTN_AIN2
-> +              - AD5940_ADC_INPUTN_AIN3
-> +              - AD5940_ADC_INPUTN_VBIAS_CA8
-> +              - AD5940_ADC_INPUTN_TEMP_N
-> +              - AD5940_ADC_INPUTN_AIN4
-> +              - AD5940_ADC_INPUTN_AIN6
-> +              - AD5940_ADC_INPUTN_VZERO
-> +              - AD5940_ADC_INPUTN_VBIAS0
-> +              - AD5940_ADC_INPUTN_EXCITATION
-> +
-> +      channel-name:
-> +        description:
-> +          Any string format name you would like to assign to this channel.
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +      - channel-name
-> +
-> +examples:
-> +  - |
-> +    ad5940: ad5940@0 {
-> +      compatible = "adi,ad5940";
-> +      reg = <0>;
-> +      spi-max-frequency = <16000000>;
-> +      vref-supply = <&adc_vref>;
-> +      interrupt-parent = <&gpio>;
-> +      interrupts = <24 2>;
-> +
-> +      adi,interrupt-io = <0>;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      channel@0 {
-> +        reg = <0>;
-> +        diff-channels = <AD5940_ADC_INPUTP_VCE0
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "Vce-Vbias";
-> +      };
-> +
-> +      channel@1 {
-> +        reg = <1>;
-> +        diff-channels = <AD5940_ADC_INPUTP_VRE0
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "Vre-Vbias";
-> +      };
-> +
-> +      channel@2 {
-> +        reg = <2>;
-> +        diff-channels = <AD5940_ADC_INPUTP_SE0
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "Vse-Vbias";
-> +      };
-> +
-> +      channel@3 {
-> +        reg = <3>;
-> +        diff-channels = <AD5940_ADC_INPUTP_DE0
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "Vde-Vbias";
-> +      };
-> +
-> +      channel@4 {
-> +        reg = <4>;
-> +        diff-channels = <AD5940_ADC_INPUTP_AIN0
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "ain0-Vbias";
-> +      };
-> +
-> +      channel@5 {
-> +        reg = <5>;
-> +        diff-channels = <AD5940_ADC_INPUTP_AIN1
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "ain1-Vbias";
-> +      };
-> +
-> +      channel@6 {
-> +        reg = <6>;
-> +        diff-channels = <AD5940_ADC_INPUTP_AIN2
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "ain2-Vbias";
-> +      };
-> +
-> +      channel@7 {
-> +        reg = <7>;
-> +        diff-channels = <AD5940_ADC_INPUTP_AIN3
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "ain3-Vbias";
-> +      };
-> +
-> +      channel@8 {
-> +        reg = <8>;
-> +        diff-channels = <AD5940_ADC_INPUTP_AIN4
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "ain4-Vbias";
-> +      };
-> +
-> +      channel@9 {
-> +        reg = <9>;
-> +        diff-channels = <AD5940_ADC_INPUTP_AIN6
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "ain6-Vbias";
-> +      };
-> +
-> +      channel@10 {
-> +        reg = <10>;
-> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA_LP
-> +                         AD5940_ADC_INPUTN_LPTIA>;
-> +        channel-name = "Low power TIA DC";
-> +      };
-> +
-> +      channel@11 {
-> +        reg = <11>;
-> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA
-> +                         AD5940_ADC_INPUTN_LPTIA>;
-> +        channel-name = "Low power TIA AC";
-> +      };
-> +
-> +      channel@12 {
-> +        reg = <12>;
-> +        diff-channels = <AD5940_ADC_INPUTP_HSTIA
-> +                         AD5940_ADC_INPUTN_HSTIA>;
-> +        channel-name = "High Speed TIA";
-> +      };
-> +
-> +      channel@13 {
-> +        reg = <13>;
-> +        diff-channels = <AD5940_ADC_INPUTP_TEMP
-> +                         AD5940_ADC_INPUTN_VBIAS0>;
-> +        channel-name = "Temperature";
-> +      };
-> +    };
-> diff --git a/include/dt-bindings/iio/adc/adi,ad5940.h b/include/dt-bindings/iio/adc/adi,ad5940.h
-> new file mode 100644
-> index 000000000000..c17826f2f654
-> --- /dev/null
-> +++ b/include/dt-bindings/iio/adc/adi,ad5940.h
-> @@ -0,0 +1,52 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides constants for configuring the AD5940 AFE
-> + */
-> +
-> +#ifndef _DT_BINDINGS_IIO_ADC_AD5940_H
-> +#define _DT_BINDINGS_IIO_ADC_AD5940_H
-> +
-> +#define AD5940_ADC_INPUTN_FLOATING	0
-> +#define AD5940_ADC_INPUTN_HSTIA		1
-> +#define AD5940_ADC_INPUTN_LPTIA		2
-> +#define AD5940_ADC_INPUTN_AIN0		4
-> +#define AD5940_ADC_INPUTN_AIN1		5
-> +#define AD5940_ADC_INPUTN_AIN2		6
-> +#define AD5940_ADC_INPUTN_AIN3		7
-> +#define AD5940_ADC_INPUTN_VBIAS_CA8	10
-> +#define AD5940_ADC_INPUTN_TEMP_N	11
-> +#define AD5940_ADC_INPUTN_AIN4		12
-> +#define AD5940_ADC_INPUTN_AIN6		14
-> +#define AD5940_ADC_INPUTN_VZERO		16
-> +#define AD5940_ADC_INPUTN_VBIAS0	17
-> +#define AD5940_ADC_INPUTN_EXCITATION	20
-> +
-> +#define AD5940_ADC_INPUTP_FLOATING	0
-> +#define AD5940_ADC_INPUTP_HSTIA		1
-> +#define AD5940_ADC_INPUTP_LPTIA_LP	2
-> +#define AD5940_ADC_INPUTP_AIN0		4
-> +#define AD5940_ADC_INPUTP_AIN1		5
-> +#define AD5940_ADC_INPUTP_AIN2		6
-> +#define AD5940_ADC_INPUTP_AIN3		7
-> +#define AD5940_ADC_INPUTP_AVDD_2	8
-> +#define AD5940_ADC_INPUTP_DVDD_2	9
-> +#define AD5940_ADC_INPUTP_AVDD_REG_2	10
-> +#define AD5940_ADC_INPUTP_TEMP		11
-> +#define AD5940_ADC_INPUTP_VBIAS_CAP	12
-> +#define AD5940_ADC_INPUTP_DE0		13
-> +#define AD5940_ADC_INPUTP_SE0		14
-> +#define AD5940_ADC_INPUTP_VREF_2V5_2	16
-> +#define AD5940_ADC_INPUTP_VREF_1V82	18
-> +#define AD5940_ADC_INPUTP_P_TEMP_N	19
-> +#define AD5940_ADC_INPUTP_AIN4		20
-> +#define AD5940_ADC_INPUTP_AIN6		22
-> +#define AD5940_ADC_INPUTP_VZERO		23
-> +#define AD5940_ADC_INPUTP_VBIAS0	24
-> +#define AD5940_ADC_INPUTP_VCE0		25
-> +#define AD5940_ADC_INPUTP_VRE0		26
-> +#define AD5940_ADC_INPUTP_VCE0_2	31
-> +#define AD5940_ADC_INPUTP_LPTIA		33
-> +#define AD5940_ADC_INPUTP_AGND_REF	35
-> +#define AD5940_ADC_INPUTP_EXCITATION	36
-> +
-> +#endif /* _DT_BINDINGS_IIO_ADC_AD5940 */
-
+If someone cares enough to backport these as a coherent set, with boot
+tests on the affected hardware etc, then I am not going to object.
