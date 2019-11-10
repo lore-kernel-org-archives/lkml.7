@@ -2,131 +2,128 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CCFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B28C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B7320842
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AEF206BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="QP7GK7An"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfKJQJm (ORCPT
+        id S1726976AbfKJQVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:09:42 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:47789 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726806AbfKJQJm (ORCPT
+        Sun, 10 Nov 2019 11:21:48 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:33181 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfKJQVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:09:42 -0500
-Received: (qmail 30307 invoked by uid 500); 10 Nov 2019 11:09:40 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 10 Nov 2019 11:09:40 -0500
-Date:   Sun, 10 Nov 2019 11:09:40 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-In-Reply-To: <CAHk-=wjB61GNmqpX0BLA5tpL4tsjWV7akaTc2Roth7uGgax+mw@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1911101034180.29192-100000@netrider.rowland.org>
+        Sun, 10 Nov 2019 11:21:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573402906;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=69FfUeSqb2fedNCohVljQrRWHmyf/9ZXSdgsxjOGuNI=;
+        b=QP7GK7AnnTwE7wadEIXRoRKYUu8exR2EBMevCsa3NncBQ7zn1WDdr7At+oy8ppyIcl
+        GEitvgsbTf1Un9xGH/z1DbqiOyTUNHVyLD+BNVtfRHA5lVvTHa8mHbWhIQEj9O5Z98WZ
+        OK7p3eLlcjp6h+O9qLSy0H+CARqXFbHEM2cqEl6bg1AOqw/y5SnowFvWv2/NRGnPUKuo
+        BeZkre9Qr79u/ea7yVC/BsqxJBsgVcSx04cBZHegTwbN32toupHAS6LNardq8iIkdh2s
+        vj/di3ujOI40fLdc875qYDCoTXxF0RLUs9iYrUmnjIk1aSwnxtoMmTN3DkrpZg0Ke9LV
+        s3IQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXt8PvtxJQng=="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vAAGLQywV
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sun, 10 Nov 2019 17:21:26 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     =?UTF-8?q?Cl=C3=A9ment=20Perrochaud?= 
+        <clement.perrochaud@effinnov.com>,
+        Charles Gorand <charles.gorand@effinnov.com>,
+        linux-nfc@lists.01.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sedat Dilek <sedat.dilek@credativ.de>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
+Date:   Sun, 10 Nov 2019 17:19:15 +0100
+Message-Id: <20191110161915.11059-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 Nov 2019, Linus Torvalds wrote:
+I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
+result in a NULL pointer dereference at the moment:
 
-> On Sat, Nov 9, 2019, 15:08 Alan Stern <stern@rowland.harvard.edu> wrote:
-> 
-> > On Fri, 8 Nov 2019, Linus Torvalds wrote:
-> > >
-> > > Two writes to normal memory are *not* idempotent if they write
-> > > different values. The ordering very much matters, and it's racy and a
-> > > tool should complain.
-> >
-> > What you have written strongly indicates that either you think the word
-> > "idempotent" means something different from its actual meaning or else
-> > you are misusing the word in a very confusing way.
-> >
-> 
-> "Idempotence is the property of certain operations in mathematics and
-> computer science whereby they can be applied multiple times without
-> changing the result beyond the initial application. "
-> 
-> This is (for example) commonly used when talking about nfs operations,
-> where you can re-send the same nfs operation, and it's ok (even if it has
-> side effects) because the server remembers that it already did the
-> operation. If it's already been done, nothing changes.
-> 
-> It may not match your definition in some other area, but this is very much
-> the accepted meaning of the word in computer science and operating systems.
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    Oops: 0002 [#1] PREEMPT SMP NOPTI
+    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
+    RIP: 0010:skb_queue_tail+0x25/0x50
+    Call Trace:
+     nci_recv_frame+0x36/0x90 [nci]
+     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
+     ? preempt_count_add+0x68/0xa0
+     ? irq_forced_thread_fn+0x80/0x80
+     irq_thread_fn+0x20/0x60
+     irq_thread+0xee/0x180
+     ? wake_threads_waitq+0x30/0x30
+     kthread+0xfb/0x130
+     ? irq_thread_check_affinity+0xd0/0xd0
+     ? kthread_park+0x90/0x90
+     ret_from_fork+0x1f/0x40
 
-Agreed.  My point was that you were using the word in a way which did
-not match this definition.
+Afterward the kernel must be rebooted to work properly again.
 
-Never mind that.  You did not respond to the question at the end of my 
-previous email: Should the LKMM be changed so that two writes are not 
-considered to race with each other if they store the same value?
+This happens because it attempts to call nci_recv_frame() with skb == NULL.
+However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
+NULL checks for skb, causing the NULL pointer dereference.
 
-That change would take care of the original issue of this email thread,
-wouldn't it?  And it would render WRITE_IDEMPOTENT unnecessary.
+Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
+Make sure to log it so it is obvious that a communication error occurred.
+The error above then becomes:
 
-Making that change would amount to formalizing your requirement that 
-the compiler should not invent stores to shared variables.  In C11 such 
-invented stores are allowed.  Given something like this:
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
 
-	<A complex computation which does not involve x but does
-	 require a register spill>
-	x = 1234;
+Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+Note: Not sure why NFC is broken on this laptop (a Lenovo ThinkPad L490).
+It runs into the I2C communication errors immediately when enabling NFC.
+This patch fixes the NULL pointer dereference at least.
+---
+ drivers/nfc/nxp-nci/i2c.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-C11 allows the compiler to store an intermediate value in x rather than
-allocating a slot on the stack for the register spill.  After all, x is
-going to be overwritten anyway, and if any other thread accessed x
-during the complex computation then it would race with the final store
-and so the behavior would be undefined in any case.
-
-If you want to specifically forbid the compiler from doing this, it
-makes sense to change the memory model accordingly.
-
-For those used to thinking in terms of litmus tests, consider this one:
-
-C equivalent-writes
-
-{}
-
-P0(int *x)
-{
-	*x = 1;
-}
-
-P1(int *x)
-{
-	*x = 1;
-}
-
-exists (~x=1)
-
-Should the LKMM say that this litmus test contains a race?
-
-This suggests that we might also want to relax the notion of a write
-racing with a read, although in that case I'm not at all sure what the
-appropriate change to the memory model would be.  Something along the
-lines of: If a write W races with a read R, but W stores the same value
-that R would have read if W were not present, then it's not really a
-race.  But of course this is far too vague to be useful.
-
-Alan Stern
+diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+index 307bd2afbe05..4d1909aecd6c 100644
+--- a/drivers/nfc/nxp-nci/i2c.c
++++ b/drivers/nfc/nxp-nci/i2c.c
+@@ -220,8 +220,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
+ 
+ 	if (r == -EREMOTEIO) {
+ 		phy->hard_fault = r;
+-		skb = NULL;
+-	} else if (r < 0) {
++		if (info->mode == NXP_NCI_MODE_FW)
++			nxp_nci_fw_recv_frame(phy->ndev, NULL);
++	}
++	if (r < 0) {
+ 		nfc_err(&client->dev, "Read failed with error %d\n", r);
+ 		goto exit_irq_handled;
+ 	}
+-- 
+2.23.0
 
