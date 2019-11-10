@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DFEC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F88C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D170215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52FF215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353960;
-	bh=YoOdhLDsccXJu821EOv0qP752hFVRTq/feQk1vt7ELE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9ILncuuxvCgLjIQTVJfCbVyxwRl0QHutL42j/CQNzxcwgBAELLXH3m7/3cqnO5dq
-	 ky88aFK2WIE0HGEUzgs+KCaTDCXub4bHqJFMkdO0+EPU+/JWoz21bBKbKcSAqJsP87
-	 vc3DGUZRwYsCeTA5NrzYO3/uFcBTcOsHl3K1H6vo=
+	s=default; t=1573353964;
+	bh=k2A1BTemWvg7On3V9rWsnCXdzojip5BlRvpssb7PQBA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RxqVpO0f2QtLtALeJXeqHsGvOUoaUZG2Su4YdxlOmt6wqCR5LfAQ0xECT3HhHWK19
+	 yqtiYpj07Xpt75TSeLuiFfo40gSeiirMeFB1I7nP1h+JAtlpDUq00ftGHx8hfwRUv9
+	 gZoeYKMZiLDIum71btc9e9rAy8vFfzef8h5AcDWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbfKJCp7 (ORCPT
+        id S1728968AbfKJCqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47232 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbfKJCpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:32 -0500
+        id S1727812AbfKJCpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB9F21850;
-        Sun, 10 Nov 2019 02:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C94C21655;
+        Sun, 10 Nov 2019 02:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353931;
-        bh=YoOdhLDsccXJu821EOv0qP752hFVRTq/feQk1vt7ELE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BefvvuzddmujSUvASBbpx/VR85B94duhn9prhT14Pu0oNt10q2/sK+77P4PLdvD04
-         2omC/q3ZfkVCXgdq1rQ0MrGODSaRWPEqKsWmvcCzSrvovUl8NjLTWpXek2Q2m85TBt
-         ZD0+OmUJcBlbCELuperZF7b3tFw0a7E97QRQSUjs=
+        s=default; t=1573353942;
+        bh=k2A1BTemWvg7On3V9rWsnCXdzojip5BlRvpssb7PQBA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UoCgDKMmmGEp08trX5ii14ciVQBFC70EL5HsqVdqaMJ3mjmaXHBqfSwLSft8VMjMt
+         Ejgk7K8a5wwCCn3EppU2rPToxkBwRAI3HHuXaARdbHS0VotGGxRUiUNC9JqwTcYDY6
+         6nmyRnU+YYE+ZNIlnhwo1PrM0tzGrDqMG9ABm6g4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 190/191] net: phy: mdio-bcm-unimac: mark PM functions as __maybe_unused
-Date:   Sat,  9 Nov 2019 21:40:12 -0500
-Message-Id: <20191110024013.29782-190-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 001/109] s390/qeth: invoke softirqs after napi_schedule()
+Date:   Sat,  9 Nov 2019 21:43:53 -0500
+Message-Id: <20191110024541.31567-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
-References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,51 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 9b97123a584f60a5bca5a2663485768a1f6cd0a4 ]
+[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
 
-The newly added runtime-pm support causes a harmless warning
-when CONFIG_PM is disabled:
+Calling napi_schedule() from process context does not ensure that the
+NET_RX softirq is run in a timely fashion. So trigger it manually.
 
-drivers/net/phy/mdio-bcm-unimac.c:330:12: error: 'unimac_mdio_resume' defined but not used [-Werror=unused-function]
- static int unimac_mdio_resume(struct device *d)
-drivers/net/phy/mdio-bcm-unimac.c:321:12: error: 'unimac_mdio_suspend' defined but not used [-Werror=unused-function]
- static int unimac_mdio_suspend(struct device *d)
+This is no big issue with current code. A call to ndo_open() is usually
+followed by a ndo_set_rx_mode() call, and for qeth this contains a
+spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
+early.
+Nevertheless it's best to not depend on this behaviour, and just fix
+the issue at its source like all other drivers do. For instance see
+commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
 
-Marking the functions as __maybe_unused is the easiest workaround
-and avoids adding #ifdef checks.
-
-Fixes: b78ac6ecd1b6 ("net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio-bcm-unimac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/net/qeth_l2_main.c | 3 +++
+ drivers/s390/net/qeth_l3_main.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
-index 80b9583eaa952..df75efa96a7d9 100644
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -318,7 +318,7 @@ static int unimac_mdio_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 2845316db5545..6fa07c2469150 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -869,7 +869,10 @@ static int __qeth_l2_open(struct net_device *dev)
  
--static int unimac_mdio_suspend(struct device *d)
-+static int __maybe_unused unimac_mdio_suspend(struct device *d)
- {
- 	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
+ 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
+ 		napi_enable(&card->napi);
++		local_bh_disable();
+ 		napi_schedule(&card->napi);
++		/* kick-start the NAPI softirq: */
++		local_bh_enable();
+ 	} else
+ 		rc = -EIO;
+ 	return rc;
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index d9830c86d0c11..8bccfd686b735 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -2849,7 +2849,10 @@ static int __qeth_l3_open(struct net_device *dev)
  
-@@ -327,7 +327,7 @@ static int unimac_mdio_suspend(struct device *d)
- 	return 0;
- }
- 
--static int unimac_mdio_resume(struct device *d)
-+static int __maybe_unused unimac_mdio_resume(struct device *d)
- {
- 	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
- 	int ret;
+ 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
+ 		napi_enable(&card->napi);
++		local_bh_disable();
+ 		napi_schedule(&card->napi);
++		/* kick-start the NAPI softirq: */
++		local_bh_enable();
+ 	} else
+ 		rc = -EIO;
+ 	return rc;
 -- 
 2.20.1
 
