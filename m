@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA07C17442
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA3C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B752085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AED721855
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfKJKYJ (ORCPT
+        id S1726887AbfKJKYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 05:24:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54413 "EHLO
+        Sun, 10 Nov 2019 05:24:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54417 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfKJKYI (ORCPT
+        with ESMTP id S1726610AbfKJKYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 05:24:08 -0500
+        Sun, 10 Nov 2019 05:24:09 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iTkO4-0004Xs-VE; Sun, 10 Nov 2019 11:24:05 +0100
+        id 1iTkO6-0004YA-Lb; Sun, 10 Nov 2019 11:24:07 +0100
 Date:   Sun, 10 Nov 2019 10:21:53 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] timers/urgent for v5.4-rc7
+Subject: [GIT pull] x86/urgent for v5.4-rc7
 References: <157338131323.14789.2179255265964358886.tglx@nanos.tec.linutronix.de>
-Message-ID: <157338131324.14789.9347520189915553665.tglx@nanos.tec.linutronix.de>
+Message-ID: <157338131324.14789.8363441947094006311.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -41,211 +41,144 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest timers-urgent-for-linus git tree from:
+please pull the latest x86-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
 
-up to:  52338415cf4d: timekeeping/vsyscall: Update VDSO data unconditionally
+up to:  63ec58b44fcc: x86/tsc: Respect tsc command line paraemeter for clocksource_tsc_early
 
-A small set of fixes for timekeepoing and clocksource drivers:
+A small set of fixes for x86:
 
-  - VDSO data was updated conditional on the availability of a VDSO capable
-    clocksource. This causes the VDSO functions which do not depend on a
-    VDSO capable clocksource to operate on stale data. Always update
-    unconditionally.
+  - Make the tsc=reliable/nowatchdog command line parameter work again. It was broken
+    with the introduction of the early TSC clocksource.
 
-  - Prevent a double free in the mediatek driver
+  - Prevent the evaluation of exception stacks before they are set up. This
+    causes a crash in dumpstack because the stack walk termination gets
+    screwed up.
 
-  - Use the proper helper in the sh_mtu2 driver so it won't attempt to
-    initialize non-existing interrupts.
+  - Prevent a NULL pointer dereference in the rescource control file
+    system.
+
+  - Avoid bogus warnings about APIC id mismatch related to the LDR which
+    can happen when the LDR is not in use and therefore not initialized.
+    Only evaluate that when the APIC is in logical destination mode.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Fabien Parent (1):
-      clocksource/drivers/mediatek: Fix error handling
+Jan Beulich (1):
+      x86/apic/32: Avoid bogus LDR warnings
 
-Geert Uytterhoeven (1):
-      clocksource/drivers/sh_mtu2: Do not loop using platform_get_irq_by_name()
+Michael Zhivich (1):
+      x86/tsc: Respect tsc command line paraemeter for clocksource_tsc_early
 
-Huacai Chen (1):
-      timekeeping/vsyscall: Update VDSO data unconditionally
+Thomas Gleixner (1):
+      x86/dumpstack/64: Don't evaluate exception stacks before setup
+
+Xiaochen Shen (1):
+      x86/resctrl: Prevent NULL pointer dereference when reading mondata
 
 
- arch/arm64/include/asm/vdso/vsyscall.h |  7 -------
- arch/mips/include/asm/vdso/vsyscall.h  |  7 -------
- drivers/clocksource/sh_mtu2.c          | 16 +++++++++++-----
- drivers/clocksource/timer-mediatek.c   | 10 ++--------
- include/asm-generic/vdso/vsyscall.h    |  7 -------
- kernel/time/vsyscall.c                 |  9 +++------
- 6 files changed, 16 insertions(+), 40 deletions(-)
+ arch/x86/kernel/apic/apic.c               | 28 +++++++++++++++-------------
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  4 ++++
+ arch/x86/kernel/dumpstack_64.c            |  7 +++++++
+ arch/x86/kernel/tsc.c                     |  3 +++
+ 4 files changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso/vsyscall.h b/arch/arm64/include/asm/vdso/vsyscall.h
-index 0c731bfc7c8c..0c20a7c1bee5 100644
---- a/arch/arm64/include/asm/vdso/vsyscall.h
-+++ b/arch/arm64/include/asm/vdso/vsyscall.h
-@@ -30,13 +30,6 @@ int __arm64_get_clock_mode(struct timekeeper *tk)
- }
- #define __arch_get_clock_mode __arm64_get_clock_mode
- 
--static __always_inline
--int __arm64_use_vsyscall(struct vdso_data *vdata)
--{
--	return !vdata[CS_HRES_COARSE].clock_mode;
--}
--#define __arch_use_vsyscall __arm64_use_vsyscall
--
- static __always_inline
- void __arm64_update_vsyscall(struct vdso_data *vdata, struct timekeeper *tk)
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 9e2dd2b296cd..2b0faf86da1b 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1586,9 +1586,6 @@ static void setup_local_APIC(void)
  {
-diff --git a/arch/mips/include/asm/vdso/vsyscall.h b/arch/mips/include/asm/vdso/vsyscall.h
-index 195314732233..00d41b94ba31 100644
---- a/arch/mips/include/asm/vdso/vsyscall.h
-+++ b/arch/mips/include/asm/vdso/vsyscall.h
-@@ -28,13 +28,6 @@ int __mips_get_clock_mode(struct timekeeper *tk)
- }
- #define __arch_get_clock_mode __mips_get_clock_mode
+ 	int cpu = smp_processor_id();
+ 	unsigned int value;
+-#ifdef CONFIG_X86_32
+-	int logical_apicid, ldr_apicid;
+-#endif
  
--static __always_inline
--int __mips_use_vsyscall(struct vdso_data *vdata)
--{
--	return (vdata[CS_HRES_COARSE].clock_mode != VDSO_CLOCK_NONE);
--}
--#define __arch_use_vsyscall __mips_use_vsyscall
--
- /* The asm-generic header needs to be included after the definitions above */
- #include <asm-generic/vdso/vsyscall.h>
+ 	if (disable_apic) {
+ 		disable_ioapic_support();
+@@ -1626,16 +1623,21 @@ static void setup_local_APIC(void)
+ 	apic->init_apic_ldr();
  
-diff --git a/drivers/clocksource/sh_mtu2.c b/drivers/clocksource/sh_mtu2.c
-index 354b27d14a19..62812f80b5cc 100644
---- a/drivers/clocksource/sh_mtu2.c
-+++ b/drivers/clocksource/sh_mtu2.c
-@@ -328,12 +328,13 @@ static int sh_mtu2_register(struct sh_mtu2_channel *ch, const char *name)
- 	return 0;
- }
- 
-+static const unsigned int sh_mtu2_channel_offsets[] = {
-+	0x300, 0x380, 0x000,
-+};
+ #ifdef CONFIG_X86_32
+-	/*
+-	 * APIC LDR is initialized.  If logical_apicid mapping was
+-	 * initialized during get_smp_config(), make sure it matches the
+-	 * actual value.
+-	 */
+-	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
+-	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
+-	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
+-	/* always use the value from LDR */
+-	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
++	if (apic->dest_logical) {
++		int logical_apicid, ldr_apicid;
 +
- static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
- 				 struct sh_mtu2_device *mtu)
- {
--	static const unsigned int channel_offsets[] = {
--		0x300, 0x380, 0x000,
--	};
- 	char name[6];
- 	int irq;
- 	int ret;
-@@ -356,7 +357,7 @@ static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
- 		return ret;
++		/*
++		 * APIC LDR is initialized.  If logical_apicid mapping was
++		 * initialized during get_smp_config(), make sure it matches
++		 * the actual value.
++		 */
++		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
++		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
++		if (logical_apicid != BAD_APICID)
++			WARN_ON(logical_apicid != ldr_apicid);
++		/* Always use the value from LDR. */
++		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
++	}
+ #endif
+ 
+ 	/*
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index efbd54cc4e69..055c8613b531 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -522,6 +522,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+ 	int ret = 0;
+ 
+ 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
++	if (!rdtgrp) {
++		ret = -ENOENT;
++		goto out;
++	}
+ 
+ 	md.priv = of->kn->priv;
+ 	resid = md.u.rid;
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 753b8cfe8b8a..87b97897a881 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -94,6 +94,13 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+ 
+ 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
++	/*
++	 * Handle the case where stack trace is collected _before_
++	 * cea_exception_stacks had been initialized.
++	 */
++	if (!begin)
++		return false;
++
+ 	end = begin + sizeof(struct cea_exception_stacks);
+ 	/* Bail if @stack is outside the exception stack area. */
+ 	if (stk < begin || stk >= end)
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index c59454c382fd..7e322e2daaf5 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -1505,6 +1505,9 @@ void __init tsc_init(void)
+ 		return;
  	}
  
--	ch->base = mtu->mapbase + channel_offsets[index];
-+	ch->base = mtu->mapbase + sh_mtu2_channel_offsets[index];
- 	ch->index = index;
- 
- 	return sh_mtu2_register(ch, dev_name(&mtu->pdev->dev));
-@@ -408,7 +409,12 @@ static int sh_mtu2_setup(struct sh_mtu2_device *mtu,
- 	}
- 
- 	/* Allocate and setup the channels. */
--	mtu->num_channels = 3;
-+	ret = platform_irq_count(pdev);
-+	if (ret < 0)
-+		goto err_unmap;
++	if (tsc_clocksource_reliable || no_tsc_watchdog)
++		clocksource_tsc_early.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
 +
-+	mtu->num_channels = min_t(unsigned int, ret,
-+				  ARRAY_SIZE(sh_mtu2_channel_offsets));
- 
- 	mtu->channels = kcalloc(mtu->num_channels, sizeof(*mtu->channels),
- 				GFP_KERNEL);
-diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
-index a562f491b0f8..9318edcd8963 100644
---- a/drivers/clocksource/timer-mediatek.c
-+++ b/drivers/clocksource/timer-mediatek.c
-@@ -268,15 +268,12 @@ static int __init mtk_syst_init(struct device_node *node)
- 
- 	ret = timer_of_init(node, &to);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
- 					TIMER_SYNC_TICKS, 0xffffffff);
- 
- 	return 0;
--err:
--	timer_of_cleanup(&to);
--	return ret;
- }
- 
- static int __init mtk_gpt_init(struct device_node *node)
-@@ -293,7 +290,7 @@ static int __init mtk_gpt_init(struct device_node *node)
- 
- 	ret = timer_of_init(node, &to);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	/* Configure clock source */
- 	mtk_gpt_setup(&to, TIMER_CLK_SRC, GPT_CTRL_OP_FREERUN);
-@@ -311,9 +308,6 @@ static int __init mtk_gpt_init(struct device_node *node)
- 	mtk_gpt_enable_irq(&to, TIMER_CLK_EVT);
- 
- 	return 0;
--err:
--	timer_of_cleanup(&to);
--	return ret;
- }
- TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
- TIMER_OF_DECLARE(mtk_mt6765, "mediatek,mt6765-timer", mtk_syst_init);
-diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
-index e94b19782c92..ce4103208619 100644
---- a/include/asm-generic/vdso/vsyscall.h
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -25,13 +25,6 @@ static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
- }
- #endif /* __arch_get_clock_mode */
- 
--#ifndef __arch_use_vsyscall
--static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
--{
--	return 1;
--}
--#endif /* __arch_use_vsyscall */
--
- #ifndef __arch_update_vsyscall
- static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
- 						   struct timekeeper *tk)
-diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
-index 4bc37ac3bb05..5ee0f7709410 100644
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -110,8 +110,7 @@ void update_vsyscall(struct timekeeper *tk)
- 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
- 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
- 
--	if (__arch_use_vsyscall(vdata))
--		update_vdso_data(vdata, tk);
-+	update_vdso_data(vdata, tk);
- 
- 	__arch_update_vsyscall(vdata, tk);
- 
-@@ -124,10 +123,8 @@ void update_vsyscall_tz(void)
- {
- 	struct vdso_data *vdata = __arch_get_k_vdso_data();
- 
--	if (__arch_use_vsyscall(vdata)) {
--		vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
--		vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
--	}
-+	vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
-+	vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
- 
- 	__arch_sync_vdso_data(vdata);
+ 	clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
+ 	detect_art();
  }
 
 
