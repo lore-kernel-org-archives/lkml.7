@@ -2,59 +2,45 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AB8C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96F2C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB1720B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573388279;
-	bh=rCC8uEJIQJxJnqP/dZzpYXpADRBvhBPUGrzMfUvqyqo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=COSU4UD2fzEv9yKemm5fxCXCvXVj1kQ7uu/pF+7BOzDk62QW02EUIqdsUtS7qA1ML
-	 FV29PrlIYA/1iVyfr3nTXurv3wDM/Zzh6G9LRm8qktAO3zeOcvprXUpJuFP4Nl7XJ4
-	 Wz6IZBBNthU2OvXf+/Tn26HHHoNjickZkbMENhVM=
+	by mail.kernel.org (Postfix) with ESMTP id 7F0392080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfKJMR6 (ORCPT
+        id S1726710AbfKJMWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 07:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726610AbfKJMR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 07:17:58 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        Sun, 10 Nov 2019 07:22:37 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53022 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfKJMWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 07:22:37 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02CFF2080F;
-        Sun, 10 Nov 2019 12:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573388277;
-        bh=rCC8uEJIQJxJnqP/dZzpYXpADRBvhBPUGrzMfUvqyqo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dbwMHEq7DT44fxjkfQCbUz6hZ8wz1JJfGFMHaeiRpWRx8VZPf375ZAwjUx+Au+eIs
-         +yjfEZa5ih9QXYSb9tlhQQpL4fy/rsja5NUdjvqzxc7euuKfM789sn6X3/DX+y2L2J
-         tKyWUYDb+CGyeYhexWXl0i+iRjzs3+YXP/p4+tsw=
-Date:   Sun, 10 Nov 2019 12:17:50 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Enrico Granata <egranata@chromium.org>
-Subject: Re: [PATCH v4 05/17] platform: chrome: cros_ec: Do not attempt to
- register a non-positive IRQ number
-Message-ID: <20191110121750.78f0824f@archlinux>
-In-Reply-To: <20191105222652.70226-6-gwendal@chromium.org>
-References: <20191105222652.70226-1-gwendal@chromium.org>
-        <20191105222652.70226-6-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AF26428A46F;
+        Sun, 10 Nov 2019 12:22:34 +0000 (GMT)
+Date:   Sun, 10 Nov 2019 13:22:32 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        gerg@kernel.org, linux-mtd@lists.infradead.org, neil@brown.name,
+        linux-mediatek@lists.infradead.org, blogic@openwrt.org
+Subject: Re: [PATCH] mtd: rawnand: driver for Mediatek MT7621 SoC NAND flash
+ controller
+Message-ID: <20191110132232.3815f1af@collabora.com>
+In-Reply-To: <20191110123919.5c998839@collabora.com>
+References: <20191107073521.11413-1-gerg@kernel.org>
+        <20191107084007.GA1203521@kroah.com>
+        <20191110123919.5c998839@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -63,43 +49,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 Nov 2019 14:26:40 -0800
-Gwendal Grignou <gwendal@chromium.org> wrote:
+On Sun, 10 Nov 2019 12:39:19 +0100
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-> Add a layer of sanity checking to cros_ec_register against attempting to
-> register IRQ values that are not strictly greater than 0.
+> On Thu, 7 Nov 2019 09:40:07 +0100
+> Greg KH <gregkh@linuxfoundation.org> wrote:
 > 
-> Signed-off-by: Enrico Granata <egranata@chromium.org>
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-
-This strikes me as something that could be a potential fix to backport?
-Any known cases of a negative irq getting to here or is this a by
-inspection thing?
-
-Otherwise seems obviously correct.
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Jonathan
-
-> ---
-> No changes in v4, v3.
-> Changes in v2:
->   Remove dual Enrico's signature.
+> > On Thu, Nov 07, 2019 at 05:35:21PM +1000, gerg@kernel.org wrote:  
+> > > From: Greg Ungerer <gerg@kernel.org>
+> > > 
+> > > Add a driver to support the NAND flash controller of the MediaTek MT7621
+> > > System-on-Chip device. (This one is the MIPS based parts from Mediatek).
+> > > 
+> > > This code is a re-working of the earlier patches for this hardware that
+> > > have been floating around the internet for years:
+> > > 
+> > > https://github.com/ReclaimYourPrivacy/cloak/blob/master/target/linux/ramips/patches-3.18/0045-mtd-add-mt7621-nand-support.patch
+> > > 
+> > > This is a much cleaned up version, put in staging to start with.
+> > > It does still have some problems, mainly that it still uses a lot of the
+> > > mtd raw nand legacy support.    
+> > 
+> > Is that an issue?  
 > 
->  drivers/platform/chrome/cros_ec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Well, yes that's an issue since we decided that all new drivers should
+> implement ->exec_op() instead of the legacy hooks. But that would be an
+> issue even if we were merging the driver in staging.
 > 
-> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-> index 925f84dbf621..d3dfa27171e6 100644
-> --- a/drivers/platform/chrome/cros_ec.c
-> +++ b/drivers/platform/chrome/cros_ec.c
-> @@ -149,7 +149,7 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
->  		return err;
->  	}
->  
-> -	if (ec_dev->irq) {
-> +	if (ec_dev->irq > 0) {
->  		err = devm_request_threaded_irq(dev, ec_dev->irq,
->  						ec_irq_handler,
->  						ec_irq_thread,
+> > Why not just put it in the "real" part of the kernel
+> > then, if those apis are still in use?
+> >   
+> > > The driver not only compiles, but it works well on the small range of
+> > > hardware platforms that it has been used on so far. I have been using
+> > > for quite a while now, cleaning up as I get time.
+> > > 
+> > > So... I am looking for comments on the best approach forward with this.
+> > > At least in staging it can get some more eyeballs going over it.    
+> > 
+> > staging will just nit-pick it to death for coding style issues, it's not
+> > going to be get any major api changes/cleanups there usually.  I'd
+> > recommend just merging this to the "real" part of the kernel now if it's
+> > working for you.  
+> 
+> I agree on that point: we should merge this driver directly in the NAND
+> framework after it's been reworked to implement ->exec_op() instead of
+
+  s/framework/subsystem/
+
+> the legacy hooks.
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
