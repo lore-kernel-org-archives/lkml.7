@@ -2,239 +2,90 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559CCC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A491BC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228A320B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573389066;
-	bh=08tTd3Kp1eVd05tgOQ/l7s/1n4h1NTJgwCA1oHYjeZs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rNWyo+ihzb9UBoBoYla3rOkPDlxgSfU78Umlvzhz5R9B2GAnbbu4p0hBXv7wUPLng
-	 eglrdaO3tT4wAoeoc7VEE8vQVVN2QfCt6ovif4kHWON7/H7IfJsA1SNG3XHTEYhRM+
-	 cvYDM9kt7rq8ozt59YP2Vm7wJ4HV9bjVgJKl1quM=
+	by mail.kernel.org (Postfix) with ESMTP id 79DE820869
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfKJMbF (ORCPT
+        id S1726758AbfKJMgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 07:31:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbfKJMbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 07:31:04 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A45120869;
-        Sun, 10 Nov 2019 12:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573389063;
-        bh=08tTd3Kp1eVd05tgOQ/l7s/1n4h1NTJgwCA1oHYjeZs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=anKE2sMosm4Uo43FIC24gMt2PkSkMZbR1eh199OYGplP0iRZNLn3Sf4SGHMTUlaq/
-         rjSBEo0RKqDbfWnL7lxYzLFmHi6jMPpIfq5plXK5uFEfFw9RTP5OSOWIMUF3GzT6wF
-         34/ajQVjp9l3ogfl122D9saH42riq2ZXvWzAASK4=
-Date:   Sun, 10 Nov 2019 12:16:08 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 04/17] platform: chrome: cros-ec: record event
- timestamp in the hard irq
-Message-ID: <20191110121608.330bc0f7@archlinux>
-In-Reply-To: <20191105222652.70226-5-gwendal@chromium.org>
-References: <20191105222652.70226-1-gwendal@chromium.org>
-        <20191105222652.70226-5-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 10 Nov 2019 07:36:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54541 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbfKJMgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 07:36:14 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iTmRr-0005NX-EL; Sun, 10 Nov 2019 13:36:07 +0100
+Date:   Sun, 10 Nov 2019 13:36:04 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch 2/9] x86/process: Unify copy_thread_tls()
+In-Reply-To: <alpine.DEB.2.21.1911090040520.2605@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1911101332490.12583@nanos.tec.linutronix.de>
+References: <20191106193459.581614484@linutronix.de> <20191106202805.948064985@linutronix.de> <53a6f346-fca1-ac04-ee34-6d472a0d4408@kernel.org> <alpine.DEB.2.21.1911090040520.2605@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 Nov 2019 14:26:39 -0800
-Gwendal Grignou <gwendal@chromium.org> wrote:
-
-> To improve sensor timestamp precision, given EC and AP are in
-> different time domains, the AP needs to try to record the exact
-> moment an event was signalled to the AP by the EC as soon as
-> possible after it happens.
+On Sat, 9 Nov 2019, Thomas Gleixner wrote:
+> On Fri, 8 Nov 2019, Andy Lutomirski wrote:
+> > On 11/6/19 11:35 AM, Thomas Gleixner wrote:
+> > > +static inline int copy_io_bitmap(struct task_struct *tsk)
+> > > +{
+> > > +	if (likely(!test_tsk_thread_flag(current, TIF_IO_BITMAP)))
+> > > +		return 0;
+> > > +
+> > > +	tsk->thread.io_bitmap_ptr = kmemdup(current->thread.io_bitmap_ptr,
+> > > +					    IO_BITMAP_BYTES, GFP_KERNEL);
+> > 
+> > tsk->thread.io_bitmap_max = current->thread.io_bitmap_max?
+> > 
+> > I realize you inherited this from the code you're refactoring, but it
+> > does seem to be missing.
 > 
-> First thing in the hard irq is the best place for this.
+> It already got copied with the task struct :)
+>  
+> > > +#ifdef CONFIG_X86_64
+> > > +	savesegment(gs, p->thread.gsindex);
+> > > +	p->thread.gsbase = p->thread.gsindex ? 0 : current->thread.gsbase;
+> > > +	savesegment(fs, p->thread.fsindex);
+> > > +	p->thread.fsbase = p->thread.fsindex ? 0 : current->thread.fsbase;
+> > > +	savesegment(es, p->thread.es);
+> > > +	savesegment(ds, p->thread.ds);
+> > > +#else
+> > > +	/* Clear all status flags including IF and set fixed bit. */
+> > > +	frame->flags = X86_EFLAGS_FIXED;
+> > > +#endif
+> > 
+> > Want to do another commit to make the eflags fixup unconditional?  I'm
+> > wondering if we have a bug.
 > 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-A minor issue with kernel-doc (I think...)
+> Let me look at that.
 
-Otherwise,
-Acked-by: Jonathan Cameron <Jonathan.Cameron@kernel.org>
-> ---
-> Changes in v4:
->   Check patch with --strict option
->     Alignement
-> No changes in v3.
-> Changes in v2:
->   Make cros_ec_get_time_ns inline.
->   Using ktime_t instead of s64 when dealing with time.
->   Added code in ishtp to gather timestamp.
-> 
->  drivers/platform/chrome/cros_ec.c           | 17 ++++++++++++++---
->  drivers/platform/chrome/cros_ec_ishtp.c     | 17 +++++++++++++++--
->  drivers/platform/chrome/cros_ec_lpc.c       |  2 ++
->  include/linux/platform_data/cros_ec_proto.h | 16 ++++++++++++++++
->  4 files changed, 47 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-> index 9b2d07422e17..925f84dbf621 100644
-> --- a/drivers/platform/chrome/cros_ec.c
-> +++ b/drivers/platform/chrome/cros_ec.c
-> @@ -31,6 +31,15 @@ static struct cros_ec_platform pd_p = {
->  	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
->  };
->  
-> +static irqreturn_t ec_irq_handler(int irq, void *data)
-> +{
-> +	struct cros_ec_device *ec_dev = data;
-> +
-> +	ec_dev->last_event_time = cros_ec_get_time_ns();
-> +
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
->  static irqreturn_t ec_irq_thread(int irq, void *data)
->  {
->  	struct cros_ec_device *ec_dev = data;
-> @@ -141,9 +150,11 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
->  	}
->  
->  	if (ec_dev->irq) {
-> -		err = devm_request_threaded_irq(dev, ec_dev->irq, NULL,
-> -				ec_irq_thread, IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> -				"chromeos-ec", ec_dev);
-> +		err = devm_request_threaded_irq(dev, ec_dev->irq,
-> +						ec_irq_handler,
-> +						ec_irq_thread,
-> +						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> +						"chromeos-ec", ec_dev);
->  		if (err) {
->  			dev_err(dev, "Failed to request IRQ %d: %d",
->  				ec_dev->irq, err);
-> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-> index 25ca2c894b4d..5c848f22b44b 100644
-> --- a/drivers/platform/chrome/cros_ec_ishtp.c
-> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
-> @@ -200,13 +200,14 @@ static int ish_send(struct ishtp_cl_data *client_data,
->   * process_recv() - Received and parse incoming packet
->   * @cros_ish_cl: Client instance to get stats
->   * @rb_in_proc: Host interface message buffer
-> + * @timestamp: Timestamp of when parent callback started
->   *
->   * Parse the incoming packet. If it is a response packet then it will
->   * update per instance flags and wake up the caller waiting to for the
->   * response. If it is an event packet then it will schedule event work.
->   */
->  static void process_recv(struct ishtp_cl *cros_ish_cl,
-> -			 struct ishtp_cl_rb *rb_in_proc)
-> +			 struct ishtp_cl_rb *rb_in_proc, ktime_t timestamp)
->  {
->  	size_t data_len = rb_in_proc->buf_idx;
->  	struct ishtp_cl_data *client_data =
-> @@ -295,6 +296,11 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
->  		break;
->  
->  	case CROS_MKBP_EVENT:
-> +		/*
-> +		 * Set timestamp from beginning of function since we actually
-> +		 * got an incoming MKBP event
-> +		 */
-> +		client_data->ec_dev->last_event_time = timestamp;
->  		/* The event system doesn't send any data in buffer */
->  		schedule_work(&client_data->work_ec_evt);
->  
-> @@ -322,10 +328,17 @@ static void ish_event_cb(struct ishtp_cl_device *cl_device)
->  {
->  	struct ishtp_cl_rb *rb_in_proc;
->  	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
-> +	ktime_t timestamp;
-> +
-> +	/*
-> +	 * Take timestamp as close to hardware interrupt as possible for sensor
-> +	 * timestamps.
-> +	 */
-> +	timestamp = cros_ec_get_time_ns();
->  
->  	while ((rb_in_proc = ishtp_cl_rx_get_rb(cros_ish_cl)) != NULL) {
->  		/* Decide what to do with received data */
-> -		process_recv(cros_ish_cl, rb_in_proc);
-> +		process_recv(cros_ish_cl, rb_in_proc, timestamp);
->  	}
->  }
->  
-> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-> index 7d10d909435f..3c77496e164d 100644
-> --- a/drivers/platform/chrome/cros_ec_lpc.c
-> +++ b/drivers/platform/chrome/cros_ec_lpc.c
-> @@ -313,6 +313,8 @@ static void cros_ec_lpc_acpi_notify(acpi_handle device, u32 value, void *data)
->  {
->  	struct cros_ec_device *ec_dev = data;
->  
-> +	ec_dev->last_event_time = cros_ec_get_time_ns();
-> +
->  	if (ec_dev->mkbp_event_supported &&
->  	    cros_ec_get_next_event(ec_dev, NULL) > 0)
->  		blocking_notifier_call_chain(&ec_dev->event_notifier, 0,
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index 691f9e953a96..b183024fef1f 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -122,6 +122,8 @@ struct cros_ec_command {
->   * @event_data: Raw payload transferred with the MKBP event.
->   * @event_size: Size in bytes of the event data.
->   * @host_event_wake_mask: Mask of host events that cause wake from suspend.
-> + * @last_event_time: exact time from the hard irq when we got notified of
-> + *     a new event.
->   * @ec: The platform_device used by the mfd driver to interface with the
->   *      main EC.
->   * @pd: The platform_device used by the mfd driver to interface with the
-> @@ -162,6 +164,7 @@ struct cros_ec_device {
->  	int event_size;
->  	u32 host_event_wake_mask;
->  	u32 last_resume_result;
-> +	ktime_t last_event_time;
->  
->  	/* The platform devices used by the mfd driver */
->  	struct platform_device *ec;
-> @@ -210,4 +213,17 @@ int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
->  
->  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
->  
-> +/**
-> + * cros_ec_get_time_ns - Return time in ns.
+64bit does not have flags in the inactive_task_frame ...
 
-Fairly sure that's not correct kernel-doc.  Please run
-../scripts/kernel-doc over the files and fix the warnings.
+Thanks,
 
- * cros_ec_get_time_ns() - Return time in ns.
-
-> + *
-> + * This is the function used to record the time for last_event_time in struct
-> + * cros_ec_device during the hard irq.
-> + *
-> + * Return: ktime_t format since boot.
-> + */
-> +static inline ktime_t cros_ec_get_time_ns(void)
-> +{
-> +	return ktime_get_boottime_ns();
-> +}
-> +
->  #endif /* __LINUX_CROS_EC_PROTO_H */
-
+	tglx
