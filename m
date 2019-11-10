@@ -2,131 +2,79 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B272C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F935C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481A320B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573386513;
-	bh=3ZlcSdnSyJm9AAdYjI6QHnNMIOARCyjlNADNfdeTPT8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Nsseu1fwiADTgga8UYk3gOGx2N+Z5DXnFg4vt9yKsKOcJkdXKW7z6bgNjBHAhO/s5
-	 sCqOYTMSYdpBW9RgnkeOHyOC82OnDAvp+TcLzZ4Zq9WDVdj4GnLG6ozSTMaRC9aPKM
-	 GBuFTxisrW5zUFw0i5bNFKlRyrHBjJ/iGSAwCWoc=
+	by mail.kernel.org (Postfix) with ESMTP id 456BA20869
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfKJLsc (ORCPT
+        id S1726853AbfKJLtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 06:48:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfKJLsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 06:48:31 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36BD520869;
-        Sun, 10 Nov 2019 11:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573386511;
-        bh=3ZlcSdnSyJm9AAdYjI6QHnNMIOARCyjlNADNfdeTPT8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WTHwi2TjhJZ0w8Yb/sgHLW7ravV3YzqjcMs16nU6bk2gklziWbYEja9ow3DuTXFvC
-         3ywstnYdQbIpfp46s5Nho4l+Si0n56O2uqcA0oFnQUJDOoNTb0UKe3yHlcJvbKPPhh
-         EPmMsigYc79vCTdDHegk06phWBP6B2JLr3fEwoww=
-Date:   Sun, 10 Nov 2019 11:48:23 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: temperature: ltc2983: fix u32 read into a unsigned
- long long
-Message-ID: <20191110114823.2bbe87b0@archlinux>
-In-Reply-To: <dab9cfd93e6affa5d94f078154c3e181303bbf47.camel@analog.com>
-References: <20191105202818.90065-1-colin.king@canonical.com>
-        <dab9cfd93e6affa5d94f078154c3e181303bbf47.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 10 Nov 2019 06:49:02 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:53449 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbfKJLtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 06:49:01 -0500
+Received: by mail-il1-f197.google.com with SMTP id y17so13712732ila.20
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 03:49:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=muS40/M+U7unS7Nwdhba7+0opY/I2Z2pZGBBgPUq8C0=;
+        b=two3lPNPM+sQiSV14DN4MmD7JMEHp8igOEUgzrfGvP2u1Yd3GZSp8wHUJvaMoYTC/j
+         Wdu1m2nOA9aT3T2dik+HFOOT2NCqvgDS+2AHq6UzOE1ZaZ/JmqZ9/2A5Xa2GOcWIemnl
+         5AfNIqw6Tm32/w6hiBaIj2WaIdqBp8rrP7yvo/1X+Td+zwHS9QVvOyTLsKlMDAgUsejD
+         FdroQfX9CFIvCSwKpQQYQMmz7f0X++bNWqZdZr3T8Sr/tRlCBZ6VT7TTnJsbhN+FSaut
+         AfFYuOyb6CopL3moRVKZNS2fY5tzJUrhwzqjPlP33fnbd0A+n3xFbeuu0vjDalnWkuXU
+         Z5Ew==
+X-Gm-Message-State: APjAAAXI8QP2wG/ZepqVB5km61UeCJXbDwWpCRG0o+V8Elrk26IeKkm+
+        T0LcsaGdDQhD3U5MoaBXH5eUE8uj9N1oTKVGuCqWuT5yMWiF
+X-Google-Smtp-Source: APXvYqwG7iOuXUzrPn9C7IQw34I7LSwhAIRpMFyONIfQ9Z8ZWhdhx/QqVwYg/S2UFNW58oOzV3uQTeJdrwTJ/Pza/72hGbJAuyfE
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a92:16d4:: with SMTP id 81mr24840022ilw.198.1573386541143;
+ Sun, 10 Nov 2019 03:49:01 -0800 (PST)
+Date:   Sun, 10 Nov 2019 03:49:01 -0800
+In-Reply-To: <0000000000003659ef0596fa4cae@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e11df90596fc9955@google.com>
+Subject: Re: KASAN: invalid-free in io_sqe_files_unregister
+From:   syzbot <syzbot+3254bc44113ae1e331ee@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Nov 2019 14:19:52 +0000
-"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+syzbot has bisected this bug to:
 
-> On Tue, 2019-11-05 at 20:28 +0000, Colin King wrote:
-> >=20
-> > From: Colin Ian King <colin.king@canonical.com>
-> >=20
-> > Currently the read of temp using of_property_read_u32_index is
-> > reading
-> > a u32 value into a unsigned long long.  This relies on machine
-> > endianness
-> > to work correctly, so fix this by reading a u32 value and setting
-> > temp
-> > to this value.
-> >=20
-> > Addresses-Coverity: ("Reliance on integer endianness")
-> > Fixes: f110f3188e56 ("iio: temperature: Add support for LTC2983")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/iio/temperature/ltc2983.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/temperature/ltc2983.c
-> > b/drivers/iio/temperature/ltc2983.c
-> > index ddf47023364b..d39c0d6b77f1 100644
-> > --- a/drivers/iio/temperature/ltc2983.c
-> > +++ b/drivers/iio/temperature/ltc2983.c
-> > @@ -444,8 +444,10 @@ static struct ltc2983_custom_sensor
-> > *__ltc2983_custom_sensor_new(
-> >  			else
-> >  				temp =3D __convert_to_raw(temp,
-> > resolution);
-> >  		} else {
-> > -			of_property_read_u32_index(np, propname, index,
-> > -						   (u32 *)&temp);
-> > +			u32 t32;
-> > +
-> > +			of_property_read_u32_index(np, propname, index,
-> > &t32);
-> > +			temp =3D t32;
-> >  		}
-> > =20
-> >  		for (j =3D 0; j < n_size; j++) =20
->=20
-> Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
+commit 65e19f54d29cd8559ce60cfd0d751bef7afbdc5c
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Sat Oct 26 13:20:21 2019 +0000
 
-A slight complexity around this one. I'm not sure I'll have time for a pull
-before the merge window (as Greg will only take them to about 1 week before
-that opens so we get some exposure in Linux next).
+     io_uring: support for larger fixed file sets
 
-As a result I'll have to sit on this one until Linus comments on rc7, proba=
-bly
-later today.  Otherwise it'll be material for stable post release.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=154f483ce00000
+start commit:   5591cf00 Add linux-next specific files for 20191108
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=174f483ce00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=134f483ce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e1036c6ef52866f9
+dashboard link: https://syzkaller.appspot.com/bug?extid=3254bc44113ae1e331ee
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116bb33ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=173f133ae00000
 
-If I seem to have lost it give me a poke and we'll make sure it goes into=20
-an early rc instead of at the merge window.
+Reported-by: syzbot+3254bc44113ae1e331ee@syzkaller.appspotmail.com
+Fixes: 65e19f54d29c ("io_uring: support for larger fixed file sets")
 
-Thanks,
-
-Jonathan
-
-> Thanks,
-> Nuno S=C3=A1
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
