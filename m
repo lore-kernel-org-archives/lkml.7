@@ -2,200 +2,133 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C38AC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9948AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B94D20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686152077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vbk73AhZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C3ILoU5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfKJUvP (ORCPT
+        id S1727030AbfKJU6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 15:51:15 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44344 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfKJUvP (ORCPT
+        Sun, 10 Nov 2019 15:58:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40705 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726800AbfKJU6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 15:51:15 -0500
-Received: by mail-wr1-f67.google.com with SMTP id f2so12413346wrs.11;
-        Sun, 10 Nov 2019 12:51:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ho3Z9+dyLzWgXFFV/oKnRZdWGk0Oq6P4ftGFLTY36fk=;
-        b=vbk73AhZrRABAzA0KdgOWo7U4zGNAJ7O1qUM82AkSTtwOpBdEaLMYK5l3pkfvWoN0C
-         O8EgHb9inEsyNlZwgbC3exesFDpKicwh4XmSfdh6R/Guc9FM4ajnGwW78rUUd2Yv/d4I
-         RXfQEMfZwwavPOrIqYhacQpy6DX/JRM0EndgiLWIyl1TpsPEecVCKUMJ1gNnTNKwsnU/
-         yjxASCwosmvTUvImjKgNFc6xe5cVHPNWSlGmgV5GZiB7TgiUp84XxHkGy9X3NlhRl9DG
-         jpdahDzMk+whrrNYs6eOI8OukmBhiNdru3rJV1Cqdy9h3oMwMVjVY9ngHiyhIk4OBaWx
-         JT1w==
+        Sun, 10 Nov 2019 15:58:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573419496;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=1qTjdfC8ezIAZIrpn04RQSW87KvIrvGlilpBXh6ye9k=;
+        b=C3ILoU5RtTqtP+qBL8g+mt+JKek3bqeKNQ2PF/CoPjVUB6pGDvflo7aSHSMhVBqtz7+Z1g
+        cm9jccOlkUIYs/4QkyHRWHrajc/fuMqrvagjNY0imGzCmD8PfRoQvi95prC10NQl1IkPK6
+        Z6KFZBRAfzv/qRvHQAezA8ZNYDrEMXg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-coam3oU4NVqku1dfQG1Njg-1; Sun, 10 Nov 2019 15:58:15 -0500
+Received: by mail-wr1-f69.google.com with SMTP id k15so1064259wrp.22
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 12:58:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ho3Z9+dyLzWgXFFV/oKnRZdWGk0Oq6P4ftGFLTY36fk=;
-        b=dCMs6Nrv1/XeCyRETjn0s+m1+slSW5F0480J2F/+n9MogdwacEHLZOp3CUwt3glpme
-         uDxq9JF7dT3UraH6hgjyFOqbwFEQaXPaCGSoExWX/f6RF3zKdFG5xbyCycInUY7xPvTH
-         MrrL5K2o1djsFQ1SyAH75yOfSjAnGMqscOvh7U3Md0YbVXnVYnTtysxGpX4pzGM0sdLu
-         2nsRh0OOFyrCe5IYpZh7POo57HNzug7yTrEu7SNyCKF0l30Jcd2xM5nFjT5mx1HHGSaE
-         jm3GqulmGvyS973gS+m7gO/Tf/qX4Ox/k8gyYMwT8QCJz7KdOXexbHd0Obguu90oFsvA
-         U7ng==
-X-Gm-Message-State: APjAAAU8BaEjemagiAfnuCH5dV2umM1t6Lff3xIHIopezNr6ESWzpoCn
-        r69TY298BlRvMw/YVpNxw3M=
-X-Google-Smtp-Source: APXvYqw3rMvT05YoHWr8om5lqboqsyooLcA1Hi/VhjdXakI/E46jsX1SaKXwv/0Pd07CMPe02/xwxA==
-X-Received: by 2002:adf:9ec7:: with SMTP id b7mr18162618wrf.221.1573419071748;
-        Sun, 10 Nov 2019 12:51:11 -0800 (PST)
-Received: from ziggy.stardust ([95.169.226.39])
-        by smtp.gmail.com with ESMTPSA id g5sm13851536wma.43.2019.11.10.12.51.10
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7F8iE9QzmCtoPp4QzWe8QlpBFqJv960okC23ay4RuRU=;
+        b=f8b/lracZsk7onm/m3UJf900u/sCg1A5NDLztohC/TXrP54VSduSjYUiCdshplXCol
+         ZX+NpwSYVFmU35H6fCfhBMFj5RC4u6nV80lum0k6U422PcRugydb6Fr+GIKkOyw6ZNiA
+         +KnrC8nG14rn57XAZfPCvwx2Gvq9khOSJUTIgW4h+uqmyB57nf+urNvBCaqZi73mhhTG
+         AbEhUYQjt0wPsjAk4MDyeyTHBkckFlLksWB6oBAT/B5SrqHJY51/EbItpsjEidi3odwL
+         JmpTZE+wWK2MhqxpArL1vwhm6RMVBZVy/XliYZsoPwkem/4U38OypzhW7m3squrHdkZb
+         hnbw==
+X-Gm-Message-State: APjAAAVdctnxUxcmedVnDEqydAVjaqeENd+teIevYo49O1tezv9+8VB9
+        LoinirMOzLJioEuXESQikvkG3AXHS6pQGhumuw/3a3BECm503u99lU/78oDOwDN6miLYx3JohOY
+        2B5Pq9zt6pgsrR5Y/4drWU8TN
+X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr18345175wmg.93.1573419494262;
+        Sun, 10 Nov 2019 12:58:14 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz5Shc4FEqXb6AMBAG6avRltInuQ7VAj50rA6or0wKrTsT41F9rt48W7L7rXTaeYs4BbD8jNQ==
+X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr18345162wmg.93.1573419493959;
+        Sun, 10 Nov 2019 12:58:13 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:e8cd:9f0f:a5dc:7ad5? ([2001:b07:6468:f312:e8cd:9f0f:a5dc:7ad5])
+        by smtp.gmail.com with ESMTPSA id 76sm18841698wma.0.2019.11.10.12.58.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 12:51:10 -0800 (PST)
-Subject: Re: [RESEND, PATCH 1/1] arm: dts: mediatek: add mt7629 pwm support
-To:     Sam Shih <sam.shih@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1571751001-28588-1-git-send-email-sam.shih@mediatek.com>
- <1571751001-28588-2-git-send-email-sam.shih@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- r2JwH1CJjrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <31fddc2b-65c7-02e8-dca2-b5d6dc050f87@gmail.com>
-Date:   Sun, 10 Nov 2019 21:51:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sun, 10 Nov 2019 12:58:13 -0800 (PST)
+Subject: Re: "statsfs" API design
+To:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20191109184441.GA5092@avx2> <20191110091435.GC1435668@kroah.com>
+ <20191110153424.GA5141@avx2>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <9fe3a096-20b9-979a-d4d7-48a37b059dff@redhat.com>
+Date:   Sun, 10 Nov 2019 21:58:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1571751001-28588-2-git-send-email-sam.shih@mediatek.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191110153424.GA5141@avx2>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: coam3oU4NVqku1dfQG1Njg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/11/19 16:34, Alexey Dobriyan wrote:
+> In the other direction: describe every field of /proc/*/stat file
+> without looking to the manpage:
+>=20
+> $ cat /proc/self/stat
+> 5349 (cat) R 5342 5349 5342 34826 5349 4210688 91 0 0 0 0 0 0 0 20 0 1 0 =
+864988 9183232 184 18446744073709551615 94352028622848 94352028651936 14073=
+3810522864 0 0 0 0 0 0 0 0 0 17 5 0 0 0 0 0 94352030751824 94352030753376 9=
+4352060055552 140733810527527 140733810527547 140733810527547 1407338105323=
+35 0
 
+That's why this is not what I am proposing, and also not what Greg has
+mentioned.
 
-On 22/10/2019 15:30, Sam Shih wrote:
-> This adds pwm support for MT7629.
-> Used:
-> https://patchwork.kernel.org/patch/11160851/
-> 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> ---
->  arch/arm/boot/dts/mt7629.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> index 9608bc2ccb3f..24375fc5f936 100644
-> --- a/arch/arm/boot/dts/mt7629.dtsi
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -241,6 +241,21 @@
->  			status = "disabled";
->  		};
->  
-> +		pwm: pwm@11006000 {
-> +			compatible = "mediatek,mt7629-pwm";
-> +			reg = <0x11006000 0x1000>;
-> +			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-> +				 <&pericfg CLK_PERI_PWM_PD>,
-> +				 <&pericfg CLK_PERI_PWM1_PD>;
-> +			clock-names = "top", "main", "pwm1";
-> +			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-> +			assigned-clock-parents =
-> +					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-> +			num-pwms = <1>;
+> and realise that everything alse is a waste of electricity, namely,
+>=20
+> * pathname allocation (4KB)
+> * VFS '/' split, lookups (/sys/kernel/.../" means 3+ lookups
+> * 192 bytes for each dentry
+> * 550+ bytes per inode
+> * 3 system calls per act of gathering statistics
+> =09userspace will be written in the most stupid way possible
+> =09without openat() etc
+> * userspace snprintf() for pathname
+> * kernel space snprintf() somewhere
+> * multiple copying inside kernel (vsnprintf.c)
+> * general inability for userspace to estimate the amount of data in decim=
+al
+>   (nobody does that), so nicely sized buffers of 4K or 1K or 16KB (bash)
+>   will be used which is a waste.
 
-num-pwms is not defined. Did you mean pwm-cells?
+Yeah, all of this is true but I know how much I use
+/sys/kernel/debug/kvm so backwards-compatibility with it is certainly a
+requirement for stats.  Good thing, having a high-level stats API lets
+you also design something that targets different usecases than just
+quick "cat" or "watch".  The somewhat wasteful sysfs interface to
+statsfs can even be hidden behind a kconfig symbol once there is an
+alternative.  It also makes it possible to create inodes on demand if
+someone is so inclined.
 
-Regards,
-Matthias
+So the good thing is that despite the disagreements, this can be
+considered an argument in favor of statsfs, and we agree on that. :)
 
-> +			status = "disabled";
-> +		};
-> +
->  		i2c: i2c@11007000 {
->  			compatible = "mediatek,mt7629-i2c",
->  				     "mediatek,mt2712-i2c";
-> 
+Thanks,
+
+Paolo
+
