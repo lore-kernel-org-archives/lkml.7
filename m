@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8837BC17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801BAC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFE021D7B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C34215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353843;
-	bh=mGjPsR67NsH8i4TW2u6yaW2jdVFRvrQWuhjdjIqqxIk=;
+	s=default; t=1573353859;
+	bh=bM9cRdbOq7bN8J7dnv5tjh1Vva7808rZD3E11I9ZnJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+3rVGG+tDzKPAagEA9AXyBL1rRkpgG3R1KriOHTHLE4GYtfHfc3z924z75TsjLDS
-	 pFHimYhxi1vblDmmTVGOLC38+IXWqwMNeokiI1OGAVuznefRZ7OIn1j9O21bJwlr9p
-	 3Nt/7cEWtZfcqnRJ6ZjNdfHMmHBruIU7fG3XiA2k=
+	b=UBIVKSpiQtVfsM9UNP0yMmBlWf+yFmjfGZZ570mdz4Ht62G4dcU/Ia57COIj8nG4G
+	 l38yed8s6/hlJoWWlLyjk1QUVK2jSL3AuimQ7sAof4SamKNVwESKk9FZgpwW/9xejy
+	 aSsVaSqK3Bg8OpTuewssmDkOPpYG4lVoHy6FgYfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbfKJCoC (ORCPT
+        id S1728532AbfKJCoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727290AbfKJCny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:54 -0500
+        id S1727032AbfKJCoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41CE2215EA;
-        Sun, 10 Nov 2019 02:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46C7C222CD;
+        Sun, 10 Nov 2019 02:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353834;
-        bh=mGjPsR67NsH8i4TW2u6yaW2jdVFRvrQWuhjdjIqqxIk=;
+        s=default; t=1573353845;
+        bh=bM9cRdbOq7bN8J7dnv5tjh1Vva7808rZD3E11I9ZnJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZTO9vBME27ucsKQ5qovG6cH4YJcgcoqId2QdDfKhMhghZW+qp7x4ckNAaKxo52mwk
-         iHyNEZfR00c63adv2F0+DFfh9vlyH0wxMY/cdUnKr8EDoCLqkD7wazrWgwqjXEGjUP
-         O2TUscUajaN7gwGIYMZnK4F3qVxTALq0E8Go/UHE=
+        b=17aQd07OtDYdVJoySJfKD/nPUVXadvvE7ObqL119f+QpXN/9JMgPjydJpeNEI6Xks
+         NGuye8zx8lOBkWoje30pE4oCcmXIcWZ8PCZJHOBnKlSax2wstJkLujm4HPKwdEduTh
+         46MCzb8JfOj1uaul5DDj+XTDGz50OdpD4FvFsTOk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Gage Eads <gage.eads@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 125/191] vfio/pci: Mask buggy SR-IOV VF INTx support
-Date:   Sat,  9 Nov 2019 21:39:07 -0500
-Message-Id: <20191110024013.29782-125-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 133/191] efi: honour memory reservations passed via a linux specific config table
+Date:   Sat,  9 Nov 2019 21:39:15 -0500
+Message-Id: <20191110024013.29782-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,100 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit db04264fe9bc0f2b62e036629f9afb530324b693 ]
+[ Upstream commit 71e0940d52e107748b270213a01d3b1546657d74 ]
 
-The SR-IOV spec requires that VFs must report zero for the INTx pin
-register as VFs are precluded from INTx support.  It's much easier for
-the host kernel to understand whether a device is a VF and therefore
-whether a non-zero pin register value is bogus than it is to do the
-same in userspace.  Override the INTx count for such devices and
-virtualize the pin register to provide a consistent view of the device
-to the user.
+In order to allow the OS to reserve memory persistently across a
+kexec, introduce a Linux-specific UEFI configuration table that
+points to the head of a linked list in memory, allowing each kernel
+to add list items describing memory regions that the next kernel
+should treat as reserved.
 
-As this is clearly a spec violation, warn about it to support hardware
-validation, but also provide a known whitelist as it doesn't do much
-good to continue complaining if the hardware vendor doesn't plan to
-fix it.
+This is useful, e.g., for GICv3 based ARM systems that cannot disable
+DMA access to the LPI tables, forcing them to reuse the same memory
+region again after a kexec reboot.
 
-Known devices with this issue: 8086:270c
-
-Tested-by: Gage Eads <gage.eads@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Tested-by: Jeremy Linton <jeremy.linton@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c        |  8 ++++++--
- drivers/vfio/pci/vfio_pci_config.c | 27 +++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/efi.c | 27 ++++++++++++++++++++++++++-
+ include/linux/efi.h        |  8 ++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index a92c2868d9021..0a6eb53e79fbf 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -443,10 +443,14 @@ static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
- {
- 	if (irq_type == VFIO_PCI_INTX_IRQ_INDEX) {
- 		u8 pin;
-+
-+		if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) ||
-+		    vdev->nointx || vdev->pdev->is_virtfn)
-+			return 0;
-+
- 		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
--		if (IS_ENABLED(CONFIG_VFIO_PCI_INTX) && !vdev->nointx && pin)
--			return 1;
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index d54fca902e64f..f265309859781 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -52,7 +52,8 @@ struct efi __read_mostly efi = {
+ 	.properties_table	= EFI_INVALID_TABLE_ADDR,
+ 	.mem_attr_table		= EFI_INVALID_TABLE_ADDR,
+ 	.rng_seed		= EFI_INVALID_TABLE_ADDR,
+-	.tpm_log		= EFI_INVALID_TABLE_ADDR
++	.tpm_log		= EFI_INVALID_TABLE_ADDR,
++	.mem_reserve		= EFI_INVALID_TABLE_ADDR,
+ };
+ EXPORT_SYMBOL(efi);
  
-+		return pin ? 1 : 0;
- 	} else if (irq_type == VFIO_PCI_MSI_IRQ_INDEX) {
- 		u8 pos;
- 		u16 flags;
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 62023b4a373b4..423ea1f98441a 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1611,6 +1611,15 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
+@@ -487,6 +488,7 @@ static __initdata efi_config_table_type_t common_tables[] = {
+ 	{EFI_MEMORY_ATTRIBUTES_TABLE_GUID, "MEMATTR", &efi.mem_attr_table},
+ 	{LINUX_EFI_RANDOM_SEED_TABLE_GUID, "RNG", &efi.rng_seed},
+ 	{LINUX_EFI_TPM_EVENT_LOG_GUID, "TPMEventLog", &efi.tpm_log},
++	{LINUX_EFI_MEMRESERVE_TABLE_GUID, "MEMRESERVE", &efi.mem_reserve},
+ 	{NULL_GUID, NULL, NULL},
+ };
+ 
+@@ -594,6 +596,29 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 		early_memunmap(tbl, sizeof(*tbl));
+ 	}
+ 
++	if (efi.mem_reserve != EFI_INVALID_TABLE_ADDR) {
++		unsigned long prsv = efi.mem_reserve;
++
++		while (prsv) {
++			struct linux_efi_memreserve *rsv;
++
++			/* reserve the entry itself */
++			memblock_reserve(prsv, sizeof(*rsv));
++
++			rsv = early_memremap(prsv, sizeof(*rsv));
++			if (rsv == NULL) {
++				pr_err("Could not map UEFI memreserve entry!\n");
++				return -ENOMEM;
++			}
++
++			if (rsv->size)
++				memblock_reserve(rsv->base, rsv->size);
++
++			prsv = rsv->next;
++			early_memunmap(rsv, sizeof(*rsv));
++		}
++	}
++
  	return 0;
  }
  
-+/*
-+ * Nag about hardware bugs, hopefully to have vendors fix them, but at least
-+ * to collect a list of dependencies for the VF INTx pin quirk below.
-+ */
-+static const struct pci_device_id known_bogus_vf_intx_pin[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x270c) },
-+	{}
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index cc3391796c0b8..f43fc61fbe2c9 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -672,6 +672,7 @@ void efi_native_runtime_setup(void);
+ #define LINUX_EFI_LOADER_ENTRY_GUID		EFI_GUID(0x4a67b082, 0x0a4c, 0x41cf,  0xb6, 0xc7, 0x44, 0x0b, 0x29, 0xbb, 0x8c, 0x4f)
+ #define LINUX_EFI_RANDOM_SEED_TABLE_GUID	EFI_GUID(0x1ce1e5bc, 0x7ceb, 0x42f2,  0x81, 0xe5, 0x8a, 0xad, 0xf1, 0x80, 0xf5, 0x7b)
+ #define LINUX_EFI_TPM_EVENT_LOG_GUID		EFI_GUID(0xb7799cb0, 0xeca2, 0x4943,  0x96, 0x67, 0x1f, 0xae, 0x07, 0xb7, 0x47, 0xfa)
++#define LINUX_EFI_MEMRESERVE_TABLE_GUID		EFI_GUID(0x888eb0c6, 0x8ede, 0x4ff5,  0xa8, 0xf0, 0x9a, 0xee, 0x5c, 0xb9, 0x77, 0xc2)
+ 
+ typedef struct {
+ 	efi_guid_t guid;
+@@ -957,6 +958,7 @@ extern struct efi {
+ 	unsigned long mem_attr_table;	/* memory attributes table */
+ 	unsigned long rng_seed;		/* UEFI firmware random seed */
+ 	unsigned long tpm_log;		/* TPM2 Event Log table */
++	unsigned long mem_reserve;	/* Linux EFI memreserve table */
+ 	efi_get_time_t *get_time;
+ 	efi_set_time_t *set_time;
+ 	efi_get_wakeup_time_t *get_wakeup_time;
+@@ -1667,4 +1669,10 @@ extern int efi_tpm_eventlog_init(void);
+ /* Workqueue to queue EFI Runtime Services */
+ extern struct workqueue_struct *efi_rts_wq;
+ 
++struct linux_efi_memreserve {
++	phys_addr_t	next;
++	phys_addr_t	base;
++	phys_addr_t	size;
 +};
 +
- /*
-  * For each device we allocate a pci_config_map that indicates the
-  * capability occupying each dword and thus the struct perm_bits we
-@@ -1676,6 +1685,24 @@ int vfio_config_init(struct vfio_pci_device *vdev)
- 	if (pdev->is_virtfn) {
- 		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
- 		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
-+
-+		/*
-+		 * Per SR-IOV spec rev 1.1, 3.4.1.18 the interrupt pin register
-+		 * does not apply to VFs and VFs must implement this register
-+		 * as read-only with value zero.  Userspace is not readily able
-+		 * to identify whether a device is a VF and thus that the pin
-+		 * definition on the device is bogus should it violate this
-+		 * requirement.  We already virtualize the pin register for
-+		 * other purposes, so we simply need to replace the bogus value
-+		 * and consider VFs when we determine INTx IRQ count.
-+		 */
-+		if (vconfig[PCI_INTERRUPT_PIN] &&
-+		    !pci_match_id(known_bogus_vf_intx_pin, pdev))
-+			pci_warn(pdev,
-+				 "Hardware bug: VF reports bogus INTx pin %d\n",
-+				 vconfig[PCI_INTERRUPT_PIN]);
-+
-+		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
- 	}
- 
- 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
+ #endif /* _LINUX_EFI_H */
 -- 
 2.20.1
 
