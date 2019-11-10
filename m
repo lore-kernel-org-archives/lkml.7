@@ -2,93 +2,82 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50613C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A39C17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C33A2085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D9120818
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:51:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="q2Ozd2zV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfKJOqM (ORCPT
+        id S1726877AbfKJOvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 09:46:12 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37061 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726402AbfKJOqM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 09:46:12 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@misterjones.org>)
-        id 1iToTf-0002oJ-JP; Sun, 10 Nov 2019 15:46:07 +0100
-Date:   Sun, 10 Nov 2019 14:46:06 +0000
-From:   Marc Zyngier <maz@misterjones.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, lorenzo.pieralisi@arm.com,
-        Andrew.Murray@arm.com, yuzenghui@huawei.com,
-        Heyi Guo <guoheyi@huawei.com>
-Subject: Re: [PATCH v2 07/11] irqchip/gic-v3-its: Add its_vlpi_map helpers
-Message-ID: <20191110144606.61a1f537@why>
-In-Reply-To: <20191108165805.3071-8-maz@kernel.org>
-References: <20191108165805.3071-1-maz@kernel.org>
-        <20191108165805.3071-8-maz@kernel.org>
-Organization: Metropolis
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 10 Nov 2019 09:51:11 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:54378 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726402AbfKJOvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 09:51:11 -0500
+Received: from zn.tnic (p200300EC2F26BB00D42A27CD7BFC583C.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:bb00:d42a:27cd:7bfc:583c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D00381EC0982;
+        Sun, 10 Nov 2019 15:51:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573397470;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=xO0lB4uGxIXMoeB+wg7ZV0Q6T8U7kfsLIan1I/NRv50=;
+        b=q2Ozd2zVPLt3azwaOD4yqZ8j1dPFxql7nj5emegrt0Ps21bLyGoceMKua1z8WwjZ0grcts
+        C8dayUH4fLgsvs/Zq5zjvpYomqqRTXv1RYQnt7RGc45h+bpsJbGl97JOs5VUQjHrjdb9Vu
+        YumeyboKjjf8V9tP8uaG2dd1XYNO2dM=
+Date:   Sun, 10 Nov 2019 15:51:05 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/20] EDAC: Rework edac_mc and ghes drivers
+Message-ID: <20191110145104.GB12627@zn.tnic>
+References: <20191106093239.25517-1-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com, guoheyi@huawei.com
-X-SA-Exim-Mail-From: maz@misterjones.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191106093239.25517-1-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 Nov 2019 16:58:01 +0000
-Marc Zyngier <maz@kernel.org> wrote:
+On Wed, Nov 06, 2019 at 09:32:58AM +0000, Robert Richter wrote:
+> Robert Richter (20):
+>   EDAC: Replace EDAC_DIMM_PTR() macro with edac_get_dimm() function
+>   EDAC: Remove EDAC_DIMM_OFF() macro
+>   EDAC: Introduce mci_for_each_dimm() iterator
+>   EDAC, mc: Do not BUG_ON() in edac_mc_alloc()
+>   EDAC, mc: Remove needless zero string termination
+>   EDAC, mc: Reduce indentation level in edac_mc_handle_error()
+>   EDAC, mc: Rename iterator variable to idx
+>   EDAC: Remove misleading comment in struct edac_raw_error_desc
+>   EDAC, ghes: Use standard kernel macros for page calculations
+>   EDAC, ghes: Fix grain calculation
+>   EDAC, ghes: Remove intermediate buffer pvt->detail_location
+>   EDAC, ghes: Unify trace_mc_event() code with edac_mc driver
+>   EDAC, Documentation: Describe CPER module definition and DIMM ranks
 
-> Obtaining the mapping information for a VLPI is something quite common,
-> and the GICv4.1 code is going to make even more use of it. Expose it as
-> a separate set of helpers.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-> Link: https://lore.kernel.org/r/20191027144234.8395-8-maz@kernel.org
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 47 ++++++++++++++++++++++----------
->  1 file changed, 32 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 94f13d6b8400..cad8fd18bab7 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -207,6 +207,15 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
->  	return its->collections + its_dev->event_map.col_map[event];
->  }
->  
-> +static struct its_vlpi_map *dev_event_to_vlpi_map(struct its_device *its_dev,
-> +					       u32 event)
-> +{
-> +	if (WARN_ON_ONCE(event >= its_dev->event_map.nr_lpis))
-> +		return NULL;
-> +
-> +	return its_dev->event_map.vlpi_maps[event];
+Queued up to here.
 
-As pointed out by our dear friend the 01 bot, the above line lacks a
-'&'. It happened to work because this was later reworked, but this
-patch on its own breaks the build.
+Thx.
 
-I've now fixed it, and verified that the whole series correctly bisects.
-
-Thanks,
-
-	M.
 -- 
-Without deviation from the norm, progress is not possible.
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
