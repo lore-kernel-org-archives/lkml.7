@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318F7C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4BDC17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8221215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A42215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355264;
-	bh=kiO9wqUjASzmMINbaT3sESNlTQfAAWLNzXtu9pP1MHU=;
+	s=default; t=1573355271;
+	bh=J7af8Qtw38Ew9P8n51YmBy+yIcLcxX26TQGIZ7m712s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=caRH/ZehXAtGvV38YIFlGGfvFRCyI/93CRyB18MZFfHNvkBPNplrpNZ7dORA+SINI
-	 vXBCnSIRrOAiMjOqRtBP+vICvwghQn8UyodgZmgTG+7QrLT9P/kgLqt7gAlcAc9ufm
-	 2ncZkjdn8vzMi192IlASeipELtpGMdm1WlfsbzE0=
+	b=CqWPi1b9f0HH/5poL56xua2plyHzxMmWKzI5r79yEHt1CwZELSL7bF4g86z9W2qYS
+	 6ZsTpKvnlNuNJl+j88T25i+Ajc7WSgbJVKFnfBS4s5aUA1UM+OFcTYsIVMeJ4RHTfk
+	 ZxswL+v5mGFCPqfs9aNfgs8cV0nKc0JgqKuL1wRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfKJDHm (ORCPT
+        id S1727315AbfKJCpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:07:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46192 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfKJCpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:14 -0500
+        id S1728592AbfKJCof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F10D21655;
-        Sun, 10 Nov 2019 02:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F9D421D82;
+        Sun, 10 Nov 2019 02:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353914;
-        bh=kiO9wqUjASzmMINbaT3sESNlTQfAAWLNzXtu9pP1MHU=;
+        s=default; t=1573353874;
+        bh=J7af8Qtw38Ew9P8n51YmBy+yIcLcxX26TQGIZ7m712s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RfCE9Nq2579PBZVBw2Pf7mufTL418dV0RLUuM4TkOq9wRxOzpNgEKEdWf3VdlSjHm
-         Hr2H+6kJCfX+3Wym9TnJC4sBC+Y0Ss6YjlhOn2Y90Mu8/s88mwymsLhOdMKGl0ivBG
-         fgKEjZKFjAbXHemyHYyoYvYTH1cIJV6jefr6jW7M=
+        b=VteY9gRcnJY2TuewLGeTHaOEOURGNqqjxMSNrn0zcRU03ZLPzWSMQMXZ1JIYbKzmj
+         P7huH+GL+8Br/N6J/wtHNsvBff3L3bPSKbp/VbUzlH3N0vHJ4QTulK+zuFvros8Ngd
+         5CZqkPJKkm/Tb/xxrBY4HioMNlKJzjkCiJT8HL0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Brijesh Singh <brijeshkumar.singh@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 177/191] arm64: dts: amd: Fix SPI bus warnings
-Date:   Sat,  9 Nov 2019 21:39:59 -0500
-Message-Id: <20191110024013.29782-177-sashal@kernel.org>
+Cc:     Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 153/191] Bluetooth: hci_serdev: clear HCI_UART_PROTO_READY to avoid closing proto races
+Date:   Sat,  9 Nov 2019 21:39:35 -0500
+Message-Id: <20191110024013.29782-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -62,48 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
-[ Upstream commit e9f0878c4b2004ac19581274c1ae4c61ae3ca70e ]
+[ Upstream commit 7cf7846d27bfc9731e449857db3eec5e0e9701ba ]
 
-dtc has new checks for SPI buses. Fix the warnings in node names.
+Clearing HCI_UART_PROTO_READY will avoid usage of proto function pointers
+before running the proto close function pointer. There is chance of kernel
+crash, due to usage of non proto close function pointers after proto close.
 
-arch/arm64/boot/dts/amd/amd-overdrive.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-
-Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_serdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index 125f4deb52fe9..b664e7af74eb3 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -107,7 +107,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index aa2543b3c2869..46e20444ba19b 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -368,6 +368,7 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ {
+ 	struct hci_dev *hdev = hu->hdev;
  
--		spi0: ssp@e1020000 {
-+		spi0: spi@e1020000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1020000 0 0x1000>;
-@@ -117,7 +117,7 @@
- 			clock-names = "apb_pclk";
- 		};
++	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 	hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
  
--		spi1: ssp@e1030000 {
-+		spi1: spi@e1030000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1030000 0 0x1000>;
 -- 
 2.20.1
 
