@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D324FC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95521C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9905921655
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A7E214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353740;
-	bh=JimTXPtAbX8YoTT19Gr8WHDW98DSZBe8ND3dur/LtAQ=;
+	s=default; t=1573353743;
+	bh=c8KsAEiMdXpU+ct8AoP47mQ6yVted/wuYpqdIaHF2vo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIvz0ueTKqQes+PBfLs1+hCXgwKiM+F8jVthx0DhcBOjrNWp1L7p0jha9aZYFvfn6
-	 1kc3uepl61S5UMFpF7sTZQhjFov2ZRHmle1XBU2+iD7EzEhztg9Z0cMkChKF4cJAYt
-	 SwmqSqhhOLi+MduB00t1kOLhbIz5RLgu7j8LiHQw=
+	b=dqZ3Tk8VrRlEd2cxwB9KP/JeZbrapu2Pz7SgoE6ko4gRbV+mYBkbbA2o1CaiH2ORw
+	 8qbgJzVoih4yKl0krnKqKGBb74WgZrBgAypDeOIlueq+upUQZiIrSuLJJPCiKkCr1v
+	 HjEyi3S7+L6WabAh+vRaTuPaT3wEdDFyBkryEDcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfKJCmT (ORCPT
+        id S1727843AbfKJCmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37770 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbfKJCmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:15 -0500
+        id S1727817AbfKJCmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE2CE214E0;
-        Sun, 10 Nov 2019 02:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D4C0214E0;
+        Sun, 10 Nov 2019 02:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353735;
-        bh=JimTXPtAbX8YoTT19Gr8WHDW98DSZBe8ND3dur/LtAQ=;
+        s=default; t=1573353738;
+        bh=c8KsAEiMdXpU+ct8AoP47mQ6yVted/wuYpqdIaHF2vo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOK1QRdq1T6pP3u8DQiNuaLLupupY6uSJRwtl8Ac2ofZSwkKAnxG4s4TaKzvWsELJ
-         aUbgWoLu9t3mQjgSlEkt0nsvdmV1rPvvbtCY7NhQGVU1bEXCGOFQeUJYejpDifDsOK
-         CyXXTiM2lcVcM07w+0v/iquzJWbbd4pV3UwMkwxo=
+        b=AVLDOoxsba7wiX3JtfjGwpu677bkq75X0dup6/NYfOuiS6XIUtrSeoDrXOx0+Xikp
+         IYea8kN9gRfBKwtzmG6E0yCarVjFMyQHHnHBg1KfdCmkswJAESni8rbZcOaavhtohP
+         APVk3UCoBcN3ZVQiO4Ngy+NMJe6em81GBQEO0eY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 058/191] brcmfmac: increase buffer for obtaining firmware capabilities
-Date:   Sat,  9 Nov 2019 21:38:00 -0500
-Message-Id: <20191110024013.29782-58-sashal@kernel.org>
+Cc:     Petr Machata <petrm@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 060/191] mlxsw: spectrum: Init shaper for TCs 8..15
+Date:   Sat,  9 Nov 2019 21:38:02 -0500
+Message-Id: <20191110024013.29782-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -65,38 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 59c2a30d36c8ae430d26a902c4c9665ea33ccee5 ]
+[ Upstream commit a9f36656b519a9a21309793c306941a3cd0eeb8f ]
 
-When obtaining the firmware capability a buffer is provided of 512
-bytes. However, if all features in firmware are supported the buffer
-needs to be 565 bytes as otherwise truncated information is retrieved
-from firmware. Increasing the buffer to 768 bytes on stack.
+With introduction of MC-aware mode to mlxsw, it became necessary to
+configure TCs above 7 as well. There is now code in mlxsw to disable ETS
+for these higher classes, but disablement of max shaper was neglected.
 
-Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
-Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Reviewed-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+By default, max shaper is currently disabled to begin with, so the
+problem is just cosmetic. However, for symmetry, do like we do for ETS
+configuration, and call mlxsw_sp_port_ets_maxrate_set() for both TC i
+and i + 8.
+
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-index 8347da632a5b0..4c5a3995dc352 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-@@ -178,7 +178,7 @@ static void brcmf_feat_iovar_data_set(struct brcmf_if *ifp,
- 	ifp->fwil_fwerr = false;
- }
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index ccd9aca281b37..1c170a0fd2cc9 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2815,6 +2815,13 @@ static int mlxsw_sp_port_ets_init(struct mlxsw_sp_port *mlxsw_sp_port)
+ 						    MLXSW_REG_QEEC_MAS_DIS);
+ 		if (err)
+ 			return err;
++
++		err = mlxsw_sp_port_ets_maxrate_set(mlxsw_sp_port,
++						    MLXSW_REG_QEEC_HIERARCY_TC,
++						    i + 8, i,
++						    MLXSW_REG_QEEC_MAS_DIS);
++		if (err)
++			return err;
+ 	}
  
--#define MAX_CAPS_BUFFER_SIZE	512
-+#define MAX_CAPS_BUFFER_SIZE	768
- static void brcmf_feat_firmware_capabilities(struct brcmf_if *ifp)
- {
- 	char caps[MAX_CAPS_BUFFER_SIZE];
+ 	/* Map all priorities to traffic class 0. */
 -- 
 2.20.1
 
