@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BF9C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6AEC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDBF22790
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A92C22790
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354287;
-	bh=zwiB0jeC03ZgwzHt91IsT3P3zsTUgNluiRma6fPjWNA=;
+	s=default; t=1573354292;
+	bh=UTXw+8OAS8XcJ+yXQiEfH5etCMRkA8k0yFtoVe6scbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zSnR1+tg1Mxrr/HhhF7I7rKFHj/MyD4XfNBahso5zNq5H8sj1+kZxrZYzIoThjXoK
-	 ju4CZD1lp/o1kKVcli8psxcCxdOwzH1cphVsmA4FffSL7jfnIbdtRcAPNQwaTl+hRh
-	 5h5wUkEom+YUZmHUHDzQgbIAJqE49bw08Ox34Mow=
+	b=r9Yk7ncgk7tqR8ztpayMTk6KO/IJITYsr9YTrWf6RVxACA8VU6wlhbYGQXtV34KD9
+	 LHQWY9EnMaGOE8j8NdnYQ31G8Gm4dEk8ar3TJZwyqR4BALUGWcQ8bChzhCp+qR5hfs
+	 +tIIvfrUEiKzeB8q/FeOczvVNFUTj+Yy7mzQfg24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbfKJCvZ (ORCPT
+        id S1730010AbfKJCva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35420 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:51:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729895AbfKJCvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:51:08 -0500
+        id S1728484AbfKJCvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:51:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E826B22795;
-        Sun, 10 Nov 2019 02:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DEE122583;
+        Sun, 10 Nov 2019 02:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354267;
-        bh=zwiB0jeC03ZgwzHt91IsT3P3zsTUgNluiRma6fPjWNA=;
+        s=default; t=1573354276;
+        bh=UTXw+8OAS8XcJ+yXQiEfH5etCMRkA8k0yFtoVe6scbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7FpubvNag9L0wdlsI0tUtLtxNGgJTSnOVPOzXQz55ATaeq9UwoZVu9UEU9mprHUd
-         sxTNBFtFWh+iGLL+FoNCzGUm1MlEfP6KaJe6aWxvF85M3m8NE+R+2MF/K/L/GwqLUM
-         Y2VpjQlPOXOGPUAc8vWr5Vx1nzPTybxZ0x/HMJIU=
+        b=W+M37v0nndiOa3bTZNqULTyyhu9Ynpb7oIqd404iyE8nZT6Cq//88CVEd4Z2m/wjd
+         WEYv6dyDzLW9EV+dC99h1nYlwocY6ljf0H9WZHmOuaDeaLj4fBJm0cGllJEL+gjGXw
+         sj7nXZ+R7kkqvRFq96T4MwBUVliUdt4ds6hTqrLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 16/40] ARM: dts: ux500: Correct SCU unit address
-Date:   Sat,  9 Nov 2019 21:50:08 -0500
-Message-Id: <20191110025032.827-16-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 21/40] net: micrel: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:50:13 -0500
+Message-Id: <20191110025032.827-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
@@ -59,33 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2f217d24ecaec2012e628d21e244eef0608656a4 ]
+[ Upstream commit 2b49117a5abee8478b0470cba46ac74f93b4a479 ]
 
-The unit address of the Cortex-A9 SCU device node contains one zero too
-many.  Remove it.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/micrel/ks8695net.c  | 2 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 50f5e9d092038..86bd320057a38 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -186,7 +186,7 @@
- 			      <0xa0410100 0x100>;
- 		};
+diff --git a/drivers/net/ethernet/micrel/ks8695net.c b/drivers/net/ethernet/micrel/ks8695net.c
+index a8522d8af95d3..2126286b72e9b 100644
+--- a/drivers/net/ethernet/micrel/ks8695net.c
++++ b/drivers/net/ethernet/micrel/ks8695net.c
+@@ -1156,7 +1156,7 @@ ks8695_timeout(struct net_device *ndev)
+  *	sk_buff and adds it to the TX ring. It then kicks the TX DMA
+  *	engine to ensure transmission begins.
+  */
+-static int
++static netdev_tx_t
+ ks8695_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct ks8695_priv *ksp = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 2fc5cd56c0a84..8dc1f0277117d 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -1020,9 +1020,9 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
+  * spin_lock_irqsave is required because tx and rx should be mutual exclusive.
+  * So while tx is in-progress, prevent IRQ interrupt from happenning.
+  */
+-static int ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+-	int retv = NETDEV_TX_OK;
++	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
  
--		scu@a04100000 {
-+		scu@a0410000 {
- 			compatible = "arm,cortex-a9-scu";
- 			reg = <0xa0410000 0x100>;
- 		};
+ 	disable_irq(netdev->irq);
 -- 
 2.20.1
 
