@@ -2,114 +2,192 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B9CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BF2C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B358C2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573425335;
-	bh=zSPqudhiPKJw565M1oGzVTfCFsnPjdMatxo8OjKlnCM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ozlEVlaN4iLfa8VGfh8/N66Cw6hPFzZFmu4soKnmpW8UEDkz5I8A+LeVKVPtXA0XZ
-	 LT9ImRZCXrMTqQzVsVIaW4Vcs15zCC51kUA8294ZwnAyh9o0D0RWsOrV2r+R47LN1u
-	 SGi8bH8Dae+QdMLOiX/qEP5PEpt7FyMgL0VL8X7k=
+	by mail.kernel.org (Postfix) with ESMTP id 53FE1206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfKJWfe (ORCPT
+        id S1726754AbfKJWyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 17:35:34 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43898 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfKJWfe (ORCPT
+        Sun, 10 Nov 2019 17:54:09 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:41214 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfKJWyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 17:35:34 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y23so11663660ljh.10
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 14:35:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+NBVMvAeSjvjjX1c0c+htPmEjTBHiy+YFhFok5r1cTA=;
-        b=MM8GecQS9398VBncpNfj2q30ym0v7Wd61Hikdfm/vCnzORHKlwKdao3VidtKG5V5T4
-         J+el26ZulK3mESVoyXcPjV8Qd3QdsikjbXc+H3+u1R2+Hc/HUkIytR0o+SIDGXmnJ3rl
-         veUNtlt/IAoEx8JGzCoA131B1WO66X6wpkocI=
+        Sun, 10 Nov 2019 17:54:09 -0500
+Received: by mail-io1-f69.google.com with SMTP id v5so12016427iot.8
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 14:54:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+NBVMvAeSjvjjX1c0c+htPmEjTBHiy+YFhFok5r1cTA=;
-        b=TbZ9FDCrs0UvG1+DxUnXPVRP9CwUqpsZlKnr3H1ZEnW3W71bpm8rkeG+qIXVREQRdk
-         61tAjWR1DWZQRRs8iCBE0XFz1zX0vX2AI0+U3uenuhM9nxVxpVWEUgya5FuJBgJcZnvw
-         HxoQSNI42pUIfX13OG4LE6TxIh4EmnxI5IPO49jdgVlIhcI13Aq4b6a5U9x3sLHtxqtn
-         jSzserYRnEOVEkp7hjr6uAHknlfAsa5JazphXDc8ECjlAQ6ZOwdfOc65QC20LMqkXLcV
-         LGlZOuOKWmfyoer2lqQP8fuT9mzJzC/eNIN7OvxjQmFSsKAkBumywFI1N45/sked+1ez
-         wySA==
-X-Gm-Message-State: APjAAAUr8stCtVmCKdoc1msNmveq15lS0pp5rG/iTuIbRaMpw5kpn3Pl
-        GlKqRtP8RS1kCpp2ddT7nJkqTQwjGdg=
-X-Google-Smtp-Source: APXvYqwHGepIzIn2/ocJSWNiAnX4z7uqNK7eZevLD/40MmT9GJsOl8P8PC2XaBnm3bIVPGZrS341ow==
-X-Received: by 2002:a2e:b4da:: with SMTP id r26mr18157ljm.153.1573425331558;
-        Sun, 10 Nov 2019 14:35:31 -0800 (PST)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id x18sm5896429ljc.39.2019.11.10.14.35.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 14:35:30 -0800 (PST)
-Received: by mail-lj1-f179.google.com with SMTP id n5so11684971ljc.9
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 14:35:29 -0800 (PST)
-X-Received: by 2002:a2e:8809:: with SMTP id x9mr13989546ljh.82.1573425329687;
- Sun, 10 Nov 2019 14:35:29 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=T+hSEXD8Dr0eik6ghANx808yi18vcvBCJAQm5kVWr2s=;
+        b=Vx8cJeYAtSBizcUoTSVXOeDbvflnY3O8orslFnG+WnmnK1gDCifgMlSGxfd9nxn8RD
+         RtzaYU/5hx/YiTMdA8ZWd/yA7jPhYWx/QP0Pmi29SCg6NFNlqCHW9J1cfX+c+ftVfRgV
+         nBLQn+E+s5R+OaGZeBcvnYxIqgyON+JnVLtF8ldS2x/z/gr2jOr4SisnyxzE7wfwFHlW
+         gdgaGV7oPOtI4Bm6992yuGaU98WLL2uj4ue9mVHkSHfkIKAv2ZUH+K7xjLHqYS971hbB
+         ghYMp/1hNW+O/uFVMw4cZMfSYjJW+JzM9ra27MObIP8z0G+a5d/fdt3jwx3P9oaqOM9/
+         OC/w==
+X-Gm-Message-State: APjAAAV+2qMw7/j9cPrkNbZrYrHuq3a5EXUGsGyHYoudWt0bFY7kbb5o
+        hvQnfFGf6rxiKz7k4oCaSBBcFB7RONb79I+8YMOuBTXJHB5z
+X-Google-Smtp-Source: APXvYqw6Ild/vJLjFVysjFa8KW3N9gwbpBvH+mHq0fOB0XgJiWam7/3idPuZp395EjbCe8qidk2Kcx4sitciXP/1LRoWqjEGvHUN
 MIME-Version: 1.0
-References: <157338131323.14789.2179255265964358886.tglx@nanos.tec.linutronix.de>
- <698b03300532f80dfbd30fa35446a33e58ae0c89.camel@perches.com>
-In-Reply-To: <698b03300532f80dfbd30fa35446a33e58ae0c89.camel@perches.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 10 Nov 2019 14:35:13 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiwhMFo6GFUAg3CZJMix4TJo59NBaSDciQxW23RHR8Zbg@mail.gmail.com>
-Message-ID: <CAHk-=wiwhMFo6GFUAg3CZJMix4TJo59NBaSDciQxW23RHR8Zbg@mail.gmail.com>
-Subject: Re: [GIT pull] core/urgent for v5.4-rc7
-To:     Joe Perches <joe@perches.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jslaby@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a92:7f03:: with SMTP id a3mr19662759ild.105.1573426447957;
+ Sun, 10 Nov 2019 14:54:07 -0800 (PST)
+Date:   Sun, 10 Nov 2019 14:54:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000082c66d059705e442@google.com>
+Subject: KASAN: use-after-free Read in j1939_session_get_by_addr_locked
+From:   syzbot <syzbot+ca172a0ac477ac90f045@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kernel@pengutronix.de,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
+        robin@protonic.nl, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 2:01 PM Joe Perches <joe@perches.com> wrote:
->
-> trivia:
->
-> This idiom '!!(logical test)' is odd and redundant.
-> Logical test result is already 0 or 1, no !! is unnecessary.
+Hello,
 
-You are of course correct.
+syzbot found the following crash on:
 
-I have to say, I personally have always disliked the idiomatic C "!!"
-pattern. I don't think it reads well, although that's probably "C
-cultural" - once you are used to the pattern, you don't think of it as
-anything else.
+HEAD commit:    00aff683 Merge tag 'for-5.4-rc6-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=179eb2c2e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8c5e2eca3f31f9bf
+dashboard link: https://syzkaller.appspot.com/bug?extid=ca172a0ac477ac90f045
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144150e2e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aaa9fce00000
 
-Personally, I prefer "x != 0" over "!!x" since it reads much better to
-a human, and is equally legible whether you're used to the !! pattern
-or not.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ca172a0ac477ac90f045@syzkaller.appspotmail.com
 
-C is not perl, the Obfuscated C contest not-withstanding.
+vcan0: j1939_tp_rxtimer: 0x00000000be22d2f7: rx timeout, send abort
+vcan0: j1939_xtp_rx_abort_one: 0x00000000be22d2f7: 0x00000: (3) A timeout  
+occurred and this is the connection abort to close the session.
+vcan0: j1939_tp_rxtimer: 0x00000000f7dc054a: rx timeout, send abort
+vcan0: j1939_xtp_rx_abort_one: 0x00000000f7dc054a: 0x00000: (3) A timeout  
+occurred and this is the connection abort to close the session.
+==================================================================
+BUG: KASAN: use-after-free in j1939_session_get_by_addr_locked+0x648/0x680  
+net/can/j1939/transport.c:491
+Read of size 8 at addr ffff8880937d9058 by task ksoftirqd/0/9
 
-And since modern C has bool, if you really want to use a cast-to-bool
-instead of "x != 0", I think doing exactly that is preferable to "!!".
+CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  j1939_session_get_by_addr_locked+0x648/0x680 net/can/j1939/transport.c:491
+  j1939_session_get_by_addr+0x47/0x60 net/can/j1939/transport.c:531
+  j1939_xtp_rx_abort_one+0x8d/0x100 net/can/j1939/transport.c:1242
+  j1939_xtp_rx_abort net/can/j1939/transport.c:1270 [inline]
+  j1939_tp_cmd_recv net/can/j1939/transport.c:1958 [inline]
+  j1939_tp_recv+0x798/0x9b0 net/can/j1939/transport.c:1991
+  j1939_can_recv+0x4bb/0x620 net/can/j1939/main.c:100
+  deliver net/can/af_can.c:568 [inline]
+  can_rcv_filter+0x292/0x8e0 net/can/af_can.c:602
+  can_receive+0x2e7/0x530 net/can/af_can.c:659
+  can_rcv+0x133/0x1b0 net/can/af_can.c:685
+  __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:4929
+  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5043
+  process_backlog+0x206/0x750 net/core/dev.c:5874
+  napi_poll net/core/dev.c:6311 [inline]
+  net_rx_action+0x508/0x1120 net/core/dev.c:6379
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  run_ksoftirqd kernel/softirq.c:603 [inline]
+  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
+  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-So I think both "x != 0" and "(bool)x" are preferable to "!!x", and
-would also have made it obvious how odd and redundant the test was in
-this case.
+Allocated by task 10302:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:690 [inline]
+  j1939_priv_create net/can/j1939/main.c:122 [inline]
+  j1939_netdev_start+0xa4/0x550 net/can/j1939/main.c:251
+  j1939_sk_bind+0x65a/0x8e0 net/can/j1939/socket.c:438
+  __sys_bind+0x239/0x290 net/socket.c:1647
+  __do_sys_bind net/socket.c:1658 [inline]
+  __se_sys_bind net/socket.c:1656 [inline]
+  __x64_sys_bind+0x73/0xb0 net/socket.c:1656
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-But "!!x" is shorter, of course. And it you learnt C with that pattern
-it looks obvious.
+Freed by task 10302:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  __j1939_priv_release net/can/j1939/main.c:154 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  j1939_priv_put+0x8b/0xb0 net/can/j1939/main.c:159
+  j1939_netdev_stop+0x45/0x190 net/can/j1939/main.c:291
+  j1939_sk_release+0x3bd/0x5c0 net/can/j1939/socket.c:580
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-                Linus
+The buggy address belongs to the object at ffff8880937d8000
+  which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 4184 bytes inside of
+  8192-byte region [ffff8880937d8000, ffff8880937da000)
+The buggy address belongs to the page:
+page:ffffea00024df600 refcount:1 mapcount:0 mapping:ffff8880aa4021c0  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002623308 ffffea0002a31f08 ffff8880aa4021c0
+raw: 0000000000000000 ffff8880937d8000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880937d8f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880937d8f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8880937d9000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                     ^
+  ffff8880937d9080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880937d9100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
