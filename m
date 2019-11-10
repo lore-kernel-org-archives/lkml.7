@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEECC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4910BC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C864B215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15608214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353663;
-	bh=rOUJTLLDLcIrzkoJgb4s/aQqCIxC8gU62BXczugNZz8=;
+	s=default; t=1573353667;
+	bh=LwqOr4I4zulBalz0R9isVxO+q7yNbwDmSBSJJrSTNSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gR2v58HNgrWNxL4QOOTv1/gSoe+ecC6T76F0rNtVwHDgvPMevHVjP0w7yeRtXp/fV
-	 4fQ5VQf//rOb4LeUMUH1+NbeBkN65jwJygt6rDXglak6Wr/K9G2TMsdaDhlrxG9Vi+
-	 NfE/Nx2XLi5SjP2xV5Jrm9ZG1pThMLdBb07K9Bhk=
+	b=hKxELietQlrImpa4dbOye/NTNIZJwOK7iBeHc652vxLvfCPVW08WlwKg/DYIhrwul
+	 LiXry7j8XzEPNCrRk393+el7cz7n/Mb8K2VMnFpqdusp/XGylSBF3BVnwPMkvvUSLN
+	 5bmBrwvfgMVU4YWUQnjGAHr5UdQy7+nFswZFrq84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfKJClC (ORCPT
+        id S1727216AbfKJClF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfKJCkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:36 -0500
+        id S1726965AbfKJCkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 729F021882;
-        Sun, 10 Nov 2019 02:40:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623472184C;
+        Sun, 10 Nov 2019 02:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353636;
-        bh=rOUJTLLDLcIrzkoJgb4s/aQqCIxC8gU62BXczugNZz8=;
+        s=default; t=1573353637;
+        bh=LwqOr4I4zulBalz0R9isVxO+q7yNbwDmSBSJJrSTNSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OR9kiKAiNcut7fdY0xEXLRSQK9gakDBA9WKIGAungn7Xf+4j5OVIqzDwdzwLeDgkY
-         lvWgOhmx9Pl7vHXtRlgC7nIKz2QNVecZ4R/rEID7UgwSOWqMU1mPri8Qu6/+5CPEGH
-         LJmpryqkVo4e+qJ6vRb4kpnb9THpvS7P09qm2rTI=
+        b=zFEqicX5bpzpWdB956ffG689808F47PivI1oFVB5lk9f/r6UD8M8+/M9AZ8Ac7cns
+         XxCy46xCqAQ1uBVsoN7xWQZEaxDhgoPlxJ9/PHXUJEMzuM6G6xkIrG8O+ARouxeZoS
+         b74Ay97M7IbhAgd2Uee0EG26U9jE1AVou0QBCtbo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Meelis Roos <mroos@linux.ee>, Corey Minyard <cminyard@mvista.com>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 019/191] ipmi_si_pci: fix NULL device in ipmi_si error message
-Date:   Sat,  9 Nov 2019 21:37:21 -0500
-Message-Id: <20191110024013.29782-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 020/191] ipmi_si: fix potential integer overflow on large shift
+Date:   Sat,  9 Nov 2019 21:37:22 -0500
+Message-Id: <20191110024013.29782-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -58,52 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Meelis Roos <mroos@linux.ee>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 01508d9ebf4fc863f2fc4561c390bf4b7c3301a6 ]
+[ Upstream commit 97a103e6b584442cd848887ed8d47be2410b7e09 ]
 
-I noticed that 4.17.0 logs the follwing during ipmi_si setup:
+Shifting unsigned char b by an int type can lead to sign-extension
+overflow. For example, if b is 0xff and the shift is 24, then top
+bit is sign-extended so the final value passed to writeq has all
+the upper 32 bits set.  Fix this by casting b to a 64 bit unsigned
+before the shift.
 
- ipmi_si 0000:01:04.6: probing via PCI
- (NULL device *): Could not setup I/O space
- ipmi_si 0000:01:04.6: [mem 0xf5ef0000-0xf5ef00ff] regsize 1 spacing 1 irq 21
+Detected by CoverityScan, CID#1465246 ("Unintended sign extension")
 
-Fix the "NULL device *) by moving io.dev assignment before its potential
-use by ipmi_pci_probe_regspacing().
-
-Result:
- ipmi_si 0000:01:04.6: probing via PCI
- ipmi_si 0000:01:04.6: Could not setup I/O space
- ipmi_si 0000:01:04.6: [mem 0xf5ef0000-0xf5ef00ff] regsize 1 spacing 1 irq 21
-
-Signed-off-by: Meelis Roos <mroos@linux.ee>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/ipmi/ipmi_si_mem_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_pci.c b/drivers/char/ipmi/ipmi_si_pci.c
-index f54ca6869ed2c..022e03634ce2a 100644
---- a/drivers/char/ipmi/ipmi_si_pci.c
-+++ b/drivers/char/ipmi/ipmi_si_pci.c
-@@ -120,6 +120,8 @@ static int ipmi_pci_probe(struct pci_dev *pdev,
- 	}
- 	io.addr_data = pci_resource_start(pdev, 0);
- 
-+	io.dev = &pdev->dev;
-+
- 	io.regspacing = ipmi_pci_probe_regspacing(&io);
- 	io.regsize = DEFAULT_REGSIZE;
- 	io.regshift = 0;
-@@ -128,8 +130,6 @@ static int ipmi_pci_probe(struct pci_dev *pdev,
- 	if (io.irq)
- 		io.irq_setup = ipmi_std_irq_setup;
- 
--	io.dev = &pdev->dev;
--
- 	dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
- 		&pdev->resource[0], io.regsize, io.regspacing, io.irq);
+diff --git a/drivers/char/ipmi/ipmi_si_mem_io.c b/drivers/char/ipmi/ipmi_si_mem_io.c
+index 638f4ab88f445..75583612ab105 100644
+--- a/drivers/char/ipmi/ipmi_si_mem_io.c
++++ b/drivers/char/ipmi/ipmi_si_mem_io.c
+@@ -51,7 +51,7 @@ static unsigned char mem_inq(const struct si_sm_io *io, unsigned int offset)
+ static void mem_outq(const struct si_sm_io *io, unsigned int offset,
+ 		     unsigned char b)
+ {
+-	writeq(b << io->regshift, (io->addr)+(offset * io->regspacing));
++	writeq((u64)b << io->regshift, (io->addr)+(offset * io->regspacing));
+ }
+ #endif
  
 -- 
 2.20.1
