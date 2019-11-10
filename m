@@ -2,131 +2,213 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24A5C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 19:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F7BC17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 19:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B533F20854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 19:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573413680;
-	bh=fsQV/vIJseysmHIBSbuAF5psHRmutlyROOzFy00FGtU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZaIi5mzoc320k5260wHO9T/E2ONgvHULhKZ3D5JF3p76+dwdQ6LRHhBRfIVR1NMCr
-	 wgQfcjquC8nv1GfhXfVUBvvSXD+5RZjJp3LHQVXb44XAq0pt4f7Z3ku4BzGOCjPQAf
-	 wPuQr7fOE26UbO0nxGw3UPZZwj4DRkQlHbQjalEs=
+	by mail.kernel.org (Postfix) with ESMTP id 3B46120818
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 19:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQ8/92fp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfKJTVP (ORCPT
+        id S1727058AbfKJTnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 14:21:15 -0500
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:39966 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfKJTVO (ORCPT
+        Sun, 10 Nov 2019 14:43:07 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54133 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKJTnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 14:21:14 -0500
-Received: by mail-lj1-f173.google.com with SMTP id q2so11438072ljg.7
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 11:21:13 -0800 (PST)
+        Sun, 10 Nov 2019 14:43:07 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u18so3504470wmc.3
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 11:43:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vps6XmCw9WRkAtYxpnFwWu+xV4X8ojukCSN0qo58N6c=;
-        b=cIj419uq1cCoNo/Cqt9dnkfZ/zoLO/cAgHHpjyVkn/Tj0px/QPbQk8+nmQiG4RBzYX
-         /DhDmmagDbgLBwtfJUZexOqqGEfiZJNMQDyi3dPKp2PfVpw/BsJT01SEfki1eU0+DTUe
-         IuZxYN2U4SUb4pI+OIgnz5/kkESeGNQ+VYBVY=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0ERIbyU+62RDKkuyfUPzZUSe1FFHvxlCgQktwAbE+sA=;
+        b=gQ8/92fpg3vcqG02QlEM6gFMXSpp9Ph9D2+nj0qwCKurqR6YhPnxrqFAjRIJvE0lrx
+         QvhOS81QZ8U0SLJaQfN9xJgWxt8hv/pI2PyYRhIiJBJF8KPC/TN8cnS5PBj+rFFwaF/b
+         O0kfMDmJKovijb9kgGSUQRC2nA3/L0wWRImGV64Sbcs2WacXpzfENtkhZuRYOU1k1L0I
+         BifJsSQsffT5rjAqn0YPltjHC2R0RpD/zsZA0FjxSdRAHjl7rG5qHQBmt+W3dTMlZEbl
+         xk0DfAvn0jFR7JOI8QyfItmeLLGSq8FIl3WIyi0tUBtv9E8roINSuR+ENCyat7T0s7Uh
+         DI9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vps6XmCw9WRkAtYxpnFwWu+xV4X8ojukCSN0qo58N6c=;
-        b=ZKtA1puf3xSQglqfdzvZlCjlLXgt4JEKKKVlFONalJt75pFX8pyhvYzZnpbHLP5tP/
-         hrrwxifLxYWhb9DVhw2Aeli0duxfoP2MNpnSGK89xm8tAlPKt+FvPof/1iEzS2opxp1S
-         wwmDJJS3KV1DcJF2NDwk/PhV7jK36zdfdRid/v6TvDdlEnoRtnfTO4CPdpTxyyewSvW1
-         mLhsA/lX9s/+B6DzD2VhWDtGb+TTKc7fD2xUXJqKgwkzDs0nzewDKiKQcH4t58zF5Hdo
-         c/iHO5uP6ieMiOgZhiky04IcwrQ75ucGujSW3DqMnKaaFNykdrnVdkwFawzHpOMnBkGH
-         wZoA==
-X-Gm-Message-State: APjAAAXTeGlcScxy7N4C500DPXGYgHU3fpdcCAefxFdWClidgfCCRIHt
-        LmoRf3g3Tm5zpymWH8lrRNjgzlK5FZI=
-X-Google-Smtp-Source: APXvYqwno7GZIls6BHnqTz1AjkZDp3YvpYXRxx29fQJm3sGfQ3+k6+trXJ6PyrlJ/CfZ9p7oZwML1w==
-X-Received: by 2002:a2e:7016:: with SMTP id l22mr13745072ljc.227.1573413671496;
-        Sun, 10 Nov 2019 11:21:11 -0800 (PST)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id r12sm6010310ljh.102.2019.11.10.11.21.09
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=0ERIbyU+62RDKkuyfUPzZUSe1FFHvxlCgQktwAbE+sA=;
+        b=LFR8X1ml1LH1UqqtBIZIbnmfIBH0IS6CSmDflsSRDEUOy6wFJmvaX9QmvXw516P0G7
+         OBrRfQ47qZpn11yQSY2Dpo/GQtUgaH8GJeUC3i/QNoP/WsfN6thoXq5VETxZq74HbJ3C
+         Y5YR25kB5txjdJK0v8EWq8bzML7tteX5vI616y7zft+ZMSJOuk3BR5dj21ts1diivHql
+         RynRtswR0PAvDbTwX3xbNBTdT6tfdBegIFvBAHOc6DzosiObDGSFNGQBK0Lt9D10lW9d
+         B5SD0qx584UgH973DSE0RK+gIQ3VR5UEFBvqCxNRBL5JW0le2e51T1fl0d7Q+5Z2Zbsg
+         rvFQ==
+X-Gm-Message-State: APjAAAVzR+6C5ASMfN0rCFU43HXrzlYMs5ye4Y0N4/eeLnSP/pwrA982
+        ALbhljkG+j1i5bAS9t2z1Cs=
+X-Google-Smtp-Source: APXvYqxU+z4FOp9Y3j/HWJpJGGZDN36lb/Gvc1apgoOLKuG1pccbejXbQ+6Iltqxrzyx1hfd4qf9OA==
+X-Received: by 2002:a1c:5fc4:: with SMTP id t187mr18344973wmb.142.1573414982196;
+        Sun, 10 Nov 2019 11:43:02 -0800 (PST)
+Received: from ziggy.stardust ([95.169.226.39])
+        by smtp.gmail.com with ESMTPSA id k14sm376055wrw.46.2019.11.10.11.43.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 11:21:10 -0800 (PST)
-Received: by mail-lf1-f43.google.com with SMTP id z188so966512lfa.11
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 11:21:09 -0800 (PST)
-X-Received: by 2002:ac2:498a:: with SMTP id f10mr1217684lfl.170.1573413669634;
- Sun, 10 Nov 2019 11:21:09 -0800 (PST)
+        Sun, 10 Nov 2019 11:43:01 -0800 (PST)
+Subject: Re: [PATCHi v3 1/3] arm64: dts: mt8183: add dsi node
+To:     Jitao Shi <jitao.shi@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     srv_heupstream@mediatek.com
+References: <20191028115039.96555-1-jitao.shi@mediatek.com>
+ <20191028115039.96555-2-jitao.shi@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ r2JwH1CJjrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <50c4f50d-f0ca-da0d-bfad-d2fabacfb5ed@gmail.com>
+Date:   Sun, 10 Nov 2019 20:43:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <CAHk-=wjB61GNmqpX0BLA5tpL4tsjWV7akaTc2Roth7uGgax+mw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911101034180.29192-100000@netrider.rowland.org> <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
-In-Reply-To: <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 10 Nov 2019 11:20:53 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com>
-Message-ID: <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191028115039.96555-2-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 11:12 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> And this is where WRITE_IDEMPOTENT would make a possible difference.
-> In particular, if we make the optimization to do the "read and only
-> write if changed"
 
-It might be useful for checking too. IOW, something like KCSAN could
-actually check that if a field has an idempotent write to it, all
-writes always have the same value.
 
-Again, there's the issue with lifetime.
+On 28/10/2019 12:50, Jitao Shi wrote:
+> Add dsi and mipitx nodes to the mt8183
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 2857583f5d60..bb0d53be6a25 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -649,6 +649,16 @@
+>  			#clock-cells = <1>;
+>  		};
+>  
+> +		mipi_tx0: mipi-dphy@11e50000 {
+> +			compatible = "mediatek,mt8183-mipi-tx";
+> +			reg = <0 0x11e50000 0 0x1000>;
+> +			clocks = <&apmixedsys CLK_APMIXED_MIPID0_26M>;
+> +			clock-names = "ref_clk";
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +			clock-output-names = "mipi_tx0_pll";
+> +		};
+> +
+>  		efuse: efuse@11f10000 {
+>  			compatible = "mediatek,mt8183-efuse",
+>  				     "mediatek,efuse";
+> @@ -670,6 +680,20 @@
+>  			#clock-cells = <1>;
+>  		};
+>  
+> +		dsi0: dsi@14014000 {
+> +			compatible = "mediatek,mt8183-dsi";
+> +			reg = <0 0x14014000 0 0x1000>;
+> +			interrupts = <GIC_SPI 236 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			mediatek,syscon-dsi = <&mmsys 0x140>;
 
-Part of that is "initialization is different". Those writes would not
-be marked idempotent, of course, and they'd write another value.
+mediatek,syscon-dsi isn't defined anywhere and not used in the driver. Please
+delete.
 
-There's also the issue of lifetime at the _end_ of the use, of course.
-There _are_ interesting data races at the end of the lifetime, both
-reads and writes.
-
-In particular, if it's a sticky flag, in order for there to not be any
-races, all the writes have to happen with a refcount held, and the
-final read has to happen after the final refcount is dropped (and the
-refcounts have to have atomicity and ordering, of course). I'm not
-sure how easy something like that is model in KSAN. Maybe it already
-does things like that for all the other refcount stuff we do.
-
-But the lifetime can be problematic for other reasons too - in this
-particular case we have a union for that sticky flag (which is used
-under the refcount), and then when the final refcount is released we
-read that value (thus no data race) but because of the union we will
-now start using that field with *different* data. It becomes that RCU
-list head instead.
-
-That kind of "it used to be a sticky flag, but now the lifetime of the
-flag is over, and it's something entirely different" might be a
-nightmare for something like KCSAN. It sounds complicated to check
-for, but I have no idea what KCSAN really considers complicated or
-not.
-
-                  Linus
+> +			clocks = <&mmsys CLK_MM_DSI0_MM>,
+> +				<&mmsys CLK_MM_DSI0_IF>,
+> +				<&mipi_tx0>;
+> +			clock-names = "engine", "digital", "hs";
+> +			phys = <&mipi_tx0>;
+> +			phy-names = "dphy";
+> +		};
+> +
+>  		imgsys: syscon@15020000 {
+>  			compatible = "mediatek,mt8183-imgsys", "syscon";
+>  			reg = <0 0x15020000 0 0x1000>;
+> 
