@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A5AC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA82CC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F7B22573
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB0422573
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354440;
-	bh=J1TfCkGGjmKJvfH1ogXdHfv9dUz/lNqn2N2wwhcvuC0=;
+	s=default; t=1573354443;
+	bh=ni71MLyzBp4qGD+CQpM45gvt8cp3Xgd0N9OQp3oizTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nyk35xKbfCmJZcMeG9FrM7PfKAFSeHKlmqXC2fbB5EMs0WHns33+36/N9b7ILYp0L
-	 ObjUP4IYOn7si8tzGN7PAEMcKNMZjHoIvHuyBlzQ9lZ0OM1IMv2B50373vv0U8qdw/
-	 3ZH53WJskpoT1leHFz0Bl8X90sC3uTHBFaAzoNUU=
+	b=cdSCbjEtET+fTxcHjVz0S0Me6ZVNYdtaEVwVv2Fb96EnFXDfzqv0AjQDZ4wgdnsbD
+	 2fnQLrP359Ygn3DyxYYmHy2gfz0a7yWrNPOjBg25nOYNt9r3F7x3QDqbBiSa+mwz37
+	 65U/yAIa2SEtXgnsU8YNnSMai5TCSrV4fVO/H8m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbfKJCu6 (ORCPT
+        id S1728904AbfKJCyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:50:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:54:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbfKJCuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:37 -0500
+        id S1729859AbfKJCvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:51:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16A98229F0;
-        Sun, 10 Nov 2019 02:50:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BAAF22573;
+        Sun, 10 Nov 2019 02:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354236;
-        bh=J1TfCkGGjmKJvfH1ogXdHfv9dUz/lNqn2N2wwhcvuC0=;
+        s=default; t=1573354259;
+        bh=ni71MLyzBp4qGD+CQpM45gvt8cp3Xgd0N9OQp3oizTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gq69cPTgj/xD9uAIHM79hygoPS+7tpb5OER35kGBAZ2yQnDuzuCsIexPPpuhdzS2T
-         pA37rFR7NWyurlLzNzOAFf9n6Imr7JhNfjIZOHT1qm5NCWgjoMEeotanza7noVnkaf
-         ykcyQuUL3LIsNjbL5KbwKaMUl8MEB180R0QjvyGc=
+        b=okaipJpI2NN6IBspFPDC3Am0CSDJ3tHaKKeOCFMqBG9X8uRKk3X47bEPkqpuNqspX
+         dp6SPL3ZsjPiutvE5//pnZF/9NJW768i8zhSW06orJawSaueYDOFbvYXi89L6hddxY
+         Tc4Tof9gdeSGMKdJd9H6wjVDAS63VKx2YUYQNNL0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Vasilyev <vasilyev@ispras.ru>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 03/40] serial: mxs-auart: Fix potential infinite loop
-Date:   Sat,  9 Nov 2019 21:49:55 -0500
-Message-Id: <20191110025032.827-3-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 12/40] net: broadcom: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:50:04 -0500
+Message-Id: <20191110025032.827-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,43 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Vasilyev <vasilyev@ispras.ru>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 5963e8a3122471cadfe0eba41c4ceaeaa5c8bb4d ]
+[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
 
-On the error path of mxs_auart_request_gpio_irq() is performed
-backward iterating with index i of enum type. Underline enum type
-may be unsigned char. In this case check (--i >= 0) will be always
-true and error handling goes into infinite loop.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-The patch changes the check so that it is valid for signed and unsigned
-types.
+Found by coccinelle.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/mxs-auart.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
+ drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index daa4a65ef6ffc..fe870170db74a 100644
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -1248,8 +1248,9 @@ static int mxs_auart_request_gpio_irq(struct mxs_auart_port *s)
+diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+index ec5834087e4b4..c01ab06863b3d 100644
+--- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
++++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+@@ -571,12 +571,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
+ /*
+  * tx request callback
+  */
+-static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct bcm_enet_priv *priv;
+ 	struct bcm_enet_desc *desc;
+ 	u32 len_stat;
+-	int ret;
++	netdev_tx_t ret;
  
- 	/*
- 	 * If something went wrong, rollback.
-+	 * Be careful: i may be unsigned.
- 	 */
--	while (err && (--i >= 0))
-+	while (err && (i-- > 0))
- 		if (irq[i] >= 0)
- 			free_irq(irq[i], s);
+ 	priv = netdev_priv(dev);
  
+diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
+index f557a2aaec231..73a7c8a504702 100644
+--- a/drivers/net/ethernet/broadcom/sb1250-mac.c
++++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
+@@ -300,7 +300,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
+ static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
+ static uint64_t sbmac_addr2reg(unsigned char *ptr);
+ static irqreturn_t sbmac_intr(int irq, void *dev_instance);
+-static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
++static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
+ static void sbmac_setmulti(struct sbmac_softc *sc);
+ static int sbmac_init(struct platform_device *pldev, long long base);
+ static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
+@@ -2033,7 +2033,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
+  *  Return value:
+  *  	   nothing
+  ********************************************************************* */
+-static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct sbmac_softc *sc = netdev_priv(dev);
+ 	unsigned long flags;
 -- 
 2.20.1
 
