@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD92C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61327C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBE2215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3760F215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355398;
-	bh=hYB5w+UMz/UqauZuigYfxBQ7rra5sbV9A9cqsKXHT6A=;
+	s=default; t=1573355404;
+	bh=7O0a6f7OAljtZm3g5vT7cbtIr3K62GbeufgrYTkBfgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gD5chgqagOa6URVIlO/SN4t24DPc+JTMMwd7kN/4R1REWjKhiypb1aEVepPOmU26l
-	 90MkQo/IkE9mhWrLPmkMEvRA6h70choImQzsiYe3ua0xYAsWYyV3SczMowfCXqbTYS
-	 b/mMzh7M/bOt5s609cXm0L929S/ltmDMn2I+DnTM=
+	b=rGrSE0FBEkN1k7W+G72TL/P37E0wXnr3PE/bDUEJa9Z/ENPLEgTmKqtcONg6+7bwL
+	 p9gPEECR+bsy0kgJe2wh3nK7vVF9mvcMxNRJACN38j8QyLiWREJsOCEh7NhDvZhMNf
+	 FqZ5GXlMtgpkMXGda1Xp/FoFrg64ssyCbE9JXacw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfKJCoX (ORCPT
+        id S1728071AbfKJDKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:44:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43126 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:10:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbfKJCoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:08 -0500
+        id S1728528AbfKJCoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5941E21655;
-        Sun, 10 Nov 2019 02:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B908C21D7F;
+        Sun, 10 Nov 2019 02:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353847;
-        bh=hYB5w+UMz/UqauZuigYfxBQ7rra5sbV9A9cqsKXHT6A=;
+        s=default; t=1573353857;
+        bh=7O0a6f7OAljtZm3g5vT7cbtIr3K62GbeufgrYTkBfgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkEFTMyhLkJJ801OtcSM6/KETlxymbF0+m6lMOb3YJ2+WMIt/dl+uyRj1sLJ9qe69
-         lUlm6PU03f0OZnjkb7vZncMERFF7KtXgJHcNsXaFv1kCejIccHKP0tdkKVzrY97TeO
-         BFI7ydqQR9V+HYupiRFyuQCkTWblI4gVk9kD0aYg=
+        b=nO1Uxd33YQ/JxXjRxk8UgVpSYQT2sBdCE3zyzV54oZDUuGEQMGEFQ//w1ybBrwbuY
+         VL8cWZj9vd436AJED96mdc4pFQ5LCTJgFi7As43p11fWMaw4HrnXSEpEFFmjGV5Olp
+         KfCylIr2zZoUsvoVDfo6Oi8E71ztNqLdf0dk+6iQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sai Praneeth <sai.praneeth.prakhya@intel.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 134/191] efi: Make efi_rts_work accessible to efi page fault handler
-Date:   Sat,  9 Nov 2019 21:39:16 -0500
-Message-Id: <20191110024013.29782-134-sashal@kernel.org>
+Cc:     Marc Dietrich <marvin24@gmx.de>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 142/191] ARM: dts: paz00: fix wakeup gpio keycode
+Date:   Sat,  9 Nov 2019 21:39:24 -0500
+Message-Id: <20191110024013.29782-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,165 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Praneeth <sai.praneeth.prakhya@intel.com>
+From: Marc Dietrich <marvin24@gmx.de>
 
-[ Upstream commit 9dbbedaa6171247c4c7c40b83f05b200a117c2e0 ]
+[ Upstream commit ebea2a43fdafdbce918bd7e200b709d6c33b9f3b ]
 
-After the kernel has booted, if any accesses by firmware causes a page
-fault, the efi page fault handler would freeze efi_rts_wq and schedules
-a new process. To do this, the efi page fault handler needs
-efi_rts_work. Hence, make it accessible.
+The power key is controlled solely by the EC, which only tiggeres this
+gpio after wakeup.
+Fixes immediately return to suspend after wake from LP1.
 
-There will be no race conditions in accessing this structure, because
-all the calls to efi runtime services are already serialized.
-
-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-Suggested-by: Matt Fleming <matt@codeblueprint.co.uk>
-Based-on-code-from: Ricardo Neri <ricardo.neri@intel.com>
-Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Marc Dietrich <marvin24@gmx.de>
+Tested-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/runtime-wrappers.c | 53 +++++--------------------
- include/linux/efi.h                     | 36 +++++++++++++++++
- 2 files changed, 45 insertions(+), 44 deletions(-)
+ arch/arm/boot/dts/tegra20-paz00.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
-index 1606abead22cc..b31e3d3729a6d 100644
---- a/drivers/firmware/efi/runtime-wrappers.c
-+++ b/drivers/firmware/efi/runtime-wrappers.c
-@@ -45,39 +45,7 @@
- #define __efi_call_virt(f, args...) \
- 	__efi_call_virt_pointer(efi.systab->runtime, f, args)
+diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
+index ef245291924f0..4f9b4a889febe 100644
+--- a/arch/arm/boot/dts/tegra20-paz00.dts
++++ b/arch/arm/boot/dts/tegra20-paz00.dts
+@@ -524,10 +524,10 @@
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
  
--/* efi_runtime_service() function identifiers */
--enum efi_rts_ids {
--	GET_TIME,
--	SET_TIME,
--	GET_WAKEUP_TIME,
--	SET_WAKEUP_TIME,
--	GET_VARIABLE,
--	GET_NEXT_VARIABLE,
--	SET_VARIABLE,
--	QUERY_VARIABLE_INFO,
--	GET_NEXT_HIGH_MONO_COUNT,
--	UPDATE_CAPSULE,
--	QUERY_CAPSULE_CAPS,
--};
--
--/*
-- * efi_runtime_work:	Details of EFI Runtime Service work
-- * @arg<1-5>:		EFI Runtime Service function arguments
-- * @status:		Status of executing EFI Runtime Service
-- * @efi_rts_id:		EFI Runtime Service function identifier
-- * @efi_rts_comp:	Struct used for handling completions
-- */
--struct efi_runtime_work {
--	void *arg1;
--	void *arg2;
--	void *arg3;
--	void *arg4;
--	void *arg5;
--	efi_status_t status;
--	struct work_struct work;
--	enum efi_rts_ids efi_rts_id;
--	struct completion efi_rts_comp;
--};
-+struct efi_runtime_work efi_rts_work;
- 
- /*
-  * efi_queue_work:	Queue efi_runtime_service() and wait until it's done
-@@ -91,7 +59,6 @@ struct efi_runtime_work {
-  */
- #define efi_queue_work(_rts, _arg1, _arg2, _arg3, _arg4, _arg5)		\
- ({									\
--	struct efi_runtime_work efi_rts_work;				\
- 	efi_rts_work.status = EFI_ABORTED;				\
- 									\
- 	init_completion(&efi_rts_work.efi_rts_comp);			\
-@@ -191,18 +158,16 @@ extern struct semaphore __efi_uv_runtime_lock __alias(efi_runtime_lock);
-  */
- static void efi_call_rts(struct work_struct *work)
- {
--	struct efi_runtime_work *efi_rts_work;
- 	void *arg1, *arg2, *arg3, *arg4, *arg5;
- 	efi_status_t status = EFI_NOT_FOUND;
- 
--	efi_rts_work = container_of(work, struct efi_runtime_work, work);
--	arg1 = efi_rts_work->arg1;
--	arg2 = efi_rts_work->arg2;
--	arg3 = efi_rts_work->arg3;
--	arg4 = efi_rts_work->arg4;
--	arg5 = efi_rts_work->arg5;
-+	arg1 = efi_rts_work.arg1;
-+	arg2 = efi_rts_work.arg2;
-+	arg3 = efi_rts_work.arg3;
-+	arg4 = efi_rts_work.arg4;
-+	arg5 = efi_rts_work.arg5;
- 
--	switch (efi_rts_work->efi_rts_id) {
-+	switch (efi_rts_work.efi_rts_id) {
- 	case GET_TIME:
- 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
- 				       (efi_time_cap_t *)arg2);
-@@ -260,8 +225,8 @@ static void efi_call_rts(struct work_struct *work)
- 		 */
- 		pr_err("Requested executing invalid EFI Runtime Service.\n");
- 	}
--	efi_rts_work->status = status;
--	complete(&efi_rts_work->efi_rts_comp);
-+	efi_rts_work.status = status;
-+	complete(&efi_rts_work.efi_rts_comp);
- }
- 
- static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index f43fc61fbe2c9..9d4c25090fd04 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1666,6 +1666,42 @@ struct linux_efi_tpm_eventlog {
- 
- extern int efi_tpm_eventlog_init(void);
- 
-+/* efi_runtime_service() function identifiers */
-+enum efi_rts_ids {
-+	GET_TIME,
-+	SET_TIME,
-+	GET_WAKEUP_TIME,
-+	SET_WAKEUP_TIME,
-+	GET_VARIABLE,
-+	GET_NEXT_VARIABLE,
-+	SET_VARIABLE,
-+	QUERY_VARIABLE_INFO,
-+	GET_NEXT_HIGH_MONO_COUNT,
-+	UPDATE_CAPSULE,
-+	QUERY_CAPSULE_CAPS,
-+};
-+
-+/*
-+ * efi_runtime_work:	Details of EFI Runtime Service work
-+ * @arg<1-5>:		EFI Runtime Service function arguments
-+ * @status:		Status of executing EFI Runtime Service
-+ * @efi_rts_id:		EFI Runtime Service function identifier
-+ * @efi_rts_comp:	Struct used for handling completions
-+ */
-+struct efi_runtime_work {
-+	void *arg1;
-+	void *arg2;
-+	void *arg3;
-+	void *arg4;
-+	void *arg5;
-+	efi_status_t status;
-+	struct work_struct work;
-+	enum efi_rts_ids efi_rts_id;
-+	struct completion efi_rts_comp;
-+};
-+
-+extern struct efi_runtime_work efi_rts_work;
-+
- /* Workqueue to queue EFI Runtime Services */
- extern struct workqueue_struct *efi_rts_wq;
- 
+-		power {
+-			label = "Power";
++		wakeup {
++			label = "Wakeup";
+ 			gpios = <&gpio TEGRA_GPIO(J, 7) GPIO_ACTIVE_LOW>;
+-			linux,code = <KEY_POWER>;
++			linux,code = <KEY_WAKEUP>;
+ 			wakeup-source;
+ 		};
+ 	};
 -- 
 2.20.1
 
