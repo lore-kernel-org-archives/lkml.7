@@ -7,44 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48EAC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B463C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E7D208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30E4208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355064;
-	bh=YRs4s1sjG7eJRwKwYyVft9OLeY3xfnyFEOZciMSfYyk=;
+	s=default; t=1573355067;
+	bh=9vHTsqmnu+cuuI3EJ+XhZIbw+Rq+l0wS6KturhsKzNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bPEeSOnXRHdTXz3YdUrC6Sq6D246W3LQ/vH3cDnfQQA/QPFhLfStmrQalBVBIoGrM
-	 xWzW3ti7n0Fk3CnNZIsbzb0T8XjNiPxgqHq/lHWQ9STGFob1reF9QOJbabnKEqVVaC
-	 F52RJK6MR/s/ksbhCAtRz2HETuEiFpSPTgRpgx0A=
+	b=Q9nW3cuv9y9PB9XcU/WVLrDZOku5sv/z1y3EpmXIVUc01KNi036r8lYZIwcoSJN28
+	 hTjK6445xA9+KLaGUvudCxWFXjbaAH+ywSAxIfrgnbb9ZcxkG9WIrjuFAgnW0szCqf
+	 PzqlrFiqwjD+ESxL9z+KndI9mdwlr4eyVazu2P40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbfKJDEX (ORCPT
+        id S1729190AbfKJCqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:04:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51590 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729196AbfKJCqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:46:55 -0500
+        id S1729179AbfKJCqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C936215EA;
-        Sun, 10 Nov 2019 02:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F64221D7E;
+        Sun, 10 Nov 2019 02:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354015;
-        bh=YRs4s1sjG7eJRwKwYyVft9OLeY3xfnyFEOZciMSfYyk=;
+        s=default; t=1573354011;
+        bh=9vHTsqmnu+cuuI3EJ+XhZIbw+Rq+l0wS6KturhsKzNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i6CuTPV3mueLXK1kRbKj7r96Ewau8R6IrT3QVmzV6J27eq9/q5e14z2kDithOHawo
-         MYO/htHsymzwaYfFS4q5nIsTc9XEXF6M2ANbY5hvA/bC0FebkU0Tg/nlQBQs6S1sY4
-         ek4wx667Gyj7n7vT71kgM+8+u184x7aNQIjAweR8=
+        b=iyP9k7sW5ZCG2/jv5NSSwqnsPpaHWTnDrH199i5krd4XeQUBsrISZbIQq/8zF/Mcl
+         MedG8x/dfi1Aljr2X6rVseIIYQ8IpZr49NN3RbZxfw0ppFo6altY6z56oEGZrTZ9+3
+         g2YiLa5XAldugtNftOrHxDZZ9+BZ6FkItKeCEnSY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 039/109] x86/mce-inject: Reset injection struct after injection
-Date:   Sat,  9 Nov 2019 21:44:31 -0500
-Message-Id: <20191110024541.31567-39-sashal@kernel.org>
+Cc:     Stefan Agner <stefan@agner.ch>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 036/109] cpufeature: avoid warning when compiling with clang
+Date:   Sat,  9 Nov 2019 21:44:28 -0500
+Message-Id: <20191110024541.31567-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -57,46 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Stefan Agner <stefan@agner.ch>
 
-[ Upstream commit 7401a633c34adc7aefd3edfec60074cb0475a3e8 ]
+[ Upstream commit c785896b21dd8e156326ff660050b0074d3431df ]
 
-Clear the MCE struct which is used for collecting the injection details
-after injection.
+The table id (second) argument to MODULE_DEVICE_TABLE is often
+referenced otherwise. This is not the case for CPU features. This
+leads to warnings when building the kernel with Clang:
+  arch/arm/crypto/aes-ce-glue.c:450:1: warning: variable
+    'cpu_feature_match_AES' is not needed and will not be emitted
+    [-Wunneeded-internal-declaration]
+  module_cpu_feature_match(AES, aes_init);
+  ^
 
-Also, populate it with more details from the machine.
+Avoid warnings by using __maybe_unused, similar to commit 1f318a8bafcf
+("modules: mark __inittest/__exittest as __maybe_unused").
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20180905081954.10391-1-bp@alien8.de
+Fixes: 67bad2fdb754 ("cpu: add generic support for CPU feature based module autoloading")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce-inject.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/cpufeature.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-index 8fec687b3e44e..f12141ba9a76d 100644
---- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-@@ -108,6 +108,9 @@ static void setup_inj_struct(struct mce *m)
- 	memset(m, 0, sizeof(struct mce));
- 
- 	m->cpuvendor = boot_cpu_data.x86_vendor;
-+	m->time	     = ktime_get_real_seconds();
-+	m->cpuid     = cpuid_eax(1);
-+	m->microcode = boot_cpu_data.microcode;
- }
- 
- /* Update fake mce registers on current CPU. */
-@@ -576,6 +579,9 @@ static int inj_bank_set(void *data, u64 val)
- 	m->bank = val;
- 	do_inject();
- 
-+	/* Reset injection struct */
-+	setup_inj_struct(&i_mce);
-+
- 	return 0;
- }
- 
+diff --git a/include/linux/cpufeature.h b/include/linux/cpufeature.h
+index 986c06c88d814..84d3c81b59781 100644
+--- a/include/linux/cpufeature.h
++++ b/include/linux/cpufeature.h
+@@ -45,7 +45,7 @@
+  * 'asm/cpufeature.h' of your favorite architecture.
+  */
+ #define module_cpu_feature_match(x, __initfunc)			\
+-static struct cpu_feature const cpu_feature_match_ ## x[] =	\
++static struct cpu_feature const __maybe_unused cpu_feature_match_ ## x[] = \
+ 	{ { .feature = cpu_feature(x) }, { } };			\
+ MODULE_DEVICE_TABLE(cpu, cpu_feature_match_ ## x);		\
+ 								\
 -- 
 2.20.1
 
