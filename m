@@ -2,52 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58035C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6305FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FAD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEA1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499219;
-	bh=lWYXohEveQ9l45sEh9RSFjZwLmKDb85yvXYMavMpE8k=;
+	s=default; t=1573499231;
+	bh=ZK/ZBjuL36PlHFysUhKmPHj4iSBscDJgj7PWaoy0ufo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYOaok64s/XxtqZCzC59JGivtMYBTSiFGmbXfAJAXyTDEUHaCQyavzpOJPbV+MF2A
-	 fhbn3IVrjDWb8uwbk6uItOXsaA7QWbSq3T2mEPGYo/rd48K2OXzdeNg4P32Kg3CMR0
-	 YZ9B9SZ0D9RCt3qEcLecddhj/YGrzP0viiFyPfK4=
+	b=0htKtGOxdV+4lL1j0CilaLv+TYApNg74OrlzaNmguv52qAg9k3JZwhRGhF7l1e5Gd
+	 H+BRk0OxeW+SN5pyVmL/6voek/xsmWES5eUUzYHrJMmxO2GAQojshiENqxNBjxOMdT
+	 7BRmYVGMeGaEU813zgnfc/LnzgCRurm94l5fhDkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfKKSiW (ORCPT
+        id S1728080AbfKKTHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57206 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:07:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728970AbfKKSiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:18 -0500
+        id S1727987AbfKKSiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 380DB204FD;
-        Mon, 11 Nov 2019 18:38:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0845F214E0;
+        Mon, 11 Nov 2019 18:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497497;
-        bh=lWYXohEveQ9l45sEh9RSFjZwLmKDb85yvXYMavMpE8k=;
+        s=default; t=1573497480;
+        bh=ZK/ZBjuL36PlHFysUhKmPHj4iSBscDJgj7PWaoy0ufo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yNitIQTuNwWQlGr766FR2ftyArrZERQepCynuZFmnjP9paPs9tnyncHxis2qeJGpq
-         OT1Vkeck6HYyW7qg41VcCnxGw4aIyDDT5phkldzOz7qZxdk286ar87oxlgLd3PeP6m
-         fIT9W51izacVPzp7nMEkIbYrcidFVtNdbUoYW0Sg=
+        b=D49QMJeoipL2EJdhrE4SVxCij8++3Dd2PYOswjJFjer+T53qKqJXbmICH6f45befI
+         znIIH1Q317XAhTlFK4SOx+hW0edMsjoru7IWR65YuEKFc6a2+xqWYBwh4rop1RBzPD
+         seCxZlxLpro5ttKiW9C4sdO1sKs7GY/XoqzzqB1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/105] RDMA/uverbs: Prevent potential underflow
-Date:   Mon, 11 Nov 2019 19:28:44 +0100
-Message-Id: <20191111181446.065683727@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.14 042/105] configfs_register_group() shouldnt be (and isnt) called in rmdirable parts
+Date:   Mon, 11 Nov 2019 19:28:12 +0100
+Message-Id: <20191111181440.718616654@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,61 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit a9018adfde809d44e71189b984fa61cc89682b5e ]
+commit f19e4ed1e1edbfa3c9ccb9fed17759b7d6db24c6 upstream.
 
-The issue is in drivers/infiniband/core/uverbs_std_types_cq.c in the
-UVERBS_HANDLER(UVERBS_METHOD_CQ_CREATE) function.  We check that:
+revert cc57c07343bd "configfs: fix registered group removal"
+It was an attempt to handle something that fundamentally doesn't
+work - configfs_register_group() should never be done in a part
+of tree that can be rmdir'ed.  And in mainline it never had been,
+so let's not borrow trouble; the fix was racy anyway, it would take
+a lot more to make that work and desired semantics is not clear.
 
-        if (attr.comp_vector >= attrs->ufile->device->num_comp_vectors) {
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-But we don't check if "attr.comp_vector" is negative.  It could
-potentially lead to an array underflow.  My concern would be where
-cq->vector is used in the create_cq() function from the cxgb4 driver.
-
-And really "attr.comp_vector" is appears as a u32 to user space so that's
-the right type to use.
-
-Fixes: 9ee79fce3642 ("IB/core: Add completion queue (cq) object actions")
-Link: https://lore.kernel.org/r/20191011133419.GA22905@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/uverbs.h | 2 +-
- include/rdma/ib_verbs.h          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/configfs/dir.c |   11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
-index 37c8903e7fd0c..8d79a48ccd388 100644
---- a/drivers/infiniband/core/uverbs.h
-+++ b/drivers/infiniband/core/uverbs.h
-@@ -87,7 +87,7 @@
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1782,16 +1782,6 @@ void configfs_unregister_group(struct co
+ 	struct dentry *dentry = group->cg_item.ci_dentry;
+ 	struct dentry *parent = group->cg_item.ci_parent->ci_dentry;
  
- struct ib_uverbs_device {
- 	atomic_t				refcount;
--	int					num_comp_vectors;
-+	u32					num_comp_vectors;
- 	struct completion			comp;
- 	struct device			       *dev;
- 	struct ib_device	__rcu	       *ib_dev;
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index b8a5118b6a428..4a43193319894 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -306,7 +306,7 @@ enum ib_cq_creation_flags {
+-	mutex_lock(&subsys->su_mutex);
+-	if (!group->cg_item.ci_parent->ci_group) {
+-		/*
+-		 * The parent has already been unlinked and detached
+-		 * due to a rmdir.
+-		 */
+-		goto unlink_group;
+-	}
+-	mutex_unlock(&subsys->su_mutex);
+-
+ 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
+ 	spin_lock(&configfs_dirent_lock);
+ 	configfs_detach_prep(dentry, NULL);
+@@ -1806,7 +1796,6 @@ void configfs_unregister_group(struct co
+ 	dput(dentry);
  
- struct ib_cq_init_attr {
- 	unsigned int	cqe;
--	int		comp_vector;
-+	u32		comp_vector;
- 	u32		flags;
- };
- 
--- 
-2.20.1
-
+ 	mutex_lock(&subsys->su_mutex);
+-unlink_group:
+ 	unlink_group(group);
+ 	mutex_unlock(&subsys->su_mutex);
+ }
 
 
