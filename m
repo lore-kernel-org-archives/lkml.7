@@ -2,174 +2,114 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFAAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE67C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE9421E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8464621783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:17:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zQ9LmirZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPTS9N+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfKKQPS (ORCPT
+        id S1726977AbfKKQRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:15:18 -0500
-Received: from mail-eopbgr740088.outbound.protection.outlook.com ([40.107.74.88]:42405
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726906AbfKKQPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:15:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WTT+MQpmml4e3XLlWejoG0GkQT2S5/5oOlx6sAW3WfMHNP2JuKrwkAmBABs+KGcWzz6vymX6TWjdQnvyHRr1DyaYlLNAEHtfVRsjqGSGGT/jPZl7Oikyy4zo8FhkBxlZ4BXs0/vquhlIuuYeCjrdIoOQrlqZtx5wtN6q5xDe2WuXbeq/Qnnh7zqV5HsDCqgSrffbjpCQ5sdPLzbWm70PCWtRCYao9ST1D4IfglXRgFhl1KRmNQS2ubOfmak2hfI2Lmo55sNJbZRHXo2RVbz2MYzZvofWUgFfApWgyq0wX37VGeqOsv+elJwcXOyF9ruuk2X/hC37f9RgAh189uoKZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7JceQJQmuMlsibB23uBXUNdBy43kiPKtp1whcLxKZbg=;
- b=gUXNZENvHeeVGMxFzb3SyVnEQ1403Vao4G0hDzvwsZyfSZEb3fi4vEyniofZ3vzx4QjZ5Fw0jw2ndCH9febSsMSkvpeC7ACjzElobjBgSp3/7E5YT1kQhfQ50ZE753jjD7P5UwgWHy0jeupe0++QH5GjqCjHjKCcr8upN2+kR3yj40K6RlWePoc+kAqoKGdSlN3RzeMnFgOmoheFikLPgZFYH1mfEQfNICcUw6hV0+EtF+84htNwcZvKPC3vTkJNLFBF8GaJMhu8a0Eyo0VGzhtOLAztEbDKJtpt2x2P395ZCDZxrzow+voisXeWc6Tprmf6bZCkRPDv/6BcWtf4xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 11 Nov 2019 11:17:35 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34092 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbfKKQRf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:17:35 -0500
+Received: by mail-lj1-f193.google.com with SMTP id 139so14458663ljf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 08:17:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7JceQJQmuMlsibB23uBXUNdBy43kiPKtp1whcLxKZbg=;
- b=zQ9LmirZysEA7HAojRTBedn0ki7qte2oGyUuGl9ygtp0YJ4D2Qe7gnRNg64wvfPEX25Wh7lbWcmcRfZimg4oFsEmlUTM9fc6xkFUaByCBWSHD3280/y6Oq0UFwz+nQnba0ZsakvFxzDvCySu7ogZxKgei79WFMvpQ2deUrqvSkY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Akshu.Agrawal@amd.com; 
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com (20.179.80.143) by
- MN2PR12MB4287.namprd12.prod.outlook.com (52.135.51.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Mon, 11 Nov 2019 16:15:15 +0000
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::305d:cfb0:baaf:7008]) by MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::305d:cfb0:baaf:7008%4]) with mapi id 15.20.2430.023; Mon, 11 Nov 2019
- 16:15:15 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, cychiang@chromium.org, rrangel@chromium.org,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] i2c: i2c-cros-ec-tunnel: Make the device acpi compatible
-Date:   Mon, 11 Nov 2019 21:44:28 +0530
-Message-Id: <20191111161431.26293-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0075.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::15)
- To MN2PR12MB2878.namprd12.prod.outlook.com (2603:10b6:208:aa::15)
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K/+NFqs0F+NSUfd9yCmnz5NfQc9F7D35Qd2TZxptiX8=;
+        b=jPTS9N+R74bh1Vi/8HgMkFBkvF2G9BvI1CqYFpl+82rzgOHZezGCUmSX2VxdSqFWbq
+         924RyJmQL6IZYkVH6zP5yIGQL3oqEPs5cwD5fTKlsacctKGPRGzYILULOMuMbKwrTyo/
+         GBVEkwPVCMHO3ievhZ1snWHQtd3eH3Y5BAP7nfD6zXnWKUOiwWNEQjYhGjd8zFd7WpSx
+         KxmjqAoqqt6VApsZD6FOcWVteMvdyZAJybbgoRv9dqcFj8UF4VEdcW1SpMhVukV+lumS
+         Hq6lVl2t9BDWQLFjzSD34jd91EMwY31vft5jmR+R2ft3JiVM7STO8Y/ouJfkSAWGJkQf
+         6PCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K/+NFqs0F+NSUfd9yCmnz5NfQc9F7D35Qd2TZxptiX8=;
+        b=spnvb+gzgaykVPEf1FODVvjsToTc9vOcPDrsFKgroaO8Prr5e0pr94UwDMxOyhV2FB
+         f6aZHCdUKP4WtqQlJhTLaht34jpPVqZ4l08rThusHMGiJcSx8Z+4IIUoA9aCBZW+6oxT
+         E3YXLmtM97Kfm8UKNx+aA1iYS0krcwVepMoWqnN0kO8WS9oHM0Hf1eDBwMmpchWx+8QB
+         FDxkugClOAB2ROarxMOfiFEXuT+VALZr3i/c7xUqMETUWBu0YgZ1lV/J9F19p29jsgnS
+         JTZWvNMS/RVK2EwB0rdfm01J09gENYRtidjO2aKFZzvdQL4/ETwu8zZRVTNLMNwuL8Pd
+         7B9g==
+X-Gm-Message-State: APjAAAXoXnJmVuWtmwqcAmE3gVVNiJlWQ++/zMu7Qql/AXON6eXagg2s
+        DW+tqXNQZKXXmuG4i5HLzi0fPATmrgaO5Q==
+X-Google-Smtp-Source: APXvYqxpxfjJ/s3M4kO1mxQa6K/91iX/y7vl00YTJOHXEqtqPK6JQW/OgzcB3eejbE0jMkgpOxdTFA==
+X-Received: by 2002:a2e:9981:: with SMTP id w1mr16477357lji.205.1573489053004;
+        Mon, 11 Nov 2019 08:17:33 -0800 (PST)
+Received: from localhost (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
+        by smtp.gmail.com with ESMTPSA id 70sm3015191lfh.86.2019.11.11.08.17.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 08:17:32 -0800 (PST)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah@kernel.org, songliubraving@fb.com,
+        simon.horman@netronome.com,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] selftests: bpf: add missing object file to TEST_FILES
+Date:   Mon, 11 Nov 2019 17:17:28 +0100
+Message-Id: <20191111161728.8854-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 44aa10e7-6a01-4b49-905a-08d766c2560f
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4287:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB428765AB7D5933C2AF8A149DF8740@MN2PR12MB4287.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:270;
-X-Forefront-PRVS: 0218A015FA
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(136003)(376002)(346002)(199004)(189003)(36756003)(8676002)(54906003)(7736002)(8936002)(16586007)(316002)(305945005)(6486002)(6436002)(81156014)(25786009)(50226002)(1076003)(81166006)(44832011)(5660300002)(66556008)(4326008)(476003)(66066001)(50466002)(52116002)(2616005)(47776003)(51416003)(6506007)(386003)(486006)(186003)(6512007)(26005)(2906002)(6116002)(3846002)(7416002)(1671002)(6666004)(48376002)(14454004)(478600001)(66476007)(66946007)(86362001)(99286004)(109986005)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4287;H:MN2PR12MB2878.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +B2fNf5F2NyBgq4pGv7fptbxpuZGdkVPRRdmn/ZQX15j3WFtgzFpf3ZEI4vGAQOES2Ea92obV5+jFkjw0EnA6pHeAcE9rUJsxNCoW30pnoI0REPPrZxwL8rWcTBKC5hyk5ZV4gM4J2ZhimRavNB1rtB1YSPUnHf1MRxa78wkYxoJSpxoZ78TcZglog+PdMrYBzk7e0A6b2JskBPWRBqDQZ5j6COPIKGZ4Vofe0nLJJY8sPuPre4gEEgVHnQGfVkHWo94v36zQP2i+NtfkJTh6+fhhIkU4q2qIew1fglh7ZKJpjMUhw6jAjlYCv64H+Squ7lRZPTQq7a7O6iJPGQrNjovd7MXqK2IlVGYu1o8EfXAzAE+iByWtFbuQKZEiCb4YF6yA8GjJDVisd6ROsX6BjSUYabvuI0DfJljuN5/ezaus2cJbXy/nK1AudHJr2nd
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44aa10e7-6a01-4b49-905a-08d766c2560f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2019 16:15:15.2502
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: szX6LSn95nwkv7P+nUvkvAYfDn21xEd1CaSNv0Gfnyd1vHimKxlNVRQSB0+mfLaIYxlek6rO2OlZ9+8kBNRjxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4287
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ACPI entry and use device_property_read to get fw value
-which is common to both dtsi and acpi.
+When installing kselftests to its own directory and run the
+test_lwt_ip_encap.sh it will complain that test_lwt_ip_encap.o can't be
+found. Same with the test_tc_edt.sh test it will complain that
+test_tc_edt.o can't be found.
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+$ ./test_lwt_ip_encap.sh
+starting egress IPv4 encap test
+Error opening object test_lwt_ip_encap.o: No such file or directory
+Object hashing failed!
+Cannot initialize ELF context!
+Failed to parse eBPF program: Invalid argument
+
+Rework to add test_lwt_ip_encap.o and test_tc_edt.o to TEST_FILES so the
+object file gets installed when installing kselftest.
+
+Fixes: 74b5a5968fe8 ("selftests/bpf: Replace test_progs and test_maps w/ general rule")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Acked-by: Song Liu <songliubraving@fb.com>
 ---
- drivers/i2c/busses/i2c-cros-ec-tunnel.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/testing/selftests/bpf/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-cros-ec-tunnel.c b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-index c551aa96a2e3..958161c71985 100644
---- a/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-+++ b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-@@ -3,6 +3,7 @@
- //
- // Copyright (C) 2013 Google, Inc.
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index b334a6db15c1..b03dc2298fea 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -38,7 +38,8 @@ TEST_GEN_PROGS += test_progs-bpf_gcc
+ endif
  
-+#include <linux/acpi.h>
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/platform_data/cros_ec_commands.h>
-@@ -240,7 +241,6 @@ static const struct i2c_algorithm ec_i2c_algorithm = {
+ TEST_GEN_FILES =
+-TEST_FILES =
++TEST_FILES = test_lwt_ip_encap.o \
++	test_tc_edt.o
  
- static int ec_i2c_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
- 	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
- 	struct device *dev = &pdev->dev;
- 	struct ec_i2c_device *bus = NULL;
-@@ -256,7 +256,7 @@ static int ec_i2c_probe(struct platform_device *pdev)
- 	if (bus == NULL)
- 		return -ENOMEM;
- 
--	err = of_property_read_u32(np, "google,remote-bus", &remote_bus);
-+	err = device_property_read_u32(dev, "google,remote-bus", &remote_bus);
- 	if (err) {
- 		dev_err(dev, "Couldn't read remote-bus property\n");
- 		return err;
-@@ -271,7 +271,7 @@ static int ec_i2c_probe(struct platform_device *pdev)
- 	bus->adap.algo = &ec_i2c_algorithm;
- 	bus->adap.algo_data = bus;
- 	bus->adap.dev.parent = &pdev->dev;
--	bus->adap.dev.of_node = np;
-+	bus->adap.dev.of_node = pdev->dev.of_node;
- 	bus->adap.retries = I2C_MAX_RETRIES;
- 
- 	err = i2c_add_adapter(&bus->adap);
-@@ -291,19 +291,24 @@ static int ec_i2c_remove(struct platform_device *dev)
- 	return 0;
- }
- 
--#ifdef CONFIG_OF
- static const struct of_device_id cros_ec_i2c_of_match[] = {
- 	{ .compatible = "google,cros-ec-i2c-tunnel" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, cros_ec_i2c_of_match);
--#endif
-+
-+static const struct acpi_device_id cros_ec_i2c_tunnel_acpi_id[] = {
-+	{ "GOOG001A", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, cros_ec_i2c_tunnel_acpi_id);
- 
- static struct platform_driver ec_i2c_tunnel_driver = {
- 	.probe = ec_i2c_probe,
- 	.remove = ec_i2c_remove,
- 	.driver = {
- 		.name = "cros-ec-i2c-tunnel",
-+		.acpi_match_table = ACPI_PTR(cros_ec_i2c_tunnel_acpi_id),
- 		.of_match_table = of_match_ptr(cros_ec_i2c_of_match),
- 	},
- };
+ # Order correspond to 'make run_tests' order
+ TEST_PROGS := test_kmod.sh \
 -- 
-2.17.1
+2.20.1
 
