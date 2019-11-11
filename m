@@ -2,122 +2,152 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207DAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A386C17446
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB4C2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F7621783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZYzyx+8k"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EFxfIiWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfKKPUx (ORCPT
+        id S1726912AbfKKPYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:20:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53271 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726857AbfKKPUw (ORCPT
+        Mon, 11 Nov 2019 10:24:18 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44024 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfKKPYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:20:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573485651;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C1zGHKvwpfTIUGcapQ+PDyzQUKdMx+4TB/qV51A6KfM=;
-        b=ZYzyx+8k88KApyTDKgLQLPjMrXkY7WyCLfrmL/wRjCWkjU8JvFLNWHAJkTZD/zHZiIl7Iw
-        +XxcFy7n0nk+RxKe7hwqCJgp34FqP8OF+at4RI2KxovGN5f0oLakv4emNRoZasZiS9p+0f
-        FSe0q/hoN0YdnxkwXqv3eAtuQ8c5cyk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-vBGvGzzCMIG6kes1J63o-g-1; Mon, 11 Nov 2019 10:20:48 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F7F5911AD;
-        Mon, 11 Nov 2019 15:20:46 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E6F060852;
-        Mon, 11 Nov 2019 15:20:38 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: For review: documentation of clone3() system call
-References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
-        <87tv7awj4g.fsf@oldenburg2.str.redhat.com>
-        <CAG48ez3zpBwU6vHSuY6VoP+Uw_Jz6uxYN1Teg2wSpwZrPmAn-g@mail.gmail.com>
-Date:   Mon, 11 Nov 2019 16:20:36 +0100
-In-Reply-To: <CAG48ez3zpBwU6vHSuY6VoP+Uw_Jz6uxYN1Teg2wSpwZrPmAn-g@mail.gmail.com>
-        (Jann Horn's message of "Mon, 11 Nov 2019 16:15:58 +0100")
-Message-ID: <875zjqwibf.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 11 Nov 2019 10:24:18 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABFO7G0123167;
+        Mon, 11 Nov 2019 09:24:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573485847;
+        bh=CS+i48le/nixyfp28KvB8emlqsL8zLIaTpD4UiUPBgg=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=EFxfIiWFMAuTURTKB1Nqf1eArMcjvwoTQtrncyqluxEXYyeL9EX1bIRk4TKehpxHC
+         vWhrB04F3pd6z97BEeGNblTbLXPidgZlnObE6Oqi3rJcnG1G/EdVBqIij3czCePGwc
+         bmTxhAVGtgOxmrzho+ffLh0BGuw+SpobEDOq6sdM=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABFO7Qr002743
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Nov 2019 09:24:07 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
+ Nov 2019 09:23:49 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 11 Nov 2019 09:23:49 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABFO2lD094280;
+        Mon, 11 Nov 2019 09:24:03 -0600
+Subject: Re: [PATCH v5 09/15] dmaengine: ti: New driver for K3 UDMA - split#1:
+ defines, structs, io func
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
+ <20191111135330.8235-10-peter.ujfalusi@ti.com>
+Message-ID: <f6ad18d4-a8c2-fbed-3e41-40dcb23e651c@ti.com>
+Date:   Mon, 11 Nov 2019 17:25:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: vBGvGzzCMIG6kes1J63o-g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191111135330.8235-10-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jann Horn:
+Hi,
 
-> On Mon, Nov 11, 2019 at 4:03 PM Florian Weimer <fweimer@redhat.com> wrote=
-:
->>
->> * Michael Kerrisk:
->>
->> >        Another  difference  for  the  raw clone() system call is that =
-the
->> >        stack argument may be NULL, in which case the child uses a  dup=
-li=E2=80=90
->> >        cate  of the parent's stack.  (Copy-on-write semantics ensure t=
-hat
->> >        the child gets separate copies of stack pages when either  proc=
-ess
->> >        modifies  the  stack.)   In  this case, for correct operation, =
-the
->> >        CLONE_VM option should not be specified.  (If the child shares =
-the
->> >        parent's  memory  because of the use of the CLONE_VM flag, then=
- no
->> >        copy-on-write duplication occurs and chaos is likely to result.=
-)
->>
->> I think sharing the stack also works with CLONE_VFORK with CLONE_VM, as
->> long as measures are taken to preserve the return address in a register.
->
-> That basically just requires that the userspace function declaration
-> for clone3 includes __attribute__((returns_twice)), right?
+On 11/11/2019 15.53, Peter Ujfalusi wrote:
+> Split patch for review containing: defines, structs, io and low level
+> functions and interrupt callbacks.
+> 
+> DMA driver for
+> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
+> 
+> The UDMA-P is intended to perform similar (but significantly upgraded) functions
+> as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
+> supports the transmission and reception of various packet types. The UDMA-P is
+> architected to facilitate the segmentation and reassembly of SoC DMA data
+> structure compliant packets to/from smaller data blocks that are natively
+> compatible with the specific requirements of each connected peripheral. Multiple
+> Tx and Rx channels are provided within the DMA which allow multiple segmentation
+> or reassembly operations to be ongoing. The DMA controller maintains state
+> information for each of the channels which allows packet segmentation and
+> reassembly operations to be time division multiplexed between channels in order
+> to share the underlying DMA hardware. An external DMA scheduler is used to
+> control the ordering and rate at which this multiplexing occurs for Transmit
+> operations. The ordering and rate of Receive operations is indirectly controlled
+> by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
+> 
+> The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
+> channels. Channels in the UDMA-P can be configured to be either Packet-Based or
+> Third-Party channels on a channel by channel basis.
+> 
+> The initial driver supports:
+> - MEM_TO_MEM (TR mode)
+> - DEV_TO_MEM (Packet / TR mode)
+> - MEM_TO_DEV (Packet / TR mode)
+> - Cyclic (Packet / TR mode)
+> - Metadata for descriptors
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/ti/k3-udma.c | 1047 ++++++++++++++++++++++++++++++++++++++
+>  drivers/dma/ti/k3-udma.h |  120 +++++
+>  2 files changed, 1167 insertions(+)
+>  create mode 100644 drivers/dma/ti/k3-udma.c
+>  create mode 100644 drivers/dma/ti/k3-udma.h
+> 
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> new file mode 100644
+> index 000000000000..c6f94d79388c
+> --- /dev/null
+> +++ b/drivers/dma/ti/k3-udma.c
 
-The clone3 implementation itself would have to store the return address
-in a register because at the time of the second return, a return address
-on the stack may have been corrupted by the subprocess because what used
-to be the stack frame of the clone function has since been reused for
-something else.
+...
 
-__attribute__ ((returns_twice)) is likely needed as well, but that
-benefits the caller.  It's also not clear that it is sufficient for this
-to work in all cases.  (But the mandatory-to-implement vfork function
-faces the same problems.)
+> +static bool udma_is_chan_running(struct udma_chan *uc)
+> +{
+> +	u32 trt_ctl = 0;
+> +	u32 rrt_ctl = 0;
+> +
+> +	if (uc->tchan)
+> +		trt_ctl = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_CTL_REG);
+> +	if (uc->rchan)
+> +		rrt_ctl = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_CTL_REG);
+> +
+> +	if (trt_ctl & (UDMA_CHAN_RT_CTL_EN || rrt_ctl & UDMA_CHAN_RT_CTL_EN))
 
-Thanks,
-Florian
+Gash:
+if (trt_ctl & UDMA_CHAN_RT_CTL_EN || rrt_ctl & UDMA_CHAN_RT_CTL_EN)
 
+
+> +		return true;
+> +
+> +	return false;
+> +}
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
