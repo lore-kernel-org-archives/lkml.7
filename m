@@ -2,132 +2,169 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822EDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF697C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611312196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BFA222CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wu/WJSWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfKKQHo (ORCPT
+        id S1727012AbfKKQHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:07:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:47544 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbfKKQHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:07:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05B0B31B;
-        Mon, 11 Nov 2019 08:07:43 -0800 (PST)
-Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6C8A3F534;
-        Mon, 11 Nov 2019 08:07:41 -0800 (PST)
-Subject: Re: [PATCH 1/2] arm64: Rename WORKAROUND_1165522 to SPECULATIVE_AT
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <20191111141157.55062-1-steven.price@arm.com>
- <20191111141157.55062-2-steven.price@arm.com>
- <160a852027f4481cc63aed72c4f4a409@www.loen.fr>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <013eec05-b558-d97a-bf95-248a62f25dc5@arm.com>
-Date:   Mon, 11 Nov 2019 16:07:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 11:07:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22961 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726845AbfKKQHq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:07:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573488465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=J8ErC4PVdVGwBCyt7dEhWq/0IJ1CoVRGTxaHLB8Usq8=;
+        b=Wu/WJSWib3Csf3EFxK36wJidLLasgG9eSg3mKt6EYDQSUkKFGwoDrFd+v/VPC6kaJG2MX4
+        iLm73jfSyKfIX4z/jAxBHL8RY6i0rA/fIS2KVeY77pYX55jN+rmt8GjWAroo1FLudBsBbT
+        8ovkpWLLJDJtataYNQnSZVOvS+xrasE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-yzbKBR5MO1a2Nt2c4kU-hQ-1; Mon, 11 Nov 2019 11:07:42 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 700A0100551C;
+        Mon, 11 Nov 2019 16:07:40 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D399210027A5;
+        Mon, 11 Nov 2019 16:07:38 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 17:07:38 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] perf session: Fix compression processing
+Message-ID: <20191111160738.GD26980@krava>
+References: <20191103222441.GE8251@krava>
+ <d57725e6-e62f-b37e-6cb4-28bf521faaea@linux.intel.com>
+ <20191111145640.GB26980@krava>
+ <69782f54-f5f5-f89f-9c8d-172d4de331d0@linux.intel.com>
+ <20191111154612.GC26980@krava>
+ <84f6c330-95bc-b615-4366-8a243d1f5c20@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <160a852027f4481cc63aed72c4f4a409@www.loen.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <84f6c330-95bc-b615-4366-8a243d1f5c20@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: yzbKBR5MO1a2Nt2c4kU-hQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/2019 15:42, Marc Zyngier wrote:
-> Hi Steven,
-> 
-> On 2019-11-11 15:21, Steven Price wrote:
->> Cortex-A55 is affected by a similar erratum, so rename the existing
->> workaround for errarum 1165522 so it can be used for both errata.
-> 
-> nit: erratum
+On Mon, Nov 11, 2019 at 06:53:35PM +0300, Alexey Budankov wrote:
+> On 11.11.2019 18:46, Jiri Olsa wrote:
+> > On Mon, Nov 11, 2019 at 06:41:47PM +0300, Alexey Budankov wrote:
+> >> On 11.11.2019 17:56, Jiri Olsa wrote:
+> >>> On Mon, Nov 11, 2019 at 05:38:49PM +0300, Alexey Budankov wrote:
+> >>>>
+> >>>> On 04.11.2019 1:24, Jiri Olsa wrote:
+> >>>>> hi,
+> >>>> <SNIP>
+> >>>>> ---
+> >>>>> The compressed data processing occasionally fails with:
+> >>>>>   $ perf report --stdio -vv
+> >>>>>   decomp (B): 44519 to 163000
+> >>>>>   decomp (B): 48119 to 174800
+> >>>>>   decomp (B): 65527 to 131072
+> >>>>>   fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mma=
+p_size=3D0x20000: fuzzed perf.data?
+> >>>>>   Error:
+> >>>>>   failed to process sample
+> >>>>>   ...
+> >>>>>
+> >>>>> It's caused by recent fuzzer fix that does not take into account
+> >>>>> that compressed data do not need to by fully present in the buffer,
+> >>>>> so it's ok to just return NULL and not to fail.
+> >>>>>
+> >>>>> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing=
+ invalid header.size")
+> >>>>> Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.ker=
+nel.org
+> >>>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> >>>>> ---
+> >>>>>  tools/perf/util/session.c | 8 +++++---
+> >>>>>  1 file changed, 5 insertions(+), 3 deletions(-)
+> >>>>>
+> >>>>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> >>>>> index f07b8ecb91bc..3589ed14a629 100644
+> >>>>> --- a/tools/perf/util/session.c
+> >>>>> +++ b/tools/perf/util/session.c
+> >>>>> @@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_event=
+s(struct perf_session *session)
+> >>>>> =20
+> >>>>>  static union perf_event *
+> >>>>>  fetch_mmaped_event(struct perf_session *session,
+> >>>>> -=09=09   u64 head, size_t mmap_size, char *buf)
+> >>>>> +=09=09   u64 head, size_t mmap_size, char *buf, bool decomp)
+> >>>>
+> >>>> bools in interface make code less transparent.
+> >>>>
+> >>>>>  {
+> >>>>>  =09union perf_event *event;
+> >>>>> =20
+> >>>>> @@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *sessi=
+on,
+> >>>>>  =09=09/* We're not fetching the event so swap back again */
+> >>>>>  =09=09if (session->header.needs_swap)
+> >>>>>  =09=09=09perf_event_header__bswap(&event->header);
+> >>>>> +=09=09if (decomp)
+> >>>>> +=09=09=09return NULL;
+> >>>>>  =09=09pr_debug("%s: head=3D%#" PRIx64 " event->header_size=3D%#x, =
+mmap_size=3D%#zx: fuzzed perf.data?\n",
+> >>>>>  =09=09=09 __func__, head, event->header.size, mmap_size);
+> >>>>>  =09=09return ERR_PTR(-EINVAL);
+> >>>>> @@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_eve=
+nts(struct perf_session *session)
+> >>>>>  =09=09return 0;
+> >>>>> =20
+> >>>>>  =09while (decomp->head < decomp->size && !session_done()) {
+> >>>>> -=09=09union perf_event *event =3D fetch_mmaped_event(session, deco=
+mp->head, decomp->size, decomp->data);
+> >>>>> +=09=09union perf_event *event =3D fetch_mmaped_event(session, deco=
+mp->head, decomp->size, decomp->data, true);
+> >>>>
+> >>>> It looks like this call can be skipped, at all, in this case.
+> >>>
+> >>> not sure what you mean, we are in decomp code no?
+> >>
+> >> Ok, it is inside "not fetching" branch.=20
+> >> NULL return value means to proceed getting further over the trace.
+> >> Checking record type =3D=3D COMPRESSED at the higher level could=20
+> >> probably be cleaner fix and also work faster.
+> >=20
+> > any chance you could post the fix? the patch I did was a
+> > quick fix to get the feature working for presentation ;-)
+> > you're probably thinking of the proper approach
+>=20
+> Please share the exact reproducing steps=20
+> so I could come up with something.
 
-Thanks, I do seem to have trouble spelling it correctly :)
+'perf record -z' for longer workloads
 
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  arch/arm64/Kconfig                |  4 ++++
->>  arch/arm64/include/asm/cpucaps.h  |  2 +-
->>  arch/arm64/include/asm/kvm_host.h |  2 +-
->>  arch/arm64/include/asm/kvm_hyp.h  |  3 +--
->>  arch/arm64/kernel/cpu_errata.c    | 17 +++++++++++++----
->>  arch/arm64/kvm/hyp/switch.c       |  2 +-
->>  arch/arm64/kvm/hyp/tlb.c          |  4 ++--
->>  7 files changed, 23 insertions(+), 11 deletions(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 3f047afb982c..6cb4eff602c6 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -510,9 +510,13 @@ config ARM64_ERRATUM_1418040
->>
->>        If unsure, say Y.
->>
->> +config ARM64_WORKAROUND_SPECULATIVE_AT
->> +    bool
->> +
->>  config ARM64_ERRATUM_1165522
->>      bool "Cortex-A76: Speculative AT instruction using out-of-context
->> translation regime could cause subsequent request to generate an
->> incorrect translation"
->>      default y
->> +    select ARM64_WORKAROUND_SPECULATIVE_AT
-> 
-> I'd object that ARM64_ERRATUM_1319367 (and its big brother 1319537)
-> are also related to speculative AT execution, and yet are not covered
-> by this configuration symbol.
+jirka
 
-Good point.
-
-> I can see three solutions to this:
-> 
-> - Either you call it SPECULATIVE_AT_VHE and introduce SPECULATIVE_AT_NVHE
->   for symmetry
-
-Tempting...
-
-> - Or you make SPECULATIVE_AT cover all the speculative AT errata, which
->   may or may not work...
-
-This actually sounds the neatest, but I'm not sure whether there's going
-to be any conflicts between VHE/NVHE. I'll prototype this and see how
-ugly it is.
-
-> - Or even better, you just ammend the documentation to say that 1165522
->   also covers the newly found A55 one (just like we have for A57/A72)
-
-Well Mark Rutland disliked my initial thoughts about just including both
-errata in one option like that - hence the refactoring in this patch.
-Although of course that's exactly what's happened with 1319367/1319537...
-
-> What do you think?
-
-I'll have a go at SPECULATIVE_AT covering both VHE/NVHE - from an
-initial look it seems like it should work and it would be neat if it
-does. In particular it should avoid the necessity to require VHE when
-the erratum is present.
-
-Otherwise I guess SPECULATIVE_AT_{,N}VHE is probably second best.
-
-Thanks,
-
-Steve
