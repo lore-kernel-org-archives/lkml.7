@@ -2,107 +2,96 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A79C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5578FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275D320856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B37120856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gX6VKX1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfKKKgo (ORCPT
+        id S1726910AbfKKKjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:36:44 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:38207 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfKKKgn (ORCPT
+        Mon, 11 Nov 2019 05:39:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31517 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726770AbfKKKjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:36:43 -0500
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MqbI0-1i8CQi2iKu-00mc2H; Mon, 11 Nov 2019 11:36:40 +0100
-Received: by mail-qv1-f46.google.com with SMTP id f12so4660079qvu.3;
-        Mon, 11 Nov 2019 02:36:39 -0800 (PST)
-X-Gm-Message-State: APjAAAUT3Qdeiri2nf/a9hZxYA+s9YglrpYjjU1hn5ZWkyA7i5p8Vrcc
-        QA30I7QFw7jV+rFcmPGwSBM33hztJ/+dGvx7o1E=
-X-Google-Smtp-Source: APXvYqwG9UjDI7BT4/zArLXJROi41Jfl0ozvIqGD8Z6sQp9Psd5jWuuWMeGtnWBnULPRq767xF7AmE4x/PyrFGraS9U=
-X-Received: by 2002:a0c:a9cc:: with SMTP id c12mr4580319qvb.222.1573468598676;
- Mon, 11 Nov 2019 02:36:38 -0800 (PST)
+        Mon, 11 Nov 2019 05:39:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573468740;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DtJ5pv77U2r0G6ksqsSYckeZ6pvSP6wLt/Y5uCN51BI=;
+        b=gX6VKX1YGSQBI/P7OkvrH8I9iedPzu5Owoj68/TimgZxIogBVL9lB2mlcILm37mLI6OhY+
+        KBmGypspQcRqNqkEA1sxK+Ou2e7bfAKgBjIY/vq6QCMsHGvS57gKZYwMrT/rDLOp6gb99k
+        Xc5zsiEjM+MsvqWYLt86/mwuxguMlvA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-S1iNAS8jNHuFSYbreh69fQ-1; Mon, 11 Nov 2019 05:38:56 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D4F5107ACC4;
+        Mon, 11 Nov 2019 10:38:55 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E5C755D6A3;
+        Mon, 11 Nov 2019 10:38:54 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id C14C94BB5C;
+        Mon, 11 Nov 2019 10:38:54 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 05:38:54 -0500 (EST)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        LTP List <ltp@lists.linux.it>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        lkft-triage@lists.linaro.org,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Message-ID: <1757087132.11450258.1573468734360.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20191111083815.GA29540@infradead.org>
+References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com> <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com> <20191111012614.GC6235@magnolia> <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com> <20191111083815.GA29540@infradead.org>
+Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0:
+ Success
 MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-4-hch@lst.de>
-In-Reply-To: <20191029064834.23438-4-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:36:22 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3k2KRyhCy4OWJkToNBiw_mw0e_A=Ta6UANMMF3EXnhmA@mail.gmail.com>
-Message-ID: <CAK8P3a3k2KRyhCy4OWJkToNBiw_mw0e_A=Ta6UANMMF3EXnhmA@mail.gmail.com>
-Subject: Re: [PATCH 03/21] ia64: rename ioremap_nocache to ioremap_uc
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:1JhgznTD+nxQakSYexEK5Pk7b21gJFc2WwU/VhlwbME8N3jGV/+
- TpZ37rg3qW3B4NpO67un+1fSQwj7nJ9WZxTx4tTw9EKEbeJLwQT1TG9P/3xrMgCSPaMoGDW
- 4OmMhZWar6tNBwoASHsSKmwJI7CPx497+h8ii4N2nIjzGmy0KJ0TV9vHBlIGb31rRCksOx9
- aTZ8Ir7FbCAiPNKD11llg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ine2h7iyM1A=:qlrnOzki59DM0rGyHbF8c+
- 4c41xr+Pjp3dv6qx5neQvKwVeJxerBsQ4cZwqUg3qKbbDEFa2ZPC0yEa1cbl7oJWJAwRcsdz6
- 3MUPWCBNg96i3H6LWIf2LY64tTEzAwU6ta+wRDArNRsNPjb+cOcAHdO9J5cipKKooXSwfqh8z
- hdrlf+Webj14QrpswR0AwC+8hKtzWd3i0xF+aE+nK/v+b1TtFw3PWqR0yiKat86EI4zUEaq5S
- blnI1BhSm9FhHUQnRQYPCyh9wiNRLDsep8swNKAMT9kFtEYbcXHeA956UAKOL55rHOLQlxqd3
- lAXOyepCNVYPFNUyMmMo6uXZePmp/F+60qeAs/Tm928lA24mSrrR1jN4Nq8m3JqUpjKhlZFaU
- fvOcUxdsAUUjwEiE4xSEhPoEtQb+DOGjhCuWsoZrvcZ1CjJd2pnmp6FLV3FPDrayCN2FUB0+D
- dmLJySIAVE94FRl52KFtqFt9/TBA0a2L4yS7XNw+74hbWZJzUFOsB1zH2ZnS90kPa5a1S22XM
- mkuCB+Ze2kLOtqiQGKJqc0RlyWnS+sMOkWAdvTX+Rk1hGH5fKf0QbR6Le5fYNxtQWuM0JMh+f
- By832HCI9AAhEwsUgCfxQCimkThZsEgsisrp/yb11zuIdHEeLX16avpzV0hyWrAt6yeKP7XrG
- yjSzxrZhvOP87R/igp1n2UpO7GVNOVggicvQugamDUOVh3NDT+rQXzKcV4LH3yIkPIKuSINHm
- GaoL/XXgPWkF56Qx6lsBsgXfh3dciBTkAIu4nPZV5+fqR9kZ2QN3jAM4eo2Ub3HntQ9Kbyv/a
- ZDdBgC236xAnxPORQfWGJIrWohqntO0L5vDv2H4PTweI1FuenAFOsrx0PeMpr05WJvpzkeNBM
- RntzRq/h+i22XaPj8kSJZuypgHi3M6gwdd2H+7uFpgi5116lXuTPt2gZhmC4RNHOAUMyt7F6w
- EKVOtQp2bdxVDZZvAy6BtKT5EprzcuH1RFRAxRb4YPU7spR+xJPQCgbGgWu5JDdYB+aa/+plM
- NJyOttaoY33T+C7Iqkgauu6DDMOdPDodJFayhYpF7V4oCFsaUB1Qh4zXbOtQenYMLA==
+X-Originating-IP: [10.43.17.163, 10.4.195.18]
+Thread-Topic: diotest4.c:476: read to read-only space. returns 0: Success
+Thread-Index: 910IB+66jrM2sMmDpKAiK7gJA7sQsg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: S1iNAS8jNHuFSYbreh69fQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:48 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On ia64 ioremap_nocache fails if attributes don't match.  Not other
-> architectures does this, and we plan to get rid of ioremap_nocache.
-> So get rid of the special semantics and define ioremap_nocache in
-> terms of ioremap as no portable driver could rely on the behavior
-> anyway.
->
-> However x86 implements ioremap_uc in a similar way as the ia64
-> version of ioremap_nocache, in that it ignores the firmware tables.
-> Switch ia64 to override ioremap_uc instead.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Good idea,
+----- Original Message -----
+> Is this a new test?
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+No, it's not new.
+
+> If not why was this never reported?  Sounds like
+> we should add this test case to xfstests.
+
+I'm guessing not that many users still run 32bit kernels.
+Naresh' setup is using ext4, so I assume he noticed only
+after recent changes in linux-next wrt. directio and ext4.
+
+Regards,
+Jan
+
