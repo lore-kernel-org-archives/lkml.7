@@ -2,240 +2,124 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41854C17444
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7ECC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB1E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573464753;
-	bh=6kZnh4xohKvnhS11RTmA8D1b23bqzOH5KKHIMcAgi4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kdS/0lrnudxmHfIbRScSm0E4G4w9wD691FTm9I7CNNm4/0WMdgAzjr4xVm24IvXIm
-	 wHHi+kTufx4q99ZMZTGWFRb6/Uk0/1D7VUoZ0tv41tTYtm6U9Gn6Z4xfDtilOTf0/g
-	 02SESmn1p0ZOWAEqrg8FF5oc9JaoeNLAJhoUv0VU=
+	by mail.kernel.org (Postfix) with ESMTP id BB5D72075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKKJcc (ORCPT
+        id S1727122AbfKKJck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:32:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35362 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726768AbfKKJcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:32:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DC194B5ED;
-        Mon, 11 Nov 2019 09:32:27 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 10:32:26 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     david@fromorbit.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        martin@urbackup.org, Damien.LeMoal@wdc.com,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH] Add prctl support for controlling mem reclaim V3
-Message-ID: <20191111093226.GC1396@dhcp22.suse.cz>
-References: <20191108185319.9326-1-mchristi@redhat.com>
+        Mon, 11 Nov 2019 04:32:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55742 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKJck (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:32:40 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iU63l-000378-4X; Mon, 11 Nov 2019 10:32:33 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9034E1C0093;
+        Mon, 11 Nov 2019 10:32:32 +0100 (CET)
+Date:   Mon, 11 Nov 2019 09:32:32 -0000
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irq_work: Slightly simplify IRQ_WORK_PENDING clearing
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191108160858.31665-4-frederic@kernel.org>
+References: <20191108160858.31665-4-frederic@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108185319.9326-1-mchristi@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157346475217.29376.12478664809830197769.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc linux-api]
+The following commit has been merged into the irq/core branch of tip:
 
-On Fri 08-11-19 12:53:19, Mike Christie wrote:
-> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
-> amd nbd that have userspace components that can run in the IO path. For
-> example, iscsi and nbd's userspace deamons may need to recreate a socket
-> and/or send IO on it, and dm-multipath's daemon multipathd may need to
-> send SG IO or read/write IO to figure out the state of paths and re-set
-> them up.
-> 
-> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
-> memalloc_*_save/restore functions to control the allocation behavior,
-> but for userspace we would end up hitting an allocation that ended up
-> writing data back to the same device we are trying to allocate for.
-> The device is then in a state of deadlock, because to execute IO the
-> device needs to allocate memory, but to allocate memory the memory
-> layers want execute IO to the device.
-> 
-> Here is an example with nbd using a local userspace daemon that performs
-> network IO to a remote server. We are using XFS on top of the nbd device,
-> but it can happen with any FS or other modules layered on top of the nbd
-> device that can write out data to free memory.  Here a nbd daemon helper
-> thread, msgr-worker-1, is performing a write/sendmsg on a socket to execute
-> a request. This kicks off a reclaim operation which results in a WRITE to
-> the nbd device and the nbd thread calling back into the mm layer.
-> 
-> [ 1626.609191] msgr-worker-1   D    0  1026      1 0x00004000
-> [ 1626.609193] Call Trace:
-> [ 1626.609195]  ? __schedule+0x29b/0x630
-> [ 1626.609197]  ? wait_for_completion+0xe0/0x170
-> [ 1626.609198]  schedule+0x30/0xb0
-> [ 1626.609200]  schedule_timeout+0x1f6/0x2f0
-> [ 1626.609202]  ? blk_finish_plug+0x21/0x2e
-> [ 1626.609204]  ? _xfs_buf_ioapply+0x2e6/0x410
-> [ 1626.609206]  ? wait_for_completion+0xe0/0x170
-> [ 1626.609208]  wait_for_completion+0x108/0x170
-> [ 1626.609210]  ? wake_up_q+0x70/0x70
-> [ 1626.609212]  ? __xfs_buf_submit+0x12e/0x250
-> [ 1626.609214]  ? xfs_bwrite+0x25/0x60
-> [ 1626.609215]  xfs_buf_iowait+0x22/0xf0
-> [ 1626.609218]  __xfs_buf_submit+0x12e/0x250
-> [ 1626.609220]  xfs_bwrite+0x25/0x60
-> [ 1626.609222]  xfs_reclaim_inode+0x2e8/0x310
-> [ 1626.609224]  xfs_reclaim_inodes_ag+0x1b6/0x300
-> [ 1626.609227]  xfs_reclaim_inodes_nr+0x31/0x40
-> [ 1626.609228]  super_cache_scan+0x152/0x1a0
-> [ 1626.609231]  do_shrink_slab+0x12c/0x2d0
-> [ 1626.609233]  shrink_slab+0x9c/0x2a0
-> [ 1626.609235]  shrink_node+0xd7/0x470
-> [ 1626.609237]  do_try_to_free_pages+0xbf/0x380
-> [ 1626.609240]  try_to_free_pages+0xd9/0x1f0
-> [ 1626.609245]  __alloc_pages_slowpath+0x3a4/0xd30
-> [ 1626.609251]  ? ___slab_alloc+0x238/0x560
-> [ 1626.609254]  __alloc_pages_nodemask+0x30c/0x350
-> [ 1626.609259]  skb_page_frag_refill+0x97/0xd0
-> [ 1626.609274]  sk_page_frag_refill+0x1d/0x80
-> [ 1626.609279]  tcp_sendmsg_locked+0x2bb/0xdd0
-> [ 1626.609304]  tcp_sendmsg+0x27/0x40
-> [ 1626.609307]  sock_sendmsg+0x54/0x60
-> [ 1626.609308]  ___sys_sendmsg+0x29f/0x320
-> [ 1626.609313]  ? sock_poll+0x66/0xb0
-> [ 1626.609318]  ? ep_item_poll.isra.15+0x40/0xc0
-> [ 1626.609320]  ? ep_send_events_proc+0xe6/0x230
-> [ 1626.609322]  ? hrtimer_try_to_cancel+0x54/0xf0
-> [ 1626.609324]  ? ep_read_events_proc+0xc0/0xc0
-> [ 1626.609326]  ? _raw_write_unlock_irq+0xa/0x20
-> [ 1626.609327]  ? ep_scan_ready_list.constprop.19+0x218/0x230
-> [ 1626.609329]  ? __hrtimer_init+0xb0/0xb0
-> [ 1626.609331]  ? _raw_spin_unlock_irq+0xa/0x20
-> [ 1626.609334]  ? ep_poll+0x26c/0x4a0
-> [ 1626.609337]  ? tcp_tsq_write.part.54+0xa0/0xa0
-> [ 1626.609339]  ? release_sock+0x43/0x90
-> [ 1626.609341]  ? _raw_spin_unlock_bh+0xa/0x20
-> [ 1626.609342]  __sys_sendmsg+0x47/0x80
-> [ 1626.609347]  do_syscall_64+0x5f/0x1c0
-> [ 1626.609349]  ? prepare_exit_to_usermode+0x75/0xa0
-> [ 1626.609351]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> This patch adds a new prctl command that daemons can use after they have
-> done their initial setup, and before they start to do allocations that
-> are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
-> flags so both userspace block and FS threads can use it to avoid the
-> allocation recursion and try to prevent from being throttled while
-> writing out data to free up memory.
-> 
-> Signed-off-by: Mike Christie <mchristi@redhat.com>
+Commit-ID:     feb4a51323babe13315c3b783ea7f1cf25368918
+Gitweb:        https://git.kernel.org/tip/feb4a51323babe13315c3b783ea7f1cf25368918
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Fri, 08 Nov 2019 17:08:57 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 11 Nov 2019 09:03:31 +01:00
 
-OK, this looks much better then explicitly exposing NOIO/NOFS to the
-userspace. Restricting to CAP_SYS_RESOURCE makes sense as well but I am
-not really an expert in that direction.
+irq_work: Slightly simplify IRQ_WORK_PENDING clearing
 
-So for the proposed semantic this makes sense
-Acked-by: Michal Hocko <mhocko@suse.com>
+Instead of fetching the value of flags and perform an xchg() to clear
+a bit, just use atomic_fetch_andnot() that is more suitable to do that
+job in one operation while keeping the full ordering.
 
-Please do not forget to add a man page update.
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E . McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191108160858.31665-4-frederic@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/irq_work.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Keeping the rest of the email for the new CC
-
-> ---
-> V3 
-> - Drop NOFS, set PF_LESS_THROTTLE and rename prctl flag to reflect it
-> is more general and can support both FS and block devices. Both fuse
-> and block device daemons, nbd and tcmu-runner, have been tested to
-> confirm the more restrictive PF_MEMALLOC_NOIO also works for fuse.
-> 
-> - Use CAP_SYS_RESOURCE instead of admin.
-> 
-> V2:
-> - Use prctl instead of procfs.
-> - Add support for NOFS for fuse.
-> - Check permissions.
-> 
-> 
->  include/uapi/linux/capability.h |  1 +
->  include/uapi/linux/prctl.h      |  4 ++++
->  kernel/sys.c                    | 26 ++++++++++++++++++++++++++
->  3 files changed, 31 insertions(+)
-> 
-> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-> index 240fdb9a60f6..272dc69fa080 100644
-> --- a/include/uapi/linux/capability.h
-> +++ b/include/uapi/linux/capability.h
-> @@ -301,6 +301,7 @@ struct vfs_ns_cap_data {
->  /* Allow more than 64hz interrupts from the real-time clock */
->  /* Override max number of consoles on console allocation */
->  /* Override max number of keymaps */
-> +/* Control memory reclaim behavior */
->  
->  #define CAP_SYS_RESOURCE     24
->  
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 7da1b37b27aa..07b4f8131e36 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -234,4 +234,8 @@ struct prctl_mm_map {
->  #define PR_GET_TAGGED_ADDR_CTRL		56
->  # define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
->  
-> +/* Control reclaim behavior when allocating memory */
-> +#define PR_SET_IO_FLUSHER		57
-> +#define PR_GET_IO_FLUSHER		58
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index a611d1d58c7d..08c6b682fa99 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2486,6 +2486,32 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->  			return -EINVAL;
->  		error = GET_TAGGED_ADDR_CTRL();
->  		break;
-> +	case PR_SET_IO_FLUSHER:
-> +		if (!capable(CAP_SYS_RESOURCE))
-> +			return -EPERM;
-> +
-> +		if (arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +
-> +		if (arg2 == 1)
-> +			current->flags |= PF_MEMALLOC_NOIO | PF_LESS_THROTTLE;
-> +		else if (!arg2)
-> +			current->flags &= ~(PF_MEMALLOC_NOIO | PF_LESS_THROTTLE);
-> +		else
-> +			return -EINVAL;
-> +		break;
-> +	case PR_GET_IO_FLUSHER:
-> +		if (!capable(CAP_SYS_RESOURCE))
-> +			return -EPERM;
-> +
-> +		if (arg2 || arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +
-> +		if (current->flags & (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE))
-> +			error = 1;
-> +		else
-> +			error = 0;
-> +		break;
->  	default:
->  		error = -EINVAL;
->  		break;
-> -- 
-> 2.20.1
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 255454a..49c53f8 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -34,7 +34,7 @@ static bool irq_work_claim(struct irq_work *work)
+ 	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED, &work->flags);
+ 	/*
+ 	 * If the work is already pending, no need to raise the IPI.
+-	 * The pairing atomic_xchg() in irq_work_run() makes sure
++	 * The pairing atomic_fetch_andnot() in irq_work_run() makes sure
+ 	 * everything we did before is visible.
+ 	 */
+ 	if (oflags & IRQ_WORK_PENDING)
+@@ -135,7 +135,6 @@ static void irq_work_run_list(struct llist_head *list)
+ {
+ 	struct irq_work *work, *tmp;
+ 	struct llist_node *llnode;
+-	int flags;
+ 
+ 	BUG_ON(!irqs_disabled());
+ 
+@@ -144,6 +143,7 @@ static void irq_work_run_list(struct llist_head *list)
+ 
+ 	llnode = llist_del_all(list);
+ 	llist_for_each_entry_safe(work, tmp, llnode, llnode) {
++		int flags;
+ 		/*
+ 		 * Clear the PENDING bit, after this point the @work
+ 		 * can be re-used.
+@@ -151,8 +151,7 @@ static void irq_work_run_list(struct llist_head *list)
+ 		 * to claim that work don't rely on us to handle their data
+ 		 * while we are in the middle of the func.
+ 		 */
+-		flags = atomic_read(&work->flags) & ~IRQ_WORK_PENDING;
+-		atomic_xchg(&work->flags, flags);
++		flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
+ 
+ 		work->func(work);
+ 		/*
