@@ -2,112 +2,96 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E06C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2657C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F32C20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B50206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:08:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZ0jIngn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJIYehn2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfKKUHB (ORCPT
+        id S1727312AbfKKUH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:07:01 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36531 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726845AbfKKUHB (ORCPT
+        Mon, 11 Nov 2019 15:07:59 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35492 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKUH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:07:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573502819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vh0lOxBTIyStTtSHCcKqLlpPPA7dotESbLsNyxBw55Y=;
-        b=WZ0jIngnDrUnKMZNj5Do1au1v/XIanEXtSee0Il9OwopRJccRdZvtAj9kVZHshD3IDd8FB
-        HYmrPlU1aQ99WQoMHZawFIbZj4TnjsMG88nP4wa3l1yLTkU43lafkDpMgrlgI63ZPjobnu
-        Ladp0wqTmDPZY5KQovTnNKGrn7eHrDQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-388-ylkYT010O8eIPpjcxLndVg-1; Mon, 11 Nov 2019 15:06:58 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 754BA18B9F80;
-        Mon, 11 Nov 2019 20:06:57 +0000 (UTC)
-Received: from krava (ovpn-204-89.brq.redhat.com [10.40.204.89])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4328846;
-        Mon, 11 Nov 2019 20:06:56 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 21:06:55 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
-        acme@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 13/13] perf stat: Use affinity for enabling/disabling
- events
-Message-ID: <20191111200655.GB31193@krava>
-References: <20191107181646.506734-1-andi@firstfloor.org>
- <20191107181646.506734-14-andi@firstfloor.org>
- <20191111140415.GA26980@krava>
- <20191111165028.GC573472@tassilo.jf.intel.com>
+        Mon, 11 Nov 2019 15:07:59 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so12648207oig.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 12:07:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Nwqx7QWQGsC3I4CJNnbzWwRJdYPwJji/UODQxE0sPQU=;
+        b=tJIYehn2kw6unw0OwdiFgOkyUDNrINJx43lzHBVIhcCikfiewRFeH0wz19EHFmCPqi
+         iOq5Xm9cCQrN4riVXpzA2ONUrp4iIIuzmn1qxbj1rlSE9fP4rLhPkw1QXUDgfDlDP822
+         sS/DhORtaU51kFXKb/e2Bp3iMp3mhdxKiH6RxfXhvTrD9GYS8YVJ/Qf9+cxS1bJM8KNh
+         vM5ZdFjwBhduSApuEABZyV8IPIWZo2mzYp0dOTTjScZzGQ1Y8CasCIIf30c0MURDOl8b
+         1CEOlCMTgqRP5/L+QKc654nXmPyu5UDlgUOYuJmo4QpkwS8OjPb1rlkarO6Kz/YWW0JG
+         pFdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nwqx7QWQGsC3I4CJNnbzWwRJdYPwJji/UODQxE0sPQU=;
+        b=sOMxwVHpoqiag+YOtac3LX2FknryQ8aAOmYM5zEkGVrBVTSVgSmnwBfRTMiKvKE/ly
+         4CDpB9ExM6FGDmrG65/dh3a3G3gon1CeiQnZ4MfqtjRuowJ/OM8dsVnP/IW7xHQaOTCb
+         5s03Q2bxSviw46ciKaIWJuQf3EZYARXa9fnBCcb/sIeJaD8G+yaZQ2+cTkYWSFzjIGgj
+         o5rzvQ1AcfzibvQq1SS6N2AA0jEinGYBLLkh/t9v6bFtHVhQjNS3RbW8hhUqwxpTl+yE
+         3NPdDwc1w+q9VJpqGwDabFM7qB8PMzBcnvfW5EfFgH3sIOeAvfRUD8vrm19svMJKPXyj
+         sxcg==
+X-Gm-Message-State: APjAAAXczWv7RvAWboj0Jqboww+sSG4FDs2i5n917pMkgyVWSDQQLCxj
+        5Y001DgWtPyz28z2mD/79XY=
+X-Google-Smtp-Source: APXvYqxFp3PdUYMAB+G6kG11oigcGErslKKXE/y6y8IuzAxeYHF1sdk6mMMKXXdx4wFiItpFcnGCyw==
+X-Received: by 2002:aca:5145:: with SMTP id f66mr649745oib.0.1573502877903;
+        Mon, 11 Nov 2019 12:07:57 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id e193sm5295951oib.53.2019.11.11.12.07.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Nov 2019 12:07:57 -0800 (PST)
+Date:   Mon, 11 Nov 2019 13:07:55 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Dmitry Golovin <dima@golovin.in>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Matthias Maennich <maennich@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] ARM: kbuild: use correct nm executable
+Message-ID: <20191111200755.GA2881@ubuntu-m2-xlarge-x86>
+References: <20191110153043.111710-1-dima@golovin.in>
 MIME-Version: 1.0
-In-Reply-To: <20191111165028.GC573472@tassilo.jf.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: ylkYT010O8eIPpjcxLndVg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191110153043.111710-1-dima@golovin.in>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 08:50:28AM -0800, Andi Kleen wrote:
-> On Mon, Nov 11, 2019 at 03:04:15PM +0100, Jiri Olsa wrote:
-> > On Thu, Nov 07, 2019 at 10:16:46AM -0800, Andi Kleen wrote:
-> >=20
-> > SNIP
-> >=20
-> > > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > > index 33080f79b977..571bb102b432 100644
-> > > --- a/tools/perf/util/evlist.c
-> > > +++ b/tools/perf/util/evlist.c
-> > > @@ -378,11 +378,28 @@ bool evsel__cpu_iter_skip(struct evsel *ev, int=
- cpu)
-> > >  void evlist__disable(struct evlist *evlist)
-> > >  {
-> > >  =09struct evsel *pos;
-> > > +=09struct affinity affinity;
-> > > +=09int cpu, i;
-> >=20
-> > should we have the fallback to current code in here (and below) as well=
-?
-> > also for reading/openning?
->=20
-> The return only happens when you're out of memory, when nothing
-> will work anyways.
+On Sun, Nov 10, 2019 at 05:30:39PM +0200, Dmitry Golovin wrote:
+> Since $(NM) variable can be easily overridden for the whole build, it's
+> better to use it instead of $(CROSS_COMPILE)nm. The use of $(CROSS_COMPILE)
+> prefixed variables where their calculated equivalents can be used is
+> incorrect. This fixes issues with builds where $(NM) is set to llvm-nm.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/766
+> Signed-off-by: Dmitry Golovin <dima@golovin.in>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Matthias Maennich <maennich@google.com>
 
-then let's have some assert or BUG_ON on !all_cpus
-and remove the fallback code from close path
-
-jirka
-
->=20
-> -Andi
->=20
-> >=20
-> > jirka
-> >=20
-> > > +
-> > > +=09if (affinity__setup(&affinity) < 0)
-> > > +=09=09return;
->=20
-
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
