@@ -2,136 +2,138 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254D1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE6DC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E0F2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D65C2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mz5fSnaV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVKPNzZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfKKR3B (ORCPT
+        id S1727101AbfKKR3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:29:01 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:48548 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKR3A (ORCPT
+        Mon, 11 Nov 2019 12:29:09 -0500
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:44011 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKR3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:29:00 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHPVFe077366;
-        Mon, 11 Nov 2019 17:28:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=WlxVxKiBr49y4SsqPlWfm5cHZY1cE9jd8M0a28PEqNk=;
- b=Mz5fSnaVVh/Jxse98mVsZB+d77X0IfUciewQJcCvtqcMCnsXDWDz+7BAkafki3Ob/LSF
- cIc0Lq+XWBuB4GiPn+PsiTPxwaAQyhe2P0wjz5xdFSf/+d+J7DRASqceeS/tj8wL3fk/
- YWUkvZ1WbU3BgLPuGaRGe6oqDPpDHnBbgmayHxxT7oE9avpM65sRgigvWVRtBUyxb2Zx
- +sVCqPFxqZ7NPU1+f5pIAQuBGOvSr6fBEUyNLfY28uxN9B1b4Bz+3U9+WTASm0yfuqLr
- +AW0pl/vHFA1440Py+jSOTSy9lj2aG2F40Cchd380ZMZCa3ra/2G+lV6WvJ+JPI3dKIw qg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w5mvtg7vs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 17:28:09 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHEp6p067937;
-        Mon, 11 Nov 2019 17:28:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2w66wmfwbg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 17:28:08 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xABHS51e023060;
-        Mon, 11 Nov 2019 17:28:05 GMT
-Received: from [10.175.169.52] (/10.175.169.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Nov 2019 09:28:05 -0800
-Subject: Re: [PATCH v1 2/3] KVM: VMX: Do not change PID.NDST when loading a
- blocked vCPU
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jag Raman <jag.raman@oracle.com>
-References: <20191106175602.4515-1-joao.m.martins@oracle.com>
- <20191106175602.4515-3-joao.m.martins@oracle.com>
- <15c8c821-25ff-eb62-abd3-8d7d69650744@redhat.com>
- <314a4120-036c-e954-bc9f-e57dee3bbb7c@oracle.com>
- <49912d14-1f79-2658-9471-4193807ad667@redhat.com>
- <b61dc2b2-14be-4d4f-f512-5280010d930a@oracle.com>
- <4E05E5FC-0064-47DE-B4B2-B3BDAF23C072@oracle.com>
- <20191111155349.GA11725@linux.intel.com>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <946be6b4-3b8b-e89d-c3e5-18fd7b714a7f@oracle.com>
-Date:   Mon, 11 Nov 2019 17:27:57 +0000
+        Mon, 11 Nov 2019 12:29:08 -0500
+Received: by mail-wr1-f46.google.com with SMTP id n1so15502168wra.10;
+        Mon, 11 Nov 2019 09:29:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WvahG5W8zWbUV9iqIm0KSrs4sqEMRwt53GgRh7CNpec=;
+        b=oVKPNzZQoZ50rPMdCnJF0EIT92tbzpfWMmemCHN4JDQliBjPItaFwxO58zW1nWMHc0
+         OWw7wfQdOZvtiro0hMaTKCfv6m18CWljs4kfOrmarRWWwoPlsPAtaubiHkb4XUh1BSK/
+         w5lSdpoGfmOSHxb8zZzYF2rF0rfWuBY/zgXLuhR49CnMG1GWMSkUvIGRnOzi4KVUM1hm
+         OGTz+cNWI8Q1jJBEgwe4PHqbt0wO0gFNWwYMfBDruCvYh5sSKJD1r38etLNHsGEorCFt
+         sw4b7kZdE7tvTl1sKDZ11mT5BwzWc9HB6erR9SNuykOxLyjYFLOVtjjjA6Aq4yWjuwW6
+         5MfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WvahG5W8zWbUV9iqIm0KSrs4sqEMRwt53GgRh7CNpec=;
+        b=nsRZPSIlZuoQCEq33YcDw3g/3lla55EKAdiC3xPAJZ5/19FsrXzqGtLLw8vU4FSsYv
+         AmNPB/HCDsAB6raTAtzXhGbi3XghpucqlR09Wud7V2LauH4pttuGga5laY+u7WzsK2PG
+         j/j1kKJbGH52x93S+L9MLQv3enHK+Yqn4B2syo2NP449jS+hLNqHrfwKnnBTf+13maON
+         1XHJOeAXXSYw8Tv6b3ev3nSsMQcmlp5Y0Z+LG05njdeGDrRikAWBomCCgvL78172pOQk
+         hyM0Z6hv9o/ZhQVVkJX1VDb1gqj8QWzg6YxxMT3fGiV0NBjXYFaZp7U71cxCBO2bDUFe
+         imEg==
+X-Gm-Message-State: APjAAAU7clKV6U2oUIg/jWkhfaeA9ALGHyZu4G3ikO9zpMrNzoSnrcBI
+        sHn9ceUK5xGAwQtM41pYwszZe6GTpS25KH/4Y7A=
+X-Google-Smtp-Source: APXvYqy15wsyeIRkSnFOQeGZoWHHrPQpkNQoIHKatY4xSgX7gHUbvRLSH0of6Tp/VF9Yf/c+URN441n7EAy5ltGu/Yw=
+X-Received: by 2002:a05:6000:18c:: with SMTP id p12mr21064238wrx.154.1573493346316;
+ Mon, 11 Nov 2019 09:29:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191111155349.GA11725@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=904
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911110155
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=971 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911110155
+References: <20191109194923.231655-1-colin.king@canonical.com> <633bbabf-56d4-ad4a-9d4e-9562e7122d17@amd.com>
+In-Reply-To: <633bbabf-56d4-ad4a-9d4e-9562e7122d17@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 11 Nov 2019 12:28:53 -0500
+Message-ID: <CADnq5_N+WdogHBKuQah92WS6ijFe8K6Ae3RxBdO5hyGMTMGsFg@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amd/display: fix spelling mistake "exeuction"
+ -> "execution"
+To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 3:53 PM, Sean Christopherson wrote:
-> On Mon, Nov 11, 2019 at 04:59:20PM +0200, Liran Alon wrote:
->>
->>
->>> On 11 Nov 2019, at 16:56, Joao Martins <joao.m.martins@oracle.com> wrote:
->>>
->>> On 11/11/19 2:50 PM, Paolo Bonzini wrote:
->>>> On 11/11/19 15:48, Joao Martins wrote:
->>>>>>>
->>>>>>> Fixes: c112b5f50232 ("KVM: x86: Recompute PID.ON when clearing PID.SN")
->>>>>>> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
->>>>>>> Signed-off-by: Liran Alon <liran.alon@oracle.com>
->>>>>> Something wrong in the SoB line?
->>>>>>
->>>>> I can't spot any mistake; at least it looks chained correctly for me. What's the
->>>>> issue you see with the Sob line?
->>>>
->>>> Liran's line after yours is confusing.  Did he help with the analysis or
->>>> anything like that?
->>>>
->>> He was initially reviewing my patches, but then helped improving the problem
->>> description in the commit messages so felt correct to give credit.
->>>
->>> 	Joao
->>
->> I think proper action is to just remove me from the SoB line.
-> 
-> Use Co-developed-by to attribute multiple authors.  Note, the SoB ordering
-> should show the chronological history of the patch when possible, e.g. the
-> person sending the patch should always have their SoB last.
-> 
-> Documentation/process/submitting-patches.rst and 
-> Documentation/process/5.Posting.rst have more details.
-> 
-The Sob chain on the first two patches were broken (regardless of any use of
-Co-developed-by). Fixed it up on v2, alongside the rest of the comments.
+Applied.  Thanks!
 
-Cheers,
-	Joao
+Alex
+
+On Mon, Nov 11, 2019 at 8:37 AM Kazlauskas, Nicholas
+<nicholas.kazlauskas@amd.com> wrote:
+>
+> On 2019-11-09 2:49 p.m., Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > There are spelling mistakes in a DC_ERROR message and a comment.
+> > Fix these.
+> >
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>
+> Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+>
+> Thanks!
+>
+> Nicholas Kazlauskas
+>
+> > ---
+> >   drivers/gpu/drm/amd/display/dc/dc_dmub_srv.c    | 2 +-
+> >   drivers/gpu/drm/amd/display/dmub/inc/dmub_srv.h | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dc_dmub_srv.c b/drivers/gpu/drm/amd/display/dc/dc_dmub_srv.c
+> > index 61cefe0a3790..b65b66025267 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dc_dmub_srv.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dc_dmub_srv.c
+> > @@ -92,7 +92,7 @@ void dc_dmub_srv_cmd_execute(struct dc_dmub_srv *dc_dmub_srv)
+> >
+> >       status = dmub_srv_cmd_execute(dmub);
+> >       if (status != DMUB_STATUS_OK)
+> > -             DC_ERROR("Error starting DMUB exeuction: status=%d\n", status);
+> > +             DC_ERROR("Error starting DMUB execution: status=%d\n", status);
+> >   }
+> >
+> >   void dc_dmub_srv_wait_idle(struct dc_dmub_srv *dc_dmub_srv)
+> > diff --git a/drivers/gpu/drm/amd/display/dmub/inc/dmub_srv.h b/drivers/gpu/drm/amd/display/dmub/inc/dmub_srv.h
+> > index aa8f0396616d..45e427d1952e 100644
+> > --- a/drivers/gpu/drm/amd/display/dmub/inc/dmub_srv.h
+> > +++ b/drivers/gpu/drm/amd/display/dmub/inc/dmub_srv.h
+> > @@ -416,7 +416,7 @@ enum dmub_status dmub_srv_cmd_queue(struct dmub_srv *dmub,
+> >    * dmub_srv_cmd_execute() - Executes a queued sequence to the dmub
+> >    * @dmub: the dmub service
+> >    *
+> > - * Begins exeuction of queued commands on the dmub.
+> > + * Begins execution of queued commands on the dmub.
+> >    *
+> >    * Return:
+> >    *   DMUB_STATUS_OK - success
+> >
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
