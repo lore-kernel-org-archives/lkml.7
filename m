@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE7AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38422C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB32B21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11765222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498549;
-	bh=lesCjPfVbmccshqGOePfUxiBPLe03ulNgUg/hcMlxdw=;
+	s=default; t=1573498552;
+	bh=/JfsXujUHOoaYr494pO+SoT6VdOaPt9/CvFBihZrpYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8YKRilS6AquUF7CV13GsMIPZpaSWNmA1Hl/DwwhxrtfIwPKDwPkd6f+Jy8zZpAjf
-	 lnQUCrqJst5V6pllWV4EnQXgqtBH4pv96Czt1twuYeuB6VOsatWcx4MQaanHUTfXs3
-	 /OQNBDJplPokfc45O5ENgQEfEKx6Npku4toa1Z14=
+	b=xGHLujsvSJrtZcrbnySZGTpbZVO2eJA+cX0vWWmyf+Bl/XuEftQJBmwUaCNwmVb9L
+	 6mt4KGOsga6TYNCd7q5XksT2cokLkQ/OGZXWl+HOeVpXjgy6qgas+pgV65Uu2ebXRy
+	 NrkBEzCzczkQAfCiGAn1nxQvxMltyucU3vMrQz4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfKKSzs (ORCPT
+        id S1730427AbfKKSzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:55:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53238 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:55:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730007AbfKKSzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:55:44 -0500
+        id S1730670AbfKKSzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:55:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6551F21783;
-        Mon, 11 Nov 2019 18:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF16421655;
+        Mon, 11 Nov 2019 18:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498544;
-        bh=lesCjPfVbmccshqGOePfUxiBPLe03ulNgUg/hcMlxdw=;
+        s=default; t=1573498547;
+        bh=/JfsXujUHOoaYr494pO+SoT6VdOaPt9/CvFBihZrpYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z3OyKVKvx+01zX7wDso0RK8IHX0mhnsvaJRruugmxJTp9skKtCJ+qcAlEi3xNNc8v
-         +l84fwgN3GB4Ftkzk3eLMF59CanIUUX11HLEpk+S7NgmxAT7yDSB1iu0G9s69SiPT2
-         iZltFBK1oCNSRi43u/467GhfUr/hZJTTquoSI7BI=
+        b=XJ46zG0YaDNs1/J7l2vcTvgQ9pmuBjV1onzA4M1ErgdAiADNg1Li5UW5Dl2XwjnLT
+         dmLYFxcuLQRctubnrdEBesu0kg53S8DyA3V9zBVLZi/vnz7hcEMnwKeQUkX4DT3Bzr
+         rLEsy93VOL56wo9C6rZb35b6KggcUqzCCjJyiftM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, GwanYeong Kim <gy741.kim@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 148/193] USB: ldusb: use unsigned size format specifiers
-Date:   Mon, 11 Nov 2019 19:28:50 +0100
-Message-Id: <20191111181512.062947342@linuxfoundation.org>
+Subject: [PATCH 5.3 149/193] usbip: tools: Fix read_usb_vudc_device() error path handling
+Date:   Mon, 11 Nov 2019 19:28:51 +0100
+Message-Id: <20191111181512.142337434@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,53 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: GwanYeong Kim <gy741.kim@gmail.com>
 
-[ Upstream commit 88f6bf3846ee90bf33aa1ce848cd3bfb3229f4a4 ]
+[ Upstream commit 28df0642abbf6d66908a2858922a7e4b21cdd8c2 ]
 
-A recent info-leak bug manifested itself along with warning about a
-negative buffer overflow:
+This isn't really accurate right. fread() doesn't always
+return 0 in error. It could return < number of elements
+and set errno.
 
-	ldusb 1-1:0.28: Read buffer overflow, -131383859965943 bytes dropped
-
-when it was really a rather large positive one.
-
-A sanity check that prevents this has now been put in place, but let's
-fix up the size format specifiers, which should all be unsigned.
-
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191022143203.5260-3-johan@kernel.org
+Signed-off-by: GwanYeong Kim <gy741.kim@gmail.com>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191018032223.4644-1-gy741.kim@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/ldusb.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/usb/usbip/libsrc/usbip_device_driver.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
-index f5e34c5034547..8f86b4ebca898 100644
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -487,7 +487,7 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
- 	}
- 	bytes_to_read = min(count, *actual_buffer);
- 	if (bytes_to_read < *actual_buffer)
--		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
-+		dev_warn(&dev->intf->dev, "Read buffer overflow, %zu bytes dropped\n",
- 			 *actual_buffer-bytes_to_read);
+diff --git a/tools/usb/usbip/libsrc/usbip_device_driver.c b/tools/usb/usbip/libsrc/usbip_device_driver.c
+index 5a3726eb44abc..b237a43e62990 100644
+--- a/tools/usb/usbip/libsrc/usbip_device_driver.c
++++ b/tools/usb/usbip/libsrc/usbip_device_driver.c
+@@ -69,7 +69,7 @@ int read_usb_vudc_device(struct udev_device *sdev, struct usbip_usb_device *dev)
+ 	FILE *fd = NULL;
+ 	struct udev_device *plat;
+ 	const char *speed;
+-	int ret = 0;
++	size_t ret;
  
- 	/* copy one interrupt_in_buffer from ring_buffer into userspace */
-@@ -562,8 +562,9 @@ static ssize_t ld_usb_write(struct file *file, const char __user *buffer,
- 	/* write the data into interrupt_out_buffer from userspace */
- 	bytes_to_write = min(count, write_buffer_size*dev->interrupt_out_endpoint_size);
- 	if (bytes_to_write < count)
--		dev_warn(&dev->intf->dev, "Write buffer overflow, %zd bytes dropped\n", count-bytes_to_write);
--	dev_dbg(&dev->intf->dev, "%s: count = %zd, bytes_to_write = %zd\n",
-+		dev_warn(&dev->intf->dev, "Write buffer overflow, %zu bytes dropped\n",
-+			count - bytes_to_write);
-+	dev_dbg(&dev->intf->dev, "%s: count = %zu, bytes_to_write = %zu\n",
- 		__func__, count, bytes_to_write);
+ 	plat = udev_device_get_parent(sdev);
+ 	path = udev_device_get_syspath(plat);
+@@ -79,8 +79,10 @@ int read_usb_vudc_device(struct udev_device *sdev, struct usbip_usb_device *dev)
+ 	if (!fd)
+ 		return -1;
+ 	ret = fread((char *) &descr, sizeof(descr), 1, fd);
+-	if (ret < 0)
++	if (ret != 1) {
++		err("Cannot read vudc device descr file: %s", strerror(errno));
+ 		goto err;
++	}
+ 	fclose(fd);
  
- 	if (copy_from_user(dev->interrupt_out_buffer, buffer, bytes_to_write)) {
+ 	copy_descr_attr(dev, &descr, bDeviceClass);
 -- 
 2.20.1
 
