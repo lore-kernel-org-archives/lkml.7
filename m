@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D12C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9D5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE8821783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C562173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497329;
-	bh=1gwTMekgjt67z7fCm6yRqttyHTJmowUzZ/pjtGgvDOo=;
+	s=default; t=1573497332;
+	bh=mDXh+p9DiujxpHwfkKkbukJW0A5v+GXZtUYBfV6HGOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXyplAOFnYapE/WqhyfLWbSmeIoG9qPTrE4Txn2qYaa2fYipL/RHBtTofUAmCJTWZ
-	 63YfD/4fe7WGcQoMWTiPq5cjbm6z0/+kUu5B2te58smeLFsrPFPvLFwQ+Sz4QJBkE6
-	 cU4lDTLnUkL2OUFtoaodXz5cWA/eGEJ2fdpuSfMs=
+	b=DDiaSbxwW6m+kxqnAX63FSr19zs7v1cS/w4i5nD2yJBDAP6OraBwNqaKHpf18Qbf/
+	 2x5sfHTK3jCnPdiuA532s7mBAh3tGWinPd3uYECor0cVWlOVi7gWX/5RDo/Q9rCWYS
+	 5rPHLT+8/EPRCugOScfcWtCp14nUc80mZMRObNc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfKKSf1 (ORCPT
+        id S1728536AbfKKSfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53286 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbfKKSf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:26 -0500
+        id S1728397AbfKKSf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42B7320659;
-        Mon, 11 Nov 2019 18:35:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4756214E0;
+        Mon, 11 Nov 2019 18:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497324;
-        bh=1gwTMekgjt67z7fCm6yRqttyHTJmowUzZ/pjtGgvDOo=;
+        s=default; t=1573497327;
+        bh=mDXh+p9DiujxpHwfkKkbukJW0A5v+GXZtUYBfV6HGOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=epmvPLukHTAQgu+LdGE8ytLNClOqsR05t3/oBYNgtVd8/9dlnFgECJiq+xDHhIvj6
-         Qg1DOaB875YoNbcB1HfpASQ3lSfa7zqySDtiykU5S+m9m/+UZfpqeEqt1Sd43Pbgwr
-         l9mjqBd0bOy0W0uBRilxAutZpr9GcAZNM80p7azI=
+        b=HJnMS/coOF2i/OsxGKR4M14a9RSbp6mbIyo29A4/zsoB3Zl9mYOpkEb/Ko6QGTe+v
+         l2M9NSmHJjxQwN8ue/GSwTAcoDFIr12eB1Pokj3GO7E5CWVHd3hdLgfsZF4ELafxBG
+         16ByA0euDuQWgY9KCXJ7L5N+4bqP1WQzwsGzyfM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Gang Deng <gavin.dg@linux.alibaba.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 015/105] mm, meminit: recalculate pcpu batch and high limits after init completes
-Date:   Mon, 11 Nov 2019 19:27:45 +0100
-Message-Id: <20191111181431.387847886@linuxfoundation.org>
+Subject: [PATCH 4.14 016/105] mm: thp: handle page cache THP correctly in PageTransCompoundMap
+Date:   Mon, 11 Nov 2019 19:27:46 +0100
+Message-Id: <20191111181432.495574074@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -66,120 +65,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit 3e8fc0075e24338b1117cdff6a79477427b8dbed upstream.
+commit 169226f7e0d275c1879551f37484ef6683579a5c upstream.
 
-Deferred memory initialisation updates zone->managed_pages during the
-initialisation phase but before that finishes, the per-cpu page
-allocator (pcpu) calculates the number of pages allocated/freed in
-batches as well as the maximum number of pages allowed on a per-cpu
-list.  As zone->managed_pages is not up to date yet, the pcpu
-initialisation calculates inappropriately low batch and high values.
+We have a usecase to use tmpfs as QEMU memory backend and we would like
+to take the advantage of THP as well.  But, our test shows the EPT is
+not PMD mapped even though the underlying THP are PMD mapped on host.
+The number showed by /sys/kernel/debug/kvm/largepage is much less than
+the number of PMD mapped shmem pages as the below:
 
-This increases zone lock contention quite severely in some cases with
-the degree of severity depending on how many CPUs share a local zone and
-the size of the zone.  A private report indicated that kernel build
-times were excessive with extremely high system CPU usage.  A perf
-profile indicated that a large chunk of time was lost on zone->lock
-contention.
+  7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
+  Size:            4194304 kB
+  [snip]
+  AnonHugePages:         0 kB
+  ShmemPmdMapped:   579584 kB
+  [snip]
+  Locked:                0 kB
 
-This patch recalculates the pcpu batch and high values after deferred
-initialisation completes for every populated zone in the system.  It was
-tested on a 2-socket AMD EPYC 2 machine using a kernel compilation
-workload -- allmodconfig and all available CPUs.
+  cat /sys/kernel/debug/kvm/largepages
+  12
 
-mmtests configuration: config-workload-kernbench-max Configuration was
-modified to build on a fresh XFS partition.
+And some benchmarks do worse than with anonymous THPs.
 
-kernbench
-                                5.4.0-rc3              5.4.0-rc3
-                                  vanilla           resetpcpu-v2
-Amean     user-256    13249.50 (   0.00%)    16401.31 * -23.79%*
-Amean     syst-256    14760.30 (   0.00%)     4448.39 *  69.86%*
-Amean     elsp-256      162.42 (   0.00%)      119.13 *  26.65%*
-Stddev    user-256       42.97 (   0.00%)       19.15 (  55.43%)
-Stddev    syst-256      336.87 (   0.00%)        6.71 (  98.01%)
-Stddev    elsp-256        2.46 (   0.00%)        0.39 (  84.03%)
+By digging into the code we figured out that commit 127393fbe597 ("mm:
+thp: kvm: fix memory corruption in KVM with THP enabled") checks if
+there is a single PTE mapping on the page for anonymous THP when setting
+up EPT map.  But the _mapcount < 0 check doesn't work for page cache THP
+since every subpage of page cache THP would get _mapcount inc'ed once it
+is PMD mapped, so PageTransCompoundMap() always returns false for page
+cache THP.  This would prevent KVM from setting up PMD mapped EPT entry.
 
-                   5.4.0-rc3    5.4.0-rc3
-                     vanilla resetpcpu-v2
-Duration User       39766.24     49221.79
-Duration System     44298.10     13361.67
-Duration Elapsed      519.11       388.87
+So we need handle page cache THP correctly.  However, when page cache
+THP's PMD gets split, kernel just remove the map instead of setting up
+PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
+the subpages may get PTE mapped even though it is still a THP since the
+page cache THP may be mapped by other processes at the mean time.
 
-The patch reduces system CPU usage by 69.86% and total build time by
-26.65%.  The variance of system CPU usage is also much reduced.
+Checking its _mapcount and whether the THP has PTE mapped or not.
+Although this may report some false negative cases (PTE mapped by other
+processes), it looks not trivial to make this accurate.
 
-Before, this was the breakdown of batch and high values over all zones
-was:
+With this fix /sys/kernel/debug/kvm/largepage would show reasonable
+pages are PMD mapped by EPT as the below:
 
-    256               batch: 1
-    256               batch: 63
-    512               batch: 7
-    256               high:  0
-    256               high:  378
-    512               high:  42
+  7fbeaee00000-7fbfaee00000 rw-s 00000000 00:14 275464 /dev/shm/qemu_back_mem.mem.SKUvat (deleted)
+  Size:            4194304 kB
+  [snip]
+  AnonHugePages:         0 kB
+  ShmemPmdMapped:   557056 kB
+  [snip]
+  Locked:                0 kB
 
-512 pcpu pagesets had a batch limit of 7 and a high limit of 42.  After
-the patch:
+  cat /sys/kernel/debug/kvm/largepages
+  271
 
-    256               batch: 1
-    768               batch: 63
-    256               high:  0
-    768               high:  378
+And the benchmarks are as same as anonymous THPs.
 
-[mgorman@techsingularity.net: fix merge/linkage snafu]
-  Link: http://lkml.kernel.org/r/20191023084705.GD3016@techsingularity.netLink: http://lkml.kernel.org/r/20191021094808.28824-2-mgorman@techsingularity.net
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Qian Cai <cai@lca.pw>
-Cc: <stable@vger.kernel.org>	[4.1+]
+[yang.shi@linux.alibaba.com: v4]
+  Link: http://lkml.kernel.org/r/1571865575-42913-1-git-send-email-yang.shi@linux.alibaba.com
+Link: http://lkml.kernel.org/r/1571769577-89735-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: dd78fedde4b9 ("rmap: support file thp")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Reported-by: Gang Deng <gavin.dg@linux.alibaba.com>
+Tested-by: Gang Deng <gavin.dg@linux.alibaba.com>
+Suggested-by: Hugh Dickins <hughd@google.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: <stable@vger.kernel.org>	[4.8+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ include/linux/mm.h         |    5 -----
+ include/linux/mm_types.h   |    5 +++++
+ include/linux/page-flags.h |   20 ++++++++++++++++++--
+ 3 files changed, 23 insertions(+), 7 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1998,6 +1998,14 @@ static void steal_suitable_fallback(stru
- 	old_block_type = get_pageblock_migratetype(page);
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -549,11 +549,6 @@ static inline void *kvmalloc_array(size_
  
- 	/*
-+	 * The number of managed pages has changed due to the initialisation
-+	 * so the pcpu batch and high limits needs to be updated or the limits
-+	 * will be artificially small.
-+	 */
-+	for_each_populated_zone(zone)
-+		zone_pcp_update(zone);
-+
-+	/*
- 	 * This can happen due to races and we want to prevent broken
- 	 * highatomic accounting.
- 	 */
-@@ -7659,7 +7667,6 @@ void free_contig_range(unsigned long pfn
- }
- #endif
+ extern void kvfree(const void *addr);
  
--#ifdef CONFIG_MEMORY_HOTPLUG
- /*
-  * The zone indicated has a new number of managed_pages; batch sizes and percpu
-  * page high values need to be recalulated.
-@@ -7673,7 +7680,6 @@ void __meminit zone_pcp_update(struct zo
- 				per_cpu_ptr(zone->pageset, cpu));
- 	mutex_unlock(&pcp_batch_high_lock);
- }
--#endif
- 
- void zone_pcp_reset(struct zone *zone)
+-static inline atomic_t *compound_mapcount_ptr(struct page *page)
+-{
+-	return &page[1].compound_mapcount;
+-}
+-
+ static inline int compound_mapcount(struct page *page)
  {
+ 	VM_BUG_ON_PAGE(!PageCompound(page), page);
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -240,6 +240,11 @@ struct page_frag_cache {
+ 
+ typedef unsigned long vm_flags_t;
+ 
++static inline atomic_t *compound_mapcount_ptr(struct page *page)
++{
++	return &page[1].compound_mapcount;
++}
++
+ /*
+  * A region containing a mapping of a non-memory backed file under NOMMU
+  * conditions.  These are held in a global tree and are pinned by the VMAs that
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -565,12 +565,28 @@ static inline int PageTransCompound(stru
+  *
+  * Unlike PageTransCompound, this is safe to be called only while
+  * split_huge_pmd() cannot run from under us, like if protected by the
+- * MMU notifier, otherwise it may result in page->_mapcount < 0 false
++ * MMU notifier, otherwise it may result in page->_mapcount check false
+  * positives.
++ *
++ * We have to treat page cache THP differently since every subpage of it
++ * would get _mapcount inc'ed once it is PMD mapped.  But, it may be PTE
++ * mapped in the current process so comparing subpage's _mapcount to
++ * compound_mapcount to filter out PTE mapped case.
+  */
+ static inline int PageTransCompoundMap(struct page *page)
+ {
+-	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
++	struct page *head;
++
++	if (!PageTransCompound(page))
++		return 0;
++
++	if (PageAnon(page))
++		return atomic_read(&page->_mapcount) < 0;
++
++	head = compound_head(page);
++	/* File THP is PMD mapped and not PTE mapped */
++	return atomic_read(&page->_mapcount) ==
++	       atomic_read(compound_mapcount_ptr(head));
+ }
+ 
+ /*
 
 
