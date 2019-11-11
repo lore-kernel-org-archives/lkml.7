@@ -2,52 +2,53 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB103C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77C5C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C410D2245C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F352245C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499179;
-	bh=92ronLFtUrw6FpPIjyOv7L17PV0WUZhDLx5rq8LQBDQ=;
+	s=default; t=1573499183;
+	bh=SqRmjZhn94quOQXuKvLtH6KunMbWuCA4q/EJ86b0H+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l+v4BH+0B0Zp3EqiJqsHjOpu1F3nW3Zc7jIlIBA6wUCt0+Xgs6ZO1VBSNrkCSLTnZ
-	 nbwp5ecLfWS31hDyHPR73nG0To4T8YDwpJiwDDVE0kOG1ib4i2eLGvmV15NxOG5ZrW
-	 kG+yxPQWhzCBTekCEtEZbe021/MmjxpUcsVmBUoQ=
+	b=jdzuN5vXNuJqYEQCEOSLGrxFmtbQKAx8Eh4NOj253th7EkpnFe+qUSKb7BHMdKFWO
+	 ARI3JDNzm6g3HvVW5XvM3ZZbd8P4dx8exr4VXKhTt5QUbn+rs69Yip4LKBVCquMDFG
+	 85yq1n8Aktt5J3yGD9Pau8x57XkF8vprsx1F3D8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbfKKTGS (ORCPT
+        id S1729096AbfKKSjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729138AbfKKSjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:11 -0500
+        id S1729107AbfKKSi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B603F20659;
-        Mon, 11 Nov 2019 18:39:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3208E214E0;
+        Mon, 11 Nov 2019 18:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497550;
-        bh=92ronLFtUrw6FpPIjyOv7L17PV0WUZhDLx5rq8LQBDQ=;
+        s=default; t=1573497538;
+        bh=SqRmjZhn94quOQXuKvLtH6KunMbWuCA4q/EJ86b0H+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1fK2lDVISu116JnI+A7DUOEr4sH8Llpw0bE/E7zDpPdLjamTISw0kcvnK8cI8dZXF
-         Foqi3cdNanAdBlkezH024jJZNRpv4XooVuQMObCTPky58d7FrVMbEoSk7wBgt/l/nI
-         W69Z/fh0D4clv9tjPhT+yIChaynqmThjGnJkzJfQ=
+        b=LjlG0qMpYU6BjulfB1qStHj0vtv+Hh3o7I+3xZf3PhyBkkrQLjaKOQjK2faz+kdSW
+         iYkExoPvIpu1c0oTR162cu7/yqOSRy2MXxbHLaPc8KobOJ5osNUkOb4k/6gbwu83QI
+         +xUyD4ZWY83VoucFjj4UDOB63pFcPKkXvbc2NyQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 094/105] net: hisilicon: Fix "Trying to free already-free IRQ"
-Date:   Mon, 11 Nov 2019 19:29:04 +0100
-Message-Id: <20191111181448.399723781@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+863724e7128e14b26732@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.14 039/105] can: peak_usb: fix slab info leak
+Date:   Mon, 11 Nov 2019 19:28:09 +0100
+Message-Id: <20191111181439.936521349@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,59 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 63a41746827cb16dc6ad0d4d761ab4e7dda7a0c3 ]
+commit f7a1337f0d29b98733c8824e165fca3371d7d4fd upstream.
 
-When rmmod hip04_eth.ko, we can get the following warning:
+Fix a small slab info leak due to a failure to clear the command buffer
+at allocation.
 
-Task track: rmmod(1623)>bash(1591)>login(1581)>init(1)
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1623 at kernel/irq/manage.c:1557 __free_irq+0xa4/0x2ac()
-Trying to free already-free IRQ 200
-Modules linked in: ping(O) pramdisk(O) cpuinfo(O) rtos_snapshot(O) interrupt_ctrl(O) mtdblock mtd_blkdevrtfs nfs_acl nfs lockd grace sunrpc xt_tcpudp ipt_REJECT iptable_filter ip_tables x_tables nf_reject_ipv
-CPU: 0 PID: 1623 Comm: rmmod Tainted: G           O    4.4.193 #1
-Hardware name: Hisilicon A15
-[<c020b408>] (rtos_unwind_backtrace) from [<c0206624>] (show_stack+0x10/0x14)
-[<c0206624>] (show_stack) from [<c03f2be4>] (dump_stack+0xa0/0xd8)
-[<c03f2be4>] (dump_stack) from [<c021a780>] (warn_slowpath_common+0x84/0xb0)
-[<c021a780>] (warn_slowpath_common) from [<c021a7e8>] (warn_slowpath_fmt+0x3c/0x68)
-[<c021a7e8>] (warn_slowpath_fmt) from [<c026876c>] (__free_irq+0xa4/0x2ac)
-[<c026876c>] (__free_irq) from [<c0268a14>] (free_irq+0x60/0x7c)
-[<c0268a14>] (free_irq) from [<c0469e80>] (release_nodes+0x1c4/0x1ec)
-[<c0469e80>] (release_nodes) from [<c0466924>] (__device_release_driver+0xa8/0x104)
-[<c0466924>] (__device_release_driver) from [<c0466a80>] (driver_detach+0xd0/0xf8)
-[<c0466a80>] (driver_detach) from [<c0465e18>] (bus_remove_driver+0x64/0x8c)
-[<c0465e18>] (bus_remove_driver) from [<c02935b0>] (SyS_delete_module+0x198/0x1e0)
-[<c02935b0>] (SyS_delete_module) from [<c0202ed0>] (__sys_trace_return+0x0/0x10)
----[ end trace bb25d6123d849b44 ]---
+The first 16 bytes of the command buffer are always sent to the device
+in pcan_usb_send_cmd() even though only the first two may have been
+initialised in case no argument payload is provided (e.g. when waiting
+for a response).
 
-Currently "rmmod hip04_eth.ko" call free_irq more than once
-as devres_release_all and hip04_remove both call free_irq.
-This results in a 'Trying to free already-free IRQ' warning.
-To solve the problem free_irq has been moved out of hip04_remove.
+Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
+Cc: stable <stable@vger.kernel.org>     # 3.4
+Reported-by: syzbot+863724e7128e14b26732@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 17cbe8145dcd9..ebc056b9a0fd2 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -945,7 +945,6 @@ static int hip04_remove(struct platform_device *pdev)
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -776,7 +776,7 @@ static int peak_usb_create_dev(const str
+ 	dev = netdev_priv(netdev);
  
- 	hip04_free_ring(ndev, d);
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
- 	of_node_put(priv->phy_node);
- 	cancel_work_sync(&priv->tx_timeout_task);
- 	free_netdev(ndev);
--- 
-2.20.1
-
+ 	/* allocate a buffer large enough to send commands */
+-	dev->cmd_buf = kmalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
++	dev->cmd_buf = kzalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
+ 	if (!dev->cmd_buf) {
+ 		err = -ENOMEM;
+ 		goto lbl_free_candev;
 
 
