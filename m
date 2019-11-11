@@ -2,127 +2,123 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78661C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F22C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 596D1206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90628206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:33:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LMos4A8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfKKTcE (ORCPT
+        id S1727539AbfKKTdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:32:04 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:56388 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726950AbfKKTcE (ORCPT
+        Mon, 11 Nov 2019 14:33:10 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:44802 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbfKKTdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:32:04 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iUFPr-00017a-Bc; Mon, 11 Nov 2019 20:31:59 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from dell2.five-lan.de (pD9E89174.dip0.t-ipconnect.de [217.232.145.116])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xABJVvBQ021691
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 11 Nov 2019 20:31:58 +0100
-Subject: Re: arm64: dts: rockchip: Add SDR104 mode to SD-card I/F on
- rk3399-roc-pc
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-References: <f03c978c-86de-b8bb-22c2-177d7fafed94@fivetechno.de>
- <CAPDyKFqn06LZZMXLD2o-M6A0R6KU97PFUTN=NgYnMtf=ESULTA@mail.gmail.com>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Message-ID: <e69268d2-4a3f-3cd8-fc2e-57ae52ad337a@fivetechno.de>
-Date:   Mon, 11 Nov 2019 20:31:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqn06LZZMXLD2o-M6A0R6KU97PFUTN=NgYnMtf=ESULTA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573500722;d304cc47;
-X-HE-SMSGID: 1iUFPr-00017a-Bc
+        Mon, 11 Nov 2019 14:33:09 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id DC3CF2010C18;
+        Mon, 11 Nov 2019 11:33:08 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC3CF2010C18
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573500788;
+        bh=fGp7aGtfx5j4b2g0DCuVmlZ/hhAjByENcIbOKEQH7bo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=LMos4A8A+Tb+CnZj3jALtpTqB8SXPXDlhNB46x4eVrQMpbGZEW3aZ+0gz+mtBmPUU
+         KDfmkq6/Uub1XOqXtp+4J5DcCj9ttrXH/spLmR40YuSLEWKv4lubloOo730Wd84X9Z
+         f5grS9eVIe35NV5nDh63jTmFaL1gDazk0pMRRb/I=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 01/10] IMA: Added KEYRING_CHECK func in IMA policy to measure keys
+Date:   Mon, 11 Nov 2019 11:32:54 -0800
+Message-Id: <20191111193303.12781-2-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191111193303.12781-1-nramas@linux.microsoft.com>
+References: <20191111193303.12781-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
+IMA policy needs to support a func to enable measurement of
+asymmetric keys.
 
-Am 11.11.19 um 18:27 schrieb Ulf Hansson:
-> On Mon, 11 Nov 2019 at 15:13, Markus Reichl <m.reichl@fivetechno.de> wrote:
->>
->> Add SDR104 capability and regulators to SD card node.
->> While at it, fix a typo in lcd pinctrl and remove two
->> undocumented bindings from pmic.
->>
->> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
->> ---
->>  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 31 +++++++++++++++----
->>  1 file changed, 25 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->> index 33df95e384b4..e86a6db54499 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->> @@ -135,6 +135,20 @@
->>                 vin-supply = <&vcc_1v8>;
->>         };
->>
->> +       vcc3v0_sd: vcc3v0-sd {
->> +               compatible = "regulator-fixed";
->> +               enable-active-high;
->> +               gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&vcc3v0_sd_en>;
->> +               regulator-name = "vcc3v0_sd";
->> +               regulator-always-on;
-> 
-> This looks odd. A GPIO regulator being always on?
+This patch defines a new IMA policy func namely KEYRING_CHECK to
+measure asymmetric keys.
 
-This is a standard micro SD card socket that can also be used for
-booting the board. I wanted to be cautious and start
-working with it and several SD cards and explore the capabilities.
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+---
+ Documentation/ABI/testing/ima_policy | 6 ++++++
+ security/integrity/ima/ima.h         | 1 +
+ security/integrity/ima/ima_policy.c  | 4 +++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-On this board nearly all regulators are still continously
-switched on. I plan to remove the always-on properties step
-by step from the regulators when the board runs stable with it's
-components all enbled. 
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index 29aaedf33246..341df49b5ad1 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -30,6 +30,7 @@ Description:
+ 				[FIRMWARE_CHECK]
+ 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+ 				[KEXEC_CMDLINE]
++				[KEYRING_CHECK]
+ 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+ 			       [[^]MAY_EXEC]
+ 			fsmagic:= hex value
+@@ -113,3 +114,8 @@ Description:
+ 		Example of appraise rule allowing modsig appended signatures:
+ 
+ 			appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig
++
++		Example of measure rule using KEYRING_CHECK to measure
++		all keys:
++
++			measure func=KEYRING_CHECK
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index df4ca482fb53..7f23405b2718 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -193,6 +193,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
+ 	hook(KEXEC_INITRAMFS_CHECK)	\
+ 	hook(POLICY_CHECK)		\
+ 	hook(KEXEC_CMDLINE)		\
++	hook(KEYRING_CHECK)		\
+ 	hook(MAX_CHECK)
+ #define __ima_hook_enumify(ENUM)	ENUM,
+ 
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index f19a895ad7cd..9ca32ffaaa9d 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -373,7 +373,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+ {
+ 	int i;
+ 
+-	if (func == KEXEC_CMDLINE) {
++	if ((func == KEXEC_CMDLINE) || (func == KEYRING_CHECK)) {
+ 		if ((rule->flags & IMA_FUNC) && (rule->func == func))
+ 			return true;
+ 		return false;
+@@ -997,6 +997,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 				entry->func = POLICY_CHECK;
+ 			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
+ 				entry->func = KEXEC_CMDLINE;
++			else if (strcmp(args[0].from, "KEYRING_CHECK") == 0)
++				entry->func = KEYRING_CHECK;
+ 			else
+ 				result = -EINVAL;
+ 			if (!result)
+-- 
+2.17.1
 
-> 
->> +               regulator-boot-on;
->> +               regulator-min-microvolt = <3000000>;
->> +               regulator-max-microvolt = <3000000>;
->> +               vin-supply = <&vcc3v3_sys>;
->> +       };
-> 
-> Assumes this powers an SDIO embedded card. Often those have a specific
-> power sequence, just wanted to make sure the above are really
-> sufficient? No delays or external clock needed?
-
-It's not embedded, just a standard µSD plug. It is already enabled
-by mainline U-Boot and ejecting and inserting the card works fine.
-
---
-Gruß,
-Markus
-> 
-> [...]
-> 
-> Kind regards
-> Uffe
-> 
