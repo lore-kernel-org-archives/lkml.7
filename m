@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A61C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFDCC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D182084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A512075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0ExBf69"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fDhq0K+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfKKHfZ (ORCPT
+        id S1727050AbfKKHfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:35:25 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33156 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfKKHfX (ORCPT
+        Mon, 11 Nov 2019 02:35:30 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41326 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfKKHf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:35:23 -0500
-Received: by mail-pg1-f193.google.com with SMTP id h27so8945488pgn.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 23:35:23 -0800 (PST)
+        Mon, 11 Nov 2019 02:35:29 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p26so10095217pfq.8
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 23:35:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=shSJXxHkqiOnwVznDt/3eHxUBXqubG/+hrNMGFN/+WI=;
-        b=s0ExBf69BmmTL8g8enNiPwaRmpBMFWW+q7MngojPegddgeqfh2kgXDFE2hDQ8T2JyG
-         ggi+0b0rIR/nNwAiYSw6V/WvnJpfITQzXqiNJtBp/wqHduWt3VLLhzVBSTM7p3KZGs/N
-         ex5F/9AKeJcvhao21rlQ8yVLzgJ39s90ruG/NY28kqG1I7UI6aH93dX1eOX1ccF2Q4Vn
-         o5XOb0liCGl/CZxAlUiwyHaXC8NQIbKk6gejnCc99hzVFILoZbA5kX/i4b7wkD1KtBlX
-         ZLogjfb2lQyl5XmpZDRB2UH0VrmWkiV57kI1rh/oVYq1IEScxehvEKBlH4vAu3VE9hGk
-         BWAA==
+        bh=i6cJtP2GLYXrWSbffAAlWqbiBaFJmvg9QhFIx0JCR4w=;
+        b=fDhq0K+/Rn0iuKKs10LO1snJBg6va0XLJdJa4Bz/h7Q5iuKxXTGigB77w3v0ezUGv7
+         wN9k5uqyPodAtGkyVOPY1YOlstq2rqxsBmFs+7tsqE/tF95NyFrwW0NiWsFmcMGxuSN6
+         7Xb7zSaRRZhZylx+27eHpbgWmeIuJJnbcxODRj7yqS8s6p6QeUUvcHiAsWaB9fQQviHo
+         Hr4Xjv7NOWumj6n+AstBAJWIR3KJv8kWTHv8S9I8HlkSk1pAQnxR46/Cf6MoevHFfc+F
+         3B1CnqUYgyBVz60ZWMH/yaITJlVlDcDZ0zSZYP4AMXYEp4bRi42ls1WEsp+JLbcS/OFP
+         PgeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=shSJXxHkqiOnwVznDt/3eHxUBXqubG/+hrNMGFN/+WI=;
-        b=l21gw4APUtMwNmzoHCrzRJP9m8bL9j49HJkcHShtBqBzJm8Qx940REKXAW68TDIkn6
-         UqNSD8dvucH2eydIunUTDb+qxmyMN/+X4jmKOeyhbea7tzJbl5v1wwsIDOnXhiFoTkel
-         5r4QRpslbtnsGDrTrKay7l/HYF89pHxWNrVjLkj0P1m4rDUy4Bw9Tz05lsVFQ7mIT8Vi
-         Ao34nOpFNNhGNW9SFKDWRqiSqPfysRpDCOkPQLWuknZ2xfXjp9njnF7JEwaqBXMomLYk
-         oNQy5hmzvzUfU9UOKXWOhtGZTEqnc7tNYJpXy2cPzReMcTyP7Xg9ibF4+I2PLeVTVQxr
-         295w==
-X-Gm-Message-State: APjAAAUrV9MShkPMejzD/p079jNqVnMUh3gRFkyxzfUgVuFS81pu0kKs
-        NCC7mWT8wX8lfuFxTR3McNb9QA==
-X-Google-Smtp-Source: APXvYqzGhEowdl33ZG3Nn+JSXRL0cpS3eAkme+jXg+GvtWTyLHfqqj7nPp7wfJIa1XDaOOa04ma3+g==
-X-Received: by 2002:a62:ea1a:: with SMTP id t26mr5386170pfh.14.1573457722961;
-        Sun, 10 Nov 2019 23:35:22 -0800 (PST)
+        bh=i6cJtP2GLYXrWSbffAAlWqbiBaFJmvg9QhFIx0JCR4w=;
+        b=q/l2tFHCVdsi6sNSlSGMj6BjH8TnubLvzKYdJFzXazzz+atfn9vc9Huv2T+GzxspQh
+         FH5rwv7IZXZzBimwRSB3QtXbpbnrtBRgxOj09ZV3htegcFsw82YxoaVxzhUD6sVYnPsi
+         Cqp3r0t4DbbGn7A3dPDQu7k7+RRAYzqIt16h7lY3pdGHSIag7yn133BuPjConF99VsRH
+         SFA2tMXUilDVnzPO0F+0dPwpAmJSq9o+pFDi6H6quVqWWuBgd7jIkJTGo2rzRi3+zyq8
+         PEKiqcpYa1iNGrnrjSBILetV3PYwzGEUb+BjXpx4rJbDhL0+sGTucVpdt7Prz9VFuuZA
+         SYMg==
+X-Gm-Message-State: APjAAAUUgffAU1wsCcGGa3xuMYe1kCHv36Ye6odv65BtxalrD1/i2GJT
+        dDmrZNAW6z0bgMdUaHPVtn+AuQ==
+X-Google-Smtp-Source: APXvYqxhkLmLWJIsYD/Z+DW+fx4kiGR/RMpy3gFQqLneqDDfgIkGQ1rke5EWhKSBQiwaHoVDNlzJGg==
+X-Received: by 2002:a63:9a12:: with SMTP id o18mr26772073pge.379.1573457727181;
+        Sun, 10 Nov 2019 23:35:27 -0800 (PST)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id c184sm17345285pfc.159.2019.11.10.23.35.18
+        by smtp.gmail.com with ESMTPSA id c184sm17345285pfc.159.2019.11.10.23.35.23
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 10 Nov 2019 23:35:22 -0800 (PST)
+        Sun, 10 Nov 2019 23:35:26 -0800 (PST)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         asutoshd@codeaurora.org
@@ -63,9 +63,9 @@ Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
         linus.walleij@linaro.org, vincent.guittot@linaro.org,
         baolin.wang@linaro.org, baolin.wang7@gmail.com,
         linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 3/4] mmc: host: sdhci-sprd: Add software queue support
-Date:   Mon, 11 Nov 2019 15:33:59 +0800
-Message-Id: <c9f7aa5fd8337886866bb5db8743840f3158c140.1573456284.git.baolin.wang@linaro.org>
+Subject: [PATCH v6 4/4] mmc: host: sdhci: Add a variable to defer to complete requests if needed
+Date:   Mon, 11 Nov 2019 15:34:00 +0800
+Message-Id: <119d3285ab610967b43f7c822dfdc0ebb8d521cb.1573456284.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1573456283.git.baolin.wang@linaro.org>
 References: <cover.1573456283.git.baolin.wang@linaro.org>
@@ -76,105 +76,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add software queue support to improve the performance.
+When using the host software queue, it will trigger the next request in
+irq handler without a context switch. But the sdhci_request() can not be
+called in interrupt context when using host software queue for some host
+drivers, due to the get_cd() ops can be sleepable.
 
+But for some host drivers, such as Spreadtrum host driver, the card is
+nonremovable, so the get_cd() ops is not sleepable, which means we can
+complete the data request and trigger the next request in irq handler
+to remove the context switch for the Spreadtrum host driver.
+
+Thus we still need introduce a variable in struct sdhci_host to indicate
+that we will always to defer to complete requests if the sdhci_request()
+can not be called in interrupt context for some host drivers, when using
+the host software queue.
+
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/mmc/host/Kconfig      |    1 +
- drivers/mmc/host/sdhci-sprd.c |   26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ drivers/mmc/host/sdhci.c |    2 +-
+ drivers/mmc/host/sdhci.h |    1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index efa4019..54b86f6 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -632,6 +632,7 @@ config MMC_SDHCI_SPRD
- 	depends on ARCH_SPRD
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
-+	select MMC_HSQ
- 	help
- 	  This selects the SDIO Host Controller in Spreadtrum
- 	  SoCs, this driver supports R11(IP version: R11P0).
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index d07b979..3cc1277 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- 
- #include "sdhci-pltfm.h"
-+#include "mmc_hsq.h"
- 
- /* SDHCI_ARGUMENT2 register high 16bit */
- #define SDHCI_SPRD_ARG2_STUFF		GENMASK(31, 16)
-@@ -379,6 +380,16 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	return 0;
- }
- 
-+static void sdhci_sprd_request_done(struct sdhci_host *host,
-+				    struct mmc_request *mrq)
-+{
-+	/* Validate if the request was from software queue firstly. */
-+	if (mmc_hsq_finalize_request(host->mmc, mrq))
-+		return;
-+
-+	 mmc_request_done(host->mmc, mrq);
-+}
-+
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -392,6 +403,7 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	.hw_reset = sdhci_sprd_hw_reset,
- 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
- 	.get_ro = sdhci_sprd_get_ro,
-+	.request_done = sdhci_sprd_request_done,
- };
- 
- static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-@@ -521,6 +533,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 850241f..4bef066 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct sdhci_host *host,
  {
- 	struct sdhci_host *host;
- 	struct sdhci_sprd_host *sprd_host;
-+	struct mmc_hsq *hsq;
- 	struct clk *clk;
- 	int ret = 0;
+ 	struct mmc_data *data = mrq->data;
  
-@@ -631,6 +644,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+-	return host->pending_reset ||
++	return host->pending_reset || host->always_defer_done ||
+ 	       ((host->flags & SDHCI_REQ_USE_DMA) && data &&
+ 		data->host_cookie == COOKIE_MAPPED);
+ }
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index d89cdb9..a73ce89 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -533,6 +533,7 @@ struct sdhci_host {
+ 	bool pending_reset;	/* Cmd/data reset is pending */
+ 	bool irq_wake_enabled;	/* IRQ wakeup is enabled */
+ 	bool v4_mode;		/* Host Version 4 Enable */
++	bool always_defer_done;	/* Always defer to complete requests */
  
- 	sprd_host->flags = host->flags;
- 
-+	hsq = devm_kzalloc(&pdev->dev, sizeof(*hsq), GFP_KERNEL);
-+	if (!hsq) {
-+		ret = -ENOMEM;
-+		goto err_cleanup_host;
-+	}
-+
-+	ret = mmc_hsq_init(hsq, host->mmc);
-+	if (ret)
-+		goto err_cleanup_host;
-+
- 	ret = __sdhci_add_host(host);
- 	if (ret)
- 		goto err_cleanup_host;
-@@ -689,6 +712,7 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
- 
-+	mmc_hsq_suspend(host->mmc);
- 	sdhci_runtime_suspend_host(host);
- 
- 	clk_disable_unprepare(sprd_host->clk_sdio);
-@@ -717,6 +741,8 @@ static int sdhci_sprd_runtime_resume(struct device *dev)
- 		goto clk_disable;
- 
- 	sdhci_runtime_resume_host(host, 1);
-+	mmc_hsq_resume(host->mmc);
-+
- 	return 0;
- 
- clk_disable:
+ 	struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];	/* Requests done */
+ 	struct mmc_command *cmd;	/* Current command */
 -- 
 1.7.9.5
 
