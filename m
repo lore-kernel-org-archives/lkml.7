@@ -2,54 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38F1C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2693BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B045D21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89A621925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497059;
-	bh=CUXlu8NZW03WkyDCebKAp5bWiJQw0Dd3ZEeLxh35JVE=;
+	s=default; t=1573497064;
+	bh=n6AUb7a03zjKnkOPbOJkQb6cpxFO6lzi0Y90HfhWmtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDtOVPoEmrVo9yNQzrK4x7i37dEnrOoLHc45UJOSdwMieDdm5uA8vgRDvsOS8DoDq
-	 jKrwQfv9MTKcP5KM4TRVnFihSBgYtjEDPJGwG3vWPv16i/s7fM5rY4rvdkWl0Fk6I/
-	 oJoxyW/7+g2LhsK+A9bHpbYqajTuUuiWbZMXi2e0=
+	b=Pnlp3M4Y+1RfNc2sqm97L1naHaTEw6LDx8iu4rgFJF+tkA5x4XJwHwgRDRV3YuSc9
+	 0CTdrdpGSkwxHSvLsPVJ+TVzMA1gFXTVytBRVq1S/k/ClBAF24OP8iot7U1hwwCmX1
+	 xg4bzx0XMNGUoxTkhPPz1pRv819t5eXwt3ofG+io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKKSa6 (ORCPT
+        id S1727530AbfKKSbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:30:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47356 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbfKKSa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:56 -0500
+        id S1727516AbfKKSa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AAE221872;
-        Mon, 11 Nov 2019 18:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FA2222C9;
+        Mon, 11 Nov 2019 18:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497055;
-        bh=CUXlu8NZW03WkyDCebKAp5bWiJQw0Dd3ZEeLxh35JVE=;
+        s=default; t=1573497058;
+        bh=n6AUb7a03zjKnkOPbOJkQb6cpxFO6lzi0Y90HfhWmtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mdsvgeW7BWRUftlGNbbAGz+K6qZxfPe/AG8C8DeCzic7BMCquSIiv7PYqWrFEbKw9
-         yTZQjQMC/tRpVlqj381HNENtQ9Sk2tY+05P5TdR3w6h+0R/HwBRXSdBPDydKgW7U5C
-         vHxVQV2e4uWLzDuSjdyreS221z364cHDyWjtGc1w=
+        b=B9Wc6TTRZ6at+8zjVXS+DsJo73/2IzTc1NJCyhIdQz+//10u4vbuSHwbq17da/iwI
+         aA/pCAIRdEk8vtuLfQryi6C/NsCAAA/+Zljequkw8i1bPN98Tnq0/sfK7yGd571g7W
+         2EuH01n9A6aIQ6T2fL2xPqc9n/c0APfJWtAz+eaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikhil Badola <nikhil.badola@freescale.com>,
-        Ran Wang <ran.wang_1@nxp.com>, Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 30/43] usb: fsl: Check memory resource before releasing it
-Date:   Mon, 11 Nov 2019 19:28:44 +0100
-Message-Id: <20191111181320.739683111@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 04/43] NFC: st21nfca: fix double free
+Date:   Mon, 11 Nov 2019 19:28:18 +0100
+Message-Id: <20191111181252.645265024@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -62,37 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Badola <nikhil.badola@freescale.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit bc1e3a2dd0c9954fd956ac43ca2876bbea018c01 ]
+[ Upstream commit 99a8efbb6e30b72ac98cecf81103f847abffb1e5 ]
 
-Check memory resource existence before releasing it to avoid NULL
-pointer dereference
+The variable nfcid_skb is not changed in the callee nfc_hci_get_param()
+if error occurs. Consequently, the freed variable nfcid_skb will be
+freed again, resulting in a double free bug. Set nfcid_skb to NULL after
+releasing it to fix the bug.
 
-Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
-Reviewed-by: Ran Wang <ran.wang_1@nxp.com>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/gadget/udc/fsl_udc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/st21nfca/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/udc/fsl_udc_core.c
-index 8991a40707926..bd98557caa280 100644
---- a/drivers/usb/gadget/udc/fsl_udc_core.c
-+++ b/drivers/usb/gadget/udc/fsl_udc_core.c
-@@ -2570,7 +2570,7 @@ static int fsl_udc_remove(struct platform_device *pdev)
- 	dma_pool_destroy(udc_controller->td_pool);
- 	free_irq(udc_controller->irq, udc_controller);
- 	iounmap(dr_regs);
--	if (pdata->operating_mode == FSL_USB2_DR_DEVICE)
-+	if (res && (pdata->operating_mode == FSL_USB2_DR_DEVICE))
- 		release_mem_region(res->start, resource_size(res));
- 
- 	/* free udc --wait for the release() finished */
--- 
-2.20.1
-
+--- a/drivers/nfc/st21nfca/core.c
++++ b/drivers/nfc/st21nfca/core.c
+@@ -726,6 +726,7 @@ static int st21nfca_hci_complete_target_
+ 							NFC_PROTO_FELICA_MASK;
+ 		} else {
+ 			kfree_skb(nfcid_skb);
++			nfcid_skb = NULL;
+ 			/* P2P in type A */
+ 			r = nfc_hci_get_param(hdev, ST21NFCA_RF_READER_F_GATE,
+ 					ST21NFCA_RF_READER_F_NFCID1,
 
 
