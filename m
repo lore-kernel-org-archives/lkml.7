@@ -2,94 +2,143 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C009C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078EEC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49CE2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE00D2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttoY3wvT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mXaHGQTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKKIpn (ORCPT
+        id S1727078AbfKKIq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:45:43 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50863 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKKIpn (ORCPT
+        Mon, 11 Nov 2019 03:46:27 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56048 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKIq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:45:43 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l17so11534400wmh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:45:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=EK18B9QZyV4jnCqfqkVYQrPKW6P0mT9Ad8azIEuB/P4=;
-        b=ttoY3wvTzROazUqlKjqwt/l6HTPdwcAvzmwHO9jyTo64nDUomWbOL4wqLYnkrHu1nO
-         w775gZq7o09MUhaxVfFY6/1JRs1jj6GebF69W3U1qC+wXkU9/DltXBovTS2wtcu/Tj3p
-         ZBa8pak5Q8jAXq3FUwLcTYPfigNW+m59cB81Bx+oe31xgajk3OdddURjI4qbLF11KelS
-         hJe7FJUFtbFzQtArsW3yEETMZOjbEtnWQLXyf+akz1Q5M+uMIS2parIOUDIwIRPU8dh9
-         oBD2ZP445sKaCth0kMNa1/J1UWhbQYiNk3EOzdaWRvqhRfJxFCeq3X6HzbqkS8UmrNBj
-         cYGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=EK18B9QZyV4jnCqfqkVYQrPKW6P0mT9Ad8azIEuB/P4=;
-        b=HQahyT9eQzASv9auPtP6VgNX5D0/SCXXHerTbGtNOAqq7RrfzOEv3fIe6wIHBO0wiV
-         KmcRfZJinmAQZHPBfVKPoy4C8m4dRC6XPUKhm9WcqaoCB+D/sadf8TkWpENdZ9mUeblr
-         5SC8V+1AIoCWc6fTR/JPNUsmUhzIUWVWGHnJZodKB0lZDJjD4+GOfl+9o7apsB45cKxk
-         jd65OKKqIlncFz2QMCQLS0Ok78J7y67FmzntHHU2dcU23NxGFS2LV9CpuCWGT1cfw16e
-         /O2zWR3OmeyHrryO0ZhsiLUBVSZ2R9x4SEFhE9QiaBUaBi2QZyAbc1//bxC2yekCjuqx
-         cuxw==
-X-Gm-Message-State: APjAAAXN1pJr890xHDAykJ0rIDkRUUSq6hTePwmnuB07gsrk6Udujikr
-        Xh5xOTKXvnmXlHsX1InzlYQI8g==
-X-Google-Smtp-Source: APXvYqxcQjtkGYqFYtlGx4wVN1bfsfLN9y8wxU8r68YqnzJFwgi+pfxn3f8HlKzJvn7gZ0xn1msfZg==
-X-Received: by 2002:a1c:7519:: with SMTP id o25mr18696343wmc.70.1573461941226;
-        Mon, 11 Nov 2019 00:45:41 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id o81sm15961872wmb.38.2019.11.11.00.45.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 00:45:40 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:45:33 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: intel-lpss: Add Intel Comet Lake PCH-H PCI IDs
-Message-ID: <20191111084533.GM18902@dell>
-References: <20191029094409.43741-1-andriy.shevchenko@linux.intel.com>
+        Mon, 11 Nov 2019 03:46:27 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB8kFjp047825;
+        Mon, 11 Nov 2019 02:46:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573461975;
+        bh=bPsdV3D16S4/f/dE/JDv9mNF3nvxhJIfXWIaWmitlCY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=mXaHGQTW3V1k5l+az7PK9qrALszJvuc6fkBps1mPRoWCUC9eXPnedgV5DUDxYuHv6
+         g9E7oN45MK9ILrYHZGMIN2+6dBw6BWc9/HGDwcZz+2CI4lvRLEdew9a8772mJj13A/
+         X8xm14x3Ju/vIpOsQydYM+IDfjBI0Rd1gnU+XBlw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB8kE99038243
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Nov 2019 02:46:15 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
+ Nov 2019 02:45:57 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 11 Nov 2019 02:45:57 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB8kArs100093;
+        Mon, 11 Nov 2019 02:46:11 -0600
+Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
+ configuration
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-8-peter.ujfalusi@ti.com>
+ <20191111044716.GM952516@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <0a9d570a-0942-6e98-9e5a-798546c9c677@ti.com>
+Date:   Mon, 11 Nov 2019 10:47:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20191111044716.GM952516@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029094409.43741-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019, Andy Shevchenko wrote:
 
-> Intel Comet Lake PCH-H has the same LPSS than Intel Cannon Lake.
-> Add the new IDs to the list of supported devices.
+
+On 11/11/2019 6.47, Vinod Koul wrote:
+> On 01-11-19, 10:41, Peter Ujfalusi wrote:
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/mfd/intel-lpss-pci.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>> --- /dev/null
+>> +++ b/drivers/dma/ti/k3-psil.c
+>> @@ -0,0 +1,97 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+> 
+> ...
+> 
+>> +extern struct psil_ep_map am654_ep_map;
+>> +extern struct psil_ep_map j721e_ep_map;
+>> +
+>> +static DEFINE_MUTEX(ep_map_mutex);
+>> +static struct psil_ep_map *soc_ep_map;
+>> +
+>> +struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
+>> +{
+>> +	int i;
+>> +
+>> +	mutex_lock(&ep_map_mutex);
+>> +	if (!soc_ep_map) {
+>> +		if (of_machine_is_compatible("ti,am654")) {
+>> +			soc_ep_map = &am654_ep_map;
+>> +		} else if (of_machine_is_compatible("ti,j721e")) {
+>> +			soc_ep_map = &j721e_ep_map;
+>> +		} else {
+>> +			pr_err("PSIL: No compatible machine found for map\n");
+>> +			return ERR_PTR(-ENOTSUPP);
+>> +		}
+>> +		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
+>> +	}
+>> +	mutex_unlock(&ep_map_mutex);
+>> +
+>> +	if (thread_id & K3_PSIL_DST_THREAD_ID_OFFSET && soc_ep_map->dst) {
+>> +		/* check in destination thread map */
+>> +		for (i = 0; i < soc_ep_map->dst_count; i++) {
+>> +			if (soc_ep_map->dst[i].thread_id == thread_id)
+>> +				return &soc_ep_map->dst[i].ep_config;
+>> +		}
+>> +	}
+>> +
+>> +	thread_id &= ~K3_PSIL_DST_THREAD_ID_OFFSET;
+>> +	if (soc_ep_map->src) {
+>> +		for (i = 0; i < soc_ep_map->src_count; i++) {
+>> +			if (soc_ep_map->src[i].thread_id == thread_id)
+>> +				return &soc_ep_map->src[i].ep_config;
+>> +		}
+>> +	}
+>> +
+>> +	return ERR_PTR(-ENOENT);
+>> +}
+>> +EXPORT_SYMBOL(psil_get_ep_config);
+> 
+> This doesn't match the license of this module, we need it to be
+> EXPORT_SYMBOL_GPL
 
-Applied, thanks.
+Oops, will fix it.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
