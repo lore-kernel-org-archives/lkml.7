@@ -2,106 +2,122 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE0FC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207DAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C298821655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB4C2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBSNhKIA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZYzyx+8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfKKPTQ (ORCPT
+        id S1726953AbfKKPUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:19:16 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38307 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKKPTQ (ORCPT
+        Mon, 11 Nov 2019 10:20:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53271 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726857AbfKKPUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:19:16 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a14so11789709oid.5;
-        Mon, 11 Nov 2019 07:19:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Oj77XRuIrZ+nhWL6BBEQMxJ0gbQ2ADE6qolk4AXWkzA=;
-        b=MBSNhKIAv95LtaZvlBH6VARu3dh7z+L05kADCNgCQQ2W1L+YEJ/Fh5KbVdrN2ukKTW
-         yye7KJf0Mxhe/0Qlz/cca8Nh3qnNE7kVPRvFwgCA+sWCozRAuhez99jCi8oKLRtEyOLz
-         YDMo/IafADp0jPq+iZTQnrrQEmEARhTi9OOwYntNdsUQ0+uySatCE4nETmvlVIMpzjTu
-         Fbkni5LtKIrwqZHTwYwFYCeoAL6O8zyxnqtRyRDacZWI3rRATBHF0zyb7cVYqnfD76+Q
-         UrctDS3U/OVVkj0MDFo8fXnjTphJGEHakhq/62iffw7rom5hMV5ZYaE+20oo/Gcx85u+
-         zBHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Oj77XRuIrZ+nhWL6BBEQMxJ0gbQ2ADE6qolk4AXWkzA=;
-        b=h2aC4W1qSlMewAnzTnmvRdXvNUtL1FGNqQrMxVezYfgVxRjL4BH6Y2pM9Nu7L1TTvz
-         EclsK0Zo3j7aOHVD/Qq++aA7r8DAA8JPhMmgZGg5EXZyhUhTWSe9+J6t4AI9U2wAmwwv
-         99i+LVHnGtqq0OlCkBqJvw1JSP7T4uYeh8QCAZGOP3U5nGclzv2MmeqAsJviX8nVcrPV
-         sA57eQAoXqML8v0YsZR6zd5n6ZCMXvTSdNurSCwd+pyM7ucAfT6/HNYWsPchAJfhDTU6
-         gFY4ifZrhRiHT/zcEJ0AN7miU0CHc6K+75nktlVqbUFqdhdpHoIGVDf9nHwOnvsHmkin
-         HbnA==
-X-Gm-Message-State: APjAAAU9TCQ+JNx7C4pfRHqriudfapFXXZqRf27dGqIL0h7gOi56buE6
-        9bFseCVMDLn34fR4Ww2qEVmw5GX/PhKBLB+y6fk=
-X-Google-Smtp-Source: APXvYqw9rbbJ6ZcvEghaKJ5gEsvMxtbSqyhIaGnVT2nY29rpxvM6DopCJ1x8v1olm7Q1QpHPOIBOY+lnBec1fmFd1yA=
-X-Received: by 2002:aca:2803:: with SMTP id 3mr1017346oix.113.1573485555030;
- Mon, 11 Nov 2019 07:19:15 -0800 (PST)
+        Mon, 11 Nov 2019 10:20:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573485651;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C1zGHKvwpfTIUGcapQ+PDyzQUKdMx+4TB/qV51A6KfM=;
+        b=ZYzyx+8k88KApyTDKgLQLPjMrXkY7WyCLfrmL/wRjCWkjU8JvFLNWHAJkTZD/zHZiIl7Iw
+        +XxcFy7n0nk+RxKe7hwqCJgp34FqP8OF+at4RI2KxovGN5f0oLakv4emNRoZasZiS9p+0f
+        FSe0q/hoN0YdnxkwXqv3eAtuQ8c5cyk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-6-vBGvGzzCMIG6kes1J63o-g-1; Mon, 11 Nov 2019 10:20:48 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F7F5911AD;
+        Mon, 11 Nov 2019 15:20:46 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E6F060852;
+        Mon, 11 Nov 2019 15:20:38 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: For review: documentation of clone3() system call
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+        <87tv7awj4g.fsf@oldenburg2.str.redhat.com>
+        <CAG48ez3zpBwU6vHSuY6VoP+Uw_Jz6uxYN1Teg2wSpwZrPmAn-g@mail.gmail.com>
+Date:   Mon, 11 Nov 2019 16:20:36 +0100
+In-Reply-To: <CAG48ez3zpBwU6vHSuY6VoP+Uw_Jz6uxYN1Teg2wSpwZrPmAn-g@mail.gmail.com>
+        (Jann Horn's message of "Mon, 11 Nov 2019 16:15:58 +0100")
+Message-ID: <875zjqwibf.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20191018194707.27188-1-sudipm.mukherjee@gmail.com> <20191104164351.GA2269025@kroah.com>
-In-Reply-To: <20191104164351.GA2269025@kroah.com>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Mon, 11 Nov 2019 15:18:38 +0000
-Message-ID: <CADVatmMzZ9AByeUBtqdrfE_apK58oMYLxSuBrDdLh2XTQzKE9A@mail.gmail.com>
-Subject: Re: [PATCH] tty: serial: samsung: rename to fix build warning
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: vBGvGzzCMIG6kes1J63o-g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+* Jann Horn:
 
-On Mon, Nov 4, 2019 at 4:43 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+> On Mon, Nov 11, 2019 at 4:03 PM Florian Weimer <fweimer@redhat.com> wrote=
+:
+>>
+>> * Michael Kerrisk:
+>>
+>> >        Another  difference  for  the  raw clone() system call is that =
+the
+>> >        stack argument may be NULL, in which case the child uses a  dup=
+li=E2=80=90
+>> >        cate  of the parent's stack.  (Copy-on-write semantics ensure t=
+hat
+>> >        the child gets separate copies of stack pages when either  proc=
+ess
+>> >        modifies  the  stack.)   In  this case, for correct operation, =
+the
+>> >        CLONE_VM option should not be specified.  (If the child shares =
+the
+>> >        parent's  memory  because of the use of the CLONE_VM flag, then=
+ no
+>> >        copy-on-write duplication occurs and chaos is likely to result.=
+)
+>>
+>> I think sharing the stack also works with CLONE_VFORK with CLONE_VM, as
+>> long as measures are taken to preserve the return address in a register.
 >
-> On Fri, Oct 18, 2019 at 08:47:07PM +0100, Sudip Mukherjee wrote:
-> > The build of arm allmodconfig gives a warning:
-> >
-> > warning: same module names found:
-> >   drivers/tty/serial/samsung.ko
-> >   drivers/mtd/nand/onenand/samsung.ko
-> >
-> > Rename drivers/tty/serial/samsung.c to drivers/tty/serial/samsung_tty.c
-> > to fix the warning.
-> >
-<snip>
->
->
-> What are you going to break if you rename this module?
+> That basically just requires that the userspace function declaration
+> for clone3 includes __attribute__((returns_twice)), right?
 
-hopefully nothing.
+The clone3 implementation itself would have to store the return address
+in a register because at the time of the second return, a return address
+on the stack may have been corrupted by the subprocess because what used
+to be the stack frame of the clone function has since been reused for
+something else.
 
->
-> What configs enable both of these other than allmodconfig?  Why rename
-> the tty driver and not the mtd driver?  Why not both?
+__attribute__ ((returns_twice)) is likely needed as well, but that
+benefits the caller.  It's also not clear that it is sufficient for this
+to work in all cases.  (But the mandatory-to-implement vfork function
+faces the same problems.)
 
-But, there is no other config defined which has both enabled. Though I can
-make one, but since it is not defined and no one else has reported this, I think
-its better if you discard this. ( I think you already have :) )  or if
-you want I can
-send a v2 renaming both.
+Thanks,
+Florian
 
-
--- 
-Regards
-Sudip
