@@ -2,145 +2,122 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD515C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03458C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD274204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1042084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dcluWyIw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dT2s5dAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfKKIR1 (ORCPT
+        id S1726889AbfKKITx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:17:27 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40108 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKIR1 (ORCPT
+        Mon, 11 Nov 2019 03:19:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25972 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726793AbfKKITx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:17:27 -0500
-Received: by mail-wr1-f68.google.com with SMTP id i10so13529734wrs.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:17:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VsDEMrW/RrcxhRY1vm2HEmbhOBjQCGmnH7miF+ASOOE=;
-        b=dcluWyIwC0AdhNW+RROY3tTV7NkIFLNALJW6YRUeoVaa82SQwt80DfSxG1hGtkz2pq
-         VELwGauGVA+xgVx0MK+yrpkr65Bsw8gfIgFPGpg1Qe4V/boROsLDw5WjHU7IZNpjt39B
-         zGtNnDZ6Il+huxIOnoaJqLX7un8nvqDdqrwy+Y7LJUENYR6O8crz7HtuhJpfN61/AzgZ
-         8fKYF4TVSk+fnXFT4lBf8vdGMlCT1w5UUE2+WMqs0TYdJYvK8gSxYJU8BGZDtuRoIrSw
-         Tso2FqKD1HWi/+RUWE7FY7PVocvZKmfMYdJcHYDaVMkqsCjmtpfY7v0A4uzZG0z/tjxa
-         42rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VsDEMrW/RrcxhRY1vm2HEmbhOBjQCGmnH7miF+ASOOE=;
-        b=JSf/12SRMRM3WzLL90LnbnEm6vzscosMkEln8odbsAVM7rrDYJLuVHNsPoITYvW272
-         LF725Q7Fdb75Ew3Xkb9vnkhMLr+bgK2OvC7PUsaInWa8aCjZ8LBybaRpnzOsm5nqV7F6
-         glI7ZXe8PMISwNNGqBWAKb/uWNGmJ+YKLrgmPyyPdsXGkInRmwhs6j1iPKVGZrFSyx48
-         eIIo3pckRhhfYfLoE8UNHyiqoz935Gofupc5NOYv97vHQZhSgj+MywkSlfgSr8QKDmVz
-         f9Mrnopx0HlraHTaI+LadEXLWCqKNPy9TkBGqHcBjnL5dMPkYLY/pULwx+8+fyLVE7P/
-         TMWQ==
-X-Gm-Message-State: APjAAAWOtwZVkWG8d83vE+NYijwZjtCAJvgc5SPbLJRCVc8NixZ3ZpIQ
-        FcYzQG+JxUT4DhQaCU27FKlOSQ==
-X-Google-Smtp-Source: APXvYqw50g+Lc1op/Iwn+RwSQf/NtoeqZxi2CTsp1TjaRTk3Ol3VsnEatrEJSlf2I+YA9Qr0Q0gKvw==
-X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr18797692wrw.290.1573460244631;
-        Mon, 11 Nov 2019 00:17:24 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id i71sm31948761wri.68.2019.11.11.00.17.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 00:17:24 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:17:17 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, arm@kernel.org,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: Re: [PATCH v3] mfd: db8500-prcmu: Support U8420-sysclk firmware
-Message-ID: <20191111081717.GG18902@dell>
-References: <20191026214732.17725-1-linus.walleij@linaro.org>
+        Mon, 11 Nov 2019 03:19:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573460390;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y+d9HgiQd/ROeqheIWevtzZ1281FA0vSMCBkopaTcHI=;
+        b=dT2s5dAmT+wheA83Nw7+lNiR+wyzwBWdaTMts40zzh7gCofBz/D28p5hpBH715/RDn+HEz
+        78eWT0b2c69dvtYYuDNzPO4jcjrnh5tpMH0DzlTa5vZK9U0YsaN2mtfRKIqKrOVVjN2p6H
+        wdpBvHDpOJ4zO15Y+mUNodmBqz2sC5A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-_0XAJepROSaUejme0jEEIQ-1; Mon, 11 Nov 2019 03:19:44 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0CAFC107ACC4;
+        Mon, 11 Nov 2019 08:19:42 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BFE4100EBA6;
+        Mon, 11 Nov 2019 08:19:41 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9754118089C8;
+        Mon, 11 Nov 2019 08:19:40 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 03:19:40 -0500 (EST)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        LTP List <ltp@lists.linux.it>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        lkft-triage@lists.linaro.org,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Message-ID: <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20191111012614.GC6235@magnolia>
+References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com> <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com> <20191111012614.GC6235@magnolia>
+Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0:
+ Success
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191026214732.17725-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [10.43.17.163, 10.4.195.18]
+Thread-Topic: diotest4.c:476: read to read-only space. returns 0: Success
+Thread-Index: OoFxfOUloBUkdPsY/du59GUryWTVqQ==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: _0XAJepROSaUejme0jEEIQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 26 Oct 2019, Linus Walleij wrote:
 
-> There is a distinct version of the Ux500 U8420 variant
-> with "sysclk", as can be seen from the vendor code that
-> didn't make it upstream, this firmware lacks the
-> ULPPLL (ultra-low power phase locked loop) which in
-> effect means that the timer clock is instead wired to
-> the 32768 Hz always-on clock.
-> 
-> This has some repercussions when enabling the timer
-> clock as the code as it stands will disable the timer
-> clock on these platforms (lacking the so-called
-> "doze mode") and obtaining the wrong rate of the timer
-> clock.
-> 
-> The timer frequency is of course needed very early in
-> the boot, and as a consequence, we need to shuffle
-> around the early PRCMU init code: whereas in the past
-> we did not need to look up the PRCMU firmware version
-> in the early init, but now we need to know the version
-> before the core system timers are registered so we
-> restructure the platform callbacks to the PRCMU so as
-> not to take any arguments and instead look up the
-> resources it needs directly from the device tree
-> when initializing.
-> 
-> As we do not yet support any platforms using this
-> firmware it is not a regression, but as PostmarketOS
-> is starting to support products with this firmware we
-> need to fix this up.
-> 
-> The low rate of 32kHz also makes the MTU timer unsuitable
-> as delay timer but this needs to be fixed in a separate
-> patch.
-> 
-> Cc: arm@kernel.org
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Stephan Gerhold <stephan@gerhold.net>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v2->v3:
-> - It's a bad idead to return -ENODEV in a function
->   that returns void.
-> ChangeLog v1->v2:
-> - Change the style of the ULPPLL check function (more
->   compact)
-> - Fix a missing of_node_put() by actually returning
->   with -ENODEV on error.
-> 
-> ARM SoC folks: as this mostly affects the MFD subsystems
-> I think it'd be best if Lee can merge it, I do not
-> plan any other changes to the ARM core files that the
-> patch touches.
-> ---
->  arch/arm/mach-ux500/cpu-db8500.c |  2 +-
->  drivers/mfd/db8500-prcmu.c       | 63 ++++++++++++++++++++++----------
->  include/linux/mfd/db8500-prcmu.h |  4 +-
->  include/linux/mfd/dbx500-prcmu.h |  7 ++--
->  4 files changed, 50 insertions(+), 26 deletions(-)
+----- Original Message -----
+> I can't do a whole lot with a code snippet that lacks a proper SOB
+> header.
 
-Applied, thanks.
+I'll resend as a patch, maybe split it to 2 returns instead.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> > diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> > index 2f88d64c2a4d..8615b1f78389 100644
+> > --- a/fs/iomap/direct-io.c
+> > +++ b/fs/iomap/direct-io.c
+> > @@ -318,7 +318,7 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos=
+,
+> > loff_t length,
+> >                 if (pad)
+> >                         iomap_dio_zero(dio, iomap, pos, fs_block_size -
+> >                         pad);
+> >         }
+> > -       return copied ? copied : ret;
+> > +       return copied ? (loff_t) copied : ret;
+>=20
+> I'm a little confused on this proposed fix -- why does casting size_t
+> (aka unsigned long) to loff_t (long long) on a 32-bit system change the
+> test outcome?
+
+Ternary operator has a return type and an attempt is made to convert
+each of operands to the type of the other. So, in this case "ret"
+appears to be converted to type of "copied" first. Both have size of
+4 bytes on 32-bit x86:
+
+size_t copied =3D 0;
+int ret =3D -14;
+long long actor_ret =3D copied ? copied : ret;
+
+On x86_64: actor_ret =3D=3D -14;
+On x86   : actor_ret =3D=3D 4294967282
+
+> Does this same diotest4 failure happen with XFS?  I ask
+> because XFS has been using iomap for directio for ages.
+
+Yes, it fails on XFS too.
+
