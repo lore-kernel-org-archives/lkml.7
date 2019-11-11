@@ -2,52 +2,63 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85712C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D764C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E20C214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75944222CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498177;
-	bh=xQszBDJZJd2T01x8+vOm7pGVZrZ/vPRp8KoDRjOk4IA=;
+	s=default; t=1573498179;
+	bh=PMkpqNZv3ZPfHaaDe9KyVurQIlzPF/Fmtm0kTa+IWaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eD5Wx/yT5kJSRVt6pg5dEyIgi6Nzxdvuf13DbIlA2BDtUyjnbGuXmPPi34xS7MdEz
-	 hXXi0u2m5fxglIl+yhznAz5IHoQbCZruU0CcLQD2to71jj7xjP8dCPRdWBJWiJCwlP
-	 JyfuSUjPvYQhun+A3+qlddeYVAF6ijz5n7JV2V60=
+	b=XfsBIWNjlt75SztIrtCL6vTal5TEeyXTdb3p2ZgogICxMwg+xbLYcsaAwqJvfq58K
+	 dLHHWs1DL7ggKuoqhkPveZc8R8NyZyjN2/YduLedIyFwrJV/yT3tScVK/lT6eOCKfF
+	 +lfUxnNRM4ZuhSqZ4CC5oXwN2amOy7TXBr8qc9Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfKKStg (ORCPT
+        id S1730285AbfKKSti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:49:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:49:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727865AbfKKStc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:49:32 -0500
+        id S1730005AbfKKStg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:49:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1282D204FD;
-        Mon, 11 Nov 2019 18:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265E5204FD;
+        Mon, 11 Nov 2019 18:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498171;
-        bh=xQszBDJZJd2T01x8+vOm7pGVZrZ/vPRp8KoDRjOk4IA=;
+        s=default; t=1573498174;
+        bh=PMkpqNZv3ZPfHaaDe9KyVurQIlzPF/Fmtm0kTa+IWaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcEFDJOFsP8MLxHi0SbynJWRkSY8qpvLABtY9ZPGrNK2PwkzYU5mr9Bv6JAJjXN/I
-         zsVaBrN4LTkPOQ6T3Y63RMLGR32AsDgx28owK0QT6cAfFeWrva99/u6KwXkFnHlWU0
-         Mb3mVmrR9G7psB8p/xIAhfSVJspM51ZS13JHH/48=
+        b=2HUKcglcNc6D2WqarXXiBN/FYT7JPY33XZNIGihnPhkEIeq1PeEPrBcmFmSwU5ZmH
+         MeePDsbQ4BIyzaA1O2GVBOpCnY0w3AHMJZIoyIQG4v2zegaAkpkK0U9Bp9NopilVnM
+         piotZ3E7CrZHkY3nqzHXihuRa6RE/U7il82Hv5AQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.3 043/193] HID: wacom: generic: Treat serial number and related fields as unsigned
-Date:   Mon, 11 Nov 2019 19:27:05 +0100
-Message-Id: <20191111181504.140142940@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ville Syrjl <ville.syrjala@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 044/193] mm/khugepaged: fix might_sleep() warn with CONFIG_HIGHPTE=y
+Date:   Mon, 11 Nov 2019 19:27:06 +0100
+Message-Id: <20191111181504.216827366@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,101 +71,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <killertofu@gmail.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit ff479731c3859609530416a18ddb3db5db019b66 upstream.
+commit ec649c9d454ea372dcf16cccf48250994f1d7788 upstream.
 
-The HID descriptors for most Wacom devices oddly declare the serial
-number and other related fields as signed integers. When these numbers
-are ingested by the HID subsystem, they are automatically sign-extended
-into 32-bit integers. We treat the fields as unsigned elsewhere in the
-kernel and userspace, however, so this sign-extension causes problems.
-In particular, the sign-extended tool ID sent to userspace as ABS_MISC
-does not properly match unsigned IDs used by xf86-input-wacom and libwacom.
+I got some khugepaged spew on a 32bit x86:
 
-We introduce a function 'wacom_s32tou' that can undo the automatic sign
-extension performed by 'hid_snto32'. We call this function when processing
-the serial number and related fields to ensure that we are dealing with
-and reporting the unsigned form. We opt to use this method rather than
-adding a descriptor fixup in 'wacom_hid_usage_quirk' since it should be
-more robust in the face of future devices.
+  BUG: sleeping function called from invalid context at include/linux/mmu_notifier.h:346
+  in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 25, name: khugepaged
+  INFO: lockdep is turned off.
+  CPU: 1 PID: 25 Comm: khugepaged Not tainted 5.4.0-rc5-elk+ #206
+  Hardware name: System manufacturer P5Q-EM/P5Q-EM, BIOS 2203    07/08/2009
+  Call Trace:
+   dump_stack+0x66/0x8e
+   ___might_sleep.cold.96+0x95/0xa6
+   __might_sleep+0x2e/0x80
+   collapse_huge_page.isra.51+0x5ac/0x1360
+   khugepaged+0x9a9/0x20f0
+   kthread+0xf5/0x110
+   ret_from_fork+0x2e/0x38
 
-Ref: https://github.com/linuxwacom/input-wacom/issues/134
-Fixes: f85c9dc678 ("HID: wacom: generic: Support tool ID and additional tool types")
-CC: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Looks like it's due to CONFIG_HIGHPTE=y pte_offset_map()->kmap_atomic()
+vs.  mmu_notifier_invalidate_range_start().  Let's do the naive approach
+and just reorder the two operations.
+
+Link: http://lkml.kernel.org/r/20191029201513.GG1208@intel.com
+Fixes: 810e24e009cf71 ("mm/mmu_notifiers: annotate with might_sleep()")
+Signed-off-by: Ville Syrjl <ville.syrjala@linux.intel.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom.h     |   15 +++++++++++++++
- drivers/hid/wacom_wac.c |   10 ++++++----
- 2 files changed, 21 insertions(+), 4 deletions(-)
+ mm/khugepaged.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/hid/wacom.h
-+++ b/drivers/hid/wacom.h
-@@ -202,6 +202,21 @@ static inline void wacom_schedule_work(s
- 	}
- }
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1016,12 +1016,13 @@ static void collapse_huge_page(struct mm
  
-+/*
-+ * Convert a signed 32-bit integer to an unsigned n-bit integer. Undoes
-+ * the normally-helpful work of 'hid_snto32' for fields that use signed
-+ * ranges for questionable reasons.
-+ */
-+static inline __u32 wacom_s32tou(s32 value, __u8 n)
-+{
-+	switch (n) {
-+	case 8:  return ((__u8)value);
-+	case 16: return ((__u16)value);
-+	case 32: return ((__u32)value);
-+	}
-+	return value & (1 << (n - 1)) ? value & (~(~0U << n)) : value;
-+}
-+
- extern const struct hid_device_id wacom_ids[];
+ 	anon_vma_lock_write(vma->anon_vma);
  
- void wacom_wac_irq(struct wacom_wac *wacom_wac, size_t len);
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -2258,7 +2258,7 @@ static void wacom_wac_pen_event(struct h
- 	case HID_DG_TOOLSERIALNUMBER:
- 		if (value) {
- 			wacom_wac->serial[0] = (wacom_wac->serial[0] & ~0xFFFFFFFFULL);
--			wacom_wac->serial[0] |= (__u32)value;
-+			wacom_wac->serial[0] |= wacom_s32tou(value, field->report_size);
- 		}
- 		return;
- 	case HID_DG_TWIST:
-@@ -2274,15 +2274,17 @@ static void wacom_wac_pen_event(struct h
- 		return;
- 	case WACOM_HID_WD_SERIALHI:
- 		if (value) {
-+			__u32 raw_value = wacom_s32tou(value, field->report_size);
+-	pte = pte_offset_map(pmd, address);
+-	pte_ptl = pte_lockptr(mm, pmd);
+-
+ 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm,
+ 				address, address + HPAGE_PMD_SIZE);
+ 	mmu_notifier_invalidate_range_start(&range);
 +
- 			wacom_wac->serial[0] = (wacom_wac->serial[0] & 0xFFFFFFFF);
--			wacom_wac->serial[0] |= ((__u64)value) << 32;
-+			wacom_wac->serial[0] |= ((__u64)raw_value) << 32;
- 			/*
- 			 * Non-USI EMR devices may contain additional tool type
- 			 * information here. See WACOM_HID_WD_TOOLTYPE case for
- 			 * more details.
- 			 */
- 			if (value >> 20 == 1) {
--				wacom_wac->id[0] |= value & 0xFFFFF;
-+				wacom_wac->id[0] |= raw_value & 0xFFFFF;
- 			}
- 		}
- 		return;
-@@ -2294,7 +2296,7 @@ static void wacom_wac_pen_event(struct h
- 		 * bitwise OR so the complete value can be built
- 		 * up over time :(
- 		 */
--		wacom_wac->id[0] |= value;
-+		wacom_wac->id[0] |= wacom_s32tou(value, field->report_size);
- 		return;
- 	case WACOM_HID_WD_OFFSETLEFT:
- 		if (features->offset_left && value != features->offset_left)
++	pte = pte_offset_map(pmd, address);
++	pte_ptl = pte_lockptr(mm, pmd);
++
+ 	pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
+ 	/*
+ 	 * After this gup_fast can't run anymore. This also removes
 
 
