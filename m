@@ -2,180 +2,119 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F50C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC77C17447
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 972F3214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:51:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573516286;
-	bh=Holydj0puWmzItoMY11fraej1BUm5SwvcVicyzxx6hI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e8VfVi9O2LHqlzws2H7K6cQYlL8hgPtVZLAzWxJ11ml/dd1YW3GR5ROtZ+N1DSxoq
-	 VO0Fj4MH7BD0Kguxujnk/rAByzpEhBG3vJ1IRxaj3x9uL4Zq1I2nrwiIQwZUiKlcFp
-	 5lRWrN6TQ/iI53wJ8takkwpRzYAgUL7jAfBsJlvA=
+	by mail.kernel.org (Postfix) with ESMTP id BF0C921655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfKKXvZ (ORCPT
+        id S1727093AbfKKXyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:51:25 -0500
-Received: from mail-lj1-f177.google.com ([209.85.208.177]:45573 "EHLO
-        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKXvZ (ORCPT
+        Mon, 11 Nov 2019 18:54:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60267 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfKKXyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:51:25 -0500
-Received: by mail-lj1-f177.google.com with SMTP id n21so15666450ljg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Jr8GhMrrt/B5MXgl6TQY/T7xl692bmOyZCXN0LAOj8=;
-        b=IbYZZWEI4KLhUtWSkrs7hcs68+mEge6/KLgmu1047nQtr8xXaC+fl5/qcP+Z0UfI2r
-         FK4INqmH+Qpf28gOugYt+TB7BEFWjBUtO/OlIANn3GeMtU8xVQCR4bgX9tvJDsGcfGgt
-         8RhepscHXu3gvogkyKNhV60hOA+mHP91rWAbw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Jr8GhMrrt/B5MXgl6TQY/T7xl692bmOyZCXN0LAOj8=;
-        b=mpfoasA7G1W0E2TlsNZK9acr/wEYzof3qv4nIb3zyWVSqR3Ptzefp7IRhT0PqHtiOy
-         3ua41BAQPyc+oRejCnf5ITe8Y2QVaK8OvL29Mze/ngn6m2K/nNkrPhaekTRkMGQH/lwV
-         yH9vOguVJLkMawQ400wm7W8IQ1S5Yurk6e02kbX3tjnOuZAFnCcG9txJEEWXQonNQnip
-         BiiX9M8EaKcgJRObH8Jq11sQ39iFkrDJAh2hQ0bwIr1qn9d+exLHP2RD8Ul8j6hQ91Iz
-         BOecmaiUKpFLL78gaDyQOXeYPy+bcHP4oHpfuRtsZCrgtjsS+n+hzHRN3t1OAYA7Ld1G
-         dSJQ==
-X-Gm-Message-State: APjAAAUfDs/HnxjvCszoEHYoZqv6GlB0raNNv32u7LwCAaLAsgVU1wGd
-        KNhbkOut6hX20x0dUJToCLv0hr4KRyQ=
-X-Google-Smtp-Source: APXvYqy6leR3v87NjH+8LhQ3yigIygpHVrW+oqKqV7M5VWTIT/Ygpmmya3ZHpalLB9NMCrxZ0bI6bA==
-X-Received: by 2002:a2e:9106:: with SMTP id m6mr3692254ljg.146.1573516280635;
-        Mon, 11 Nov 2019 15:51:20 -0800 (PST)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id 15sm7200266ljq.62.2019.11.11.15.51.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 15:51:20 -0800 (PST)
-Received: by mail-lf1-f54.google.com with SMTP id y186so5463956lfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:51:20 -0800 (PST)
-X-Received: by 2002:ac2:5bca:: with SMTP id u10mr17489031lfn.134.1573516279685;
- Mon, 11 Nov 2019 15:51:19 -0800 (PST)
+        Mon, 11 Nov 2019 18:54:35 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iUJVh-0001np-JL; Tue, 12 Nov 2019 00:54:19 +0100
+Date:   Tue, 12 Nov 2019 00:54:16 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     =?UTF-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
+cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v24 01/12] Linux Random Number Generator
+In-Reply-To: <2369119.jSEA3qhmGI@positron.chronox.de>
+Message-ID: <alpine.DEB.2.21.1911120041060.1833@nanos.tec.linutronix.de>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2369119.jSEA3qhmGI@positron.chronox.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
- <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com>
- <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
- <CAHk-=wg6Zaf09i0XNgCmOzKKWnoAPMfA7WX9OY1Ow1YtF0ZP3A@mail.gmail.com>
- <CANn89i+hRhweL2N=r1chMpWKU2ue8fiQO=dLxGs9sgLFbgHEWQ@mail.gmail.com>
- <CANn89iJiuOkKc2AVmccM8z9e_d4zbV61K-3z49ao1UwRDdFiHw@mail.gmail.com> <CAHk-=wgkwBjQWyDQi8mu06DXr_v_4zui+33fk3eK89rPof5b+A@mail.gmail.com>
-In-Reply-To: <CAHk-=wgkwBjQWyDQi8mu06DXr_v_4zui+33fk3eK89rPof5b+A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Nov 2019 15:51:03 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whFejio0dC3T3a-5wuy9aum45unqacxkFpt5yo+-J502w@mail.gmail.com>
-Message-ID: <CAHk-=whFejio0dC3T3a-5wuy9aum45unqacxkFpt5yo+-J502w@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Eric Dumazet <edumazet@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kirill Smelkov <kirr@nexedi.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: multipart/mixed; boundary="000000000000e6518e05971aced8"
+Content-Type: multipart/mixed; boundary="8323329-1567238779-1573516457=:1833"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000e6518e05971aced8
-Content-Type: text/plain; charset="UTF-8"
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Mon, Nov 11, 2019 at 11:00 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> > if (ppos) {
-> >      pos = *ppos; // data-race
->
-> That code uses "fdget_pos().
->
-> Which does mutual exclusion _if_ the file is something we care about
-> pos for, and if it has more than one process using it.
+--8323329-1567238779-1573516457=:1833
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-That said, the more I look at that code, the less I like it.
+Stephan,
 
-I have this feeling we really should get rid of FMODE_ATOMIC_POS
-entirely, now that we have the much nicer FMODE_STREAM to indicate
-that 'pos' really doesn't matter.
+On Mon, 11 Nov 2019, Stephan Müller wrote:
 
-Also, the test for "file_count(file) > 1" really is wrong, in that it
-means that we protect against other processes, but not other threads.
+thanks for Cc'ing me. I'll have a look at the technical details at later
+point in time. While skimming through the patches I noticed, that you
+thankfully added the SPDX license identifiers, but
 
-So maybe we really should do the attached thing. Adding Al and Kirill
-to the cc for comments. Kirill did some fairly in-depth review of the
-whole locking on f_pos, it might be good to get his comments.
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +/*
+> + * LRNG Fast Noise Source: CPU-based noise source
+> + *
+> + * Copyright (C) 2016 - 2019, Stephan Mueller <smueller@chronox.de>
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+> + * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ALL OF
+> + * WHICH ARE HEREBY DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE
+> + * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+> + * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+> + * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+> + * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+> + * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+> + * USE OF THIS SOFTWARE, EVEN IF NOT ADVISED OF THE POSSIBILITY OF SUCH
+> + * DAMAGE.
 
-Al? Note the change from
+we really want to get rid of these boiler plate disclaimers as they are
+already implicit by the SPDX license identifier and provide no real
+value.
 
--               if (file_count(file) > 1) {
-+               if ((v & FDPUT_FPUT) || file_count(file) > 1) {
+Aside of that, the above disclaimer has even a slightly different wording
+than the standard BSD-2-Clause disclaimer which is going to cause even more
+headaches as automated scanner tools will detect that and someone has to go
+through that unreadable uppercase yelling mess and figure out whether it's
+a legaly substantial difference.
 
-in __fdget_pos(). It basically says that the threaded case also does
-the pos locking.
+Can you please get rid of those?
 
-NOTE! This is entirely untested. It might be totally broken. It passes
-my "LooksSuperficiallyFine(tm)" test, but that's all I'm going to say
-about the patch.
+Thanks,
 
-            Linus
+	tglx
 
---000000000000e6518e05971aced8
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k2v2y66l0>
-X-Attachment-Id: f_k2v2y66l0
 
-IGZzL2ZpbGUuYyAgICAgICAgICB8IDQgKystLQogZnMvb3Blbi5jICAgICAgICAgIHwgNiArLS0t
-LS0KIGluY2x1ZGUvbGludXgvZnMuaCB8IDIgLS0KIDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRp
-b25zKCspLCA5IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2ZzL2ZpbGUuYyBiL2ZzL2ZpbGUu
-YwppbmRleCAzZGE5MWExMTJiYWIuLjcwOGU1YzJiN2Q2NSAxMDA2NDQKLS0tIGEvZnMvZmlsZS5j
-CisrKyBiL2ZzL2ZpbGUuYwpAQCAtNzk1LDggKzc5NSw4IEBAIHVuc2lnbmVkIGxvbmcgX19mZGdl
-dF9wb3ModW5zaWduZWQgaW50IGZkKQogCXVuc2lnbmVkIGxvbmcgdiA9IF9fZmRnZXQoZmQpOwog
-CXN0cnVjdCBmaWxlICpmaWxlID0gKHN0cnVjdCBmaWxlICopKHYgJiB+Myk7CiAKLQlpZiAoZmls
-ZSAmJiAoZmlsZS0+Zl9tb2RlICYgRk1PREVfQVRPTUlDX1BPUykpIHsKLQkJaWYgKGZpbGVfY291
-bnQoZmlsZSkgPiAxKSB7CisJaWYgKGZpbGUgJiYgIShmaWxlLT5mX21vZGUgJiBGTU9ERV9TVFJF
-QU0pKSB7CisJCWlmICgodiAmIEZEUFVUX0ZQVVQpIHx8IGZpbGVfY291bnQoZmlsZSkgPiAxKSB7
-CiAJCQl2IHw9IEZEUFVUX1BPU19VTkxPQ0s7CiAJCQltdXRleF9sb2NrKCZmaWxlLT5mX3Bvc19s
-b2NrKTsKIAkJfQpkaWZmIC0tZ2l0IGEvZnMvb3Blbi5jIGIvZnMvb3Blbi5jCmluZGV4IGI2MmY1
-YzA5MjNhOC4uNWM2ODI4MmVhNzllIDEwMDY0NAotLS0gYS9mcy9vcGVuLmMKKysrIGIvZnMvb3Bl
-bi5jCkBAIC03NzEsMTAgKzc3MSw2IEBAIHN0YXRpYyBpbnQgZG9fZGVudHJ5X29wZW4oc3RydWN0
-IGZpbGUgKmYsCiAJCWYtPmZfbW9kZSB8PSBGTU9ERV9XUklURVI7CiAJfQogCi0JLyogUE9TSVgu
-MS0yMDA4L1NVU3Y0IFNlY3Rpb24gWFNJIDIuOS43ICovCi0JaWYgKFNfSVNSRUcoaW5vZGUtPmlf
-bW9kZSkgfHwgU19JU0RJUihpbm9kZS0+aV9tb2RlKSkKLQkJZi0+Zl9tb2RlIHw9IEZNT0RFX0FU
-T01JQ19QT1M7Ci0KIAlmLT5mX29wID0gZm9wc19nZXQoaW5vZGUtPmlfZm9wKTsKIAlpZiAoV0FS
-Tl9PTighZi0+Zl9vcCkpIHsKIAkJZXJyb3IgPSAtRU5PREVWOwpAQCAtMTI1Niw3ICsxMjUyLDcg
-QEAgRVhQT1JUX1NZTUJPTChub25zZWVrYWJsZV9vcGVuKTsKICAqLwogaW50IHN0cmVhbV9vcGVu
-KHN0cnVjdCBpbm9kZSAqaW5vZGUsIHN0cnVjdCBmaWxlICpmaWxwKQogewotCWZpbHAtPmZfbW9k
-ZSAmPSB+KEZNT0RFX0xTRUVLIHwgRk1PREVfUFJFQUQgfCBGTU9ERV9QV1JJVEUgfCBGTU9ERV9B
-VE9NSUNfUE9TKTsKKwlmaWxwLT5mX21vZGUgJj0gfihGTU9ERV9MU0VFSyB8IEZNT0RFX1BSRUFE
-IHwgRk1PREVfUFdSSVRFKTsKIAlmaWxwLT5mX21vZGUgfD0gRk1PREVfU1RSRUFNOwogCXJldHVy
-biAwOwogfQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9mcy5oIGIvaW5jbHVkZS9saW51eC9m
-cy5oCmluZGV4IGUwZDkwOWQzNTc2My4uYTdjM2Y2ZGQ1NzAxIDEwMDY0NAotLS0gYS9pbmNsdWRl
-L2xpbnV4L2ZzLmgKKysrIGIvaW5jbHVkZS9saW51eC9mcy5oCkBAIC0xNDgsOCArMTQ4LDYgQEAg
-dHlwZWRlZiBpbnQgKGRpb19pb2RvbmVfdCkoc3RydWN0IGtpb2NiICppb2NiLCBsb2ZmX3Qgb2Zm
-c2V0LAogLyogRmlsZSBpcyBvcGVuZWQgd2l0aCBPX1BBVEg7IGFsbW9zdCBub3RoaW5nIGNhbiBi
-ZSBkb25lIHdpdGggaXQgKi8KICNkZWZpbmUgRk1PREVfUEFUSAkJKChfX2ZvcmNlIGZtb2RlX3Qp
-MHg0MDAwKQogCi0vKiBGaWxlIG5lZWRzIGF0b21pYyBhY2Nlc3NlcyB0byBmX3BvcyAqLwotI2Rl
-ZmluZSBGTU9ERV9BVE9NSUNfUE9TCSgoX19mb3JjZSBmbW9kZV90KTB4ODAwMCkKIC8qIFdyaXRl
-IGFjY2VzcyB0byB1bmRlcmx5aW5nIGZzICovCiAjZGVmaW5lIEZNT0RFX1dSSVRFUgkJKChfX2Zv
-cmNlIGZtb2RlX3QpMHgxMDAwMCkKIC8qIEhhcyByZWFkIG1ldGhvZChzKSAqLwo=
---000000000000e6518e05971aced8--
+--8323329-1567238779-1573516457=:1833--
