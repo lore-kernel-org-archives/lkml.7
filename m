@@ -2,146 +2,127 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55B5C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68675C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9029206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF3D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fQXw6SsF"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QL7E7y/E";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bDztKrrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfKKJPF (ORCPT
+        id S1726943AbfKKJQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:15:05 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44204 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKJPF (ORCPT
+        Mon, 11 Nov 2019 04:16:31 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:47113 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726768AbfKKJQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:15:05 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB9Etav002180;
-        Mon, 11 Nov 2019 03:14:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573463695;
-        bh=A9b+LfFAU9abDyZML7frujnSPbQT16TGgA6T2WhOOz4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fQXw6SsF4mnZggBOhlgS28uuqZ4Tzagnl1FPaRYECHFiWK6vN9ubexYdHjs1HIhZ4
-         8Fy986pCalwDYiZXODoSgiQJIoj+1iYER22prIGrZPa3Qcwdu5LLK1nqegB9+BFZr/
-         Rf8UcyjnoItwQGskYC/OHAIMqer6vRO859N09DhI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB9Et3o062305
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 03:14:55 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 03:14:37 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 03:14:37 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB9Epbh106565;
-        Mon, 11 Nov 2019 03:14:51 -0600
-Subject: Re: [PATCH v4 10/15] dmaengine: ti: New driver for K3 UDMA - split#2:
- probe/remove, xlate and filter_fn
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-11-peter.ujfalusi@ti.com>
- <20191111053301.GO952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
-Date:   Mon, 11 Nov 2019 11:16:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 04:16:30 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id D10C34BB;
+        Mon, 11 Nov 2019 04:16:28 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 11 Nov 2019 04:16:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=767pSBRJ5shuYMbgPGJ/NNfiJLw
+        uGxahyROFUAPFCyc=; b=QL7E7y/EkKZiIaXtSdO5xlErh7sWmESOBvYArr7CVfp
+        eQzc3UERDa9ID9hdy2lFIlSKG6qxAErTf3njeANYlVShDy6UuKgA7ijVOvSazPcr
+        g3wjoXv9ZEYeqkbXvf0xTRSWRhXoa1JYrOQt2QjNXGY0UjKrpaPoCwunhc7kKjpb
+        /frGGcTi8OBPNTf8rvHE3WO9zkj3pDCRuchNBLsC22DpVKVMK6qSAL+QAJF0ZvId
+        utlEu3dYSA+MdZeJj/OfIlrYwLTu+kHwKlBxe0T/sjFJirwbVVtvZg9tz2skBtgb
+        uIRhrA1vAjindtTZDdMuPzbNunRo9atznS0r8/pQOhQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=767pSB
+        RJ5shuYMbgPGJ/NNfiJLwuGxahyROFUAPFCyc=; b=bDztKrrAvA8V+7wLK3MLVe
+        m8W/bcOJD8KxIyKB8OkXlQb0Y3RFA6OsgJx61wa5oIIG5+hDfQVPgsl7LWhb0p/+
+        CT+mslvrBRj7y02GVeqDbQxbQquw6kAu7SXKQrHIr36J5XLqTphRRnaHX2zJKrLw
+        3Du7MBVCEO7FZh58iviSUnQ9aA2j/QYYn9KDTo4a3JdK/+Z3yrKKPdciuyhU5crQ
+        3LWP5KfWvJZ4dxW4zBxAXjNSxkKfjlqolNIGNH/8oH88a1nWMsEoD8yWATMpcd8X
+        A+gaQo3VAbFQXhxOkPn9ubd42Yyj/3VBXnDOW/SoYSsYkQGIgiRVKAFeL6ey8jVw
+        ==
+X-ME-Sender: <xms:6ybJXeu0x1QJJObgsILvHQe3sOcXCVOvVrYyrT1UytIqV59h2uVRsQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddvjedgtdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:6ybJXZfJyvDt3neyds_yxO2il2OqimVf6hPU5EQM6QAV3J2PtmykCA>
+    <xmx:6ybJXXZ18rQyPBzQhbADNALFi019tBRuNUERxXgmFmzdQVC9g2o3Ww>
+    <xmx:6ybJXUVQZqXp4-UBlASkwi0BVT8d-IaH2XgMqMnhdOezzcBG0xRdbg>
+    <xmx:7CbJXe0xMG9EQdfRsehkw-9hE_MmqmKB8aUY2nxGKil6KH1KfHK83w>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0FF8F3060060;
+        Mon, 11 Nov 2019 04:16:26 -0500 (EST)
+Date:   Mon, 11 Nov 2019 10:16:24 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     "# 4 . 7" <stable@vger.kernel.org>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: Re: [BACKPORT 4.14.y 04/18] usb: dwc3: Allow disabling of
+ metastability workaround
+Message-ID: <20191111091624.GA4139389@kroah.com>
+References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+ <20190905161759.28036-5-mathieu.poirier@linaro.org>
+ <20190910143601.GD3362@kroah.com>
+ <CANLsYkwkq2fLWsGXHxr2tSBLHdfe4JXgu8ehuD1FOEQeDAPNnA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111053301.GO952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANLsYkwkq2fLWsGXHxr2tSBLHdfe4JXgu8ehuD1FOEQeDAPNnA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/11/2019 7.33, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
+On Wed, Sep 11, 2019 at 08:01:40AM -0600, Mathieu Poirier wrote:
+> On Tue, 10 Sep 2019 at 08:36, Greg KH <greg@kroah.com> wrote:
+> >
+> > On Thu, Sep 05, 2019 at 10:17:45AM -0600, Mathieu Poirier wrote:
+> > > From: Roger Quadros <rogerq@ti.com>
+> > >
+> > > commit 42bf02ec6e420e541af9a47437d0bdf961ca2972 upstream
+> > >
+> > > Some platforms (e.g. TI's DRA7 USB2 instance) have more trouble
+> > > with the metastability workaround as it supports only
+> > > a High-Speed PHY and the PHY can enter into an Erratic state [1]
+> > > when the controller is set in SuperSpeed mode as part of
+> > > the metastability workaround.
+> > >
+> > > This causes upto 2 seconds delay in enumeration on DRA7's USB2
+> > > instance in gadget mode.
+> > >
+> > > If these platforms can be better off without the workaround,
+> > > provide a device tree property to suggest that so the workaround
+> > > is avoided.
+> > >
+> > > [1] Device mode enumeration trace showing PHY Erratic Error.
+> > >      irq/90-dwc3-969   [000] d...    52.323145: dwc3_event: event (00000901): Erratic Error [U0]
+> > >      irq/90-dwc3-969   [000] d...    52.560646: dwc3_event: event (00000901): Erratic Error [U0]
+> > >      irq/90-dwc3-969   [000] d...    52.798144: dwc3_event: event (00000901): Erratic Error [U0]
+> >
+> > Does the DT also need to get updated with this new id for this?  Is that
+> > a separate patch somewhere?
 > 
->> +static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
->> +{
->> +	struct psil_endpoint_config *ep_config;
->> +	struct udma_chan *uc;
->> +	struct udma_dev *ud;
->> +	u32 *args;
->> +
->> +	if (chan->device->dev->driver != &udma_driver.driver)
->> +		return false;
->> +
->> +	uc = to_udma_chan(chan);
->> +	ud = uc->ud;
->> +	args = param;
->> +	uc->remote_thread_id = args[0];
->> +
->> +	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
->> +		uc->dir = DMA_MEM_TO_DEV;
->> +	else
->> +		uc->dir = DMA_DEV_TO_MEM;
+> The upstream commit is:
 > 
-> Can you explain this a bit?
-
-The UDMAP in K3 works between two PSI-L endpoint. The source and
-destination needs to be paired to allow data flow.
-Source thread IDs are in range of 0x0000 - 0x7fff, while destination
-thread IDs are 0x8000 - 0xffff.
-
-If the remote thread ID have the bit 31 set (0x8000) then the transfer
-is MEM_TO_DEV and I need to pick one unused tchan for it. If the remote
-is the source then it can be handled by rchan.
-
-dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
-dma-names = "tx", "rx";
-
-0xc400 is a destination thread ID, so it is MEM_TO_DEV
-0x4400 is a source thread ID, so it is DEV_TO_MEM
-
-Even in MEM_TO_MEM case I need to pair two UDMAP channels:
-UDMAP source threads are starting at offset 0x1000, UDMAP destination
-threads are 0x9000+
-
-Changing direction runtime is hardly possible as it would involve
-tearing down the channel, removing interrupts, destroying rings,
-removing the PSI-L pairing and redoing everything.
-
->> +static int udma_remove(struct platform_device *pdev)
->> +{
->> +	struct udma_dev *ud = platform_get_drvdata(pdev);
->> +
->> +	of_dma_controller_free(pdev->dev.of_node);
->> +	dma_async_device_unregister(&ud->ddev);
->> +
->> +	/* Make sure that we did proper cleanup */
->> +	cancel_work_sync(&ud->purge_work);
->> +	udma_purge_desc_work(&ud->purge_work);
+> b8c9c6fa2002 ARM: dts: dra7: Disable USB metastability workaround for USB2
 > 
-> kill the vchan tasklets at it too please
+> Should I just send the latter or you prefer a resend with both patches?
 
-Oh, I have missed that, I'll add it.
+I've queued this up now, along with the rest of this series, thanks.
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+greg k-h
