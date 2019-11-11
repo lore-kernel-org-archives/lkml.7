@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EE2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B42EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE6A20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2DA21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498016;
-	bh=vSa3OwHpZ8OUxXteH9FhHaMegSgNgzkJ4irP9Ed/s90=;
+	s=default; t=1573498021;
+	bh=x4KlDONvL5gFLEFToGLSxDIpUpyTrEGcLppi2wf6V8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NwqQNwHuvvURkVCBemP6+X22+0eQH3VkSXg+CO0KIMnQ/yQdixV/ZYgAs7sulPX3P
-	 ef5ZL7aCqJFErZEEmr6MFnkqzFFloORZqmF2Tfqx/IH580wIOnXjkf8Q47gT2/y5m+
-	 HkzTkmeXCE+4HOA3ubwJsuX4thJvkK9EXAPwcpvs=
+	b=13yEaB9ZH0kSSssm8ME1hEgufbM8D7M4uroCN23B2qSZ0CgMOWH1u23JotGOyXu9x
+	 plUovNHbdDkK79BeGGBZOP561lvGquj0Z1inbHPjOz66CmPYRWpRvmdffNU/OXyN+g
+	 vPe7fy+CsRyfUvv5nafrv4JKmj6IHswQB7v5Uk70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfKKSqy (ORCPT
+        id S1730053AbfKKSq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39504 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:46:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728474AbfKKSqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:46:51 -0500
+        id S1729372AbfKKSq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:46:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1FB821783;
-        Mon, 11 Nov 2019 18:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9560520659;
+        Mon, 11 Nov 2019 18:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498011;
-        bh=vSa3OwHpZ8OUxXteH9FhHaMegSgNgzkJ4irP9Ed/s90=;
+        s=default; t=1573498015;
+        bh=x4KlDONvL5gFLEFToGLSxDIpUpyTrEGcLppi2wf6V8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNP51DAJDtB+1S8XoqxGshO0mm0bJPIxHrHF8tdkEMUMfaE+kX8UnYLQ58/eUNDqj
-         Zf+Gqn8gVAzunhuq1Eya+rVu3hVZlkJFGcNTqrX1/tBICD47vTo6AxfLO7sooiF3Sk
-         dq+Rh7QnTEdVyETTCgPSkUOdHUr8lINbz8F5UHV4=
+        b=p7BOR1OvHuywYlvtZ6ty8cyoGs7q/Z8bQqOXOz5sVzgtNVbHii9UW2nYD/uv5amfQ
+         C2wOK6TB+krvM8L18N2YhwduFvk4NWubdXUQBjhKKL4KY4VbtQ9G+yARFg0IVNRTvl
+         bsTbj7JR+17PMV/gUa2Bo4Ci//WVdaXsVzrfxwlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Daniel Wagner <dwagner@suse.de>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/125] scsi: lpfc: Honor module parameter lpfc_use_adisc
-Date:   Mon, 11 Nov 2019 19:28:41 +0100
-Message-Id: <20191111181451.116334245@linuxfoundation.org>
+Subject: [PATCH 4.19 083/125] scsi: qla2xxx: Initialized mailbox to prevent driver load failure
+Date:   Mon, 11 Nov 2019 19:28:42 +0100
+Message-Id: <20191111181451.235535193@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -63,63 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Wagner <dwagner@suse.de>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-[ Upstream commit 0fd103ccfe6a06e40e2d9d8c91d96332cc9e1239 ]
+[ Upstream commit c2ff2a36eff60efb5e123c940115216d6bf65684 ]
 
-The initial lpfc_desc_set_adisc implementation in commit
-dea3101e0a5c ("lpfc: add Emulex FC driver version 8.0.28") enabled ADISC if
+This patch fixes issue with Gen7 adapter in a blade environment where one
+of the ports will not be detected by driver. Firmware expects mailbox 11 to
+be set or cleared by driver for newer ISP.
 
-	cfg_use_adisc && RSCN_MODE && FCP_2_DEVICE
+Following message is seen in the log file:
 
-In commit 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of
-SLI-3") this changed to
+[   18.810892] qla2xxx [0000:d8:00.0]-1820:1: **** Failed=102 mb[0]=4005 mb[1]=37 mb[2]=20 mb[3]=8
+[   18.819596]  cmd=2 ****
 
-	(cfg_use_adisc && RSC_MODE) || FCP_2_DEVICE
+[mkp: typos]
 
-and later in commit ffc954936b13 ("[SCSI] lpfc 8.3.13: FC Discovery Fixes
-and enhancements.") to
-
-	(cfg_use_adisc && RSC_MODE) || (FCP_2_DEVICE && FCP_TARGET)
-
-A customer reports that after a devloss, an ADISC failure is logged. It
-turns out the ADISC flag is set even the user explicitly set lpfc_use_adisc
-= 0.
-
-[Sat Dec 22 22:55:58 2018] lpfc 0000:82:00.0: 2:(0):0203 Devloss timeout on WWPN 50:01:43:80:12:8e:40:20 NPort x05df00 Data: x82000000 x8 xa
-[Sat Dec 22 23:08:20 2018] lpfc 0000:82:00.0: 2:(0):2755 ADISC failure DID:05DF00 Status:x9/x70000
-
-[mkp: fixed Hannes' email]
-
-Fixes: 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of SLI-3")
-Cc: Dick Kennedy <dick.kennedy@broadcom.com>
-Cc: James Smart <james.smart@broadcom.com>
-Link: https://lore.kernel.org/r/20191022072112.132268-1-dwagner@suse.de
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lore.kernel.org/r/20191022193643.7076-2-hmadhani@marvell.com
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nportdisc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_mbx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index a6619fd8238c1..ae6301c796785 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -844,9 +844,9 @@ lpfc_disc_set_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 84f57f075455e..128fcff24f1be 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -684,6 +684,7 @@ qla2x00_execute_fw(scsi_qla_host_t *vha, uint32_t risc_addr)
+ 		mcp->mb[2] = LSW(risc_addr);
+ 		mcp->mb[3] = 0;
+ 		mcp->mb[4] = 0;
++		mcp->mb[11] = 0;
+ 		ha->flags.using_lr_setting = 0;
+ 		if (IS_QLA25XX(ha) || IS_QLA81XX(ha) || IS_QLA83XX(ha) ||
+ 		    IS_QLA27XX(ha)) {
+@@ -727,7 +728,7 @@ qla2x00_execute_fw(scsi_qla_host_t *vha, uint32_t risc_addr)
+ 		if (ha->flags.exchoffld_enabled)
+ 			mcp->mb[4] |= ENABLE_EXCHANGE_OFFLD;
  
- 	if (!(vport->fc_flag & FC_PT2PT)) {
- 		/* Check config parameter use-adisc or FCP-2 */
--		if ((vport->cfg_use_adisc && (vport->fc_flag & FC_RSCN_MODE)) ||
-+		if (vport->cfg_use_adisc && ((vport->fc_flag & FC_RSCN_MODE) ||
- 		    ((ndlp->nlp_fcp_info & NLP_FCP_2_DEVICE) &&
--		     (ndlp->nlp_type & NLP_FCP_TARGET))) {
-+		     (ndlp->nlp_type & NLP_FCP_TARGET)))) {
- 			spin_lock_irq(shost->host_lock);
- 			ndlp->nlp_flag |= NLP_NPR_ADISC;
- 			spin_unlock_irq(shost->host_lock);
+-		mcp->out_mb |= MBX_4|MBX_3|MBX_2|MBX_1;
++		mcp->out_mb |= MBX_4 | MBX_3 | MBX_2 | MBX_1 | MBX_11;
+ 		mcp->in_mb |= MBX_3 | MBX_2 | MBX_1;
+ 	} else {
+ 		mcp->mb[1] = LSW(risc_addr);
 -- 
 2.20.1
 
