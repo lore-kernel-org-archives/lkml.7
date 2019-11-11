@@ -2,52 +2,53 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4F1C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F089C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D3B21925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CDD20818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498396;
-	bh=i5gkfhBnIMrzvhHOoZ2F2H3K1hIYR9G5ZodLMKdollY=;
+	s=default; t=1573498400;
+	bh=75nxCkP4GlyGRbAdyu+S7SC5vvE0LOIIcJuAo5K9rww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vDQVixo/hOmpXUv6LctilUsR44dufD0LXQRunfT9cQn5eWAtm8iR7HKJGZctsZaSn
-	 vZAITk3Rua32FoqT+Cdp8GEsw5FHLInvdSoXisteObFA7GGIibZSaNefzN06Dbi6tv
-	 rDpf4F5OfTMIjhKDJo2juOwndSrxhVjBPkzJVWx0=
+	b=QWrfhcisrtNceJLuNN3me3/1e3YuWxSb0dUfe90ZABfAVg4/xNNp+CyVJ+o/2pw2f
+	 kdNz729TaQMcHWINIyUqJAAs8PjfrOWQp/bGP3Cf5RdZ3/g0MRzMuk0lA1dLyJUJlC
+	 nz3rk5dU/Lx4q3QHDQghUywkpFomM////n8L4Zck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbfKKSxO (ORCPT
+        id S1727116AbfKKSxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:53:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47884 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727256AbfKKSxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:53:11 -0500
+        id S1728044AbfKKSxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:53:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67C4420818;
-        Mon, 11 Nov 2019 18:53:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51990204EC;
+        Mon, 11 Nov 2019 18:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498391;
-        bh=i5gkfhBnIMrzvhHOoZ2F2H3K1hIYR9G5ZodLMKdollY=;
+        s=default; t=1573498394;
+        bh=75nxCkP4GlyGRbAdyu+S7SC5vvE0LOIIcJuAo5K9rww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZxZV1cezY/j5IR/khYpTAnmyuc2WwPddArZNXzEuNDeERY0VkwPkgEyH7Z5PfUPb
-         Jr3nXX5n8fEVkY1nOGR3o9WtI4f6EXEAeSwpWFK9HyTaSzIHAlFt4V3TApuiCVdor3
-         +at2245wi+Yf9vUTnGu/94YI9W4KbMCu3oiIZiWU=
+        b=kne93LzYt6kfANG+zzckuycVkdVy7pYkbtBU5w/tA9Kg6YdsudTmLpPeUgMSvtsUS
+         a6wJcoMeUuj3qQecko26AFXJ/cGwpJTRcpYRZG431L3rzk1U+eYQxjrYbLtPfIjENn
+         d7rZYcVKLatNIxYLxSbIFpkBCCYsBC/IeMWIFytU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cyrill Gorcunov <gorcunov@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 5.3 069/193] x86/dumpstack/64: Dont evaluate exception stacks before setup
-Date:   Mon, 11 Nov 2019 19:27:31 +0100
-Message-Id: <20191111181506.198102010@linuxfoundation.org>
+        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 105/193] net/mlx5e: kTLS, Release reference on DUMPed fragments in shutdown flow
+Date:   Mon, 11 Nov 2019 19:28:07 +0100
+Message-Id: <20191111181508.870963047@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,67 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-commit e361362b08cab1098b64b0e5fd8c879f086b3f46 upstream.
+[ Upstream commit 2c559361389b452ca23494080d0c65ab812706c1 ]
 
-Cyrill reported the following crash:
+A call to kTLS completion handler was missing in the TXQSQ release
+flow. Add it.
 
-  BUG: unable to handle page fault for address: 0000000000001ff0
-  #PF: supervisor read access in kernel mode
-  RIP: 0010:get_stack_info+0xb3/0x148
-
-It turns out that if the stack tracer is invoked before the exception stack
-mappings are initialized in_exception_stack() can erroneously classify an
-invalid address as an address inside of an exception stack:
-
-    begin = this_cpu_read(cea_exception_stacks);  <- 0
-    end = begin + sizeof(exception stacks);
-
-i.e. any address between 0 and end will be considered as exception stack
-address and the subsequent code will then try to derefence the resulting
-stack frame at a non mapped address.
-
- end = begin + (unsigned long)ep->size;
-     ==> end = 0x2000
-
- regs = (struct pt_regs *)end - 1;
-     ==> regs = 0x2000 - sizeof(struct pt_regs *) = 0x1ff0
-
- info->next_sp   = (unsigned long *)regs->sp;
-     ==> Crashes due to accessing 0x1ff0
-
-Prevent this by checking the validity of the cea_exception_stack base
-address and bailing out if it is zero.
-
-Fixes: afcd21dad88b ("x86/dumpstack/64: Use cpu_entry_area instead of orig_ist")
-Reported-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/dumpstack_64.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ .../mellanox/mlx5/core/en_accel/ktls.h        |  7 ++++-
+ .../mellanox/mlx5/core/en_accel/ktls_tx.c     | 11 ++++++--
+ .../net/ethernet/mellanox/mlx5/core/en_tx.c   | 28 ++++++++++---------
+ 3 files changed, 30 insertions(+), 16 deletions(-)
 
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -94,6 +94,13 @@ static bool in_exception_stack(unsigned
- 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
+index b7298f9ee3d3f..c4c128908b6e8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
+@@ -86,7 +86,7 @@ struct sk_buff *mlx5e_ktls_handle_tx_skb(struct net_device *netdev,
+ 					 struct mlx5e_tx_wqe **wqe, u16 *pi);
+ void mlx5e_ktls_tx_handle_resync_dump_comp(struct mlx5e_txqsq *sq,
+ 					   struct mlx5e_tx_wqe_info *wi,
+-					   struct mlx5e_sq_dma *dma);
++					   u32 *dma_fifo_cc);
  
- 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
-+	/*
-+	 * Handle the case where stack trace is collected _before_
-+	 * cea_exception_stacks had been initialized.
-+	 */
-+	if (!begin)
-+		return false;
+ #else
+ 
+@@ -94,6 +94,11 @@ static inline void mlx5e_ktls_build_netdev(struct mlx5e_priv *priv)
+ {
+ }
+ 
++static inline void
++mlx5e_ktls_tx_handle_resync_dump_comp(struct mlx5e_txqsq *sq,
++				      struct mlx5e_tx_wqe_info *wi,
++				      u32 *dma_fifo_cc) {}
 +
- 	end = begin + sizeof(struct cea_exception_stacks);
- 	/* Bail if @stack is outside the exception stack area. */
- 	if (stk < begin || stk >= end)
+ #endif
+ 
+ #endif /* __MLX5E_TLS_H__ */
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+index 7833ddef04278..002245bb6b287 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+@@ -304,9 +304,16 @@ tx_post_resync_dump(struct mlx5e_txqsq *sq, struct sk_buff *skb,
+ 
+ void mlx5e_ktls_tx_handle_resync_dump_comp(struct mlx5e_txqsq *sq,
+ 					   struct mlx5e_tx_wqe_info *wi,
+-					   struct mlx5e_sq_dma *dma)
++					   u32 *dma_fifo_cc)
+ {
+-	struct mlx5e_sq_stats *stats = sq->stats;
++	struct mlx5e_sq_stats *stats;
++	struct mlx5e_sq_dma *dma;
++
++	if (!wi->resync_dump_frag)
++		return;
++
++	dma = mlx5e_dma_get(sq, (*dma_fifo_cc)++);
++	stats = sq->stats;
+ 
+ 	mlx5e_tx_dma_unmap(sq->pdev, dma);
+ 	__skb_frag_unref(wi->resync_dump_frag);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index 9aaf74407a11f..4eebf7946aca1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -480,14 +480,7 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *cq, int napi_budget)
+ 			skb = wi->skb;
+ 
+ 			if (unlikely(!skb)) {
+-#ifdef CONFIG_MLX5_EN_TLS
+-				if (wi->resync_dump_frag) {
+-					struct mlx5e_sq_dma *dma =
+-						mlx5e_dma_get(sq, dma_fifo_cc++);
+-
+-					mlx5e_ktls_tx_handle_resync_dump_comp(sq, wi, dma);
+-				}
+-#endif
++				mlx5e_ktls_tx_handle_resync_dump_comp(sq, wi, &dma_fifo_cc);
+ 				sqcc += wi->num_wqebbs;
+ 				continue;
+ 			}
+@@ -543,29 +536,38 @@ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
+ {
+ 	struct mlx5e_tx_wqe_info *wi;
+ 	struct sk_buff *skb;
++	u32 dma_fifo_cc;
++	u16 sqcc;
+ 	u16 ci;
+ 	int i;
+ 
+-	while (sq->cc != sq->pc) {
+-		ci = mlx5_wq_cyc_ctr2ix(&sq->wq, sq->cc);
++	sqcc = sq->cc;
++	dma_fifo_cc = sq->dma_fifo_cc;
++
++	while (sqcc != sq->pc) {
++		ci = mlx5_wq_cyc_ctr2ix(&sq->wq, sqcc);
+ 		wi = &sq->db.wqe_info[ci];
+ 		skb = wi->skb;
+ 
+ 		if (!skb) {
+-			sq->cc += wi->num_wqebbs;
++			mlx5e_ktls_tx_handle_resync_dump_comp(sq, wi, &dma_fifo_cc);
++			sqcc += wi->num_wqebbs;
+ 			continue;
+ 		}
+ 
+ 		for (i = 0; i < wi->num_dma; i++) {
+ 			struct mlx5e_sq_dma *dma =
+-				mlx5e_dma_get(sq, sq->dma_fifo_cc++);
++				mlx5e_dma_get(sq, dma_fifo_cc++);
+ 
+ 			mlx5e_tx_dma_unmap(sq->pdev, dma);
+ 		}
+ 
+ 		dev_kfree_skb_any(skb);
+-		sq->cc += wi->num_wqebbs;
++		sqcc += wi->num_wqebbs;
+ 	}
++
++	sq->dma_fifo_cc = dma_fifo_cc;
++	sq->cc = sqcc;
+ }
+ 
+ #ifdef CONFIG_MLX5_CORE_IPOIB
+-- 
+2.20.1
+
 
 
