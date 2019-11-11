@@ -2,52 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B16CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A81DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C08222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A9A2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497525;
-	bh=a0YyOLp9BJGIlRbcwVhG0isF00a6whUm2Sm5dUxTKjs=;
+	s=default; t=1573497529;
+	bh=LbnEZgm2BvH2olWHVKKrQ0U9lIl1aIiEKSTyer5PYJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2D4Q6YPtuxeXMiBioqa/XEg86c1t/2KV1GGHPf+SOoRWOwJefz48gvemnyHd4Jpie
-	 kDEf2+qCWvnDBdAuWiZeisijh1QyTdvn7KbC8Q+8HSaI87IC69qOnokTK8tjKYGj6C
-	 08Z1aQuSPqwWyIXxtFq/Ow72P7+PVcdxTqyOTPz4=
+	b=zzytm7YmLo9D4YpgugxrnIVTL0N9zPaIgG0i94NbjHjxJhtb7R/Q04Bi3Bbgvr9lF
+	 1HxNM3Lc6IZRcQUP9F5jtaQQg8FqmmiqAybV8cfHYsP8c/ijhQIYc3YM4N268urRlB
+	 +HTaMbmB7n6ny3hljpppS8qIm0cUbvgadksYdiD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbfKKSin (ORCPT
+        id S1729071AbfKKSis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57616 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbfKKSij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:39 -0500
+        id S1728482AbfKKSiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E38E021655;
-        Mon, 11 Nov 2019 18:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B335421655;
+        Mon, 11 Nov 2019 18:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497518;
-        bh=a0YyOLp9BJGIlRbcwVhG0isF00a6whUm2Sm5dUxTKjs=;
+        s=default; t=1573497524;
+        bh=LbnEZgm2BvH2olWHVKKrQ0U9lIl1aIiEKSTyer5PYJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMqg/jGYISu6yey6vEol5II5SGA8otfVUqlKcEUVd5SxnTHIJJ3p0PgAvPZShaaAR
-         B5HXIUQz2is008Y/ZgcyjMU8y7AEC3Cy8GuH/c0DJrLN426locn7n0KBigbuz+OvF7
-         hX3tE/V1LiW2dJITB2bjflHsHqoEs11WNFq8xY00=
+        b=nZxg0NgmBu8K/qvbuMGOt6GlRYr42zJcncVe/EuuUgdimfpqcZUcXReowhB1wORsz
+         1yY1yH+wagZp+E2EGdFCKTrrjBonMsu77NHhfH4QXiW2NcQodkhz9R59PCghm+KpmJ
+         p+QKm+rNET55SX/IiAS1yD69ofj6z73X67wVyJKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/105] bonding: fix unexpected IFF_BONDING bit unset
-Date:   Mon, 11 Nov 2019 19:28:50 +0100
-Message-Id: <20191111181446.748747349@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.14 044/105] configfs: provide exclusion between IO and removals
+Date:   Mon, 11 Nov 2019 19:28:14 +0100
+Message-Id: <20191111181441.059913770@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,100 +59,277 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 65de65d9033750d2cf1b336c9d6e9da3a8b5cc6e ]
+commit b0841eefd9693827afb9888235e26ddd098f9cef upstream.
 
-The IFF_BONDING means bonding master or bonding slave device.
-->ndo_add_slave() sets IFF_BONDING flag and ->ndo_del_slave() unsets
-IFF_BONDING flag.
+Make sure that attribute methods are not called after the item
+has been removed from the tree.  To do so, we
+	* at the point of no return in removals, grab ->frag_sem
+exclusive and mark the fragment dead.
+	* call the methods of attributes with ->frag_sem taken
+shared and only after having verified that the fragment is still
+alive.
 
-bond0<--bond1
+	The main benefit is for method instances - they are
+guaranteed that the objects they are accessing *and* all ancestors
+are still there.  Another win is that we don't need to bother
+with extra refcount on config_item when opening a file -
+the item will be alive for as long as it stays in the tree, and
+we won't touch it/attributes/any associated data after it's
+been removed from the tree.
 
-Both bond0 and bond1 are bonding device and these should keep having
-IFF_BONDING flag until they are removed.
-But bond1 would lose IFF_BONDING at ->ndo_del_slave() because that routine
-do not check whether the slave device is the bonding type or not.
-This patch adds the interface type check routine before removing
-IFF_BONDING flag.
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Test commands:
-    ip link add bond0 type bond
-    ip link add bond1 type bond
-    ip link set bond1 master bond0
-    ip link set bond1 nomaster
-    ip link del bond1 type bond
-    ip link add bond1 type bond
-
-Splat looks like:
-[  226.665555] proc_dir_entry 'bonding/bond1' already registered
-[  226.666440] WARNING: CPU: 0 PID: 737 at fs/proc/generic.c:361 proc_register+0x2a9/0x3e0
-[  226.667571] Modules linked in: bonding af_packet sch_fq_codel ip_tables x_tables unix
-[  226.668662] CPU: 0 PID: 737 Comm: ip Not tainted 5.4.0-rc3+ #96
-[  226.669508] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  226.670652] RIP: 0010:proc_register+0x2a9/0x3e0
-[  226.671612] Code: 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 39 01 00 00 48 8b 04 24 48 89 ea 48 c7 c7 a0 0b 14 9f 48 8b b0 e
-0 00 00 00 e8 07 e7 88 ff <0f> 0b 48 c7 c7 40 2d a5 9f e8 59 d6 23 01 48 8b 4c 24 10 48 b8 00
-[  226.675007] RSP: 0018:ffff888050e17078 EFLAGS: 00010282
-[  226.675761] RAX: dffffc0000000008 RBX: ffff88805fdd0f10 RCX: ffffffff9dd344e2
-[  226.676757] RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff88806c9f6b8c
-[  226.677751] RBP: ffff8880507160f3 R08: ffffed100d940019 R09: ffffed100d940019
-[  226.678761] R10: 0000000000000001 R11: ffffed100d940018 R12: ffff888050716008
-[  226.679757] R13: ffff8880507160f2 R14: dffffc0000000000 R15: ffffed100a0e2c1e
-[  226.680758] FS:  00007fdc217cc0c0(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
-[  226.681886] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  226.682719] CR2: 00007f49313424d0 CR3: 0000000050e46001 CR4: 00000000000606f0
-[  226.683727] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  226.684725] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  226.685681] Call Trace:
-[  226.687089]  proc_create_seq_private+0xb3/0xf0
-[  226.687778]  bond_create_proc_entry+0x1b3/0x3f0 [bonding]
-[  226.691458]  bond_netdev_event+0x433/0x970 [bonding]
-[  226.692139]  ? __module_text_address+0x13/0x140
-[  226.692779]  notifier_call_chain+0x90/0x160
-[  226.693401]  register_netdevice+0x9b3/0xd80
-[  226.694010]  ? alloc_netdev_mqs+0x854/0xc10
-[  226.694629]  ? netdev_change_features+0xa0/0xa0
-[  226.695278]  ? rtnl_create_link+0x2ed/0xad0
-[  226.695849]  bond_newlink+0x2a/0x60 [bonding]
-[  226.696422]  __rtnl_newlink+0xb9f/0x11b0
-[  226.696968]  ? rtnl_link_unregister+0x220/0x220
-[ ... ]
-
-Fixes: 0b680e753724 ("[PATCH] bonding: Add priv_flag to avoid event mishandling")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/configfs/dir.c  |   23 ++++++++++++++++
+ fs/configfs/file.c |   75 ++++++++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 80 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index cf8385a22de59..5f6602cb191f2 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1779,7 +1779,8 @@ err_hwaddr_unsync:
- 		bond_hw_addr_flush(bond_dev, slave_dev);
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1474,6 +1474,7 @@ static int configfs_rmdir(struct inode *
+ 	struct config_item *item;
+ 	struct configfs_subsystem *subsys;
+ 	struct configfs_dirent *sd;
++	struct configfs_fragment *frag;
+ 	struct module *subsys_owner = NULL, *dead_item_owner = NULL;
+ 	int ret;
  
- err_close:
--	slave_dev->priv_flags &= ~IFF_BONDING;
-+	if (!netif_is_bond_master(slave_dev))
-+		slave_dev->priv_flags &= ~IFF_BONDING;
- 	dev_close(slave_dev);
+@@ -1531,6 +1532,16 @@ static int configfs_rmdir(struct inode *
+ 		}
+ 	} while (ret == -EAGAIN);
  
- err_restore_mac:
-@@ -1985,7 +1986,8 @@ static int __bond_release_one(struct net_device *bond_dev,
- 	else
- 		dev_set_mtu(slave_dev, slave->original_mtu);
++	frag = sd->s_frag;
++	if (down_write_killable(&frag->frag_sem)) {
++		spin_lock(&configfs_dirent_lock);
++		configfs_detach_rollback(dentry);
++		spin_unlock(&configfs_dirent_lock);
++		return -EINTR;
++	}
++	frag->frag_dead = true;
++	up_write(&frag->frag_sem);
++
+ 	/* Get a working ref for the duration of this function */
+ 	item = configfs_get_config_item(dentry);
  
--	slave_dev->priv_flags &= ~IFF_BONDING;
-+	if (!netif_is_bond_master(slave_dev))
-+		slave_dev->priv_flags &= ~IFF_BONDING;
+@@ -1832,6 +1843,12 @@ void configfs_unregister_group(struct co
+ 	struct configfs_subsystem *subsys = group->cg_subsys;
+ 	struct dentry *dentry = group->cg_item.ci_dentry;
+ 	struct dentry *parent = group->cg_item.ci_parent->ci_dentry;
++	struct configfs_dirent *sd = dentry->d_fsdata;
++	struct configfs_fragment *frag = sd->s_frag;
++
++	down_write(&frag->frag_sem);
++	frag->frag_dead = true;
++	up_write(&frag->frag_sem);
  
- 	bond_free_slave(slave);
+ 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
+ 	spin_lock(&configfs_dirent_lock);
+@@ -1957,12 +1974,18 @@ void configfs_unregister_subsystem(struc
+ 	struct config_group *group = &subsys->su_group;
+ 	struct dentry *dentry = group->cg_item.ci_dentry;
+ 	struct dentry *root = dentry->d_sb->s_root;
++	struct configfs_dirent *sd = dentry->d_fsdata;
++	struct configfs_fragment *frag = sd->s_frag;
  
--- 
-2.20.1
-
+ 	if (dentry->d_parent != root) {
+ 		pr_err("Tried to unregister non-subsystem!\n");
+ 		return;
+ 	}
+ 
++	down_write(&frag->frag_sem);
++	frag->frag_dead = true;
++	up_write(&frag->frag_sem);
++
+ 	inode_lock_nested(d_inode(root),
+ 			  I_MUTEX_PARENT);
+ 	inode_lock_nested(d_inode(dentry), I_MUTEX_CHILD);
+--- a/fs/configfs/file.c
++++ b/fs/configfs/file.c
+@@ -62,22 +62,32 @@ struct configfs_buffer {
+ 	};
+ };
+ 
++static inline struct configfs_fragment *to_frag(struct file *file)
++{
++	struct configfs_dirent *sd = file->f_path.dentry->d_fsdata;
++
++	return sd->s_frag;
++}
+ 
+-static int fill_read_buffer(struct configfs_buffer * buffer)
++static int fill_read_buffer(struct file *file, struct configfs_buffer *buffer)
+ {
+-	ssize_t count;
++	struct configfs_fragment *frag = to_frag(file);
++	ssize_t count = -ENOENT;
+ 
+ 	if (!buffer->page)
+ 		buffer->page = (char *) get_zeroed_page(GFP_KERNEL);
+ 	if (!buffer->page)
+ 		return -ENOMEM;
+ 
+-	count = buffer->attr->show(buffer->item, buffer->page);
++	down_read(&frag->frag_sem);
++	if (!frag->frag_dead)
++		count = buffer->attr->show(buffer->item, buffer->page);
++	up_read(&frag->frag_sem);
++
+ 	if (count < 0)
+ 		return count;
+ 	if (WARN_ON_ONCE(count > (ssize_t)SIMPLE_ATTR_SIZE))
+ 		return -EIO;
+-
+ 	buffer->needs_read_fill = 0;
+ 	buffer->count = count;
+ 	return 0;
+@@ -110,7 +120,7 @@ configfs_read_file(struct file *file, ch
+ 
+ 	mutex_lock(&buffer->mutex);
+ 	if (buffer->needs_read_fill) {
+-		retval = fill_read_buffer(buffer);
++		retval = fill_read_buffer(file, buffer);
+ 		if (retval)
+ 			goto out;
+ 	}
+@@ -147,6 +157,7 @@ static ssize_t
+ configfs_read_bin_file(struct file *file, char __user *buf,
+ 		       size_t count, loff_t *ppos)
+ {
++	struct configfs_fragment *frag = to_frag(file);
+ 	struct configfs_buffer *buffer = file->private_data;
+ 	ssize_t retval = 0;
+ 	ssize_t len = min_t(size_t, count, PAGE_SIZE);
+@@ -162,7 +173,12 @@ configfs_read_bin_file(struct file *file
+ 
+ 	if (buffer->needs_read_fill) {
+ 		/* perform first read with buf == NULL to get extent */
+-		len = buffer->bin_attr->read(buffer->item, NULL, 0);
++		down_read(&frag->frag_sem);
++		if (!frag->frag_dead)
++			len = buffer->bin_attr->read(buffer->item, NULL, 0);
++		else
++			len = -ENOENT;
++		up_read(&frag->frag_sem);
+ 		if (len <= 0) {
+ 			retval = len;
+ 			goto out;
+@@ -182,8 +198,13 @@ configfs_read_bin_file(struct file *file
+ 		buffer->bin_buffer_size = len;
+ 
+ 		/* perform second read to fill buffer */
+-		len = buffer->bin_attr->read(buffer->item,
+-					     buffer->bin_buffer, len);
++		down_read(&frag->frag_sem);
++		if (!frag->frag_dead)
++			len = buffer->bin_attr->read(buffer->item,
++						     buffer->bin_buffer, len);
++		else
++			len = -ENOENT;
++		up_read(&frag->frag_sem);
+ 		if (len < 0) {
+ 			retval = len;
+ 			vfree(buffer->bin_buffer);
+@@ -234,9 +255,16 @@ fill_write_buffer(struct configfs_buffer
+ }
+ 
+ static int
+-flush_write_buffer(struct configfs_buffer *buffer, size_t count)
++flush_write_buffer(struct file *file, struct configfs_buffer *buffer, size_t count)
+ {
+-	return buffer->attr->store(buffer->item, buffer->page, count);
++	struct configfs_fragment *frag = to_frag(file);
++	int res = -ENOENT;
++
++	down_read(&frag->frag_sem);
++	if (!frag->frag_dead)
++		res = buffer->attr->store(buffer->item, buffer->page, count);
++	up_read(&frag->frag_sem);
++	return res;
+ }
+ 
+ 
+@@ -266,7 +294,7 @@ configfs_write_file(struct file *file, c
+ 	mutex_lock(&buffer->mutex);
+ 	len = fill_write_buffer(buffer, buf, count);
+ 	if (len > 0)
+-		len = flush_write_buffer(buffer, len);
++		len = flush_write_buffer(file, buffer, len);
+ 	if (len > 0)
+ 		*ppos += len;
+ 	mutex_unlock(&buffer->mutex);
+@@ -342,6 +370,7 @@ out:
+ static int __configfs_open_file(struct inode *inode, struct file *file, int type)
+ {
+ 	struct dentry *dentry = file->f_path.dentry;
++	struct configfs_fragment *frag = to_frag(file);
+ 	struct configfs_attribute *attr;
+ 	struct configfs_buffer *buffer;
+ 	int error;
+@@ -351,8 +380,13 @@ static int __configfs_open_file(struct i
+ 	if (!buffer)
+ 		goto out;
+ 
++	error = -ENOENT;
++	down_read(&frag->frag_sem);
++	if (unlikely(frag->frag_dead))
++		goto out_free_buffer;
++
+ 	error = -EINVAL;
+-	buffer->item = configfs_get_config_item(dentry->d_parent);
++	buffer->item = to_item(dentry->d_parent);
+ 	if (!buffer->item)
+ 		goto out_free_buffer;
+ 
+@@ -410,6 +444,7 @@ static int __configfs_open_file(struct i
+ 	buffer->read_in_progress = false;
+ 	buffer->write_in_progress = false;
+ 	file->private_data = buffer;
++	up_read(&frag->frag_sem);
+ 	return 0;
+ 
+ out_put_module:
+@@ -417,6 +452,7 @@ out_put_module:
+ out_put_item:
+ 	config_item_put(buffer->item);
+ out_free_buffer:
++	up_read(&frag->frag_sem);
+ 	kfree(buffer);
+ out:
+ 	return error;
+@@ -426,8 +462,6 @@ static int configfs_release(struct inode
+ {
+ 	struct configfs_buffer *buffer = filp->private_data;
+ 
+-	if (buffer->item)
+-		config_item_put(buffer->item);
+ 	module_put(buffer->owner);
+ 	if (buffer->page)
+ 		free_page((unsigned long)buffer->page);
+@@ -453,12 +487,17 @@ static int configfs_release_bin_file(str
+ 	buffer->read_in_progress = false;
+ 
+ 	if (buffer->write_in_progress) {
++		struct configfs_fragment *frag = to_frag(file);
+ 		buffer->write_in_progress = false;
+ 
+-		/* result of ->release() is ignored */
+-		buffer->bin_attr->write(buffer->item, buffer->bin_buffer,
+-				buffer->bin_buffer_size);
+-
++		down_read(&frag->frag_sem);
++		if (!frag->frag_dead) {
++			/* result of ->release() is ignored */
++			buffer->bin_attr->write(buffer->item,
++					buffer->bin_buffer,
++					buffer->bin_buffer_size);
++		}
++		up_read(&frag->frag_sem);
+ 		/* vfree on NULL is safe */
+ 		vfree(buffer->bin_buffer);
+ 		buffer->bin_buffer = NULL;
 
 
