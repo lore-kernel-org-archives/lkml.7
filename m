@@ -7,53 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113DEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF48FC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41C021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F862184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573501756;
-	bh=uTabz5ov6Vjop6XN/e5gPLEdHcP81d+HSZTh66elhSg=;
+	s=default; t=1573501758;
+	bh=6jHUt8KIGlVQo2GJfa8J2iXzcNczIZQVUUY9Mu6u3q0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=F3e3E50VFbYjhSG+AHhA+iMbwmgdTquc+DKdzISFGFgVs1CsvgjXOwlRBHbwCsA+D
-	 C3QXiYPrBzkqQ6etU9Svg+6+nvEWbU+iErhee+XMpMJ0622uiX/0xPwaWiTR0iezkC
-	 L3BWqkvAZwxZJmOHjI4N1qYQ5nHljqUOnzXrTkso=
+	b=SRsmbkDxumZy8fAtuhj9RCRSwmNistsy7k2ALAnlYfUVV260MoQkLPonZTUhY07GC
+	 wvGQ6ZCJav9AaJ1KkiOTmex6Bat3Yo6t7JiwjlBR5bnJocn4p6cSsCGaN43DW62TdQ
+	 Hsl6wZbi92eQPS1x+oddT0shdwVqZ6ldHt4z32lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfKKTtP (ORCPT
+        id S1727578AbfKKTtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:49:15 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50494 "EHLO
+        Mon, 11 Nov 2019 14:49:17 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50496 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfKKTtO (ORCPT
+        with ESMTP id S1727080AbfKKTtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:49:14 -0500
+        Mon, 11 Nov 2019 14:49:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=PIfTM93qdGG19Mu2hY3L9jGo+XJ6ctbU8MTvg5JJabA=; b=YNZ0QM5WZ3nE
-        gYVeW8LjVF7v/7SkxCM8qkXiDbbcNoncMPnGMPRnawQE8x5oMUsQSMy3inQSJYsBwpRhtkpZHaCVO
-        nxciVGlEip+vzuZGMmEGlIk4NhxTSU+7mNvO8c2LGNzFG5RowpuaBP0jLgpbb2JIobmUXM6oWzE1X
-        HS/eE=;
+        List-Archive; bh=84REvcwjrpVztiWS0w7fns355oyY2epT8nBgVsXKgpw=; b=kEFIHQp4fA0u
+        Mdn9IbceTH6wxHJhAly7ch5YFvZS/zqIXMMkhZsX2nS+gp/N+9o0tBluJ4+/kiSV/Iylsz1R01h6G
+        FgTJlqqdIyiEmUXWFZRSDffsRQaT5/IjpUVxqF5usptC0aWMgA63+ktJpWup7My6IvUy1Wrb/uV40
+        OrRTg=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iUFgT-0005Ni-Lu; Mon, 11 Nov 2019 19:49:09 +0000
+        id 1iUFgT-0005Ne-3Z; Mon, 11 Nov 2019 19:49:09 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 20B342742C95; Mon, 11 Nov 2019 19:49:09 +0000 (GMT)
+        id 9E5AD27429EB; Mon, 11 Nov 2019 19:49:08 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: omap2-mcspi: Remove redundant checks" to the spi tree
-In-Reply-To: <20191109041827.26934-1-vigneshr@ti.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     "Cc:"@sirena.co.uk, "Cc:"@sirena.co.uk,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Applied "spi: pxa2xx: Add missed security checks" to the spi tree
+In-Reply-To: <20191109080943.30428-1-hslester96@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191111194909.20B342742C95@ypsilon.sirena.org.uk>
-Date:   Mon, 11 Nov 2019 19:49:09 +0000 (GMT)
+Message-Id: <20191111194908.9E5AD27429EB@ypsilon.sirena.org.uk>
+Date:   Mon, 11 Nov 2019 19:49:08 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: omap2-mcspi: Remove redundant checks
+   spi: pxa2xx: Add missed security checks
 
 has been applied to the spi tree at
 
@@ -86,171 +90,43 @@ to this mail.
 Thanks,
 Mark
 
-From 8d8584912a4348ca41653dca70f2099a82e644d9 Mon Sep 17 00:00:00 2001
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Date: Sat, 9 Nov 2019 09:48:27 +0530
-Subject: [PATCH] spi: omap2-mcspi: Remove redundant checks
+From 5eb263ef08b5014cfc2539a838f39d2fd3531423 Mon Sep 17 00:00:00 2001
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Sat, 9 Nov 2019 16:09:43 +0800
+Subject: [PATCH] spi: pxa2xx: Add missed security checks
 
-Both omap2_mcspi_tx_dma() and omap2_mcspi_rx_dma() are only called from
-omap2_mcspi_txrx_dma() and omap2_mcspi_txrx_dma() is always called after
-making sure that mcspi_dma->dma_rx and mcspi_dma->dma_tx are not NULL
-(see omap2_mcspi_transfer_one()).
-Therefore remove redundant NULL checks for omap2_mcspi->dma_tx and
-omap2_mcspi->dma_rx pointers in omap2_mcspi_tx_dma() and
-omap2_mcspi_rx_dma() respectively.
+pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+platform_get_irq.
+Add checks for them to fix the bugs.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20191109041827.26934-1-vigneshr@ti.com
+Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
+So we cannot use _optional() for devm_clk_get and platform_get_irq.
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-omap2-mcspi.c | 105 +++++++++++++++-------------------
- 1 file changed, 47 insertions(+), 58 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 848e03e5f42d..7e2292c11d12 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -397,30 +397,26 @@ static void omap2_mcspi_tx_dma(struct spi_device *spi,
- {
- 	struct omap2_mcspi	*mcspi;
- 	struct omap2_mcspi_dma  *mcspi_dma;
-+	struct dma_async_tx_descriptor *tx;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 6eb6805ee51d..9bc710c1b9e5 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1557,7 +1557,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ #endif
  
- 	mcspi = spi_master_get_devdata(spi->master);
- 	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
- 
--	if (mcspi_dma->dma_tx) {
--		struct dma_async_tx_descriptor *tx;
-+	dmaengine_slave_config(mcspi_dma->dma_tx, &cfg);
- 
--		dmaengine_slave_config(mcspi_dma->dma_tx, &cfg);
--
--		tx = dmaengine_prep_slave_sg(mcspi_dma->dma_tx, xfer->tx_sg.sgl,
--					     xfer->tx_sg.nents,
--					     DMA_MEM_TO_DEV,
--					     DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
--		if (tx) {
--			tx->callback = omap2_mcspi_tx_callback;
--			tx->callback_param = spi;
--			dmaengine_submit(tx);
--		} else {
--			/* FIXME: fall back to PIO? */
--		}
-+	tx = dmaengine_prep_slave_sg(mcspi_dma->dma_tx, xfer->tx_sg.sgl,
-+				     xfer->tx_sg.nents,
-+				     DMA_MEM_TO_DEV,
-+				     DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (tx) {
-+		tx->callback = omap2_mcspi_tx_callback;
-+		tx->callback_param = spi;
-+		dmaengine_submit(tx);
-+	} else {
-+		/* FIXME: fall back to PIO? */
- 	}
- 	dma_async_issue_pending(mcspi_dma->dma_tx);
- 	omap2_mcspi_set_dma_req(spi, 0, 1);
--
- }
- 
- static unsigned
-@@ -439,6 +435,7 @@ omap2_mcspi_rx_dma(struct spi_device *spi, struct spi_transfer *xfer,
- 	int			word_len, element_count;
- 	struct omap2_mcspi_cs	*cs = spi->controller_state;
- 	void __iomem		*chstat_reg = cs->base + OMAP2_MCSPI_CHSTAT0;
-+	struct dma_async_tx_descriptor *tx;
- 
- 	mcspi = spi_master_get_devdata(spi->master);
- 	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
-@@ -462,55 +459,47 @@ omap2_mcspi_rx_dma(struct spi_device *spi, struct spi_transfer *xfer,
- 	else /* word_len <= 32 */
- 		element_count = count >> 2;
- 
--	if (mcspi_dma->dma_rx) {
--		struct dma_async_tx_descriptor *tx;
- 
--		dmaengine_slave_config(mcspi_dma->dma_rx, &cfg);
-+	dmaengine_slave_config(mcspi_dma->dma_rx, &cfg);
- 
-+	/*
-+	 *  Reduce DMA transfer length by one more if McSPI is
-+	 *  configured in turbo mode.
-+	 */
-+	if ((l & OMAP2_MCSPI_CHCONF_TURBO) && mcspi->fifo_depth == 0)
-+		transfer_reduction += es;
+ 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(ssp->clk))
++		return NULL;
 +
-+	if (transfer_reduction) {
-+		/* Split sgl into two. The second sgl won't be used. */
-+		sizes[0] = count - transfer_reduction;
-+		sizes[1] = transfer_reduction;
-+		nb_sizes = 2;
-+	} else {
- 		/*
--		 *  Reduce DMA transfer length by one more if McSPI is
--		 *  configured in turbo mode.
-+		 * Don't bother splitting the sgl. This essentially
-+		 * clones the original sgl.
- 		 */
--		if ((l & OMAP2_MCSPI_CHCONF_TURBO) && mcspi->fifo_depth == 0)
--			transfer_reduction += es;
--
--		if (transfer_reduction) {
--			/* Split sgl into two. The second sgl won't be used. */
--			sizes[0] = count - transfer_reduction;
--			sizes[1] = transfer_reduction;
--			nb_sizes = 2;
--		} else {
--			/*
--			 * Don't bother splitting the sgl. This essentially
--			 * clones the original sgl.
--			 */
--			sizes[0] = count;
--			nb_sizes = 1;
--		}
-+		sizes[0] = count;
-+		nb_sizes = 1;
-+	}
- 
--		ret = sg_split(xfer->rx_sg.sgl, xfer->rx_sg.nents,
--			       0, nb_sizes,
--			       sizes,
--			       sg_out, out_mapped_nents,
--			       GFP_KERNEL);
-+	ret = sg_split(xfer->rx_sg.sgl, xfer->rx_sg.nents, 0, nb_sizes,
-+		       sizes, sg_out, out_mapped_nents, GFP_KERNEL);
- 
--		if (ret < 0) {
--			dev_err(&spi->dev, "sg_split failed\n");
--			return 0;
--		}
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "sg_split failed\n");
-+		return 0;
-+	}
- 
--		tx = dmaengine_prep_slave_sg(mcspi_dma->dma_rx,
--					     sg_out[0],
--					     out_mapped_nents[0],
--					     DMA_DEV_TO_MEM,
--					     DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
--		if (tx) {
--			tx->callback = omap2_mcspi_rx_callback;
--			tx->callback_param = spi;
--			dmaengine_submit(tx);
--		} else {
--				/* FIXME: fall back to PIO? */
--		}
-+	tx = dmaengine_prep_slave_sg(mcspi_dma->dma_rx, sg_out[0],
-+				     out_mapped_nents[0], DMA_DEV_TO_MEM,
-+				     DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (tx) {
-+		tx->callback = omap2_mcspi_rx_callback;
-+		tx->callback_param = spi;
-+		dmaengine_submit(tx);
-+	} else {
-+		/* FIXME: fall back to PIO? */
- 	}
- 
- 	dma_async_issue_pending(mcspi_dma->dma_rx);
+ 	ssp->irq = platform_get_irq(pdev, 0);
++	if (ssp->irq < 0)
++		return NULL;
++
+ 	ssp->type = type;
+ 	ssp->dev = &pdev->dev;
+ 	ssp->port_id = pxa2xx_spi_get_port_id(&pdev->dev);
 -- 
 2.20.1
 
