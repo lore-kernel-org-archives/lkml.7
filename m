@@ -2,133 +2,157 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE843C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CF4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B133F2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15F421655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LAzanCoh"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="IW0zEpu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfKKOkW (ORCPT
+        id S1726977AbfKKOm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:40:22 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39122 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfKKOkW (ORCPT
+        Mon, 11 Nov 2019 09:42:59 -0500
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:44412 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726853AbfKKOm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:40:22 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x28so10826724pfo.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:40:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=HSZMQWzyEHnnHHGSgljiQy/rMe2MxTJvgjXJLTPB8Uw=;
-        b=LAzanCohnqFWoF8gGT+BAns/rhQOt9zScUEdL2og/ftcWJRRiv37aXkm3RKjkwf2p+
-         ALvBnZ0EdR41oJ1oipALK9HTNW3YLU06bdHqI2mCfXrRsOaH72lpnrDVj5qht22plo/I
-         raY9u3gdnGyg9LrKuqIgdSuLbCkvJfvay3T8/j8RznOfP86n5uNku2uD8mRBWIFfzE+x
-         G/+VqYJp/K+k64wGPG8tHH6inJ6Hd1ahzyAjEVin93HD7RgfQgN1EWHr0ZnCvNPTcbvR
-         jqMd59qSv/jCqsbpiUag62bFCGY4vM8w9wV78ceO1YpZDuIddkh2Vm/IcPfH6F2kTCrD
-         7hUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=HSZMQWzyEHnnHHGSgljiQy/rMe2MxTJvgjXJLTPB8Uw=;
-        b=CU6O+98M3JUi/rxjnRw+yhDRlLTtLS29+Eo1ffG0O7uNMcHToGOGXk9gadD6oiQnpL
-         gG+4Dxuz2tDgEaQ+mDfTw7AOgX7WAcNTofoO0GtSH9mszD45VJHL+RswFydDYCcERmPr
-         kBl98ciz2W5N7SHjVyD7pGqyNOOaNwIBmSL9jQxnTYI8VxbOdKFpsc1pKGzA4/OXx95W
-         U1LbJiBLcl5puEXabUsIn+guENWCDOjRkHLvO3FLTiCk23dE5CVlshTbPhpFAZoPdBk9
-         7BmuqNzmawTl42T7u3XpOQ0iE5YlBtDcI+IJ9TtZDjX9vS4ML6GKwLS+sKHz446O6wbK
-         cWUA==
-X-Gm-Message-State: APjAAAUP8ohr+cVtGG7xTYpmCe67dbfP+yoG677+7r4GoexOom/E6HjA
-        yAZC9gDwrG2MXaRTzIYnmjr0HQ==
-X-Google-Smtp-Source: APXvYqzRF26meFYV5Haf+VOng2ZQhf2ivGmMtkGpcH5rhUWnKoKrEYEEDzl/1JLe7l1dj9g5OfIKpg==
-X-Received: by 2002:a17:90b:110f:: with SMTP id gi15mr35797335pjb.128.1573483220407;
-        Mon, 11 Nov 2019 06:40:20 -0800 (PST)
-Received: from localhost ([2601:602:9200:a1a5:dd5e:2cce:fe26:7bc6])
-        by smtp.gmail.com with ESMTPSA id fz12sm13611195pjb.15.2019.11.11.06.40.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Nov 2019 06:40:19 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v4 2/4] firmware: meson_sm: Add secure power domain support
-In-Reply-To: <420073b1-0a3f-1bfd-4422-34f8cd7e0d2d@amlogic.com>
-References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com> <1572868028-73076-3-git-send-email-jianxin.pan@amlogic.com> <7hk188stcy.fsf@baylibre.com> <420073b1-0a3f-1bfd-4422-34f8cd7e0d2d@amlogic.com>
-Date:   Mon, 11 Nov 2019 06:40:18 -0800
-Message-ID: <7heeyecw8d.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 11 Nov 2019 09:42:59 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3DE52C003F;
+        Mon, 11 Nov 2019 14:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1573483378; bh=D0tldHpoR0/W84EFHc/hsP+fZvOo1J+/4ZOjJ5Rol+U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=IW0zEpu9TzHvUaY35am2cd1uyDfdct94Dch/LvnnD2kBYTuEqrKytZOppnJG+KOHT
+         nOF5Jp2qYoMwOBKDlflxK0Ggkfi44S1FYqRaGnvkTF53DT9siG+3ZOZ+fueHKdDT7b
+         UNbvNilu7Mh8CAv1qayrZLgQJIz4JCam5ciST5VHuo6HAy2PFKCAFpggnHZ2tLh7Gj
+         QHhRY+u2T+Qza+6bxuMmH+iAiLVILPqY1tMSeIFuzBU09Kk29SsnVm0HUZZi9jT/GP
+         jjYAB5cvEaZ7i5VmA/oq5l1V7qBZ02JY2oSdK1JiLHeQRKMztHn1fw3geeY9SfeILL
+         IbErXgyXbqK5Q==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id C9076A0243;
+        Mon, 11 Nov 2019 14:42:56 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 1/6] net: stmmac: Fix sparse warning
+Date:   Mon, 11 Nov 2019 15:42:34 +0100
+Message-Id: <7fe3e8eb2269ebbe67c9b924d50a793f5907b7e1.1573482991.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1573482991.git.Jose.Abreu@synopsys.com>
+References: <cover.1573482991.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1573482991.git.Jose.Abreu@synopsys.com>
+References: <cover.1573482991.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jianxin Pan <jianxin.pan@amlogic.com> writes:
+The VID is converted to le16 so the variable must be __le16 type.
 
-> Hi Kevin,
->
-> Please see my comments below:
->
-> On 2019/11/10 4:11, Kevin Hilman wrote:
->> Jianxin Pan <jianxin.pan@amlogic.com> writes:
->> 
->>> The Amlogic Meson A1/C1 Secure Monitor implements calls to control power
->>> domain.
->>>
->>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->>> ---
->>>  drivers/firmware/meson/meson_sm.c       | 2 ++
->>>  include/linux/firmware/meson/meson_sm.h | 2 ++
->>>  2 files changed, 4 insertions(+)
->>>
-> [...]
->>> diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
->>> index 6669e2a..4ed3989 100644
->>> --- a/include/linux/firmware/meson/meson_sm.h
->>> +++ b/include/linux/firmware/meson/meson_sm.h
->>> @@ -12,6 +12,8 @@ enum {
->>>  	SM_EFUSE_WRITE,
->>>  	SM_EFUSE_USER_MAX,
->>>  	SM_GET_CHIP_ID,
->>> +	SM_PWRC_SET,
->>> +	SM_PWRC_GET,
->> 
->> These new IDs are unique to the A1/C1 family.  Maybe we should add a
->> prefix to better indicate that.  Maybe:
->> 
->>        SM_A1_PWRC_SET,
->>        SM_A1_PWRC_GET,
->> 
->> Thoughts?
->
-> I consulted with the internal VLSI team, and it's likely that the latter new SOC will follow A1/C1.
-> And then it may become common function in the future.
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: c7ab0b8088d7 ("net: stmmac: Fallback to VLAN Perfect filtering if HASH is not available")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-OK, but it's not a common function for the past, so it's useful to mark
-that distinction.
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h          | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c   | 5 +++--
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
-Just like in device-tree, we often have compatibles named for previous
-SoC families (e.g. "gxbb") used on newer SoCs, but we use that to mean
-"GXBB or newer".
-
-Similarily here, we can use SM_A1_ prefix to mean "A1 or newer.
-
-Kevin
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index a2ecab5dc8c8..40ca00e596dd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -733,7 +733,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
+ }
+ 
+ static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+-				    u16 perfect_match, bool is_double)
++				    __le16 perfect_match, bool is_double)
+ {
+ 	void __iomem *ioaddr = hw->pcsr;
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 9553d2bec1a7..082f5ee9e525 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -556,7 +556,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
+ }
+ 
+ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+-				      u16 perfect_match, bool is_double)
++				      __le16 perfect_match, bool is_double)
+ {
+ 	void __iomem *ioaddr = hw->pcsr;
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index 1303d1e9a18f..509daeefdb79 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -357,7 +357,7 @@ struct stmmac_ops {
+ 			     struct stmmac_rss *cfg, u32 num_rxq);
+ 	/* VLAN */
+ 	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
+-				 u16 perfect_match, bool is_double);
++				 __le16 perfect_match, bool is_double);
+ 	void (*enable_vlan)(struct mac_device_info *hw, u32 type);
+ 	/* TX Timestamp */
+ 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 199c4f938bb2..5f40fbb67bac 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4214,6 +4214,7 @@ static u32 stmmac_vid_crc32_le(__le16 vid_le)
+ static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
+ {
+ 	u32 crc, hash = 0;
++	__le16 pmatch = 0;
+ 	int count = 0;
+ 	u16 vid = 0;
+ 
+@@ -4228,11 +4229,11 @@ static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
+ 		if (count > 2) /* VID = 0 always passes filter */
+ 			return -EOPNOTSUPP;
+ 
+-		vid = cpu_to_le16(vid);
++		pmatch = cpu_to_le16(vid);
+ 		hash = 0;
+ 	}
+ 
+-	return stmmac_update_vlan_hash(priv, priv->hw, hash, vid, is_double);
++	return stmmac_update_vlan_hash(priv, priv->hw, hash, pmatch, is_double);
+ }
+ 
+ static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
+-- 
+2.7.4
 
