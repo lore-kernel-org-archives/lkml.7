@@ -2,63 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8006C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFA5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E672184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D0E21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497074;
-	bh=RJg+NpvpsDYYNN2voNdfNoMG1zjJq7mpF5ZJMNMGIcQ=;
+	s=default; t=1573497078;
+	bh=NQ8hEnMGGrLVGpvkW97YGDHz+Z/OC+g+PKaH/TGZQSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vdJm4VAVizIJKOgvAqGM4bfE9dJh+VoVuXInZPPN5uvFv0YkcQpGAHY289V12CEP/
-	 VWMzIEQbC0eLPZmsrnYj4wN65lR3grsmDL4OuL6HFFbApicwg4Usq/dxIWI3CXA8oB
-	 fKAe5k9ZSt/yDv5JGe0N4TmxYHA/IMg4DzfmYwdw=
+	b=qYPpc1yeetXV2XJIesKDOCuDD0t8NKgvZFv4S+sE9BCJyaEfsMqU0gb2IK/nU4KZQ
+	 J3dWH5R+xCGxXhsI+0Lpb8oz3SZ+lXzV1w7sCMv3jTalF/O/PHVIW2M+Cg51C7o7NR
+	 XDVtYNjPvGifeUu9s1YygYsRYUqNJS1B3j86ulFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfKKSbN (ORCPT
+        id S1727611AbfKKSbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfKKSbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:11 -0500
+        id S1727559AbfKKSbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F4221783;
-        Mon, 11 Nov 2019 18:31:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD952173B;
+        Mon, 11 Nov 2019 18:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497070;
-        bh=RJg+NpvpsDYYNN2voNdfNoMG1zjJq7mpF5ZJMNMGIcQ=;
+        s=default; t=1573497073;
+        bh=NQ8hEnMGGrLVGpvkW97YGDHz+Z/OC+g+PKaH/TGZQSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYwuQmVJOZVpVBizKOuQIS/yulijKj6DjrSi5YtRiaDIYhIC7w70vNtBSk78l/Fmj
-         i+vwbfrfqdVkLgLwpJ4qrIUEAVGUZhUq7uZCmeHEDIS5wPFQf5v+eQkEnetlXHn7Yv
-         iQ3EISoxmVz+fLDJeyzC1HDMR1eAqRg5Gpq94LFI=
+        b=aGbVXPg9VIriJsxTonIN/0+vhV4bkN99EQ2B9xsD8VMiIoY9AH6W1iDQdKDEGrMlJ
+         puWgLDxxJb5gD1PwPg66V1XPIJ/FF9HEqWrSmFN937Fh7qUy1gsmhEM5Kbkunx033e
+         uVILGsR5+rU1p0f592xbNJyLIsYwIFGK8EZXy9J4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 34/43] perf/x86/amd/ibs: Fix reading of the IBS OpData register and thus precise RIP validity
-Date:   Mon, 11 Nov 2019 19:28:48 +0100
-Message-Id: <20191111181324.929853900@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 35/43] USB: Skip endpoints with 0 maxpacket length
+Date:   Mon, 11 Nov 2019 19:28:49 +0100
+Message-Id: <20191111181325.467989555@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -71,49 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 317b96bb14303c7998dbcd5bc606bd8038fdd4b4 ]
+[ Upstream commit d482c7bb0541d19dea8bff437a9f3c5563b5b2d2 ]
 
-The loop that reads all the IBS MSRs into *buf stopped one MSR short of
-reading the IbsOpData register, which contains the RipInvalid status bit.
+Endpoints with a maxpacket length of 0 are probably useless.  They
+can't transfer any data, and it's not at all unlikely that an HCD will
+crash or hang when trying to handle an URB for such an endpoint.
 
-Fix the offset_max assignment so the MSR gets read, so the RIP invalid
-evaluation is based on what the IBS h/w output, instead of what was
-left in memory.
+Currently the USB core does not check for endpoints having a maxpacket
+value of 0.  This patch adds a check, printing a warning and skipping
+over any endpoints it catches.
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: d47e8238cd76 ("perf/x86-ibs: Take instruction pointer from ibs sample")
-Link: https://lkml.kernel.org/r/20191023150955.30292-1-kim.phillips@amd.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Now, the USB spec does not rule out endpoints having maxpacket = 0.
+But since they wouldn't have any practical use, there doesn't seem to
+be any good reason for us to accept them.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281050420.1485-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/perf_event_amd_ibs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/config.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/x86/kernel/cpu/perf_event_amd_ibs.c
-+++ b/arch/x86/kernel/cpu/perf_event_amd_ibs.c
-@@ -555,7 +555,7 @@ static int perf_ibs_handle_irq(struct pe
- 	if (event->attr.sample_type & PERF_SAMPLE_RAW)
- 		offset_max = perf_ibs->offset_max;
- 	else if (check_rip)
--		offset_max = 2;
-+		offset_max = 3;
- 	else
- 		offset_max = 1;
- 	do {
+diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+index 5abc4e5434ecf..cbd064fae23bd 100644
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -314,6 +314,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+ 
+ 	/* Validate the wMaxPacketSize field */
+ 	maxp = usb_endpoint_maxp(&endpoint->desc);
++	if (maxp == 0) {
++		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
++		    cfgno, inum, asnum, d->bEndpointAddress);
++		goto skip_to_next_endpoint_or_interface_descriptor;
++	}
+ 
+ 	/* Find the highest legal maxpacket size for this endpoint */
+ 	i = 0;		/* additional transactions per microframe */
+-- 
+2.20.1
+
 
 
