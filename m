@@ -2,132 +2,128 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0E2C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB9DC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E8D20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156BC20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezStHSGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKKR5m (ORCPT
+        id S1726982AbfKKR6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:57:42 -0500
-Received: from mga01.intel.com ([192.55.52.88]:15544 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbfKKR5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:57:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 09:57:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
-   d="scan'208";a="207176314"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 11 Nov 2019 09:57:19 -0800
-Date:   Mon, 11 Nov 2019 09:57:19 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thomas Lamprecht <t.lamprecht@proxmox.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Doug Reiland <doug.reiland@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
- when loading PDPTRS
-Message-ID: <20191111175719.GD11805@linux.intel.com>
-References: <20191003154447.010950442@linuxfoundation.org>
- <20191003154525.870373223@linuxfoundation.org>
- <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
- <20191111173757.GB11805@linux.intel.com>
- <20191111174859.GB1083018@kroah.com>
+        Mon, 11 Nov 2019 12:58:05 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:46467 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfKKR6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:58:05 -0500
+Received: by mail-wr1-f53.google.com with SMTP id b3so15602757wrs.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:58:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EpziU3n1BW5TLHQT8FQscf45CBaREelPg2coeu8/dVQ=;
+        b=ezStHSGEGwVEJrQ2BSZyBOA0qUcZhjbVVj5Hte4teiC3bJFyEKVYPUSqYfAmvOit3o
+         H10Yx+EBvcTFLI/I6dWQjNkRRL2ENKHmkZKKtbx76Jd1bbCESZ1zbdQD2rDKd5xuT8Xr
+         5wC36jcM9CT+skEFLwhQ4wIfnNXXpWWY4uKSh19OT5CltAqQDXqCc0dA/YLg6Tc+Ayd0
+         Ra91tYwjq/vMPjRJh73oq6Hseg3C0D0XJ+oREdGO7+oQ2wxiQGdKzeZAEdrUcuDIl+vs
+         xidMWt1xUfXXwU1fPF27DJYJ7OocSrxCWfbrhTwVO1wGUO3bJHweTq/as7v8twDhp2LR
+         r6mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EpziU3n1BW5TLHQT8FQscf45CBaREelPg2coeu8/dVQ=;
+        b=c0zKp+PRdwvfeH7nfyRqlZBF2uEpAPnkTrw+YrRBeSl+hKK8uvMzR8Rkb7LsBQQVDR
+         VfDa8McXCatRiPJ8iyvt+E6FUPO2wlwYBcb1HbZC35xKTPOLj2iVkysBPk30fphpeCDq
+         5CXEPeeYmJb6Vs18sLH4f5qUhe6mFMa0dJCGDvuuVvaNMqY2MICRGdL8KPgu7dcACIW3
+         ku/1lo+7dQMA8Ny4DQl2m4BmBaqG7kEMiw4QsHvTLoYQLJKDMvLruT6IbSxrrI5wjXRh
+         xyglAg6P7GS8NPp8nxfRY6gA9F5UVh0He9HQEnkpgGYUR9WcDWwkR2FsZ0/kmp7MPwSl
+         jOVA==
+X-Gm-Message-State: APjAAAX0q/nMYKKYd3k2BH7EtPk4YpYjMges/GZWTswvvLP22klSfocg
+        Z4e31sE5eu8ugWnF9WcnJviMxugh7J/i/SbcEOY=
+X-Google-Smtp-Source: APXvYqx3ye/RxIPpV3svQCJ4zX0dnZOKXMO8w79UOdtPMbx1hABpnBd3Hy5aphbwPtqSPIfRyTOPL8O8scVa13McSKk=
+X-Received: by 2002:a5d:4688:: with SMTP id u8mr21495307wrq.40.1573495082976;
+ Mon, 11 Nov 2019 09:58:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111174859.GB1083018@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191109093725.42364-1-yuehaibing@huawei.com>
+In-Reply-To: <20191109093725.42364-1-yuehaibing@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 11 Nov 2019 12:57:49 -0500
+Message-ID: <CADnq5_PcSdTm9yKdbv=QHFtGeO58a30wZ0KxjQUNqy3Aax9thg@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amd/display: remove set but not used variable 'ds_port'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 06:48:59PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Nov 11, 2019 at 09:37:57AM -0800, Sean Christopherson wrote:
-> > On Mon, Nov 11, 2019 at 10:32:05AM +0100, Thomas Lamprecht wrote:
-> > > On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
-> > > > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > > 
-> > > > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
-> > > > 
-> > > > Manually generate the PDPTR reserved bit mask when explicitly loading
-> > > > PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
-> > > It seems that a backport of this to stable and distro kernels tickled out
-> > > some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
-> > > Intel CPUs[1].
-> > 
-> > It manifests specifically when running with EPT disabled (no surprise
-> > there).  Actually, it probably would reproduce simply with unrestricted
-> > guest disabled, but that's beside the point.
-> > 
-> > The issue is a flawed PAE-paging check in kvm_set_cr3(), which causes KVM
-> > to incorrectly load PDPTRs in 64-bit mode and inject a #GP.  It's a sneaky
-> > little bugger because the "if (is_long_mode() ..." makes it appear to be
-> > correct at first glance.
-> > 
-> > 	if (is_long_mode(vcpu) &&
-> > 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
-> > 		return 1;
-> > 	else if (is_pae(vcpu) && is_paging(vcpu) &&  <--- needs !is_long_mode()
-> > 		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-> > 		return 1;
-> > 
-> > With unrestricted guest, KVM doesn't intercept writes to CR3 and so doesn't
-> > trigger the buggy code.  This doesn't fail upstream because the offending
-> > code was refactored to encapsulate the PAE checks in a single helper,
-> > precisely to avoid this type of headache.
-> > 
-> >   commit bf03d4f9334728bf7c8ffc7de787df48abd6340e
-> >   Author: Paolo Bonzini <pbonzini@redhat.com>
-> >   Date:   Thu Jun 6 18:52:44 2019 +0200
-> > 
-> >     KVM: x86: introduce is_pae_paging
-> > 
-> >     Checking for 32-bit PAE is quite common around code that fiddles with
-> >     the PDPTRs.  Add a function to compress all checks into a single
-> >     invocation.
-> > 
-> > 
-> > Commit bf03d4f93347 ("KVM: x86: introduce is_pae_paging") doesn't apply
-> > cleanly to 4.19 or earlier because of the VMX file movement in 4.20.  But,
-> > the revelant changes in x86.c do apply cleanly, and I've quadruple checked
-> > that the PAE checks in vmx.c are correct, i.e. applying the patch and
-> > ignoring the nested.c/vmx.c conflicts would be a viable lazy option.
-> > 
-> > > Basically, booting this kernel as host, then running an KVM guest distro
-> > > or kernel fails it that guest kernel early in the boot phase without any
-> > > error or other log to serial console, earlyprintk.
-> > 
-> > ...
-> > 
-> > > 
-> > > [0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
-> > > [1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
-> > >      westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
-> > >      has VMX support (i.e. is 64bit based)
-> > 
-> > Note, not Westmere, which has EPT and unrestricted guest.  Xeon E5420 is
-> > Harpertown, a.k.a. Penryn, the shrink of Conroe.  
-> 
-> 
-> Thanks for figuring this out, can you send us a patch that we can apply
-> to fix this issue in the stable tree?
+Applied.  thanks!
 
-Can do.  A custom backport will be need for 4.20 and earlier, not 4.19 and
-earlier.  I misremembered when we did the VMX refactoring.
+Alex
 
-For 5.0, 5.1 and 5.2, commit bf03d4f93347 can be applied directly.
+On Sun, Nov 10, 2019 at 9:29 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c: In function dp_wa_power_up_0010FA:
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c:2320:35: warning:
+>  variable ds_port set but not used [-Wunused-but-set-variable]
+>
+> It is never used, so can be removed.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> index 65de32f..b814b74 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> @@ -2910,7 +2910,6 @@ static void dp_wa_power_up_0010FA(struct dc_link *link, uint8_t *dpcd_data,
+>                 int length)
+>  {
+>         int retry = 0;
+> -       union dp_downstream_port_present ds_port = { 0 };
+>
+>         if (!link->dpcd_caps.dpcd_rev.raw) {
+>                 do {
+> @@ -2923,9 +2922,6 @@ static void dp_wa_power_up_0010FA(struct dc_link *link, uint8_t *dpcd_data,
+>                 } while (retry++ < 4 && !link->dpcd_caps.dpcd_rev.raw);
+>         }
+>
+> -       ds_port.byte = dpcd_data[DP_DOWNSTREAMPORT_PRESENT -
+> -                                DP_DPCD_REV];
+> -
+>         if (link->dpcd_caps.dongle_type == DISPLAY_DONGLE_DP_VGA_CONVERTER) {
+>                 switch (link->dpcd_caps.branch_dev_id) {
+>                 /* 0010FA active dongles (DP-VGA, DP-DLDVI converters) power down
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
