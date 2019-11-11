@@ -2,115 +2,117 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA91C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD043C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1422821925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5DE21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="17xdVOab"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nM5r4shU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfKKQXu (ORCPT
+        id S1726950AbfKKQY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:23:50 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40040 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfKKQXu (ORCPT
+        Mon, 11 Nov 2019 11:24:56 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38723 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKQY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:23:50 -0500
-Received: by mail-ot1-f66.google.com with SMTP id m15so11703290otq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 08:23:49 -0800 (PST)
+        Mon, 11 Nov 2019 11:24:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id i12so8400612wro.5;
+        Mon, 11 Nov 2019 08:24:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EK5rfvfSII06/EDQTTan7V0YdFmqp+cuq2tEw4+bqpc=;
-        b=17xdVOabPHkdqXoVofyU2oGM4B4m95gnLle7cFrn1YMkwWbiTLbI/0troG20gZ9VZF
-         LX95md6dEop4QOSKcJgsP24YOZ4c5m60SFzvCmdSKsNe9Ef4Adyt0ep7D30gPmzEHFM3
-         76EKc9E/JZqf/JynqO0TwLB2ckYrJFa2hHgaU6yxQ1Dww953k3L5Rjl7vttXNiVlkffi
-         5Rj4ZrSXGK1/vW18zmnQLV1+QauUftzINox4U1Lt5dnXJu92M8zJhKHlXvI8I462ihZ1
-         bWKwEIaqGpVwuMVGwc56mpyZ+pRnnftycuMhYBn0tXtijl1QzzztqHZ0zwvmbBxHmN91
-         T4bg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pwaa9sLhBORID/RCUQM/P5FIVmYbuKhw4bg4GhpXrpw=;
+        b=nM5r4shUfZNP0YLlxxQkulRrBWevasGMJYQwRuqOkc9jDEDJR0HMbskzY/iLrggnDh
+         gWRNwav1tSipKGccdQoPFX8tErdbhyILjKZeqV9aIX5dL2hvhwA7sCSBdfZUxXj/lPvU
+         rBZ16q2ubHm9S5J2F/S9b+xxBXAADF5nEwqOIh12nzZUNmj1jtYLd5dABdaBnMoHcRej
+         /x/1joXuL3NNcTbl/q77HB5V046HvnZGadMbsCVfuGB5ogjz+3LfC5h+dkwMNlYU1qz3
+         eWmug7hjC8uFw0qoKbBhPk/yf71GgVl/8CVasIYnxQCaxxUhBXBgZcwmXm9tFZcfREFj
+         7ZRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EK5rfvfSII06/EDQTTan7V0YdFmqp+cuq2tEw4+bqpc=;
-        b=sQMZeNnoGGhu4kCE7RAHHqx8iDjmFJaErHPVEessKBaLZbQDEFvc89L/ALE+T6+ao0
-         DBMJn+Sx626bEMQXPSCTzOuEHARmQVVUkbB1dBgPXqo+8FKJ6XY2Tarpe7BTEwuvUXHz
-         vnpXsrSraNdO93urMQIjVTHlZr2Uk9HKclPv+HaqS9refL+5tB9ghzd/dcr/JtBFgPA+
-         XCejV1kd/Az85v6OTSxLUTbcSXiZbOWO9tpTQI5grpbJD2hep3DpFK19otOJNaYM4z9z
-         mIb7sIFnZwxs5tcImZfcXATrSPHF8u0Eb/mU7DJ7QXxcegZ68b4wuK+Aobei/5gNHnzO
-         HrZA==
-X-Gm-Message-State: APjAAAUpBcmCnQKTMInzx+4oIYQBY7kHqQTn7qCqmtDyj5k9hsrufF0l
-        ukpGubOhDi5Dtg6BCRNjXFHziPVKw1VajvWbtUCziA==
-X-Google-Smtp-Source: APXvYqywohi4GCAt/BglQ3C0fcbjKIg2OIffbbL/IPdakdWcpjfBuw1FR1rGa7efSojC1F+sMY799Z6U/QZm/PuYdQo=
-X-Received: by 2002:a05:6830:1af7:: with SMTP id c23mr20766490otd.247.1573489429293;
- Mon, 11 Nov 2019 08:23:49 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pwaa9sLhBORID/RCUQM/P5FIVmYbuKhw4bg4GhpXrpw=;
+        b=L7hb/sErwT9lxQDxZzk19/O++Het1/A76pVCLO9ItWZJLLi/RZvUvBTrvzQVlR3D1c
+         owDOn96JeIhUgknj4Ab9d8aFqwWb+F6qSq1RvlMHjzn1nNPrhlCFI8K2Yi/7CWU+rXIk
+         0H8pDtJiFMTE1IjSIe3ApwdqIIcDHbpOxJyI/3gMu7o0AgA4l9XVl7AOmaoYyoC10xkj
+         3PuDOGUJi0E+aR2r3zH7/5W8HKChP2+LAg7+JsmwYmmNdo1wB2EHiKtp5Zbx2WUfsmh6
+         0ViCJI1ZLvoB6v8jCTchOIT5f9Py5K0ipiOlJF0GbfxaC7FIohYrpw6aJSHIZYSCs63B
+         WMzA==
+X-Gm-Message-State: APjAAAVhJgvekbjQWnJ7jBMRBWS8kTOHl/uH6OlJiDR4p9CqOhV9uGDb
+        zTwPyPfv19LKzyqgzaCS6ns=
+X-Google-Smtp-Source: APXvYqxwFAX9Lsonp+jsKJLuEmqfTuYnHimU5q/alG8pDYS6BX+Ge7PvY5a/QnEehdM9Snv3GIUH9A==
+X-Received: by 2002:adf:979a:: with SMTP id s26mr16955243wrb.92.1573489493672;
+        Mon, 11 Nov 2019 08:24:53 -0800 (PST)
+Received: from arch-vook ([77.125.77.116])
+        by smtp.gmail.com with ESMTPSA id a206sm18717606wmf.15.2019.11.11.08.24.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 08:24:52 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:24:42 +0000
+From:   Omer Shalev <omerdeshalev@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media:usb:cpia2: Properly check framebuffer mmap offsets
+Message-ID: <20191111182409.GA20121@arch-vook>
+References: <20191108215038.59170-1-omerdeshalev@gmail.com>
+ <20191108204949.GA1277001@kroah.com>
+ <a1c55e7d-4710-70e9-f4d0-8fc155197f07@xs4all.nl>
+ <20191111114615.GA418224@kroah.com>
 MIME-Version: 1.0
-References: <20191108000855.25209-1-t-fukasawa@vx.jp.nec.com>
- <20191108091851.GB15658@dhcp22.suse.cz> <5fc7da0c-bd79-9f3b-e5d9-8688648cf032@vx.jp.nec.com>
-In-Reply-To: <5fc7da0c-bd79-9f3b-e5d9-8688648cf032@vx.jp.nec.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 11 Nov 2019 08:23:38 -0800
-Message-ID: <CAPcyv4joVDwiL21PPyJ7E_mMFR2SL3QTi09VMtfxb_W+-1p8vQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] make pfn walker support ZONE_DEVICE
-To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111114615.GA418224@kroah.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 12:01 AM Toshiki Fukasawa
-<t-fukasawa@vx.jp.nec.com> wrote:
->
-> On 2019/11/08 18:18, Michal Hocko wrote:
-> > On Fri 08-11-19 00:08:03, Toshiki Fukasawa wrote:
-> >> This patch set tries to make pfn walker support ZONE_DEVICE.
-> >> This idea is from the TODO in below patch:
-> >>
-> >>    commit aad5f69bc161af489dbb5934868bd347282f0764
-> >>    Author: David Hildenbrand <david@redhat.com>
-> >>    Date:   Fri Oct 18 20:19:20 2019 -0700
-> >>
-> >>      fs/proc/page.c: don't access uninitialized memmaps in fs/proc/page.c
-> >>
-> >> pfn walker's ZONE_DEVICE support requires capability to identify
-> >> that a memmap has been initialized. The uninitialized cases are
-> >> as follows:
-> >>
-> >>      a) pages reserved for ZONE_DEVICE driver
-> >>      b) pages currently initializing
-> >>
-> >> This patch set solves both of them.
-> >
-> > Why do we want this? What is the usecase?
->
-> We are writing a test program for hwpoison, which is a use case.
-> Without this patch, we can't see the HWPOISON flag on the
-> ZONE_DEVICE page.
+On Mon, Nov 11, 2019 at 12:46:15PM +0100, Greg Kroah-Hartman wrote:
+> On Sat, Nov 09, 2019 at 12:39:43PM +0100, Hans Verkuil wrote:
+> > Hi Greg,
+> > 
+> > On 11/8/19 9:49 PM, Greg Kroah-Hartman wrote:
+> > > On Fri, Nov 08, 2019 at 09:50:36PM +0000, Omer Shalev wrote:
+> > >> The cpai2 driver's mmap implementation wasn't properly check for all
+> > >> possible offset values. Given a huge offset value , the calculation
+> > >> start_offset + size can wrap around to a low value and pass the check
+> > > 
+> > > I thought we checked that in the core of the kernel now, to keep all
+> > > drivers from not having to do this type of thing (as they obviously all
+> > > forgot to.)  Why is this still needed here as well?
+> > 
+> > Where is that checked in the core? I couldn't find anything, but I might
+> > have been looking in the wrong place.
+> 
+> Sorry, took me a while to find it.  Look at be83bbf80682 ("mmap:
+> introduce sane default mmap limits") as I think this should handle the
+> problem already.
+> 
+> thanks,
+> 
+> greg k-h
 
-I'm not sure that's a goal that's a worthwhile goal. That hwpoison
-flag has specific meaning for the System RAM case where the page is
-going to be marked offline. For the pmem case the nvdimm core tracks
-'badblocks'. I did attempt to use PageHWPoison to track which pmem
-pages had been marked UC to prevent speculative consumption, but that
-implementation has been found to collide with lookup_memtype() so I'm
-looking ot replace it with something that consults with the pmem
-driver.
+Thanks Greg. But All other drivers I've seen implement it like that: if(size > total_size || offset >
+total_size - size). Which I think, is a better way to write this code, and generally more
+secure. Plus, no extra code is needed (just changing this line).
+
+Please let me know what you think.
+
+Best regards,
+
+Omer
