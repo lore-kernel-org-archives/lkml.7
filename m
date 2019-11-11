@@ -2,141 +2,86 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F26C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572C7C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D4C2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:08:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573445282;
-	bh=0sFiDQ1Ua0cntLXmApw+pNgbF+rKtXJ5SSDn5ybn9FU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=13tMiZMcl1Q/RscB3nUTl5pySV414OynGx85cz/cGVvhjh8tLMxi9YCu7gExqf8tu
-	 g+Nf8x/jn68UE1Ht5rHQZAteHXdbP2CYJjvRFY7p2UJ3tGwuo8MayIqlbslIvW21fv
-	 nB030sd1pgMxzZrxWz+au188DEwn5LMwry+Ld+Do=
+	by mail.kernel.org (Postfix) with ESMTP id 380D12086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfKKEHx (ORCPT
+        id S1726902AbfKKESn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 23:07:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbfKKEHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 23:07:52 -0500
-Received: from localhost (unknown [106.201.42.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEB86206BB;
-        Mon, 11 Nov 2019 04:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573445271;
-        bh=0sFiDQ1Ua0cntLXmApw+pNgbF+rKtXJ5SSDn5ybn9FU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b4jJ40N9GFXb0NQusGBdTcO5gkD517TNBKxqR5jaqNit19nmZKb/coqEswEfbdjiR
-         GD2wyY6NdpPxOdCulUjESDGAQMJOaF3HcF6MgWEsa/aa+odZGFfcARZJ1Iv0KTKiEN
-         TfB+vggW+N199oO82dWSZJftkJU4MLLjk+ePZ9wo=
-Date:   Mon, 11 Nov 2019 09:37:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com
-Subject: Re: [PATCH v4 01/15] bindings: soc: ti: add documentation for k3
- ringacc
-Message-ID: <20191111040747.GJ952516@vkoul-mobl>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-2-peter.ujfalusi@ti.com>
+        Sun, 10 Nov 2019 23:18:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41768 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726754AbfKKESm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 23:18:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3DE98B32D;
+        Mon, 11 Nov 2019 04:18:41 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] Initial RTD1619 SoC and Realtek Mjolnir EVB
+ support
+To:     James Tai <james.tai@realtek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        'DTML' <devicetree@vger.kernel.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91F9CB@RTITMBSVM04.realtek.com.tw>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <f2ce8745-e056-06a5-3d55-b00ab4d82414@suse.de>
+Date:   Mon, 11 Nov 2019 05:18:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101084135.14811-2-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <43B123F21A8CFE44A9641C099E4196FFCF91F9CB@RTITMBSVM04.realtek.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-11-19, 10:41, Peter Ujfalusi wrote:
-> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
-> enable straightforward passing of work between a producer and a consumer.
-> There is one RINGACC module per NAVSS on TI AM65x and j721e.
-> 
-> This patch introduces RINGACC device tree bindings.
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/soc/ti/k3-ringacc.txt | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
-> new file mode 100644
-> index 000000000000..86954cf4fa99
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
-> @@ -0,0 +1,59 @@
-> +* Texas Instruments K3 NavigatorSS Ring Accelerator
-> +
-> +The Ring Accelerator (RA) is a machine which converts read/write accesses
-> +from/to a constant address into corresponding read/write accesses from/to a
-> +circular data structure in memory. The RA eliminates the need for each DMA
-> +controller which needs to access ring elements from having to know the current
-> +state of the ring (base address, current offset). The DMA controller
-> +performs a read or write access to a specific address range (which maps to the
-> +source interface on the RA) and the RA replaces the address for the transaction
-> +with a new address which corresponds to the head or tail element of the ring
-> +(head for reads, tail for writes).
-> +
-> +The Ring Accelerator is a hardware module that is responsible for accelerating
-> +management of the packet queues. The K3 SoCs can have more than one RA instances
-> +
-> +Required properties:
-> +- compatible	: Must be "ti,am654-navss-ringacc";
-> +- reg		: Should contain register location and length of the following
-> +		  named register regions.
-> +- reg-names	: should be
-> +		  "rt" - The RA Ring Real-time Control/Status Registers
-> +		  "fifos" - The RA Queues Registers
-> +		  "proxy_gcfg" - The RA Proxy Global Config Registers
-> +		  "proxy_target" - The RA Proxy Datapath Registers
-> +- ti,num-rings	: Number of rings supported by RA
-> +- ti,sci-rm-range-gp-rings : TI-SCI RM subtype for GP ring range
-> +- ti,sci	: phandle on TI-SCI compatible System controller node
-> +- ti,sci-dev-id	: TI-SCI device id
-> +- msi-parent	: phandle for "ti,sci-inta" interrupt controller
-> +
-> +Optional properties:
-> + -- ti,dma-ring-reset-quirk : enable ringacc / udma ring state interoperability
-> +		  issue software w/a
-> +
-> +Example:
-> +
-> +ringacc: ringacc@3c000000 {
-> +	compatible = "ti,am654-navss-ringacc";
-> +	reg =	<0x0 0x3c000000 0x0 0x400000>,
-> +		<0x0 0x38000000 0x0 0x400000>,
-> +		<0x0 0x31120000 0x0 0x100>,
-> +		<0x0 0x33000000 0x0 0x40000>;
-> +	reg-names = "rt", "fifos",
-> +		    "proxy_gcfg", "proxy_target";
-> +	ti,num-rings = <818>;
-> +	ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
-> +	ti,dma-ring-reset-quirk;
-> +	ti,sci = <&dmsc>;
-> +	ti,sci-dev-id = <187>;
+Hi James,
 
-why do we need dev-id for? doesn't phandle the line above help?
+Am 08.11.19 um 10:42 schrieb James Tai:
+> This series adds Device Trees for the Realtek RTD1619 SoC and Realtek's
+> Mjolnir EVB.
+> 
+> v1 -> v2:
+> * Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
+> * Add uart1 and uart2 device node into rtd16xx.dtsi
+> * move cpus node and the interrupt-affinity into rtd16xx.dtsi
+> * Specify the r-bus ranges
+
+With the exception of r-bus this is getting pretty good already.
+Two formal improvements:
+
+1) The patches 1/2 and 2/2 are expected to be threaded to 0/2 (but not
+2/2 to 1/2). Please check your git [sendemail] config or use --thread
+--no-chain-reply-to. That helps keep the series together when people
+start replying to individual patches. If your Git config seems correct,
+it might also be an issue with your SMTP server.
+
+2) Please also include a per-patch changelog like I do. I privately
+shared a script how I do that in a reproducible way. This benefits
+reviewers not getting CC'ed on the cover letter as well as users of the
+Patchwork web interface.
+
+Thanks,
+Andreas
 
 -- 
-~Vinod
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
