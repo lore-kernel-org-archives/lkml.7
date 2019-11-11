@@ -2,126 +2,85 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A09C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C07AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D7D21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:00:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQIErTu0"
+	by mail.kernel.org (Postfix) with ESMTP id 34FFB21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfKKNAD (ORCPT
+        id S1726983AbfKKNBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:00:03 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42134 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKKNAD (ORCPT
+        Mon, 11 Nov 2019 08:01:10 -0500
+Received: from www62.your-server.de ([213.133.104.62]:46868 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKNBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:00:03 -0500
-Received: by mail-wr1-f66.google.com with SMTP id a15so14507781wrf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 05:00:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gEDRS3N08vMM5wC2R3aZvV9f5xQTSZhcB9bk4IB+bq0=;
-        b=gQIErTu0/oszN8lDTz1psUNEDcAdWbU40K8KqpgGYE1+FklD6DWKZARx4jvikbe8hI
-         IUbjoTaI7RCucaVZnq9rr+j5jZLuDrtmXsUZ9BjPrKScB1qgY6eLW1z4JLxu/dm2lv2/
-         W4vok6LKeW+En4DLuNrPzcUwt48cyFCOmyuko9OkG3X0dRsdhoVovl1BFuzxIh2ydWB8
-         tIU7Ygpzc6KjprZLKofyo2NkgvMsjaS7NQ0y81q/kdqNQihyTqzvSiYS64Ys/GRpmbDS
-         2Z5q3nwlkf58Hrj2efnLn2nz/0P5TeevFXbfciBBR7nI2Z1xegr1gfkNjIEyflKNDXtc
-         lw6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gEDRS3N08vMM5wC2R3aZvV9f5xQTSZhcB9bk4IB+bq0=;
-        b=FBzIrKSL8c0PMVGKTaab6fPlldRQV7HeT67bxGwSQ6bLpFJZWDbx0SJWwGjzkBus8c
-         o9e6hGq/VuR6ZyzdvVJitKrE/J5peABrQKK/akVJ553BkoQ28O4y1KEQTshEaZ1GyX9q
-         QKLyVrP5egkt36/GNCo6pecpjJvrOQVcLxAUAiDmErCnayY7vfiFIBbz1JiQZypyDZ2h
-         0EIL8duAHBgFdLZCHH3mX8UtDwBog+l9g2wJlbTLDdZoFIQbGYvnrfFyZAxOUH79MNe7
-         iVycpCJO/QXulGa2AMGX8l9C/RhO7VJZv47SraScUTYO3MqqUR4M5VW8xsVfgRigHnHD
-         RfQw==
-X-Gm-Message-State: APjAAAVlO5a0yaM1WveSWhPqz36JwSQ9/vkI4VzGeJ1IPy57FvzbCXAV
-        ecp3u/4Et0UxazldgZXGEwWyxeXvmnyOKdd8EX0=
-X-Google-Smtp-Source: APXvYqxJ8vep/IViuTx4QDVZatw0xHW0xWFo1DYsgxKISpGkP73DqHjKUsinqUDVA+MkD9zjNn8i2eYD0XNxvyZ4khk=
-X-Received: by 2002:a5d:5306:: with SMTP id e6mr18900931wrv.187.1573477200508;
- Mon, 11 Nov 2019 05:00:00 -0800 (PST)
+        Mon, 11 Nov 2019 08:01:10 -0500
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iU9JV-0002oj-Qs; Mon, 11 Nov 2019 14:01:01 +0100
+Received: from [2a02:1205:507e:bf80:bef8:7f66:49c8:72e5] (helo=pc-11.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iU9JV-000Qka-5w; Mon, 11 Nov 2019 14:01:01 +0100
+Subject: Re: [PATCH bpf-next 2/2] selftests: bpf: test_tc_edt: add missing
+ object file to TEST_FILES
+To:     Simon Horman <simon.horman@netronome.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Cc:     ast@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah@kernel.org,
+        songliubraving@fb.com
+References: <20191110092616.24842-1-anders.roxell@linaro.org>
+ <20191110092616.24842-2-anders.roxell@linaro.org>
+ <20191111124501.alvvekp5owj4daoh@netronome.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4ce79d06-e8af-6547-240d-50e3038a6ae7@iogearbox.net>
+Date:   Mon, 11 Nov 2019 14:01:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <AM0PR04MB6468D4D15E471940B1906344E3780@AM0PR04MB6468.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB6468D4D15E471940B1906344E3780@AM0PR04MB6468.eurprd04.prod.outlook.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 11 Nov 2019 14:59:49 +0200
-Message-ID: <CAEnQRZBfOCH-R-QmY2gB5jEehea1Cn+RnyOkOhMj8=ZJoOADBg@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: fsl_audmix: Add spin lock to protect tdms
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191111124501.alvvekp5owj4daoh@netronome.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25630/Mon Nov 11 10:59:49 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 8:54 AM S.j. Wang <shengjiu.wang@nxp.com> wrote:
->
-> Hi
-> >
-> > Hi Shengjiu,
-> >
-> > Comments inline.
-> >
-> > On Wed, Nov 6, 2019 at 9:30 AM Shengjiu Wang <shengjiu.wang@nxp.com>
-> > wrote:
-> > >
-> > > Audmix support two substream, When two substream start to run, the
-> > > trigger function may be called by two substream in same time, that the
-> > > priv->tdms may be updated wrongly.
-> > >
-> > > The expected priv->tdms is 0x3, but sometimes the result is 0x2, or
-> > > 0x1.
-> > >
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > ---
-> > >  sound/soc/fsl/fsl_audmix.c | 6 ++++++  sound/soc/fsl/fsl_audmix.h | 1
-> > > +
-> > >  2 files changed, 7 insertions(+)
-> > >
-> > > diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
-> > > index c7e4e9757dce..a1db1bce330f 100644
-> > > --- a/sound/soc/fsl/fsl_audmix.c
-> > > +++ b/sound/soc/fsl/fsl_audmix.c
-> > > @@ -286,6 +286,7 @@ static int fsl_audmix_dai_trigger(struct
-> > snd_pcm_substream *substream, int cmd,
-> > >                                   struct snd_soc_dai *dai)  {
-> > >         struct fsl_audmix *priv = snd_soc_dai_get_drvdata(dai);
-> > > +       unsigned long lock_flags;
-> > >
-> > >         /* Capture stream shall not be handled */
-> > >         if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
-> > > @@ -295,12 +296,16 @@ static int fsl_audmix_dai_trigger(struct
-> > snd_pcm_substream *substream, int cmd,
-> > >         case SNDRV_PCM_TRIGGER_START:
-> > >         case SNDRV_PCM_TRIGGER_RESUME:
-> > >         case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-> > > +               spin_lock_irqsave(&priv->lock, lock_flags);
-> >
-> > Why do we need to disable interrupts here? I assume that lock is only
-> > used in process context.
-> >
-> It is in atomic context, so I think it is ok to disable interrupt.
+On 11/11/19 1:45 PM, Simon Horman wrote:
+> On Sun, Nov 10, 2019 at 10:26:16AM +0100, Anders Roxell wrote:
+>> When installing kselftests to its own directory and running the
+>> test_tc_edt.sh it will complain that test_tc_edt.o can't be find.
+>>
+>> $ ./test_tc_edt.sh
+>> Error opening object test_tc_edt.o: No such file or directory
+>> Object hashing failed!
+>> Cannot initialize ELF context!
+>> Unable to load program
+>>
+>> Rework to add test_tc_edt.o to TEST_FILES so the object file gets
+>> installed when installing kselftest.
+>>
+>> Fixes: 74b5a5968fe8 ("selftests/bpf: Replace test_progs and test_maps w/ general rule")
+>> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+>> Acked-by: Song Liu <songliubraving@fb.com>
+> 
+> It seems to me that the two patches that comprise this series
+> should be combined as they seem to be fixing two halves of the same
+> problem.
 
-All right thanks for the explanation. Added my Reviewed-by to v2.
+Yep, agree, please respin as single patch.
+
+Thanks,
+Daniel
