@@ -2,188 +2,136 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A7AC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798C8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A607D222BD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C05A222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dKcH+yJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfKKNaf (ORCPT
+        id S1727101AbfKKNai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:30:35 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:38441 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfKKNae (ORCPT
+        Mon, 11 Nov 2019 08:30:38 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35649 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727187AbfKKNag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:30:34 -0500
-Received: from linux.loongson.cn (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPDx_1tI0sldUhcAAA--.3S2;
-        Tue, 12 Nov 2019 05:27:36 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2] MIPS: Scan the DMI system information
-Date:   Mon, 11 Nov 2019 21:29:45 +0800
-Message-Id: <1573478985-3535-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: QMiowPDx_1tI0sldUhcAAA--.3S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xAw4rtFy7Zw45AF17GFg_yoWrCryrpF
-        4DA3Z5tr4DGF47G3yfAa4xur13Zan3Wr90kFyj9w17Zas8X34xJrs7GwsIyryUZr4kKayI
-        93WagF45GFZFyaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9m14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK6x804I0_JFv_Gryl8cAvFVAK0II2c7
-        xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE
-        2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
-        xK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr
-        0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7VAKI48G
-        6xCjnVAKz4kxM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfgA7UUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Mon, 11 Nov 2019 08:30:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573479035;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P4BMidOVZKEVpsHN/f9l10/p1xHO+IaREHg0739sCgY=;
+        b=dKcH+yJsbeKcoNH1S5rSjCLz2kfEsiepa30AW+UEwQVn1Y52AbaCFMjcG35iqqyKKXnq5e
+        Mr0EFsnBDHvtE+oJ5B88CMle14DajZ0GGuvqVEc3fkT/LA2uLkXooDue/CG8QLX2E1rLpB
+        a5xJwf8hRZXujE9sjukTGbgcIzb+rn4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-345-2FwtZx-4OjK73mhAVfgmdA-1; Mon, 11 Nov 2019 08:30:30 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C425801E50;
+        Mon, 11 Nov 2019 13:30:29 +0000 (UTC)
+Received: from krava (unknown [10.40.205.88])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3B60D61075;
+        Mon, 11 Nov 2019 13:30:27 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 14:30:27 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, acme@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v5 10/13] perf stat: Use affinity for opening events
+Message-ID: <20191111133027.GB12923@krava>
+References: <20191107181646.506734-1-andi@firstfloor.org>
+ <20191107181646.506734-11-andi@firstfloor.org>
+MIME-Version: 1.0
+In-Reply-To: <20191107181646.506734-11-andi@firstfloor.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 2FwtZx-4OjK73mhAVfgmdA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-(dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-driver can easily match various of mainboards.
+On Thu, Nov 07, 2019 at 10:16:43AM -0800, Andi Kleen wrote:
 
-In the SMBIOS reference specification, the table anchor string "_SM_" is
-present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-but there exists a special case for Loongson platform, when call function
-dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-it is reserved for SMBIOS and can be normally access in the BIOS.
+SNIP
 
-This patch works fine on the Loongson 3A3000 platform which belongs to
-MIPS architecture and has no influence on the other architectures such
-as x86 and ARM.
+> +=09=09=09=09 * Don't close here because we're in the wrong affinity.
+> +=09=09=09=09 */
+> +=09=09=09=09if ((errno =3D=3D EINVAL || errno =3D=3D EBADF) &&
+> +=09=09=09=09    counter->leader !=3D counter &&
+> +=09=09=09=09    counter->weak_group) {
+> +=09=09=09=09=09perf_evlist__reset_weak_group(evsel_list, counter, false)=
+;
+> +=09=09=09=09=09assert(counter->reset_group);
+> +=09=09=09=09=09second_pass =3D true;
+> +=09=09=09=09=09continue;
+> +=09=09=09=09}
+> +
+> +=09=09=09=09switch (stat_handle_error(counter)) {
+> +=09=09=09=09case COUNTER_FATAL:
+> +=09=09=09=09=09return -1;
+> +=09=09=09=09case COUNTER_RETRY:
+> +=09=09=09=09=09goto try_again;
+> +=09=09=09=09case COUNTER_SKIP:
+> +=09=09=09=09=09continue;
+> +=09=09=09=09default:
+> +=09=09=09=09=09break;
+> +=09=09=09=09}
+> +
+>  =09=09=09}
+> +=09=09=09counter->supported =3D true;
+> +=09=09}
+> +=09}
+> =20
+> -=09=09=09switch (stat_handle_error(counter)) {
+> -=09=09=09case COUNTER_FATAL:
+> -=09=09=09=09return -1;
+> -=09=09=09case COUNTER_RETRY:
+> -=09=09=09=09goto try_again;
+> -=09=09=09case COUNTER_SKIP:
+> -=09=09=09=09continue;
+> -=09=09=09default:
+> -=09=09=09=09break;
+> +=09if (second_pass) {
+> +=09=09/*
+> +=09=09 * Now redo all the weak group after closing them,
+> +=09=09 * and also close errored counters.
+> +=09=09 */
+> +
+> +=09=09evlist__cpu_iter_start(evsel_list);
+> +=09=09evlist__for_each_cpu (evsel_list, i, cpu) {
 
-Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-[jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+no need for evlist__cpu_iter_start call in here?
 
-v2:
-  - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
-  - refine definitions and Kconfig by Jiaxun
+jirka
 
- arch/mips/Kconfig           | 10 ++++++++++
- arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
- arch/mips/kernel/setup.c    |  2 ++
- drivers/firmware/dmi_scan.c |  6 +++++-
- 4 files changed, 37 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/include/asm/dmi.h
+> +=09=09=09affinity__set(&affinity, cpu);
+> +=09=09=09/* First close errored or weak retry */
+> +=09=09=09evlist__for_each_entry(evsel_list, counter) {
+> +=09=09=09=09if (!counter->reset_group && !counter->errored)
+> +=09=09=09=09=09continue;
+> +=09=09=09=09if (evsel__cpu_iter_skip_no_inc(counter, cpu))
+> +=09=09=09=09=09continue;
+> +=09=09=09=09perf_evsel__close_cpu(&counter->core, counter->cpu_iter);
+>  =09=09=09}
+> +=09=09=09/* Now reopen weak */
+> +=09=09=09evlist__for_each_entry(evsel_list, counter) {
+> +=09=09=09=09if (!counter->reset_group && !counter->errored)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 7cb8947..6393551 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2757,6 +2757,16 @@ config HW_PERF_EVENTS
- 	  Enable hardware performance counter support for perf events. If
- 	  disabled, perf events will use software events only.
- 
-+config DMI
-+	default y if MACH_LOONGSON64
-+	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-+	bool "Enable DMI scanning"
-+	help
-+	  Enabled scanning of DMI to identify machine quirks. Say Y
-+	  here unless you have verified that your setup is not
-+	  affected by entries in the DMI blacklist. Required by PNP
-+	  BIOS code.
-+
- config SMP
- 	bool "Multi-Processing support"
- 	depends on SYS_SUPPORTS_SMP
-diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
-new file mode 100644
-index 0000000..27415a2
---- /dev/null
-+++ b/arch/mips/include/asm/dmi.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_DMI_H
-+#define _ASM_DMI_H
-+
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+
-+#define dmi_early_remap(x, l)		ioremap_cache(x, l)
-+#define dmi_early_unmap(x, l)		iounmap(x)
-+#define dmi_remap(x, l)			ioremap_cache(x, l)
-+#define dmi_unmap(x)			iounmap(x)
-+
-+/* MIPS initialize DMI scan before SLAB is ready, so we use memblock here */
-+#define dmi_alloc(l)			memblock_alloc_low(l, PAGE_SIZE)
-+
-+#if defined(CONFIG_MACH_LOONGSON64)
-+#define SMBIOS_ENTRY_POINT_SCAN_START	0xFFFE000
-+#endif
-+
-+#endif /* _ASM_DMI_H */
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index c3d4212..da7d312 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -28,6 +28,7 @@
- #include <linux/decompress/generic.h>
- #include <linux/of_fdt.h>
- #include <linux/of_reserved_mem.h>
-+#include <linux/dmi.h>
- 
- #include <asm/addrspace.h>
- #include <asm/bootinfo.h>
-@@ -802,6 +803,7 @@ void __init setup_arch(char **cmdline_p)
- #endif
- 
- 	arch_mem_init(cmdline_p);
-+	dmi_setup();
- 
- 	resource_init();
- 	plat_smp_setup();
-diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-index 35ed56b..161bbf1 100644
---- a/drivers/firmware/dmi_scan.c
-+++ b/drivers/firmware/dmi_scan.c
-@@ -11,6 +11,10 @@
- #include <asm/dmi.h>
- #include <asm/unaligned.h>
- 
-+#ifndef SMBIOS_ENTRY_POINT_SCAN_START
-+#define SMBIOS_ENTRY_POINT_SCAN_START 0xF0000
-+#endif
-+
- struct kobject *dmi_kobj;
- EXPORT_SYMBOL_GPL(dmi_kobj);
- 
-@@ -661,7 +665,7 @@ static void __init dmi_scan_machine(void)
- 			return;
- 		}
- 	} else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
--		p = dmi_early_remap(0xF0000, 0x10000);
-+		p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
- 		if (p == NULL)
- 			goto error;
- 
--- 
-2.1.0
-
+SNIP
 
