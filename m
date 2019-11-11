@@ -2,189 +2,70 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD1AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25906C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20AA2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="m742fK84"
+	by mail.kernel.org (Postfix) with ESMTP id EDF312190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfKKM3I (ORCPT
+        id S1726978AbfKKMbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 07:29:08 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34792 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKM3H (ORCPT
+        Mon, 11 Nov 2019 07:31:21 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:48188 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfKKMbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 07:29:07 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j18so3055129wmk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 04:29:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dSewQoeACmq1i1jpvr49vxw60LKl1U3C6WonRLxoHo0=;
-        b=m742fK844x/AKk8KLUcMNI/xB3PL7U/PKYIrZRbBI6HHBHB0Xftdnqn+CdxGBajHiU
-         qf/+lGuVOwdsUcByXWOoq/4uWy+RyPAHX+FmSkh8ivk3IZJGEMcRK5s1U9PG6pctruAU
-         x5cdMfvqDVbx9PpWanjh+YnIsNlR7xKuTDuyChMjREHTPvLJkhQZ0Mz5Kp4aFScRUtKy
-         VY/yBirGXm6Ex8bwo0kQzpK+jJyz+juMYkp3GOgMwtP7DUNJdtpzHghBe6MIPTjJf55T
-         cmrW18SFS6MUx5JKGDvhlVfYSbYwOiNZ7+HzSR9v+xtby+FIjUHWluguBGptbDkXrn8V
-         ViFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dSewQoeACmq1i1jpvr49vxw60LKl1U3C6WonRLxoHo0=;
-        b=gfjQlVaUsgmeE3XDKKPscdTrHmGIb569LlgtDUoKZ5YmhP55lfQbnCWK2CAeHymjqs
-         NPWM6OVWq/GSmnbyf5ehyK7lSmepog4eDg+CWhdidvMatwIRPZledENozfM3bN7UMrv9
-         teVYVD0gKaCXQEJ1qR6Y87EoT35j1oqeHbdCLe6qbb6WFcxdxLQgsUw1tYhkoOfhBVAW
-         w5/yiEUaRX48YupNC0A0T+VvEvJR+6I5Wu4zXJCdsBg+V5K4Xamt3I1FfWnA/rrXhTO/
-         EJx5RmP2wGXxvfgiYGiukk1boDuWcv64BCkTXO7jmegoyBkTaa3efp8Ev9CN+46/tLQ9
-         uczQ==
-X-Gm-Message-State: APjAAAXcggoM/Kv9DVkwXHgEP9bDKHOScHMquOL91pGxAEpvaUvkp6T4
-        HN1P2dwC9fMS+v7H9I0JEHlxlg==
-X-Google-Smtp-Source: APXvYqyZIKxeXx4xEQ1NF4pOosCu14x+2PE3xpwtY7eYZ1cc7Li7ooYJvY2hEnMV6QiKRzLBKjnX6Q==
-X-Received: by 2002:a7b:c768:: with SMTP id x8mr21085407wmk.26.1573475344622;
-        Mon, 11 Nov 2019 04:29:04 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id y2sm22728920wmy.2.2019.11.11.04.29.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Nov 2019 04:29:04 -0800 (PST)
-Date:   Mon, 11 Nov 2019 13:29:03 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: net: dp83869: Add TI dp83869 phy
-Message-ID: <20191111122902.567r2geh4popqknq@netronome.com>
-References: <20191107174002.11227-1-dmurphy@ti.com>
+        Mon, 11 Nov 2019 07:31:21 -0500
+Received: from p54ac5540.dip0.t-ipconnect.de ([84.172.85.64] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iU8qk-0000Ls-Tz; Mon, 11 Nov 2019 12:31:18 +0000
+Date:   Mon, 11 Nov 2019 13:31:18 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christian Brauner <christian@brauner.io>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH 23/23] y2038: allow disabling time32 system calls
+Message-ID: <20191111123116.upuqpdetbxdmfp3i@wittgenstein>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+ <20191108211323.1806194-14-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191107174002.11227-1-dmurphy@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191108211323.1806194-14-arnd@arndb.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 11:40:01AM -0600, Dan Murphy wrote:
-> Add dt bindings for the TI dp83869 Gigabit ethernet phy
-> device.
+On Fri, Nov 08, 2019 at 10:12:22PM +0100, Arnd Bergmann wrote:
+> At the moment, the compilation of the old time32 system calls depends
+> purely on the architecture. As systems with new libc based on 64-bit
+> time_t are getting deployed, even architectures that previously supported
+> these (notably x86-32 and arm32 but also many others) no longer depend on
+> them, and removing them from a kernel image results in a smaller kernel
+> binary, the same way we can leave out many other optional system calls.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Rob Herring <robh+dt@kernel.org>
-> ---
+> More importantly, on an embedded system that needs to keep working
+> beyond year 2038, any user space program calling these system calls
+> is likely a bug, so removing them from the kernel image does provide
+> an extra debugging help for finding broken applications.
 > 
-> v2 - No changes 
+> I've gone back and forth on hiding this option unless CONFIG_EXPERT
+> is set. This version leaves it visible based on the logic that
+> eventually it will be turned off indefinitely.
 > 
->  .../devicetree/bindings/net/ti,dp83869.yaml   | 84 +++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,dp83869.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-> new file mode 100644
-> index 000000000000..6fe3e451da8a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2019 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/net/ti,dp83869.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI DP83869 ethernet PHY
-> +
-> +allOf:
-> +  - $ref: "ethernet-controller.yaml#"
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The DP83869HM device is a robust, fully-featured Gigabit (PHY) transceiver
-> +  with integrated PMD sublayers that supports 10BASE-Te, 100BASE-TX and
-> +  1000BASE-T Ethernet protocols. The DP83869 also supports 1000BASE-X and
-> +  100BASE-FX Fiber protocols.
-> +  This device interfaces to the MAC layer through Reduced GMII (RGMII) and
-> +  SGMII The DP83869HM supports Media Conversion in Managed mode. In this mode,
-> +  the DP83869HM can run 1000BASE-X-to-1000BASE-T and 100BASE-FX-to-100BASE-TX
-> +  conversions.  The DP83869HM can also support Bridge Conversion from RGMII to
-> +  SGMII and SGMII to RGMII.
-> +
-> +  Specifications about the charger can be found at:
-> +    http://www.ti.com/lit/ds/symlink/dp83869hm.pdf
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ti,min-output-impedance:
-> +    type: boolean
-> +    description: |
-> +       MAC Interface Impedance control to set the programmable output impedance
-> +       to a minimum value (35 ohms).
-> +
-> +  ti,max-output-impedance:
-> +    type: boolean
-> +    description: |
-> +       MAC Interface Impedance control to set the programmable output impedance
-> +       to a maximum value (70 ohms).
-> +
-> +  tx-fifo-depth:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +       Transmitt FIFO depth see dt-bindings/net/ti-dp83869.h for values
-> +
-> +  rx-fifo-depth:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +       Receive FIFO depth see dt-bindings/net/ti-dp83869.h for values
-> +
-> +  ti,clk-output-sel:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +       Muxing option for CLK_OUT pin see dt-bindings/net/ti-dp83869.h for values.
-> +
-> +  ti,op-mode:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +       Operational mode for the PHY.  If this is not set then the operational
-> +       mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
-> +
-> +required:
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/net/ti-dp83869.h>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-The header above does not exist until patch 2 is applied.
-Which means that make dtbs_check fails.
-
-Perhaps adding the header could be moved into this patch?
-
-> +    mdio0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      ethphy0: ethernet-phy@0 {
-> +        reg = <0>;
-> +        tx-fifo-depth = <DP83869_PHYCR_FIFO_DEPTH_4_B_NIB>;
-> +        rx-fifo-depth = <DP83869_PHYCR_FIFO_DEPTH_4_B_NIB>;
-> +        ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
-> +        ti,max-output-impedance = "true";
-> +        ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
-> +      };
-> +    };
-> -- 
-> 2.22.0.214.g8dca754b1e
-> 
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
