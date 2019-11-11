@@ -2,146 +2,116 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31BFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE75C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B351B206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1608214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZXuhxfC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LDRFeT00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfKKWju (ORCPT
+        id S1727078AbfKKWnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:39:50 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50324 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfKKWju (ORCPT
+        Mon, 11 Nov 2019 17:43:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20730 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726912AbfKKWnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:39:50 -0500
-Received: by mail-wm1-f67.google.com with SMTP id l17so1041714wmh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 14:39:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kLZzRK49xDavb9wz9Sf4AjD14pe2l4fvkbkWyRvqJ9M=;
-        b=VZXuhxfCsYqJHeAAZWi8U4wsj49O2BkOkmkDNoQod5eOhXrb0FI6MPWtiONK3lEHIC
-         g6EgrDgHM4QqZWIG1URCW42d7CaCrN/dTtkea5oO3HRXepParhfR+8mTgj+SUhB5SlsD
-         cpUat5dlYyBH/Nn5g/Jhc22m++/wA4M0LInFkqytUm3CoUi0Yxcsy45ybiRGJWBRMI2t
-         y60LN80clF+fH2hFqNLvnYKd2jd6Iwf86ZmKY+VHhQj8GS5qU6SlVR+0qDEyggoLishn
-         4N2jfW8fYOulcywjy1p69/IHUErRea8Vc3YugI4Qi0mE6fktdQjMW3MYugVNHmzgmM+M
-         JVeA==
+        Mon, 11 Nov 2019 17:43:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573512202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=+3E68Um6Tt8y9CXkua7izwyEPRiZxPLXIv8+dZ2zBd8=;
+        b=LDRFeT0057J4I2jXvpcWbWMx0UY6Xvyev/bamh7cmJAm5LpOO5ZOz1tbqK7veK1p++4Qdx
+        d2SdhhQTpMrGdTLjFuAn2kSFzx5hxrOkv+L/Ve8feWfTBnr/cG+CkPxP5XxztZ2UOqv31z
+        vHEhs6AcgiN5vuWt+JGyuOthFmQ6Li4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-183-3KpnrJG2MLOtcbMxFTvYJg-1; Mon, 11 Nov 2019 17:43:21 -0500
+Received: by mail-wr1-f70.google.com with SMTP id m17so10768413wrb.20
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 14:43:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kLZzRK49xDavb9wz9Sf4AjD14pe2l4fvkbkWyRvqJ9M=;
-        b=BXCHVVfRD1mpfo6Q2bU+Ktn5w9DaKuYwrCA/GLDJJZftHPdxUr/t/fU8Z1jpFDu3/9
-         Ce0kIl2qFXG5y3HF1gNMjMgil7r3+BIwQnKTo2qzh1yH/Pf13FAnUcdG7puWL+XS40en
-         UqzrqAnMF342Fhz2eFhnE2I53IeqsJ9cwBGR5hE/15L/VSs0D2FuSnV/2ffcMxKpqZ4n
-         I28FNCLWS88gLctMdp2rwJzFOUtrIbwi/ekQYJNmLUrwFtzT5IZgSfSZgsX+nOdkPT2j
-         qwAatEj4mSXA0x+RQzwAi60ts+jLUhcitrk/5P6jbLsads+rJxGx6KeEbHhsXpfIGg4e
-         fcpg==
-X-Gm-Message-State: APjAAAUbn43wOneo6FRGrcd+xF5GcZM/n6sk8/KyuOIypG7mf9MqY/b8
-        /QhGWCJ4tQ/hqCAbOL9D1KKGq5vt6BPSbllKrh4=
-X-Google-Smtp-Source: APXvYqz+tmuJK+8UMO293AmQSmsTISo+DNCWj9/FOQWAl3qhe7Xq8Jc6y5Cy2acisbs754yH/eX41FMkrx0gHYnlKHc=
-X-Received: by 2002:a1c:41c2:: with SMTP id o185mr1037425wma.34.1573511988047;
- Mon, 11 Nov 2019 14:39:48 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0imOcBZtHzOC2GY9nm8Jh6eW98nYnDyTJ620lFBF2zY=;
+        b=F2PRG2iX8JVTDTGlfmQydqM+plyZ41YVp0yKFTwEklsTpun2JIYhDx8hxUyDNsl2QC
+         NDvhLPQ/IBPa9LfzO+GIORBwHBqwpX+3IlyMXJzAFjvWUQlCsyd3r1nzl6ytv7OYL0N5
+         VPBhGSIGoJva4egG250PJHgL+tDK8zhWwDhUUX+NZXyHvoRRTblom63N7Usc3YKe0R93
+         VluXGNw9x/rxBuy6WC6DYLG21sYXUzqqHCi2OQA5FapWl6QvshytVzcpthcRGUTvYCbz
+         FyE/wZNEVkMLJ702xhtSiwKDZ+6ue5fYhOXDGtE1cgyrQM0ow6TV6fE5cP/xjIsNuFaT
+         QTTA==
+X-Gm-Message-State: APjAAAV7ccG2qZloDLfL5C96piMuvvbOKGKeTsJpqIHewl0KMrQ4jwOH
+        /KJOEovV7nt1kzSykEdPrfccePamTsfaEr1Nb740k33y/A+NxDJLgv+3WlozFbihe8/i3drblbW
+        OsXFqgjfchXrC/HVTmdBLphIB
+X-Received: by 2002:a5d:4982:: with SMTP id r2mr23000775wrq.254.1573512200153;
+        Mon, 11 Nov 2019 14:43:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwxQSI41mJobzK6Insrsq0qbtd7QRgNmgRi09jVXFAoyeD8/PfQM1mPq+1MQCPHtR592LQpMw==
+X-Received: by 2002:a5d:4982:: with SMTP id r2mr23000749wrq.254.1573512199844;
+        Mon, 11 Nov 2019 14:43:19 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
+        by smtp.gmail.com with ESMTPSA id j7sm7755986wro.54.2019.11.11.14.43.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Nov 2019 14:43:19 -0800 (PST)
+Subject: Re: [PATCH v2 1/3] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+References: <20191111221229.24732-1-sean.j.christopherson@intel.com>
+ <20191111221229.24732-2-sean.j.christopherson@intel.com>
+ <CAPcyv4hyPWv0OpZVBJ-Vq8pGny1B59EkvykZ0RKZAgHB0tq2og@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <4d5a1f52-ca25-bbf9-fb3c-d7cec90caafc@redhat.com>
+Date:   Mon, 11 Nov 2019 23:43:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191111172543.GA31748@embeddedor> <b5b41653-3536-b0f0-2f49-2c010370ec99@amd.com>
- <cf7d4cfe-be29-39d8-8a5e-bac217475597@embeddedor.com>
-In-Reply-To: <cf7d4cfe-be29-39d8-8a5e-bac217475597@embeddedor.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 11 Nov 2019 17:39:34 -0500
-Message-ID: <CADnq5_NmfCaQ=6to+ng81=qV0mp7Vo-ugKPTF__5JMAmjP13Kw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Fix unsigned variable compared to less
- than zero
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Mikita Lipski <mlipski@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPcyv4hyPWv0OpZVBJ-Vq8pGny1B59EkvykZ0RKZAgHB0tq2og@mail.gmail.com>
+Content-Language: en-US
+X-MC-Unique: 3KpnrJG2MLOtcbMxFTvYJg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On 11/11/19 23:39, Dan Williams wrote:
+>> [*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
+>>
+>> Reported-by: Adam Borowski <kilobyte@angband.pl>
+>> Debugged-by: David Hildenbrand <david@redhat.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+>=20
+>> Cc: stable@vger.kernel.org
+> Perhaps add:
+>=20
+> Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
+>=20
+> ...since that was the first kernel that broke KVM's assumption about
+> which pfn types needed to have the reference count managed.
+>=20
 
-Alex
+Done, thanks!
 
-On Mon, Nov 11, 2019 at 2:44 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
->
->
-> On 11/11/19 11:46, Mikita Lipski wrote:
-> >
-> > Thanks for catching it!
-> >
->
-> Glad to help out. :)
->
-> > Reviewed-by: Mikita Lipski <mikita.lipski@amd.com>
-> >
->
-> Thanks
-> --
-> Gustavo
->
-> >
-> > On 11.11.2019 12:25, Gustavo A. R. Silva wrote:
-> >> Currenly, the error check below on variable*vcpi_slots*  is always
-> >> false because it is a uint64_t type variable, hence, the values
-> >> this variable can hold are never less than zero:
-> >>
-> >> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:
-> >> 4870         if (dm_new_connector_state->vcpi_slots < 0) {
-> >> 4871                 DRM_DEBUG_ATOMIC("failed finding vcpi slots: %d\n", (int)dm_new_connector_stat     e->vcpi_slots);
-> >> 4872                 return dm_new_connector_state->vcpi_slots;
-> >> 4873         }
-> >>
-> >> Fix this by making*vcpi_slots*  of int type
-> >>
-> >> Addresses-Coverity: 1487838 ("Unsigned compared against 0")
-> >> Fixes: b4c578f08378 ("drm/amd/display: Add MST atomic routines")
-> >> Signed-off-by: Gustavo A. R. Silva<gustavo@embeddedor.com>
-> >> ---
-> >>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
-> >> index 6db07e9e33ab..a8fc90a927d6 100644
-> >> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
-> >> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
-> >> @@ -403,7 +403,7 @@ struct dm_connector_state {
-> >>       bool underscan_enable;
-> >>       bool freesync_capable;
-> >>       uint8_t abm_level;
-> >> -    uint64_t vcpi_slots;
-> >> +    int vcpi_slots;
-> >>       uint64_t pbn;
-> >>   };
-> >>   -- 2.23.0
-> >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Paolo
+
