@@ -6,49 +6,56 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238A4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7437C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FD621783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B524821783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfKKOCi (ORCPT
+        id S1727027AbfKKOCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:02:38 -0500
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:52635 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726853AbfKKOCh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:02:37 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id UAH2iVJA8QBsYUAH5i6fxS; Mon, 11 Nov 2019 15:02:36 +0100
-Subject: Re: general protection fault in vb2_mmap
-To:     syzbot <syzbot+52e5bf0ebfa66092937a@syzkaller.appspotmail.com>,
-        hansverk@cisco.com, kyungmin.park@samsung.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        m.szyprowski@samsung.com, mchehab+samsung@kernel.org,
-        mchehab@kernel.org, pawel@osciak.com,
-        syzkaller-bugs@googlegroups.com, tfiga@chromium.org
-References: <000000000000d5dacd0596c1d41e@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <bb399b87-8a06-6edb-200b-597a43485e2f@xs4all.nl>
-Date:   Mon, 11 Nov 2019 15:02:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 09:02:55 -0500
+Received: from 8bytes.org ([81.169.241.247]:51270 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbfKKOCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 09:02:55 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 77629120; Mon, 11 Nov 2019 15:02:53 +0100 (CET)
+Date:   Mon, 11 Nov 2019 15:02:52 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        cui.zhang@mediatek.com, chao.hao@mediatek.com,
+        edison.hsieh@mediatek.com
+Subject: Re: [PATCH v5 0/7] Improve tlb range flush
+Message-ID: <20191111140251.GA18333@8bytes.org>
+References: <1572850868-22315-1-git-send-email-yong.wu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <000000000000d5dacd0596c1d41e@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfH//5xB9dRYWbf8A9gNIjxE//XTKVYNTafCC/69AuxWWQZdTybCOgi1AccejzgEB6TOO4bdaytbwY6t97xgXeJY8oVkpdvxeGiL/37FqwQZIjyaHGWQX
- WsXenighWEjK3UXPXmI1Isg/BJcz2Q+BQrEABBV51ozlt6E2x9pyi7K4gZ9nqykVvnYGmkNRWjmWwkCnZkzhP8AAY/eHow6PRQe/bfveV0L6YeoVQqgWNyNX
- q/U4E7ivlTVDsVdsJfUT4dl4mnVPSmTU0WAMppztsJjiSOg8xwxo2lEehw7V9y9Vumo0xmvr0vHE0l1vZgaZJeDGSVgahelkin4QtosBK1FeW8D8WL6wUQuI
- Mhiwkn7fNPlx845X9iM/dZO2qTii6onAyzVpk7MCVTQnLdMdkISADzKS8NsiTgv534aWpZGVQSBioLULCUZolUDuMe014tvkQqYTBJFCgGI3vwVCxUuMCLQP
- aOkDVosgwTqr+dYddbIOGAB5FO5/8tXTE4Uv/t/Gi9N1iEKVg6Ht/+s9jRnAfdFpYcD2P/ZcbnhkgVtTeel3Ib55JM8S9LXUYLILJg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572850868-22315-1-git-send-email-yong.wu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: media: vb2: vb2_mmap: move lock up
+On Mon, Nov 04, 2019 at 03:01:01PM +0800, Yong Wu wrote:
+> Yong Wu (7):
+>   iommu/mediatek: Correct the flush_iotlb_all callback
+>   iommu/mediatek: Add a new tlb_lock for tlb_flush
+>   iommu/mediatek: Use gather to achieve the tlb range flush
+>   iommu/mediatek: Delete the leaf in the tlb_flush
+>   iommu/mediatek: Move the tlb_sync into tlb_flush
+>   iommu/mediatek: Get rid of the pgtlock
+>   iommu/mediatek: Reduce the tlb flush timeout value
+
+Applied, thanks.
