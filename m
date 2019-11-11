@@ -2,87 +2,103 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5632AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DF8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2994C2196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573472780;
-	bh=Mngmwt5ehNfydvH5+MyDl+bMhJj5Sa8XVoQfZL7Muq8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vuVlUKpdogpS8VZ8g3PcCcouo+nCqUQAlM1qRLvRZcHfxCxqE7oDp2vwZbX2D/JC1
-	 nwcc+vwC2COZKkN/Jjjo+P+FaKwJbXLXAGbeBkHdryVRvIxoPYvAppQMKpr8IYrQst
-	 V/NiTF1gLBlRFnxneumv2FtyOSb8GnE1W1wWXY40=
+	by mail.kernel.org (Postfix) with ESMTP id 96185214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKKLqS (ORCPT
+        id S1726964AbfKKLrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:46:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfKKLqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:46:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2832184C;
-        Mon, 11 Nov 2019 11:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573472778;
-        bh=Mngmwt5ehNfydvH5+MyDl+bMhJj5Sa8XVoQfZL7Muq8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aLnN84N3ez2marIBm1OMVpyOO6edGWJRaY81Rhak9oiqx87FWhAhHXJGFRRVylekl
-         Sb/+i9uk969oKTPUQJxNu2v/EFBDq06xIMJ+EL9d6S4R4bRJcoT+izJHCh2wumze/x
-         lbuwZaiy9h4VW6PRokkOouT/7h20pJSuzNldvQAg=
-Date:   Mon, 11 Nov 2019 12:46:15 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Omer Shalev <omerdeshalev@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media:usb:cpia2: Properly check framebuffer mmap offsets
-Message-ID: <20191111114615.GA418224@kroah.com>
-References: <20191108215038.59170-1-omerdeshalev@gmail.com>
- <20191108204949.GA1277001@kroah.com>
- <a1c55e7d-4710-70e9-f4d0-8fc155197f07@xs4all.nl>
+        Mon, 11 Nov 2019 06:47:35 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43837 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfKKLrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:47:35 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iU8AI-0000vA-On; Mon, 11 Nov 2019 12:47:26 +0100
+Received: from mgr by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iU8AH-0006hF-DX; Mon, 11 Nov 2019 12:47:25 +0100
+From:   Michael Grzeschik <m.grzeschik@pengutronix.de>
+To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kernel@pengutronix.de, festevam@gmail.com
+Cc:     linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: imx25: fix usbhost1 node
+Date:   Mon, 11 Nov 2019 12:46:56 +0100
+Message-Id: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1c55e7d-4710-70e9-f4d0-8fc155197f07@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 09, 2019 at 12:39:43PM +0100, Hans Verkuil wrote:
-> Hi Greg,
-> 
-> On 11/8/19 9:49 PM, Greg Kroah-Hartman wrote:
-> > On Fri, Nov 08, 2019 at 09:50:36PM +0000, Omer Shalev wrote:
-> >> The cpai2 driver's mmap implementation wasn't properly check for all
-> >> possible offset values. Given a huge offset value , the calculation
-> >> start_offset + size can wrap around to a low value and pass the check
-> > 
-> > I thought we checked that in the core of the kernel now, to keep all
-> > drivers from not having to do this type of thing (as they obviously all
-> > forgot to.)  Why is this still needed here as well?
-> 
-> Where is that checked in the core? I couldn't find anything, but I might
-> have been looking in the wrong place.
+The usb port represented by &usbhost1 uses an USB phy internal to the
+SoC. We add the phy_type to the base dtsi so the board dts only have to
+overwrite it if they use a different configuration. While at it we also
+pin the usbhost port to host mode.
 
-Sorry, took me a while to find it.  Look at be83bbf80682 ("mmap:
-introduce sane default mmap limits") as I think this should handle the
-problem already.
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts | 2 --
+ arch/arm/boot/dts/imx25-pdk.dts                        | 2 --
+ arch/arm/boot/dts/imx25.dtsi                           | 2 ++
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-thanks,
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+index 0fde90df2b546..3f38c2e60a745 100644
+--- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+@@ -165,8 +165,6 @@
+ };
+ 
+ &usbhost1 {
+-	phy_type = "serial";
+-	dr_mode = "host";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx25-pdk.dts b/arch/arm/boot/dts/imx25-pdk.dts
+index 05cccd12624cb..fb66884d8a2fa 100644
+--- a/arch/arm/boot/dts/imx25-pdk.dts
++++ b/arch/arm/boot/dts/imx25-pdk.dts
+@@ -304,8 +304,6 @@
+ };
+ 
+ &usbhost1 {
+-	phy_type = "serial";
+-	dr_mode = "host";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index 9a097ef014af5..7c7795b40ee0c 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -570,6 +570,8 @@
+ 				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
++				phy_type = "serial";
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+-- 
+2.24.0.rc1
 
-greg k-h
