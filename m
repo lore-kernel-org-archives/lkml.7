@@ -2,105 +2,106 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A940C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803A1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91F021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF6B21925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:34:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZX614W2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfKKXcg (ORCPT
+        id S1726983AbfKKXe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:32:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60238 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKXcg (ORCPT
+        Mon, 11 Nov 2019 18:34:29 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40895 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726845AbfKKXe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:32:36 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iUJAK-0001cf-3j; Tue, 12 Nov 2019 00:32:13 +0100
-Date:   Tue, 12 Nov 2019 00:32:11 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     zhong jiang <zhongjiang@huawei.com>
-cc:     dave.hansen@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, luto@kernel.org, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] x86/mm: Mask out unsupported bit when it set
- noexec=off
-In-Reply-To: <1573465994-33249-1-git-send-email-zhongjiang@huawei.com>
-Message-ID: <alpine.DEB.2.21.1911120012200.1833@nanos.tec.linutronix.de>
-References: <1573465994-33249-1-git-send-email-zhongjiang@huawei.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 11 Nov 2019 18:34:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573515267;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Osmocn6A+32FCq+AZZzVX6c3EKPInFHUzdh8/zOxZjQ=;
+        b=ZX614W2cc+i2fFPMDkz2jI5qGUq80VRY7lv1Qb1TdfaZG8y9jr46FvZ4hBsxu3hF/mTBzG
+        zEBxJvOPECs1mKr0SUdcn3Q3xsjFgji7oKs4KcopUVJdu8YEjgghnaUgqhMinhdlq16ypF
+        VX+GKAhiHGO04B90oWFbOUqgZ2dZbCo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-7pYHOyhaMVGIDXctMbS_0Q-1; Mon, 11 Nov 2019 18:34:23 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EEA06800D49;
+        Mon, 11 Nov 2019 23:34:21 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-116-116.phx2.redhat.com [10.3.116.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AE131100EBBD;
+        Mon, 11 Nov 2019 23:34:20 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-stable@vger.kernel.org,
+        Christian Bundy <christianbundy@fraction.io>
+Subject: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
+Date:   Mon, 11 Nov 2019 16:34:18 -0700
+Message-Id: <20191111233418.17676-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 7pYHOyhaMVGIDXctMbS_0Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhong,
+With power gating moved out of the tpm_transmit code we need
+to power on the TPM prior to calling tpm_get_timeouts.
 
-On Mon, 11 Nov 2019, zhong jiang wrote:
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-stable@vger.kernel.org
+Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()=
+")
+Reported-by: Christian Bundy <christianbundy@fraction.io>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+ drivers/char/tpm/tpm_tis_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Commit 510bb96fe5b3 ("x86/mm: Prevent bogus warnings with "noexec=off"")
-> use  __supported_pte_mask to replace __default_kernel_pte_mask to mask
-> out the unsupported bits. It works when the command line set noexec=off.
-> 
-> It also seems to works to use __supported_pte_mask instead in native_set_fixmap.
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_cor=
+e.c
+index 270f43acbb77..cb101cec8f8b 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev, struct tpm_=
+tis_data *priv, int irq,
+ =09=09 * to make sure it works. May as well use that command to set the
+ =09=09 * proper timeouts for the driver.
+ =09=09 */
++=09=09tpm_chip_start(chip);
+ =09=09if (tpm_get_timeouts(chip)) {
+ =09=09=09dev_err(dev, "Could not get TPM timeouts and durations\n");
+ =09=09=09rc =3D -ENODEV;
++=09=09=09tpm_stop_chip(chip);
+ =09=09=09goto out_err;
+ =09=09}
+=20
+-=09=09tpm_chip_start(chip);
+ =09=09chip->flags |=3D TPM_CHIP_FLAG_IRQ;
+ =09=09if (irq) {
+ =09=09=09tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+--=20
+2.24.0
 
-"Seems to work" is really not a good engineering principle and neither a
-good rationale WHY this change is correct, which it is not.
-
-> @@ -647,7 +647,7 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
->  		       phys_addr_t phys, pgprot_t flags)
->  {
->  	/* Sanitize 'prot' against any unsupported bits: */
-> -	pgprot_val(flags) &= __default_kernel_pte_mask;
-> +	pgprot_val(flags) &= __supported_pte_mask;
->  
->  	__native_set_fixmap(idx, pfn_pte(phys >> PAGE_SHIFT, flags));
->  }
-
-The commit you mentioned switched __early_set_fixmap() to
-__supported_pte_mask because __default_kernel_pte_mask is not yet set up at
-that point which caused the following warning:
-
-     attempted to set unsupported pgprot:    8000000000000163
-                                  bits:      8000000000000000
-                                  supported: 7fffffffffffffff
-
-At this point __default_kernel_pte_mask is still compile time initialized
-to ~0UL, i.e. all bits set which allows the NX bit to be set, but it's not
-supported according to __supported_pte_mask.
-
-Once __default_kernel_pte_mask is properly runtime initialized to:
-
-     __default_kernel_pte_mask = __supported_pte_mask;
-
-in probe_page_size_mask() there is no reason that subsequent code uses
-__supported_pte_mask.
-
-In fact that's just wrong because __default_kernel_pte_mask can have extra
-bits cleared during runtime initialization, e.g.:
-
-        /* Except when with PTI where the kernel is mostly non-Global: */
-        if (cpu_feature_enabled(X86_FEATURE_PTI))
-                __default_kernel_pte_mask &= ~_PAGE_GLOBAL;
-
-So your change "works", but subtly breaks PTI protections.
-
-Please be more careful next time and really analyse why your change is
-correct and provide this analysis in the changelog.
-
-Thanks,
-
-	tglx
