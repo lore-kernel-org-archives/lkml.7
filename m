@@ -2,167 +2,202 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE60C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B690C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8514A2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C82206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wK9nb2xC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKKHfE (ORCPT
+        id S1726970AbfKKHfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:35:04 -0500
-Received: from mga18.intel.com ([134.134.136.126]:12187 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbfKKHfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:35:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 23:35:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
-   d="scan'208";a="354702768"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 10 Nov 2019 23:35:03 -0800
-Received: from [10.226.38.147] (unknown [10.226.38.147])
-        by linux.intel.com (Postfix) with ESMTP id 5DD88580261;
-        Sun, 10 Nov 2019 23:35:01 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Vignesh Raghavendra <vigneshr@ti.com>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     broonie@kernel.org, robh+dt@kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20191030081155.29947-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191030081155.29947-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <b553b1e8-1c35-fd7c-6855-75a4c1c943fe@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <51fa7c46-20d0-2712-8690-1d6a885cb98b@linux.intel.com>
-Date:   Mon, 11 Nov 2019 15:35:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <b553b1e8-1c35-fd7c-6855-75a4c1c943fe@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Mon, 11 Nov 2019 02:35:12 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38070 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfKKHfL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 02:35:11 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c13so10100884pfp.5
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 23:35:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=N0j02+Va0C16JEjBX5OE+cbOU9+TiW36MdYFngXdC6E=;
+        b=wK9nb2xCvMLxbclKU1/3bng7vqnyYGI39pi7noeOmitJLWFV3vf1TzIqiW3IkS6VjN
+         l/fdKaozziBjweBF4rZIf3akH6U91D6T/qqqXFRpCJAbpb6h7RGyPcVnbeK25O5rizFj
+         ss+yHVduSxWqUl07HJi3QfpQRqi9qk9Q1oA+chao2s2taV7z1pDLVxQUvyYdB1zoH7/X
+         6e6SqVEgmWsj8j0DqKKrEsxPpU2M+To/Mm5TkEqdF91e4s4AWKA9omlx0rfxjsXG7wLX
+         uGuDzr5iepjE5w6RFrFrqEg2kav9shazpWxLiQE3SLfDZySnfBJtq6820Ih4oVnmPjRN
+         bl3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N0j02+Va0C16JEjBX5OE+cbOU9+TiW36MdYFngXdC6E=;
+        b=Su4bLjPRsrQ3SJIMc0zL/yW++4soXWaIS4vDUfuHt2hqIvrH3kbbnJkL+Gf6m+Cbxp
+         KlrSMw53yg9HR6h7IFs+x5CN/SbY3j0emU/TYQaU8HKkJOdqfvFiTPjRM9AXHWf8mG3t
+         QQBo0rMou+fHPy3g+dvSzHMWeGaVMbM43/74dYL1+oXkakIh+Ua4i28tIn++8P87zZPD
+         T8Pz3I/YI3M5wUSu1m/aR4yQbvY414coMrXhEU48UY0x1YoxnbmMWuUdCBTJ8RZ9mqHO
+         5w3hLkT/N/iBMl8VqLRSkYmhFLgRaLoMFSZiEmCHQgmb0HHA2s8V3zw5Pry8G+WMZq7R
+         YbgQ==
+X-Gm-Message-State: APjAAAXle8kqfiQQ6NmCrvNPCfN7Qh7cYQsdLanHkigGQxNquSMpGeCp
+        JqoG6eeEPRLXral0ewHyFt93qQ==
+X-Google-Smtp-Source: APXvYqz6JzHETVqcxJkOK0cNO/1faSYI41RKw6t3aOIHZMW3LYPFXKa6lvWRXvpq76/2isGS66q+Hw==
+X-Received: by 2002:a62:e811:: with SMTP id c17mr27878536pfi.136.1573457710798;
+        Sun, 10 Nov 2019 23:35:10 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id c184sm17345285pfc.159.2019.11.10.23.35.06
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 10 Nov 2019 23:35:09 -0800 (PST)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
+        linus.walleij@linaro.org, vincent.guittot@linaro.org,
+        baolin.wang@linaro.org, baolin.wang7@gmail.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/4] Add MMC software queue support
+Date:   Mon, 11 Nov 2019 15:33:56 +0800
+Message-Id: <cover.1573456283.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vignesh,
+Hi All,
 
-On 5/11/2019 12:30 PM, Vignesh Raghavendra wrote:
-> Hi,
->
-> On 30/10/19 1:41 PM, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add dt-bindings documentation for Cadence-QSPI controller to support
->> spi based flash memories.
->>
-> The new driver being added in patch 2/2 is supposed to replace
-> drivers/mtd/spi-nor/cadence-quadspi.c. Therefore the bindings should be
-> exactly same as
-> Documentation/devicetree/bindings/mtd/cadence-quadspi.txt. Otherwise, it
-> breaks DT backward compatibility. There cannot be two different sets of
-> bindings for same HW IP.
->
-> Therefore please rewrite yaml schema to match existing bindings at
-> Documentation/devicetree/bindings/mtd/cadence-quadspi.txt.
-> And then include a patch dropping older bindings.
-sure, I will create dt-schema for the below file
+Now the MMC read/write stack will always wait for previous request is
+completed by mmc_blk_rw_wait(), before sending a new request to hardware,
+or queue a work to complete request, that will bring context switching
+overhead, especially for high I/O per second rates, to affect the IO
+performance.
 
-Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+Thus this patch set will introduce the MMC software command queue support
+based on command queue engine's interfaces, and set the queue depth as 32
+to allow more requests can be be prepared, merged and inserted into IO
+scheduler, but we only allow 2 requests in flight, that is enough to let
+the irq handler always trigger the next request without a context switch,
+as well as avoiding a long latency.
 
----
-With Best Regards
-Vadivel
+Moreover we can expand the MMC software queue interface to support
+MMC packed request or packed command instead of adding new interfaces,
+according to previosus discussion.
 
->
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/spi/cadence,qspi.yaml      | 65 ++++++++++++++++++++++
->>   1 file changed, 65 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
->> new file mode 100644
->> index 000000000000..295501f01e5e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
->> @@ -0,0 +1,65 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/spi/cadence,qspi.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence QSPI Flash Controller support
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: "spi-controller.yaml#"
->> +
->> +description: |
->> +  Add support for the Cadence QSPI controller,This controller is
->> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
->> +  has been tested On Intel's LGM SoC.
->> +
->> +properties:
->> +  compatible:
->> +    const: cadence,qspi
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clocks-names:
->> +    maxItems: 1
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  reset-names:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - reset-names
->> +
->> +examples:
->> +  - |
->> +    spi@ec000000 {
->> +          compatible = "cadence,qspi";
->> +          reg = <0xec000000 0x100>;
->> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
->> +          clock-names = "qspi";
->> +          resets = <&rcu0 0x10 1>;
->> +          reset-names = "qspi";
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +
->> +          flash: flash@1 {
->> +              compatible = "spi-nand", "jedec, spi-nor";
-> s/"jedec, spi-nor"/"jedec,spi-nor" (i.e no space after comma)
->
->> +              reg = <1>;
->> +              spi-max-frequency = <10000000>;
->> +          };
->> +    };
->> +
->>
+Below are some comparison data with fio tool. The fio command I used
+is like below with changing the '--rw' parameter and enabling the direct
+IO flag to measure the actual hardware transfer speed in 4K block size.
+
+./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=1G --group_reporting --numjobs=20 --name=test_read
+
+My eMMC card working at HS400 Enhanced strobe mode:
+[    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
+[    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB 
+[    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
+[    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
+[    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
+
+1. Without MMC software queue
+I tested 5 times for each case and output a average speed.
+
+1) Sequential read:
+Speed: 59.4MiB/s, 63.4MiB/s, 57.5MiB/s, 57.2MiB/s, 60.8MiB/s
+Average speed: 59.66MiB/s
+
+2) Random read:
+Speed: 26.9MiB/s, 26.9MiB/s, 27.1MiB/s, 27.1MiB/s, 27.2MiB/s
+Average speed: 27.04MiB/s
+
+3) Sequential write:
+Speed: 71.6MiB/s, 72.5MiB/s, 72.2MiB/s, 64.6MiB/s, 67.5MiB/s
+Average speed: 69.68MiB/s
+
+4) Random write:
+Speed: 36.3MiB/s, 35.4MiB/s, 38.6MiB/s, 34MiB/s, 35.5MiB/s
+Average speed: 35.96MiB/s
+
+2. With MMC software queue
+I tested 5 times for each case and output a average speed.
+
+1) Sequential read:
+Speed: 59.2MiB/s, 60.4MiB/s, 63.6MiB/s, 60.3MiB/s, 59.9MiB/s
+Average speed: 60.68MiB/s
+
+2) Random read:
+Speed: 31.3MiB/s, 31.4MiB/s, 31.5MiB/s, 31.3MiB/s, 31.3MiB/s
+Average speed: 31.36MiB/s
+
+3) Sequential write:
+Speed: 71MiB/s, 71.8MiB/s, 72.3MiB/s, 72.2MiB/s, 71MiB/s
+Average speed: 71.66MiB/s
+
+4) Random write:
+Speed: 68.9MiB/s, 68.7MiB/s, 68.8MiB/s, 68.6MiB/s, 68.8MiB/s
+Average speed: 68.76MiB/s
+
+Form above data, we can see the MMC software queue can help to improve some
+performance obviously for random read and write, though no obvious improvement
+for sequential read and write.
+
+Any comments are welcome. Thanks a lot.
+
+Hi Ulf,
+
+This patch set was pending for a while, and I've tested it several times and
+have not found any recessions. Hope this patch set can be merged into v5.5
+if no objection from you, since I still have some patches introducing the
+packed request depend on the mmc software queue as we talked before.
+Thanks a lot.
+
+Changes from v5:
+ - Modify the condition of defering to complete request suggested by Adrian.
+
+Changes from v4:
+ - Add a seperate patch to introduce a variable to defer to complete
+ data requests for some host drivers, when using host software queue.
+
+Changes from v3:
+ - Use host software queue instead of sqhci.
+ - Fix random config building issue.
+ - Change queue depth to 32, but still only allow 2 requests in flight.
+ - Update the testing data.
+
+Changes from v2:
+ - Remove reference to 'struct cqhci_host' and 'struct cqhci_slot',
+ instead adding 'struct sqhci_host', which is only used by software queue.
+
+Changes from v1:
+ - Add request_done ops for sdhci_ops.
+ - Replace virtual command queue with software queue for functions and
+ variables.
+ - Rename the software queue file and add sqhci.h header file.
+
+Baolin Wang (4):
+  mmc: Add MMC host software queue support
+  mmc: host: sdhci: Add request_done ops for struct sdhci_ops
+  mmc: host: sdhci-sprd: Add software queue support
+  mmc: host: sdhci: Add a variable to defer to complete requests if
+    needed
+
+ drivers/mmc/core/block.c      |   61 ++++++++
+ drivers/mmc/core/mmc.c        |   13 +-
+ drivers/mmc/core/queue.c      |   33 +++-
+ drivers/mmc/host/Kconfig      |    8 +
+ drivers/mmc/host/Makefile     |    1 +
+ drivers/mmc/host/mmc_hsq.c    |  344 +++++++++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/mmc_hsq.h    |   30 ++++
+ drivers/mmc/host/sdhci-sprd.c |   26 ++++
+ drivers/mmc/host/sdhci.c      |   14 +-
+ drivers/mmc/host/sdhci.h      |    3 +
+ include/linux/mmc/host.h      |    3 +
+ 11 files changed, 523 insertions(+), 13 deletions(-)
+ create mode 100644 drivers/mmc/host/mmc_hsq.c
+ create mode 100644 drivers/mmc/host/mmc_hsq.h
+
+-- 
+1.7.9.5
+
