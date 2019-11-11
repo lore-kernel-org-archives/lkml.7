@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EBEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C42EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49BD2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2E721655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497258;
-	bh=8TCRa5j57pe7+Mx5RkLfWcn+fZoJqmv6pWa/XoPllB8=;
+	s=default; t=1573497260;
+	bh=0iZaIIXbU/NqbmH15+RRrZpLj+GgN8NzNblxv7/I+gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KwUqeTM7VUmRP+dHG0dfzw6Wki/Sz8S2D5/UxRVbHq875R2PXJCnvorGk/u9Qhog
-	 8RFX0o358nWfwanmt7E4XkfInBfVS1raO1Ir9csx+HHEx4SmApYbrBRspHNsXcavvd
-	 pY78CbV5q3B7qG0mBrEO72iEdsYc8H+BJeReAQ/I=
+	b=d+VrH3MHkLageqFPzEJTvvy+QqtYAG3SeJzRR2Rrjed30OrzOPDN1qdnqLPT0i58l
+	 9ySGVkYZnIRTSkVigShjUX0EYpdsDKQeoXsQ7qJ7DgGfp+b0k2rQTYBF4LUU1uwSG3
+	 OI8zwuD6nnYyCbzckkkq9DLeVUxTOrOVAQMtQzfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfKKSeQ (ORCPT
+        id S1728304AbfKKSeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:34:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51762 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:34:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbfKKSeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:11 -0500
+        id S1727965AbfKKSeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94A3E21925;
-        Mon, 11 Nov 2019 18:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9C921925;
+        Mon, 11 Nov 2019 18:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497251;
-        bh=8TCRa5j57pe7+Mx5RkLfWcn+fZoJqmv6pWa/XoPllB8=;
+        s=default; t=1573497256;
+        bh=0iZaIIXbU/NqbmH15+RRrZpLj+GgN8NzNblxv7/I+gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=or6BUi9M2laiJGqMdwAy02nDLABFmbVG2ih6r6G1pFiFrYk/l/poQb/LSYZ0qXYRP
-         ET+zchhChuH4kKifmBFen7AYHi/SKNKHAdF4mgkgBVJ9K0pegr3ONlK30Bp/hc/gD0
-         TWyNJJYJ2ApgAATUsQCel3POYAfjhc0WBqBeNn4w=
+        b=SX1SKmYHj9T0h0mX7etQR0Gh4DxARPKm4u11GDm++HX//+AtPqTyZ75ucuaJeClDg
+         aYXoSIE7BhSzJTlo6BOr+IyboiYSAknLjdmT5C57SFHOZj843YwCD9fAV/Lcfim/CI
+         jV/zB9sI/aYOKMEk/Q4paU7aUlzo2C7W/DB4MY8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4.9 15/65] dump_stack: avoid the livelock of the dump_lock
-Date:   Mon, 11 Nov 2019 19:28:15 +0100
-Message-Id: <20191111181343.934460230@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 07/65] NFC: st21nfca: fix double free
+Date:   Mon, 11 Nov 2019 19:28:07 +0100
+Message-Id: <20191111181336.300618727@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -60,47 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Pan Bian <bianpan2016@163.com>
 
-commit 5cbf2fff3bba8d3c6a4d47c1754de1cf57e2b01f upstream.
+[ Upstream commit 99a8efbb6e30b72ac98cecf81103f847abffb1e5 ]
 
-In the current code, we use the atomic_cmpxchg() to serialize the output
-of the dump_stack(), but this implementation suffers the thundering herd
-problem.  We have observed such kind of livelock on a Marvell cn96xx
-board(24 cpus) when heavily using the dump_stack() in a kprobe handler.
-Actually we can let the competitors to wait for the releasing of the
-lock before jumping to atomic_cmpxchg().  This will definitely mitigate
-the thundering herd problem.  Thanks Linus for the suggestion.
+The variable nfcid_skb is not changed in the callee nfc_hci_get_param()
+if error occurs. Consequently, the freed variable nfcid_skb will be
+freed again, resulting in a double free bug. Set nfcid_skb to NULL after
+releasing it to fix the bug.
 
-[akpm@linux-foundation.org: fix comment]
-Link: http://lkml.kernel.org/r/20191030031637.6025-1-haokexin@gmail.com
-Fixes: b58d977432c8 ("dump_stack: serialize the output from dump_stack()")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- lib/dump_stack.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/nfc/st21nfca/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/lib/dump_stack.c
-+++ b/lib/dump_stack.c
-@@ -44,7 +44,12 @@ retry:
- 		was_locked = 1;
- 	} else {
- 		local_irq_restore(flags);
--		cpu_relax();
-+		/*
-+		 * Wait for the lock to release before jumping to
-+		 * atomic_cmpxchg() in order to mitigate the thundering herd
-+		 * problem.
-+		 */
-+		do { cpu_relax(); } while (atomic_read(&dump_lock) != -1);
- 		goto retry;
- 	}
- 
+--- a/drivers/nfc/st21nfca/core.c
++++ b/drivers/nfc/st21nfca/core.c
+@@ -719,6 +719,7 @@ static int st21nfca_hci_complete_target_
+ 							NFC_PROTO_FELICA_MASK;
+ 		} else {
+ 			kfree_skb(nfcid_skb);
++			nfcid_skb = NULL;
+ 			/* P2P in type A */
+ 			r = nfc_hci_get_param(hdev, ST21NFCA_RF_READER_F_GATE,
+ 					ST21NFCA_RF_READER_F_NFCID1,
 
 
