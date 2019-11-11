@@ -2,114 +2,96 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E98CC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAA320578
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B91D20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfKKUNV (ORCPT
+        id S1727537AbfKKURE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:13:21 -0500
-Received: from mga17.intel.com ([192.55.52.151]:64606 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfKKUNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:13:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 12:13:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
-   d="scan'208";a="378595734"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga005.jf.intel.com with ESMTP; 11 Nov 2019 12:13:20 -0800
-Date:   Mon, 11 Nov 2019 12:13:20 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, rafael.j.wysocki@intel.com,
-        joao.m.martins@oracle.com, mtosatti@redhat.com,
-        kvm@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 2/4] KVM: ensure grow start value is nonzero
-Message-ID: <20191111201320.GA7431@linux.intel.com>
-References: <1573041302-4904-1-git-send-email-zhenzhong.duan@oracle.com>
- <1573041302-4904-3-git-send-email-zhenzhong.duan@oracle.com>
+        Mon, 11 Nov 2019 15:17:04 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:47321 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfKKURC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 15:17:02 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MDhth-1ieTNm3gZT-00AmNk; Mon, 11 Nov 2019 21:16:50 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-nfs@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 11/19] nfsd: use timespec64 in encode_time_delta
+Date:   Mon, 11 Nov 2019 21:16:31 +0100
+Message-Id: <20191111201639.2240623-12-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
+References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573041302-4904-3-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zBEHU7LOQ8BR+RvLscuFxq5Q8uP7KpIKmRblB/0JRwtkA5oax2n
+ vTwmcYsK8Belkc2C9pPRkpxv9FO+mMRz4UGcaVU1rtmz641TyQdeWBICy8LAW2WMHOUZay2
+ GwlOYDJzKFtZm7mAL5WBUfqjdYDxR55pYrhyv4E8Hd0fs6UiP21IceExVdpjEE44XEV02An
+ hNZoR15EcnN6SPGGexKFw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+4sYNMt7F9Q=:M3AyrELI81yH0KXCinQXj1
+ izGRACW/Q+P5BQUA/EHio1Y0Qx5vawQ4Ti0Hsahd/my+mlXpfH7XisKxbIDUbEW3cpMMT3wuc
+ 7tTX1zrpkLfYXAyTVdYFKuYz02QN3fgFtfNsOLzKqxB3JEfsy4V/ihvWinx+mascGq7FyuxkP
+ IqfE2VSPFUJ/dIgVlR4tYeieXQ9E0UMu8iVrGAge/rR2HJbQbJOPBXPsKTkdwEoFpRjI1ZydA
+ o+DllKKIYDaxAsz86d0VtZgjDXEyfnkbCbMDDiATRR1ZNBrwv/d4GpcT6OLXbZtzi8wcMv2rh
+ TKpvekjvUJ4OlF2HrwoRxcCV+JF4VPYz7pjgZKvxHTtnbMnrS1z83tPJGjmwIE9/eI+Xfp4Ca
+ sM9oesbDfuyzqVY0VH65JtBvdlKiHJQ0mIW0LRgTZWymcMoJqfdcOghXaI1iLJYHX1/ZODNsW
+ P/B26nui60xr3mIUHJHOMBrGAEnsUuFrGbZYek+pN7bzUi1zX+EDY8yzl4ix6eB9ecU3p/Y1J
+ Zokb7/hFED6sYkosupilI7GHPO36mX6G5EZrCWu18DvQcon9qm9EH+khNLIuiP6XpNdHVs4xz
+ aSKkEMHpg8YDAt2iCuPZIOIqfNQ7Mv0oThau/CpKEeKAH3QGkVLsZEyooQD06S4W731YGxbp/
+ LJWZnI25MxEH0SUqa29hNl4Oa8BbR2jbgSmrxqIZe05b/QUbqH/ynTQN0dEmGDFNQ5bHdxZ38
+ Iq0tOOGp5a7VlL0A7d/A+Jf+3m5+V3tUxAmkhLv8S2jJ9bGQSVDoviyVUJozmhExYi7KLiE+b
+ QHzMENIaZV7xDkQkCQ6q1gXSYZlV5WjW4Il+PjgzDTtt96dhvnXyd1dSGylKI+95DkpmJ1C1B
+ r1KCi0NYqNlg8KpXnXXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 07:55:00PM +0800, Zhenzhong Duan wrote:
-> vcpu->halt_poll_ns could be zeroed in certain cases (e.g. by
-> halt_poll_ns = 0). If halt_poll_grow_start is zero,
-> vcpu->halt_poll_ns will never be bigger than zero.
-> 
-> Use param callback to avoid writing zero to halt_poll_grow_start.
+The values in encode_time_delta are always small and don't
+overflow the range of 'struct timespec', so changing it has
+no effect.
 
-This doesn't explain why allowing an admin to disable halt polling by
-writing halt_poll_grow_start=0 is a bad thing.  Paolo had the same
-question in v1, here[1] and in the guest driver[2].
+Change it to timespec64 as a prerequisite for removing the
+timespec definition later.
 
-[1] https://lkml.kernel.org/r/57679389-6e4a-b7ad-559f-3128a608c28a@redhat.com
-[2] https://lkml.kernel.org/r/391dd11b-ebbb-28ff-5e57-4a795cd16a1b@redhat.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/nfsd/nfs4xdr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> ---
->  virt/kvm/kvm_main.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index d6f0696..359516b 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -69,6 +69,26 @@
->  MODULE_AUTHOR("Qumranet");
->  MODULE_LICENSE("GPL");
->  
-> +static int grow_start_set(const char *val, const struct kernel_param *kp)
-> +{
-> +	int ret;
-> +	unsigned int n;
-> +
-> +	if (!val)
-> +		return -EINVAL;
-> +
-> +	ret = kstrtouint(val, 0, &n);
-> +	if (ret || !n)
-> +		return -EINVAL;
-> +
-> +	return param_set_uint(val, kp);
-> +}
-> +
-> +static const struct kernel_param_ops grow_start_ops = {
-> +	.set = grow_start_set,
-> +	.get = param_get_uint,
-> +};
-> +
->  /* Architectures should define their poll value according to the halt latency */
->  unsigned int halt_poll_ns = KVM_HALT_POLL_NS_DEFAULT;
->  module_param(halt_poll_ns, uint, 0644);
-> @@ -81,7 +101,7 @@
->  
->  /* The start value to grow halt_poll_ns from */
->  unsigned int halt_poll_ns_grow_start = 10000; /* 10us */
-> -module_param(halt_poll_ns_grow_start, uint, 0644);
-> +module_param_cb(halt_poll_ns_grow_start, &grow_start_ops, &halt_poll_ns_grow_start, 0644);
->  EXPORT_SYMBOL_GPL(halt_poll_ns_grow_start);
->  
->  /* Default resets per-vcpu halt_poll_ns . */
-> -- 
-> 1.8.3.1
-> 
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 533d0fc3c96b..d8234d9e89fe 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2024,11 +2024,11 @@ static __be32 *encode_change(__be32 *p, struct kstat *stat, struct inode *inode,
+  */
+ static __be32 *encode_time_delta(__be32 *p, struct inode *inode)
+ {
+-	struct timespec ts;
++	struct timespec64 ts;
+ 	u32 ns;
+ 
+ 	ns = max_t(u32, NSEC_PER_SEC/HZ, inode->i_sb->s_time_gran);
+-	ts = ns_to_timespec(ns);
++	ts = ns_to_timespec64(ns);
+ 
+ 	p = xdr_encode_hyper(p, ts.tv_sec);
+ 	*p++ = cpu_to_be32(ts.tv_nsec);
+-- 
+2.20.0
+
