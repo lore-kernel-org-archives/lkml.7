@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583E5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831C8C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3217621783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBDD20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497602;
-	bh=YQs+1EPKoIJNVEYToKN9gg81eX8jHycoxZJUZvxjTNM=;
+	s=default; t=1573497605;
+	bh=q3yhYxOzX2mNGYFSfx/rjL2uwHVIjB8YmkgAE67YCrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWDuJPPe0+GR+5qzfJILzjo32eiOEy0T1pOeNEqP0bEXhd0o2N3MYN+qsuOUMf0K0
-	 ohQC2GF+Ykj2PPNdyF5mbAi7JV3hdNJoZuqDDZ6LQuSzbzC8yrLE/fH7IlMdNFweT7
-	 otm1BlzCOUZJQ4B/UqrTQKTp9+CZ1H+egOFZtpBc=
+	b=qbRSQ9zt5oO/HG0GpjgyfwWsvYNDuA3tGVI+88QARqRKXbrjYmP+ukNGYsOg0q96i
+	 c+CZTjEz6fyt2pyJFd9dDH0gFOiEDMvaPAOBnaPI3Ms4SvXdvzh/0asPE0GmBRvjXx
+	 +FQiC25bYD1Q6nsgZ4HZSIQJwl/kEZr+GFrkZkBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfKKSkA (ORCPT
+        id S1729204AbfKKSj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:40:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbfKKSj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Nov 2019 13:39:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729178AbfKKSjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ED8121925;
-        Mon, 11 Nov 2019 18:39:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 082052173B;
+        Mon, 11 Nov 2019 18:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497597;
-        bh=YQs+1EPKoIJNVEYToKN9gg81eX8jHycoxZJUZvxjTNM=;
+        s=default; t=1573497594;
+        bh=q3yhYxOzX2mNGYFSfx/rjL2uwHVIjB8YmkgAE67YCrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h9nm4a72YOJ5yecxeaudEWLVRFWVBBOg6z3OvU+Bd2uxpRU+Nz9lZLYqnvWke62+h
-         z5ZdUor8jM8KAr2E5dRkQYuM4T+r+R7Rx7+IV8AIUXGIkRhCw4cShhcCvvxLbv+Y6Z
-         b0tZE3iQScT/+ASt4W4VdZ+/TMUX5pxhJSPLdwwg=
+        b=A4/CNmIQHfT/nv7UT5RWwoyAixF9m/wBqkvIM3jS7FyP4OGU3JAZWNbIh/02XKEBJ
+         9SN0B5nz68m7/1ZpTDNMvycT9Re5GyknLX7cvacraelGztlipT00I0rnTL7/gA7BbD
+         gR6a5hQ6wqWm1lKnXTzuwplpCW0nGvCEjrbapf2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -56,9 +56,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 088/105] perf/x86/amd/ibs: Handle erratum #420 only on the affected CPU family (10h)
-Date:   Mon, 11 Nov 2019 19:28:58 +0100
-Message-Id: <20191111181447.616944222@linuxfoundation.org>
+Subject: [PATCH 4.14 087/105] perf/x86/amd/ibs: Fix reading of the IBS OpData register and thus precise RIP validity
+Date:   Mon, 11 Nov 2019 19:28:57 +0100
+Message-Id: <20191111181447.561488793@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -73,19 +73,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kim Phillips <kim.phillips@amd.com>
 
-[ Upstream commit e431e79b60603079d269e0c2a5177943b95fa4b6 ]
+[ Upstream commit 317b96bb14303c7998dbcd5bc606bd8038fdd4b4 ]
 
-This saves us writing the IBS control MSR twice when disabling the
-event.
+The loop that reads all the IBS MSRs into *buf stopped one MSR short of
+reading the IbsOpData register, which contains the RipInvalid status bit.
 
-I searched revision guides for all families since 10h, and did not
-find occurrence of erratum #420, nor anything remotely similar:
-so we isolate the secondary MSR write to family 10h only.
-
-Also unconditionally update the count mask for IBS Op implementations
-that have read & writeable current count (CurCnt) fields in addition
-to the MaxCnt field.  These bits were reserved on prior
-implementations, and therefore shouldn't have negative impact.
+Fix the offset_max assignment so the MSR gets read, so the RIP invalid
+evaluation is based on what the IBS h/w output, instead of what was
+left in memory.
 
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -101,38 +96,27 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: c9574fe0bdb9 ("perf/x86-ibs: Implement workaround for IBS erratum #420")
-Link: https://lkml.kernel.org/r/20191023150955.30292-2-kim.phillips@amd.com
+Fixes: d47e8238cd76 ("perf/x86-ibs: Take instruction pointer from ibs sample")
+Link: https://lkml.kernel.org/r/20191023150955.30292-1-kim.phillips@amd.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/events/amd/ibs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 4deecdb26ab30..f24e9adaa3167 100644
+index 7a86fbc07ddc1..4deecdb26ab30 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -389,7 +389,8 @@ static inline void perf_ibs_disable_event(struct perf_ibs *perf_ibs,
- 					  struct hw_perf_event *hwc, u64 config)
- {
- 	config &= ~perf_ibs->cnt_mask;
--	wrmsrl(hwc->config_base, config);
-+	if (boot_cpu_data.x86 == 0x10)
-+		wrmsrl(hwc->config_base, config);
- 	config &= ~perf_ibs->enable_mask;
- 	wrmsrl(hwc->config_base, config);
- }
-@@ -564,7 +565,8 @@ static struct perf_ibs perf_ibs_op = {
- 	},
- 	.msr			= MSR_AMD64_IBSOPCTL,
- 	.config_mask		= IBS_OP_CONFIG_MASK,
--	.cnt_mask		= IBS_OP_MAX_CNT,
-+	.cnt_mask		= IBS_OP_MAX_CNT | IBS_OP_CUR_CNT |
-+				  IBS_OP_CUR_CNT_RAND,
- 	.enable_mask		= IBS_OP_ENABLE,
- 	.valid_mask		= IBS_OP_VAL,
- 	.max_period		= IBS_OP_MAX_CNT << 4,
+@@ -625,7 +625,7 @@ fail:
+ 	if (event->attr.sample_type & PERF_SAMPLE_RAW)
+ 		offset_max = perf_ibs->offset_max;
+ 	else if (check_rip)
+-		offset_max = 2;
++		offset_max = 3;
+ 	else
+ 		offset_max = 1;
+ 	do {
 -- 
 2.20.1
 
