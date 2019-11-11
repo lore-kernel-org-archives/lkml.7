@@ -1,167 +1,158 @@
-Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0735C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 23:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4E2C17442
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 00:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915C8206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 23:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E430D2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 00:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLqkOMy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfKJXoL (ORCPT
+        id S1726805AbfKKARa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 18:44:11 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:42774 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfKJXoL (ORCPT
+        Sun, 10 Nov 2019 19:17:30 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40087 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfKKARa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 18:44:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id w1so12130485ioj.9
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 15:44:10 -0800 (PST)
+        Sun, 10 Nov 2019 19:17:30 -0500
+Received: by mail-ot1-f67.google.com with SMTP id m15so9852508otq.7
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 16:17:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OhsOaebOhYHxMqV94r7kcc7AguzKN+Auyp31Rb0JoVw=;
+        b=VLqkOMy2tquWHF8n6MZVAyJAvFHR0phqMcphKQflrGGjpZIOOMR1yBz1OFjChXHI08
+         LOOF0UBMVw5bh3yyxo1H0G6j0qq+FCiK+BHRqoFh0AVkGS4xuOUs9QvI+zhdvSSJFQU+
+         sexHjtR9jcULiSuImK3zbEdSPqs0rWuHD4Af/CrAuevFmjuKp+8S2QV9rSt+mMUwyCuA
+         YwC7xjT8znKBbbIVHWk5TFFDHvftedEqKxf3b5KumvKRwGiaQlNPdl4tA9UNVtOSnL2o
+         OvzHWnjaVU7U3UEKq3OHVHyNbEFvo9PFDfwwR330hH1mKfxLMdED7OdK+CrDqM9LCFY4
+         eiow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mQkvXa5UwiKwX7Ee0D6VQirlDEkappHc40K5MNYp5sw=;
-        b=h/jw/5GKqEeO53lLpaW+JnaBBuoI6n3cQaK91UEty2eaO4ou3JUwvknEb8YDYsS1Ct
-         eMhmN59qEwj8EjnTwF66PhCkU4F7G9RR5r3n6yUJYNePjErC4UKcSwfS9k5hZsUUNBI2
-         3wdeQ0c+AdO5Ep2oLWhaTNzWLkaBedeIbNtPJBIGFXWiwxz95yPN3IukSEXQyrO6QrG+
-         C2NwxVHPQ5rhMA5d7gqUV8QECpNWAWbDqPIhTBUBsBLSF15/dGdCZowA6KMb116DHOR7
-         JDgYrqf9Ro27wwr0RyPjejjYApDg5WglOzok/JOp7MTxvg9lw7zgT5LRnch9cdGuFqqP
-         sVyQ==
-X-Gm-Message-State: APjAAAU5InAgfB7j0pdJlhc/0JzmPH3CEm0cwO5tcunjXwir6DZQHldD
-        G54VCrps4lgMv+sIg/tjCzNFe8RbKAkVPNhhIegSW38C9Bsq
-X-Google-Smtp-Source: APXvYqx+BIbdaoKD4C5K1UbHnHG7i9QU2I0+3Tx0qR+dwRWdkXXNrj26PIqIbQtxxe2lNzBe3N3ROx6uptaSdt0deXIMz/je2yJe
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OhsOaebOhYHxMqV94r7kcc7AguzKN+Auyp31Rb0JoVw=;
+        b=VKTVa3T677IRuObMNwtaBdlOlXu/13r8F14lg9AFq86Ouv0B5t2y3FpcTTUqlZ/KKq
+         YxZ2yGK+a0hylbaxx1NEHLEklbtAYNvodYqpuJldUxB2sRhd+DoETH63V66lXkNRT1E3
+         LotMr8cnk9HL3wVgiix/2rl+4aJySA6Pe5/gMIBKBInLJYofBRJbY6orVz11QNdyY6Ii
+         juCazzqZHQ2VjgOkXUAJ6f2E5PAuzpaa+FhN73htbUmeXpdfJQNiTE7pac1Wp4vXtx1M
+         h1iu1/jYCwdhGVpl6eZACskN4ESKNKgXHBTM7643Z3dboPAFFNYnyB/IKfmz2mlUVreA
+         OXxQ==
+X-Gm-Message-State: APjAAAX7bikeMhYtBieMT/Q4D8+abBQipI3IajrmySHAchvpBF14Oyq+
+        2vBKhFouHsO/phyRdH3u+sB1ph9xvA/r8N4CLEQvjOKN
+X-Google-Smtp-Source: APXvYqxomRIDMbxqMNubEdeNxZm86L5SYvCuTsFQa329n7usrb8jndKJc4nwmJinhIsr7BKQK5hy3XbrWXUiVrMroM0=
+X-Received: by 2002:a9d:4b86:: with SMTP id k6mr18409215otf.353.1573431448777;
+ Sun, 10 Nov 2019 16:17:28 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:1dc6:: with SMTP id g67mr25717512ile.182.1573429450098;
- Sun, 10 Nov 2019 15:44:10 -0800 (PST)
-Date:   Sun, 10 Nov 2019 15:44:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000073d3a70597069799@google.com>
-Subject: general protection fault in ext4_writepages
-From:   syzbot <syzbot+9567fda428fba259deba@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, riteshh@linux.ibm.com,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190907174833.19957-1-katsuhiro@katsuster.net>
+In-Reply-To: <20190907174833.19957-1-katsuhiro@katsuster.net>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Sun, 10 Nov 2019 16:17:02 -0800
+Message-ID: <CA+E=qVdvKxzFcU-09Ucn1Fr0FdkwSsPcLr8vPn2wsu6-DD1gqg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: add analog audio nodes on rk3399-rockpro64
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Sep 7, 2019 at 10:48 AM Katsuhiro Suzuki
+<katsuhiro@katsuster.net> wrote:
+>
+> This patch adds audio codec (Everest ES8316) and I2S audio nodes for
+> RK3399 RockPro64.
 
-syzbot found the following crash on:
+Hi Katsuhiro,
 
-HEAD commit:    dcd34bd2 Add linux-next specific files for 20191106
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a0a4fce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
-dashboard link: https://syzkaller.appspot.com/bug?extid=9567fda428fba259deba
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1645c42ce00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1108a23ae00000
+I tested your patch with my rockpro64 on 5.4-rc6 which has your other
+patches to es8316 driver, but apparently it doesn't work.
 
-The bug was bisected to:
+'alsamixer' complains 'cannot load mixer controls: No such device or
+address' and if I try to play audio with mpg123 it pretends that it
+plays something but there's no sound.
 
-commit c8cc88163f40df39e50cda63ac361631864b453e
-Author: Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Wed Oct 16 07:37:10 2019 +0000
+Any idea what can be wrong?
 
-     ext4: Add support for blocksize < pagesize in dioread_nolock
+Regards,
+Vasily
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1044c6b4e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1244c6b4e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1444c6b4e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9567fda428fba259deba@syzkaller.appspotmail.com
-Fixes: c8cc88163f40 ("ext4: Add support for blocksize < pagesize in  
-dioread_nolock")
-
-RDX: 0000000000000000 RSI: 0000000100000003 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000000000001 R09: 00007fffd7a50033
-R10: 0000000028120001 R11: 0000000000000246 R12: 0000000000401ef0
-R13: 0000000000401f80 R14: 0000000000000000 R15: 0000000000000000
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8639 Comm: syz-executor031 Not tainted 5.4.0-rc6-next-20191106  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:mpage_map_and_submit_extent fs/ext4/inode.c:2557 [inline]
-RIP: 0010:ext4_writepages+0x17b4/0x2e80 fs/ext4/inode.c:2911
-Code: ff ff e8 1f cf b0 ff 48 8b 85 30 fe ff ff 48 8b 8d 00 fe ff ff 48 8d  
-78 10 48 89 fa 48 c1 ea 03 0f b6 89 c2 00 00 00 48 d3 e3 <42> 80 3c 2a 00  
-0f 85 03 16 00 00 48 89 58 10 48 c7 c0 08 ad c4 89
-RSP: 0018:ffff88808bf77890 EFLAGS: 00010206
-RAX: fffffffffffffff4 RBX: 00000000007ff000 RCX: 000000000000000c
-RDX: 0000000000000000 RSI: ffffffff820534cd RDI: 0000000000000004
-RBP: ffff88808bf77ac0 R08: 0000000000000000 R09: ffffed1015d06b7d
-R10: ffffed1015d06b7c R11: ffff8880ae835be3 R12: 0000000000000000
-R13: dffffc0000000000 R14: 00000000000007ff R15: ffff888086499488
-FS:  0000000001162880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000009366b000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  ? 0xffffffff81000000
-  do_writepages+0xfa/0x2a0 mm/page-writeback.c:2344
-  __filemap_fdatawrite_range+0x2bc/0x3b0 mm/filemap.c:421
-  filemap_write_and_wait_range mm/filemap.c:681 [inline]
-  filemap_write_and_wait_range+0xfc/0x1d0 mm/filemap.c:675
-  ext4_punch_hole+0x27d/0x1320 fs/ext4/inode.c:4314
-  ext4_fallocate+0x419/0x2470 fs/ext4/extents.c:4889
-  vfs_fallocate+0x4aa/0xa50 fs/open.c:309
-  ksys_fallocate+0x58/0xa0 fs/open.c:332
-  __do_sys_fallocate fs/open.c:340 [inline]
-  __se_sys_fallocate fs/open.c:338 [inline]
-  __x64_sys_fallocate+0x97/0xf0 fs/open.c:338
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440609
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffd7a50c58 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
-RAX: ffffffffffffffda RBX: 00007fffd7a50c60 RCX: 0000000000440609
-RDX: 0000000000000000 RSI: 0000000100000003 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000000000001 R09: 00007fffd7a50033
-R10: 0000000028120001 R11: 0000000000000246 R12: 0000000000401ef0
-R13: 0000000000401f80 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 0ee46d2ea32148f5 ]---
-RIP: 0010:mpage_map_and_submit_extent fs/ext4/inode.c:2557 [inline]
-RIP: 0010:ext4_writepages+0x17b4/0x2e80 fs/ext4/inode.c:2911
-Code: ff ff e8 1f cf b0 ff 48 8b 85 30 fe ff ff 48 8b 8d 00 fe ff ff 48 8d  
-78 10 48 89 fa 48 c1 ea 03 0f b6 89 c2 00 00 00 48 d3 e3 <42> 80 3c 2a 00  
-0f 85 03 16 00 00 48 89 58 10 48 c7 c0 08 ad c4 89
-RSP: 0018:ffff88808bf77890 EFLAGS: 00010206
-RAX: fffffffffffffff4 RBX: 00000000007ff000 RCX: 000000000000000c
-RDX: 0000000000000000 RSI: ffffffff820534cd RDI: 0000000000000004
-RBP: ffff88808bf77ac0 R08: 0000000000000000 R09: ffffed1015d06b7d
-R10: ffffed1015d06b7c R11: ffff8880ae835be3 R12: 0000000000000000
-R13: dffffc0000000000 R14: 00000000000007ff R15: ffff888086499488
-FS:  0000000001162880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000009366b000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> ---
+>  .../boot/dts/rockchip/rk3399-rockpro64.dts    | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> index 0401d4ec1f45..8b1e6382b140 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> @@ -81,6 +81,12 @@
+>                 reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+>         };
+>
+> +       sound {
+> +               compatible = "audio-graph-card";
+> +               label = "rockchip,rk3399";
+> +               dais = <&i2s1_p0>;
+> +       };
+> +
+>         vcc12v_dcin: vcc12v-dcin {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "vcc12v_dcin";
+> @@ -470,6 +476,20 @@
+>         i2c-scl-rising-time-ns = <300>;
+>         i2c-scl-falling-time-ns = <15>;
+>         status = "okay";
+> +
+> +       es8316: codec@11 {
+> +               compatible = "everest,es8316";
+> +               reg = <0x11>;
+> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
+> +               clock-names = "mclk";
+> +               #sound-dai-cells = <0>;
+> +
+> +               port {
+> +                       es8316_p0_0: endpoint {
+> +                               remote-endpoint = <&i2s1_p0_0>;
+> +                       };
+> +               };
+> +       };
+>  };
+>
+>  &i2c3 {
+> @@ -505,6 +525,14 @@
+>         rockchip,playback-channels = <2>;
+>         rockchip,capture-channels = <2>;
+>         status = "okay";
+> +
+> +       i2s1_p0: port {
+> +               i2s1_p0_0: endpoint {
+> +                       dai-format = "i2s";
+> +                       mclk-fs = <256>;
+> +                       remote-endpoint = <&es8316_p0_0>;
+> +               };
+> +       };
+>  };
+>
+>  &i2s2 {
+> --
+> 2.23.0.rc1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
