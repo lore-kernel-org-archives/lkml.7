@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B4BC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40D1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514462184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF782184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498652;
-	bh=Ax+FHhCtRxVEODSOPHtaJSLKyHegr8sUfHtfHtlD4OM=;
+	s=default; t=1573498653;
+	bh=jciIuqN6+XJ0SohuD/SxNfkHQ9OpVxARqL5y9dtpxGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tyEw6HGyj9QVHPzih3bYzBKIjFzH2dZcDcbHMAtmjqBkbNi1vLGGN8AXVNeqOlw8E
-	 HA8GG+Jju7rUbg/wbnYJiInvdWdakBKJBvuKihX/KITch+M7yQdQAPUbqewqPocl5o
-	 H2ojcxHjV7Iv16/xVo5hkl//II3aOQ/zmkZULOl8=
+	b=yKFroEPPKmfMtipFFinzP7Z1FKoRHySeHmJD44EJ28G7b2W3nkMsOI1Jt9ICGEGxw
+	 L2kYX5GYDs5rnlnm4eO0jCULEGgIDVEHX39AKmO72K/JLK4RE8S1pSHLypjAMQIOWc
+	 sCaFGZZcHvdPntiHZbQMvSQfHDJ1HHGwuxSthv+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfKKS5a (ORCPT
+        id S1730851AbfKKS5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:57:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:57:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbfKKS50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:57:26 -0500
+        id S1729045AbfKKS5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:57:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304072184C;
-        Mon, 11 Nov 2019 18:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AFCD222C1;
+        Mon, 11 Nov 2019 18:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498645;
-        bh=Ax+FHhCtRxVEODSOPHtaJSLKyHegr8sUfHtfHtlD4OM=;
+        s=default; t=1573498649;
+        bh=jciIuqN6+XJ0SohuD/SxNfkHQ9OpVxARqL5y9dtpxGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ohz2HvdCPOUdsVDtdKkVXNzT6fdWRw0EZtzd1dMmgdsxG5xWc5ggLIINYEqlfUHLg
-         Xq1szUB+RxrKt3DTAA8+DGZleBKrCeYMA7BhzTkxYlG3YC8FjgPtvU/rhKbTcv1UCi
-         0rWAlnZzo5K/XuJhLRQ0o78KvBBSgNy/zw1LiN58=
+        b=0+clynyva2d7wCrL1UoFWj3U+fkp2cKm6kA2OEbPyyeaA+spqvgcQ+wUK9V6eG/wx
+         OPdafkbHOJWqroSNs/3m5gob+spbyEmlZkgWcupx99joOJa6rZFtPGvbPB+CaBItnC
+         rRtiPDbSAinNxOVaqxdmJ979Lk6EBhrLxKh4b0hU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 179/193] usb: dwc3: gadget: fix race when disabling ep with cancelled xfers
-Date:   Mon, 11 Nov 2019 19:29:21 +0100
-Message-Id: <20191111181514.307807909@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 180/193] arm64: apply ARM64_ERRATUM_845719 workaround for Brahma-B53 core
+Date:   Mon, 11 Nov 2019 19:29:22 +0100
+Message-Id: <20191111181514.384894649@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,43 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit d8eca64eec7103ab1fbabc0a187dbf6acfb2af93 ]
+[ Upstream commit bfc97f9f199cb041cf897af3af096540948cc705 ]
 
-When disabling an endpoint which has cancelled requests, we should
-make sure to giveback requests that are currently pending in the
-cancelled list, otherwise we may fall into a situation where command
-completion interrupt fires after endpoint has been disabled, therefore
-causing a splat.
+The Broadcom Brahma-B53 core is susceptible to the issue described by
+ARM64_ERRATUM_845719 so this commit enables the workaround to be applied
+when executing on that core.
 
-Fixes: fec9095bdef4 "usb: dwc3: gadget: remove wait_end_transfer"
-Reported-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Link: https://lore.kernel.org/r/20191031090713.1452818-1-felipe.balbi@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Since there are now multiple entries to match, we must convert the
+existing ARM64_ERRATUM_845719 into an erratum list.
+
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/arm64/silicon-errata.rst |  3 +++
+ arch/arm64/include/asm/cputype.h       |  2 ++
+ arch/arm64/kernel/cpu_errata.c         | 13 +++++++++++--
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 173f5329d3d9e..56bd6ae0c18f9 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -707,6 +707,12 @@ static void dwc3_remove_requests(struct dwc3 *dwc, struct dwc3_ep *dep)
+diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
+index 47feda6c15bcc..8c87c68dcc324 100644
+--- a/Documentation/arm64/silicon-errata.rst
++++ b/Documentation/arm64/silicon-errata.rst
+@@ -91,6 +91,9 @@ stable kernels.
+ | ARM            | MMU-500         | #841119,826419  | N/A                         |
+ +----------------+-----------------+-----------------+-----------------------------+
+ +----------------+-----------------+-----------------+-----------------------------+
++| Broadcom       | Brahma-B53      | N/A             | ARM64_ERRATUM_845719        |
+++----------------+-----------------+-----------------+-----------------------------+
+++----------------+-----------------+-----------------+-----------------------------+
+ | Cavium         | ThunderX ITS    | #22375,24313    | CAVIUM_ERRATUM_22375        |
+ +----------------+-----------------+-----------------+-----------------------------+
+ | Cavium         | ThunderX ITS    | #23144          | CAVIUM_ERRATUM_23144        |
+diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+index b1454d117cd2c..aca07c2f6e6e3 100644
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -79,6 +79,7 @@
+ #define CAVIUM_CPU_PART_THUNDERX_83XX	0x0A3
+ #define CAVIUM_CPU_PART_THUNDERX2	0x0AF
  
- 		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
- 	}
-+
-+	while (!list_empty(&dep->cancelled_list)) {
-+		req = next_request(&dep->cancelled_list);
-+
-+		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
-+	}
- }
++#define BRCM_CPU_PART_BRAHMA_B53	0x100
+ #define BRCM_CPU_PART_VULCAN		0x516
  
- /**
+ #define QCOM_CPU_PART_FALKOR_V1		0x800
+@@ -105,6 +106,7 @@
+ #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
+ #define MIDR_THUNDERX_83XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_83XX)
+ #define MIDR_CAVIUM_THUNDERX2 MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX2)
++#define MIDR_BRAHMA_B53 MIDR_CPU_MODEL(ARM_CPU_IMP_BRCM, BRCM_CPU_PART_BRAHMA_B53)
+ #define MIDR_BRCM_VULCAN MIDR_CPU_MODEL(ARM_CPU_IMP_BRCM, BRCM_CPU_PART_VULCAN)
+ #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR_V1)
+ #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR)
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 4465be78ee466..d9da4201ba858 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -743,6 +743,16 @@ static const struct midr_range erratum_1418040_list[] = {
+ };
+ #endif
+ 
++#ifdef CONFIG_ARM64_ERRATUM_845719
++static const struct midr_range erratum_845719_list[] = {
++	/* Cortex-A53 r0p[01234] */
++	MIDR_REV_RANGE(MIDR_CORTEX_A53, 0, 0, 4),
++	/* Brahma-B53 r0p[0] */
++	MIDR_REV(MIDR_BRAHMA_B53, 0, 0),
++	{},
++};
++#endif
++
+ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
+ 	{
+@@ -783,10 +793,9 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #endif
+ #ifdef CONFIG_ARM64_ERRATUM_845719
+ 	{
+-	/* Cortex-A53 r0p[01234] */
+ 		.desc = "ARM erratum 845719",
+ 		.capability = ARM64_WORKAROUND_845719,
+-		ERRATA_MIDR_REV_RANGE(MIDR_CORTEX_A53, 0, 0, 4),
++		ERRATA_MIDR_RANGE_LIST(erratum_845719_list),
+ 	},
+ #endif
+ #ifdef CONFIG_CAVIUM_ERRATUM_23154
 -- 
 2.20.1
 
