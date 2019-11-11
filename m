@@ -2,53 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1298EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671BEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDB7214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE0620818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498407;
-	bh=SjGmx2f95nIpbYgxMLJJg94hP0uwKMUt5OY7cItNRwM=;
+	s=default; t=1573498412;
+	bh=PqiC49kc30tvGS27xJH3WX24/feVFXmbvnQN0nLxgJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHdDUS92JbmiSXffvdBH2iALj5DlnCKykFu4G5HAmS4o0VZa6TPvSvgW4WkXsfyyh
-	 p6vzOUy3usQ4IaJbGBCKfqFP3sXCzaMA47tc2FOlNu6ReyGaEbZILc2NjUKxd9jIC+
-	 +iRI+3CHEJaXaNYYXxCfsu8ApBKxB2Nd5dYtE6ng=
+	b=ohDHMGPdLR4/nl/Iu4+C7rrSzA2pHsmyVWWM+oQ2AWW4YofBkCJK7zhjOE7rRGQEl
+	 rJRx+ObEiaRwAq9NtoHQO7CvpQGCrnzBii8J6RHqLdc838R2y+Wo7PK/1QpeQr0Oeu
+	 kdOIpPf1V/Rw4J33ga0bDmv7MF7hxNrpn8hobZ/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfKKSx0 (ORCPT
+        id S1730218AbfKKSxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:53:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730218AbfKKSxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:53:22 -0500
+        id S1729594AbfKKSx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:53:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D400E222D2;
-        Mon, 11 Nov 2019 18:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84078204EC;
+        Mon, 11 Nov 2019 18:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498401;
-        bh=SjGmx2f95nIpbYgxMLJJg94hP0uwKMUt5OY7cItNRwM=;
+        s=default; t=1573498405;
+        bh=PqiC49kc30tvGS27xJH3WX24/feVFXmbvnQN0nLxgJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1IOPABQ+3oUDDEypB9sCWYvO30bSlSYmwlUa8pr2UyyjC7oVsM72MJJQncnVnRnzi
-         Fs/NcY4i5b7GTRu/hS2hquH7xTcopIB6i97MKt1KGmJPMQBTGlw5ChpiNl1ZZhttZu
-         1jTVdfG9HV+aXOjWi2dB60X1VC4g5basSo+0kVII=
+        b=Xuc/M00klHF1RhOiVf2Sr2ckRCLv4V8otAusOpdOOv5n1UvJBvAmAcwI6Pnfl1TIS
+         8Hmhagjv/4DCOXaYKPuhdrJjUSCj3z13PveHn6ANxyYdH2appftpZXe3OQqzqVo7Ae
+         h6wq8gXWP4FBy7mas9srWuyDMvIoAoL5QRvSyCxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 107/193] net/mlx5: prevent memory leak in mlx5_fpga_conn_create_cq
-Date:   Mon, 11 Nov 2019 19:28:09 +0100
-Message-Id: <20191111181509.021424289@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.3 070/193] x86/apic/32: Avoid bogus LDR warnings
+Date:   Mon, 11 Nov 2019 19:27:32 +0100
+Message-Id: <20191111181506.275154395@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -61,39 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jan Beulich <jbeulich@suse.com>
 
-[ Upstream commit c8c2a057fdc7de1cd16f4baa51425b932a42eb39 ]
+commit fe6f85ca121e9c74e7490fe66b0c5aae38e332c3 upstream.
 
-In mlx5_fpga_conn_create_cq if mlx5_vector2eqn fails the allocated
-memory should be released.
+The removal of the LDR initialization in the bigsmp_32 APIC code unearthed
+a problem in setup_local_APIC().
 
-Fixes: 537a50574175 ("net/mlx5: FPGA, Add high-speed connection routines")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The code checks unconditionally for a mismatch of the logical APIC id by
+comparing the early APIC id which was initialized in get_smp_config() with
+the actual LDR value in the APIC.
+
+Due to the removal of the bogus LDR initialization the check now can
+trigger on bigsmp_32 APIC systems emitting a warning for every booting
+CPU. This is of course a false positive because the APIC is not using
+logical destination mode.
+
+Restrict the check and the possibly resulting fixup to systems which are
+actually using the APIC in logical destination mode.
+
+[ tglx: Massaged changelog and added Cc stable ]
+
+Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c |   28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-index 4c50efe4e7f11..61021133029e6 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-@@ -464,8 +464,10 @@ static int mlx5_fpga_conn_create_cq(struct mlx5_fpga_conn *conn, int cq_size)
- 	}
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1573,9 +1573,6 @@ static void setup_local_APIC(void)
+ {
+ 	int cpu = smp_processor_id();
+ 	unsigned int value;
+-#ifdef CONFIG_X86_32
+-	int logical_apicid, ldr_apicid;
+-#endif
  
- 	err = mlx5_vector2eqn(mdev, smp_processor_id(), &eqn, &irqn);
--	if (err)
-+	if (err) {
-+		kvfree(in);
- 		goto err_cqwq;
+ 
+ 	if (disable_apic) {
+@@ -1616,16 +1613,21 @@ static void setup_local_APIC(void)
+ 	apic->init_apic_ldr();
+ 
+ #ifdef CONFIG_X86_32
+-	/*
+-	 * APIC LDR is initialized.  If logical_apicid mapping was
+-	 * initialized during get_smp_config(), make sure it matches the
+-	 * actual value.
+-	 */
+-	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
+-	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
+-	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
+-	/* always use the value from LDR */
+-	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
++	if (apic->dest_logical) {
++		int logical_apicid, ldr_apicid;
++
++		/*
++		 * APIC LDR is initialized.  If logical_apicid mapping was
++		 * initialized during get_smp_config(), make sure it matches
++		 * the actual value.
++		 */
++		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
++		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
++		if (logical_apicid != BAD_APICID)
++			WARN_ON(logical_apicid != ldr_apicid);
++		/* Always use the value from LDR. */
++		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
 +	}
+ #endif
  
- 	cqc = MLX5_ADDR_OF(create_cq_in, in, cq_context);
- 	MLX5_SET(cqc, cqc, log_cq_size, ilog2(cq_size));
--- 
-2.20.1
-
+ 	/*
 
 
