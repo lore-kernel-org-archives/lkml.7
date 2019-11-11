@@ -7,60 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F803C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C77C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054EC21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1B62184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497113;
-	bh=hRjSS52Bk2f/86Mm6L764w/hdN31rB/1Bp8maYVfs+o=;
+	s=default; t=1573497115;
+	bh=sDbQ88zRwfp5BvP0eivR8CU9Yz9Yt9ySGLC79pNDjOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGdP0TMZpeG/6Kh1aGqu2Uu+I8FmcIFEIh+AeeLka4xzrK8IzzBOX+/YIQKyUBh4k
-	 8/tVvUUoVVAkmchVyw+5futWdpdZHr9BwvIwab6Olbqag5PLxYxdCd8diOiOcNoePU
-	 ptfAFq0CkCk6wzkuu8AscB1cLKr76h8b8lS8hTeo=
+	b=hYj6ODWV9ihSoUCp67QBdUCxJ3l+wa1VOp5UKYEIK2TmSxq0qlpBYkBZY9Ugps9II
+	 PSGr85oYzaadIRGNyhdC3MkXfCc2kZYf1zt/rplUOSH7Bvmu/2hr6+yYke51cyCZFk
+	 MPPOh3c1SW3mO14+Rm6EoRAyGcCNfcGmFcMkC40I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfKKSbw (ORCPT
+        id S1727791AbfKKSby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48510 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbfKKSbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:49 -0500
+        id S1727770AbfKKSbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80FEE20656;
-        Mon, 11 Nov 2019 18:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5492D20856;
+        Mon, 11 Nov 2019 18:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497108;
-        bh=hRjSS52Bk2f/86Mm6L764w/hdN31rB/1Bp8maYVfs+o=;
+        s=default; t=1573497110;
+        bh=sDbQ88zRwfp5BvP0eivR8CU9Yz9Yt9ySGLC79pNDjOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PEYXSb3+G/zCEl74tJvG8v5y3Qvc+J4242Q1Q+BTBuQf5HJdjs7PxBtSHKw6hoq95
-         dJNVL5NsMjS9Nuuh/wWXh6lW0Y7XVMqyQl/jqoNd20XjRC87Rsi3N1OP+gV7Kv+iDM
-         EeSnbxmHAoaSZSW3U4fBo1nAC16DA39ROVxLpw4U=
+        b=sayiC09kG1DMe1NrFjrOrTbe8+gmOzdR00zW5aTLiRdwbvOEQk9ml5OTbO3Hg4GqS
+         WdND9IuXIYcv/i56Wv2tsJL8WiiFvyooTg1o8IEBxHI8MxuiVR69g/Vzyl/QfyT6T9
+         1m9G74riBuezSLgYwp+mSp41ZbuqVwYpandMZk7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Waiman Long <longman@redhat.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Rafael Aquini <aquini@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 10/43] mm, vmstat: hide /proc/pagetypeinfo from normal users
-Date:   Mon, 11 Nov 2019 19:28:24 +0100
-Message-Id: <20191111181259.133933103@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 01/43] CDC-NCM: handle incomplete transfer of MTU
+Date:   Mon, 11 Nov 2019 19:28:15 +0100
+Message-Id: <20191111181249.280728992@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -69,57 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit abaed0112c1db08be15a784a2c5c8a8b3063cdd3 upstream.
+[ Upstream commit 332f989a3b0041b810836c5c3747e59aad7e9d0b ]
 
-/proc/pagetypeinfo is a debugging tool to examine internal page
-allocator state wrt to fragmentation.  It is not very useful for any
-other use so normal users really do not need to read this file.
+A malicious device may give half an answer when asked
+for its MTU. The driver will proceed after this with
+a garbage MTU. Anything but a complete answer must be treated
+as an error.
 
-Waiman Long has noticed that reading this file can have negative side
-effects because zone->lock is necessary for gathering data and that a)
-interferes with the page allocator and its users and b) can lead to hard
-lockups on large machines which have very long free_list.
+V2: used sizeof as request by Alexander
 
-Reduce both issues by simply not exporting the file to regular users.
-
-Link: http://lkml.kernel.org/r/20191025072610.18526-2-mhocko@kernel.org
-Fixes: 467c996c1e19 ("Print out statistics in relation to fragmentation avoidance to /proc/pagetypeinfo")
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Waiman Long <longman@redhat.com>
-Acked-by: Mel Gorman <mgorman@suse.de>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Waiman Long <longman@redhat.com>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Jann Horn <jannh@google.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-and-tested-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/vmstat.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1589,7 +1589,7 @@ static int __init setup_vmstat(void)
- #endif
- #ifdef CONFIG_PROC_FS
- 	proc_create("buddyinfo", S_IRUGO, NULL, &fragmentation_file_operations);
--	proc_create("pagetypeinfo", S_IRUGO, NULL, &pagetypeinfo_file_ops);
-+	proc_create("pagetypeinfo", 0400, NULL, &pagetypeinfo_file_ops);
- 	proc_create("vmstat", S_IRUGO, NULL, &proc_vmstat_file_operations);
- 	proc_create("zoneinfo", S_IRUGO, NULL, &proc_zoneinfo_file_operations);
- #endif
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -533,8 +533,8 @@ static void cdc_ncm_set_dgram_size(struc
+ 	/* read current mtu value from device */
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+-			      0, iface_no, &max_datagram_size, 2);
+-	if (err < 0) {
++			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
++	if (err < sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
+ 	}
+@@ -545,7 +545,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	max_datagram_size = cpu_to_le16(ctx->max_datagram_size);
+ 	err = usbnet_write_cmd(dev, USB_CDC_SET_MAX_DATAGRAM_SIZE,
+ 			       USB_TYPE_CLASS | USB_DIR_OUT | USB_RECIP_INTERFACE,
+-			       0, iface_no, &max_datagram_size, 2);
++			       0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+ 	if (err < 0)
+ 		dev_dbg(&dev->intf->dev, "SET_MAX_DATAGRAM_SIZE failed\n");
+ 
 
 
