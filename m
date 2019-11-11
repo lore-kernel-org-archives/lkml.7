@@ -2,134 +2,192 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71CBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EB8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26C021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3145621655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gezhLtqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfKKOjC (ORCPT
+        id S1727103AbfKKOjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:39:02 -0500
-Received: from mga07.intel.com ([134.134.136.100]:62624 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfKKOjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:39:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 06:39:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
-   d="scan'208";a="213776866"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Nov 2019 06:39:00 -0800
-Received: from [10.252.3.28] (unknown [10.252.3.28])
-        by linux.intel.com (Postfix) with ESMTP id BAFF35803A5;
-        Mon, 11 Nov 2019 06:38:56 -0800 (PST)
-Subject: Re: [RFC] perf session: Fix compression processing
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20191103222441.GE8251@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <d57725e6-e62f-b37e-6cb4-28bf521faaea@linux.intel.com>
-Date:   Mon, 11 Nov 2019 17:38:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 11 Nov 2019 09:39:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55065 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726908AbfKKOjM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 09:39:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573483150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=wirKbU/8Cv2mgoDz4OmhWHmf28SB8MLFquOJWJpWCPc=;
+        b=gezhLtqesh55OuDgYLITz/7Szuc/xJB+M/Wgcvz3C+NCJ3fd/c5iOlZfmqjK2kJFCnUJhB
+        qGCdc9gWbymZ8AZAXFz5inenfxDJcevrk/90y2/WqZelO1AiOo06n10CrwK5eW8fWu6AJM
+        3b+01WAqfqK8ADK4uIXUZElAmgMQVm0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-71-6N1VGOxBMCeiM_l3S0F-Dw-1; Mon, 11 Nov 2019 09:39:08 -0500
+Received: by mail-wm1-f71.google.com with SMTP id f11so8484708wmc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:39:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2vUuMLzRqkGHHf2+2jVwfNEqVzFHxRKuojcVRTT5wvM=;
+        b=cTy+qI9O8L6hSCEfENSWUBNrIb8iP6mbubuC/iYBzUX2zhyoVjWSwOq8O3UsxtetTc
+         i5640hZS43Loal+mwzh/c6kpb/ukIIriIBZlaEnupnALAWWj5ye9Ltq7YWGC/3/D07eZ
+         p3xb3cigyaIgpzMI0tb/zBnhzM4Emp0rCWneErsbgn9W5BM25qZiVeQ5yNoan2VqcbXa
+         GSRfqNh03xzaH0njoM5VD7O/F6w/Id0tKYoAqzgx1oaDNlSaWcMV2ZKuzDFZE2dzLjOt
+         tEjFeYQDjxNnHy5mTZLsGtZCIhI8MfuYAqVYbxcTKeSco7kUawU4FJBBzrKKpLpp3CkE
+         N2cw==
+X-Gm-Message-State: APjAAAXZw7rH46A4NSbRJzrx/ddcWegpCt3rq5fk4pzr/ccLjKEv3JCT
+        k0MqksF1qOs4D6Em4qtbM0mnqNZtBkmcEYCRUeWULLhQ3amVbHUra8OPzBKYA0tWtCSYReYe9RA
+        9hrWJemIgReglBwOtg3RH5bDU
+X-Received: by 2002:a7b:c1d0:: with SMTP id a16mr22013155wmj.127.1573483146363;
+        Mon, 11 Nov 2019 06:39:06 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxJ8FeEElSu3YUeqierkfd/csj/UTEuloo6RjxvUSLwq82HJNOJS+SokLC3HuL5PAhxFuoEYw==
+X-Received: by 2002:a7b:c1d0:: with SMTP id a16mr22013123wmj.127.1573483146026;
+        Mon, 11 Nov 2019 06:39:06 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:a0f7:472a:1e7:7ef? ([2001:b07:6468:f312:a0f7:472a:1e7:7ef])
+        by smtp.gmail.com with ESMTPSA id j63sm22130103wmj.46.2019.11.11.06.39.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Nov 2019 06:39:05 -0800 (PST)
+Subject: Re: [PATCH v1 2/3] KVM: VMX: Do not change PID.NDST when loading a
+ blocked vCPU
+To:     Joao Martins <joao.m.martins@oracle.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Jag Raman <jag.raman@oracle.com>
+References: <20191106175602.4515-1-joao.m.martins@oracle.com>
+ <20191106175602.4515-3-joao.m.martins@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <15c8c821-25ff-eb62-abd3-8d7d69650744@redhat.com>
+Date:   Mon, 11 Nov 2019 15:39:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191103222441.GE8251@krava>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191106175602.4515-3-joao.m.martins@oracle.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: 6N1VGOxBMCeiM_l3S0F-Dw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/11/19 18:56, Joao Martins wrote:
+> When vCPU enters block phase, pi_pre_block() inserts vCPU to a per pCPU
+> linked list of all vCPUs that are blocked on this pCPU. Afterwards, it
+> changes PID.NV to POSTED_INTR_WAKEUP_VECTOR which its handler
+> (wakeup_handler()) is responsible to kick (unblock) any vCPU on that
+> linked list that now has pending posted interrupts.
+>=20
+> While vCPU is blocked (in kvm_vcpu_block()), it may be preempted which
+> will cause vmx_vcpu_pi_put() to set PID.SN.  If later the vCPU will be
+> scheduled to run on a different pCPU, vmx_vcpu_pi_load() will clear
+> PID.SN but will also *overwrite PID.NDST to this different pCPU*.
+> Instead of keeping it with original pCPU which vCPU had entered block
+> phase on.
+>=20
+> This results in an issue because when a posted interrupt is delivered,
+> the wakeup_handler() will be executed and fail to find blocked vCPU on
+> its per pCPU linked list of all vCPUs that are blocked on this pCPU.
+> Which is due to the vCPU being placed on a *different* per pCPU
+> linked list than the original pCPU that it had entered block phase.
+>=20
+> The regression is introduced by commit c112b5f50232 ("KVM: x86:
+> Recompute PID.ON when clearing PID.SN"). Therefore, partially revert
+> it and reintroduce the condition in vmx_vcpu_pi_load() responsible for
+> avoiding changing PID.NDST when loading a blocked vCPU.
+>=20
+> Fixes: c112b5f50232 ("KVM: x86: Recompute PID.ON when clearing PID.SN")
+> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+> Signed-off-by: Liran Alon <liran.alon@oracle.com>
 
-On 04.11.2019 1:24, Jiri Olsa wrote:
-> hi,
-<SNIP>
+Something wrong in the SoB line?
+
+Otherwise looks good.
+
+Paolo
+
 > ---
-> The compressed data processing occasionally fails with:
->   $ perf report --stdio -vv
->   decomp (B): 44519 to 163000
->   decomp (B): 48119 to 174800
->   decomp (B): 65527 to 131072
->   fetch_mmaped_event: head=0x1ffe0 event->header_size=0x28, mmap_size=0x20000: fuzzed perf.data?
->   Error:
->   failed to process sample
->   ...
-> 
-> It's caused by recent fuzzer fix that does not take into account
-> that compressed data do not need to by fully present in the buffer,
-> so it's ok to just return NULL and not to fail.
-> 
-> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid header.size")
-> Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/session.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index f07b8ecb91bc..3589ed14a629 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
->  
->  static union perf_event *
->  fetch_mmaped_event(struct perf_session *session,
-> -		   u64 head, size_t mmap_size, char *buf)
-> +		   u64 head, size_t mmap_size, char *buf, bool decomp)
-
-bools in interface make code less transparent.
-
+>  arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++++
+>  arch/x86/kvm/vmx/vmx.h |  6 ++++++
+>  2 files changed, 20 insertions(+)
+>=20
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 18b0bee662a5..75d903455e1c 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1274,6 +1274,18 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu=
+, int cpu)
+>  =09if (!pi_test_sn(pi_desc) && vcpu->cpu =3D=3D cpu)
+>  =09=09return;
+> =20
+> +=09/*
+> +=09 * If the 'nv' field is POSTED_INTR_WAKEUP_VECTOR, do not change
+> +=09 * PI.NDST: pi_post_block is the one expected to change PID.NDST and =
+the
+> +=09 * wakeup handler expects the vCPU to be on the blocked_vcpu_list tha=
+t
+> +=09 * matches PI.NDST. Otherwise, a vcpu may not be able to be woken up
+> +=09 * correctly.
+> +=09 */
+> +=09if (pi_desc->nv =3D=3D POSTED_INTR_WAKEUP_VECTOR || vcpu->cpu =3D=3D =
+cpu) {
+> +=09=09pi_clear_sn(pi_desc);
+> +=09=09goto after_clear_sn;
+> +=09}
+> +
+>  =09/* The full case.  */
+>  =09do {
+>  =09=09old.control =3D new.control =3D pi_desc->control;
+> @@ -1289,6 +1301,8 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu,=
+ int cpu)
+>  =09} while (cmpxchg64(&pi_desc->control, old.control,
+>  =09=09=09   new.control) !=3D old.control);
+> =20
+> +after_clear_sn:
+> +
+>  =09/*
+>  =09 * Clear SN before reading the bitmap.  The VT-d firmware
+>  =09 * writes the bitmap and reads SN atomically (5.2.3 in the
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index bee16687dc0b..1e32ab54fc2d 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -373,6 +373,12 @@ static inline void pi_clear_on(struct pi_desc *pi_de=
+sc)
+>  =09=09(unsigned long *)&pi_desc->control);
+>  }
+> =20
+> +static inline void pi_clear_sn(struct pi_desc *pi_desc)
+> +{
+> +=09clear_bit(POSTED_INTR_SN,
+> +=09=09(unsigned long *)&pi_desc->control);
+> +}
+> +
+>  static inline int pi_test_on(struct pi_desc *pi_desc)
 >  {
->  	union perf_event *event;
->  
-> @@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *session,
->  		/* We're not fetching the event so swap back again */
->  		if (session->header.needs_swap)
->  			perf_event_header__bswap(&event->header);
-> +		if (decomp)
-> +			return NULL;
->  		pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx: fuzzed perf.data?\n",
->  			 __func__, head, event->header.size, mmap_size);
->  		return ERR_PTR(-EINVAL);
-> @@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_events(struct perf_session *session)
->  		return 0;
->  
->  	while (decomp->head < decomp->size && !session_done()) {
-> -		union perf_event *event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data);
-> +		union perf_event *event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data, true);
+>  =09return test_bit(POSTED_INTR_ON,
+>=20
 
-It looks like this call can be skipped, at all, in this case.
-
->  
->  		if (IS_ERR(event))
->  			return PTR_ERR(event);
-> @@ -2100,7 +2102,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
->  	}
->  
->  more:
-> -	event = fetch_mmaped_event(session, head, mmap_size, buf);
-> +	event = fetch_mmaped_event(session, head, mmap_size, buf, false);
->  	if (IS_ERR(event))
->  		return PTR_ERR(event);
->  
-> 
-
-~Alexey
