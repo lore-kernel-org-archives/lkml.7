@@ -7,51 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC3CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FB5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA99F204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974C6204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497827;
-	bh=LeSW+nA1C/mdMbUqhaZ3bV3dUN0zhMt/01LMgdpLGbk=;
+	s=default; t=1573497830;
+	bh=YEEGNQYgDRCfA+H+yE2304eYWEyqkrXcJaCd6xGXhBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9HKd9rQj/FDrZwhceGLrcqzCfF47QM7XAcFrr6qP4jfok66pnhsOvnTLIKoX62hl
-	 F2hi9tSoNP23W5jK3ogKx8KxxI2kYpYFUUd0Q02RGqfDtbVQ2oJ/H2jg7jSBoEJfsE
-	 dnudk0lZb7pyBOUEcod9lCi6p/tSKb9DKp+2pOW0=
+	b=H+s60DoxLhEWnYHOeGEVZexd+c1hBc8fu1oIMg2ATZ02gqm1LllK3AGiig2RYiOMT
+	 j/e1aYiZ8wiMhmf4qMxRXpLCtPxNlkRxzC6UUXQgruxGuIooRHoR9enefofUiDLnT3
+	 q+s0LHNRKt+9pUy5aifDk20AnoUa9VIcEYN3rMj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbfKKSnq (ORCPT
+        id S1728917AbfKKSnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:43:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35146 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:43:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729648AbfKKSnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:43:42 -0500
+        id S1728967AbfKKSnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:43:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A04320659;
-        Mon, 11 Nov 2019 18:43:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C40A214E0;
+        Mon, 11 Nov 2019 18:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497821;
-        bh=LeSW+nA1C/mdMbUqhaZ3bV3dUN0zhMt/01LMgdpLGbk=;
+        s=default; t=1573497825;
+        bh=YEEGNQYgDRCfA+H+yE2304eYWEyqkrXcJaCd6xGXhBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njT7YFY9ZQms8QwSML0Q/DpHc0NIMvtKWG8BoCK0Yky96M4mRnGXpOcxORfQPUlfT
-         D361XSK8FWFLmtbDQ0lKRBGNAEWppeRWkCIE4bvZ8a+UwD+LTqL2DBpWCeMEBObfyl
-         uikicHIhalHkeoZ83DYqLIUD07SPm+5fy4M3rVsg=
+        b=qlTwUkFSlm75gkQW5t7AVbnuGKN/BXMIxZzM2Dll7tmvn4drkaB7PBmtCyhcJvx0m
+         fZ1nGzwdMzcfSw3+BCN/wU6zmULzhs9tJU87v0FUEycvO0OPAqXliHnrdBGdTyLdzM
+         yIl/Jw5ClqmqdGdny+vfUmpIa+tGQp4llorXeM/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ben Segall <bsegall@google.com>,
-        Dave Chiluk <chiluk+linux@indeed.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, pauld@redhat.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 066/125] sched/fair: Fix -Wunused-but-set-variable warnings
-Date:   Mon, 11 Nov 2019 19:28:25 +0100
-Message-Id: <20191111181449.035205987@linuxfoundation.org>
+        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>
+Subject: [PATCH 4.19 067/125] usbip: Fix vhci_urb_enqueue() URB null transfer buffer error path
+Date:   Mon, 11 Nov 2019 19:28:26 +0100
+Message-Id: <20191111181449.127832423@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -64,87 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Shuah Khan <shuah@kernel.org>
 
-commit 763a9ec06c409dcde2a761aac4bb83ff3938e0b3 upstream.
+commit 2c904963b1dd2acd4bc785b6c72e10a6283c2081 upstream.
 
-Commit:
+Fix vhci_urb_enqueue() to print debug msg and return error instead of
+failing with BUG_ON.
 
-   de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-
-introduced a few compilation warnings:
-
-  kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-  kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used [-Wunused-but-set-variable]
-  kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-  kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used [-Wunused-but-set-variable]
-
-Also, __refill_cfs_bandwidth_runtime() does no longer update the
-expiration time, so fix the comments accordingly.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: pauld@redhat.com
-Fixes: de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-Link: https://lkml.kernel.org/r/1566326455-8038-1-git-send-email-cai@lca.pw
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- kernel/sched/fair.c |   19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/usb/usbip/vhci_hcd.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4305,21 +4305,16 @@ static inline u64 sched_cfs_bandwidth_sl
- }
+--- a/drivers/usb/usbip/vhci_hcd.c
++++ b/drivers/usb/usbip/vhci_hcd.c
+@@ -702,8 +702,10 @@ static int vhci_urb_enqueue(struct usb_h
+ 	}
+ 	vdev = &vhci_hcd->vdev[portnum-1];
  
- /*
-- * Replenish runtime according to assigned quota and update expiration time.
-- * We use sched_clock_cpu directly instead of rq->clock to avoid adding
-- * additional synchronization around rq->lock.
-+ * Replenish runtime according to assigned quota. We use sched_clock_cpu
-+ * directly instead of rq->clock to avoid adding additional synchronization
-+ * around rq->lock.
-  *
-  * requires cfs_b->lock
-  */
- void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
- {
--	u64 now;
--
--	if (cfs_b->quota == RUNTIME_INF)
--		return;
--
--	now = sched_clock_cpu(smp_processor_id());
--	cfs_b->runtime = cfs_b->quota;
-+	if (cfs_b->quota != RUNTIME_INF)
-+		cfs_b->runtime = cfs_b->quota;
- }
+-	/* patch to usb_sg_init() is in 2.5.60 */
+-	BUG_ON(!urb->transfer_buffer && urb->transfer_buffer_length);
++	if (!urb->transfer_buffer && urb->transfer_buffer_length) {
++		dev_dbg(dev, "Null URB transfer buffer\n");
++		return -EINVAL;
++	}
  
- static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-@@ -4924,15 +4919,13 @@ static void init_cfs_rq_runtime(struct c
- 
- void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- {
--	u64 overrun;
--
- 	lockdep_assert_held(&cfs_b->lock);
- 
- 	if (cfs_b->period_active)
- 		return;
- 
- 	cfs_b->period_active = 1;
--	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-+	hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
- 	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
- }
+ 	spin_lock_irqsave(&vhci->lock, flags);
  
 
 
