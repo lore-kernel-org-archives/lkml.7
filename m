@@ -2,122 +2,76 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744DEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65858C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545A921783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B4821925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Peyngf2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKKQZB (ORCPT
+        id S1727016AbfKKQZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:25:01 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:52362 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKQY7 (ORCPT
+        Mon, 11 Nov 2019 11:25:06 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55388 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKQZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:24:59 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: TYtC1rAmPclYrH1GZp/AMdIoQjyR9E0gqok6N5hPBk10tcmMsaUS0JvvMtsKN9dc0f3BrDuDs3
- zeO1pe0efHX/BnCM5Niz52/ku3pkqlJC5zQAiyhSLPLhc3RUYgFMyWftbghuIik+xch/8UPjv0
- DPWhe7jhxLtVGNJzGYev6cy4Vz1iyAqJnW2ftA862s1J9dDPS6Hba8J6S45Lj7h7LpSM+h49VI
- gx6f+bkF2WmHGQbrxx+hdzQgUIE4AMuyGhHlChzKbVxmt8mYOz9A7tXSxQwfccFCULo5e4Woyl
- GRQ=
-X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
-   d="scan'208";a="56519402"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Nov 2019 09:24:48 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 11 Nov 2019 09:24:43 -0700
-Received: from soft-dev3.microsemi.net (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 11 Nov 2019 09:24:41 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-CC:     <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <davem@davemloft.net>, <andrew@lunn.ch>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH] net: mscc: ocelot: reinterpret the return value of of_get_phy_mode
-Date:   Mon, 11 Nov 2019 17:21:27 +0100
-Message-ID: <20191111162127.18684-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 11 Nov 2019 11:25:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xpsjH3Rxk+PTzoxkOgZp7C1flZE/0kiFWtXlSW8zmmw=; b=Peyngf2bhOnRCdtwxQx45nP8t
+        wAM5uTHozveypsI8OvzwXiRStp/WogTr0roVN/uKHuLazBH7c+mWXnXqQ1PKU5tSSg1e3alIDQiv3
+        FoYLONj0SfEZQMbaDMmpbxCW5xcYZ9L1SnHvEHDzhRtO7O0d7aMOcu56vmmClKNhy0qMGroZpe07j
+        g0d71Zzb1txtXYa9dO7Wuxk56P3CgfiqUMc+4tpfGEmKjdkM/OmNWYfloVPA/ijo8jtYfxjeSq4E8
+        eeVarnc5boRMwTbtMWZ2BRbavAOznWvd4Qfnl+WCs5qe+IPj7AwPuiJsA1G1sHW4F1KsiGV/oZmhZ
+        fSLdpIETw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUCUv-0001T1-CH; Mon, 11 Nov 2019 16:25:01 +0000
+Date:   Mon, 11 Nov 2019 08:25:01 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [PATCH] fs/splice: ignore flag SPLICE_F_GIFT in syscall vmsplice
+Message-ID: <20191111162501.GB24952@infradead.org>
+References: <157338008330.5347.7117089871769008055.stgit@buzz>
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157338008330.5347.7117089871769008055.stgit@buzz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 0c65b2b90d13c ("net: of_get_phy_mode: Change API to solve
-int/unit warnings") updated the function of_get_phy_mode declaration.
-Now it returns an error code and in case the node doesn't contain the
-property 'phy-mode' or 'phy-connection-type' it returns -EINVAL.
+On Sun, Nov 10, 2019 at 01:01:23PM +0300, Konstantin Khlebnikov wrote:
+> Generic support of flag SPLICE_F_MOVE in syscall splice was removed in
+> kernel 2.6.21 commit 485ddb4b9741 ("1/2 splice: dont steal").
+> Infrastructure stay intact and this feature may came back.
+> At least driver or filesystem could provide own implementation.
+> 
+> But stealing mapped pages from userspace never worked and is very
+> unlikely that will ever make sense due to unmapping overhead.
+> Also lru handling is broken if gifted anon page spliced into file.
+> 
+> Let's seal entry point for marking page as a gift in vmsplice.
 
-In Ocelot the return code of the function was checked against -ENODEV
-which is not true so it would failed to probe the port and then
-eventually failed to probe the driver.
-
-The fix consists in just checking if the function of_get_phy_mode returns
-an error and in that case just fall back and use the interface
-PHY_INTERFACE_MODE_NA.
-
-This patch is based on the patch series:
-https://patchwork.ozlabs.org/project/netdev/list/?series=141849
-
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/net/ethernet/mscc/ocelot_board.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
-index 811599f32910..677701355da2 100644
---- a/drivers/net/ethernet/mscc/ocelot_board.c
-+++ b/drivers/net/ethernet/mscc/ocelot_board.c
-@@ -378,6 +378,7 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
- 		struct phy *serdes;
- 		void __iomem *regs;
- 		char res_name[8];
-+		int phy_err;
- 		u32 port;
- 
- 		if (of_property_read_u32(portnp, "reg", &port))
-@@ -410,9 +411,9 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
- 		priv = container_of(ocelot_port, struct ocelot_port_private,
- 				    port);
- 
--		err = of_get_phy_mode(portnp, &phy_mode);
--		if (err && err != -ENODEV)
--			goto out_put_ports;
-+		phy_err = of_get_phy_mode(portnp, &phy_mode);
-+		if (phy_err)
-+			phy_mode = PHY_INTERFACE_MODE_NA;
- 
- 		priv->phy_mode = phy_mode;
- 
--- 
-2.17.1
-
+Please kill off PIPE_BUF_FLAG_GIFT entirely, there is no need to keep
+dead code around.  Anyone who cares enough can resurrect it from git
+history.
