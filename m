@@ -2,278 +2,192 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961CFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23348C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAFF21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B9821655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6Qh/qIU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="C7bAEHOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfKKT0Z (ORCPT
+        id S1727593AbfKKT05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:26:25 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39029 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbfKKT0Y (ORCPT
+        Mon, 11 Nov 2019 14:26:57 -0500
+Received: from gateway34.websitewelcome.com ([192.185.149.46]:43595 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726950AbfKKT05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:26:24 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v138so12500084oif.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 11:26:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tZzh1Ex9ZdXCo9TXeCCIknPHlre0k+c4oPEzpW65C30=;
-        b=S6Qh/qIU+Y1N82mm958h1PBbGUral3TH1yFTB7b5i1T02F2nMJ5/MS1daY11cKqUzJ
-         bvag4kgaJyCeBv94BgfK5TVojYsFoEhcqf+o0qGJ6oRdpqGDxWd6DqeUqd1ne/I1FUfj
-         y8CsCvNxAAZUzk7bZZrqSfiLo8ByC7SEDDWFJ/wnH8BiKXwDoC5/vKcosm+wo0u6pPXn
-         vXvc4BCKP15K+ofeXxnwNfRZCyfCSa1RyD+inrAIPAc28thGpUNy05cZcJqtbjBvqcmv
-         iXkxc0ovV33KbqbSvMnqewrEctZd4syiVTZ3peVkDRAdo4EGOcH+pnhb4diGHoNMVCvt
-         75Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tZzh1Ex9ZdXCo9TXeCCIknPHlre0k+c4oPEzpW65C30=;
-        b=Y9AI0xLEpIiMJVW1+qVLOzcDyhBGscThlizsy75rEcz/i4XQzAobHKGT34O32lfLG3
-         LpaDyWK3wHcUwHQPkhybaUqABnaN7HzXrQhwW/PlBLXGeVL74+wBPZ7IP64Dxro3mw9m
-         WxPHNh7Ujp4LMzI5WTudXENJH7wkexU3cuNzvVBvEsWn9QQp0ldSFP2Au7bi+h6U5K9x
-         yNGR+h2F3K5h6p8Ny3Eyolxt0W/Vr6c3rle4JZhTaV1ZjPq6bTdhBH+Us1dJQG9GjSDs
-         BbkUEp5VNq93tOk7sL4FIEt5fS80C2h4fZ5oYM8qtF40v/MvUnA/IltllGMxDjRg3Ar7
-         9T7A==
-X-Gm-Message-State: APjAAAW39NW9dufW88CcHnKLkcAePSpO+ejabfxtsu5/+DD5Zh3fh4iw
-        akTGLN6kHkX8x3/jQ4HJFjJwPksjnI9gJIs8d96gSN/n
-X-Google-Smtp-Source: APXvYqycLeytYmMe71q7G23bQ7Ku/ehgUySrFtbrdw+1tpqpbASH71BGLABOtIFpVmbsi5fGIZ433uPaxD0juq+3BWY=
-X-Received: by 2002:aca:6547:: with SMTP id j7mr529837oiw.98.1573500383120;
- Mon, 11 Nov 2019 11:26:23 -0800 (PST)
+        Mon, 11 Nov 2019 14:26:57 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 6796317AA0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:26:55 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id UFKxiGpAWBnGaUFKxirvrQ; Mon, 11 Nov 2019 13:26:55 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=j1lNzFsR5TFCQCYcMtUUHZaoihv3vYBTqK2f04Mcvn4=; b=C7bAEHOFjc6fl+7zJKVNDKwe6h
+        yDhwXQ1JmZrVgP8z9BN8/cZCrCq+sQWl0q4MPaV64jdl0tDfE7mCMl7Ao5j/OfsWpiHfkFZ0xV5kh
+        BUac57ZYnJNqyJ8ze3Xzm/KkoxZAVu/KSoPszzEsQnetd8SCKnwFD7wWsoxKmPHtlS7q/BaNiAQY6
+        +TSEZYr+TF8jcpcLo5yWhwI13h2TfDy+UAoAxayLoaXVqS+aqe7VEh1qE+/XWRQAmHqYg2HJdpKVR
+        Id9DK8eihYsgvJaFShmR70/6I9q3Zo1vshDW3m3yIu6HtHevpGrauBQH0yC38P9cQ0Oz683eVHgLF
+        jdOxSZcQ==;
+Received: from [187.192.2.30] (port=53146 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1iUFKw-002JG6-Nv; Mon, 11 Nov 2019 13:26:54 -0600
+Subject: Re: [PATCH] drm/amd/display: Fix unsigned variable compared to less
+ than zero
+To:     Mikita Lipski <mlipski@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20191111172543.GA31748@embeddedor>
+ <b5b41653-3536-b0f0-2f49-2c010370ec99@amd.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
+ CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
+ l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
+ obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
+ cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
+ ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
+ JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
+ JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
+ PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
+ R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
+ 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
+ e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
+ H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
+ DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
+ 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
+ otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
+ l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
+ jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
+ zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
+ I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
+ ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
+ EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
+ UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
+ XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
+ WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
+ imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
+ fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
+ 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
+ ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
+ YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
+ GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <cf7d4cfe-be29-39d8-8a5e-bac217475597@embeddedor.com>
+Date:   Mon, 11 Nov 2019 13:27:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190907174833.19957-1-katsuhiro@katsuster.net>
- <CA+E=qVdvKxzFcU-09Ucn1Fr0FdkwSsPcLr8vPn2wsu6-DD1gqg@mail.gmail.com>
- <abc648cc-0b5d-b407-b74b-639833ba196b@katsuster.net> <CA+E=qVdy-wqmR+XOms5S2zMp+B0vM7Dj_fk9N=08-1WjfKDm0Q@mail.gmail.com>
-In-Reply-To: <CA+E=qVdy-wqmR+XOms5S2zMp+B0vM7Dj_fk9N=08-1WjfKDm0Q@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 11 Nov 2019 11:25:57 -0800
-Message-ID: <CA+E=qVdLzHbNTemMSmhA=-0dsNumQZJhjE-EnXBDu+j7sXTnVw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: add analog audio nodes on rk3399-rockpro64
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b5b41653-3536-b0f0-2f49-2c010370ec99@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.2.30
+X-Source-L: No
+X-Exim-ID: 1iUFKw-002JG6-Nv
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [187.192.2.30]:53146
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 9:40 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Sun, Nov 10, 2019 at 7:30 PM Katsuhiro Suzuki
-> <katsuhiro@katsuster.net> wrote:
-> >
-> > Hello Vasily,
->
-> Hi Katsuhiro,
->
-> Thanks for response!
 
-Looks like on my board codec sits at address 0x10, and according to
-schematics that's what its address is supposed to be.
 
-See http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+On 11/11/19 11:46, Mikita Lipski wrote:
+> 
+> Thanks for catching it!
+> 
 
-Codec address is selected by pin CE of ES8316, and on rockpro64 it
-goes to GND through R226. So address should be 0x10.
+Glad to help out. :)
 
-> > Thank you for reporting.
-> >
-> > On 2019/11/11 9:17, Vasily Khoruzhick wrote:
-> > > On Sat, Sep 7, 2019 at 10:48 AM Katsuhiro Suzuki
-> > > <katsuhiro@katsuster.net> wrote:
-> > >>
-> > >> This patch adds audio codec (Everest ES8316) and I2S audio nodes for
-> > >> RK3399 RockPro64.
-> > >
-> > > Hi Katsuhiro,
-> > >
-> > > I tested your patch with my rockpro64 on 5.4-rc6 which has your other
-> > > patches to es8316 driver, but apparently it doesn't work.
-> > >
-> > > 'alsamixer' complains 'cannot load mixer controls: No such device or
-> > > address' and if I try to play audio with mpg123 it pretends that it
-> > > plays something but there's no sound.
-> > >
-> > > Any idea what can be wrong?
-> > >
-> >
-> > Do you use defconfig? If so I guess we need turn on more configs:
-> >
-> > - simple-graph-card driver (CONFIG_SND_AUDIO_GRAPH_CARD)
-> > - ES8316 (SND_SOC_ES8316)
->
-> I have these enabled, card is present in /proc/asound/cards, but
-> alsamixer doesn't work with it.
->
-> > FYI) ASoC related status or logs in my environment as follows:
-> >
-> > root@rockpro64:~# uname -a
-> > Linux rockpro64 5.4.0-rc6-next-20191108 #169 SMP PREEMPT Mon Nov 11 12:21:44 JST 2019 aarch64 GNU/Linux
->
-> I'm running 5.4.0-rc6  (commit
-> 00aff6836241ae5654895dcea10e6d4fc5878ca6) with your patch "arm64: dts:
-> rockchip: add analog audio nodes on rk3399-rockpro64" on top of it.
->
-> > root@rockpro64:~# dmesg | grep -i asoc
-> > [   21.509903] asoc-simple-card hdmi-sound: i2s-hifi <-> ff8a0000.i2s mapping ok
-> > [   21.510550] asoc-simple-card hdmi-sound: ASoC: no DMI vendor name!
-> > [   21.567906] asoc-audio-graph-card sound: ES8316 HiFi <-> ff890000.i2s mapping ok
-> > [   21.568565] asoc-audio-graph-card sound: ASoC: no DMI vendor name!
->
-> Similar here:
->
-> [vasilykh@rockpro64 ~]$ dmesg | grep -i asoc
-> [   15.627685] asoc-audio-graph-card sound: ES8316 HiFi <->
-> ff890000.i2s mapping ok
-> [   16.250196] asoc-simple-card hdmi-sound: i2s-hifi <-> ff8a0000.i2s mapping ok
->
-> > root@rockpro64:~# cat /proc/asound/pcm
-> > 00-00: ff8a0000.i2s-i2s-hifi i2s-hifi-0 : ff8a0000.i2s-i2s-hifi i2s-hifi-0 : playback 1
-> > 01-00: ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : playback 1 : capture 1
->
-> Same here:
->
-> [vasilykh@rockpro64 ~]$ cat /proc/asound/pcm
-> 00-00: ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : ff890000.i2s-ES8316
-> HiFi ES8316 HiFi-0 : playback 1 : capture 1
-> 01-00: ff8a0000.i2s-i2s-hifi i2s-hifi-0 : ff8a0000.i2s-i2s-hifi
-> i2s-hifi-0 : playback
->
-> > root@rockpro64:~# cat /sys/kernel/debug/asoc/components
-> > hdmi-audio-codec.3.auto
-> > ff8a0000.i2s
-> > ff8a0000.i2s
-> > ff890000.i2s
-> > ff890000.i2s
-> > ff880000.i2s
-> > ff880000.i2s
-> > es8316.1-0011
-> > snd-soc-dummy
-> > snd-soc-dummy
->
-> Same here.
->
-> > root@rockpro64:~# cat /sys/kernel/debug/asoc/dais
-> > i2s-hifi
-> > ff8a0000.i2s
-> > ff890000.i2s
-> > ff880000.i2s
-> > ES8316 HiFi
-> > snd-soc-dummy-dai
->
-> Same here.
->
-> Yet alsamixer doesn't work for me. It terminates with 'cannot load
-> mixer controls: No such device or address'. Strace shows that fails
-> here:
->
-> openat(AT_FDCWD, "/dev/snd/controlC0", O_RDWR|O_CLOEXEC) = 3
-> fcntl(3, F_SETFD, FD_CLOEXEC)           = 0
-> ioctl(3, SNDRV_CTL_IOCTL_PVERSION, 0xfffffd3ad04c) = 0
-> fcntl(3, F_GETFL)                       = 0x20002 (flags O_RDWR|O_LARGEFILE)
-> fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK|O_LARGEFILE) = 0
-> ioctl(3, SNDRV_CTL_IOCTL_ELEM_LIST, 0xfffffd3ad228) = 0
-> ioctl(3, SNDRV_CTL_IOCTL_ELEM_LIST, 0xfffffd3ad228) = 0
-> ioctl(3, SNDRV_CTL_IOCTL_ELEM_INFO, 0xfffffd3ace38) = 0
-> ioctl(3, SNDRV_CTL_IOCTL_ELEM_READ, 0xfffffd3ac160) = -1 ENXIO (No
-> such device or address)
->
-> Looks like it fails to talk to the codec?
->
-> mpg123 thinks that it's playing audio, but my headphones connected to
-> 3.5mm output are silent.
->
-> Regards,
-> Vasily
->
->
-> > Best Regards,
-> > Katsuhiro Suzuki
-> >
-> >
-> > > Regards,
-> > > Vasily
-> > >
-> > >> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> > >> ---
-> > >>   .../boot/dts/rockchip/rk3399-rockpro64.dts    | 28 +++++++++++++++++++
-> > >>   1 file changed, 28 insertions(+)
-> > >>
-> > >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> > >> index 0401d4ec1f45..8b1e6382b140 100644
-> > >> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> > >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> > >> @@ -81,6 +81,12 @@
-> > >>                  reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
-> > >>          };
-> > >>
-> > >> +       sound {
-> > >> +               compatible = "audio-graph-card";
-> > >> +               label = "rockchip,rk3399";
-> > >> +               dais = <&i2s1_p0>;
-> > >> +       };
-> > >> +
-> > >>          vcc12v_dcin: vcc12v-dcin {
-> > >>                  compatible = "regulator-fixed";
-> > >>                  regulator-name = "vcc12v_dcin";
-> > >> @@ -470,6 +476,20 @@
-> > >>          i2c-scl-rising-time-ns = <300>;
-> > >>          i2c-scl-falling-time-ns = <15>;
-> > >>          status = "okay";
-> > >> +
-> > >> +       es8316: codec@11 {
-> > >> +               compatible = "everest,es8316";
-> > >> +               reg = <0x11>;
-> > >> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
-> > >> +               clock-names = "mclk";
-> > >> +               #sound-dai-cells = <0>;
-> > >> +
-> > >> +               port {
-> > >> +                       es8316_p0_0: endpoint {
-> > >> +                               remote-endpoint = <&i2s1_p0_0>;
-> > >> +                       };
-> > >> +               };
-> > >> +       };
-> > >>   };
-> > >>
-> > >>   &i2c3 {
-> > >> @@ -505,6 +525,14 @@
-> > >>          rockchip,playback-channels = <2>;
-> > >>          rockchip,capture-channels = <2>;
-> > >>          status = "okay";
-> > >> +
-> > >> +       i2s1_p0: port {
-> > >> +               i2s1_p0_0: endpoint {
-> > >> +                       dai-format = "i2s";
-> > >> +                       mclk-fs = <256>;
-> > >> +                       remote-endpoint = <&es8316_p0_0>;
-> > >> +               };
-> > >> +       };
-> > >>   };
-> > >>
-> > >>   &i2s2 {
-> > >> --
-> > >> 2.23.0.rc1
-> > >>
-> > >>
-> > >> _______________________________________________
-> > >> linux-arm-kernel mailing list
-> > >> linux-arm-kernel@lists.infradead.org
-> > >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > >
-> >
+> Reviewed-by: Mikita Lipski <mikita.lipski@amd.com>
+> 
+
+Thanks
+--
+Gustavo
+
+> 
+> On 11.11.2019 12:25, Gustavo A. R. Silva wrote:
+>> Currenly, the error check below on variable*vcpi_slots*  is always
+>> false because it is a uint64_t type variable, hence, the values
+>> this variable can hold are never less than zero:
+>>
+>> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:
+>> 4870         if (dm_new_connector_state->vcpi_slots < 0) {
+>> 4871                 DRM_DEBUG_ATOMIC("failed finding vcpi slots: %d\n", (int)dm_new_connector_stat     e->vcpi_slots);
+>> 4872                 return dm_new_connector_state->vcpi_slots;
+>> 4873         }
+>>
+>> Fix this by making*vcpi_slots*  of int type
+>>
+>> Addresses-Coverity: 1487838 ("Unsigned compared against 0")
+>> Fixes: b4c578f08378 ("drm/amd/display: Add MST atomic routines")
+>> Signed-off-by: Gustavo A. R. Silva<gustavo@embeddedor.com>
+>> ---
+>>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+>> index 6db07e9e33ab..a8fc90a927d6 100644
+>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+>> @@ -403,7 +403,7 @@ struct dm_connector_state {
+>>       bool underscan_enable;
+>>       bool freesync_capable;
+>>       uint8_t abm_level;
+>> -    uint64_t vcpi_slots;
+>> +    int vcpi_slots;
+>>       uint64_t pbn;
+>>   };
+>>   -- 2.23.0
+> 
