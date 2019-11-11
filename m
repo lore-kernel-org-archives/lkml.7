@@ -2,161 +2,82 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1AEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4812AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E2C20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UiDUPE6I"
+	by mail.kernel.org (Postfix) with ESMTP id 237DF2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfKKPqY (ORCPT
+        id S1726953AbfKKPrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:46:24 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59223 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKPqY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:46:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573487182;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4hvCDZXTCZ2nFUfV3XkZPxJrmWvqepgR/qG1xYdpL+8=;
-        b=UiDUPE6Ijpc8GWtx1GLEbZhcNX2bWMauLsKOlh2gU1r1Ie5cS1JlqYVX6xHzL/bCgoC4u4
-        F10o+8SSswOOaM9qYFXPQUOcihy/1MjsDnQCxug3NOax15fjSKJ8bkFcwJ93fiDNb4ZXYY
-        tmtkuhWlnIz/eey/WdSdjpG6wOk15H4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-lM4pYcv4POCpGf9ctL-qDg-1; Mon, 11 Nov 2019 10:46:16 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBF8818B9F82;
-        Mon, 11 Nov 2019 15:46:14 +0000 (UTC)
-Received: from krava (unknown [10.40.205.88])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 210C05D6D4;
-        Mon, 11 Nov 2019 15:46:12 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 16:46:12 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] perf session: Fix compression processing
-Message-ID: <20191111154612.GC26980@krava>
-References: <20191103222441.GE8251@krava>
- <d57725e6-e62f-b37e-6cb4-28bf521faaea@linux.intel.com>
- <20191111145640.GB26980@krava>
- <69782f54-f5f5-f89f-9c8d-172d4de331d0@linux.intel.com>
+        Mon, 11 Nov 2019 10:47:05 -0500
+Received: from gentwo.org ([3.19.106.255]:39186 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbfKKPrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:47:04 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id B85DF3EC1E; Mon, 11 Nov 2019 15:47:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id B71FA3EC1D;
+        Mon, 11 Nov 2019 15:47:03 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 15:47:03 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Yu Zhao <yuzhao@google.com>
+cc:     Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v4 2/2] mm: avoid slub allocation while holding
+ list_lock
+In-Reply-To: <20191110184721.GA171640@google.com>
+Message-ID: <alpine.DEB.2.21.1911111543420.10669@www.lameter.com>
+References: <20190914000743.182739-1-yuzhao@google.com> <20191108193958.205102-1-yuzhao@google.com> <20191108193958.205102-2-yuzhao@google.com> <alpine.DEB.2.21.1911092024560.9034@www.lameter.com> <20191109230147.GA75074@google.com>
+ <alpine.DEB.2.21.1911092313460.32415@www.lameter.com> <20191110184721.GA171640@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <69782f54-f5f5-f89f-9c8d-172d4de331d0@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: lM4pYcv4POCpGf9ctL-qDg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 06:41:47PM +0300, Alexey Budankov wrote:
-> On 11.11.2019 17:56, Jiri Olsa wrote:
-> > On Mon, Nov 11, 2019 at 05:38:49PM +0300, Alexey Budankov wrote:
-> >>
-> >> On 04.11.2019 1:24, Jiri Olsa wrote:
-> >>> hi,
-> >> <SNIP>
-> >>> ---
-> >>> The compressed data processing occasionally fails with:
-> >>>   $ perf report --stdio -vv
-> >>>   decomp (B): 44519 to 163000
-> >>>   decomp (B): 48119 to 174800
-> >>>   decomp (B): 65527 to 131072
-> >>>   fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mmap_=
-size=3D0x20000: fuzzed perf.data?
-> >>>   Error:
-> >>>   failed to process sample
-> >>>   ...
-> >>>
-> >>> It's caused by recent fuzzer fix that does not take into account
-> >>> that compressed data do not need to by fully present in the buffer,
-> >>> so it's ok to just return NULL and not to fail.
-> >>>
-> >>> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing i=
-nvalid header.size")
-> >>> Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.kerne=
-l.org
-> >>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> >>> ---
-> >>>  tools/perf/util/session.c | 8 +++++---
-> >>>  1 file changed, 5 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> >>> index f07b8ecb91bc..3589ed14a629 100644
-> >>> --- a/tools/perf/util/session.c
-> >>> +++ b/tools/perf/util/session.c
-> >>> @@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_events(=
-struct perf_session *session)
-> >>> =20
-> >>>  static union perf_event *
-> >>>  fetch_mmaped_event(struct perf_session *session,
-> >>> -=09=09   u64 head, size_t mmap_size, char *buf)
-> >>> +=09=09   u64 head, size_t mmap_size, char *buf, bool decomp)
-> >>
-> >> bools in interface make code less transparent.
-> >>
-> >>>  {
-> >>>  =09union perf_event *event;
-> >>> =20
-> >>> @@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *session=
-,
-> >>>  =09=09/* We're not fetching the event so swap back again */
-> >>>  =09=09if (session->header.needs_swap)
-> >>>  =09=09=09perf_event_header__bswap(&event->header);
-> >>> +=09=09if (decomp)
-> >>> +=09=09=09return NULL;
-> >>>  =09=09pr_debug("%s: head=3D%#" PRIx64 " event->header_size=3D%#x, mm=
-ap_size=3D%#zx: fuzzed perf.data?\n",
-> >>>  =09=09=09 __func__, head, event->header.size, mmap_size);
-> >>>  =09=09return ERR_PTR(-EINVAL);
-> >>> @@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_event=
-s(struct perf_session *session)
-> >>>  =09=09return 0;
-> >>> =20
-> >>>  =09while (decomp->head < decomp->size && !session_done()) {
-> >>> -=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp=
-->head, decomp->size, decomp->data);
-> >>> +=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp=
-->head, decomp->size, decomp->data, true);
-> >>
-> >> It looks like this call can be skipped, at all, in this case.
-> >=20
-> > not sure what you mean, we are in decomp code no?
->=20
-> Ok, it is inside "not fetching" branch.=20
-> NULL return value means to proceed getting further over the trace.
-> Checking record type =3D=3D COMPRESSED at the higher level could=20
-> probably be cleaner fix and also work faster.
+On Sun, 10 Nov 2019, Yu Zhao wrote:
 
-any chance you could post the fix? the patch I did was a
-quick fix to get the feature working for presentation ;-)
-you're probably thinking of the proper approach
+> On Sat, Nov 09, 2019 at 11:16:28PM +0000, Christopher Lameter wrote:
+> > On Sat, 9 Nov 2019, Yu Zhao wrote:
+> >
+> > > >  	struct page *page, *h;
+> > > > +	unsigned long *map = bitmap_alloc(oo_objects(s->max), GFP_KERNEL);
+> > > > +
+> > > > +	if (!map)
+> > > > +		return;
+> > >
+> > > What would happen if we are trying to allocate from the slab that is
+> > > being shut down? And shouldn't the allocation be conditional (i.e.,
+> > > only when CONFIG_SLUB_DEBUG=y)?
+> >
+> > Kmalloc slabs are never shut down.
+>
+> Maybe I'm not thinking straight -- isn't it what caused the deadlock in
+> the first place?
 
-thanks,
-jirka
+Well if kmalloc allocations become a problem then we have numerous
+issues all over the kernel to fix.
+
+> Kmalloc slabs can be shut down when memcg is on.
+
+Kmalloc needs to work even during shutdown of a memcg.
+
+Maybe we need to fix memcg to not allocate from the current memcg during
+shutdown?
+
 
