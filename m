@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51855C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288E8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F21220659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E238720659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497558;
-	bh=EMX2mwMsPDVTT5OCb9gPwQH/OyP+Vv3ygfv94ADuU+U=;
+	s=default; t=1573497567;
+	bh=XBw2oZfQ9k26crgUp87umqJgoGEDJwGM2wcCYBXUPZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HXyYN/felBZ88m13QLAvwPrxpb8HQTbbEBOm9vUtvC5mFsHsykzpvGqYc63YURS3l
-	 zJu16riKTxewESawjzw4Tv6UMtZW3rgc6zbp9/1VTNqFsuc9Ys3A2hNRYyb1nZmhIN
-	 w6caoq0cq3/MGQBe3gUOvpcbiaV/Rn60E+HSaYFM=
+	b=QMByqEhwy9+KlVR2+7K4hYj2iD4YfBxBhL2pRQvUi9rmxofqVNOAbTjEj2mrHiNJy
+	 4tUI5tPe4BLzTR1+a2xf3fuqyI5T4W6/nj3hwEawncHC3oHLEXNN+XJoXcooSNVNhj
+	 +qQtzxjlxbGAhU/U5/JLamHnQxS7rZuadKU/lbtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfKKSjR (ORCPT
+        id S1727835AbfKKSjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727166AbfKKSjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:14 -0500
+        id S1727543AbfKKSjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDCC021783;
-        Mon, 11 Nov 2019 18:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69209204FD;
+        Mon, 11 Nov 2019 18:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497553;
-        bh=EMX2mwMsPDVTT5OCb9gPwQH/OyP+Vv3ygfv94ADuU+U=;
+        s=default; t=1573497561;
+        bh=XBw2oZfQ9k26crgUp87umqJgoGEDJwGM2wcCYBXUPZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zIUFu9v2adjpElE8goL92/ehRPmuSi7gxBJtUHr+HQUcZrBAbd49vyGI8Pd7Jl394
-         zUROA0YalKISBoDRsAA12w+QFwg9YhCi705THWvG9KHVjA2qRYitf+AGV0imyFyuZa
-         L1x5UH+cTyYBSA8+mRrVVsss6EcvTCqjv8psWlBA=
+        b=zqhU5cQsJjcYM256GcafFBX4wDisnqVWAEg229TlJxhxPjnFenBriTAdHS3vHW0TQ
+         JSwzQraOKZSJ/j2FeApIeEukhMuqsxVa7HqlJk14UHdlL0HuveL+3KC/4M5hxltiZf
+         8Es49EohVwVHzbqey1HDOrbYtFhQ99aa7ljlLsxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 095/105] hv_netvsc: Fix error handling in netvsc_attach()
-Date:   Mon, 11 Nov 2019 19:29:05 +0100
-Message-Id: <20191111181448.566869694@linuxfoundation.org>
+Subject: [PATCH 4.14 098/105] igb: Fix constant media auto sense switching when no cable is connected
+Date:   Mon, 11 Nov 2019 19:29:08 +0100
+Message-Id: <20191111181448.927178086@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,49 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
 
-[ Upstream commit 719b85c336ed35565d0f3982269d6f684087bb00 ]
+[ Upstream commit 8d5cfd7f76a2414e23c74bb8858af7540365d985 ]
 
-If rndis_filter_open() fails, we need to remove the rndis device created
-in earlier steps, before returning an error code. Otherwise, the retry of
-netvsc_attach() from its callers will fail and hang.
+At least on the i350 there is an annoying behavior that is maybe also
+present on 82580 devices, but was probably not noticed yet as MAS is not
+widely used.
 
-Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+If no cable is connected on both fiber/copper ports the media auto sense
+code will constantly swap between them as part of the watchdog task and
+produce many unnecessary kernel log messages.
+
+The swap code responsible for this behavior (switching to fiber) should
+not be executed if the current media type is copper and there is no signal
+detected on the fiber port. In this case we can safely wait until the
+AUTOSENSE_EN bit is cleared.
+
+Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 33c1f6548fb79..5a44b97952669 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -969,7 +969,7 @@ static int netvsc_attach(struct net_device *ndev,
- 	if (netif_running(ndev)) {
- 		ret = rndis_filter_open(nvdev);
- 		if (ret)
--			return ret;
-+			goto err;
- 
- 		rdev = nvdev->extension;
- 		if (!rdev->link_state)
-@@ -977,6 +977,13 @@ static int netvsc_attach(struct net_device *ndev,
- 	}
- 
- 	return 0;
-+
-+err:
-+	netif_device_detach(ndev);
-+
-+	rndis_filter_device_remove(hdev, nvdev);
-+
-+	return ret;
- }
- 
- static int netvsc_set_channels(struct net_device *net,
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 71b235f935d94..9c7e75b3b6c7a 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -1680,7 +1680,8 @@ static void igb_check_swap_media(struct igb_adapter *adapter)
+ 	if ((hw->phy.media_type == e1000_media_type_copper) &&
+ 	    (!(connsw & E1000_CONNSW_AUTOSENSE_EN))) {
+ 		swap_now = true;
+-	} else if (!(connsw & E1000_CONNSW_SERDESD)) {
++	} else if ((hw->phy.media_type != e1000_media_type_copper) &&
++		   !(connsw & E1000_CONNSW_SERDESD)) {
+ 		/* copper signal takes time to appear */
+ 		if (adapter->copper_tries < 4) {
+ 			adapter->copper_tries++;
 -- 
 2.20.1
 
