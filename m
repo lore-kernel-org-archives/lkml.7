@@ -2,50 +2,98 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91428C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5650C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1CF20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F6121655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfKKUhq (ORCPT
+        id S1727493AbfKKUiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:37:46 -0500
-Received: from verein.lst.de ([213.95.11.211]:51892 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726939AbfKKUhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:37:46 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 45C7368B05; Mon, 11 Nov 2019 21:37:43 +0100 (CET)
-Date:   Mon, 11 Nov 2019 21:37:43 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-nvme@lists.infradead.org, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com, hch@lst.de,
-        palmer@dabbelt.com, paul.walmsley@sifive.com
-Subject: Re: [PATCH RFC] PCI: endpoint: Add NVMe endpoint function driver
-Message-ID: <20191111203743.GA25876@lst.de>
-References: <1573493889-22336-1-git-send-email-alan.mikhak@sifive.com>
+        Mon, 11 Nov 2019 15:38:46 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:49245 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbfKKUip (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 15:38:45 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MqqLB-1i7uDG1Fxp-00mv3t; Mon, 11 Nov 2019 21:38:39 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org,
+        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v4 1/8] media: documentation: fix video_event description
+Date:   Mon, 11 Nov 2019 21:38:28 +0100
+Message-Id: <20191111203835.2260382-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191111203835.2260382-1-arnd@arndb.de>
+References: <20191111203835.2260382-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573493889-22336-1-git-send-email-alan.mikhak@sifive.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:5zY86Zg2X7OpNRN+ymwONVDbgqel0wnkoWEwvm3mpfHV4abDbbv
+ J4JgHP55At7vExyyNfizEhDB3c9UO7e5sChRli0Gskpb1Va8zPq209ZiJY8yAsD4IcxNBAc
+ /K983IG/2HElRxP8bP9w9JzQHaiAwXnPOzDOgyl/DfiaDESZhezreYIJmNTBmJHuoolC0Gj
+ JqY9KOwyRr7WYfJmnOWsA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WtBLRW8rGO0=:EJoxFI9//tF52eUhaE/+Ix
+ Gz/ScRgBG4lUhddk/4of/+cdRpakodA7+uWeRf1VbRxW6hJS7UbcMU8Vs32qTHDE9vMp/IZXc
+ Cuj56PjoewPgM36OjOSG62gggxztKsDpOdL3Cp0CvLp2spa9pD6mgkiaPKHApSrNatIa1fZdV
+ lXUUg3796V+loZT6hoe7ibM8SSo646Zk5ED0gl+v09Wj3XHff5gjFcbOGjMIg8GL49h0aNN+Q
+ vDTVu82yTXOoLoeBoPQXpBfm4lERWva1hUIsrTHDS64wo3M7QhAXESbFGDuh3D/jZWmKeYPpJ
+ zYLOjHWxt8disX5RN0SK9E28L7gCY1t0cp5Z9+OkMw3eJXzYXL4IZ7g7ILYvU6PSDVYWkLZoh
+ CzBhCKrsV7rwSDWuUZIrjQ7DIN/t/YZnh4n0gwDpZJLT1Qub+H6bBb+vfNNUDqxjVOymgXp1b
+ +GFuQXyjsnUZxad1RxiES0+p3YSilykybiWA7woW1hG9WGqoa1MWaSQsYSZcJJsv/RoK7K296
+ N7CycwgcLB2S9QONQGcrzGgsAM0hgS7clZFy2Dw9yFyMEATWdpiCSZxGMrfSVBU1Y1wDnzTNL
+ 0EdzljOVBJY1Vt1GYBoqURDQ/lbOk0vmhFDVrrqMPdOwK1XxsKGiscdTRjPDiNULpQmnTZ04m
+ FPhg/AtXzv5EWQS8XUwDNY3PyovUpq+ZBs6E2En5inMdpodCtqYW9taXRK7+2CWDLXlwx2Yk4
+ A7dkQCF6mHKxxxXDQCJX3ZmgZkh4Cq4URKUkqe1X5soW0VMyExuVBtHvdeXYMQLAkDqJ863Pz
+ 4ti67AysEwEH9KBu2HTCJ6kvO/pW/eeOGCsHDYtbUsxguvhHue42iH8h5IY9V+mTJeOB9x8qo
+ XmIxbD+IXhMWMyoru8bw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:38:09AM -0800, Alan Mikhak wrote:
-> A design goal is to not modify the Linux NVMe target driver
-> at all.
+The type for the timestamp in video_event was changed to
+'long' a long time ago, change the documentation to match.
 
-As I told you before that is not a "goal" but a fundamental mistake and
-against the design philosophy of all major Linux subsystems.  Please fix
-your series to move all command parsing to the code based on flags for
-fabrics vs PCIe in the few places where they significantly differ.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ Documentation/media/uapi/dvb/video-get-event.rst | 2 +-
+ Documentation/media/uapi/dvb/video_types.rst     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/media/uapi/dvb/video-get-event.rst b/Documentation/media/uapi/dvb/video-get-event.rst
+index def6c40db601..7f03fbe3d3b0 100644
+--- a/Documentation/media/uapi/dvb/video-get-event.rst
++++ b/Documentation/media/uapi/dvb/video-get-event.rst
+@@ -81,7 +81,7 @@ for this ioctl call.
+ 	#define VIDEO_EVENT_FRAME_RATE_CHANGED	2
+ 	#define VIDEO_EVENT_DECODER_STOPPED 	3
+ 	#define VIDEO_EVENT_VSYNC 		4
+-		__kernel_time_t timestamp;
++		long timestamp;
+ 		union {
+ 			video_size_t size;
+ 			unsigned int frame_rate;	/* in frames per 1000sec */
+diff --git a/Documentation/media/uapi/dvb/video_types.rst b/Documentation/media/uapi/dvb/video_types.rst
+index 479942ce6fb8..2697400ccf62 100644
+--- a/Documentation/media/uapi/dvb/video_types.rst
++++ b/Documentation/media/uapi/dvb/video_types.rst
+@@ -170,7 +170,7 @@ VIDEO_GET_EVENT call.
+     #define VIDEO_EVENT_FRAME_RATE_CHANGED  2
+     #define VIDEO_EVENT_DECODER_STOPPED     3
+     #define VIDEO_EVENT_VSYNC       4
+-	__kernel_time_t timestamp;
++	long timestamp;
+ 	union {
+ 	    video_size_t size;
+ 	    unsigned int frame_rate;    /* in frames per 1000sec */
+-- 
+2.20.0
+
