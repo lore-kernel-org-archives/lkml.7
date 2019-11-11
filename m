@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5A6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9597DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C42921655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EBF21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499409;
-	bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
+	s=default; t=1573499412;
+	bh=27fDGEpqKQPn9KccCyYX91hENaUtYZICVPP1diLkpYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6fc2JbKAHZW+HTDbB+CONBBTe8nUFvRNGysDVf+vulbEQxhhhRH02oMC8S3f3Ft3
-	 VtId0Fi2U8uPinoeY0cpvgGKJMxPM4J0ztDt0of7nLlSVW3mNn8PkWzedFTwmyFIqD
-	 4IO9zKYVh96GlDljprIXNQvk339RjhdkaYBPiVmA=
+	b=eeC+s7K7WnZoIstHOdWAfAB84KvXDcLYCyO97i+3dZRNBvXMvtqmcI7go4gopFtNs
+	 J7w5NTQ36r8zA+bIL7+txX7DI20IegOwo56aoXjVB8m273XCbc+hjqoAowbOSbFK5O
+	 97snfd7MAjTzOuqkB3ucY+eLBwWovys4lADYS07k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfKKScl (ORCPT
+        id S1727996AbfKKTKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:32:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:10:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbfKKScf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:32:35 -0500
+        id S1727999AbfKKScl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:32:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E7C214E0;
-        Mon, 11 Nov 2019 18:32:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1FA020674;
+        Mon, 11 Nov 2019 18:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497155;
-        bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
+        s=default; t=1573497161;
+        bh=27fDGEpqKQPn9KccCyYX91hENaUtYZICVPP1diLkpYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZcR5idYUcZ/FziZt66TbLA80eSmJ39O7Yxh4GUUgO/l98PZW9qkJBHT56u+5xdfa
-         QtAd4gE1rNX8n2YxS8OYu8FN47572VMf4fySgcf/jBISLPFpkP5FR1yQy86YRNidU4
-         +noJ78HRmbGhL/e165mznBgVFAjMM+e5bvetsMMw=
+        b=1p/5TybSN2SAUm9pg4zGEBEbv/zt0E1HpFD0XAEP9mtl86VQsV1idUtSylTQFegOW
+         J6Z9gc/BcO1/wirGJtd2wSiQHGoAPFrXISnipWUwbA+EMRE2RNQsRKvYtgpYS+JhqQ
+         Ae1dKfH69+NvxPT1OIxTYzXX/NwODUCdp3YDCBn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bernd Krumboeck <b.krumboeck@gmail.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org,
+        Stephane Grosjean <s.grosjean@peak-system.com>,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.9 22/65] can: usb_8dev: fix use-after-free on disconnect
-Date:   Mon, 11 Nov 2019 19:28:22 +0100
-Message-Id: <20191111181345.056368548@linuxfoundation.org>
+Subject: [PATCH 4.9 24/65] can: peak_usb: fix a potential out-of-sync while decoding packets
+Date:   Mon, 11 Nov 2019 19:28:24 +0100
+Message-Id: <20191111181345.547015472@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -61,36 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Stephane Grosjean <s.grosjean@peak-system.com>
 
-commit 3759739426186a924675651b388d1c3963c5710e upstream.
+commit de280f403f2996679e2607384980703710576fed upstream.
 
-The driver was accessing its driver data after having freed it.
+When decoding a buffer received from PCAN-USB, the first timestamp read in
+a packet is a 16-bit coded time base, and the next ones are an 8-bit
+offset to this base, regardless of the type of packet read.
 
-Fixes: 0024d8ad1639 ("can: usb_8dev: Add support for USB2CAN interface from 8 devices")
-Cc: stable <stable@vger.kernel.org>     # 3.9
-Cc: Bernd Krumboeck <b.krumboeck@gmail.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+This patch corrects a potential loss of synchronization by using a
+timestamp index read from the buffer, rather than an index of received
+data packets, to determine on the sizeof the timestamp to be read from the
+packet being decoded.
+
+Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
+Fixes: 46be265d3388 ("can: usb: PEAK-System Technik PCAN-USB specific part")
+Cc: linux-stable <stable@vger.kernel.org>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/usb_8dev.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/can/usb/peak_usb/pcan_usb.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/net/can/usb/usb_8dev.c
-+++ b/drivers/net/can/usb/usb_8dev.c
-@@ -1007,9 +1007,8 @@ static void usb_8dev_disconnect(struct u
- 		netdev_info(priv->netdev, "device disconnected\n");
+--- a/drivers/net/can/usb/peak_usb/pcan_usb.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
+@@ -108,7 +108,7 @@ struct pcan_usb_msg_context {
+ 	u8 *end;
+ 	u8 rec_cnt;
+ 	u8 rec_idx;
+-	u8 rec_data_idx;
++	u8 rec_ts_idx;
+ 	struct net_device *netdev;
+ 	struct pcan_usb *pdev;
+ };
+@@ -552,10 +552,15 @@ static int pcan_usb_decode_status(struct
+ 	mc->ptr += PCAN_USB_CMD_ARGS;
  
- 		unregister_netdev(priv->netdev);
--		free_candev(priv->netdev);
--
- 		unlink_all_urbs(priv);
-+		free_candev(priv->netdev);
+ 	if (status_len & PCAN_USB_STATUSLEN_TIMESTAMP) {
+-		int err = pcan_usb_decode_ts(mc, !mc->rec_idx);
++		int err = pcan_usb_decode_ts(mc, !mc->rec_ts_idx);
+ 
+ 		if (err)
+ 			return err;
++
++		/* Next packet in the buffer will have a timestamp on a single
++		 * byte
++		 */
++		mc->rec_ts_idx++;
  	}
  
- }
+ 	switch (f) {
+@@ -638,10 +643,13 @@ static int pcan_usb_decode_data(struct p
+ 
+ 	cf->can_dlc = get_can_dlc(rec_len);
+ 
+-	/* first data packet timestamp is a word */
+-	if (pcan_usb_decode_ts(mc, !mc->rec_data_idx))
++	/* Only first packet timestamp is a word */
++	if (pcan_usb_decode_ts(mc, !mc->rec_ts_idx))
+ 		goto decode_failed;
+ 
++	/* Next packet in the buffer will have a timestamp on a single byte */
++	mc->rec_ts_idx++;
++
+ 	/* read data */
+ 	memset(cf->data, 0x0, sizeof(cf->data));
+ 	if (status_len & PCAN_USB_STATUSLEN_RTR) {
+@@ -695,7 +703,6 @@ static int pcan_usb_decode_msg(struct pe
+ 		/* handle normal can frames here */
+ 		} else {
+ 			err = pcan_usb_decode_data(&mc, sl);
+-			mc.rec_data_idx++;
+ 		}
+ 	}
+ 
 
 
