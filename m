@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190DCC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1005BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3682184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF39F214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497374;
-	bh=4WJhdgNgB/WxPq4VgTBrlWHTLCa7rOxekKv6IQLcclY=;
+	s=default; t=1573497379;
+	bh=OwZNKYHe2zMRqZhRoRvhzFzHdREgxZidsEXfVuUzL9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ByTyOh5JrnhsJCy8SaY4yxH7LpHz6DVB0vZQm1KJhML4dw0efWC9Bmjlu7ErkGD8F
-	 T5RIxBqglaJARwweZWEh6zJKwk5siY+UXCITiUW5VrwXO48FzOk2HCgBM9MP3qby4S
-	 CssidJkMTDm5POTq8ckOkmnYztWKFLLH9/m3yDAA=
+	b=awbMvWd3bquHupH+bA9I+tBXxIaPyuoYu3mre5u3Zi+kRTYgjk/NfcLGBT7Yv/3K7
+	 CICtWhU/rw8hDUb2lsKkR8ayOcfxHGHB60EBBDgv939I+Qy0QMmlUb32Q2SX6MWxQK
+	 Y4JFvJd+2g+2nXCmQVrqurySVFSANlakzZjQv+/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfKKSgN (ORCPT
+        id S1728695AbfKKSgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728670AbfKKSgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:09 -0500
+        id S1727810AbfKKSgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD9D2184C;
-        Mon, 11 Nov 2019 18:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09CFA21655;
+        Mon, 11 Nov 2019 18:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497368;
-        bh=4WJhdgNgB/WxPq4VgTBrlWHTLCa7rOxekKv6IQLcclY=;
+        s=default; t=1573497374;
+        bh=OwZNKYHe2zMRqZhRoRvhzFzHdREgxZidsEXfVuUzL9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rTelq3DBQorQoRYPb/sGnflKNW0yj3HexyNHXG+pefKJcBMslv7XkXELeJC41heeP
-         OPo/vrANbVHqsyx7pwrz5Vtoyrj6m21pLLN5hu1VezJZaGS+NG/ZjrnjOfhOvz15I9
-         +RL853PTP3V5SaJHsksv7rQstAu2EW/MyI0zpPMQ=
+        b=yJNuc4PmvLPtFo/t4mGxV8PF9zrCUEHm0IOhuEeNqT5LOPbkHKzyCzZXaW9VIQYnH
+         j5ePlJZfB8Q9Go3aA8wHDOHQtnHfahf5VdHWkaRT/CHxJIDZGCR8h8/IF72u5I/EY6
+         K2dKWgMMqKbqtjDtxoqryTzisRKKGGoQMnPxqI2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hendrik Donner <hd@os-cillation.de>,
-        David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 003/105] ipv4: Fix table id reference in fib_sync_down_addr
-Date:   Mon, 11 Nov 2019 19:27:33 +0100
-Message-Id: <20191111181423.196686464@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 031/105] intel_th: pci: Add Comet Lake PCH support
+Date:   Mon, 11 Nov 2019 19:28:01 +0100
+Message-Id: <20191111181438.233243037@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,35 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@kernel.org>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit e0a312629fefa943534fc46f7bfbe6de3fdaf463 ]
+commit 3adbb5718dd5264666ddbc2b9b43799d292e9cb6 upstream.
 
-Hendrik reported routes in the main table using source address are not
-removed when the address is removed. The problem is that fib_sync_down_addr
-does not account for devices in the default VRF which are associated
-with the main table. Fix by updating the table id reference.
+This adds support for Intel TH on Comet Lake PCH.
 
-Fixes: 5a56a0b3a45d ("net: Don't delete routes in different VRFs")
-Reported-by: Hendrik Donner <hd@os-cillation.de>
-Signed-off-by: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191028070651.9770-7-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/fib_semantics.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -1471,8 +1471,8 @@ int fib_sync_down_addr(struct net_device
- 	int ret = 0;
- 	unsigned int hash = fib_laddr_hashfn(local);
- 	struct hlist_head *head = &fib_info_laddrhash[hash];
-+	int tb_id = l3mdev_fib_table(dev) ? : RT_TABLE_MAIN;
- 	struct net *net = dev_net(dev);
--	int tb_id = l3mdev_fib_table(dev);
- 	struct fib_info *fi;
- 
- 	if (!fib_info_laddrhash || local == 0)
+---
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -184,6 +184,11 @@ static const struct pci_device_id intel_
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	},
+ 	{
++		/* Comet Lake PCH */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x06a6),
++		.driver_data = (kernel_ulong_t)&intel_th_2x,
++	},
++	{
+ 		/* Ice Lake NNPI */
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x45c5),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
 
 
