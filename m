@@ -2,127 +2,170 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CBAC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F7CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690992084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416092190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573486774;
+	bh=o4qJouEy1HgCEmH6O0gWZxRya36rLkMLwmDDxwFd4s4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KD177RCQMmMdeHVeMvMPIsDiCz81k/mR+BpJRngjQOc8Bto41FcZkQi7Qva6fFjn8
+	 VE4ZJA3i29Ltn09NUkCOBuXcegBHKdQCRcvQdq1dnzyjaLZRDX60+YgTfJz+I0XrJm
+	 dFjTdbLg2Qfk+yyofu0x++0y7YtfFCc2gBoMKTaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfKKPic (ORCPT
+        id S1726949AbfKKPjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:38:32 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:57464 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726832AbfKKPic (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:38:32 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iUBls-00041I-3p; Mon, 11 Nov 2019 16:38:28 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xABFcQon014343
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 11 Nov 2019 16:38:26 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: [PATCH] arm64: dts: rockchip: Add node for gpu on rk3399-roc-pc
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <c2b88509-129d-46d4-9e23-15d0482951be@fivetechno.de>
-Date:   Mon, 11 Nov 2019 16:38:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 11 Nov 2019 10:39:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfKKPjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:39:32 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32A1E2084F;
+        Mon, 11 Nov 2019 15:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573486771;
+        bh=o4qJouEy1HgCEmH6O0gWZxRya36rLkMLwmDDxwFd4s4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qjrwe5DJXe7U7bKOIW26eK/hF1Li/TwctNy62/R3SXwK7uAz75n+FRf5fHpjAEydf
+         8dkQmsAKtOvy3b8yBgg6r8h6xcswTtesgILbIbhqvJr2PH6arFgk0u7PS3/F2bZi8k
+         JT+KuombXKnis5fNIBII8zSsV5qrdFFfRXvfDdxg=
+Date:   Mon, 11 Nov 2019 15:39:25 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
+Message-ID: <20191111153925.GC10488@willie-the-truck>
+References: <20191025130000.13032-2-adrian.hunter@intel.com>
+ <20191030104747.GA21153@leoy-ThinkPad-X240s>
+ <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
+ <20191030141950.GB21153@leoy-ThinkPad-X240s>
+ <20191030162325.GT4114@hirez.programming.kicks-ass.net>
+ <20191031073136.GC21153@leoy-ThinkPad-X240s>
+ <20191101100440.GU4131@hirez.programming.kicks-ass.net>
+ <20191104022346.GC26019@leoy-ThinkPad-X240s>
+ <20191108150530.GA7721@leoy-ThinkPad-X240s>
+ <20191111144642.GM4114@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573486710;6f824438;
-X-HE-SMSGID: 1iUBls-00041I-3p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111144642.GM4114@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rk3399-roc-pc has a Mali gpu, enable it for use with panfrost and mesa >19.2.
+As a disclaimer: I'm having a hard time understanding what this thread is
+about.
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
-Based on v5.5-armsoc/dts64/75aa5678
-If applied with other patches in between, the second hunk
-offsets and may patch vdd_cpu_b instead of vdd_gpu.
----
- arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Mon, Nov 11, 2019 at 03:46:42PM +0100, Peter Zijlstra wrote:
+> On Fri, Nov 08, 2019 at 11:05:30PM +0800, Leo Yan wrote:
+> 
+> > I will update some status for prototype (the code has been uploaded into
+> > git server [1]) and found some issues for text poke perf event on arm64.
+> > These issues are mainly related with arch64 architecture.
+> > 
+> > - The first issue is for the nosync instruction emulation.  On arm64,
+> >   some instructions need to be single stepped and some instructions
+> >   is emulated.  Especially, after I read the code for kprobe
+> >   implementation on Arm64.  So the main idea for prototyping is to use
+> >   the almos same method with kprobe for nosync instruction.
+> 
+> This makes no sense to me what so ever. What actual instructions are
+> patched with _nosync() ? ftrace/jump_label only use 'NOP/JMP/CALL'
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 7e07dae33d0f..287f97488f65 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -238,6 +238,11 @@
- 	status = "okay";
- };
- 
-+&gpu {
-+	mali-supply = <&vdd_gpu>;
-+	status = "okay";
-+};
-+
- &hdmi {
- 	ddc-i2c-bus = <&i2c3>;
- 	pinctrl-names = "default";
-@@ -465,8 +470,6 @@
- 		regulator-min-microvolt = <712500>;
- 		regulator-max-microvolt = <1500000>;
- 		regulator-ramp-delay = <1000>;
--		regulator-always-on;
--		regulator-boot-on;
- 		vin-supply = <&vcc3v3_sys>;
- 
- 		regulator-state-mem {
--- 
-2.20.1
+'_nosync()' can be used to patch the following instructions:
+
+	B		(JMP)
+	BL		(CALL)
+	BRK		(Breakpoint)
+	SVC, HVC, SMC	(System calls)
+	NOP
+	ISB		(Pipe flush)
+
+Our kprobes implementation prefers to single-step the instruction in an
+XOL buffer (we should do this by placing a BRK at the end of the buffer,
+but we currently use hardware step which is overkill imo). For instructions
+that are performing a PC-relative operation (e.g. an immediate branch),
+we can't run from the XOL buffer because we'd go to the wrong place; these
+instructions are therefore emulated in software...
+
+> For NOP you can advance regs->ip, for JMP you can adjust regs->ip, for
+> CALL you adjust regs->ip and regs->r14 (IIUC you do something like:
+> regs->r14 = regs->ip+4; regs->ip = func;)
+
+... in a manner similar to what you describe here. See simulate_b_bl(),
+although it's thankfully simpler than what x86 seems to have to do. This
+approach means we can avoid emulating the vast majority of the instruction
+set.
+
+> (FWIW emulating CALL on x86 is fun because we get to PUSH something on
+> the stack, let me know if you want to see the patches that were required
+> to make that happen :-)
+
+No thanks ;)
+
+> > - The second issue is race condition between the CPU alters
+> >   instructions and other CPUs hit the altered instructions (and
+> >   breakpointed).
+> > 
+> >   Peter's suggestion uses global variables 'nosync_insn' and
+> >   'nosync_addr' to record the altered instruction.  But from the
+> >   testing I found for single static key, usually it will change for
+> >   multiple address at once.
+> > 
+> >   So this might cause the issue is: CPU(a) will loop to alter
+> >   instructions for different address (sometimes the opcode also is
+> >   different for different address), at the meantime, CPU(b) hits an
+> >   altered instruction and handle exception for the breakpoint, if
+> >   CPU(a) is continuing to alter instruction for the next address, thne
+> >   CPU(a) might wrongly to use the value from 'nosync_insn' and
+> >   'nosync_addr'.
+> > 
+> >   Simply to say, we cannot only support single nosync instruction but
+> >   need to support multiple nosync instructions in the loop.
+> 
+> On x86 all actual text poking is serialized by text_mutex.
+
+On arm64, we patch a *lot* and I think stop_machine() is the only safe
+choice for things like the alternatives, where we patch all sorts of things
+(cache maintenance, I/O accessors, atomics (until recently), user accessors.
+Even then, we have to provide our own synchronisation in
+__apply_alternatives_multi_stop() and use special cache-flushing
+(clean_dcache_range_nopatch()) to avoid the possibility of running the code
+that we're modifying. Outside of the alternatives, I'd still be wary about
+recursive debug exceptions if we were to patch jump labels with breakpoints.
+
+Backing up though, I think I'm missing details about what this thread is
+trying to achieve. You're adding perf events so that coresight trace can
+take into account modifications of the kernel text, right? If so:
+
+  * Does this need to take into account more than just jump_label()?
+  * What consistency guarantees are needed by userspace? It's not clear to
+    me how it correlates the new event with execution on other CPUs. Is this
+    using timestamps or something else?
+  * What about module loading?
+
+Finally, the whole point of the '_nosync()' stuff is that we don't have
+to synchronise. Therefore, there is a window where you really can't tell
+whether the instruction has been updated from the perspective of another
+CPU.
+
+Will
