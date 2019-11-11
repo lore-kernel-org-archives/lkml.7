@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F139CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20981C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E7920659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4E220659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499378;
-	bh=tLGNzM1ESzY0AC4R6Ft+QUd5Jg4tuJOTcEn0pW8yYYo=;
+	s=default; t=1573499386;
+	bh=u2bTk1fuFSWK2W7igBb3oFb4c2ppAh1UEJtkSLG8omw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHVktwtIL5+8WcE8LV3hmNABuE6rXAsWRtkzYE/BgwCwSfi04XotkaVa0rGuKXGq1
-	 xVdxde6O1FiwQVW/qnaSX1QPx9BRKnoI1rwZvhCINNyU2N8zCPi48tEKVjENB9qMRr
-	 F3ZJykbsisOYELmcMYAzDZ6E1oVJOOVB3BN9U960=
+	b=oFCVT9tSz56pju9oopMx5HNxg2wITovNWyo0LSHKm7D2geuJ9rZCeHC2keQd2wEYU
+	 g7u31DHkvaePlQOkaxQVax18RTfZkM1Ce+P8Akef/KyiI4Mu33xD2Y3xTW+puF4xo9
+	 tQAXpfwu9iBRdRGe0YDTvO3FeDQnoPxNxD3bH4tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfKKTJh (ORCPT
+        id S1728199AbfKKSdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:09:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbfKKSdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:52 -0500
+        id S1727439AbfKKSdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F9720656;
-        Mon, 11 Nov 2019 18:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19DA121655;
+        Mon, 11 Nov 2019 18:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497231;
-        bh=tLGNzM1ESzY0AC4R6Ft+QUd5Jg4tuJOTcEn0pW8yYYo=;
+        s=default; t=1573497216;
+        bh=u2bTk1fuFSWK2W7igBb3oFb4c2ppAh1UEJtkSLG8omw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMyXX113Q0pArW6498K+QmFj8x1zwtS2r5MkrUWAY6/N8hRwSbGkjZlSchez7zX8v
-         eyziNXRQFiWfWNeCPE0wbVrdLoGA/8nedtqqi7PABYxk8rYhcLWbUWtgBye0ZZXIRo
-         OktbPNmpTtpqqWD1E5xkJurgwKso/tjh88cb+Zcc=
+        b=uPOxeeo8TB7xF0Ntnvk1RHeaTwYFBtQ+epBDCfB6aeTGxo51upd00HaHZBtIOunaC
+         kHONigmZjelnb9QT1wYkXAgnFFoYWzFJvXIsRBLA+FlniFFnq2/FIbVf+JJcsp4tVP
+         DahuBR0T7R6RkHirE/3buauO1SQg/C0RyFLXRiuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 46/65] usb: gadget: composite: Fix possible double free memory bug
-Date:   Mon, 11 Nov 2019 19:28:46 +0100
-Message-Id: <20191111181349.413232862@linuxfoundation.org>
+Subject: [PATCH 4.9 41/65] scsi: lpfc: Honor module parameter lpfc_use_adisc
+Date:   Mon, 11 Nov 2019 19:28:41 +0100
+Message-Id: <20191111181348.129999692@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -61,65 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+From: Daniel Wagner <dwagner@suse.de>
 
-[ Upstream commit 1c20c89b0421b52b2417bb0f62a611bc669eda1d ]
+[ Upstream commit 0fd103ccfe6a06e40e2d9d8c91d96332cc9e1239 ]
 
-composite_dev_cleanup call from the failure of configfs_composite_bind
-frees up the cdev->os_desc_req and cdev->req. If the previous calls of
-bind and unbind is successful these will carry stale values.
+The initial lpfc_desc_set_adisc implementation in commit
+dea3101e0a5c ("lpfc: add Emulex FC driver version 8.0.28") enabled ADISC if
 
-Consider the below sequence of function calls:
-configfs_composite_bind()
-        composite_dev_prepare()
-                - Allocate cdev->req, cdev->req->buf
-        composite_os_desc_req_prepare()
-                - Allocate cdev->os_desc_req, cdev->os_desc_req->buf
-configfs_composite_unbind()
-        composite_dev_cleanup()
-                - free the cdev->os_desc_req->buf and cdev->req->buf
-Next composition switch
-configfs_composite_bind()
-        - If it fails goto err_comp_cleanup will call the
-	  composite_dev_cleanup() function
-        composite_dev_cleanup()
-	        - calls kfree up with the stale values of cdev->req->buf and
-		  cdev->os_desc_req from the previous configfs_composite_bind
-		  call. The free call on these stale values leads to double free.
+	cfg_use_adisc && RSCN_MODE && FCP_2_DEVICE
 
-Hence, Fix this issue by setting request and buffer pointer to NULL after
-kfree.
+In commit 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of
+SLI-3") this changed to
 
-Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+	(cfg_use_adisc && RSC_MODE) || FCP_2_DEVICE
+
+and later in commit ffc954936b13 ("[SCSI] lpfc 8.3.13: FC Discovery Fixes
+and enhancements.") to
+
+	(cfg_use_adisc && RSC_MODE) || (FCP_2_DEVICE && FCP_TARGET)
+
+A customer reports that after a devloss, an ADISC failure is logged. It
+turns out the ADISC flag is set even the user explicitly set lpfc_use_adisc
+= 0.
+
+[Sat Dec 22 22:55:58 2018] lpfc 0000:82:00.0: 2:(0):0203 Devloss timeout on WWPN 50:01:43:80:12:8e:40:20 NPort x05df00 Data: x82000000 x8 xa
+[Sat Dec 22 23:08:20 2018] lpfc 0000:82:00.0: 2:(0):2755 ADISC failure DID:05DF00 Status:x9/x70000
+
+[mkp: fixed Hannes' email]
+
+Fixes: 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of SLI-3")
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+Cc: James Smart <james.smart@broadcom.com>
+Link: https://lore.kernel.org/r/20191022072112.132268-1-dwagner@suse.de
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/composite.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 9fa168af847b5..854c4ec0af2c5 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -2179,14 +2179,18 @@ void composite_dev_cleanup(struct usb_composite_dev *cdev)
- 			usb_ep_dequeue(cdev->gadget->ep0, cdev->os_desc_req);
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index 56a3df4fddb05..21ec7b5b6c85c 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -759,9 +759,9 @@ lpfc_disc_set_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
  
- 		kfree(cdev->os_desc_req->buf);
-+		cdev->os_desc_req->buf = NULL;
- 		usb_ep_free_request(cdev->gadget->ep0, cdev->os_desc_req);
-+		cdev->os_desc_req = NULL;
- 	}
- 	if (cdev->req) {
- 		if (cdev->setup_pending)
- 			usb_ep_dequeue(cdev->gadget->ep0, cdev->req);
- 
- 		kfree(cdev->req->buf);
-+		cdev->req->buf = NULL;
- 		usb_ep_free_request(cdev->gadget->ep0, cdev->req);
-+		cdev->req = NULL;
- 	}
- 	cdev->next_string_id = 0;
- 	device_remove_file(&cdev->gadget->dev, &dev_attr_suspended);
+ 	if (!(vport->fc_flag & FC_PT2PT)) {
+ 		/* Check config parameter use-adisc or FCP-2 */
+-		if ((vport->cfg_use_adisc && (vport->fc_flag & FC_RSCN_MODE)) ||
++		if (vport->cfg_use_adisc && ((vport->fc_flag & FC_RSCN_MODE) ||
+ 		    ((ndlp->nlp_fcp_info & NLP_FCP_2_DEVICE) &&
+-		     (ndlp->nlp_type & NLP_FCP_TARGET))) {
++		     (ndlp->nlp_type & NLP_FCP_TARGET)))) {
+ 			spin_lock_irq(shost->host_lock);
+ 			ndlp->nlp_flag |= NLP_NPR_ADISC;
+ 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
