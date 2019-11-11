@@ -2,144 +2,110 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239ECC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CE4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8F72196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:25:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+CCZiO+"
+	by mail.kernel.org (Postfix) with ESMTP id 8ECF9222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573478844;
+	bh=3khfY817g3PS5TkES+rklqgKgMSJFdurf0htRIWV3E8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KXhbXw1HoJI4gtXC8NnZbtm+04+V8TwOA9pPSNo6RCNm4MnhD4ddLiEAbjd3YEssT
+	 2PrIbKhCgNU2xm0U/vqhIwZ8HfNeaBrY2GkLrUT3/lG1g9GNS83kR5E3mXAWPs4IJ/
+	 mrFxa18lw0L5M3P2Ez5B6bvGqPoxjPp1k/5JorP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfKKNZy (ORCPT
+        id S1726951AbfKKN1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:25:54 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45399 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfKKNZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:25:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z10so9322908wrs.12;
-        Mon, 11 Nov 2019 05:25:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=blu77unpeE09r1JI0P7HpC+ivP/3zsMfpmusG6ey0wg=;
-        b=L+CCZiO+UFIqbNPCkKohaXARPxLm4OT06+/QOuEWBybW/LIHrzhNwiKuciQxKfswY+
-         KXwJW05Dy0LVOuhCA1C8/+hul9xuqPnyUJZo117/V2fODS1NGHyVTQSr4p8R056Av/HB
-         wQ8vrJ6mtIdda4j2gmj85X4JIrdRrhefft9UQn2n6rPpSbho/Fa/cMTaV0UURpoSvWd4
-         Llt/n1pflIAc7kCZOTzn1vJWTw9oKOLSW+sasRGYWItozOTquIWUeV9+S/OROXDP/XF6
-         Cjc8/C0xqAPz5Jyi020yGnwQAIzsikynjIPFnLnElbACTll5DV2cfca/Dy1IoG89fHlA
-         HsNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=blu77unpeE09r1JI0P7HpC+ivP/3zsMfpmusG6ey0wg=;
-        b=Q1RLb8aWC8Uv46XrV7RCkAi3BAezGQsh4+tn/+T4uPZJH3F4OlJasj90kxukk8QPg1
-         uLKKyWWe2rUpHVD9t26CW0rMb7ZoPo9PwNK0TfhOHDdqYULBSfeeVJOPU/HphQQbssWO
-         rJJrs26NJQGvolb9puh2Ts19IKr0FiB/JSLuMDgYBYqmwmuggFXx23/4PhZteC8Oi0En
-         hpXf60EhcPZrEbI/WmoiCkdJBA2r4s3osOa4lf2QxvOeO7vOKkeA+uhU4uQk6oQ4kOmb
-         TVH6/4pfHlgYZuM2l/nCSd4sxdGn34FR6QneHbcl0rBLspivKaWmko70W4LMElwBrWpD
-         Ynjw==
-X-Gm-Message-State: APjAAAVVVn1MwUTN2MSM+v92q7vhFUyk6lAqlDNofuIgZ+mFQM1G7Fgz
-        56DRPK3ae0D8uHpe+P3qrbJYfIkz
-X-Google-Smtp-Source: APXvYqzWJFM4B0A4KrsqAdfd/MII9XmNRZJzIm9+qH0vj4F/tfYvEL2uZBIQa0A6litOzlc1ap+xJw==
-X-Received: by 2002:a5d:4a45:: with SMTP id v5mr22352296wrs.288.1573478746007;
-        Mon, 11 Nov 2019 05:25:46 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id p1sm7555131wmc.38.2019.11.11.05.25.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Nov 2019 05:25:45 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     jmattson@google.com, wanpengli@tencent.com,
-        Junaid Shahid <junaids@google.com>
-Subject: [PATCH 2/2] KVM: fix placement of refcount initialization
-Date:   Mon, 11 Nov 2019 14:25:41 +0100
-Message-Id: <1573478741-30959-3-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573478741-30959-1-git-send-email-pbonzini@redhat.com>
-References: <1573478741-30959-1-git-send-email-pbonzini@redhat.com>
+        Mon, 11 Nov 2019 08:27:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726879AbfKKN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 08:27:23 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBCC32196E;
+        Mon, 11 Nov 2019 13:27:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573478842;
+        bh=3khfY817g3PS5TkES+rklqgKgMSJFdurf0htRIWV3E8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m+qMg8uHBw99MxUsk26njdjGjDT/Ta8ES+ZVEG2GQ0udk7tYSiKb+Jd1xciKXpB8F
+         twU/HuO8oIndjNsYOzuMjoEa907GWnUixaMXCV1d3Wa3GFZc5BFH+gfgMfWCP1lcli
+         Fpo2XworndBJncJiA4o6dYYhc2YNDoBJat65lfPM=
+Date:   Mon, 11 Nov 2019 13:27:17 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     catalin.marinas@arm.com, maz@kernel.org, suzuki.poulose@arm.com,
+        mark.rutland@arm.com, tangnianyao@huawei.com,
+        xiexiangyou@huawei.com, linux-kernel@vger.kernel.org,
+        arm@kernel.org
+Subject: Re: [RFC PATCH v2] arm64: cpufeatures: add support for tlbi range
+ instructions
+Message-ID: <20191111132716.GA9394@willie-the-truck>
+References: <5DC960EB.9050503@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5DC960EB.9050503@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reported by syzkaller:
+On Mon, Nov 11, 2019 at 09:23:55PM +0800, Zhenyu Ye wrote:
+> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+> range of input addresses. This patch adds support for this feature.
+> This is the second version of the patch.
+> 
+> I traced the __flush_tlb_range() for a minute and get some statistical
+> data as below:
+> 
+> 	PAGENUM		COUNT
+> 	1		34944
+> 	2		5683
+> 	3		1343
+> 	4		7857
+> 	5		838
+> 	9		339
+> 	16		933
+> 	19		427
+> 	20		5821
+> 	23		279
+> 	41		338
+> 	141		279
+> 	512		428
+> 	1668		120
+> 	2038		100
+> 
+> Those data are based on kernel-5.4.0, where PAGENUM = end - start, COUNT
+> shows number of calls to the __flush_tlb_range() in a minute. There only
+> shows the data which COUNT >= 100. The kernel is started normally, and
+> transparent hugepage is opened. As we can see, though most user TLBI
+> ranges were 1 pages long, the num of long-range can not be ignored.
+> 
+> The new feature of TLB range can improve lots of performance compared to
+> the current implementation. As an example, flush 512 ranges needs only 1
+> instruction as opposed to 512 instructions using current implementation.
+> 
+> And for a new hardware feature, support is better than not.
+> 
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+> ChangeLog v1 -> v2:
+> - Change the main implementation of this feature.
+> - Add some comments.
 
-   =============================
-   WARNING: suspicious RCU usage
-   -----------------------------
-   ./include/linux/kvm_host.h:536 suspicious rcu_dereference_check() usage!
+How does this address my concerns here:
 
-   other info that might help us debug this:
+https://lore.kernel.org/linux-arm-kernel/20191031131649.GB27196@willie-the-truck/
 
-   rcu_scheduler_active = 2, debug_locks = 1
-   no locks held by repro_11/12688.
+?
 
-   stack backtrace:
-   Call Trace:
-    dump_stack+0x7d/0xc5
-    lockdep_rcu_suspicious+0x123/0x170
-    kvm_dev_ioctl+0x9a9/0x1260 [kvm]
-    do_vfs_ioctl+0x1a1/0xfb0
-    ksys_ioctl+0x6d/0x80
-    __x64_sys_ioctl+0x73/0xb0
-    do_syscall_64+0x108/0xaa0
-    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Commit a97b0e773e4 (kvm: call kvm_arch_destroy_vm if vm creation fails)
-sets users_count to 1 before kvm_arch_init_vm(), however, if kvm_arch_init_vm()
-fails, we need to decrease this count.  By moving it earlier, we can push
-the decrease to out_err_no_arch_destroy_vm without introducing yet another
-error label.
-
-syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=15209b84e00000
-
-Reported-by: syzbot+75475908cd0910f141ee@syzkaller.appspotmail.com
-Fixes: a97b0e773e49 ("kvm: call kvm_arch_destroy_vm if vm creation fails")
-Cc: Jim Mattson <jmattson@google.com>
-Analyzed-by: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- virt/kvm/kvm_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e22ff63e5b1a..e7a07132cd7f 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -650,6 +650,7 @@ static struct kvm *kvm_create_vm(unsigned long type)
- 	if (init_srcu_struct(&kvm->irq_srcu))
- 		goto out_err_no_irq_srcu;
- 
-+	refcount_set(&kvm->users_count, 1);
- 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
- 		struct kvm_memslots *slots = kvm_alloc_memslots();
- 
-@@ -667,7 +668,6 @@ static struct kvm *kvm_create_vm(unsigned long type)
- 			goto out_err_no_arch_destroy_vm;
- 	}
- 
--	refcount_set(&kvm->users_count, 1);
- 	r = kvm_arch_init_vm(kvm, type);
- 	if (r)
- 		goto out_err_no_arch_destroy_vm;
-@@ -696,8 +696,8 @@ static struct kvm *kvm_create_vm(unsigned long type)
- 	hardware_disable_all();
- out_err_no_disable:
- 	kvm_arch_destroy_vm(kvm);
--	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
- out_err_no_arch_destroy_vm:
-+	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
- 	for (i = 0; i < KVM_NR_BUSES; i++)
- 		kfree(kvm_get_bus(kvm, i));
- 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++)
--- 
-1.8.3.1
-
+Will
