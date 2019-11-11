@@ -2,59 +2,102 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CF6C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B74C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFB07214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1313A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:27:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fw0twQqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKKSZ6 (ORCPT
+        id S1726928AbfKKS1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:25:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:49022 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfKKSZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:25:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E2421FB;
-        Mon, 11 Nov 2019 10:25:57 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B31A3F534;
-        Mon, 11 Nov 2019 10:25:56 -0800 (PST)
-Date:   Mon, 11 Nov 2019 18:25:54 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH][next] kselftest: arm64: fix spelling mistake "contiguos"
- -> "contiguous"
-Message-ID: <20191111182553.GB60539@arrakis.emea.arm.com>
-References: <20191111091236.37165-1-colin.king@canonical.com>
+        Mon, 11 Nov 2019 13:27:14 -0500
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:33078 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbfKKS1N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:27:13 -0500
+Received: by mail-lj1-f180.google.com with SMTP id t5so14917776ljk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:27:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MThzuPE5GHK9HkxVsoX5XDICTVaynruuXSaosaKjcs8=;
+        b=Fw0twQqHYcZerf7R7Z3mbmARQOIFlH3pXVj4Yjat2DM7woJjV+SUtLUFxaEmeBl+U5
+         szMKEvHO9eLWrC8gGlF9I60PdiM4n2eVfToqoV5409n1CtsBTL3vU6t0ClyXdYIp4Xvt
+         nWXLT0OSdbsl0Wx6bZ6d8xeGYVa8JX7gNAf+7micSQJLTdtOlEcyFzX48Yb1d5PPyBxL
+         DefhaGvaBR5etVxoKduL7AjUCl4udWuhNJWtuhe24rPNevBh9yKJxiS6oY/UpubbNHmA
+         SamzTvPY1gSEo+YFXpeKBxJxPZAYb3un85/OrkIjyB8A71lPT+Iigg7yWZpwMiCJ6xq1
+         VNXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MThzuPE5GHK9HkxVsoX5XDICTVaynruuXSaosaKjcs8=;
+        b=ey2u5Ut2hWPB0GQUSGL8VbfG2sxZX4u+mHM7W6mzl/qHaDK0+tCtvQC/eImoodhzad
+         uoMK9zO0v7k6+wHAWfhvk02ThX/kHjNGJqpbYwdLV1ZM6e3iIECbkdGwm9eAVyi+Nb73
+         bFEhFbJ5xjw4Dz6GjGE7cFLQWuMO852SlpKOQk3jMahSBXAWKtRKUhJq1ImEhe9o/wi1
+         KgjEJx2nUPjGutEPRLD8cu9Iq9XxIqvuFYipirmp+7DK6eUzIDk344rJTBJAcw3/py+n
+         H3dQyKpFPCjPH2BJeTOstR7fvnErJIecZFQYRGhtMoxJ6V54fxnB7wgzzfG0bh9O0h6j
+         Lf5w==
+X-Gm-Message-State: APjAAAUp3r3A5hhZLMB9IMqLz62JvH9ok1yLga6EyJskA7nZFs9H5VuY
+        1MJs+lIt47CdDjRGFkNu/P8OhjwfwbtGvTIYJ3FcHg==
+X-Google-Smtp-Source: APXvYqyWMSR5OPToEop6rDei4ILQee/UuxXH+ZjV7ZXKAeitGVZS2Lw9zm51FtgZf6Xt1NfAsveDiRmS7Mfl3wUydIw=
+X-Received: by 2002:a2e:a410:: with SMTP id p16mr17228931ljn.46.1573496829912;
+ Mon, 11 Nov 2019 10:27:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111091236.37165-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com>
+ <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com>
+ <20191111012614.GC6235@magnolia> <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
+ <20191111083815.GA29540@infradead.org> <1757087132.11450258.1573468734360.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1757087132.11450258.1573468734360.JavaMail.zimbra@redhat.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 11 Nov 2019 23:56:58 +0530
+Message-ID: <CA+G9fYtuwT_vkQL-RfAMcmH_HBHUWQ5ZPHdwsGoNTALhwyiZgg@mail.gmail.com>
+Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0: Success
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        LTP List <ltp@lists.linux.it>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        lkft-triage@lists.linaro.org,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:12:36AM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in an error message literal string. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Mon, 11 Nov 2019 at 16:09, Jan Stancek <jstancek@redhat.com> wrote:
+>
+>
+> ----- Original Message -----
+> > Is this a new test?
+>
+> No, it's not new.
+>
+> > If not why was this never reported?  Sounds like
+> > we should add this test case to xfstests.
+>
+> I'm guessing not that many users still run 32bit kernels.
+> Naresh' setup is using ext4, so I assume he noticed only
+> after recent changes in linux-next wrt. directio and ext4.
 
-Queued for 5.5. Thanks.
+That's true.
+Started noticing recently from Linux next-20191107 kernel on i386 and arm32.
 
--- 
-Catalin
+Steps to reproduce:
+./runltp -f dio -d /mounted-ext4-drive
+
+- Naresh
