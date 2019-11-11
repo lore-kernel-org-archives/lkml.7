@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761CAC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BBFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4720621655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09424222D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498958;
-	bh=eK51Yv3v7b3KxZ54DU+sFhlmbdZHrwVxHxNG2cvFhPU=;
+	s=default; t=1573498974;
+	bh=MnjhQlZwaODzj+JadDJkhh9j+AWvo5XL4w5QwgNBMyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V0HYAV5y3LpexSwQj4pDPIH89OS8/giyDZyVIC9VP06R/RxZ7+0HJFLvFrr341pV4
-	 tTe7w6lYdAtAfDulF30vFKjJfV3JpRpvyYyxcKN7/s4Glwil6C/PfxBlpICH+8wQKB
-	 VKoJ9PveM6efvU5RAL+lgSgLdEdjHyJZzjPqNWek=
+	b=PmSQiHxss1U/+43mLE6nVqWEOjmuxMbFmNcPSCdVVpdQOOXoBsmksE5X5MUatkljf
+	 zZXpJ8oLQR2BPnAcjJ/PqpYP2mU/zL6rtMNlK2wTh6y2JOyrSQk+wMLDUilszwaxRB
+	 rLD/sYOqTMeqGlnbnJ9w1l4S9UVHNyYQyxkkqXe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbfKKSsW (ORCPT
+        id S1730133AbfKKSrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:48:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:47:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730240AbfKKSsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:48:19 -0500
+        id S1730116AbfKKSr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:47:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 858D320674;
-        Mon, 11 Nov 2019 18:48:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E6621655;
+        Mon, 11 Nov 2019 18:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498097;
-        bh=eK51Yv3v7b3KxZ54DU+sFhlmbdZHrwVxHxNG2cvFhPU=;
+        s=default; t=1573498045;
+        bh=MnjhQlZwaODzj+JadDJkhh9j+AWvo5XL4w5QwgNBMyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iSsw08Iu29K7Dx5ZGJu8h5UjLsnizFVk8FPw0kcLF7EG8fi6LDMCil6ionAzLoGJ/
-         Bu1y3Scxxued5YTvCNhCWX/o9EHyfNQWQjKMWh2A2HFP4RqgeF1EEFwl138mgW8WV9
-         g2icBwdqenCWERXiLPfoU2FMq1kctWmtTUZDl1vw=
+        b=fKtqDXYO46Zt4xBKjMyIG4pswWAUWDAy+HVrb+6kQHgFbUsRkyj/POZ1LcFv6lpkm
+         rQcaqzUodYObG3rGMczr1QHejd35hEdugkABKrEonLFZ0jI08K97Y3aCotUDMeHwbd
+         +WjuFFiInU4x/WM+rhLHS2Em/ytZpmAdhrbowHYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hurley <john.hurley@netronome.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Louis Peens <louis.peens@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 021/193] net: sched: prevent duplicate flower rules from tcf_proto destroy race
-Date:   Mon, 11 Nov 2019 19:26:43 +0100
-Message-Id: <20191111181501.745091812@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 125/125] cgroup,writeback: dont switch wbs immediately on dead wbs if the memcg is dead
+Date:   Mon, 11 Nov 2019 19:29:24 +0100
+Message-Id: <20191111181456.356001524@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
-References: <20191111181459.850623879@linuxfoundation.org>
+In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
+References: <20191111181438.945353076@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,234 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hurley <john.hurley@netronome.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 59eb87cb52c9f7164804bc8639c4d03ba9b0c169 ]
+commit 65de03e251382306a4575b1779c57c87889eee49 upstream.
 
-When a new filter is added to cls_api, the function
-tcf_chain_tp_insert_unique() looks up the protocol/priority/chain to
-determine if the tcf_proto is duplicated in the chain's hashtable. It then
-creates a new entry or continues with an existing one. In cls_flower, this
-allows the function fl_ht_insert_unque to determine if a filter is a
-duplicate and reject appropriately, meaning that the duplicate will not be
-passed to drivers via the offload hooks. However, when a tcf_proto is
-destroyed it is removed from its chain before a hardware remove hook is
-hit. This can lead to a race whereby the driver has not received the
-remove message but duplicate flows can be accepted. This, in turn, can
-lead to the offload driver receiving incorrect duplicate flows and out of
-order add/delete messages.
+cgroup writeback tries to refresh the associated wb immediately if the
+current wb is dead.  This is to avoid keeping issuing IOs on the stale
+wb after memcg - blkcg association has changed (ie. when blkcg got
+disabled / enabled higher up in the hierarchy).
 
-Prevent duplicates by utilising an approach suggested by Vlad Buslov. A
-hash table per block stores each unique chain/protocol/prio being
-destroyed. This entry is only removed when the full destroy (and hardware
-offload) has completed. If a new flow is being added with the same
-identiers as a tc_proto being detroyed, then the add request is replayed
-until the destroy is complete.
+Unfortunately, the logic gets triggered spuriously on inodes which are
+associated with dead cgroups.  When the logic is triggered on dead
+cgroups, the attempt fails only after doing quite a bit of work
+allocating and initializing a new wb.
 
-Fixes: 8b64678e0af8 ("net: sched: refactor tp insert/delete for concurrent execution")
-Signed-off-by: John Hurley <john.hurley@netronome.com>
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Reported-by: Louis Peens <louis.peens@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping
+has no dirty pages") alleviated the issue significantly as it now only
+triggers when the inode has dirty pages.  However, the condition can
+still be triggered before the inode is switched to a different cgroup
+and the logic simply doesn't make sense.
+
+Skip the immediate switching if the associated memcg is dying.
+
+This is a simplified version of the following two patches:
+
+ * https://lore.kernel.org/linux-mm/20190513183053.GA73423@dennisz-mbp/
+ * http://lkml.kernel.org/r/156355839560.2063.5265687291430814589.stgit@buzz
+
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Fixes: e8a7abf5a5bd ("writeback: disassociate inodes from dying bdi_writebacks")
+Acked-by: Dennis Zhou <dennis@kernel.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/sch_generic.h |    4 ++
- net/sched/cls_api.c       |   83 +++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 83 insertions(+), 4 deletions(-)
 
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -13,6 +13,7 @@
- #include <linux/refcount.h>
- #include <linux/workqueue.h>
- #include <linux/mutex.h>
-+#include <linux/hashtable.h>
- #include <net/gen_stats.h>
- #include <net/rtnetlink.h>
- #include <net/flow_offload.h>
-@@ -359,6 +360,7 @@ struct tcf_proto {
- 	bool			deleting;
- 	refcount_t		refcnt;
- 	struct rcu_head		rcu;
-+	struct hlist_node	destroy_ht_node;
- };
+---
+ fs/fs-writeback.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -582,10 +582,13 @@ void wbc_attach_and_unlock_inode(struct
+ 	spin_unlock(&inode->i_lock);
  
- struct qdisc_skb_cb {
-@@ -409,6 +411,8 @@ struct tcf_block {
- 		struct list_head filter_chain_list;
- 	} chain0;
- 	struct rcu_head rcu;
-+	DECLARE_HASHTABLE(proto_destroy_ht, 7);
-+	struct mutex proto_destroy_lock; /* Lock for proto_destroy hashtable. */
- };
- 
- #ifdef CONFIG_PROVE_LOCKING
---- a/net/sched/cls_api.c
-+++ b/net/sched/cls_api.c
-@@ -21,6 +21,7 @@
- #include <linux/slab.h>
- #include <linux/idr.h>
- #include <linux/rhashtable.h>
-+#include <linux/jhash.h>
- #include <net/net_namespace.h>
- #include <net/sock.h>
- #include <net/netlink.h>
-@@ -45,6 +46,62 @@ static LIST_HEAD(tcf_proto_base);
- /* Protects list of registered TC modules. It is pure SMP lock. */
- static DEFINE_RWLOCK(cls_mod_lock);
- 
-+static u32 destroy_obj_hashfn(const struct tcf_proto *tp)
-+{
-+	return jhash_3words(tp->chain->index, tp->prio,
-+			    (__force __u32)tp->protocol, 0);
-+}
-+
-+static void tcf_proto_signal_destroying(struct tcf_chain *chain,
-+					struct tcf_proto *tp)
-+{
-+	struct tcf_block *block = chain->block;
-+
-+	mutex_lock(&block->proto_destroy_lock);
-+	hash_add_rcu(block->proto_destroy_ht, &tp->destroy_ht_node,
-+		     destroy_obj_hashfn(tp));
-+	mutex_unlock(&block->proto_destroy_lock);
-+}
-+
-+static bool tcf_proto_cmp(const struct tcf_proto *tp1,
-+			  const struct tcf_proto *tp2)
-+{
-+	return tp1->chain->index == tp2->chain->index &&
-+	       tp1->prio == tp2->prio &&
-+	       tp1->protocol == tp2->protocol;
-+}
-+
-+static bool tcf_proto_exists_destroying(struct tcf_chain *chain,
-+					struct tcf_proto *tp)
-+{
-+	u32 hash = destroy_obj_hashfn(tp);
-+	struct tcf_proto *iter;
-+	bool found = false;
-+
-+	rcu_read_lock();
-+	hash_for_each_possible_rcu(chain->block->proto_destroy_ht, iter,
-+				   destroy_ht_node, hash) {
-+		if (tcf_proto_cmp(tp, iter)) {
-+			found = true;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return found;
-+}
-+
-+static void
-+tcf_proto_signal_destroyed(struct tcf_chain *chain, struct tcf_proto *tp)
-+{
-+	struct tcf_block *block = chain->block;
-+
-+	mutex_lock(&block->proto_destroy_lock);
-+	if (hash_hashed(&tp->destroy_ht_node))
-+		hash_del_rcu(&tp->destroy_ht_node);
-+	mutex_unlock(&block->proto_destroy_lock);
-+}
-+
- /* Find classifier type by string name */
- 
- static const struct tcf_proto_ops *__tcf_proto_lookup_ops(const char *kind)
-@@ -232,9 +289,11 @@ static void tcf_proto_get(struct tcf_pro
- static void tcf_chain_put(struct tcf_chain *chain);
- 
- static void tcf_proto_destroy(struct tcf_proto *tp, bool rtnl_held,
--			      struct netlink_ext_ack *extack)
-+			      bool sig_destroy, struct netlink_ext_ack *extack)
- {
- 	tp->ops->destroy(tp, rtnl_held, extack);
-+	if (sig_destroy)
-+		tcf_proto_signal_destroyed(tp->chain, tp);
- 	tcf_chain_put(tp->chain);
- 	module_put(tp->ops->owner);
- 	kfree_rcu(tp, rcu);
-@@ -244,7 +303,7 @@ static void tcf_proto_put(struct tcf_pro
- 			  struct netlink_ext_ack *extack)
- {
- 	if (refcount_dec_and_test(&tp->refcnt))
--		tcf_proto_destroy(tp, rtnl_held, extack);
-+		tcf_proto_destroy(tp, rtnl_held, true, extack);
+ 	/*
+-	 * A dying wb indicates that the memcg-blkcg mapping has changed
+-	 * and a new wb is already serving the memcg.  Switch immediately.
++	 * A dying wb indicates that either the blkcg associated with the
++	 * memcg changed or the associated memcg is dying.  In the first
++	 * case, a replacement wb should already be available and we should
++	 * refresh the wb immediately.  In the second case, trying to
++	 * refresh will keep failing.
+ 	 */
+-	if (unlikely(wb_dying(wbc->wb)))
++	if (unlikely(wb_dying(wbc->wb) && !css_is_dying(wbc->wb->memcg_css)))
+ 		inode_switch_wbs(inode, wbc->wb_id);
  }
- 
- static int walker_check_empty(struct tcf_proto *tp, void *fh,
-@@ -368,6 +427,7 @@ static bool tcf_chain_detach(struct tcf_
- static void tcf_block_destroy(struct tcf_block *block)
- {
- 	mutex_destroy(&block->lock);
-+	mutex_destroy(&block->proto_destroy_lock);
- 	kfree_rcu(block, rcu);
- }
- 
-@@ -543,6 +603,12 @@ static void tcf_chain_flush(struct tcf_c
- 
- 	mutex_lock(&chain->filter_chain_lock);
- 	tp = tcf_chain_dereference(chain->filter_chain, chain);
-+	while (tp) {
-+		tp_next = rcu_dereference_protected(tp->next, 1);
-+		tcf_proto_signal_destroying(chain, tp);
-+		tp = tp_next;
-+	}
-+	tp = tcf_chain_dereference(chain->filter_chain, chain);
- 	RCU_INIT_POINTER(chain->filter_chain, NULL);
- 	tcf_chain0_head_change(chain, NULL);
- 	chain->flushing = true;
-@@ -1002,6 +1068,7 @@ static struct tcf_block *tcf_block_creat
- 		return ERR_PTR(-ENOMEM);
- 	}
- 	mutex_init(&block->lock);
-+	mutex_init(&block->proto_destroy_lock);
- 	flow_block_init(&block->flow_block);
- 	INIT_LIST_HEAD(&block->chain_list);
- 	INIT_LIST_HEAD(&block->owner_list);
-@@ -1754,6 +1821,12 @@ static struct tcf_proto *tcf_chain_tp_in
- 
- 	mutex_lock(&chain->filter_chain_lock);
- 
-+	if (tcf_proto_exists_destroying(chain, tp_new)) {
-+		mutex_unlock(&chain->filter_chain_lock);
-+		tcf_proto_destroy(tp_new, rtnl_held, false, NULL);
-+		return ERR_PTR(-EAGAIN);
-+	}
-+
- 	tp = tcf_chain_tp_find(chain, &chain_info,
- 			       protocol, prio, false);
- 	if (!tp)
-@@ -1761,10 +1834,10 @@ static struct tcf_proto *tcf_chain_tp_in
- 	mutex_unlock(&chain->filter_chain_lock);
- 
- 	if (tp) {
--		tcf_proto_destroy(tp_new, rtnl_held, NULL);
-+		tcf_proto_destroy(tp_new, rtnl_held, false, NULL);
- 		tp_new = tp;
- 	} else if (err) {
--		tcf_proto_destroy(tp_new, rtnl_held, NULL);
-+		tcf_proto_destroy(tp_new, rtnl_held, false, NULL);
- 		tp_new = ERR_PTR(err);
- 	}
- 
-@@ -1802,6 +1875,7 @@ static void tcf_chain_tp_delete_empty(st
- 		return;
- 	}
- 
-+	tcf_proto_signal_destroying(chain, tp);
- 	next = tcf_chain_dereference(chain_info.next, chain);
- 	if (tp == chain->filter_chain)
- 		tcf_chain0_head_change(chain, next);
-@@ -2321,6 +2395,7 @@ static int tc_del_tfilter(struct sk_buff
- 		err = -EINVAL;
- 		goto errout_locked;
- 	} else if (t->tcm_handle == 0) {
-+		tcf_proto_signal_destroying(chain, tp);
- 		tcf_chain_tp_remove(chain, &chain_info, tp);
- 		mutex_unlock(&chain->filter_chain_lock);
  
 
 
