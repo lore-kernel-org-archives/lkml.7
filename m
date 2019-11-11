@@ -2,53 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4518CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE16C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0182196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9402196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497515;
-	bh=/uI1FV1y5EIeLVsbM1HzN8zY5jnsCvK7eNvEo4Qm7+A=;
+	s=default; t=1573497518;
+	bh=LLWwTlzKdjmy5s1VIl+pq4uOGDlreo98Jg/Th1Ac00U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RQbfphMbS4duC5D+r/WxX65WhpUNGjqfWZlVty57M/c4iHAfICFwoui+cRHIF54cS
-	 u29Hiuk37wKQT5wP1iN1y0hZPukDq3R00BUCCr0tG1/AQGqHLK1IGEHGbaIacre3tl
-	 gylTa8hddMfVqGZHmVqrAKimV/VraXWrZdncB/LI=
+	b=0QDcpTCeul3YeqxTh1YT4WoFqD28wewJ0NNE19c67K7vpvuS6d+eb41vR56oGgcel
+	 0S8OX7+aCSK3QQYkRytFbbUE3EeELo+vikHyYi/bllSLYHJ4oL47Hgjj79MSlNWMmn
+	 U9oTQSP4O00ISEprH2kgsWjNaPTSJAhJvbF/PdS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfKKSie (ORCPT
+        id S1729036AbfKKSig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57458 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbfKKSia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:30 -0500
+        id S1729021AbfKKSie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4A4721783;
-        Mon, 11 Nov 2019 18:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3380921925;
+        Mon, 11 Nov 2019 18:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497509;
-        bh=/uI1FV1y5EIeLVsbM1HzN8zY5jnsCvK7eNvEo4Qm7+A=;
+        s=default; t=1573497512;
+        bh=LLWwTlzKdjmy5s1VIl+pq4uOGDlreo98Jg/Th1Ac00U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLLNaoeDckIINeBZI4auSMw+2vLYM0Pc9s4ONgBDCmeSYG3k4f9THUch68BbAtv2M
-         e4hv9dtrEq7yMjCGOT8odk3y3hz5ZSGIbw5ziqgBYnbxzPKE4gu/O4bc/MgF4PQl+4
-         NxJslDkddXLoBmmkPZExlU+uCYD1bGCzgpWZ2eFo=
+        b=RQTPLC/+RbqCGGqzvER6m7/K7ZH0TXIN8Xqpc6ZqlO+UxB6ORDACXvo1PR5THlJp9
+         HUAtya8A8mq16W+0IWghUQzrvyRKw3uSQy/8G8URljNvVuSZ5Sp7oE49pjL0IHZy2G
+         RLo22vSxG6GLX4P1c0fdbieEYtgFPc5CTGgZ1atI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Simon Horman <horms@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 078/105] ipvs: dont ignore errors in case refcounting ip_vs module fails
-Date:   Mon, 11 Nov 2019 19:28:48 +0100
-Message-Id: <20191111181446.422536462@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.14 043/105] configfs: new object reprsenting tree fragments
+Date:   Mon, 11 Nov 2019 19:28:13 +0100
+Message-Id: <20191111181440.920131156@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,238 +59,396 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 62931f59ce9cbabb934a431f48f2f1f441c605ac ]
+commit 47320fbe11a6059ae502c9c16b668022fdb4cf76 upstream.
 
-if the IPVS module is removed while the sync daemon is starting, there is
-a small gap where try_module_get() might fail getting the refcount inside
-ip_vs_use_count_inc(). Then, the refcounts of IPVS module are unbalanced,
-and the subsequent call to stop_sync_thread() causes the following splat:
+Refcounted, hangs of configfs_dirent, created by operations that add
+fragments to configfs tree (mkdir and configfs_register_{subsystem,group}).
+Will be used in the next commit to provide exclusion between fragment
+removal and ->show/->store calls.
 
- WARNING: CPU: 0 PID: 4013 at kernel/module.c:1146 module_put.part.44+0x15b/0x290
-  Modules linked in: ip_vs(-) nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 veth ip6table_filter ip6_tables iptable_filter binfmt_misc intel_rapl_msr intel_rapl_common crct10dif_pclmul crc32_pclmul ext4 mbcache jbd2 ghash_clmulni_intel snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_intel_nhlt snd_hda_codec snd_hda_core snd_hwdep snd_seq snd_seq_device snd_pcm aesni_intel crypto_simd cryptd glue_helper joydev pcspkr snd_timer virtio_balloon snd soundcore i2c_piix4 nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables xfs libcrc32c ata_generic pata_acpi virtio_net net_failover virtio_blk failover virtio_console qxl drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ata_piix ttm crc32c_intel serio_raw drm virtio_pci libata virtio_ring virtio floppy dm_mirror dm_region_hash dm_log dm_mod [last unloaded: nf_defrag_ipv6]
-  CPU: 0 PID: 4013 Comm: modprobe Tainted: G        W         5.4.0-rc1.upstream+ #741
-  Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-  RIP: 0010:module_put.part.44+0x15b/0x290
-  Code: 04 25 28 00 00 00 0f 85 18 01 00 00 48 83 c4 68 5b 5d 41 5c 41 5d 41 5e 41 5f c3 89 44 24 28 83 e8 01 89 c5 0f 89 57 ff ff ff <0f> 0b e9 78 ff ff ff 65 8b 1d 67 83 26 4a 89 db be 08 00 00 00 48
-  RSP: 0018:ffff888050607c78 EFLAGS: 00010297
-  RAX: 0000000000000003 RBX: ffffffffc1420590 RCX: ffffffffb5db0ef9
-  RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffffc1420590
-  RBP: 00000000ffffffff R08: fffffbfff82840b3 R09: fffffbfff82840b3
-  R10: 0000000000000001 R11: fffffbfff82840b2 R12: 1ffff1100a0c0f90
-  R13: ffffffffc1420200 R14: ffff88804f533300 R15: ffff88804f533ca0
-  FS:  00007f8ea9720740(0000) GS:ffff888053800000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f3245abe000 CR3: 000000004c28a006 CR4: 00000000001606f0
-  Call Trace:
-   stop_sync_thread+0x3a3/0x7c0 [ip_vs]
-   ip_vs_sync_net_cleanup+0x13/0x50 [ip_vs]
-   ops_exit_list.isra.5+0x94/0x140
-   unregister_pernet_operations+0x29d/0x460
-   unregister_pernet_device+0x26/0x60
-   ip_vs_cleanup+0x11/0x38 [ip_vs]
-   __x64_sys_delete_module+0x2d5/0x400
-   do_syscall_64+0xa5/0x4e0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f8ea8bf0db7
-  Code: 73 01 c3 48 8b 0d b9 80 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 80 2c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffcd38d2fe8 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-  RAX: ffffffffffffffda RBX: 0000000002436240 RCX: 00007f8ea8bf0db7
-  RDX: 0000000000000000 RSI: 0000000000000800 RDI: 00000000024362a8
-  RBP: 0000000000000000 R08: 00007f8ea8eba060 R09: 00007f8ea8c658a0
-  R10: 00007ffcd38d2a60 R11: 0000000000000206 R12: 0000000000000000
-  R13: 0000000000000001 R14: 00000000024362a8 R15: 0000000000000000
-  irq event stamp: 4538
-  hardirqs last  enabled at (4537): [<ffffffffb6193dde>] quarantine_put+0x9e/0x170
-  hardirqs last disabled at (4538): [<ffffffffb5a0556a>] trace_hardirqs_off_thunk+0x1a/0x20
-  softirqs last  enabled at (4522): [<ffffffffb6f8ebe9>] sk_common_release+0x169/0x2d0
-  softirqs last disabled at (4520): [<ffffffffb6f8eb3e>] sk_common_release+0xbe/0x2d0
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Check the return value of ip_vs_use_count_inc() and let its caller return
-proper error. Inside do_ip_vs_set_ctl() the module is already refcounted,
-we don't need refcount/derefcount there. Finally, in register_ip_vs_app()
-and start_sync_thread(), take the module refcount earlier and ensure it's
-released in the error path.
-
-Change since v1:
- - better return values in case of failure of ip_vs_use_count_inc(),
-   thanks to Julian Anastasov
- - no need to increase/decrease the module refcount in ip_vs_set_ctl(),
-   thanks to Julian Anastasov
-
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_app.c   | 12 ++++++++++--
- net/netfilter/ipvs/ip_vs_ctl.c   | 14 ++++----------
- net/netfilter/ipvs/ip_vs_pe.c    |  3 ++-
- net/netfilter/ipvs/ip_vs_sched.c |  3 ++-
- net/netfilter/ipvs/ip_vs_sync.c  | 13 ++++++++++---
- 5 files changed, 28 insertions(+), 17 deletions(-)
+ fs/configfs/configfs_internal.h |   15 ++++-
+ fs/configfs/dir.c               |  105 +++++++++++++++++++++++++++++++---------
+ fs/configfs/file.c              |    4 -
+ 3 files changed, 97 insertions(+), 27 deletions(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_app.c b/net/netfilter/ipvs/ip_vs_app.c
-index 299edc6add5a6..363475b246f68 100644
---- a/net/netfilter/ipvs/ip_vs_app.c
-+++ b/net/netfilter/ipvs/ip_vs_app.c
-@@ -198,21 +198,29 @@ struct ip_vs_app *register_ip_vs_app(struct netns_ipvs *ipvs, struct ip_vs_app *
+--- a/fs/configfs/configfs_internal.h
++++ b/fs/configfs/configfs_internal.h
+@@ -34,6 +34,15 @@
+ #include <linux/list.h>
+ #include <linux/spinlock.h>
  
- 	mutex_lock(&__ip_vs_app_mutex);
- 
-+	/* increase the module use count */
-+	if (!ip_vs_use_count_inc()) {
-+		err = -ENOENT;
-+		goto out_unlock;
-+	}
++struct configfs_fragment {
++	atomic_t frag_count;
++	struct rw_semaphore frag_sem;
++	bool frag_dead;
++};
 +
- 	list_for_each_entry(a, &ipvs->app_list, a_list) {
- 		if (!strcmp(app->name, a->name)) {
- 			err = -EEXIST;
-+			/* decrease the module use count */
-+			ip_vs_use_count_dec();
- 			goto out_unlock;
- 		}
++void put_fragment(struct configfs_fragment *);
++struct configfs_fragment *get_fragment(struct configfs_fragment *);
++
+ struct configfs_dirent {
+ 	atomic_t		s_count;
+ 	int			s_dependent_count;
+@@ -48,6 +57,7 @@ struct configfs_dirent {
+ #ifdef CONFIG_LOCKDEP
+ 	int			s_depth;
+ #endif
++	struct configfs_fragment *s_frag;
+ };
+ 
+ #define CONFIGFS_ROOT		0x0001
+@@ -75,8 +85,8 @@ extern int configfs_create(struct dentry
+ extern int configfs_create_file(struct config_item *, const struct configfs_attribute *);
+ extern int configfs_create_bin_file(struct config_item *,
+ 				    const struct configfs_bin_attribute *);
+-extern int configfs_make_dirent(struct configfs_dirent *,
+-				struct dentry *, void *, umode_t, int);
++extern int configfs_make_dirent(struct configfs_dirent *, struct dentry *,
++				void *, umode_t, int, struct configfs_fragment *);
+ extern int configfs_dirent_is_ready(struct configfs_dirent *);
+ 
+ extern void configfs_hash_and_remove(struct dentry * dir, const char * name);
+@@ -151,6 +161,7 @@ static inline void release_configfs_dire
+ {
+ 	if (!(sd->s_type & CONFIGFS_ROOT)) {
+ 		kfree(sd->s_iattr);
++		put_fragment(sd->s_frag);
+ 		kmem_cache_free(configfs_dir_cachep, sd);
  	}
- 	a = kmemdup(app, sizeof(*app), GFP_KERNEL);
- 	if (!a) {
- 		err = -ENOMEM;
-+		/* decrease the module use count */
-+		ip_vs_use_count_dec();
- 		goto out_unlock;
+ }
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -164,11 +164,38 @@ configfs_adjust_dir_dirent_depth_after_p
+ 
+ #endif /* CONFIG_LOCKDEP */
+ 
++static struct configfs_fragment *new_fragment(void)
++{
++	struct configfs_fragment *p;
++
++	p = kmalloc(sizeof(struct configfs_fragment), GFP_KERNEL);
++	if (p) {
++		atomic_set(&p->frag_count, 1);
++		init_rwsem(&p->frag_sem);
++		p->frag_dead = false;
++	}
++	return p;
++}
++
++void put_fragment(struct configfs_fragment *frag)
++{
++	if (frag && atomic_dec_and_test(&frag->frag_count))
++		kfree(frag);
++}
++
++struct configfs_fragment *get_fragment(struct configfs_fragment *frag)
++{
++	if (likely(frag))
++		atomic_inc(&frag->frag_count);
++	return frag;
++}
++
+ /*
+  * Allocates a new configfs_dirent and links it to the parent configfs_dirent
+  */
+ static struct configfs_dirent *configfs_new_dirent(struct configfs_dirent *parent_sd,
+-						   void *element, int type)
++						   void *element, int type,
++						   struct configfs_fragment *frag)
+ {
+ 	struct configfs_dirent * sd;
+ 
+@@ -188,6 +215,7 @@ static struct configfs_dirent *configfs_
+ 		kmem_cache_free(configfs_dir_cachep, sd);
+ 		return ERR_PTR(-ENOENT);
  	}
- 	INIT_LIST_HEAD(&a->incs_list);
- 	list_add(&a->a_list, &ipvs->app_list);
--	/* increase the module use count */
--	ip_vs_use_count_inc();
++	sd->s_frag = get_fragment(frag);
+ 	list_add(&sd->s_sibling, &parent_sd->s_children);
+ 	spin_unlock(&configfs_dirent_lock);
  
- out_unlock:
- 	mutex_unlock(&__ip_vs_app_mutex);
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 4648dccebf595..6155fd6386bf4 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -1197,7 +1197,8 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
- 	struct ip_vs_service *svc = NULL;
+@@ -222,11 +250,11 @@ static int configfs_dirent_exists(struct
  
- 	/* increase the module use count */
--	ip_vs_use_count_inc();
-+	if (!ip_vs_use_count_inc())
-+		return -ENOPROTOOPT;
+ int configfs_make_dirent(struct configfs_dirent * parent_sd,
+ 			 struct dentry * dentry, void * element,
+-			 umode_t mode, int type)
++			 umode_t mode, int type, struct configfs_fragment *frag)
+ {
+ 	struct configfs_dirent * sd;
  
- 	/* Lookup the scheduler by 'u->sched_name' */
- 	if (strcmp(u->sched_name, "none")) {
-@@ -2395,9 +2396,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
- 	if (copy_from_user(arg, user, len) != 0)
- 		return -EFAULT;
+-	sd = configfs_new_dirent(parent_sd, element, type);
++	sd = configfs_new_dirent(parent_sd, element, type, frag);
+ 	if (IS_ERR(sd))
+ 		return PTR_ERR(sd);
  
--	/* increase the module use count */
--	ip_vs_use_count_inc();
--
- 	/* Handle daemons since they have another lock */
- 	if (cmd == IP_VS_SO_SET_STARTDAEMON ||
- 	    cmd == IP_VS_SO_SET_STOPDAEMON) {
-@@ -2410,13 +2408,13 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
- 			ret = -EINVAL;
- 			if (strscpy(cfg.mcast_ifn, dm->mcast_ifn,
- 				    sizeof(cfg.mcast_ifn)) <= 0)
--				goto out_dec;
-+				return ret;
- 			cfg.syncid = dm->syncid;
- 			ret = start_sync_thread(ipvs, &cfg, dm->state);
- 		} else {
- 			ret = stop_sync_thread(ipvs, dm->state);
- 		}
--		goto out_dec;
-+		return ret;
- 	}
+@@ -273,7 +301,8 @@ static void init_symlink(struct inode *
+  *	until it is validated by configfs_dir_set_ready()
+  */
  
- 	mutex_lock(&__ip_vs_mutex);
-@@ -2511,10 +2509,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+-static int configfs_create_dir(struct config_item *item, struct dentry *dentry)
++static int configfs_create_dir(struct config_item *item, struct dentry *dentry,
++				struct configfs_fragment *frag)
+ {
+ 	int error;
+ 	umode_t mode = S_IFDIR| S_IRWXU | S_IRUGO | S_IXUGO;
+@@ -286,7 +315,8 @@ static int configfs_create_dir(struct co
+ 		return error;
  
-   out_unlock:
- 	mutex_unlock(&__ip_vs_mutex);
--  out_dec:
--	/* decrease the module use count */
--	ip_vs_use_count_dec();
--
+ 	error = configfs_make_dirent(p->d_fsdata, dentry, item, mode,
+-				     CONFIGFS_DIR | CONFIGFS_USET_CREATING);
++				     CONFIGFS_DIR | CONFIGFS_USET_CREATING,
++				     frag);
+ 	if (unlikely(error))
+ 		return error;
+ 
+@@ -351,9 +381,10 @@ int configfs_create_link(struct configfs
+ {
+ 	int err = 0;
+ 	umode_t mode = S_IFLNK | S_IRWXUGO;
++	struct configfs_dirent *p = parent->d_fsdata;
+ 
+-	err = configfs_make_dirent(parent->d_fsdata, dentry, sl, mode,
+-				   CONFIGFS_ITEM_LINK);
++	err = configfs_make_dirent(p, dentry, sl, mode,
++				   CONFIGFS_ITEM_LINK, p->s_frag);
+ 	if (!err) {
+ 		err = configfs_create(dentry, mode, init_symlink);
+ 		if (err) {
+@@ -612,7 +643,8 @@ static int populate_attrs(struct config_
+ 
+ static int configfs_attach_group(struct config_item *parent_item,
+ 				 struct config_item *item,
+-				 struct dentry *dentry);
++				 struct dentry *dentry,
++				 struct configfs_fragment *frag);
+ static void configfs_detach_group(struct config_item *item);
+ 
+ static void detach_groups(struct config_group *group)
+@@ -660,7 +692,8 @@ static void detach_groups(struct config_
+  * try using vfs_mkdir.  Just a thought.
+  */
+ static int create_default_group(struct config_group *parent_group,
+-				struct config_group *group)
++				struct config_group *group,
++				struct configfs_fragment *frag)
+ {
+ 	int ret;
+ 	struct configfs_dirent *sd;
+@@ -676,7 +709,7 @@ static int create_default_group(struct c
+ 		d_add(child, NULL);
+ 
+ 		ret = configfs_attach_group(&parent_group->cg_item,
+-					    &group->cg_item, child);
++					    &group->cg_item, child, frag);
+ 		if (!ret) {
+ 			sd = child->d_fsdata;
+ 			sd->s_type |= CONFIGFS_USET_DEFAULT;
+@@ -690,13 +723,14 @@ static int create_default_group(struct c
  	return ret;
  }
  
-diff --git a/net/netfilter/ipvs/ip_vs_pe.c b/net/netfilter/ipvs/ip_vs_pe.c
-index 0df17caa8af6c..714e7e05c1021 100644
---- a/net/netfilter/ipvs/ip_vs_pe.c
-+++ b/net/netfilter/ipvs/ip_vs_pe.c
-@@ -67,7 +67,8 @@ int register_ip_vs_pe(struct ip_vs_pe *pe)
- 	struct ip_vs_pe *tmp;
+-static int populate_groups(struct config_group *group)
++static int populate_groups(struct config_group *group,
++			   struct configfs_fragment *frag)
+ {
+ 	struct config_group *new_group;
+ 	int ret = 0;
  
- 	/* increase the module use count */
--	ip_vs_use_count_inc();
-+	if (!ip_vs_use_count_inc())
-+		return -ENOENT;
+ 	list_for_each_entry(new_group, &group->default_groups, group_entry) {
+-		ret = create_default_group(group, new_group);
++		ret = create_default_group(group, new_group, frag);
+ 		if (ret) {
+ 			detach_groups(group);
+ 			break;
+@@ -810,11 +844,12 @@ static void link_group(struct config_gro
+  */
+ static int configfs_attach_item(struct config_item *parent_item,
+ 				struct config_item *item,
+-				struct dentry *dentry)
++				struct dentry *dentry,
++				struct configfs_fragment *frag)
+ {
+ 	int ret;
  
- 	mutex_lock(&ip_vs_pe_mutex);
- 	/* Make sure that the pe with this name doesn't exist
-diff --git a/net/netfilter/ipvs/ip_vs_sched.c b/net/netfilter/ipvs/ip_vs_sched.c
-index a2ff7d746ebf4..3bd0ff36dc41b 100644
---- a/net/netfilter/ipvs/ip_vs_sched.c
-+++ b/net/netfilter/ipvs/ip_vs_sched.c
-@@ -184,7 +184,8 @@ int register_ip_vs_scheduler(struct ip_vs_scheduler *scheduler)
+-	ret = configfs_create_dir(item, dentry);
++	ret = configfs_create_dir(item, dentry, frag);
+ 	if (!ret) {
+ 		ret = populate_attrs(item);
+ 		if (ret) {
+@@ -844,12 +879,13 @@ static void configfs_detach_item(struct
+ 
+ static int configfs_attach_group(struct config_item *parent_item,
+ 				 struct config_item *item,
+-				 struct dentry *dentry)
++				 struct dentry *dentry,
++				 struct configfs_fragment *frag)
+ {
+ 	int ret;
+ 	struct configfs_dirent *sd;
+ 
+-	ret = configfs_attach_item(parent_item, item, dentry);
++	ret = configfs_attach_item(parent_item, item, dentry, frag);
+ 	if (!ret) {
+ 		sd = dentry->d_fsdata;
+ 		sd->s_type |= CONFIGFS_USET_DIR;
+@@ -865,7 +901,7 @@ static int configfs_attach_group(struct
+ 		 */
+ 		inode_lock_nested(d_inode(dentry), I_MUTEX_CHILD);
+ 		configfs_adjust_dir_dirent_depth_before_populate(sd);
+-		ret = populate_groups(to_config_group(item));
++		ret = populate_groups(to_config_group(item), frag);
+ 		if (ret) {
+ 			configfs_detach_item(item);
+ 			d_inode(dentry)->i_flags |= S_DEAD;
+@@ -1260,6 +1296,7 @@ static int configfs_mkdir(struct inode *
+ 	struct configfs_dirent *sd;
+ 	struct config_item_type *type;
+ 	struct module *subsys_owner = NULL, *new_item_owner = NULL;
++	struct configfs_fragment *frag;
+ 	char *name;
+ 
+ 	sd = dentry->d_parent->d_fsdata;
+@@ -1278,6 +1315,12 @@ static int configfs_mkdir(struct inode *
+ 		goto out;
  	}
  
- 	/* increase the module use count */
--	ip_vs_use_count_inc();
-+	if (!ip_vs_use_count_inc())
-+		return -ENOENT;
- 
- 	mutex_lock(&ip_vs_sched_mutex);
- 
-diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
-index b578ebb3d7ef6..b373e053ff9a3 100644
---- a/net/netfilter/ipvs/ip_vs_sync.c
-+++ b/net/netfilter/ipvs/ip_vs_sync.c
-@@ -1771,6 +1771,10 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 	IP_VS_DBG(7, "Each ip_vs_sync_conn entry needs %zd bytes\n",
- 		  sizeof(struct ip_vs_sync_conn_v0));
- 
-+	/* increase the module use count */
-+	if (!ip_vs_use_count_inc())
-+		return -ENOPROTOOPT;
++	frag = new_fragment();
++	if (!frag) {
++		ret = -ENOMEM;
++		goto out;
++	}
 +
- 	/* Do not hold one mutex and then to block on another */
- 	for (;;) {
- 		rtnl_lock();
-@@ -1901,9 +1905,6 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 	mutex_unlock(&ipvs->sync_mutex);
- 	rtnl_unlock();
+ 	/* Get a working ref for the duration of this function */
+ 	parent_item = configfs_get_config_item(dentry->d_parent);
+ 	type = parent_item->ci_type;
+@@ -1380,9 +1423,9 @@ static int configfs_mkdir(struct inode *
+ 	spin_unlock(&configfs_dirent_lock);
  
--	/* increase the module use count */
--	ip_vs_use_count_inc();
--
- 	return 0;
+ 	if (group)
+-		ret = configfs_attach_group(parent_item, item, dentry);
++		ret = configfs_attach_group(parent_item, item, dentry, frag);
+ 	else
+-		ret = configfs_attach_item(parent_item, item, dentry);
++		ret = configfs_attach_item(parent_item, item, dentry, frag);
+ 
+ 	spin_lock(&configfs_dirent_lock);
+ 	sd->s_type &= ~CONFIGFS_USET_IN_MKDIR;
+@@ -1419,6 +1462,7 @@ out_put:
+ 	 * reference.
+ 	 */
+ 	config_item_put(parent_item);
++	put_fragment(frag);
  
  out:
-@@ -1933,11 +1934,17 @@ out:
- 		}
- 		kfree(ti);
- 	}
-+
-+	/* decrease the module use count */
-+	ip_vs_use_count_dec();
- 	return result;
+ 	return ret;
+@@ -1587,7 +1631,7 @@ static int configfs_dir_open(struct inod
+ 	 */
+ 	err = -ENOENT;
+ 	if (configfs_dirent_is_ready(parent_sd)) {
+-		file->private_data = configfs_new_dirent(parent_sd, NULL, 0);
++		file->private_data = configfs_new_dirent(parent_sd, NULL, 0, NULL);
+ 		if (IS_ERR(file->private_data))
+ 			err = PTR_ERR(file->private_data);
+ 		else
+@@ -1743,8 +1787,13 @@ int configfs_register_group(struct confi
+ {
+ 	struct configfs_subsystem *subsys = parent_group->cg_subsys;
+ 	struct dentry *parent;
++	struct configfs_fragment *frag;
+ 	int ret;
  
- out_early:
- 	mutex_unlock(&ipvs->sync_mutex);
- 	rtnl_unlock();
++	frag = new_fragment();
++	if (!frag)
++		return -ENOMEM;
 +
-+	/* decrease the module use count */
-+	ip_vs_use_count_dec();
- 	return result;
+ 	mutex_lock(&subsys->su_mutex);
+ 	link_group(parent_group, group);
+ 	mutex_unlock(&subsys->su_mutex);
+@@ -1752,7 +1801,7 @@ int configfs_register_group(struct confi
+ 	parent = parent_group->cg_item.ci_dentry;
+ 
+ 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
+-	ret = create_default_group(parent_group, group);
++	ret = create_default_group(parent_group, group, frag);
+ 	if (ret)
+ 		goto err_out;
+ 
+@@ -1760,12 +1809,14 @@ int configfs_register_group(struct confi
+ 	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
+ 	spin_unlock(&configfs_dirent_lock);
+ 	inode_unlock(d_inode(parent));
++	put_fragment(frag);
+ 	return 0;
+ err_out:
+ 	inode_unlock(d_inode(parent));
+ 	mutex_lock(&subsys->su_mutex);
+ 	unlink_group(group);
+ 	mutex_unlock(&subsys->su_mutex);
++	put_fragment(frag);
+ 	return ret;
  }
+ EXPORT_SYMBOL(configfs_register_group);
+@@ -1852,10 +1903,17 @@ int configfs_register_subsystem(struct c
+ 	struct dentry *dentry;
+ 	struct dentry *root;
+ 	struct configfs_dirent *sd;
++	struct configfs_fragment *frag;
++
++	frag = new_fragment();
++	if (!frag)
++		return -ENOMEM;
  
--- 
-2.20.1
-
+ 	root = configfs_pin_fs();
+-	if (IS_ERR(root))
++	if (IS_ERR(root)) {
++		put_fragment(frag);
+ 		return PTR_ERR(root);
++	}
+ 
+ 	if (!group->cg_item.ci_name)
+ 		group->cg_item.ci_name = group->cg_item.ci_namebuf;
+@@ -1871,7 +1929,7 @@ int configfs_register_subsystem(struct c
+ 		d_add(dentry, NULL);
+ 
+ 		err = configfs_attach_group(sd->s_element, &group->cg_item,
+-					    dentry);
++					    dentry, frag);
+ 		if (err) {
+ 			BUG_ON(d_inode(dentry));
+ 			d_drop(dentry);
+@@ -1889,6 +1947,7 @@ int configfs_register_subsystem(struct c
+ 		unlink_group(group);
+ 		configfs_release_fs();
+ 	}
++	put_fragment(frag);
+ 
+ 	return err;
+ }
+--- a/fs/configfs/file.c
++++ b/fs/configfs/file.c
+@@ -502,7 +502,7 @@ int configfs_create_file(struct config_i
+ 
+ 	inode_lock_nested(d_inode(dir), I_MUTEX_NORMAL);
+ 	error = configfs_make_dirent(parent_sd, NULL, (void *) attr, mode,
+-				     CONFIGFS_ITEM_ATTR);
++				     CONFIGFS_ITEM_ATTR, parent_sd->s_frag);
+ 	inode_unlock(d_inode(dir));
+ 
+ 	return error;
+@@ -524,7 +524,7 @@ int configfs_create_bin_file(struct conf
+ 
+ 	inode_lock_nested(dir->d_inode, I_MUTEX_NORMAL);
+ 	error = configfs_make_dirent(parent_sd, NULL, (void *) bin_attr, mode,
+-				     CONFIGFS_ITEM_BIN_ATTR);
++				     CONFIGFS_ITEM_BIN_ATTR, parent_sd->s_frag);
+ 	inode_unlock(dir->d_inode);
+ 
+ 	return error;
 
 
