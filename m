@@ -2,199 +2,188 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8D8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80A7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F015214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4/Nt/1U"
+	by mail.kernel.org (Postfix) with ESMTP id B0EC52173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfKKXFt (ORCPT
+        id S1726946AbfKKXJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:05:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44863 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726845AbfKKXFt (ORCPT
+        Mon, 11 Nov 2019 18:09:21 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:57235 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfKKXJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:05:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573513548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=q3bU1y6/w3lsCZ4mK2/2iMcVIQyk5otgwImYycb24yA=;
-        b=H4/Nt/1U6wdfKBje+zpcFTX0V7tMDzfDXWWrjdQxDZ47EDx+9K0T4i6XltA+t6tKdC2JWC
-        30DpZ90w2e86AolI1RxdcWZWWpmuyOPPS3dXhhgpnrCkxq7wUA7qdoXaxi8QBR8nK2xDjC
-        OWLxus9xEepKN31umm9m7MNq1sNBcF4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-9NMID6rzOD-jo7tCS2Pn6w-1; Mon, 11 Nov 2019 18:05:46 -0500
-Received: by mail-wr1-f72.google.com with SMTP id h7so10653679wrb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:05:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s1xtP0FWH3mk9taRWJxAZqcAwLn3T+udkKG0yP0FnPk=;
-        b=ZLueLgYTW8PovtkOj4jvM+6k190lnyLOOHQqVZ7vtOqgsfo49Yhje9zKrEe96CMYMd
-         T9UtYl11YpQlO9rY8IuadfXkiJaQ2T1DOoyuCyZFU1BUzMlvttifQJiEOCqIxA5suimS
-         KzhQSzqLiKxZH6IX+BQuxE0KCHB0STJXxM2FklVIdOJlM7CSayz/OP3NNgh+ZvT7dINi
-         BnoQeQx2oexerRS6I3hekiyCv313udp3W+qGPeMT5Lgx1g9hccenzAU6LVg3wI7OF/zH
-         edQMUtBDsaMC4h+8Zy5xB4kr6yOoY1KuUv4Bxj+ss1u2P5goqKDpgd4tq8+82bTmgF63
-         MPhQ==
-X-Gm-Message-State: APjAAAXzlpb+ggYH5cCw2sUnDy0+ygq5OFzyyhxS1fvAs6iE4AD9k4ls
-        /YRVrDi/XykwmDpEJU+yIQ9shLZHNVKVjegqi4D/6Sx51mTNuR6E/HZHLxOuST+I1kEFQj9dWNk
-        NB5p/lY1jDaVd1cTGacbqeqST
-X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr21859097wrw.290.1573513544875;
-        Mon, 11 Nov 2019 15:05:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwP0hMQwUe3Rb9JqlVvtLWb4ETL344DFvxUp8KFGJe7FlLiSWTMYnjYvoLgjbyZvFWyxgbB3w==
-X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr21859084wrw.290.1573513544562;
-        Mon, 11 Nov 2019 15:05:44 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
-        by smtp.gmail.com with ESMTPSA id i71sm36679380wri.68.2019.11.11.15.05.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 15:05:44 -0800 (PST)
-Subject: Re: [PATCH 4.19 STABLE] KVM: x86: introduce is_pae_paging
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191111225423.29309-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <aecfcc9e-dcab-2b52-ebdb-373a416a4951@redhat.com>
-Date:   Tue, 12 Nov 2019 00:05:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 11 Nov 2019 18:09:21 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iUIoB-0004rx-HK; Mon, 11 Nov 2019 16:09:19 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iUIoA-0008RC-Bb; Mon, 11 Nov 2019 16:09:19 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Adrian Reber <areber@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+References: <20191111131704.656169-1-areber@redhat.com>
+        <20191111152514.GA11389@redhat.com>
+        <20191111154028.GF514519@dcbz.redhat.com>
+        <20191111161458.fjodxyx566dar6ob@wittgenstein>
+Date:   Mon, 11 Nov 2019 17:08:57 -0600
+In-Reply-To: <20191111161458.fjodxyx566dar6ob@wittgenstein> (Christian
+        Brauner's message of "Mon, 11 Nov 2019 17:14:59 +0100")
+Message-ID: <87ftiuau46.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191111225423.29309-1-sean.j.christopherson@intel.com>
-Content-Language: en-US
-X-MC-Unique: 9NMID6rzOD-jo7tCS2Pn6w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-XM-SPF: eid=1iUIoA-0008RC-Bb;;;mid=<87ftiuau46.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18M7A0AmO9aQgTEDeULWKj2+UuWeRV17Xc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v7 1/2] fork: extend clone3() to support setting a PID
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 23:54, Sean Christopherson wrote:
-> From: Paolo Bonzini <pbonzini@redhat.com>
->=20
-> Upstream commit bf03d4f9334728bf7c8ffc7de787df48abd6340e.
->=20
-> Checking for 32-bit PAE is quite common around code that fiddles with
-> the PDPTRs.  Add a function to compress all checks into a single
-> invocation.
->=20
-> Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
-> where it fails to check is_long_mode() and results in KVM incorrectly
-> attempting to load PDPTRs for a 64-bit guest.
->=20
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> [sean: backport to 4.x; handle vmx.c split in 5.x, call out the bugfix]
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx.c | 7 +++----
->  arch/x86/kvm/x86.c | 8 ++++----
->  arch/x86/kvm/x86.h | 5 +++++
->  3 files changed, 12 insertions(+), 8 deletions(-)
->=20
-> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> index 6f7b3acdab26..83acaed244ba 100644
-> --- a/arch/x86/kvm/vmx.c
-> +++ b/arch/x86/kvm/vmx.c
-> @@ -5181,7 +5181,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
->  =09=09      (unsigned long *)&vcpu->arch.regs_dirty))
->  =09=09return;
-> =20
-> -=09if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-> +=09if (is_pae_paging(vcpu)) {
->  =09=09vmcs_write64(GUEST_PDPTR0, mmu->pdptrs[0]);
->  =09=09vmcs_write64(GUEST_PDPTR1, mmu->pdptrs[1]);
->  =09=09vmcs_write64(GUEST_PDPTR2, mmu->pdptrs[2]);
-> @@ -5193,7 +5193,7 @@ static void ept_save_pdptrs(struct kvm_vcpu *vcpu)
->  {
->  =09struct kvm_mmu *mmu =3D vcpu->arch.walk_mmu;
-> =20
-> -=09if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-> +=09if (is_pae_paging(vcpu)) {
->  =09=09mmu->pdptrs[0] =3D vmcs_read64(GUEST_PDPTR0);
->  =09=09mmu->pdptrs[1] =3D vmcs_read64(GUEST_PDPTR1);
->  =09=09mmu->pdptrs[2] =3D vmcs_read64(GUEST_PDPTR2);
-> @@ -12021,8 +12021,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *v=
-cpu, unsigned long cr3, bool ne
->  =09=09 * If PAE paging and EPT are both on, CR3 is not used by the CPU a=
-nd
->  =09=09 * must not be dereferenced.
->  =09=09 */
-> -=09=09if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu) &&
-> -=09=09    !nested_ept) {
-> +=09=09if (is_pae_paging(vcpu) && !nested_ept) {
->  =09=09=09if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3)) {
->  =09=09=09=09*entry_failure_code =3D ENTRY_FAIL_PDPTE;
->  =09=09=09=09return 1;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 6ae8a013af31..b9b87fb75ac0 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -633,7 +633,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
->  =09gfn_t gfn;
->  =09int r;
-> =20
-> -=09if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
-> +=09if (!is_pae_paging(vcpu))
->  =09=09return false;
-> =20
->  =09if (!test_bit(VCPU_EXREG_PDPTR,
-> @@ -884,8 +884,8 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long =
-cr3)
->  =09if (is_long_mode(vcpu) &&
->  =09    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
->  =09=09return 1;
-> -=09else if (is_pae(vcpu) && is_paging(vcpu) &&
-> -=09=09   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-> +=09else if (is_pae_paging(vcpu) &&
-> +=09=09 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
->  =09=09return 1;
-> =20
->  =09kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
-> @@ -8312,7 +8312,7 @@ static int __set_sregs(struct kvm_vcpu *vcpu, struc=
-t kvm_sregs *sregs)
->  =09=09kvm_update_cpuid(vcpu);
-> =20
->  =09idx =3D srcu_read_lock(&vcpu->kvm->srcu);
-> -=09if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
-> +=09if (is_pae_paging(vcpu)) {
->  =09=09load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
->  =09=09mmu_reset_needed =3D 1;
->  =09}
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 3a91ea760f07..608e5f8c5d0a 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -139,6 +139,11 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
->  =09return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
->  }
-> =20
-> +static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
-> +{
-> +=09return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
-> +}
-> +
->  static inline u32 bit(int bitno)
->  {
->  =09return 1 << (bitno & 31);
->=20
+Christian Brauner <christian.brauner@ubuntu.com> writes:
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> On Mon, Nov 11, 2019 at 04:40:28PM +0100, Adrian Reber wrote:
+>> On Mon, Nov 11, 2019 at 04:25:15PM +0100, Oleg Nesterov wrote:
+>> > On 11/11, Adrian Reber wrote:
+>> > >
+>> > > v7:
+>> > >  - changed set_tid to be an array to set the PID of a process
+>> > >    in multiple nested PID namespaces at the same time as discussed
+>> > >    at LPC 2019 (container MC)
+>> > 
+>> > cough... iirc you convinced me this is not needed when we discussed
+>> > the previous version ;) Nevermind, probably my memory fools me.
+>> 
+>> You are right. You suggested the same thing and we didn't listen ;)
+>> 
+>> > So far I only have some cosmetic nits,
+>> 
+>> Thanks for the quick review. I will try to apply your suggestions.
+>> 
+>> > > @@ -175,6 +187,18 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>> > >
+>> > >  	for (i = ns->level; i >= 0; i--) {
+>> > >  		int pid_min = 1;
+>> > > +		int t_pos = 0;
+>> >                     ^^^^^
+>> > 
+>> > I won't insist, but I'd suggest to cache set_tid[t_pos] instead to make
+>> > the code a bit more simple.
+>> > 
+>> > > @@ -186,12 +210,24 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>> > >  		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+>> > >  			pid_min = RESERVED_PIDS;
+>> > 
+>> > You can probably move this code into the "else" branch below.
+>> > 
+>> > IOW, something like
+>> > 
+>> > 
+>> > 	for (i = ns->level; i >= 0; i--) {
+>> > 		int xxx = 0;
+>> > 
+>> > 		if (set_tid_size) {
+>> > 			int pos = ns->level - i;
+>> > 
+>> > 			xxx = set_tid[pos];
+>> > 			if (xxx < 1 || xxx >= pid_max)
+>> > 				return ERR_PTR(-EINVAL);
+>> > 			/* Also fail if a PID != 1 is requested and no PID 1 exists */
+>> > 			if (xxx != 1 && !tmp->child_reaper)
+>> > 				return ERR_PTR(-EINVAL);
+>> > 			if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+>> > 				return ERR_PTR(-EPERM);
+>> > 			set_tid_size--;
+>> > 		}
+>> > 
+>> > 		idr_preload(GFP_KERNEL);
+>> > 		spin_lock_irq(&pidmap_lock);
+>> > 
+>> > 		if (xxx) {
+>> > 			nr = idr_alloc(&tmp->idr, NULL, xxx, xxx + 1,
+>> > 					GFP_ATOMIC);
+>> > 			/*
+>> > 			 * If ENOSPC is returned it means that the PID is
+>> > 			 * alreay in use. Return EEXIST in that case.
+>> > 			 */
+>> > 			if (nr == -ENOSPC)
+>> > 				nr = -EEXIST;
+>> > 		} else {
+>> > 			int pid_min = 1;
+>> > 			/*
+>> > 			 * init really needs pid 1, but after reaching the
+>> > 			 * maximum wrap back to RESERVED_PIDS
+>> > 			 */
+>> > 			if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+>> > 				pid_min = RESERVED_PIDS;
+>> > 			/*
+>> > 			 * Store a null pointer so find_pid_ns does not find
+>> > 			 * a partially initialized PID (see below).
+>> > 			 */
+>> > 			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+>> > 					      pid_max, GFP_ATOMIC);
+>> > 		}
+>> > 
+>> > 		...
+>> > 
+>> > This way only the "if (set_tid_size)" block has to play with set_tid_size/set_tid.
+>> > 
+>> > note also that this way we can easily allow set_tid[some_level] == 0, we can
+>> > simply do
+>> > 
+>> > 	-	if (xxx < 1 || xxx >= pid_max)
+>> > 	+	if (xxx < 0 || xxx >= pid_max)
+>> > 
+>> > although I don't think this is really useful.
+>> 
+>> Yes. I explicitly didn't allow 0 as a PID as I didn't thought it would
+>> be useful (or maybe even valid).
 
+I agree not allowing 0 sounds very reasonable.
+
+> How do you express: I don't care about a specific pid in pidns level
+> <n>, just give me a random one? For example,
+>
+> set_tid[0] = 1234
+> set_tid[1] = 5678
+> set_tid[2] = random_pid()
+> set_tid[3] = 9
+>
+> Wouldn't that be potentially useful?
+
+I can't imagine how.
+
+At least in my head the fundamental concept is picking up a container on
+one machine and moving it to another machine.  For that operation you
+will know starting with the most nested pid namespace the pids that you
+want up to some point.  Farther up you don't know.
+
+I can't imagine in what scenario you would not know a pid at outer level
+but want a specified pid at an ever farther removed outer level.  What
+scenario are you thinking about that could lead to such a situation?
+
+For the me the question is: Are you restoring what you know or not?
+
+Eric
