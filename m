@@ -2,170 +2,127 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BCDC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DDAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBCD421655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F25206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:01:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Csn/2IzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfKKSAp (ORCPT
+        id S1727080AbfKKSB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:00:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33872 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726995AbfKKSA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:00:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3B211B20A;
-        Mon, 11 Nov 2019 18:00:25 +0000 (UTC)
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>
-Subject: [PATCH 5/6] x86,sched: Add support for frequency invariance on ATOM
-Date:   Mon, 11 Nov 2019 19:05:48 +0100
-Message-Id: <20191111180549.12166-6-ggherdovich@suse.cz>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191111180549.12166-1-ggherdovich@suse.cz>
-References: <20191111180549.12166-1-ggherdovich@suse.cz>
+        Mon, 11 Nov 2019 13:01:26 -0500
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:53811 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKKSB0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:01:26 -0500
+Received: by mail-wm1-f54.google.com with SMTP id u18so250859wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:01:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LZm0O+9adBfpx+ovnSPJOcOY1JX1dPWpztVmEz4llkE=;
+        b=Csn/2IzCJ6MEF+fyZKlzifXzPAy8ny1P4ICBVPnPsRGKuub7/rNPpw/Qn3CGNuuxy5
+         WtxeQ+DpHHi1LRluKoais2+875spWmUBYjiSIqIbluzGGNliVcglPlVSR46ebYq76qAc
+         BcyVjUlIWB9KPVe5mWhY8rRxEIG2ZD/KiSvIBmEGVxQBqa1koidTmQ6V3yXmH0aigPSF
+         Jq+AY0MRvqSBxIW8ZOSGQLOWNbhMcnW1i/SlF47dc4bnPvjvFGMPOG0wdcuUa71RLpGF
+         oMqKEmjNCin2r9u4BYC2Gorsi/pDfgPb2JCpbApUeu2+KOJ1tHcbXk4M/fUGmWNgauDO
+         FbpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LZm0O+9adBfpx+ovnSPJOcOY1JX1dPWpztVmEz4llkE=;
+        b=osTVksQXQUaEzPwMeMcJZWMIEO0AkPE7b+6f0esiNtS61RaMm7YaGAF/HCkDJcrghg
+         85NJbLmbXA770wD1JVYKbyNJQvC/dD2nOS0+28Xd6F//b9YNwqvTh0QY0BFlOcl9HsdU
+         9ItTq6BhUgm9rsddW4YevwIIQT4pn5hESJdtKpTP61fREluaH2TaMiXUWSozVXc8rI3+
+         inNd2AFcZi2TW8l+66CBriAkgHO4xriY20Kw9OfVwFCwEAGvtUUJRZJqnSHDitYANkMS
+         CxRXdOckWJuoLWqUPsPFX7ds1dUZjVEo6d/sJUzlUOfBkDQj9g50svyTNAbmhF2RUw0Q
+         tHaw==
+X-Gm-Message-State: APjAAAUtmsxzEcb/lzX1C6MUy04p4sU6bYhYl27kbhpDQ1SUVxneC4Cu
+        /U9BFPmHjwgX1NKbCWhy7j8zZj4JqfE4hiA0TI0=
+X-Google-Smtp-Source: APXvYqx3F2xEQnEwJIJbF32491P4OsB8Wm3WOoRDkOVtWpzT+0v4cABkBIFm0/KZ3L3bKl0dq1GLJiYXU85t9P2VkwI=
+X-Received: by 2002:a1c:790b:: with SMTP id l11mr200549wme.127.1573495284364;
+ Mon, 11 Nov 2019 10:01:24 -0800 (PST)
+MIME-Version: 1.0
+References: <20191109093538.23964-1-yuehaibing@huawei.com>
+In-Reply-To: <20191109093538.23964-1-yuehaibing@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 11 Nov 2019 13:01:11 -0500
+Message-ID: <CADnq5_O7JwQd4+ncEe+KusqNqPBGXgkcUBX6VHP5OjhNwUseWg@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amd/display: remove set but not used variable 'bpc'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Zhan Liu <Zhan.Liu@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The scheduler needs the ratio freq_curr/freq_max for frequency-invariant
-accounting. On all ATOM CPUs prior to Goldmont, set freq_max to the 1-core
-turbo ratio.
+Applied.  Thanks!
 
-We intended to perform tests validating that this patch doesn't regress in
-terms of energy efficiency, given that this is the primary concern on Atom
-processors. Alas, we found out that turbostat doesn't support reading RAPL
-interfaces on our test machine (Airmont), and we don't have external equipment
-to measure power consumption; all we have is the performance results of the
-benchmarks we ran.
+Alex
 
-Test machine:
-
-Platform    : Dell Wyse 3040 Thin Client[1]
-CPU Model   : Intel Atom x5-Z8350 (aka Cherry Trail, aka Airmont)
-Fam/Mod/Ste : 6:76:4
-Topology    : 1 socket, 4 cores / 4 threads
-Memory      : 2G
-Storage     : onboard flash, XFS filesystem
-
-[1] https://www.dell.com/en-us/work/shop/wyse-endpoints-and-software/wyse-3040-thin-client/spd/wyse-3040-thin-client
-
-Base frequency and available turbo levels (MHz):
-
-    Min Operating Freq   266 |***
-    Low Freq Mode        800 |********
-    Base Freq           2400 |************************
-    4 Cores             2800 |****************************
-    3 Cores             2800 |****************************
-    2 Cores             3200 |********************************
-    1 Core              3200 |********************************
-
-Tested kernels:
-
-Baseline      : v5.4-rc1,              intel_pstate passive,  schedutil
-Comparison #1 : v5.4-rc1,              intel_pstate active ,  powersave
-Comparison #2 : v5.4-rc1, this patch,  intel_pstate passive,  schedutil
-
-tbench, hackbench and kernbench performed the same under all three kernels;
-dbench ran faster with intel_pstate/powersave and the git unit tests were a
-lot faster with intel_pstate/powersave and invariant schedutil wrt the
-baseline. Not that any of this is terrbily interesting anyway, one doesn't buy
-an Atom system to go fast. Power consumption regressions aren't expected but
-we lack the equipment to make that measurement. Turbostat seems to think that
-reading RAPL on this machine isn't a good idea and we're trusting that
-decision.
-
-comparison ratio of performance with baseline; 1.00 means neutral,
-lower is better:
-
-                      I_PSTATE      FREQ-INV
-    ----------------------------------------
-    dbench                0.90             ~
-    kernbench             0.98          0.97
-    gitsource             0.63          0.43
-
-Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
----
- arch/x86/kernel/smpboot.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 4d192abf337d..8988177064be 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1821,6 +1821,24 @@ static bool turbo_disabled(void)
- 	return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
- }
- 
-+static bool slv_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio)
-+{
-+	int err;
-+
-+	err = rdmsrl_safe(MSR_ATOM_CORE_RATIOS, ratio);
-+	if (err)
-+		return false;
-+
-+	err = rdmsrl_safe(MSR_ATOM_CORE_TURBO_RATIOS, turbo_ratio);
-+	if (err)
-+		return false;
-+
-+	*ratio = (*ratio >> 16) & 0x3F;      /* max P state ratio */
-+	*turbo_ratio = *turbo_ratio & 0x3F;  /* 1C turbo ratio */
-+
-+	return true;
-+}
-+
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- 
-@@ -1984,19 +2002,14 @@ static bool core_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio)
- 
- static void intel_set_cpu_max_freq(void)
- {
--	/*
--	 * TODO: add support for:
--	 *
--	 * - Atom Silvermont
--	 *
--	 * which all now get by default arch_max_freq = SCHED_CAPACITY_SCALE
--	 */
--
- 	u64 ratio = 1, turbo_ratio = 1;
- 
- 	if (turbo_disabled())
- 		return;
- 
-+	if (slv_set_cpu_max_freq(&ratio, &turbo_ratio))
-+		goto set_value;
-+
- 	if (glm_set_cpu_max_freq(&ratio, &turbo_ratio))
- 		goto set_value;
- 
--- 
-2.16.4
-
+On Sun, Nov 10, 2019 at 9:30 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c: In function get_pbn_from_timing:
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2364:11: warning:
+>  variable bpc set but not used [-Wunused-but-set-variable]
+>
+> It is not used since commit e49f69363adf ("drm/amd/display: use
+> proper formula to calculate bandwidth from timing")
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+> index bdc8be3..53394e2 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+> @@ -2653,13 +2653,11 @@ static int get_color_depth(enum dc_color_depth color_depth)
+>
+>  static struct fixed31_32 get_pbn_from_timing(struct pipe_ctx *pipe_ctx)
+>  {
+> -       uint32_t bpc;
+>         uint64_t kbps;
+>         struct fixed31_32 peak_kbps;
+>         uint32_t numerator;
+>         uint32_t denominator;
+>
+> -       bpc = get_color_depth(pipe_ctx->stream_res.pix_clk_params.color_depth);
+>         kbps = dc_bandwidth_in_kbps_from_timing(&pipe_ctx->stream->timing);
+>
+>         /*
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
