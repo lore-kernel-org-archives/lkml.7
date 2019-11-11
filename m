@@ -2,113 +2,99 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA9EC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA199C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A52214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862C8214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lVY2X2PD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhhB8Klj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfKKK2z (ORCPT
+        id S1727069AbfKKK3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:28:55 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54172 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKK2z (ORCPT
+        Mon, 11 Nov 2019 05:29:02 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45893 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKK3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:28:55 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABASgF9024340;
-        Mon, 11 Nov 2019 04:28:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573468122;
-        bh=N3+nkAquCGSpb9qA9Jkp1kcNxBZi2iIfDWLwqJXaOec=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lVY2X2PDWwha9IAD9ulwt6I+UcqchltGoCdyFL0EZUqr41wtxxDU2sQDQzhs8zprf
-         rcfv4wPD4c1xAZGtPsomrchWwOFm9ffJFPIPIqa6nVGzN8ZNyR8SC/7lthe/wUtFN9
-         zhm8awX6psfFZuOD94ooPhJECr/mT576U5GG0Q5g=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABASgnC057891
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 04:28:42 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 04:28:09 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 04:28:09 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABASMXF125167;
-        Mon, 11 Nov 2019 04:28:23 -0600
-Subject: Re: [PATCH v4 12/15] dmaengine: ti: New driver for K3 UDMA - split#4:
- dma_device callbacks 1
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-13-peter.ujfalusi@ti.com>
- <20191111060943.GQ952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <6d73f6e1-6d85-d468-2e69-47d36ed75807@ti.com>
-Date:   Mon, 11 Nov 2019 12:29:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 05:29:02 -0500
+Received: by mail-qk1-f195.google.com with SMTP id q70so10664617qke.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 02:29:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=neDYQCtvWG6GFLAme/V0Z/I/G6+bUaaHqT/zW9Z6Xws=;
+        b=qhhB8Kljn7x47tZP6LMxBFrevO8A3qPIsX/IrEO+xjXdyoG+d/WmadVZ+WqSylArCp
+         2dQfJJlBgrQlZ+0C8iAqUaLeauPQ6hUP/8wgBuK1pcBMgHcrL8LdFLEgxX+qfyVVMPMR
+         WSYWJ635h2fYRFdYCwHOEovyGAXrsVSV+wqprNu4J8Ss01G+/+9TBSRu+4nMYQks84Ve
+         CJLfa4RzkN5ldNZbCtI71AyPy/yAK7B7B2eVmnYrdUMP0v+Uwo3ULhLABMIYbgsgSBOJ
+         siVOaCwwalZJdRrzLp+fdnqALBBftwzZwTR78ZPhY2UHHiHoboajfuvkzaSmPzbe7S24
+         t6YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=neDYQCtvWG6GFLAme/V0Z/I/G6+bUaaHqT/zW9Z6Xws=;
+        b=NViuFcXwN/grRN3wZzPSIKorWByklNUA+uqEz/egS3vIJFDZRELY3rQnGjB4cLbl9p
+         fB64LjCJz9zZCXkVLbdsqPYSgYQA+wQHs+/YSXanHSpa22Leb2CIrDNwx0dWZtQYYr22
+         eYen2Rz8VX5DWCjK7LA/HgRGjav9Czbw7E7jd38Kr9pwWFOKwktrYDxrWXq+jxtWw+x/
+         EOyV244PALCxFI6yFaDtBKwr9npHGHgi53qOuKciRovBduxT51ID/7BDKsV7CZlyz4Br
+         L/5okVgauNwhBfSXTSc8VaAW/800t6jKkoinaig9YLZrw+TJGy1upa9CiWj3nvxPne4X
+         X5pA==
+X-Gm-Message-State: APjAAAWtKtUoxna8P9A6hcHvUkjC5GCFh+MYRaJ/qUvNVRO0CLSjpop0
+        uLm5n/zErDlMpbbdOBjgbdhFIf6HCigOiKFewV09kqsqRw0=
+X-Google-Smtp-Source: APXvYqy/nyfp+GQeHSfInpIwAhjuAclF3Inv8QGDz8ZXi4t0RJsu/giKvtvOR4wCf+5u0xuFp9+OI5w+cUsLuXatlJk=
+X-Received: by 2002:a05:620a:1127:: with SMTP id p7mr5660664qkk.250.1573468140848;
+ Mon, 11 Nov 2019 02:29:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191111060943.GQ952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191031084944.GA21077@redhat.com>
+In-Reply-To: <20191031084944.GA21077@redhat.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 11 Nov 2019 11:28:49 +0100
+Message-ID: <CACT4Y+Y6CSG7fzOV7BTx3JQ8SKGy8iPyUggGUUv8A0JRhpkU7g@mail.gmail.com>
+Subject: Re: syzkaller for uffd-wp
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
+        syzkaller <syzkaller@googlegroups.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 31, 2019 at 9:49 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
+>
+> Hi Dmitry,
+>
+> would it be possible to grill the uffd-wp patchset with syzkaller?
+> It'd be nice if we can detect bugs before it gets merged.
+>
+> Peter posted it upstream, but we can provide a kernel git tree to
+> pull. To fuzzy you likely need to add the new UFFD_WP feature flag and
+> registration options to the fuzzer.
+>
+> Thanks,
+> Andrea
 
++syzkaller, linux-fsdevel
 
-On 11/11/2019 8.09, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
-> 
->> +/* Not much yet */
-> 
-> ?
+[getting through backlog after OSS/ELC/LSS]
 
-Forgot to remove it when I did implemented the tx_status() ;)
+Hi Andrea,
 
-> 
->> +static enum dma_status udma_tx_status(struct dma_chan *chan,
->> +				      dma_cookie_t cookie,
->> +				      struct dma_tx_state *txstate)
->> +{
->> +	struct udma_chan *uc = to_udma_chan(chan);
->> +	enum dma_status ret;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&uc->vc.lock, flags);
->> +
->> +	ret = dma_cookie_status(chan, cookie, txstate);
->> +
->> +	if (!udma_is_chan_running(uc))
->> +		ret = DMA_COMPLETE;
-> 
-> so a paused channel will result in dma complete status?
-
-The channel is still enabled (running), the pause only sets a bit in the
-channel's real time control register.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I won't have time for this in the near future unfortunately.
+But if you (or anybody on the lists)  are interested in providing
+better testing for uffd, we have docs on how to extend syzkaller:
+https://github.com/google/syzkaller/blob/master/docs/syscall_descriptions.md#describing-new-system-calls
+You may also look at the past changes adding new syscall descriptions
+and we have help provided on the syzkaller@ mailing list.
+Generally, the core syzkaller team (<1 person overall) can't become
+experts and describe thousands of subsystems in a dozen of OSes.
