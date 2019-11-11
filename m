@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8047EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90385C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5096121E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3C5214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497341;
-	bh=6VIKjkADuQVWzy7sSUCb36dA36xQEKAE3RYlBg5BnCQ=;
+	s=default; t=1573497344;
+	bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWVgy2BS+7GqEjZt13dUFHXr8VDn6FQIHiK7k/wuuiRR1zPzXbikEeiHINpThm+zw
-	 /2spQXrRgOy0tKk6oSjKW5FIygQjMZcGibIUI5ip4mJk/WxffQkHsUI9f2CwCrr2Vy
-	 G97TPEv84i6b/WAexr7z6sx+50CZFr6GlEcWojoQ=
+	b=aO2Ye4EPOHhd9lSDyyHE4g0ph1dcTMlzLwvJqrIKf5OLY+Csea7WlNkpf1jHxNEcq
+	 1O+UWTZevS8PZ6C+eP8gKWFHyk732ZtI/zCkFfQzcFiw09VK+b+EazEf3SSvENpeSA
+	 ioMT52C65P3WtWkqYOobFDD4SJ56BcJuPHcvswTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfKKSfk (ORCPT
+        id S1728581AbfKKSfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbfKKSff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:35 -0500
+        id S1727417AbfKKSfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA079214E0;
-        Mon, 11 Nov 2019 18:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D9FB21783;
+        Mon, 11 Nov 2019 18:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497335;
-        bh=6VIKjkADuQVWzy7sSUCb36dA36xQEKAE3RYlBg5BnCQ=;
+        s=default; t=1573497337;
+        bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uq9S/CcGv/2CbRY1du1SC2fhlfhi13wycmboyNaqpTtNF7u0Oq4dEea+WtKfRf/YK
-         Uqhym80QjLCoJwAtiq1+/Y379t24ClWx+2Iy6ZeF0DX42HKOcJ4nNzROky156SAMvn
-         dR7v3fmjpdAZzlBB/+IgfqdJ0/Pxln8HBj6l8vqc=
+        b=CWzX311XaB38ezuKJHWuffEVeNYMZu4IcnenIoRRyfczWmIQwRdnkX1zvZIQzUffT
+         aucLJZK778GfcuD1xo1qnJD2pshL3xhi+iynQDMuZ940GgBLufqtsqMnXxYlq9jbED
+         M7X0BLaJLI1dt/pSRkOOpV+hnjoU/1obGFrxFM0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.14 019/105] tools: gpio: Use !building_out_of_srctree to determine srctree
-Date:   Mon, 11 Nov 2019 19:27:49 +0100
-Message-Id: <20191111181433.608041362@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 002/105] CDC-NCM: handle incomplete transfer of MTU
+Date:   Mon, 11 Nov 2019 19:27:32 +0100
+Message-Id: <20191111181422.777911819@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,48 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 4a6a6f5c4aeedb72db871d60bfcca89835f317aa upstream.
+[ Upstream commit 332f989a3b0041b810836c5c3747e59aad7e9d0b ]
 
-make TARGETS=gpio kselftest fails with:
+A malicious device may give half an answer when asked
+for its MTU. The driver will proceed after this with
+a garbage MTU. Anything but a complete answer must be treated
+as an error.
 
-Makefile:23: tools/build/Makefile.include: No such file or directory
+V2: used sizeof as request by Alexander
 
-When the gpio tool make is invoked from tools Makefile, srctree is
-cleared and the current logic check for srctree equals to empty
-string to determine srctree location from CURDIR.
-
-When the build in invoked from selftests/gpio Makefile, the srctree
-is set to "." and the same logic used for srctree equals to empty is
-needed to determine srctree.
-
-Check building_out_of_srctree undefined as the condition for both
-cases to fix "make TARGETS=gpio kselftest" build failure.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reported-and-tested-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/gpio/Makefile |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -3,7 +3,11 @@ include ../scripts/Makefile.include
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -578,8 +578,8 @@ static void cdc_ncm_set_dgram_size(struc
+ 	/* read current mtu value from device */
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+-			      0, iface_no, &max_datagram_size, 2);
+-	if (err < 0) {
++			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
++	if (err < sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
+ 	}
+@@ -590,7 +590,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	max_datagram_size = cpu_to_le16(ctx->max_datagram_size);
+ 	err = usbnet_write_cmd(dev, USB_CDC_SET_MAX_DATAGRAM_SIZE,
+ 			       USB_TYPE_CLASS | USB_DIR_OUT | USB_RECIP_INTERFACE,
+-			       0, iface_no, &max_datagram_size, 2);
++			       0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+ 	if (err < 0)
+ 		dev_dbg(&dev->intf->dev, "SET_MAX_DATAGRAM_SIZE failed\n");
  
- bindir ?= /usr/bin
- 
--ifeq ($(srctree),)
-+# This will work when gpio is built in tools env. where srctree
-+# isn't set and when invoked from selftests build, where srctree
-+# is set to ".". building_out_of_srctree is undefined for in srctree
-+# builds
-+ifndef building_out_of_srctree
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
 
 
