@@ -2,166 +2,106 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7922C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D55C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE67214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:25:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aNrxQL7t"
+	by mail.kernel.org (Postfix) with ESMTP id 7A5D021783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKKPZ2 (ORCPT
+        id S1726970AbfKKP05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:25:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51629 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726832AbfKKPZ2 (ORCPT
+        Mon, 11 Nov 2019 10:26:57 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51253 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfKKP04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:25:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573485926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RTpgrGON4kavQjrqlqN+As1k4CmcekptcYakwUxrssY=;
-        b=aNrxQL7t5MpgXV37oFxbAuRYh9yOJwxNGsU2WtcJlwiM4J0O6smV1OGIsa/rO+3f950JGd
-        9MAzmvWE9okOhw45rEstlh7ly91KghitCT4+bN5Kuv2GDUI3mjpjqSAUOwZWlB6a2awFmf
-        1vQuTG4xDgGQspX+GXWJs+VgxT9v9xE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-lGc3MC08MDKlQT_hnW38rw-1; Mon, 11 Nov 2019 10:25:21 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78A3F8EBAC9;
-        Mon, 11 Nov 2019 15:25:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4938619C4F;
-        Mon, 11 Nov 2019 15:25:15 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 11 Nov 2019 16:25:19 +0100 (CET)
-Date:   Mon, 11 Nov 2019 16:25:15 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v7 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191111152514.GA11389@redhat.com>
-References: <20191111131704.656169-1-areber@redhat.com>
+        Mon, 11 Nov 2019 10:26:56 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mol@pengutronix.de>)
+        id 1iUBac-0000i0-11; Mon, 11 Nov 2019 16:26:50 +0100
+Received: from mol by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mol@pengutronix.de>)
+        id 1iUBaa-0003bS-Rg; Mon, 11 Nov 2019 16:26:48 +0100
+From:   Michael Olbrich <m.olbrich@pengutronix.de>
+To:     linux-usb@vger.kernel.org
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Michael Olbrich <m.olbrich@pengutronix.de>
+Subject: [PATCH 2/2] usb: dwc3: gadget: restart the transfer if a isoc request is queued too late
+Date:   Mon, 11 Nov 2019 16:26:45 +0100
+Message-Id: <20191111152645.13792-3-m.olbrich@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191111152645.13792-1-m.olbrich@pengutronix.de>
+References: <20191111152645.13792-1-m.olbrich@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191111131704.656169-1-areber@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: lGc3MC08MDKlQT_hnW38rw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mol@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11, Adrian Reber wrote:
->
-> v7:
->  - changed set_tid to be an array to set the PID of a process
->    in multiple nested PID namespaces at the same time as discussed
->    at LPC 2019 (container MC)
+Currently, most gadget drivers handle isoc transfers on a best effort
+bases: If the request queue runs empty, then there will simply be gaps in
+the isoc data stream.
 
-cough... iirc you convinced me this is not needed when we discussed
-the previous version ;) Nevermind, probably my memory fools me.
+The UVC gadget depends on this behaviour. It simply provides new requests
+when video frames are available and assumes that they are sent as soon as
+possible.
 
-So far I only have some cosmetic nits,
+The dwc3 gadget currently works differently: It assumes that there is a
+contiguous stream of requests without any gaps. If a request is too late,
+then it is dropped by the hardware.
+For the UVC gadget this means that a live stream stops after the first
+frame because all following requests are late.
 
-> @@ -175,6 +187,18 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->
->  =09for (i =3D ns->level; i >=3D 0; i--) {
->  =09=09int pid_min =3D 1;
-> +=09=09int t_pos =3D 0;
-                    ^^^^^
+This patch changes the behaviour of the dwc3 gadget driver to match the
+expectations. If a request arrives too late, then the transfer will be
+restart to create the needed gap.
 
-I won't insist, but I'd suggest to cache set_tid[t_pos] instead to make
-the code a bit more simple.
+A request is late if:
+1. There are currently no requests queued in the hardware
+2. The current frame number provided by DSTS does not match the frame
+   number returned by the last transfer.
 
-> @@ -186,12 +210,24 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  =09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
->  =09=09=09pid_min =3D RESERVED_PIDS;
+If this happens transfers are stopped. The following XferNotReady provides
+the new correct frame number and restarts the transfer.
 
-You can probably move this code into the "else" branch below.
+Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
+---
+ drivers/usb/dwc3/gadget.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-IOW, something like
-
-
-=09for (i =3D ns->level; i >=3D 0; i--) {
-=09=09int xxx =3D 0;
-
-=09=09if (set_tid_size) {
-=09=09=09int pos =3D ns->level - i;
-
-=09=09=09xxx =3D set_tid[pos];
-=09=09=09if (xxx < 1 || xxx >=3D pid_max)
-=09=09=09=09return ERR_PTR(-EINVAL);
-=09=09=09/* Also fail if a PID !=3D 1 is requested and no PID 1 exists */
-=09=09=09if (xxx !=3D 1 && !tmp->child_reaper)
-=09=09=09=09return ERR_PTR(-EINVAL);
-=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-=09=09=09=09return ERR_PTR(-EPERM);
-=09=09=09set_tid_size--;
-=09=09}
-
-=09=09idr_preload(GFP_KERNEL);
-=09=09spin_lock_irq(&pidmap_lock);
-
-=09=09if (xxx) {
-=09=09=09nr =3D idr_alloc(&tmp->idr, NULL, xxx, xxx + 1,
-=09=09=09=09=09GFP_ATOMIC);
-=09=09=09/*
-=09=09=09 * If ENOSPC is returned it means that the PID is
-=09=09=09 * alreay in use. Return EEXIST in that case.
-=09=09=09 */
-=09=09=09if (nr =3D=3D -ENOSPC)
-=09=09=09=09nr =3D -EEXIST;
-=09=09} else {
-=09=09=09int pid_min =3D 1;
-=09=09=09/*
-=09=09=09 * init really needs pid 1, but after reaching the
-=09=09=09 * maximum wrap back to RESERVED_PIDS
-=09=09=09 */
-=09=09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
-=09=09=09=09pid_min =3D RESERVED_PIDS;
-=09=09=09/*
-=09=09=09 * Store a null pointer so find_pid_ns does not find
-=09=09=09 * a partially initialized PID (see below).
-=09=09=09 */
-=09=09=09nr =3D idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-=09=09=09=09=09      pid_max, GFP_ATOMIC);
-=09=09}
-
-=09=09...
-
-This way only the "if (set_tid_size)" block has to play with set_tid_size/s=
-et_tid.
-
-note also that this way we can easily allow set_tid[some_level] =3D=3D 0, w=
-e can
-simply do
-
-=09-=09if (xxx < 1 || xxx >=3D pid_max)
-=09+=09if (xxx < 0 || xxx >=3D pid_max)
-
-although I don't think this is really useful.
-
-Oleg.
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index ac4673d91939..eb7f09929f28 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1473,6 +1473,14 @@ static int __dwc3_gadget_ep_queue(struct dwc3_ep *dep, struct dwc3_request *req)
+ 				return __dwc3_gadget_start_isoc(dep);
+ 			}
+ 		}
++		if ((dep->flags & DWC3_EP_TRANSFER_STARTED) &&
++		    list_empty(&dep->started_list) &&
++		    ((dep->frame_number & 0x3fff) !=
++		    __dwc3_gadget_get_frame(dwc))) {
++			dwc3_stop_active_transfer(dep, true, true);
++			dep->flags = DWC3_EP_ENABLED;
++			return 0;
++		}
+ 	}
+ 
+ 	return __dwc3_gadget_kick_transfer(dep, false);
+-- 
+2.20.1
 
