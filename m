@@ -2,51 +2,54 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDB4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5477DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD2421655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A89220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497211;
-	bh=hsj6mtJD8TKRNhJwMDJL0ulHgOWI8gc8BwKJnbp9dbs=;
+	s=default; t=1573497218;
+	bh=CscTPnHSPFlq+sLbG/O7EI8VoX3qwe5OhcLIve2oju0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfzv8KuxcbQb5NTUWygaq8GTdNrpvpITWt/6po4zhCG10ZWzF3U3/emP0q2d0x3hC
-	 RNXBGUg+O+TJbiDe7sZGGReJe/nT+KWHKvUpxXxNd+rnxHHnc1OxXAeaBtvDLdIb/R
-	 qdDSFVTPHj1GwH1MtwhVDbGWe7/hVfMSYpaigp3U=
+	b=IHRbkXmxS9LZwHF/8moB+t8m/u7+R4P66ejq4iZIAUgN1yhBclRUc1hveuAuLDrDP
+	 eHo3thDNekVCL9lbtvkBXa++TqB+lXC0ARuM1f76JqzBiCrj6BRBp16Ioa6u6CzCAA
+	 zdOHuXyKmtl4NZuZO65gEpy90DGD1bU+vPU5S7Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfKKSda (ORCPT
+        id S1728164AbfKKSdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727345AbfKKSdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:24 -0500
+        id S1727164AbfKKSd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B27F21655;
-        Mon, 11 Nov 2019 18:33:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A9A21655;
+        Mon, 11 Nov 2019 18:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497202;
-        bh=hsj6mtJD8TKRNhJwMDJL0ulHgOWI8gc8BwKJnbp9dbs=;
+        s=default; t=1573497208;
+        bh=CscTPnHSPFlq+sLbG/O7EI8VoX3qwe5OhcLIve2oju0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LekTA0vfa67Ytojm6gpfU5L51WYczedNtxn5zofJL4dnD+MgWPhLy3pPwyWlHLRNR
-         Pvluz6Hc+M7hlWgm8OSITht+J5wPo077ABLQbqiOp75xVNV1eq7nKGBEGKUjtqvVv+
-         DC6mZasjEbdnJwi3p6K9wi+8OsopGuwDo4o5rrnM=
+        b=u7BHBh0dF2DVqZKJQGH1G9qbIkGCIZc+TQCHvEw7/fL7U3rfe//Tp/91+LW/lV3QP
+         RioIZrpohFEdIvm/eeoo/Qnbps4G9YwS4i6Ow5Qkre9yYBcmyS8JenEzvc3oZjmE4L
+         zg1Pe4NkiFg0lKxkMB6cJ8POyLuBic/Pqb/BW/7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 10/65] ALSA: bebob: fix to detect configured source of sampling clock for Focusrite Saffire Pro i/o series
-Date:   Mon, 11 Nov 2019 19:28:10 +0100
-Message-Id: <20191111181339.256403940@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 38/65] dmaengine: xilinx_dma: Fix control reg update in vdma_channel_set_config
+Date:   Mon, 11 Nov 2019 19:28:38 +0100
+Message-Id: <20191111181347.341728892@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -59,50 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 
-commit 706ad6746a66546daf96d4e4a95e46faf6cf689a upstream.
+[ Upstream commit 6c6de1ddb1be3840f2ed5cc9d009a622720940c9 ]
 
-For Focusrite Saffire Pro i/o, the lowest 8 bits of register represents
-configured source of sampling clock. The next lowest 8 bits represents
-whether the configured source is actually detected or not just after
-the register is changed for the source.
+In vdma_channel_set_config clear the delay, frame count and master mask
+before updating their new values. It avoids programming incorrect state
+when input parameters are different from default.
 
-Current implementation evaluates whole the register to detect configured
-source. This results in failure due to the next lowest 8 bits when the
-source is connected in advance.
-
-This commit fixes the bug.
-
-Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
-Cc: <stable@vger.kernel.org> # v3.16+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20191102150920.20367-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Acked-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Link: https://lore.kernel.org/r/1569495060-18117-3-git-send-email-radhey.shyam.pandey@xilinx.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/bebob/bebob_focusrite.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/xilinx/xilinx_dma.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/sound/firewire/bebob/bebob_focusrite.c
-+++ b/sound/firewire/bebob/bebob_focusrite.c
-@@ -28,6 +28,8 @@
- #define SAFFIRE_CLOCK_SOURCE_SPDIF		1
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 8288fe4d17c38..cd271f7826051 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -72,6 +72,9 @@
+ #define XILINX_DMA_DMACR_CIRC_EN		BIT(1)
+ #define XILINX_DMA_DMACR_RUNSTOP		BIT(0)
+ #define XILINX_DMA_DMACR_FSYNCSRC_MASK		GENMASK(6, 5)
++#define XILINX_DMA_DMACR_DELAY_MASK		GENMASK(31, 24)
++#define XILINX_DMA_DMACR_FRAME_COUNT_MASK	GENMASK(23, 16)
++#define XILINX_DMA_DMACR_MASTER_MASK		GENMASK(11, 8)
  
- /* clock sources as returned from register of Saffire Pro 10 and 26 */
-+#define SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK	0x000000ff
-+#define SAFFIREPRO_CLOCK_SOURCE_DETECT_MASK	0x0000ff00
- #define SAFFIREPRO_CLOCK_SOURCE_INTERNAL	0
- #define SAFFIREPRO_CLOCK_SOURCE_SKIP		1 /* never used on hardware */
- #define SAFFIREPRO_CLOCK_SOURCE_SPDIF		2
-@@ -190,6 +192,7 @@ saffirepro_both_clk_src_get(struct snd_b
- 		map = saffirepro_clk_maps[1];
+ #define XILINX_DMA_REG_DMASR			0x0004
+ #define XILINX_DMA_DMASR_EOL_LATE_ERR		BIT(15)
+@@ -2054,8 +2057,10 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+ 	chan->config.gen_lock = cfg->gen_lock;
+ 	chan->config.master = cfg->master;
  
- 	/* In a case that this driver cannot handle the value of register. */
-+	value &= SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK;
- 	if (value >= SAFFIREPRO_CLOCK_SOURCE_COUNT || map[value] < 0) {
- 		err = -EIO;
- 		goto end;
++	dmacr &= ~XILINX_DMA_DMACR_GENLOCK_EN;
+ 	if (cfg->gen_lock && chan->genlock) {
+ 		dmacr |= XILINX_DMA_DMACR_GENLOCK_EN;
++		dmacr &= ~XILINX_DMA_DMACR_MASTER_MASK;
+ 		dmacr |= cfg->master << XILINX_DMA_DMACR_MASTER_SHIFT;
+ 	}
+ 
+@@ -2069,11 +2074,13 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+ 	chan->config.delay = cfg->delay;
+ 
+ 	if (cfg->coalesc <= XILINX_DMA_DMACR_FRAME_COUNT_MAX) {
++		dmacr &= ~XILINX_DMA_DMACR_FRAME_COUNT_MASK;
+ 		dmacr |= cfg->coalesc << XILINX_DMA_DMACR_FRAME_COUNT_SHIFT;
+ 		chan->config.coalesc = cfg->coalesc;
+ 	}
+ 
+ 	if (cfg->delay <= XILINX_DMA_DMACR_DELAY_MAX) {
++		dmacr &= ~XILINX_DMA_DMACR_DELAY_MASK;
+ 		dmacr |= cfg->delay << XILINX_DMA_DMACR_DELAY_SHIFT;
+ 		chan->config.delay = cfg->delay;
+ 	}
+-- 
+2.20.1
+
 
 
