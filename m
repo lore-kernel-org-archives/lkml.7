@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A638DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E41E222C5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FF92184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498479;
-	bh=MmuC3ntGipDDJDN5fDmYkcefGt/LDWxP73nABMNEhic=;
+	s=default; t=1573498484;
+	bh=pur4SZ1TslIwdXzg0QtfP1E6LnyIzDKBcr/u+XQoe6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ieSBssZDO1/UClfoBDsE3/nVBFqa1XaUQOnBJ4YvfeNJy3Be1pAFMldgIXFkKI0A2
-	 m/0X2lBnErRlSNaQRZPPlFQhDNhfj7yUyxIhqHHv29c6Qw2WsQoQ6DWqKDx1d7ldB1
-	 KAmt+wyuSVdS+TXR2Yb/IE3hh8EqOe0ovh3SwIRg=
+	b=Bu4+ATS8GZDNEzDr2QIWTM1VXd6qcAkcYeVlAjGpDiIx/2m7+ldjp6RHKU5dBzGcl
+	 /xJ1g6y4tSE4aQ4PJCY7zDjNJdbrAeJWlKIujfWe/KW7Hhsx8pkP8ACYHBmkDRTP+7
+	 JrxNzbIzpFB8/0LIs5S9+LUu6fIYrOieTVPRjq1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730506AbfKKSyi (ORCPT
+        id S1730589AbfKKSym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:54:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50616 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:54:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729538AbfKKSyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:54:32 -0500
+        id S1729538AbfKKSyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:54:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8E1222BD;
-        Mon, 11 Nov 2019 18:54:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 455E220818;
+        Mon, 11 Nov 2019 18:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498471;
-        bh=MmuC3ntGipDDJDN5fDmYkcefGt/LDWxP73nABMNEhic=;
+        s=default; t=1573498479;
+        bh=pur4SZ1TslIwdXzg0QtfP1E6LnyIzDKBcr/u+XQoe6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AfDxTWfSguO/z+2z+BFZesquxLTC6+OLp8TYqvnuj1SlfzHFEPrjiCJ0133fResNh
-         snbvu4EngaRhinoj72ZAzkuGI6OgVmdEDuRgFaC0gC3jOvbeeOwaW/6vVCVb7ZcRZy
-         up6NEtV3AInsQnHb/B2OOZtavDMOB72wVViNGAXk=
+        b=Uk+bzJnQ4DWT5hZA+SyZX1/IcLCyMVaUpXi5Nrwa6IAi5WOwA8CqOb+EndjvQY9Rd
+         Iog6mhInQnd1TsONKQTY4SBcULYItEstPJwzP+2woQGdMvC1x6euYwDsRFpzrb4PXG
+         GK+XDIecDTX8kNEtCwv6YIRE/+PDYCEoXZVR3/nQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Simon Horman <horms@verge.net.au>,
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 129/193] ipvs: move old_secure_tcp into struct netns_ipvs
-Date:   Mon, 11 Nov 2019 19:28:31 +0100
-Message-Id: <20191111181510.692053890@linuxfoundation.org>
+Subject: [PATCH 5.3 131/193] RDMA/nldev: Skip counter if port doesnt match
+Date:   Mon, 11 Nov 2019 19:28:33 +0100
+Message-Id: <20191111181510.839768118@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -61,115 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit c24b75e0f9239e78105f81c5f03a751641eb07ef ]
+[ Upstream commit a15542bb72a48042f5df7475893d46f725f5f9fb ]
 
-syzbot reported the following issue :
+The counter resource should return -EAGAIN if it was requested for a
+different port, this is similar to how QP works if the users provides a
+port filter.
 
-BUG: KCSAN: data-race in update_defense_level / update_defense_level
+Otherwise port filtering in netlink will return broken counter nests.
 
-read to 0xffffffff861a6260 of 4 bytes by task 3006 on cpu 1:
- update_defense_level+0x621/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:177
- defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-write to 0xffffffff861a6260 of 4 bytes by task 7333 on cpu 0:
- update_defense_level+0xa62/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:205
- defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 7333 Comm: kworker/0:5 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events defense_work_handler
-
-Indeed, old_secure_tcp is currently a static variable, while it
-needs to be a per netns variable.
-
-Fixes: a0840e2e165a ("IPVS: netns, ip_vs_ctl local vars moved to ipvs struct.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
+Fixes: c4ffee7c9bdb ("RDMA/netlink: Implement counter dumpit calback")
+Link: https://lore.kernel.org/r/20191020062800.8065-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h            |  1 +
- net/netfilter/ipvs/ip_vs_ctl.c | 15 +++++++--------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/infiniband/core/nldev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 3759167f91f56..078887c8c586a 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -889,6 +889,7 @@ struct netns_ipvs {
- 	struct delayed_work	defense_work;   /* Work handler */
- 	int			drop_rate;
- 	int			drop_counter;
-+	int			old_secure_tcp;
- 	atomic_t		dropentry;
- 	/* locks in ctl.c */
- 	spinlock_t		dropentry_lock;  /* drop entry handling */
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 248c76290116e..e29b00f514a0a 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -93,7 +93,6 @@ static bool __ip_vs_addr_is_local_v6(struct net *net,
- static void update_defense_level(struct netns_ipvs *ipvs)
- {
- 	struct sysinfo i;
--	static int old_secure_tcp = 0;
- 	int availmem;
- 	int nomem;
- 	int to_change = -1;
-@@ -174,35 +173,35 @@ static void update_defense_level(struct netns_ipvs *ipvs)
- 	spin_lock(&ipvs->securetcp_lock);
- 	switch (ipvs->sysctl_secure_tcp) {
- 	case 0:
--		if (old_secure_tcp >= 2)
-+		if (ipvs->old_secure_tcp >= 2)
- 			to_change = 0;
- 		break;
- 	case 1:
- 		if (nomem) {
--			if (old_secure_tcp < 2)
-+			if (ipvs->old_secure_tcp < 2)
- 				to_change = 1;
- 			ipvs->sysctl_secure_tcp = 2;
- 		} else {
--			if (old_secure_tcp >= 2)
-+			if (ipvs->old_secure_tcp >= 2)
- 				to_change = 0;
- 		}
- 		break;
- 	case 2:
- 		if (nomem) {
--			if (old_secure_tcp < 2)
-+			if (ipvs->old_secure_tcp < 2)
- 				to_change = 1;
- 		} else {
--			if (old_secure_tcp >= 2)
-+			if (ipvs->old_secure_tcp >= 2)
- 				to_change = 0;
- 			ipvs->sysctl_secure_tcp = 1;
- 		}
- 		break;
- 	case 3:
--		if (old_secure_tcp < 2)
-+		if (ipvs->old_secure_tcp < 2)
- 			to_change = 1;
- 		break;
- 	}
--	old_secure_tcp = ipvs->sysctl_secure_tcp;
-+	ipvs->old_secure_tcp = ipvs->sysctl_secure_tcp;
- 	if (to_change >= 0)
- 		ip_vs_protocol_timeout_change(ipvs,
- 					      ipvs->sysctl_secure_tcp > 1);
+diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
+index f42e856f30729..4300e21865845 100644
+--- a/drivers/infiniband/core/nldev.c
++++ b/drivers/infiniband/core/nldev.c
+@@ -778,7 +778,7 @@ static int fill_res_counter_entry(struct sk_buff *msg, bool has_cap_net_admin,
+ 		container_of(res, struct rdma_counter, res);
+ 
+ 	if (port && port != counter->port)
+-		return 0;
++		return -EAGAIN;
+ 
+ 	/* Dump it even query failed */
+ 	rdma_counter_query_stats(counter);
 -- 
 2.20.1
 
