@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77C5C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCD0C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F352245C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D3321655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499183;
-	bh=SqRmjZhn94quOQXuKvLtH6KunMbWuCA4q/EJ86b0H+8=;
+	s=default; t=1573499193;
+	bh=mK+Elh+tbvp7chd+lajcYCegHw9TYGBbrnx4TCYxMNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jdzuN5vXNuJqYEQCEOSLGrxFmtbQKAx8Eh4NOj253th7EkpnFe+qUSKb7BHMdKFWO
-	 ARI3JDNzm6g3HvVW5XvM3ZZbd8P4dx8exr4VXKhTt5QUbn+rs69Yip4LKBVCquMDFG
-	 85yq1n8Aktt5J3yGD9Pau8x57XkF8vprsx1F3D8c=
+	b=Rp+xq9zbzGdtR4MgP3KzH917asGBVtIDhqWnvBvU9gDzxTaS3NmdTBOUoXUIROELT
+	 OQLcQHQY1RJR7pZzojMNjhuyUkPFzjf9yY5Fksod37nhPfNLPEObSgEQ92eEZwgd6o
+	 SXw8o3zvrqAzjngsaJZFvfhGeQPb0v8U/IQdlL00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbfKKSjE (ORCPT
+        id S1729050AbfKKTGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57998 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:06:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729107AbfKKSi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:59 -0500
+        id S1728028AbfKKSiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3208E214E0;
-        Mon, 11 Nov 2019 18:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 927592196E;
+        Mon, 11 Nov 2019 18:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497538;
-        bh=SqRmjZhn94quOQXuKvLtH6KunMbWuCA4q/EJ86b0H+8=;
+        s=default; t=1573497530;
+        bh=mK+Elh+tbvp7chd+lajcYCegHw9TYGBbrnx4TCYxMNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjlG0qMpYU6BjulfB1qStHj0vtv+Hh3o7I+3xZf3PhyBkkrQLjaKOQjK2faz+kdSW
-         iYkExoPvIpu1c0oTR162cu7/yqOSRy2MXxbHLaPc8KobOJ5osNUkOb4k/6gbwu83QI
-         +xUyD4ZWY83VoucFjj4UDOB63pFcPKkXvbc2NyQU=
+        b=Ascod6o9QoLFL3UkvfiA0vwBLnDjznDZA6tFsKU0Ro/jYIM1k57P67ofYS/RWQowK
+         Af8nNfa4C3oj6sICBPKtR89nOjdDe09RHnKCv07iiJIPGUzz9FUmCzGQ4Tf1CZddVo
+         +0NU0gEjtwYI3sEwwckvdce7L1Thw3APkurkDW0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+863724e7128e14b26732@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.14 039/105] can: peak_usb: fix slab info leak
-Date:   Mon, 11 Nov 2019 19:28:09 +0100
-Message-Id: <20191111181439.936521349@linuxfoundation.org>
+        Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 046/105] usb: dwc3: Allow disabling of metastability workaround
+Date:   Mon, 11 Nov 2019 19:28:16 +0100
+Message-Id: <20191111181441.392248271@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,39 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Roger Quadros <rogerq@ti.com>
 
-commit f7a1337f0d29b98733c8824e165fca3371d7d4fd upstream.
+commit 42bf02ec6e420e541af9a47437d0bdf961ca2972 upstream
 
-Fix a small slab info leak due to a failure to clear the command buffer
-at allocation.
+Some platforms (e.g. TI's DRA7 USB2 instance) have more trouble
+with the metastability workaround as it supports only
+a High-Speed PHY and the PHY can enter into an Erratic state [1]
+when the controller is set in SuperSpeed mode as part of
+the metastability workaround.
 
-The first 16 bytes of the command buffer are always sent to the device
-in pcan_usb_send_cmd() even though only the first two may have been
-initialised in case no argument payload is provided (e.g. when waiting
-for a response).
+This causes upto 2 seconds delay in enumeration on DRA7's USB2
+instance in gadget mode.
 
-Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
-Cc: stable <stable@vger.kernel.org>     # 3.4
-Reported-by: syzbot+863724e7128e14b26732@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+If these platforms can be better off without the workaround,
+provide a device tree property to suggest that so the workaround
+is avoided.
+
+[1] Device mode enumeration trace showing PHY Erratic Error.
+     irq/90-dwc3-969   [000] d...    52.323145: dwc3_event: event (00000901): Erratic Error [U0]
+     irq/90-dwc3-969   [000] d...    52.560646: dwc3_event: event (00000901): Erratic Error [U0]
+     irq/90-dwc3-969   [000] d...    52.798144: dwc3_event: event (00000901): Erratic Error [U0]
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/dwc3.txt |    2 ++
+ drivers/usb/dwc3/core.c                        |    3 +++
+ drivers/usb/dwc3/core.h                        |    3 +++
+ drivers/usb/dwc3/gadget.c                      |    6 ++++--
+ 4 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -776,7 +776,7 @@ static int peak_usb_create_dev(const str
- 	dev = netdev_priv(netdev);
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -47,6 +47,8 @@ Optional properties:
+ 			from P0 to P1/P2/P3 without delay.
+  - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
+ 			during HS transmit.
++ - snps,dis_metastability_quirk: when set, disable metastability workaround.
++			CAUTION: use only if you are absolutely sure of it.
+  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+ 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+  - snps,hird-threshold: HIRD threshold
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1115,6 +1115,9 @@ static void dwc3_get_properties(struct d
+ 	device_property_read_u32(dev, "snps,quirk-frame-length-adjustment",
+ 				 &dwc->fladj);
  
- 	/* allocate a buffer large enough to send commands */
--	dev->cmd_buf = kmalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
-+	dev->cmd_buf = kzalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
- 	if (!dev->cmd_buf) {
- 		err = -ENOMEM;
- 		goto lbl_free_candev;
++	dwc->dis_metastability_quirk = device_property_read_bool(dev,
++				"snps,dis_metastability_quirk");
++
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+ 	dwc->tx_de_emphasis = tx_de_emphasis;
+ 
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -869,6 +869,7 @@ struct dwc3_scratchpad_array {
+  * 	1	- -3.5dB de-emphasis
+  * 	2	- No de-emphasis
+  * 	3	- Reserved
++ * @dis_metastability_quirk: set to disable metastability quirk.
+  * @imod_interval: set the interrupt moderation interval in 250ns
+  *                 increments or 0 to disable.
+  */
+@@ -1025,6 +1026,8 @@ struct dwc3 {
+ 	unsigned		tx_de_emphasis_quirk:1;
+ 	unsigned		tx_de_emphasis:2;
+ 
++	unsigned		dis_metastability_quirk:1;
++
+ 	u16			imod_interval;
+ };
+ 
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2034,7 +2034,8 @@ static void dwc3_gadget_set_speed(struct
+ 	 * STAR#9000525659: Clock Domain Crossing on DCTL in
+ 	 * USB 2.0 Mode
+ 	 */
+-	if (dwc->revision < DWC3_REVISION_220A) {
++	if (dwc->revision < DWC3_REVISION_220A &&
++	    !dwc->dis_metastability_quirk) {
+ 		reg |= DWC3_DCFG_SUPERSPEED;
+ 	} else {
+ 		switch (speed) {
+@@ -3265,7 +3266,8 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ 	 * is less than super speed because we don't have means, yet, to tell
+ 	 * composite.c that we are USB 2.0 + LPM ECN.
+ 	 */
+-	if (dwc->revision < DWC3_REVISION_220A)
++	if (dwc->revision < DWC3_REVISION_220A &&
++	    !dwc->dis_metastability_quirk)
+ 		dev_info(dwc->dev, "changing max_speed on rev %08x\n",
+ 				dwc->revision);
+ 
 
 
