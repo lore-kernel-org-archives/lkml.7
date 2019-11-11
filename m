@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E541BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C473C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46D620659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6657C222C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498630;
-	bh=Xn9xmVhJbceB5TGo945eRhwsCmVWx9YAH+0OcuDbu0g=;
+	s=default; t=1573498632;
+	bh=zKkKUDIZcW3GqAheMpN/zNXU40urnIbr86SVSSbIX2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nk8vfR9jFgXxgC5op13UxwAj8wT2UpSAlJQFEJPffhLHiZOcSYH+H1dxN2Sk9DuVY
-	 mdkx37BVSLNvIopMI399ChsMTV8Atzz0Div/oyN0MwwNlNJ/KkH3wgPDvjglwAEtHx
-	 y1XR2eIsM1qor9aD/v6ZLncMgyFSw5KZ4b9Bv6mg=
+	b=jdFuXBAEjdlkEd0VAbYYH7mbIZ5HgJvFyg8CnG3Cygoo+4ZCIfAxjt4yL7JBwBtYL
+	 ilcJPxM7/ExQtoSUT7IQxt1tUEphNCnVE+X8/KXD5Yn5W8+TpOgevKvTgs9CqW9epI
+	 15SWYzv2ivDZij4aW0YzxkYMsPpiPLm76+Ww/QRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbfKKS5J (ORCPT
+        id S1729697AbfKKS46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:57:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56060 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:56:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730795AbfKKS5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:57:05 -0500
+        id S1730765AbfKKS4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:56:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB53920659;
-        Mon, 11 Nov 2019 18:57:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045A320659;
+        Mon, 11 Nov 2019 18:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498624;
-        bh=Xn9xmVhJbceB5TGo945eRhwsCmVWx9YAH+0OcuDbu0g=;
+        s=default; t=1573498612;
+        bh=zKkKUDIZcW3GqAheMpN/zNXU40urnIbr86SVSSbIX2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l/OiCAUzHN4spkNqzzpIc+aLQ8t+wCivsxh3rj1TMytuRriy0+14z8lzvLpjTE1Bp
-         23/swtMGLam+Cm51kSkL/mBeqZ6mkFfabWRi8y/ZuNR+DYp2XL+wMcR7bybHVpXyJj
-         9NgBs1uZQfNBRHA6xKyqYaoVfeLTkHMVcF1wCoZA=
+        b=MTxSJHvWxGVoew8oc/dSaWzaVO7C70xjFqZWZV4H83iFkVCAJJ4MeZB4s77YCsx9Y
+         V+jb44Qvhop3/aEeum1iWBS7vrAsNBwskhr9NeSS1ukhuNRvuK/PfSijduAg9J+MwR
+         lhpSj8QrwKeQn5uo052+PDowbHOfIZCWzyqdA8Dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Brown <neilb@suse.de>,
-        kbuild test robot <lkp@intel.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 173/193] SUNRPC: Destroy the back channel when we destroy the host transport
-Date:   Mon, 11 Nov 2019 19:29:15 +0100
-Message-Id: <20191111181513.881682174@linuxfoundation.org>
+Subject: [PATCH 5.3 153/193] scsi: qla2xxx: stop timer in shutdown path
+Date:   Mon, 11 Nov 2019 19:28:55 +0100
+Message-Id: <20191111181512.422472304@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -62,70 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 669996add4c92476e0f8d6b4cd2bb308d1939fd7 ]
+[ Upstream commit d3566abb1a1e7772116e4d50fb6a58d19c9802e5 ]
 
-When we're destroying the host transport mechanism, we should ensure
-that we do not leak memory by failing to release any back channel
-slots that might still exist.
+In shutdown/reboot paths, the timer is not stopped:
 
-Reported-by: Neil Brown <neilb@suse.de>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+  qla2x00_shutdown
+  pci_device_shutdown
+  device_shutdown
+  kernel_restart_prepare
+  kernel_restart
+  sys_reboot
+
+This causes lockups (on powerpc) when firmware config space access calls
+are interrupted by smp_send_stop later in reboot.
+
+Fixes: e30d1756480dc ("[SCSI] qla2xxx: Addition of shutdown callback handler.")
+Link: https://lore.kernel.org/r/20191024063804.14538-1-npiggin@gmail.com
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sunrpc/bc_xprt.h | 5 +++++
- net/sunrpc/backchannel_rqst.c  | 2 +-
- net/sunrpc/xprt.c              | 5 +++++
- 3 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/sunrpc/bc_xprt.h b/include/linux/sunrpc/bc_xprt.h
-index 87d27e13d8859..d796058cdff2a 100644
---- a/include/linux/sunrpc/bc_xprt.h
-+++ b/include/linux/sunrpc/bc_xprt.h
-@@ -64,6 +64,11 @@ static inline int xprt_setup_backchannel(struct rpc_xprt *xprt,
- 	return 0;
- }
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 04cf6986eb8e6..ac96771bb06df 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3543,6 +3543,10 @@ qla2x00_shutdown(struct pci_dev *pdev)
+ 		qla2x00_try_to_stop_firmware(vha);
+ 	}
  
-+static inline void xprt_destroy_backchannel(struct rpc_xprt *xprt,
-+					    unsigned int max_reqs)
-+{
-+}
++	/* Disable timer */
++	if (vha->timer_active)
++		qla2x00_stop_timer(vha);
 +
- static inline bool svc_is_backchannel(const struct svc_rqst *rqstp)
- {
- 	return false;
-diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
-index 7eb251372f947..195b40c5dae4b 100644
---- a/net/sunrpc/backchannel_rqst.c
-+++ b/net/sunrpc/backchannel_rqst.c
-@@ -220,7 +220,7 @@ void xprt_destroy_bc(struct rpc_xprt *xprt, unsigned int max_reqs)
- 		goto out;
+ 	/* Turn adapter off line */
+ 	vha->flags.online = 0;
  
- 	spin_lock_bh(&xprt->bc_pa_lock);
--	xprt->bc_alloc_max -= max_reqs;
-+	xprt->bc_alloc_max -= min(max_reqs, xprt->bc_alloc_max);
- 	list_for_each_entry_safe(req, tmp, &xprt->bc_pa_list, rq_bc_pa_list) {
- 		dprintk("RPC:        req=%p\n", req);
- 		list_del(&req->rq_bc_pa_list);
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 20631d64312cb..ac796f3d42409 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1935,6 +1935,11 @@ static void xprt_destroy_cb(struct work_struct *work)
- 	rpc_destroy_wait_queue(&xprt->sending);
- 	rpc_destroy_wait_queue(&xprt->backlog);
- 	kfree(xprt->servername);
-+	/*
-+	 * Destroy any existing back channel
-+	 */
-+	xprt_destroy_backchannel(xprt, UINT_MAX);
-+
- 	/*
- 	 * Tear down transport state and free the rpc_xprt
- 	 */
 -- 
 2.20.1
 
