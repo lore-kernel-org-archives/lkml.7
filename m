@@ -2,122 +2,148 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CBAC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5997C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A405C2196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573514285;
-	bh=rdJa61maE1ekeAOY2Gb+SEWYgZusibLnrBqmCvuYI+I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=G7jDLTOVsB0EurEZKRrMXTvqN2GrQLn2OzrML+IVRvaVGpaYZxrrr7vv9/aRlOLqX
-	 8CRiyin1W2EsiNapVqIPTWuwC3XOy9N7vcAIERPXW1Lsse+Yc3EbXiTKNIqEje+WQL
-	 IvC1RD8CkCpav6mikmrYnuYrswVZey2wIMgrYgXA=
+	by mail.kernel.org (Postfix) with ESMTP id 86D3221872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fROusxRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfKKXSE (ORCPT
+        id S1727262AbfKKXSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:18:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfKKXSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:18:04 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B11632184C;
-        Mon, 11 Nov 2019 23:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573514281;
-        bh=rdJa61maE1ekeAOY2Gb+SEWYgZusibLnrBqmCvuYI+I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nvbJM84E2sEkK32e2Rv/AuBrrVuPQF/okvjjX0bzui9PswJjAGhUgUq8r4wALvWli
-         UkeeqACkIOgTMr5zQXzoOxNAr/6PZY2GKZ1rXbPPfrXXajfiYfu3bbi4YckxU5WbPJ
-         R4RHMpkbdVVMXzdwABPfTfauSPX5t3kcbdTIE5iI=
-Date:   Mon, 11 Nov 2019 15:18:01 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mhocko@suse.com, mgorman@techsingularity.net, vbabka@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: migrate: handle freed page at the first place
-Message-Id: <20191111151801.fb206aa84cc8ab3059994f7e@linux-foundation.org>
-In-Reply-To: <1573510165-113395-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1573510165-113395-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Nov 2019 18:18:34 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45171 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKXSe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 18:18:34 -0500
+Received: by mail-pl1-f194.google.com with SMTP id y24so8470912plr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9Z+hwMJx/kLG9GFEqHDOgdoZ4oNrcZFm5sKYmGU9tQw=;
+        b=fROusxRmSn1444VmGAEdWrQyvLI9TxbNAIlgC0NtKJt66Gz397Ujo20EawnqYFh6M7
+         25yUogB+56l/NuP3b2O8cCpns73b7fMt+FgOLYbsqmGbbzJdEOZMlY2LuhqFG0WEfRgu
+         3atjRyH+xLfwxSrzCvCgZXU4duOHmRpA+1IUB43MrPODB0FEo9WyBxQi+YybSupRRMVs
+         v/nrSps28bcZ8j2tX2KBOItx/EwfGaSSXbLpUsk2wb1zCjYWoxi3TOhzVe6nf00MKCmr
+         eTsW6ZekzCTHTdMHE93rKjGbUE2HW2Z8iRk0moYdROBMeXiMNu70F6qDVNuzDRJYFhhv
+         TaYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9Z+hwMJx/kLG9GFEqHDOgdoZ4oNrcZFm5sKYmGU9tQw=;
+        b=TQaDv1dK03cw9Yv/FFF0DPcDslCoQJSkmGtB+WPJ8iKNkMpjra5CK2LHzkOtKRcz3n
+         NBnYDzEQT7MQR3ov086V8KczRLEO1mCE6j2Ern6NDKrqSSjU9pclCodNxsgnFIzVbuZ+
+         GkxsK+LhKlF5f0tmUBTdNMHFZxdb9Lvdr00z3snvhLJsP7QnP8Z/MVzPO6Gvr11CWGNO
+         DCwuff43x80DHYqBl8zWghJGdzD8ITvW1UH8ZEPt9FudGcZbXEYoYnqhFZbfChXdE8XL
+         HFOkaG04ryrTrOntLbUYPbIMuppsSn1XCVGL60G5qh0NktQwlPe+yOy7KbOMTCmN0IHl
+         cUaQ==
+X-Gm-Message-State: APjAAAUMFhnbljEsOxYIMbBJCGHIm0AS5XjFKqKicvX64jO/FXzeErlM
+        ny+xA1D2ovfwGvgIHrqY0r3XRw==
+X-Google-Smtp-Source: APXvYqzWxKxDKFvEBYysyZe8UUjgl1aaKUC+TH9W0FyjSm9dahFvr0IdZ0K2E9THGZCZSp6xs9QLmQ==
+X-Received: by 2002:a17:902:9a8b:: with SMTP id w11mr28940863plp.9.1573514311830;
+        Mon, 11 Nov 2019 15:18:31 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s3sm449953pjn.21.2019.11.11.15.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 15:18:31 -0800 (PST)
+Date:   Mon, 11 Nov 2019 15:18:29 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        s-anna@ti.com
+Subject: Re: [PATCH 04/17] remoteproc/omap: Add a sanity check for DSP boot
+ address alignment
+Message-ID: <20191111231829.GF3108315@builder>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-5-t-kristo@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028124238.19224-5-t-kristo@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 06:09:25 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
+On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
 
-> When doing migration if the freed page is met, we just return without
-> migrating it since it is pointless to migrate a freed page.  But, the
-> current code did two things before handling freed page:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> 1. Return -ENOMEM if the page is THP and THP migration is not supported.
-> 2. Allocate target page unconditionally.
+> The DSP remote processors on OMAP SoCs require a boot register to
+> be programmed with a boot address, and this boot address needs to
+> be on a 1KB boundary. The current code is simply masking the boot
+> address appropriately without performing any sanity checks before
+> releasing the resets. An unaligned boot address results in an
+> undefined execution behavior and can result in various bus errors
+> like MMU Faults or L3 NoC errors. Such errors are hard to debug and
+> can be easily avoided by adding a sanity check for the alignment
+> before booting a DSP remote processor.
 > 
-> Both makes not too much sense.  If we handle freed page at the first place
-> we don't have to worry about allocating/freeing target page and split
-> THP at all.
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+>  drivers/remoteproc/omap_remoteproc.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
-> For example (worst case) if we are trying to migrate a freed THP without
-> THP migration supported, the migrate_pages() would just split the THP then
-> retry to migrate base pages one by one by pointless allocating and freeing
-> pages, this is just waste of time.
-> 
-> I didn't run into any actual problem with the current code (or I may
-> just not notice it yet), it was found by visual inspection.
-> 
->
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1170,13 +1170,6 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  	int rc = MIGRATEPAGE_SUCCESS;
->  	struct page *newpage;
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index cd776189d20b..a10377547533 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -124,13 +124,22 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+>   *
+>   * Set boot address for a supported DSP remote processor.
+>   */
+> -static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+> +static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+>  {
+> +	struct device *dev = rproc->dev.parent;
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+>  	u32 offset = bdata->boot_reg;
 >  
-> -	if (!thp_migration_supported() && PageTransHuge(page))
-> -		return -ENOMEM;
-> -
-> -	newpage = get_new_page(page, private);
-> -	if (!newpage)
-> -		return -ENOMEM;
-> -
->  	if (page_count(page) == 1) {
-
-Is it possible to have (!thp_migration_supported() &&
-PageTransHuge(page) && page_count(page) == 1)?  If so, isn't this new
-behviour?
-
->  		/* page was freed from under us. So we are done. */
->  		ClearPageActive(page);
-> @@ -1187,13 +1180,16 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  				__ClearPageIsolated(page);
->  			unlock_page(page);
->  		}
-> -		if (put_new_page)
-> -			put_new_page(newpage, private);
-> -		else
-> -			put_page(newpage);
->  		goto out;
->  	}
+> +	if (rproc->bootaddr & (SZ_1K - 1)) {
+> +		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
+> +			rproc->bootaddr);
+> +		return -EINVAL;
+> +	}
+> +
+>  	regmap_write(bdata->syscon, offset, rproc->bootaddr);
+> +
+> +	return 0;
+>  }
 >  
-> +	if (!thp_migration_supported() && PageTransHuge(page))
-> +		return -ENOMEM;
-> +
-> +	newpage = get_new_page(page, private);
-> +	if (!newpage)
-> +		return -ENOMEM;
-> +
->  	rc = __unmap_and_move(page, newpage, force, mode);
->  	if (rc == MIGRATEPAGE_SUCCESS)
->  		set_page_owner_migrate_reason(newpage, reason);
-
+>  /*
+> @@ -147,8 +156,11 @@ static int omap_rproc_start(struct rproc *rproc)
+>  	int ret;
+>  	struct mbox_client *client = &oproc->client;
+>  
+> -	if (oproc->boot_data)
+> -		omap_rproc_write_dsp_boot_addr(rproc);
+> +	if (oproc->boot_data) {
+> +		ret = omap_rproc_write_dsp_boot_addr(rproc);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	client->dev = dev;
+>  	client->tx_done = NULL;
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
