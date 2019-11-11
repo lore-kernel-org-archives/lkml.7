@@ -2,65 +2,180 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED505C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214D8C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FA82190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72B82190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:19:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gdaw3O8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKKNSY (ORCPT
+        id S1727041AbfKKNTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:18:24 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45086 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726845AbfKKNSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:18:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 05DF4B595;
-        Mon, 11 Nov 2019 13:18:23 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 14:18:17 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Diego Elio =?iso-8859-1?Q?Petten=F2?= <flameeyes@flameeyes.com>
-Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org
-Subject: Re: cdrom: make debug logging rely on pr_debug and debugfs only.
-Message-ID: <20191111131817.GA2770@kitsune.suse.cz>
-References: <20190826151640.5036-3-flameeyes@flameeyes.com>
- <20191103160030.GO1384@kitsune.suse.cz>
- <CAHcsgXRtWAt0mEQoW2rn1v6yYZ8ZKygKVetk4mnm_o+pwgwcVw@mail.gmail.com>
+        Mon, 11 Nov 2019 08:19:55 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46761 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfKKNTy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 08:19:54 -0500
+Received: by mail-io1-f67.google.com with SMTP id c6so14487058ioo.13;
+        Mon, 11 Nov 2019 05:19:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iRKDx6Fejpor5pYdLn7G3kgNJ1vgpNwffUtYoE2a0oQ=;
+        b=Gdaw3O8jb/PC9I3quBaFNFdXhsLl5xBsKkgou1e+Bqj87wCCdnWo6RL621XW4/F6xm
+         o39SfkWAw0j4yM91e9xwJ8shnusIHbUbtSPUY+HxVINCpHWYVBdlED7E+iD2OX7e6GyO
+         pHaZ5LO1wYf77A+/Mg3jkjtHAESyJYWiIjL7owvM1VZ7poSVvGtKrVdPK+MwOIt05pmO
+         lETO3t6URRBV7XosrTBH9BMkauNKjpE9MVUp0Is/Q8PpnVlqEtlkqlx3fDRnk3ZK1NQg
+         em5v59MvK4BAT7na6dNq6gdGc7ZZGIPcLpJX6wQksVmfZruLZEyWSVrY9erTAEBr2EvI
+         4ipQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iRKDx6Fejpor5pYdLn7G3kgNJ1vgpNwffUtYoE2a0oQ=;
+        b=L+lo89CHD501ZEIx2WorKj5jIvcscekUqO/pjk0cYApzLQgxVeFioD/q0eNm1MZrZw
+         G9dtYmZvcpvjX96sIP7eL8fY0NMcfGP8ZBeQZfR3Cc2E0le+YNgVEONUhDvW+F97DkJO
+         eBjjeIB8A46lEsQYtd8x6+6FBJic4iycXhz2JF8qS1SIEMd5z4MYt0dn7AqIXefBiWiw
+         iqy3wrqbffrSQWm6JFxM4NoIvVff2lQQi4UnhWYfIG9awZzypQlIha/4VKuuBlWyRsuL
+         ih2Li3cTlmDdq6PyUbeJ56fFyKvpnwcwPhzk00fH4sHLTGjkHoYwHAkhmH/xAiPiQZ2O
+         Agog==
+X-Gm-Message-State: APjAAAXFKqC8g+oUbLqu+MgMP3kBGAyS5KukmWqWGGwmoTWSAzOK4T3v
+        wQODHS9loChMEtk43PVVcmOsDJqQZVEz1GCxq1Y=
+X-Google-Smtp-Source: APXvYqyGIUTyr+1o8xjw2JPHnMGy0W5HE7ZnIXmNr6qQj4tdycsdQYWpeb8DZtkEpJZuvKILmsvQOeGz0wT4GkeS+qw=
+X-Received: by 2002:a5e:8c0a:: with SMTP id n10mr25782091ioj.78.1573478391683;
+ Mon, 11 Nov 2019 05:19:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHcsgXRtWAt0mEQoW2rn1v6yYZ8ZKygKVetk4mnm_o+pwgwcVw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191016135147.7743-1-aford173@gmail.com> <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
+ <20191101075726.GB6209@pendragon.ideasonboard.com>
+In-Reply-To: <20191101075726.GB6209@pendragon.ideasonboard.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 11 Nov 2019 07:19:40 -0600
+Message-ID: <CAHCN7x+cCyQ=kp30Z9Vu6-feU2Yp6b=kui-h6G8t67abhYXpCw@mail.gmail.com>
+Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 12:21:38PM +0000, Diego Elio Pettenò wrote:
-> On Sun, Nov 3, 2019 at 4:00 PM Michal Suchánek <msuchanek@suse.de> wrote:
-> > can you change cd_dbg to a macro that always prints the device name
-> > using pr_debug instead of removing it?
-> 
-> I can try doing that (need to figure out how, of course.)
-> 
-> Should I split the change that removes the debug parameter /
-> ERRORLOGMASK parts? To be honest those are the parts that appear more
-> of a duplication than the macro itself, so it might make sense to
-> remove the custom debug selection, and then add the device name on top
-> of that?
+On Fri, Nov 1, 2019 at 2:57 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> On Wed, Oct 30, 2019 at 09:44:20AM -0500, Adam Ford wrote:
+> > On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
+> > >
+> > > Previously, there was an omap panel-dpi driver that would
+> > > read generic timings from the device tree and set the display
+> > > timing accordingly.  This driver was removed so the screen
+> > > no longer functions.  This patch modifies the panel-simple
+> > > file to setup the timings to the same values previously used.
+> > >
+> > > Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+> >
+> > Will this be able to make it into linux-next for the 5.5 merge window?
+> > I believe Tony has picked up the device tree portion in his omap
+> > tree, but I haven't seen any notifications on this series on whether
+> > or not it's being applied.  I also don't know which tree I need to
+> > look if it's already been applied.
+> >
+> > This fixes a regression introduced a while ago where the driver I was
+> > using for the display was removed.
+>
+> Sam, would you be able to pick this up ?
 
-I wrote a patch that does just that because I am debugging an issue with
-cdrom and I need to know which device the messages relate to.
+Gentle nudge with the merge window approaching.
 
-Maybe you can drop this part entirely to not get conflicts.
+Thank you,
 
-Thanks
+adam
 
-Michal
+>
+> > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > > ---
+> > > V5:  No Change
+> > > V4:  No Change
+> > > V3:  No Change
+> > > V2:  No Change
+> > >
+> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > > index 5d487686d25c..72f69709f349 100644
+> > > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > > @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+> > >         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> > >  };
+> > >
+> > > +static const struct drm_display_mode logicpd_type_28_mode = {
+> > > +       .clock = 9000,
+> > > +       .hdisplay = 480,
+> > > +       .hsync_start = 480 + 3,
+> > > +       .hsync_end = 480 + 3 + 42,
+> > > +       .htotal = 480 + 3 + 42 + 2,
+> > > +
+> > > +       .vdisplay = 272,
+> > > +       .vsync_start = 272 + 2,
+> > > +       .vsync_end = 272 + 2 + 11,
+> > > +       .vtotal = 272 + 2 + 11 + 3,
+> > > +       .vrefresh = 60,
+> > > +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+> > > +};
+> > > +
+> > > +static const struct panel_desc logicpd_type_28 = {
+> > > +       .modes = &logicpd_type_28_mode,
+> > > +       .num_modes = 1,
+> > > +       .bpc = 8,
+> > > +       .size = {
+> > > +               .width = 105,
+> > > +               .height = 67,
+> > > +       },
+> > > +       .delay = {
+> > > +               .prepare = 200,
+> > > +               .enable = 200,
+> > > +               .unprepare = 200,
+> > > +               .disable = 200,
+> > > +       },
+> > > +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> > > +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
+> > > +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
+> > > +};
+> > > +
+> > >  static const struct panel_desc mitsubishi_aa070mc01 = {
+> > >         .modes = &mitsubishi_aa070mc01_mode,
+> > >         .num_modes = 1,
+> > > @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
+> > >         }, {
+> > >                 .compatible = "lg,lp129qe",
+> > >                 .data = &lg_lp129qe,
+> > > +       }, {
+> > > +               .compatible = "logicpd,type28",
+> > > +               .data = &logicpd_type_28,
+> > >         }, {
+> > >                 .compatible = "mitsubishi,aa070mc01-ca1",
+> > >                 .data = &mitsubishi_aa070mc01,
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
