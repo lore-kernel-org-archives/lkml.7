@@ -6,175 +6,91 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E8FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6CDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7457121925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E53221E6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfKKONg (ORCPT
+        id S1727027AbfKKOOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:13:36 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:43700 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726888AbfKKONf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:13:35 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iUARg-0004oX-Rp; Mon, 11 Nov 2019 15:13:32 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xABEDVj2011080
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 11 Nov 2019 15:13:31 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: arm64: dts: rockchip: Add SDR104 mode to SD-card I/F on rk3399-roc-pc
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <f03c978c-86de-b8bb-22c2-177d7fafed94@fivetechno.de>
-Date:   Mon, 11 Nov 2019 15:13:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 11 Nov 2019 09:14:45 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2083 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726853AbfKKOOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 09:14:44 -0500
+Received: from lhreml708-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 36B1291DAC2EB7F3BE6C;
+        Mon, 11 Nov 2019 14:14:43 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml708-cah.china.huawei.com (10.201.108.49) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 11 Nov 2019 14:14:42 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 11 Nov
+ 2019 14:14:42 +0000
+Subject: Re: [PATCH] arm64: Kconfig: make CMDLINE_FORCE depend on CMDLINE
+To:     Anders Roxell <anders.roxell@linaro.org>, <catalin.marinas@arm.com>
+CC:     <will@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191111085956.6158-1-anders.roxell@linaro.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ea4ee177-f72a-1803-45d1-1b2deabdc532@huawei.com>
+Date:   Mon, 11 Nov 2019 14:14:42 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+In-Reply-To: <20191111085956.6158-1-anders.roxell@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573481615;ef732f39;
-X-HE-SMSGID: 1iUARg-0004oX-Rp
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SDR104 capability and regulators to SD card node.
-While at it, fix a typo in lcd pinctrl and remove two
-undocumented bindings from pmic.
+On 11/11/2019 08:59, Anders Roxell wrote:
+> When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
+> CONFIG_CMDLINE_FORCE gets enabled. Which forces the user to pass the
+> full cmdline to CONFIG_CMDLINE="...".
+> 
+> Rework so that CONFIG_CMDLINE_FORCE gets set only if CONFIG_CMDLINE is
+> set to something except an empty string.
+> 
+> Suggested-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> ---
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
- .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 31 +++++++++++++++----
- 1 file changed, 25 insertions(+), 6 deletions(-)
+This looks ok.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 33df95e384b4..e86a6db54499 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -135,6 +135,20 @@
- 		vin-supply = <&vcc_1v8>;
- 	};
- 
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc3v0_sd_en>;
-+		regulator-name = "vcc3v0_sd";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		vin-supply = <&vcc3v3_sys>;
-+	};
-+
- 	vcc3v3_sys: vcc3v3-sys {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_sys";
-@@ -279,8 +293,6 @@
- 		vcc10-supply = <&vcc3v3_sys>;
- 		vcc11-supply = <&vcc3v3_sys>;
- 		vcc12-supply = <&vcc3v3_sys>;
--		vcc13-supply = <&vcc3v3_sys>;
--		vcc14-supply = <&vcc3v3_sys>;
- 		vddio-supply = <&vcc_3v0>;
- 
- 		regulators {
-@@ -562,7 +574,7 @@
- 
- 	lcd-panel {
- 		lcd_panel_reset: lcd-panel-reset {
--			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
-+			rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_up>;
- 		};
- 	};
- 
-@@ -588,6 +600,10 @@
- 		vsel2_gpio: vsel2-gpio {
- 			rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
- 		};
-+
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
- 	};
- 
- 	sdio-pwrseq {
-@@ -596,9 +612,9 @@
- 		};
- 	};
- 
--	pmic {
--		pmic_int_l: pmic-int-l {
--			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-+	sdmmc {
-+		vcc3v0_sd_en: vcc3v0-sd-en {
-+			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
- 
-@@ -653,6 +669,9 @@
- 	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	max-frequency = <150000000>;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc3v0_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
- 	status = "okay";
--- 
-2.20.1
+Were you also going to propose a patch to introduce a LITTLE ENDIAN 
+config option?
+
+For me, this would mean that ACPI module is built for allmodconfig, 
+which is a good thing.
+
+Thanks,
+john
+
+
+>   arch/arm64/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 50df79d4aa3b..64764ca92fca 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1629,6 +1629,7 @@ config CMDLINE
+>   
+>   config CMDLINE_FORCE
+>   	bool "Always use the default kernel command string"
+> +	depends on CMDLINE != ""
+>   	help
+>   	  Always use the default kernel command string, even if the boot
+>   	  loader passes other arguments to the kernel.
+> 
 
