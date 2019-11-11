@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC83C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BFCC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FBF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DCC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499266;
-	bh=ezdMpOZBc7nuvT/RQXHfOgSv42XWpVPhTvjDuhk/2xE=;
+	s=default; t=1573499270;
+	bh=LXXefkn7p8AQImuoepIaWvtbHVSn6+lPhVa3zsDkwBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIo14YyvrcbM7vButDpyY8xfnKKhbmy0Db6vPg9Ieda+qUD/8WBazog0xFeDQ1KAJ
-	 24Yfth6+Us/2LxAZEPDRm7nLKmWFQHHFUhDHWnJndbdPvZo8nAKM/ECAjTXoitFiWq
-	 MEvINUw37TcelX2DarQDTFp/rWoiaMiZquAqydqQ=
+	b=cmWzF7tad6hgRhq324MEndwI3ZS+lhUdbuBm/aPmJdy8p1L6Y9d9MqTrpfzFnGQkg
+	 cZgnnVJoknrsH9SLK95Ih8i1uZjFaOA90xxKXmh/rWoy6fN2GC36aBNmRCdEQdZ8NA
+	 jzF/XsLfxahAgN/TsCzGOp+KROlYGDTdMbR4TAw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbfKKShP (ORCPT
+        id S1728897AbfKKTHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:07:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbfKKShL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:11 -0500
+        id S1728169AbfKKShN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2FB204FD;
-        Mon, 11 Nov 2019 18:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C156521655;
+        Mon, 11 Nov 2019 18:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497430;
-        bh=ezdMpOZBc7nuvT/RQXHfOgSv42XWpVPhTvjDuhk/2xE=;
+        s=default; t=1573497433;
+        bh=LXXefkn7p8AQImuoepIaWvtbHVSn6+lPhVa3zsDkwBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDYh4bgpExrGzK4CZtURnB5TsVNjdo4SiOJraKzZLOUk/Dh8ppPCarVboCsmc5kcJ
-         bpXp50SEV7sMcsDaN9W9YBljy9XlgJ6lX1qzY3gt2dxsI9iv/8Ah58zQFpgA/TEp//
-         dltixqhvFAR1QnnLHNu0s4nkmn3jXXSexSpN3BV0=
+        b=HieXN1DeKkp7EcbMy49/wKEMuPLRqFWlwF308j8l1vZQDRxMatP7DHrz1jVz/+ugi
+         UbHpUwMe8SKbW41vel/S7PJJrUeLpmdF2UU2X/U2K2Ml9R4hbMix4z2as1ohK7IPKd
+         ex5p30Zd+BSUu4B8D+7pdbprYxskWkf5MUA4CY6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 052/105] PCI: dra7xx: Add shutdown handler to cleanly turn off clocks
-Date:   Mon, 11 Nov 2019 19:28:22 +0100
-Message-Id: <20191111181443.084527801@linuxfoundation.org>
+Subject: [PATCH 4.14 053/105] misc: pci_endpoint_test: Fix BUG_ON error during pci_disable_msi()
+Date:   Mon, 11 Nov 2019 19:28:23 +0100
+Message-Id: <20191111181443.403909088@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,53 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keerthy <j-keerthy@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 9c049bea083fea21373b8baf51fe49acbe24e105 upstream
+commit b7636e816adcb52bc96b6fb7bc9d141cbfd17ddb upstream
 
-Add shutdown handler to cleanly turn off clocks.  This will help in cases of
-kexec where in a new kernel can boot abruptly.
+pci_disable_msi() throws a Kernel BUG if the driver has successfully
+requested an IRQ and not released it. Fix it here by freeing IRQs before
+invoking pci_disable_msi().
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pci/dwc/pci-dra7xx.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/misc/pci_endpoint_test.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/pci/dwc/pci-dra7xx.c
-+++ b/drivers/pci/dwc/pci-dra7xx.c
-@@ -817,6 +817,22 @@ static int dra7xx_pcie_resume_noirq(stru
- }
- #endif
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -92,6 +92,7 @@ struct pci_endpoint_test {
+ 	void __iomem	*bar[6];
+ 	struct completion irq_raised;
+ 	int		last_irq;
++	int		num_irqs;
+ 	/* mutex to protect the ioctls */
+ 	struct mutex	mutex;
+ 	struct miscdevice miscdev;
+@@ -514,6 +515,7 @@ static int pci_endpoint_test_probe(struc
+ 		irq = pci_alloc_irq_vectors(pdev, 1, 32, PCI_IRQ_MSI);
+ 		if (irq < 0)
+ 			dev_err(dev, "failed to get MSI interrupts\n");
++		test->num_irqs = irq;
+ 	}
  
-+void dra7xx_pcie_shutdown(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dra7xx_pcie *dra7xx = dev_get_drvdata(dev);
-+	int ret;
+ 	err = devm_request_irq(dev, pdev->irq, pci_endpoint_test_irqhandler,
+@@ -581,6 +583,9 @@ err_iounmap:
+ 			pci_iounmap(pdev, test->bar[bar]);
+ 	}
+ 
++	for (i = 0; i < irq; i++)
++		devm_free_irq(dev, pdev->irq + i, test);
 +
-+	dra7xx_pcie_stop_link(dra7xx->pci);
-+
-+	ret = pm_runtime_put_sync(dev);
-+	if (ret < 0)
-+		dev_dbg(dev, "pm_runtime_put_sync failed\n");
-+
-+	pm_runtime_disable(dev);
-+	dra7xx_pcie_disable_phy(dra7xx);
-+}
-+
- static const struct dev_pm_ops dra7xx_pcie_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(dra7xx_pcie_suspend, dra7xx_pcie_resume)
- 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(dra7xx_pcie_suspend_noirq,
-@@ -830,5 +846,6 @@ static struct platform_driver dra7xx_pci
- 		.suppress_bind_attrs = true,
- 		.pm	= &dra7xx_pcie_pm_ops,
- 	},
-+	.shutdown = dra7xx_pcie_shutdown,
- };
- builtin_platform_driver_probe(dra7xx_pcie_driver, dra7xx_pcie_probe);
+ err_disable_msi:
+ 	pci_disable_msi(pdev);
+ 	pci_release_regions(pdev);
+@@ -594,6 +599,7 @@ err_disable_pdev:
+ static void pci_endpoint_test_remove(struct pci_dev *pdev)
+ {
+ 	int id;
++	int i;
+ 	enum pci_barno bar;
+ 	struct pci_endpoint_test *test = pci_get_drvdata(pdev);
+ 	struct miscdevice *misc_device = &test->miscdev;
+@@ -609,6 +615,8 @@ static void pci_endpoint_test_remove(str
+ 		if (test->bar[bar])
+ 			pci_iounmap(pdev, test->bar[bar]);
+ 	}
++	for (i = 0; i < test->num_irqs; i++)
++		devm_free_irq(&pdev->dev, pdev->irq + i, test);
+ 	pci_disable_msi(pdev);
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
 
 
