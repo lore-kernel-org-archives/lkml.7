@@ -7,47 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B2DC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2384C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72442173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9559E2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498136;
-	bh=CwCZfoRPCth1IRqPRRz/UpOF2NJeF6VJrV2ec1jRlFM=;
+	s=default; t=1573498135;
+	bh=07Q+lzMyYk4HtvmcIj0qU3vfd9YyAh8FYBnRoE5cFiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0pf+w7ZXG6DGr85rhCizlRRqx0zZo43zHxxfLyFlQ9gBGJKNCytjmoCFOWhBP5SJ0
-	 ZZ7grl4W24i8yJgrwEpGkSJiYBPFxeWkxcBlBbkhAYnfuM6FfOw966RvfO3Z5r6Ner
-	 UvDLwTQQ6CUK4m9iRDi9GwtI8MXyk4aYtZfOLxjY=
+	b=lw7eZDfXRlaM/1LmlEN+9EbXyNqgGLAVgAIGHdiZiM8cPQwW1tDvhTivD94TMLRWz
+	 eep9Zx4ROD+MvGMeepgO0Kd0owPckbYSL8hxIk48R0vRAaRQKodwW/SOg1v/PZ3RH3
+	 A9D93LFL+uwmpZUOXzx0DoRCyqNr8mcD4aqewgYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730257AbfKKSsz (ORCPT
+        id S1729638AbfKKSsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:48:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41948 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:48:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728503AbfKKSss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:48:48 -0500
+        id S1727341AbfKKSsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:48:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B1B521655;
-        Mon, 11 Nov 2019 18:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F73721655;
+        Mon, 11 Nov 2019 18:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498127;
-        bh=CwCZfoRPCth1IRqPRRz/UpOF2NJeF6VJrV2ec1jRlFM=;
+        s=default; t=1573498130;
+        bh=07Q+lzMyYk4HtvmcIj0qU3vfd9YyAh8FYBnRoE5cFiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g4mnMNr2jeXKuWdblLKQ7o5uizRkaxVJwowyoMg1oY0j8KYVGkrB7etdMUidek+eR
-         z8L2+Vv2UzlncWJhsEJs5vQvQWB1NlcgH+H3VoVveX7licgsgg1rgHRs7nD45tkXfg
-         UU+YBz7ODpqC8xwybQ2JQtgLL6nWM2998Rd2c3H8=
+        b=Zu4h8dgZcQ/6T9V8jJ5wfcAg5qfoVYUVvNMPqyIure6A0uTUrFJUKRokO2iGPW/37
+         f+l8qMM4xK+nbcAznBysNLXghEBGM4p5IrOPlCidwzk8vEDh9mIuuvYXC01dLVzG6+
+         CMduEHQn/6LRwYkXAq1U6FsHBhmNNdLZYa6U5r3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Barber <smbarber@chromium.org>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 023/193] vsock/virtio: fix sock refcnt holding during the shutdown
-Date:   Mon, 11 Nov 2019 19:26:45 +0100
-Message-Id: <20191111181501.929904168@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Waiman Long <longman@redhat.com>, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rafael Aquini <aquini@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 032/193] mm, vmstat: hide /proc/pagetypeinfo from normal users
+Date:   Mon, 11 Nov 2019 19:26:54 +0100
+Message-Id: <20191111181502.739487567@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,48 +69,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Michal Hocko <mhocko@suse.com>
 
-[ Upstream commit ad8a7220355d39cddce8eac1cea9677333e8b821 ]
+commit abaed0112c1db08be15a784a2c5c8a8b3063cdd3 upstream.
 
-The "42f5cda5eaf4" commit rightly set SOCK_DONE on peer shutdown,
-but there is an issue if we receive the SHUTDOWN(RDWR) while the
-virtio_transport_close_timeout() is scheduled.
-In this case, when the timeout fires, the SOCK_DONE is already
-set and the virtio_transport_close_timeout() will not call
-virtio_transport_reset() and virtio_transport_do_close().
-This causes that both sockets remain open and will never be released,
-preventing the unloading of [virtio|vhost]_transport modules.
+/proc/pagetypeinfo is a debugging tool to examine internal page
+allocator state wrt to fragmentation.  It is not very useful for any
+other use so normal users really do not need to read this file.
 
-This patch fixes this issue, calling virtio_transport_reset() and
-virtio_transport_do_close() when we receive the SHUTDOWN(RDWR)
-and there is nothing left to read.
+Waiman Long has noticed that reading this file can have negative side
+effects because zone->lock is necessary for gathering data and that a)
+interferes with the page allocator and its users and b) can lead to hard
+lockups on large machines which have very long free_list.
 
-Fixes: 42f5cda5eaf4 ("vsock/virtio: set SOCK_DONE on peer shutdown")
-Cc: Stephen Barber <smbarber@chromium.org>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reduce both issues by simply not exporting the file to regular users.
+
+Link: http://lkml.kernel.org/r/20191025072610.18526-2-mhocko@kernel.org
+Fixes: 467c996c1e19 ("Print out statistics in relation to fragmentation avoidance to /proc/pagetypeinfo")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reported-by: Waiman Long <longman@redhat.com>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Waiman Long <longman@redhat.com>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Jann Horn <jannh@google.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/vmw_vsock/virtio_transport_common.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -870,9 +870,11 @@ virtio_transport_recv_connected(struct s
- 		if (le32_to_cpu(pkt->hdr.flags) & VIRTIO_VSOCK_SHUTDOWN_SEND)
- 			vsk->peer_shutdown |= SEND_SHUTDOWN;
- 		if (vsk->peer_shutdown == SHUTDOWN_MASK &&
--		    vsock_stream_has_data(vsk) <= 0) {
--			sock_set_flag(sk, SOCK_DONE);
--			sk->sk_state = TCP_CLOSING;
-+		    vsock_stream_has_data(vsk) <= 0 &&
-+		    !sock_flag(sk, SOCK_DONE)) {
-+			(void)virtio_transport_reset(vsk, NULL);
-+
-+			virtio_transport_do_close(vsk, true);
- 		}
- 		if (le32_to_cpu(pkt->hdr.flags))
- 			sk->sk_state_change(sk);
+---
+ mm/vmstat.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1970,7 +1970,7 @@ void __init init_mm_internals(void)
+ #endif
+ #ifdef CONFIG_PROC_FS
+ 	proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
+-	proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
++	proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
+ 	proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
+ 	proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
+ #endif
 
 
