@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D9C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD0FC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29197204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A05220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498242;
-	bh=54s9gAZ/w4ffu2vVpETxtuTNjxXcA3yNC4esabz2sHk=;
+	s=default; t=1573498245;
+	bh=zBMoCn20EK+hY3wb8aj4t/El2JV1Jt5wJ4xnEA4Cxgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eT7RJ0xgSw7hCi163WGus5pUIym9ffKRyMEJQ+e9sS+OpjBjhYYHfoaN91WzWd59A
-	 grZrmoz0qdISg130D11RYDJiOr30JMSRp7FVqMJZt6JvbmjrKBDZzRHKfDBWfEdiW2
-	 nJ+IqsjV//ULYacdBobpMzJBUFbrEBcDIDY4CJZE=
+	b=r3aYAR6UoYgx3ruCrKpYSGHxXGKGoeTjZjC2gXleS2o2G5I8aPnMy5ZbVjicI6D7t
+	 B0ZwfJ0W4HfvaV5sVbSL70c7bGWuW5nxJT1jccfs/vwIM9g4r/YFZq19aXVTL/vkdl
+	 NeEvjT1Yp4qf5sUXaC5rR6CMgOVFhFmrebkv7874=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbfKKSuk (ORCPT
+        id S1730183AbfKKSun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44400 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbfKKSuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:37 -0500
+        id S1728736AbfKKSuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CFE204FD;
-        Mon, 11 Nov 2019 18:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 771E020674;
+        Mon, 11 Nov 2019 18:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498236;
-        bh=54s9gAZ/w4ffu2vVpETxtuTNjxXcA3yNC4esabz2sHk=;
+        s=default; t=1573498240;
+        bh=zBMoCn20EK+hY3wb8aj4t/El2JV1Jt5wJ4xnEA4Cxgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPFiShkVpUwC1oRoUFk5wZ6HJAeXzt29U43QLv9b3NEZmkTPV3/aVylBGKmnhgRFc
-         gUISPLQQtrk+eq/l4d1Doh3xBDgz3L/P/9hnfou4ND6jVmIxAMIBXYDQ58M/jxLyr9
-         Dp0kQ7SYIppSnzmwtFJ1dTqSZxQKWNCBRMtEMVy8=
+        b=sTiM+92bAOI+n/rYM7n3IiQqwzOuo1sw89SngF/JmJmatWF0wZpgW2amQ7zXIFo1L
+         C7IBrBKuIdq6IsP6Z8uOAgPWtNFajEDSO/aiYdyXP0nz1MlBJPidgItkK9hKrdL2PC
+         15J41cHOVHXvAK05R5dpylsD3zj3hb1rJGFjwFvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.3 061/193] ARM: dts: imx6-logicpd: Re-enable SNVS power key
-Date:   Mon, 11 Nov 2019 19:27:23 +0100
-Message-Id: <20191111181505.507072829@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 026/193] ALSA: bebob: fix to detect configured source of sampling clock for Focusrite Saffire Pro i/o series
+Date:   Mon, 11 Nov 2019 19:26:48 +0100
+Message-Id: <20191111181502.178879216@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,40 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit cabe5f85e63626c00f3b879a670ec27325056a2d upstream.
+commit 706ad6746a66546daf96d4e4a95e46faf6cf689a upstream.
 
-The baseboard of the Logic PD i.MX6 development kit has a power
-button routed which can both power down and power up the board.
-It can also wake the board from sleep.  This functionality was
-marked as disabled by default in imx6qdl.dtsi, so it needs to
-be explicitly enabled for each board.
+For Focusrite Saffire Pro i/o, the lowest 8 bits of register represents
+configured source of sampling clock. The next lowest 8 bits represents
+whether the configured source is actually detected or not just after
+the register is changed for the source.
 
-This patch enables the snvs power key again.
+Current implementation evaluates whole the register to detect configured
+source. This results in failure due to the next lowest 8 bits when the
+source is connected in advance.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
-Cc: stable <stable@vger.kernel.org> #5.3+
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+This commit fixes the bug.
+
+Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
+Cc: <stable@vger.kernel.org> # v3.16+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20191102150920.20367-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/firewire/bebob/bebob_focusrite.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-+++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-@@ -328,6 +328,10 @@
- 	pinctrl-0 = <&pinctrl_pwm3>;
- };
+--- a/sound/firewire/bebob/bebob_focusrite.c
++++ b/sound/firewire/bebob/bebob_focusrite.c
+@@ -27,6 +27,8 @@
+ #define SAFFIRE_CLOCK_SOURCE_SPDIF		1
  
-+&snvs_pwrkey {
-+	status = "okay";
-+};
-+
- &ssi2 {
- 	status = "okay";
- };
+ /* clock sources as returned from register of Saffire Pro 10 and 26 */
++#define SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK	0x000000ff
++#define SAFFIREPRO_CLOCK_SOURCE_DETECT_MASK	0x0000ff00
+ #define SAFFIREPRO_CLOCK_SOURCE_INTERNAL	0
+ #define SAFFIREPRO_CLOCK_SOURCE_SKIP		1 /* never used on hardware */
+ #define SAFFIREPRO_CLOCK_SOURCE_SPDIF		2
+@@ -189,6 +191,7 @@ saffirepro_both_clk_src_get(struct snd_b
+ 		map = saffirepro_clk_maps[1];
+ 
+ 	/* In a case that this driver cannot handle the value of register. */
++	value &= SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK;
+ 	if (value >= SAFFIREPRO_CLOCK_SOURCE_COUNT || map[value] < 0) {
+ 		err = -EIO;
+ 		goto end;
 
 
