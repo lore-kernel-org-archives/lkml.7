@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEC2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3E9C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AE621783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFE2222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498497;
-	bh=O41LwHklMQi00bcu3oEIE90jeboup3lfQjnvEm+zojQ=;
+	s=default; t=1573498504;
+	bh=pUWKp8naBDs9sjU+E0WOyTLJfsG5GyDZCVxfypsKw5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTuNLvm+pp8xa5fgmfBSdyyf8mbwwL96+KF5nRk+0QO1mQtBq+cWI8q9K3H2A7Irg
-	 r9QhuaBSA1Wo0wCdqmmj7OQQVcV6/jb0uP4PrCc+fkem9RWf56AZ3BQR7zBH2kbD2y
-	 oFuEO1Y1MX+emdEYJ2B5futxkzEOYXZPHDCrZge0=
+	b=FXtLE7DRm7QnbZaThyH3+NRjAbD1HlBdDgIlVdHFCpXtLq1bSA+4rS3NdDlTCXhto
+	 wcJhUbaGwctXqccDJCSyIvPbyqCYN6/LDWoQY2gFlmVdFnDM9D94i6Q6S8lwkTEAit
+	 o1g3UeJ2p62ttHTN/oE/k/X2UKCkfJGpiY6dQfGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbfKKSy4 (ORCPT
+        id S1730595AbfKKSzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:54:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51218 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:55:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730590AbfKKSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:54:51 -0500
+        id S1729539AbfKKSy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:54:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8AD6204EC;
-        Mon, 11 Nov 2019 18:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21008204EC;
+        Mon, 11 Nov 2019 18:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498490;
-        bh=O41LwHklMQi00bcu3oEIE90jeboup3lfQjnvEm+zojQ=;
+        s=default; t=1573498497;
+        bh=pUWKp8naBDs9sjU+E0WOyTLJfsG5GyDZCVxfypsKw5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jvqqH/e3sTcuVfPDw97RTMDFVFHTV3ReFmljIWw7BclTxQg6dXuYU1P4HV273Yidj
-         RpwuEx0SlaFIzvWl2vgYCEHxYr3aO5+8oXram8CFOzDMiGrXhc7V2Fve+6qSszpioo
-         Jz8Sxvdg+avTSN6ITnh+JJBzfJzGoGmvdJkhrsHA=
+        b=fk0sUEygIIdxD3eOQCSVH82w9bSMi9lX+BtZH7o5Wr7WThLu35yNx5vyBPYcC67f+
+         TolrLnQ6KeShtPRHZ1B2LB8YVZQzXeFBJbd7tR9L0ioP6Nx5IAT31wi4D3tDnIrhc4
+         Y79S/1h/vndQPzTSpgfVy+NLtG6m7vn2+08Xv7IE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 134/193] macsec: fix refcnt leak in module exit routine
-Date:   Mon, 11 Nov 2019 19:28:36 +0100
-Message-Id: <20191111181511.052784136@linuxfoundation.org>
+Subject: [PATCH 5.3 136/193] scsi: sd: define variable dif as unsigned int instead of bool
+Date:   Mon, 11 Nov 2019 19:28:38 +0100
+Message-Id: <20191111181511.204518731@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,74 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit 2bce1ebed17da54c65042ec2b962e3234bad5b47 ]
+[ Upstream commit 0cf9f4e547cebb5f5d2d046437c71ddcc8ea4a39 ]
 
-When a macsec interface is created, it increases a refcnt to a lower
-device(real device). when macsec interface is deleted, the refcnt is
-decreased in macsec_free_netdev(), which is ->priv_destructor() of
-macsec interface.
+Variable dif in function sd_setup_read_write_cmnd() is the return value of
+function scsi_host_dif_capable() which returns dif capability of disks.  If
+define it as bool, even for the disks which support DIF3, the function
+still return dif=1, which causes IO error. So define variable dif as
+unsigned int instead of bool.
 
-The problem scenario is this.
-When nested macsec interfaces are exiting, the exit routine of the
-macsec module makes refcnt leaks.
-
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add macsec0 link dummy0 type macsec
-    ip link add macsec1 link macsec0 type macsec
-    modprobe -rv macsec
-
-[  208.629433] unregister_netdevice: waiting for macsec0 to become free. Usage count = 1
-
-Steps of exit routine of macsec module are below.
-1. Calls ->dellink() in __rtnl_link_unregister().
-2. Checks refcnt and wait refcnt to be 0 if refcnt is not 0 in
-netdev_run_todo().
-3. Calls ->priv_destruvtor() in netdev_run_todo().
-
-Step2 checks refcnt, but step3 decreases refcnt.
-So, step2 waits forever.
-
-This patch makes the macsec module do not hold a refcnt of the lower
-device because it already holds a refcnt of the lower device with
-netdev_upper_dev_link().
-
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e249e42d277e ("scsi: sd: Clean up sd_setup_read_write_cmnd()")
+Link: https://lore.kernel.org/r/1571725628-132736-1-git-send-email-chenxiang66@hisilicon.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/scsi/sd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index cb7637364b40d..1bd113b142ea7 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -3001,12 +3001,10 @@ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
- static void macsec_free_netdev(struct net_device *dev)
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
--	struct net_device *real_dev = macsec->real_dev;
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 2d77f32e13d5e..9dc367e2e742d 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1166,11 +1166,12 @@ static blk_status_t sd_setup_read_write_cmnd(struct scsi_cmnd *cmd)
+ 	sector_t lba = sectors_to_logical(sdp, blk_rq_pos(rq));
+ 	sector_t threshold;
+ 	unsigned int nr_blocks = sectors_to_logical(sdp, blk_rq_sectors(rq));
+-	bool dif, dix;
+ 	unsigned int mask = logical_to_sectors(sdp, 1) - 1;
+ 	bool write = rq_data_dir(rq) == WRITE;
+ 	unsigned char protect, fua;
+ 	blk_status_t ret;
++	unsigned int dif;
++	bool dix;
  
- 	free_percpu(macsec->stats);
- 	free_percpu(macsec->secy.tx_sc.stats);
- 
--	dev_put(real_dev);
- }
- 
- static void macsec_setup(struct net_device *dev)
-@@ -3261,8 +3259,6 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 	if (err < 0)
- 		return err;
- 
--	dev_hold(real_dev);
--
- 	macsec->nest_level = dev_get_nest_level(real_dev) + 1;
- 	netdev_lockdep_set_classes(dev);
- 	lockdep_set_class_and_subclass(&dev->addr_list_lock,
+ 	ret = scsi_init_io(cmd);
+ 	if (ret != BLK_STS_OK)
 -- 
 2.20.1
 
