@@ -5,54 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76022C17447
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D0DC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49EE021783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13EF0217F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:46:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ihuN695K"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X6cJO6j+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfKKVqe (ORCPT
+        id S1727827AbfKKVqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:46:34 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44420 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727632AbfKKVqH (ORCPT
+        Mon, 11 Nov 2019 16:46:32 -0500
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:45558 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727640AbfKKVqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Nov 2019 16:46:07 -0500
-Received: by mail-pl1-f194.google.com with SMTP id az9so7528504plb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:46:05 -0800 (PST)
+Received: by mail-pl1-f173.google.com with SMTP id y24so8353548plr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:46:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=scnPY7Vttw3RyzZhL4W5SpA/avMnImyUTQ0YId03ujs=;
-        b=ihuN695KvOIYvShEFrPb/mLsRgCB+jsW+Zf4zcpsRLeZ6gUH29xLpLoEaSZENcxesD
-         aRXnINDZpo+dHBayJhowwxsHQmmjO8KhdQEmxw/osNEkLnDYkkGzE3mUznjodnxBXuKd
-         g40VBnd7TXFKmXIgxwQAsBGGRxfPHa+cNQYBA=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Q2lZ7Dm1L5aRXMm9XxNsm9WxcGVGFqTOrxf2vwq2v/c=;
+        b=X6cJO6j+LuNeFzoMBlJXSpwENsy0YOCb5jmcJTGxZvPS1RV2nWRXEkpU9UtVC0gzU3
+         +Skr+AL2+vJk7GunbZi7TcgodFA6q2V5iT3hVRsf4ee2IKQkEKCEGk0zUGnZWZV6us3x
+         dsdp/HxQ5DvQXnLDmGpXnTwQRiGC4YdyBTjDE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=scnPY7Vttw3RyzZhL4W5SpA/avMnImyUTQ0YId03ujs=;
-        b=dDg0PJT+YWnDqoI2+IX8xYlBDig2Ihuo+6nNwKXQgTGwYd84st0P4XJhx6RSJNR+1y
-         yBTxftBO2eGFKiJirqAU6bHoouYKnPE+7U1nZTVvmkN4cj2/jFaRARRNZqvAWok4Zyjp
-         P11foFAkRbeCiXzCGGWlbm9KmPcD67tLB0DB0a8dydxiIgIcISadBAurBFV8TUHhHbpr
-         mwIDMwQNYN36jKPzJSkCqzirkaSOXyHNIzuPRbe7W9tH3PHRNUZKOhF8S25wANu5SJKI
-         5r+ffiA1ryFUxv20vjdviZZw8r7UMvsXsiBXcg1aBd9bA91CHij01TNy5aiOTXIfq6xK
-         c8kw==
-X-Gm-Message-State: APjAAAXRQ5LTPfuaqCBri+TPlFHq6FKmj1tW3cfX7lL+ph0IQ76F6d4O
-        sjA3XyMTGYri3uMce8b7kbnTtA==
-X-Google-Smtp-Source: APXvYqzVIxtt5GEKdaDXPQ+xj7Wjby90TrRdmpa51OGLsU2O2Qj1q3F+9zcZ2rKrY4+kA2/QVptBBg==
-X-Received: by 2002:a17:902:7c8f:: with SMTP id y15mr27046980pll.341.1573508764932;
-        Mon, 11 Nov 2019 13:46:04 -0800 (PST)
+         :references;
+        bh=Q2lZ7Dm1L5aRXMm9XxNsm9WxcGVGFqTOrxf2vwq2v/c=;
+        b=hYUsLzxlalX/eoGzkf5CditLzXTPyeRY4YTIAtfN9HEIQPQIhNH3fimJiXDRQYYMxK
+         vXajskD+WENZpcJTTGkpnLwOv5VhRfx4X7P8Fjoa7EYzhK+5LuQ1OXsAqd8d3ueud8wk
+         LUJYPn3zqlvGBPqC7uC4qzeooJp90P/tTCW8qCinjEIJT3wrEoANs99JogXZfkLFWnUo
+         evsZNb7wk5yaMWldrm904I3yBH6ildvDG0cBoJaplzThAIf5jOGZFjyh8Te+dHT2sFen
+         YIXDnzHIpiGiZQl/GxsJ05WSZU96Aq7tSNqqbVXJ4Qjr198gRwZQIMxZ2PlRhtRxUEZX
+         8w+g==
+X-Gm-Message-State: APjAAAVRW0AFTAdRECAe/+0gK8l+SxYEfPIV/s1WKfZRvK8tgpas1abo
+        hctHe9n5UGmkdxUzBmXcoSFb7g==
+X-Google-Smtp-Source: APXvYqyte6oJuiojDpH+7VVh1GlXynL4x0mJaAVAGIUiJyoki2Cy/SuhjS+ya0YYXVwQoQZshdRvoA==
+X-Received: by 2002:a17:902:b948:: with SMTP id h8mr27221875pls.139.1573508766383;
+        Mon, 11 Nov 2019 13:46:06 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y11sm19317170pfq.1.2019.11.11.13.46.00
+        by smtp.gmail.com with ESMTPSA id w138sm12427189pfc.68.2019.11.11.13.46.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 13:46:00 -0800 (PST)
+        Mon, 11 Nov 2019 13:46:05 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -64,67 +63,55 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-hardening@lists.openwall.com
-Subject: [PATCH v4 1/8] crypto: x86/glue_helper: Add function glue macros
-Date:   Mon, 11 Nov 2019 13:45:45 -0800
-Message-Id: <20191111214552.36717-2-keescook@chromium.org>
+Subject: [PATCH v4 7/8] crypto: x86/glue_helper: Remove function prototype cast helpers
+Date:   Mon, 11 Nov 2019 13:45:51 -0800
+Message-Id: <20191111214552.36717-8-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191111214552.36717-1-keescook@chromium.org>
 References: <20191111214552.36717-1-keescook@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The crypto glue performed function prototype casting to make indirect
-calls to assembly routines. Instead of performing casts at the call
-sites (which trips Control Flow Integrity prototype checking), create a
-set of macros to either declare the prototypes to avoid the need for
-casts, or build inline helpers to allow for various aliased functions.
+Now that all users of the function prototype casting helpers have been
+removed, delete the unused macros.
 
-Co-developed-by: João Moreira <joao.moreira@lsc.ic.unicamp.br>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/crypto/glue_helper.h | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/x86/include/asm/crypto/glue_helper.h | 5 -----
+ include/crypto/xts.h                      | 2 --
+ 2 files changed, 7 deletions(-)
 
 diff --git a/arch/x86/include/asm/crypto/glue_helper.h b/arch/x86/include/asm/crypto/glue_helper.h
-index 8d4a8e1226ee..2fa4968ab8e2 100644
+index 2fa4968ab8e2..a9935bbb3eb9 100644
 --- a/arch/x86/include/asm/crypto/glue_helper.h
 +++ b/arch/x86/include/asm/crypto/glue_helper.h
-@@ -23,6 +23,30 @@ typedef void (*common_glue_xts_func_t)(void *ctx, u128 *dst, const u128 *src,
- #define GLUE_CTR_FUNC_CAST(fn) ((common_glue_ctr_func_t)(fn))
- #define GLUE_XTS_FUNC_CAST(fn) ((common_glue_xts_func_t)(fn))
+@@ -18,11 +18,6 @@ typedef void (*common_glue_ctr_func_t)(void *ctx, u128 *dst, const u128 *src,
+ typedef void (*common_glue_xts_func_t)(void *ctx, u128 *dst, const u128 *src,
+ 				       le128 *iv);
  
-+#define CRYPTO_FUNC(func)						\
-+asmlinkage void func(void *ctx, u8 *dst, const u8 *src)
-+
-+#define CRYPTO_FUNC_CBC(func)						\
-+asmlinkage void func(void *ctx, u128 *dst, const u128 *src)
-+
-+#define CRYPTO_FUNC_WRAP_CBC(func)					\
-+static inline void func ## _cbc(void *ctx, u128 *dst, const u128 *src)	\
-+{ func(ctx, (u8 *)dst, (u8 *)src); }
-+
-+#define CRYPTO_FUNC_CTR(func)						\
-+asmlinkage void func(void *ctx, u128 *dst, const u128 *src, le128 *iv);
-+
-+#define CRYPTO_FUNC_XTS(func)	CRYPTO_FUNC_CTR(func)
-+
-+#define CRYPTO_FUNC_XOR(func)						\
-+asmlinkage void __ ## func(void *ctx, u8 *dst, const u8 *src, bool y);	\
-+asmlinkage static inline						\
-+void func(void *ctx, u8 *dst, const u8 *src)				\
-+{ __ ## func(ctx, dst, src, false); }					\
-+asmlinkage static inline						\
-+void func ## _xor(void *ctx, u8 *dst, const u8 *src)			\
-+{ __ ## func(ctx, dst, src, true); }
-+
- struct common_glue_func_entry {
- 	unsigned int num_blocks; /* number of blocks that @fn will process */
- 	union {
+-#define GLUE_FUNC_CAST(fn) ((common_glue_func_t)(fn))
+-#define GLUE_CBC_FUNC_CAST(fn) ((common_glue_cbc_func_t)(fn))
+-#define GLUE_CTR_FUNC_CAST(fn) ((common_glue_ctr_func_t)(fn))
+-#define GLUE_XTS_FUNC_CAST(fn) ((common_glue_xts_func_t)(fn))
+-
+ #define CRYPTO_FUNC(func)						\
+ asmlinkage void func(void *ctx, u8 *dst, const u8 *src)
+ 
+diff --git a/include/crypto/xts.h b/include/crypto/xts.h
+index 75fd96ff976b..15ae7fdc0478 100644
+--- a/include/crypto/xts.h
++++ b/include/crypto/xts.h
+@@ -8,8 +8,6 @@
+ 
+ #define XTS_BLOCK_SIZE 16
+ 
+-#define XTS_TWEAK_CAST(x) ((void (*)(void *, u8*, const u8*))(x))
+-
+ static inline int xts_check_key(struct crypto_tfm *tfm,
+ 				const u8 *key, unsigned int keylen)
+ {
 -- 
 2.17.1
 
