@@ -2,37 +2,41 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDBBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7B3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798D221925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA59A2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfKKOMN (ORCPT
+        id S1727036AbfKKOMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:12:13 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:39595 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726832AbfKKOMN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:12:13 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Tho9KK0_1573481523;
-Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0Tho9KK0_1573481523)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 11 Nov 2019 22:12:03 +0800
-From:   Tony Lu <tonylu@linux.alibaba.com>
-To:     davem@davemloft.net
-Cc:     shemminger@osdl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: remove static inline from dev_put/dev_hold
-Date:   Mon, 11 Nov 2019 22:05:03 +0800
-Message-Id: <20191111140502.17541-1-tonylu@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 11 Nov 2019 09:12:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:45768 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbfKKOMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 09:12:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4EB831B;
+        Mon, 11 Nov 2019 06:12:22 -0800 (PST)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DDD83F534;
+        Mon, 11 Nov 2019 06:12:21 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Steven Price <steven.price@arm.com>
+Subject: [PATCH 0/2] arm64: Workaround for Cortex-A55 erratum 1530923
+Date:   Mon, 11 Nov 2019 14:11:55 +0000
+Message-Id: <20191111141157.55062-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,104 +44,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes static inline from dev_put/dev_hold in order to help
-trace the pcpu_refcnt leak of net_device.
+This series enables a workaround for Cortex-A55 erratum 1530923. The
+erratum potentially allows TLB entries to be allocated as a result of a
+speculative AT instruction. This may happen in the middle of a guest
+world switch while the relevant VMSA configuration is in an inconsistent
+state, leading to erroneous content being allocated into TLBs.
 
-We have sufferred this kind of issue for several times during
-manipulating NIC between different net namespaces. It prints this
-log in dmesg:
+The existing workaround for Cortex-A76 erratum 1165522 is the same, so
+the first patch renames this workaround to a generic name
+(SPECULATIVE_AT), the second patch then adds the detection for the
+Cortex-A55 erratum 1530923.
 
-  unregister_netdevice: waiting for eth0 to become free. Usage count = 1
+Steven Price (2):
+  arm64: Rename WORKAROUND_1165522 to SPECULATIVE_AT
+  arm64: Workaround for Cortex-A55 erratum 1530923
 
-However, it is hard to find out who called and leaked refcnt in time. It
-only left the crime scene but few evidence. Once leaked, it is not
-safe to fix it up on the running host. We can't trace dev_put/dev_hold
-directly, for the functions are inlined and used wildly amoung modules.
-And this issue is common, there are tens of patches fix net_device
-refcnt leak for various causes.
+ Documentation/arm64/silicon-errata.rst |  2 ++
+ arch/arm64/Kconfig                     | 17 +++++++++++++++++
+ arch/arm64/include/asm/cpucaps.h       |  2 +-
+ arch/arm64/include/asm/kvm_host.h      |  2 +-
+ arch/arm64/include/asm/kvm_hyp.h       |  7 +++----
+ arch/arm64/kernel/cpu_errata.c         | 23 ++++++++++++++++++-----
+ arch/arm64/kvm/hyp/switch.c            |  6 +++---
+ arch/arm64/kvm/hyp/tlb.c               |  8 ++++----
+ 8 files changed, 49 insertions(+), 18 deletions(-)
 
-To trace the refcnt manipulating, this patch removes static inline from
-dev_put/dev_hold. We can use handy tools, such as eBPF with kprobe, to
-find out who holds but forgets to put refcnt. This will not be called
-frequently, so the overhead is limited.
-
-Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
----
- include/linux/netdevice.h | 24 ++++--------------------
- net/core/dev.c            | 24 ++++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index c20f190b4c18..872d266c6da5 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -3720,27 +3720,11 @@ extern unsigned int	netdev_budget_usecs;
- /* Called by rtnetlink.c:rtnl_unlock() */
- void netdev_run_todo(void);
- 
--/**
-- *	dev_put - release reference to device
-- *	@dev: network device
-- *
-- * Release reference to device to allow it to be freed.
-- */
--static inline void dev_put(struct net_device *dev)
--{
--	this_cpu_dec(*dev->pcpu_refcnt);
--}
-+/* Release reference to device to allow it to be freed. */
-+void dev_put(struct net_device *dev);
- 
--/**
-- *	dev_hold - get reference to device
-- *	@dev: network device
-- *
-- * Hold reference to device to keep it from being freed.
-- */
--static inline void dev_hold(struct net_device *dev)
--{
--	this_cpu_inc(*dev->pcpu_refcnt);
--}
-+/* Hold reference to device to keep it from being freed. */
-+void dev_hold(struct net_device *dev);
- 
- /* Carrier loss detection, dial on demand. The functions netif_carrier_on
-  * and _off may be called from IRQ context, but it is caller
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 99ac84ff398f..620fb3d6718a 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -1294,6 +1294,30 @@ void netdev_notify_peers(struct net_device *dev)
- }
- EXPORT_SYMBOL(netdev_notify_peers);
- 
-+/**
-+ *	dev_put - release reference to device
-+ *	@dev: network device
-+ *
-+ * Release reference to device to allow it to be freed.
-+ */
-+void dev_put(struct net_device *dev)
-+{
-+	this_cpu_dec(*dev->pcpu_refcnt);
-+}
-+EXPORT_SYMBOL(dev_put);
-+
-+/**
-+ *	dev_hold - get reference to device
-+ *	@dev: network device
-+ *
-+ * Hold reference to device to keep it from being freed.
-+ */
-+void dev_hold(struct net_device *dev)
-+{
-+	this_cpu_inc(*dev->pcpu_refcnt);
-+}
-+EXPORT_SYMBOL(dev_hold);
-+
- static int __dev_open(struct net_device *dev, struct netlink_ext_ack *extack)
- {
- 	const struct net_device_ops *ops = dev->netdev_ops;
 -- 
-2.24.0
+2.20.1
 
