@@ -3,50 +3,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A227C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF3EC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E59A2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7232084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LDSRVX8r";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WFpcJ/4m"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="msIK6Hjb";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="msIK6Hjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfKKGOI (ORCPT
+        id S1726903AbfKKGPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:14:08 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:46524 "EHLO
+        Mon, 11 Nov 2019 01:15:24 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:46948 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfKKGOH (ORCPT
+        with ESMTP id S1726765AbfKKGPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 01:14:07 -0500
+        Mon, 11 Nov 2019 01:15:23 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 50BE8609EF; Mon, 11 Nov 2019 06:14:06 +0000 (UTC)
+        id DA72B60A0B; Mon, 11 Nov 2019 06:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573452846;
-        bh=I8UqTvymT7Y0417tUmtAztkA40mQvmH3geek+CovnWc=;
+        s=default; t=1573452922;
+        bh=BLOQ+eCIjJN4buelWfgp8BiWzMoO2U42JmFRdn7Sa84=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LDSRVX8rsXLgxV+lNF+YeDY4+WZDxAboQO9bxsy9FlxAl/4b0+NJAq7Ayshns01Eh
-         LN7C5AMDO3nbOWwCtv0Mte6ezb9eb0BiwAouUQshunEEsAkRfm06EkJBZXehGcq59h
-         4/9wt4qRrzkDhlpH1m7ylS7heebtv2sS/UDhHbyw=
+        b=msIK6Hjb9gtJcWpFPvjysAhT4tjstVf72U2uJlG4K7fD6tyt8uBSbCXawWGFm2ZX4
+         wGccKh5GrVZmpGLvkgaSbrz0CYNj0ONGNG5aebMdRI8bD62eou2sULvXCsMcY7vCCx
+         BvxdHfvjwCOWljfm/YF4XYSEwFKh35mTc9FBg4Q0=
 Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 994ED60913;
-        Mon, 11 Nov 2019 06:14:04 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTP id 38B5F6092D;
+        Mon, 11 Nov 2019 06:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573452845;
-        bh=I8UqTvymT7Y0417tUmtAztkA40mQvmH3geek+CovnWc=;
+        s=default; t=1573452922;
+        bh=BLOQ+eCIjJN4buelWfgp8BiWzMoO2U42JmFRdn7Sa84=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WFpcJ/4m05Gm9BrpEhAzwq6qEEXYBwsD/5NDWSaAqiG5xAj6FgMwlTxpPY2uzMz2r
-         30i68EoDIEdfAzK7xoNsWUouagGf4zKOyAEFzoVLZ/yomgjBXSWBgI2QCOnQIllYwT
-         ffnE7Kg2bbN9smKILV9irpK3/jQ3vuaUWIGD3Ezo=
+        b=msIK6Hjb9gtJcWpFPvjysAhT4tjstVf72U2uJlG4K7fD6tyt8uBSbCXawWGFm2ZX4
+         wGccKh5GrVZmpGLvkgaSbrz0CYNj0ONGNG5aebMdRI8bD62eou2sULvXCsMcY7vCCx
+         BvxdHfvjwCOWljfm/YF4XYSEwFKh35mTc9FBg4Q0=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 Nov 2019 11:44:04 +0530
+Date:   Mon, 11 Nov 2019 11:45:22 +0530
 From:   kgunda@codeaurora.org
 To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -57,10 +57,12 @@ Cc:     Andy Gross <agross@kernel.org>,
         rnayak@codeaurora.org
 Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
  pm6150l
-In-Reply-To: <5dc2f6fb.1c69fb81.195ac.9fff@mx.google.com>
+In-Reply-To: <5dc2f71e.1c69fb81.8912a.f2c0@mx.google.com>
 References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
- <5dc2f6fb.1c69fb81.195ac.9fff@mx.google.com>
-Message-ID: <bd06260d75cae2044b99751561e3df84@codeaurora.org>
+ <5dc1cb4c.1c69fb81.af253.0b8a@mx.google.com>
+ <c4cee81775c6d82024ca05250290f603@codeaurora.org>
+ <5dc2f71e.1c69fb81.8912a.f2c0@mx.google.com>
+Message-ID: <1d3436e220ea17ca9d99000922fcb809@codeaurora.org>
 X-Sender: kgunda@codeaurora.org
 User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,62 +71,28 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 2019-11-06 22:08, Stephen Boyd wrote:
-> Quoting Kiran Gunda (2019-11-04 21:21:49)
->> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt 
->> b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> index 1437062..b5fc64e 100644
->> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> @@ -32,6 +32,8 @@ Required properties:
->>                     "qcom,pm8998",
->>                     "qcom,pmi8998",
->>                     "qcom,pm8005",
->> +                  "qcom,pm6150",
->> +                  "qcom,pm6150l",
-> 
-> This seems to match the compatible list in the driver. Can you convert
-> this binding to YAML and then sort this compatible string list
-> alpha-numberically? Two patches, one to convert to YAML and sort and
-> another patch to add these new compatible strings.
-> 
-Sure. Will do it.
->>                     or generalized "qcom,spmi-pmic".
->>  - reg:             Specifies the SPMI USID slave address for this 
->> device.
->>                     For more information see:
->> diff --git a/drivers/mfd/qcom-spmi-pmic.c 
->> b/drivers/mfd/qcom-spmi-pmic.c
->> index e8fe705..74b7980 100644
->> --- a/drivers/mfd/qcom-spmi-pmic.c
->> +++ b/drivers/mfd/qcom-spmi-pmic.c
->> @@ -34,6 +34,8 @@
->>  #define PM8998_SUBTYPE         0x14
->>  #define PMI8998_SUBTYPE                0x15
->>  #define PM8005_SUBTYPE         0x18
->> +#define PM6150_SUBTYPE         0x28
->> +#define PM6150L_SUBTYPE                0x27
-> 
-> This list looks to be sorted based on id number, so just swap the two
-> here.
-> 
-Ok. Will do it in next post.
+> Quoting kgunda@codeaurora.org (2019-11-05 22:43:59)
+>> On 2019-11-06 00:49, Stephen Boyd wrote:
+>> > Quoting Kiran Gunda (2019-11-04 21:21:49)
+>> >> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
+>> >> found on SC7180 based platforms.
+>> >>
+>> >> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> >> ---
+>> >>  - Changes from V1:
+>> >>    Sorted the macros and compatibles.
+>> >
+>> > I don't see anything sorted though.
+>> >
+>> Sorry .. I might have misunderstood your comment. Let me know if my
+>> understanding is correct.
 >> 
->>  static const struct of_device_id pmic_spmi_id_table[] = {
->>         { .compatible = "qcom,spmi-pmic", .data = (void 
->> *)COMMON_SUBTYPE },
->> @@ -53,6 +55,8 @@
->>         { .compatible = "qcom,pm8998",    .data = (void 
->> *)PM8998_SUBTYPE },
->>         { .compatible = "qcom,pmi8998",   .data = (void 
->> *)PMI8998_SUBTYPE },
->>         { .compatible = "qcom,pm8005",    .data = (void 
->> *)PM8005_SUBTYPE },
->> +       { .compatible = "qcom,pm6150",    .data = (void 
->> *)PM6150_SUBTYPE },
->> +       { .compatible = "qcom,pm6150l",   .data = (void 
->> *)PM6150L_SUBTYPE },
+>> >>>> And compatible here.
+>> >>> And on macro name here.
+>> 
+>> This means you want to sort all the existing compatible and macros in
+>> alpha numeric order ?
 > 
-> This is also sorted based on .data value, so swap the two here too.
-> 
-Ok. Will do it in next post.
->>         { }
+> Sorry I also got confused on what the driver is doing. I replied on the
+> original patch with what is preferred.
+Ok.. I just replied to that.
