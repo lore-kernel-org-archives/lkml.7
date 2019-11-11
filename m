@@ -2,304 +2,242 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF77C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626ABC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6867B20869
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D9020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:44:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KTTG06hy";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JCSWVJyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfKKGoO (ORCPT
+        id S1726932AbfKKGov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:44:14 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:21657 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfKKGoN (ORCPT
+        Mon, 11 Nov 2019 01:44:51 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55234 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfKKGov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 01:44:13 -0500
-Received: from [10.28.39.106] (10.28.39.106) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 11 Nov
- 2019 14:44:28 +0800
-Subject: Re: [PATCH v5 1/3] pinctrl: meson: add a new callback for SoCs fixup
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <1573203636-7436-1-git-send-email-qianggui.song@amlogic.com>
- <1573203636-7436-2-git-send-email-qianggui.song@amlogic.com>
- <54809378-d4b0-2013-eb22-d6570eff2a8c@baylibre.com>
-From:   Qianggui Song <qianggui.song@amlogic.com>
-Message-ID: <ce76e0e0-62b4-ca89-5d56-982b021af72c@amlogic.com>
-Date:   Mon, 11 Nov 2019 14:44:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 11 Nov 2019 01:44:51 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 34D6560A24; Mon, 11 Nov 2019 06:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573454690;
+        bh=JO+MF1/DvaXK6pMxWJ29ZBKz6Hapbs4TK+9Hei9eqac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KTTG06hyO5O6tscSwm/d8/oWnHl7CVDSoP7KEJU/Tc0lamwSZJJCaTYjIk6hknJHh
+         lELqjVZPUH1spDL3G2dQ7MO7C02WxATtbsvczjVnxWR26YJ0VZ4osLMQm9zq8Ghtt9
+         9ic3oDRcaeS59BwaPeFVtEm7jbCIcVJsf8HxTTmM=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A25A360A23;
+        Mon, 11 Nov 2019 06:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573454689;
+        bh=JO+MF1/DvaXK6pMxWJ29ZBKz6Hapbs4TK+9Hei9eqac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JCSWVJyEplGs/ZTll7CwTB0r6VF+bmseg3khxeonYU2znLG5ULwXDiJJfKr5rXSy3
+         3yVOD1MtzioNQssuZlq9hQ/T51OJxVwD8sT/1x50m5Wmi1+XdO6cCFAubpKVMvDg3g
+         s5IqS2h90B6CJAEhNIMxpz6uGtBzL0wM2tQV2Tiw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A25A360A23
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Mon, 11 Nov 2019 12:14:41 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: Fix deadlock under storage almost full/dirty
+ condition
+Message-ID: <20191111064441.GC15669@codeaurora.org>
+References: <1573211027-30785-1-git-send-email-stummala@codeaurora.org>
+ <5c491884-91d3-5b85-6d49-569a8d06f3a3@huawei.com>
+ <20191111034026.GA15669@codeaurora.org>
+ <9ece86fd-ff53-3a70-627e-c6acb03b9264@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <54809378-d4b0-2013-eb22-d6570eff2a8c@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.106]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ece86fd-ff53-3a70-627e-c6acb03b9264@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chao,
 
+On Mon, Nov 11, 2019 at 02:28:47PM +0800, Chao Yu wrote:
+> Hi Sahitya,
+> 
+> On 2019/11/11 11:40, Sahitya Tummala wrote:
+> > Hi Chao,
+> > 
+> > On Mon, Nov 11, 2019 at 10:51:10AM +0800, Chao Yu wrote:
+> >> On 2019/11/8 19:03, Sahitya Tummala wrote:
+> >>> There could be a potential deadlock when the storage capacity
+> >>> is almost full and theren't enough free segments available, due
+> >>> to which FG_GC is needed in the atomic commit ioctl as shown in
+> >>> the below callstack -
+> >>>
+> >>> schedule_timeout
+> >>> io_schedule_timeout
+> >>> congestion_wait
+> >>> f2fs_drop_inmem_pages_all
+> >>> f2fs_gc
+> >>> f2fs_balance_fs
+> >>> __write_node_page
+> >>> f2fs_fsync_node_pages
+> >>> f2fs_do_sync_file
+> >>> f2fs_ioctl
+> >>>
+> >>> If this inode doesn't have i_gc_failures[GC_FAILURE_ATOMIC] set,
+> >>> then it waits forever in f2fs_drop_inmem_pages_all(), for this
+> >>> atomic inode to be dropped. And the rest of the system is stuck
+> >>> waiting for sbi->gc_mutex lock, which is acquired by f2fs_balance_fs()
+> >>> in the stack above.
+> >>
+> >> I think the root cause of this issue is there is potential infinite loop in
+> >> f2fs_drop_inmem_pages_all() for the case of gc_failure is true, because once the
+> >> first inode in inode_list[ATOMIC_FILE] list didn't suffer gc failure, we will
+> >> skip dropping its in-memory cache and calling iput(), and traverse the list
+> >> again, most possibly there is the same inode in the head of that list.
+> >>
+> > 
+> > I thought we are expecting for those atomic updates (without any gc failures) to be
+> > committed by doing congestion_wait() and thus retrying again. Hence, I just
+> 
+> Nope, we only need to drop inode which encounter gc failures, and keep the rest
+> inodes.
+> 
+> > fixed only if we are ending up waiting for commit to happen in the atomic
+> > commit path itself, which will be a deadlock.
+> 
+> Look into call stack you provide, I don't think it's correct to drop such inode,
+> as its dirty pages should be committed before f2fs_fsync_node_pages(), so
+> calling f2fs_drop_inmem_pages won't release any inmem pages, and won't help
+> looped GC caused by skipping due to inmem pages.
+> 
+> And then I figure out below fix...
+> 
 
-On 2019/11/8 20:50, Neil Armstrong wrote:
-> Hi,
-> 
-> On 08/11/2019 10:00, Qianggui Song wrote:
->> In meson_pinctrl_parse_dt, it contains two parts: reg parsing and
->> SoC relative fixup for AO. Several fixups in the same code make it hard
->> to maintain, so move all fixups to each SoC's callback and make
->> meson_pinctrl_parse_dt just do the reg parsing, separate these two
->> parts.Overview of all current Meson SoCs fixup is as below:
->>
->> +------+--------------------------------------+--------------------------+
->> |      |                                      |                          |
->> | SoC  |                EE domain             |        AO domain         |
->> +------+--------------------------------------+--------------------------+
->> |m8    | parse regs:                          | parse regs:              |
->> |m8b   |   gpio,mux,pull,pull-enable(skip ds) |    gpio,mux,pull(skip ds)|
->> |gxl   | fixup:                               | fixup:                   |
->> |gxbb  |   no                                 |     pull-enable = pull;  |
->> |axg   |                                      |                          |
->> +------+--------------------------------------+--------------------------+
->> |g12a  | parse regs:                          | parse regs:              |
->> |sm1   |   gpio,mux,pull,pull-enable,ds       |   gpio,mux,ds            |
->> |      | fixup:                               | fixup:                   |
->> |      |   no                                 |   pull = gpio;           |
->> |      |                                      |   pull-enable = gpio;    |
->> +------+--------------------------------------+--------------------------+
->> |a1 or | parse regs:                                                     |
->> |later |  gpio/mux (without ao domain)                                   |
->> |SoCs  | fixup:                                                          |
->> |      |  pull = gpio; pull-enable = gpio; ds = gpio;                    |
->> +------+-----------------------------------------------------------------+
->> Since m8-axg share the same ao fixup, make a common function
->> meson8_aobus_parse_dt_extra to do the job.
->>
->> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
->> ---
->>  drivers/pinctrl/meson/pinctrl-meson-axg.c  |  1 +
->>  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  9 +++++++++
->>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c |  1 +
->>  drivers/pinctrl/meson/pinctrl-meson-gxl.c  |  1 +
->>  drivers/pinctrl/meson/pinctrl-meson.c      | 25 ++++++++++++++++++-------
->>  drivers/pinctrl/meson/pinctrl-meson.h      |  5 +++++
->>  drivers/pinctrl/meson/pinctrl-meson8.c     |  1 +
->>  drivers/pinctrl/meson/pinctrl-meson8b.c    |  1 +
->>  8 files changed, 37 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg.c b/drivers/pinctrl/meson/pinctrl-meson-axg.c
->> index ad502eda4afa..072765db93d7 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-axg.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-axg.c
->> @@ -1066,6 +1066,7 @@
->>  	.num_banks	= ARRAY_SIZE(meson_axg_aobus_banks),
->>  	.pmx_ops	= &meson_axg_pmx_ops,
->>  	.pmx_data	= &meson_axg_aobus_pmx_banks_data,
->> +	.parse_dt	= meson8_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_axg_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> index 582665fd362a..41850e3c0091 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> @@ -1362,6 +1362,14 @@
->>  	.num_pmx_banks	= ARRAY_SIZE(meson_g12a_aobus_pmx_banks),
->>  };
->>  
->> +static int meson_g12a_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	pc->reg_pull = pc->reg_gpio;
->> +	pc->reg_pullen = pc->reg_gpio;
->> +
->> +	return 0;
->> +}
->> +
->>  static struct meson_pinctrl_data meson_g12a_periphs_pinctrl_data = {
->>  	.name		= "periphs-banks",
->>  	.pins		= meson_g12a_periphs_pins,
->> @@ -1388,6 +1396,7 @@
->>  	.num_banks	= ARRAY_SIZE(meson_g12a_aobus_banks),
->>  	.pmx_ops	= &meson_axg_pmx_ops,
->>  	.pmx_data	= &meson_g12a_aobus_pmx_banks_data,
->> +	.parse_dt	= meson_g12a_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_g12a_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
->> index 5bfa56f3847e..926b9997159a 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
->> @@ -851,6 +851,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt	= meson8_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_gxbb_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> index 72c5373c8dc1..8b1a49f5da43 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> @@ -820,6 +820,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson_gxl_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson_gxl_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt 	= meson8_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_gxl_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
->> index 8bba9d053d9f..a812c6d986d9 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->> @@ -625,7 +625,7 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
->>  
->>  	i = of_property_match_string(node, "reg-names", name);
->>  	if (of_address_to_resource(node, i, &res))
->> -		return ERR_PTR(-ENOENT);
->> +		return NULL;
->>  
->>  	base = devm_ioremap_resource(pc->dev, &res);
->>  	if (IS_ERR(base))
->> @@ -665,26 +665,24 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
->>  	pc->of_node = gpio_np;
->>  
->>  	pc->reg_mux = meson_map_resource(pc, gpio_np, "mux");
->> -	if (IS_ERR(pc->reg_mux)) {
->> +	if (IS_ERR_OR_NULL(pc->reg_mux)) {
->>  		dev_err(pc->dev, "mux registers not found\n");
->>  		return PTR_ERR(pc->reg_mux);
-> 
-> If pc->reg_mux is NULL, it will return "0" here, which is wrong.
-> 
-> Either keep the return ERR_PTR(-ENOENT); in meson_map_resource, or
-> 	return pc->reg_mux ? -ENOENT : PTR_ERR(pc->reg_mux);
-> 
- Thanks. ERR_PTR(-ENOENT) to NULL make below region easy to handle, I
-will change to "return pc->reg_mux ? -ENOENT : PTR_ERR(pc->reg_mux);"
+Thanks for the explanation.
+The fix below looks good to me.
 
->>  	}
->>  
->>  	pc->reg_gpio = meson_map_resource(pc, gpio_np, "gpio");
->> -	if (IS_ERR(pc->reg_gpio)) {
->> +	if (IS_ERR_OR_NULL(pc->reg_gpio)) {
->>  		dev_err(pc->dev, "gpio registers not found\n");
->>  		return PTR_ERR(pc->reg_gpio);
+Thanks,
+Sahitya.
+
+> > 
+> >> Could you please check below fix:
+> >>
+> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >> index 7bf7b0194944..8a3a35b42a37 100644
+> >> --- a/fs/f2fs/f2fs.h
+> >> +++ b/fs/f2fs/f2fs.h
+> >> @@ -1395,6 +1395,7 @@ struct f2fs_sb_info {
+> >>  	unsigned int gc_mode;			/* current GC state */
+> >>  	unsigned int next_victim_seg[2];	/* next segment in victim section */
+> >>  	/* for skip statistic */
+> >> +	unsigned int atomic_files;		/* # of opened atomic file */
+> >>  	unsigned long long skipped_atomic_files[2];	/* FG_GC and BG_GC */
+> >>  	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
+> >>
+> >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >> index ecd063239642..79f4b348951a 100644
+> >> --- a/fs/f2fs/file.c
+> >> +++ b/fs/f2fs/file.c
+> >> @@ -2047,6 +2047,7 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
+> >>  	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>  	if (list_empty(&fi->inmem_ilist))
+> >>  		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
+> >> +	sbi->atomic_files++;
+> >>  	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>
+> >>  	/* add inode in inmem_list first and set atomic_file */
+> >> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> >> index 8b977bbd6822..6aa0bb693697 100644
+> >> --- a/fs/f2fs/segment.c
+> >> +++ b/fs/f2fs/segment.c
+> >> @@ -288,6 +288,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi,
+> >> bool gc_failure)
+> >>  	struct list_head *head = &sbi->inode_list[ATOMIC_FILE];
+> >>  	struct inode *inode;
+> >>  	struct f2fs_inode_info *fi;
+> >> +	unsigned int count = sbi->atomic_files;
+> > 
+> > If the sbi->atomic_files decrements just after this, then the below exit condition
+> > may not work. In that case, looped will never be >= count.
+> > 
+> >> +	unsigned int looped = 0;
+> >>  next:
+> >>  	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>  	if (list_empty(head)) {
+> >> @@ -296,22 +298,29 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi,
+> >> bool gc_failure)
+> >>  	}
+> >>  	fi = list_first_entry(head, struct f2fs_inode_info, inmem_ilist);
+> >>  	inode = igrab(&fi->vfs_inode);
+> >> +	if (inode)
+> >> +		list_move_tail(&fi->inmem_ilist, head);
+> >>  	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>
+> >>  	if (inode) {
+> >>  		if (gc_failure) {
+> >> -			if (fi->i_gc_failures[GC_FAILURE_ATOMIC])
+> >> -				goto drop;
+> >> -			goto skip;
+> >> +			if (!fi->i_gc_failures[GC_FAILURE_ATOMIC])
+> >> +				goto skip;
+> >>  		}
+> >> -drop:
+> >>  		set_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
+> >>  		f2fs_drop_inmem_pages(inode);
+> >> +skip:
+> >>  		iput(inode);
+> > 
+> > Does this result into f2fs_evict_inode() in this context for this inode?
 > 
-> Ditto
-will do as above.
+> Yup, we need to call igrab/iput in pair in f2fs_drop_inmem_pages_all() anyway.
 > 
->>  	}
->>  
->>  	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
->> -	/* Use gpio region if pull one is not present */
->>  	if (IS_ERR(pc->reg_pull))
->> -		pc->reg_pull = pc->reg_gpio;
->> +		pc->reg_pull = NULL;
->>  
->>  	pc->reg_pullen = meson_map_resource(pc, gpio_np, "pull-enable");
->> -	/* Use pull region if pull-enable one is not present */
->>  	if (IS_ERR(pc->reg_pullen))
->> -		pc->reg_pullen = pc->reg_pull;
->> +		pc->reg_pullen = NULL;
->>  
->>  	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
->>  	if (IS_ERR(pc->reg_ds)) {
->> @@ -692,6 +690,19 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
->>  		pc->reg_ds = NULL;
->>  	}
->>  
->> +	if (pc->data->parse_dt)
->> +		return pc->data->parse_dt(pc);
->> +
->> +	return 0;
->> +}
->> +
->> +int meson8_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	if (!pc->reg_pull)
->> +		return -EINVAL;
->> +
->> +	pc->reg_pullen = pc->reg_pull;
->> +
->>  	return 0;
->>  }
->>  
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
->> index c696f3241a36..bfa1d3599333 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.h
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
->> @@ -11,6 +11,8 @@
->>  #include <linux/regmap.h>
->>  #include <linux/types.h>
->>  
->> +struct meson_pinctrl;
->> +
->>  /**
->>   * struct meson_pmx_group - a pinmux group
->>   *
->> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
->>  	unsigned int num_banks;
->>  	const struct pinmux_ops *pmx_ops;
->>  	void *pmx_data;
->> +	int (*parse_dt)(struct meson_pinctrl *pc);
->>  };
->>  
->>  struct meson_pinctrl {
->> @@ -171,3 +174,5 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev,
->>  
->>  /* Common probe function */
->>  int meson_pinctrl_probe(struct platform_device *pdev);
->> +/* Common ao groups extra dt parse function for SoCs before g12a  */
->> +int meson8_aobus_parse_dt_extra(struct meson_pinctrl *pc);
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
->> index 0b97befa6335..dd17100efdcf 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson8.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson8.c
->> @@ -1103,6 +1103,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson8_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson8_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt	= &meson8_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson8_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
->> index a7de388388e6..2d5339edd0b7 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson8b.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
->> @@ -962,6 +962,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson8b_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson8b_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt	= &meson8_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson8b_pinctrl_dt_match[] = {
->>
+> Previously, we may have .i_count leak...
 > 
-> .
+> Thanks,
 > 
+> > 
+> > thanks,
+> > 
+> >>  	}
+> >> -skip:
+> >> +
+> >>  	congestion_wait(BLK_RW_ASYNC, HZ/50);
+> >>  	cond_resched();
+> >> +
+> >> +	if (gc_failure) {
+> >> +		if (++looped >= count)
+> >> +			return;
+> >> +	}
+> >> +
+> >>  	goto next;
+> >>  }
+> >>
+> >> @@ -334,6 +343,7 @@ void f2fs_drop_inmem_pages(struct inode *inode)
+> >>  	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>  	if (!list_empty(&fi->inmem_ilist))
+> >>  		list_del_init(&fi->inmem_ilist);
+> >> +	sbi->atomic_files--;
+> >>  	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>  }
+> >>
+> >> Thanks,
+> > 
+
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
