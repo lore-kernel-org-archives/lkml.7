@@ -2,482 +2,241 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EEAC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77128C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D25221925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC0521872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfKKLz0 (ORCPT
+        id S1726908AbfKKL62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:55:26 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5761 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726810AbfKKLz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:55:26 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4D43BA92126F42160EB0;
-        Mon, 11 Nov 2019 19:55:23 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 11 Nov 2019
- 19:55:22 +0800
-Date:   Mon, 11 Nov 2019 11:55:13 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        <briannorris@chromium.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>, <bleung@chromium.org>,
-        <dianders@chromium.org>, <groeck@chromium.org>,
-        <fabien.lahoudere@collabora.com>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v4 02/17] platform: cros_ec: Add cros_ec_sensor_hub
- driver
-Message-ID: <20191111115513.00007504@huawei.com>
-In-Reply-To: <dffd870b-fd0b-c7f4-218c-5b51bebea75c@collabora.com>
-References: <20191105222652.70226-1-gwendal@chromium.org>
-        <20191105222652.70226-3-gwendal@chromium.org>
-        <20191110121004.0167542e@archlinux>
-        <dffd870b-fd0b-c7f4-218c-5b51bebea75c@collabora.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 Nov 2019 06:58:28 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35863 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKL61 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:58:27 -0500
+X-Originating-IP: 2.224.242.101
+Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 4D2171BF204;
+        Mon, 11 Nov 2019 11:58:23 +0000 (UTC)
+From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: media: renesas,ceu: Convert to yaml
+Date:   Mon, 11 Nov 2019 13:00:17 +0100
+Message-Id: <20191111120017.83161-1-jacopo+renesas@jmondi.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 10:24:01 +0100
-Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+Convert the Renesas CEU bindings description to json-schema and remove
+the existing textual bindings document.
 
-> Hi,
-> 
-> On 10/11/19 13:10, Jonathan Cameron wrote:
-> > On Tue,  5 Nov 2019 14:26:37 -0800
-> > Gwendal Grignou <gwendal@chromium.org> wrote:
-> >   
-> >> Similar to HID sensor stack, the new driver sits between cros_ec_dev
-> >> and the iio device drivers:
-> >>
-> >> EC based iio device topology would be:
-> >> iio:device1 ->
-> >> ...0/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.6.auto/
-> >>                                          cros-ec-sensorhub.7.auto/
-> >>                                          cros-ec-accel.15.auto/
-> >>                                          iio:device1
-> >>
-> >> It will be expanded to control EC sensor FIFO.
-> >>
-> >> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>  
-> > 
-> > Random suggestion for a possible cleanup...
-> > 
-> > Would a devm_platform_device_register_data make sense?  Drops a
-> > fair bit of boilerplate in here.  If its not a common enough
-> > pattern, could use the devm_add_action_or_reset route
-> > to do the same thing.
-> >   
-> 
-> I don't think devm_platform_device_register exists, exist?
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
+ .../bindings/media/renesas,ceu.yaml           | 72 ++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 73 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
 
-It doesn't.  I was rather unclear :(  Suggestion was that we might want
-to think about adding one if this pattern is reasonably common.
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+deleted file mode 100644
+index 3e2a2652eb19..000000000000
+--- a/Documentation/devicetree/bindings/media/renesas,ceu.txt
++++ /dev/null
+@@ -1,86 +0,0 @@
+-Renesas Capture Engine Unit (CEU)
+-----------------------------------------------
+-
+-The Capture Engine Unit is the image capture interface found in the Renesas
+-SH Mobile, R-Mobile and RZ SoCs.
+-
+-The interface supports a single parallel input with data bus width of 8 or 16
+-bits.
+-
+-Required properties:
+-- compatible: Shall be one of the following values:
+-	"renesas,r7s72100-ceu" for CEU units found in RZ/A1H and RZ/A1M SoCs
+-	"renesas,r8a7740-ceu" for CEU units found in R-Mobile A1 R8A7740 SoCs
+-- reg: Registers address base and size.
+-- interrupts: The interrupt specifier.
+-
+-The CEU supports a single parallel input and should contain a single 'port'
+-subnode with a single 'endpoint'. Connection to input devices are modeled
+-according to the video interfaces OF bindings specified in:
+-[1] Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Optional endpoint properties applicable to parallel input bus described in
+-the above mentioned "video-interfaces.txt" file are supported.
+-
+-- hsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- vsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- bus-width: See [1] for description. Accepted values are '8' and '16'.
+-  If property is not present, default is '8'.
+-- field-even-active: See [1] for description. If property is not present,
+-  an even field is identified by a logic 0 (active-low signal).
+-
+-Example:
+-
+-The example describes the connection between the Capture Engine Unit and an
+-OV7670 image sensor connected to i2c1 interface.
+-
+-ceu: ceu@e8210000 {
+-	reg = <0xe8210000 0x209c>;
+-	compatible = "renesas,r7s72100-ceu";
+-	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&vio_pins>;
+-
+-	status = "okay";
+-
+-	port {
+-		ceu_in: endpoint {
+-			remote-endpoint = <&ov7670_out>;
+-
+-			hsync-active = <1>;
+-			vsync-active = <0>;
+-		};
+-	};
+-};
+-
+-i2c1: i2c@fcfee400 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+-
+-	status = "okay";
+-
+-	clock-frequency = <100000>;
+-
+-	ov7670: camera@21 {
+-		compatible = "ovti,ov7670";
+-		reg = <0x21>;
+-
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&vio_pins>;
+-
+-		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+-		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+-
+-		port {
+-			ov7670_out: endpoint {
+-				remote-endpoint = <&ceu_in>;
+-
+-				hsync-active = <1>;
+-				vsync-active = <0>;
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.yaml b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+new file mode 100644
+index 000000000000..3c4a4ff975ae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/renesas,ceu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Capture Engine Unit (CEU) Bindings
++
++maintainers:
++  - Jacopo Mondi <jacopo+renesas@jmondi.org>
++  - linux-renesas-soc@vger.kernel.org
++
++description: |+
++  The Capture Engine Unit is the image capture interface found in the Renesas SH
++  Mobile, R-Mobile and RZ SoCs. The interface supports a single parallel input
++  with data bus width of 8 or 16 bits.
++
++properties:
++  compatible:
++    enum:
++      - renesas,r7a72100-ceu
++      - renesas,r8a7740-ceu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  port:
++    type: object
++    additionalProperties: false
++
++    properties:
++       endpoint:
++         type: object
++
++         # Properties described in
++         # Documentation/devicetree/bindings/media/video-interfaces.txt
++         properties:
++           hsync-active: true
++           vsync-active: true
++           field-even-active: false
++           bus-width:
++             enum: [8, 16]
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - port
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    ceu: ceu@e8210000 {
++        reg = <0xe8210000 0x209c>;
++        compatible = "renesas,r7s72100-ceu";
++        interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++
++        port {
++            ceu_in: endpoint {
++                remote-endpoint = <&ov7670_out>;
++                hsync-active = <1>;
++                vsync-active = <0>;
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 37a977cbac6f..feab894f7584 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10133,7 +10133,7 @@ L:	linux-media@vger.kernel.org
+ L:	linux-renesas-soc@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+-F:	Documentation/devicetree/bindings/media/renesas,ceu.txt
++F:	Documentation/devicetree/bindings/media/renesas,ceu.yaml
+ F:	drivers/media/platform/renesas-ceu.c
+ F:	include/media/drv-intf/renesas-ceu.h
 
-In meantime devm_add_action_or_reset will give us much the same
-with changes only in the driver.
-
-Jonathan
-
-> 
-> After solving the changes pointed by Jonathan the patch looks good to me.
-> 
-> > I would suggest this as a possible future element, but you
-> > have some other issues around that area that this would cleanup
-> > nicely for you.  See inline.
-> > 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> > 
-> > 
-> >   
-> >> ---
-> >> Changes in v4:
-> >> - Use platform_device_register_data in children registration.
-> >> - Free registered pdev children at remove time.
-> >> - Remove useless includes
-> >> - Check patch with --strict option
-> >>     Use sizeof(*obj) instead of sizeof(struct ...obj)
-> >>     Alignement
-> >> - Describe cros_ec_sensorhub in kernel-doc format.
-> >> Changes in v3:
-> >> - Fix doxygen comments
-> >> - Fix use of ret |=
-> >> - Remove unncessary goto.
-> >> Changes in v2:
-> >> - Remove unerelated changes.
-> >> - Fix spelling.
-> >> - Use !x instead of x == NULL
-> >> - Use platform_ API directly to register IIO sensors from
-> >>   cros_ec_sensorhub.
-> >>
-> >>  drivers/iio/common/cros_ec_sensors/Kconfig    |   2 +-
-> >>  drivers/platform/chrome/Kconfig               |  12 +
-> >>  drivers/platform/chrome/Makefile              |   1 +
-> >>  drivers/platform/chrome/cros_ec_sensorhub.c   | 223 ++++++++++++++++++
-> >>  .../linux/platform_data/cros_ec_sensorhub.h   |  33 +++
-> >>  5 files changed, 270 insertions(+), 1 deletion(-)
-> >>  create mode 100644 drivers/platform/chrome/cros_ec_sensorhub.c
-> >>  create mode 100644 include/linux/platform_data/cros_ec_sensorhub.h
-> >>
-> >> diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig b/drivers/iio/common/cros_ec_sensors/Kconfig
-> >> index cdbb29cfb907..fefad9572790 100644
-> >> --- a/drivers/iio/common/cros_ec_sensors/Kconfig
-> >> +++ b/drivers/iio/common/cros_ec_sensors/Kconfig
-> >> @@ -4,7 +4,7 @@
-> >>  #
-> >>  config IIO_CROS_EC_SENSORS_CORE
-> >>  	tristate "ChromeOS EC Sensors Core"
-> >> -	depends on SYSFS && CROS_EC
-> >> +	depends on SYSFS && CROS_EC_SENSORHUB
-> >>  	select IIO_BUFFER
-> >>  	select IIO_TRIGGERED_BUFFER
-> >>  	help
-> >> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> >> index ee5f08ea57b6..56a25317a6be 100644
-> >> --- a/drivers/platform/chrome/Kconfig
-> >> +++ b/drivers/platform/chrome/Kconfig
-> >> @@ -190,6 +190,18 @@ config CROS_EC_DEBUGFS
-> >>  	  To compile this driver as a module, choose M here: the
-> >>  	  module will be called cros_ec_debugfs.
-> >>  
-> >> +config CROS_EC_SENSORHUB
-> >> +	tristate "ChromeOS EC MEMS Sensor Hub"
-> >> +	depends on CROS_EC && IIO  
-> > 
-> > Could relax the IIO dependency I think...  Get you more build coverage.
-> >   
-> >> +	help
-> >> +	  Allow loading IIO sensors. This driver is loaded by MFD and will in
-> >> +	  turn query the EC and register the sensors.
-> >> +	  It also spreads the sensor data coming from the EC to the IIO sensor
-> >> +	  object.
-> >> +
-> >> +	  To compile this driver as a module, choose M here: the
-> >> +	  module will be called cros_ec_sensorhub.
-> >> +
-> >>  config CROS_EC_SYSFS
-> >>  	tristate "ChromeOS EC control and information through sysfs"
-> >>  	depends on MFD_CROS_EC_DEV && SYSFS
-> >> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> >> index 477ec3d1d1c9..a164c40dc099 100644
-> >> --- a/drivers/platform/chrome/Makefile
-> >> +++ b/drivers/platform/chrome/Makefile
-> >> @@ -17,6 +17,7 @@ obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
-> >>  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
-> >>  obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
-> >>  obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
-> >> +obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
-> >>  obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
-> >>  obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
-> >>  obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
-> >> diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
-> >> new file mode 100644
-> >> index 000000000000..6a0aa84cf092
-> >> --- /dev/null
-> >> +++ b/drivers/platform/chrome/cros_ec_sensorhub.c
-> >> @@ -0,0 +1,223 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * SensorHub: driver that discover sensors behind
-> >> + * a ChromeOS Embedded controller.
-> >> + *
-> >> + * Copyright 2019 Google LLC
-> >> + */
-> >> +
-> >> +#include <linux/init.h>
-> >> +#include <linux/device.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/mfd/cros_ec.h>
-> >> +#include <linux/platform_data/cros_ec_commands.h>
-> >> +#include <linux/platform_data/cros_ec_proto.h>
-> >> +#include <linux/platform_data/cros_ec_sensorhub.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/slab.h>
-> >> +
-> >> +#define DRV_NAME		"cros-ec-sensorhub"
-> >> +
-> >> +static struct platform_device *cros_ec_sensorhub_allocate_single_sensor(
-> >> +		struct device *parent,
-> >> +		char *sensor_name,
-> >> +		int sensor_num)
-> >> +{
-> >> +	struct cros_ec_sensor_platform sensor_platforms = {
-> >> +		.sensor_num = sensor_num,
-> >> +	};
-> >> +
-> >> +	return platform_device_register_data(parent, sensor_name,
-> >> +				PLATFORM_DEVID_AUTO,
-> >> +				&sensor_platforms,
-> >> +				sizeof(sensor_platforms));
-> >> +}
-> >> +
-> >> +static int cros_ec_sensorhub_register(struct device *dev,
-> >> +				      struct cros_ec_sensorhub *sensorhub)  
-> > 
-> > As noted below, I'd be happier if this function did it's own cleanup on
-> > error rather than leaving that for the caller.
-> >   
-> >> +{
-> >> +	int ret, i, id, sensor_num;
-> >> +	struct cros_ec_dev *ec = sensorhub->ec;
-> >> +	int sensor_type[MOTIONSENSE_TYPE_MAX] = { 0 };
-> >> +	struct ec_params_motion_sense *params;
-> >> +	struct ec_response_motion_sense *resp;
-> >> +	struct cros_ec_command *msg;
-> >> +	struct platform_device *pdev;
-> >> +	char *name;
-> >> +
-> >> +	sensor_num = cros_ec_get_sensor_count(ec);
-> >> +	if (sensor_num < 0) {
-> >> +		dev_err(dev,
-> >> +			"Unable to retrieve sensor information (err:%d)\n",
-> >> +			sensor_num);
-> >> +		return sensor_num;
-> >> +	}
-> >> +
-> >> +	if (sensor_num == 0) {
-> >> +		dev_err(dev, "Zero sensors reported.\n");
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	/* Prepare a message to send INFO command to each sensor. */
-> >> +	msg = kzalloc(sizeof(*msg) + max(sizeof(*params), sizeof(*resp)),
-> >> +		      GFP_KERNEL);
-> >> +	if (!msg)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	msg->version = 1;
-> >> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> >> +	msg->outsize = sizeof(*params);
-> >> +	msg->insize = sizeof(*resp);
-> >> +	params = (struct ec_params_motion_sense *)msg->data;
-> >> +	resp = (struct ec_response_motion_sense *)msg->data;
-> >> +
-> >> +	id = 0;
-> >> +	for (i = 0; i < sensor_num; i++) {
-> >> +		params->cmd = MOTIONSENSE_CMD_INFO;
-> >> +		params->info.sensor_num = i;
-> >> +		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> >> +		if (ret < 0) {
-> >> +			dev_warn(dev, "no info for EC sensor %d : %d/%d\n",
-> >> +				 i, ret, msg->result);
-> >> +			continue;
-> >> +		}
-> >> +		switch (resp->info.type) {
-> >> +		case MOTIONSENSE_TYPE_ACCEL:
-> >> +			name = "cros-ec-accel";
-> >> +			break;
-> >> +		case MOTIONSENSE_TYPE_BARO:
-> >> +			name = "cros-ec-baro";
-> >> +			break;
-> >> +		case MOTIONSENSE_TYPE_GYRO:
-> >> +			name = "cros-ec-gyro";
-> >> +			break;
-> >> +		case MOTIONSENSE_TYPE_MAG:
-> >> +			name = "cros-ec-mag";
-> >> +			break;
-> >> +		case MOTIONSENSE_TYPE_PROX:
-> >> +			name = "cros-ec-prox";
-> >> +			break;
-> >> +		case MOTIONSENSE_TYPE_LIGHT:
-> >> +			name = "cros-ec-light";
-> >> +			break;
-> >> +		case MOTIONSENSE_TYPE_ACTIVITY:
-> >> +			name = "cros-ec-activity";
-> >> +			break;
-> >> +		default:
-> >> +			dev_warn(dev, "unknown type %d\n", resp->info.type);
-> >> +			continue;
-> >> +		}
-> >> +		pdev = cros_ec_sensorhub_allocate_single_sensor(dev, name, i);
-> >> +		if (IS_ERR(pdev)) {
-> >> +			ret = IS_ERR(pdev);
-> >> +			goto error;
-> >> +		}
-> >> +		sensorhub->sensor_pdev[id++] = pdev;
-> >> +		sensor_type[resp->info.type]++;
-> >> +	}
-> >> +
-> >> +	if (sensor_type[MOTIONSENSE_TYPE_ACCEL] >= 2)
-> >> +		ec->has_kb_wake_angle = true;
-> >> +
-> >> +	if (cros_ec_check_features(ec,
-> >> +				   EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
-> >> +		pdev = cros_ec_sensorhub_allocate_single_sensor(dev,
-> >> +							"cros-ec-lid-angle", 0);
-> >> +		if (IS_ERR(pdev)) {
-> >> +			ret = IS_ERR(pdev);
-> >> +			goto error;
-> >> +		}
-> >> +		sensorhub->sensor_pdev[id++] = pdev;
-> >> +	}
-> >> +
-> >> +error:
-> >> +	kfree(msg);
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int cros_ec_sensorhub_probe(struct platform_device *sensorhub_pdev)
-> >> +{
-> >> +	struct device *dev = &sensorhub_pdev->dev;
-> >> +	struct cros_ec_dev *ec = dev_get_drvdata(dev->parent);
-> >> +	int ret, i;
-> >> +	struct platform_device *pdev;
-> >> +	struct cros_ec_sensorhub *data =
-> >> +		kzalloc(sizeof(struct cros_ec_sensorhub), GFP_KERNEL);  
-> > 
-> > Do we free this anywhere?  Could just use devm_kzalloc to do it
-> > automatically.
-> >   
-> >> +
-> >> +	if (!data)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	data->ec = ec;
-> >> +	dev_set_drvdata(dev, data);
-> >> +
-> >> +	/* Check whether this EC is a sensor hub. */
-> >> +	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE)) {
-> >> +		ret = cros_ec_sensorhub_register(dev, data);
-> >> +		if (ret) {
-> >> +			dev_err(dev, "Register failed %d\n", ret);
-> >> +			goto unregister_sensors;  
-> > 
-> > From a code structure point of view, cros_ec_sensorhub_register
-> > should have done any cleanup necessary if it returns an error.  Hence
-> > we should be fine doing a direct return here (other than the memory
-> > not being freed comment above.
-> > 
-> > This may seem an overly restrictive request, but that sort of rule
-> > makes code a lot easier to review as we don't have to go look
-> > to see where the error handling occurs and check for multiple paths
-> > etc.  Note that if you use managed functions then there is no
-> > cleanup to do anyway ;)
-> >   
-> >> +		}
-> >> +	} else {
-> >> +		/*
-> >> +		 * If the device has sensors but does not claim to
-> >> +		 * be a sensor hub, we are in legacy mode.
-> >> +		 */
-> >> +		for (i = 0; i < 2; i++) {
-> >> +			pdev = cros_ec_sensorhub_allocate_single_sensor(dev,
-> >> +						"cros-ec-accel-legacy", i);
-> >> +			if (IS_ERR(pdev)) {
-> >> +				ret = IS_ERR(pdev);
-> >> +				dev_err(dev, "Legacy %d failed %d\n", i, ret);
-> >> +				goto unregister_sensors;
-> >> +			} else {
-> >> +				data->sensor_pdev[i] = pdev;
-> >> +			}
-> >> +		}
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +
-> >> +unregister_sensors:
-> >> +	/*
-> >> +	 * Given the probe has failed, we need to unregister all the sensors,
-> >> +	 * not jutst the one that did not work: this device will be
-> >> +	 * de-allocated.
-> >> +	 */
-> >> +	for (i = 0; i < CROS_EC_SENSOR_PDEV_MAX; i++) {
-> >> +		pdev = data->sensor_pdev[i];
-> >> +		if (pdev)
-> >> +			platform_device_unregister(pdev);
-> >> +	}
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int cros_ec_sensorhub_remove(struct platform_device *sensorhub_pdev)
-> >> +{
-> >> +	struct cros_ec_sensorhub *sensorhub =
-> >> +		platform_get_drvdata(sensorhub_pdev);
-> >> +	struct platform_device *pdev;
-> >> +	int i;
-> >> +
-> >> +	for (i = 0; i < CROS_EC_SENSOR_PDEV_MAX; i++) {
-> >> +		pdev = sensorhub->sensor_pdev[i];
-> >> +		if (pdev)
-> >> +			platform_device_unregister(pdev);
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static struct platform_driver cros_ec_sensorhub_driver = {
-> >> +	.driver = {
-> >> +		.name = DRV_NAME,
-> >> +	},
-> >> +	.probe = cros_ec_sensorhub_probe,
-> >> +	.remove = cros_ec_sensorhub_remove,
-> >> +};
-> >> +
-> >> +module_platform_driver(cros_ec_sensorhub_driver);
-> >> +
-> >> +MODULE_ALIAS("platform:" DRV_NAME);
-> >> +MODULE_AUTHOR("Gwendal Grignou <gwendal@chromium.org>");
-> >> +MODULE_DESCRIPTION("ChromeOS EC MEMS Sensor Hub Driver");
-> >> +MODULE_LICENSE("GPL");
-> >> diff --git a/include/linux/platform_data/cros_ec_sensorhub.h b/include/linux/platform_data/cros_ec_sensorhub.h
-> >> new file mode 100644
-> >> index 000000000000..da0ba1d201e4
-> >> --- /dev/null
-> >> +++ b/include/linux/platform_data/cros_ec_sensorhub.h
-> >> @@ -0,0 +1,33 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * cros_ec_sensorhub- Chrome OS EC MEMS Sensor Hub driver.
-> >> + *
-> >> + * Copyright (C) 2019 Google, Inc
-> >> + */
-> >> +
-> >> +#ifndef __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
-> >> +#define __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
-> >> +
-> >> +#include <linux/platform_data/cros_ec_commands.h>
-> >> +
-> >> +/* Maximal number of sensors supported by the EC. */
-> >> +#define CROS_EC_SENSOR_MAX 16
-> >> +
-> >> +/*
-> >> + * Maximal number of sensors supported by the hub:
-> >> + * We add one for the lid angle inclinometer sensor.
-> >> + */
-> >> +#define CROS_EC_SENSOR_PDEV_MAX (CROS_EC_SENSOR_MAX + 1)
-> >> +
-> >> +/**
-> >> + * struct cros_ec_sensorhub - Sensor Hub device data.
-> >> + *
-> >> + * @ec:           Embedded Controller where the hub is located.
-> >> + * @sensor_pdev:  Array of platform_device, one per sensor.
-> >> + */
-> >> +struct cros_ec_sensorhub {
-> >> +	struct cros_ec_dev *ec;
-> >> +	struct platform_device *sensor_pdev[CROS_EC_SENSOR_PDEV_MAX];
-> >> +};
-> >> +
-> >> +#endif   /* __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H */  
-> >   
-
+--
+2.23.0
 
