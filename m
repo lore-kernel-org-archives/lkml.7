@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3472BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483D7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0056821872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCE521925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfKKWg1 (ORCPT
+        id S1727577AbfKKWgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:36:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60033 "EHLO
+        Mon, 11 Nov 2019 17:36:32 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60015 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKWfq (ORCPT
+        with ESMTP id S1726946AbfKKWfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:35:46 -0500
+        Mon, 11 Nov 2019 17:35:45 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iUIHg-0000uG-HL; Mon, 11 Nov 2019 23:35:44 +0100
-Message-Id: <20191111223052.292300453@linutronix.de>
+        id 1iUIHd-0000ta-B2; Mon, 11 Nov 2019 23:35:41 +0100
+Message-Id: <20191111223051.757065690@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 11 Nov 2019 23:03:22 +0100
+Date:   Mon, 11 Nov 2019 23:03:17 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
@@ -34,9 +34,8 @@ Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
         Stephen Hemminger <stephen@networkplumber.org>,
         Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [patch V2 08/16] x86/ioperm: Add bitmap sequence number
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [patch V2 03/16] x86/cpu: Unify cpu_init()
 References: <20191111220314.519933535@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,149 +44,271 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a globally unique sequence number which is incremented when ioperm() is
-changing the I/O bitmap of a task. Store the new sequence number in the
-io_bitmap structure and compare it along with the actual struct pointer
-with the one which was last loaded on a CPU. Only update the bitmap if
-either of the two changes. That should further reduce the overhead of I/O
-bitmap scheduling when there are only a few I/O bitmap users on the system.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Similar to copy_thread_tls() the 32bit and 64bit implementations of
+cpu_init() are very similar and unification avoids duplicate changes in the
+future.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
 ---
-V2: New patch
+V2: Fix 32bit build by removing the pointless #ifdef around the uv header include.
 ---
- arch/x86/include/asm/iobitmap.h  |    1 
- arch/x86/include/asm/processor.h |    8 +++++++
- arch/x86/kernel/cpu/common.c     |    1 
- arch/x86/kernel/ioport.c         |    9 +++++---
- arch/x86/kernel/process.c        |   40 +++++++++++++++++++++++++++++----------
- 5 files changed, 46 insertions(+), 13 deletions(-)
+ arch/x86/kernel/cpu/common.c |  175 ++++++++++++++++---------------------------
+ 1 file changed, 66 insertions(+), 109 deletions(-)
 
---- a/arch/x86/include/asm/iobitmap.h
-+++ b/arch/x86/include/asm/iobitmap.h
-@@ -5,6 +5,7 @@
- #include <asm/processor.h>
- 
- struct io_bitmap {
-+	u64			sequence;
- 	unsigned int		io_bitmap_max;
- 	union {
- 		unsigned long	bits[IO_BITMAP_LONGS];
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -366,6 +366,14 @@ struct tss_struct {
- 	struct x86_hw_tss	x86_tss;
- 
- 	/*
-+	 * The bitmap pointer and the sequence number of the last active
-+	 * bitmap. last_bitmap cannot be dereferenced. It's solely for
-+	 * comparison.
-+	 */
-+	struct io_bitmap	*last_bitmap;
-+	u64			last_sequence;
-+
-+	/*
- 	 * Store the dirty size of the last io bitmap offender. The next
- 	 * one will have to do the cleanup as the switch out to a non io
- 	 * bitmap user will just set x86_tss.io_bitmap_base to a value
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
-@@ -1861,6 +1861,7 @@ void cpu_init(void)
- 	/* Initialize the TSS. */
- 	tss_setup_ist(tss);
- 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
-+	tss->last_bitmap = NULL;
- 	tss->io_bitmap_prev_max = 0;
- 	memset(tss->io_bitmap_bytes, 0xff, sizeof(tss->io_bitmap_bytes));
- 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -14,6 +14,8 @@
- #include <asm/iobitmap.h>
- #include <asm/desc.h>
- 
-+static atomic64_t io_bitmap_sequence;
-+
- /*
-  * this changes the io permissions bitmap in the current task.
-  */
-@@ -76,14 +78,15 @@ long ksys_ioperm(unsigned long from, uns
- 
- 	iobm->io_bitmap_max = bytes;
- 
--	/* Update the TSS: */
--	memcpy(tss->io_bitmap_bytes, iobm->bitmap_bytes, bytes_updated);
+@@ -53,10 +53,7 @@
+ #include <asm/microcode_intel.h>
+ #include <asm/intel-family.h>
+ #include <asm/cpu_device_id.h>
 -
-+	/* Update the sequence number to force an update in switch_to() */
-+	iobm->sequence = atomic64_add_return(1, &io_bitmap_sequence);
- 	/* Set the tasks io_bitmap pointer (might be the same) */
- 	t->io_bitmap = iobm;
- 	/* Mark it active for context switching */
- 	set_thread_flag(TIF_IO_BITMAP);
+-#ifdef CONFIG_X86_LOCAL_APIC
+ #include <asm/uv/uv.h>
+-#endif
  
-+	/* Update the TSS: */
-+	memcpy(tss->io_bitmap_bytes, iobm->bitmap_bytes, bytes_updated);
- 	/* Make the bitmap base in the TSS valid */
- 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
+ #include "cpu.h"
  
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -354,6 +354,29 @@ void arch_setup_new_exec(void)
- 	}
+@@ -1749,7 +1746,7 @@ static void wait_for_master_cpu(int cpu)
  }
  
-+static void switch_to_update_io_bitmap(struct tss_struct *tss,
-+				       struct io_bitmap *iobm)
-+{
-+	/*
-+	 * Copy at least the byte range of the incoming tasks bitmap which
-+	 * covers the permitted I/O ports.
-+	 *
-+	 * If the previous task which used an I/O bitmap had more bits
-+	 * permitted, then the copy needs to cover those as well so they
-+	 * get turned off.
-+	 */
-+	memcpy(tss->io_bitmap_bytes, iobm->bitmap_bytes,
-+	       max(tss->io_bitmap_prev_max, iobm->io_bitmap_max));
+ #ifdef CONFIG_X86_64
+-static void setup_getcpu(int cpu)
++static inline void setup_getcpu(int cpu)
+ {
+ 	unsigned long cpudata = vdso_encode_cpunode(cpu, early_cpu_to_node(cpu));
+ 	struct desc_struct d = { };
+@@ -1769,7 +1766,43 @@ static void setup_getcpu(int cpu)
+ 
+ 	write_gdt_entry(get_cpu_gdt_rw(cpu), GDT_ENTRY_CPUNODE, &d, DESCTYPE_S);
+ }
 +
-+	/*
-+	 * Store the new max and the sequence number of this bitmap
-+	 * and a pointer to the bitmap itself.
-+	 */
-+	tss->io_bitmap_prev_max = iobm->io_bitmap_max;
-+	tss->last_sequence = iobm->sequence;
-+	tss->last_bitmap = iobm;
++static inline void ucode_cpu_init(int cpu)
++{
++	if (cpu)
++		load_ucode_ap();
 +}
 +
- static inline void switch_to_bitmap(struct thread_struct *next,
- 				    unsigned long tifp, unsigned long tifn)
++static inline void tss_setup_ist(struct tss_struct *tss)
++{
++	/* Set up the per-CPU TSS IST stacks */
++	tss->x86_tss.ist[IST_INDEX_DF] = __this_cpu_ist_top_va(DF);
++	tss->x86_tss.ist[IST_INDEX_NMI] = __this_cpu_ist_top_va(NMI);
++	tss->x86_tss.ist[IST_INDEX_DB] = __this_cpu_ist_top_va(DB);
++	tss->x86_tss.ist[IST_INDEX_MCE] = __this_cpu_ist_top_va(MCE);
++}
++
++static inline void gdt_setup_doublefault_tss(int cpu) { }
++
++#else /* CONFIG_X86_64 */
++
++static inline void setup_getcpu(int cpu) { }
++
++static inline void ucode_cpu_init(int cpu)
++{
++	show_ucode_info_early();
++}
++
++static inline void tss_setup_ist(struct tss_struct *tss) { }
++
++static inline void gdt_setup_doublefault_tss(int cpu)
++{
++#ifdef CONFIG_DOUBLEFAULT
++	/* Set up the doublefault TSS pointer in the GDT */
++	__set_tss_desc(cpu, GDT_ENTRY_DOUBLEFAULT_TSS, &doublefault_tss);
+ #endif
++}
++#endif /* !CONFIG_X86_64 */
+ 
+ /*
+  * cpu_init() initializes state that is per-CPU. Some data is already
+@@ -1777,21 +1810,15 @@ static void setup_getcpu(int cpu)
+  * and IDT. We reload them nevertheless, this function acts as a
+  * 'CPU state barrier', nothing should get across.
+  */
+-#ifdef CONFIG_X86_64
+-
+ void cpu_init(void)
  {
-@@ -363,18 +386,15 @@ static inline void switch_to_bitmap(stru
- 		struct io_bitmap *iobm = next->io_bitmap;
++	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
++	struct task_struct *cur = current;
+ 	int cpu = raw_smp_processor_id();
+-	struct task_struct *me;
+-	struct tss_struct *t;
+-	int i;
  
- 		/*
--		 * Copy at least the size of the incoming tasks bitmap
--		 * which covers the last permitted I/O port.
--		 *
--		 * If the previous task which used an io bitmap had more
--		 * bits permitted, then the copy needs to cover those as
--		 * well so they get turned off.
-+		 * Only copy bitmap data when the bitmap or the sequence
-+		 * number differs. The update time is accounted to the
-+		 * incoming task.
- 		 */
--		memcpy(tss->io_bitmap_bytes, iobm->bitmap_bytes,
--		       max(tss->io_bitmap_prev_max, iobm->io_bitmap_max));
-+		if (tss->last_bitmap != iobm ||
-+		    tss->last_sequence != iobm->sequence)
-+			switch_to_update_io_bitmap(tss, iobm);
+ 	wait_for_master_cpu(cpu);
  
--		/* Store the new max and set io_bitmap_base valid */
--		tss->io_bitmap_prev_max = iobm->io_bitmap_max;
-+		/* Enable the bitmap */
- 		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
+-	if (cpu)
+-		load_ucode_ap();
+-
+-	t = &per_cpu(cpu_tss_rw, cpu);
++	ucode_cpu_init(cpu);
  
- 		/*
+ #ifdef CONFIG_NUMA
+ 	if (this_cpu_read(numa_node) == 0 &&
+@@ -1800,63 +1827,48 @@ void cpu_init(void)
+ #endif
+ 	setup_getcpu(cpu);
+ 
+-	me = current;
+-
+ 	pr_debug("Initializing CPU#%d\n", cpu);
+ 
+-	cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
++	if (IS_ENABLED(CONFIG_X86_64) || cpu_feature_enabled(X86_FEATURE_VME) ||
++	    boot_cpu_has(X86_FEATURE_TSC) || boot_cpu_has(X86_FEATURE_DE))
++		cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
+ 
+ 	/*
+ 	 * Initialize the per-CPU GDT with the boot GDT,
+ 	 * and set up the GDT descriptor:
+ 	 */
+-
+ 	switch_to_new_gdt(cpu);
+-	loadsegment(fs, 0);
+-
+ 	load_current_idt();
+ 
+-	memset(me->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
+-	syscall_init();
++	if (IS_ENABLED(CONFIG_X86_64)) {
++		loadsegment(fs, 0);
++		memset(cur->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
++		syscall_init();
++
++		wrmsrl(MSR_FS_BASE, 0);
++		wrmsrl(MSR_KERNEL_GS_BASE, 0);
++		barrier();
+ 
+-	wrmsrl(MSR_FS_BASE, 0);
+-	wrmsrl(MSR_KERNEL_GS_BASE, 0);
+-	barrier();
+-
+-	x86_configure_nx();
+-	x2apic_setup();
+-
+-	/*
+-	 * set up and load the per-CPU TSS
+-	 */
+-	if (!t->x86_tss.ist[0]) {
+-		t->x86_tss.ist[IST_INDEX_DF] = __this_cpu_ist_top_va(DF);
+-		t->x86_tss.ist[IST_INDEX_NMI] = __this_cpu_ist_top_va(NMI);
+-		t->x86_tss.ist[IST_INDEX_DB] = __this_cpu_ist_top_va(DB);
+-		t->x86_tss.ist[IST_INDEX_MCE] = __this_cpu_ist_top_va(MCE);
++		x2apic_setup();
+ 	}
+ 
+-	t->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
+-
+-	/*
+-	 * <= is required because the CPU will access up to
+-	 * 8 bits beyond the end of the IO permission bitmap.
+-	 */
+-	for (i = 0; i <= IO_BITMAP_LONGS; i++)
+-		t->io_bitmap[i] = ~0UL;
+-
+ 	mmgrab(&init_mm);
+-	me->active_mm = &init_mm;
+-	BUG_ON(me->mm);
++	cur->active_mm = &init_mm;
++	BUG_ON(cur->mm);
+ 	initialize_tlbstate_and_flush();
+-	enter_lazy_tlb(&init_mm, me);
++	enter_lazy_tlb(&init_mm, cur);
+ 
+-	/*
+-	 * Initialize the TSS.  sp0 points to the entry trampoline stack
+-	 * regardless of what task is running.
+-	 */
++	/* Initialize the TSS. */
++	tss_setup_ist(tss);
++	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
++	memset(tss->io_bitmap, 0xff, sizeof(tss->io_bitmap));
+ 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
++
+ 	load_TR_desc();
++	/*
++	 * sp0 points to the entry trampoline stack regardless of what task
++	 * is running.
++	 */
+ 	load_sp0((unsigned long)(cpu_entry_stack(cpu) + 1));
+ 
+ 	load_mm_ldt(&init_mm);
+@@ -1864,6 +1876,8 @@ void cpu_init(void)
+ 	clear_all_debug_regs();
+ 	dbg_restore_debug_regs();
+ 
++	gdt_setup_doublefault_tss(cpu);
++
+ 	fpu__init_cpu();
+ 
+ 	if (is_uv_system())
+@@ -1872,63 +1886,6 @@ void cpu_init(void)
+ 	load_fixmap_gdt(cpu);
+ }
+ 
+-#else
+-
+-void cpu_init(void)
+-{
+-	int cpu = smp_processor_id();
+-	struct task_struct *curr = current;
+-	struct tss_struct *t = &per_cpu(cpu_tss_rw, cpu);
+-
+-	wait_for_master_cpu(cpu);
+-
+-	show_ucode_info_early();
+-
+-	pr_info("Initializing CPU#%d\n", cpu);
+-
+-	if (cpu_feature_enabled(X86_FEATURE_VME) ||
+-	    boot_cpu_has(X86_FEATURE_TSC) ||
+-	    boot_cpu_has(X86_FEATURE_DE))
+-		cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
+-
+-	load_current_idt();
+-	switch_to_new_gdt(cpu);
+-
+-	/*
+-	 * Set up and load the per-CPU TSS and LDT
+-	 */
+-	mmgrab(&init_mm);
+-	curr->active_mm = &init_mm;
+-	BUG_ON(curr->mm);
+-	initialize_tlbstate_and_flush();
+-	enter_lazy_tlb(&init_mm, curr);
+-
+-	/*
+-	 * Initialize the TSS.  sp0 points to the entry trampoline stack
+-	 * regardless of what task is running.
+-	 */
+-	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+-	load_TR_desc();
+-	load_sp0((unsigned long)(cpu_entry_stack(cpu) + 1));
+-
+-	load_mm_ldt(&init_mm);
+-
+-	t->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
+-
+-#ifdef CONFIG_DOUBLEFAULT
+-	/* Set up doublefault TSS pointer in the GDT */
+-	__set_tss_desc(cpu, GDT_ENTRY_DOUBLEFAULT_TSS, &doublefault_tss);
+-#endif
+-
+-	clear_all_debug_regs();
+-	dbg_restore_debug_regs();
+-
+-	fpu__init_cpu();
+-
+-	load_fixmap_gdt(cpu);
+-}
+-#endif
+-
+ /*
+  * The microcode loader calls this upon late microcode load to recheck features,
+  * only when microcode has been updated. Caller holds microcode_mutex and CPU
 
 
