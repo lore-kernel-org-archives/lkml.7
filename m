@@ -2,114 +2,109 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F50C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B95C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55FB214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9453C214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfKKKb1 (ORCPT
+        id S1726955AbfKKKcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:31:27 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:60767 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfKKKb0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:31:26 -0500
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M1YxX-1iSBIl08Wh-00394l; Mon, 11 Nov 2019 11:31:24 +0100
-Received: by mail-qv1-f46.google.com with SMTP id y18so4653500qve.2;
-        Mon, 11 Nov 2019 02:31:22 -0800 (PST)
-X-Gm-Message-State: APjAAAUxlJXW97+1cBVSkWYmUR6nUAyzY7pFnWR1j64svdk137UqnkjB
-        L3rL1AV0PwZOn0xobSNrp1i1ToAK7xZJ7ywQxfA=
-X-Google-Smtp-Source: APXvYqxD4F/fwy7LIVnyFzyiMun+f+kScDaMuxMbPMHFdHwTAmNy4Oax48ObAzH1ZmZyCVG2W0sxl5/9Apu79krhc7g=
-X-Received: by 2002:a0c:a9cc:: with SMTP id c12mr4561842qvb.222.1573468282069;
- Mon, 11 Nov 2019 02:31:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20191029064834.23438-12-hch@lst.de> <mhng-33ea9141-2440-4a2d-8133-62094486fc48@palmer-si-x1c4>
- <CAMuHMdVuDp_8UDeWv8tdPAH5JS84=-yfwZjOk-YQcoYKM9za+w@mail.gmail.com>
-In-Reply-To: <CAMuHMdVuDp_8UDeWv8tdPAH5JS84=-yfwZjOk-YQcoYKM9za+w@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:31:05 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2a7jwmAKhh3WsowCmvdQpsde5A5nz+3NXRn7amhwUxQg@mail.gmail.com>
-Message-ID: <CAK8P3a2a7jwmAKhh3WsowCmvdQpsde5A5nz+3NXRn7amhwUxQg@mail.gmail.com>
-Subject: Re: [PATCH 11/21] asm-generic: don't provide ioremap for CONFIG_MMU
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Vincent Chen <deanbo422@gmail.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-mips@vger.kernel.org, alpha <linux-alpha@vger.kernel.org>,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:GhVqUNVJ6NcFflSOEwN3xNZ+WDbcZEBsdfOJy5lHGcUzStPON3S
- sdvrlkVnzJ4K/x3cf5tYPugN5XhSBeh1PoZWPALuD9vHbiqs7LkvRtku4dgNCYPfg2hTWD3
- aVB9H4AYQg+3P/o5HUXDoffXlGofXmGsR9gAnSPoqG/6NQQYwaLa49lQwiosiJF/NEYAPps
- lqR0sQiFoqXofI25s5XJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:URlU+6+rc6w=:y5PGJEge8OBUWHMAmN3LJO
- jIxpuP7dwcb+ik9HrK0VliiW2etopAEFn7uaY69aK9jGrqr7zmd1UGZJRBqB6CpVskEG/zCmk
- BUxZlaXSP2HfoBeDI1gCu7bYcY4fzXvLBrG9aPN+zildJOs7QeBcOfLC01M7htudy1pUPdFtA
- dR7SDHkntfBffPPssOnu6ozRPDnU6vL2KUZ/ZH/UXiHM1JH0SCQi3S+xNy26Z9u7aOGtjVuuO
- PboGcUnXnq3UHc+4dGBkWnBZqMiP3HYXGf5s9IXYstXi/3xPJcP434DY79oHGBb5Q5QCS7pK3
- Uh0sK/c6JlDeEuv/gL/RRCD0bvXv2SlkehmX2f9FT7bNgJYnNvApyh/P0EK+ylKyicCH785sG
- xC8SI2udds3P3++DOPOSazbC3AFpHQUODsb9TOd8/7q76Uvk2Q8Cx7y4Bpi6wlIxtGNHhFxG+
- GrbYr9XnYxkfFIfbc09D32LUFSRMlQbiKhK+f9ulUq1+DzdAaz5KJQCOdG8j5T2PMF+tZQKOX
- fxrqTQQnVV5QO3UZ9eprc58Gh9+a+JmAzuRVILazR9h+Q4YMNvlH6mMi2Y6SEyIlDBf75q2Kb
- ssAh+zE1KqjhRdsofdjkMYHkRgsTuR/y6OSetAY5mWDaBpp0F/+tlvsTaWXWGYx9ipHHQyRQe
- h1E8Nf2100ZVK2stQXODwrwsTyFzK6/Jxt9vt/fi8F6opD9MMsohnz1+WQLVVQfS0XnJiJhtc
- LNLskA15FjzURVAbK5EZaI1b5UJGTHvdRXycVdprQUsFnJ7JZaPMWksiXLm9r+Ndyaeklwakd
- OhiMwOoJE6qrOjB9QpYGAepCg/KlNGFz3AaQBpWbKb0wXzSS4NfVpn80UjiPCOnoHPmJ6ogZ8
- Hg9JY1zIFq3kTEw9eITg==
+        Mon, 11 Nov 2019 05:32:36 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:37450 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726768AbfKKKcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:32:36 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EA92F1A011D;
+        Mon, 11 Nov 2019 11:32:33 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CCA931A00B1;
+        Mon, 11 Nov 2019 11:32:29 +0100 (CET)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 643BD402B7;
+        Mon, 11 Nov 2019 18:32:24 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Wen He <wen.he_1@nxp.com>
+Subject: [v8 1/2] dt/bindings: clk: Add YAML schemas for LS1028A Display Clock bindings
+Date:   Mon, 11 Nov 2019 18:20:55 +0800
+Message-Id: <20191111102056.43148-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 7:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Palmer,
->
-> On Wed, Nov 6, 2019 at 7:11 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> > It looks like the difference in prototype between the architectures is between
-> >
-> >     void __iomem *ioremap(resource_size_t, size_t)
-> >     void __iomem *ioremap(phys_addr_t, size_t)
-> >     void __iomem *ioremap(phys_addr_t, unsigned long)
-> >     void __iomem *ioremap(unsigned long, unsigned long)
-> >
-> > shouldn't they all just be that first one?  In other words, wouldn't it be
-> > better to always provide the generic ioremap prototype and unify the ports
-> > instead?
->
-> Agreed. But I'd go for the second one.
+LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
+output interface. Add a YAML schema for this.
 
-Right, phys_addr_t is the correct type here, resource_size_t is just a generic
-type that is at least as long as any resource, and usually the same as
-phys_addr_t, which is supposed to be used for physical addresses.
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/clock/fsl,plldig.yaml | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
 
-      Arnd
+diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+new file mode 100644
+index 000000000000..32274e94aafc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
++
++maintainers:
++  - Wen He <wen.he_1@nxp.com>
++
++description: |
++  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
++  interface in the display core, as implemented in TSMC CLN28HPM PLL.
++  which generate and offers pixel clocks to Display.
++
++properties:
++  compatible:
++    const: fsl,ls1028a-plldig
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++examples:
++  # Display PIXEL Clock node:
++  - |
++    dpclk: clock-display@f1f0000 {
++        compatible = "fsl,ls1028a-plldig";
++        reg = <0x0 0xf1f0000 0x0 0xffff>;
++        #clock-cells = <0>;
++        clocks = <&osc_27m>;
++    };
++
++...
+-- 
+2.17.1
+
