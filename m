@@ -2,167 +2,108 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42AFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A12C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93F721E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="q9MNsiYx"
+	by mail.kernel.org (Postfix) with ESMTP id C4990222C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfKKTdi (ORCPT
+        id S1727340AbfKKTdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:33:38 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:44846 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfKKTdK (ORCPT
+        Mon, 11 Nov 2019 14:33:41 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:39367 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727797AbfKKTdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:33:10 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id AA23920B4906;
-        Mon, 11 Nov 2019 11:33:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AA23920B4906
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573500789;
-        bh=TbueFcT61GF2z3Tx3i2usZTf2xULkk+T2gjdlpez5ls=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=q9MNsiYxWVFc6Yf+9sS+KmSHc4McqHSyDQXxrf8yc2p9IAEODppPCVn8Bg+pgQVpi
-         ynMDYhSs7MCPexaPPdejcY3ft+xz6WYWqcxdBLZKryi9KA9ZezjYqtWA6++8CV82OK
-         ijeTtGFrCf2695CI0fcH5fNsJEFsxKuQEX4kc7Co=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 06/10] IMA: Defined an IMA hook to measure keys on key create or update
-Date:   Mon, 11 Nov 2019 11:32:59 -0800
-Message-Id: <20191111193303.12781-7-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191111193303.12781-1-nramas@linux.microsoft.com>
-References: <20191111193303.12781-1-nramas@linux.microsoft.com>
+        Mon, 11 Nov 2019 14:33:39 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N3bCH-1hmQ3w3kY7-010fCN; Mon, 11 Nov 2019 20:33:36 +0100
+Received: by mail-qk1-f179.google.com with SMTP id h15so12180561qka.13;
+        Mon, 11 Nov 2019 11:33:34 -0800 (PST)
+X-Gm-Message-State: APjAAAXXUehROR4hg16SrGsmLkhlWeNJFltpGV8/mDO3s1mh8skoqwjh
+        tY/46NCrVFjCjJg/qAPgy/4Ru1VJxk+kMV3sub8=
+X-Google-Smtp-Source: APXvYqzRT3LvGe5JvZLYKm1upZpHxk2xc9ns43ZUwTpi/JlFXD7dYhA8+4Mt4XVDG2f3/qLjEL/Ms2I9EThmbgvV8Jg=
+X-Received: by 2002:a37:58d:: with SMTP id 135mr2321779qkf.394.1573500813881;
+ Mon, 11 Nov 2019 11:33:33 -0800 (PST)
+MIME-Version: 1.0
+References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-11-hch@lst.de>
+ <CAK8P3a2o4R+E2hTrHrmNy7K1ki3_98aWE5a-fjkQ_NWW=xd_gQ@mail.gmail.com>
+ <20191111101531.GA12294@lst.de> <CAK8P3a0rTvfPP2LUMw8EC0xz5gfZP5+NUkoaZBJrtYYfr6YRig@mail.gmail.com>
+ <20191111102923.GA12974@lst.de>
+In-Reply-To: <20191111102923.GA12974@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 Nov 2019 20:33:17 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2b=td4JhYOcK1jUshh8Mp-5_w4v+dAr_JjnH783=ptBQ@mail.gmail.com>
+Message-ID: <CAK8P3a2b=td4JhYOcK1jUshh8Mp-5_w4v+dAr_JjnH783=ptBQ@mail.gmail.com>
+Subject: Re: [PATCH 10/21] asm-generic: ioremap_uc should behave the same with
+ and without MMU
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        "moderated list:NIOS2 ARCHITECTURE" 
+        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:VkzlYprmjLZkUUcNJ+eTrkc1uyTcHlM+BFAEE68s21ucomSZQaJ
+ Mq1HsbOKR10W9ktsWQqC2d+1fxNFc++gSh355I/Sm9Nt0OELiCU5GE/ejcbxdc0XoKGFGOR
+ lJT0aj3OKGGsrqrwmqhZcVjRTdGYhtUjAmaLqUrUWTfS9gPcJXopxjb/cHOb3V99Jjg8KyM
+ BDe7AsIZLiGgQ+SW18UXg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hdS04Xdlzj8=:M/ucaK4r3dinqbK80C41xd
+ FMDjqQL3YWPxy6jHWBpvqKj9qZWP8X6dfE8RQCodF9mGe6XJZOKEt4p5phfvsuDjwfDAuR77q
+ 5sbXk3f1gGuA3fUl2kc50FhfPxqpKsTvCyJ9PMoA1vJWANud2ysKvaSTXrsxfuBDYbDYflWwD
+ FkAIhnavF1mnucw3hAUZbu/DkQc78rhm6yA66+iyf0ibiFIB1fiFKcy3QWM1WJMSymvmz+Cik
+ 0TMLecIni73LtmjHaEJqdQ07OpzRu6o2+nc6q2bAY8v58NfnuF4PC+RAMX5jsCwhiMQuTAAzH
+ d9cCFvrdweO5pjBwUMsl1fDngiL0PhMkFoHuG2mp6WTu+9yigHaCDYkLBnzqo3wCtFy+yT589
+ vZ/FGbV4Lx/67Cyy8ORfHd/Q4I+ytFVw6wwtG0/mHwHZbYfS5buusBz3lQKNPLkaAr33vhbEI
+ HXyb+ZMaKffgQFt++5lnGgDgUJQspoUegjhdEeGEI5XiZQJLi3elBg+C5Gkccpc1LDKrpW2ka
+ YjGgj5260Lt3d8KDG/qdbMttJAKgU/xdQzH2MW0jtDV/+7cUj/sApumoILyv1cXORKI+bqwSx
+ ogfAEpKRHtcZ3qEtQueZhW8Xu+2e019UPGPVU0qRA4v2G6oIRAzpinHe15u698zmzbDymL58Y
+ lwxjoo4VbkwFV/6Hr98ctBchu4Q9vloUQ/pqLZpaLK1ga8iZgXmf+PzlaojeIr0ObdDBvevEx
+ 7OZcdxrTy7Y1NqggNs6PW94MGROjlUKfXkY5V9wZiL5kUIPMuEbzKs1fxUg2d59L21Tn3fP6m
+ i7fEXDMKusM1lgLeJl9N0qIk4SBBs+5bFUkc1R6uO78ROGzNzWdO/juF7AjegP2MSh3mgCkLn
+ JUwmUH8sWRrwHApJ0rkA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Asymmetric keys used for verifying file signatures or certificates
-are currently not included in the IMA measurement list.
+On Mon, Nov 11, 2019 at 11:29 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Mon, Nov 11, 2019 at 11:27:27AM +0100, Arnd Bergmann wrote:
+> > Ok, fair enough. Let's just go with your version for now, if only to not
+> > hold your series up more. I'd still suggest we change atyfb to only
+> > use ioremap_uc() on i386 and maybe ia64. I can send a patch for that.
+>
+> I don't think we even need it on ia64.  But lets kick off a dicussion
+> with the atyfb, x86 and ia64 maintainers after this series is in.
+> Which was kinda my plan anyway.
 
-This patch defines a new IMA hook namely ima_post_key_create_or_update()
-to measure asymmetric keys.
+I missed your reply and already sent my patch now. I guess it doesn't
+hurt to discuss that in parallel. Anyway I think that this patch is the
+last one you want an Ack from me for (let me know if I missed one), so
 
-The IMA hook is defined in a new file namely ima_asymmetric_keys.c
-
-Note that currently IMA subsystem can be enabled without
-enabling KEYS subsystem.
-
-Adding support for measuring asymmetric keys in IMA requires KEYS
-subsystem to be enabled. To handle this dependency a new config
-namely CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS has been added. Enabling
-this config requires the following configs to be enabled:
-    CONFIG_IMA, CONFIG_KEYS, CONFIG_ASYMMETRIC_KEY_TYPE, and
-    CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE.
-
-The new file ima_asymmetric_keys.c is built only if
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is enabled.
-
-This config is turned off by default.
-
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- security/integrity/ima/Kconfig               | 14 +++++++
- security/integrity/ima/Makefile              |  1 +
- security/integrity/ima/ima_asymmetric_keys.c | 44 ++++++++++++++++++++
- 3 files changed, 59 insertions(+)
- create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
-
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index 838476d780e5..c6d14884bc19 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -310,3 +310,17 @@ config IMA_APPRAISE_SIGNED_INIT
- 	default n
- 	help
- 	   This option requires user-space init to be signed.
-+
-+config IMA_MEASURE_ASYMMETRIC_KEYS
-+	bool "Enable measuring asymmetric keys on key create or update"
-+	depends on IMA
-+	depends on KEYS
-+	depends on ASYMMETRIC_KEY_TYPE
-+	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-+	default n
-+	help
-+	   This option enables measuring asymmetric keys when
-+	   the key is created or updated. Additionally, IMA policy
-+	   needs to be configured to either measure keys linked to
-+	   any keyring or only measure keys linked to the keyrings
-+	   specified in the IMA policy through the keyrings= option.
-diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-index 31d57cdf2421..3e9d0ad68c7b 100644
---- a/security/integrity/ima/Makefile
-+++ b/security/integrity/ima/Makefile
-@@ -12,3 +12,4 @@ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
- ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
- ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
- obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-+obj-$(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) += ima_asymmetric_keys.o
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-new file mode 100644
-index 000000000000..7d6603bfcc06
---- /dev/null
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation
-+ *
-+ * Author: Lakshmi Ramasubramanian (nramas@linux.microsoft.com)
-+ *
-+ * File: ima_asymmetric_keys.c
-+ *       Defines an IMA hook to measure asymmetric keys on key
-+ *       create or update.
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <crypto/public_key.h>
-+#include <keys/asymmetric-type.h>
-+#include "ima.h"
-+
-+/**
-+ * ima_post_key_create_or_update - measure asymmetric keys
-+ * @keyring: keyring to which the key is linked to
-+ * @key: created or updated key
-+ * @flags: key flags
-+ * @create: flag indicating whether the key was created or updated
-+ *
-+ * Keys can only be measured, not appraised.
-+ */
-+void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-+				   unsigned long flags, bool create)
-+{
-+	const struct public_key *pk;
-+
-+	/* Only asymmetric keys are handled */
-+	if (key->type != &key_type_asymmetric)
-+		return;
-+
-+	/*
-+	 * Get the public_key of the given asymmetric key to measure.
-+	 */
-+	pk = key->payload.data[asym_crypto];
-+	process_buffer_measurement(pk->key, pk->keylen,
-+				   keyring->description,
-+				   KEYRING_CHECK, 0,
-+				   keyring->description);
-+}
--- 
-2.17.1
-
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
