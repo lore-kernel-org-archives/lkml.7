@@ -2,119 +2,101 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CB7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585C8C17448
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06AF21925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E96206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:37:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pEqqdmWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfKKWha (ORCPT
+        id S1727646AbfKKWhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:37:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33642 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726912AbfKKWha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:37:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AAEA9AC8B;
-        Mon, 11 Nov 2019 22:37:28 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Mon, 11 Nov 2019 17:37:42 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:53084 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKKWhl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 17:37:41 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6858120B7192;
+        Mon, 11 Nov 2019 14:37:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6858120B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573511860;
+        bh=JAJ429uDrlDNbZDkeSdCYcoCvf5POqtncvJncujgjRA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pEqqdmWeWwca6el82Y7BDyoW0kZAMB8in5gjKJPT2x1CG6HOBn/9RiHD4x8RTtit9
+         K/rXdmeJTfLfnjR4hDXzrEYWmSGGTUNOl5XZrT/ui95vcOrJQDlI/H1v2sQp5mjse3
+         rjQ+HO3OErxJ3Tonv+3R/6GUHlKCF/fQZPMQopUA=
+Subject: Re: [PATCH v9 0/4] powerpc: expose secure variables to the kernel and
+ userspace
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH] ARM: ep93xx: Avoid soc_device_to_device()
-Date:   Mon, 11 Nov 2019 23:37:22 +0100
-Message-Id: <20191111223722.2364-1-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
+        George Wilson <gcwilson@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>
+References: <1573441836-3632-1-git-send-email-nayna@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <216572e5-d8c6-f181-3ec0-b4a840f20f46@linux.microsoft.com>
+Date:   Mon, 11 Nov 2019 14:37:40 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1573441836-3632-1-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ep93xx_init_soc() uses soc_device_to_device() to return a device
-to ep93xx_init_devices(), where it is passed on to its callers,
-who all ignore the return value. As this helper is deprecated,
-change the return type of ep93xx_init_devices() to void and
-have ep93xx_init_soc() return the soc_device instead.
+On 11/10/19 7:10 PM, Nayna Jain wrote:
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/arm/mach-ep93xx/core.c     | 12 ++++--------
- arch/arm/mach-ep93xx/platform.h |  2 +-
- 2 files changed, 5 insertions(+), 9 deletions(-)
+Hi Nayna,
 
-diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
-index 6fb19a393fd2..7a0c82b30564 100644
---- a/arch/arm/mach-ep93xx/core.c
-+++ b/arch/arm/mach-ep93xx/core.c
-@@ -937,7 +937,7 @@ static const char __init *ep93xx_get_machine_name(void)
- 	return kasprintf(GFP_KERNEL,"%s", machine_desc->name);
- }
- 
--static struct device __init *ep93xx_init_soc(void)
-+static struct soc_device __init *ep93xx_init_soc(void)
- {
- 	struct soc_device_attribute *soc_dev_attr;
- 	struct soc_device *soc_dev;
-@@ -958,13 +958,11 @@ static struct device __init *ep93xx_init_soc(void)
- 		return NULL;
- 	}
- 
--	return soc_device_to_device(soc_dev);
-+	return soc_dev;
- }
- 
--struct device __init *ep93xx_init_devices(void)
-+void __init ep93xx_init_devices(void)
- {
--	struct device *parent;
--
- 	/* Disallow access to MaverickCrunch initially */
- 	ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_CPENA);
- 
-@@ -975,7 +973,7 @@ struct device __init *ep93xx_init_devices(void)
- 			       EP93XX_SYSCON_DEVCFG_GONIDE |
- 			       EP93XX_SYSCON_DEVCFG_HONIDE);
- 
--	parent = ep93xx_init_soc();
-+	ep93xx_init_soc();
- 
- 	/* Get the GPIO working early, other devices need it */
- 	platform_device_register(&ep93xx_gpio_device);
-@@ -989,8 +987,6 @@ struct device __init *ep93xx_init_devices(void)
- 	platform_device_register(&ep93xx_wdt_device);
- 
- 	gpio_led_register_device(-1, &ep93xx_led_data);
--
--	return parent;
- }
- 
- void ep93xx_restart(enum reboot_mode mode, const char *cmd)
-diff --git a/arch/arm/mach-ep93xx/platform.h b/arch/arm/mach-ep93xx/platform.h
-index b4045a186239..8a3a2be50f11 100644
---- a/arch/arm/mach-ep93xx/platform.h
-+++ b/arch/arm/mach-ep93xx/platform.h
-@@ -34,7 +34,7 @@ void ep93xx_register_ac97(void);
- void ep93xx_register_ide(void);
- void ep93xx_register_adc(void);
- 
--struct device *ep93xx_init_devices(void);
-+void ep93xx_init_devices(void);
- extern void ep93xx_timer_init(void);
- 
- void ep93xx_restart(enum reboot_mode, const char *);
--- 
-2.16.4
+> In order to verify the OS kernel on PowerNV systems, secure boot requires
+> X.509 certificates trusted by the platform. These are stored in secure
+> variables controlled by OPAL, called OPAL secure variables. In order to
+> enable users to manage the keys, the secure variables need to be exposed
+> to userspace.
+Are you planning to split the patches in this patch set into smaller 
+chunks so that it is easier to code review and also perhaps make it 
+easier when merging the changes?
 
+Just a suggestion - but if, folks familiar with this code base don't 
+have any objections, please feel free to ignore my comment.
+
+Patch #1
+  1, opal-api.h which adds the #defines  OPAL_SECVAR_ and the API signature.
+  2, secvar.h then adds secvar_operations struct
+  3, powerpc/kernel for the Interface definitions
+  4, powernv/opal-secvar.c for the API implementations
+  5, powernv/opal-call.c for the API calls
+  6, powernv/opal.c for the secvar init calls.
+
+Patch #2
+1, Definitions of attribute functions like backend_show, size_show, etc.
+2, secvar_sysfs_load
+3, secvar_sysfs_init
+4, secvar_sysfs_exit
+
+thanks,
+  -lakshmi
