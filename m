@@ -2,99 +2,83 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6FCC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE035C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211B620659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66052196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYC+6N6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKKNY4 (ORCPT
+        id S1726988AbfKKNZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:24:56 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:34426 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfKKNYy (ORCPT
+        Mon, 11 Nov 2019 08:25:46 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33847 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfKKNZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:24:54 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C9E161C100B; Mon, 11 Nov 2019 14:24:52 +0100 (CET)
-Date:   Mon, 11 Nov 2019 14:24:52 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        gregkh@linuxfoundation.org, stable@kernel.org,
-        Chris.Paterson2@renesas.com
-Subject: patch in 4.4.201-rc1 breaks build (mm, meminit: recalculate pcpu
- batch and high limits after init completes)
-Message-ID: <20191111132451.GA1208@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 11 Nov 2019 08:25:46 -0500
+Received: by mail-wr1-f66.google.com with SMTP id e6so14695008wrw.1;
+        Mon, 11 Nov 2019 05:25:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=u3CoHNh7IQCIJE14gCTOqxD+2t322eDV5uttrHyFEEY=;
+        b=hYC+6N6M3p+UrmV46pZp15EqE7ogI53gVUeIQYy5+mSy+6/NjQU8Wd22/93cgbSOX+
+         g5r08+bZRKbZQKbh2ZDTJzDQBIC9jYw25vWe3jueG7uTr17CVlC4NApXErk79qe2Vk/t
+         NJCQnXHzbEok6QExXsbv38gqrEnNN/pxwqStN+diUypV5+7nhucjXkD39Js4HdMBQdiB
+         /k2lWTB+8Bqq8YtJHWeSZSlxliDhDZ3nJe08HUAt02DhJYvBO/HmdyZ/IVJAk52AmGVe
+         sbsb9Vs74Ap20wnfTpYxP15LjIErAkEUzWK9YPtK3CnFrhq204CGYltrQzfAaPuTKIKy
+         HA2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=u3CoHNh7IQCIJE14gCTOqxD+2t322eDV5uttrHyFEEY=;
+        b=mzNP6LjSOPnHQnU47PuWDcgFsmF2gPrUlmZuIRUo5g+mfQQ5K6rPqcgfh+S+SeqB5E
+         baoc/gUzwR06ERgrEu1n1skmQLKk6nGlHBuZ25PEVUsSu3+qWNXmVMw+0hKWh+ZfaznS
+         UnDjAT8iUhfHJAtBhlEetn779Qe20aunFO/GR4zY25zJO9Tj3iW58PKM9ygjVcHQ9Gjq
+         MAjtVhw822Jk0EvzThNA6/78Man4Xt5UFH0SE+QBWp7HKN80tEW4+xhCngLBHPBNj6SP
+         UusVWWNtg0dEUD4ykZTzs9aan7RP7kEtIGnh9h+ISjPA/xg59dM2la7Qtzear3O4CMbN
+         Hiew==
+X-Gm-Message-State: APjAAAUUFaeHzzFXsovpTKPHoRDo1sDjfQbB0l1c0d5HDnRRva5XGFml
+        NkmRKq6MuOJfOxcsQzdgmkZnEb46
+X-Google-Smtp-Source: APXvYqyYD5tlz0OKY7P7QPLnJdMFBRyGMNUxDmoYTOS3E5u1KN9QRFMlpwTiWRH2nTR0/eg7YzoM4Q==
+X-Received: by 2002:adf:f547:: with SMTP id j7mr21725532wrp.69.1573478743660;
+        Mon, 11 Nov 2019 05:25:43 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id p1sm7555131wmc.38.2019.11.11.05.25.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Nov 2019 05:25:42 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     jmattson@google.com, wanpengli@tencent.com,
+        Junaid Shahid <junaids@google.com>
+Subject: [PATCH 0/2] KVM: fix issues with kvm_create_vm failures
+Date:   Mon, 11 Nov 2019 14:25:39 +0100
+Message-Id: <1573478741-30959-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix problems with the recent introduction of kvm_arch_destroy_vm
+on VM creation failure.  An updated version of the patches already
+sent by Wanpeng.
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Paolo
 
-Hi!
+Paolo Bonzini (2):
+  KVM: Fix NULL-ptr defer after kvm_create_vm fails
+  KVM: fix placement of refcount initialization
 
-This seems to break our build with particular
-=2Econfig. (cip-kernel-config/4.4.y-cip/arm/moxa_mxc_defconfig).
+ virt/kvm/kvm_main.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-commit df82285ab4b974f2040f31dbabdd11e055a282c2
-Author: Mel Gorman <mgorman@techsingularity.net>
-Date:   Tue Nov 5 21:16:27 2019 -0800
+-- 
+1.8.3.1
 
-    mm, meminit: recalculate pcpu batch and high limits after init completes
-   =20
-    commit 3e8fc0075e24338b1117cdff6a79477427b8dbed upstream.
-
-
-
-Quoting Chris Peterson:
-
-> I've seen a failure this morning with our linux stable-rc build
-> testing.
-
-> Version: 4cb9b88c651a2fff886dd64b6d797343e7ddb4dd Linux 4.4.201-rc1
-> Arch: arm
-> Config: moxa_mxc_defconfig
-
-> Pipeline: https://gitlab.com/cip-playground/linux-stable-rc-ci/pipelines/=
-95016985
-> Failure: https://gitlab.com/cip-playground/linux-stable-rc-ci/pipelines/9=
-5016985/failures
-> Log: https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/346974180
-> Config: https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/34697=
-4180
-
-> All other configurations that we build were successful.
-
-> Kind regards, Chris
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXclhIwAKCRAw5/Bqldv6
-8oFXAJwLGUettz85/zedw5Yxg7iUyMSEowCfQeReBPpITdtD59Dcz43EM/NmN/k=
-=Krw7
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
