@@ -2,182 +2,122 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF92C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CE2C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64EFF21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573493384;
-	bh=sTAo81ga35nrHBYg28tMpBJ/akeUP/g9Q4S64bmMeaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FJAKOPrhH97inOxjr6FtPw1icj9AWjfzXJjMVb3doLrmUyGKDsZh/3xPpDShnFpjN
-	 YiUQKCheR4EGlPQn9XKsYpQR8GhV85QAVt5OcVOh+0x23diVCK+MoFWNxPfDsyEqZ4
-	 1JM3JN5x38A4DTUpZe6uduUT5us51h/FUA52qJFE=
+	by mail.kernel.org (Postfix) with ESMTP id 50009214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="iacXhPkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKKR3n (ORCPT
+        id S1727031AbfKKR36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:29:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfKKR3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:29:43 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB03214DB;
-        Mon, 11 Nov 2019 17:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573493381;
-        bh=sTAo81ga35nrHBYg28tMpBJ/akeUP/g9Q4S64bmMeaw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJQdLKK4o0G/WsS9+0TT3E7WSBqAUdOB7w0kXHs77zcZObbGuO6/EKDAJ0buPJ2kI
-         KTZVdE9aAvcktEevu5+hFy3Gb6WqRg2qow+1+MeBukRqBi6oMD7joqWnucwOowGmKg
-         ZTT7m+1eVSyAJS0+w7OjltUNuh7RigPAMgXJogr0=
-Date:   Mon, 11 Nov 2019 17:29:35 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
-Message-ID: <20191111172935.GA11972@willie-the-truck>
-References: <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
- <20191030141950.GB21153@leoy-ThinkPad-X240s>
- <20191030162325.GT4114@hirez.programming.kicks-ass.net>
- <20191031073136.GC21153@leoy-ThinkPad-X240s>
- <20191101100440.GU4131@hirez.programming.kicks-ass.net>
- <20191104022346.GC26019@leoy-ThinkPad-X240s>
- <20191108150530.GA7721@leoy-ThinkPad-X240s>
- <20191111144642.GM4114@hirez.programming.kicks-ass.net>
- <20191111153925.GC10488@willie-the-truck>
- <20191111160505.GZ4097@hirez.programming.kicks-ass.net>
+        Mon, 11 Nov 2019 12:29:58 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41088 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbfKKR35 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:29:57 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p26so11106476pfq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:29:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fA7Fsg1gpMy56Uu36LA4owNDl1Jh20vv8x7SlaV4qs8=;
+        b=iacXhPkc9FGy32VeGcUizlaxp9TQyTa3YCq/Mk6DC1chJi3XqsDkHLsbxG5ogjF7mL
+         cHrCAE9nMRbY1ne2C3sr4IhOPaWJ2BRnmockFOBbL70I54EDazU88zBM3JO+CpK73UQ3
+         PodZNDoDnD8qH1DoJ1oiFoNgNkaTTyEFmoesB2/PI8l9OtBr5MTXGwh0+SkMxIIiKwBD
+         oKc631VrVtl2JSu7Nt5yTatGHrE46KsgfPCuwoSyITvpyvrCJXb6MU68VvMyD0GnQNeq
+         2XLnaTQkBqfugUlXoMFeoT1nyAYH8VQDHPUEw3yCqSvvMO9cPzry4w02tpH4rmIb0xCh
+         76HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fA7Fsg1gpMy56Uu36LA4owNDl1Jh20vv8x7SlaV4qs8=;
+        b=TeU/4/8wAwIQaXGK7NyPVxoNXbql0WaJC44NeLuYI7PUR6xei+hwbRO8Pw3U2udkoz
+         SepY+dThgMk9+QM/N0cNyPST320f+eWFOLdDWK1Hmx4pdlvJ9zjvg1uYbTylvn2T2zqU
+         c2mo8M1TcbMawNUGXuJa7pYjhD2z5LgO3vw8phhwAqPKmi7SWTGttyKZVcaPyslYVhqQ
+         MHxnDvbA8VfIRYkEc9a3LhiQhBGvZDKVpvvog6h4Iy6fnw0/omZ1t1+O+Pu+5HcxouKG
+         L0DDE3CyrPX+Xlnfg+FF9111VTcWwhzd0VN/wNztRno42GnN3m9hL04NfdOXLXU3H5P0
+         jx1w==
+X-Gm-Message-State: APjAAAUWrmalyfeEP5FY7GkiC8eBftfpVhrZ6dm5LEUUhUQJVyQetgdm
+        dnciLx115+ANTd1YXAHyScmMRQ==
+X-Google-Smtp-Source: APXvYqz/ZDi0j4sGOiniVLuzA+Rs8BpMrp5miPmhe+9uGIOTxXjJNz7l6UCNqvoKgWBmZet2LW3hWA==
+X-Received: by 2002:a63:7015:: with SMTP id l21mr27824906pgc.200.1573493397028;
+        Mon, 11 Nov 2019 09:29:57 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id r184sm17589538pfc.106.2019.11.11.09.29.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 09:29:56 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:29:48 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     lantianyu1986@gmail.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>, sashal@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net, robh@kernel.org,
+        Jonathan.Cameron@huawei.com, paulmck@linux.ibm.com,
+        Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, vkuznets <vkuznets@redhat.com>
+Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
+Message-ID: <20191111092948.047f1708@hermes.lan>
+In-Reply-To: <20191111172322.GB1077444@kroah.com>
+References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
+        <20191111094920.GA135867@kroah.com>
+        <20191111084712.37ba7d5a@hermes.lan>
+        <20191111172322.GB1077444@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111160505.GZ4097@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 05:05:05PM +0100, Peter Zijlstra wrote:
-> On Mon, Nov 11, 2019 at 03:39:25PM +0000, Will Deacon wrote:
-> 
-> > Backing up though, I think I'm missing details about what this thread is
-> > trying to achieve. You're adding perf events so that coresight trace can
-> > take into account modifications of the kernel text, right?
-> 
-> Yes, because ARM-CS / Intel-PT need to know the exact text at any one
-> time in order to correctly decode their traces.
-> 
-> > If so:
-> >
-> >   * Does this need to take into account more than just jump_label()?
-> 
-> jump_label seems to be the initial target Adrian set, but yes, it needs
-> to cover 'everything'.
+On Mon, 11 Nov 2019 18:23:22 +0100
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-Including alternatives, which are what get me worried since the potential
-for recursion is pretty high there (on arm64, at least).
+> On Mon, Nov 11, 2019 at 08:47:12AM -0800, Stephen Hemminger wrote:
+> > On Mon, 11 Nov 2019 01:49:20 -0800
+> > "Greg KH" <gregkh@linuxfoundation.org> wrote:
+> >   
+> > > > +	ret = sysfs_create_bin_file(&channel->kobj,    
+> > > &ring_buffer_bin_attr);  
+> > > > +	if (ret)
+> > > > +		dev_notice(&dev->device,
+> > > > +			   "sysfs create ring bin file failed; %d\n",    
+> > > ret);  
+> > > > +    
+> > > 
+> > > Again, don't create sysfs files on your own, the bus code should be
+> > > doing this for you automatically and in a way that is race-free.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h  
+> > 
+> > The sysfs file is only created if the VFIO/UIO driveris used.  
+> 
+> That's even worse.  Again, sysfs files should be automatically created
+> by the driver core when the device is created.  To randomly add/remove
+> random files after that happens means userspace is never notified of
+> that and that's not good.
+> 
+> We've been working for a while to fix up these types of races, don't
+> purposfully add new ones for no good reason please :)
+> 
+> thanks,
+> 
+> greg k-h
 
-> That is, all single instruction patching crud around:
-> 
->  - optimized kprobes
->    (regular kprobes are exempt because they rely on exceptions)
->  - jump_labels
->  - static_call (still pending but still)
->  - ftrace fentry
-> 
-> We also need a solution for whole new chunks of text:
-> 
->  - modules
->  - ftrace trampolines
->  - optprobe trampolines
->  - JIT stuff
-> 
-> but that is so far not included; I had some ideas about a /dev/mem based
-> interface that would report new ranges and wait for acks (from open
-> file-desc) before freeing them.
-
-I think that it would be nice not to end up with two very different
-interfaces for this. But I see this is still just an RFC, so maybe the
-full picture will emerge once we solve more of these use-cases.
-
-> >   * What consistency guarantees are needed by userspace? It's not clear to
-> >     me how it correlates the new event with execution on other CPUs. Is this
-> >     using timestamps or something else?
-> 
-> Something else :-)
-> 
-> Both CS/PT basically have a bit-stream encoding of taken / not-taken
-> decisions. To decode they read the text until a conditional
-> branch-point, then consume one bit from the stream and continue.
-> 
-> (note how unconditional branches -- jump_labels -- are expected to be
-> correct in this scheme)
-> 
-> This means they need an exact representation of the text to be able to
-> accurately decode.
-> 
-> This means timestamps or PRE/POST modify events are not acceptible.
-> Because until the I-FLUSH has completed we do not know which CPU has
-> which version of the instruction.
-> 
-> Instead we rely on exceptions; exceptions are differently encoded in the
-> CS/PT data streams.
-> 
-> The scheme used is:
-> 
->  - overwrite target instruction with an exception (INT3 on x86, BRK on arm)
->  - sync (IPI broadcast CPUID or I-FLUSH completion)
-
-Hmm. Wouldn't this sync also need to drain the trace buffers for all other
-CPUs so that we make sure that the upcoming TEXT_POKE event occurs after
-all prior trace data, which could've been from before the breakpoint was
-installed?
-
-> at this point we know the instruction _will_ trap and CS/PT can observe
-> this alternate flow. That is, the exception handler will emulate the
-> instruction.
-> 
->  - emit the TEXT_POKE event with both the old and new instruction
->    included
-> 
->  - overwrite the target instruction with the new instruction
->  - sync
-> 
-> at this point the new instruction should be valid.
-> 
-> Using this scheme we can at all times follow the instruction flow.
-> Either it is an exception and the exception encoding helps us navigate,
-> or, on either size, we'll know the old/new instruction.
-> 
-> >   * What about module loading?
-> 
-> I mentioned that above; that is still pending.
-> 
-> > Finally, the whole point of the '_nosync()' stuff is that we don't have
-> > to synchronise. Therefore, there is a window where you really can't tell
-> > whether the instruction has been updated from the perspective of another
-> > CPU.
-> 
-> Right, and much of that is preserved with the above scheme, nowhere do
-> you have to wait/disturb other CPUs, except for the I-FLUSH completion.
-> 
-> Does this help?
-
-Yes, thank you for explaining it!
-
-Will
+The handler for this sysfs file is in the vfio (and uio) driver.
+How would this work if bus handled it?
