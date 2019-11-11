@@ -2,112 +2,157 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8088C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D95C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B022196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84B12196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgMKb3pN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dwlafrN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKKORu (ORCPT
+        id S1727020AbfKKOSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:17:50 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38086 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKKORu (ORCPT
+        Mon, 11 Nov 2019 09:18:07 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44225 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfKKOSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:17:50 -0500
-Received: by mail-pl1-f194.google.com with SMTP id w8so7874550plq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:17:49 -0800 (PST)
+        Mon, 11 Nov 2019 09:18:07 -0500
+Received: by mail-ot1-f65.google.com with SMTP id c19so11297671otr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:18:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=93RdXzsIh7XerKQ70G4SgAWwA1RTqVLA4QVQaE+nVeA=;
-        b=vgMKb3pNimrdFifDzpVs92F8cm3CtbjmJ2qeSxmnYx+db60ceBU5VEo+4rWeupA3VS
-         P7xdTsj6iT6ndJL+tS06LB9fAN+o/r1NRurzphtvYLN/9dhWkWbFTVmMZLPHCOVbtawN
-         0hJcB07YNPifUoYxkiNgd1AEyQWdYcIDPo2yfaLCAuIqDMvNS3QodnGfVC5+mLZOUeQz
-         yV1hd9jlOfEIJZ/dhknd+GFtb6an6m+dJBpayVm83blb1+GJyTd+hZCZcZT4r5oRn78l
-         nNW4qSeLvRm37RIfygsxJ45JQJBDnlD0zoUUI90Tdbc7HeRz0YKbXoFNTEA2KtU/6sZE
-         +xwA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h0W1n0b934oa9x92tev635siFZCltGl2D+xamCm39z0=;
+        b=dwlafrN5wf9ZIU+8HnaHXgZxiE2WQoT2x13HIzNXh13AVC2z3WLTG/MDiHDkrI9DLI
+         HtQNz8QlSzy6fLSGhikfiPTKLrcsgsN9aGBQShDYal54qTdyehcCHU2vWo/9MjyZUuad
+         oj22/sOn27ZMo4QbsiE1ldiPe95t4pY5hCRyAoI3IaepW5H3a7dXwX0aolfiFAVR4M+I
+         SEtyClMYBDLUyznNvnNoQDY9NQT+NXdQPZo6OB6N/UshLDbhAwwuW2zX+zZKj2C5nGbG
+         bNY6gOTRehHoOIDsL8aWekzTNutrCox1p1heqVt36+Y/jUV6fXtDPfKfnhS6uSzqI/XL
+         w84g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=93RdXzsIh7XerKQ70G4SgAWwA1RTqVLA4QVQaE+nVeA=;
-        b=iE0ZvWg5nw9hUJQri9l2i8eTOq4Egpnj+jnpDQKIBnmld6fzLXqUwVLM4mQLvR91ht
-         kDYmSUlAoik4+htw8SoSFtd3W0grXENAVNbF5I8IxGZqHVjGqtfQdnXIjLm8KqWjrzBg
-         UVJA42kfUFuZZ678LtNPQItENjVNjnEJS5ZRNjaUduag669DTekw7J4maXBoHv3uW4x/
-         hiVb1HIKH26i0JUxivgiDXjvUHr1AnqHQ5B4QbRqiCeYdVZNHnnF1Tfik8hD+Ul9ACoq
-         nSmaY0U8MXldm1R7cc9/yGtVLACN6ZgmZQnw2F66i8nZGPqkYykfG1c8xwzzqVfklIMY
-         aOHQ==
-X-Gm-Message-State: APjAAAWGzv4z++CyJmJ0n1GaNOoicggxaHv8VBxqoDGFAaz0A5HKBHAs
-        9N4GJGlVAUFKkydIH/sUBto=
-X-Google-Smtp-Source: APXvYqyFfD/d/to91cD9Js7V+sQl7S4aV/n6ouG+pxNMxCkhYGyZqnTZZqlJUPWaVA7Ql+w78/EpqQ==
-X-Received: by 2002:a17:902:b40b:: with SMTP id x11mr24314029plr.252.1573481869532;
-        Mon, 11 Nov 2019 06:17:49 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n5sm622739pgg.80.2019.11.11.06.17.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Nov 2019 06:17:48 -0800 (PST)
-Subject: Re: [PATCH v2 -next] fsi: aspeed: Use devm_kfree in
- aspeed_master_release()
-To:     YueHaibing <yuehaibing@huawei.com>, jk@ozlabs.org, joel@jms.id.au,
-        eajames@linux.ibm.com, andrew@aj.id.au
-Cc:     linux-aspeed@lists.ozlabs.org, alistair@popple.id.au,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsi@lists.ozlabs.org
-References: <20191109033209.45244-1-yuehaibing@huawei.com>
- <20191109033634.30544-1-yuehaibing@huawei.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <c2b2ca4c-d164-5c16-d518-f9040b81c5ea@roeck-us.net>
-Date:   Mon, 11 Nov 2019 06:17:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h0W1n0b934oa9x92tev635siFZCltGl2D+xamCm39z0=;
+        b=IHcq537AFUmkCifs6wb16zwof0SZnIyPrjrRRG12wzhPur6WNhydM28/tiY9Dkz0tl
+         KHkW/f0MRqKbijjMmMNhOkjc58Ueo61GwAipvILTSk+EBK0woJA3K4oNfoVvu+ajhcty
+         Ug5bfT7OKBJX2CO/F6e8PuzD/Bx7KgdSW6PSMbV2Hdw/x/7P8qt7M/8VTQr9TV2jdEBA
+         7eUdBeQvNcqtPl8///73jSppMSVdPTdkYaJf0ghPZ7EmnnGPb6rI3k1Uhv5MvGD1215Z
+         BdZBVmLlZPfdQnqI4CIGz65cVOq1gmoalW7Q9Vh68V3gxC4o7js29cTlNm5TVufPoxFx
+         4PnQ==
+X-Gm-Message-State: APjAAAVYcey2z06Zlz+vYkaMODJ2m2w70HwgrZh5FYti/lueoOxRGZkC
+        jqyHM9MaEHzBNSotdAxRRm3ii4qNWwDoBwVpPML1eA==
+X-Google-Smtp-Source: APXvYqwIWidb8/pbE2F77YzjZa65IUUEcN92SCyHgSszq3N6tcIFrUSDUMVJsu4ljJDPwcm5bwJQ7bnjdPykTR9d/Og=
+X-Received: by 2002:a9d:7308:: with SMTP id e8mr22346700otk.17.1573481884676;
+ Mon, 11 Nov 2019 06:18:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191109033634.30544-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHk-=wjB61GNmqpX0BLA5tpL4tsjWV7akaTc2Roth7uGgax+mw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911101034180.29192-100000@netrider.rowland.org>
+ <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
+ <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com> <20191110204442.GA2865@paulmck-ThinkPad-P72>
+In-Reply-To: <20191110204442.GA2865@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 11 Nov 2019 15:17:51 +0100
+Message-ID: <CANpmjNOepvb6+zJmDePxj21n2rctM4Sp4rJ66x_J-L1UmNK54A@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/8/19 7:36 PM, YueHaibing wrote:
-> 'aspeed' is allocated by devm_kzalloc(), it should not be
-> freed by kfree().
-> 
-> Fixes: 1edac1269c02 ("fsi: Add ast2600 master driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: fix log typos
-> ---
->   drivers/fsi/fsi-master-aspeed.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
-> index 3dd82dd..0f63eec 100644
-> --- a/drivers/fsi/fsi-master-aspeed.c
-> +++ b/drivers/fsi/fsi-master-aspeed.c
-> @@ -361,7 +361,7 @@ static void aspeed_master_release(struct device *dev)
->   	struct fsi_master_aspeed *aspeed =
->   		to_fsi_master_aspeed(dev_to_fsi_master(dev));
->   
-> -	kfree(aspeed);
-> +	devm_kfree(dev, aspeed);
->   }
->   
->   /* mmode encoders */
-> 
-Same question as before: Why is there a release function in the first place ?
+On Sun, 10 Nov 2019 at 21:44, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Sun, Nov 10, 2019 at 11:20:53AM -0800, Linus Torvalds wrote:
+> > On Sun, Nov 10, 2019 at 11:12 AM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > >
+> > > And this is where WRITE_IDEMPOTENT would make a possible difference.
+> > > In particular, if we make the optimization to do the "read and only
+> > > write if changed"
+> >
+> > It might be useful for checking too. IOW, something like KCSAN could
+> > actually check that if a field has an idempotent write to it, all
+> > writes always have the same value.
+> >
+> > Again, there's the issue with lifetime.
+> >
+> > Part of that is "initialization is different". Those writes would not
+> > be marked idempotent, of course, and they'd write another value.
+> >
+> > There's also the issue of lifetime at the _end_ of the use, of course.
+> > There _are_ interesting data races at the end of the lifetime, both
+> > reads and writes.
+> >
+> > In particular, if it's a sticky flag, in order for there to not be any
+> > races, all the writes have to happen with a refcount held, and the
+> > final read has to happen after the final refcount is dropped (and the
+> > refcounts have to have atomicity and ordering, of course). I'm not
+> > sure how easy something like that is model in KSAN. Maybe it already
+> > does things like that for all the other refcount stuff we do.
+> >
+> > But the lifetime can be problematic for other reasons too - in this
+> > particular case we have a union for that sticky flag (which is used
+> > under the refcount), and then when the final refcount is released we
+> > read that value (thus no data race) but because of the union we will
+> > now start using that field with *different* data. It becomes that RCU
+> > list head instead.
+> >
+> > That kind of "it used to be a sticky flag, but now the lifetime of the
+> > flag is over, and it's something entirely different" might be a
+> > nightmare for something like KCSAN. It sounds complicated to check
+> > for, but I have no idea what KCSAN really considers complicated or
+> > not.
+>
+> But will "one size fits all" be practical and useful?
+>
+> For my code, I would be happy to accept a significant "false positive"
+> rate to get even a probabilistic warning of other-task accesses to some
+> of RCU's fields.  Even if the accesses were perfect from a functional
+> viewpoint, they could be problematic from a performance and scalability
+> viewpoint.  And for something like RCU, real bugs, even those that are
+> very improbable, need to be fixed.
+>
+> But other code (and thus other developers and maintainers) are going to
+> have different needs.  For all I know, some might have good reasons to
+> exclude their code from KCSAN analysis entirely.
+>
+> Would it make sense for KCSAN to have per-file/subsystem/whatever flags
+> specifying the depth of the analysis?
 
-Guenter
+Just to answer this: we already have this, and disable certain files
+already. So it's an option if required. Just need maintainers to add
+KCSAN_SANITIZE := n, or KCSAN_SANITIZE_file.o := n to Makefiles, and
+KCSAN will simply ignore those.
 
+FWIW we now also have a config option to "ignore repeated writes with
+the same value". It may be a little overaggressive/imprecise in
+filtering data races, but anything else like the super precise
+analysis involving tracking lifetimes and values (and whatever else
+the rules would require) is simply too complex. So, the current
+solution will avoid reporting cases like the original report here
+(__alloc_file), but at the cost of maybe being a little imprecise.
+It's probably a reasonable trade-off, given that we have too many data
+races to deal with on syzbot anyway.
+
+Thanks,
+-- Marco
