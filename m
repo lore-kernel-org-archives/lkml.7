@@ -2,130 +2,87 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9E9C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5632AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3062A2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:44:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCmCH4ON"
+	by mail.kernel.org (Postfix) with ESMTP id 2994C2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573472780;
+	bh=Mngmwt5ehNfydvH5+MyDl+bMhJj5Sa8XVoQfZL7Muq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vuVlUKpdogpS8VZ8g3PcCcouo+nCqUQAlM1qRLvRZcHfxCxqE7oDp2vwZbX2D/JC1
+	 nwcc+vwC2COZKkN/Jjjo+P+FaKwJbXLXAGbeBkHdryVRvIxoPYvAppQMKpr8IYrQst
+	 V/NiTF1gLBlRFnxneumv2FtyOSb8GnE1W1wWXY40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKKLod (ORCPT
+        id S1726949AbfKKLqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:44:33 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37882 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKLod (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:44:33 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b17so4591927wmj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 03:44:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pBYMKGdeC8uxl71BEDu8lTDLVYM52moP2vRHyLhP634=;
-        b=tCmCH4ONJBtSz9KrLfPrqlbp5ENanTkQ9MPa6Ot4BeWo7hY9H99dPFyqc2z9D79lvP
-         GJ4VcXKtSQQ/jB5R+tmw1JcOjgzoOeqx6x/c1VTFv1z3vTSU/Vh06PxSBPeYyXyoLkq1
-         ABCiQBbM8ybqJYcm5S2O8oa+xuraqiN6oOl9Ubao+mI/qNyaZ5p5CGDyppkysz1d7n/z
-         4ehlopU/doGFmsr8Z079zaZLxgvTIUeanbw8le0m2Hj4GIUwlTOFv5+JJtNUvTThCg5T
-         oDAnpOcLOv8/ZGXLa1YLNcOvBzekfqoidcJW5s/qT4o2Bt+HfZQl20Qr7DAt6Kshv0ez
-         C/Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pBYMKGdeC8uxl71BEDu8lTDLVYM52moP2vRHyLhP634=;
-        b=W6+B0PdX9TNBrPV6pK8qYz+vB6JkMOpkz4blnFq7WsQ83tPKpT+me1NLlQ65VTED32
-         GhWqXQnJUvYUR5fnzJ0oVupaoYyzMRQf7RSQwLw6wcE8lU704HOfBHs39PmmQUgvcfTT
-         /Hcnff7JzzvCIjpFVypSKiIArI0C5iMpbQrX5IbzRnjPN7ez5OSISsKusmuOti69TciV
-         UsgCx9f/NwdidjOFRUzdtWzQBowN6hLNPi5S9lVUVuPiygGM18nmI3fC5P/AWfW2i2+E
-         D2Tp7tTULaw6xagq4ocsRdHso2GWna0dJtzXjdtoffrc5AtANXoc/dmJnsYT1tq/52D6
-         /Mjg==
-X-Gm-Message-State: APjAAAWG6g/olBEtROHx4Z/5ZLz6p7ftxENXma+8YTgIsKm4pCH2MGpY
-        DXmC3JpYOmkAszUEdn2PFbTFTA==
-X-Google-Smtp-Source: APXvYqy3cV3J5+lGnGuLIWLtIACVWtH8IVzsbXMXLJ4UquBRUy44658weOkpodyltvzp44m/Zo1PXw==
-X-Received: by 2002:a1c:a791:: with SMTP id q139mr19589497wme.155.1573472670996;
-        Mon, 11 Nov 2019 03:44:30 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id q15sm6929500wrs.91.2019.11.11.03.44.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 03:44:30 -0800 (PST)
-Date:   Mon, 11 Nov 2019 11:44:23 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v4 01/17] mfd: cros_ec: Add sensor_count and make
- check_features public
-Message-ID: <20191111114423.GN3218@dell>
-References: <20191105222652.70226-1-gwendal@chromium.org>
- <20191105222652.70226-2-gwendal@chromium.org>
- <CAFqH_50q7y-sL0SyA3BDkZ9_YBX_FL90smtXt7v0Z+BW8nrw3A@mail.gmail.com>
+        Mon, 11 Nov 2019 06:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726810AbfKKLqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:46:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F2832184C;
+        Mon, 11 Nov 2019 11:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573472778;
+        bh=Mngmwt5ehNfydvH5+MyDl+bMhJj5Sa8XVoQfZL7Muq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aLnN84N3ez2marIBm1OMVpyOO6edGWJRaY81Rhak9oiqx87FWhAhHXJGFRRVylekl
+         Sb/+i9uk969oKTPUQJxNu2v/EFBDq06xIMJ+EL9d6S4R4bRJcoT+izJHCh2wumze/x
+         lbuwZaiy9h4VW6PRokkOouT/7h20pJSuzNldvQAg=
+Date:   Mon, 11 Nov 2019 12:46:15 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Omer Shalev <omerdeshalev@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media:usb:cpia2: Properly check framebuffer mmap offsets
+Message-ID: <20191111114615.GA418224@kroah.com>
+References: <20191108215038.59170-1-omerdeshalev@gmail.com>
+ <20191108204949.GA1277001@kroah.com>
+ <a1c55e7d-4710-70e9-f4d0-8fc155197f07@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFqH_50q7y-sL0SyA3BDkZ9_YBX_FL90smtXt7v0Z+BW8nrw3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a1c55e7d-4710-70e9-f4d0-8fc155197f07@xs4all.nl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 08 Nov 2019, Enric Balletbo Serra wrote:
-
-> Missatge de Gwendal Grignou <gwendal@chromium.org> del dia dt., 5 de
-> nov. 2019 a les 23:28:
-> >
-> > Add a new function to return the number of MEMS sensors available in a
-> > ChromeOS Embedded Controller.
-> > It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
-> > registers to find out.
-> >
-> > Also, make check_features public as it can be useful for other drivers
-> > to know what the Embedded Controller supports.
-> >
-> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+On Sat, Nov 09, 2019 at 12:39:43PM +0100, Hans Verkuil wrote:
+> Hi Greg,
 > 
-> Version 3 was acked and I think we can maintain his ack, so:
+> On 11/8/19 9:49 PM, Greg Kroah-Hartman wrote:
+> > On Fri, Nov 08, 2019 at 09:50:36PM +0000, Omer Shalev wrote:
+> >> The cpai2 driver's mmap implementation wasn't properly check for all
+> >> possible offset values. Given a huge offset value , the calculation
+> >> start_offset + size can wrap around to a low value and pass the check
+> > 
+> > I thought we checked that in the core of the kernel now, to keep all
+> > drivers from not having to do this type of thing (as they obviously all
+> > forgot to.)  Why is this still needed here as well?
 > 
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> 
-> Also,
-> 
-> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> 
-> Lee, how you would like to handle this? I think will be safe for
-> patches 1/2/3 go through the platform-chrome tree without an immutable
-> branch. Patch 3 thought still needs and Ack from you if is fine.
+> Where is that checked in the core? I couldn't find anything, but I might
+> have been looking in the wrong place.
 
-Please take the entire set, converting:
+Sorry, took me a while to find it.  Look at be83bbf80682 ("mmap:
+introduce sane default mmap limits") as I think this should handle the
+problem already.
 
-  s/Acked-for-MFD-by/Acked-by/
+thanks,
 
-... and send me a pull-request to an immutable branch.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
