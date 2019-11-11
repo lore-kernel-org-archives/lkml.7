@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D810C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFA2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB69A2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E57521925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498695;
-	bh=nrBgn8UFKW74PBHjlnB2QG55PmpfCVjWh3tNrM096r4=;
+	s=default; t=1573498698;
+	bh=c73pM0vMfB+nZzLpqXcyf8WgkHue4kWXssjUlDgME5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lm+NjpjimK5A2O2BdBf6yVqPVe7mVawzGr0B9cMQTkMbvgGuRJH+rqL28hnW3XXkM
-	 +dN1f3XYo2ieRYgycT9TnEOKbbn81iSFcr4fuMAKLqupll1Yfu2wqkhVuZf4/GjhRg
-	 oiIgtM69CkJSF0XgiYKaTn0cwwRtyRZNgNZLYuHI=
+	b=x1r2LWvMD3MyKwc2x6+5a17RoQuPlwQB5kBBOskjVZ8PNf8769KN52byzKe7uylp4
+	 mPd+wPL7a6lf9Io8j0gi9n/chI99EZXfBsrnN2Xp4JMGatDghKY0cJp4wyjZItM6L3
+	 DjDHjrMXUtRznq5fHCSzuDIFhqzQLmlXfqx2hkaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730938AbfKKS6O (ORCPT
+        id S1730939AbfKKS6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:58:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58512 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:58:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730179AbfKKS6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:58:12 -0500
+        id S1730937AbfKKS6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:58:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EBE520659;
-        Mon, 11 Nov 2019 18:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AA3521655;
+        Mon, 11 Nov 2019 18:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498690;
-        bh=nrBgn8UFKW74PBHjlnB2QG55PmpfCVjWh3tNrM096r4=;
+        s=default; t=1573498693;
+        bh=c73pM0vMfB+nZzLpqXcyf8WgkHue4kWXssjUlDgME5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQcHGX5ajghLkw2L4p2WKaB3Bp4IjysLdrkKbBXf7UgGOn1VxLngNvGyqiUi5jbQh
-         SD2OwXSr3NXyPsz15JXP6iCjySjJkze0VMqqFuz4DIBsL3ALNgsGJy/M27Q0AcdPqX
-         gVfRJGrwdgHxKsZ9GoTYfagxptvgg725uihNGzUE=
+        b=pyWXGoqv917xMNMv9FPxldo8lUrIwkUUBU8lwct6VhjC3sAidO54rBIghe+1P95bq
+         8xab4n12FSl2aI/gDoHEwVr6Buk+NPxoIhh1qpX/Ag7Nv3Wr1WGQV1tzM0CC+RbmP7
+         7+MSiHS8e/HPZGe9sGhego8IevAdwmj5IqqfDmlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, hannes@cmpxchg.org,
-        lizefan@huawei.com, morten.rasmussen@arm.com, qperret@google.com,
-        tj@kernel.org, vincent.guittot@linaro.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 155/193] sched/topology: Allow sched_asym_cpucapacity to be disabled
-Date:   Mon, 11 Nov 2019 19:28:57 +0100
-Message-Id: <20191111181512.570764400@linuxfoundation.org>
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 191/193] timekeeping/vsyscall: Update VDSO data unconditionally
+Date:   Mon, 11 Nov 2019 19:29:33 +0100
+Message-Id: <20191111181515.176484931@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -67,115 +65,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit e284df705cf1eeedb5ec3a66ed82d17a64659150 ]
+[ Upstream commit 52338415cf4d4064ae6b8dd972dadbda841da4fa ]
 
-While the static key is correctly initialized as being disabled, it will
-remain forever enabled once turned on. This means that if we start with an
-asymmetric system and hotplug out enough CPUs to end up with an SMP system,
-the static key will remain set - which is obviously wrong. We should detect
-this and turn off things like misfit migration and capacity aware wakeups.
+The update of the VDSO data is depending on __arch_use_vsyscall() returning
+True. This is a leftover from the attempt to map the features of various
+architectures 1:1 into generic code.
 
-As Quentin pointed out, having separate root domains makes this slightly
-trickier. We could have exclusive cpusets that create an SMP island - IOW,
-the domains within this root domain will not see any asymmetry. This means
-we can't just disable the key on domain destruction, we need to count how
-many asymmetric root domains we have.
+The usage of __arch_use_vsyscall() in the actual vsyscall implementations
+got dropped and replaced by the requirement for the architecture code to
+return U64_MAX if the global clocksource is not usable in the VDSO.
 
-Consider the following example using Juno r0 which is 2+4 big.LITTLE, where
-two identical cpusets are created: they both span both big and LITTLE CPUs:
+But the __arch_use_vsyscall() check in the update code stayed which causes
+the VDSO data to be stale or invalid when an architecture actually
+implements that function and returns False when the current clocksource is
+not usable in the VDSO.
 
-    asym0    asym1
-  [       ][       ]
-   L  L  B  L  L  B
+As a consequence the VDSO implementations of clock_getres(), time(),
+clock_gettime(CLOCK_.*_COARSE) operate on invalid data and return bogus
+information.
 
-  $ cgcreate -g cpuset:asym0
-  $ cgset -r cpuset.cpus=0,1,3 asym0
-  $ cgset -r cpuset.mems=0 asym0
-  $ cgset -r cpuset.cpu_exclusive=1 asym0
+Remove the __arch_use_vsyscall() check from the VDSO update function and
+update the VDSO data unconditionally.
 
-  $ cgcreate -g cpuset:asym1
-  $ cgset -r cpuset.cpus=2,4,5 asym1
-  $ cgset -r cpuset.mems=0 asym1
-  $ cgset -r cpuset.cpu_exclusive=1 asym1
+[ tglx: Massaged changelog and removed the now useless implementations in
+  	asm-generic/ARM64/MIPS ]
 
-  $ cgset -r cpuset.sched_load_balance=0 .
-
-(the CPU numbering may look odd because on the Juno LITTLEs are CPUs 0,3-5
-and bigs are CPUs 1-2)
-
-If we make one of those SMP (IOW remove asymmetry) by e.g. hotplugging its
-big core, we would end up with an SMP cpuset and an asymmetric cpuset - the
-static key must remain set, because we still have one asymmetric root domain.
-
-With the above example, this could be done with:
-
-  $ echo 0 > /sys/devices/system/cpu/cpu2/online
-
-Which would result in:
-
-    asym0   asym1
-  [       ][    ]
-   L  L  B  L  L
-
-When both SMP and asymmetric cpusets are present, all CPUs will observe
-sched_asym_cpucapacity being set (it is system-wide), but not all CPUs
-observe asymmetry in their sched domain hierarchy:
-
-  per_cpu(sd_asym_cpucapacity, <any CPU in asym0>) == <some SD at DIE level>
-  per_cpu(sd_asym_cpucapacity, <any CPU in asym1>) == NULL
-
-Change the simple key enablement to an increment, and decrement the key
-counter when destroying domains that cover asymmetric CPUs.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: hannes@cmpxchg.org
-Cc: lizefan@huawei.com
-Cc: morten.rasmussen@arm.com
-Cc: qperret@google.com
-Cc: tj@kernel.org
-Cc: vincent.guittot@linaro.org
-Fixes: df054e8445a4 ("sched/topology: Add static_key for asymmetric CPU capacity optimizations")
-Link: https://lkml.kernel.org/r/20191023153745.19515-3-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 44f57d788e7deecb50 ("timekeeping: Provide a generic update_vsyscall() implementation")
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1571887709-11447-1-git-send-email-chenhc@lemote.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/vdso/vsyscall.h | 7 -------
+ include/asm-generic/vdso/vsyscall.h    | 7 -------
+ kernel/time/vsyscall.c                 | 9 +++------
+ 3 files changed, 3 insertions(+), 20 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 1906edb44d63c..93a8749763ea0 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2008,7 +2008,7 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	rcu_read_unlock();
+diff --git a/arch/arm64/include/asm/vdso/vsyscall.h b/arch/arm64/include/asm/vdso/vsyscall.h
+index 0c731bfc7c8c7..0c20a7c1bee50 100644
+--- a/arch/arm64/include/asm/vdso/vsyscall.h
++++ b/arch/arm64/include/asm/vdso/vsyscall.h
+@@ -30,13 +30,6 @@ int __arm64_get_clock_mode(struct timekeeper *tk)
+ }
+ #define __arch_get_clock_mode __arm64_get_clock_mode
  
- 	if (has_asym)
--		static_branch_enable_cpuslocked(&sched_asym_cpucapacity);
-+		static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
- 
- 	if (rq && sched_debug_enabled) {
- 		pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
-@@ -2103,8 +2103,12 @@ int sched_init_domains(const struct cpumask *cpu_map)
-  */
- static void detach_destroy_domains(const struct cpumask *cpu_map)
+-static __always_inline
+-int __arm64_use_vsyscall(struct vdso_data *vdata)
+-{
+-	return !vdata[CS_HRES_COARSE].clock_mode;
+-}
+-#define __arch_use_vsyscall __arm64_use_vsyscall
+-
+ static __always_inline
+ void __arm64_update_vsyscall(struct vdso_data *vdata, struct timekeeper *tk)
  {
-+	unsigned int cpu = cpumask_any(cpu_map);
- 	int i;
+diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
+index e94b19782c92f..ce41032086193 100644
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -25,13 +25,6 @@ static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
+ }
+ #endif /* __arch_get_clock_mode */
  
-+	if (rcu_access_pointer(per_cpu(sd_asym_cpucapacity, cpu)))
-+		static_branch_dec_cpuslocked(&sched_asym_cpucapacity);
-+
- 	rcu_read_lock();
- 	for_each_cpu(i, cpu_map)
- 		cpu_attach_domain(NULL, &def_root_domain, i);
+-#ifndef __arch_use_vsyscall
+-static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
+-{
+-	return 1;
+-}
+-#endif /* __arch_use_vsyscall */
+-
+ #ifndef __arch_update_vsyscall
+ static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
+ 						   struct timekeeper *tk)
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index 4bc37ac3bb052..5ee0f77094107 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -110,8 +110,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+ 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
+ 
+-	if (__arch_use_vsyscall(vdata))
+-		update_vdso_data(vdata, tk);
++	update_vdso_data(vdata, tk);
+ 
+ 	__arch_update_vsyscall(vdata, tk);
+ 
+@@ -124,10 +123,8 @@ void update_vsyscall_tz(void)
+ {
+ 	struct vdso_data *vdata = __arch_get_k_vdso_data();
+ 
+-	if (__arch_use_vsyscall(vdata)) {
+-		vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
+-		vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
+-	}
++	vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
++	vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
+ 
+ 	__arch_sync_vdso_data(vdata);
+ }
 -- 
 2.20.1
 
