@@ -2,99 +2,118 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA199C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD4DC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862C8214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36497214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhhB8Klj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qu8oR+yS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfKKK3C (ORCPT
+        id S1727103AbfKKK31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:29:02 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45893 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKK3C (ORCPT
+        Mon, 11 Nov 2019 05:29:27 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42783 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726912AbfKKK30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:29:02 -0500
-Received: by mail-qk1-f195.google.com with SMTP id q70so10664617qke.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 02:29:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=neDYQCtvWG6GFLAme/V0Z/I/G6+bUaaHqT/zW9Z6Xws=;
-        b=qhhB8Kljn7x47tZP6LMxBFrevO8A3qPIsX/IrEO+xjXdyoG+d/WmadVZ+WqSylArCp
-         2dQfJJlBgrQlZ+0C8iAqUaLeauPQ6hUP/8wgBuK1pcBMgHcrL8LdFLEgxX+qfyVVMPMR
-         WSYWJ635h2fYRFdYCwHOEovyGAXrsVSV+wqprNu4J8Ss01G+/+9TBSRu+4nMYQks84Ve
-         CJLfa4RzkN5ldNZbCtI71AyPy/yAK7B7B2eVmnYrdUMP0v+Uwo3ULhLABMIYbgsgSBOJ
-         siVOaCwwalZJdRrzLp+fdnqALBBftwzZwTR78ZPhY2UHHiHoboajfuvkzaSmPzbe7S24
-         t6YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=neDYQCtvWG6GFLAme/V0Z/I/G6+bUaaHqT/zW9Z6Xws=;
-        b=NViuFcXwN/grRN3wZzPSIKorWByklNUA+uqEz/egS3vIJFDZRELY3rQnGjB4cLbl9p
-         fB64LjCJz9zZCXkVLbdsqPYSgYQA+wQHs+/YSXanHSpa22Leb2CIrDNwx0dWZtQYYr22
-         eYen2Rz8VX5DWCjK7LA/HgRGjav9Czbw7E7jd38Kr9pwWFOKwktrYDxrWXq+jxtWw+x/
-         EOyV244PALCxFI6yFaDtBKwr9npHGHgi53qOuKciRovBduxT51ID/7BDKsV7CZlyz4Br
-         L/5okVgauNwhBfSXTSc8VaAW/800t6jKkoinaig9YLZrw+TJGy1upa9CiWj3nvxPne4X
-         X5pA==
-X-Gm-Message-State: APjAAAWtKtUoxna8P9A6hcHvUkjC5GCFh+MYRaJ/qUvNVRO0CLSjpop0
-        uLm5n/zErDlMpbbdOBjgbdhFIf6HCigOiKFewV09kqsqRw0=
-X-Google-Smtp-Source: APXvYqy/nyfp+GQeHSfInpIwAhjuAclF3Inv8QGDz8ZXi4t0RJsu/giKvtvOR4wCf+5u0xuFp9+OI5w+cUsLuXatlJk=
-X-Received: by 2002:a05:620a:1127:: with SMTP id p7mr5660664qkk.250.1573468140848;
- Mon, 11 Nov 2019 02:29:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20191031084944.GA21077@redhat.com>
-In-Reply-To: <20191031084944.GA21077@redhat.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 11 Nov 2019 11:28:49 +0100
-Message-ID: <CACT4Y+Y6CSG7fzOV7BTx3JQ8SKGy8iPyUggGUUv8A0JRhpkU7g@mail.gmail.com>
-Subject: Re: syzkaller for uffd-wp
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
-        syzkaller <syzkaller@googlegroups.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 11 Nov 2019 05:29:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573468166;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pcVRVS2wigfNxAtSVYLPPaPRSK4c2t19oDRB3orBUZ8=;
+        b=Qu8oR+yS+SqKnZKhq7MLdSGa7rTRFICVguQD0H8Odfe6wr9GUAVwXwMnBOJSX7jzKbEi5o
+        gzUH6SjKbp9xeBjhAjRy6mERaKnfY9eSs1cQBcUOMDvMOm6UcGlBD92+7O6wB8xKtXIHXA
+        ZrAYGJhK0OkDbK4QJiUdDjUt72GFF2s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-401-z809MnJvNym6fsK2ylp1rQ-1; Mon, 11 Nov 2019 05:29:23 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 531491005500;
+        Mon, 11 Nov 2019 10:29:21 +0000 (UTC)
+Received: from dustball.usersys.redhat.com (unknown [10.43.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 640765D6A3;
+        Mon, 11 Nov 2019 10:29:18 +0000 (UTC)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     darrick.wong@oracle.com, naresh.kamboju@linaro.org,
+        hch@infradead.org
+Cc:     ltp@lists.linux.it, linux-next@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, chrubis@suse.cz,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        broonie@kernel.org, arnd@arndb.de, lkft-triage@lists.linaro.org,
+        linux-ext4@vger.kernel.org, tytso@mit.edu, jstancek@redhat.com
+Subject: [PATCH] iomap: fix return value of iomap_dio_bio_actor on 32bit systems
+Date:   Mon, 11 Nov 2019 11:28:10 +0100
+Message-Id: <b757ff64ddf68519fc3d55b66fcd8a1d4b436395.1573467154.git.jstancek@redhat.com>
+In-Reply-To: <20191111083815.GA29540@infradead.org>
+References: <20191111083815.GA29540@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: z809MnJvNym6fsK2ylp1rQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 9:49 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
->
-> Hi Dmitry,
->
-> would it be possible to grill the uffd-wp patchset with syzkaller?
-> It'd be nice if we can detect bugs before it gets merged.
->
-> Peter posted it upstream, but we can provide a kernel git tree to
-> pull. To fuzzy you likely need to add the new UFFD_WP feature flag and
-> registration options to the fuzzer.
->
-> Thanks,
-> Andrea
+Naresh reported LTP diotest4 failing for 32bit x86 and arm -next
+kernels on ext4. Same problem exists in 5.4-rc7 on xfs.
 
-+syzkaller, linux-fsdevel
+The failure comes down to:
+  openat(AT_FDCWD, "testdata-4.5918", O_RDWR|O_DIRECT) =3D 4
+  mmap2(NULL, 4096, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) =3D 0xb7f7=
+b000
+  read(4, 0xb7f7b000, 4096)              =3D 0 // expects -EFAULT
 
-[getting through backlog after OSS/ELC/LSS]
+Problem is conversion at iomap_dio_bio_actor() return. Ternary
+operator has a return type and an attempt is made to convert each
+of operands to the type of the other. In this case "ret" (int)
+is converted to type of "copied" (unsigned long). Both have size
+of 4 bytes:
+    size_t copied =3D 0;
+    int ret =3D -14;
+    long long actor_ret =3D copied ? copied : ret;
 
-Hi Andrea,
+    On x86_64: actor_ret =3D=3D -14;
+    On x86   : actor_ret =3D=3D 4294967282
 
-I won't have time for this in the near future unfortunately.
-But if you (or anybody on the lists)  are interested in providing
-better testing for uffd, we have docs on how to extend syzkaller:
-https://github.com/google/syzkaller/blob/master/docs/syscall_descriptions.md#describing-new-system-calls
-You may also look at the past changes adding new syscall descriptions
-and we have help provided on the syzkaller@ mailing list.
-Generally, the core syzkaller team (<1 person overall) can't become
-experts and describe thousands of subsystems in a dozen of OSes.
+Replace ternary operator with 2 return statements to avoid this
+unwanted conversion.
+
+Fixes: 4721a6010990 ("iomap: dio data corruption and spurious errors when p=
+ipes fill")
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+---
+ fs/iomap/direct-io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 1fc28c2da279..7c58f51d7da7 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -318,7 +318,9 @@ static void iomap_dio_bio_end_io(struct bio *bio)
+ =09=09if (pad)
+ =09=09=09iomap_dio_zero(dio, iomap, pos, fs_block_size - pad);
+ =09}
+-=09return copied ? copied : ret;
++=09if (copied)
++=09=09return copied;
++=09return ret;
+ }
+=20
+ static loff_t
+--=20
+1.8.3.1
+
