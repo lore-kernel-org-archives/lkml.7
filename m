@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8524AC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70A6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653DF20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8384120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKKURD (ORCPT
+        id S1727790AbfKKURm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:17:03 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:33919 "EHLO
+        Mon, 11 Nov 2019 15:17:42 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:42367 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfKKURC (ORCPT
+        with ESMTP id S1727059AbfKKURD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:17:02 -0500
+        Mon, 11 Nov 2019 15:17:03 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N6svJ-1hphAy14rX-018NFQ; Mon, 11 Nov 2019 21:16:51 +0100
+ 1MiJdI-1i0zpq2YCs-00fOE5; Mon, 11 Nov 2019 21:16:52 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -31,67 +31,69 @@ To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 15/19] nfsd: fix delay timer on 32-bit architectures
-Date:   Mon, 11 Nov 2019 21:16:35 +0100
-Message-Id: <20191111201639.2240623-16-arnd@arndb.de>
+Subject: [PATCH 19/19] nfsd: remove nfs4_reset_lease() declarations
+Date:   Mon, 11 Nov 2019 21:16:39 +0100
+Message-Id: <20191111201639.2240623-20-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
 References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:gmiJexBFvqElF3mq4b9b+BZDQ8d72Q7kCeZTPOCjS6AhS6bzlDu
- NXJLMSB2hdsvgNmtvpikLv8CkbAUuuLITgyvau37mTIqgnGMh2E9z2Kqjdm+HVfcFTkEsgE
- 9/kcOOnOXlfAtr/6WB+MFLMVjWxlTuUuJmcpK3g5R/UWsE22dELI9rGE5eFOqYyEefJsgrh
- 5uj7yStbDDRkV90oaUamg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OuSNcZeVEos=:x5ZXKdsBl17wIelyNU21r3
- 8HywO3EQnZh63jP5CdexIy9kbzHofX+dQ9vWCbGyNW6gxNBDmMoQdYNIOkN7oiQqhOxKT5miN
- LMLI3zCfLbaVnWqKzXHzkh4SXd60raLsDj6FZ9cqxRnLegxn+ujtQhmJ8O1qrAJ9uGHdZLEyo
- YYrIHvXt9yrS3dOKUH6D9er6OY6AE3pYEn6niAs26nWvtg31Oh8kIrebSr00Jfwq4uyVMUtMa
- LovWvlMjgjNNVvy2GM4CZgAc8qjB3IpKNM3Dk2tAM5WyUQRDj1rXtPNk0llxXBskdSmHWOGmM
- O01Z0XOSo8gBiTaL6JKDtCZPN7/mOK/La4BlGKGPel9nlWIqQdYIRC1lAQSz5LxrOdJNHNCQo
- c4Yeb6MDh1XYxzXp7hEifvWn65XWZ7EmeYVA8nlUZXm4F9K9Pl6WhGZjrqe15yqHsbxDtEyso
- zFCbNi+U+ezxW5uyTCO1WGPAhb5r84NSFv0BtGGH2jHcyiYKlhpDoxFXmco9e4u1oP9gxaqpV
- Coh9Kb8379K2/S45ksuq0DhJCSXfK2+/mVQS5ONJ/KKkCZeqe0VdQvVBVyEdyVL2cQZ6s2Eg4
- 2SWHkhksSI61c9TmpFxbCv5LIguBAC0j6yaj8sesQwBzjdB8Mqo51GEzubeCjZR2t4nnupwMF
- oATxST3QYVtUyEn+jyRsq1kCOMrKwM/LWp90kFyffh6rm3nE6VkM+HxbBRHOnuszqT5w59STU
- lpDJzUcRO0AazmApNe0Emg7YfFD1DDH1qopZZnpp6IhPj6fwpCXEvyn0ltAA5wp4hbWOfP4sh
- qgUW/h5GeiZ266/UeL//8fY8p9NQIQ9M6LE7YJzHNOR12p1iBWrbBBawW5Lv3hC4nCTp2Nh2e
- 47wyLsKwTNhlghaiTKhQ==
+X-Provags-ID: V03:K1:iafSuqH4Bp5e/AWz4sqAojsBIoYJnl02pkxascDjDPERrJsK5XY
+ LuEVM2fqvh7m8JQnJKf732b2ymBeNnsygXViheIEE3f6FrCguecj23HqhwZRfpUdu80LURB
+ gckupp9jrTa2thabVPppYnnMb8tsb6lU4wvWKhYMJg5DALwIuE3EC/1jiQkFqODqYrE958R
+ YtJs0Lv6+joejC+leu3ZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xGriYet1jFg=:/7jxH/nP273V1JjwioFy5f
+ weSwzG82+77qaVH+KI7EcZrjwsUGhIVamdtpqMdnbCs36cuBxpsagITBnkyJngB6ZGKtZ/1kk
+ lXrvwbV4AXeKGg1GnNOXhTM0GP4rP7rfBY7mEfeqiu9upppe0mKPZTlIVcip841Qcqx3Ma0nn
+ vePqUtm2Y7a2NU1NHIeBQemiMDkQfV/Z+tCobAE2xfIsTLpi99QRU0FZnGbg7fldgd2XWy8V0
+ JpwSqlZKos7f1wWwb7VgMYAHaLisxIzb3JX81eFVmTLbX0uNKMD0voZNZ+cWheh3i+HJaqbsF
+ tKIOQ0ll6Y+Q6hndX7mZWCQdVFUeLAMDBSBgoLUs1nbH5a0xdOX7a6gz6ItLyU+BqP4KXH2DV
+ rDFIpKRqnZqWvvYTdVqLx23v++HLYTnOu8E7My6GxofEUC3ePXcYWIRR8hp65uR15AdFRV/MS
+ CLPyY0OiYkmJh7SU8TaQNza5iokt60ZZfr/rVVCv827HunPlTwtGV/AuAxLsMV2WYFGAg48P7
+ Qb69Dlyva9zd4MpPR06pUmR5em8CsMZRDsmynkKANk1Xu6ZpJeQ/388Shfw8bo9PhTVlWZ2n7
+ QAJx6wb8JPs7O0Wr12Hw2Ia0MvWpv1iA2vrcuoqlQ83cQLkywWKHRy0Lbrer7uG5YE+NuZByH
+ SbTt0S3526fDNdnV8L9Yy2AAdw33Uz61+oC37Rx68D2Oc9JVDqrXcE66K1MIx/I5q2aVTcsPv
+ c3SQzwHmdgY8Ub3y3w4m/EicJHOWEJZtHHr/RQiDBOa7uxazVPKTyk+onqlmKdEX+pFXM1jdX
+ i754BZt1xhazqH80w7YY2OHBa7aaZ4CMa4ltQuuH/DfirTbR/AAZy3V6/VagRnhk31J7oFSZ4
+ 7GX3Mi2TvHQhTkiGcQZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nfsd4_cb_layout_done() function takes a 'time_t' value,
-multiplied by NSEC_PER_SEC*2 to get a nanosecond value.
+The function was removed a long time ago, but the declaration
+and a dummy implementation are still there, referencing the
+deprecated time_t type.
 
-This works fine on 64-bit architectures, but on 32-bit, any
-value over 1 second results in a signed integer overflow
-with unexpected results.
+Remove both.
 
-Cast one input to a 64-bit type in order to produce the
-same result that we have on 64-bit architectures, regarless
-of the type of nfsd4_lease.
-
-Fixes: 6b9b21073d3b ("nfsd: give up on CB_LAYOUTRECALLs after two lease periods")
+Fixes: f958a1320ff7 ("nfsd4: remove unnecessary lease-setting function")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfs4layouts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfsd.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 2681c70283ce..e12409eca7cc 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -675,7 +675,7 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
- 
- 		/* Client gets 2 lease periods to return it */
- 		cutoff = ktime_add_ns(task->tk_start,
--					 nn->nfsd4_lease * NSEC_PER_SEC * 2);
-+					 (u64)nn->nfsd4_lease * NSEC_PER_SEC * 2);
- 
- 		if (ktime_before(now, cutoff)) {
- 			rpc_delay(task, HZ/100); /* 10 mili-seconds */
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index af2947551e9c..e74979b5849e 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -142,7 +142,6 @@ int nfs4_state_start(void);
+ int nfs4_state_start_net(struct net *net);
+ void nfs4_state_shutdown(void);
+ void nfs4_state_shutdown_net(struct net *net);
+-void nfs4_reset_lease(time_t leasetime);
+ int nfs4_reset_recoverydir(char *recdir);
+ char * nfs4_recoverydir(void);
+ bool nfsd4_spo_must_allow(struct svc_rqst *rqstp);
+@@ -153,7 +152,6 @@ static inline int nfs4_state_start(void) { return 0; }
+ static inline int nfs4_state_start_net(struct net *net) { return 0; }
+ static inline void nfs4_state_shutdown(void) { }
+ static inline void nfs4_state_shutdown_net(struct net *net) { }
+-static inline void nfs4_reset_lease(time_t leasetime) { }
+ static inline int nfs4_reset_recoverydir(char *recdir) { return 0; }
+ static inline char * nfs4_recoverydir(void) {return NULL; }
+ static inline bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
 -- 
 2.20.0
 
