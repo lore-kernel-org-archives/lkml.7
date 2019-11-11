@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8898EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C23C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52EAB20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C1C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498116;
-	bh=xFBlIuhONq+naCWyfL6jszbnWwxREMT+IEYwbtlTFTM=;
+	s=default; t=1573498119;
+	bh=vNa/ksUXJnBe6vrWo5uDxUVxHyDz6ZLyD+1YZGbDsIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yBptnX6m1iewBGqcRBRihg9YFjGNoa4BoBQ6wPXHdbenkgOy7g5hYx5//ZVfybfeh
-	 qohmgyLX5xfCLNW3Hh0BaNSXpnjRcFpBGN7RvI2TsVJv0Wop/k8eizXUVHV0jpT7+T
-	 s7p47ZrUJDZxVnL881k0DA0hb8WopoJ2MiqDVv98=
+	b=yRZtpUZtAjdurDUpTgoYpvTyVqHDM5dPD1Y8UuTWWMBWMh6C8azUCI2CA7XQKa+0B
+	 N1mn1D2o5OJ3htKpT+9e4n1K77S3ZeBAyP8KHW9EBYAWffJcj/tJY4kLqT5DH40+wV
+	 JUGAc7nXNCVdY2BZw8XvlAY9VKaBPWDMpxYqiNxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbfKKSse (ORCPT
+        id S1730272AbfKKSsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:48:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:48:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729865AbfKKSsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:48:31 -0500
+        id S1729600AbfKKSsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:48:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB0E20674;
-        Mon, 11 Nov 2019 18:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23AE120674;
+        Mon, 11 Nov 2019 18:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498110;
-        bh=xFBlIuhONq+naCWyfL6jszbnWwxREMT+IEYwbtlTFTM=;
+        s=default; t=1573498114;
+        bh=vNa/ksUXJnBe6vrWo5uDxUVxHyDz6ZLyD+1YZGbDsIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THdsZqC93Agg3FmpAO9lwe3GkUHuVi/dBVRoXK/T5VfpYauLtn4s0jKyayMbAzHU5
-         eB1xqob5sPEp9xKChccAdVWfQ5F0XnkdVfTOhysmZyVzMz1h8GPNTezdC3OBoxVkDf
-         VlENLJ098pgC9KaV7n/hae5NWMXMDamdZypLTfBM=
+        b=OlnafMFrWn2qzkByeDuOUKQlyZhAVdjdowwLeyYKWnJ+I/S5rmqm4+9b32/1VkewK
+         Wo7kZ4M0+hqHgtNr5PwI4iZnuattOuIkAfbb7pq9rdL9EmyU4WMJJs2fKEykbH1SlS
+         SsF0NrVHcWJ73vWKBlird3hm2CePvq6bME1dbfuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
+        stable@vger.kernel.org,
+        syzbot+f8495bff23a879a6d0bd@syzkaller.appspotmail.com,
+        syzbot+6f50c99e8f6194bf363f@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 006/193] net: qualcomm: rmnet: Fix potential UAF when unregistering
-Date:   Mon, 11 Nov 2019 19:26:28 +0100
-Message-Id: <20191111181500.307705719@linuxfoundation.org>
+Subject: [PATCH 5.3 007/193] net/tls: fix sk_msg trim on fallback to copy mode
+Date:   Mon, 11 Nov 2019 19:26:29 +0100
+Message-Id: <20191111181500.382685090@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,45 +63,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Tranchetti <stranche@codeaurora.org>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit e7a86c687e64ab24f88330ad24ecc9442ce40c5a ]
+[ Upstream commit 683916f6a84023407761d843048f1aea486b2612 ]
 
-During the exit/unregistration process of the RmNet driver, the function
-rmnet_unregister_real_device() is called to handle freeing the driver's
-internal state and removing the RX handler on the underlying physical
-device. However, the order of operations this function performs is wrong
-and can lead to a use after free of the rmnet_port structure.
+sk_msg_trim() tries to only update curr pointer if it falls into
+the trimmed region. The logic, however, does not take into the
+account pointer wrapping that sk_msg_iter_var_prev() does nor
+(as John points out) the fact that msg->sg is a ring buffer.
 
-Before calling netdev_rx_handler_unregister(), this port structure is
-freed with kfree(). If packets are received on any RmNet devices before
-synchronize_net() completes, they will attempt to use this already-freed
-port structure when processing the packet. As such, before cleaning up any
-other internal state, the RX handler must be unregistered in order to
-guarantee that no further packets will arrive on the device.
+This means that when the message was trimmed completely, the new
+curr pointer would have the value of MAX_MSG_FRAGS - 1, which is
+neither smaller than any other value, nor would it actually be
+correct.
 
-Fixes: ceed73a2cf4a ("drivers: net: ethernet: qualcomm: rmnet: Initial implementation")
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+Special case the trimming to 0 length a little bit and rework
+the comparison between curr and end to take into account wrapping.
+
+This bug caused the TLS code to not copy all of the message, if
+zero copy filled in fewer sg entries than memcopy would need.
+
+Big thanks to Alexander Potapenko for the non-KMSAN reproducer.
+
+v2:
+ - take into account that msg->sg is a ring buffer (John).
+
+Link: https://lore.kernel.org/netdev/20191030160542.30295-1-jakub.kicinski@netronome.com/ (v1)
+
+Fixes: d829e9c4112b ("tls: convert to generic sk_msg interface")
+Reported-by: syzbot+f8495bff23a879a6d0bd@syzkaller.appspotmail.com
+Reported-by: syzbot+6f50c99e8f6194bf363f@syzkaller.appspotmail.com
+Co-developed-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/skmsg.h |    9 ++++++---
+ net/core/skmsg.c      |   20 +++++++++++++++-----
+ 2 files changed, 21 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -57,10 +57,10 @@ static int rmnet_unregister_real_device(
- 	if (port->nr_rmnet_devs)
- 		return -EINVAL;
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -139,6 +139,11 @@ static inline void sk_msg_apply_bytes(st
+ 	}
+ }
  
--	kfree(port);
--
- 	netdev_rx_handler_unregister(real_dev);
- 
-+	kfree(port);
++static inline u32 sk_msg_iter_dist(u32 start, u32 end)
++{
++	return end >= start ? end - start : end + (MAX_MSG_FRAGS - start);
++}
 +
- 	/* release reference on real_dev */
- 	dev_put(real_dev);
+ #define sk_msg_iter_var_prev(var)			\
+ 	do {						\
+ 		if (var == 0)				\
+@@ -198,9 +203,7 @@ static inline u32 sk_msg_elem_used(const
+ 	if (sk_msg_full(msg))
+ 		return MAX_MSG_FRAGS;
+ 
+-	return msg->sg.end >= msg->sg.start ?
+-		msg->sg.end - msg->sg.start :
+-		msg->sg.end + (MAX_MSG_FRAGS - msg->sg.start);
++	return sk_msg_iter_dist(msg->sg.start, msg->sg.end);
+ }
+ 
+ static inline struct scatterlist *sk_msg_elem(struct sk_msg *msg, int which)
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -271,18 +271,28 @@ void sk_msg_trim(struct sock *sk, struct
+ 
+ 	msg->sg.data[i].length -= trim;
+ 	sk_mem_uncharge(sk, trim);
++	/* Adjust copybreak if it falls into the trimmed part of last buf */
++	if (msg->sg.curr == i && msg->sg.copybreak > msg->sg.data[i].length)
++		msg->sg.copybreak = msg->sg.data[i].length;
+ out:
+-	/* If we trim data before curr pointer update copybreak and current
+-	 * so that any future copy operations start at new copy location.
++	sk_msg_iter_var_next(i);
++	msg->sg.end = i;
++
++	/* If we trim data a full sg elem before curr pointer update
++	 * copybreak and current so that any future copy operations
++	 * start at new copy location.
+ 	 * However trimed data that has not yet been used in a copy op
+ 	 * does not require an update.
+ 	 */
+-	if (msg->sg.curr >= i) {
++	if (!msg->sg.size) {
++		msg->sg.curr = msg->sg.start;
++		msg->sg.copybreak = 0;
++	} else if (sk_msg_iter_dist(msg->sg.start, msg->sg.curr) >=
++		   sk_msg_iter_dist(msg->sg.start, msg->sg.end)) {
++		sk_msg_iter_var_prev(i);
+ 		msg->sg.curr = i;
+ 		msg->sg.copybreak = msg->sg.data[i].length;
+ 	}
+-	sk_msg_iter_var_next(i);
+-	msg->sg.end = i;
+ }
+ EXPORT_SYMBOL_GPL(sk_msg_trim);
  
 
 
