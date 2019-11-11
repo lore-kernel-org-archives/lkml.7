@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5477DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7245FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A89220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8DD2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497218;
-	bh=CscTPnHSPFlq+sLbG/O7EI8VoX3qwe5OhcLIve2oju0=;
+	s=default; t=1573497222;
+	bh=HF4uijMyGzKGfAH1v82FhCnktpAr5PkJtl1aztSZj0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IHRbkXmxS9LZwHF/8moB+t8m/u7+R4P66ejq4iZIAUgN1yhBclRUc1hveuAuLDrDP
-	 eHo3thDNekVCL9lbtvkBXa++TqB+lXC0ARuM1f76JqzBiCrj6BRBp16Ioa6u6CzCAA
-	 zdOHuXyKmtl4NZuZO65gEpy90DGD1bU+vPU5S7Bw=
+	b=lhcNKnQfbgYC0MdiNoqqx0Lk4TCefGJsr7StrUpa9WdAndbqy2HhSdfR3Ms1wUtGO
+	 +LyzmNq5ICqJpm0XMkixdiSUc+PUDjDfc8LKFXe7Wl3iQihkz8P6XaBgLegLJRpknW
+	 mPPQdF2Jic3lt556mUAadCsBlou00tJmGe7iajZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfKKSdf (ORCPT
+        id S1728191AbfKKSdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfKKSd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:28 -0500
+        id S1728158AbfKKSdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84A9A21655;
-        Mon, 11 Nov 2019 18:33:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ADDE214E0;
+        Mon, 11 Nov 2019 18:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497208;
-        bh=CscTPnHSPFlq+sLbG/O7EI8VoX3qwe5OhcLIve2oju0=;
+        s=default; t=1573497213;
+        bh=HF4uijMyGzKGfAH1v82FhCnktpAr5PkJtl1aztSZj0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u7BHBh0dF2DVqZKJQGH1G9qbIkGCIZc+TQCHvEw7/fL7U3rfe//Tp/91+LW/lV3QP
-         RioIZrpohFEdIvm/eeoo/Qnbps4G9YwS4i6Ow5Qkre9yYBcmyS8JenEzvc3oZjmE4L
-         zg1Pe4NkiFg0lKxkMB6cJ8POyLuBic/Pqb/BW/7Q=
+        b=TLgxAilHg76UxI9oPp3oHUxExrWtsYaLUfhfDCLbmlZKMKwmVoQwJU89L67IyLb3j
+         Q7aAUPwxNhs7ZrSq7pCOkCCw+ENQhh8yN/oVAgtcCt3mM7mI7h0IMjE3pUESQLoATz
+         sjRGfGsQ/JwZknYg4xmdFbGmFFACbXIivCvMlZXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 38/65] dmaengine: xilinx_dma: Fix control reg update in vdma_channel_set_config
-Date:   Mon, 11 Nov 2019 19:28:38 +0100
-Message-Id: <20191111181347.341728892@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 40/65] scsi: qla2xxx: fixup incorrect usage of host_byte
+Date:   Mon, 11 Nov 2019 19:28:40 +0100
+Message-Id: <20191111181347.659641041@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -62,63 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+From: Hannes Reinecke <hare@suse.com>
 
-[ Upstream commit 6c6de1ddb1be3840f2ed5cc9d009a622720940c9 ]
+[ Upstream commit 66cf50e65b183c863825f5c28a818e3f47a72e40 ]
 
-In vdma_channel_set_config clear the delay, frame count and master mask
-before updating their new values. It avoids programming incorrect state
-when input parameters are different from default.
+DRIVER_ERROR is a a driver byte setting, not a host byte.  The qla2xxx
+driver should rather return DID_ERROR here to be in line with the other
+drivers.
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Acked-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Link: https://lore.kernel.org/r/1569495060-18117-3-git-send-email-radhey.shyam.pandey@xilinx.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20191018140458.108278-1-hare@suse.de
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/scsi/qla2xxx/qla_bsg.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 8288fe4d17c38..cd271f7826051 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -72,6 +72,9 @@
- #define XILINX_DMA_DMACR_CIRC_EN		BIT(1)
- #define XILINX_DMA_DMACR_RUNSTOP		BIT(0)
- #define XILINX_DMA_DMACR_FSYNCSRC_MASK		GENMASK(6, 5)
-+#define XILINX_DMA_DMACR_DELAY_MASK		GENMASK(31, 24)
-+#define XILINX_DMA_DMACR_FRAME_COUNT_MASK	GENMASK(23, 16)
-+#define XILINX_DMA_DMACR_MASTER_MASK		GENMASK(11, 8)
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index 4a6e086279f9a..33e4dceb895f2 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -252,7 +252,7 @@ qla2x00_process_els(struct fc_bsg_job *bsg_job)
+ 	srb_t *sp;
+ 	const char *type;
+ 	int req_sg_cnt, rsp_sg_cnt;
+-	int rval =  (DRIVER_ERROR << 16);
++	int rval =  (DID_ERROR << 16);
+ 	uint16_t nextlid = 0;
  
- #define XILINX_DMA_REG_DMASR			0x0004
- #define XILINX_DMA_DMASR_EOL_LATE_ERR		BIT(15)
-@@ -2054,8 +2057,10 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.gen_lock = cfg->gen_lock;
- 	chan->config.master = cfg->master;
- 
-+	dmacr &= ~XILINX_DMA_DMACR_GENLOCK_EN;
- 	if (cfg->gen_lock && chan->genlock) {
- 		dmacr |= XILINX_DMA_DMACR_GENLOCK_EN;
-+		dmacr &= ~XILINX_DMA_DMACR_MASTER_MASK;
- 		dmacr |= cfg->master << XILINX_DMA_DMACR_MASTER_SHIFT;
- 	}
- 
-@@ -2069,11 +2074,13 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.delay = cfg->delay;
- 
- 	if (cfg->coalesc <= XILINX_DMA_DMACR_FRAME_COUNT_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_FRAME_COUNT_MASK;
- 		dmacr |= cfg->coalesc << XILINX_DMA_DMACR_FRAME_COUNT_SHIFT;
- 		chan->config.coalesc = cfg->coalesc;
- 	}
- 
- 	if (cfg->delay <= XILINX_DMA_DMACR_DELAY_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_DELAY_MASK;
- 		dmacr |= cfg->delay << XILINX_DMA_DMACR_DELAY_SHIFT;
- 		chan->config.delay = cfg->delay;
- 	}
+ 	if (bsg_job->request->msgcode == FC_BSG_RPT_ELS) {
+@@ -426,7 +426,7 @@ qla2x00_process_ct(struct fc_bsg_job *bsg_job)
+ 	struct Scsi_Host *host = bsg_job->shost;
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	int req_sg_cnt, rsp_sg_cnt;
+ 	uint16_t loop_id;
+ 	struct fc_port *fcport;
+@@ -1911,7 +1911,7 @@ qlafx00_mgmt_cmd(struct fc_bsg_job *bsg_job)
+ 	struct Scsi_Host *host = bsg_job->shost;
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	struct qla_mt_iocb_rqst_fx00 *piocb_rqst;
+ 	srb_t *sp;
+ 	int req_sg_cnt = 0, rsp_sg_cnt = 0;
 -- 
 2.20.1
 
