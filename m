@@ -2,99 +2,135 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF82C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BF8C17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77A42075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8C8206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f/G4svEJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfKKD1G (ORCPT
+        id S1726910AbfKKDb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 22:27:06 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6182 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726742AbfKKD1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 22:27:06 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A38838B905A01154A088;
-        Mon, 11 Nov 2019 11:27:02 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 11 Nov 2019
- 11:26:54 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <denis.ciocca@st.com>, <tglx@linutronix.de>,
-        <alexios.zavras@intel.com>, <allison@lohutok.net>,
-        <yuehaibing@huawei.com>, <linus.walleij@linaro.org>,
-        <ladis@linux-mips.org>
-CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 -next] iio: st_accel: Fix unused variable warning
-Date:   Mon, 11 Nov 2019 11:21:15 +0800
-Message-ID: <20191111032115.3008-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20191101134741.25108-1-yuehaibing@huawei.com>
-References: <20191101134741.25108-1-yuehaibing@huawei.com>
+        Sun, 10 Nov 2019 22:31:58 -0500
+Received: from ozlabs.org ([203.11.71.1]:34929 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726742AbfKKDb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 22:31:57 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47BGdQ5VZPz9sPK;
+        Mon, 11 Nov 2019 14:31:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573443115;
+        bh=vP5Ytc5V6Y1ug4Ttp8PT0OCixHE3mZcJWYX9N6B1xrw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=f/G4svEJHgpbRaPFJbcLuNXgf259iHGd9cl8p4P6kVfxfl8hLCAoCkfaF9dQTPHbP
+         almn7lhsSg0FBO3/aPdpNhnaZriueGduoqALWWh6xo3DI2PCbtRQQtBZYudfawUWwP
+         ifKbusUDuvS8h6iq6ZtcWDQNIfaLDM3tHAk7PD4OEjC9WiHzDzQ+Zavb+nDeaYnIZn
+         aTWdyqawNYhcpsBvq0KkJ3AEqzyzZhVH9+brxLe/ifvV+Xk/pblO8xDXuhOVSy6nkk
+         sMl8WLdKQzGGwwfrCjx+3ncOu9ujZqpr/4GXDRAKA/hwUQNE5YGP4nECvxxRYFiPK0
+         hwl9YyJWdzjeg==
+Date:   Mon, 11 Nov 2019 14:31:54 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
+Subject: linux-next: manual merge of the tip tree with the xtensa tree
+Message-ID: <20191111143154.13b0a7ac@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/prKWrhXS8Vld8urfDAE1_q4";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/iio/accel/st_accel_core.c:1005:44: warning:
- mount_matrix_ext_info defined but not used [-Wunused-const-variable=]
+--Sig_/prKWrhXS8Vld8urfDAE1_q4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Using stub helper while CONFIG_ACPI is disabled to fix it.
+Hi all,
 
-Suggested-by: Ladislav Michl <ladis@linux-mips.org>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/iio/accel/st_accel_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Today's linux-next merge of the tip tree got a conflict in:
 
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index 7b83764..7320275 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -992,6 +992,7 @@ static const struct iio_trigger_ops st_accel_trigger_ops = {
- #define ST_ACCEL_TRIGGER_OPS NULL
- #endif
- 
-+#ifdef CONFIG_ACPI
- static const struct iio_mount_matrix *
- get_mount_matrix(const struct iio_dev *indio_dev,
- 		 const struct iio_chan_spec *chan)
-@@ -1012,7 +1013,6 @@ static const struct iio_chan_spec_ext_info mount_matrix_ext_info[] = {
- static int apply_acpi_orientation(struct iio_dev *indio_dev,
- 				  struct iio_chan_spec *channels)
- {
--#ifdef CONFIG_ACPI
- 	struct st_sensor_data *adata = iio_priv(indio_dev);
- 	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
- 	struct acpi_device *adev;
-@@ -1140,10 +1140,14 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
- out:
- 	kfree(buffer.pointer);
- 	return ret;
-+}
- #else /* !CONFIG_ACPI */
-+static int apply_acpi_orientation(struct iio_dev *indio_dev,
-+				  struct iio_chan_spec *channels)
-+{
- 	return 0;
--#endif
- }
-+#endif
- 
- /*
-  * st_accel_get_settings() - get sensor settings from device name
--- 
-2.7.4
+  arch/xtensa/kernel/vmlinux.lds.S
 
+between commit:
 
+  158b6b99ba7b ("xtensa: merge .fixup with .text")
+
+from the xtensa tree and commits:
+
+  eaf937075c9a ("vmlinux.lds.h: Move NOTES into RO_DATA")
+  94174c9b71c6 ("xtensa: Move EXCEPTION_TABLE to RO_DATA segment")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/xtensa/kernel/vmlinux.lds.S
+index c64abc15d38f,0043d5858f14..000000000000
+--- a/arch/xtensa/kernel/vmlinux.lds.S
++++ b/arch/xtensa/kernel/vmlinux.lds.S
+@@@ -124,17 -126,16 +126,15 @@@ SECTION
+ =20
+    . =3D ALIGN(16);
+ =20
+-   RODATA
++   RO_DATA(4096)
+ =20
+-   EXCEPTION_TABLE(16)
+-   NOTES
+ -  /*  Relocation table */
+ -
+ -  .fixup   : { *(.fixup) }
+ -
+    /* Data section */
+ =20
+ +#ifdef CONFIG_XIP_KERNEL
+ +  INIT_TEXT_SECTION(PAGE_SIZE)
+ +#else
+    _sdata =3D .;
+-   RW_DATA_SECTION(XCHAL_ICACHE_LINESIZE, PAGE_SIZE, THREAD_SIZE)
++   RW_DATA(XCHAL_ICACHE_LINESIZE, PAGE_SIZE, THREAD_SIZE)
+    _edata =3D .;
+ =20
+    /* Initialization code and data: */
+
+--Sig_/prKWrhXS8Vld8urfDAE1_q4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3I1ioACgkQAVBC80lX
+0Gzjmwf/fr/fMLlfj21xgvK8rj9ecb2t7crLaOdR4SAO8VeW194rgMiz1fHEvFd4
+eAnE5Ts3BuBL5MysBuiSsjPHoCITxGR0xcomC/weZTHKyeLjnZbfCjYA/7N7+l3j
+QtqnnipeO1Z4SNi+WEkzehftMXwLI0mwxBx1s+eEUSrRcLeQ8HUWTJVYDYXQse+j
+izPmxPy+t/ATCkaVkN4OfY1flGO1N3xILrugMZyIMXA6kG+zuDeTebxb55dtW5sA
+ngER/CdMaeW+ag3azYmdMzKd+/Jrn0Har+MYBj0mwVsqo+U0s+Irdv/uYx+mutZX
+xs6Jw0GfFnP1yixwARQk4kY4Ni/AsA==
+=BaKq
+-----END PGP SIGNATURE-----
+
+--Sig_/prKWrhXS8Vld8urfDAE1_q4--
