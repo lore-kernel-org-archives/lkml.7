@@ -2,136 +2,84 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B42C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97924206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49AD7206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKKHUD (ORCPT
+        id S1726960AbfKKHUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:20:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58187 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfKKHUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:20:02 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iU3zQ-0005vi-5D; Mon, 11 Nov 2019 08:19:56 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iU3zM-0007yV-Kj; Mon, 11 Nov 2019 08:19:52 +0100
-Date:   Mon, 11 Nov 2019 08:19:52 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Grant Erickson <marathon96@gmail.com>,
-        Joachim Eastwood <manabian@gmail.com>,
-        Neil Brown <neilb@suse.de>, Wen Yang <wen.yang99@zte.com.cn>
-Subject: Re: [PATCH] pwm: omap-dmtimer: Add missing put_device() call in
- pwm_omap_dmtimer_probe()
-Message-ID: <20191111071952.6pbswbboqreen6im@pengutronix.de>
-References: <fd7a56e4-2a35-a6c4-e5bd-1e53a6c48687@web.de>
+        Mon, 11 Nov 2019 02:20:25 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45880 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726360AbfKKHUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 02:20:25 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 23B4FBE7B83F4ABC15A6;
+        Mon, 11 Nov 2019 15:20:23 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 11 Nov 2019
+ 15:20:14 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <mail@david-bauer.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] mdio_bus: Fix PTR_ERR applied after initialization to constant
+Date:   Mon, 11 Nov 2019 15:13:47 +0800
+Message-ID: <20191111071347.21712-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fd7a56e4-2a35-a6c4-e5bd-1e53a6c48687@web.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Markus,
+Fix coccinelle warning:
 
-On Sat, Nov 09, 2019 at 01:26:50PM +0100, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sat, 9 Nov 2019 13:09:42 +0100
-> 
-> A coccicheck run provided information like the following.
-> 
-> drivers/pwm/pwm-omap-dmtimer.c:304:2-8: ERROR: missing put_device;
-> call of_find_device_by_node on line 255, but without a corresponding
-> object release within this function.
-> 
-> Generated by: scripts/coccinelle/free/put_device.cocci
-> 
-> Thus add jump targets to fix the exception handling for this
-> function implementation.
-> 
-> Fixes: b7290cf6ff7869ec12070aa146c370728cab62c2 ("pwm: pwm-omap-dmtimer: Adapt driver to utilize dmtimer pdata ops")
-> Fixes: 6604c6556db9e41c85f2839f66bd9d617bcf9f87 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  drivers/pwm/pwm-omap-dmtimer.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-> index 00772fc53490..958854213786 100644
-> --- a/drivers/pwm/pwm-omap-dmtimer.c
-> +++ b/drivers/pwm/pwm-omap-dmtimer.c
-> @@ -301,12 +301,13 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
->  put:
->  	of_node_put(timer);
->  	if (ret < 0)
-> -		return ret;
-> +		goto check_timer_pdev;
-> 
->  	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
->  	if (!omap) {
->  		pdata->free(dm_timer);
-> -		return -ENOMEM;
-> +		ret = -ENOMEM;
-> +		goto put_device;
->  	}
-> 
->  	omap->pdata = pdata;
-> @@ -340,12 +341,19 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "failed to register PWM\n");
->  		omap->pdata->free(omap->dm_timer);
-> -		return ret;
-> +		goto put_device;
->  	}
-> 
->  	platform_set_drvdata(pdev, omap);
-> 
->  	return 0;
-> +
-> +check_timer_pdev:
-> +	if (timer_pdev)
-> +put_device:
-> +		put_device(&timer_pdev->dev);
+./drivers/net/phy/mdio_bus.c:67:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
+./drivers/net/phy/mdio_bus.c:68:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
 
-This is ugly but necessary with the driver as is because the error
-handling is interwinded within the normal path through this function.
+Fix this by using IS_ERR before PTR_ERR
 
-I would prefer to clean this up first, then this fix gets a bit nicer.
-Will send a patch in reply to this mail.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 71dd6c0dff51 ("net: phy: add support for reset-controller")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/phy/mdio_bus.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Best regards
-Uwe
-
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 2e29ab8..3587656 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -64,11 +64,12 @@ static int mdiobus_register_reset(struct mdio_device *mdiodev)
+ 	if (mdiodev->dev.of_node)
+ 		reset = devm_reset_control_get_exclusive(&mdiodev->dev,
+ 							 "phy");
+-	if (PTR_ERR(reset) == -ENOENT ||
+-	    PTR_ERR(reset) == -ENOTSUPP)
+-		reset = NULL;
+-	else if (IS_ERR(reset))
+-		return PTR_ERR(reset);
++	if (IS_ERR(reset)) {
++		if (PTR_ERR(reset) == -ENOENT || PTR_ERR(reset) == -ENOSYS)
++			reset = NULL;
++		else
++			return PTR_ERR(reset);
++	}
+ 
+ 	mdiodev->reset_ctrl = reset;
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.7.4
+
+
