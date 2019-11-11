@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E0BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427B1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F57121783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AAB21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499347;
-	bh=7dXXsH7X6GxxR3lsUezPDfcCSac/BRCkT7gmmTpCPzc=;
+	s=default; t=1573499352;
+	bh=34iO7JmVcXpXn7LTOurI6kkO/0cJKor/J47L6tLTihY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=abumOUYRDveqc1swbvczR/BfVYSbbM16K7tl9yv5wWQgDYLWyeDcCFwDnxFr69Xa9
-	 893uH9l+5I2lx2zAwnR0Uz5jVPTFo5V0xPt4BLvMGvxutvgNL45EgRw0nSY3VhRRyf
-	 3PomXgD8jk/blByn+3elpkkTJtHekpxi7XU04Xz8=
+	b=PPRzfaPPvJDbz/nF0NVHLjkXrkyNaj6vGnb1qwOlXod0wlJW+OF4D6dbfXXD7h8Pu
+	 jnxZHDwsfMGTqxiomciTMIgJ1vF6z71nk/odVXydVNdjFpaftyOlBLSZRty17IQam+
+	 RnFqeoLVo4Mth52y3G+aABovJbcDARTDqKw/PcjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbfKKSeg (ORCPT
+        id S1728338AbfKKSe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:34:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:34:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbfKKSed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:33 -0500
+        id S1727632AbfKKSeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A202173B;
-        Mon, 11 Nov 2019 18:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEEEC21925;
+        Mon, 11 Nov 2019 18:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497272;
-        bh=7dXXsH7X6GxxR3lsUezPDfcCSac/BRCkT7gmmTpCPzc=;
+        s=default; t=1573497264;
+        bh=34iO7JmVcXpXn7LTOurI6kkO/0cJKor/J47L6tLTihY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UbAlQ16976AlT2Zq8FWuH9bfdotn/ZWQmvqfWUo7SWf5lrS1H/jwq9ADxwOmCl+0g
-         2ItGzMP1gCGg55gWQNNfUPrQILEIwReDkRjOjkXzYM9+oi+4zOlz2KpmjapHI+TuVd
-         knlvIuiIi30NzC0O6CA9D2wBBkl858ckIjoeRwik=
+        b=NH+DRLPAFg5Np+ClwIqZ2lVhWTVNvo+FbC3s9wgUY+U/sxzGG0YDNRvqR1k/LDS/M
+         KbSHNjZ/X+p/faI0zXk4ef5CcCSJmtFBY2U2eblcLTparonmSybQavWHOTNK6O9BDF
+         D4h2a4tN15G6NM+Yo0u1uNdUc2H/kAwMZOXbhtGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 63/65] can: flexcan: disable completely the ECC mechanism
-Date:   Mon, 11 Nov 2019 19:29:03 +0100
-Message-Id: <20191111181356.319463216@linuxfoundation.org>
+        stable@vger.kernel.org, Dou Liyang <douly.fnst@cn.fujitsu.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>, bhe@redhat.com,
+        ebiederm@xmission.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 60/65] x86/apic: Move pending interrupt check code into its own function
+Date:   Mon, 11 Nov 2019 19:29:00 +0100
+Message-Id: <20191111181355.364498204@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -60,37 +61,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: Dou Liyang <douly.fnst@cn.fujitsu.com>
 
-[ Upstream commit 5e269324db5adb2f5f6ec9a93a9c7b0672932b47 ]
+[ Upstream commit 9b217f33017715903d0956dfc58f82d2a2d00e63 ]
 
-The ECC (memory error detection and correction) mechanism can be
-activated or not, controlled by the ECCDIS bit in CAN_MECR. When
-disabled, updates on indications and reporting registers are stopped.
-So if want to disable ECC completely, had better assert ECCDIS bit, not
-just mask the related interrupts.
+The pending interrupt check code is mixed with the local APIC setup code,
+that looks messy.
 
-Fixes: cdce844865be ("can: flexcan: add vf610 support for FlexCAN")
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Extract the related code, move it into a new function named
+apic_pending_intr_clear().
+
+Signed-off-by: Dou Liyang <douly.fnst@cn.fujitsu.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: bhe@redhat.com
+Cc: ebiederm@xmission.com
+Link: https://lkml.kernel.org/r/20180301055930.2396-2-douly.fnst@cn.fujitsu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/flexcan.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/apic/apic.c | 100 ++++++++++++++++++++----------------
+ 1 file changed, 55 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
-index baef09b9449f9..6b866d0451b21 100644
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -923,6 +923,7 @@ static int flexcan_chip_start(struct net_device *dev)
- 		reg_mecr = flexcan_read(&regs->mecr);
- 		reg_mecr &= ~FLEXCAN_MECR_ECRWRDIS;
- 		flexcan_write(reg_mecr, &regs->mecr);
-+		reg_mecr |= FLEXCAN_MECR_ECCDIS;
- 		reg_mecr &= ~(FLEXCAN_MECR_NCEFAFRZ | FLEXCAN_MECR_HANCEI_MSK |
- 			      FLEXCAN_MECR_FANCEI_MSK);
- 		flexcan_write(reg_mecr, &regs->mecr);
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 232350519062b..264daf1f49915 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1281,6 +1281,56 @@ static void lapic_setup_esr(void)
+ 			oldvalue, value);
+ }
+ 
++static void apic_pending_intr_clear(void)
++{
++	long long max_loops = cpu_khz ? cpu_khz : 1000000;
++	unsigned long long tsc = 0, ntsc;
++	unsigned int value, queued;
++	int i, j, acked = 0;
++
++	if (boot_cpu_has(X86_FEATURE_TSC))
++		tsc = rdtsc();
++	/*
++	 * After a crash, we no longer service the interrupts and a pending
++	 * interrupt from previous kernel might still have ISR bit set.
++	 *
++	 * Most probably by now CPU has serviced that pending interrupt and
++	 * it might not have done the ack_APIC_irq() because it thought,
++	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
++	 * does not clear the ISR bit and cpu thinks it has already serivced
++	 * the interrupt. Hence a vector might get locked. It was noticed
++	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
++	 */
++	do {
++		queued = 0;
++		for (i = APIC_ISR_NR - 1; i >= 0; i--)
++			queued |= apic_read(APIC_IRR + i*0x10);
++
++		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
++			value = apic_read(APIC_ISR + i*0x10);
++			for (j = 31; j >= 0; j--) {
++				if (value & (1<<j)) {
++					ack_APIC_irq();
++					acked++;
++				}
++			}
++		}
++		if (acked > 256) {
++			printk(KERN_ERR "LAPIC pending interrupts after %d EOI\n",
++			       acked);
++			break;
++		}
++		if (queued) {
++			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
++				ntsc = rdtsc();
++				max_loops = (cpu_khz << 10) - (ntsc - tsc);
++			} else
++				max_loops--;
++		}
++	} while (queued && max_loops > 0);
++	WARN_ON(max_loops <= 0);
++}
++
+ /**
+  * setup_local_APIC - setup the local APIC
+  *
+@@ -1290,13 +1340,11 @@ static void lapic_setup_esr(void)
+ void setup_local_APIC(void)
+ {
+ 	int cpu = smp_processor_id();
+-	unsigned int value, queued;
+-	int i, j, acked = 0;
+-	unsigned long long tsc = 0, ntsc;
+-	long long max_loops = cpu_khz ? cpu_khz : 1000000;
++	unsigned int value;
++#ifdef CONFIG_X86_32
++	int i;
++#endif
+ 
+-	if (boot_cpu_has(X86_FEATURE_TSC))
+-		tsc = rdtsc();
+ 
+ 	if (disable_apic) {
+ 		disable_ioapic_support();
+@@ -1356,45 +1404,7 @@ void setup_local_APIC(void)
+ 	value &= ~APIC_TPRI_MASK;
+ 	apic_write(APIC_TASKPRI, value);
+ 
+-	/*
+-	 * After a crash, we no longer service the interrupts and a pending
+-	 * interrupt from previous kernel might still have ISR bit set.
+-	 *
+-	 * Most probably by now CPU has serviced that pending interrupt and
+-	 * it might not have done the ack_APIC_irq() because it thought,
+-	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
+-	 * does not clear the ISR bit and cpu thinks it has already serivced
+-	 * the interrupt. Hence a vector might get locked. It was noticed
+-	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
+-	 */
+-	do {
+-		queued = 0;
+-		for (i = APIC_ISR_NR - 1; i >= 0; i--)
+-			queued |= apic_read(APIC_IRR + i*0x10);
+-
+-		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
+-			value = apic_read(APIC_ISR + i*0x10);
+-			for (j = 31; j >= 0; j--) {
+-				if (value & (1<<j)) {
+-					ack_APIC_irq();
+-					acked++;
+-				}
+-			}
+-		}
+-		if (acked > 256) {
+-			printk(KERN_ERR "LAPIC pending interrupts after %d EOI\n",
+-			       acked);
+-			break;
+-		}
+-		if (queued) {
+-			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
+-				ntsc = rdtsc();
+-				max_loops = (cpu_khz << 10) - (ntsc - tsc);
+-			} else
+-				max_loops--;
+-		}
+-	} while (queued && max_loops > 0);
+-	WARN_ON(max_loops <= 0);
++	apic_pending_intr_clear();
+ 
+ 	/*
+ 	 * Now that we are all set up, enable the APIC
 -- 
 2.20.1
 
