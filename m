@@ -2,165 +2,114 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A980BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC545C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD57214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB8B206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfKKKLo (ORCPT
+        id S1727097AbfKKKLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:11:44 -0500
-Received: from mga02.intel.com ([134.134.136.20]:32506 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfKKKLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:11:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 02:11:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
-   d="scan'208";a="354734522"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 11 Nov 2019 02:11:40 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Mon, 11 Nov 2019 18:11:30 +0800
-Message-Id: <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+        Mon, 11 Nov 2019 05:11:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56043 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKKLt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:11:49 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iU6fc-00046R-6A; Mon, 11 Nov 2019 11:11:40 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A7E4D1C0093;
+        Mon, 11 Nov 2019 11:11:39 +0100 (CET)
+Date:   Mon, 11 Nov 2019 10:11:39 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/stacktrace] stacktrace: Get rid of unneeded '!!' pattern
+Cc:     Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191111092647.27419-1-jslaby@suse.cz>
+References: <20191111092647.27419-1-jslaby@suse.cz>
+MIME-Version: 1.0
+Message-ID: <157346709937.29376.10784180052617315961.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+The following commit has been merged into the core/stacktrace branch of tip:
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Commit-ID:     4b48512c2e9c63b62d7da23563cdb224b4d61d72
+Gitweb:        https://git.kernel.org/tip/4b48512c2e9c63b62d7da23563cdb224b4d61d72
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Mon, 11 Nov 2019 10:26:47 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 11 Nov 2019 10:30:59 +01:00
+
+stacktrace: Get rid of unneeded '!!' pattern
+
+My commit b0c51f158455 ("stacktrace: Don't skip first entry on
+noncurrent tasks") adds one or zero to skipnr by "!!(current == tsk)".
+
+But the C99 standard says:
+
+  The == (equal to) and != (not equal to) operators are
+  ...
+  Each of the operators yields 1 if the specified relation is true and 0
+  if it is false.
+
+So there is no need to prepend the above expression by "!!" -- remove it.
+
+Reported-by: Joe Perches <joe@perches.com>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191111092647.27419-1-jslaby@suse.cz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ kernel/stacktrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..d54a3bda1f4f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+
-+      bias-pull-up:
-+        type: boolean
-+      bias-pull-down:
-+        type: boolean
-+      drive-strength:
-+        type: boolean
-+      slew-rate:
-+        type: boolean
-+      drive-open-drain:
-+        type: boolean
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0-pins: uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
-
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index c9ea7eb..2af66e4 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -142,7 +142,7 @@ unsigned int stack_trace_save_tsk(struct task_struct *tsk, unsigned long *store,
+ 		.store	= store,
+ 		.size	= size,
+ 		/* skip this function if they are tracing us */
+-		.skip	= skipnr + !!(current == tsk),
++		.skip	= skipnr + (current == tsk),
+ 	};
+ 
+ 	if (!try_get_task_stack(tsk))
+@@ -300,7 +300,7 @@ unsigned int stack_trace_save_tsk(struct task_struct *task,
+ 		.entries	= store,
+ 		.max_entries	= size,
+ 		/* skip this function if they are tracing us */
+-		.skip	= skipnr + !!(current == task),
++		.skip	= skipnr + (current == task),
+ 	};
+ 
+ 	save_stack_trace_tsk(task, &trace);
