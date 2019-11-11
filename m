@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B64FC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E10C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632F1222D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300E0222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497534;
-	bh=Umhrk4I3/8m4n1PENLs+C//lxigBRjVE7+2A8v6Wleo=;
+	s=default; t=1573497537;
+	bh=iM1DRWLg/EZkcgBIASKaE0hYTDyDeIPKvMjcj8krd/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRY6ebxaMwrfPC9VYFY9nUPj7eBHa3sjQabvozD+1nRdooQsX+JDqvK5gR4SjSGnA
-	 /QZeVnUS/Fdc8KbRc5l0o6rkiz/yC4RnXMxl+EF1BMJAEGCrUoUhmq5VG4VTeQEFJg
-	 P5TL8zskkihvimWYjCLkI/Gy7b7KDnNUWaDCYsy8=
+	b=DlBDicXVEzT98bpbi5vig1VIoMXIJ5qvIuEflUuoRE50u+ARx4yRk0UCF/CpYTZia
+	 9eLjG7Rhy5TP/Pc1PFPXIIs1BesFwx5uMe1m3hRYim7DYi55rSbWmdLUvo0oL20Tw0
+	 XpruhrqPmJZ5v6f5TAmyDxNIAJppNwrjb2pPKIb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfKKSiw (ORCPT
+        id S1729097AbfKKSiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729061AbfKKSis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:48 -0500
+        id S1729090AbfKKSix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648F0204FD;
-        Mon, 11 Nov 2019 18:38:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB552196E;
+        Mon, 11 Nov 2019 18:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497526;
-        bh=Umhrk4I3/8m4n1PENLs+C//lxigBRjVE7+2A8v6Wleo=;
+        s=default; t=1573497532;
+        bh=iM1DRWLg/EZkcgBIASKaE0hYTDyDeIPKvMjcj8krd/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FcI6KuN/46qD8JjIpE5L47SPhC8qprgvBb0XNvX6tVMSwIzd+8+xMsQB8O2FeFNmQ
-         2745q1BukWuEabvTZ6i7BKGLhLS/KBG55x9KXoaaNLVa3jLoiiNNCNu7+pTb5TFpOH
-         E9w3qcEWkHrnytD3TRiAc1R30Q33V0UDnzmuC9zc=
+        b=ZzTra3WTl4GSRSO64eIoTv8B1fKkAA7sw9kbVQgWruiqP85DDlmyHDsC2koDdKeoM
+         OjdDUCrM8pcXgH5OLCPtjvqPtl2XOpJJf5cOehYxjJoUIFCTYSUEZxwG5s2RN/0FwL
+         oDuniF/fIzclrHet8SGyQGMStG/o2x46wcTgjxV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.14 045/105] configfs: fix a deadlock in configfs_symlink()
-Date:   Mon, 11 Nov 2019 19:28:15 +0100
-Message-Id: <20191111181441.252994654@linuxfoundation.org>
+        Keerthy <j-keerthy@ti.com>, Lee Jones <lee.jones@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 047/105] mfd: palmas: Assign the right powerhold mask for tps65917
+Date:   Mon, 11 Nov 2019 19:28:17 +0100
+Message-Id: <20191111181441.571177580@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,81 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Keerthy <j-keerthy@ti.com>
 
-commit 351e5d869e5ac10cb40c78b5f2d7dfc816ad4587 upstream.
+commit 572ff4d560be3784205b224cd67d6715620092d7 upstream
 
-Configfs abuses symlink(2).  Unlike the normal filesystems, it
-wants the target resolved at symlink(2) time, like link(2) would've
-done.  The problem is that ->symlink() is called with the parent
-directory locked exclusive, so resolving the target inside the
-->symlink() is easily deadlocked.
+The powerhold mask for TPS65917 is different when comapred to
+the other palmas versions. Hence assign the right mask that enables
+power off of tps65917 pmic correctly.
 
-Short of really ugly games in sys_symlink() itself, all we can
-do is to unlock the parent before resolving the target and
-relock it after.  However, that invalidates the checks done
-by the caller of ->symlink(), so we have to
-	* check that dentry is still where it used to be
-(it couldn't have been moved, but it could've been unhashed)
-	* recheck that it's still negative (somebody else
-might've successfully created a symlink with the same name
-while we were looking the target up)
-	* recheck the permissions on the parent directory.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/configfs/symlink.c |   33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ drivers/mfd/palmas.c       |   10 +++++++++-
+ include/linux/mfd/palmas.h |    3 +++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
---- a/fs/configfs/symlink.c
-+++ b/fs/configfs/symlink.c
-@@ -157,11 +157,42 @@ int configfs_symlink(struct inode *dir,
- 	    !type->ct_item_ops->allow_link)
- 		goto out_put;
+--- a/drivers/mfd/palmas.c
++++ b/drivers/mfd/palmas.c
+@@ -430,6 +430,7 @@ static void palmas_power_off(void)
+ {
+ 	unsigned int addr;
+ 	int ret, slave;
++	u8 powerhold_mask;
+ 	struct device_node *np = palmas_dev->dev->of_node;
  
-+	/*
-+	 * This is really sick.  What they wanted was a hybrid of
-+	 * link(2) and symlink(2) - they wanted the target resolved
-+	 * at syscall time (as link(2) would've done), be a directory
-+	 * (which link(2) would've refused to do) *AND* be a deep
-+	 * fucking magic, making the target busy from rmdir POV.
-+	 * symlink(2) is nothing of that sort, and the locking it
-+	 * gets matches the normal symlink(2) semantics.  Without
-+	 * attempts to resolve the target (which might very well
-+	 * not even exist yet) done prior to locking the parent
-+	 * directory.  This perversion, OTOH, needs to resolve
-+	 * the target, which would lead to obvious deadlocks if
-+	 * attempted with any directories locked.
-+	 *
-+	 * Unfortunately, that garbage is userland ABI and we should've
-+	 * said "no" back in 2005.  Too late now, so we get to
-+	 * play very ugly games with locking.
-+	 *
-+	 * Try *ANYTHING* of that sort in new code, and you will
-+	 * really regret it.  Just ask yourself - what could a BOFH
-+	 * do to me and do I want to find it out first-hand?
-+	 *
-+	 *  AV, a thoroughly annoyed bastard.
-+	 */
-+	inode_unlock(dir);
- 	ret = get_target(symname, &path, &target_item, dentry->d_sb);
-+	inode_lock(dir);
- 	if (ret)
- 		goto out_put;
+ 	if (of_property_read_bool(np, "ti,palmas-override-powerhold")) {
+@@ -437,8 +438,15 @@ static void palmas_power_off(void)
+ 					  PALMAS_PRIMARY_SECONDARY_PAD2);
+ 		slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
  
--	ret = type->ct_item_ops->allow_link(parent_item, target_item);
-+	if (dentry->d_inode || d_unhashed(dentry))
-+		ret = -EEXIST;
-+	else
-+		ret = inode_permission(dir, MAY_WRITE | MAY_EXEC);
-+	if (!ret)
-+		ret = type->ct_item_ops->allow_link(parent_item, target_item);
- 	if (!ret) {
- 		mutex_lock(&configfs_symlink_mutex);
- 		ret = create_link(parent_item, target_item, dentry);
++		if (of_device_is_compatible(np, "ti,tps65917"))
++			powerhold_mask =
++				TPS65917_PRIMARY_SECONDARY_PAD2_GPIO_5_MASK;
++		else
++			powerhold_mask =
++				PALMAS_PRIMARY_SECONDARY_PAD2_GPIO_7_MASK;
++
+ 		ret = regmap_update_bits(palmas_dev->regmap[slave], addr,
+-				PALMAS_PRIMARY_SECONDARY_PAD2_GPIO_7_MASK, 0);
++					 powerhold_mask, 0);
+ 		if (ret)
+ 			dev_err(palmas_dev->dev,
+ 				"Unable to write PRIMARY_SECONDARY_PAD2 %d\n",
+--- a/include/linux/mfd/palmas.h
++++ b/include/linux/mfd/palmas.h
+@@ -3733,6 +3733,9 @@ enum usb_irq_events {
+ #define TPS65917_REGEN3_CTRL_MODE_ACTIVE			0x01
+ #define TPS65917_REGEN3_CTRL_MODE_ACTIVE_SHIFT			0x00
+ 
++/* POWERHOLD Mask field for PRIMARY_SECONDARY_PAD2 register */
++#define TPS65917_PRIMARY_SECONDARY_PAD2_GPIO_5_MASK		0xC
++
+ /* Registers for function RESOURCE */
+ #define TPS65917_REGEN1_CTRL					0x2
+ #define TPS65917_PLLEN_CTRL					0x3
 
 
