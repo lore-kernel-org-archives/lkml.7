@@ -2,96 +2,153 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73180C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB07C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC422184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EFA2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="UysnqbJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfKKWMg (ORCPT
+        id S1727164AbfKKWPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:12:36 -0500
-Received: from mga03.intel.com ([134.134.136.65]:2932 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfKKWMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:12:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 14:12:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,294,1569308400"; 
-   d="scan'208";a="287302340"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 11 Nov 2019 14:12:29 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v2 0/3] KVM: MMU: Fix a refcount bug with ZONE_DEVICE pages
-Date:   Mon, 11 Nov 2019 14:12:26 -0800
-Message-Id: <20191111221229.24732-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 11 Nov 2019 17:15:31 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38250 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbfKKWPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 17:15:31 -0500
+Received: by mail-lf1-f68.google.com with SMTP id q28so11123894lfa.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 14:15:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JRXrodVHYhiGAfwYVYOvpqNqKsOaJKtvlzrom6mvWYM=;
+        b=UysnqbJjbZklK2plaqyIEe+XW5WofM07UNZ/iralSzFfBCjam7qpOU2k0pD/PSeHMh
+         6a/D31RBqtZB9pgmEoumiBOjb8orhAaDSK7pXCUApMgFV0LdjwZbELZPs+cxaiPfonUR
+         2pdP//ukce48f3YrL24RkhoCF99krNL+g2GKY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JRXrodVHYhiGAfwYVYOvpqNqKsOaJKtvlzrom6mvWYM=;
+        b=GToS+4PIiO3u2pAjsNBO2Q5TxgOh/X1AlTmnmBYISaUTaYxp7lJ+ku+zh5fKvdy5CB
+         BTSclsEC6+vNQhgxFvpG3+LDbYDR+Ek0jN6OmB2tRGmaDoAe1gtEkFlU2oMpDaGq7SeN
+         70JSP0u8BAziZA9dHo4M+TNMaqXL2PTrXKb9PDImbwZqcu0vM+zTytnN7tFuHHfgu6wc
+         4udTFwFyX/ZhFXO1AZ0KNTANeeylWp2qGzs1+REbSWPSTumcUGGA+BV1aiMhQulMz6Fy
+         YccuqBYrZcA0P3YS52ciDhS3+ur4VwUEhTGCOVCHmpHpLrZ/XhXZUNhP3knqu4HToe56
+         E9YQ==
+X-Gm-Message-State: APjAAAV562LCSQwFy3jWMS1jZGm3vthYlAtD3479u9BN1Qhto/gg8eUi
+        k724jT9L/ooNh3mZiMfcJD0lBBSgBdc=
+X-Google-Smtp-Source: APXvYqxkHnYkKqHXF33wJikEKSAcRL+wwJC3Liou9mSqBVHPdLOM/v67G69jS60uz532oU/4kZLUqQ==
+X-Received: by 2002:ac2:4a8a:: with SMTP id l10mr16950312lfp.185.1573510527947;
+        Mon, 11 Nov 2019 14:15:27 -0800 (PST)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id r19sm7432742lfi.13.2019.11.11.14.15.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Nov 2019 14:15:27 -0800 (PST)
+Subject: Re: [PATCH net-next 2/2] bridge: implement get_link_ksettings ethtool
+ method
+To:     Matthias Schiffer <mschiffer@universe-factory.net>,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net,
+        roopa@cumulusnetworks.com
+References: <cover.1573321597.git.mschiffer@universe-factory.net>
+ <8e414e98928aba7f11ea997498fb18af05434f5f.1573321597.git.mschiffer@universe-factory.net>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <5da07a98-bae3-2d67-d60b-2e58be9d8377@cumulusnetworks.com>
+Date:   Tue, 12 Nov 2019 00:15:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8e414e98928aba7f11ea997498fb18af05434f5f.1573321597.git.mschiffer@universe-factory.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This mini-series fixes a suspected, but technically unconfirmed, bug in
-KVM related to ZONE_DEVICE pages.  The suspected issue is that KVM treats
-ZONE_DEVICE pages as reserved PFNs, and so doesn't put references to such
-pages when dropping references via KVM's generic kvm_release_pfn_clean().
+On 09/11/2019 19:54, Matthias Schiffer wrote:
+> We return the maximum speed of all active ports. This matches how the link
+> speed would give an upper limit for traffic to/from any single peer if the
+> bridge were replaced with a hardware switch.
+> 
+> Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+> ---
+>  net/bridge/br_device.c | 37 +++++++++++++++++++++++++++++++++++--
+>  1 file changed, 35 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
+> index e804a3016902..e8a2d0c13592 100644
+> --- a/net/bridge/br_device.c
+> +++ b/net/bridge/br_device.c
+> @@ -263,6 +263,38 @@ static void br_getinfo(struct net_device *dev, struct ethtool_drvinfo *info)
+>  	strlcpy(info->bus_info, "N/A", sizeof(info->bus_info));
+>  }
+>  
+> +static int br_get_link_ksettings(struct net_device *dev,
+> +				 struct ethtool_link_ksettings *cmd)
+> +{
+> +	struct net_bridge *br = netdev_priv(dev);
+> +	struct net_bridge_port *p;
+> +
+> +	cmd->base.duplex = DUPLEX_UNKNOWN;
+> +	cmd->base.port = PORT_OTHER;
+> +	cmd->base.speed = SPEED_UNKNOWN;
+> +
+> +	list_for_each_entry(p, &br->port_list, list) {
+> +		struct ethtool_link_ksettings ecmd;
+> +		struct net_device *pdev = p->dev;
+> +
+> +		if (!netif_running(pdev) || !netif_oper_up(pdev))
+> +			continue;
+> +
+> +		if (__ethtool_get_link_ksettings(pdev, &ecmd))
+> +			continue;
+> +
+> +		if (ecmd.base.speed == (__u32)SPEED_UNKNOWN)
+> +			continue;
+> +
+> +		if (cmd->base.speed == (__u32)SPEED_UNKNOWN ||
+> +		    cmd->base.speed < ecmd.base.speed) {
+> +			cmd->base.speed = ecmd.base.speed;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static netdev_features_t br_fix_features(struct net_device *dev,
+>  	netdev_features_t features)
+>  {
+> @@ -365,8 +397,9 @@ static int br_del_slave(struct net_device *dev, struct net_device *slave_dev)
+>  }
+>  
+>  static const struct ethtool_ops br_ethtool_ops = {
+> -	.get_drvinfo    = br_getinfo,
+> -	.get_link	= ethtool_op_get_link,
+> +	.get_drvinfo		 = br_getinfo,
+> +	.get_link		 = ethtool_op_get_link,
+> +	.get_link_ksettings	 = br_get_link_ksettings,
+>  };
+>  
+>  static const struct net_device_ops br_netdev_ops = {
+> 
 
-David Hildenbrand uncovered the bug during a discussion about removing
-PG_reserved from ZONE_DEVICE pages, after Dan Williams pointed out[1] that
-there was a bug report from Adam Borowski[2] that was likely related to
-KVM's interaction with PageReserved().
+Code-wise this is ok, but it could cause potential issues because devices will suddenly
+have speed (without duplex), and macvlan/8021q are examples which use the lowerdev's
+get_link_ksettings. I searched for potential problems with some user-space software
+but couldn't find any, so I hope it will be fine. :)
+Let's see where this goes.
 
-Patch 1/3 contains the actual fix, patches 2/3 and 3/3 are minor cleanup
-that is mostly unrelated, but dependent and prompted by the fix itself.
-
-v2:
-  - Remove the kvm_is_zone_device_pfn(pfn) check from kvm_get_pfn().  It's
-    not entirely clear whether or not the hva_to_pfn_remapped() case is
-    actually broken, e.g. KVM's page fault handler is likely ok, whereas
-    not calling get_page() willl definitely cause breakage as KVM would
-    later call put_page() on the pfn/page. [Paolo]
-
-  - WARN if kvm_is_zone_device_pfn() is called without the underlying
-    page being pinned.  This won't necessarily catch all bugs, e.g. if
-    the above hva_to_pfn_remapped case is indeed broken, but will
-    prevent completely bogus usage. [Dan]
-
-  - Remove the is_error_pfn() check from transparent_hugepage_adjust()
-    instead of carrying it forward into the new kvm_is_hugepage_allowed()
-    helper. [Paolo]
-
-[1] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
-[2] https://lkml.kernel.org/r/01adb4cb-6092-638c-0bab-e61322be7cf5@redhat.com
-
-Sean Christopherson (3):
-  KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
-  KVM: x86/mmu: Remove superfluous is_error_pfn() check from THP adjust
-  KVM: x86/mmu: Add helper to consolidate huge page promotion
-
- arch/x86/kvm/mmu.c       | 15 +++++++++------
- include/linux/kvm_host.h |  1 +
- virt/kvm/kvm_main.c      | 26 +++++++++++++++++++++++---
- 3 files changed, 33 insertions(+), 9 deletions(-)
-
--- 
-2.24.0
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
