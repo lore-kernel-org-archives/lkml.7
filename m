@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142D6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ADBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4829222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2806221655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497143;
-	bh=cIA2Er4jQ/jeqXZOLNDmggGDCTaLVlwFasMubnHygrk=;
+	s=default; t=1573497148;
+	bh=nnJzIxaWfKrfXXPn1m88ZMoTv/P6sxqm6t4t3sBo0LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNUuAGu4Wv6woh8Dt2RZCSp++a1pbVPJWb1+t8rnvlx8pKULh1lSkJjgnVX04q87b
-	 o5BT2YtClQKvB6zHiEtfddUVU72SKRorSZbbwU2OsRUX8ATULA3yvLCYON4O1KvXFp
-	 ErmnIrhXNDkc9MxHkMFxEyV7bsG7DJ3bzepct2Ao=
+	b=Kj5sy6ukRqh5pxjhAspPOIG0e8H6Inj0NGzUR78N32U8JsSisK51pZw8l6JSUK2rj
+	 Q0kBH9iqt/USRJX6CP0+pBIg0t1UPz1O0Hi/F1JbmSERvM+S3KVt7Z83bTbsItzveh
+	 NEeK+FUEGPfcJrFQ5gqQ88mQoQrtDGLovgtKrIb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfKKScW (ORCPT
+        id S1727956AbfKKSc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:32:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:32:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbfKKScU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:32:20 -0500
+        id S1727939AbfKKScY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:32:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0C9222C9;
-        Mon, 11 Nov 2019 18:32:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA3821783;
+        Mon, 11 Nov 2019 18:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497140;
-        bh=cIA2Er4jQ/jeqXZOLNDmggGDCTaLVlwFasMubnHygrk=;
+        s=default; t=1573497143;
+        bh=nnJzIxaWfKrfXXPn1m88ZMoTv/P6sxqm6t4t3sBo0LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1+HH2JAp9UMmFo/Tp0of0xdFcxKHHHuirkBUe67SRxCslRPreFguhDmVmV/Tt2wB
-         Pksiazu+LRubbdFhEjVwfkaCvFrAKzawsIN8grRjhFoT90kufzzfEVKcF2XblduGk0
-         yPepmWcfC4Eli6atTfDVrixRLrV5UZJ0r/I0U8fI=
+        b=OsZg16QIo6DnnhAE9sRTenTAjZVN1/7n03LuYwaOzzx4I7k50PxibmAzX5gKoyt9g
+         5bJGP03TyIJSyyu+D8Yh5E8IwgRqqt8q+Y4QpWGHl8zAEG8JFr3JdzdgeE7mGrOeCe
+         xqVmWipiC23AcfdBGZYRkDTdeeO6gkGAayAJ0bG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yong Zhao <yong.zhao@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.9 17/65] drm/radeon: fix si_enable_smc_cac() failed issue
-Date:   Mon, 11 Nov 2019 19:28:17 +0100
-Message-Id: <20191111181344.326123799@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.9 18/65] ceph: fix use-after-free in __ceph_remove_cap()
+Date:   Mon, 11 Nov 2019 19:28:18 +0100
+Message-Id: <20191111181344.476514494@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -59,33 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-commit 2c409ba81be25516afe05ae27a4a15da01740b01 upstream.
+commit ea60ed6fcf29eebc78f2ce91491e6309ee005a01 upstream.
 
-Need to set the dte flag on this asic.
+KASAN reports a use-after-free when running xfstest generic/531, with the
+following trace:
 
-Port the fix from amdgpu:
-5cb818b861be114 ("drm/amd/amdgpu: fix si_enable_smc_cac() failed issue")
+[  293.903362]  kasan_report+0xe/0x20
+[  293.903365]  rb_erase+0x1f/0x790
+[  293.903370]  __ceph_remove_cap+0x201/0x370
+[  293.903375]  __ceph_remove_caps+0x4b/0x70
+[  293.903380]  ceph_evict_inode+0x4e/0x360
+[  293.903386]  evict+0x169/0x290
+[  293.903390]  __dentry_kill+0x16f/0x250
+[  293.903394]  dput+0x1c6/0x440
+[  293.903398]  __fput+0x184/0x330
+[  293.903404]  task_work_run+0xb9/0xe0
+[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+[  293.903413]  do_syscall_64+0x1a0/0x1c0
+[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Reviewed-by: Yong Zhao <yong.zhao@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This happens because __ceph_remove_cap() may queue a cap release
+(__ceph_queue_cap_release) which can be scheduled before that cap is
+removed from the inode list with
+
+	rb_erase(&cap->ci_node, &ci->i_caps);
+
+And, when this finally happens, the use-after-free will occur.
+
+This can be fixed by removing the cap from the inode list before being
+removed from the session list, and thus eliminating the risk of an UAF.
+
 Cc: stable@vger.kernel.org
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/radeon/si_dpm.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ceph/caps.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/radeon/si_dpm.c
-+++ b/drivers/gpu/drm/radeon/si_dpm.c
-@@ -1956,6 +1956,7 @@ static void si_initialize_powertune_defa
- 		case 0x682C:
- 			si_pi->cac_weights = cac_weights_cape_verde_pro;
- 			si_pi->dte_data = dte_data_sun_xt;
-+			update_dte_from_pl2 = true;
- 			break;
- 		case 0x6825:
- 		case 0x6827:
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -933,6 +933,11 @@ void __ceph_remove_cap(struct ceph_cap *
+ 
+ 	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
+ 
++	/* remove from inode's cap rbtree, and clear auth cap */
++	rb_erase(&cap->ci_node, &ci->i_caps);
++	if (ci->i_auth_cap == cap)
++		ci->i_auth_cap = NULL;
++
+ 	/* remove from session list */
+ 	spin_lock(&session->s_cap_lock);
+ 	if (session->s_cap_iterator == cap) {
+@@ -968,11 +973,6 @@ void __ceph_remove_cap(struct ceph_cap *
+ 
+ 	spin_unlock(&session->s_cap_lock);
+ 
+-	/* remove from inode list */
+-	rb_erase(&cap->ci_node, &ci->i_caps);
+-	if (ci->i_auth_cap == cap)
+-		ci->i_auth_cap = NULL;
+-
+ 	if (removed)
+ 		ceph_put_cap(mdsc, cap);
+ 
 
 
