@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330C0C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F939C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C2E21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E2221655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497987;
-	bh=c33AECLfdkLw9jMvT37q32hJX80dIXfiA4ZnBHOxKt8=;
+	s=default; t=1573497990;
+	bh=qoJBrkv55Yvx3fUS2dlYaAZ2YK1eLNgX8mG9LyfTzr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hiSvRrgLzGq44XySwCrPXMG7pmMUhW7OftHPtx9kNvu6suKKCJ5KAmemaF5ebDIxk
-	 I/e2rtuEE9/z/YmiCDlWiLvtdXQ/Oyqm3k64OsjkSurAykM7N02dbuwK5f/K0uQ7Ep
-	 cFUblU4tVOzBO9/ARBYASC823Anr/IpiGTqeqQ64=
+	b=YKQrBksOcRzMTmvTjrNKobVVuVbZ6evHRg27busbR4mgN3/F9aR1OJVjiXS8nzWrq
+	 rBFP+ZsDgm1iqsp+KXUNGO/JglOqyE2Zx+BRGrH85hMJDX/bzvD9eDJNsR2IcRJ5Zt
+	 K51GLaRcZtYIUmq0NceGGIPulPwyL2KeydG5GYQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfKKSqZ (ORCPT
+        id S1730003AbfKKSq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:46:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38828 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:46:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbfKKSqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:46:22 -0500
+        id S1729996AbfKKSqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:46:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96AB02173B;
-        Mon, 11 Nov 2019 18:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 170D021925;
+        Mon, 11 Nov 2019 18:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497981;
-        bh=c33AECLfdkLw9jMvT37q32hJX80dIXfiA4ZnBHOxKt8=;
+        s=default; t=1573497984;
+        bh=qoJBrkv55Yvx3fUS2dlYaAZ2YK1eLNgX8mG9LyfTzr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pnz+9rZvSoYokpfFvwUgPrU2xdeks/uJR33Ll4AGP0HsNtNaOs277koKX++yA3nVS
-         +TjZBC6A+PUGaSBW5hWx25q4vnqu2bHub/R3i57BS9yw6AxB8Z6iRsYEWC75r4G/tB
-         n6C/xj4wOzUsrCWyUB1Io7fhi/4IS+yeEcSEqXoE=
+        b=XJafm2i+4gq5Hvf3oxvQEM64ijF8+HI01m8aKxxMiS7HF7D3wqoYPbF4YfUL80cj9
+         MbW8QIOtM8crO0l0AWKOnpUzTOdqQwz/kZ9fWVgglpugWGvC/P0UwNHF3mbB+jjt0Q
+         IaJbXIWIGTLm34jDrOou9lXZxspN9FFaq7eKzBtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/125] usb: dwc3: gadget: fix race when disabling ep with cancelled xfers
-Date:   Mon, 11 Nov 2019 19:29:12 +0100
-Message-Id: <20191111181454.916507789@linuxfoundation.org>
+Subject: [PATCH 4.19 114/125] NFSv4: Dont allow a cached open with a revoked delegation
+Date:   Mon, 11 Nov 2019 19:29:13 +0100
+Message-Id: <20191111181455.122357586@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,43 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit d8eca64eec7103ab1fbabc0a187dbf6acfb2af93 ]
+[ Upstream commit be3df3dd4c70ee020587a943a31b98a0fb4b6424 ]
 
-When disabling an endpoint which has cancelled requests, we should
-make sure to giveback requests that are currently pending in the
-cancelled list, otherwise we may fall into a situation where command
-completion interrupt fires after endpoint has been disabled, therefore
-causing a splat.
+If the delegation is marked as being revoked, we must not use it
+for cached opens.
 
-Fixes: fec9095bdef4 "usb: dwc3: gadget: remove wait_end_transfer"
-Reported-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Link: https://lore.kernel.org/r/20191031090713.1452818-1-felipe.balbi@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 869f9dfa4d6d ("NFSv4: Fix races between nfs_remove_bad_delegation() and delegation return")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/nfs/delegation.c | 10 ++++++++++
+ fs/nfs/delegation.h |  1 +
+ fs/nfs/nfs4proc.c   |  7 ++-----
+ 3 files changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 54de732550648..8398c33d08e7c 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -698,6 +698,12 @@ static void dwc3_remove_requests(struct dwc3 *dwc, struct dwc3_ep *dep)
- 
- 		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
- 	}
-+
-+	while (!list_empty(&dep->cancelled_list)) {
-+		req = next_request(&dep->cancelled_list);
-+
-+		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
-+	}
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 825a8c52165a2..c5c3394148f72 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -54,6 +54,16 @@ nfs4_is_valid_delegation(const struct nfs_delegation *delegation,
+ 	return false;
  }
  
- /**
++struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode)
++{
++	struct nfs_delegation *delegation;
++
++	delegation = rcu_dereference(NFS_I(inode)->delegation);
++	if (nfs4_is_valid_delegation(delegation, 0))
++		return delegation;
++	return NULL;
++}
++
+ static int
+ nfs4_do_check_delegation(struct inode *inode, fmode_t flags, bool mark)
+ {
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index c95477823fa6b..dd0f3eed3890d 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -66,6 +66,7 @@ int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state,
+ bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_stateid *dst, struct rpc_cred **cred);
+ bool nfs4_refresh_delegation_stateid(nfs4_stateid *dst, struct inode *inode);
+ 
++struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode);
+ void nfs_mark_delegation_referenced(struct nfs_delegation *delegation);
+ int nfs4_have_delegation(struct inode *inode, fmode_t flags);
+ int nfs4_check_delegation(struct inode *inode, fmode_t flags);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 75faef7af22d3..792f8821b5d6b 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1393,8 +1393,6 @@ static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
+ 		return 0;
+ 	if ((delegation->type & fmode) != fmode)
+ 		return 0;
+-	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
+-		return 0;
+ 	switch (claim) {
+ 	case NFS4_OPEN_CLAIM_NULL:
+ 	case NFS4_OPEN_CLAIM_FH:
+@@ -1751,7 +1749,6 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
+ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
+ {
+ 	struct nfs4_state *state = opendata->state;
+-	struct nfs_inode *nfsi = NFS_I(state->inode);
+ 	struct nfs_delegation *delegation;
+ 	int open_mode = opendata->o_arg.open_flags;
+ 	fmode_t fmode = opendata->o_arg.fmode;
+@@ -1768,7 +1765,7 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
+ 		}
+ 		spin_unlock(&state->owner->so_lock);
+ 		rcu_read_lock();
+-		delegation = rcu_dereference(nfsi->delegation);
++		delegation = nfs4_get_valid_delegation(state->inode);
+ 		if (!can_open_delegated(delegation, fmode, claim)) {
+ 			rcu_read_unlock();
+ 			break;
+@@ -2293,7 +2290,7 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
+ 					data->o_arg.open_flags, claim))
+ 			goto out_no_action;
+ 		rcu_read_lock();
+-		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
++		delegation = nfs4_get_valid_delegation(data->state->inode);
+ 		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
+ 			goto unlock_no_action;
+ 		rcu_read_unlock();
 -- 
 2.20.1
 
