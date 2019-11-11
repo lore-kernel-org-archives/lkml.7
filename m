@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D0C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C495C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0A621925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D532621925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498366;
-	bh=tY0oOqPs5y4Z3QzaxhFPBAKTG3CHb+oGU/zS+s/xIZc=;
+	s=default; t=1573498369;
+	bh=X0UsWCc8knCwIbpLLX0WtWSJ5qAx6dFoPruE5QMt/z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0M946x1fcf0St934WkSvdGdoEc4S33X2Ww/sLaEwYXG/8RYbyij8QEjkwUvW9MQw
-	 k25IdjbfgBmL4RdPw5toHWqjdqjmgOmnxfYVfjGwHup6UiJE0JDoZOd5mxS1PJW8FV
-	 UIwKkaMqv3u6n3sUSQMynaQ1KbmSoOPmTJsP24qY=
+	b=oOea4Jdwn+UHLx4cVwcooOY4BY59dW8s+V0KxAwhvgcOYh/X+LX4+lOosdHKwrFWR
+	 YLkR1suX0wuzfAQr/ROUddOcpIRkt7nEN+c0AGRw5lXNO5Kqn0kHGj48XmYxejtIgT
+	 zOyPZkUY/JiK6ohA//+Qf1lD4Dh/TxirMHg/hbFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbfKKSwp (ORCPT
+        id S1729515AbfKKSws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:52:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47060 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:52:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbfKKSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:52:42 -0500
+        id S1730493AbfKKSwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:52:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0829214E0;
-        Mon, 11 Nov 2019 18:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0405F214E0;
+        Mon, 11 Nov 2019 18:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498360;
-        bh=tY0oOqPs5y4Z3QzaxhFPBAKTG3CHb+oGU/zS+s/xIZc=;
+        s=default; t=1573498356;
+        bh=X0UsWCc8knCwIbpLLX0WtWSJ5qAx6dFoPruE5QMt/z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IDzXOJNz9DfJIXQzHNOeAmvu3f3xKM4BnjPDCwY2+KzOvoq58UBxDhStzKwt3JpNk
-         w2WYM9whr433IMApbL5QVcE4j4n2aWN6V0RCrUtwNQSIIQ9mVDjDbU4SGxTbUgiAhA
-         eCPUES4JZPkyi79syrubUJgVKBDlXbOE7DWS2jlE=
+        b=hI4gQ/qGsX6qNSRiwlrDPZxccLNkt+dwrCvZYPYwE6T6DJMSwbZFwjGzBl8C8M52P
+         jwmY6jaL9oClVsP04b+h8KZiu4wU13rUVEp843RubRs1CpGs8ujgvAoamVBAQor+rh
+         uBY6nzqrsLh+mFMdNcBWHEhbUobf9oxMAAk2hThk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenfang Wang <zhenfang.wang@unisoc.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
+        stable@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 096/193] dmaengine: sprd: Fix the possible memory leak issue
-Date:   Mon, 11 Nov 2019 19:27:58 +0100
-Message-Id: <20191111181508.229679609@linuxfoundation.org>
+Subject: [PATCH 5.3 095/193] dmaengine: xilinx_dma: Fix control reg update in vdma_channel_set_config
+Date:   Mon, 11 Nov 2019 19:27:57 +0100
+Message-Id: <20191111181508.158970974@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,85 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@linaro.org>
+From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 
-[ Upstream commit ec1ac309596a7bdf206743b092748205f6cd5720 ]
+[ Upstream commit 6c6de1ddb1be3840f2ed5cc9d009a622720940c9 ]
 
-If we terminate the channel to free all descriptors associated with this
-channel, we will leak the memory of current descriptor if the current
-descriptor is not completed, since it had been deteled from the desc_issued
-list and have not been added into the desc_completed list.
+In vdma_channel_set_config clear the delay, frame count and master mask
+before updating their new values. It avoids programming incorrect state
+when input parameters are different from default.
 
-Thus we should check if current descriptor is completed or not, when freeing
-the descriptors associated with one channel, if not, we should free it to
-avoid this issue.
-
-Fixes: 9b3b8171f7f4 ("dmaengine: sprd: Add Spreadtrum DMA driver")
-Reported-by: Zhenfang Wang <zhenfang.wang@unisoc.com>
-Tested-by: Zhenfang Wang <zhenfang.wang@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lore.kernel.org/r/170dbbc6d5366b6fa974ce2d366652e23a334251.1570609788.git.baolin.wang@linaro.org
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Acked-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Link: https://lore.kernel.org/r/1569495060-18117-3-git-send-email-radhey.shyam.pandey@xilinx.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/dma/xilinx/xilinx_dma.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index a4a91f233121a..8546ad0347208 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -212,6 +212,7 @@ struct sprd_dma_dev {
- 	struct sprd_dma_chn	channels[0];
- };
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 1fbe0258578b0..5d56f1e4d332c 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -68,6 +68,9 @@
+ #define XILINX_DMA_DMACR_CIRC_EN		BIT(1)
+ #define XILINX_DMA_DMACR_RUNSTOP		BIT(0)
+ #define XILINX_DMA_DMACR_FSYNCSRC_MASK		GENMASK(6, 5)
++#define XILINX_DMA_DMACR_DELAY_MASK		GENMASK(31, 24)
++#define XILINX_DMA_DMACR_FRAME_COUNT_MASK	GENMASK(23, 16)
++#define XILINX_DMA_DMACR_MASTER_MASK		GENMASK(11, 8)
  
-+static void sprd_dma_free_desc(struct virt_dma_desc *vd);
- static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param);
- static struct of_dma_filter_info sprd_dma_info = {
- 	.filter_fn = sprd_dma_filter_fn,
-@@ -613,12 +614,19 @@ static int sprd_dma_alloc_chan_resources(struct dma_chan *chan)
- static void sprd_dma_free_chan_resources(struct dma_chan *chan)
- {
- 	struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
-+	struct virt_dma_desc *cur_vd = NULL;
- 	unsigned long flags;
+ #define XILINX_DMA_REG_DMASR			0x0004
+ #define XILINX_DMA_DMASR_EOL_LATE_ERR		BIT(15)
+@@ -2118,8 +2121,10 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+ 	chan->config.gen_lock = cfg->gen_lock;
+ 	chan->config.master = cfg->master;
  
- 	spin_lock_irqsave(&schan->vc.lock, flags);
-+	if (schan->cur_desc)
-+		cur_vd = &schan->cur_desc->vd;
-+
- 	sprd_dma_stop(schan);
- 	spin_unlock_irqrestore(&schan->vc.lock, flags);
++	dmacr &= ~XILINX_DMA_DMACR_GENLOCK_EN;
+ 	if (cfg->gen_lock && chan->genlock) {
+ 		dmacr |= XILINX_DMA_DMACR_GENLOCK_EN;
++		dmacr &= ~XILINX_DMA_DMACR_MASTER_MASK;
+ 		dmacr |= cfg->master << XILINX_DMA_DMACR_MASTER_SHIFT;
+ 	}
  
-+	if (cur_vd)
-+		sprd_dma_free_desc(cur_vd);
-+
- 	vchan_free_chan_resources(&schan->vc);
- 	pm_runtime_put(chan->device->dev);
- }
-@@ -1031,15 +1039,22 @@ static int sprd_dma_resume(struct dma_chan *chan)
- static int sprd_dma_terminate_all(struct dma_chan *chan)
- {
- 	struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
-+	struct virt_dma_desc *cur_vd = NULL;
- 	unsigned long flags;
- 	LIST_HEAD(head);
+@@ -2135,11 +2140,13 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+ 	chan->config.delay = cfg->delay;
  
- 	spin_lock_irqsave(&schan->vc.lock, flags);
-+	if (schan->cur_desc)
-+		cur_vd = &schan->cur_desc->vd;
-+
- 	sprd_dma_stop(schan);
+ 	if (cfg->coalesc <= XILINX_DMA_DMACR_FRAME_COUNT_MAX) {
++		dmacr &= ~XILINX_DMA_DMACR_FRAME_COUNT_MASK;
+ 		dmacr |= cfg->coalesc << XILINX_DMA_DMACR_FRAME_COUNT_SHIFT;
+ 		chan->config.coalesc = cfg->coalesc;
+ 	}
  
- 	vchan_get_all_descriptors(&schan->vc, &head);
- 	spin_unlock_irqrestore(&schan->vc.lock, flags);
- 
-+	if (cur_vd)
-+		sprd_dma_free_desc(cur_vd);
-+
- 	vchan_dma_desc_free_list(&schan->vc, &head);
- 	return 0;
- }
+ 	if (cfg->delay <= XILINX_DMA_DMACR_DELAY_MAX) {
++		dmacr &= ~XILINX_DMA_DMACR_DELAY_MASK;
+ 		dmacr |= cfg->delay << XILINX_DMA_DMACR_DELAY_SHIFT;
+ 		chan->config.delay = cfg->delay;
+ 	}
 -- 
 2.20.1
 
