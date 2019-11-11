@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09896C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD6AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD3A214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DCE2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497681;
-	bh=6VIKjkADuQVWzy7sSUCb36dA36xQEKAE3RYlBg5BnCQ=;
+	s=default; t=1573497686;
+	bh=UIq6QvcPqMu1sCDLRquDFWYrzeshzFfZ9v+MFhMzqMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgzlaUn+5dUfB81rvlwsJhyZMo8CMrrPzykh0lVXjYijnd7pObJVU+nn6QhYULCwv
-	 sU3j5A+rvXsnqQM++2Dx7wOw2iiuS6P4Bbfh92fhxpVej0kTZq4FWB8HXS2EJ4iZCb
-	 9Urngimni5ZGaexx2dOcPE7q4WpzROeWG5U/96oE=
+	b=uWI3ql11SxtnieEASgh6jdDwTXcO+ddlWfM2H3Dpp8yn6W8Qa0TQpxZdJ+LMcK9Oe
+	 xotJY3LG1VMmFFckXegNpXpb4SAiX3u3LUTINVZPLkpCx/Kxhqxmkwh6wX9dhil75b
+	 GPr7usrndanuxc/uurPzlwIP4EZuqLlPq0lrjH80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfKKSlU (ORCPT
+        id S1729377AbfKKSlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:41:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60532 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbfKKSlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:41:17 -0500
+        id S1729369AbfKKSlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1296F21E6F;
-        Mon, 11 Nov 2019 18:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19E81222BD;
+        Mon, 11 Nov 2019 18:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497676;
-        bh=6VIKjkADuQVWzy7sSUCb36dA36xQEKAE3RYlBg5BnCQ=;
+        s=default; t=1573497679;
+        bh=UIq6QvcPqMu1sCDLRquDFWYrzeshzFfZ9v+MFhMzqMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kt9oUWPAJJAjQeePrJJ3lOPXwT80z2v0OVJgKrexL9k+kmweT9JE4MNA36aCEF+QG
-         zR1vKDMIV/0Zg6r0aEESvLiVkIZ9AWYl6AEbM1InvHUGK4Yez6gNQ8tfdfYSlqe1h7
-         HHVppEF93HAGM5zdOmzKLU3xxRF0+PzItE2VALc0=
+        b=x80RBQ/eK3WH/XRaQ4Tm+jBQa8X0Hkz8m0ezWekm4pP7nZPFU+xqpI/vBQ8ZAL7Ai
+         uCnP/fD7WSSS/ECcInL9Es8c89h7g7P20phyC6B7yf3Qg8E1i0IXKGzIAEqhgsSJYD
+         RU6zlXoofkVmvNVDwkwmsE5GPTHkuUY7ij/eX7g4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 024/125] tools: gpio: Use !building_out_of_srctree to determine srctree
-Date:   Mon, 11 Nov 2019 19:27:43 +0100
-Message-Id: <20191111181443.791947996@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 025/125] perf tools: Fix time sorting
+Date:   Mon, 11 Nov 2019 19:27:44 +0100
+Message-Id: <20191111181443.955790326@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -59,48 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-commit 4a6a6f5c4aeedb72db871d60bfcca89835f317aa upstream.
+commit 722ddfde366fd46205456a9c5ff9b3359dc9a75e upstream.
 
-make TARGETS=gpio kselftest fails with:
+The final sort might get confused when the comparison is done over
+bigger numbers than int like for -s time.
 
-Makefile:23: tools/build/Makefile.include: No such file or directory
+Check the following report for longer workloads:
 
-When the gpio tool make is invoked from tools Makefile, srctree is
-cleared and the current logic check for srctree equals to empty
-string to determine srctree location from CURDIR.
+  $ perf report -s time -F time,overhead --stdio
 
-When the build in invoked from selftests/gpio Makefile, the srctree
-is set to "." and the same logic used for srctree equals to empty is
-needed to determine srctree.
+Fix hist_entry__sort() to properly return int64_t and not possible cut
+int.
 
-Check building_out_of_srctree undefined as the condition for both
-cases to fix "make TARGETS=gpio kselftest" build failure.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org # v3.16+
+Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/gpio/Makefile |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/hist.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -3,7 +3,11 @@ include ../scripts/Makefile.include
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1508,7 +1508,7 @@ int hists__collapse_resort(struct hists
+ 	return 0;
+ }
  
- bindir ?= /usr/bin
- 
--ifeq ($(srctree),)
-+# This will work when gpio is built in tools env. where srctree
-+# isn't set and when invoked from selftests build, where srctree
-+# is set to ".". building_out_of_srctree is undefined for in srctree
-+# builds
-+ifndef building_out_of_srctree
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
+-static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
++static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+ {
+ 	struct hists *hists = a->hists;
+ 	struct perf_hpp_fmt *fmt;
 
 
