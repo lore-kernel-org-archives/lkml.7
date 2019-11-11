@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB2EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D8AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1226222BD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8F921925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498374;
-	bh=ayfuX91gx37T++DZ/DF4dGO8PJP51xbQu+nZsKOaIl4=;
+	s=default; t=1573498377;
+	bh=Y/9ZF/qkWTu/dii41AfiaaBg+fpgYSY0I8bBp49s4gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DdXggMIHo7yHDZu2cY6w3ZMOph31uf1a+PQ/J+heHyee6NpIPC/eKaqIVgth0rcSs
-	 ajw57Cqy6SSNYYH2Ad5qKofDapCIfiVP4AbHCZelhQXr05Yo8xvNa7xo1DJ4z4X7Xv
-	 Yh1MEO5Ma6/ImVfY3MVfLusaUxgfwUpQbHmEXPEk=
+	b=LgdPwzwYvPY6rLFVBQVxCs7Doz8eancW0bCxmQ5q9PZ5+LD3As7u3YHummLbKRZKf
+	 eLPP/2yhmKYC+tI7X41X8lp7LB9A4nQmLO6XvHyI8x3y4I3fxONRZyNE7L0zdZQte5
+	 C8CU0vitEyQo7vZ6tq2PxXqRKxv7utb1OctvUPXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbfKKSww (ORCPT
+        id S1729900AbfKKSwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:52:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47306 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:52:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729325AbfKKSwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:52:47 -0500
+        id S1730199AbfKKSwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:52:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70F0420818;
-        Mon, 11 Nov 2019 18:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6B21222C5;
+        Mon, 11 Nov 2019 18:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498367;
-        bh=ayfuX91gx37T++DZ/DF4dGO8PJP51xbQu+nZsKOaIl4=;
+        s=default; t=1573498370;
+        bh=Y/9ZF/qkWTu/dii41AfiaaBg+fpgYSY0I8bBp49s4gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHktI2Z7svSzL5+WRUKaw4VuNdoMF7K7CQl49uphUZETla7Svjb+AbM783ylnILxP
-         o/F+0QBkD23BUo/AJ03YLtahlAJGFrsX4uuNtpP+WyG0h/ofpjcKFPGpvbNXn6b7UJ
-         cD0zfQIQyTBnZB1nWAsnPOk+8wcFEWtoBNpqRqjE=
+        b=b/jWDwSRWZmoFfyRq+QwJZhi1hJGvb0VxbaLTFTuoVMtRIchP35doSyTsqX2e2eOt
+         xI4Ted/ABEZQr49a5f5WCimssVeNhK27ulfUiJm49aCPHwfFKjpblKYmc1uZ4Jeqi7
+         AaeOM80uzhuYq3dpRnFG7beGhaYKePKx7amzq86o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Rafi Wiener <rafiw@mellanox.com>,
+        Oleg Kuporosov <olegk@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 098/193] powerpc/32s: fix allow/prevent_user_access() when crossing segment boundaries.
-Date:   Mon, 11 Nov 2019 19:28:00 +0100
-Message-Id: <20191111181508.368745009@linuxfoundation.org>
+Subject: [PATCH 5.3 099/193] RDMA/mlx5: Clear old rate limit when closing QP
+Date:   Mon, 11 Nov 2019 19:28:01 +0100
+Message-Id: <20191111181508.435528730@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,35 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Rafi Wiener <rafiw@mellanox.com>
 
-[ Upstream commit d10f60ae27d26d811e2a1bb39ded47df96d7499f ]
+[ Upstream commit c8973df2da677f375f8b12b6eefca2f44c8884d5 ]
 
-Make sure starting addr is aligned to segment boundary so that when
-incrementing the segment, the starting address of the new segment is
-below the end address. Otherwise the last segment might get  missed.
+Before QP is closed it changes to ERROR state, when this happens
+the QP was left with old rate limit that was already removed from
+the table.
 
-Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/067a1b09f15f421d40797c2d04c22d4049a1cee8.1571071875.git.christophe.leroy@c-s.fr
+Fixes: 7d29f349a4b9 ("IB/mlx5: Properly adjust rate limit on QP state transitions")
+Signed-off-by: Rafi Wiener <rafiw@mellanox.com>
+Signed-off-by: Oleg Kuporosov <olegk@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191002120243.16971-1-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/32/kup.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/mlx5/qp.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
-index 677e9babef801..f9dc597b0b868 100644
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -91,6 +91,7 @@
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 72869ff4a3342..3903141a387ed 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -3249,10 +3249,12 @@ static int modify_raw_packet_qp_sq(
+ 	}
  
- static inline void kuap_update_sr(u32 sr, u32 addr, u32 end)
- {
-+	addr &= 0xf0000000;	/* align addr to start of segment */
- 	barrier();	/* make sure thread.kuap is updated before playing with SRs */
- 	while (addr < end) {
- 		mtsrin(sr, addr);
+ 	/* Only remove the old rate after new rate was set */
+-	if ((old_rl.rate &&
+-	     !mlx5_rl_are_equal(&old_rl, &new_rl)) ||
+-	    (new_state != MLX5_SQC_STATE_RDY))
++	if ((old_rl.rate && !mlx5_rl_are_equal(&old_rl, &new_rl)) ||
++	    (new_state != MLX5_SQC_STATE_RDY)) {
+ 		mlx5_rl_remove_rate(dev, &old_rl);
++		if (new_state != MLX5_SQC_STATE_RDY)
++			memset(&new_rl, 0, sizeof(new_rl));
++	}
+ 
+ 	ibqp->rl = new_rl;
+ 	sq->state = new_state;
 -- 
 2.20.1
 
