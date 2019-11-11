@@ -2,151 +2,146 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9219DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740B3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CCC21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:04:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FBakSwx0"
+	by mail.kernel.org (Postfix) with ESMTP id 4595021783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573481070;
+	bh=AqjH6lBvlgVE8nab9htSIq2F7jnMyPZAyZaqcbdHGCo=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=C7iHw95Qu1OESXWxtW4Lu83k+oiaIh5ct7qfpHzMsEPkF1BS8bSORbq7YiOsbuwQt
+	 pKV69P61FlnFZ28PNNSByOwceyZKe21njU6ttV2QIq7Y7WQvGG0LMOoM5xG/zzS0f1
+	 NJitZ5IUaVCUs07ARUcyYSYYHDu1924Ib+Uxw+fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfKKOEX (ORCPT
+        id S1727040AbfKKOE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:04:23 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52345 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726834AbfKKOEX (ORCPT
+        Mon, 11 Nov 2019 09:04:29 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:53233 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726834AbfKKOE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:04:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573481061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u0pgqK+Di47rvdGG8Ohb/KWFrkUcTYrwZy2v64eurK4=;
-        b=FBakSwx0eb8Wklfylv7BUV4dY64e0MHhBIMSM17m6J+3HZiSoSZNJvKLnFi30nJOyyHvxM
-        N12O5WHo6TdwCHQfChk4B5ZTIkBGUra6ip1R0X9M/SpwR/mPoX1g0m+ROhwk1PvqjN8zFN
-        WFjdKfO3svFlWzoIccH9+QsHD3ca81c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-u4gGE7GCPoWB9r04_uyJsw-1; Mon, 11 Nov 2019 09:04:18 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B0A7107ACC6;
-        Mon, 11 Nov 2019 14:04:17 +0000 (UTC)
-Received: from krava (unknown [10.40.205.88])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1B735289AA;
-        Mon, 11 Nov 2019 14:04:15 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 15:04:15 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     jolsa@kernel.org, acme@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v5 13/13] perf stat: Use affinity for enabling/disabling
- events
-Message-ID: <20191111140415.GA26980@krava>
-References: <20191107181646.506734-1-andi@firstfloor.org>
- <20191107181646.506734-14-andi@firstfloor.org>
+        Mon, 11 Nov 2019 09:04:28 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iUAIr-0002cs-UW; Mon, 11 Nov 2019 15:04:25 +0100
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Subject: Re: [RFC PATCH v2] arm64: cpufeatures: add support for tlbi range  instructions
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <20191107181646.506734-14-andi@firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: u4gGE7GCPoWB9r04_uyJsw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 Nov 2019 15:13:46 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, <catalin.marinas@arm.com>,
+        <suzuki.poulose@arm.com>, <mark.rutland@arm.com>,
+        <tangnianyao@huawei.com>, <xiexiangyou@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <arm@kernel.org>
+In-Reply-To: <5DC96660.8040505@huawei.com>
+References: <5DC960EB.9050503@huawei.com>
+ <20191111132716.GA9394@willie-the-truck> <5DC96660.8040505@huawei.com>
+Message-ID: <d4542758f83b3df3ab391341499fecfb@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, will@kernel.org, catalin.marinas@arm.com, suzuki.poulose@arm.com, mark.rutland@arm.com, tangnianyao@huawei.com, xiexiangyou@huawei.com, linux-kernel@vger.kernel.org, arm@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 10:16:46AM -0800, Andi Kleen wrote:
+On 2019-11-11 14:56, Zhenyu Ye wrote:
+> On 2019/11/11 21:27, Will Deacon wrote:
+>> On Mon, Nov 11, 2019 at 09:23:55PM +0800, Zhenyu Ye wrote:
+>>> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+>>> range of input addresses. This patch adds support for this feature.
+>>> This is the second version of the patch.
+>>>
+>>> I traced the __flush_tlb_range() for a minute and get some 
+>>> statistical
+>>> data as below:
+>>>
+>>> 	PAGENUM		COUNT
+>>> 	1		34944
+>>> 	2		5683
+>>> 	3		1343
+>>> 	4		7857
+>>> 	5		838
+>>> 	9		339
+>>> 	16		933
+>>> 	19		427
+>>> 	20		5821
+>>> 	23		279
+>>> 	41		338
+>>> 	141		279
+>>> 	512		428
+>>> 	1668		120
+>>> 	2038		100
+>>>
+>>> Those data are based on kernel-5.4.0, where PAGENUM = end - start, 
+>>> COUNT
+>>> shows number of calls to the __flush_tlb_range() in a minute. There 
+>>> only
+>>> shows the data which COUNT >= 100. The kernel is started normally, 
+>>> and
+>>> transparent hugepage is opened. As we can see, though most user 
+>>> TLBI
+>>> ranges were 1 pages long, the num of long-range can not be ignored.
+>>>
+>>> The new feature of TLB range can improve lots of performance 
+>>> compared to
+>>> the current implementation. As an example, flush 512 ranges needs 
+>>> only 1
+>>> instruction as opposed to 512 instructions using current 
+>>> implementation.
+>>>
+>>> And for a new hardware feature, support is better than not.
+>>>
+>>> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+>>> ---
+>>> ChangeLog v1 -> v2:
+>>> - Change the main implementation of this feature.
+>>> - Add some comments.
+>>
+>> How does this address my concerns here:
+>>
+>> 
+>> https://lore.kernel.org/linux-arm-kernel/20191031131649.GB27196@willie-the-truck/
+>>
+>> ?
+>>
+>> Will
+>>
+>> .
+>>
+>
+> I think your concern is more about the hardware level, and we can do
+> nothing about
+> this at all. The interconnect/DVM implementation is not exposed to
+> software layer
+> (and no need), and may should be constrained at hardware level.
 
-SNIP
+You're missing the point here: the instruction may be implemented
+and perfectly working at the CPU level, and yet not carried over
+the interconnect. In this situation, other CPUs may not observe
+the DVM messages instructing them of such invalidation, and you'll end
+up with memory corruption.
 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 33080f79b977..571bb102b432 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -378,11 +378,28 @@ bool evsel__cpu_iter_skip(struct evsel *ev, int cpu=
-)
->  void evlist__disable(struct evlist *evlist)
->  {
->  =09struct evsel *pos;
-> +=09struct affinity affinity;
-> +=09int cpu, i;
+So, in the absence of an architectural guarantee that range 
+invalidation
+is supported and observed by all the DVM agents in the system, there 
+must
+be a firmware description for it on which the kernel can rely.
 
-should we have the fallback to current code in here (and below) as well?
-also for reading/openning?
-
-jirka
-
-> +
-> +=09if (affinity__setup(&affinity) < 0)
-> +=09=09return;
-> +
-> +=09evlist__for_each_cpu (evlist, i, cpu) {
-> +=09=09affinity__set(&affinity, cpu);
-> =20
-> +=09=09evlist__for_each_entry(evlist, pos) {
-> +=09=09=09if (evsel__cpu_iter_skip(pos, cpu))
-> +=09=09=09=09continue;
-> +=09=09=09if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos-=
->core.fd)
-> +=09=09=09=09continue;
-> +=09=09=09evsel__disable_cpu(pos, pos->cpu_iter - 1);
-> +=09=09}
-> +=09}
-> +=09affinity__cleanup(&affinity);
->  =09evlist__for_each_entry(evlist, pos) {
-> -=09=09if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->co=
-re.fd)
-> +=09=09if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
->  =09=09=09continue;
-> -=09=09evsel__disable(pos);
-> +=09=09pos->disabled =3D true;
->  =09}
-> =20
->  =09evlist->enabled =3D false;
-> @@ -391,11 +408,28 @@ void evlist__disable(struct evlist *evlist)
->  void evlist__enable(struct evlist *evlist)
->  {
->  =09struct evsel *pos;
-> +=09struct affinity affinity;
-> +=09int cpu, i;
-> =20
-> +=09if (affinity__setup(&affinity) < 0)
-> +=09=09return;
-> +
-> +=09evlist__for_each_cpu (evlist, i, cpu) {
-> +=09=09affinity__set(&affinity, cpu);
-> +
-> +=09=09evlist__for_each_entry(evlist, pos) {
-> +=09=09=09if (evsel__cpu_iter_skip(pos, cpu))
-> +=09=09=09=09continue;
-> +=09=09=09if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
-> +=09=09=09=09continue;
-> +=09=09=09evsel__enable_cpu(pos, pos->cpu_iter - 1);
-> +=09=09}
-> +=09}
-> +=09affinity__cleanup(&affinity);
->  =09evlist__for_each_entry(evlist, pos) {
->  =09=09if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
->  =09=09=09continue;
-> -=09=09evsel__enable(pos);
-> +=09=09pos->disabled =3D false;
->  =09}
-> =20
->  =09evlist->enabled =3D true;
-> --=20
-> 2.23.0
->=20
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
