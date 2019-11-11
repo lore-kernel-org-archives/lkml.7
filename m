@@ -2,99 +2,117 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B623C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9619AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB98C2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573493007;
-	bh=FdXhlcSnmQXZ512UJAwnB/JLm0W9BnHa+GET9e6BVV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G0MXwL8wftBzT6K8/zYz0jkMQsAGKQRCBnK3+EC8mpUODHGi193X46DTdGMkIh/Ik
-	 fmrYT0w60cELvdikkNwKO9iP049YsWc+p5kbObidRao9P9rQmZ75Ls0+mspFU6NPqO
-	 27dFFkj9BONnzn/DuNKOe8vXqj7/VI6ALpcDtGX4=
+	by mail.kernel.org (Postfix) with ESMTP id 686582184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Cu6DizQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfKKRXZ (ORCPT
+        id S1727249AbfKKRXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:23:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfKKRXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:23:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2536A214DB;
-        Mon, 11 Nov 2019 17:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573493004;
-        bh=FdXhlcSnmQXZ512UJAwnB/JLm0W9BnHa+GET9e6BVV8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VcdI+yQ6JQj+/B1nStLolWUligtFElZUe7UsWr7g/kmdLjIhj6L9UgPV9fWDeYY2d
-         IrSwoefmKTdFqj1LjlY0Z/EicQr+OA4Rrcr4EYpw7cpyzDLOM1oP4opT7UDKwjs6ij
-         GMLfc6i277bBXRE4ZSOEDrxjN96fjopM6xkMbMKc=
-Date:   Mon, 11 Nov 2019 18:23:22 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     lantianyu1986@gmail.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, sashal@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net, robh@kernel.org,
-        Jonathan.Cameron@huawei.com, paulmck@linux.ibm.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, vkuznets <vkuznets@redhat.com>
-Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
-Message-ID: <20191111172322.GB1077444@kroah.com>
-References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
- <20191111094920.GA135867@kroah.com>
- <20191111084712.37ba7d5a@hermes.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111084712.37ba7d5a@hermes.lan>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 11 Nov 2019 12:23:31 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60570 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbfKKRXa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:23:30 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHMP3G063050;
+        Mon, 11 Nov 2019 17:22:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=7DYyc0HKUvhmhki/GKWIXwRXBdqmCRZi8t0JYXW172o=;
+ b=Cu6DizQr7mrB2x9AYC2mbyI/B67FuRS3Pguz45JWuKT6w2yVbm1v30GR0ZWnBr1xbaOV
+ ecBLrRhlf5oCc3ZWQyOhzb2G4rDO5Pf75kzFX7cogsEkT5aznvqhf9cpeAe1ajT2h+xr
+ /duWA2Bdci0SYV6AywAuA/2+CuXhzzKi+A0vuaZOvoqMEp9A4ZqRL0q2qkQceI66hzpA
+ y1sISo7Oy9AxK2Jsyac7zinrwL7O1iJ5r3+dWlFv84qMBmqfWTcq00AS1MOcxe0eLeJp
+ 5StJ0n6V7zxqA2nNueW2OEKaQ6Ugoe0tW9KtfOWxKhqjqABIaCicIGcgP0WV343iwMmA qA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2w5ndq069x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 17:22:25 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHEa9Z136831;
+        Mon, 11 Nov 2019 17:20:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2w67kmc980-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 17:20:24 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xABHKNmS032343;
+        Mon, 11 Nov 2019 17:20:23 GMT
+Received: from paddy.uk.oracle.com (/10.175.169.52)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 Nov 2019 09:20:22 -0800
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     kvm@vger.kernel.org
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Jag Raman <jag.raman@oracle.com>
+Subject: [PATCH v2 0/3] KVM: VMX: Posted Interrupts fixes
+Date:   Mon, 11 Nov 2019 17:20:09 +0000
+Message-Id: <20191111172012.28356-1-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=602
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911110155
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=669 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911110155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 08:47:12AM -0800, Stephen Hemminger wrote:
-> On Mon, 11 Nov 2019 01:49:20 -0800
-> "Greg KH" <gregkh@linuxfoundation.org> wrote:
-> 
-> > > +	ret = sysfs_create_bin_file(&channel->kobj,  
-> > &ring_buffer_bin_attr);
-> > > +	if (ret)
-> > > +		dev_notice(&dev->device,
-> > > +			   "sysfs create ring bin file failed; %d\n",  
-> > ret);
-> > > +  
-> > 
-> > Again, don't create sysfs files on your own, the bus code should be
-> > doing this for you automatically and in a way that is race-free.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> The sysfs file is only created if the VFIO/UIO driveris used.
+Hey,
 
-That's even worse.  Again, sysfs files should be automatically created
-by the driver core when the device is created.  To randomly add/remove
-random files after that happens means userspace is never notified of
-that and that's not good.
+This mini-series addresses two bugs plus a small cleanup: 
 
-We've been working for a while to fix up these types of races, don't
-purposfully add new ones for no good reason please :)
+ 1) Considering PID.PIR as opposed to just PID.ON for pending interrupt checks
+    in the direct yield code path;
+ 
+ 2) Not changing NDST in vmx_vcpu_pi_load(), which addresses a regression. 
+    Prior to this, we would observe Win2K12 guests hanging momentarily.
+ 
+ 3) Small cleanup to streamline PIR checks with a common helper.
 
-thanks,
+The cleanup is done last to simplify backports.
 
-greg k-h
+	Joao
+
+v2:
+* Fixed missing Tb/Rb tags;
+* Fixed broken Sob chains (on first two patches)
+* Only test PID.PIR if PID.SN=1 (third patch)
+
+Joao Martins (3):
+  KVM: VMX: Consider PID.PIR to determine if vCPU has pending interrupts
+  KVM: VMX: Do not change PID.NDST when loading a blocked vCPU
+  KVM: VMX: Introduce pi_is_pir_empty() helper
+
+ arch/x86/kvm/vmx/vmx.c | 21 +++++++++++++++++++--
+ arch/x86/kvm/vmx/vmx.h | 11 +++++++++++
+ 2 files changed, 30 insertions(+), 2 deletions(-)
+
+-- 
+2.11.0
+
