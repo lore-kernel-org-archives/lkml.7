@@ -2,139 +2,199 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EB7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE55C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B1A2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:00:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="iqEPS+He"
+	by mail.kernel.org (Postfix) with ESMTP id A794620818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfKKFAe (ORCPT
+        id S1726811AbfKKFCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 00:00:34 -0500
-Received: from mail-eopbgr740047.outbound.protection.outlook.com ([40.107.74.47]:36483
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbfKKFAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 00:00:34 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=loa3sM6WqXPqCh8R5fyRycnSwE0nrOrzvoeqcRIW/iu4+9ZO59WNYaD0qGWr5eSWewTaUJS8/skhzRrH0oT3fYzGW4bBR72rDuKItQ5s7aebiG4J7hoOfgmYBREBRU1pffaik/YCr058EikLNoJgHNVEXWqOrfKaakVqBl8FMB8HKqpvyoZaJPcEA7CjVFk4AH4r9tp8x7HqTOBUAtDbe28wlEWgOpykhyvjTqsBSURygUfWuCq6bUa+mV5qeW08knHumMkoQV/GfdUUKs7ehENbojVUM9QanvmnpdqDJgPEpw+LMsAfdoYsJ7yPfasKfzBCDMdfLllXXvh5vZuOXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6zpk6RxWm1NOVU5k56xgyXPQa//LIW9EkPJQ91L5hg4=;
- b=BSsGGJ1GStzHR/WssE1IHOSTI858v5LDH8pkKmZzbNxjnotY6coThTWH5aidCC+MFAhuPGBSEFnFdCVZb93vgleyizn6+KS5NFHUi5PdzETohaPoSHicZEzO3YmCWuKj9RWSa8608o/B5YC50bp5YOlL/edSeaZm043x5o3dbVav/MAtmfMqIA5ZTspfdzwwJwHUKlYKeokEJpgiueDFZgCVyVsjrmjLqjh0Yjl0T8kkrWT3fId8kRN0NJi+5HeIGYJE0dlbrOYX+CWwbZTsaogUsfUJrb32FTEEGvOvtHK83bcB2/cTGwT4BXkGcxLifyCUbXsKdTsFGiff1RjmWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6zpk6RxWm1NOVU5k56xgyXPQa//LIW9EkPJQ91L5hg4=;
- b=iqEPS+HestkzW47z8bKkXx8V5ilzHZjBaYXW3M7Uiztrv5nu0Nz+dbsHVNbB9URA7gq37TM9Zc+/OR9j6PGO2sY6baxVUE7ZCxfhvi5cjTKikiCcl9OMWS+6LkjwceskhYerA7LxqfzwqwyN4yQdGDU7sEUU/MaTyl71Z5A5gt8=
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com (20.178.241.91) by
- MN2PR05MB6814.namprd05.prod.outlook.com (52.132.172.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.16; Mon, 11 Nov 2019 05:00:30 +0000
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::f0a2:e9fe:d312:7470]) by MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::f0a2:e9fe:d312:7470%4]) with mapi id 15.20.2451.018; Mon, 11 Nov 2019
- 05:00:30 +0000
-From:   Ajay Kaher <akaher@vmware.com>
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "punit.agrawal@arm.com" <punit.agrawal@arm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "mszeredi@redhat.com" <mszeredi@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Srinidhi Rao <srinidhir@vmware.com>,
-        Vikash Bansal <bvikas@vmware.com>,
-        Anish Swaminathan <anishs@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Steven Rostedt <srostedt@vmware.com>,
-        "stable@kernel.org" <stable@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing page
- refcount
-Thread-Topic: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing
- page refcount
-Thread-Index: AQHVfffGKc9CRR2dekieWi7B72DxaadSSqyAgA0lZICAC+hNgIASq5UAgAf2KoA=
-Date:   Mon, 11 Nov 2019 05:00:29 +0000
-Message-ID: <88E8A78A-6CA3-46C1-A2AA-DFE7A3A52586@vmware.com>
-References: <1570581863-12090-1-git-send-email-akaher@vmware.com>
- <1570581863-12090-7-git-send-email-akaher@vmware.com>
- <f899be71-4bc0-d07b-f650-d85a335cdebb@suse.cz>
- <BF0587E3-D104-4DB2-B972-9BC4FD4CA014@vmware.com>
- <0E5175FB-7058-4211-9AA4-9D5E2F6A30B9@vmware.com>
- <35d74931-2c18-00ff-7622-522a79be9103@suse.cz>
-In-Reply-To: <35d74931-2c18-00ff-7622-522a79be9103@suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=akaher@vmware.com; 
-x-originating-ip: [2409:4071:220e:3934:3c2a:8f63:a44f:9055]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc85f22b-e9b6-4b57-d853-08d766641366
-x-ms-traffictypediagnostic: MN2PR05MB6814:|MN2PR05MB6814:|MN2PR05MB6814:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR05MB6814B219DD57C19FA23F2631BB740@MN2PR05MB6814.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0218A015FA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(366004)(39860400002)(396003)(346002)(199004)(189003)(76176011)(33656002)(54906003)(110136005)(102836004)(99286004)(478600001)(66476007)(66556008)(64756008)(66446008)(6116002)(36756003)(6436002)(91956017)(76116006)(66946007)(305945005)(229853002)(7736002)(5660300002)(25786009)(6506007)(7416002)(6486002)(86362001)(4744005)(316002)(71200400001)(71190400001)(53546011)(14454004)(186003)(256004)(46003)(446003)(11346002)(2906002)(81166006)(81156014)(8676002)(6512007)(8936002)(4326008)(6246003)(476003)(2616005)(486006)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6814;H:MN2PR05MB6208.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kA8ESF8+dEws6fJizvSKRDn5/ju4We9vuzfhtmf/kdiN8RoAsAmWvdbhiFsWmVmFaltUl68WyJW9a97Mbg2lIYBucOEcvxESmM8UuSukevSTsksoVCxHPdaTtLC7rQaAJTxT9D4Mt3x8cCv3AqoI5Rf3V6RV0tEXhT8eaoDrfcuws0veAmCGRSkg7YJoz7GUKaMELjy2uCVZH9ImvCK6Xr+2VLpFHLglODjGsXLh4UzQVr/3YvJVaSIaiVXp/7W2GNpj5TFzpFBiibXSMhX1dtfJfz/AWy2hXFF5BpCj9QIYVlTZBmQ+pEvzU84/FsqnoicEm1zgPyZa6WStIOyTg6VQG+6GWQc1s9ZHWxlzObl5O9hZ99Gd7jPjdpUvqfg1SmKe7K5Q7+lBSV/Gbe5PLohqUl8pEm4ck045vzbUYpmeNVEg8tWRJGgiiUasCZxb
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <219FFBD87736E845A639BFC215EF7855@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 11 Nov 2019 00:02:38 -0500
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:62222 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfKKFCi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 00:02:38 -0500
+X-Greylist: delayed 3600 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 00:02:36 EST
+Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xAB3U1uw022710;
+        Mon, 11 Nov 2019 12:30:01 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
+ Mon, 11 Nov 2019 12:30:01 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
+Received: from [192.168.1.2] (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xAB3U0F8022658
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Mon, 11 Nov 2019 12:30:01 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] arm64: dts: rockchip: add analog audio nodes on
+ rk3399-rockpro64
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+References: <20190907174833.19957-1-katsuhiro@katsuster.net>
+ <CA+E=qVdvKxzFcU-09Ucn1Fr0FdkwSsPcLr8vPn2wsu6-DD1gqg@mail.gmail.com>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <abc648cc-0b5d-b407-b74b-639833ba196b@katsuster.net>
+Date:   Mon, 11 Nov 2019 12:30:00 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc85f22b-e9b6-4b57-d853-08d766641366
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 05:00:30.2135
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: i+vsoXlm6h9qxD5hhirEgIRMDjb8xqOf7cjXF4ovWUtCwZAgeujdiCTsTuaeSoC2O867jo8ZLEca6nTGgsIQgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6814
+In-Reply-To: <CA+E=qVdvKxzFcU-09Ucn1Fr0FdkwSsPcLr8vPn2wsu6-DD1gqg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQrvu79PbiAwNi8xMS8xOSwgMjoyNSBQTSwgIlZsYXN0aW1pbCBCYWJrYSIgPHZiYWJrYUBzdXNl
-LmN6PiB3cm90ZToNCg0KPiBPbiAxMC8yNS8xOSA4OjE4IEFNLCBBamF5IEthaGVyIHdyb3RlOg0K
-Pj4gT24gMTcvMTAvMTksIDk6NTggUE0sICJBamF5IEthaGVyIiA8YWthaGVyQHZtd2FyZS5jb20+
-IHdyb3RlOg0KPj4gICAgIA0KPj4+ICAgIA0KPj4+IENvdWxkIHdlIGhhbmRsZSBhcmNoLXNwZWNp
-ZmljIGd1cC5jIGluIGRpZmZlcmVudCBwYXRjaCBzZXRzIGFuZCANCj4+PiBsZXQgdGhlc2UgcGF0
-Y2hlcyB0byBtZXJnZSB0byA0LjQueT8NCj4+ICAgDQo+PiBWbGFzdGltaWwsIHBsZWFzZSBzdWdn
-ZXN0IGlmIGl0J3MgZmluZSB0byBtZXJnZSB0aGVzZSBwYXRjaGVzIHRvIDQuNC55DQo+DQo+IEkn
-bSBub3Qgc3VyZSBpZiBpdCBtYWtlcyBtdWNoIHNlbnNlIHRvIG1lcmdlIHRoZW0gd2l0aG91dCB0
-aGUgYXJjaC1zcGVjaWZpYyBndXANCj4gc3VwcG9ydCwgd2hlbiB3ZSdyZSBhd2FyZSB0aGF0IGl0
-J3MgbWlzc2luZy4NCj4NCj4+IGFuZCBoYW5kbGUgYXJjaC1zcGVjaWZpYyBndXAuYyBpbiBkaWZm
-ZXJlbnQgcGF0Y2ggc2V0cyBzdGFydHMgZnJvbSA0LjE5LnksDQo+DQo+IEFjdHVhbGx5IGFyY2gt
-c3BlY2lmaWMgZ3VwLmMgd2VyZSByZW1vdmVkIGluIDQuMTMsIHNvIGl0J3MgZW5vdWdoIHRvIHN0
-YXJ0IGZyb20NCj4gNC45LnksIHdoaWNoIEknbSBnb2luZyB0byBmaW5hbGx5IGxvb2sgaW50by4N
-Cg0KWWVzIHg4NiBndXAuYyBpcyByZW1vdmVkLiBzMzkwIGd1cC5jIGlzIHByZXNlbnQgdGlsbCA0
-LjE5LA0Kc28gaWYgeW91IGFyZSBtYWtpbmcgY2hhbmdlcyBpbiB0aGlzIGZpbGUgZm9yIDQuNC55
-IGFuZCA0LjkueSwgDQp0aGVuIHNhbWUgc2hvdWxkIGJlIGRvbmUgZm9yIDQuMTQueSBhbmQgdjQu
-MTkueS4NCg0KLSBBamF5DQogICAgDQogICAgDQoNCg==
+Hello Vasily,
+
+Thank you for reporting.
+
+On 2019/11/11 9:17, Vasily Khoruzhick wrote:
+> On Sat, Sep 7, 2019 at 10:48 AM Katsuhiro Suzuki
+> <katsuhiro@katsuster.net> wrote:
+>>
+>> This patch adds audio codec (Everest ES8316) and I2S audio nodes for
+>> RK3399 RockPro64.
+> 
+> Hi Katsuhiro,
+> 
+> I tested your patch with my rockpro64 on 5.4-rc6 which has your other
+> patches to es8316 driver, but apparently it doesn't work.
+> 
+> 'alsamixer' complains 'cannot load mixer controls: No such device or
+> address' and if I try to play audio with mpg123 it pretends that it
+> plays something but there's no sound.
+> 
+> Any idea what can be wrong?
+> 
+
+Do you use defconfig? If so I guess we need turn on more configs:
+
+- simple-graph-card driver (CONFIG_SND_AUDIO_GRAPH_CARD)
+- ES8316 (SND_SOC_ES8316)
+
+
+FYI) ASoC related status or logs in my environment as follows:
+
+root@rockpro64:~# uname -a
+Linux rockpro64 5.4.0-rc6-next-20191108 #169 SMP PREEMPT Mon Nov 11 12:21:44 JST 2019 aarch64 GNU/Linux
+
+root@rockpro64:~# dmesg | grep -i asoc
+[   21.509903] asoc-simple-card hdmi-sound: i2s-hifi <-> ff8a0000.i2s mapping ok
+[   21.510550] asoc-simple-card hdmi-sound: ASoC: no DMI vendor name!
+[   21.567906] asoc-audio-graph-card sound: ES8316 HiFi <-> ff890000.i2s mapping ok
+[   21.568565] asoc-audio-graph-card sound: ASoC: no DMI vendor name!
+
+root@rockpro64:~# cat /proc/asound/pcm
+00-00: ff8a0000.i2s-i2s-hifi i2s-hifi-0 : ff8a0000.i2s-i2s-hifi i2s-hifi-0 : playback 1
+01-00: ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : playback 1 : capture 1
+
+root@rockpro64:~# cat /sys/kernel/debug/asoc/components
+hdmi-audio-codec.3.auto
+ff8a0000.i2s
+ff8a0000.i2s
+ff890000.i2s
+ff890000.i2s
+ff880000.i2s
+ff880000.i2s
+es8316.1-0011
+snd-soc-dummy
+snd-soc-dummy
+
+root@rockpro64:~# cat /sys/kernel/debug/asoc/dais
+i2s-hifi
+ff8a0000.i2s
+ff890000.i2s
+ff880000.i2s
+ES8316 HiFi
+snd-soc-dummy-dai
+
+Best Regards,
+Katsuhiro Suzuki
+
+
+> Regards,
+> Vasily
+> 
+>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> ---
+>>   .../boot/dts/rockchip/rk3399-rockpro64.dts    | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> index 0401d4ec1f45..8b1e6382b140 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> @@ -81,6 +81,12 @@
+>>                  reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+>>          };
+>>
+>> +       sound {
+>> +               compatible = "audio-graph-card";
+>> +               label = "rockchip,rk3399";
+>> +               dais = <&i2s1_p0>;
+>> +       };
+>> +
+>>          vcc12v_dcin: vcc12v-dcin {
+>>                  compatible = "regulator-fixed";
+>>                  regulator-name = "vcc12v_dcin";
+>> @@ -470,6 +476,20 @@
+>>          i2c-scl-rising-time-ns = <300>;
+>>          i2c-scl-falling-time-ns = <15>;
+>>          status = "okay";
+>> +
+>> +       es8316: codec@11 {
+>> +               compatible = "everest,es8316";
+>> +               reg = <0x11>;
+>> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
+>> +               clock-names = "mclk";
+>> +               #sound-dai-cells = <0>;
+>> +
+>> +               port {
+>> +                       es8316_p0_0: endpoint {
+>> +                               remote-endpoint = <&i2s1_p0_0>;
+>> +                       };
+>> +               };
+>> +       };
+>>   };
+>>
+>>   &i2c3 {
+>> @@ -505,6 +525,14 @@
+>>          rockchip,playback-channels = <2>;
+>>          rockchip,capture-channels = <2>;
+>>          status = "okay";
+>> +
+>> +       i2s1_p0: port {
+>> +               i2s1_p0_0: endpoint {
+>> +                       dai-format = "i2s";
+>> +                       mclk-fs = <256>;
+>> +                       remote-endpoint = <&es8316_p0_0>;
+>> +               };
+>> +       };
+>>   };
+>>
+>>   &i2s2 {
+>> --
+>> 2.23.0.rc1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
