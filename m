@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFA5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E0C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D0E21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEADC222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497078;
-	bh=NQ8hEnMGGrLVGpvkW97YGDHz+Z/OC+g+PKaH/TGZQSU=;
+	s=default; t=1573497082;
+	bh=yROh0fTXdNtArS1xmUHquJ+Jv0AlbRBpy+9faOc/SV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYPpc1yeetXV2XJIesKDOCuDD0t8NKgvZFv4S+sE9BCJyaEfsMqU0gb2IK/nU4KZQ
-	 J3dWH5R+xCGxXhsI+0Lpb8oz3SZ+lXzV1w7sCMv3jTalF/O/PHVIW2M+Cg51C7o7NR
-	 XDVtYNjPvGifeUu9s1YygYsRYUqNJS1B3j86ulFg=
+	b=IOwz5Lq5vYawahoUGgW9/j3HTxwk/wbaq44BVbfRPbYTRyMgru8vluILkv3LvAzgZ
+	 rekv3J8kdIsMubBSCEk8mQODVcgHR9pc8nxWRaMsgrCxA1mIs6+26A50uilL/eSaGo
+	 1kOTfAffafAV6WbKdFMxUyAfppcjS+g3aA1HWu9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfKKSbR (ORCPT
+        id S1727641AbfKKSbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfKKSbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:14 -0500
+        id S1726985AbfKKSbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBD952173B;
-        Mon, 11 Nov 2019 18:31:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B30FC21872;
+        Mon, 11 Nov 2019 18:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497073;
-        bh=NQ8hEnMGGrLVGpvkW97YGDHz+Z/OC+g+PKaH/TGZQSU=;
+        s=default; t=1573497079;
+        bh=yROh0fTXdNtArS1xmUHquJ+Jv0AlbRBpy+9faOc/SV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGbVXPg9VIriJsxTonIN/0+vhV4bkN99EQ2B9xsD8VMiIoY9AH6W1iDQdKDEGrMlJ
-         puWgLDxxJb5gD1PwPg66V1XPIJ/FF9HEqWrSmFN937Fh7qUy1gsmhEM5Kbkunx033e
-         uVILGsR5+rU1p0f592xbNJyLIsYwIFGK8EZXy9J4=
+        b=NfGyIqya0NXqhs81UmXj3wKlaauGL800qwOq21VBCItJIt09y0wLVpRxpglfRTeec
+         fJMl6/9OmjyMLeOLdJq8hHtYi0aKQKP+5CQBv/NZRkjKPQNigMZwmX4zpCNvjsLVAT
+         tYCuZ1qULq08otCr1h2+i80GAOAvWyqdHuY3JAsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 35/43] USB: Skip endpoints with 0 maxpacket length
-Date:   Mon, 11 Nov 2019 19:28:49 +0100
-Message-Id: <20191111181325.467989555@linuxfoundation.org>
+Subject: [PATCH 4.4 37/43] net: hisilicon: Fix "Trying to free already-free IRQ"
+Date:   Mon, 11 Nov 2019 19:28:51 +0100
+Message-Id: <20191111181326.777188012@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -59,47 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit d482c7bb0541d19dea8bff437a9f3c5563b5b2d2 ]
+[ Upstream commit 63a41746827cb16dc6ad0d4d761ab4e7dda7a0c3 ]
 
-Endpoints with a maxpacket length of 0 are probably useless.  They
-can't transfer any data, and it's not at all unlikely that an HCD will
-crash or hang when trying to handle an URB for such an endpoint.
+When rmmod hip04_eth.ko, we can get the following warning:
 
-Currently the USB core does not check for endpoints having a maxpacket
-value of 0.  This patch adds a check, printing a warning and skipping
-over any endpoints it catches.
+Task track: rmmod(1623)>bash(1591)>login(1581)>init(1)
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1623 at kernel/irq/manage.c:1557 __free_irq+0xa4/0x2ac()
+Trying to free already-free IRQ 200
+Modules linked in: ping(O) pramdisk(O) cpuinfo(O) rtos_snapshot(O) interrupt_ctrl(O) mtdblock mtd_blkdevrtfs nfs_acl nfs lockd grace sunrpc xt_tcpudp ipt_REJECT iptable_filter ip_tables x_tables nf_reject_ipv
+CPU: 0 PID: 1623 Comm: rmmod Tainted: G           O    4.4.193 #1
+Hardware name: Hisilicon A15
+[<c020b408>] (rtos_unwind_backtrace) from [<c0206624>] (show_stack+0x10/0x14)
+[<c0206624>] (show_stack) from [<c03f2be4>] (dump_stack+0xa0/0xd8)
+[<c03f2be4>] (dump_stack) from [<c021a780>] (warn_slowpath_common+0x84/0xb0)
+[<c021a780>] (warn_slowpath_common) from [<c021a7e8>] (warn_slowpath_fmt+0x3c/0x68)
+[<c021a7e8>] (warn_slowpath_fmt) from [<c026876c>] (__free_irq+0xa4/0x2ac)
+[<c026876c>] (__free_irq) from [<c0268a14>] (free_irq+0x60/0x7c)
+[<c0268a14>] (free_irq) from [<c0469e80>] (release_nodes+0x1c4/0x1ec)
+[<c0469e80>] (release_nodes) from [<c0466924>] (__device_release_driver+0xa8/0x104)
+[<c0466924>] (__device_release_driver) from [<c0466a80>] (driver_detach+0xd0/0xf8)
+[<c0466a80>] (driver_detach) from [<c0465e18>] (bus_remove_driver+0x64/0x8c)
+[<c0465e18>] (bus_remove_driver) from [<c02935b0>] (SyS_delete_module+0x198/0x1e0)
+[<c02935b0>] (SyS_delete_module) from [<c0202ed0>] (__sys_trace_return+0x0/0x10)
+---[ end trace bb25d6123d849b44 ]---
 
-Now, the USB spec does not rule out endpoints having maxpacket = 0.
-But since they wouldn't have any practical use, there doesn't seem to
-be any good reason for us to accept them.
+Currently "rmmod hip04_eth.ko" call free_irq more than once
+as devres_release_all and hip04_remove both call free_irq.
+This results in a 'Trying to free already-free IRQ' warning.
+To solve the problem free_irq has been moved out of hip04_remove.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281050420.1485-100000@iolanthe.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/config.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 5abc4e5434ecf..cbd064fae23bd 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -314,6 +314,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index e8b7dc1bcfa6e..2a7dfac205464 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -950,7 +950,6 @@ static int hip04_remove(struct platform_device *pdev)
  
- 	/* Validate the wMaxPacketSize field */
- 	maxp = usb_endpoint_maxp(&endpoint->desc);
-+	if (maxp == 0) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
-+		    cfgno, inum, asnum, d->bEndpointAddress);
-+		goto skip_to_next_endpoint_or_interface_descriptor;
-+	}
- 
- 	/* Find the highest legal maxpacket size for this endpoint */
- 	i = 0;		/* additional transactions per microframe */
+ 	hip04_free_ring(ndev, d);
+ 	unregister_netdev(ndev);
+-	free_irq(ndev->irq, ndev);
+ 	of_node_put(priv->phy_node);
+ 	cancel_work_sync(&priv->tx_timeout_task);
+ 	free_netdev(ndev);
 -- 
 2.20.1
 
