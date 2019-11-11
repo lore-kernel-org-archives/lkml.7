@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222CDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FFAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DCD21E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5742184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497364;
-	bh=jlnTzvoyGLFnWfdd3rhWLJ0o0stvG4YQ6aaLNBAKQag=;
+	s=default; t=1573497367;
+	bh=xs/uc3tSF9YOdmddui/dzZ64YJC7ZTdzZFgbGi7P0Yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQbJUwFsikUcIwRQvAh0xCM4Ft06oNNkVbbyZ/ZgAzcFmi6rXAwB9hG2RrxgEifMH
-	 Gc4KldyOg6Yy76My7XNFq68nch0UO4xJoitJ6sEfGkfYhXlRMKlEmW/yI+G/OwguGr
-	 kgImK+s/gCB6x/ShMpn/NvvwxPz/1fo3+mK4RSw0=
+	b=poEXCDfcE7VIUz+RM6HfR89wo4aWSYXZ30QtdKhaYLfFxb+bRb6IHwsQUbPUdvo0V
+	 T8gPLW6oFygeBqo7HWlItawkg0T4z4m/6cwwBBf1vaI+4IfQpmnyT5uN7JxZFrxitx
+	 hZ10gMyg8HrDytC+U7JVENYwz0Jr67+ez/x8FbaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfKKSgC (ORCPT
+        id S1728668AbfKKSgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54078 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727515AbfKKSgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:00 -0500
+        id S1727515AbfKKSgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 804302196E;
-        Mon, 11 Nov 2019 18:35:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3757221655;
+        Mon, 11 Nov 2019 18:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497360;
-        bh=jlnTzvoyGLFnWfdd3rhWLJ0o0stvG4YQ6aaLNBAKQag=;
+        s=default; t=1573497362;
+        bh=xs/uc3tSF9YOdmddui/dzZ64YJC7ZTdzZFgbGi7P0Yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WX3tqWgox/oA7kTkiz965KGgR0xzMnhPTZWQ2TFKxNJT/cdd9u/7U1VWvP3dvqkHo
-         gBW1cUu8nWyiQZa5bDuA37u21YRQiIhmO/CO1mnqehU9VGqJp430VUGiU6h4LVYcv8
-         L11zsN0j5dvaSUWtGavp39T+KuLg9KwG+5OjC4B4=
+        b=V/FXrQPkQvC/orwkKmBUzqBcDWJHXeIgPTyQrcLkNrpLyFt191G1rGCOjaPMI6Wrs
+         5ptJs8Nlana/H0xp0TN+c/9uv62JTnEVHzSQDEtRYwkq0qcxQwSjokF/W59ynSMD45
+         jen1fmxlw/5uyAVwYCHekeI7cjPUFNZ56IHwBZeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
+        =?UTF-8?q?Zbyn=C4=9Bk=20Kocur?= <zbynek.kocur@fel.cvut.cz>,
+        Andreas Klinger <ak@it-klinger.de>, Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 027/105] iio: imu: adis16480: make sure provided frequency is positive
-Date:   Mon, 11 Nov 2019 19:27:57 +0100
-Message-Id: <20191111181437.760054896@linuxfoundation.org>
+Subject: [PATCH 4.14 028/105] iio: srf04: fix wrong limitation in distance measuring
+Date:   Mon, 11 Nov 2019 19:27:58 +0100
+Message-Id: <20191111181437.842601796@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,40 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Andreas Klinger <ak@it-klinger.de>
 
-commit 24e1eb5c0d78cfb9750b690bbe997d4d59170258 upstream.
+commit 431f7667bd6889a274913162dfd19cce9d84848e upstream.
 
-It could happen that either `val` or `val2` [provided from userspace] is
-negative. In that case the computed frequency could get a weird value.
+The measured time value in the driver is limited to the maximum distance
+which can be read by the sensor. This limitation was wrong and is fixed
+by this patch.
 
-Fix this by checking that neither of the 2 variables is negative, and check
-that the computed result is not-zero.
+It also takes into account that we are supporting a variety of sensors
+today and that the recently added sensors have a higher maximum
+distance range.
 
-Fixes: e4f959390178 ("iio: imu: adis16480 switch sampling frequency attr to core support")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
+Changes in v2:
+- Added a Tested-by
+
+Suggested-by: Zbyněk Kocur <zbynek.kocur@fel.cvut.cz>
+Tested-by: Zbyněk Kocur <zbynek.kocur@fel.cvut.cz>
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Cc:<Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/adis16480.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/iio/proximity/srf04.c |   29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -266,8 +266,11 @@ static int adis16480_set_freq(struct iio
- 	struct adis16480 *st = iio_priv(indio_dev);
- 	unsigned int t;
+--- a/drivers/iio/proximity/srf04.c
++++ b/drivers/iio/proximity/srf04.c
+@@ -105,7 +105,7 @@ static int srf04_read(struct srf04_data
+ 	udelay(10);
+ 	gpiod_set_value(data->gpiod_trig, 0);
  
-+	if (val < 0 || val2 < 0)
-+		return -EINVAL;
-+
- 	t =  val * 1000 + val2 / 1000;
--	if (t <= 0)
-+	if (t == 0)
- 		return -EINVAL;
+-	/* it cannot take more than 20 ms */
++	/* it should not take more than 20 ms until echo is rising */
+ 	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
+ 	if (ret < 0) {
+ 		mutex_unlock(&data->lock);
+@@ -115,7 +115,8 @@ static int srf04_read(struct srf04_data
+ 		return -ETIMEDOUT;
+ 	}
  
- 	t = 2460000 / t;
+-	ret = wait_for_completion_killable_timeout(&data->falling, HZ/50);
++	/* it cannot take more than 50 ms until echo is falling */
++	ret = wait_for_completion_killable_timeout(&data->falling, HZ/20);
+ 	if (ret < 0) {
+ 		mutex_unlock(&data->lock);
+ 		return ret;
+@@ -130,19 +131,19 @@ static int srf04_read(struct srf04_data
+ 
+ 	dt_ns = ktime_to_ns(ktime_dt);
+ 	/*
+-	 * measuring more than 3 meters is beyond the capabilities of
+-	 * the sensor
++	 * measuring more than 6,45 meters is beyond the capabilities of
++	 * the supported sensors
+ 	 * ==> filter out invalid results for not measuring echos of
+ 	 *     another us sensor
+ 	 *
+ 	 * formula:
+-	 *         distance       3 m
+-	 * time = ---------- = --------- = 9404389 ns
+-	 *          speed       319 m/s
++	 *         distance     6,45 * 2 m
++	 * time = ---------- = ------------ = 40438871 ns
++	 *          speed         319 m/s
+ 	 *
+ 	 * using a minimum speed at -20 °C of 319 m/s
+ 	 */
+-	if (dt_ns > 9404389)
++	if (dt_ns > 40438871)
+ 		return -EIO;
+ 
+ 	time_ns = dt_ns;
+@@ -154,20 +155,20 @@ static int srf04_read(struct srf04_data
+ 	 *   with Temp in °C
+ 	 *   and speed in m/s
+ 	 *
+-	 * use 343 m/s as ultrasonic speed at 20 °C here in absence of the
++	 * use 343,5 m/s as ultrasonic speed at 20 °C here in absence of the
+ 	 * temperature
+ 	 *
+ 	 * therefore:
+-	 *             time     343
+-	 * distance = ------ * -----
+-	 *             10^6       2
++	 *             time     343,5     time * 106
++	 * distance = ------ * ------- = ------------
++	 *             10^6         2         617176
+ 	 *   with time in ns
+ 	 *   and distance in mm (one way)
+ 	 *
+-	 * because we limit to 3 meters the multiplication with 343 just
++	 * because we limit to 6,45 meters the multiplication with 106 just
+ 	 * fits into 32 bit
+ 	 */
+-	distance_mm = time_ns * 343 / 2000000;
++	distance_mm = time_ns * 106 / 617176;
+ 
+ 	return distance_mm;
+ }
 
 
