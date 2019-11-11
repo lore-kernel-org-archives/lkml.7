@@ -2,142 +2,105 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AEFC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E1CC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98071214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C8A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKKRSV (ORCPT
+        id S1727012AbfKKRTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:18:21 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37948 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfKKRSV (ORCPT
+        Mon, 11 Nov 2019 12:19:18 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50953 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKRTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:18:21 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E7CE328FCBA
-Subject: Re: [PATCH] i2c: i2c-cros-ec-tunnel: Make the device acpi compatible
-To:     Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     cychiang@chromium.org, rrangel@chromium.org,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191111161431.26293-1-akshu.agrawal@amd.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <a5f6a3a9-8eb7-58fd-a624-718374c2437f@collabora.com>
-Date:   Mon, 11 Nov 2019 18:18:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 12:19:18 -0500
+X-Originating-IP: 90.65.92.102
+Received: from localhost (lfbn-1-1723-102.w90-65.abo.wanadoo.fr [90.65.92.102])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id BD89E1BF205;
+        Mon, 11 Nov 2019 17:19:15 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 18:19:15 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: tps65910: allow using RTC without alarm interrupt
+Message-ID: <20191111171915.GA3572@piout.net>
+References: <20191109154652.7419-1-andrej.skvortzov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111161431.26293-1-akshu.agrawal@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191109154652.7419-1-andrej.skvortzov@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akshu,
+Hi,
 
-Thanks for sending this upstream and improve CrOS EC
+This needs a proper commit message.
 
-On 11/11/19 17:14, Akshu Agrawal wrote:
-> Add ACPI entry and use device_property_read to get fw value
-> which is common to both dtsi and acpi.
-> 
-> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+On 09/11/2019 18:46:52+0300, Andrey Skvortsov wrote:
+> Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
 > ---
->  drivers/i2c/busses/i2c-cros-ec-tunnel.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+>  drivers/rtc/rtc-tps65910.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/i2c/busses/i2c-cros-ec-tunnel.c b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-> index c551aa96a2e3..958161c71985 100644
-> --- a/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-> +++ b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-> @@ -3,6 +3,7 @@
->  //
->  // Copyright (C) 2013 Google, Inc.
->  
-> +#include <linux/acpi.h>
->  #include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/platform_data/cros_ec_commands.h>
-> @@ -240,7 +241,6 @@ static const struct i2c_algorithm ec_i2c_algorithm = {
->  
->  static int ec_i2c_probe(struct platform_device *pdev)
->  {
-> -	struct device_node *np = pdev->dev.of_node;
->  	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
->  	struct device *dev = &pdev->dev;
->  	struct ec_i2c_device *bus = NULL;
-> @@ -256,7 +256,7 @@ static int ec_i2c_probe(struct platform_device *pdev)
->  	if (bus == NULL)
->  		return -ENOMEM;
->  
-> -	err = of_property_read_u32(np, "google,remote-bus", &remote_bus);
-> +	err = device_property_read_u32(dev, "google,remote-bus", &remote_bus);
->  	if (err) {
->  		dev_err(dev, "Couldn't read remote-bus property\n");
->  		return err;
-> @@ -271,7 +271,7 @@ static int ec_i2c_probe(struct platform_device *pdev)
->  	bus->adap.algo = &ec_i2c_algorithm;
->  	bus->adap.algo_data = bus;
->  	bus->adap.dev.parent = &pdev->dev;
-> -	bus->adap.dev.of_node = np;
-> +	bus->adap.dev.of_node = pdev->dev.of_node;
-
-That change is not really needed/(related) but as np was only used here I'm fine
-with it.
-
->  	bus->adap.retries = I2C_MAX_RETRIES;
->  
->  	err = i2c_add_adapter(&bus->adap);
-> @@ -291,19 +291,24 @@ static int ec_i2c_remove(struct platform_device *dev)
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_OF
->  static const struct of_device_id cros_ec_i2c_of_match[] = {
->  	{ .compatible = "google,cros-ec-i2c-tunnel" },
->  	{},
+> diff --git a/drivers/rtc/rtc-tps65910.c b/drivers/rtc/rtc-tps65910.c
+> index 2c0467a9e717..aa3a001ef413 100644
+> --- a/drivers/rtc/rtc-tps65910.c
+> +++ b/drivers/rtc/rtc-tps65910.c
+> @@ -361,6 +361,13 @@ static const struct rtc_class_ops tps65910_rtc_ops = {
+>  	.set_offset	= tps65910_set_offset,
 >  };
->  MODULE_DEVICE_TABLE(of, cros_ec_i2c_of_match);
-> -#endif
-> +
-> +static const struct acpi_device_id cros_ec_i2c_tunnel_acpi_id[] = {
-> +	{ "GOOG001A", 0 },
-> +	{ }
+>  
+> +static const struct rtc_class_ops tps65910_rtc_ops_noirq = {
+> +	.read_time	= tps65910_rtc_read_time,
+> +	.set_time	= tps65910_rtc_set_time,
+> +	.read_offset	= tps65910_read_offset,
+> +	.set_offset	= tps65910_set_offset,
 > +};
-> +MODULE_DEVICE_TABLE(acpi, cros_ec_i2c_tunnel_acpi_id);
+> +
+>  static int tps65910_rtc_probe(struct platform_device *pdev)
+>  {
+>  	struct tps65910 *tps65910 = NULL;
+> @@ -415,13 +422,17 @@ static int tps65910_rtc_probe(struct platform_device *pdev)
+>  		tps65910_rtc_interrupt, IRQF_TRIGGER_LOW,
+>  		dev_name(&pdev->dev), &pdev->dev);
+>  	if (ret < 0) {
+> -		dev_err(&pdev->dev, "IRQ is not free.\n");
+> -		return ret;
+> +		dev_err(&pdev->dev, "request IRQ:%d failed, err = %d\n",
+> +			 irq, ret);
+
+Do we actually need an error message here?
+
+> +		irq = -1;
+>  	}
+>  	tps_rtc->irq = irq;
+> -	device_set_wakeup_capable(&pdev->dev, 1);
+> +	if (irq != -1) {
+> +		device_set_wakeup_capable(&pdev->dev, 1);
+> +		tps_rtc->rtc->ops = &tps65910_rtc_ops;
+> +	} else
+> +		tps_rtc->rtc->ops = &tps65910_rtc_ops_noirq;
 >  
->  static struct platform_driver ec_i2c_tunnel_driver = {
->  	.probe = ec_i2c_probe,
->  	.remove = ec_i2c_remove,
->  	.driver = {
->  		.name = "cros-ec-i2c-tunnel",
-> +		.acpi_match_table = ACPI_PTR(cros_ec_i2c_tunnel_acpi_id),
->  		.of_match_table = of_match_ptr(cros_ec_i2c_of_match),
->  	},
->  };
+> -	tps_rtc->rtc->ops = &tps65910_rtc_ops;
+>  	tps_rtc->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
+>  	tps_rtc->rtc->range_max = RTC_TIMESTAMP_END_2099;
+>  
+> -- 
+> 2.20.1
 > 
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Question: Is this supported on older firmwares or is only expected to work on
-newer ACPI-based devices?
-
-Thanks,
- Enric
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
