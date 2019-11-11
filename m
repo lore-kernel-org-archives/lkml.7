@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7245FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D087C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8DD2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57552173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497222;
-	bh=HF4uijMyGzKGfAH1v82FhCnktpAr5PkJtl1aztSZj0M=;
+	s=default; t=1573497228;
+	bh=jFKRDozkNnN17b4uRxPS4zmxpYQ3OKZr9Ar/cQVZc80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lhcNKnQfbgYC0MdiNoqqx0Lk4TCefGJsr7StrUpa9WdAndbqy2HhSdfR3Ms1wUtGO
-	 +LyzmNq5ICqJpm0XMkixdiSUc+PUDjDfc8LKFXe7Wl3iQihkz8P6XaBgLegLJRpknW
-	 mPPQdF2Jic3lt556mUAadCsBlou00tJmGe7iajZU=
+	b=WNL4syoDp49WRXyeVWUQ0eJ9casy3cMSw4Cyl5lVUkI14rF4Xnc9Vo/FonWBAwn2p
+	 /UyVgvi9rusJK2OExgYbA2VMyFfyeu00GM+cVqHtGjHOQuro6SD/xRKQWDSA0NmF3G
+	 tn6u4ZIohLsSsr8BLrJMZSePmJLI7XtjhQVR4cjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfKKSdl (ORCPT
+        id S1728209AbfKKSdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728158AbfKKSdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:35 -0500
+        id S1728177AbfKKSdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ADDE214E0;
-        Mon, 11 Nov 2019 18:33:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 445EF20656;
+        Mon, 11 Nov 2019 18:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497213;
-        bh=HF4uijMyGzKGfAH1v82FhCnktpAr5PkJtl1aztSZj0M=;
+        s=default; t=1573497219;
+        bh=jFKRDozkNnN17b4uRxPS4zmxpYQ3OKZr9Ar/cQVZc80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLgxAilHg76UxI9oPp3oHUxExrWtsYaLUfhfDCLbmlZKMKwmVoQwJU89L67IyLb3j
-         Q7aAUPwxNhs7ZrSq7pCOkCCw+ENQhh8yN/oVAgtcCt3mM7mI7h0IMjE3pUESQLoATz
-         sjRGfGsQ/JwZknYg4xmdFbGmFFACbXIivCvMlZXs=
+        b=dpUsczyA3nZb8ahRfp/Y2Jdc6Zy0P/hc6yCTq4mbGdaRY3FPjNdNDT9bzgXHU88eT
+         Pz0827JOXbBWEmyBQR0la6/jc55qcRNaLEBqQO9mcyaYeNO3Ng/hXEN6SMhB5j1xp6
+         9Div99mVp80aO/lZFe5cGpldc39H2W/UIevnQY00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Simon Horman <horms@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 40/65] scsi: qla2xxx: fixup incorrect usage of host_byte
-Date:   Mon, 11 Nov 2019 19:28:40 +0100
-Message-Id: <20191111181347.659641041@linuxfoundation.org>
+Subject: [PATCH 4.9 42/65] ipvs: move old_secure_tcp into struct netns_ipvs
+Date:   Mon, 11 Nov 2019 19:28:42 +0100
+Message-Id: <20191111181348.344555759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -61,54 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 66cf50e65b183c863825f5c28a818e3f47a72e40 ]
+[ Upstream commit c24b75e0f9239e78105f81c5f03a751641eb07ef ]
 
-DRIVER_ERROR is a a driver byte setting, not a host byte.  The qla2xxx
-driver should rather return DID_ERROR here to be in line with the other
-drivers.
+syzbot reported the following issue :
 
-Link: https://lore.kernel.org/r/20191018140458.108278-1-hare@suse.de
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+BUG: KCSAN: data-race in update_defense_level / update_defense_level
+
+read to 0xffffffff861a6260 of 4 bytes by task 3006 on cpu 1:
+ update_defense_level+0x621/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:177
+ defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
+ process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+ worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+
+write to 0xffffffff861a6260 of 4 bytes by task 7333 on cpu 0:
+ update_defense_level+0xa62/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:205
+ defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
+ process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+ worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 7333 Comm: kworker/0:5 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events defense_work_handler
+
+Indeed, old_secure_tcp is currently a static variable, while it
+needs to be a per netns variable.
+
+Fixes: a0840e2e165a ("IPVS: netns, ip_vs_ctl local vars moved to ipvs struct.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Simon Horman <horms@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_bsg.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/net/ip_vs.h            |  1 +
+ net/netfilter/ipvs/ip_vs_ctl.c | 15 +++++++--------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
-index 4a6e086279f9a..33e4dceb895f2 100644
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -252,7 +252,7 @@ qla2x00_process_els(struct fc_bsg_job *bsg_job)
- 	srb_t *sp;
- 	const char *type;
- 	int req_sg_cnt, rsp_sg_cnt;
--	int rval =  (DRIVER_ERROR << 16);
-+	int rval =  (DID_ERROR << 16);
- 	uint16_t nextlid = 0;
- 
- 	if (bsg_job->request->msgcode == FC_BSG_RPT_ELS) {
-@@ -426,7 +426,7 @@ qla2x00_process_ct(struct fc_bsg_job *bsg_job)
- 	struct Scsi_Host *host = bsg_job->shost;
- 	scsi_qla_host_t *vha = shost_priv(host);
- 	struct qla_hw_data *ha = vha->hw;
--	int rval = (DRIVER_ERROR << 16);
-+	int rval = (DID_ERROR << 16);
- 	int req_sg_cnt, rsp_sg_cnt;
- 	uint16_t loop_id;
- 	struct fc_port *fcport;
-@@ -1911,7 +1911,7 @@ qlafx00_mgmt_cmd(struct fc_bsg_job *bsg_job)
- 	struct Scsi_Host *host = bsg_job->shost;
- 	scsi_qla_host_t *vha = shost_priv(host);
- 	struct qla_hw_data *ha = vha->hw;
--	int rval = (DRIVER_ERROR << 16);
-+	int rval = (DID_ERROR << 16);
- 	struct qla_mt_iocb_rqst_fx00 *piocb_rqst;
- 	srb_t *sp;
- 	int req_sg_cnt = 0, rsp_sg_cnt = 0;
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index cd6018a9ee246..a26165744d980 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -887,6 +887,7 @@ struct netns_ipvs {
+ 	struct delayed_work	defense_work;   /* Work handler */
+ 	int			drop_rate;
+ 	int			drop_counter;
++	int			old_secure_tcp;
+ 	atomic_t		dropentry;
+ 	/* locks in ctl.c */
+ 	spinlock_t		dropentry_lock;  /* drop entry handling */
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 8037b25ddb76a..33125fc009cfd 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -97,7 +97,6 @@ static bool __ip_vs_addr_is_local_v6(struct net *net,
+ static void update_defense_level(struct netns_ipvs *ipvs)
+ {
+ 	struct sysinfo i;
+-	static int old_secure_tcp = 0;
+ 	int availmem;
+ 	int nomem;
+ 	int to_change = -1;
+@@ -178,35 +177,35 @@ static void update_defense_level(struct netns_ipvs *ipvs)
+ 	spin_lock(&ipvs->securetcp_lock);
+ 	switch (ipvs->sysctl_secure_tcp) {
+ 	case 0:
+-		if (old_secure_tcp >= 2)
++		if (ipvs->old_secure_tcp >= 2)
+ 			to_change = 0;
+ 		break;
+ 	case 1:
+ 		if (nomem) {
+-			if (old_secure_tcp < 2)
++			if (ipvs->old_secure_tcp < 2)
+ 				to_change = 1;
+ 			ipvs->sysctl_secure_tcp = 2;
+ 		} else {
+-			if (old_secure_tcp >= 2)
++			if (ipvs->old_secure_tcp >= 2)
+ 				to_change = 0;
+ 		}
+ 		break;
+ 	case 2:
+ 		if (nomem) {
+-			if (old_secure_tcp < 2)
++			if (ipvs->old_secure_tcp < 2)
+ 				to_change = 1;
+ 		} else {
+-			if (old_secure_tcp >= 2)
++			if (ipvs->old_secure_tcp >= 2)
+ 				to_change = 0;
+ 			ipvs->sysctl_secure_tcp = 1;
+ 		}
+ 		break;
+ 	case 3:
+-		if (old_secure_tcp < 2)
++		if (ipvs->old_secure_tcp < 2)
+ 			to_change = 1;
+ 		break;
+ 	}
+-	old_secure_tcp = ipvs->sysctl_secure_tcp;
++	ipvs->old_secure_tcp = ipvs->sysctl_secure_tcp;
+ 	if (to_change >= 0)
+ 		ip_vs_protocol_timeout_change(ipvs,
+ 					      ipvs->sysctl_secure_tcp > 1);
 -- 
 2.20.1
 
