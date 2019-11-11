@@ -2,81 +2,132 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD30CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822EDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE6221925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611312196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfKKQHC (ORCPT
+        id S1726982AbfKKQHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:07:02 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:34310 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfKKQHC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:07:02 -0500
-Received: by mail-io1-f71.google.com with SMTP id a13so13831718iol.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 08:07:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=gFl20HjZDqq+nPQeJUYSxv5Bfmo8ZIyMRQ74ccfUZsc=;
-        b=MES1xGW/S8lVHtljDnvMNfc59ZpNbXLbdnYbfIk34BqpFhYGG709rxX6R7YFsKpy9k
-         b64gZfxyLordDKipYgGBAncmzTj+kQfeUhcY+iTQbj3RNsQP4IA1WhR0Hhf4a9bSW58N
-         1LBnWoI72sKdnhTB4UcMe8eHWbTsJ84YPpc/vlo4cRpcTOvbLVtEe4UNBwaa1fDeC+H9
-         O3YxdinRsC4LVzDZ3dMJw/YeLV+b+u9uCzGulaiE6BhCSeyUkbxp2mAdusM023o1znNL
-         GcRl8N6yqYS1RgIt7GTA7Yt0/UOb/vFpjnHLKKa/PmARyH0TqU3UbqxTRqBU4TK52ZHA
-         pF3g==
-X-Gm-Message-State: APjAAAVeSybTIm7qb7o7slxKiC3DPig0ivKse13aRRy1ufaCsoP1XM0A
-        Dawh/3oO+ZwKH+S9H5T3PsSTPrexAWeRN2OGz7QYpVqcPNms
-X-Google-Smtp-Source: APXvYqywxuAwIOiw8d0TKszs0yk4o9kaGMvUJ9K55SHH6Im/F08TWUOQQw1vBGPnwfBhSwGcTMIJv9gca9cNfCX3fkgdzA02Qkyu
+        Mon, 11 Nov 2019 11:07:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:47544 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbfKKQHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:07:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05B0B31B;
+        Mon, 11 Nov 2019 08:07:43 -0800 (PST)
+Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6C8A3F534;
+        Mon, 11 Nov 2019 08:07:41 -0800 (PST)
+Subject: Re: [PATCH 1/2] arm64: Rename WORKAROUND_1165522 to SPECULATIVE_AT
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20191111141157.55062-1-steven.price@arm.com>
+ <20191111141157.55062-2-steven.price@arm.com>
+ <160a852027f4481cc63aed72c4f4a409@www.loen.fr>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <013eec05-b558-d97a-bf95-248a62f25dc5@arm.com>
+Date:   Mon, 11 Nov 2019 16:07:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:dd0f:: with SMTP id n15mr31057502ilm.146.1573488421314;
- Mon, 11 Nov 2019 08:07:01 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:07:01 -0800
-In-Reply-To: <000000000000aae1480596a5632b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000692ac105971452c5@google.com>
-Subject: Re: WARNING: refcount bug in j1939_netdev_start
-From:   syzbot <syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com>
-To:     bst@pengutronix.de, davem@davemloft.net,
-        dev.kurt@vandijck-laurijssen.be, ecathinds@gmail.com,
-        kernel@pengutronix.de, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@rempel-privat.de,
-        lkp@intel.com, maxime.jayat@mobile-devices.fr, mkl@pengutronix.de,
-        netdev@vger.kernel.org, o.rempel@pengutronix.de, robin@protonic.nl,
-        socketcan@hartkopp.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <160a852027f4481cc63aed72c4f4a409@www.loen.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 11/11/2019 15:42, Marc Zyngier wrote:
+> Hi Steven,
+> 
+> On 2019-11-11 15:21, Steven Price wrote:
+>> Cortex-A55 is affected by a similar erratum, so rename the existing
+>> workaround for errarum 1165522 so it can be used for both errata.
+> 
+> nit: erratum
 
-commit 9d71dd0c70099914fcd063135da3c580865e924c
-Author: The j1939 authors <linux-can@vger.kernel.org>
-Date:   Mon Oct 8 09:48:36 2018 +0000
+Thanks, I do seem to have trouble spelling it correctly :)
 
-     can: add support of SAE J1939 protocol
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  arch/arm64/Kconfig                |  4 ++++
+>>  arch/arm64/include/asm/cpucaps.h  |  2 +-
+>>  arch/arm64/include/asm/kvm_host.h |  2 +-
+>>  arch/arm64/include/asm/kvm_hyp.h  |  3 +--
+>>  arch/arm64/kernel/cpu_errata.c    | 17 +++++++++++++----
+>>  arch/arm64/kvm/hyp/switch.c       |  2 +-
+>>  arch/arm64/kvm/hyp/tlb.c          |  4 ++--
+>>  7 files changed, 23 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 3f047afb982c..6cb4eff602c6 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -510,9 +510,13 @@ config ARM64_ERRATUM_1418040
+>>
+>>        If unsure, say Y.
+>>
+>> +config ARM64_WORKAROUND_SPECULATIVE_AT
+>> +    bool
+>> +
+>>  config ARM64_ERRATUM_1165522
+>>      bool "Cortex-A76: Speculative AT instruction using out-of-context
+>> translation regime could cause subsequent request to generate an
+>> incorrect translation"
+>>      default y
+>> +    select ARM64_WORKAROUND_SPECULATIVE_AT
+> 
+> I'd object that ARM64_ERRATUM_1319367 (and its big brother 1319537)
+> are also related to speculative AT execution, and yet are not covered
+> by this configuration symbol.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17100f3ae00000
-start commit:   9805a683 Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14900f3ae00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10900f3ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
-dashboard link: https://syzkaller.appspot.com/bug?extid=afd421337a736d6c1ee6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d713c6e00000
+Good point.
 
-Reported-by: syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+> I can see three solutions to this:
+> 
+> - Either you call it SPECULATIVE_AT_VHE and introduce SPECULATIVE_AT_NVHE
+>   for symmetry
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Tempting...
+
+> - Or you make SPECULATIVE_AT cover all the speculative AT errata, which
+>   may or may not work...
+
+This actually sounds the neatest, but I'm not sure whether there's going
+to be any conflicts between VHE/NVHE. I'll prototype this and see how
+ugly it is.
+
+> - Or even better, you just ammend the documentation to say that 1165522
+>   also covers the newly found A55 one (just like we have for A57/A72)
+
+Well Mark Rutland disliked my initial thoughts about just including both
+errata in one option like that - hence the refactoring in this patch.
+Although of course that's exactly what's happened with 1319367/1319537...
+
+> What do you think?
+
+I'll have a go at SPECULATIVE_AT covering both VHE/NVHE - from an
+initial look it seems like it should work and it would be neat if it
+does. In particular it should avoid the necessity to require VHE when
+the erratum is present.
+
+Otherwise I guess SPECULATIVE_AT_{,N}VHE is probably second best.
+
+Thanks,
+
+Steve
