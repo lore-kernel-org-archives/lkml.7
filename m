@@ -2,136 +2,169 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DEDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E89C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDED214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2227214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X3BPNePR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKKK1t (ORCPT
+        id S1726976AbfKKK2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:27:49 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:35633 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbfKKK1s (ORCPT
+        Mon, 11 Nov 2019 05:28:41 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:50370 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726810AbfKKK2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:27:48 -0500
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N3K9E-1hmpgx2PIo-010ORl; Mon, 11 Nov 2019 11:27:45 +0100
-Received: by mail-qk1-f175.google.com with SMTP id z23so10656773qkj.10;
-        Mon, 11 Nov 2019 02:27:44 -0800 (PST)
-X-Gm-Message-State: APjAAAULs6wahQR09QYfNE1m6lDQ9CQ8pxVtikC33hSdUApyGiuDBM/j
-        BSYkNQcH8zP655hfuafngRC3eTIDoUXLmeVmd+0=
-X-Google-Smtp-Source: APXvYqyGcZLqyAcsV/LYDmC4LmwcrdvTKQ+w9XPWbssEa676VSOvhgPE+TuvbqMkbxFWBQMzT6WHPBHBJZYF9AVQbpE=
-X-Received: by 2002:a37:4f0a:: with SMTP id d10mr9711437qkb.286.1573468063366;
- Mon, 11 Nov 2019 02:27:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-11-hch@lst.de>
- <CAK8P3a2o4R+E2hTrHrmNy7K1ki3_98aWE5a-fjkQ_NWW=xd_gQ@mail.gmail.com> <20191111101531.GA12294@lst.de>
-In-Reply-To: <20191111101531.GA12294@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:27:27 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0rTvfPP2LUMw8EC0xz5gfZP5+NUkoaZBJrtYYfr6YRig@mail.gmail.com>
-Message-ID: <CAK8P3a0rTvfPP2LUMw8EC0xz5gfZP5+NUkoaZBJrtYYfr6YRig@mail.gmail.com>
-Subject: Re: [PATCH 10/21] asm-generic: ioremap_uc should behave the same with
- and without MMU
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
+        Mon, 11 Nov 2019 05:28:41 -0500
+X-UUID: 5a058e0fb6104c5ca2f49ce08d323b88-20191111
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Uo09G+Mt+uFPoRjbYnLMUPPU/rQnCSKkFsV6CT6/YM4=;
+        b=X3BPNePRXGKJ657K5HiUcPOU82BEKqVSrq7Hu6msvac7UrlfTeNedap83FY7Avn4sYInMms1z0KpPSkyQd46wIuj96LQMYlFVIJKZeJOzXq2w4NFiU38RWCXnMccoBMHcK8n+coiCVGHXjjurFzGa//0EnlnHO4I3sAatmGmUf0=;
+X-UUID: 5a058e0fb6104c5ca2f49ce08d323b88-20191111
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 905569529; Mon, 11 Nov 2019 18:28:34 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 11 Nov 2019 18:28:31 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 11 Nov 2019 18:28:30 +0800
+Message-ID: <1573468113.20611.61.camel@mtksdccf07>
+Subject: Re: [PATCH v3 1/2] kasan: detect negative size in memory operation
+ function
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Mon, 11 Nov 2019 18:28:33 +0800
+In-Reply-To: <CACT4Y+bxWCF0WCkVxi+Qq3pztAXf2g-eBG5oexmQsQ65xrmiRw@mail.gmail.com>
+References: <20191104020519.27988-1-walter-zh.wu@mediatek.com>
+         <34bf9c08-d2f2-a6c6-1dbe-29b1456d8284@virtuozzo.com>
+         <1573456464.20611.45.camel@mtksdccf07>
+         <757f0296-7fa0-0e5e-8490-3eca52da41ad@virtuozzo.com>
+         <1573467150.20611.57.camel@mtksdccf07>
+         <CACT4Y+bxWCF0WCkVxi+Qq3pztAXf2g-eBG5oexmQsQ65xrmiRw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:GkivQCpdGWFh606DM+vaZn5tEaom79mzbDAs7XKVPKHD/g0ePK9
- 201/HVq3eg8zhxayfN21MCbyF1GGFaa3VOkRd1FphyeZzTf0WaI5HjQPn0ZNaOrOaP5e2Hy
- hQEsUv9iWzLIBAYi2aGA3DyScJkiJfWaiUbn4bsVjsxgF3kUeJhoorrI7JKDGhGcRDfhO8v
- Br8PDyVGEX6jUhHWooUXg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GUU5HWu/Btg=:Kv1hrs/fv2SjYJXwVcUNiv
- /1X99/Cat12CjFMO0w3Shy1KVnUIcc638DE+mm/Z2H6mHFqF1D5oLyKRW16442UfY1tsN0Kpg
- WfCNKgEuWzA8LX47ywhTOlSGD67FNOgoWnM7m2xVn+AZql2jVZfGEM1bF7tFAIznSY6XZsk9K
- sTTz3ILnuAyhUurudsbqEUFu4/RbUwBpsvCfnLvx+UVfjzzKQ3ZS2/dzXlX6PoRT81C1H5dGE
- 8xcrOCfX1Xgm5XuFuZj61C/ORU8+rJ4y4kfPJLs1iuxWJNytVZCiJQdn82fvyO20poSIOWdR+
- sp/OYWCHfwYDCI5T90BK1y0vKfW3RdzZc3c7y8dJzpg8/E19kex13wuRyrAEXltoLEcwFlPXt
- NWCyNfBmtknPmtCPsZ2D6bLdT0CS9qhLq+bzZK+78Hi+c3pzB1Cb2VTpLUxj9P86q8pvmCqOG
- gekJ+qlc1/2dZW3fIx6gZEOQ8bkQqVkzyHetoK5GAW3brrqYDlsJ1fO8EuIGvTyjt2kTITA91
- 3b/YDfbeEERPVbXOvtWEufFuWwhw88V1XJdlIF//dtap8SZCstmVHWJRqv9t1JvKAloRFv3Q8
- jwMVJNIq1H6Mtbt4cyguVwiefC5L093cVQlvmre55h+1EhUiPfCB4VQ6aES7y3hSOMOmehrBU
- kk9pBMHHylWvlzo0OGRaLR7+sTuQyRQH2sCdU1wQcHZKQe0eW+E6phOYesAjoOnG/WWEoPdz9
- BKnNQF6PBQZJ17NLwpTbNvKTPvNvt+K1YQGtHrQ+Uzrki+JxQ4xZNarEXMn6VLdQlooMXOuos
- 3AeIuZhkkfFe5lYjGGYWYCCINn3jjEI8MIWHsc4pLO7zhD97J/B4fhQfKFDjchAdn/dqGn0Jk
- eq3AJbBdIX15byFF2Oog==
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 11:15 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Mon, Nov 11, 2019 at 11:09:05AM +0100, Arnd Bergmann wrote:
-> > Maybe we could move the definition into the atyfb driver itself?
-> >
-> > As I understand it, the difference between ioremap()/ioremap_nocache()
-> > and ioremap_uc() only exists on pre-PAT x86-32 systems (i.e. 486, P5,
-> > Ppro, PII, K6, VIA C3), while on more modern systems (all non-x86,
-> > PentiumIII, Athlon, VIA C7)  those three are meant to be synonyms
-> > anyway.
->
-> That's not how I understood it.  Based on the code and the UC-
-> explanation ioremap_uc always overrides the MTRR, which can still
-> be present on more modern x86 systems.
+T24gTW9uLCAyMDE5LTExLTExIGF0IDExOjE3ICswMTAwLCBEbWl0cnkgVnl1a292IHdyb3RlOg0K
+PiBPbiBNb24sIE5vdiAxMSwgMjAxOSBhdCAxMToxMiBBTSBXYWx0ZXIgV3UgPHdhbHRlci16aC53
+dUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+ID4gT24gMTEvMTEvMTkgMTA6MTQgQU0sIFdhbHRl
+ciBXdSB3cm90ZToNCj4gPiA+ID4gT24gU2F0LCAyMDE5LTExLTA5IGF0IDAxOjMxICswMzAwLCBB
+bmRyZXkgUnlhYmluaW4gd3JvdGU6DQo+ID4gPiA+Pg0KPiA+ID4gPj4gT24gMTEvNC8xOSA1OjA1
+IEFNLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+ID4gPiA+Pg0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gZGlm
+ZiAtLWdpdCBhL21tL2thc2FuL2NvbW1vbi5jIGIvbW0va2FzYW4vY29tbW9uLmMNCj4gPiA+ID4+
+PiBpbmRleCA2ODE0ZDZkNmEwMjMuLjRmZjY3ZTJmZDJkYiAxMDA2NDQNCj4gPiA+ID4+PiAtLS0g
+YS9tbS9rYXNhbi9jb21tb24uYw0KPiA+ID4gPj4+ICsrKyBiL21tL2thc2FuL2NvbW1vbi5jDQo+
+ID4gPiA+Pj4gQEAgLTk5LDEwICs5OSwxNCBAQCBib29sIF9fa2FzYW5fY2hlY2tfd3JpdGUoY29u
+c3Qgdm9sYXRpbGUgdm9pZCAqcCwgdW5zaWduZWQgaW50IHNpemUpDQo+ID4gPiA+Pj4gIH0NCj4g
+PiA+ID4+PiAgRVhQT1JUX1NZTUJPTChfX2thc2FuX2NoZWNrX3dyaXRlKTsNCj4gPiA+ID4+Pg0K
+PiA+ID4gPj4+ICtleHRlcm4gYm9vbCByZXBvcnRfZW5hYmxlZCh2b2lkKTsNCj4gPiA+ID4+PiAr
+DQo+ID4gPiA+Pj4gICN1bmRlZiBtZW1zZXQNCj4gPiA+ID4+PiAgdm9pZCAqbWVtc2V0KHZvaWQg
+KmFkZHIsIGludCBjLCBzaXplX3QgbGVuKQ0KPiA+ID4gPj4+ICB7DQo+ID4gPiA+Pj4gLSBjaGVj
+a19tZW1vcnlfcmVnaW9uKCh1bnNpZ25lZCBsb25nKWFkZHIsIGxlbiwgdHJ1ZSwgX1JFVF9JUF8p
+Ow0KPiA+ID4gPj4+ICsgaWYgKHJlcG9ydF9lbmFibGVkKCkgJiYNCj4gPiA+ID4+PiArICAgICAh
+Y2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQgbG9uZylhZGRyLCBsZW4sIHRydWUsIF9SRVRf
+SVBfKSkNCj4gPiA+ID4+PiArICAgICAgICAgcmV0dXJuIE5VTEw7DQo+ID4gPiA+Pj4NCj4gPiA+
+ID4+PiAgIHJldHVybiBfX21lbXNldChhZGRyLCBjLCBsZW4pOw0KPiA+ID4gPj4+ICB9DQo+ID4g
+PiA+Pj4gQEAgLTExMCw4ICsxMTQsMTAgQEAgdm9pZCAqbWVtc2V0KHZvaWQgKmFkZHIsIGludCBj
+LCBzaXplX3QgbGVuKQ0KPiA+ID4gPj4+ICAjdW5kZWYgbWVtbW92ZQ0KPiA+ID4gPj4+ICB2b2lk
+ICptZW1tb3ZlKHZvaWQgKmRlc3QsIGNvbnN0IHZvaWQgKnNyYywgc2l6ZV90IGxlbikNCj4gPiA+
+ID4+PiAgew0KPiA+ID4gPj4+IC0gY2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQgbG9uZylz
+cmMsIGxlbiwgZmFsc2UsIF9SRVRfSVBfKTsNCj4gPiA+ID4+PiAtIGNoZWNrX21lbW9yeV9yZWdp
+b24oKHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVuLCB0cnVlLCBfUkVUX0lQXyk7DQo+ID4gPiA+Pj4g
+KyBpZiAocmVwb3J0X2VuYWJsZWQoKSAmJg0KPiA+ID4gPj4+ICsgICAgKCFjaGVja19tZW1vcnlf
+cmVnaW9uKCh1bnNpZ25lZCBsb25nKXNyYywgbGVuLCBmYWxzZSwgX1JFVF9JUF8pIHx8DQo+ID4g
+PiA+Pj4gKyAgICAgIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVu
+LCB0cnVlLCBfUkVUX0lQXykpKQ0KPiA+ID4gPj4+ICsgICAgICAgICByZXR1cm4gTlVMTDsNCj4g
+PiA+ID4+Pg0KPiA+ID4gPj4+ICAgcmV0dXJuIF9fbWVtbW92ZShkZXN0LCBzcmMsIGxlbik7DQo+
+ID4gPiA+Pj4gIH0NCj4gPiA+ID4+PiBAQCAtMTE5LDggKzEyNSwxMCBAQCB2b2lkICptZW1tb3Zl
+KHZvaWQgKmRlc3QsIGNvbnN0IHZvaWQgKnNyYywgc2l6ZV90IGxlbikNCj4gPiA+ID4+PiAgI3Vu
+ZGVmIG1lbWNweQ0KPiA+ID4gPj4+ICB2b2lkICptZW1jcHkodm9pZCAqZGVzdCwgY29uc3Qgdm9p
+ZCAqc3JjLCBzaXplX3QgbGVuKQ0KPiA+ID4gPj4+ICB7DQo+ID4gPiA+Pj4gLSBjaGVja19tZW1v
+cnlfcmVnaW9uKCh1bnNpZ25lZCBsb25nKXNyYywgbGVuLCBmYWxzZSwgX1JFVF9JUF8pOw0KPiA+
+ID4gPj4+IC0gY2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQgbG9uZylkZXN0LCBsZW4sIHRy
+dWUsIF9SRVRfSVBfKTsNCj4gPiA+ID4+PiArIGlmIChyZXBvcnRfZW5hYmxlZCgpICYmDQo+ID4g
+PiA+Pg0KPiA+ID4gPj4gICAgICAgICAgICAgcmVwb3J0X2VuYWJsZWQoKSBjaGVja3Mgc2VlbXMg
+dG8gYmUgdXNlbGVzcy4NCj4gPiA+ID4+DQo+ID4gPiA+DQo+ID4gPiA+IEhpIEFuZHJleSwNCj4g
+PiA+ID4NCj4gPiA+ID4gSWYgaXQgZG9lc24ndCBoYXZlIHJlcG9ydF9lbmFibGUoKSwgdGhlbiBp
+dCB3aWxsIGhhdmUgYmVsb3cgdGhlIGVycm9yLg0KPiA+ID4gPiBXZSB0aGluayBpdCBzaG91bGQg
+YmUgeDg2IHNoYWRvdyBtZW1vcnkgaXMgaW52YWxpZCB2YWx1ZSBiZWZvcmUgS0FTQU4NCj4gPiA+
+ID4gaW5pdGlhbGl6ZWQsIGl0IHdpbGwgaGF2ZSBzb21lIG1pc2p1ZGdtZW50cyB0byBkbyBkaXJl
+Y3RseSByZXR1cm4gd2hlbg0KPiA+ID4gPiBpdCBkZXRlY3RzIGludmFsaWQgc2hhZG93IHZhbHVl
+IGluIG1lbXNldCgpL21lbWNweSgpL21lbW1vdmUoKS4gU28gd2UNCj4gPiA+ID4gYWRkIHJlcG9y
+dF9lbmFibGUoKSB0byBhdm9pZCB0aGlzIGhhcHBlbmluZy4gYnV0IHdlIHNob3VsZCBvbmx5IHVz
+ZSB0aGUNCj4gPiA+ID4gY29uZGl0aW9uICJjdXJyZW50LT5rYXNhbl9kZXB0aCA9PSAwIiB0byBk
+ZXRlcm1pbmUgaWYgS0FTQU4gaXMNCj4gPiA+ID4gaW5pdGlhbGl6ZWQuIEFuZCB3ZSB0cnkgaXQg
+aXMgcGFzcyBhdCB4ODYuDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gT2ssIEkgc2VlLiBJdCBqdXN0
+IG1lYW5zIHRoYXQgY2hlY2tfbWVtb3J5X3JlZ2lvbigpIHJldHVybiBpbmNvcnJlY3QgcmVzdWx0
+IGluIGVhcmx5IHN0YWdlcyBvZiBib290Lg0KPiA+ID4gU28sIHRoZSByaWdodCB3YXkgdG8gZGVh
+bCB3aXRoIHRoaXMgd291bGQgYmUgbWFraW5nIGthc2FuX3JlcG9ydCgpIHRvIHJldHVybiBib29s
+ICgiZmFsc2UiIGlmIG5vIHJlcG9ydCBhbmQgInRydWUiIGlmIHJlcG9ydGVkKQ0KPiA+ID4gYW5k
+IHByb3BhZ2F0ZSB0aGlzIHJldHVybiB2YWx1ZSB1cCB0byBjaGVja19tZW1vcnlfcmVnaW9uKCku
+DQo+ID4gPg0KPiA+IFRoaXMgY2hhbmdlcyBpbiB2NC4NCj4gPg0KPiA+ID4NCj4gPiA+ID4+PiBk
+aWZmIC0tZ2l0IGEvbW0va2FzYW4vZ2VuZXJpY19yZXBvcnQuYyBiL21tL2thc2FuL2dlbmVyaWNf
+cmVwb3J0LmMNCj4gPiA+ID4+PiBpbmRleCAzNmM2NDU5MzliYzkuLjUyYTkyYzdkYjY5NyAxMDA2
+NDQNCj4gPiA+ID4+PiAtLS0gYS9tbS9rYXNhbi9nZW5lcmljX3JlcG9ydC5jDQo+ID4gPiA+Pj4g
+KysrIGIvbW0va2FzYW4vZ2VuZXJpY19yZXBvcnQuYw0KPiA+ID4gPj4+IEBAIC0xMDcsNiArMTA3
+LDI0IEBAIHN0YXRpYyBjb25zdCBjaGFyICpnZXRfd2lsZF9idWdfdHlwZShzdHJ1Y3Qga2FzYW5f
+YWNjZXNzX2luZm8gKmluZm8pDQo+ID4gPiA+Pj4NCj4gPiA+ID4+PiAgY29uc3QgY2hhciAqZ2V0
+X2J1Z190eXBlKHN0cnVjdCBrYXNhbl9hY2Nlc3NfaW5mbyAqaW5mbykNCj4gPiA+ID4+PiAgew0K
+PiA+ID4gPj4+ICsgLyoNCj4gPiA+ID4+PiArICAqIElmIGFjY2Vzc19zaXplIGlzIG5lZ2F0aXZl
+IG51bWJlcnMsIHRoZW4gaXQgaGFzIHRocmVlIHJlYXNvbnMNCj4gPiA+ID4+PiArICAqIHRvIGJl
+IGRlZmluZWQgYXMgaGVhcC1vdXQtb2YtYm91bmRzIGJ1ZyB0eXBlLg0KPiA+ID4gPj4+ICsgICog
+MSkgQ2FzdGluZyBuZWdhdGl2ZSBudW1iZXJzIHRvIHNpemVfdCB3b3VsZCBpbmRlZWQgdHVybiB1
+cCBhcw0KPiA+ID4gPj4+ICsgICogICAgYSBsYXJnZSBzaXplX3QgYW5kIGl0cyB2YWx1ZSB3aWxs
+IGJlIGxhcmdlciB0aGFuIFVMT05HX01BWC8yLA0KPiA+ID4gPj4+ICsgICogICAgc28gdGhhdCB0
+aGlzIGNhbiBxdWFsaWZ5IGFzIG91dC1vZi1ib3VuZHMuDQo+ID4gPiA+Pj4gKyAgKiAyKSBJZiBL
+QVNBTiBoYXMgbmV3IGJ1ZyB0eXBlIGFuZCB1c2VyLXNwYWNlIHBhc3NlcyBuZWdhdGl2ZSBzaXpl
+LA0KPiA+ID4gPj4+ICsgICogICAgdGhlbiB0aGVyZSBhcmUgZHVwbGljYXRlIHJlcG9ydHMuIFNv
+IGRvbid0IHByb2R1Y2UgbmV3IGJ1ZyB0eXBlDQo+ID4gPiA+Pj4gKyAgKiAgICBpbiBvcmRlciB0
+byBwcmV2ZW50IGR1cGxpY2F0ZSByZXBvcnRzIGJ5IHNvbWUgc3lzdGVtcw0KPiA+ID4gPj4+ICsg
+ICogICAgKGUuZy4gc3l6Ym90KSB0byByZXBvcnQgdGhlIHNhbWUgYnVnIHR3aWNlLg0KPiA+ID4g
+Pj4+ICsgICogMykgV2hlbiBzaXplIGlzIG5lZ2F0aXZlIG51bWJlcnMsIGl0IG1heSBiZSBwYXNz
+ZWQgZnJvbSB1c2VyLXNwYWNlLg0KPiA+ID4gPj4+ICsgICogICAgU28gd2UgYWx3YXlzIHByaW50
+IGhlYXAtb3V0LW9mLWJvdW5kcyBpbiBvcmRlciB0byBwcmV2ZW50IHRoYXQNCj4gPiA+ID4+PiAr
+ICAqICAgIGtlcm5lbC1zcGFjZSBhbmQgdXNlci1zcGFjZSBoYXZlIHRoZSBzYW1lIGJ1ZyBidXQg
+aGF2ZSBkdXBsaWNhdGUNCj4gPiA+ID4+PiArICAqICAgIHJlcG9ydHMuDQo+ID4gPiA+Pj4gKyAg
+Ki8NCj4gPiA+ID4+DQo+ID4gPiA+PiBDb21wbGV0ZWx5IGZhaWwgdG8gdW5kZXJzdGFuZCAyKSBh
+bmQgMykuIDIpIHRhbGtzIHNvbWV0aGluZyBhYm91dCAqTk9UKiBwcm9kdWNpbmcgbmV3IGJ1Zw0K
+PiA+ID4gPj4gdHlwZSwgYnV0IGF0IHRoZSBzYW1lIHRpbWUgeW91IGNvZGUgYWN0dWFsbHkgZG9l
+cyB0aGF0Lg0KPiA+ID4gPj4gMykgc2F5cyBzb21ldGhpbmcgYWJvdXQgdXNlci1zcGFjZSB3aGlj
+aCBoYXZlIG5vdGhpbmcgdG8gZG8gd2l0aCBrYXNhbi4NCj4gPiA+ID4+DQo+ID4gPiA+IGFib3V0
+IDIpDQo+ID4gPiA+IFdlIG9yaWdpbmFsbHkgdGhpbmsgdGhlIGhlYXAtb3V0LW9mLWJvdW5kcyBp
+cyBzaW1pbGFyIHRvDQo+ID4gPiA+IGhlYXAtYnVmZmVyLW92ZXJmbG93LCBtYXliZSB3ZSBzaG91
+bGQgY2hhbmdlIHRoZSBidWcgdHlwZSB0bw0KPiA+ID4gPiBoZWFwLWJ1ZmZlci1vdmVyZmxvdy4N
+Cj4gPiA+DQo+ID4gPiBUaGVyZSBpcyBubyAiaGVhcC1idWZmZXItb3ZlcmZsb3ciLg0KPiA+ID4N
+Cj4gPiBJZiBJIHJlbWVtYmVyIGNvcnJlY3RseSwgImhlYXAtYnVmZmVyLW92ZXJmbG93IiBpcyBv
+bmUgb2YgZXhpc3RpbmcgYnVnDQo+ID4gdHlwZSBpbiB1c2VyLXNwYWNlPyBPciB5b3Ugd2FudCB0
+byBleHBlY3QgdG8gc2VlIGFuIGV4aXN0aW5nIGJ1ZyB0eXBlIGluDQo+ID4ga2VybmVsIHNwYWNl
+Pw0KPiANCj4gRXhpc3RpbmcgYnVnIGluIEtBU0FOLg0KPiBLQVNBTiBhbmQgQVNBTiBidWdzIHdp
+bGwgbmV2ZXIgbWF0Y2ggcmVnYXJkbGVzcyBvZiB3aGF0IHdlIGRvLiBUaGV5DQo+IGFyZSBzaW1w
+bHkgaW4gY29tcGxldGVseSBkaWZmZXJlbnQgY29kZS4gU28gYWxpZ25pbmcgdGl0bGVzIGJldHdl
+ZW4NCj4ga2VybmVsIGFuZCB1c2Vyc3BhY2Ugd2lsbCBub3QgbGVhZCB0byBhbnkgYmV0dGVyIGRl
+ZHVwbGljYXRpb24uDQoNCk9rLCBpdCBzZWVtcyBsaWtlIHRvIHByaW50ICJvdXQtb2YtYm91bmRz
+Ii4gU2ltcGxlIGFuZCBlYXN5IHRvIGtub3cgaXQuDQpUaGFua3MgRG1pdHJ5Lg0K
 
-As I understand, the point is that on PAT-enabled systems, the
-normal ioremap() *also* overrides the MTRR, citing from
-Documentation/x86/pat.rst:
-
-  ====  =======  ===  =========================  =====================
-  MTRR  Non-PAT  PAT  Linux ioremap value        Effective memory type
-  ====  =======  ===  =========================  =====================
-        PAT                                        Non-PAT |  PAT
-        |PCD                                               |
-        ||PWT                                              |
-        |||                                                |
-  WC    000      WB   _PAGE_CACHE_MODE_WB             WC   |   WC
-  WC    001      WC   _PAGE_CACHE_MODE_WC             WC*  |   WC
-  WC    010      UC-  _PAGE_CACHE_MODE_UC_MINUS       WC*  |   UC
-  WC    011      UC   _PAGE_CACHE_MODE_UC             UC   |   UC
-  ====  =======  ===  =========================  =====================
-
-> In fact I remember a patch
-> floating around very recently adding another ioremap_uc caller in
-> some Atom platform device driver that works around buggy MTRR
-> tables.  Also this series actually adds a new override and a few
-> callers for ia64 platform code, which works very similar to x86
-> based on the comments in the code.  That being said I'm not sure
-> the callers in ia64 are really required, but it was the safest thing
-> to do as part of this cleanup.
-
-Ok, fair enough. Let's just go with your version for now, if only to not
-hold your series up more. I'd still suggest we change atyfb to only
-use ioremap_uc() on i386 and maybe ia64. I can send a patch for that.
-
-      Arnd
