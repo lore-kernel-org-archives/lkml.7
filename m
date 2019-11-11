@@ -2,308 +2,94 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90706C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDB2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8492075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335AE20818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:41:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TfHXEZam"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JqdEErT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKKJjy (ORCPT
+        id S1726985AbfKKJli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:39:54 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44438 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKJjy (ORCPT
+        Mon, 11 Nov 2019 04:41:38 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48070 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726857AbfKKJlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:39:54 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB9deam107948;
-        Mon, 11 Nov 2019 03:39:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573465180;
-        bh=BEXZAIpRzxqNeefh/J9C5EiDlt0B/TXLhAEH6e8HpHk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TfHXEZamg58rdWlK5BysZV02AQQQj4UU7QrHapkWnMxQ72oxEdzvHcEsimBil1wd6
-         lIv6CticHJZrV5CnF2Wvc1LS51J6EAP0NNB2ojI1Ni1R8wx7dk5/zdc+zQD6o+kLjX
-         Xs7IUjaUFXCKeqpsS6D3oBG9JK6xefyD/07vDVUc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB9ddRZ118324
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 03:39:40 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 03:39:21 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 03:39:21 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB9dZnY090658;
-        Mon, 11 Nov 2019 03:39:36 -0600
-Subject: Re: [PATCH v4 11/15] dmaengine: ti: New driver for K3 UDMA - split#3:
- alloc/free chan_resources
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-12-peter.ujfalusi@ti.com>
- <20191111060625.GP952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <33c88201-3311-0438-ead5-63ea14a0b153@ti.com>
-Date:   Mon, 11 Nov 2019 11:40:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 04:41:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573465296;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xH9paoH84WAP3S/ATWHs4L3GR0FO8tvE2c1L9kietRg=;
+        b=JqdEErT9cwFYr3CMZgBawGC4ZWMKWqG7hNf49a4Zb4h2m5G30ymEJKS8cZVAX2uqGArDE0
+        of9xl9Q6q8mFhfMiC9Kga9uiOd3BhvPrXmH0c6PB2jW3VppZy8JjdqC77VjCUK6N05VwKv
+        JQmMQJ9YvqrXIaA6TRDQU9ng+ppFejs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-412-_hgx6tiHOsGX5hz3cbUKkA-1; Mon, 11 Nov 2019 04:41:35 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BA28477;
+        Mon, 11 Nov 2019 09:41:34 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 103AE5DA7D;
+        Mon, 11 Nov 2019 09:41:34 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id ED0854BB5C;
+        Mon, 11 Nov 2019 09:41:33 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 04:41:33 -0500 (EST)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, ltp@lists.linux.it,
+        viro@zeniv.linux.org.uk, kstewart@linuxfoundation.org,
+        gregkh@linuxfoundation.org, rfontana@redhat.com
+Message-ID: <475677126.11444968.1573465293662.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20191107125559.GI4131@hirez.programming.kicks-ass.net>
+References: <a87876829697e1b3c63601b1401a07af79eddae6.1572651216.git.jstancek@redhat.com> <20191107123224.GA6315@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1911071335320.4256@nanos.tec.linutronix.de> <20191107125559.GI4131@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH] kernel: use ktime_get_real_ts64() to calculate
+ acct.ac_btime
 MIME-Version: 1.0
-In-Reply-To: <20191111060625.GP952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.43.17.163, 10.4.195.4]
+Thread-Topic: kernel: use ktime_get_real_ts64() to calculate acct.ac_btime
+Thread-Index: j00i/ne0YYWt2EQwNR0Jpc5QU9IvTg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: _hgx6tiHOsGX5hz3cbUKkA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+----- Original Message -----
+> It's wrecked in general. It also jumps around for any REALTIME
+> adjustment.
+>=20
+> > So a CLOCK_REALTIME time stamp at fork would at least be correct
+> > vs. suspend resume.
+>=20
+> But still wrecked vs REALTIME jumps, as in, when DST flips the clock
+> back an hour, your timestamp is in the future.
+>=20
+> Any which way around the whole thing is buggered.  The only real fix is
+> not using REALTIME anything. Which is why I'm loath to add that REALTIME
+> timestamp at fork(), it just encourages more use.
 
-On 11/11/2019 8.06, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
->> Split patch for review containing: channel rsource allocation and free
-> 
-> s/rsource/resource
+Thank you for feedback and listing all other problems.
+I'll adjust test expectations.
 
-I'll try to remember to fix up this temporally commit message, at the
-end these split patches are going to be squashed into one commit when
-things are ready to be applied.
+Regards,
+Jan
 
->> +static int udma_tisci_tx_channel_config(struct udma_chan *uc)
->> +{
->> +	struct udma_dev *ud = uc->ud;
->> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
->> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
->> +	struct udma_tchan *tchan = uc->tchan;
->> +	int tc_ring = k3_ringacc_get_ring_id(tchan->tc_ring);
->> +	struct ti_sci_msg_rm_udmap_tx_ch_cfg req_tx = { 0 };
->> +	u32 mode, fetch_size;
->> +	int ret = 0;
->> +
->> +	if (uc->pkt_mode) {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
->> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib, uc->psd_size,
->> +						   0);
->> +	} else {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
->> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
->> +	}
->> +
->> +	req_tx.valid_params =
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID;
-> 
-> bunch of these are repeat, you can define a COMMON_VALID_PARAMS and use
-> that + specific ones..
-
-OK, I'll try to sanitize these a bit.
-
->> +
->> +	req_tx.nav_id = tisci_rm->tisci_dev_id;
->> +	req_tx.index = tchan->id;
->> +	req_tx.tx_pause_on_err = 0;
->> +	req_tx.tx_filt_einfo = 0;
->> +	req_tx.tx_filt_pswords = 0;
-> 
-> i think initialization to 0 is superfluous
-
-Indeed, I'll remove these.
-
->> +	req_tx.tx_chan_type = mode;
->> +	req_tx.tx_supr_tdpkt = uc->notdpkt;
->> +	req_tx.tx_fetch_size = fetch_size >> 2;
->> +	req_tx.txcq_qnum = tc_ring;
->> +	if (uc->ep_type == PSIL_EP_PDMA_XY) {
->> +		/* wait for peer to complete the teardown for PDMAs */
->> +		req_tx.valid_params |=
->> +				TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID;
->> +		req_tx.tx_tdtype = 1;
->> +	}
->> +
->> +	ret = tisci_ops->tx_ch_cfg(tisci_rm->tisci, &req_tx);
->> +	if (ret)
->> +		dev_err(ud->dev, "tchan%d cfg failed %d\n", tchan->id, ret);
->> +
->> +	return ret;
->> +}
->> +
->> +static int udma_tisci_rx_channel_config(struct udma_chan *uc)
->> +{
->> +	struct udma_dev *ud = uc->ud;
->> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
->> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
->> +	struct udma_rchan *rchan = uc->rchan;
->> +	int fd_ring = k3_ringacc_get_ring_id(rchan->fd_ring);
->> +	int rx_ring = k3_ringacc_get_ring_id(rchan->r_ring);
->> +	struct ti_sci_msg_rm_udmap_rx_ch_cfg req_rx = { 0 };
->> +	struct ti_sci_msg_rm_udmap_flow_cfg flow_req = { 0 };
->> +	u32 mode, fetch_size;
->> +	int ret = 0;
->> +
->> +	if (uc->pkt_mode) {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
->> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib,
->> +							uc->psd_size, 0);
->> +	} else {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
->> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
->> +	}
->> +
->> +	req_rx.valid_params =
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID;
->> +
->> +	req_rx.nav_id = tisci_rm->tisci_dev_id;
->> +	req_rx.index = rchan->id;
->> +	req_rx.rx_fetch_size =  fetch_size >> 2;
->> +	req_rx.rxcq_qnum = rx_ring;
->> +	req_rx.rx_pause_on_err = 0;
->> +	req_rx.rx_chan_type = mode;
->> +	req_rx.rx_ignore_short = 0;
->> +	req_rx.rx_ignore_long = 0;
->> +	req_rx.flowid_start = 0;
->> +	req_rx.flowid_cnt = 0;
->> +
->> +	ret = tisci_ops->rx_ch_cfg(tisci_rm->tisci, &req_rx);
->> +	if (ret) {
->> +		dev_err(ud->dev, "rchan%d cfg failed %d\n", rchan->id, ret);
->> +		return ret;
->> +	}
->> +
->> +	flow_req.valid_params =
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_EINFO_PRESENT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_PSINFO_PRESENT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_ERROR_HANDLING_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DESC_TYPE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_HI_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_LO_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_HI_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_LO_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ0_SZ0_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ1_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ2_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ3_QNUM_VALID;
->> +
->> +	flow_req.nav_id = tisci_rm->tisci_dev_id;
->> +	flow_req.flow_index = rchan->id;
->> +
->> +	if (uc->needs_epib)
->> +		flow_req.rx_einfo_present = 1;
->> +	else
->> +		flow_req.rx_einfo_present = 0;
->> +	if (uc->psd_size)
->> +		flow_req.rx_psinfo_present = 1;
->> +	else
->> +		flow_req.rx_psinfo_present = 0;
->> +	flow_req.rx_error_handling = 1;
->> +	flow_req.rx_desc_type = 0;
->> +	flow_req.rx_dest_qnum = rx_ring;
->> +	flow_req.rx_src_tag_hi_sel = 2;
->> +	flow_req.rx_src_tag_lo_sel = 4;
->> +	flow_req.rx_dest_tag_hi_sel = 5;
->> +	flow_req.rx_dest_tag_lo_sel = 4;
-> 
-> can we get rid of magic numbers here and elsewhere, or at least comment
-> on what these mean..
-
-True, I'll clean it up.
-
->> +static int udma_alloc_chan_resources(struct dma_chan *chan)
->> +{
->> +	struct udma_chan *uc = to_udma_chan(chan);
->> +	struct udma_dev *ud = to_udma_dev(chan->device);
->> +	const struct udma_match_data *match_data = ud->match_data;
->> +	struct k3_ring *irq_ring;
->> +	u32 irq_udma_idx;
->> +	int ret;
->> +
->> +	if (uc->pkt_mode || uc->dir == DMA_MEM_TO_MEM) {
->> +		uc->use_dma_pool = true;
->> +		/* in case of MEM_TO_MEM we have maximum of two TRs */
->> +		if (uc->dir == DMA_MEM_TO_MEM) {
->> +			uc->hdesc_size = cppi5_trdesc_calc_size(
->> +					sizeof(struct cppi5_tr_type15_t), 2);
->> +			uc->pkt_mode = false;
->> +		}
->> +	}
->> +
->> +	if (uc->use_dma_pool) {
->> +		uc->hdesc_pool = dma_pool_create(uc->name, ud->ddev.dev,
->> +						 uc->hdesc_size, ud->desc_align,
->> +						 0);
->> +		if (!uc->hdesc_pool) {
->> +			dev_err(ud->ddev.dev,
->> +				"Descriptor pool allocation failed\n");
->> +			uc->use_dma_pool = false;
->> +			return -ENOMEM;
->> +		}
->> +	}
->> +
->> +	/*
->> +	 * Make sure that the completion is in a known state:
->> +	 * No teardown, the channel is idle
->> +	 */
->> +	reinit_completion(&uc->teardown_completed);
->> +	complete_all(&uc->teardown_completed);
-> 
-> should we not complete first and then do reinit to bring a clean state?
-
-The reason why it is like this is that the udma_synchronize() is
-checking the completion and if the client requested the channel and
-calls terminate_all_sync() without any transfer then no one will mark
-the completion completed.
-
->> +	uc->state = UDMA_CHAN_IS_IDLE;
->> +
->> +	switch (uc->dir) {
->> +	case DMA_MEM_TO_MEM:
-> 
-> can you explain why a allocation should be channel dependent, shouldn't
-> these things be done in prep_ calls?
-
-A channel can not change direction, it is either MEM_TO_DEV, DEV_TO_MEM
-or MEM_TO_MEM and it is set when the channel is requested.
-
-> I looked ahead and checked the prep_ calls and we can use any direction
-> so this somehow doesn't make sense!
-
-I'm checking in the prep callbacks if the requested direction is
-matching with the channel direction.
-
-I just can not change the channel direction runtime.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
