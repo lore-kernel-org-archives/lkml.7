@@ -2,52 +2,56 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE47DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DC6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40A02196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF5F2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497583;
-	bh=qMniKZ600avFidGQRAxOvWNIc/Fv4rGe7VfVytJg73A=;
+	s=default; t=1573497588;
+	bh=jDfRS1hQzjMJmiMj46C0fIj6gSwRUc1XYB5Wre9T7UI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqqcdxwa8cqp1CJyp62UtrPyDaZUhEK2D0fT/LGYoul+eTGvNrVf9ZTHfXve7iTLP
-	 +0P53wXad/Vom5ctClseuByJsWj9Uol9KZmmJTPrtMfK+WRpVH/akzDWGMoDIhXT7W
-	 KPXXyTys29TGW2Dlz+vnVP9nKb79h7mmlfgug1RI=
+	b=XwkYsmp6teE1toA7gjFCzB0BwZme4B6BHin2h1pk7jkviKzsTYBm/qmMNehKjgbJi
+	 BdWqqHcA1uCUlSHV4qCWmpOgpzIpueUwKkcJLUPOmi+vLzYMiRgbPqrv6sKxyB2Un8
+	 esXpJENDLiKzLPx/wEEnX1cmPpJtfk9w60PkNtFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfKKSjm (ORCPT
+        id S1727122AbfKKSjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbfKKSjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:40 -0500
+        id S1728254AbfKKSjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C1B02196E;
-        Mon, 11 Nov 2019 18:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58A262173B;
+        Mon, 11 Nov 2019 18:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497579;
-        bh=qMniKZ600avFidGQRAxOvWNIc/Fv4rGe7VfVytJg73A=;
+        s=default; t=1573497582;
+        bh=jDfRS1hQzjMJmiMj46C0fIj6gSwRUc1XYB5Wre9T7UI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MRQnRZSlUtJGHesKKqFljNDheoXWyHT8lWM8DgPEymN3QeTwtSRp4f/DsZibuO4Qo
-         M7+y7CEux/ZQGGflV66AdkVb7qY0JxKXEPTlgujBo3s+lSyFNz5k+fE3HVhArwiXQF
-         QoHU2+aUBxBCBdRTlW6OpcvqoqgKp6sVBgZ0mhc0=
+        b=0YBc34wCMtY6W88aBidu1hP/he8+mCua+gtFfc4cwf7Y7G1w1suuzlQkNUa8buvnS
+         PaKkBGz+E2eUj+mX9mQ29d4a6jc/Suhn7Dz7dgAFo3JM2jx4D2pgmcUTlmfgAoGvAx
+         ieM5UhgY2l/dbyRnmgX7fj830WxjR1P3aAWk99DI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/105] can: flexcan: disable completely the ECC mechanism
-Date:   Mon, 11 Nov 2019 19:29:13 +0100
-Message-Id: <20191111181449.558889091@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 104/105] mm/filemap.c: dont initiate writeback if mapping has no dirty pages
+Date:   Mon, 11 Nov 2019 19:29:14 +0100
+Message-Id: <20191111181449.694521006@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,39 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 5e269324db5adb2f5f6ec9a93a9c7b0672932b47 ]
+commit c3aab9a0bd91b696a852169479b7db1ece6cbf8c upstream.
 
-The ECC (memory error detection and correction) mechanism can be
-activated or not, controlled by the ECCDIS bit in CAN_MECR. When
-disabled, updates on indications and reporting registers are stopped.
-So if want to disable ECC completely, had better assert ECCDIS bit, not
-just mask the related interrupts.
+Functions like filemap_write_and_wait_range() should do nothing if inode
+has no dirty pages or pages currently under writeback.  But they anyway
+construct struct writeback_control and this does some atomic operations if
+CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
+updates state of writeback ownership, on slow path might be more work.
+Current this path is safely avoided only when inode mapping has no pages.
 
-Fixes: cdce844865be ("can: flexcan: add vf610 support for FlexCAN")
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For example generic_file_read_iter() calls filemap_write_and_wait_range()
+at each O_DIRECT read - pretty hot path.
+
+This patch skips starting new writeback if mapping has no dirty tags set.
+If writeback is already in progress filemap_write_and_wait_range() will
+wait for it.
+
+Link: http://lkml.kernel.org/r/156378816804.1087.8607636317907921438.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/can/flexcan.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/filemap.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
-index 7280f3a8aa041..84dd79041285a 100644
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -1018,6 +1018,7 @@ static int flexcan_chip_start(struct net_device *dev)
- 		reg_mecr = flexcan_read(&regs->mecr);
- 		reg_mecr &= ~FLEXCAN_MECR_ECRWRDIS;
- 		flexcan_write(reg_mecr, &regs->mecr);
-+		reg_mecr |= FLEXCAN_MECR_ECCDIS;
- 		reg_mecr &= ~(FLEXCAN_MECR_NCEFAFRZ | FLEXCAN_MECR_HANCEI_MSK |
- 			      FLEXCAN_MECR_FANCEI_MSK);
- 		flexcan_write(reg_mecr, &regs->mecr);
--- 
-2.20.1
-
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -338,7 +338,8 @@ int __filemap_fdatawrite_range(struct ad
+ 		.range_end = end,
+ 	};
+ 
+-	if (!mapping_cap_writeback_dirty(mapping))
++	if (!mapping_cap_writeback_dirty(mapping) ||
++	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+ 		return 0;
+ 
+ 	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
 
 
