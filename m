@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1005BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E66C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF39F214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C7121655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497379;
-	bh=OwZNKYHe2zMRqZhRoRvhzFzHdREgxZidsEXfVuUzL9w=;
+	s=default; t=1573497382;
+	bh=uYFt5Jv5oeU56nOMZRh2gwtCkP6ppAH6wLKlAArvihA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=awbMvWd3bquHupH+bA9I+tBXxIaPyuoYu3mre5u3Zi+kRTYgjk/NfcLGBT7Yv/3K7
-	 CICtWhU/rw8hDUb2lsKkR8ayOcfxHGHB60EBBDgv939I+Qy0QMmlUb32Q2SX6MWxQK
-	 Y4JFvJd+2g+2nXCmQVrqurySVFSANlakzZjQv+/M=
+	b=Mirb4fh71SmEb0GUcjRYDaK5JW27m/8I6ne9wkyTGb/jLBnVl4FLcW0JmOUm9t1YE
+	 gVEf4dxc/UxaawedBKorP27nBBfXcOEI5eOrHGjc3HWCVVPvvXR3UxiCqLSbNXoqYw
+	 RBPxnOXnGGevXERvs+luf9hGvOiglK4TpnRTq+d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfKKSgS (ORCPT
+        id S1728706AbfKKSgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727810AbfKKSgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:14 -0500
+        id S1727848AbfKKSgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09CFA21655;
-        Mon, 11 Nov 2019 18:36:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E2852184C;
+        Mon, 11 Nov 2019 18:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497374;
-        bh=OwZNKYHe2zMRqZhRoRvhzFzHdREgxZidsEXfVuUzL9w=;
+        s=default; t=1573497377;
+        bh=uYFt5Jv5oeU56nOMZRh2gwtCkP6ppAH6wLKlAArvihA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yJNuc4PmvLPtFo/t4mGxV8PF9zrCUEHm0IOhuEeNqT5LOPbkHKzyCzZXaW9VIQYnH
-         j5ePlJZfB8Q9Go3aA8wHDOHQtnHfahf5VdHWkaRT/CHxJIDZGCR8h8/IF72u5I/EY6
-         K2dKWgMMqKbqtjDtxoqryTzisRKKGGoQMnPxqI2o=
+        b=jWtrmF46h4hzkc9f1ahskzigugj5mARW32pmbvgsCxPDHgRhaEGdA964hpJxUSVkq
+         kviyfTrQS5DPPGDtmZB7zdA7JCo1wvUAVxlJiz4YABLYcQ0fIzb0+K5ZeqfeACZw4q
+         kklQP6YCnc+k/n5+iliez0BKcXd/Nicw19rE2xuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 031/105] intel_th: pci: Add Comet Lake PCH support
-Date:   Mon, 11 Nov 2019 19:28:01 +0100
-Message-Id: <20191111181438.233243037@linuxfoundation.org>
+Subject: [PATCH 4.14 032/105] intel_th: pci: Add Jasper Lake PCH support
+Date:   Mon, 11 Nov 2019 19:28:02 +0100
+Message-Id: <20191111181438.405431106@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -62,14 +62,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 3adbb5718dd5264666ddbc2b9b43799d292e9cb6 upstream.
+commit 9d55499d8da49e9261e95a490f3fda41d955f505 upstream.
 
-This adds support for Intel TH on Comet Lake PCH.
+This adds support for Intel TH on Jasper Lake PCH.
 
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191028070651.9770-7-alexander.shishkin@linux.intel.com
+Link: https://lore.kernel.org/r/20191028070651.9770-8-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
@@ -78,17 +78,17 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/hwtracing/intel_th/pci.c
 +++ b/drivers/hwtracing/intel_th/pci.c
-@@ -184,6 +184,11 @@ static const struct pci_device_id intel_
+@@ -198,6 +198,11 @@ static const struct pci_device_id intel_
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
  		.driver_data = (kernel_ulong_t)&intel_th_2x,
  	},
- 	{
-+		/* Comet Lake PCH */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x06a6),
++	{
++		/* Jasper Lake PCH */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4da6),
 +		.driver_data = (kernel_ulong_t)&intel_th_2x,
 +	},
-+	{
- 		/* Ice Lake NNPI */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x45c5),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	{ 0 },
+ };
+ 
 
 
