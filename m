@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E942C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18E0214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB872184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497498;
-	bh=wEqq2Gp2cFmHyhYl4WEbc33WFOLcIfzbyW5YtyCoAHc=;
+	s=default; t=1573497501;
+	bh=UqEsKD7kxd9sYdPrPpIkXzZPJTqKw70J1KYSfWLwVi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LrZrw/90Us/zDOv1EMZCQSKWoE+kG98jzIwMBMDVFISZhx6ANypIsGK4ZM/m+Klv3
-	 rD4nLsDNMBOgmsO6SxivlE0FyE3bADXxNVktDAqgt2WZhjOWpwLoi0oW7uTygLn/nR
-	 A6ejPi+ovkQzVXdRqMaNJ1djCHzF6sKu2Hy0FQ3U=
+	b=S+mjDv5ZZJZ9bNRXpAfnqei703L1vts1TWbtt165URfn+XicpHQMNRaBLog1eVGcJ
+	 7xB3gRrL2313Ijt774j/2kXl8zuEn/g5nWNoJbQhi892RVh7JDcDyVyvb0A2Bepz3Z
+	 3Bf++WVMeCjQ2z0naoAE7Z7Tpbq1xoixHb0ZvBxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfKKSiQ (ORCPT
+        id S1728975AbfKKSiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57072 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbfKKSiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:12 -0500
+        id S1728027AbfKKSiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B0FC204FD;
-        Mon, 11 Nov 2019 18:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8313F21E6F;
+        Mon, 11 Nov 2019 18:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497491;
-        bh=wEqq2Gp2cFmHyhYl4WEbc33WFOLcIfzbyW5YtyCoAHc=;
+        s=default; t=1573497495;
+        bh=UqEsKD7kxd9sYdPrPpIkXzZPJTqKw70J1KYSfWLwVi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7QO7oIz3G4yk7zNjjxrzRZHqxCp7aknuz/f1kBPj7i51MIDF2KKJfB1Rd/J7huEU
-         Ag1ObXzadz0h0TmHySL21XMEX6ELLgrCtKGQuHcK+N4m8wgzg4mHoryt4gkqE6vj1K
-         ZLPxhywAKd6U5hAOH4+WuhfSWS1sZpd4zq4ZAJ5A=
+        b=DVBa4NbNu6DEQRG+fsXL0THqVRsOxjfojORYQnX+b4K8V5Wx0hU/KtCoY+Qxd1Kdm
+         N8D3tYYD0OT9iD2iCCDk96+VyqtFcR4J4DdjgqYib2XNdfnThseoWxeepMJR9cFver
+         mbn/tDgAXjU+ELTAABm7IbwRzbUy6KFDwzRqDDYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 072/105] net/mlx5: prevent memory leak in mlx5_fpga_conn_create_cq
-Date:   Mon, 11 Nov 2019 19:28:42 +0100
-Message-Id: <20191111181445.863075653@linuxfoundation.org>
+Subject: [PATCH 4.14 073/105] scsi: qla2xxx: fixup incorrect usage of host_byte
+Date:   Mon, 11 Nov 2019 19:28:43 +0100
+Message-Id: <20191111181445.921280627@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,37 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Hannes Reinecke <hare@suse.com>
 
-[ Upstream commit c8c2a057fdc7de1cd16f4baa51425b932a42eb39 ]
+[ Upstream commit 66cf50e65b183c863825f5c28a818e3f47a72e40 ]
 
-In mlx5_fpga_conn_create_cq if mlx5_vector2eqn fails the allocated
-memory should be released.
+DRIVER_ERROR is a a driver byte setting, not a host byte.  The qla2xxx
+driver should rather return DID_ERROR here to be in line with the other
+drivers.
 
-Fixes: 537a50574175 ("net/mlx5: FPGA, Add high-speed connection routines")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Link: https://lore.kernel.org/r/20191018140458.108278-1-hare@suse.de
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_bsg.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-index c4392f741c5fe..5212428031a43 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-@@ -462,8 +462,10 @@ static int mlx5_fpga_conn_create_cq(struct mlx5_fpga_conn *conn, int cq_size)
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index 2ea0ef93f5cbb..7472d3882ad41 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -258,7 +258,7 @@ qla2x00_process_els(struct bsg_job *bsg_job)
+ 	srb_t *sp;
+ 	const char *type;
+ 	int req_sg_cnt, rsp_sg_cnt;
+-	int rval =  (DRIVER_ERROR << 16);
++	int rval =  (DID_ERROR << 16);
+ 	uint16_t nextlid = 0;
  
- 	err = mlx5_vector2eqn(mdev, smp_processor_id(), &eqn, &irqn);
--	if (err)
-+	if (err) {
-+		kvfree(in);
- 		goto err_cqwq;
-+	}
- 
- 	cqc = MLX5_ADDR_OF(create_cq_in, in, cq_context);
- 	MLX5_SET(cqc, cqc, log_cq_size, ilog2(cq_size));
+ 	if (bsg_request->msgcode == FC_BSG_RPT_ELS) {
+@@ -433,7 +433,7 @@ qla2x00_process_ct(struct bsg_job *bsg_job)
+ 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	int req_sg_cnt, rsp_sg_cnt;
+ 	uint16_t loop_id;
+ 	struct fc_port *fcport;
+@@ -1951,7 +1951,7 @@ qlafx00_mgmt_cmd(struct bsg_job *bsg_job)
+ 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	struct qla_mt_iocb_rqst_fx00 *piocb_rqst;
+ 	srb_t *sp;
+ 	int req_sg_cnt = 0, rsp_sg_cnt = 0;
 -- 
 2.20.1
 
