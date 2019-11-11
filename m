@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70874C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E447CC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45017214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E04222C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497461;
-	bh=UUJfsJTjQIR0PVeU3w+49eR4YbkU3H0RuogjCNK6NN8=;
+	s=default; t=1573497464;
+	bh=1mn7x2xDrNdCk3rqmR4q6TOQ7cme9ekfdvb759926OQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xjgls7kjR1scLfuE1jcj4Cmp3kXaB2sNrPykjQdXrnOTGknU9mLXYFyjd69q9BMga
-	 e9uaJgZiExBhDEmI8khTW+7fYQvZX1m085C4CkWNcFJcGdojDiI7m5kIpCoKh/N3SL
-	 8SRxCmuHVEA4mlKnTj+FevFwneF3yVmjLC20aDXQ=
+	b=Z29LQUGQyQInYZoBl0W2+0UJKxWZi+Y1dHHzFY0xzRGFlLFA58lM/ODDiRnOAJm+N
+	 Pv5BTGqEmSs4juLbKwXixzd2YfvI2YzPPml3CoYsplwxgkwHfua6nF6bkrbbWslryx
+	 EwXE8bWpLJ5EjWmw/5EFYv/NHeZPO1tP5L4sUOMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfKKShj (ORCPT
+        id S1728803AbfKKShm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56266 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:37:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728877AbfKKShg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:36 -0500
+        id S1728884AbfKKShi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 638A0204FD;
-        Mon, 11 Nov 2019 18:37:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08638214E0;
+        Mon, 11 Nov 2019 18:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497453;
-        bh=UUJfsJTjQIR0PVeU3w+49eR4YbkU3H0RuogjCNK6NN8=;
+        s=default; t=1573497456;
+        bh=1mn7x2xDrNdCk3rqmR4q6TOQ7cme9ekfdvb759926OQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQsh2ZxSjwEgzLiT2mG02o9vst5GN9dlUDvSH2q97GoNRQfJsQNnuJQYCE+bAtO1+
-         0nWcisL7wAUu8aUc0cYrfFKk23NPD6kOn5BSYMUaMbF0yX6bW+Xcajp4efjvnxwSQq
-         6dmiB41XuEeMRyqXYKP2HeE0/VbSrgmsR/Qi59Vk=
+        b=Nshhc10l+Jnja+Bwec/oiTxlacEBHGJ6/PwWAbzSk/0boW0AlGxiO/h1MJuGlhf12
+         rVrzs06OvMYJ5Lfn3rf5Dl1K4mivIh2/CAm0aAT0QiAnIQJQO4HJdFz7LJZ3HcRz5O
+         lfmtIrRrtP0eRp4UnVsBEu2JIHSKrKPsgARy5VGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Foellmi <claudio.foellmi@ergon.ch>,
-        Vignesh R <vigneshr@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        Zumeng Chen <zumeng.chen@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 059/105] i2c: omap: Trigger bus recovery in lockup case
-Date:   Mon, 11 Nov 2019 19:28:29 +0100
-Message-Id: <20191111181444.761824937@linuxfoundation.org>
+Subject: [PATCH 4.14 060/105] cpufreq: ti-cpufreq: add missing of_node_put()
+Date:   Mon, 11 Nov 2019 19:28:30 +0100
+Message-Id: <20191111181444.892881703@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -62,86 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudio Foellmi <claudio.foellmi@ergon.ch>
+From: Zumeng Chen <zumeng.chen@gmail.com>
 
-commit 93367bfca98f36cece57c01dbce6ea1b4ac58245 upstream
+commit 248aefdcc3a7e0cfbd014946b4dead63e750e71b upstream
 
-A very conservative check for bus activity (to prevent interference
-in multimaster setups) prevented the bus recovery methods from being
-triggered in the case that SDA or SCL was stuck low.
-This defeats the purpose of the recovery mechanism, which was introduced
-for exactly this situation (a slave device keeping SDA pulled down).
+call of_node_put to release the refcount of np.
 
-Also added a check to make sure SDA is low before attempting recovery.
-If SDA is not stuck low, recovery will not help, so we can skip it.
-
-Note that bus lockups can persist across reboots. The only other options
-are to reset or power cycle the offending slave device, and many i2c
-slaves do not even have a reset pin.
-
-If we see that one of the lines is low for the entire timeout duration,
-we can actually be sure that there is no other master driving the bus.
-It is therefore save for us to attempt a bus recovery.
-
-Signed-off-by: Claudio Foellmi <claudio.foellmi@ergon.ch>
-Tested-by: Vignesh R <vigneshr@ti.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-[wsa: fixed one return code to -EBUSY]
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/busses/i2c-omap.c |   25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/cpufreq/ti-cpufreq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -487,6 +487,22 @@ static int omap_i2c_init(struct omap_i2c
- }
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -205,6 +205,7 @@ static int ti_cpufreq_init(void)
  
- /*
-+ * Try bus recovery, but only if SDA is actually low.
-+ */
-+static int omap_i2c_recover_bus(struct omap_i2c_dev *omap)
-+{
-+	u16 systest;
-+
-+	systest = omap_i2c_read_reg(omap, OMAP_I2C_SYSTEST_REG);
-+	if ((systest & OMAP_I2C_SYSTEST_SCL_I_FUNC) &&
-+	    (systest & OMAP_I2C_SYSTEST_SDA_I_FUNC))
-+		return 0; /* bus seems to already be fine */
-+	if (!(systest & OMAP_I2C_SYSTEST_SCL_I_FUNC))
-+		return -EBUSY; /* recovery would not fix SCL */
-+	return i2c_recover_bus(&omap->adapter);
-+}
-+
-+/*
-  * Waiting on Bus Busy
-  */
- static int omap_i2c_wait_for_bb(struct omap_i2c_dev *omap)
-@@ -496,7 +512,7 @@ static int omap_i2c_wait_for_bb(struct o
- 	timeout = jiffies + OMAP_I2C_TIMEOUT;
- 	while (omap_i2c_read_reg(omap, OMAP_I2C_STAT_REG) & OMAP_I2C_STAT_BB) {
- 		if (time_after(jiffies, timeout))
--			return i2c_recover_bus(&omap->adapter);
-+			return omap_i2c_recover_bus(omap);
- 		msleep(1);
- 	}
+ 	np = of_find_node_by_path("/");
+ 	match = of_match_node(ti_cpufreq_of_match, np);
++	of_node_put(np);
+ 	if (!match)
+ 		return -ENODEV;
  
-@@ -577,8 +593,13 @@ static int omap_i2c_wait_for_bb_valid(st
- 		}
- 
- 		if (time_after(jiffies, timeout)) {
-+			/*
-+			 * SDA or SCL were low for the entire timeout without
-+			 * any activity detected. Most likely, a slave is
-+			 * locking up the bus with no master driving the clock.
-+			 */
- 			dev_warn(omap->dev, "timeout waiting for bus ready\n");
--			return -ETIMEDOUT;
-+			return omap_i2c_recover_bus(omap);
- 		}
- 
- 		msleep(1);
 
 
