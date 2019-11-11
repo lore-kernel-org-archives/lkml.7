@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36349C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37AFC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D63820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9ADE20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XRCUl0nt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dfb6+7G1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfKKJZk (ORCPT
+        id S1727164AbfKKJZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:25:40 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40417 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfKKJZj (ORCPT
+        Mon, 11 Nov 2019 04:25:48 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46314 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfKKJZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:25:39 -0500
-Received: by mail-wr1-f66.google.com with SMTP id i10so13758646wrs.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 01:25:37 -0800 (PST)
+        Mon, 11 Nov 2019 04:25:47 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b3so13724195wrs.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 01:25:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=4p0qtiatlV0SP4T6lSPVHVPXlgHULFnSfHizAyGU0hg=;
-        b=XRCUl0ntONH7UguamnyewxwL8FNRl5jKFpvkjL2XRuqeAejncL98iTV2xLCkpWbQSr
-         xBN25JtyymE8a0XBGrYbJI5pHr8jvfi0oM24AqCtNC6LxJle9FvadHt/1gNdE3v0GMOu
-         PtJMlSAGdQc/4xD3d1HmBJ3IY1rsgmEOP8jxOtf8VMGGc+riDbT9UFXW500Axiv1SEfi
-         0bRZFvpuzSv3jHUUzJhoB9NVmj50aPYp5xy7XWDvbOINxxrUj2MjSW6qg8nReOpGUj5Y
-         dhuqErqUx3hv3Y17uJUEdWu8XNeW9ln1h57kAE62ZheE7LKr2WhsS1Y89TThUjnCQ5uZ
-         cDUg==
+        bh=QGA/xqmQWev+0NFe4O1TN1YKQ6mW88MJOuhnNp+1ZuI=;
+        b=Dfb6+7G14s79tYoH7BzweIeHFTtFG/h2mFENKgZ0C0904ffsK6FkL59yC85qrY1nR5
+         q+uIXQu2za9et+lvd+dfO/dSzilQY7Iit+HH4PRs+fPNg5lruFzEJ1m2cjQHE1gvtLV3
+         HigANxoBR/CSRpKK2yMZfdhcM2YUBY11kovpoubO7X5Cu5uVVkGWuWzlQjiii04p+91T
+         NbfSb1MFU8zaLi1WFs5y9QM4YIoT7bbAPhzLzmez+UNK1vAbSgIgILevTFRAggx9goFM
+         qwon6dX5/ysVYJmJZUP0943hXU4mNrBYplzITJSJRO2e/RvC+5X8WVXsidjpxUXLFR2t
+         adbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=4p0qtiatlV0SP4T6lSPVHVPXlgHULFnSfHizAyGU0hg=;
-        b=IShoKrCQfTeutUCOouAYXrXHevz4ChT/i0vhKPocoGHsebqQrK1OL+QHcu6fZnqnlK
-         j9LSXFKpBl+CQ3v1xqqYIKVcZdrYEqYkAcTGpBsaQ055Djdh9D77waZk0RaW8+EODjbi
-         +z0HiEalPWG920Smn8Kf03FQqVv/BSF6Jdt7loUSDeSt4vpn1OUwoy1/WIgA7IJZ2f3u
-         EblvZNq5o7JtXIe44B2Z7bsX36G6vbCLd0yicuOoSO6wnXFObt8QaSQHNGlwuAsYGe5y
-         1N/wgutase6isGZJKXRdD6hUIm6RztupJUZDpTEQUf2RWTuwLf/oqm34CQC2bJzRYFMt
-         P4Fw==
-X-Gm-Message-State: APjAAAXGHHJ/Img+6hCW1Pebsl11LmX0XcTxv9Oli5csNlL+2GcabZD8
-        L2qdj4i1CX9DWQhiV1tXfr6cRQ==
-X-Google-Smtp-Source: APXvYqz33HioT48RXV/AkDamtjCdumAIK3ppi3Q+UqUVT538LwYEY3/vW7NqUhgVByAGLe4va+taaA==
-X-Received: by 2002:adf:fa4a:: with SMTP id y10mr15491628wrr.177.1573464337262;
-        Mon, 11 Nov 2019 01:25:37 -0800 (PST)
+        bh=QGA/xqmQWev+0NFe4O1TN1YKQ6mW88MJOuhnNp+1ZuI=;
+        b=goBn8a00MfGcmYmSaMh25l1hj2H+X04mETGoqlShNlxTWhXnoAok7jk9IMpsl3j+yy
+         2poK44/dkyguWj7gdbum37E8TG7NS1Cdw0EELg/DO5lZMnFG2ZSiUcamu1vbFwI4itZ7
+         4pbv/4WUjLNiqF/NE2mPRV54vriViIBBHI7lWk3ejgUMmyClP3wDzh983qAXvwbsiSH9
+         9ZtxUIlgc9vnCYcsHzL4QDztwsxO22dO98feoxHem3tZp5ubxaPBT+wZquA/CW6ByPgK
+         bGWzPvEaW+NOg+N8R3CVIbm1MEzVQFUXZexf0Vg9oXyJ3/rPhzmaMABeblYBPLsZ5+ND
+         Xl8g==
+X-Gm-Message-State: APjAAAWI1gbrjyI7Zi1hj+RvjkEs5ERJInkYvqgbpKSDI2MHyUJRUhKW
+        Mm0PYbgoZu+/ZiSYSpP4bfa9sg==
+X-Google-Smtp-Source: APXvYqx6jDtFgEhErFSeyKkbV8ZV9CUx1Pyx244vdqrZIIvJ1ES7y4XaSdZ6WWpMzxcI9s4XD6bHhA==
+X-Received: by 2002:adf:ef0e:: with SMTP id e14mr4205640wro.204.1573464344370;
+        Mon, 11 Nov 2019 01:25:44 -0800 (PST)
 Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id c144sm17688792wmd.1.2019.11.11.01.25.36
+        by smtp.gmail.com with ESMTPSA id x6sm13916940wrw.34.2019.11.11.01.25.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 01:25:36 -0800 (PST)
-Date:   Mon, 11 Nov 2019 09:25:29 +0000
+        Mon, 11 Nov 2019 01:25:43 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:25:36 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Kiran Gunda <kgunda@codeaurora.org>
 Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
@@ -68,16 +68,16 @@ Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH V10 6/8] backlight: qcom-wled: Add support for WLED4
- peripheral.
-Message-ID: <20191111092529.GT18902@dell>
+Subject: Re: [PATCH V10 7/8] backlight: qcom-wled: add support for short
+ circuit handling.
+Message-ID: <20191111092536.GU18902@dell>
 References: <1572589624-6095-1-git-send-email-kgunda@codeaurora.org>
- <1572589624-6095-7-git-send-email-kgunda@codeaurora.org>
+ <1572589624-6095-8-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1572589624-6095-7-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <1572589624-6095-8-git-send-email-kgunda@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,16 +86,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, 01 Nov 2019, Kiran Gunda wrote:
 
-> WLED4 peripheral is present on some PMICs like pmi8998 and
-> pm660l. It has a different register map and configurations
-> are also different. Add support for it.
+> Handle the short circuit interrupt and check if the short circuit
+> interrupt is valid. Re-enable the module to check if it goes
+> away. Disable the module altogether if the short circuit event
+> persists.
 > 
 > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
->  drivers/video/backlight/qcom-wled.c | 255 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 253 insertions(+), 2 deletions(-)
+>  drivers/video/backlight/qcom-wled.c | 144 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 140 insertions(+), 4 deletions(-)
 
 Applied, thanks.
 
