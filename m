@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55248C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAE8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251F12067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7490220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497714;
-	bh=Bp+BCo3Rwgul7jvVV+Mz35jKgTHEIpcqUo9xo1puIpA=;
+	s=default; t=1573497717;
+	bh=3vG4EWMklZ0ESCIkXmbbYhT1dEFxQiPHgFy+ESs2VdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F61Y/umgOObRni3IAWb4frJyTTgVPZVImwYTOYc1JuLzZcfMwJ1a25fqfyrE6nf0z
-	 +rtnCxkH990a14NZH5ynES4VCd+uoHqKF6f/1xE0ReHgZ31KvNrfig5sNTOFFdP1Q5
-	 TnXglZVa82aKNcfPFDR4c+ePXvWJQBkUKitLlWWM=
+	b=ufucY/16Gj21JOWv3IdtBaqjp/ALoSPvcnm3l8ujrLrI3yMg+kj3t3z3bD7VpAuxe
+	 bCnqr2La1MnoCe2yuL5dtyauTYb27tSNDZcz8Rk1bAyM1cynQwqcjYctdShCrTOiJA
+	 xkv65aW34/6kt54Eri5u+pj7e8EQiEDKx84pJsoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfKKSlw (ORCPT
+        id S1729454AbfKKSl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:41:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbfKKSlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:41:50 -0500
+        id S1728725AbfKKSlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5B420674;
-        Mon, 11 Nov 2019 18:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F108214E0;
+        Mon, 11 Nov 2019 18:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497709;
-        bh=Bp+BCo3Rwgul7jvVV+Mz35jKgTHEIpcqUo9xo1puIpA=;
+        s=default; t=1573497713;
+        bh=3vG4EWMklZ0ESCIkXmbbYhT1dEFxQiPHgFy+ESs2VdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q8CJ9Oy/aIUUSg4IxwgEHq8nXBbyKs6F0Hq98W2YuXuh5QEZ2W4wz8lz0VI5GzqoQ
-         No0Kp8FQ63WGfLD+/uh77X2QkqozDUsDXmJLoNWMrnXCRda24TUNQ/x9/6sIpDt46U
-         C/NoyMxEgLoX+epWDIeeIF3Lq4vnqNpKTQvXhilE=
+        b=2SmjJHETeK1pMkG0OM9tiw4ddMJTa8Q/a+J7MKAD2Z4MUFIqBgRHVZ1WTtrZEz0mV
+         GRd5bSXuUKJU9sy5bxRDLAzXa4cNRiiooKVoHWGQgqmBoeKePyG+hDFadIi8Wi79qD
+         IxBKXoHN4XLw5nFchlpmOnKoQIkouzEZ2HpIBc4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 033/125] iio: adc: stm32-adc: fix stopping dma
-Date:   Mon, 11 Nov 2019 19:27:52 +0100
-Message-Id: <20191111181445.074033994@linuxfoundation.org>
+Subject: [PATCH 4.19 034/125] iio: imu: adis16480: make sure provided frequency is positive
+Date:   Mon, 11 Nov 2019 19:27:53 +0100
+Message-Id: <20191111181445.151155830@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,46 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-commit e6afcf6c598d6f3a0c9c408bfeddb3f5730608b0 upstream.
+commit 24e1eb5c0d78cfb9750b690bbe997d4d59170258 upstream.
 
-There maybe a race when using dmaengine_terminate_all(). The predisable
-routine may call iio_triggered_buffer_predisable() prior to a pending DMA
-callback.
-Adopt dmaengine_terminate_sync() to ensure there's no pending DMA request
-before calling iio_triggered_buffer_predisable().
+It could happen that either `val` or `val2` [provided from userspace] is
+negative. In that case the computed frequency could get a weird value.
 
-Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+Fix this by checking that neither of the 2 variables is negative, and check
+that the computed result is not-zero.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Fixes: e4f959390178 ("iio: imu: adis16480 switch sampling frequency attr to core support")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/stm32-adc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/imu/adis16480.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1340,7 +1340,7 @@ static int stm32_adc_dma_start(struct ii
- 	cookie = dmaengine_submit(desc);
- 	ret = dma_submit_error(cookie);
- 	if (ret) {
--		dmaengine_terminate_all(adc->dma_chan);
-+		dmaengine_terminate_sync(adc->dma_chan);
- 		return ret;
- 	}
+--- a/drivers/iio/imu/adis16480.c
++++ b/drivers/iio/imu/adis16480.c
+@@ -270,8 +270,11 @@ static int adis16480_set_freq(struct iio
+ 	struct adis16480 *st = iio_priv(indio_dev);
+ 	unsigned int t;
  
-@@ -1413,7 +1413,7 @@ static int stm32_adc_buffer_predisable(s
- 		dev_err(&indio_dev->dev, "predisable failed\n");
++	if (val < 0 || val2 < 0)
++		return -EINVAL;
++
+ 	t =  val * 1000 + val2 / 1000;
+-	if (t <= 0)
++	if (t == 0)
+ 		return -EINVAL;
  
- 	if (adc->dma_chan)
--		dmaengine_terminate_all(adc->dma_chan);
-+		dmaengine_terminate_sync(adc->dma_chan);
- 
- 	if (stm32_adc_set_trig(indio_dev, NULL))
- 		dev_err(&indio_dev->dev, "Can't clear trigger\n");
+ 	t = 2460000 / t;
 
 
