@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E76C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E69C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4552184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8387F21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498538;
-	bh=Tqhu+9f03OilOW6+eILq5Bv9vTNqSi1CiKwBg/6mxrw=;
+	s=default; t=1573498541;
+	bh=umeMeDhsQodteMFPJzY3tEqJwDH1YTD6mV7K/TP8oB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCiqmoxpX+U2ZKqcSADOlYxKwafiqyV1j2hoA48HqAGBm2jOZhcSkzl4FmTkRwf3P
-	 cx76/mnMNNW+3p6ict14cZF3xoHZHJk6KuQ4KkLCXoGYFE55e1fiD8kBXYKPANxT3y
-	 NeYyV2FWsCLsBV+BSQtkj1jHaokPL9+Diw1JthFI=
+	b=dVw6XPHtlgJdhJpVZP9ZM+imWbUaFUNPSwxb8PG9BsZkOHrlaxSUCA1kaLTb7z7MM
+	 63i21VDG/HEWWd8qTVFIRfZGnnASJMojj1+lisoIJadFUUfD86b385abqMmqb5vPFX
+	 1MeZCiZqVGiLvumTq7Jt21u8g2acZzsnWoVc6gSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbfKKSzi (ORCPT
+        id S1730651AbfKKSzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:55:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52648 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:55:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728484AbfKKSzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:55:31 -0500
+        id S1729895AbfKKSzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:55:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE732222BD;
-        Mon, 11 Nov 2019 18:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F37920818;
+        Mon, 11 Nov 2019 18:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498530;
-        bh=Tqhu+9f03OilOW6+eILq5Bv9vTNqSi1CiKwBg/6mxrw=;
+        s=default; t=1573498533;
+        bh=umeMeDhsQodteMFPJzY3tEqJwDH1YTD6mV7K/TP8oB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZ1X7nXF5NyEgZcz+vDHtYk0sly0enGmvRwMtTXK0ReaexQtviXTPvt8QIlSf+Snb
-         EHCDIZlaPjDmbou1ZzN5+OSEyX6FdxG1yL5oiPn3dvLSY8hTE4ndDeXkrMdPcW0K8i
-         ps+q2ys/mhKJeELu9SNSLnFokX/iezY/ZU/uxqDQ=
+        b=C6AaLQEChpmLF3/Jt+iuwXIvUu1IS3FgsG18vdGGgmu0y1rWE52DDOFO2//Nsas9a
+         ZZLa6Ok2933Az/zV3GWJcwNZiRnc0S1dtsWBzBKdxh82p3qWW1pEZHDDNjvBQkIbuQ
+         zti4Uz7WdBmrzz8C8M/QE3LDUkwrmBWTOHKU74iQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 145/193] perf/x86/amd/ibs: Handle erratum #420 only on the affected CPU family (10h)
-Date:   Mon, 11 Nov 2019 19:28:47 +0100
-Message-Id: <20191111181511.854049502@linuxfoundation.org>
+        linux-drivers-review@eclists.intel.com,
+        linux-perf@eclists.intel.com, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 146/193] perf/x86/uncore: Fix event group support
+Date:   Mon, 11 Nov 2019 19:28:48 +0100
+Message-Id: <20191111181511.923144548@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -71,29 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit e431e79b60603079d269e0c2a5177943b95fa4b6 ]
+[ Upstream commit 75be6f703a141b048590d659a3954c4fedd30bba ]
 
-This saves us writing the IBS control MSR twice when disabling the
-event.
+The events in the same group don't start or stop simultaneously.
+Here is the ftrace when enabling event group for uncore_iio_0:
 
-I searched revision guides for all families since 10h, and did not
-find occurrence of erratum #420, nor anything remotely similar:
-so we isolate the secondary MSR write to family 10h only.
+  # perf stat -e "{uncore_iio_0/event=0x1/,uncore_iio_0/event=0xe/}"
 
-Also unconditionally update the count mask for IBS Op implementations
-that have read & writeable current count (CurCnt) fields in addition
-to the MaxCnt field.  These bits were reserved on prior
-implementations, and therefore shouldn't have negative impact.
+            <idle>-0     [000] d.h.  8959.064832: read_msr: a41, value
+  b2b0b030		//Read counter reg of IIO unit0 counter0
+            <idle>-0     [000] d.h.  8959.064835: write_msr: a48, value
+  400001			//Write Ctrl reg of IIO unit0 counter0 to enable
+  counter0. <------ Although counter0 is enabled, Unit Ctrl is still
+  freezed. Nothing will count. We are still good here.
+            <idle>-0     [000] d.h.  8959.064836: read_msr: a40, value
+  30100                   //Read Unit Ctrl reg of IIO unit0
+            <idle>-0     [000] d.h.  8959.064838: write_msr: a40, value
+  30000			//Write Unit Ctrl reg of IIO unit0 to enable all
+  counters in the unit by clear Freeze bit  <------Unit0 is un-freezed.
+  Counter0 has been enabled. Now it starts counting. But counter1 has not
+  been enabled yet. The issue starts here.
+            <idle>-0     [000] d.h.  8959.064846: read_msr: a42, value 0
+			//Read counter reg of IIO unit0 counter1
+            <idle>-0     [000] d.h.  8959.064847: write_msr: a49, value
+  40000e			//Write Ctrl reg of IIO unit0 counter1 to enable
+  counter1.   <------ Now, counter1 just starts to count. Counter0 has
+  been running for a while.
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Current code un-freezes the Unit Ctrl right after the first counter is
+enabled. The subsequent group events always loses some counter values.
+
+Implement pmu_enable and pmu_disable support for uncore, which can help
+to batch hardware accesses.
+
+No one uses uncore_enable_box and uncore_disable_box. Remove them.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -101,38 +119,118 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: c9574fe0bdb9 ("perf/x86-ibs: Implement workaround for IBS erratum #420")
-Link: https://lkml.kernel.org/r/20191023150955.30292-2-kim.phillips@amd.com
+Cc: linux-drivers-review@eclists.intel.com
+Cc: linux-perf@eclists.intel.com
+Fixes: 087bfbb03269 ("perf/x86: Add generic Intel uncore PMU support")
+Link: https://lkml.kernel.org/r/1572014593-31591-1-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/uncore.c | 44 +++++++++++++++++++++++++++++-----
+ arch/x86/events/intel/uncore.h | 12 ----------
+ 2 files changed, 38 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 98ba21a588a15..26c36357c4c9c 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -377,7 +377,8 @@ static inline void perf_ibs_disable_event(struct perf_ibs *perf_ibs,
- 					  struct hw_perf_event *hwc, u64 config)
- {
- 	config &= ~perf_ibs->cnt_mask;
--	wrmsrl(hwc->config_base, config);
-+	if (boot_cpu_data.x86 == 0x10)
-+		wrmsrl(hwc->config_base, config);
- 	config &= ~perf_ibs->enable_mask;
- 	wrmsrl(hwc->config_base, config);
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 3694a5d0703d9..f7b191d3c9b01 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -502,10 +502,8 @@ void uncore_pmu_event_start(struct perf_event *event, int flags)
+ 	local64_set(&event->hw.prev_count, uncore_read_counter(box, event));
+ 	uncore_enable_event(box, event);
+ 
+-	if (box->n_active == 1) {
+-		uncore_enable_box(box);
++	if (box->n_active == 1)
+ 		uncore_pmu_start_hrtimer(box);
+-	}
  }
-@@ -553,7 +554,8 @@ static struct perf_ibs perf_ibs_op = {
- 	},
- 	.msr			= MSR_AMD64_IBSOPCTL,
- 	.config_mask		= IBS_OP_CONFIG_MASK,
--	.cnt_mask		= IBS_OP_MAX_CNT,
-+	.cnt_mask		= IBS_OP_MAX_CNT | IBS_OP_CUR_CNT |
-+				  IBS_OP_CUR_CNT_RAND,
- 	.enable_mask		= IBS_OP_ENABLE,
- 	.valid_mask		= IBS_OP_VAL,
- 	.max_period		= IBS_OP_MAX_CNT << 4,
+ 
+ void uncore_pmu_event_stop(struct perf_event *event, int flags)
+@@ -529,10 +527,8 @@ void uncore_pmu_event_stop(struct perf_event *event, int flags)
+ 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+ 		hwc->state |= PERF_HES_STOPPED;
+ 
+-		if (box->n_active == 0) {
+-			uncore_disable_box(box);
++		if (box->n_active == 0)
+ 			uncore_pmu_cancel_hrtimer(box);
+-		}
+ 	}
+ 
+ 	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
+@@ -778,6 +774,40 @@ static int uncore_pmu_event_init(struct perf_event *event)
+ 	return ret;
+ }
+ 
++static void uncore_pmu_enable(struct pmu *pmu)
++{
++	struct intel_uncore_pmu *uncore_pmu;
++	struct intel_uncore_box *box;
++
++	uncore_pmu = container_of(pmu, struct intel_uncore_pmu, pmu);
++	if (!uncore_pmu)
++		return;
++
++	box = uncore_pmu_to_box(uncore_pmu, smp_processor_id());
++	if (!box)
++		return;
++
++	if (uncore_pmu->type->ops->enable_box)
++		uncore_pmu->type->ops->enable_box(box);
++}
++
++static void uncore_pmu_disable(struct pmu *pmu)
++{
++	struct intel_uncore_pmu *uncore_pmu;
++	struct intel_uncore_box *box;
++
++	uncore_pmu = container_of(pmu, struct intel_uncore_pmu, pmu);
++	if (!uncore_pmu)
++		return;
++
++	box = uncore_pmu_to_box(uncore_pmu, smp_processor_id());
++	if (!box)
++		return;
++
++	if (uncore_pmu->type->ops->disable_box)
++		uncore_pmu->type->ops->disable_box(box);
++}
++
+ static ssize_t uncore_get_attr_cpumask(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -803,6 +833,8 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
+ 		pmu->pmu = (struct pmu) {
+ 			.attr_groups	= pmu->type->attr_groups,
+ 			.task_ctx_nr	= perf_invalid_context,
++			.pmu_enable	= uncore_pmu_enable,
++			.pmu_disable	= uncore_pmu_disable,
+ 			.event_init	= uncore_pmu_event_init,
+ 			.add		= uncore_pmu_event_add,
+ 			.del		= uncore_pmu_event_del,
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index f36f7bebbc1bb..bbfdaa720b456 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -441,18 +441,6 @@ static inline int uncore_freerunning_hw_config(struct intel_uncore_box *box,
+ 	return -EINVAL;
+ }
+ 
+-static inline void uncore_disable_box(struct intel_uncore_box *box)
+-{
+-	if (box->pmu->type->ops->disable_box)
+-		box->pmu->type->ops->disable_box(box);
+-}
+-
+-static inline void uncore_enable_box(struct intel_uncore_box *box)
+-{
+-	if (box->pmu->type->ops->enable_box)
+-		box->pmu->type->ops->enable_box(box);
+-}
+-
+ static inline void uncore_disable_event(struct intel_uncore_box *box,
+ 				struct perf_event *event)
+ {
 -- 
 2.20.1
 
