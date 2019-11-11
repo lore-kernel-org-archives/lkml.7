@@ -2,27 +2,27 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49039C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C51C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B4121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321082173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfKKUW0 (ORCPT
+        id S1727564AbfKKUV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:22:26 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:42093 "EHLO
+        Mon, 11 Nov 2019 15:21:59 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:40225 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfKKUWB (ORCPT
+        with ESMTP id S1726951AbfKKUV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:22:01 -0500
+        Mon, 11 Nov 2019 15:21:59 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MWRe1-1iNvX02Mbz-00Xvy8; Mon, 11 Nov 2019 21:16:49 +0100
+ 1M8yoa-1iaKeu0fEE-0063PN; Mon, 11 Nov 2019 21:16:46 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -31,133 +31,110 @@ To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 10/19] nfsd: handle nfs3 timestamps as unsigned
-Date:   Mon, 11 Nov 2019 21:16:30 +0100
-Message-Id: <20191111201639.2240623-11-arnd@arndb.de>
+Subject: [PATCH 00/19] nfs, nfsd: avoid 32-bit time_t
+Date:   Mon, 11 Nov 2019 21:16:20 +0100
+Message-Id: <20191111201639.2240623-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
-References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:rPopYro8ot3vLlYHqs08jMA1iOzd8VcnAKyD2rY2jki6oPrgMuC
- NMGPjcrqJPo4F7Hv4mWpkXL7P7rZ0uqLZqthPPFHrqkaJCPF4kUxwpgsd0Q90ggeVevdXQ0
- Qu4IxpZiHxBnIELSSTw4S9YFddZrgmJte3CIth/TX06xSZuEZvB80mQTjUBfIQHX+bIH0b4
- FmP6G4mdZrSkaB2LDS/Fw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eh3FrkVqo3Y=:1LVmj81qB3Y4wqPvxpklk1
- L/pfT10ZZt30XKSVX63ABfJ99hxhIrRa/nBLh/2yvzZBOuQPzLBsY4uRVZ5/KkPOOj3sgVpgW
- ReVeLk1YeDguLJIZLf1HTds0zbIqLz4a7Lqq6PgNKZlymipsDS6TNRAtqtqdiAwM8j/4BDaO4
- qLitjwO1/pnuY2qY21fwSvkEQAiBQen1bSfCeM8nDhK0R0XAogya6RrCzf0L+VfhUcoPT5f6+
- jI2gPjVDKDcDGex1Hq2xlIEtQDiIew1+mcbw938FihpHfB5w0ZAUvHSZ/WDcz8RZeKwmWxGWi
- W19Ai7s47/FRuwTzwaBwpmS9p01jNRSOt0a+Y4idT+HFi2jEHOT+GZyqefAlwxIFk5uSP8SAN
- VUw9/mMmFTub4ijxyxt5Xf8Cg3T+ESfC+FrA1ME79guspX4TwnfbzJvWGH1hfbw84nc3Ao00K
- Hq97kdktbmiLmJFj+01RcEWRgVmyC/FXJRLmR4He6gymExyQM4f4Z5EBGYuZROt85gSnfrklz
- Yj8gH6bc9uYnI+KRvv+R7K83zuQm6Xy3S47ihJR+LjJi+eJMiVeoOMkHHR5aSqPwFFnrJHo1e
- tYrTDGgpW6PzfdZgrPEb1EZqM10yNixAZJrBoQen25mTbFIEqkWHJVXKS3XO/KHik36/dbUeG
- T9Zz832RLTeNft4G3v8uhi0s2Fk+zKKmx+yRZnjKec4B7YobktNLiU+mqStfLXvrUqbGdOZgr
- PFrjdwqU/B2Z9vA77eOzpdARrHb3FlkgtruZTKWqRBAt3EJG22H8uCgeFE4m1HvyxIlX+S7yd
- fYkndMsUQJASnkzX03cGns6BHc9Zzr9ZVr7YJtptAmMQw6TU6ivKkR1SyXyHZUubu05VaYW7b
- ERkM881HLqzHq4S9EZ7Q==
+X-Provags-ID: V03:K1:JN3hpuFv/t2CfnZyt61MtRx0CiB1Qt5nIaW4ZS3du16NUH8dMu4
+ YzUQ3f6jQFhZwc/rSf6LciJS668cjuruv6UXtXMppewy+Zn4V39yi0GN92e2VmGblaGAITV
+ h0mJEZAO+IcXFKtZhdOWZZp/YUmpSC+HzcKZD6qECC93LLDUy5px+4sV3po6zUxaBuu9Bgm
+ yi4t9xYBfPDqzvmY2Uffw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:29bmaPZVYZ4=:3/cSUbtTGBhkrYm1WF+G8n
+ DZXhZSzdsRFBvSxzdPySopCDmZLeptnfFbV6F05/lmVN/2nSHbhskeq4HPAONDCZpyx1ucvIw
+ q67hshswo1euuPXMNk8a/lD1eBY2EEF5zA1eOvDjl7f89wyC59kem23VtX4w5JWK2YZAO4p7L
+ wRxKikw01WJKLcOCPeoRG/RqQF3QEXggeJ2XYhku8rDWm3nUDDNWkaZABw0tlyGWm2NLfrTFs
+ v4fAA0CAur7ySQZBbIL/Se4loN1bDsfNvVDINrA/HG94xyJgVcYMckaXqKf7nn/NHqAmtRlYQ
+ OuMzjTpEE7GAYCN6FjbyMadO/emufUYeSfD+KSc+ByGJrPDkQC2qjkPYkb7yAedbHceacBlv8
+ OEZ/kNI7EYh0MQJhBFELdkiFAjAuudk5HAXOphYeSVzXYyDbhBpha3k+PhpD3PnDuLnymMOhs
+ atpU6dvJGJAX8/McGWerLBEU651uZOa565q3tha6iygqnxBk3GSj7ZOuTFLbAVNc/TD6qVIjN
+ ++/duQKPiatSbhBpLTqhlA4B8RMjHBUzZSFsAm+henl5rfhWaDckPBDnLi7q31KsC+BwoSEch
+ QsnkszmQ8zEHxb6OOu6I3ANhEOLLVQjhMIySxVUg9cLFRLj1vylKHN4kVOGC9FtH380YpcdpS
+ JDEkGdIoeMhNwJxAUI7j8tDO7ZH2YC20ETjvUCkEPGBbVAW7Cya4+RnWay5/vEVwOv0F6Mz6p
+ ZQZSPfn95sds/UtHAEtaPdLsCDG4xipBm1aLNLd0iasSvW6pG2JTXWvjG0BBKy+vk6CCd+YhV
+ e/wXOp3iLyuNA82bcuYvzmsoDXVCn5/ZkyMk2EuMgDRw82JKKCt2XPr8I3WvAPHLP2LgNw7Lh
+ ZEzP5nFG3rhJEMOXHpqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The decode_time3 function behaves differently on 32-bit
-and 64-bit architectures: on the former, a 32-bit timestamp
-gets converted into an signed number and then into a timestamp
-between 1902 and 2038, while on the latter it is interpreted
-as unsigned in the range 1970-2106.
+I have finally found the time to convert all of NFS away from
+using time_t derived data structures to (mostly) time64_t,
+unifying the behavior between 32-bit and 64-bit architectures
+and paving the way to removing the old time_t definition from
+the kernel.
 
-Change all the remaining 'timespec' in nfsd to 'timespec64'
-to make the behavior the same, and use the current interpretation
-of the dominant 64-bit architectures.
+Please review and test. This may be a little late for linux-5.5,
+but I hope to get it all into linux-5.6 once all review comments
+are addressed.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/nfsd/nfs3xdr.c | 20 ++++++++------------
- fs/nfsd/nfsfh.h   |  4 ++--
- 2 files changed, 10 insertions(+), 14 deletions(-)
+     Arnd
 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 86e5658651f1..0ace5ae0775c 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -32,14 +32,14 @@ static u32	nfs3_ftypes[] = {
-  * XDR functions for basic NFS types
-  */
- static __be32 *
--encode_time3(__be32 *p, struct timespec *time)
-+encode_time3(__be32 *p, struct timespec64 *time)
- {
- 	*p++ = htonl((u32) time->tv_sec); *p++ = htonl(time->tv_nsec);
- 	return p;
- }
- 
- static __be32 *
--decode_time3(__be32 *p, struct timespec *time)
-+decode_time3(__be32 *p, struct timespec64 *time)
- {
- 	time->tv_sec = ntohl(*p++);
- 	time->tv_nsec = ntohl(*p++);
-@@ -167,7 +167,6 @@ encode_fattr3(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp,
- 	      struct kstat *stat)
- {
- 	struct user_namespace *userns = nfsd_user_namespace(rqstp);
--	struct timespec ts;
- 	*p++ = htonl(nfs3_ftypes[(stat->mode & S_IFMT) >> 12]);
- 	*p++ = htonl((u32) (stat->mode & S_IALLUGO));
- 	*p++ = htonl((u32) stat->nlink);
-@@ -183,12 +182,9 @@ encode_fattr3(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp,
- 	*p++ = htonl((u32) MINOR(stat->rdev));
- 	p = encode_fsid(p, fhp);
- 	p = xdr_encode_hyper(p, stat->ino);
--	ts = timespec64_to_timespec(stat->atime);
--	p = encode_time3(p, &ts);
--	ts = timespec64_to_timespec(stat->mtime);
--	p = encode_time3(p, &ts);
--	ts = timespec64_to_timespec(stat->ctime);
--	p = encode_time3(p, &ts);
-+	p = encode_time3(p, &stat->atime);
-+	p = encode_time3(p, &stat->mtime);
-+	p = encode_time3(p, &stat->ctime);
- 
- 	return p;
- }
-@@ -277,8 +273,8 @@ void fill_pre_wcc(struct svc_fh *fhp)
- 		stat.size  = inode->i_size;
- 	}
- 
--	fhp->fh_pre_mtime = timespec64_to_timespec(stat.mtime);
--	fhp->fh_pre_ctime = timespec64_to_timespec(stat.ctime);
-+	fhp->fh_pre_mtime = stat.mtime;
-+	fhp->fh_pre_ctime = stat.ctime;
- 	fhp->fh_pre_size  = stat.size;
- 	fhp->fh_pre_change = nfsd4_change_attribute(&stat, inode);
- 	fhp->fh_pre_saved = true;
-@@ -330,7 +326,7 @@ nfs3svc_decode_sattrargs(struct svc_rqst *rqstp, __be32 *p)
- 	p = decode_sattr3(p, &args->attrs, nfsd_user_namespace(rqstp));
- 
- 	if ((args->check_guard = ntohl(*p++)) != 0) { 
--		struct timespec time; 
-+		struct timespec64 time;
- 		p = decode_time3(p, &time);
- 		args->guardtime = time.tv_sec;
- 	}
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 755e256a9103..495540a248a1 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -42,8 +42,8 @@ typedef struct svc_fh {
- 
- 	/* Pre-op attributes saved during fh_lock */
- 	__u64			fh_pre_size;	/* size before operation */
--	struct timespec		fh_pre_mtime;	/* mtime before oper */
--	struct timespec		fh_pre_ctime;	/* ctime before oper */
-+	struct timespec64	fh_pre_mtime;	/* mtime before oper */
-+	struct timespec64	fh_pre_ctime;	/* ctime before oper */
- 	/*
- 	 * pre-op nfsv4 change attr: note must check IS_I_VERSION(inode)
- 	 *  to find out if it is valid.
+Arnd Bergmann (19):
+  sunrpc: convert to time64_t for expiry
+  nfs: use time64_t internally
+  nfs: use timespec64 in nfs_fattr
+  nfs: callback: use timespec64 in cb_getattrres
+  nfs: fscache: use timespec64 in inode auxdata
+  nfs: remove timespec from xdr_encode_nfstime
+  nfs: encode nfsv4 timestamps as 64-bit
+  nfsd: use ktime_get_seconds() for timestamps
+  nfsd: print 64-bit timestamps in client_info_show
+  nfsd: handle nfs3 timestamps as unsigned
+  nfsd: use timespec64 in encode_time_delta
+  nfsd: make 'boot_time' 64-bit wide
+  nfsd: pass a 64-bit guardtime to nfsd_setattr()
+  nfsd: use time64_t in nfsd_proc_setattr() check
+  nfsd: fix delay timer on 32-bit architectures
+  nfsd: fix jiffies/time_t mixup in LRU list
+  nfsd: use boottime for lease expiry alculation
+  nfsd: use ktime_get_real_seconds() in nfs4_verifier
+  nfsd: remove nfs4_reset_lease() declarations
+
+ fs/nfs/callback.h                     |  4 +-
+ fs/nfs/callback_proc.c                |  4 +-
+ fs/nfs/callback_xdr.c                 |  6 +--
+ fs/nfs/fscache-index.c                |  6 ++-
+ fs/nfs/fscache.c                      | 18 ++++---
+ fs/nfs/fscache.h                      |  8 ++--
+ fs/nfs/inode.c                        | 54 ++++++++++-----------
+ fs/nfs/internal.h                     |  6 +--
+ fs/nfs/nfs2xdr.c                      | 33 ++++++-------
+ fs/nfs/nfs3xdr.c                      | 14 ++----
+ fs/nfs/nfs4xdr.c                      | 35 +++++++-------
+ fs/nfsd/netns.h                       |  6 +--
+ fs/nfsd/nfs3xdr.c                     | 20 ++++----
+ fs/nfsd/nfs4callback.c                |  7 ++-
+ fs/nfsd/nfs4layouts.c                 |  2 +-
+ fs/nfsd/nfs4proc.c                    |  2 +-
+ fs/nfsd/nfs4recover.c                 |  8 ++--
+ fs/nfsd/nfs4state.c                   | 68 +++++++++++++--------------
+ fs/nfsd/nfs4xdr.c                     |  4 +-
+ fs/nfsd/nfsctl.c                      |  6 +--
+ fs/nfsd/nfsd.h                        |  2 -
+ fs/nfsd/nfsfh.h                       |  4 +-
+ fs/nfsd/nfsproc.c                     |  6 +--
+ fs/nfsd/state.h                       | 10 ++--
+ fs/nfsd/vfs.c                         |  4 +-
+ fs/nfsd/vfs.h                         |  2 +-
+ fs/nfsd/xdr3.h                        |  2 +-
+ include/linux/nfs_fs_sb.h             |  2 +-
+ include/linux/nfs_xdr.h               | 14 +++---
+ include/linux/sunrpc/cache.h          | 42 +++++++++--------
+ include/linux/sunrpc/gss_api.h        |  4 +-
+ include/linux/sunrpc/gss_krb5.h       |  2 +-
+ net/sunrpc/auth_gss/gss_krb5_mech.c   | 12 +++--
+ net/sunrpc/auth_gss/gss_krb5_seal.c   |  8 ++--
+ net/sunrpc/auth_gss/gss_krb5_unseal.c |  6 +--
+ net/sunrpc/auth_gss/gss_krb5_wrap.c   | 16 +++----
+ net/sunrpc/auth_gss/gss_mech_switch.c |  2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c     |  6 +--
+ net/sunrpc/cache.c                    | 18 +++----
+ net/sunrpc/svcauth_unix.c             | 10 ++--
+ 40 files changed, 243 insertions(+), 240 deletions(-)
+
 -- 
 2.20.0
 
