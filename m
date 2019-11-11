@@ -4,61 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B065DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F86C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A11A21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD0F21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498791;
-	bh=WnFA7oiZERpmd60xOy6aeNpoUKb+ts+wqlxEfGaYfMc=;
+	s=default; t=1573498801;
+	bh=KhZPSIgtm2yBPv74/lg7Dl5DCeMfUxK9rrS9xQTjMTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tk8UAjq8L8+KJLrW4F6eeVNc2p9NQCExw3yh9pNThAim+sA6obgFC5jr/z2nhGsbm
-	 Pq1zokFwXXLn1Ts0/XjbS1QrKKeRe9MK5rS4MNbwBiBxFk48u2buaW6sa7UwfSy9MH
-	 GS4rua8yVV9uY6lrDqcHePqDB7SxdsINJEDBioFY=
+	b=Hgn69juTH9wtRKrMClgixh6y+nDgfqoOkN5zYELboNj8dMt+SIkFkhQ4SI8YSNtrf
+	 RlZKRdG0R8DWasAAFNrzoFv7gnW6c1U416+g4zlQfXe8eSGOnj0g1W3b3+YS3j2aTY
+	 XLYphro1/6IONI0uPCegEpZE/3xKdRabMwHlzF0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfKKSzf (ORCPT
+        id S1729416AbfKKTAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:55:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52494 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:00:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730623AbfKKSz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:55:28 -0500
+        id S1727023AbfKKSzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:55:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C994C21925;
-        Mon, 11 Nov 2019 18:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61C72173B;
+        Mon, 11 Nov 2019 18:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498527;
-        bh=WnFA7oiZERpmd60xOy6aeNpoUKb+ts+wqlxEfGaYfMc=;
+        s=default; t=1573498511;
+        bh=KhZPSIgtm2yBPv74/lg7Dl5DCeMfUxK9rrS9xQTjMTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fv5LzZ3s8bnpisPX2cNhEUqgRHVEsNzuhzDgMMORRSi0U7bF0idy1H5LRq1MFC3qu
-         KWtl6YTNNlIxQyE36YgksBNoU2StbLpVMfN4i6/rTIHbQrVZ7noOBrFkfX2ySzOvux
-         Usi/Je2RfnGmts9AqwiVfdhQRjEB7iSgWkSMnfmQ=
+        b=YF4PL9nJ21Jsm6qFlGphZylZOploUVhSAfEPFnH4en6UeBLFVLT+EnbbhHSh1eTh3
+         drIvN327MH3g+5uq7bZIrGd0pDDTFYMU9cAbdgJBSEqjcSj/JUc2otNMZNpi5XGVcc
+         j4BaZ99Q2tYdr3g9mVdN+HI9B2NsYO88mvfKirx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 144/193] perf/x86/amd/ibs: Fix reading of the IBS OpData register and thus precise RIP validity
-Date:   Mon, 11 Nov 2019 19:28:46 +0100
-Message-Id: <20191111181511.780625977@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 139/193] usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
+Date:   Mon, 11 Nov 2019 19:28:41 +0100
+Message-Id: <20191111181511.421856460@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -71,52 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-[ Upstream commit 317b96bb14303c7998dbcd5bc606bd8038fdd4b4 ]
+[ Upstream commit ba3a1a915c49cc3023e4ddfc88f21e7514e82aa4 ]
 
-The loop that reads all the IBS MSRs into *buf stopped one MSR short of
-reading the IbsOpData register, which contains the RipInvalid status bit.
+Fix interrupt storm generated by endpoints when working in FIFO mode.
+The TX_COMPLETE interrupt is used only by control endpoints processing.
+Do not enable it for other types of endpoints.
 
-Fix the offset_max assignment so the MSR gets read, so the RIP invalid
-evaluation is based on what the IBS h/w output, instead of what was
-left in memory.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: d47e8238cd76 ("perf/x86-ibs: Take instruction pointer from ibs sample")
-Link: https://lkml.kernel.org/r/20191023150955.30292-1-kim.phillips@amd.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 914a3f3b3754 ("USB: add atmel_usba_udc driver")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 5b35b7ea5d728..98ba21a588a15 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -614,7 +614,7 @@ fail:
- 	if (event->attr.sample_type & PERF_SAMPLE_RAW)
- 		offset_max = perf_ibs->offset_max;
- 	else if (check_rip)
--		offset_max = 2;
-+		offset_max = 3;
- 	else
- 		offset_max = 1;
- 	do {
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+index 503d275bc4c4b..761e8a8088573 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.c
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+@@ -448,9 +448,11 @@ static void submit_request(struct usba_ep *ep, struct usba_request *req)
+ 		next_fifo_transaction(ep, req);
+ 		if (req->last_transaction) {
+ 			usba_ep_writel(ep, CTL_DIS, USBA_TX_PK_RDY);
+-			usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
+ 		} else {
+-			usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
+ 			usba_ep_writel(ep, CTL_ENB, USBA_TX_PK_RDY);
+ 		}
+ 	}
 -- 
 2.20.1
 
