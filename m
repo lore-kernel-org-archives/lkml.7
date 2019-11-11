@@ -2,137 +2,116 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372B5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BBFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027CF214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812C521783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ulr0/sLs"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="C7l91imC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKKOt6 (ORCPT
+        id S1727058AbfKKOuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:49:58 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:41800 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfKKOt5 (ORCPT
+        Mon, 11 Nov 2019 09:50:03 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37454 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbfKKOuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:49:57 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABEme8H132966;
-        Mon, 11 Nov 2019 14:48:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=nCtY+7bdd6mv8eDFRHIRK+wmFtnJwxI7n+WAF/dPn8A=;
- b=Ulr0/sLsLSiw3RXJBoQlA05oYd/mcLKXQ+nBThVFbv03XAo78feVR1Zfn20e9uohxdT1
- hWT6G0VNTXHilRfbJ0IWokVG6CBkG2EQOwZh/2izWmsoEJz+L3n3oe1KxGrEYyCpqPPu
- Ver//X//qTU64DMq/JjYyLhhJm5iI8FShtdA8OmZTKN5TehcAcO1H2FcF3HP1I2iLTUb
- Rfzy0mer7+5YrmLmskM73HFVDp46plw7wvD8MunwgH/wOP+qGguwBxL07jWFE/1VvLzy
- YkbOERI2JJ9n1BDGZY8cShF2iOjZFAxXdXieCRzWPVwqbCtwjPfhwXM+8SE/vmcSELYR NA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2w5ndpydhw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 14:48:51 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABEmNM8175977;
-        Mon, 11 Nov 2019 14:48:51 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2w6r8jrb7s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 14:48:50 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xABEmmQY005104;
-        Mon, 11 Nov 2019 14:48:48 GMT
-Received: from [10.175.169.52] (/10.175.169.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Nov 2019 14:48:48 +0000
-Subject: Re: [PATCH v1 2/3] KVM: VMX: Do not change PID.NDST when loading a
- blocked vCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Jag Raman <jag.raman@oracle.com>
-References: <20191106175602.4515-1-joao.m.martins@oracle.com>
- <20191106175602.4515-3-joao.m.martins@oracle.com>
- <15c8c821-25ff-eb62-abd3-8d7d69650744@redhat.com>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <314a4120-036c-e954-bc9f-e57dee3bbb7c@oracle.com>
-Date:   Mon, 11 Nov 2019 14:48:44 +0000
+        Mon, 11 Nov 2019 09:50:02 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t1so14959950wrv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:50:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=OPnJSf+FsDJ4AK8qgreISZQp/qVRV4crg89KAbDdM7k=;
+        b=C7l91imCRxRt/iXdRWLRpgFZp+d1cU9X9RIrPYVByasB726nYNdqnnPU+D6mL5YSmC
+         ihwV7cizd9tDvrMcKaNzoVQxPLyM5LDI4eAZPTQ7r8KNQ960vI4xRHHlXIeCnT9flJgn
+         DPgoxIo/FKx56KEMNcFDpRr7eoWz9x+qywUn8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=OPnJSf+FsDJ4AK8qgreISZQp/qVRV4crg89KAbDdM7k=;
+        b=aQCQ+wncsaD6EMGKjZeOgfvZkxUvPU3P/+fVJgboVwI3lAFjealUv81Ut7deV+wOaa
+         3f0uLc9jhHOac+NZ1lsCKmx8hrGBsib3t2Y/TgDTMR6QFsudqFUoEIhNwdq4wvCfR9Qe
+         woZ4o+dqKU6Xzqzsu2XDCAnYrQFmu1zbakhF6sd61apyTcKcUXP25C5JorsedM9166bj
+         T8xM+cS6/dXf8K3Yu8DxxpFWG0FDYY4ghxoXMjAfD00rE8xGCsby1wZND77ZKBYMGRaU
+         iX/saBqdfhTEwLjkhk94bVvixB9weZp4JijEoW6tK6uw7hmATxD4btHFcXMACqw344Vz
+         PciA==
+X-Gm-Message-State: APjAAAVd1PccpjLspdED46IW6i5qcI0UqDEbtMhQjel09TgZnssAG9dW
+        NmAY8LrJ7q70o6K02myC4JzlhZVOU/c=
+X-Google-Smtp-Source: APXvYqyMEx/gVsnYP8FYoS2VkeNr+PnO77nToZQSvqb1cbjd5mh9ksLHjNCNdtTLT41TUSF6rICRFw==
+X-Received: by 2002:adf:e387:: with SMTP id e7mr15450742wrm.180.1573483800231;
+        Mon, 11 Nov 2019 06:50:00 -0800 (PST)
+Received: from localhost ([2620:10d:c092:180::1:3e35])
+        by smtp.gmail.com with ESMTPSA id w17sm8434824wrt.45.2019.11.11.06.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 06:49:59 -0800 (PST)
+Date:   Mon, 11 Nov 2019 14:49:58 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com
+Subject: [PATCH] docs: cgroup: mm: Document why inactive_X + active_X may not
+ equal X
+Message-ID: <20191111144958.GA11914@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <15c8c821-25ff-eb62-abd3-8d7d69650744@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9437 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911110137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9437 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911110137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 2:39 PM, Paolo Bonzini wrote:
-> On 06/11/19 18:56, Joao Martins wrote:
->> When vCPU enters block phase, pi_pre_block() inserts vCPU to a per pCPU
->> linked list of all vCPUs that are blocked on this pCPU. Afterwards, it
->> changes PID.NV to POSTED_INTR_WAKEUP_VECTOR which its handler
->> (wakeup_handler()) is responsible to kick (unblock) any vCPU on that
->> linked list that now has pending posted interrupts.
->>
->> While vCPU is blocked (in kvm_vcpu_block()), it may be preempted which
->> will cause vmx_vcpu_pi_put() to set PID.SN.  If later the vCPU will be
->> scheduled to run on a different pCPU, vmx_vcpu_pi_load() will clear
->> PID.SN but will also *overwrite PID.NDST to this different pCPU*.
->> Instead of keeping it with original pCPU which vCPU had entered block
->> phase on.
->>
->> This results in an issue because when a posted interrupt is delivered,
->> the wakeup_handler() will be executed and fail to find blocked vCPU on
->> its per pCPU linked list of all vCPUs that are blocked on this pCPU.
->> Which is due to the vCPU being placed on a *different* per pCPU
->> linked list than the original pCPU that it had entered block phase.
->>
->> The regression is introduced by commit c112b5f50232 ("KVM: x86:
->> Recompute PID.ON when clearing PID.SN"). Therefore, partially revert
->> it and reintroduce the condition in vmx_vcpu_pi_load() responsible for
->> avoiding changing PID.NDST when loading a blocked vCPU.
->>
->> Fixes: c112b5f50232 ("KVM: x86: Recompute PID.ON when clearing PID.SN")
->> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
->> Signed-off-by: Liran Alon <liran.alon@oracle.com>
-> 
-> Something wrong in the SoB line?
-> 
-I can't spot any mistake; at least it looks chained correctly for me. What's the
-issue you see with the Sob line?
+This has confused a significant number of people using cgroups inside
+Facebook, and some of those outside as well judging by posts like
+this[0] (although it's not a problem unique to cgroup v2). If shmem
+handling in particular becomes more coherent at some point in the future
+-- although that seems unlikely now -- we can change the wording here.
 
-The only thing I forgot was a:
+[0]: https://unix.stackexchange.com/q/525092/10762
 
-Tested-by: Nathan Ni <nathan.ni@oracle.com>
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: kernel-team@fb.com
+---
+ Documentation/admin-guide/cgroup-v2.rst | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> Otherwise looks good.
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 0704552ed94f..0636bcb60b5a 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1289,7 +1289,12 @@ PAGE_SIZE multiple when read back.
+ 	  inactive_anon, active_anon, inactive_file, active_file, unevictable
+ 		Amount of memory, swap-backed and filesystem-backed,
+ 		on the internal memory management lists used by the
+-		page reclaim algorithm
++		page reclaim algorithm.
++
++		As these represent internal list state (eg. shmem pages are on anon
++		memory management lists), inactive_foo + active_foo may not be equal to
++		the value for the foo counter, since the foo counter is type-based, not
++		list-based.
+ 
+ 	  slab_reclaimable
+ 		Part of "slab" that might be reclaimed, such as
+-- 
+2.24.0
 
-If you want I can resubmit the series with the Tb and Jag Rb, unless you think
-it's OK doing on commit? Otherwise I can resubmit.
-
-	Joao
