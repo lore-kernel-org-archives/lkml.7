@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5247EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5EAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B62D214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE60820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497702;
-	bh=BqbEfcZIgfvz88GzGR4WPpOirRolzefhS2eqhc0TWas=;
+	s=default; t=1573497706;
+	bh=f+iZtFf6D0uzo11UKz1/ulbPHU3sfWmtgQoGfZNO8lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yPomc+CW4IMFg2t0J650yUgLlXzfGnJveMaE/cDLi+q8r304651DFfhLlbKX/xORO
-	 2ugwb+Tyd9codLTh1y6ZcKGj4GOqJgV+1JelDmRrGo96M0lf8dfzSoYqrZIKfKeeS8
-	 fo4WBQyVV4ifrub6szThOtjiSMlc4QMt8HeHLAFk=
+	b=VBC+c/QupC30PCzv1WvQenyGbgBb5YwnKgLMAbd0NOgnNCUSBSJ+O2Rqrx3T/IAFA
+	 cvo3tfNIRN4lRDpa4iSdDFxUz38kNhHJmqY4L6tsI59YQFQgAa75jQCnM3vrG3W/J+
+	 f/XxgxHBLQZT25cy1VM4xv2q6q/LjSn0sGJM9QGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbfKKSll (ORCPT
+        id S1729436AbfKKSlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:41:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60918 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfKKSlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:41:37 -0500
+        id S1729418AbfKKSlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E537A20659;
-        Mon, 11 Nov 2019 18:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE6D420659;
+        Mon, 11 Nov 2019 18:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497696;
-        bh=BqbEfcZIgfvz88GzGR4WPpOirRolzefhS2eqhc0TWas=;
+        s=default; t=1573497703;
+        bh=f+iZtFf6D0uzo11UKz1/ulbPHU3sfWmtgQoGfZNO8lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+5etYeDpHXGhKJr83/4sJ66n3IPosc26IWliFFgypAQBMFrjYO012vFYgaDG/ZDn
-         Qf0Pi65b2rFtsS8p4nYlXmbFOa+l82zm/R8rqDV+GDcwjIuKh4UXIdtwIEchZF5E2n
-         nF2RX4CjuU1uXgdzVrghxW3SHtX36qK5qu6SCJBA=
+        b=qsc3xFs9NX1K8D20bFFhMa94Gu6+yAEkhmATLS4gQqtacqXeR++qM0sZ4lJ4qRFE5
+         MAlhzA5V7FQqxRcYx/yAeSEhwtV9+WNTzxKkhNMjnul7KsCgT+vMcvQRm809VRKjO7
+         mTswlRDmh9se/HJq7+4xzCdZQyiSdZqMRWP+J1uU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hendrik Donner <hd@os-cillation.de>,
-        David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 003/125] ipv4: Fix table id reference in fib_sync_down_addr
-Date:   Mon, 11 Nov 2019 19:27:22 +0100
-Message-Id: <20191111181439.573190559@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.19 031/125] ceph: fix use-after-free in __ceph_remove_cap()
+Date:   Mon, 11 Nov 2019 19:27:50 +0100
+Message-Id: <20191111181444.911553332@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,35 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@kernel.org>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit e0a312629fefa943534fc46f7bfbe6de3fdaf463 ]
+commit ea60ed6fcf29eebc78f2ce91491e6309ee005a01 upstream.
 
-Hendrik reported routes in the main table using source address are not
-removed when the address is removed. The problem is that fib_sync_down_addr
-does not account for devices in the default VRF which are associated
-with the main table. Fix by updating the table id reference.
+KASAN reports a use-after-free when running xfstest generic/531, with the
+following trace:
 
-Fixes: 5a56a0b3a45d ("net: Don't delete routes in different VRFs")
-Reported-by: Hendrik Donner <hd@os-cillation.de>
-Signed-off-by: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[  293.903362]  kasan_report+0xe/0x20
+[  293.903365]  rb_erase+0x1f/0x790
+[  293.903370]  __ceph_remove_cap+0x201/0x370
+[  293.903375]  __ceph_remove_caps+0x4b/0x70
+[  293.903380]  ceph_evict_inode+0x4e/0x360
+[  293.903386]  evict+0x169/0x290
+[  293.903390]  __dentry_kill+0x16f/0x250
+[  293.903394]  dput+0x1c6/0x440
+[  293.903398]  __fput+0x184/0x330
+[  293.903404]  task_work_run+0xb9/0xe0
+[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+[  293.903413]  do_syscall_64+0x1a0/0x1c0
+[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This happens because __ceph_remove_cap() may queue a cap release
+(__ceph_queue_cap_release) which can be scheduled before that cap is
+removed from the inode list with
+
+	rb_erase(&cap->ci_node, &ci->i_caps);
+
+And, when this finally happens, the use-after-free will occur.
+
+This can be fixed by removing the cap from the inode list before being
+removed from the session list, and thus eliminating the risk of an UAF.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/fib_semantics.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -1421,8 +1421,8 @@ int fib_sync_down_addr(struct net_device
- 	int ret = 0;
- 	unsigned int hash = fib_laddr_hashfn(local);
- 	struct hlist_head *head = &fib_info_laddrhash[hash];
-+	int tb_id = l3mdev_fib_table(dev) ? : RT_TABLE_MAIN;
- 	struct net *net = dev_net(dev);
--	int tb_id = l3mdev_fib_table(dev);
- 	struct fib_info *fi;
+---
+ fs/ceph/caps.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1053,6 +1053,11 @@ void __ceph_remove_cap(struct ceph_cap *
  
- 	if (!fib_info_laddrhash || local == 0)
+ 	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
+ 
++	/* remove from inode's cap rbtree, and clear auth cap */
++	rb_erase(&cap->ci_node, &ci->i_caps);
++	if (ci->i_auth_cap == cap)
++		ci->i_auth_cap = NULL;
++
+ 	/* remove from session list */
+ 	spin_lock(&session->s_cap_lock);
+ 	if (session->s_cap_iterator == cap) {
+@@ -1088,11 +1093,6 @@ void __ceph_remove_cap(struct ceph_cap *
+ 
+ 	spin_unlock(&session->s_cap_lock);
+ 
+-	/* remove from inode list */
+-	rb_erase(&cap->ci_node, &ci->i_caps);
+-	if (ci->i_auth_cap == cap)
+-		ci->i_auth_cap = NULL;
+-
+ 	if (removed)
+ 		ceph_put_cap(mdsc, cap);
+ 
 
 
