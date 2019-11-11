@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8701C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B91D20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62C920578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfKKURE (ORCPT
+        id S1727614AbfKKURI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:17:04 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:47321 "EHLO
+        Mon, 11 Nov 2019 15:17:08 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:35251 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfKKURC (ORCPT
+        with ESMTP id S1727103AbfKKURD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:17:02 -0500
+        Mon, 11 Nov 2019 15:17:03 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MDhth-1ieTNm3gZT-00AmNk; Mon, 11 Nov 2019 21:16:50 +0100
+ 1MXoxG-1iOksW3uyi-00YDU3; Mon, 11 Nov 2019 21:16:49 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -31,67 +31,86 @@ To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 11/19] nfsd: use timespec64 in encode_time_delta
-Date:   Mon, 11 Nov 2019 21:16:31 +0100
-Message-Id: <20191111201639.2240623-12-arnd@arndb.de>
+Subject: [PATCH 08/19] nfsd: use ktime_get_seconds() for timestamps
+Date:   Mon, 11 Nov 2019 21:16:28 +0100
+Message-Id: <20191111201639.2240623-9-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
 References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:zBEHU7LOQ8BR+RvLscuFxq5Q8uP7KpIKmRblB/0JRwtkA5oax2n
- vTwmcYsK8Belkc2C9pPRkpxv9FO+mMRz4UGcaVU1rtmz641TyQdeWBICy8LAW2WMHOUZay2
- GwlOYDJzKFtZm7mAL5WBUfqjdYDxR55pYrhyv4E8Hd0fs6UiP21IceExVdpjEE44XEV02An
- hNZoR15EcnN6SPGGexKFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+4sYNMt7F9Q=:M3AyrELI81yH0KXCinQXj1
- izGRACW/Q+P5BQUA/EHio1Y0Qx5vawQ4Ti0Hsahd/my+mlXpfH7XisKxbIDUbEW3cpMMT3wuc
- 7tTX1zrpkLfYXAyTVdYFKuYz02QN3fgFtfNsOLzKqxB3JEfsy4V/ihvWinx+mascGq7FyuxkP
- IqfE2VSPFUJ/dIgVlR4tYeieXQ9E0UMu8iVrGAge/rR2HJbQbJOPBXPsKTkdwEoFpRjI1ZydA
- o+DllKKIYDaxAsz86d0VtZgjDXEyfnkbCbMDDiATRR1ZNBrwv/d4GpcT6OLXbZtzi8wcMv2rh
- TKpvekjvUJ4OlF2HrwoRxcCV+JF4VPYz7pjgZKvxHTtnbMnrS1z83tPJGjmwIE9/eI+Xfp4Ca
- sM9oesbDfuyzqVY0VH65JtBvdlKiHJQ0mIW0LRgTZWymcMoJqfdcOghXaI1iLJYHX1/ZODNsW
- P/B26nui60xr3mIUHJHOMBrGAEnsUuFrGbZYek+pN7bzUi1zX+EDY8yzl4ix6eB9ecU3p/Y1J
- Zokb7/hFED6sYkosupilI7GHPO36mX6G5EZrCWu18DvQcon9qm9EH+khNLIuiP6XpNdHVs4xz
- aSKkEMHpg8YDAt2iCuPZIOIqfNQ7Mv0oThau/CpKEeKAH3QGkVLsZEyooQD06S4W731YGxbp/
- LJWZnI25MxEH0SUqa29hNl4Oa8BbR2jbgSmrxqIZe05b/QUbqH/ynTQN0dEmGDFNQ5bHdxZ38
- Iq0tOOGp5a7VlL0A7d/A+Jf+3m5+V3tUxAmkhLv8S2jJ9bGQSVDoviyVUJozmhExYi7KLiE+b
- QHzMENIaZV7xDkQkCQ6q1gXSYZlV5WjW4Il+PjgzDTtt96dhvnXyd1dSGylKI+95DkpmJ1C1B
- r1KCi0NYqNlg8KpXnXXA==
+X-Provags-ID: V03:K1:prYR0ybWZtYGIQZYrlV+P2u6nCi8TfYizkBHaraboVlw4qnbxig
+ LQKMg4gkL6vA2s1NikusRiqqI1Bm3OJMCVQrHmiRdY33vKAPBSyBCBpoYNX09gkc2Gbejkw
+ ddVEJ7y9RckGfWslXKbXu8O9Uc0NAxW1C97J9iekWWr5QEcA/bmNwrwMb43PJTBZgPhdTjZ
+ d9ZmLBmTnKXMJseMexgHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pIvNkoEd/l4=:HQOWQXYKVwj2Av0ucDw3uJ
+ gyl0crXndujLUH0aGyy6jX2F875PqFZIjKrmP8pwRiawQi0YLcZHsWq3f58TZWzalfob+XAnn
+ SK8zcqmmD/t/A3VVrQYN0cADSqaNRMA5TG7zT9zI0KOHAuLWB4Er0qgx7aYy0jrM+KBDUqhJK
+ 5Fbn5lUQuT46mkh0hkk/7rE8UEgiEwsRl3t+SeJxI7uvQssrdQuQ07SSvoNUwGeCwlSt7c2sm
+ SsPpkPW67qOkg0rOESXyfsAWr3AIFyQ1j80Uu+9YH3GoI/DdwAKh8OQSfENGAaKzD29od0Phy
+ axtrQv3uYapyNkaCl7VQZK/AAfzddTUhis5THTkazM5KeNCG90BTTFF9DEGXCBi62KTDzBpsG
+ 2XyXLqCetAuOxTMuT+CdBSqf3K+bwyF0XRKvbDPtOMG7jVbeqZhj9wN0TyKZXcSlouhk+JSWR
+ qHlPFHgvDweA6NonMgYZAsKOcWha0ZWg6pWgDvxmxEM+Sd6qbNrwS7Cntdj6BnMSWsUA7a3Vw
+ Nq7JplT2GLVv5r8VmkW4aVwiI+SXwt7NYyqx/7ZlvjZfQZuKLDYtVAWnmq785+Ab7g/JlwOb1
+ mXgOtQzwlf42WoewNuvlARh1wmnh04b2/kKeLqb6AN+6afwYtHN4wZBd7pLEnN0/CMcGPPzVF
+ tsd8XTbip8+sokjx+D5M4DGL0U1JuJ8PjRy07/V39bBNFg/p5PnvKhKT8JuioBOS0nO1/w9KG
+ mE06b8MDMVBLj8jaQD/vRPSIThibBKmVh/g40f6ikaXxWgGTEuHYTHa84lyEs5S6oP6FzGcHK
+ GBUFoQTS0IDSN9LCwpVTQswvG1VaW32lyREB5/+IguvViGvgbr5OikajuDLcuoXTtuO1jDgNG
+ DpQhiP63FLJgQbAX8L3g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The values in encode_time_delta are always small and don't
-overflow the range of 'struct timespec', so changing it has
-no effect.
-
-Change it to timespec64 as a prerequisite for removing the
-timespec definition later.
+The delegation logic in nfsd uses the somewhat inefficient
+seconds_since_boot() function to record time intervals.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfs4xdr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 533d0fc3c96b..d8234d9e89fe 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2024,11 +2024,11 @@ static __be32 *encode_change(__be32 *p, struct kstat *stat, struct inode *inode,
-  */
- static __be32 *encode_time_delta(__be32 *p, struct inode *inode)
- {
--	struct timespec ts;
-+	struct timespec64 ts;
- 	u32 ns;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c65aeaa812d4..a20795b5053c 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -806,7 +806,7 @@ static void nfs4_free_deleg(struct nfs4_stid *stid)
+ static DEFINE_SPINLOCK(blocked_delegations_lock);
+ static struct bloom_pair {
+ 	int	entries, old_entries;
+-	time_t	swap_time;
++	time64_t swap_time;
+ 	int	new; /* index into 'set' */
+ 	DECLARE_BITMAP(set[2], 256);
+ } blocked_delegations;
+@@ -818,15 +818,15 @@ static int delegation_blocked(struct knfsd_fh *fh)
  
- 	ns = max_t(u32, NSEC_PER_SEC/HZ, inode->i_sb->s_time_gran);
--	ts = ns_to_timespec(ns);
-+	ts = ns_to_timespec64(ns);
- 
- 	p = xdr_encode_hyper(p, ts.tv_sec);
- 	*p++ = cpu_to_be32(ts.tv_nsec);
+ 	if (bd->entries == 0)
+ 		return 0;
+-	if (seconds_since_boot() - bd->swap_time > 30) {
++	if (ktime_get_seconds() - bd->swap_time > 30) {
+ 		spin_lock(&blocked_delegations_lock);
+-		if (seconds_since_boot() - bd->swap_time > 30) {
++		if (ktime_get_seconds() - bd->swap_time > 30) {
+ 			bd->entries -= bd->old_entries;
+ 			bd->old_entries = bd->entries;
+ 			memset(bd->set[bd->new], 0,
+ 			       sizeof(bd->set[0]));
+ 			bd->new = 1-bd->new;
+-			bd->swap_time = seconds_since_boot();
++			bd->swap_time = ktime_get_seconds();
+ 		}
+ 		spin_unlock(&blocked_delegations_lock);
+ 	}
+@@ -856,7 +856,7 @@ static void block_delegations(struct knfsd_fh *fh)
+ 	__set_bit((hash>>8)&255, bd->set[bd->new]);
+ 	__set_bit((hash>>16)&255, bd->set[bd->new]);
+ 	if (bd->entries == 0)
+-		bd->swap_time = seconds_since_boot();
++		bd->swap_time = ktime_get_seconds();
+ 	bd->entries += 1;
+ 	spin_unlock(&blocked_delegations_lock);
+ }
 -- 
 2.20.0
 
