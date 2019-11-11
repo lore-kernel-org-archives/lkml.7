@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920E3C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8D7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6605721783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B605121655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498437;
-	bh=tkG/7XE93bwOWzGz6iLk765b1fbL6BXtghTwdX2w60A=;
+	s=default; t=1573498439;
+	bh=0UXlZxhZLcvEzM7joCVK81AnM9ibdqsJS+MsEByHkqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w7lQmgOesvIUx//HFn7b4r5KCHDS0YKf+RH/NmVCyXBivqLHi8qEJPlF+cd+KyGPd
-	 0wMIly4U7CL/uUWGJFw6VWQj49khECPsjaP5NdYxh9dq0NDJwdyfOPqfDFsv85+dpL
-	 qMHoYrONw3s6ZfwDVNMxFfSFVaXv06JAZkmYeAi4=
+	b=UoTobK4kIkr44QmxVe4OJX0sy4xAPZUE0Y2QHf3kwB3P2eXm/ePi2qdcwefV6cByP
+	 /MlcU/Tdh7bXfd0iSRiji2MElqUNB6L1y3lZCZeHTOrGoU9Vt+cP4dqVTIm5/+6s8t
+	 cdidXqrt5MasRFwfiWaTdaQUdUymh2r3w6N9pWJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfKKSxz (ORCPT
+        id S1729294AbfKKSx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:53:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729260AbfKKSxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:53:53 -0500
+        id S1728456AbfKKSx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:53:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C04D921783;
-        Mon, 11 Nov 2019 18:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 179B02184C;
+        Mon, 11 Nov 2019 18:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498433;
-        bh=tkG/7XE93bwOWzGz6iLk765b1fbL6BXtghTwdX2w60A=;
+        s=default; t=1573498436;
+        bh=0UXlZxhZLcvEzM7joCVK81AnM9ibdqsJS+MsEByHkqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdVEXvXg29R72HxDBMl1YZsDEbig63kq9l4BWj3EMCN27HNmokDCx+z8v4lbnuyp0
-         izsKQRFnRk6qgqbdZVcsBb2SQkG2mpz4rRXLnA3Z23i/sDmfgHYKyURWGigp2EDpR1
-         1gxUMqRXdTbtk0OJ1DONCdMOwl/YGD4TSoWX63MM=
+        b=pRZssEUfvz6yWpbOw0fraG7V6FaeGgiwIGn4XTofGw9T40lvFGOTHcU4VLTA4NjCH
+         x2cYPgIGAk6Ze1G+02ZDZDYLnH+IlSLrM6cHLKNEF+YvuU0qLLFrd/fEMdD9BqWYhS
+         ggzzIlb15unIPLWynTESDLtfAstcAeGmySu+siWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 119/193] scsi: qla2xxx: Initialized mailbox to prevent driver load failure
-Date:   Mon, 11 Nov 2019 19:28:21 +0100
-Message-Id: <20191111181509.947823219@linuxfoundation.org>
+Subject: [PATCH 5.3 120/193] bpf: Fix use after free in bpf_get_prog_name
+Date:   Mon, 11 Nov 2019 19:28:22 +0100
+Message-Id: <20191111181510.026805214@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,50 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-[ Upstream commit c2ff2a36eff60efb5e123c940115216d6bf65684 ]
+[ Upstream commit 3b4d9eb2ee74dd5ea7fa36cffb0ca7f5bc4924da ]
 
-This patch fixes issue with Gen7 adapter in a blade environment where one
-of the ports will not be detected by driver. Firmware expects mailbox 11 to
-be set or cleared by driver for newer ISP.
+There is one more problematic case I noticed while recently fixing BPF kallsyms
+handling in cd7455f1013e ("bpf: Fix use after free in subprog's jited symbol
+removal") and that is bpf_get_prog_name().
 
-Following message is seen in the log file:
+If BTF has been attached to the prog, then we may be able to fetch the function
+signature type id in kallsyms through prog->aux->func_info[prog->aux->func_idx].type_id.
+However, while the BTF object itself is torn down via RCU callback, the prog's
+aux->func_info is immediately freed via kvfree(prog->aux->func_info) once the
+prog's refcount either hit zero or when subprograms were already exposed via
+kallsyms and we hit the error path added in 5482e9a93c83 ("bpf: Fix memleak in
+aux->func_info and aux->btf").
 
-[   18.810892] qla2xxx [0000:d8:00.0]-1820:1: **** Failed=102 mb[0]=4005 mb[1]=37 mb[2]=20 mb[3]=8
-[   18.819596]  cmd=2 ****
+This violates RCU as well since kallsyms could be walked in parallel where we
+could access aux->func_info. Hence, defer kvfree() to after RCU grace period.
+Looking at ba64e7d85252 ("bpf: btf: support proper non-jit func info") there
+is no reason/dependency where we couldn't defer the kvfree(aux->func_info) into
+the RCU callback.
 
-[mkp: typos]
-
-Link: https://lore.kernel.org/r/20191022193643.7076-2-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 5482e9a93c83 ("bpf: Fix memleak in aux->func_info and aux->btf")
+Fixes: ba64e7d85252 ("bpf: btf: support proper non-jit func info")
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Yonghong Song <yhs@fb.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/875f2906a7c1a0691f2d567b4d8e4ea2739b1e88.1571779205.git.daniel@iogearbox.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/bpf/syscall.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index abfb9c800ce28..ac4640f456786 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -710,6 +710,7 @@ qla2x00_execute_fw(scsi_qla_host_t *vha, uint32_t risc_addr)
- 		mcp->mb[2] = LSW(risc_addr);
- 		mcp->mb[3] = 0;
- 		mcp->mb[4] = 0;
-+		mcp->mb[11] = 0;
- 		ha->flags.using_lr_setting = 0;
- 		if (IS_QLA25XX(ha) || IS_QLA81XX(ha) || IS_QLA83XX(ha) ||
- 		    IS_QLA27XX(ha) || IS_QLA28XX(ha)) {
-@@ -754,7 +755,7 @@ qla2x00_execute_fw(scsi_qla_host_t *vha, uint32_t risc_addr)
- 		if (ha->flags.exchoffld_enabled)
- 			mcp->mb[4] |= ENABLE_EXCHANGE_OFFLD;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index af5c60b07463e..aac966b32c42e 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1316,6 +1316,7 @@ static void __bpf_prog_put_rcu(struct rcu_head *rcu)
+ {
+ 	struct bpf_prog_aux *aux = container_of(rcu, struct bpf_prog_aux, rcu);
  
--		mcp->out_mb |= MBX_4|MBX_3|MBX_2|MBX_1;
-+		mcp->out_mb |= MBX_4 | MBX_3 | MBX_2 | MBX_1 | MBX_11;
- 		mcp->in_mb |= MBX_3 | MBX_2 | MBX_1;
- 	} else {
- 		mcp->mb[1] = LSW(risc_addr);
++	kvfree(aux->func_info);
+ 	free_used_maps(aux);
+ 	bpf_prog_uncharge_memlock(aux->prog);
+ 	security_bpf_prog_free(aux);
+@@ -1326,7 +1327,6 @@ static void __bpf_prog_put_noref(struct bpf_prog *prog, bool deferred)
+ {
+ 	bpf_prog_kallsyms_del_all(prog);
+ 	btf_put(prog->aux->btf);
+-	kvfree(prog->aux->func_info);
+ 	bpf_prog_free_linfo(prog);
+ 
+ 	if (deferred)
 -- 
 2.20.1
 
