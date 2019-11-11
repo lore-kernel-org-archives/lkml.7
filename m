@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B93AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CC6C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81D4214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F90214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497488;
-	bh=2oVgDv6EyPneEc9CTrBGmU4t33dqeJSkUV4r1xoEVaw=;
+	s=default; t=1573497492;
+	bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjD4bfSBXNEllt2RNub+6ltGN7I9vImBV6DfApXwd9vP7dBuw7hi87WKaIq/b0Lcj
-	 6WIernEv5YTH843xu8RHyZjYHV4/dE4ogpVIfmTrVbseJpddI+2OV6XFE6bSBIEJF6
-	 PLc8xts/QFgJp5g1qAVUjhAoYvC7imYVn1TgH8xs=
+	b=c5VkHMWW6Vj6yasbLHdUJ2Ohcnp3fY0teSUnB+7PYVdYqI5u4k7fejF6oNiW6iuNw
+	 BZmlo3X+X+6CJrGoCJhj7FUSdsdEJLw21pX3fl4zKCJ0Wz42jaqVRTa4jSepzqhbn6
+	 zCrWTYkE2nL6g2KDqsxD8hWdkcO1Xy9g+FTt5kOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfKKSiH (ORCPT
+        id S1728011AbfKKSiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56874 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbfKKSiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:04 -0500
+        id S1728943AbfKKSiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D977721655;
-        Mon, 11 Nov 2019 18:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84DD02173B;
+        Mon, 11 Nov 2019 18:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497483;
-        bh=2oVgDv6EyPneEc9CTrBGmU4t33dqeJSkUV4r1xoEVaw=;
+        s=default; t=1573497486;
+        bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9YWx7krlF3e6h1DqWkCz+UEKwXLEz5DJvIn54I/TMGrOFefocNu2URp/DRgC13YP
-         K3pNL5m/pWc7GPC7dT9BsTNkYseQteEsC6ogYu3YNgLhq5doY67239Ys7k7PauTd/+
-         zYC/paLofQzk7iHMd8+RrCOceSM12idQ2+dsQF9c=
+        b=EKbu4VSdg00xvLJIW8J5qFPKdVX25WQM2kJoXhMYaqUCUHcelDS7h1OcMXLH76tij
+         F6VZR3qU8G+51HI6U4PUjWMDhy7OWZH9QdlF7mKcTe76ktHNGAZLGel++r9PhqihI8
+         Fmz1wgTV7u6dA3F69JXoGi6oXuwvc33/PISH7jVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 069/105] dmaengine: xilinx_dma: Fix control reg update in vdma_channel_set_config
-Date:   Mon, 11 Nov 2019 19:28:39 +0100
-Message-Id: <20191111181445.642678956@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Lixu <lixu.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 070/105] HID: intel-ish-hid: fix wrong error handling in ishtp_cl_alloc_tx_ring()
+Date:   Mon, 11 Nov 2019 19:28:40 +0100
+Message-Id: <20191111181445.725737941@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -62,63 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+From: Zhang Lixu <lixu.zhang@intel.com>
 
-[ Upstream commit 6c6de1ddb1be3840f2ed5cc9d009a622720940c9 ]
+[ Upstream commit 16ff7bf6dbcc6f77d2eec1ac9120edf44213c2f1 ]
 
-In vdma_channel_set_config clear the delay, frame count and master mask
-before updating their new values. It avoids programming incorrect state
-when input parameters are different from default.
+When allocating tx ring buffers failed, should free tx buffers, not rx buffers.
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Acked-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Link: https://lore.kernel.org/r/1569495060-18117-3-git-send-email-radhey.shyam.pandey@xilinx.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hid/intel-ish-hid/ishtp/client-buffers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 8722bcba489db..2db352308e5c0 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -72,6 +72,9 @@
- #define XILINX_DMA_DMACR_CIRC_EN		BIT(1)
- #define XILINX_DMA_DMACR_RUNSTOP		BIT(0)
- #define XILINX_DMA_DMACR_FSYNCSRC_MASK		GENMASK(6, 5)
-+#define XILINX_DMA_DMACR_DELAY_MASK		GENMASK(31, 24)
-+#define XILINX_DMA_DMACR_FRAME_COUNT_MASK	GENMASK(23, 16)
-+#define XILINX_DMA_DMACR_MASTER_MASK		GENMASK(11, 8)
+diff --git a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
+index b9b917d2d50db..c41dbb167c91b 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
++++ b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
+@@ -90,7 +90,7 @@ int ishtp_cl_alloc_tx_ring(struct ishtp_cl *cl)
+ 	return	0;
+ out:
+ 	dev_err(&cl->device->dev, "error in allocating Tx pool\n");
+-	ishtp_cl_free_rx_ring(cl);
++	ishtp_cl_free_tx_ring(cl);
+ 	return	-ENOMEM;
+ }
  
- #define XILINX_DMA_REG_DMASR			0x0004
- #define XILINX_DMA_DMASR_EOL_LATE_ERR		BIT(15)
-@@ -2057,8 +2060,10 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.gen_lock = cfg->gen_lock;
- 	chan->config.master = cfg->master;
- 
-+	dmacr &= ~XILINX_DMA_DMACR_GENLOCK_EN;
- 	if (cfg->gen_lock && chan->genlock) {
- 		dmacr |= XILINX_DMA_DMACR_GENLOCK_EN;
-+		dmacr &= ~XILINX_DMA_DMACR_MASTER_MASK;
- 		dmacr |= cfg->master << XILINX_DMA_DMACR_MASTER_SHIFT;
- 	}
- 
-@@ -2072,11 +2077,13 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.delay = cfg->delay;
- 
- 	if (cfg->coalesc <= XILINX_DMA_DMACR_FRAME_COUNT_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_FRAME_COUNT_MASK;
- 		dmacr |= cfg->coalesc << XILINX_DMA_DMACR_FRAME_COUNT_SHIFT;
- 		chan->config.coalesc = cfg->coalesc;
- 	}
- 
- 	if (cfg->delay <= XILINX_DMA_DMACR_DELAY_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_DELAY_MASK;
- 		dmacr |= cfg->delay << XILINX_DMA_DMACR_DELAY_SHIFT;
- 		chan->config.delay = cfg->delay;
- 	}
 -- 
 2.20.1
 
