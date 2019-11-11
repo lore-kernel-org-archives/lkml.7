@@ -2,208 +2,308 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDF3C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90706C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B202075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8492075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TfHXEZam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfKKJix (ORCPT
+        id S1726912AbfKKJjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:38:53 -0500
-Received: from proxmox-new.maurer-it.com ([212.186.127.180]:52551 "EHLO
-        proxmox-new.maurer-it.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKJix (ORCPT
+        Mon, 11 Nov 2019 04:39:54 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44438 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKJjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:38:53 -0500
-X-Greylist: delayed 403 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 04:38:51 EST
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-        by proxmox-new.maurer-it.com (Proxmox) with ESMTP id DE1AB46945;
-        Mon, 11 Nov 2019 10:32:07 +0100 (CET)
-Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
- when loading PDPTRS
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Doug Reiland <doug.reiland@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20191003154447.010950442@linuxfoundation.org>
- <20191003154525.870373223@linuxfoundation.org>
-From:   Thomas Lamprecht <t.lamprecht@proxmox.com>
-Message-ID: <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
-Date:   Mon, 11 Nov 2019 10:32:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:71.0) Gecko/20100101
- Thunderbird/71.0
+        Mon, 11 Nov 2019 04:39:54 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB9deam107948;
+        Mon, 11 Nov 2019 03:39:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573465180;
+        bh=BEXZAIpRzxqNeefh/J9C5EiDlt0B/TXLhAEH6e8HpHk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TfHXEZamg58rdWlK5BysZV02AQQQj4UU7QrHapkWnMxQ72oxEdzvHcEsimBil1wd6
+         lIv6CticHJZrV5CnF2Wvc1LS51J6EAP0NNB2ojI1Ni1R8wx7dk5/zdc+zQD6o+kLjX
+         Xs7IUjaUFXCKeqpsS6D3oBG9JK6xefyD/07vDVUc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB9ddRZ118324
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Nov 2019 03:39:40 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
+ Nov 2019 03:39:21 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 11 Nov 2019 03:39:21 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB9dZnY090658;
+        Mon, 11 Nov 2019 03:39:36 -0600
+Subject: Re: [PATCH v4 11/15] dmaengine: ti: New driver for K3 UDMA - split#3:
+ alloc/free chan_resources
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-12-peter.ujfalusi@ti.com>
+ <20191111060625.GP952516@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <33c88201-3311-0438-ead5-63ea14a0b153@ti.com>
+Date:   Mon, 11 Nov 2019 11:40:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191003154525.870373223@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191111060625.GP952516@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+
+
+On 11/11/2019 8.06, Vinod Koul wrote:
+> On 01-11-19, 10:41, Peter Ujfalusi wrote:
+>> Split patch for review containing: channel rsource allocation and free
 > 
-> commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
+> s/rsource/resource
+
+I'll try to remember to fix up this temporally commit message, at the
+end these split patches are going to be squashed into one commit when
+things are ready to be applied.
+
+>> +static int udma_tisci_tx_channel_config(struct udma_chan *uc)
+>> +{
+>> +	struct udma_dev *ud = uc->ud;
+>> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+>> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+>> +	struct udma_tchan *tchan = uc->tchan;
+>> +	int tc_ring = k3_ringacc_get_ring_id(tchan->tc_ring);
+>> +	struct ti_sci_msg_rm_udmap_tx_ch_cfg req_tx = { 0 };
+>> +	u32 mode, fetch_size;
+>> +	int ret = 0;
+>> +
+>> +	if (uc->pkt_mode) {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+>> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib, uc->psd_size,
+>> +						   0);
+>> +	} else {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+>> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+>> +	}
+>> +
+>> +	req_tx.valid_params =
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID;
 > 
-> Manually generate the PDPTR reserved bit mask when explicitly loading
-> PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
-> current paging mode, which is unlikely to be PAE paging in the vast
-> majority of flows that use load_pdptrs(), e.g. CR0 and CR4 emulation,
-> __set_sregs(), etc...  This can cause KVM to incorrectly signal a bad
-> PDPTR, or more likely, miss a reserved bit check and subsequently fail
-> a VM-Enter due to a bad VMCS.GUEST_PDPTR.
+> bunch of these are repeat, you can define a COMMON_VALID_PARAMS and use
+> that + specific ones..
+
+OK, I'll try to sanitize these a bit.
+
+>> +
+>> +	req_tx.nav_id = tisci_rm->tisci_dev_id;
+>> +	req_tx.index = tchan->id;
+>> +	req_tx.tx_pause_on_err = 0;
+>> +	req_tx.tx_filt_einfo = 0;
+>> +	req_tx.tx_filt_pswords = 0;
 > 
-> Add a one off helper to generate the reserved bits instead of sharing
-> code across the MMU's calculations and the PDPTR emulation.  The PDPTR
-> reserved bits are basically set in stone, and pushing a helper into
-> the MMU's calculation adds unnecessary complexity without improving
-> readability.
+> i think initialization to 0 is superfluous
+
+Indeed, I'll remove these.
+
+>> +	req_tx.tx_chan_type = mode;
+>> +	req_tx.tx_supr_tdpkt = uc->notdpkt;
+>> +	req_tx.tx_fetch_size = fetch_size >> 2;
+>> +	req_tx.txcq_qnum = tc_ring;
+>> +	if (uc->ep_type == PSIL_EP_PDMA_XY) {
+>> +		/* wait for peer to complete the teardown for PDMAs */
+>> +		req_tx.valid_params |=
+>> +				TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID;
+>> +		req_tx.tx_tdtype = 1;
+>> +	}
+>> +
+>> +	ret = tisci_ops->tx_ch_cfg(tisci_rm->tisci, &req_tx);
+>> +	if (ret)
+>> +		dev_err(ud->dev, "tchan%d cfg failed %d\n", tchan->id, ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int udma_tisci_rx_channel_config(struct udma_chan *uc)
+>> +{
+>> +	struct udma_dev *ud = uc->ud;
+>> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+>> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+>> +	struct udma_rchan *rchan = uc->rchan;
+>> +	int fd_ring = k3_ringacc_get_ring_id(rchan->fd_ring);
+>> +	int rx_ring = k3_ringacc_get_ring_id(rchan->r_ring);
+>> +	struct ti_sci_msg_rm_udmap_rx_ch_cfg req_rx = { 0 };
+>> +	struct ti_sci_msg_rm_udmap_flow_cfg flow_req = { 0 };
+>> +	u32 mode, fetch_size;
+>> +	int ret = 0;
+>> +
+>> +	if (uc->pkt_mode) {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+>> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib,
+>> +							uc->psd_size, 0);
+>> +	} else {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+>> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+>> +	}
+>> +
+>> +	req_rx.valid_params =
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID;
+>> +
+>> +	req_rx.nav_id = tisci_rm->tisci_dev_id;
+>> +	req_rx.index = rchan->id;
+>> +	req_rx.rx_fetch_size =  fetch_size >> 2;
+>> +	req_rx.rxcq_qnum = rx_ring;
+>> +	req_rx.rx_pause_on_err = 0;
+>> +	req_rx.rx_chan_type = mode;
+>> +	req_rx.rx_ignore_short = 0;
+>> +	req_rx.rx_ignore_long = 0;
+>> +	req_rx.flowid_start = 0;
+>> +	req_rx.flowid_cnt = 0;
+>> +
+>> +	ret = tisci_ops->rx_ch_cfg(tisci_rm->tisci, &req_rx);
+>> +	if (ret) {
+>> +		dev_err(ud->dev, "rchan%d cfg failed %d\n", rchan->id, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	flow_req.valid_params =
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_EINFO_PRESENT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_PSINFO_PRESENT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_ERROR_HANDLING_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DESC_TYPE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_HI_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_LO_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_HI_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_LO_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ0_SZ0_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ1_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ2_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ3_QNUM_VALID;
+>> +
+>> +	flow_req.nav_id = tisci_rm->tisci_dev_id;
+>> +	flow_req.flow_index = rchan->id;
+>> +
+>> +	if (uc->needs_epib)
+>> +		flow_req.rx_einfo_present = 1;
+>> +	else
+>> +		flow_req.rx_einfo_present = 0;
+>> +	if (uc->psd_size)
+>> +		flow_req.rx_psinfo_present = 1;
+>> +	else
+>> +		flow_req.rx_psinfo_present = 0;
+>> +	flow_req.rx_error_handling = 1;
+>> +	flow_req.rx_desc_type = 0;
+>> +	flow_req.rx_dest_qnum = rx_ring;
+>> +	flow_req.rx_src_tag_hi_sel = 2;
+>> +	flow_req.rx_src_tag_lo_sel = 4;
+>> +	flow_req.rx_dest_tag_hi_sel = 5;
+>> +	flow_req.rx_dest_tag_lo_sel = 4;
 > 
-> Oppurtunistically fix/update the comment for load_pdptrs().
+> can we get rid of magic numbers here and elsewhere, or at least comment
+> on what these mean..
+
+True, I'll clean it up.
+
+>> +static int udma_alloc_chan_resources(struct dma_chan *chan)
+>> +{
+>> +	struct udma_chan *uc = to_udma_chan(chan);
+>> +	struct udma_dev *ud = to_udma_dev(chan->device);
+>> +	const struct udma_match_data *match_data = ud->match_data;
+>> +	struct k3_ring *irq_ring;
+>> +	u32 irq_udma_idx;
+>> +	int ret;
+>> +
+>> +	if (uc->pkt_mode || uc->dir == DMA_MEM_TO_MEM) {
+>> +		uc->use_dma_pool = true;
+>> +		/* in case of MEM_TO_MEM we have maximum of two TRs */
+>> +		if (uc->dir == DMA_MEM_TO_MEM) {
+>> +			uc->hdesc_size = cppi5_trdesc_calc_size(
+>> +					sizeof(struct cppi5_tr_type15_t), 2);
+>> +			uc->pkt_mode = false;
+>> +		}
+>> +	}
+>> +
+>> +	if (uc->use_dma_pool) {
+>> +		uc->hdesc_pool = dma_pool_create(uc->name, ud->ddev.dev,
+>> +						 uc->hdesc_size, ud->desc_align,
+>> +						 0);
+>> +		if (!uc->hdesc_pool) {
+>> +			dev_err(ud->ddev.dev,
+>> +				"Descriptor pool allocation failed\n");
+>> +			uc->use_dma_pool = false;
+>> +			return -ENOMEM;
+>> +		}
+>> +	}
+>> +
+>> +	/*
+>> +	 * Make sure that the completion is in a known state:
+>> +	 * No teardown, the channel is idle
+>> +	 */
+>> +	reinit_completion(&uc->teardown_completed);
+>> +	complete_all(&uc->teardown_completed);
 > 
-> Note, the buggy commit also introduced a deliberate functional change,
-> "Also remove bit 5-6 from rsvd_bits_mask per latest SDM.", which was
-> effectively (and correctly) reverted by commit cd9ae5fe47df ("KVM: x86:
-> Fix page-tables reserved bits").  A bit of SDM archaeology shows that
-> the SDM from late 2008 had a bug (likely a copy+paste error) where it
-> listed bits 6:5 as AVL and A for PDPTEs used for 4k entries but reserved
-> for 2mb entries.  I.e. the SDM contradicted itself, and bits 6:5 are and
-> always have been reserved.
+> should we not complete first and then do reinit to bring a clean state?
+
+The reason why it is like this is that the udma_synchronize() is
+checking the completion and if the client requested the channel and
+calls terminate_all_sync() without any transfer then no one will mark
+the completion completed.
+
+>> +	uc->state = UDMA_CHAN_IS_IDLE;
+>> +
+>> +	switch (uc->dir) {
+>> +	case DMA_MEM_TO_MEM:
 > 
-> Fixes: 20c466b56168d ("KVM: Use rsvd_bits_mask in load_pdptrs()")
-> Cc: stable@vger.kernel.org
-> Cc: Nadav Amit <nadav.amit@gmail.com>
-> Reported-by: Doug Reiland <doug.reiland@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reviewed-by: Peter Xu <peterx@redhat.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  arch/x86/kvm/x86.c |   11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -581,8 +581,14 @@ static int kvm_read_nested_guest_page(st
->  				       data, offset, len, access);
->  }
->  
-> +static inline u64 pdptr_rsvd_bits(struct kvm_vcpu *vcpu)
-> +{
-> +	return rsvd_bits(cpuid_maxphyaddr(vcpu), 63) | rsvd_bits(5, 8) |
-> +	       rsvd_bits(1, 2);
-> +}
-> +
->  /*
-> - * Load the pae pdptrs.  Return true is they are all valid.
-> + * Load the pae pdptrs.  Return 1 if they are all valid, 0 otherwise.
->   */
->  int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
->  {
-> @@ -601,8 +607,7 @@ int load_pdptrs(struct kvm_vcpu *vcpu, s
->  	}
->  	for (i = 0; i < ARRAY_SIZE(pdpte); ++i) {
->  		if ((pdpte[i] & PT_PRESENT_MASK) &&
-> -		    (pdpte[i] &
-> -		     vcpu->arch.mmu.guest_rsvd_check.rsvd_bits_mask[0][2])) {
-> +		    (pdpte[i] & pdptr_rsvd_bits(vcpu))) {
->  			ret = 0;
->  			goto out;
->  		}
-> 
-> 
-> 
+> can you explain why a allocation should be channel dependent, shouldn't
+> these things be done in prep_ calls?
 
+A channel can not change direction, it is either MEM_TO_DEV, DEV_TO_MEM
+or MEM_TO_MEM and it is set when the channel is requested.
 
-first off, I hope that I'm not a bit blunt to just message you all here :)
+> I looked ahead and checked the prep_ calls and we can use any direction
+> so this somehow doesn't make sense!
 
-It seems that a backport of this to stable and distro kernels tickled out
-some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
-Intel CPUs[1].
+I'm checking in the prep callbacks if the requested direction is
+matching with the channel direction.
 
-Basically, booting this kernel as host, then running an KVM guest distro
-or kernel fails it that guest kernel early in the boot phase without any
-error or other log to serial console, earlyprintk.
+I just can not change the channel direction runtime.
 
-Quickest test here, boot the booted kernel with QEMU/KVM, e.g.:
-# qemu-system-x86_64 -enable-kvm -kernel /boot/vmlinuz-4.19.77 -nographic -append console=ttyS0
+- Péter
 
-FYI: booting a "problematic" kernel (e.g., 4.19.77) as guest kernel while
-having a good host kernel (e.g., 4.19.76) works just fine.
-
-As this does not happen when applying it on a 5.3.7 kernel (e.g.,
-Ubuntu-5.3.0-21.22 which includes this works just fine), so IMO the
-questions is: what other patch is missing from the backport of this one?
-
-I did not immediately find a fix or some related change which seemed like
-the reason for above working with 5.3.7 but not with the stable 4.19.77 to
-4.19.81 or Ubuntu's Disco 5.0.21 based kernel, so I started a reverse bisect
-between the known-bad 5.2 and the known-good 5.3-rc1, at each step
-cherry-picking this "manual calculate reserved bits when loading PDPTRS"
-commit, which made the issues show up.
-
-But I could not single out a definitive (supporting) commit for this,
-albeit, as you see in the rev-bisect log[2], I had found some promising
-commit, but once I only applied that one as single cherry-pick, the
-"reboot looping KVM Linux guest" issue did show up again... But maybe I
-also just made an error during bisecting, and came to wrong conclusions..
-
-In a act of desperation I then tried to cherry-pick all "arch/x86/kvm"
-commits, i.e., those found with:
-# git log --no-merges --oneline v5.2..v5.3-rc1 -- arch/x86/kvm/
-but to no avail, so there may be more than one supporting commit needed,
-but that's just guessing. I think you people have surely an better idea
-about what the underlying issue could be.
-
-cheers,
-Thomas
-
-[0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
-[1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
-     westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
-     has VMX support (i.e. is 64bit based)
-[2]: git reverse bisect log:
- git bisect start '--term-new=fixed' '--term-old=broken'
- # fixed: [4d856f72c10ecb060868ed10ff1b1453943fc6c8] Linux 5.3
- git bisect fixed 4d856f72c10ecb060868ed10ff1b1453943fc6c8
- # broken: [0ecfebd2b52404ae0c54a878c872bb93363ada36] Linux 5.2
- git bisect broken 0ecfebd2b52404ae0c54a878c872bb93363ada36
- # fixed: [43c95d3694cc448fdf50bd53b7ff3a5bb4655883] Merge tag 'pinctrl-v5.3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
- git bisect fixed 43c95d3694cc448fdf50bd53b7ff3a5bb4655883
- # broken: [8f6ccf6159aed1f04c6d179f61f6fb2691261e84] Merge tag 'clone3-v5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux
- git bisect broken 8f6ccf6159aed1f04c6d179f61f6fb2691261e84
- # broken: [753c8d9b7d81206bb5d011b28abe829d364b028e] Merge branch 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
- git bisect broken 753c8d9b7d81206bb5d011b28abe829d364b028e
- # broken: [d72619706abc4aa7e540ea882dae883cee7cc3b3] Merge tag 'tty-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
- git bisect broken d72619706abc4aa7e540ea882dae883cee7cc3b3
- # broken: [f632a8170a6b667ee4e3f552087588f0fe13c4bb] Merge tag 'driver-core-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
- git bisect broken f632a8170a6b667ee4e3f552087588f0fe13c4bb
- # fixed: [5010fe9f095414b959fd6fda63986dc90fd0c419] Merge tag 'vfs-fix-ioctl-checking-3' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
- git bisect fixed 5010fe9f095414b959fd6fda63986dc90fd0c419
- # fixed: [a45ff5994c9cde41af627c46abb9f32beae68943] Merge tag 'kvm-arm-for-5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
- git bisect fixed a45ff5994c9cde41af627c46abb9f32beae68943
- # fixed: [2183f5645ae7e074ed1777f3de9a782dd23db248] KVM: VMX: Shadow VMCS primary execution controls
- git bisect fixed 2183f5645ae7e074ed1777f3de9a782dd23db248
- # fixed: [2ea72039808d50c909c2eb00eaebfaaaa743927a] kvm: nVMX: small cleanup in handle_exception
- git bisect fixed 2ea72039808d50c909c2eb00eaebfaaaa743927a
- # fixed: [fb89f4ea7feb1e605f8f405d256c56d8ad69125c] kvm: selftests: introduce aarch64_vcpu_add_default
- git bisect fixed fb89f4ea7feb1e605f8f405d256c56d8ad69125c
- # fixed: [f257d6dcda0187693407e0c2e5dab69bdab3223f] KVM: Directly return result from kvm_arch_check_processor_compat()
- git bisect fixed f257d6dcda0187693407e0c2e5dab69bdab3223f
- # fixed: [84ea3acaa01fb90861b341038998e27a5198e1a0] KVM: LAPIC: Extract adaptive tune timer advancement logic
- git bisect fixed 84ea3acaa01fb90861b341038998e27a5198e1a0
- # fixed: [f3ecb59dd49f1742b97df6ba071aaa3d031154ac] kvm: x86: Fix reserved bits related calculation errors caused by MKTME
- git bisect fixed f3ecb59dd49f1742b97df6ba071aaa3d031154ac 
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
