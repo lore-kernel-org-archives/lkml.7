@@ -2,180 +2,112 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC691C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB18C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AF720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496C0206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:22:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qMA7jUQ4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nm8mqSYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfKKRVp (ORCPT
+        id S1727164AbfKKRWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:21:45 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40258 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfKKRVn (ORCPT
+        Mon, 11 Nov 2019 12:22:03 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39252 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfKKRWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:21:43 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABH9MDM033339;
-        Mon, 11 Nov 2019 17:20:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=G0xHpP97vAwN65j58XF+Ut2nWJLfH8xibEIUHyLv298=;
- b=qMA7jUQ4PCAggVjjdH1iXtVj+YenZod0qLKBS/y2acAGAT7qPkI0+/H05qzK1HIk1Or/
- GhExpXXPESWoJAsKHkq0ZaXbFW8t5UFEjWR/cHpQQPWvugA8/KpEaTCGiXK0NkgWPX7A
- P9V8ALvipkgVdv544JrqcotmloFrxqRDSwRtaO2nk9EhmW9+03OuAE4Z+bLx94c6OQqy
- ZtUZjqsllaUWd07wrcBqn0dr41ceeqlITZvemAETt3748nReDt278a+GHO3WVOiZs1fT
- mmNSzKnMi50apI1vA1E6dD/GhZS6kGMamOFyxRehCug9LrSCxqDz/M8ROQ0mN5y8LRNW Hw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w5p3qg2eu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 17:20:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHEq1i068004;
-        Mon, 11 Nov 2019 17:20:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w66wmfntu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 17:20:30 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xABHKTlx032426;
-        Mon, 11 Nov 2019 17:20:29 GMT
-Received: from paddy.uk.oracle.com (/10.175.169.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Nov 2019 09:20:29 -0800
-From:   Joao Martins <joao.m.martins@oracle.com>
-To:     kvm@vger.kernel.org
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Jag Raman <jag.raman@oracle.com>
-Subject: [PATCH v2 2/3] KVM: VMX: Do not change PID.NDST when loading a blocked vCPU
-Date:   Mon, 11 Nov 2019 17:20:11 +0000
-Message-Id: <20191111172012.28356-3-joao.m.martins@oracle.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191111172012.28356-1-joao.m.martins@oracle.com>
-References: <20191111172012.28356-1-joao.m.martins@oracle.com>
+        Mon, 11 Nov 2019 12:22:02 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 29so9847698pgm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:22:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=pqogoWx5m1B/3lE5KZVv4DafwpAuy45MHrtjmUfNbcI=;
+        b=Nm8mqSYzBtksad+d15VDCUxV23KogboujhWU4b1Ax4N7eS9d1k5c4alCNCDBHvB4H/
+         tVrcOE8hdbRwjpu2Q92RIEjBjoNpPW0GgEEggYGL9VWjV/samS6kUULXUxOmbOh+9hCd
+         Bd2cdE/5TNwCRdwW/wWNoXM0AahNpeOr/9CZU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=pqogoWx5m1B/3lE5KZVv4DafwpAuy45MHrtjmUfNbcI=;
+        b=F4wjnPW8TfHzOz10bjPvfTeBv7vwAHtcHkxRbFTK36RDQTZL9w0Km4Fu8GwxR9Ep23
+         LgEWnf+Go8HzLGIBZZdYQtAD6ldlAHclcwIIZ7cc5HAU8NHnGirL/lk8R6hmz2/2ngfH
+         3i8KX7LwdFtw/Nf1zUJRN/W7sAZlkH7ugS6dflKpKQ21cvd3cqpfjKbV0C1H6lEYQZiw
+         iq8QQlX575YciuPDoc2rQGSL+9YDWMb/IA3rpE88Fdkpd/j2lsNGVCqqfLqOGT1/mYEF
+         VJlkMr4Tu3APvwcQnJEHQNJGPLgz8LkbPB6WYtHg6zJkgRWQMkiJK1uSwzTWRtDhDTrg
+         jjNA==
+X-Gm-Message-State: APjAAAVvvR76X2mn0SipgTjyaqusiWgtWi6YVp8EVq1Z45rb+e3Op4Ut
+        5oBHV7mi2Tac5OAsGb69tWnyZgXwW+s=
+X-Google-Smtp-Source: APXvYqw6i+HKkrhCfsmAGZPUXdi7v0AusuCR/HRg/FG9ckSgWnWiws7AvVKgK3oDRZQNIJMh6I+9sA==
+X-Received: by 2002:a62:5b83:: with SMTP id p125mr31460834pfb.237.1573492922081;
+        Mon, 11 Nov 2019 09:22:02 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y138sm16517953pfb.174.2019.11.11.09.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 09:22:01 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:22:00 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: [PATCH] m68k: Convert missed RODATA to RO_DATA
+Message-ID: <201911110920.5840E9AF1@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911110155
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911110155
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When vCPU enters block phase, pi_pre_block() inserts vCPU to a per pCPU
-linked list of all vCPUs that are blocked on this pCPU. Afterwards, it
-changes PID.NV to POSTED_INTR_WAKEUP_VECTOR which its handler
-(wakeup_handler()) is responsible to kick (unblock) any vCPU on that
-linked list that now has pending posted interrupts.
+I missed two instances of the old RODATA macro (seems I was searching
+for vmlinux.lds* not vmlinux*lds*). Fix both instances and double-check
+the entire tree for other "RODATA" instances in linker scripts.
 
-While vCPU is blocked (in kvm_vcpu_block()), it may be preempted which
-will cause vmx_vcpu_pi_put() to set PID.SN.  If later the vCPU will be
-scheduled to run on a different pCPU, vmx_vcpu_pi_load() will clear
-PID.SN but will also *overwrite PID.NDST to this different pCPU*.
-Instead of keeping it with original pCPU which vCPU had entered block
-phase on.
-
-This results in an issue because when a posted interrupt is delivered, as
-the wakeup_handler() will be executed and fail to find blocked vCPU on
-its per pCPU linked list of all vCPUs that are blocked on this pCPU.
-Which is due to the vCPU being placed on a *different* per pCPU
-linked list i.e. the original pCPU in which it entered block phase.
-
-The regression is introduced by commit c112b5f50232 ("KVM: x86:
-Recompute PID.ON when clearing PID.SN"). Therefore, partially revert
-it and reintroduce the condition in vmx_vcpu_pi_load() responsible for
-avoiding changing PID.NDST when loading a blocked vCPU.
-
-Fixes: c112b5f50232 ("KVM: x86: Recompute PID.ON when clearing PID.SN")
-Tested-by: Nathan Ni <nathan.ni@oracle.com>
-Co-developed-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: c82318254d15 ("vmlinux.lds.h: Replace RODATA with RO_DATA")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v2:
-* Fixed wrong Sob chain;
-* Add missing Tb;
----
- arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++++
- arch/x86/kvm/vmx/vmx.h |  6 ++++++
- 2 files changed, 20 insertions(+)
+ arch/m68k/kernel/vmlinux-std.lds  | 2 +-
+ arch/m68k/kernel/vmlinux-sun3.lds | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4c7d2935f7ec..ccd06fdfbb76 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1274,6 +1274,18 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
- 	if (!pi_test_sn(pi_desc) && vcpu->cpu == cpu)
- 		return;
+diff --git a/arch/m68k/kernel/vmlinux-std.lds b/arch/m68k/kernel/vmlinux-std.lds
+index 6e7eb49ed985..4d33da4e7106 100644
+--- a/arch/m68k/kernel/vmlinux-std.lds
++++ b/arch/m68k/kernel/vmlinux-std.lds
+@@ -31,7 +31,7 @@ SECTIONS
  
-+	/*
-+	 * If the 'nv' field is POSTED_INTR_WAKEUP_VECTOR, do not change
-+	 * PI.NDST: pi_post_block is the one expected to change PID.NDST and the
-+	 * wakeup handler expects the vCPU to be on the blocked_vcpu_list that
-+	 * matches PI.NDST. Otherwise, a vcpu may not be able to be woken up
-+	 * correctly.
-+	 */
-+	if (pi_desc->nv == POSTED_INTR_WAKEUP_VECTOR || vcpu->cpu == cpu) {
-+		pi_clear_sn(pi_desc);
-+		goto after_clear_sn;
-+	}
-+
- 	/* The full case.  */
- 	do {
- 		old.control = new.control = pi_desc->control;
-@@ -1289,6 +1301,8 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
- 	} while (cmpxchg64(&pi_desc->control, old.control,
- 			   new.control) != old.control);
+   _sdata = .;			/* Start of data section */
  
-+after_clear_sn:
-+
- 	/*
- 	 * Clear SN before reading the bitmap.  The VT-d firmware
- 	 * writes the bitmap and reads SN atomically (5.2.3 in the
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index bee16687dc0b..1e32ab54fc2d 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -373,6 +373,12 @@ static inline void pi_clear_on(struct pi_desc *pi_desc)
- 		(unsigned long *)&pi_desc->control);
- }
+-  RODATA
++  RO_DATA(4096)
  
-+static inline void pi_clear_sn(struct pi_desc *pi_desc)
-+{
-+	clear_bit(POSTED_INTR_SN,
-+		(unsigned long *)&pi_desc->control);
-+}
-+
- static inline int pi_test_on(struct pi_desc *pi_desc)
- {
- 	return test_bit(POSTED_INTR_ON,
+   RW_DATA(16, PAGE_SIZE, THREAD_SIZE)
+ 
+diff --git a/arch/m68k/kernel/vmlinux-sun3.lds b/arch/m68k/kernel/vmlinux-sun3.lds
+index 1a0ad6b6dd8c..87d9f4d08f65 100644
+--- a/arch/m68k/kernel/vmlinux-sun3.lds
++++ b/arch/m68k/kernel/vmlinux-sun3.lds
+@@ -24,7 +24,7 @@ SECTIONS
+ 	*(.fixup)
+ 	*(.gnu.warning)
+ 	} :text = 0x4e75
+-	RODATA
++	RO_DATA(4096)
+ 
+   _etext = .;			/* End of text section */
+ 
 -- 
-2.11.0
+2.17.1
 
+
+-- 
+Kees Cook
