@@ -2,169 +2,212 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD310C17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4482DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D272075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B332075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKKHyu (ORCPT
+        id S1726878AbfKKH5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:54:50 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34178 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726845AbfKKHyt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:54:49 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAB7pcol070564
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 02:54:48 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7104daua-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 02:54:48 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 11 Nov 2019 07:54:46 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Nov 2019 07:54:43 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAB7sgWc66388060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 07:54:42 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 736CF42047;
-        Mon, 11 Nov 2019 07:54:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 081B24203F;
-        Mon, 11 Nov 2019 07:54:42 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.123])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Nov 2019 07:54:41 +0000 (GMT)
-Subject: Re: [PATCH v3] s390/pkey: Use memdup_user() rather than duplicating
- its implementation
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Joe Perches <joe@perches.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
- <deb7893f-3cfe-18fc-3feb-b26b290bf3c6@web.de>
- <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
- <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
- <733b29df-207e-a165-ee80-46be8720c0c4@de.ibm.com>
- <8f98f9fc-57df-5993-44b5-5ea4c0de7ef9@web.de>
- <c0df9cc8-c41a-1e5d-811c-1ff045c13fcc@de.ibm.com>
- <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 11 Nov 2019 08:54:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 11 Nov 2019 02:57:38 -0500
+Received: from spam01.hygon.cn ([110.188.70.11]:17136 "EHLO spam1.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726808AbfKKH5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 02:57:38 -0500
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam1.hygon.cn with ESMTP id xAB7rSnO056256;
+        Mon, 11 Nov 2019 15:53:28 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-FE.hygon.cn with ESMTP id xAB7rM6t085027;
+        Mon, 11 Nov 2019 15:53:22 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from [172.20.21.12] (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 11 Nov
+ 2019 15:53:23 +0800
+Subject: Re: [PATCH] NTB: ntb_perf: Fix address err in perf_copy_chunk
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        <jdmason@kudzu.us>
+CC:     <allenbh@gmail.com>, <dave.jiang@intel.com>
+References: <1573097913-104555-1-git-send-email-linjiasen@hygon.cn>
+ <7ea7ef5d-7e46-396a-8d70-2c6c333a4508@deltatee.com>
+From:   Jiasen Lin <linjiasen@hygon.cn>
+Message-ID: <8973e56c-ccce-2884-f4dc-4d0f8072a948@hygon.cn>
+Date:   Mon, 11 Nov 2019 15:51:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7ea7ef5d-7e46-396a-8d70-2c6c333a4508@deltatee.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111107-0028-0000-0000-000003B4D21E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111107-0029-0000-0000-00002477D8BF
-Message-Id: <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911110077
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam1.hygon.cn xAB7rSnO056256
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.11.19 18:14, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 8 Nov 2019 17:50:22 +0100
-> 
-> Reuse existing functionality from memdup_user() instead of keeping
-> duplicate source code.
-> 
-> Generated by: scripts/coccinelle/api/memdup_user.cocci
-> 
-> * The function "_copy_apqns_from_user" contained a memory leak
->   because of a missing function call "kfree(kapqns)" for an if branch.
->   Link: https://lore.kernel.org/r/833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com/
-> 
->   Thus complete the exception handling by this code replacement.
-> 
-> * Delete local variables which became unnecessary with this refactoring
->   in two function implementations.
-> 
-> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-
-You were sending this from a different email address. Can you use the same for
-the sender and the signoff?
 
 
+On 2019/11/9 1:04, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-11-06 8:38 p.m., Jiasen Lin wrote:
+>> peer->outbuf is a virtual address which is get by ioremap, it can not
+>> be converted to a physical address by virt_to_page and page_to_phys.
+>> This conversion will result in DMA error, because the destination address
+>> which is converted by page_to_phys is invalid.
+> 
+> Hmm, yes, ntb_perf is obviously wrong. I never noticed this, how did
+> this ever work?
+> 
 
-Can you also change the subject to indicate the "fix". e.g. something like
+The default value of use_dma which is used to enable DMA engine to 
+measure NTB performance is zero, in other words, DMA engine is not used 
+by default. Thus, olny memcpy_toio is called in perf_copy_chunk and not 
+trigger this bug.
 
-s390/pkey: fix memory leak in error case by using memdup_user() rather than open coding
+If we install driver with specified dma-enabled flag like this:
+insmod ntb_perf.ko use_dma=1, this issue will be triggered.
 
+>> We Save the physical address in perf_setup_peer_mw, it is MMIO address
+>> of NTB BARx. Then fill the destination address of DMA descriptor with
+>> this physical address to guarantee that the address of memory write
+>> requests fall in memory window of NBT BARx.
+> 
+> Using the physical address directly is also wrong and will not work in
+> the presence of an IOMMU. You should use dma_map_resource() for this.
+> See what was done in ntb_transport[1].
+> 
+
+Yes, my mistake. I will modify the code according to your suggestion and 
+test it on AMD and HYGON platforms with the IOMMU enabled. Maybe the 
+following patches are relied on, when IOMMU is enabled on AMD and HYGON 
+plartforms.
+
+https://lore.kernel.org/patchwork/cover/1143155/
+https://lore.kernel.org/patchwork/patch/1143156/
+https://lore.kernel.org/patchwork/patch/1143157/
+
+Thanks,
+
+Jiasen Lin
+
+> Thanks,
+> 
+> Logan
+> 
+> [1] c59666bb32b9 ("NTB: ntb_transport: Ensure the destination buffer is
+> mapped for TX DMA")
+> 
+>> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
+>> ---
+>>   drivers/ntb/test/ntb_perf.c | 28 +++++++++++++++++++++++-----
+>>   1 file changed, 23 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+>> index e9b7c2d..1c2fd1a 100644
+>> --- a/drivers/ntb/test/ntb_perf.c
+>> +++ b/drivers/ntb/test/ntb_perf.c
+>> @@ -149,6 +149,7 @@ struct perf_peer {
+>>   	u64 outbuf_xlat;
+>>   	resource_size_t outbuf_size;
+>>   	void __iomem *outbuf;
+>> +	phys_addr_t out_phys_addr;
+>>   
+>>   	/* Inbound MW params */
+>>   	dma_addr_t inbuf_xlat;
+>> @@ -776,7 +777,8 @@ static void perf_dma_copy_callback(void *data)
+>>   }
+>>   
+>>   static int perf_copy_chunk(struct perf_thread *pthr,
+>> -			   void __iomem *dst, void *src, size_t len)
+>> +			   void __iomem *dst, void *src, size_t len,
+>> +			   phys_addr_t dst_phys_addr)
+>>   {
+>>   	struct dma_async_tx_descriptor *tx;
+>>   	struct dmaengine_unmap_data *unmap;
+>> @@ -807,8 +809,7 @@ static int perf_copy_chunk(struct perf_thread *pthr,
+>>   	}
+>>   	unmap->to_cnt = 1;
+>>   
+>> -	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
+>> -		offset_in_page(dst), len, DMA_FROM_DEVICE);
+>> +	unmap->addr[1] = dst_phys_addr;
+>>   	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
+>>   		ret = -EIO;
+>>   		goto err_free_resource;
+>> @@ -901,6 +902,8 @@ static int perf_run_test(struct perf_thread *pthr)
+>>   	u64 total_size, chunk_size;
+>>   	void *flt_src;
+>>   	int ret = 0;
+>> +	phys_addr_t flt_phys_addr;
+>> +	phys_addr_t bnd_phys_addr;
+>>   
+>>   	total_size = 1ULL << total_order;
+>>   	chunk_size = 1ULL << chunk_order;
+>> @@ -909,12 +912,15 @@ static int perf_run_test(struct perf_thread *pthr)
+>>   	flt_src = pthr->src;
+>>   	bnd_dst = peer->outbuf + peer->outbuf_size;
+>>   	flt_dst = peer->outbuf;
+>> +	bnd_phys_addr = peer->out_phys_addr + peer->outbuf_size;
+>> +	flt_phys_addr = peer->out_phys_addr;
+>>   
+>>   	pthr->duration = ktime_get();
+>>   
+>>   	/* Copied field is cleared on test launch stage */
+>>   	while (pthr->copied < total_size) {
+>> -		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
+>> +		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size,
+>> +				flt_phys_addr);
+>>   		if (ret) {
+>>   			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
+>>   				pthr->tidx, ret);
+>> @@ -925,8 +931,15 @@ static int perf_run_test(struct perf_thread *pthr)
+>>   
+>>   		flt_dst += chunk_size;
+>>   		flt_src += chunk_size;
+>> -		if (flt_dst >= bnd_dst || flt_dst < peer->outbuf) {
+>> +		flt_phys_addr += chunk_size;
+>> +
+>> +		if (flt_dst >= bnd_dst ||
+>> +		    flt_dst < peer->outbuf ||
+>> +		    flt_phys_addr >= bnd_phys_addr ||
+>> +		    flt_phys_addr < peer->out_phys_addr) {
+>> +
+>>   			flt_dst = peer->outbuf;
+>> +			flt_phys_addr = peer->out_phys_addr;
+>>   			flt_src = pthr->src;
+>>   		}
+>>   
+>> @@ -1195,6 +1208,9 @@ static ssize_t perf_dbgfs_read_info(struct file *filep, char __user *ubuf,
+>>   			"\tOut buffer addr 0x%pK\n", peer->outbuf);
+>>   
+>>   		pos += scnprintf(buf + pos, buf_size - pos,
+>> +			"\tOut buff phys addr %pa[p]\n", &peer->out_phys_addr);
+>> +
+>> +		pos += scnprintf(buf + pos, buf_size - pos,
+>>   			"\tOut buffer size %pa\n", &peer->outbuf_size);
+>>   
+>>   		pos += scnprintf(buf + pos, buf_size - pos,
+>> @@ -1388,6 +1404,8 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
+>>   	if (!peer->outbuf)
+>>   		return -ENOMEM;
+>>   
+>> +	peer->out_phys_addr = phys_addr;
+>> +
+>>   	if (max_mw_size && peer->outbuf_size > max_mw_size) {
+>>   		peer->outbuf_size = max_mw_size;
+>>   		dev_warn(&peer->perf->ntb->dev,
+>>
