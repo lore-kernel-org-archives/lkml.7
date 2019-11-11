@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288E8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB639C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E238720659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 993DE204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497567;
-	bh=XBw2oZfQ9k26crgUp87umqJgoGEDJwGM2wcCYBXUPZI=;
+	s=default; t=1573497569;
+	bh=jbszZ+pK438idjmG/hhKzxYfkMI4SQrnmhW1whPaf/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QMByqEhwy9+KlVR2+7K4hYj2iD4YfBxBhL2pRQvUi9rmxofqVNOAbTjEj2mrHiNJy
-	 4tUI5tPe4BLzTR1+a2xf3fuqyI5T4W6/nj3hwEawncHC3oHLEXNN+XJoXcooSNVNhj
-	 +qQtzxjlxbGAhU/U5/JLamHnQxS7rZuadKU/lbtk=
+	b=d2QLbQC8kJoTRiGpB7UnFuYeg+ECO5YP/C/9qXiSfuqIbaBQE/SRf9r7ELcgK7xYQ
+	 12qlm9QUaLCTUfGnyUEgBY6SJAehAzWvU6/tTxfIz+cosO1X+fOyZtZQlWw3FrKXBe
+	 NEMV2rmPusr3o2wkuWIU/4srK9cq3EIVsPy/eZNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfKKSjZ (ORCPT
+        id S1727974AbfKKSj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58412 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfKKSjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:22 -0500
+        id S1729150AbfKKSjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69209204FD;
-        Mon, 11 Nov 2019 18:39:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5E7D20659;
+        Mon, 11 Nov 2019 18:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497561;
-        bh=XBw2oZfQ9k26crgUp87umqJgoGEDJwGM2wcCYBXUPZI=;
+        s=default; t=1573497559;
+        bh=jbszZ+pK438idjmG/hhKzxYfkMI4SQrnmhW1whPaf/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zqhU5cQsJjcYM256GcafFBX4wDisnqVWAEg229TlJxhxPjnFenBriTAdHS3vHW0TQ
-         JSwzQraOKZSJ/j2FeApIeEukhMuqsxVa7HqlJk14UHdlL0HuveL+3KC/4M5hxltiZf
-         8Es49EohVwVHzbqey1HDOrbYtFhQ99aa7ljlLsxg=
+        b=VIeWJLEeSwxPQsbeattYGh8+dIetGqrqMPw8BT3UTt9R9u1oTcNlgzoqfTkHz20kb
+         mG0IfdeFbpgZRDjW+xIdIW5QdPgtGFfKY8LfHHsjdqT+DQwDPJ/OavRmdc21/EqdE3
+         Bsr7pO1W2MkHz8uz/vF4e4t/jI8mt0KGIuhwnVvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 098/105] igb: Fix constant media auto sense switching when no cable is connected
-Date:   Mon, 11 Nov 2019 19:29:08 +0100
-Message-Id: <20191111181448.927178086@linuxfoundation.org>
+Subject: [PATCH 4.14 097/105] net: ethernet: arc: add the missed clk_disable_unprepare
+Date:   Mon, 11 Nov 2019 19:29:07 +0100
+Message-Id: <20191111181448.809234612@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -62,45 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 8d5cfd7f76a2414e23c74bb8858af7540365d985 ]
+[ Upstream commit 4202e219edd6cc164c042e16fa327525410705ae ]
 
-At least on the i350 there is an annoying behavior that is maybe also
-present on 82580 devices, but was probably not noticed yet as MAS is not
-widely used.
+The remove misses to disable and unprepare priv->macclk like what is done
+when probe fails.
+Add the missed call in remove.
 
-If no cable is connected on both fiber/copper ports the media auto sense
-code will constantly swap between them as part of the watchdog task and
-produce many unnecessary kernel log messages.
-
-The swap code responsible for this behavior (switching to fiber) should
-not be executed if the current media type is copper and there is no signal
-detected on the fiber port. In this case we can safely wait until the
-AUTOSENSE_EN bit is cleared.
-
-Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/arc/emac_rockchip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 71b235f935d94..9c7e75b3b6c7a 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -1680,7 +1680,8 @@ static void igb_check_swap_media(struct igb_adapter *adapter)
- 	if ((hw->phy.media_type == e1000_media_type_copper) &&
- 	    (!(connsw & E1000_CONNSW_AUTOSENSE_EN))) {
- 		swap_now = true;
--	} else if (!(connsw & E1000_CONNSW_SERDESD)) {
-+	} else if ((hw->phy.media_type != e1000_media_type_copper) &&
-+		   !(connsw & E1000_CONNSW_SERDESD)) {
- 		/* copper signal takes time to appear */
- 		if (adapter->copper_tries < 4) {
- 			adapter->copper_tries++;
+diff --git a/drivers/net/ethernet/arc/emac_rockchip.c b/drivers/net/ethernet/arc/emac_rockchip.c
+index c770ca37c9b21..a7d30731d376f 100644
+--- a/drivers/net/ethernet/arc/emac_rockchip.c
++++ b/drivers/net/ethernet/arc/emac_rockchip.c
+@@ -261,6 +261,9 @@ static int emac_rockchip_remove(struct platform_device *pdev)
+ 	if (priv->regulator)
+ 		regulator_disable(priv->regulator);
+ 
++	if (priv->soc_data->need_div_macclk)
++		clk_disable_unprepare(priv->macclk);
++
+ 	free_netdev(ndev);
+ 	return err;
+ }
 -- 
 2.20.1
 
