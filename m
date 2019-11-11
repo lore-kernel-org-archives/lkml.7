@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB88AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3072DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A594121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0583B2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498544;
-	bh=7NrS/hL5NX8zlISrzUN09b/2lxLSRWe1jW1GOETick4=;
+	s=default; t=1573498548;
+	bh=wj+xJcMJnR3JBZmFiYZ/HEjkXpciWEdzBQ/fzR8JVIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EH7+1XtLmCj6d1yzSHgV9KEZrds7c0iLWVTRbly9S83/buG6O3QIFtFoqcp0RFkHL
-	 rM4oqm7bAm3f2GA+UvGT0VohpBCLafo01wTPeF83WeCC/dOQbJugjooySurbxyZvYs
-	 etcHKNGwT/f1ZMefc5dAUOxrxAQ2AUrOo4J+HMSA=
+	b=fdU68U/lWsxpklC0VHpWi0Pm43KTeIQlt5aG/Ro1N4lFGq9gmtirU52CAAQdLC8rv
+	 wXqVUFGI1d3VFmXUoyrq9xQpPERfU9ifKXAmC6kDiRItMKoDlIV7NUapmON4ckL1Ye
+	 A2dhl+iwRrwlnW74GEY7F3rp7ZoJ5aUmW06Ox4qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730659AbfKKSzn (ORCPT
+        id S1729604AbfKKSzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:55:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:55:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbfKKSzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:55:37 -0500
+        id S1729608AbfKKSzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:55:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AE212184C;
-        Mon, 11 Nov 2019 18:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 260692184C;
+        Mon, 11 Nov 2019 18:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498537;
-        bh=7NrS/hL5NX8zlISrzUN09b/2lxLSRWe1jW1GOETick4=;
+        s=default; t=1573498540;
+        bh=wj+xJcMJnR3JBZmFiYZ/HEjkXpciWEdzBQ/fzR8JVIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pB8BaPdCbIeWBAo/dwI7iHm/MmdxleWqUBn8hbkRjH3s/ETQOViwK5rzqlBKY7yiI
-         9GfmFrrfqIsJ+zTBySmrxpc75hmmj6sJtWUmgsxTBEkC37pJ+WUc1sMWAbO8lunvGe
-         iPxzXBX/XNew3FnLxCh2//6jQIgYkSlrWXAT5WmM=
+        b=lWUC5EWEOcSGxsMP4qrBHPJqTElHlFdAn0P9SSU6DEK5aK5ULnWIVnLEj6h1xx/sh
+         +2rbHTaG2vw5u5EyRdietEOWnclmsud6Se+ngM3JpsaW6OJdbhs6On/AqdVvo3fwcg
+         mGlp6+SuZBGI9/1HnoloGTYHv5Iufia1lc69hEb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        stable@vger.kernel.org, Yuliy Izrailov <yuliy.izrailov@wdc.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 147/193] USB: Skip endpoints with 0 maxpacket length
-Date:   Mon, 11 Nov 2019 19:28:49 +0100
-Message-Id: <20191111181511.991893209@linuxfoundation.org>
+Subject: [PATCH 5.3 112/193] scsi: ufs-bsg: Wake the device before sending raw upiu commands
+Date:   Mon, 11 Nov 2019 19:28:14 +0100
+Message-Id: <20191111181509.379427636@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,47 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Avri Altman <avri.altman@wdc.com>
 
-[ Upstream commit d482c7bb0541d19dea8bff437a9f3c5563b5b2d2 ]
+[ Upstream commit 74e5e468b664d3739b2872d54764af97ac38e795 ]
 
-Endpoints with a maxpacket length of 0 are probably useless.  They
-can't transfer any data, and it's not at all unlikely that an HCD will
-crash or hang when trying to handle an URB for such an endpoint.
+The scsi async probe process is calling blk_pm_runtime_init for each lun,
+and then those request queues are monitored by the block layer pm
+engine (blk-pm.c).  This is however, not the case for scsi-passthrough
+queues, created by bsg_setup_queue().
 
-Currently the USB core does not check for endpoints having a maxpacket
-value of 0.  This patch adds a check, printing a warning and skipping
-over any endpoints it catches.
+So the ufs-bsg driver might send various commands, disregarding the pm
+status of the device. This is wrong, regardless if its request queue is
+pm-aware or not.
 
-Now, the USB spec does not rule out endpoints having maxpacket = 0.
-But since they wouldn't have any practical use, there doesn't seem to
-be any good reason for us to accept them.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281050420.1485-100000@iolanthe.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: df032bf27a41 (scsi: ufs: Add a bsg endpoint that supports UPIUs)
+Link: https://lore.kernel.org/r/1570696267-8487-1-git-send-email-avri.altman@wdc.com
+Reported-by: Yuliy Izrailov <yuliy.izrailov@wdc.com>
+Signed-off-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/config.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/scsi/ufs/ufs_bsg.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 151a74a543862..1ac1095bfeac8 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -348,6 +348,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
+index a9344eb4e047f..dc2f6d2b46edc 100644
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -98,6 +98,8 @@ static int ufs_bsg_request(struct bsg_job *job)
  
- 	/* Validate the wMaxPacketSize field */
- 	maxp = usb_endpoint_maxp(&endpoint->desc);
-+	if (maxp == 0) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
-+		    cfgno, inum, asnum, d->bEndpointAddress);
-+		goto skip_to_next_endpoint_or_interface_descriptor;
-+	}
+ 	bsg_reply->reply_payload_rcv_len = 0;
  
- 	/* Find the highest legal maxpacket size for this endpoint */
- 	i = 0;		/* additional transactions per microframe */
++	pm_runtime_get_sync(hba->dev);
++
+ 	msgcode = bsg_request->msgcode;
+ 	switch (msgcode) {
+ 	case UPIU_TRANSACTION_QUERY_REQ:
+@@ -135,6 +137,8 @@ static int ufs_bsg_request(struct bsg_job *job)
+ 		break;
+ 	}
+ 
++	pm_runtime_put_sync(hba->dev);
++
+ 	if (!desc_buff)
+ 		goto out;
+ 
 -- 
 2.20.1
 
