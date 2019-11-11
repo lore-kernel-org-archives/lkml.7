@@ -2,56 +2,53 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75D5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07907C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820C9204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAED920659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499364;
-	bh=PKvJWswNVsV4B/70R/VWDrhEscmzr0kHbjUdJ4NGXTU=;
+	s=default; t=1573499373;
+	bh=0eV3K6D/LXMfOCLgBgK508Nkws7bfTJIAwBXyK3R3jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IH0DZbNcfS+VgdkOSfB2zw77KmNuuZcDx2MI5tRd6S/s0AV1GKWA9ew6lo7ff0PJU
-	 RVjswRpSyWB3wQtFAkbsrtQ/oEIW6rjbNHQb4on+AOFK07SnEi85wS9euxRgz+pVc5
-	 /AycixH3hfAvDgxiOgcD85C2MM+HhjTdDBnQaBko=
+	b=1Ti+sn6IpaIFM9jwokqXapeH5pd9DPsw1YZ/7ZN1T5/guZt7lLH1EZly2xUTkoXxI
+	 MzSZfbq6BKeL999NYo0/UjcSYQQZPeaNQBr9Dh/B7LEuYtfU6sPBYvYQbbLWq5m1xG
+	 SmHTKQVMwklMAVomJnW3GodwoWRJbFvgJW091ork=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfKKTJW (ORCPT
+        id S1727376AbfKKSdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:09:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51828 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbfKKSeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:14 -0500
+        id S1727279AbfKKSdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48E872190F;
-        Mon, 11 Nov 2019 18:34:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B951020656;
+        Mon, 11 Nov 2019 18:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497253;
-        bh=PKvJWswNVsV4B/70R/VWDrhEscmzr0kHbjUdJ4NGXTU=;
+        s=default; t=1573497228;
+        bh=0eV3K6D/LXMfOCLgBgK508Nkws7bfTJIAwBXyK3R3jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sdPaa7/8qpH+a5ZM6HpHJ4dQj7/ZtrH8Py4qG1uGzZO6Xebi3hqu6gmpGRT7ERv+A
-         /MPiCGc48fHSG1xxTC3fxWr/IbnkKeeHRgzWK/W1qfbKL04OgWNnefm3vO+sX1XIPy
-         xlNA7Sj+Q8FNZ1Au173R8LT0KWNaF48rlInQDzJY=
+        b=Oo24vWBO7kk5iLDzoeCSA55SvG7ByrWLNkH5jnHnMfQiLSsbjq1YuPl6MbEL3gYV+
+         0zX2PxrkpWrmO+KSHPJFGh72/ZxYCVusBT2wRFhPzOn+24Gb5mzg0ekEJjQ7ZH3k+V
+         ABYerbvJK6o8M2tqm9fpKOMi7FVrdCyOyyaHlFDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 16/65] perf tools: Fix time sorting
-Date:   Mon, 11 Nov 2019 19:28:16 +0100
-Message-Id: <20191111181344.035381042@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 45/65] usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
+Date:   Mon, 11 Nov 2019 19:28:45 +0100
+Message-Id: <20191111181349.079145966@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -64,46 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-commit 722ddfde366fd46205456a9c5ff9b3359dc9a75e upstream.
+[ Upstream commit ba3a1a915c49cc3023e4ddfc88f21e7514e82aa4 ]
 
-The final sort might get confused when the comparison is done over
-bigger numbers than int like for -s time.
+Fix interrupt storm generated by endpoints when working in FIFO mode.
+The TX_COMPLETE interrupt is used only by control endpoints processing.
+Do not enable it for other types of endpoints.
 
-Check the following report for longer workloads:
-
-  $ perf report -s time -F time,overhead --stdio
-
-Fix hist_entry__sort() to properly return int64_t and not possible cut
-int.
-
-Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
-Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 914a3f3b3754 ("USB: add atmel_usba_udc driver")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/hist.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1485,7 +1485,7 @@ int hists__collapse_resort(struct hists
- 	return 0;
- }
- 
--static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-+static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
- {
- 	struct hists *hists = a->hists;
- 	struct perf_hpp_fmt *fmt;
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+index 9705bcdbc577f..57dd3bad95397 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.c
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+@@ -403,9 +403,11 @@ static void submit_request(struct usba_ep *ep, struct usba_request *req)
+ 		next_fifo_transaction(ep, req);
+ 		if (req->last_transaction) {
+ 			usba_ep_writel(ep, CTL_DIS, USBA_TX_PK_RDY);
+-			usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
+ 		} else {
+-			usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
+ 			usba_ep_writel(ep, CTL_ENB, USBA_TX_PK_RDY);
+ 		}
+ 	}
+-- 
+2.20.1
+
 
 
