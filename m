@@ -2,106 +2,114 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ED3C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D758C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A0420856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB8A20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfKKKm6 (ORCPT
+        id S1726915AbfKKKoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:42:58 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56967 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKKm6 (ORCPT
+        Mon, 11 Nov 2019 05:44:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56151 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfKKKoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:42:58 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iU79p-0002lp-7t; Mon, 11 Nov 2019 11:42:53 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iU79o-0006kG-2i; Mon, 11 Nov 2019 11:42:52 +0100
-Date:   Mon, 11 Nov 2019 11:42:52 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "thorsten.scherer@eckelmann.de" <thorsten.scherer@eckelmann.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
-Message-ID: <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
-References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <20191111072715.GB4117@ws067.eckelmann.group>
- <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
+        Mon, 11 Nov 2019 05:44:06 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iU7Ax-0004ZX-JU; Mon, 11 Nov 2019 11:44:03 +0100
+Date:   Mon, 11 Nov 2019 11:44:03 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v2] percpu-refcount: Use normal instead of RCU-sched"
+Message-ID: <20191111104403.5gna4pyg25v4mdin@linutronix.de>
+References: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
+ <20191107091319.6zf5tmdi54amtann@linutronix.de>
+ <20191107161749.GA93945@dennisz-mbp>
+ <20191107162842.2qgd3db2cjmmsxeh@linutronix.de>
+ <20191107165519.GA99408@dennisz-mbp>
+ <20191107172434.ylz4hyxw4rbmhre2@linutronix.de>
+ <20191107173653.GA1242@dennisz-mbp>
+ <20191108173553.lxsdic6wa4y3ifsr@linutronix.de>
+ <alpine.DEB.2.21.1911081813330.1687@www.lameter.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1911081813330.1687@www.lameter.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Matti,
-
-On Mon, Nov 11, 2019 at 07:43:50AM +0000, Vaittinen, Matti wrote:
-> On Mon, 2019-11-11 at 08:27 +0100, Thorsten Scherer wrote:
-> > Hello,
-> > 
-> > On Tue, Nov 05, 2019 at 12:30:58PM +0200, Matti Vaittinen wrote:
-> > > It's hard for occasional GPIO code reader/writer to know if values
-> > > 0/1
-> > > equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> > > GPIO_LINE_DIRECTION_OUT to help them out.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > 
-> > for SIOX gpio:
-> > 
-> > Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > 
-> > > Patches are compile-tested only. I have no HW to really test
-> > > them.  Thus
-> > > I'd appreciate carefull review. This work is mainly about
-> > > converting
-> > > zeros and ones to the new defines but it wouldn't be first time I
-> > > get it wrong in one of the patches
-> > > :)                                                   
-> > 
-> > Applied the patch(es) and tested them with SIOX device
-> > 
-> > Tested-by: Thorsten Scherer <t.scherer@eckelmann.de>
+On 2019-11-08 18:17:47 [+0000], Christopher Lameter wrote:
+> On Fri, 8 Nov 2019, Sebastian Andrzej Siewior wrote:
 > 
-> Big thanks! It's _really_ nice that someone takes the time to do the
-> testing! Highly appreciated! :]
+> > diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
+> > index 7aef0abc194a2..390031e816dcd 100644
+> > --- a/include/linux/percpu-refcount.h
+> > +++ b/include/linux/percpu-refcount.h
+> > @@ -186,14 +186,14 @@ static inline void percpu_ref_get_many(struct percpu_ref *ref, unsigned long nr)
+> >  {
+> >  	unsigned long __percpu *percpu_count;
+> >
+> > -	rcu_read_lock_sched();
+> > +	rcu_read_lock();
+> >
+> >  	if (__ref_is_percpu(ref, &percpu_count))
+> >  		this_cpu_add(*percpu_count, nr);
+> 
+> You can use
+> 
+> 	__this_cpu_add()
+> 
+> instead since rcu_read_lock implies preempt disable.
 
-without wanting to devalue Thorsten's testing, I think testing your
-series can be trivially done without a runtime check as your patches
-won't change the compiled result. So just compile once without the patch
-and once with and compare the results. If they are bit-by-bit identical
-everything is fine.
+Paul may correct me but rcu_read_lock() does not imply
+preempt_disable().  rcu_read_lock() does preempt_disable() on preemption
+models other than "Low-Latency Desktop". You can be preempted in a
+RCU-read section.
 
-Best regards
-Uwe
+> This will not change the code for x86 but other platforms that do not use
+> atomic operation here will be able to avoid including to code to disable
+> preempt for the per cpu operations.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+x86 triggers this warning with the suggested change:
+
+| BUG: using __this_cpu_add() in preemptible [00000000] code: login/2370
+| caller is blk_mq_get_request+0x74/0x4c0
+| CPU: 0 PID: 2370 Comm: login Not tainted 5.4.0-rc7+ #82
+| Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
+| Call Trace:
+|  dump_stack+0x7a/0xaa
+|  __this_cpu_preempt_check.cold+0x49/0x4e
+|  blk_mq_get_request+0x74/0x4c0
+|  blk_mq_make_request+0x111/0x890
+|  generic_make_request+0xd3/0x3f0
+|  submit_bio+0x42/0x140
+|  submit_bh_wbc.isra.0+0x13f/0x170
+|  ll_rw_block+0xa0/0xb0
+|  __breadahead+0x3f/0x70
+|  __ext4_get_inode_loc+0x40a/0x520
+|  __ext4_iget+0x10a/0xcf0
+|  ext4_lookup+0x106/0x1f0
+|  lookup_open+0x267/0x8e0
+|  path_openat+0x7c8/0xcb0
+|  do_filp_open+0x8c/0x100
+|  do_sys_open+0x17a/0x230
+|  __x64_sys_openat+0x1b/0x20
+|  do_syscall_64+0x5a/0x230
+|  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+> Same is valid for all other per cpu operations in the patch.
+
+Sebastian
