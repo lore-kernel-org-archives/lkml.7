@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CF4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D855C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15F421655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044C321655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:43:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="IW0zEpu9"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eZzmHFxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKKOm7 (ORCPT
+        id S1727162AbfKKOnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:42:59 -0500
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:44412 "EHLO
+        Mon, 11 Nov 2019 09:43:03 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:55154 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726853AbfKKOm7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726973AbfKKOnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:42:59 -0500
+        Mon, 11 Nov 2019 09:43:00 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3DE52C003F;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6E02EC08B8;
         Mon, 11 Nov 2019 14:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573483378; bh=D0tldHpoR0/W84EFHc/hsP+fZvOo1J+/4ZOjJ5Rol+U=;
+        t=1573483379; bh=scoltA+WigVvTzqdJe03QvtfADm3p97oUkWlWeL7UFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=IW0zEpu9TzHvUaY35am2cd1uyDfdct94Dch/LvnnD2kBYTuEqrKytZOppnJG+KOHT
-         nOF5Jp2qYoMwOBKDlflxK0Ggkfi44S1FYqRaGnvkTF53DT9siG+3ZOZ+fueHKdDT7b
-         UNbvNilu7Mh8CAv1qayrZLgQJIz4JCam5ciST5VHuo6HAy2PFKCAFpggnHZ2tLh7Gj
-         QHhRY+u2T+Qza+6bxuMmH+iAiLVILPqY1tMSeIFuzBU09Kk29SsnVm0HUZZi9jT/GP
-         jjYAB5cvEaZ7i5VmA/oq5l1V7qBZ02JY2oSdK1JiLHeQRKMztHn1fw3geeY9SfeILL
-         IbErXgyXbqK5Q==
+        b=eZzmHFxmbImhW0FoFa8LLlSvauoyC9st1qU6FgqrlEjRz1Ls3tYuKqZrGXHnKi8cc
+         CjvWmsGScCrs+U9vwSC4yqi3AL4U4a2pM6XQ/q/aduRyKNyIoxa81aWfBiKjSwsnRQ
+         Npfi0Z6OZswdsN9i3AG5DBnNGa4t2W5gZgw7kTBeKngpC8644r5bjYNgv4hoWLHe4a
+         Blb3NaxgykQlvAGraEY3v84auAjvGgcoaEahJ4A7Mn/7qKckzTn5lJpGQF2D6jqsL7
+         1wX5yjUnu+afVGYCKQBcS/Wz/4gXFKswaMJIZNCwOo7ZzZ9bp80ezNXJ7ukYuGEZ9P
+         w79TNoCn14f0A==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id C9076A0243;
-        Mon, 11 Nov 2019 14:42:56 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 14128A0251;
+        Mon, 11 Nov 2019 14:42:57 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/6] net: stmmac: Fix sparse warning
-Date:   Mon, 11 Nov 2019 15:42:34 +0100
-Message-Id: <7fe3e8eb2269ebbe67c9b924d50a793f5907b7e1.1573482991.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next 4/6] net: stmmac: tc: Remove the speed dependency
+Date:   Mon, 11 Nov 2019 15:42:37 +0100
+Message-Id: <9186dd18e5210a51d4fc7aad5c78b49486e18bfe.1573482991.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1573482991.git.Jose.Abreu@synopsys.com>
 References: <cover.1573482991.git.Jose.Abreu@synopsys.com>
@@ -65,10 +65,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VID is converted to le16 so the variable must be __le16 type.
+XGMAC3 supports full CBS features with speeds that can go up to 10G so
+we can now remove the maximum speed check of CBS.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: c7ab0b8088d7 ("net: stmmac: Fallback to VLAN Perfect filtering if HASH is not available")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -82,77 +81,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 2 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h          | 2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c   | 5 +++--
- 4 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index a2ecab5dc8c8..40ca00e596dd 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -733,7 +733,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index f9a9a9d82233..7d972e0fd2b0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -321,8 +321,6 @@ static int tc_setup_cbs(struct stmmac_priv *priv,
+ 		return -EINVAL;
+ 	if (!priv->dma_cap.av)
+ 		return -EOPNOTSUPP;
+-	if (priv->speed != SPEED_100 && priv->speed != SPEED_1000)
+-		return -EOPNOTSUPP;
  
- static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				    u16 perfect_match, bool is_double)
-+				    __le16 perfect_match, bool is_double)
- {
- 	void __iomem *ioaddr = hw->pcsr;
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 9553d2bec1a7..082f5ee9e525 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -556,7 +556,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
- }
- 
- static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				      u16 perfect_match, bool is_double)
-+				      __le16 perfect_match, bool is_double)
- {
- 	void __iomem *ioaddr = hw->pcsr;
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 1303d1e9a18f..509daeefdb79 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -357,7 +357,7 @@ struct stmmac_ops {
- 			     struct stmmac_rss *cfg, u32 num_rxq);
- 	/* VLAN */
- 	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
--				 u16 perfect_match, bool is_double);
-+				 __le16 perfect_match, bool is_double);
- 	void (*enable_vlan)(struct mac_device_info *hw, u32 type);
- 	/* TX Timestamp */
- 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 199c4f938bb2..5f40fbb67bac 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4214,6 +4214,7 @@ static u32 stmmac_vid_crc32_le(__le16 vid_le)
- static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- {
- 	u32 crc, hash = 0;
-+	__le16 pmatch = 0;
- 	int count = 0;
- 	u16 vid = 0;
- 
-@@ -4228,11 +4229,11 @@ static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- 		if (count > 2) /* VID = 0 always passes filter */
- 			return -EOPNOTSUPP;
- 
--		vid = cpu_to_le16(vid);
-+		pmatch = cpu_to_le16(vid);
- 		hash = 0;
- 	}
- 
--	return stmmac_update_vlan_hash(priv, priv->hw, hash, vid, is_double);
-+	return stmmac_update_vlan_hash(priv, priv->hw, hash, pmatch, is_double);
- }
- 
- static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
+ 	mode_to_use = priv->plat->tx_queues_cfg[queue].mode_to_use;
+ 	if (mode_to_use == MTL_QUEUE_DCB && qopt->enable) {
 -- 
 2.7.4
 
