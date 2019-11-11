@@ -2,120 +2,136 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732FBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254D1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026DF214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E0F2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t5ZpWPML"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mz5fSnaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfKKR2c (ORCPT
+        id S1727064AbfKKR3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:28:32 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:45886 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfKKR2b (ORCPT
+        Mon, 11 Nov 2019 12:29:01 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:48548 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKR3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:28:31 -0500
-Received: by mail-vs1-f68.google.com with SMTP id n9so3880209vsa.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:28:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1OTu7RzLc243iGue7chxiy8Vk2YRX4D1tgtKssbyxYs=;
-        b=t5ZpWPMLeBDEvkNCdWobOXpY1rn8mKKbhlJAqH/nClIIPOo8xtotQlHbtDHya4Is2h
-         oMEZKC6Qh/5PvNDFNmY7Qo0a3QcMJk8QVG0lTAlBXtjVdwYFZGnwxEfUmx0l/jfycAlA
-         wQB0V12uNIgPHHMkZZzhcbKeXCUVhZeNQYZb9vvA6OAYGiQ1jyh3DqSXYUX4O4VUgcbM
-         nntC2qRDQHoKCArmi5zgZ9chZOb3Z+WZDSz02rWVMpT8A+tmZWrPjxhJ990eCDT4/D7z
-         1KGN6yioFbYO0lWiOBt1hF/sQINuGYPnD6hUG9Ty9K/hpA13WopK8gW42j8mHxk+adXW
-         OKDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1OTu7RzLc243iGue7chxiy8Vk2YRX4D1tgtKssbyxYs=;
-        b=UcVYousv/WuvVaBA7HPSFhxBNqdX6zkvp5y8EJ5FDGdoxZPmUZyPLUY0J0MxE1Chq+
-         PnALgX6M7YvqK/vrMkrc/DcGD2nqyFtwGdwy78owaI3SyDdZmb2eOrSLFyK2+PdH2iPi
-         Oj/lQKRIDlPFo71MaMzdnYSd1ct9lrd0hzUUTllzlx8ZKU9niW549Ypk2cP6iKc//ov/
-         EXpzEpVmLKqgbJ+M9ZQiID1DqCge0P5+E053oX7xNYBZ/+4o/HoFOvBDTrODTrL1didr
-         YghKwc76kSVfo6UMrpcZ86n9Cx6BaFMdyh5ybznVHIWX3RTkpOP22rLUEk3MNBVoI995
-         Avsw==
-X-Gm-Message-State: APjAAAXaRaAPxz9bieEiHW25fiAHWJ1xbZ9DizD3TC/ixwZLG/vcLx/h
-        EfFI14QZODdHafiQ8WJImE0jOxTIYxETL4kzKALrFA==
-X-Google-Smtp-Source: APXvYqwilC07dl1RnIx5npEnNIV0hBMmZ1Z8YLoBy1QbElednuBWAi2IH+P4714/fpUNZRzKUbKdgOH1iwmWYFORaFA=
-X-Received: by 2002:a67:ef4e:: with SMTP id k14mr10817201vsr.165.1573493310523;
- Mon, 11 Nov 2019 09:28:30 -0800 (PST)
+        Mon, 11 Nov 2019 12:29:00 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHPVFe077366;
+        Mon, 11 Nov 2019 17:28:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=WlxVxKiBr49y4SsqPlWfm5cHZY1cE9jd8M0a28PEqNk=;
+ b=Mz5fSnaVVh/Jxse98mVsZB+d77X0IfUciewQJcCvtqcMCnsXDWDz+7BAkafki3Ob/LSF
+ cIc0Lq+XWBuB4GiPn+PsiTPxwaAQyhe2P0wjz5xdFSf/+d+J7DRASqceeS/tj8wL3fk/
+ YWUkvZ1WbU3BgLPuGaRGe6oqDPpDHnBbgmayHxxT7oE9avpM65sRgigvWVRtBUyxb2Zx
+ +sVCqPFxqZ7NPU1+f5pIAQuBGOvSr6fBEUyNLfY28uxN9B1b4Bz+3U9+WTASm0yfuqLr
+ +AW0pl/vHFA1440Py+jSOTSy9lj2aG2F40Cchd380ZMZCa3ra/2G+lV6WvJ+JPI3dKIw qg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w5mvtg7vs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 17:28:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHEp6p067937;
+        Mon, 11 Nov 2019 17:28:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2w66wmfwbg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 17:28:08 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xABHS51e023060;
+        Mon, 11 Nov 2019 17:28:05 GMT
+Received: from [10.175.169.52] (/10.175.169.52)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 Nov 2019 09:28:05 -0800
+Subject: Re: [PATCH v1 2/3] KVM: VMX: Do not change PID.NDST when loading a
+ blocked vCPU
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jag Raman <jag.raman@oracle.com>
+References: <20191106175602.4515-1-joao.m.martins@oracle.com>
+ <20191106175602.4515-3-joao.m.martins@oracle.com>
+ <15c8c821-25ff-eb62-abd3-8d7d69650744@redhat.com>
+ <314a4120-036c-e954-bc9f-e57dee3bbb7c@oracle.com>
+ <49912d14-1f79-2658-9471-4193807ad667@redhat.com>
+ <b61dc2b2-14be-4d4f-f512-5280010d930a@oracle.com>
+ <4E05E5FC-0064-47DE-B4B2-B3BDAF23C072@oracle.com>
+ <20191111155349.GA11725@linux.intel.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <946be6b4-3b8b-e89d-c3e5-18fd7b714a7f@oracle.com>
+Date:   Mon, 11 Nov 2019 17:27:57 +0000
 MIME-Version: 1.0
-References: <f03c978c-86de-b8bb-22c2-177d7fafed94@fivetechno.de>
-In-Reply-To: <f03c978c-86de-b8bb-22c2-177d7fafed94@fivetechno.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 11 Nov 2019 18:27:54 +0100
-Message-ID: <CAPDyKFqn06LZZMXLD2o-M6A0R6KU97PFUTN=NgYnMtf=ESULTA@mail.gmail.com>
-Subject: Re: arm64: dts: rockchip: Add SDR104 mode to SD-card I/F on rk3399-roc-pc
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191111155349.GA11725@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=904
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911110155
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=971 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911110155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 at 15:13, Markus Reichl <m.reichl@fivetechno.de> wrote:
->
-> Add SDR104 capability and regulators to SD card node.
-> While at it, fix a typo in lcd pinctrl and remove two
-> undocumented bindings from pmic.
->
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> ---
->  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 31 +++++++++++++++----
->  1 file changed, 25 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> index 33df95e384b4..e86a6db54499 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> @@ -135,6 +135,20 @@
->                 vin-supply = <&vcc_1v8>;
->         };
->
-> +       vcc3v0_sd: vcc3v0-sd {
-> +               compatible = "regulator-fixed";
-> +               enable-active-high;
-> +               gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&vcc3v0_sd_en>;
-> +               regulator-name = "vcc3v0_sd";
-> +               regulator-always-on;
+On 11/11/19 3:53 PM, Sean Christopherson wrote:
+> On Mon, Nov 11, 2019 at 04:59:20PM +0200, Liran Alon wrote:
+>>
+>>
+>>> On 11 Nov 2019, at 16:56, Joao Martins <joao.m.martins@oracle.com> wrote:
+>>>
+>>> On 11/11/19 2:50 PM, Paolo Bonzini wrote:
+>>>> On 11/11/19 15:48, Joao Martins wrote:
+>>>>>>>
+>>>>>>> Fixes: c112b5f50232 ("KVM: x86: Recompute PID.ON when clearing PID.SN")
+>>>>>>> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+>>>>>>> Signed-off-by: Liran Alon <liran.alon@oracle.com>
+>>>>>> Something wrong in the SoB line?
+>>>>>>
+>>>>> I can't spot any mistake; at least it looks chained correctly for me. What's the
+>>>>> issue you see with the Sob line?
+>>>>
+>>>> Liran's line after yours is confusing.  Did he help with the analysis or
+>>>> anything like that?
+>>>>
+>>> He was initially reviewing my patches, but then helped improving the problem
+>>> description in the commit messages so felt correct to give credit.
+>>>
+>>> 	Joao
+>>
+>> I think proper action is to just remove me from the SoB line.
+> 
+> Use Co-developed-by to attribute multiple authors.  Note, the SoB ordering
+> should show the chronological history of the patch when possible, e.g. the
+> person sending the patch should always have their SoB last.
+> 
+> Documentation/process/submitting-patches.rst and 
+> Documentation/process/5.Posting.rst have more details.
+> 
+The Sob chain on the first two patches were broken (regardless of any use of
+Co-developed-by). Fixed it up on v2, alongside the rest of the comments.
 
-This looks odd. A GPIO regulator being always on?
-
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <3000000>;
-> +               regulator-max-microvolt = <3000000>;
-> +               vin-supply = <&vcc3v3_sys>;
-> +       };
-
-Assumes this powers an SDIO embedded card. Often those have a specific
-power sequence, just wanted to make sure the above are really
-sufficient? No delays or external clock needed?
-
-[...]
-
-Kind regards
-Uffe
+Cheers,
+	Joao
