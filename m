@@ -2,136 +2,69 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00D3C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EFCC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FD721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4AE20818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573494544;
-	bh=hy1iBSxWrAo+5K7ISprQZ72uYFIvTGnv3EGpLhFk9Gg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bsfJh4gNVUcUQ6i1odhUi5e7ulnL9MKL0FXGJ0RqdoHWf0Q4aO3blrAYtjAGUnnDQ
-	 nGAR8AVZruiPro3Y6rBZZQtERM7/eodCiMEoXJJZGHPffgnOosVW1IUKAowDU5NguM
-	 BkfSGpyefCbJzyCnK/z2i/W3ZcLPl1YS6O5l2kGI=
+	s=default; t=1573494608;
+	bh=6Btq0cANTE9NZDddbWN8HJIM2SdQnv3rmPVHoIJKJzA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=tKAu8mY0sGyJk9b2/TcbRl6+SQvSsLfFPt9hWhqHmwjaEeabLV/oh6N2iZGuLbNqy
+	 01MMWI2D1Pn7g5VNFPRro7GhMhX4c1bFV/r+aZWNAuVVCvua+PnCkrex6VloU3qbm+
+	 Zz5d05cKG+CcgR31LN3/PxIlsx47Q9OMUnA2e+Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKKRtE (ORCPT
+        id S1727022AbfKKRuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:49:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 12:50:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfKKRtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:49:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B86FA20818;
-        Mon, 11 Nov 2019 17:49:01 +0000 (UTC)
+        id S1726871AbfKKRuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:50:06 -0500
+Subject: Re: [GIT PULL] SCSI fixes for 5.4-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573494542;
-        bh=hy1iBSxWrAo+5K7ISprQZ72uYFIvTGnv3EGpLhFk9Gg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QoeQys2CPtN0gI+qqN2MaDHEdhmUL9H3+WbfYsyKHHpcgA6hrcHuQTpeF2kOOaXJa
-         wSYGC3Wp1mFkXggcsVwLLxrulUEULdQC9r0XpVcCPhHWkgJ7VZzoWAvSGLTN0zXfsm
-         RsxNOTcqsLXaJ9wR9TqKPo3vrj63NdfgOcAc0Nfc=
-Date:   Mon, 11 Nov 2019 18:48:59 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Lamprecht <t.lamprecht@proxmox.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Doug Reiland <doug.reiland@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
- when loading PDPTRS
-Message-ID: <20191111174859.GB1083018@kroah.com>
-References: <20191003154447.010950442@linuxfoundation.org>
- <20191003154525.870373223@linuxfoundation.org>
- <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
- <20191111173757.GB11805@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111173757.GB11805@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        s=default; t=1573494606;
+        bh=6Btq0cANTE9NZDddbWN8HJIM2SdQnv3rmPVHoIJKJzA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=yfwA+7HxVPLWjvW3lrHzmCqcDCDMiydhiQjd7Q86Ft3GrQI/d0BXq5WmUey9ZqbnD
+         JzeWyBODmtd0RO6SRBd/lM7cTXGNh3yDTeCvPiVyjr1wMEqOrDA1otFgiwa+NtSqKg
+         ZSNyoYdWxBg6rlj+v85q77u1tzy9Atn0zvVN2RLE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1573492117.6865.5.camel@HansenPartnership.com>
+References: <1573492117.6865.5.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1573492117.6865.5.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: 9393c8de628cf0968d81a17cc11841e42191e041
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 72d5ac679e246c15d94a00d53a6289e142cfcf86
+Message-Id: <157349460633.15424.9562738626187318416.pr-tracker-bot@kernel.org>
+Date:   Mon, 11 Nov 2019 17:50:06 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:37:57AM -0800, Sean Christopherson wrote:
-> On Mon, Nov 11, 2019 at 10:32:05AM +0100, Thomas Lamprecht wrote:
-> > On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
-> > > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > 
-> > > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
-> > > 
-> > > Manually generate the PDPTR reserved bit mask when explicitly loading
-> > > PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
-> > It seems that a backport of this to stable and distro kernels tickled out
-> > some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
-> > Intel CPUs[1].
-> 
-> It manifests specifically when running with EPT disabled (no surprise
-> there).  Actually, it probably would reproduce simply with unrestricted
-> guest disabled, but that's beside the point.
-> 
-> The issue is a flawed PAE-paging check in kvm_set_cr3(), which causes KVM
-> to incorrectly load PDPTRs in 64-bit mode and inject a #GP.  It's a sneaky
-> little bugger because the "if (is_long_mode() ..." makes it appear to be
-> correct at first glance.
-> 
-> 	if (is_long_mode(vcpu) &&
-> 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
-> 		return 1;
-> 	else if (is_pae(vcpu) && is_paging(vcpu) &&  <--- needs !is_long_mode()
-> 		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-> 		return 1;
-> 
-> With unrestricted guest, KVM doesn't intercept writes to CR3 and so doesn't
-> trigger the buggy code.  This doesn't fail upstream because the offending
-> code was refactored to encapsulate the PAE checks in a single helper,
-> precisely to avoid this type of headache.
-> 
->   commit bf03d4f9334728bf7c8ffc7de787df48abd6340e
->   Author: Paolo Bonzini <pbonzini@redhat.com>
->   Date:   Thu Jun 6 18:52:44 2019 +0200
-> 
->     KVM: x86: introduce is_pae_paging
-> 
->     Checking for 32-bit PAE is quite common around code that fiddles with
->     the PDPTRs.  Add a function to compress all checks into a single
->     invocation.
-> 
-> 
-> Commit bf03d4f93347 ("KVM: x86: introduce is_pae_paging") doesn't apply
-> cleanly to 4.19 or earlier because of the VMX file movement in 4.20.  But,
-> the revelant changes in x86.c do apply cleanly, and I've quadruple checked
-> that the PAE checks in vmx.c are correct, i.e. applying the patch and
-> ignoring the nested.c/vmx.c conflicts would be a viable lazy option.
-> 
-> > Basically, booting this kernel as host, then running an KVM guest distro
-> > or kernel fails it that guest kernel early in the boot phase without any
-> > error or other log to serial console, earlyprintk.
-> 
-> ...
-> 
-> > 
-> > [0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
-> > [1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
-> >      westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
-> >      has VMX support (i.e. is 64bit based)
-> 
-> Note, not Westmere, which has EPT and unrestricted guest.  Xeon E5420 is
-> Harpertown, a.k.a. Penryn, the shrink of Conroe.  
+The pull request you sent on Mon, 11 Nov 2019 09:08:37 -0800:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-Thanks for figuring this out, can you send us a patch that we can apply
-to fix this issue in the stable tree?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/72d5ac679e246c15d94a00d53a6289e142cfcf86
 
-greg k-h
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
