@@ -4,61 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B54DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACE5C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F46204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C01F204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497922;
-	bh=s8LjOJRbFWTjFJU8PunCvZmgxtsSf2yjWOf9YJFE/nI=;
+	s=default; t=1573497924;
+	bh=kinpNwYLAbFbcv0INl+n+Jk3R5U6KkCib8TlU4z/nx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FdYsb4p1CPrCmUskWZyfLKNCW2OX8Su9syUh7EDST4dsMuoJaY5VHDEWEjRWG3+Xu
-	 JVB4VkaLWbxnezJxVOE6MlEKoaD3fs0EX60AFc2TLCoo76dttcVbaAmS+Rqpv/1EoD
-	 ZEXlN8lVin+2NrdZ54/tIAmd/Z+scqblkaQ366IM=
+	b=Gxcq6u1s3CnlBR1Ha4fSEOsr6Oj4MlK9dl5OrA4Os6MFfgo8lVDjR9PYXW0fRBmK4
+	 28U4G5hzMcLIM7JyggslR0W0JLEHgpjNfdqui+lOn25yuBo4HndXku9Qxt9SkVcifr
+	 sKoVG1A+BhEGUQqeB60n2XP6SzWXzOXob2kBsWqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfKKSpV (ORCPT
+        id S1729451AbfKKSpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:45:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:45:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729835AbfKKSpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:45:18 -0500
+        id S1729847AbfKKSpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:45:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C52521783;
-        Mon, 11 Nov 2019 18:45:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0D10214E0;
+        Mon, 11 Nov 2019 18:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497917;
-        bh=s8LjOJRbFWTjFJU8PunCvZmgxtsSf2yjWOf9YJFE/nI=;
+        s=default; t=1573497920;
+        bh=kinpNwYLAbFbcv0INl+n+Jk3R5U6KkCib8TlU4z/nx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GibbU1+Bv4hZfyxnOUdEWQvJ076saXI6TQtYu7xSPf0hLoMkceUINh1Rm4ktw8FB/
-         Odx9liHsq3oBCglicvVM8kHKGRUmVX1gKjK0J76af97iwJiOXMF+HWfWvQPg7XmyyB
-         rRGGkKkMwElvPkthMlIMdugGLor36QHzazjKFaPU=
+        b=HE26saA87IUEPsI+sxm6TT1O/qaQ50bDdWrqCypRZAFCD51NEmO1IV2/Uh6hDkt5h
+         a4O/ANby0C22+mhmlv06fNbCvZQAeBJf9hm/hvVQjFrGqMqstd9tpM90D53QgcRpGN
+         3KkIaE+SLmynGSXB/FL+BFWaz446RD+b9yqa34v8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/125] perf/x86/amd/ibs: Handle erratum #420 only on the affected CPU family (10h)
-Date:   Mon, 11 Nov 2019 19:28:55 +0100
-Message-Id: <20191111181452.639310015@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 079/125] scsi: qla2xxx: fixup incorrect usage of host_byte
+Date:   Mon, 11 Nov 2019 19:28:38 +0100
+Message-Id: <20191111181450.702770553@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -71,68 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Hannes Reinecke <hare@suse.com>
 
-[ Upstream commit e431e79b60603079d269e0c2a5177943b95fa4b6 ]
+[ Upstream commit 66cf50e65b183c863825f5c28a818e3f47a72e40 ]
 
-This saves us writing the IBS control MSR twice when disabling the
-event.
+DRIVER_ERROR is a a driver byte setting, not a host byte.  The qla2xxx
+driver should rather return DID_ERROR here to be in line with the other
+drivers.
 
-I searched revision guides for all families since 10h, and did not
-find occurrence of erratum #420, nor anything remotely similar:
-so we isolate the secondary MSR write to family 10h only.
-
-Also unconditionally update the count mask for IBS Op implementations
-that have read & writeable current count (CurCnt) fields in addition
-to the MaxCnt field.  These bits were reserved on prior
-implementations, and therefore shouldn't have negative impact.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: c9574fe0bdb9 ("perf/x86-ibs: Implement workaround for IBS erratum #420")
-Link: https://lkml.kernel.org/r/20191023150955.30292-2-kim.phillips@amd.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20191018140458.108278-1-hare@suse.de
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_bsg.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index fac0867907d4d..07bf5517d9d8b 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -389,7 +389,8 @@ static inline void perf_ibs_disable_event(struct perf_ibs *perf_ibs,
- 					  struct hw_perf_event *hwc, u64 config)
- {
- 	config &= ~perf_ibs->cnt_mask;
--	wrmsrl(hwc->config_base, config);
-+	if (boot_cpu_data.x86 == 0x10)
-+		wrmsrl(hwc->config_base, config);
- 	config &= ~perf_ibs->enable_mask;
- 	wrmsrl(hwc->config_base, config);
- }
-@@ -564,7 +565,8 @@ static struct perf_ibs perf_ibs_op = {
- 	},
- 	.msr			= MSR_AMD64_IBSOPCTL,
- 	.config_mask		= IBS_OP_CONFIG_MASK,
--	.cnt_mask		= IBS_OP_MAX_CNT,
-+	.cnt_mask		= IBS_OP_MAX_CNT | IBS_OP_CUR_CNT |
-+				  IBS_OP_CUR_CNT_RAND,
- 	.enable_mask		= IBS_OP_ENABLE,
- 	.valid_mask		= IBS_OP_VAL,
- 	.max_period		= IBS_OP_MAX_CNT << 4,
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index 4a9fd8d944d60..85b03a7f473c1 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -258,7 +258,7 @@ qla2x00_process_els(struct bsg_job *bsg_job)
+ 	srb_t *sp;
+ 	const char *type;
+ 	int req_sg_cnt, rsp_sg_cnt;
+-	int rval =  (DRIVER_ERROR << 16);
++	int rval =  (DID_ERROR << 16);
+ 	uint16_t nextlid = 0;
+ 
+ 	if (bsg_request->msgcode == FC_BSG_RPT_ELS) {
+@@ -433,7 +433,7 @@ qla2x00_process_ct(struct bsg_job *bsg_job)
+ 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	int req_sg_cnt, rsp_sg_cnt;
+ 	uint16_t loop_id;
+ 	struct fc_port *fcport;
+@@ -1948,7 +1948,7 @@ qlafx00_mgmt_cmd(struct bsg_job *bsg_job)
+ 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	struct qla_mt_iocb_rqst_fx00 *piocb_rqst;
+ 	srb_t *sp;
+ 	int req_sg_cnt = 0, rsp_sg_cnt = 0;
 -- 
 2.20.1
 
