@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3EFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B18C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE04B2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288B1214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497314;
-	bh=0iZaIIXbU/NqbmH15+RRrZpLj+GgN8NzNblxv7/I+gg=;
+	s=default; t=1573497321;
+	bh=5shsiuGVpMOzq5flnd+ZIoIzHgqAS7cOLYrX4/j23uI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D3nkt20wsU0mKDbzd/UEemWIaeI3/47Skq8e0GMPLpmPw5wrnTilpsVJ4qPIqxfkG
-	 S19k5aCa33S+mSVXEQFzRTm3QoCAMxAgingYm6ODFm8rrTOWzPH4NwyvYSwku2hgDb
-	 8VfGCTxh7Nbw8Y8QjTmCfDk8WfQV/TPQqW//sjxw=
+	b=Y/ezsOzr4J4fmc7hpW8C4Wdgc5u6/b80x9aiw2Z1NMx79LOH3c4CuMGJBQwjSicE1
+	 +atOt5Q1iziTyvU1he7Gvfa88nF7H+1zmd89WufWvNHFNrKMgE+BELOd83DEWevfCg
+	 H/UwERGEgNtS1j21CxLub7zmMytVosSuAkrieB+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfKKSfN (ORCPT
+        id S1728499AbfKKSfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53020 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfKKSfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:10 -0500
+        id S1727547AbfKKSfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8134B21925;
-        Mon, 11 Nov 2019 18:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB5F20659;
+        Mon, 11 Nov 2019 18:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497310;
-        bh=0iZaIIXbU/NqbmH15+RRrZpLj+GgN8NzNblxv7/I+gg=;
+        s=default; t=1573497315;
+        bh=5shsiuGVpMOzq5flnd+ZIoIzHgqAS7cOLYrX4/j23uI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KaqFzGKm5YUENmt0O5pFSABjNrL6ApiHg898kknEPpeeBkhUe65pk6Nf+86XgabOd
-         vTBOC6dQijX7z060Cgr3VGHrXVsLS/UOtE1V94T9UYHY63KbFBVP+oZzxZeGZaE2zr
-         Ezmm6HSn2qpaEUeIaxkB5dDi5Lf9f9fpBUz1ojNo=
+        b=RGpWx//dqiJdLZzwNszWOzK3YxyRf59/y/gq4/VcoDCeHniMyZdUX5Eq5aw8lX7gE
+         DXruRVz2cD44kwHorVT12lgdyki8rODlNE0BUj6sHw3JL3wLIdnnhdxuvouYA/izgw
+         GO6JL8lxLTQs9yG2705XaeT7Vw0HASikzxDIaLRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 010/105] NFC: st21nfca: fix double free
-Date:   Mon, 11 Nov 2019 19:27:40 +0100
-Message-Id: <20191111181427.754413944@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Tristan Madani <tristmd@gmail.com>
+Subject: [PATCH 4.14 012/105] ALSA: timer: Fix incorrectly assigned timer instance
+Date:   Mon, 11 Nov 2019 19:27:42 +0100
+Message-Id: <20191111181428.400790917@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,31 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 99a8efbb6e30b72ac98cecf81103f847abffb1e5 ]
+commit e7af6307a8a54f0b873960b32b6a644f2d0fbd97 upstream.
 
-The variable nfcid_skb is not changed in the callee nfc_hci_get_param()
-if error occurs. Consequently, the freed variable nfcid_skb will be
-freed again, resulting in a double free bug. Set nfcid_skb to NULL after
-releasing it to fix the bug.
+The clean up commit 41672c0c24a6 ("ALSA: timer: Simplify error path in
+snd_timer_open()") unified the error handling code paths with the
+standard goto, but it introduced a subtle bug: the timer instance is
+stored in snd_timer_open() incorrectly even if it returns an error.
+This may eventually lead to UAF, as spotted by fuzzer.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The culprit is the snd_timer_open() code checks the
+SNDRV_TIMER_IFLG_EXCLUSIVE flag with the common variable timeri.
+This variable is supposed to be the newly created instance, but we
+(ab-)used it for a temporary check before the actual creation of a
+timer instance.  After that point, there is another check for the max
+number of instances, and it bails out if over the threshold.  Before
+the refactoring above, it worked fine because the code returned
+directly from that point.  After the refactoring, however, it jumps to
+the unified error path that stores the timeri variable in return --
+even if it returns an error.  Unfortunately this stored value is kept
+in the caller side (snd_timer_user_tselect()) in tu->timeri.  This
+causes inconsistency later, as if the timer was successfully
+assigned.
+
+In this patch, we fix it by not re-using timeri variable but a
+temporary variable for testing the exclusive connection, so timeri
+remains NULL at that point.
+
+Fixes: 41672c0c24a6 ("ALSA: timer: Simplify error path in snd_timer_open()")
+Reported-and-tested-by: Tristan Madani <tristmd@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191106165547.23518-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/nfc/st21nfca/core.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -719,6 +719,7 @@ static int st21nfca_hci_complete_target_
- 							NFC_PROTO_FELICA_MASK;
- 		} else {
- 			kfree_skb(nfcid_skb);
-+			nfcid_skb = NULL;
- 			/* P2P in type A */
- 			r = nfc_hci_get_param(hdev, ST21NFCA_RF_READER_F_GATE,
- 					ST21NFCA_RF_READER_F_NFCID1,
+---
+ sound/core/timer.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -298,11 +298,11 @@ int snd_timer_open(struct snd_timer_inst
+ 		goto unlock;
+ 	}
+ 	if (!list_empty(&timer->open_list_head)) {
+-		timeri = list_entry(timer->open_list_head.next,
++		struct snd_timer_instance *t =
++			list_entry(timer->open_list_head.next,
+ 				    struct snd_timer_instance, open_list);
+-		if (timeri->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
++		if (t->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
+ 			err = -EBUSY;
+-			timeri = NULL;
+ 			goto unlock;
+ 		}
+ 	}
 
 
