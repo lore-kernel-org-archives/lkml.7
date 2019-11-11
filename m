@@ -2,127 +2,94 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF3C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78F7C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B00B206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5802084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dIrSy8/A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtnDIhai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfKKPAb (ORCPT
+        id S1726964AbfKKPDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:00:31 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:45704 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfKKPAb (ORCPT
+        Mon, 11 Nov 2019 10:03:24 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60054 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726888AbfKKPDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:00:31 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABEmXYx144677;
-        Mon, 11 Nov 2019 14:59:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=lOs4Q755rWn2yin72lVv51mq0OtKjhD3FBFGWHRvPig=;
- b=dIrSy8/AGjkkTWZ+Nfz4Uu6MBenA7ggIrP9bI8bSzjpdxYV3z6HFxFDyABTYjP2eUa6T
- PcRB1HA2TmYOcCDu+0h+1cYk8+DIy0pvFPW5S9Az9ml2V1JzfTZZ4EsyZo+yYPjD76sC
- PM0BvAzttOOD6KdgMHHIgv/NYCloDsoLWhkp094+yVAQS/PKdeslE4a1Q4EA4H0Dk++Q
- x38ga1YUVMuSn0wcX8ivHgJ/X6BUV7htmFdkVyUoTo7GOMFOu+UC5DKHann4LFA62dzY
- TfUY90p/E1Y9iNnQZ/QYFYyre30BBBdHZCs6AHXo+4RQg0kmc4+T/W9rn7odTTYtps/P TA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2w5mvtfg5p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 14:59:27 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABEmNYt175996;
-        Mon, 11 Nov 2019 14:59:27 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2w6r8jrstx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 14:59:27 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xABExPxL011909;
-        Mon, 11 Nov 2019 14:59:26 GMT
-Received: from [192.168.14.112] (/79.182.207.213)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Nov 2019 06:59:25 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v1 2/3] KVM: VMX: Do not change PID.NDST when loading a
- blocked vCPU
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <b61dc2b2-14be-4d4f-f512-5280010d930a@oracle.com>
-Date:   Mon, 11 Nov 2019 16:59:20 +0200
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jag Raman <jag.raman@oracle.com>
+        Mon, 11 Nov 2019 10:03:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573484603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/lyJlehl3SHL3cILoyZTYkZm+/0A3k7QAa57z5CMFPs=;
+        b=UtnDIhaiYGW6Xq1ftX1xYrogHdC375XfeuoTshI0iXSGa58BuwLCuA+roGY39APpjtc6Mj
+        xyT63N7dIkraMhk/Kfm32+zqLiPcuz4Lbzh3aqRkWG+bgV5c9iSmSQJuLAsr21cIPtKT+d
+        CTHBT4Pt09l9AncLBS4yKd7L2WSJFDE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-oVSFwkg6M_O6eCXYgu36-g-1; Mon, 11 Nov 2019 10:03:20 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65813800C61;
+        Mon, 11 Nov 2019 15:03:18 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 493CB52F3;
+        Mon, 11 Nov 2019 15:03:13 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Jann Horn <jannh@google.com>
+Subject: Re: For review: documentation of clone3() system call
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+Date:   Mon, 11 Nov 2019 16:03:11 +0100
+In-Reply-To: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+        (Michael Kerrisk's message of "Fri, 25 Oct 2019 18:59:31 +0200")
+Message-ID: <87tv7awj4g.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: oVSFwkg6M_O6eCXYgu36-g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <4E05E5FC-0064-47DE-B4B2-B3BDAF23C072@oracle.com>
-References: <20191106175602.4515-1-joao.m.martins@oracle.com>
- <20191106175602.4515-3-joao.m.martins@oracle.com>
- <15c8c821-25ff-eb62-abd3-8d7d69650744@redhat.com>
- <314a4120-036c-e954-bc9f-e57dee3bbb7c@oracle.com>
- <49912d14-1f79-2658-9471-4193807ad667@redhat.com>
- <b61dc2b2-14be-4d4f-f512-5280010d930a@oracle.com>
-To:     Joao Martins <joao.m.martins@oracle.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9437 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=980
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911110137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9437 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911110137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Michael Kerrisk:
 
+>        Another  difference  for  the  raw clone() system call is that the
+>        stack argument may be NULL, in which case the child uses a  dupli=
+=E2=80=90
+>        cate  of the parent's stack.  (Copy-on-write semantics ensure that
+>        the child gets separate copies of stack pages when either  process
+>        modifies  the  stack.)   In  this case, for correct operation, the
+>        CLONE_VM option should not be specified.  (If the child shares the
+>        parent's  memory  because of the use of the CLONE_VM flag, then no
+>        copy-on-write duplication occurs and chaos is likely to result.)
 
-> On 11 Nov 2019, at 16:56, Joao Martins <joao.m.martins@oracle.com> =
-wrote:
->=20
-> On 11/11/19 2:50 PM, Paolo Bonzini wrote:
->> On 11/11/19 15:48, Joao Martins wrote:
->>>>>=20
->>>>> Fixes: c112b5f50232 ("KVM: x86: Recompute PID.ON when clearing =
-PID.SN")
->>>>> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
->>>>> Signed-off-by: Liran Alon <liran.alon@oracle.com>
->>>> Something wrong in the SoB line?
->>>>=20
->>> I can't spot any mistake; at least it looks chained correctly for =
-me. What's the
->>> issue you see with the Sob line?
->>=20
->> Liran's line after yours is confusing.  Did he help with the analysis =
-or
->> anything like that?
->>=20
-> He was initially reviewing my patches, but then helped improving the =
-problem
-> description in the commit messages so felt correct to give credit.
->=20
-> 	Joao
+I think sharing the stack also works with CLONE_VFORK with CLONE_VM, as
+long as measures are taken to preserve the return address in a register.
 
-I think proper action is to just remove me from the SoB line.
+Thanks,
+Florian
 
--Liran=
