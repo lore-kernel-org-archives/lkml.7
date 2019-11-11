@@ -2,82 +2,111 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6959C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97616C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC382190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E53222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573497122;
+	bh=HNqy7dCWHOAhnEqVQn3eWdl3OjUnIi+Gkos2zhsq6Iw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EiGgNvOQLRLI4+wo3Xn2Pb/NKw3akCZ0BLgOTLh7ygEdiZVJAriU5BSb8y5xRQSYI
+	 jpNKMf3ly2jYmlHJ9bzg/4IvUofJJ/0iL43lvfju52v988dLi25xwxJBqK1fNrX+Q/
+	 8ADZTSDPFfxPw58NGfqJ1vZSQ2pTdnrW8vO3QHDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfKKSb6 (ORCPT
+        id S1727836AbfKKScB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45288 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727770AbfKKSbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 14E12B2E3;
-        Mon, 11 Nov 2019 18:31:54 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 48398DA7AF; Mon, 11 Nov 2019 19:31:58 +0100 (CET)
-Date:   Mon, 11 Nov 2019 19:31:58 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next 1/2] btrfs: tree-checker: Fix error format string
-Message-ID: <20191111183158.GT3001@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191108213853.16635-1-afaerber@suse.de>
- <20191108213853.16635-2-afaerber@suse.de>
+        Mon, 11 Nov 2019 13:32:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727814AbfKKSb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:57 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC3B22184C;
+        Mon, 11 Nov 2019 18:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573497116;
+        bh=HNqy7dCWHOAhnEqVQn3eWdl3OjUnIi+Gkos2zhsq6Iw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0OpkyrrFztYjYJVi0xOcMLa3JUP7/THSL58dwLg7zIEBSjq+XoDsGYGx5o2KRol+S
+         Ks4C1tpqprmR2+ztII0ssoNzvbnSsVhjb7JaEQTpJPpO3978MPWi2MyLc0Uc/yKbCs
+         Ie4EOGSQ1OXSi4V2+V2dPYFG0MAE9QEc4hJgQ8xc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 42/43] mm/filemap.c: dont initiate writeback if mapping has no dirty pages
+Date:   Mon, 11 Nov 2019 19:28:56 +0100
+Message-Id: <20191111181328.697316041@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
+References: <20191111181246.772983347@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108213853.16635-2-afaerber@suse.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:38:52PM +0100, Andreas Färber wrote:
-> From: Andreas Färber <afaerber@suse.com>
-> 
-> Argument BTRFS_FILE_EXTENT_INLINE_DATA_START is defined as offsetof(),
-> which returns type size_t, so we need %zu instead of %lu.
-> 
-> This fixes a build warning on 32-bit arm:
-> 
->   ../fs/btrfs/tree-checker.c: In function 'check_extent_data_item':
->   ../fs/btrfs/tree-checker.c:230:43: warning: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'unsigned int' [-Wformat=]
->     230 |     "invalid item size, have %u expect [%lu, %u)",
->         |                                         ~~^
->         |                                           |
->         |                                           long unsigned int
->         |                                         %u
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Is there a gcc warning option that can catch that on 64bit too?
--Wformat=2 does not and I don't see any other of the option family to do
-that. We've had fixups of the size_t printk formats and I'd like to
-catch that when the patches are added to the devel branches. I can't run
-32bit build check each time but this seems to be the only way so far.
+commit c3aab9a0bd91b696a852169479b7db1ece6cbf8c upstream.
 
-> Fixes: a31ccb4b7ba2 ("btrfs: tree-checker: Check item size before reading file extent type")
+Functions like filemap_write_and_wait_range() should do nothing if inode
+has no dirty pages or pages currently under writeback.  But they anyway
+construct struct writeback_control and this does some atomic operations if
+CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
+updates state of writeback ownership, on slow path might be more work.
+Current this path is safely avoided only when inode mapping has no pages.
 
-As the patch is still in the devel branch, the commit id is not stable
-and I'll fold the change to to the patch. Thanks.
+For example generic_file_read_iter() calls filemap_write_and_wait_range()
+at each O_DIRECT read - pretty hot path.
+
+This patch skips starting new writeback if mapping has no dirty tags set.
+If writeback is already in progress filemap_write_and_wait_range() will
+wait for it.
+
+Link: http://lkml.kernel.org/r/156378816804.1087.8607636317907921438.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ mm/filemap.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -340,7 +340,8 @@ int __filemap_fdatawrite_range(struct ad
+ 		.range_end = end,
+ 	};
+ 
+-	if (!mapping_cap_writeback_dirty(mapping))
++	if (!mapping_cap_writeback_dirty(mapping) ||
++	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+ 		return 0;
+ 
+ 	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
+
+
