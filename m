@@ -2,96 +2,106 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5578FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ED3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B37120856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:39:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gX6VKX1Y"
+	by mail.kernel.org (Postfix) with ESMTP id C7A0420856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKKKjC (ORCPT
+        id S1726878AbfKKKm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:39:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31517 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726770AbfKKKjB (ORCPT
+        Mon, 11 Nov 2019 05:42:58 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56967 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKKm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:39:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573468740;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DtJ5pv77U2r0G6ksqsSYckeZ6pvSP6wLt/Y5uCN51BI=;
-        b=gX6VKX1YGSQBI/P7OkvrH8I9iedPzu5Owoj68/TimgZxIogBVL9lB2mlcILm37mLI6OhY+
-        KBmGypspQcRqNqkEA1sxK+Ou2e7bfAKgBjIY/vq6QCMsHGvS57gKZYwMrT/rDLOp6gb99k
-        Xc5zsiEjM+MsvqWYLt86/mwuxguMlvA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-S1iNAS8jNHuFSYbreh69fQ-1; Mon, 11 Nov 2019 05:38:56 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D4F5107ACC4;
-        Mon, 11 Nov 2019 10:38:55 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E5C755D6A3;
-        Mon, 11 Nov 2019 10:38:54 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id C14C94BB5C;
-        Mon, 11 Nov 2019 10:38:54 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 05:38:54 -0500 (EST)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        LTP List <ltp@lists.linux.it>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        lkft-triage@lists.linaro.org,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Message-ID: <1757087132.11450258.1573468734360.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20191111083815.GA29540@infradead.org>
-References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com> <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com> <20191111012614.GC6235@magnolia> <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com> <20191111083815.GA29540@infradead.org>
-Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0:
- Success
+        Mon, 11 Nov 2019 05:42:58 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iU79p-0002lp-7t; Mon, 11 Nov 2019 11:42:53 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iU79o-0006kG-2i; Mon, 11 Nov 2019 11:42:52 +0100
+Date:   Mon, 11 Nov 2019 11:42:52 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "thorsten.scherer@eckelmann.de" <thorsten.scherer@eckelmann.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
+Message-ID: <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
+References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
+ <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191111072715.GB4117@ws067.eckelmann.group>
+ <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.17.163, 10.4.195.18]
-Thread-Topic: diotest4.c:476: read to read-only space. returns 0: Success
-Thread-Index: 910IB+66jrM2sMmDpKAiK7gJA7sQsg==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: S1iNAS8jNHuFSYbreh69fQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Matti,
 
------ Original Message -----
-> Is this a new test?
+On Mon, Nov 11, 2019 at 07:43:50AM +0000, Vaittinen, Matti wrote:
+> On Mon, 2019-11-11 at 08:27 +0100, Thorsten Scherer wrote:
+> > Hello,
+> > 
+> > On Tue, Nov 05, 2019 at 12:30:58PM +0200, Matti Vaittinen wrote:
+> > > It's hard for occasional GPIO code reader/writer to know if values
+> > > 0/1
+> > > equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+> > > GPIO_LINE_DIRECTION_OUT to help them out.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > 
+> > for SIOX gpio:
+> > 
+> > Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
+> > 
+> > > Patches are compile-tested only. I have no HW to really test
+> > > them.  Thus
+> > > I'd appreciate carefull review. This work is mainly about
+> > > converting
+> > > zeros and ones to the new defines but it wouldn't be first time I
+> > > get it wrong in one of the patches
+> > > :)                                                   
+> > 
+> > Applied the patch(es) and tested them with SIOX device
+> > 
+> > Tested-by: Thorsten Scherer <t.scherer@eckelmann.de>
+> 
+> Big thanks! It's _really_ nice that someone takes the time to do the
+> testing! Highly appreciated! :]
 
-No, it's not new.
+without wanting to devalue Thorsten's testing, I think testing your
+series can be trivially done without a runtime check as your patches
+won't change the compiled result. So just compile once without the patch
+and once with and compare the results. If they are bit-by-bit identical
+everything is fine.
 
-> If not why was this never reported?  Sounds like
-> we should add this test case to xfstests.
+Best regards
+Uwe
 
-I'm guessing not that many users still run 32bit kernels.
-Naresh' setup is using ext4, so I assume he noticed only
-after recent changes in linux-next wrt. directio and ext4.
-
-Regards,
-Jan
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
