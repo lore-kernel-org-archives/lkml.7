@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB5C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA3BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAD020659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80835204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498756;
-	bh=2yS4gRpxf/2gEhhzNNa75eK9CfmmxLHaADM6e7yB17k=;
+	s=default; t=1573498766;
+	bh=fnvCyuzWa8dcVt7gPXXH3w5RLjFVoBejn1wjVcjPlYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqe0nXu4l7ulvUoKkUGT1rOOZnRDI4FQriYlNnTRyqZhq4+D2vo4VJqTw0GuVQMbN
-	 ykLtuOzWQslj2gPC31l31zyuOMJJmG3/Ab5Pbu50b4uijIDt7uxwkUhuD0Q3REIFKj
-	 r6gRk0yolGHuxV8RrbwUqt9veDKJrnSleHnmiF2k=
+	b=DE77jjVGAQ8vE/fvRAu8Q2aV51EBLsPaO7Yn81FgE9s7L/Qahj82UuIddO60kmy9V
+	 M/+ZrooxbXFnLH4hN5kmpLWeP7HlEHkOTSA5aejE7AnVhYRYJklhgLn1nVIIz0IAkK
+	 juRQHwqDHJQ2OpQgbghZAZqJ/eIFk9kWHGvxdfRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730811AbfKKS5T (ORCPT
+        id S1730724AbfKKS4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:57:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56340 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:56:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730801AbfKKS5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:57:12 -0500
+        id S1727632AbfKKS4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:56:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 784FD2173B;
-        Mon, 11 Nov 2019 18:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 840F52184C;
+        Mon, 11 Nov 2019 18:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498632;
-        bh=2yS4gRpxf/2gEhhzNNa75eK9CfmmxLHaADM6e7yB17k=;
+        s=default; t=1573498592;
+        bh=fnvCyuzWa8dcVt7gPXXH3w5RLjFVoBejn1wjVcjPlYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hYrDD4QgUwA3u4i6NSLesnurV/ewjoQxwGSwzkd0wItKgBXdC7UrY6EEON3JaIjOj
-         bGW5bEBceNqZ/VWryc4h14r9X/ParE6TBPSOYza9Rkvj35hdij7LqR5T2smAKn1zIl
-         RPcEgok4L7UWGl7I9m2PEZ2s0zSdHPig7bWhUOyQ=
+        b=Pka3xhufDf/DxwtrWcFf5Ng4IUUxywcYTm0bk33XBeZIV8CwzHXPI2mLWWtkHoIWD
+         YpqoJxL3MAhqci/LB7TbbwvEaWBB+7kk30NuarmV2ebgN869oidMxjYLTfjod/ZnRl
+         B7X7cS50rwsPoQMTzBEwwONe/ozgl/Z9xeqR6Rl0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 175/193] efi/tpm: Return -EINVAL when determining tpm final events log size fails
-Date:   Mon, 11 Nov 2019 19:29:17 +0100
-Message-Id: <20191111181514.033406325@linuxfoundation.org>
+Subject: [PATCH 5.3 165/193] drm/sched: Set error to s_fence if HW job submission failed.
+Date:   Mon, 11 Nov 2019 19:29:07 +0100
+Message-Id: <20191111181513.301498679@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -66,43 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerry Snitselaar <jsnitsel@redhat.com>
+From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
 
-[ Upstream commit 2bb6a81633cb47dcba4c9f75605cbe49e6b73d60 ]
+[ Upstream commit 167bf96014a095753053595f3224fcdeb49ac3c8 ]
 
-Currently nothing checks the return value of efi_tpm_eventlog_init(),
-but in case that changes in the future make sure an error is
-returned when it fails to determine the tpm final events log
-size.
+Problem:
+When run_job fails and HW fence returned is NULL we still signal
+the s_fence to avoid hangs but the user has no way of knowing if
+the actual HW job was ran and finished.
 
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after ...")
-Link: https://lkml.kernel.org/r/20191029173755.27149-3-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fix:
+Allow .run_job implementations to return ERR_PTR in the fence pointer
+returned and then set this error for s_fence->finished fence so whoever
+wait on this fence can inspect the signaled fence for an error.
+
+Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/tpm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/scheduler/sched_main.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index ebd7977653a8e..31f9f0e369b97 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -88,6 +88,7 @@ int __init efi_tpm_eventlog_init(void)
+diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+index c1058eece16b4..27e6449da24ad 100644
+--- a/drivers/gpu/drm/scheduler/sched_main.c
++++ b/drivers/gpu/drm/scheduler/sched_main.c
+@@ -478,6 +478,7 @@ void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched)
+ 	struct drm_sched_job *s_job, *tmp;
+ 	uint64_t guilty_context;
+ 	bool found_guilty = false;
++	struct dma_fence *fence;
  
- 	if (tbl_size < 0) {
- 		pr_err(FW_BUG "Failed to parse event in TPM Final Events Log\n");
-+		ret = -EINVAL;
- 		goto out_calc;
+ 	list_for_each_entry_safe(s_job, tmp, &sched->ring_mirror_list, node) {
+ 		struct drm_sched_fence *s_fence = s_job->s_fence;
+@@ -491,7 +492,16 @@ void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched)
+ 			dma_fence_set_error(&s_fence->finished, -ECANCELED);
+ 
+ 		dma_fence_put(s_job->s_fence->parent);
+-		s_job->s_fence->parent = sched->ops->run_job(s_job);
++		fence = sched->ops->run_job(s_job);
++
++		if (IS_ERR_OR_NULL(fence)) {
++			s_job->s_fence->parent = NULL;
++			dma_fence_set_error(&s_fence->finished, PTR_ERR(fence));
++		} else {
++			s_job->s_fence->parent = fence;
++		}
++
++
  	}
+ }
+ EXPORT_SYMBOL(drm_sched_resubmit_jobs);
+@@ -719,7 +729,7 @@ static int drm_sched_main(void *param)
+ 		fence = sched->ops->run_job(sched_job);
+ 		drm_sched_fence_scheduled(s_fence);
  
+-		if (fence) {
++		if (!IS_ERR_OR_NULL(fence)) {
+ 			s_fence->parent = dma_fence_get(fence);
+ 			r = dma_fence_add_callback(fence, &sched_job->cb,
+ 						   drm_sched_process_job);
+@@ -729,8 +739,11 @@ static int drm_sched_main(void *param)
+ 				DRM_ERROR("fence add callback failed (%d)\n",
+ 					  r);
+ 			dma_fence_put(fence);
+-		} else
++		} else {
++
++			dma_fence_set_error(&s_fence->finished, PTR_ERR(fence));
+ 			drm_sched_process_job(NULL, &sched_job->cb);
++		}
+ 
+ 		wake_up(&sched->job_scheduled);
+ 	}
 -- 
 2.20.1
 
