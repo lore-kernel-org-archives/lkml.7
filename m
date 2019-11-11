@@ -2,96 +2,161 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62098C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1AEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF8A222C5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E2C20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="NlZMZ6JN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UiDUPE6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfKKPoq (ORCPT
+        id S1726959AbfKKPqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:44:46 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45183 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfKKPop (ORCPT
+        Mon, 11 Nov 2019 10:46:24 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59223 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfKKPqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:44:45 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z10so9850478wrs.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 07:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OTPVxnQFejq+AoNfEY9ziHLlBKyMve0E2Eb7D8CDsvM=;
-        b=NlZMZ6JNKrmFbgq1d+v60CJLMAEcPitVUMyH8CO8Oabh4/hijRW+hFrF4gOCzJHOSH
-         nxTuVd/pZ5G2nGvcoz9DfIDhIxLVdINocZqhHVdo766p2D7td1MnJtojV7OGdcVkD0Zg
-         o6gsI8Ecqq+51r8pD6bdlhAtsRA36E0K/CmYpbsNummwK2MAhlBD//uK5to/HKA6c/1y
-         vDmURgwu+WNn0Po0spr5qYSGS2L/DMsyHZUPFiv/Xbr2nCLx1ppqHzMnoW3YnZCR4v+Q
-         Ut0KV6/S/Tm2jTteNJyUvoF3IlBskkIaHXGfSS+8sqZZJDc09ZROpg852P6tvqYs2dgD
-         UxMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OTPVxnQFejq+AoNfEY9ziHLlBKyMve0E2Eb7D8CDsvM=;
-        b=J/Xrub+LcuYjB6+YiVoE1xBAH4QPj8RPCGMYv21b2OAPWcuz1/imsBZeQrgEqSzajj
-         OCpPhtsyztAfj83SW8cGs/nWkhNhmTBD8ywolW1mH0obxXHZO9fl/n6Er7KhtwUBAfyW
-         eZnG2uzdvxNntax+Md7Yf14Jtfh2gOmI3hcve+2MuEvrqem5XqAUBAsi8/7MmkFWXxor
-         mjU5HTe9/pL/JynLhHi0hslyPo8cghT4nhuI5tAZD4zwjw+XW6iHwpYq9T6+39G7tTyz
-         hcaW81zJ+vDJYODQdn5SXj7Ude4rq8zYWoWxBoScg6VyrXKhmvndpH7OCzIpSjWByJ5k
-         /tdA==
-X-Gm-Message-State: APjAAAVPi/3uBJIjYo8T6N9NyhMGadbgyjk57fJvjoLyfOndLcZYqhRa
-        qAuWOdEZLRuQbfR44A+9MsBv9Q==
-X-Google-Smtp-Source: APXvYqxb5lV2vP+fMkclWvxE7Ml+3jil7wNaTNQRgPvSM5vEA13rUp7frW173OTD/hcCik/EbCb1FA==
-X-Received: by 2002:a5d:6706:: with SMTP id o6mr727306wru.54.1573487083488;
-        Mon, 11 Nov 2019 07:44:43 -0800 (PST)
-Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id p10sm18000080wmi.44.2019.11.11.07.44.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 07:44:43 -0800 (PST)
-Date:   Mon, 11 Nov 2019 16:44:40 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: bnxt_en: Fix array overrun in
- bnxt_fill_l2_rewrite_fields()
-Message-ID: <20191111154440.GA29052@netronome.com>
-References: <20191111020855.20775-1-olof@lixom.net>
+        Mon, 11 Nov 2019 10:46:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573487182;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4hvCDZXTCZ2nFUfV3XkZPxJrmWvqepgR/qG1xYdpL+8=;
+        b=UiDUPE6Ijpc8GWtx1GLEbZhcNX2bWMauLsKOlh2gU1r1Ie5cS1JlqYVX6xHzL/bCgoC4u4
+        F10o+8SSswOOaM9qYFXPQUOcihy/1MjsDnQCxug3NOax15fjSKJ8bkFcwJ93fiDNb4ZXYY
+        tmtkuhWlnIz/eey/WdSdjpG6wOk15H4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-lM4pYcv4POCpGf9ctL-qDg-1; Mon, 11 Nov 2019 10:46:16 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBF8818B9F82;
+        Mon, 11 Nov 2019 15:46:14 +0000 (UTC)
+Received: from krava (unknown [10.40.205.88])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 210C05D6D4;
+        Mon, 11 Nov 2019 15:46:12 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 16:46:12 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] perf session: Fix compression processing
+Message-ID: <20191111154612.GC26980@krava>
+References: <20191103222441.GE8251@krava>
+ <d57725e6-e62f-b37e-6cb4-28bf521faaea@linux.intel.com>
+ <20191111145640.GB26980@krava>
+ <69782f54-f5f5-f89f-9c8d-172d4de331d0@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <69782f54-f5f5-f89f-9c8d-172d4de331d0@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: lM4pYcv4POCpGf9ctL-qDg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191111020855.20775-1-olof@lixom.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 06:08:55PM -0800, Olof Johansson wrote:
-> This is caused by what seems to be a fragile typing approach by
-> the Broadcom firmware/driver:
-> 
-> /* FW expects smac to be in u16 array format */
-> 
-> So the driver uses eth_addr and eth_addr_mask as u16[6] instead of u8[12],
-> so the math in bnxt_fill_l2_rewrite_fields does a [6] deref of the u16
-> pointer, it goes out of bounds on the array.
-> 
-> Just a few lines below, they use ETH_ALEN/2, so this must have been
-> overlooked. I'm surprised original developers didn't notice the compiler
-> warnings?!
-> 
-> Fixes: 90f906243bf6 ("bnxt_en: Add support for L2 rewrite")
-> Signed-off-by: Olof Johansson <olof@lixom.net>
+On Mon, Nov 11, 2019 at 06:41:47PM +0300, Alexey Budankov wrote:
+> On 11.11.2019 17:56, Jiri Olsa wrote:
+> > On Mon, Nov 11, 2019 at 05:38:49PM +0300, Alexey Budankov wrote:
+> >>
+> >> On 04.11.2019 1:24, Jiri Olsa wrote:
+> >>> hi,
+> >> <SNIP>
+> >>> ---
+> >>> The compressed data processing occasionally fails with:
+> >>>   $ perf report --stdio -vv
+> >>>   decomp (B): 44519 to 163000
+> >>>   decomp (B): 48119 to 174800
+> >>>   decomp (B): 65527 to 131072
+> >>>   fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mmap_=
+size=3D0x20000: fuzzed perf.data?
+> >>>   Error:
+> >>>   failed to process sample
+> >>>   ...
+> >>>
+> >>> It's caused by recent fuzzer fix that does not take into account
+> >>> that compressed data do not need to by fully present in the buffer,
+> >>> so it's ok to just return NULL and not to fail.
+> >>>
+> >>> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing i=
+nvalid header.size")
+> >>> Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.kerne=
+l.org
+> >>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> >>> ---
+> >>>  tools/perf/util/session.c | 8 +++++---
+> >>>  1 file changed, 5 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> >>> index f07b8ecb91bc..3589ed14a629 100644
+> >>> --- a/tools/perf/util/session.c
+> >>> +++ b/tools/perf/util/session.c
+> >>> @@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_events(=
+struct perf_session *session)
+> >>> =20
+> >>>  static union perf_event *
+> >>>  fetch_mmaped_event(struct perf_session *session,
+> >>> -=09=09   u64 head, size_t mmap_size, char *buf)
+> >>> +=09=09   u64 head, size_t mmap_size, char *buf, bool decomp)
+> >>
+> >> bools in interface make code less transparent.
+> >>
+> >>>  {
+> >>>  =09union perf_event *event;
+> >>> =20
+> >>> @@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *session=
+,
+> >>>  =09=09/* We're not fetching the event so swap back again */
+> >>>  =09=09if (session->header.needs_swap)
+> >>>  =09=09=09perf_event_header__bswap(&event->header);
+> >>> +=09=09if (decomp)
+> >>> +=09=09=09return NULL;
+> >>>  =09=09pr_debug("%s: head=3D%#" PRIx64 " event->header_size=3D%#x, mm=
+ap_size=3D%#zx: fuzzed perf.data?\n",
+> >>>  =09=09=09 __func__, head, event->header.size, mmap_size);
+> >>>  =09=09return ERR_PTR(-EINVAL);
+> >>> @@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_event=
+s(struct perf_session *session)
+> >>>  =09=09return 0;
+> >>> =20
+> >>>  =09while (decomp->head < decomp->size && !session_done()) {
+> >>> -=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp=
+->head, decomp->size, decomp->data);
+> >>> +=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp=
+->head, decomp->size, decomp->data, true);
+> >>
+> >> It looks like this call can be skipped, at all, in this case.
+> >=20
+> > not sure what you mean, we are in decomp code no?
+>=20
+> Ok, it is inside "not fetching" branch.=20
+> NULL return value means to proceed getting further over the trace.
+> Checking record type =3D=3D COMPRESSED at the higher level could=20
+> probably be cleaner fix and also work faster.
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+any chance you could post the fix? the patch I did was a
+quick fix to get the feature working for presentation ;-)
+you're probably thinking of the proper approach
+
+thanks,
+jirka
 
