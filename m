@@ -2,287 +2,202 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B972C17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939A5C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29232075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:37:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="tw/qW979"
+	by mail.kernel.org (Postfix) with ESMTP id 73ED62075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKKJhj (ORCPT
+        id S1726995AbfKKJhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:37:39 -0500
-Received: from mga06.intel.com ([134.134.136.31]:40081 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbfKKJhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:37:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 01:37:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
-   d="scan'208";a="234416991"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Nov 2019 01:37:35 -0800
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 11 Nov 2019 01:37:35 -0800
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 11 Nov 2019 01:37:35 -0800
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 11 Nov 2019 01:37:35 -0800
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (104.47.40.56) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 11 Nov 2019 01:37:35 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d4PSbfVocvnf92HlzAicZlyo+8TLfhkO+XIh+Z7pS1xc2grgo3sj4yEXrjml5QpMXT+v1isirw7uOMCcMqw8uuOppPK4oRz/lGscnfKGZCFKwE7bYaxV6Bl4dgZBSjEV5VSQkRTcS6OlZlt/2MRM5bZcd3cwmHZUrHBCUzbV+kM3yTYIr6JiQriy3Vday7S/gF+aGKJhdu2SzXWxPqnPrQ6dSwaf+p9RniCkR6OLygq8Z1xdWTQIpefox4LqM3ccfaKCuD8o5OUaOFOVfM8s512NHUrDl2oSXZjzQMTEJ4u8hjRXLrroUGPIJtmzx9u8xWOQXmevk+yvHYjes5M6xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iFacM4CLq16Uj2xxGo5nbzX5+CiMj2Pxw2pL6Be3SWM=;
- b=XXNd6mMPlWkeC8WVnq49jqUJPI6oV2KsVKkAoqZDb7D+kY/KBr03P6LHLgK64X8H+zHcGd1FnI7ayxsmvEnCJKRuUG/nBiYL+baVddZXng0Sq6AGDkYgntSm1QybPRartU5FMkln+S2qo7c1WlqcOFgczOscxoS6h7C9LFgcfmM0s18vKU38byGopf2stzFVB5VEjwN2FriE9uX41dyJd0nSGsJzQvNaNsDhTwo+Fy7kdillsG4K/c0yfG4Mkg2M9EqF0DA0iwMup74oKo/D9lmqF6WfFkikNTdHnibMetZNoua3nTqJME7cGi9RpzFA2LcH1I5llaX8imYTXP3cCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iFacM4CLq16Uj2xxGo5nbzX5+CiMj2Pxw2pL6Be3SWM=;
- b=tw/qW979uwDcHSuSEhZ73LYbhnF5Ygit3732NSeIQsCNd1Y/qd22hRgKucJA0Kb2QUZcmWbco26487taMYbmPd1gCDDJmF1cjFuIb7x8VdwVSFl5B4euwyDm+cRcpEnfIom586nZQTPjPRKVfJnUZ2O70xGUs7BLw1O7vuVJ7bU=
-Received: from CY4PR1101MB2360.namprd11.prod.outlook.com (10.173.192.137) by
- CY4PR1101MB2120.namprd11.prod.outlook.com (10.172.79.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Mon, 11 Nov 2019 09:37:33 +0000
-Received: from CY4PR1101MB2360.namprd11.prod.outlook.com
- ([fe80::a897:af24:535a:1732]) by CY4PR1101MB2360.namprd11.prod.outlook.com
- ([fe80::a897:af24:535a:1732%3]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
- 09:37:33 +0000
-From:   "Zavras, Alexios" <alexios.zavras@intel.com>
-To:     Joe Perches <joe@perches.com>, Thomas Gleixner <tglx@linutronix.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-spdx@vger.kernel.org" <linux-spdx@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: RE: spdxcheck.py complains about the second OR?
-Thread-Topic: spdxcheck.py complains about the second OR?
-Thread-Index: AQHVkGx97YY5RqhHq0ueYoAqFuykEad7mOCAgAADfoCAAMSpYIAAVI0AgAkKDLA=
-Date:   Mon, 11 Nov 2019 09:37:32 +0000
-Message-ID: <CY4PR1101MB236097D5F60B4AD344413FCD89740@CY4PR1101MB2360.namprd11.prod.outlook.com>
-References: <CAK7LNASwF9y+MkhkvCRATu0qXSJkxx8fZ-DUjQTfWOi9+1YrfQ@mail.gmail.com>
-         <alpine.DEB.2.21.1911042310040.17054@nanos.tec.linutronix.de>
-         <46615f063c973eee649e3fdb8261978102c89108.camel@perches.com>
-         <CY4PR1101MB2360AB7647D9E2FA15044EE4897E0@CY4PR1101MB2360.namprd11.prod.outlook.com>
- <ec20c751ac1e4156aca0b02dfa0cef4b70cb8ec5.camel@perches.com>
-In-Reply-To: <ec20c751ac1e4156aca0b02dfa0cef4b70cb8ec5.camel@perches.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=alexios.zavras@intel.com; 
-x-originating-ip: [88.217.180.120]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dba886a6-3296-4674-aa78-08d7668ac738
-x-ms-traffictypediagnostic: CY4PR1101MB2120:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CY4PR1101MB2120B5868CEA8370B764C2D989740@CY4PR1101MB2120.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0218A015FA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(136003)(39850400004)(346002)(396003)(199004)(189003)(13464003)(66556008)(7696005)(53546011)(33656002)(6506007)(6436002)(476003)(76116006)(66066001)(26005)(446003)(76176011)(11346002)(4326008)(66446008)(64756008)(486006)(66476007)(66946007)(102836004)(15974865002)(256004)(6246003)(55016002)(186003)(71200400001)(71190400001)(9686003)(8936002)(74316002)(2906002)(8676002)(14454004)(478600001)(81166006)(81156014)(316002)(110136005)(7736002)(305945005)(229853002)(52536014)(25786009)(99286004)(86362001)(5660300002)(6116002)(3846002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1101MB2120;H:CY4PR1101MB2360.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5nk31mnc1c1j8gBUDr/jW3WMKeLKYh7epUlt1tnSSmt/x3T+6AXPXhxqEbn6RN8t0bK2vtI7I1SmKJGwRnH/tu97mnslekX2ytQVNPJ+FYPc2vCgLPGRjoyCHmWyWMJfxb2Mx4eKdcbd/+T4iulzZgCGwlMpcYkjGn7C/REIpk6jfdp0h1hdFC+ZzrR1d/inY8dfUrlrnikvDcskGvtCp6+T0gDxgdTdRybVZoybfavYxqAOMsR5VBukU4eD9TQ/JLw5cOScp/9Q4+J9Mw6PDat93c03umU/wcYlTln6joQ5l6Mml7rOuCjrddlNVkVEzET7OqKelY3XX9VvPzP67w9mymn89ZsEq+44AacUUzvvnpxYokL3KrXIf0hN11JD2tzxNUw5l+zu6buveT1EhrA894YZLaCtSlDtOcaCHh731z3zHlvpZn4lQHrSZM8Pawdc6usG/ikRWqdCrTszfxA47Co/KSUmbSQQioDbP0E=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
+        Mon, 11 Nov 2019 04:37:45 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60720 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfKKJhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:37:45 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5A76C28EE70
+Subject: Re: [PATCH v4 14/17] iio: cros_ec: Remove pm function
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        dianders@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+References: <20191105222652.70226-1-gwendal@chromium.org>
+ <20191105222652.70226-15-gwendal@chromium.org>
+ <20191110131805.2b592b3b@archlinux>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <c6b309c6-0b27-44bd-11e0-187f449b043c@collabora.com>
+Date:   Mon, 11 Nov 2019 10:37:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dba886a6-3296-4674-aa78-08d7668ac738
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 09:37:32.8844
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vyeTb8uvU2aCmC5NqAsFiuePyH8+md2n8KITCVHK7E6VETjFhFw96qf0zPBglP43WjyI6t1KMB96SkG7viwc6NNnUtfn2ZnaXhYFDFG3Gek=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1101MB2120
-X-OriginatorOrg: intel.com
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191110131805.2b592b3b@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the delay in replying.
-I've never used PLY before, but I do know lex and yacc, so I'm confident th=
-at an expression with two (or more) "OR" terms will be handled recursively.
-
-The problem with spdxcheck.py is, I think, that it specifies "nonassoc" in =
-the precedence variable, which effectively means that constructs like "a OR=
- b OR c" are not allowed and need to be "(a OR b) OR c". I expect simply de=
-leting this string would make everything pass.
-
-The following standalone test code shows that there is no need for any addi=
-tional rule in the grammar (the first tests succeed, the last two fail with=
- lexical and parsing errors, respectively):
-
-#!/usr/bin/env python3
-
-import ply.lex as lex
-import ply.yacc as yacc
-
-tokens =3D ( 'ID', 'OR', 'AND', 'LPAR', 'RPAR',)
-
-t_ID =3D r'[a-z]+'
-t_OR =3D 'OR'
-t_AND =3D 'AND'
-t_LPAR  =3D r'\('
-t_RPAR  =3D r'\)'
-t_ignore  =3D ' \t\n'
-
-def p_expr(p):
-    '''expr : ID
-        | expr AND expr
-        | expr OR expr
-        | LPAR expr RPAR'''
-
-def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
-
-def p_error(p):
-    print("Syntax error in input!", p)
 
 
-lexer =3D lex.lex()
-parser =3D yacc.yacc()
+On 10/11/19 14:18, Jonathan Cameron wrote:
+> On Tue,  5 Nov 2019 14:26:49 -0800
+> Gwendal Grignou <gwendal@chromium.org> wrote:
+> 
+>> Since cros_ec_sensorhub is shutting down the FIFO when the device
+>> suspends, no need to slow down the EC sampling period rate.
+>> It was necesseary to do that before command CMD_FIFO_INT_ENABLE was
+>> introduced, but now all supported chromebooks have it.
+>>
+>> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 
-tests =3D ( 'a', 'a OR b', 'a AND b', 'a OR b OR c', 'a OR b AND c OR d',
-        'a AND @', 'a OR OR b')
-for s in tests:
-    print(s)
-    parser.parse(s)
+Also looks good to me
 
-#EOF----------------------------------------------------------------
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
--- zvr
+Thanks,
+ Enric
 
------Original Message-----
-From: Joe Perches <joe@perches.com> =
-
-Sent: Tuesday, 5 November, 2019 16:11
-To: Zavras, Alexios <alexios.zavras@intel.com>; Thomas Gleixner <tglx@linut=
-ronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; linux-spdx@vger.kernel=
-.org; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Masahiro Ya=
-mada <yamada.masahiro@socionext.com>
-Subject: Re: spdxcheck.py complains about the second OR?
-
-On Tue, 2019-11-05 at 10:11 +0000, Zavras, Alexios wrote:
-> This is not correct.
-> Since the grammar includes the production "expr: expr OR expr", there =
-
-> is absolutely no need to add a rule with more than two operands -- it =
-
-> will be handled recursively.
-
-You sure about the recursion?
-
-It does work and spdxcheck no longer emits a message for these two files.
-
-> -- zvr
-> =
-
-> -----Original Message-----
-> From: linux-spdx-owner@vger.kernel.org =
-
-> <linux-spdx-owner@vger.kernel.org> On Behalf Of Joe Perches
-> Sent: Monday, 4 November, 2019 23:24
-> To: Thomas Gleixner <tglx@linutronix.de>; Masahiro Yamada =
-
-> <yamada.masahiro@socionext.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; =
-
-> linux-spdx@vger.kernel.org; Linux Kernel Mailing List =
-
-> <linux-kernel@vger.kernel.org>
-> Subject: Re: spdxcheck.py complains about the second OR?
-> =
-
-> On Mon, 2019-11-04 at 23:11 +0100, Thomas Gleixner wrote:
-> > On Fri, 1 Nov 2019, Masahiro Yamada wrote:
-> > > scripts/spdxcheck.py warns the following two files.
-> > > =
-
-> > > $ ./scripts/spdxcheck.py
-> > > drivers/net/ethernet/pensando/ionic/ionic_if.h: 1:52 Syntax error: =
-
-> > > OR
-> > > drivers/net/ethernet/pensando/ionic/ionic_regs.h: 1:52 Syntax error: =
-
-> > > OR
-> > > =
-
-> > > I do not understand what is wrong with them.
-> > > =
-
-> > > I think "A OR B OR C" is sane.
-> > =
-
-> > Yes it is, but obviously we did not expect files with 3 possible =
-
-> > alternative licenses.
-> =
-
-> Perhaps just this, but the generic logic obviously isn't complete.
-> ---
->  scripts/spdxcheck.py | 1 +
->  1 file changed, 1 insertion(+)
-> =
-
-> diff --git a/scripts/spdxcheck.py b/scripts/spdxcheck.py index =
-
-> 6374e0..00be34 100755
-> --- a/scripts/spdxcheck.py
-> +++ b/scripts/spdxcheck.py
-> @@ -150,6 +150,7 @@ class id_parser(object):
->                  | ID WITH EXC
->                  | expr AND expr
->                  | expr OR expr
-> +                | expr OR expr OR expr
->                  | LPAR expr RPAR'''
->          pass
->  =
-
-> =
-
-> =
-
-> Intel Deutschland GmbH
-> Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
-> Tel: +49 89 99 8853-0, www.intel.de
-> Managing Directors: Christin Eisenschmid, Gary Kershaw Chairperson of =
-
-> the Supervisory Board: Nicole Lau Registered Office: Munich Commercial =
-
-> Register: Amtsgericht Muenchen HRB 186928
-> =
-
-
-Intel Deutschland GmbH
-Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
-Tel: +49 89 99 8853-0, www.intel.de
-Managing Directors: Christin Eisenschmid, Gary Kershaw
-Chairperson of the Supervisory Board: Nicole Lau
-Registered Office: Munich
-Commercial Register: Amtsgericht Muenchen HRB 186928
-
+>> ---
+>> No changes in v4, v3.
+>> New in v2.
+>>
+>>  .../cros_ec_sensors/cros_ec_lid_angle.c       |  1 -
+>>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  1 -
+>>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 47 -------------------
+>>  drivers/iio/light/cros_ec_light_prox.c        |  1 -
+>>  .../linux/iio/common/cros_ec_sensors_core.h   |  5 --
+>>  5 files changed, 55 deletions(-)
+>>
+>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+>> index e30a59fcf0f9..af801e203623 100644
+>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+>> @@ -127,7 +127,6 @@ MODULE_DEVICE_TABLE(platform, cros_ec_lid_angle_ids);
+>>  static struct platform_driver cros_ec_lid_angle_platform_driver = {
+>>  	.driver = {
+>>  		.name	= DRV_NAME,
+>> -		.pm	= &cros_ec_sensors_pm_ops,
+>>  	},
+>>  	.probe		= cros_ec_lid_angle_probe,
+>>  	.id_table	= cros_ec_lid_angle_ids,
+>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+>> index 62a0dd970988..9d0b8ad7a0a5 100644
+>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+>> @@ -315,7 +315,6 @@ MODULE_DEVICE_TABLE(platform, cros_ec_sensors_ids);
+>>  static struct platform_driver cros_ec_sensors_platform_driver = {
+>>  	.driver = {
+>>  		.name	= "cros-ec-sensors",
+>> -		.pm	= &cros_ec_sensors_pm_ops,
+>>  	},
+>>  	.probe		= cros_ec_sensors_probe,
+>>  	.id_table	= cros_ec_sensors_ids,
+>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> index 904cd26dd31f..879b69527cae 100644
+>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> @@ -723,52 +723,5 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>>  }
+>>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_write);
+>>  
+>> -static int __maybe_unused cros_ec_sensors_prepare(struct device *dev)
+>> -{
+>> -	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>> -	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+>> -
+>> -	if (st->curr_sampl_freq == 0)
+>> -		return 0;
+>> -
+>> -	/*
+>> -	 * If the sensors are sampled at high frequency, we will not be able to
+>> -	 * sleep. Set sampling to a long period if necessary.
+>> -	 */
+>> -	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
+>> -		mutex_lock(&st->cmd_lock);
+>> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+>> -		st->param.ec_rate.data = CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY;
+>> -		cros_ec_motion_send_host_cmd(st, 0);
+>> -		mutex_unlock(&st->cmd_lock);
+>> -	}
+>> -	return 0;
+>> -}
+>> -
+>> -static void __maybe_unused cros_ec_sensors_complete(struct device *dev)
+>> -{
+>> -	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>> -	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+>> -
+>> -	if (st->curr_sampl_freq == 0)
+>> -		return;
+>> -
+>> -	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
+>> -		mutex_lock(&st->cmd_lock);
+>> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+>> -		st->param.ec_rate.data = st->curr_sampl_freq;
+>> -		cros_ec_motion_send_host_cmd(st, 0);
+>> -		mutex_unlock(&st->cmd_lock);
+>> -	}
+>> -}
+>> -
+>> -const struct dev_pm_ops cros_ec_sensors_pm_ops = {
+>> -#ifdef CONFIG_PM_SLEEP
+>> -	.prepare = cros_ec_sensors_prepare,
+>> -	.complete = cros_ec_sensors_complete
+>> -#endif
+>> -};
+>> -EXPORT_SYMBOL_GPL(cros_ec_sensors_pm_ops);
+>> -
+>>  MODULE_DESCRIPTION("ChromeOS EC sensor hub core functions");
+>>  MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+>> index 698b2ee81ebf..ccdc6d8958c6 100644
+>> --- a/drivers/iio/light/cros_ec_light_prox.c
+>> +++ b/drivers/iio/light/cros_ec_light_prox.c
+>> @@ -256,7 +256,6 @@ MODULE_DEVICE_TABLE(platform, cros_ec_light_prox_ids);
+>>  static struct platform_driver cros_ec_light_prox_platform_driver = {
+>>  	.driver = {
+>>  		.name	= "cros-ec-light-prox",
+>> -		.pm	= &cros_ec_sensors_pm_ops,
+>>  	},
+>>  	.probe		= cros_ec_light_prox_probe,
+>>  	.id_table	= cros_ec_light_prox_ids,
+>> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+>> index b8f573ca9dcc..96ea4551945e 100644
+>> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+>> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+>> @@ -30,9 +30,6 @@ enum {
+>>   */
+>>  #define CROS_EC_SAMPLE_SIZE  (sizeof(s64) * 2)
+>>  
+>> -/* Minimum sampling period to use when device is suspending */
+>> -#define CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY 1000  /* 1 second */
+>> -
+>>  typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
+>>  
+>>  /**
+>> @@ -117,8 +114,6 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>>  			       struct iio_chan_spec const *chan,
+>>  			       int val, int val2, long mask);
+>>  
+>> -extern const struct dev_pm_ops cros_ec_sensors_pm_ops;
+>> -
+>>  /* List of extended channel specification for all sensors */
+>>  extern const struct iio_chan_spec_ext_info cros_ec_sensors_ext_info[];
+>>  
+> 
