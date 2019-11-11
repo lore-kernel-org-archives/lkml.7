@@ -2,64 +2,64 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA16C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176F5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E4C214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:34:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="hjBW8tL2"
+	by mail.kernel.org (Postfix) with ESMTP id E1F6621872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKKMeG (ORCPT
+        id S1726912AbfKKMig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 07:34:06 -0500
-Received: from first.geanix.com ([116.203.34.67]:35130 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfKKMeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 07:34:06 -0500
-Received: from localhost (87-49-44-45-mobile.dk.customer.tdc.net [87.49.44.45])
-        by first.geanix.com (Postfix) with ESMTPSA id 5BF5C8ED32;
-        Mon, 11 Nov 2019 12:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1573475489; bh=vA/ubZR8WQd44V047oybkMR4vUaL0pxjJypRZvbCbbs=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=hjBW8tL26FwkpKD8J+BU7qs8IoykYAp7kKcMG9wO7Iov5uOUV4FUMPUVxzl/glzAc
-         Sn0czBzaUarv/s6i1n3/ftKsZRMHfTSbYhePNmwVV3r12SgJesoRbaXVzan8CdvpZJ
-         MB/Rjgm7S1ev1Z5f5/TLqUcIzio7vV+kozbdPe/upd0SpAl/l+kIUnQ1QIilf3+Fst
-         iHXClrWfpGVZ/dJZ2tCq4U3/Osg11niramaMZuuPSLLeqrt1p9xf3eHv+mYtOi2AmI
-         VcL50cvfn3p91/E9D44XxuSFrhbSi0avGLLi3AXmxi7PjGdEw3RZKTeNlOdsq9w+iK
-         /URiJp6QPthzg==
-From:   Esben Haabendal <esben@geanix.com>
-To:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] net: ll_temac: Remove set but not used variable 'start_p'
-References: <20191110103937.124600-1-zhengyongjun3@huawei.com>
-Date:   Mon, 11 Nov 2019 13:34:02 +0100
-In-Reply-To: <20191110103937.124600-1-zhengyongjun3@huawei.com> (Zheng
-        Yongjun's message of "Sun, 10 Nov 2019 18:39:37 +0800")
-Message-ID: <87r22ed22t.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 11 Nov 2019 07:38:36 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:48307 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfKKMif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 07:38:35 -0500
+Received: from p54ac5540.dip0.t-ipconnect.de ([84.172.85.64] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iU8xk-0000j9-VE; Mon, 11 Nov 2019 12:38:33 +0000
+Date:   Mon, 11 Nov 2019 13:38:32 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH 10/23] y2038: uapi: change __kernel_time_t to
+ __kernel_old_time_t
+Message-ID: <20191111123830.du25cahvat4ahg54@wittgenstein>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+ <20191108211323.1806194-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191108211323.1806194-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zheng Yongjun <zhengyongjun3@huawei.com> writes:
+On Fri, Nov 08, 2019 at 10:12:09PM +0100, Arnd Bergmann wrote:
+> This is mainly a patch for clarification, and to let us remove
+> the time_t definition from the kernel to prevent new users from
+> creeping in that might not be y2038-safe.
+> 
+> All remaining uses of 'time_t' or '__kernel_time_t' are part of
+> the user API that cannot be changed by that either have a
+> replacement or that do not suffer from the y2038 overflow.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/net/ethernet/xilinx/ll_temac_main.c: In function temac_start_xmit:
-> drivers/net/ethernet/xilinx/ll_temac_main.c:737:13: warning: variable start_p set but not used [-Wunused-but-set-variable]
->
-> start_p is never used, so remove it.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
-
-Acked-by: Esben Haabendal <esben@geanix.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
