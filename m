@@ -2,103 +2,266 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CF2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735DBC17444
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3E720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:04:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="NvMeNPIS"
+	by mail.kernel.org (Postfix) with ESMTP id 3F2D520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573452410;
+	bh=n7hFj+kxBxxMNL94Ev69ntv74KtMsyl8SF9Nu7bBmIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OrRfQROrGUSrFJZsigw+h5FBDmj2sPHwY3lKmFd5T5IP7wg7CdXqdsWdDZxHWgJC7
+	 aXFVhX7ZfC7EwrywqpZ+lkWKNwvAk7bt0sOwj3SGHLDG6CVJbX1KLvFuBBRn+dejYj
+	 VXS7hmYnBKjIknj+9MMjqI6dy1cJadv4WvJ90WVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfKKGEf (ORCPT
+        id S1726973AbfKKGGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:04:35 -0500
-Received: from mail-eopbgr30110.outbound.protection.outlook.com ([40.107.3.110]:59699
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726360AbfKKGEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 01:04:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W+f69m76iqMTinTKnEVpb24yHyhoXXzGE/JRkpnKUuTKjRjuZIu5Ok+Hw85NcVQBnfn1mJbHSwgZZ46KuIYf0a22aL82vbKXvfTgdBZuWDQxqZWuVzo8D0Ppzm5F8hbgL9AXkjbKePzKNnNAGke1V+N8Mn4ZPl4GFkbhEwNmwRJ7pvfs4GYfgEVEC6NKAVkgFcF/n4q+zx7siZarIwR+JWcY+1cHKAI038q7SY4OEU0Bg/wHoFlyNGh6lS5/w8gXeZaaqV9O0A+5IVkiWbsw160a0ovHTYa93gB9Uht9CRBOb85xEd9YCCPjCp0Yjjul7CaS0oGxC+kOftRPxm5Zpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F3LlkwxUPKsWeqPcqF2XJ+wTPvs6U9uWZ7cEBezucLA=;
- b=jutCJMeSwn8vAKYu+JC04l28yKZNEbkBw7tvHwWTpR5Wv8pZhN2KTw5rD04NXUXgZVtNcN5Qty3g+leposf2vgmErHfiK6p6PCRgYO7Yj2lojKI8jgLsRJSgtv/K2HD1t0AfQQMNwt7UzvkNkaXaGEFxegLnbD0YPwMjVh5Rd5Wl00omb9QRN8nL9VCp8igP88gSH1F+fwQQF1aICemm76PLsTHu2cvu8LVWkHVyaJWzSUR8Ohrmh2Kjo7nBIAnUkEW0x+M3Ms0xgMsN2YC0S46CBCIweGgy8Fk4mfkL3kVmNor1+2hG0zuxqZaHfepbm1U187MYeEQpoWwd7S6wcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F3LlkwxUPKsWeqPcqF2XJ+wTPvs6U9uWZ7cEBezucLA=;
- b=NvMeNPISs03QO+yLxhBZOITybQ+9EHqLwfdgjkuDYkaEQfxHH7Te/GK6kGPjMED+/KJuYWbFJgRvY4m8g/aoXhO1gjAzEKin+6rNlKBLNofTe1tJRvGFIw/EM5jzN6fTwb73NNBqmfUPldCFe4xgRL4wct/XsvWJRd6b9Zf4poQ=
-Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com (52.133.8.16) by
- AM6PR0202MB3493.eurprd02.prod.outlook.com (52.133.31.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.24; Mon, 11 Nov 2019 06:04:31 +0000
-Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com
- ([fe80::240e:7545:887b:939e]) by AM6PR0202MB3382.eurprd02.prod.outlook.com
- ([fe80::240e:7545:887b:939e%4]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
- 06:04:31 +0000
-From:   Omer Shpigelman <oshpigelman@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomer Tayar <ttayar@habana.ai>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH 5/6] habanalabs: don't print error when queues are full
-Thread-Topic: [PATCH 5/6] habanalabs: don't print error when queues are full
-Thread-Index: AQHVmBGYC8imNZcx9kmxVBFayUGhdqeFe68w
-Date:   Mon, 11 Nov 2019 06:04:31 +0000
-Message-ID: <AM6PR0202MB338219721B8F2F018E964DC9B8740@AM6PR0202MB3382.eurprd02.prod.outlook.com>
-References: <20191110215533.754-1-oded.gabbay@gmail.com>
- <20191110215533.754-5-oded.gabbay@gmail.com>
-In-Reply-To: <20191110215533.754-5-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oshpigelman@habana.ai; 
-x-originating-ip: [141.226.8.173]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f6b1a64a-94b9-401c-2a59-08d7666d04de
-x-ms-traffictypediagnostic: AM6PR0202MB3493:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0202MB34931FF907F91D36A796A333B8740@AM6PR0202MB3493.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0218A015FA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(376002)(346002)(39840400004)(396003)(366004)(136003)(189003)(199004)(99286004)(66446008)(66946007)(66476007)(66556008)(64756008)(6636002)(55016002)(4326008)(9686003)(53546011)(6506007)(316002)(110136005)(26005)(52536014)(186003)(558084003)(76116006)(6246003)(102836004)(256004)(5660300002)(6436002)(66066001)(71200400001)(71190400001)(478600001)(2501003)(6116002)(3846002)(25786009)(74316002)(14454004)(76176011)(305945005)(7736002)(7696005)(229853002)(2906002)(33656002)(8936002)(476003)(446003)(11346002)(486006)(8676002)(81156014)(81166006)(86362001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3493;H:AM6PR0202MB3382.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bjOscHLiusokf/XDgsEWFe/M4VaSeIlnTVJdCwme9sBi7Avw16Mj76SF8XIrBF0P3xiViOedI7IvFrKMcoAW8+PRi5agtvzDOMaItFKraZ+TEUzt/YmvsP/MoLYYQ8q6BNeFo7uRGBcx2F0rS/TmAiN6CeDNSdXttMU4/VhS5dT/90YWEcVFCbdpx60cVadbLl/S3y0sULdL6CCPPJWmXYiXpbmPNRJcDevn/pTlhux9IB2l+cRD/SMCKYX7fljMTxrDUBlmD5cJaLQR+06oeUobhoJx65jtBfhs/O30aV6KyZMRJNIog3ja25qraEaDQEd6FrXprI7JcIA5o6/kIQI3tLVl6LM4W/ozlMzcnZAok0TWk5OZ1+igVnUr/DKE6qUZ7P4+KnpB8v9pR0TeOXGtoqecwZjd8PAzpRe8fWlimRfxYf+RKlxoYiCPF93t
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 11 Nov 2019 01:06:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbfKKGGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 01:06:48 -0500
+Received: from localhost (unknown [106.201.42.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518FC20679;
+        Mon, 11 Nov 2019 06:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573452407;
+        bh=n7hFj+kxBxxMNL94Ev69ntv74KtMsyl8SF9Nu7bBmIo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cHOCQJ/ShdE+LvSNASxQapSPa8F0gwqk5Z+9n7gbKft8XLD+jkxj09f6AnBQZjnud
+         16TGe7U0pV1VVogYwYn3lEfSUy/cTuFgOe/DpYIQvAhgHs0gBFFtJV/hPob6h2xscY
+         wW7nDjRXL20mQXs0JEPbmgi0cwW2+iDyvEb3ngDM=
+Date:   Mon, 11 Nov 2019 11:36:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+Subject: Re: [PATCH v4 11/15] dmaengine: ti: New driver for K3 UDMA -
+ split#3: alloc/free chan_resources
+Message-ID: <20191111060625.GP952516@vkoul-mobl>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-12-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6b1a64a-94b9-401c-2a59-08d7666d04de
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 06:04:31.4282
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /0FCzLAvdnnX11GN0q2j5p1I+vX7bVf7mCcsrkWJJt5XZQ/Zjl45MyzFAgq4QzEou+Bmac8p/4f+yfZS3IOaXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3493
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101084135.14811-12-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCBOb3YgMTAsIDIwMTkgYXQgMTE6NTYgUE0gT2RlZCBHYWJiYXkgd3JvdGU6DQo+IElm
-IHRoZSBxdWV1ZXMgYXJlIGZ1bGwgYW5kIHdlIHJldHVybiAtRUFHQUlOIHRvIHRoZSB1c2VyLCB0
-aGVyZSBpcyBubyBuZWVkIHRvDQo+IHByaW50IGFuIGVycm9yLCBhcyB0aGF0IGNhc2UgaXNuJ3Qg
-YW4gZXJyb3IgYW5kIHRoZSB1c2VyIGlzIGV4cGVjdGVkIHRvIHJlLQ0KPiBzdWJtaXQgdGhlIHdv
-cmsuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBPZGVkIEdhYmJheSA8b2RlZC5nYWJiYXlAZ21haWwu
-Y29tPg0KDQpSZXZpZXdlZC1ieTogT21lciBTaHBpZ2VsbWFuIDxvc2hwaWdlbG1hbkBoYWJhbmEu
-YWk+DQo=
+On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> Split patch for review containing: channel rsource allocation and free
+
+s/rsource/resource
+
+
+> +static int udma_tisci_tx_channel_config(struct udma_chan *uc)
+> +{
+> +	struct udma_dev *ud = uc->ud;
+> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+> +	struct udma_tchan *tchan = uc->tchan;
+> +	int tc_ring = k3_ringacc_get_ring_id(tchan->tc_ring);
+> +	struct ti_sci_msg_rm_udmap_tx_ch_cfg req_tx = { 0 };
+> +	u32 mode, fetch_size;
+> +	int ret = 0;
+> +
+> +	if (uc->pkt_mode) {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib, uc->psd_size,
+> +						   0);
+> +	} else {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+> +	}
+> +
+> +	req_tx.valid_params =
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID;
+
+bunch of these are repeat, you can define a COMMON_VALID_PARAMS and use
+that + specific ones..
+
+> +
+> +	req_tx.nav_id = tisci_rm->tisci_dev_id;
+> +	req_tx.index = tchan->id;
+> +	req_tx.tx_pause_on_err = 0;
+> +	req_tx.tx_filt_einfo = 0;
+> +	req_tx.tx_filt_pswords = 0;
+
+i think initialization to 0 is superfluous
+
+> +	req_tx.tx_chan_type = mode;
+> +	req_tx.tx_supr_tdpkt = uc->notdpkt;
+> +	req_tx.tx_fetch_size = fetch_size >> 2;
+> +	req_tx.txcq_qnum = tc_ring;
+> +	if (uc->ep_type == PSIL_EP_PDMA_XY) {
+> +		/* wait for peer to complete the teardown for PDMAs */
+> +		req_tx.valid_params |=
+> +				TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID;
+> +		req_tx.tx_tdtype = 1;
+> +	}
+> +
+> +	ret = tisci_ops->tx_ch_cfg(tisci_rm->tisci, &req_tx);
+> +	if (ret)
+> +		dev_err(ud->dev, "tchan%d cfg failed %d\n", tchan->id, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int udma_tisci_rx_channel_config(struct udma_chan *uc)
+> +{
+> +	struct udma_dev *ud = uc->ud;
+> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+> +	struct udma_rchan *rchan = uc->rchan;
+> +	int fd_ring = k3_ringacc_get_ring_id(rchan->fd_ring);
+> +	int rx_ring = k3_ringacc_get_ring_id(rchan->r_ring);
+> +	struct ti_sci_msg_rm_udmap_rx_ch_cfg req_rx = { 0 };
+> +	struct ti_sci_msg_rm_udmap_flow_cfg flow_req = { 0 };
+> +	u32 mode, fetch_size;
+> +	int ret = 0;
+> +
+> +	if (uc->pkt_mode) {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib,
+> +							uc->psd_size, 0);
+> +	} else {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+> +	}
+> +
+> +	req_rx.valid_params =
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID;
+> +
+> +	req_rx.nav_id = tisci_rm->tisci_dev_id;
+> +	req_rx.index = rchan->id;
+> +	req_rx.rx_fetch_size =  fetch_size >> 2;
+> +	req_rx.rxcq_qnum = rx_ring;
+> +	req_rx.rx_pause_on_err = 0;
+> +	req_rx.rx_chan_type = mode;
+> +	req_rx.rx_ignore_short = 0;
+> +	req_rx.rx_ignore_long = 0;
+> +	req_rx.flowid_start = 0;
+> +	req_rx.flowid_cnt = 0;
+> +
+> +	ret = tisci_ops->rx_ch_cfg(tisci_rm->tisci, &req_rx);
+> +	if (ret) {
+> +		dev_err(ud->dev, "rchan%d cfg failed %d\n", rchan->id, ret);
+> +		return ret;
+> +	}
+> +
+> +	flow_req.valid_params =
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_EINFO_PRESENT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_PSINFO_PRESENT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_ERROR_HANDLING_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DESC_TYPE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_HI_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_LO_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_HI_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_LO_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ0_SZ0_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ1_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ2_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ3_QNUM_VALID;
+> +
+> +	flow_req.nav_id = tisci_rm->tisci_dev_id;
+> +	flow_req.flow_index = rchan->id;
+> +
+> +	if (uc->needs_epib)
+> +		flow_req.rx_einfo_present = 1;
+> +	else
+> +		flow_req.rx_einfo_present = 0;
+> +	if (uc->psd_size)
+> +		flow_req.rx_psinfo_present = 1;
+> +	else
+> +		flow_req.rx_psinfo_present = 0;
+> +	flow_req.rx_error_handling = 1;
+> +	flow_req.rx_desc_type = 0;
+> +	flow_req.rx_dest_qnum = rx_ring;
+> +	flow_req.rx_src_tag_hi_sel = 2;
+> +	flow_req.rx_src_tag_lo_sel = 4;
+> +	flow_req.rx_dest_tag_hi_sel = 5;
+> +	flow_req.rx_dest_tag_lo_sel = 4;
+
+can we get rid of magic numbers here and elsewhere, or at least comment
+on what these mean..
+
+> +static int udma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct udma_chan *uc = to_udma_chan(chan);
+> +	struct udma_dev *ud = to_udma_dev(chan->device);
+> +	const struct udma_match_data *match_data = ud->match_data;
+> +	struct k3_ring *irq_ring;
+> +	u32 irq_udma_idx;
+> +	int ret;
+> +
+> +	if (uc->pkt_mode || uc->dir == DMA_MEM_TO_MEM) {
+> +		uc->use_dma_pool = true;
+> +		/* in case of MEM_TO_MEM we have maximum of two TRs */
+> +		if (uc->dir == DMA_MEM_TO_MEM) {
+> +			uc->hdesc_size = cppi5_trdesc_calc_size(
+> +					sizeof(struct cppi5_tr_type15_t), 2);
+> +			uc->pkt_mode = false;
+> +		}
+> +	}
+> +
+> +	if (uc->use_dma_pool) {
+> +		uc->hdesc_pool = dma_pool_create(uc->name, ud->ddev.dev,
+> +						 uc->hdesc_size, ud->desc_align,
+> +						 0);
+> +		if (!uc->hdesc_pool) {
+> +			dev_err(ud->ddev.dev,
+> +				"Descriptor pool allocation failed\n");
+> +			uc->use_dma_pool = false;
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Make sure that the completion is in a known state:
+> +	 * No teardown, the channel is idle
+> +	 */
+> +	reinit_completion(&uc->teardown_completed);
+> +	complete_all(&uc->teardown_completed);
+
+should we not complete first and then do reinit to bring a clean state?
+
+> +	uc->state = UDMA_CHAN_IS_IDLE;
+> +
+> +	switch (uc->dir) {
+> +	case DMA_MEM_TO_MEM:
+
+can you explain why a allocation should be channel dependent, shouldn't
+these things be done in prep_ calls?
+
+I looked ahead and checked the prep_ calls and we can use any direction
+so this somehow doesn't make sense!
+-- 
+~Vinod
