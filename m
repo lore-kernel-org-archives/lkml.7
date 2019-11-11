@@ -2,458 +2,145 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EFFC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8BFC17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A4D2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53442075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:31:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="kXmJXhCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfKKJbF (ORCPT
+        id S1726973AbfKKJbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:31:05 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60630 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKJbE (ORCPT
+        Mon, 11 Nov 2019 04:31:36 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:4244 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726770AbfKKJbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:31:04 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id BBE4C28EE17
-Subject: Re: [PATCH v4 06/17] platform: chrome: cros_ec: handle MKBP more
- events flag
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, Enrico Granata <egranata@chromium.org>
-References: <20191105222652.70226-1-gwendal@chromium.org>
- <20191105222652.70226-7-gwendal@chromium.org>
- <20191110122800.356e0bd0@archlinux>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <d9639d95-ed97-fbea-7283-036329942888@collabora.com>
-Date:   Mon, 11 Nov 2019 10:30:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 04:31:35 -0500
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAB9Rnkv015948;
+        Mon, 11 Nov 2019 04:31:16 -0500
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2055.outbound.protection.outlook.com [104.47.46.55])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2w6v7aa73x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 04:31:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gQFiZSXNLpEgFdph2WD2H2yTWrsNGOCCtvCOecpt3ZBauK38ZmN6//jEd6exP8bDIjlcGTjgOKLWPkBCQCEgxrYNjntq+++0sWG72BUG5VXc1cwp+khBOHE4HAuPy9LTEFc3h4s2wUBHr9UQwlfTYvx4uh9bbO4ZjzwUrPIoWu5A9AeF+HkWUkIA1QyRAmtokTUDHRx268Jpu+QbHvUhGAISVE0MTbKQ1gFVet1hJPNfgLYU3RDy9HwjTOgWsXfUUebhRHs4LjMEEpGRbsFAX+ROggN93pTGMD7nJLueer/Vb1PROr0i1WQRi/bfSNMY5tuX41+Uq0H9+ekG9Eq17w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/B2rZDkhne6UGl/pnWPBTWb/l0O96FjaR3scAu9+z4E=;
+ b=Dte7q5Ui9AQpw4KXt3COqedLF63MEDX2eEJEnlpL/hkursloiTBEE6Z6s7zYIwt0Y7lNjVacTGc3UDgXdrJW4WX7VAoAZ7R7GkZ8bhO+ykXFQIsaMSFZLW+8zWTPjAaDeEuOk7YPklObPOjfvS4EVMCl7LA0X8jj3uxq385OcIT5w3DlRxagxIkoTj8n6ch6t/R8QVNoAQ6wbHFU8mpXiwhDosbPqibZGw8jee+iEonq2c6fGDCxjFSbZGWD0wAhHnk6BbJXyF5k61mfuvXgmM4rk7nWRkmozN7HLjsU1Mcqhrj535rbL5lrE9IHcJOpTSke7iXhBTpl+pg/Lzx7TA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/B2rZDkhne6UGl/pnWPBTWb/l0O96FjaR3scAu9+z4E=;
+ b=kXmJXhCCXxl69f0bQx+bvNWY6sHWLWvHLns1foN1IvlTdPInYmm0fWXoHG2kVoPQ7ejnY+esywD1Dov9QUrsDI3f8A2nSihMS5dNaL84d2r3jD2N46/u6qJq1NXNTuLUYr6wdHxZpWaEqNFlPcRZVKmr+GViaODw5KBaLU8CcMc=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5254.namprd03.prod.outlook.com (20.180.4.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Mon, 11 Nov 2019 09:31:15 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::99:71f2:a588:977c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::99:71f2:a588:977c%3]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
+ 09:31:15 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+CC:     "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "jsarha@ti.com" <jsarha@ti.com>,
+        "horms@verge.net.au" <horms@verge.net.au>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+        "ce3a@gmx.de" <ce3a@gmx.de>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>
+Subject: Re: [PATCH v3] clk: clk-gpio: propagate rate change to parent
+Thread-Topic: [PATCH v3] clk: clk-gpio: propagate rate change to parent
+Thread-Index: AQHVlgR4WDw8avjBmkqVept8rTPe66eBxWqAgAP0TgA=
+Date:   Mon, 11 Nov 2019 09:31:15 +0000
+Message-ID: <f219739b465f32d0f1b8fe75c137581a44257744.camel@analog.com>
+References: <20191106113551.5557-1-alexandru.ardelean@analog.com>
+         <20191108071718.17985-1-alexandru.ardelean@analog.com>
+         <20191108210854.95C8C20869@mail.kernel.org>
+In-Reply-To: <20191108210854.95C8C20869@mail.kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4e72ce60-95cd-47de-8148-08d76689e649
+x-ms-traffictypediagnostic: CH2PR03MB5254:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR03MB5254082E4DED19A942E78FB6F9740@CH2PR03MB5254.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0218A015FA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(396003)(376002)(136003)(199004)(189003)(229853002)(186003)(8676002)(5660300002)(8936002)(11346002)(2616005)(99286004)(446003)(81156014)(81166006)(305945005)(7736002)(2906002)(6506007)(66066001)(102836004)(76176011)(26005)(71190400001)(71200400001)(2501003)(476003)(25786009)(36756003)(256004)(66476007)(4326008)(3846002)(6116002)(118296001)(6246003)(6512007)(66556008)(478600001)(6486002)(54906003)(486006)(66946007)(76116006)(66446008)(64756008)(6436002)(14454004)(86362001)(7416002)(316002)(2201001)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5254;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gKTmfvEu63ZeiRJFymRz03iVw+n0Vh/Sn4EQ0vTSgvAHvw62CpjTld2jV8mL3/OwCLaImweokK1loZhcmVDIW+h+paYmnJNwvJhh6h+UFoGeKknNj30AmND2811WDnDIhNFKY+8UhVMQJ+Uy58srhI2faeclnGa8rDGWqv9rqNdq9k5hU2SzSyjJkWoxSsm+Ma1YAtlqs0y3xYhV4fCuQksBhSCzPynKAkDSN0WlUUvzs2n0fC5IokkbsGXa/2ca+3HTh96hOOSkJ+jFd5DbFEVB/1zHT/pUmSD1SHSzOZ01MxDMxNZljqxr3bVzho3tVGSFwwd+U+HTsclaIVgNddmD+M/RuDgYU9/Kdl0VEr2V9T/vy6rSjGhRJxHY6uEsLVB1QRqnsfWsV2IOTifeJNEH2Dtis5FJhFz0jSYsqSy4n59x1gmb2QWDGQVeQ/+p
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0C4D07FF9DA1804F84BE7DC3B13B638F@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191110122800.356e0bd0@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e72ce60-95cd-47de-8148-08d76689e649
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 09:31:15.4910
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dqCWkNxTT9zAjMRIjIWBWleu/cqfrOcWGe8tIiPP37VaHHlmiKB+Mp43NkKa143cLYGAsk8IEzMJ4uPCoHpkiDhW/ZEPbqaOAis5errgpAE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5254
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-11_02:2019-11-08,2019-11-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 impostorscore=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911110094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/11/19 13:28, Jonathan Cameron wrote:
-> On Tue,  5 Nov 2019 14:26:41 -0800
-> Gwendal Grignou <gwendal@chromium.org> wrote:
-> 
->> From: Enrico Granata <egranata@chromium.org>
->>
->> The ChromeOS EC has support for signaling to the host that
->> a single IRQ can serve multiple MKBP (Matrix KeyBoard Protocol)
->> events.
->>
->> Doing this serves an optimization purpose, as it minimizes the
->> number of round-trips into the interrupt handling machinery, and
->> it proves beneficial to sensor timestamping as it keeps the desired
->> synchronization of event times between the two processors.
->>
->> This patch adds kernel support for this EC feature, allowing the
->> ec_irq to loop until all events have been served.
->>
->> Signed-off-by: Enrico Granata <egranata@chromium.org>
->> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> A couple of trivial things inline.  
-> I just checked with the script and it doesn't seem to warn on the ()
-> but the documentation for kernel-doc suggests it should be there...
-> 
-> I guess things are more relaxed than I though.. Fix them if you are
-> doing another spin perhaps but don't bother otherwise.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-
-Looks good to me, please fix the above comments and:
-
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Thanks,
- Enric
-
-
->> ---
->> Changes in v4:
->> - Check patch with --strict option
->>     Alignement
->> Changes in v3:
->>   Fix indentation.
->> Changes in v2:
->>   Process flag inside cros_ec_get_next_event, clean flag from event.
->>   Introduce public function cros_ec_handle_event(), use it in rpmsg and
->>     ishtp transport layer.
->>   Remplace dev_info with dev_dbg, call only once.
->>
->>  drivers/platform/chrome/cros_ec.c           | 34 +++++++--
->>  drivers/platform/chrome/cros_ec_ishtp.c     |  8 +-
->>  drivers/platform/chrome/cros_ec_lpc.c       | 15 +++-
->>  drivers/platform/chrome/cros_ec_proto.c     | 81 +++++++++++++--------
->>  drivers/platform/chrome/cros_ec_rpmsg.c     | 19 +----
->>  include/linux/platform_data/cros_ec_proto.h | 12 ++-
->>  6 files changed, 107 insertions(+), 62 deletions(-)
->>
->> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
->> index d3dfa27171e6..c9f0b9ebcbc1 100644
->> --- a/drivers/platform/chrome/cros_ec.c
->> +++ b/drivers/platform/chrome/cros_ec.c
->> @@ -40,13 +40,23 @@ static irqreturn_t ec_irq_handler(int irq, void *data)
->>  	return IRQ_WAKE_THREAD;
->>  }
->>  
->> -static irqreturn_t ec_irq_thread(int irq, void *data)
->> +/**
->> + * cros_ec_handle_event - process and forward pending events on EC
-> 
-> cros_ec_handle_event() - 
-> 
->> + * @ec_dev: Device with events to process.
->> + *
->> + * Call this function in a loop when the kernel is notified that the EC has
->> + * pending events.
->> + *
->> + * Return: true if more events are still pending and this function should be
->> + * called again.
->> + */
->> +bool cros_ec_handle_event(struct cros_ec_device *ec_dev)
->>  {
->> -	struct cros_ec_device *ec_dev = data;
->> -	bool wake_event = true;
->> +	bool wake_event;
->> +	bool ec_has_more_events;
->>  	int ret;
->>  
->> -	ret = cros_ec_get_next_event(ec_dev, &wake_event);
->> +	ret = cros_ec_get_next_event(ec_dev, &wake_event, &ec_has_more_events);
->>  
->>  	/*
->>  	 * Signal only if wake host events or any interrupt if
->> @@ -59,6 +69,20 @@ static irqreturn_t ec_irq_thread(int irq, void *data)
->>  	if (ret > 0)
->>  		blocking_notifier_call_chain(&ec_dev->event_notifier,
->>  					     0, ec_dev);
->> +
->> +	return ec_has_more_events;
->> +}
->> +EXPORT_SYMBOL(cros_ec_handle_event);
->> +
->> +static irqreturn_t ec_irq_thread(int irq, void *data)
->> +{
->> +	struct cros_ec_device *ec_dev = data;
->> +	bool ec_has_more_events;
->> +
->> +	do {
->> +		ec_has_more_events = cros_ec_handle_event(ec_dev);
->> +	} while (ec_has_more_events);
->> +
->>  	return IRQ_HANDLED;
->>  }
->>  
->> @@ -274,7 +298,7 @@ EXPORT_SYMBOL(cros_ec_suspend);
->>  static void cros_ec_report_events_during_suspend(struct cros_ec_device *ec_dev)
->>  {
->>  	while (ec_dev->mkbp_event_supported &&
->> -	       cros_ec_get_next_event(ec_dev, NULL) > 0)
->> +	       cros_ec_get_next_event(ec_dev, NULL, NULL) > 0)
->>  		blocking_notifier_call_chain(&ec_dev->event_notifier,
->>  					     1, ec_dev);
->>  }
->> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
->> index 5c848f22b44b..e5996821d08b 100644
->> --- a/drivers/platform/chrome/cros_ec_ishtp.c
->> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
->> @@ -136,11 +136,11 @@ static void ish_evt_handler(struct work_struct *work)
->>  	struct ishtp_cl_data *client_data =
->>  		container_of(work, struct ishtp_cl_data, work_ec_evt);
->>  	struct cros_ec_device *ec_dev = client_data->ec_dev;
->> +	bool ec_has_more_events;
->>  
->> -	if (cros_ec_get_next_event(ec_dev, NULL) > 0) {
->> -		blocking_notifier_call_chain(&ec_dev->event_notifier,
->> -					     0, ec_dev);
->> -	}
->> +	do {
->> +		ec_has_more_events = cros_ec_handle_event(ec_dev);
->> +	} while (ec_has_more_events);
->>  }
->>  
->>  /**
->> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
->> index 3c77496e164d..dccf479c6625 100644
->> --- a/drivers/platform/chrome/cros_ec_lpc.c
->> +++ b/drivers/platform/chrome/cros_ec_lpc.c
->> @@ -312,13 +312,20 @@ static int cros_ec_lpc_readmem(struct cros_ec_device *ec, unsigned int offset,
->>  static void cros_ec_lpc_acpi_notify(acpi_handle device, u32 value, void *data)
->>  {
->>  	struct cros_ec_device *ec_dev = data;
->> +	bool ec_has_more_events;
->> +	int ret;
->>  
->>  	ec_dev->last_event_time = cros_ec_get_time_ns();
->>  
->> -	if (ec_dev->mkbp_event_supported &&
->> -	    cros_ec_get_next_event(ec_dev, NULL) > 0)
->> -		blocking_notifier_call_chain(&ec_dev->event_notifier, 0,
->> -					     ec_dev);
->> +	if (ec_dev->mkbp_event_supported)
->> +		do {
->> +			ret = cros_ec_get_next_event(ec_dev, NULL,
->> +						     &ec_has_more_events);
->> +			if (ret > 0)
->> +				blocking_notifier_call_chain(
->> +						&ec_dev->event_notifier, 0,
->> +						ec_dev);
->> +		} while (ec_has_more_events);
->>  
->>  	if (value == ACPI_NOTIFY_DEVICE_WAKE)
->>  		pm_system_wakeup();
->> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
->> index b502933e911b..03173ca66b1b 100644
->> --- a/drivers/platform/chrome/cros_ec_proto.c
->> +++ b/drivers/platform/chrome/cros_ec_proto.c
->> @@ -456,7 +456,10 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
->>  	if (ret < 0 || ver_mask == 0)
->>  		ec_dev->mkbp_event_supported = 0;
->>  	else
->> -		ec_dev->mkbp_event_supported = 1;
->> +		ec_dev->mkbp_event_supported = fls(ver_mask);
->> +
->> +	dev_dbg(ec_dev->dev, "MKBP support version %u\n",
->> +		ec_dev->mkbp_event_supported - 1);
->>  
->>  	/* Probe if host sleep v1 is supported for S0ix failure detection. */
->>  	ret = cros_ec_get_host_command_version_mask(ec_dev,
->> @@ -569,6 +572,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
->>  
->>  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->>  			       struct cros_ec_command *msg,
->> +			       struct ec_response_get_next_event_v1 *event,
->>  			       int version, uint32_t size)
->>  {
->>  	int ret;
->> @@ -581,7 +585,7 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->>  	ret = cros_ec_cmd_xfer(ec_dev, msg);
->>  	if (ret > 0) {
->>  		ec_dev->event_size = ret - 1;
->> -		memcpy(&ec_dev->event_data, msg->data, ret);
->> +		ec_dev->event_data = *event;
->>  	}
->>  
->>  	return ret;
->> @@ -589,30 +593,26 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->>  
->>  static int get_next_event(struct cros_ec_device *ec_dev)
->>  {
->> -	u8 buffer[sizeof(struct cros_ec_command) + sizeof(ec_dev->event_data)];
->> -	struct cros_ec_command *msg = (struct cros_ec_command *)&buffer;
->> -	static int cmd_version = 1;
->> -	int ret;
->> +	struct {
->> +		struct cros_ec_command msg;
->> +		struct ec_response_get_next_event_v1 event;
->> +	} __packed buf;
->> +	struct cros_ec_command *msg = &buf.msg;
->> +	struct ec_response_get_next_event_v1 *event = &buf.event;
->> +	const int cmd_version = ec_dev->mkbp_event_supported - 1;
->>  
->> +	memset(msg, 0, sizeof(*msg));
->>  	if (ec_dev->suspended) {
->>  		dev_dbg(ec_dev->dev, "Device suspended.\n");
->>  		return -EHOSTDOWN;
->>  	}
->>  
->> -	if (cmd_version == 1) {
->> -		ret = get_next_event_xfer(ec_dev, msg, cmd_version,
->> -				sizeof(struct ec_response_get_next_event_v1));
->> -		if (ret < 0 || msg->result != EC_RES_INVALID_VERSION)
->> -			return ret;
->> -
->> -		/* Fallback to version 0 for future send attempts */
->> -		cmd_version = 0;
->> -	}
->> -
->> -	ret = get_next_event_xfer(ec_dev, msg, cmd_version,
->> +	if (cmd_version == 0)
->> +		return get_next_event_xfer(ec_dev, msg, event, 0,
->>  				  sizeof(struct ec_response_get_next_event));
->>  
->> -	return ret;
->> +	return get_next_event_xfer(ec_dev, msg, event, cmd_version,
->> +				sizeof(struct ec_response_get_next_event_v1));
->>  }
->>  
->>  static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
->> @@ -639,32 +639,55 @@ static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
->>   * @ec_dev: Device to fetch event from.
->>   * @wake_event: Pointer to a bool set to true upon return if the event might be
->>   *              treated as a wake event. Ignored if null.
->> + * @has_more_events: Pointer to bool set to true if more than one event is
->> + *              pending.
->> + *              Some EC will set this flag to indicate cros_ec_get_next_event()
->> + *              can be called multiple times in a row.
->> + *              It is an optimization to prevent issuing a EC command for
->> + *              nothing or wait for another interrupt from the EC to process
->> + *              the next message.
->> + *              Ignored if null.
->>   *
->>   * Return: negative error code on errors; 0 for no data; or else number of
->>   * bytes received (i.e., an event was retrieved successfully). Event types are
->>   * written out to @ec_dev->event_data.event_type on success.
->>   */
->> -int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
->> +int cros_ec_get_next_event(struct cros_ec_device *ec_dev,
->> +			   bool *wake_event,
->> +			   bool *has_more_events)
->>  {
->>  	u8 event_type;
->>  	u32 host_event;
->>  	int ret;
->>  
->> -	if (!ec_dev->mkbp_event_supported) {
->> -		ret = get_keyboard_state_event(ec_dev);
->> -		if (ret <= 0)
->> -			return ret;
->> +	/*
->> +	 * Default value for wake_event.
->> +	 * Wake up on keyboard event, wake up for spurious interrupt or link
->> +	 * error to the EC.
->> +	 */
->> +	if (wake_event)
->> +		*wake_event = true;
->>  
->> -		if (wake_event)
->> -			*wake_event = true;
->> +	/*
->> +	 * Default value for has_more_events.
->> +	 * EC will raise another interrupt if AP does not process all events
->> +	 * anyway.
->> +	 */
->> +	if (has_more_events)
->> +		*has_more_events = false;
->>  
->> -		return ret;
->> -	}
->> +	if (!ec_dev->mkbp_event_supported)
->> +		return get_keyboard_state_event(ec_dev);
->>  
->>  	ret = get_next_event(ec_dev);
->>  	if (ret <= 0)
->>  		return ret;
->>  
->> +	if (has_more_events)
->> +		*has_more_events = ec_dev->event_data.event_type &
->> +			EC_MKBP_HAS_MORE_EVENTS;
->> +	ec_dev->event_data.event_type &= EC_MKBP_EVENT_TYPE_MASK;
->> +
->>  	if (wake_event) {
->>  		event_type = ec_dev->event_data.event_type;
->>  		host_event = cros_ec_get_host_event(ec_dev);
->> @@ -679,11 +702,7 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
->>  		else if (host_event &&
->>  			 !(host_event & ec_dev->host_event_wake_mask))
->>  			*wake_event = false;
->> -		/* Consider all other events as wake events. */
->> -		else
->> -			*wake_event = true;
->>  	}
->> -
-> 
-> Nitpick. Unrelated whitespace change ;)
-> 
->>  	return ret;
->>  }
->>  EXPORT_SYMBOL(cros_ec_get_next_event);
->> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
->> index 0c3738c3244d..bd068afe43b5 100644
->> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
->> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
->> @@ -143,22 +143,11 @@ cros_ec_rpmsg_host_event_function(struct work_struct *host_event_work)
->>  						      struct cros_ec_rpmsg,
->>  						      host_event_work);
->>  	struct cros_ec_device *ec_dev = dev_get_drvdata(&ec_rpmsg->rpdev->dev);
->> -	bool wake_event = true;
->> -	int ret;
->> -
->> -	ret = cros_ec_get_next_event(ec_dev, &wake_event);
->> -
->> -	/*
->> -	 * Signal only if wake host events or any interrupt if
->> -	 * cros_ec_get_next_event() returned an error (default value for
->> -	 * wake_event is true)
->> -	 */
->> -	if (wake_event && device_may_wakeup(ec_dev->dev))
->> -		pm_wakeup_event(ec_dev->dev, 0);
->> +	bool ec_has_more_events;
->>  
->> -	if (ret > 0)
->> -		blocking_notifier_call_chain(&ec_dev->event_notifier,
->> -					     0, ec_dev);
->> +	do {
->> +		ec_has_more_events = cros_ec_handle_event(ec_dev);
->> +	} while (ec_has_more_events);
->>  }
->>  
->>  static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
->> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
->> index b183024fef1f..e238930ae967 100644
->> --- a/include/linux/platform_data/cros_ec_proto.h
->> +++ b/include/linux/platform_data/cros_ec_proto.h
->> @@ -116,7 +116,9 @@ struct cros_ec_command {
->>   *            code.
->>   * @pkt_xfer: Send packet to EC and get response.
->>   * @lock: One transaction at a time.
->> - * @mkbp_event_supported: True if this EC supports the MKBP event protocol.
->> + * @mkbp_event_supported: 0 if MKBP not supported. Otherwise its value is
->> + *                        the maximum supported version of the MKBP host event
->> + *                        command + 1.
->>   * @host_sleep_v1: True if this EC supports the sleep v1 command.
->>   * @event_notifier: Interrupt event notifier for transport devices.
->>   * @event_data: Raw payload transferred with the MKBP event.
->> @@ -156,7 +158,7 @@ struct cros_ec_device {
->>  	int (*pkt_xfer)(struct cros_ec_device *ec,
->>  			struct cros_ec_command *msg);
->>  	struct mutex lock;
->> -	bool mkbp_event_supported;
->> +	u8 mkbp_event_supported;
->>  	bool host_sleep_v1;
->>  	struct blocking_notifier_head event_notifier;
->>  
->> @@ -205,7 +207,9 @@ int cros_ec_unregister(struct cros_ec_device *ec_dev);
->>  
->>  int cros_ec_query_all(struct cros_ec_device *ec_dev);
->>  
->> -int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
->> +int cros_ec_get_next_event(struct cros_ec_device *ec_dev,
->> +			   bool *wake_event,
->> +			   bool *has_more_events);
->>  
->>  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->>  
->> @@ -213,6 +217,8 @@ int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
->>  
->>  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
->>  
->> +bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
->> +
->>  /**
->>   * cros_ec_get_time_ns - Return time in ns.
->>   *
-> 
+T24gRnJpLCAyMDE5LTExLTA4IGF0IDEzOjA4IC0wODAwLCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+
+IFF1b3RpbmcgQWxleGFuZHJ1IEFyZGVsZWFuICgyMDE5LTExLTA3IDIzOjE3OjE4KQ0KPiA+IEZy
+b206IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5lcmljaEBhbmFsb2cuY29tPg0KPiA+
+IA0KPiA+IEZvciBhbiBleHRlcm5hbCBjbG9jayBzb3VyY2UsIHdoaWNoIGlzIGdhdGVkIHZpYSBh
+IEdQSU8sIHRoZQ0KPiA+IHJhdGUgY2hhbmdlIHNob3VsZCB0eXBpY2FsbHkgYmUgcHJvcGFnYXRl
+ZCB0byB0aGUgcGFyZW50IGNsb2NrLg0KPiA+IA0KPiA+IFRoZSBzaXR1YXRpb24gd2hlcmUgd2Ug
+YXJlIHJlcXVpcmluZyB0aGlzIHByb3BhZ2F0aW9uLCBpcyB3aGVuIGFuDQo+ID4gZXh0ZXJuYWwg
+Y2xvY2sgaXMgY29ubmVjdGVkIHRvIG92ZXJyaWRlIGFuIGludGVybmFsIGNsb2NrICh3aGljaA0K
+PiA+IHR5cGljYWxseQ0KPiA+IGhhcyBhIGZpeGVkIHJhdGUpLiBUaGUgZXh0ZXJuYWwgY2xvY2sg
+Y2FuIGhhdmUgYSBkaWZmZXJlbnQgcmF0ZSB0aGFuDQo+ID4gdGhlDQo+ID4gaW50ZXJuYWwgb25l
+LCBhbmQgbWF5IGFsc28gYmUgdmFyaWFibGUsIHRodXMgcmVxdWlyaW5nIHRoZSByYXRlDQo+ID4g
+cHJvcGFnYXRpb24uDQo+ID4gDQo+ID4gVGhpcyByYXRlIGNoYW5nZSB3YXNuJ3QgcHJvcGFnYXRl
+ZCB1bnRpbCBub3csIGFuZCBpdCdzIHVuY2xlYXIgYWJvdXQNCj4gPiBjYXNlcw0KPiA+IHdoZXJl
+IHRoaXMgc2hvdWxkbid0IGJlIHByb3BhZ2F0ZWQuIFRodXMsIGl0J3MgdW5jbGVhciB3aGV0aGVy
+IHRoaXMgaXMNCj4gPiBmaXhpbmcgYSBidWcsIG9yIGV4dGVuZGluZyB0aGUgY3VycmVudCBkcml2
+ZXIgYmVoYXZpb3IuIEFsc28sIGl0J3MNCj4gPiB1bnN1cmUNCj4gPiBhYm91dCB3aGV0aGVyIHRo
+aXMgbWF5IGJyZWFrIGFueSBleGlzdGluZyBzZXR1cHM7IGluIHRoZSBjYXNlIHRoYXQgaXQNCj4g
+PiBkb2VzLA0KPiA+IGEgZGV2aWNlLXRyZWUgcHJvcGVydHkgbWF5IGJlIGFkZGVkIHRvIGRpc2Fi
+bGUgdGhpcyBmbGFnLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1pY2hhZWwgSGVubmVyaWNo
+IDxtaWNoYWVsLmhlbm5lcmljaEBhbmFsb2cuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXhh
+bmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gLS0tDQo+
+IA0KPiBBcHBsaWVkIHRvIGNsay1uZXh0DQo+IA0KPiBOZXh0IHRpbWUgcGxlYXNlIHNlbmQgYXMg
+YSBuZXcgdG9waWMgaW5zdGVhZCBvZiBhIHJlcGx5IHRvIHRoZSBvcmlnaW5hbA0KPiBwYXRjaC4g
+TWFrZXMgaXQgZWFzaWVyIGZvciBtZSB0byBhcHBseSB0aGUgcGF0Y2guDQo+IA0KDQpBY2suDQpX
+aWxsIGRvIHRoYXQuDQoNClRoYW5rcw0KQWxleA0K
