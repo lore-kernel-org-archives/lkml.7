@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0990C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70874C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06F320659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45017214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497457;
-	bh=JMJu/ISpO+Ofu3e9o07t2yxI0gvmIbFGoKPqbXSo4y0=;
+	s=default; t=1573497461;
+	bh=UUJfsJTjQIR0PVeU3w+49eR4YbkU3H0RuogjCNK6NN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JozZnbgyi+q9hN2741x9Rbs/Oy7ghvxsVS1lr3fFr70Tc+7w7DPxH/Rp8oh4LkIuh
-	 iq6M/BV9p5b9GTGasAFvVk4M1FZ3ZsqNPPYLS/ts5a/eL68Dh5JUobU9Xo+5FrLeO2
-	 HXuFT5O/b8KDYyv0mYq9agzRkejBRIwtdXtjObvI=
+	b=Xjgls7kjR1scLfuE1jcj4Cmp3kXaB2sNrPykjQdXrnOTGknU9mLXYFyjd69q9BMga
+	 e9uaJgZiExBhDEmI8khTW+7fYQvZX1m085C4CkWNcFJcGdojDiI7m5kIpCoKh/N3SL
+	 8SRxCmuHVEA4mlKnTj+FevFwneF3yVmjLC20aDXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfKKShg (ORCPT
+        id S1728793AbfKKShj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56242 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:37:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbfKKShc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:32 -0500
+        id S1728877AbfKKShg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3156320659;
-        Mon, 11 Nov 2019 18:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638A0204FD;
+        Mon, 11 Nov 2019 18:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497450;
-        bh=JMJu/ISpO+Ofu3e9o07t2yxI0gvmIbFGoKPqbXSo4y0=;
+        s=default; t=1573497453;
+        bh=UUJfsJTjQIR0PVeU3w+49eR4YbkU3H0RuogjCNK6NN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0d+D7hUdfXDhgNRiDiD2khZVZWQ/3nCK1cxK1d4imPHZaQOGQuv8XEIi7RplBUll
-         XGszSOMooOT4GXOgix07N0spO5fetphJQjwMTLR+MFoqncfnVHBAk2uIXs+Jwc7RPu
-         I+MGUWwmxYPZm881SCQ1SnIgc2H33Tz+ET9mftww=
+        b=eQsh2ZxSjwEgzLiT2mG02o9vst5GN9dlUDvSH2q97GoNRQfJsQNnuJQYCE+bAtO1+
+         0nWcisL7wAUu8aUc0cYrfFKk23NPD6kOn5BSYMUaMbF0yX6bW+Xcajp4efjvnxwSQq
+         6dmiB41XuEeMRyqXYKP2HeE0/VbSrgmsR/Qi59Vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.14 041/105] configfs: stash the data we need into configfs_buffer at open time
-Date:   Mon, 11 Nov 2019 19:28:11 +0100
-Message-Id: <20191111181440.590090185@linuxfoundation.org>
+        Claudio Foellmi <claudio.foellmi@ergon.ch>,
+        Vignesh R <vigneshr@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 059/105] i2c: omap: Trigger bus recovery in lockup case
+Date:   Mon, 11 Nov 2019 19:28:29 +0100
+Message-Id: <20191111181444.761824937@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,409 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Claudio Foellmi <claudio.foellmi@ergon.ch>
 
-commit ff4dd081977da56566a848f071aed8fa92d604a1 upstream.
+commit 93367bfca98f36cece57c01dbce6ea1b4ac58245 upstream
 
-simplifies the ->read()/->write()/->release() instances nicely
+A very conservative check for bus activity (to prevent interference
+in multimaster setups) prevented the bus recovery methods from being
+triggered in the case that SDA or SCL was stuck low.
+This defeats the purpose of the recovery mechanism, which was introduced
+for exactly this situation (a slave device keeping SDA pulled down).
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Also added a check to make sure SDA is low before attempting recovery.
+If SDA is not stuck low, recovery will not help, so we can skip it.
+
+Note that bus lockups can persist across reboots. The only other options
+are to reset or power cycle the offending slave device, and many i2c
+slaves do not even have a reset pin.
+
+If we see that one of the lines is low for the entire timeout duration,
+we can actually be sure that there is no other master driving the bus.
+It is therefore save for us to attempt a bus recovery.
+
+Signed-off-by: Claudio Foellmi <claudio.foellmi@ergon.ch>
+Tested-by: Vignesh R <vigneshr@ti.com>
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+[wsa: fixed one return code to -EBUSY]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/configfs/file.c |  229 +++++++++++++++++++++--------------------------------
- 1 file changed, 95 insertions(+), 134 deletions(-)
+ drivers/i2c/busses/i2c-omap.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/fs/configfs/file.c
-+++ b/fs/configfs/file.c
-@@ -53,24 +53,18 @@ struct configfs_buffer {
- 	bool			write_in_progress;
- 	char			*bin_buffer;
- 	int			bin_buffer_size;
-+	int			cb_max_size;
-+	struct config_item	*item;
-+	struct module		*owner;
-+	union {
-+		struct configfs_attribute	*attr;
-+		struct configfs_bin_attribute	*bin_attr;
-+	};
- };
- 
- 
--/**
-- *	fill_read_buffer - allocate and fill buffer from item.
-- *	@dentry:	dentry pointer.
-- *	@buffer:	data buffer for file.
-- *
-- *	Allocate @buffer->page, if it hasn't been already, then call the
-- *	config_item's show() method to fill the buffer with this attribute's
-- *	data.
-- *	This is called only once, on the file's first read.
-- */
--static int fill_read_buffer(struct dentry * dentry, struct configfs_buffer * buffer)
-+static int fill_read_buffer(struct configfs_buffer * buffer)
- {
--	struct configfs_attribute * attr = to_attr(dentry);
--	struct config_item * item = to_item(dentry->d_parent);
--	int ret = 0;
- 	ssize_t count;
- 
- 	if (!buffer->page)
-@@ -78,15 +72,15 @@ static int fill_read_buffer(struct dentr
- 	if (!buffer->page)
- 		return -ENOMEM;
- 
--	count = attr->show(item, buffer->page);
-+	count = buffer->attr->show(buffer->item, buffer->page);
-+	if (count < 0)
-+		return count;
-+	if (WARN_ON_ONCE(count > (ssize_t)SIMPLE_ATTR_SIZE))
-+		return -EIO;
- 
--	BUG_ON(count > (ssize_t)SIMPLE_ATTR_SIZE);
--	if (count >= 0) {
--		buffer->needs_read_fill = 0;
--		buffer->count = count;
--	} else
--		ret = count;
--	return ret;
-+	buffer->needs_read_fill = 0;
-+	buffer->count = count;
-+	return 0;
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -487,6 +487,22 @@ static int omap_i2c_init(struct omap_i2c
  }
  
- /**
-@@ -111,12 +105,13 @@ static int fill_read_buffer(struct dentr
- static ssize_t
- configfs_read_file(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- {
--	struct configfs_buffer * buffer = file->private_data;
-+	struct configfs_buffer *buffer = file->private_data;
- 	ssize_t retval = 0;
- 
- 	mutex_lock(&buffer->mutex);
- 	if (buffer->needs_read_fill) {
--		if ((retval = fill_read_buffer(file->f_path.dentry,buffer)))
-+		retval = fill_read_buffer(buffer);
-+		if (retval)
- 			goto out;
+ /*
++ * Try bus recovery, but only if SDA is actually low.
++ */
++static int omap_i2c_recover_bus(struct omap_i2c_dev *omap)
++{
++	u16 systest;
++
++	systest = omap_i2c_read_reg(omap, OMAP_I2C_SYSTEST_REG);
++	if ((systest & OMAP_I2C_SYSTEST_SCL_I_FUNC) &&
++	    (systest & OMAP_I2C_SYSTEST_SDA_I_FUNC))
++		return 0; /* bus seems to already be fine */
++	if (!(systest & OMAP_I2C_SYSTEST_SCL_I_FUNC))
++		return -EBUSY; /* recovery would not fix SCL */
++	return i2c_recover_bus(&omap->adapter);
++}
++
++/*
+  * Waiting on Bus Busy
+  */
+ static int omap_i2c_wait_for_bb(struct omap_i2c_dev *omap)
+@@ -496,7 +512,7 @@ static int omap_i2c_wait_for_bb(struct o
+ 	timeout = jiffies + OMAP_I2C_TIMEOUT;
+ 	while (omap_i2c_read_reg(omap, OMAP_I2C_STAT_REG) & OMAP_I2C_STAT_BB) {
+ 		if (time_after(jiffies, timeout))
+-			return i2c_recover_bus(&omap->adapter);
++			return omap_i2c_recover_bus(omap);
+ 		msleep(1);
  	}
- 	pr_debug("%s: count = %zd, ppos = %lld, buf = %s\n",
-@@ -153,9 +148,6 @@ configfs_read_bin_file(struct file *file
- 		       size_t count, loff_t *ppos)
- {
- 	struct configfs_buffer *buffer = file->private_data;
--	struct dentry *dentry = file->f_path.dentry;
--	struct config_item *item = to_item(dentry->d_parent);
--	struct configfs_bin_attribute *bin_attr = to_bin_attr(dentry);
- 	ssize_t retval = 0;
- 	ssize_t len = min_t(size_t, count, PAGE_SIZE);
  
-@@ -170,14 +162,14 @@ configfs_read_bin_file(struct file *file
- 
- 	if (buffer->needs_read_fill) {
- 		/* perform first read with buf == NULL to get extent */
--		len = bin_attr->read(item, NULL, 0);
-+		len = buffer->bin_attr->read(buffer->item, NULL, 0);
- 		if (len <= 0) {
- 			retval = len;
- 			goto out;
+@@ -577,8 +593,13 @@ static int omap_i2c_wait_for_bb_valid(st
  		}
  
- 		/* do not exceed the maximum value */
--		if (bin_attr->cb_max_size && len > bin_attr->cb_max_size) {
-+		if (buffer->cb_max_size && len > buffer->cb_max_size) {
- 			retval = -EFBIG;
- 			goto out;
+ 		if (time_after(jiffies, timeout)) {
++			/*
++			 * SDA or SCL were low for the entire timeout without
++			 * any activity detected. Most likely, a slave is
++			 * locking up the bus with no master driving the clock.
++			 */
+ 			dev_warn(omap->dev, "timeout waiting for bus ready\n");
+-			return -ETIMEDOUT;
++			return omap_i2c_recover_bus(omap);
  		}
-@@ -190,7 +182,8 @@ configfs_read_bin_file(struct file *file
- 		buffer->bin_buffer_size = len;
  
- 		/* perform second read to fill buffer */
--		len = bin_attr->read(item, buffer->bin_buffer, len);
-+		len = buffer->bin_attr->read(buffer->item,
-+					     buffer->bin_buffer, len);
- 		if (len < 0) {
- 			retval = len;
- 			vfree(buffer->bin_buffer);
-@@ -240,25 +233,10 @@ fill_write_buffer(struct configfs_buffer
- 	return error ? -EFAULT : count;
- }
- 
--
--/**
-- *	flush_write_buffer - push buffer to config_item.
-- *	@dentry:	dentry to the attribute
-- *	@buffer:	data buffer for file.
-- *	@count:		number of bytes
-- *
-- *	Get the correct pointers for the config_item and the attribute we're
-- *	dealing with, then call the store() method for the attribute,
-- *	passing the buffer that we acquired in fill_write_buffer().
-- */
--
- static int
--flush_write_buffer(struct dentry * dentry, struct configfs_buffer * buffer, size_t count)
-+flush_write_buffer(struct configfs_buffer *buffer, size_t count)
- {
--	struct configfs_attribute * attr = to_attr(dentry);
--	struct config_item * item = to_item(dentry->d_parent);
--
--	return attr->store(item, buffer->page, count);
-+	return buffer->attr->store(buffer->item, buffer->page, count);
- }
- 
- 
-@@ -282,13 +260,13 @@ flush_write_buffer(struct dentry * dentr
- static ssize_t
- configfs_write_file(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
- {
--	struct configfs_buffer * buffer = file->private_data;
-+	struct configfs_buffer *buffer = file->private_data;
- 	ssize_t len;
- 
- 	mutex_lock(&buffer->mutex);
- 	len = fill_write_buffer(buffer, buf, count);
- 	if (len > 0)
--		len = flush_write_buffer(file->f_path.dentry, buffer, len);
-+		len = flush_write_buffer(buffer, len);
- 	if (len > 0)
- 		*ppos += len;
- 	mutex_unlock(&buffer->mutex);
-@@ -313,8 +291,6 @@ configfs_write_bin_file(struct file *fil
- 			size_t count, loff_t *ppos)
- {
- 	struct configfs_buffer *buffer = file->private_data;
--	struct dentry *dentry = file->f_path.dentry;
--	struct configfs_bin_attribute *bin_attr = to_bin_attr(dentry);
- 	void *tbuf = NULL;
- 	ssize_t len;
- 
-@@ -330,8 +306,8 @@ configfs_write_bin_file(struct file *fil
- 	/* buffer grows? */
- 	if (*ppos + count > buffer->bin_buffer_size) {
- 
--		if (bin_attr->cb_max_size &&
--			*ppos + count > bin_attr->cb_max_size) {
-+		if (buffer->cb_max_size &&
-+			*ppos + count > buffer->cb_max_size) {
- 			len = -EFBIG;
- 			goto out;
- 		}
-@@ -363,31 +339,45 @@ out:
- 	return len;
- }
- 
--static int check_perm(struct inode * inode, struct file * file, int type)
-+static int __configfs_open_file(struct inode *inode, struct file *file, int type)
- {
--	struct config_item *item = configfs_get_config_item(file->f_path.dentry->d_parent);
--	struct configfs_attribute * attr = to_attr(file->f_path.dentry);
--	struct configfs_bin_attribute *bin_attr = NULL;
--	struct configfs_buffer * buffer;
--	struct configfs_item_operations * ops = NULL;
--	int error = 0;
-+	struct dentry *dentry = file->f_path.dentry;
-+	struct configfs_attribute *attr;
-+	struct configfs_buffer *buffer;
-+	int error;
- 
--	if (!item || !attr)
--		goto Einval;
-+	error = -ENOMEM;
-+	buffer = kzalloc(sizeof(struct configfs_buffer), GFP_KERNEL);
-+	if (!buffer)
-+		goto out;
- 
--	if (type & CONFIGFS_ITEM_BIN_ATTR)
--		bin_attr = to_bin_attr(file->f_path.dentry);
-+	error = -EINVAL;
-+	buffer->item = configfs_get_config_item(dentry->d_parent);
-+	if (!buffer->item)
-+		goto out_free_buffer;
-+
-+	attr = to_attr(dentry);
-+	if (!attr)
-+		goto out_put_item;
-+
-+	if (type & CONFIGFS_ITEM_BIN_ATTR) {
-+		buffer->bin_attr = to_bin_attr(dentry);
-+		buffer->cb_max_size = buffer->bin_attr->cb_max_size;
-+	} else {
-+		buffer->attr = attr;
-+	}
- 
-+	buffer->owner = attr->ca_owner;
- 	/* Grab the module reference for this attribute if we have one */
--	if (!try_module_get(attr->ca_owner)) {
--		error = -ENODEV;
--		goto Done;
--	}
-+	error = -ENODEV;
-+	if (!try_module_get(buffer->owner))
-+		goto out_put_item;
- 
--	if (item->ci_type)
--		ops = item->ci_type->ct_item_ops;
--	else
--		goto Eaccess;
-+	error = -EACCES;
-+	if (!buffer->item->ci_type)
-+		goto out_put_module;
-+
-+	buffer->ops = buffer->item->ci_type->ct_item_ops;
- 
- 	/* File needs write support.
- 	 * The inode's perms must say it's ok,
-@@ -395,13 +385,11 @@ static int check_perm(struct inode * ino
- 	 */
- 	if (file->f_mode & FMODE_WRITE) {
- 		if (!(inode->i_mode & S_IWUGO))
--			goto Eaccess;
--
-+			goto out_put_module;
- 		if ((type & CONFIGFS_ITEM_ATTR) && !attr->store)
--			goto Eaccess;
--
--		if ((type & CONFIGFS_ITEM_BIN_ATTR) && !bin_attr->write)
--			goto Eaccess;
-+			goto out_put_module;
-+		if ((type & CONFIGFS_ITEM_BIN_ATTR) && !buffer->bin_attr->write)
-+			goto out_put_module;
- 	}
- 
- 	/* File needs read support.
-@@ -410,90 +398,65 @@ static int check_perm(struct inode * ino
- 	 */
- 	if (file->f_mode & FMODE_READ) {
- 		if (!(inode->i_mode & S_IRUGO))
--			goto Eaccess;
--
-+			goto out_put_module;
- 		if ((type & CONFIGFS_ITEM_ATTR) && !attr->show)
--			goto Eaccess;
--
--		if ((type & CONFIGFS_ITEM_BIN_ATTR) && !bin_attr->read)
--			goto Eaccess;
-+			goto out_put_module;
-+		if ((type & CONFIGFS_ITEM_BIN_ATTR) && !buffer->bin_attr->read)
-+			goto out_put_module;
- 	}
- 
--	/* No error? Great, allocate a buffer for the file, and store it
--	 * it in file->private_data for easy access.
--	 */
--	buffer = kzalloc(sizeof(struct configfs_buffer),GFP_KERNEL);
--	if (!buffer) {
--		error = -ENOMEM;
--		goto Enomem;
--	}
- 	mutex_init(&buffer->mutex);
- 	buffer->needs_read_fill = 1;
- 	buffer->read_in_progress = false;
- 	buffer->write_in_progress = false;
--	buffer->ops = ops;
- 	file->private_data = buffer;
--	goto Done;
-+	return 0;
- 
-- Einval:
--	error = -EINVAL;
--	goto Done;
-- Eaccess:
--	error = -EACCES;
-- Enomem:
--	module_put(attr->ca_owner);
-- Done:
--	if (error && item)
--		config_item_put(item);
-+out_put_module:
-+	module_put(buffer->owner);
-+out_put_item:
-+	config_item_put(buffer->item);
-+out_free_buffer:
-+	kfree(buffer);
-+out:
- 	return error;
- }
- 
- static int configfs_release(struct inode *inode, struct file *filp)
- {
--	struct config_item * item = to_item(filp->f_path.dentry->d_parent);
--	struct configfs_attribute * attr = to_attr(filp->f_path.dentry);
--	struct module * owner = attr->ca_owner;
--	struct configfs_buffer * buffer = filp->private_data;
--
--	if (item)
--		config_item_put(item);
--	/* After this point, attr should not be accessed. */
--	module_put(owner);
--
--	if (buffer) {
--		if (buffer->page)
--			free_page((unsigned long)buffer->page);
--		mutex_destroy(&buffer->mutex);
--		kfree(buffer);
--	}
-+	struct configfs_buffer *buffer = filp->private_data;
-+
-+	if (buffer->item)
-+		config_item_put(buffer->item);
-+	module_put(buffer->owner);
-+	if (buffer->page)
-+		free_page((unsigned long)buffer->page);
-+	mutex_destroy(&buffer->mutex);
-+	kfree(buffer);
- 	return 0;
- }
- 
- static int configfs_open_file(struct inode *inode, struct file *filp)
- {
--	return check_perm(inode, filp, CONFIGFS_ITEM_ATTR);
-+	return __configfs_open_file(inode, filp, CONFIGFS_ITEM_ATTR);
- }
- 
- static int configfs_open_bin_file(struct inode *inode, struct file *filp)
- {
--	return check_perm(inode, filp, CONFIGFS_ITEM_BIN_ATTR);
-+	return __configfs_open_file(inode, filp, CONFIGFS_ITEM_BIN_ATTR);
- }
- 
--static int configfs_release_bin_file(struct inode *inode, struct file *filp)
-+static int configfs_release_bin_file(struct inode *inode, struct file *file)
- {
--	struct configfs_buffer *buffer = filp->private_data;
--	struct dentry *dentry = filp->f_path.dentry;
--	struct config_item *item = to_item(dentry->d_parent);
--	struct configfs_bin_attribute *bin_attr = to_bin_attr(dentry);
--	ssize_t len = 0;
--	int ret;
-+	struct configfs_buffer *buffer = file->private_data;
- 
- 	buffer->read_in_progress = false;
- 
- 	if (buffer->write_in_progress) {
- 		buffer->write_in_progress = false;
- 
--		len = bin_attr->write(item, buffer->bin_buffer,
-+		/* result of ->release() is ignored */
-+		buffer->bin_attr->write(buffer->item, buffer->bin_buffer,
- 				buffer->bin_buffer_size);
- 
- 		/* vfree on NULL is safe */
-@@ -503,10 +466,8 @@ static int configfs_release_bin_file(str
- 		buffer->needs_read_fill = 1;
- 	}
- 
--	ret = configfs_release(inode, filp);
--	if (len < 0)
--		return len;
--	return ret;
-+	configfs_release(inode, file);
-+	return 0;
- }
- 
- 
+ 		msleep(1);
 
 
