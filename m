@@ -2,130 +2,111 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE1AC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441A3C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187FF21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198CF21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="fvhC8Ha1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfKKPzH (ORCPT
+        id S1727093AbfKKPzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:55:07 -0500
-Received: from gentwo.org ([3.19.106.255]:39218 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbfKKPzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:55:06 -0500
-Received: by gentwo.org (Postfix, from userid 1002)
-        id CB4C63EC1E; Mon, 11 Nov 2019 15:55:05 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id CA3263EC1D;
-        Mon, 11 Nov 2019 15:55:05 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 15:55:05 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Yu Zhao <yuzhao@google.com>
-cc:     Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [FIX] slub: Remove kmalloc under list_lock from list_slab_objects()
- V2
-In-Reply-To: <alpine.DEB.2.21.1911111543420.10669@www.lameter.com>
-Message-ID: <alpine.DEB.2.21.1911111553020.15366@www.lameter.com>
-References: <20190914000743.182739-1-yuzhao@google.com> <20191108193958.205102-1-yuzhao@google.com> <20191108193958.205102-2-yuzhao@google.com> <alpine.DEB.2.21.1911092024560.9034@www.lameter.com> <20191109230147.GA75074@google.com>
- <alpine.DEB.2.21.1911092313460.32415@www.lameter.com> <20191110184721.GA171640@google.com> <alpine.DEB.2.21.1911111543420.10669@www.lameter.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 11 Nov 2019 10:55:47 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.217]:35730 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfKKPzq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:55:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573487741;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=KlOKFrmkDI7GV+1PiMIhjIPTlTpG431Vo+TeP0qxrh4=;
+        b=fvhC8Ha13e/DGlAlPygAKBM37iFG2UQnQQmBid/y02/G38YJ5EzYMPrEgihKhKmFQU
+        +MoKy8qIndiJDvjcCv7DF8iNjnZyr+MQNvVu4bVvnPUcaOIVzhKOiG8vxFRcKdKlBtpn
+        CY4e5DRwMTLg0CD7PcTt327phVdwQ21mHYSAn0Z1xVZgZD3w2gvnaCiaejZU3aFQ7Rga
+        raShURl6seU8OzC0TUIVPyDrWPjKPJnP0acqp+/vqkEITKBT6GzMjVnaKk5HClGaqaVk
+        WQqdFNZaCXNKtHZl3V3C8uuLP7ROkNW1gjWpDinOfi/Yi0Jxjzbqs5SCEZR8cl2fMiww
+        DTYQ==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4kV1cX92EW4mFvNjTRB"
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id 20735bvABFtf4v9
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 11 Nov 2019 16:55:41 +0100 (CET)
+Date:   Mon, 11 Nov 2019 16:55:21 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "open list:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
+Message-ID: <20191111165521.4a04398d.olaf@aepfle.de>
+In-Reply-To: <20191102041856.GY1554@sasha-vm>
+References: <20191024144943.26199-1-olaf@aepfle.de>
+        <20191028161754.GF1554@sasha-vm>
+        <20191028184955.24dbb7d4.olaf@aepfle.de>
+        <20191102041856.GY1554@sasha-vm>
+X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/xLcfgRcxe=vix.RenICTuWq"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Regardless of the issue with memcgs allowing allocations from its
-kmalloc array during shutdown: This patch cleans things up and properly
-allocates the bitmap outside of the list_lock.
+--Sig_/xLcfgRcxe=vix.RenICTuWq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Am Sat, 2 Nov 2019 00:18:56 -0400
+schrieb Sasha Levin <sashal@kernel.org>:
 
-[FIX] slub: Remove kmalloc under list_lock from list_slab_objects() V2
+> make[1]: Leaving directory '/home/sasha/linux/tools/hv'
+> gcc -O2 -Wall -g -D_GNU_SOURCE -Iinclude -lpthread hv_kvp_daemon-in.o -o =
+hv_kvp_daemon
+> /usr/bin/ld: hv_kvp_daemon-in.o: in function `kvp_obtain_domain_name':
+> /home/sasha/linux/tools/hv/hv_kvp_daemon.c:1372: undefined reference to `=
+pthread_create'
+> /usr/bin/ld: /home/sasha/linux/tools/hv/hv_kvp_daemon.c:1377: undefined r=
+eference to `pthread_detach'
 
-V1->V2 : Properly handle CONFIG_SLUB_DEBUG. Handle bitmap free correctly.
+Is perhaps '-pthread' instead of -lpthread' required, as indicated by pthre=
+ad_create(3)?
+Not sure why it happens to work for me. But I will make this change for the=
+ upcoming v2.
 
-list_slab_objects() is called when a slab is destroyed and there are objects still left
-to list the objects in the syslog. This is a pretty rare event.
+Olaf
 
-And there it seems we take the list_lock and call kmalloc while holding that lock.
+--Sig_/xLcfgRcxe=vix.RenICTuWq
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
 
-Perform the allocation in free_partial() before the list_lock is taken.
+-----BEGIN PGP SIGNATURE-----
 
-Fixes: bbd7d57bfe852d9788bae5fb171c7edb4021d8ac ("slub: Potential stack overflow")
-Signed-off-by: Christoph Lameter
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl3JhGkACgkQ86SN7mm1
+DoATPBAAoVPRJdhxD1eU6WleNhWl1GY6MY6PrcuMrd/+L9vs0s/a/nendf+mSF8v
+XAqBGsfD7RL5T78yD7gdDQ1azrkWeucM5HW2xHiyWKFXfLDiG1Wm8CBdBNm82k18
+gRnb+EgVobESBzSeGu8Qw66xDtBcg4EiBJF9Ns82dIPuaHuo6O4lCvp003sCEwnI
+hg8Tlf14dvYAuPO/aQmoMtiiz9dKsh2wfmt5fc/dAqoaYgAtLDPwA+BJR5VdSjTW
+DcJUuKjc4PWwJPnuO0IwOfwcAXiuZd594EySWfGIAHM67MI1UwxBxgH0FcwzdMuf
+o/TjjLublwPf02DIvb2JfBx0ABtV8fqx5Qp/ddf5wPzmBDycDOQUJ98emkuLHpUU
+3AsB76BT6cRWS+cKe+LKqdH2mp6tVlv1VjYsPi3pP9n77Ffl4uCvctMA6pjdOah6
+Q717Ay3/ECDhyVVPfijuFJqPv4Zhqrw0SFywHBMWghfOnZl5MxqjcAxwqLCt2+7R
+HgfzlQVObJNCbxCCUxURcS9ufCebqtTMZ7FXap0xRxBc8lZXFJSEQsp0KNNMM2W8
+EBSm6JLRcM8rc2rYGM2c4g+jVcuEXD5M9LGi5E6o58IEy0gFM8rjSldDyd7ZJ8Jm
+U0eOb97z9sneiOvGr38KWSEQBmi9hSoRS11bWHHNJaRdnU8AdwA=
+=uCTS
+-----END PGP SIGNATURE-----
 
-Index: linux/mm/slub.c
-===================================================================
---- linux.orig/mm/slub.c	2019-10-15 13:54:57.032655296 +0000
-+++ linux/mm/slub.c	2019-11-11 15:52:11.616397853 +0000
-@@ -3690,14 +3690,15 @@ error:
- }
-
- static void list_slab_objects(struct kmem_cache *s, struct page *page,
--							const char *text)
-+					const char *text, unsigned long *map)
- {
- #ifdef CONFIG_SLUB_DEBUG
- 	void *addr = page_address(page);
- 	void *p;
--	unsigned long *map = bitmap_zalloc(page->objects, GFP_ATOMIC);
-+
- 	if (!map)
- 		return;
-+
- 	slab_err(s, page, text, s->name);
- 	slab_lock(page);
-
-@@ -3710,7 +3711,6 @@ static void list_slab_objects(struct kme
- 		}
- 	}
- 	slab_unlock(page);
--	bitmap_free(map);
- #endif
- }
-
-@@ -3723,6 +3723,11 @@ static void free_partial(struct kmem_cac
- {
- 	LIST_HEAD(discard);
- 	struct page *page, *h;
-+	unsigned long *map = NULL;
-+
-+#ifdef CONFIG_SLUB_DEBUG
-+	map = bitmap_alloc(oo_objects(s->max), GFP_KERNEL);
-+#endif
-
- 	BUG_ON(irqs_disabled());
- 	spin_lock_irq(&n->list_lock);
-@@ -3732,11 +3737,16 @@ static void free_partial(struct kmem_cac
- 			list_add(&page->slab_list, &discard);
- 		} else {
- 			list_slab_objects(s, page,
--			"Objects remaining in %s on __kmem_cache_shutdown()");
-+			"Objects remaining in %s on __kmem_cache_shutdown()",
-+			map);
- 		}
- 	}
- 	spin_unlock_irq(&n->list_lock);
-
-+#ifdef CONFIG_SLUB_DEBUG
-+	bitmap_free(map);
-+#endif
-+
- 	list_for_each_entry_safe(page, h, &discard, slab_list)
- 		discard_slab(s, page);
- }
+--Sig_/xLcfgRcxe=vix.RenICTuWq--
