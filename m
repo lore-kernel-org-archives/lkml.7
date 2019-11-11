@@ -2,152 +2,166 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A386C17446
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7922C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F7621783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE67214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EFxfIiWF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aNrxQL7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKKPYS (ORCPT
+        id S1726952AbfKKPZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:24:18 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44024 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKKPYS (ORCPT
+        Mon, 11 Nov 2019 10:25:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51629 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726832AbfKKPZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:24:18 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABFO7G0123167;
-        Mon, 11 Nov 2019 09:24:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573485847;
-        bh=CS+i48le/nixyfp28KvB8emlqsL8zLIaTpD4UiUPBgg=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=EFxfIiWFMAuTURTKB1Nqf1eArMcjvwoTQtrncyqluxEXYyeL9EX1bIRk4TKehpxHC
-         vWhrB04F3pd6z97BEeGNblTbLXPidgZlnObE6Oqi3rJcnG1G/EdVBqIij3czCePGwc
-         bmTxhAVGtgOxmrzho+ffLh0BGuw+SpobEDOq6sdM=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABFO7Qr002743
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 09:24:07 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 09:23:49 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 09:23:49 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABFO2lD094280;
-        Mon, 11 Nov 2019 09:24:03 -0600
-Subject: Re: [PATCH v5 09/15] dmaengine: ti: New driver for K3 UDMA - split#1:
- defines, structs, io func
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
- <20191111135330.8235-10-peter.ujfalusi@ti.com>
-Message-ID: <f6ad18d4-a8c2-fbed-3e41-40dcb23e651c@ti.com>
-Date:   Mon, 11 Nov 2019 17:25:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 10:25:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573485926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RTpgrGON4kavQjrqlqN+As1k4CmcekptcYakwUxrssY=;
+        b=aNrxQL7t5MpgXV37oFxbAuRYh9yOJwxNGsU2WtcJlwiM4J0O6smV1OGIsa/rO+3f950JGd
+        9MAzmvWE9okOhw45rEstlh7ly91KghitCT4+bN5Kuv2GDUI3mjpjqSAUOwZWlB6a2awFmf
+        1vQuTG4xDgGQspX+GXWJs+VgxT9v9xE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-lGc3MC08MDKlQT_hnW38rw-1; Mon, 11 Nov 2019 10:25:21 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78A3F8EBAC9;
+        Mon, 11 Nov 2019 15:25:19 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4938619C4F;
+        Mon, 11 Nov 2019 15:25:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 11 Nov 2019 16:25:19 +0100 (CET)
+Date:   Mon, 11 Nov 2019 16:25:15 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v7 1/2] fork: extend clone3() to support setting a PID
+Message-ID: <20191111152514.GA11389@redhat.com>
+References: <20191111131704.656169-1-areber@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111135330.8235-10-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191111131704.656169-1-areber@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: lGc3MC08MDKlQT_hnW38rw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 11/11, Adrian Reber wrote:
+>
+> v7:
+>  - changed set_tid to be an array to set the PID of a process
+>    in multiple nested PID namespaces at the same time as discussed
+>    at LPC 2019 (container MC)
 
-On 11/11/2019 15.53, Peter Ujfalusi wrote:
-> Split patch for review containing: defines, structs, io and low level
-> functions and interrupt callbacks.
-> 
-> DMA driver for
-> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
-> 
-> The UDMA-P is intended to perform similar (but significantly upgraded) functions
-> as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-> supports the transmission and reception of various packet types. The UDMA-P is
-> architected to facilitate the segmentation and reassembly of SoC DMA data
-> structure compliant packets to/from smaller data blocks that are natively
-> compatible with the specific requirements of each connected peripheral. Multiple
-> Tx and Rx channels are provided within the DMA which allow multiple segmentation
-> or reassembly operations to be ongoing. The DMA controller maintains state
-> information for each of the channels which allows packet segmentation and
-> reassembly operations to be time division multiplexed between channels in order
-> to share the underlying DMA hardware. An external DMA scheduler is used to
-> control the ordering and rate at which this multiplexing occurs for Transmit
-> operations. The ordering and rate of Receive operations is indirectly controlled
-> by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
-> 
-> The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-> channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-> Third-Party channels on a channel by channel basis.
-> 
-> The initial driver supports:
-> - MEM_TO_MEM (TR mode)
-> - DEV_TO_MEM (Packet / TR mode)
-> - MEM_TO_DEV (Packet / TR mode)
-> - Cyclic (Packet / TR mode)
-> - Metadata for descriptors
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/ti/k3-udma.c | 1047 ++++++++++++++++++++++++++++++++++++++
->  drivers/dma/ti/k3-udma.h |  120 +++++
->  2 files changed, 1167 insertions(+)
->  create mode 100644 drivers/dma/ti/k3-udma.c
->  create mode 100644 drivers/dma/ti/k3-udma.h
-> 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> new file mode 100644
-> index 000000000000..c6f94d79388c
-> --- /dev/null
-> +++ b/drivers/dma/ti/k3-udma.c
+cough... iirc you convinced me this is not needed when we discussed
+the previous version ;) Nevermind, probably my memory fools me.
 
-...
+So far I only have some cosmetic nits,
 
-> +static bool udma_is_chan_running(struct udma_chan *uc)
-> +{
-> +	u32 trt_ctl = 0;
-> +	u32 rrt_ctl = 0;
-> +
-> +	if (uc->tchan)
-> +		trt_ctl = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_CTL_REG);
-> +	if (uc->rchan)
-> +		rrt_ctl = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_CTL_REG);
-> +
-> +	if (trt_ctl & (UDMA_CHAN_RT_CTL_EN || rrt_ctl & UDMA_CHAN_RT_CTL_EN))
+> @@ -175,6 +187,18 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>
+>  =09for (i =3D ns->level; i >=3D 0; i--) {
+>  =09=09int pid_min =3D 1;
+> +=09=09int t_pos =3D 0;
+                    ^^^^^
 
-Gash:
-if (trt_ctl & UDMA_CHAN_RT_CTL_EN || rrt_ctl & UDMA_CHAN_RT_CTL_EN)
+I won't insist, but I'd suggest to cache set_tid[t_pos] instead to make
+the code a bit more simple.
+
+> @@ -186,12 +210,24 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>  =09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+>  =09=09=09pid_min =3D RESERVED_PIDS;
+
+You can probably move this code into the "else" branch below.
+
+IOW, something like
 
 
-> +		return true;
-> +
-> +	return false;
-> +}
+=09for (i =3D ns->level; i >=3D 0; i--) {
+=09=09int xxx =3D 0;
 
-- Péter
+=09=09if (set_tid_size) {
+=09=09=09int pos =3D ns->level - i;
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+=09=09=09xxx =3D set_tid[pos];
+=09=09=09if (xxx < 1 || xxx >=3D pid_max)
+=09=09=09=09return ERR_PTR(-EINVAL);
+=09=09=09/* Also fail if a PID !=3D 1 is requested and no PID 1 exists */
+=09=09=09if (xxx !=3D 1 && !tmp->child_reaper)
+=09=09=09=09return ERR_PTR(-EINVAL);
+=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+=09=09=09=09return ERR_PTR(-EPERM);
+=09=09=09set_tid_size--;
+=09=09}
+
+=09=09idr_preload(GFP_KERNEL);
+=09=09spin_lock_irq(&pidmap_lock);
+
+=09=09if (xxx) {
+=09=09=09nr =3D idr_alloc(&tmp->idr, NULL, xxx, xxx + 1,
+=09=09=09=09=09GFP_ATOMIC);
+=09=09=09/*
+=09=09=09 * If ENOSPC is returned it means that the PID is
+=09=09=09 * alreay in use. Return EEXIST in that case.
+=09=09=09 */
+=09=09=09if (nr =3D=3D -ENOSPC)
+=09=09=09=09nr =3D -EEXIST;
+=09=09} else {
+=09=09=09int pid_min =3D 1;
+=09=09=09/*
+=09=09=09 * init really needs pid 1, but after reaching the
+=09=09=09 * maximum wrap back to RESERVED_PIDS
+=09=09=09 */
+=09=09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+=09=09=09=09pid_min =3D RESERVED_PIDS;
+=09=09=09/*
+=09=09=09 * Store a null pointer so find_pid_ns does not find
+=09=09=09 * a partially initialized PID (see below).
+=09=09=09 */
+=09=09=09nr =3D idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+=09=09=09=09=09      pid_max, GFP_ATOMIC);
+=09=09}
+
+=09=09...
+
+This way only the "if (set_tid_size)" block has to play with set_tid_size/s=
+et_tid.
+
+note also that this way we can easily allow set_tid[some_level] =3D=3D 0, w=
+e can
+simply do
+
+=09-=09if (xxx < 1 || xxx >=3D pid_max)
+=09+=09if (xxx < 0 || xxx >=3D pid_max)
+
+although I don't think this is really useful.
+
+Oleg.
+
