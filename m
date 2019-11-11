@@ -2,110 +2,126 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454D4C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD64C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1173A214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573467837;
-	bh=9F/+5Wf+Tql8TBr4gc8aV+VqUAzRuBlL5iswcV1jIVQ=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=UXhaqFU6GWQRyLgv2F0mrRipGiGjhCRHcOJQfaLmYK6GUg83RJz3MfchH6vJZPcOY
-	 NPaJ+M27nZEMd9XLuHjvWgHaHDE4xYHPc6AGScCuCdTgbeaTMMdrEiKpbuWQcD+wKC
-	 lUQoHTCuBUIH6snjPspbheJBf6cxoT5fiPBftNhE=
+	by mail.kernel.org (Postfix) with ESMTP id 3620F214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bhNAzQJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfKKKX4 (ORCPT
+        id S1726949AbfKKKYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:23:56 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:51923 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726768AbfKKKXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:23:55 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iU6rO-0007yi-Or; Mon, 11 Nov 2019 11:23:50 +0100
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt  lines
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 11 Nov 2019 05:24:42 -0500
+Received: from ozlabs.org ([203.11.71.1]:40197 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726768AbfKKKYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:24:41 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47BRnf3TZDz9sPV;
+        Mon, 11 Nov 2019 21:24:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573467878;
+        bh=k/xW7ZDPcv3/7SjHYmJJY6IalclKd1sGAGRnLtXIecw=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=bhNAzQJrclPVlWTt6hTGJJf0ngOZ5aAKiJ4pS0Ks1QYOCKkp3bCijwsKkYq+MnG3u
+         JPogPyIGXRX91Ao/L1wY6GRqUKfsTxT6iHNNTyFbauE3q2Wqf+qEs9t6ouXCthXwIG
+         56FuglLyylXLliWe9PlWQ+f1SOew5mFOGSR5KE8JrUxHBKBHVlzhcViIYy61f2aqeB
+         g4oqZYgD4Fm6Sp0qnHXV5MZv+yuiWbsdSPIhx3ICAPQSXvN5GiG4mwPVPeo5D3zsoc
+         pnYnVdZaZcsXIeHDVc74mMAAq4nIQvZxBzEpkoDmib005ZVmYkaigwBi4sbOMnq0Ft
+         nYo0aCM/0r7Sw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+In-Reply-To: <0892a018-152f-629d-3dd0-60ce79f2887b@oracle.com>
+References: <20191105211920.787df2ab@canb.auug.org.au> <0892a018-152f-629d-3dd0-60ce79f2887b@oracle.com>
+Date:   Mon, 11 Nov 2019 21:24:31 +1100
+Message-ID: <871rue4so0.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 Nov 2019 11:33:11 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Kurt Kanzenbach <kurt@linutronix.de>
-In-Reply-To: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
-References: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
-Message-ID: <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: linux@rasmusvillemoes.dk, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kurt@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-07 13:30, Rasmus Villemoes wrote:
-> In v7, I've tried to change from a custom binding to use
-> interrupt-map, modelled on the recent addition of the
-> renesas,rza1-irqc (commits a644ccb819bc and 5e27a314a11f). It's
-> possible that the interrupt-map parsing code can be factored to a
-> common helper, but it's a bit hard to generalize from two examples to
-> know what a good interface would look like.
->
-> The interrupt-map-mask is a bit arbitrary. 0xff would likely work 
-> just
-> as well (but I think the ls2088a has 32 external lines, so it has to
-> be a least 0x1f).
->
-> Also, this drops the fsl,bit-reverse property and instead reads the
-> SCFGREVCR register to determine if bit-reversing is needed.
->
-> The dt/bindings patch now comes first in accordance with
-> Documentation/devicetree/bindings/submitting-patches.txt.
->
-> Earlier versions can be found here:
->
-> v6: 
-> https://lore.kernel.org/lkml/20190923101513.32719-1-kurt@linutronix.de/
-> v5:
-> 
-> https://lore.kernel.org/lkml/20180223210901.23480-1-rasmus.villemoes@prevas.dk/
->
-> Rasmus Villemoes (2):
->   dt/bindings: Add bindings for Layerscape external irqs
->   irqchip: add support for Layerscape external interrupt lines
->
->  .../interrupt-controller/fsl,ls-extirq.txt    |  49 +++++
->  drivers/irqchip/Kconfig                       |   4 +
->  drivers/irqchip/Makefile                      |   1 +
->  drivers/irqchip/irq-ls-extirq.c               | 197 
-> ++++++++++++++++++
->  4 files changed, 251 insertions(+)
->  create mode 100644
-> 
-> Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
->  create mode 100644 drivers/irqchip/irq-ls-extirq.c
+Hi Mike,
 
-Applied to irqchip-next.
+Mike Kravetz <mike.kravetz@oracle.com> writes:
+> On 11/5/19 2:19 AM, Stephen Rothwell wrote:
+>> Hi all,
+>> 
+>> After merging the akpm-current tree, today's linux-next build (powerpc64
+>> allnoconfig) failed like this:
+>> 
+>> In file included from arch/powerpc/mm/mem.c:30:
+>> include/linux/hugetlb.h:233:19: error: redefinition of 'pmd_huge'
+>>   233 | static inline int pmd_huge(pmd_t pmd)
+>>       |                   ^~~~~~~~
+>> In file included from arch/powerpc/include/asm/book3s/64/pgtable.h:301,
+>>                  from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
+>>                  from arch/powerpc/include/asm/book3s/64/mmu.h:46,
+>>                  from arch/powerpc/include/asm/mmu.h:356,
+>>                  from arch/powerpc/include/asm/lppaca.h:47,
+>>                  from arch/powerpc/include/asm/paca.h:17,
+>>                  from arch/powerpc/include/asm/current.h:13,
+>>                  from include/linux/sched.h:12,
+>>                  from arch/powerpc/mm/mem.c:16:
+>> arch/powerpc/include/asm/book3s/64/pgtable-4k.h:74:19: note: previous definition of 'pmd_huge' was here
+>>    74 | static inline int pmd_huge(pmd_t pmd) { return 0; }
+>>       |                   ^~~~~~~~
+...
+>
+> Hello Michael,
+>
+> When I started to look into this I noticed that you added commit aad71e3928be
+> ("powerpc/mm: Fix build break with RADIX=y & HUGETLBFS=n") some time back.
+> It appears that all other architectures get the definition of pmd_huge and
+> pud_huge from <linux/hugetlb.h> in the !CONFIG_HUGETLB_PAGE case.  Previously,
+> this was not an issue as the #define pmd_huge/pud_huge did not conflict with
+> the static inline in the powerpc header files.  The conflicts above happened
+> when I converted the macros to also be static inlines.  Could you live with
+> a patch like the following to remove the stubs from powerpc header files and
+> fix your original build break by including  <linux/hugetlb.h>?  After the
+> below patch is applied, the above commit will not cause the build errors seen
+> in linux-next.
 
-Thanks,
+As long as the end result is the same, ie. we get an empty definition
+that always returns false then yeah that's fine by me.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> From 4b3ab017e639e4e583fff801e6d8e6727b7877e8 Mon Sep 17 00:00:00 2001
+> From: Mike Kravetz <mike.kravetz@oracle.com>
+> Date: Tue, 5 Nov 2019 15:12:15 -0800
+> Subject: [PATCH] powerpc/mm: remove pmd_huge/pud_huge stubs and include
+>  hugetlb.h
+>
+> This removes the power specific stubs created by commit aad71e3928be
+> ("powerpc/mm: Fix build break with RADIX=y & HUGETLBFS=n") used when
+> !CONFIG_HUGETLB_PAGE.  Instead, it addresses the build break by
+> getting the definitions from <linux/hugetlb.h>.
+>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  arch/powerpc/include/asm/book3s/64/pgtable-4k.h  | 3 ---
+>  arch/powerpc/include/asm/book3s/64/pgtable-64k.h | 3 ---
+>  arch/powerpc/mm/book3s64/radix_pgtable.c         | 1 +
+>  3 files changed, 1 insertion(+), 6 deletions(-)
+
+The two pgtable headers are included eventually by our top-level
+pgtable.h, and that is included by over 100 files. So I worry this is
+going to break the build somewhere in some obscure configuration.
+
+I'll push it through some test builds and see what happens.
+
+cheers
