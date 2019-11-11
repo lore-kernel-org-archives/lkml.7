@@ -7,48 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACE5C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3040EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C01F204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEC821925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497924;
-	bh=kinpNwYLAbFbcv0INl+n+Jk3R5U6KkCib8TlU4z/nx0=;
+	s=default; t=1573497929;
+	bh=raTRrfmLpLliBo6BC0N/2uLNLfOJBhAN9HZ3cp3ABxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gxcq6u1s3CnlBR1Ha4fSEOsr6Oj4MlK9dl5OrA4Os6MFfgo8lVDjR9PYXW0fRBmK4
-	 28U4G5hzMcLIM7JyggslR0W0JLEHgpjNfdqui+lOn25yuBo4HndXku9Qxt9SkVcifr
-	 sKoVG1A+BhEGUQqeB60n2XP6SzWXzOXob2kBsWqY=
+	b=fGR6QHjoDC5XyJeH+a5erdhRVh6AaajV8V2kcB68QUHlPn2ONcFevo0VXwIQGRma/
+	 RhXdAX/yaIVyrDJpV/lnuVSEB55XrVeNrX5honQwPE7S6pTit/rca2NqAhsioyPkb+
+	 g9EuFvSqwtRkP+H3y4L9VeJbudNR+RvfKxzmOdiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbfKKSpX (ORCPT
+        id S1729853AbfKKSp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:45:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37438 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:45:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbfKKSpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:45:21 -0500
+        id S1729859AbfKKSpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:45:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0D10214E0;
-        Mon, 11 Nov 2019 18:45:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1F8221655;
+        Mon, 11 Nov 2019 18:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497920;
-        bh=kinpNwYLAbFbcv0INl+n+Jk3R5U6KkCib8TlU4z/nx0=;
+        s=default; t=1573497923;
+        bh=raTRrfmLpLliBo6BC0N/2uLNLfOJBhAN9HZ3cp3ABxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HE26saA87IUEPsI+sxm6TT1O/qaQ50bDdWrqCypRZAFCD51NEmO1IV2/Uh6hDkt5h
-         a4O/ANby0C22+mhmlv06fNbCvZQAeBJf9hm/hvVQjFrGqMqstd9tpM90D53QgcRpGN
-         3KkIaE+SLmynGSXB/FL+BFWaz446RD+b9yqa34v8=
+        b=MWrdzemnG1LyaUp7TI5nMr9DFRndQgD07ZT6w0i36K4NaSJdyM+vxPl1sCz04T5Jf
+         nDguRzc20cKUwou93GtBkWJIL5ytyo//5Nk51B3coxpiWs1lIC9l4VR6fXKXJjm3OY
+         Vf6c79ur0qs/hmGDqJmCjymtxfXBeF4LdOkZ3lNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        linux-drivers-review@eclists.intel.com,
+        linux-perf@eclists.intel.com, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/125] scsi: qla2xxx: fixup incorrect usage of host_byte
-Date:   Mon, 11 Nov 2019 19:28:38 +0100
-Message-Id: <20191111181450.702770553@linuxfoundation.org>
+Subject: [PATCH 4.19 097/125] perf/x86/uncore: Fix event group support
+Date:   Mon, 11 Nov 2019 19:28:56 +0100
+Message-Id: <20191111181452.768177907@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -61,54 +71,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit 66cf50e65b183c863825f5c28a818e3f47a72e40 ]
+[ Upstream commit 75be6f703a141b048590d659a3954c4fedd30bba ]
 
-DRIVER_ERROR is a a driver byte setting, not a host byte.  The qla2xxx
-driver should rather return DID_ERROR here to be in line with the other
-drivers.
+The events in the same group don't start or stop simultaneously.
+Here is the ftrace when enabling event group for uncore_iio_0:
 
-Link: https://lore.kernel.org/r/20191018140458.108278-1-hare@suse.de
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  # perf stat -e "{uncore_iio_0/event=0x1/,uncore_iio_0/event=0xe/}"
+
+            <idle>-0     [000] d.h.  8959.064832: read_msr: a41, value
+  b2b0b030		//Read counter reg of IIO unit0 counter0
+            <idle>-0     [000] d.h.  8959.064835: write_msr: a48, value
+  400001			//Write Ctrl reg of IIO unit0 counter0 to enable
+  counter0. <------ Although counter0 is enabled, Unit Ctrl is still
+  freezed. Nothing will count. We are still good here.
+            <idle>-0     [000] d.h.  8959.064836: read_msr: a40, value
+  30100                   //Read Unit Ctrl reg of IIO unit0
+            <idle>-0     [000] d.h.  8959.064838: write_msr: a40, value
+  30000			//Write Unit Ctrl reg of IIO unit0 to enable all
+  counters in the unit by clear Freeze bit  <------Unit0 is un-freezed.
+  Counter0 has been enabled. Now it starts counting. But counter1 has not
+  been enabled yet. The issue starts here.
+            <idle>-0     [000] d.h.  8959.064846: read_msr: a42, value 0
+			//Read counter reg of IIO unit0 counter1
+            <idle>-0     [000] d.h.  8959.064847: write_msr: a49, value
+  40000e			//Write Ctrl reg of IIO unit0 counter1 to enable
+  counter1.   <------ Now, counter1 just starts to count. Counter0 has
+  been running for a while.
+
+Current code un-freezes the Unit Ctrl right after the first counter is
+enabled. The subsequent group events always loses some counter values.
+
+Implement pmu_enable and pmu_disable support for uncore, which can help
+to batch hardware accesses.
+
+No one uses uncore_enable_box and uncore_disable_box. Remove them.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: linux-drivers-review@eclists.intel.com
+Cc: linux-perf@eclists.intel.com
+Fixes: 087bfbb03269 ("perf/x86: Add generic Intel uncore PMU support")
+Link: https://lkml.kernel.org/r/1572014593-31591-1-git-send-email-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_bsg.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/uncore.c | 44 +++++++++++++++++++++++++++++-----
+ arch/x86/events/intel/uncore.h | 12 ----------
+ 2 files changed, 38 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
-index 4a9fd8d944d60..85b03a7f473c1 100644
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -258,7 +258,7 @@ qla2x00_process_els(struct bsg_job *bsg_job)
- 	srb_t *sp;
- 	const char *type;
- 	int req_sg_cnt, rsp_sg_cnt;
--	int rval =  (DRIVER_ERROR << 16);
-+	int rval =  (DID_ERROR << 16);
- 	uint16_t nextlid = 0;
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 2690135bf83f0..7098b9b05d566 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -485,10 +485,8 @@ void uncore_pmu_event_start(struct perf_event *event, int flags)
+ 	local64_set(&event->hw.prev_count, uncore_read_counter(box, event));
+ 	uncore_enable_event(box, event);
  
- 	if (bsg_request->msgcode == FC_BSG_RPT_ELS) {
-@@ -433,7 +433,7 @@ qla2x00_process_ct(struct bsg_job *bsg_job)
- 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
- 	scsi_qla_host_t *vha = shost_priv(host);
- 	struct qla_hw_data *ha = vha->hw;
--	int rval = (DRIVER_ERROR << 16);
-+	int rval = (DID_ERROR << 16);
- 	int req_sg_cnt, rsp_sg_cnt;
- 	uint16_t loop_id;
- 	struct fc_port *fcport;
-@@ -1948,7 +1948,7 @@ qlafx00_mgmt_cmd(struct bsg_job *bsg_job)
- 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
- 	scsi_qla_host_t *vha = shost_priv(host);
- 	struct qla_hw_data *ha = vha->hw;
--	int rval = (DRIVER_ERROR << 16);
-+	int rval = (DID_ERROR << 16);
- 	struct qla_mt_iocb_rqst_fx00 *piocb_rqst;
- 	srb_t *sp;
- 	int req_sg_cnt = 0, rsp_sg_cnt = 0;
+-	if (box->n_active == 1) {
+-		uncore_enable_box(box);
++	if (box->n_active == 1)
+ 		uncore_pmu_start_hrtimer(box);
+-	}
+ }
+ 
+ void uncore_pmu_event_stop(struct perf_event *event, int flags)
+@@ -512,10 +510,8 @@ void uncore_pmu_event_stop(struct perf_event *event, int flags)
+ 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+ 		hwc->state |= PERF_HES_STOPPED;
+ 
+-		if (box->n_active == 0) {
+-			uncore_disable_box(box);
++		if (box->n_active == 0)
+ 			uncore_pmu_cancel_hrtimer(box);
+-		}
+ 	}
+ 
+ 	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
+@@ -769,6 +765,40 @@ static int uncore_pmu_event_init(struct perf_event *event)
+ 	return ret;
+ }
+ 
++static void uncore_pmu_enable(struct pmu *pmu)
++{
++	struct intel_uncore_pmu *uncore_pmu;
++	struct intel_uncore_box *box;
++
++	uncore_pmu = container_of(pmu, struct intel_uncore_pmu, pmu);
++	if (!uncore_pmu)
++		return;
++
++	box = uncore_pmu_to_box(uncore_pmu, smp_processor_id());
++	if (!box)
++		return;
++
++	if (uncore_pmu->type->ops->enable_box)
++		uncore_pmu->type->ops->enable_box(box);
++}
++
++static void uncore_pmu_disable(struct pmu *pmu)
++{
++	struct intel_uncore_pmu *uncore_pmu;
++	struct intel_uncore_box *box;
++
++	uncore_pmu = container_of(pmu, struct intel_uncore_pmu, pmu);
++	if (!uncore_pmu)
++		return;
++
++	box = uncore_pmu_to_box(uncore_pmu, smp_processor_id());
++	if (!box)
++		return;
++
++	if (uncore_pmu->type->ops->disable_box)
++		uncore_pmu->type->ops->disable_box(box);
++}
++
+ static ssize_t uncore_get_attr_cpumask(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -794,6 +824,8 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
+ 		pmu->pmu = (struct pmu) {
+ 			.attr_groups	= pmu->type->attr_groups,
+ 			.task_ctx_nr	= perf_invalid_context,
++			.pmu_enable	= uncore_pmu_enable,
++			.pmu_disable	= uncore_pmu_disable,
+ 			.event_init	= uncore_pmu_event_init,
+ 			.add		= uncore_pmu_event_add,
+ 			.del		= uncore_pmu_event_del,
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 42fa3974c421c..40e040ec31b50 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -412,18 +412,6 @@ static inline int uncore_freerunning_hw_config(struct intel_uncore_box *box,
+ 	return -EINVAL;
+ }
+ 
+-static inline void uncore_disable_box(struct intel_uncore_box *box)
+-{
+-	if (box->pmu->type->ops->disable_box)
+-		box->pmu->type->ops->disable_box(box);
+-}
+-
+-static inline void uncore_enable_box(struct intel_uncore_box *box)
+-{
+-	if (box->pmu->type->ops->enable_box)
+-		box->pmu->type->ops->enable_box(box);
+-}
+-
+ static inline void uncore_disable_event(struct intel_uncore_box *box,
+ 				struct perf_event *event)
+ {
 -- 
 2.20.1
 
