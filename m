@@ -2,174 +2,242 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BA2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5803C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A1721925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E0321655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498729;
-	bh=q+/jCqcut4LydO1NERwoV16ZPIJQWPpvwuLKWTBQk5Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CW5NyiLe/+LXRhWxQZLvkTrlPxgnHKJ5OqPNAZLRNK7D9DsE8iJpPJMJh0wija/eP
-	 FST6mSyJKr2MBy8NPFzi8f6vU3GomWNDs8sBsxVJgokFh1HFrLrWAjYaE+HaZQjVSN
-	 IeaIuJAUivQDz1rnCsxYqIhMz2atiiczom/p+nD4=
+	s=default; t=1573498735;
+	bh=GlRrlBty4j3KSFWVLF8ywo++7MO3lh4DNNTxXAti2ts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mDdZxMuF0cCsFClWZ1k0Nz8KrmBCTscAHbGubuBuKFK92bGqCcgUOvXaIycMdjI5O
+	 KKpCvhaknCzuISvqlNkoPQdQdMfXKsr2bkutOS3UM42/SXDDc4VWJ2YkICq7F6Wk6g
+	 WH8BEA6y7RUVSOK7lkiwZQco0PQaXEmJDZqwHlNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbfKKS6n (ORCPT
+        id S1730348AbfKKS6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:58:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:58:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730977AbfKKS6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:58:40 -0500
+        id S1726845AbfKKS6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:58:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99142184C;
-        Mon, 11 Nov 2019 18:58:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B86EC21783;
+        Mon, 11 Nov 2019 18:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498719;
-        bh=q+/jCqcut4LydO1NERwoV16ZPIJQWPpvwuLKWTBQk5Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zob6TdkH+Hn4PKC5e1GZgPiCc8Ah2Ph33VUwiLHpFbPw6rPVjwoz9zcZmc+cuddUM
-         zpafTynfnUUHKNSI7f+jJfD22185hssPlUiS3+ZvaCt+WKJ5Sd5vGnBLq0clnKexz+
-         0wcyIwdEWfgwDya2bPzxOZstAzIBPtDJFU5/t3Fw=
+        s=default; t=1573498729;
+        bh=GlRrlBty4j3KSFWVLF8ywo++7MO3lh4DNNTxXAti2ts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I+7fVLCm7ZvkO6S+0ao9pOecYF15eDtRscYAagzF0BsQce0S89VQiEQPqsN+yp01F
+         VPI7e3fFLiO8cqpcs6nsvl8xOezKoQnQ9YIDyeu4C+j46J+MqdaLRcIe/O6M8RLOBA
+         97f9H5C63rFypQie6QUOK+Z3hvVJ8vAMY61tvK5g=
+Date:   Mon, 11 Nov 2019 19:30:59 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 160/193] net: mscc: ocelot: fix vlan_filtering when enslaving to bridge before link is up
-Date:   Mon, 11 Nov 2019 19:29:02 +0100
-Message-Id: <20191111181512.928613356@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
-References: <20191111181459.850623879@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
+        Dan Rue <dan.rue@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: stable-rc 4.14.154-rc1/0d12dcf336c6: regressions detected in
+ project stable v.4.14.y on OE - sanity
+Message-ID: <20191111183059.GA1140707@kroah.com>
+References: <0100016e5ae0878e-7b9d1bef-b3be-4350-8823-440929ca4a81-000000@email.amazonses.com>
+ <CA+G9fYt=+ymENJg1-m=F3BF8dn7mzxvt5Di34Jw5qFLBHXA5bA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYt=+ymENJg1-m=F3BF8dn7mzxvt5Di34Jw5qFLBHXA5bA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+On Mon, Nov 11, 2019 at 11:45:35PM +0530, Naresh Kamboju wrote:
+> Hi Greg,
+> 
+> Regressions detected in project stable v.4.14.
+> arm64, arm, x86_64 boot failed.
+> 
+> Summary
+> ------------------------------------------------------------------------
+>   git branch: linux-4.14.y
+>   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+>   git commit: a67492b55c53045e9c0b9969f04410723448c1ee
+>   git describe: v4.14.153-104-ga67492b55c53
+>   make_kernelversion: 4.14.154-rc1
+>   kernel-config:
+> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-4.14/641/config
+> 
+> 
+> arm64 kernel crash log:
+> ---------------------------
+> [    0.000000] Linux version 4.14.154-rc1 (oe-user@oe-host) (gcc
+> version 7.3.0 (GCC)) #1 SMP PREEMPT Mon Nov 11 17:15:34 UTC 2019
+> [    0.000000] Boot CPU: AArch64 Processor [410fd033]
+> [    0.000000] Machine model: ARM Juno development board (r2)
+> [    0.000000] earlycon: pl11 at MMIO 0x000000007ff80000 (options '')
+> [    0.000000] bootconsole [pl11] enabled
+> [    0.000000] efi: Getting EFI parameters from FDT:
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] cma: Reserved 16 MiB at 0x00000000fe000000
+> [    0.000000] NUMA: No NUMA configuration found
+> [    0.000000] NUMA: Faking a node at [mem
+> 0x0000000000000000-0x00000009ffffffff]
+> [    0.000000] NUMA: NODE_DATA [mem 0x9fffc6f80-0x9fffc8bff]
+> [    0.000000] Zone ranges:
+> [    0.000000]   DMA      [mem 0x0000000080000000-0x00000000ffffffff]
+> [    0.000000]   Normal   [mem 0x0000000100000000-0x00000009ffffffff]
+> [    0.000000] Movable zone start for each node
+> [    0.000000] Early memory node ranges
+> [    0.000000]   node   0: [mem 0x0000000080000000-0x00000000feffffff]
+> [    0.000000]   node   0: [mem 0x0000000880000000-0x00000009ffffffff]
+> [    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x00000009ffffffff]
+> [    0.000000] On node 0 totalpages: 2093056
+> [    0.000000]   DMA zone: 8192 pages used for memmap
+> [    0.000000]   DMA zone: 0 pages reserved
+> [    0.000000]   DMA zone: 520192 pages, LIFO batch:31
+> [    0.000000]   Normal zone: 24576 pages used for memmap
+> [    0.000000]   Normal zone: 1572864 pages, LIFO batch:31
+> [    0.000000] psci: probing for conduit method from DT.
+> [    0.000000] psci: PSCIv1.1 detected in firmware.
+> [    0.000000] psci: Using standard PSCI v0.2 function IDs
+> [    0.000000] psci: Trusted OS migration not required
+> [    0.000000] psci: SMC Calling Convention v1.0
+> [    0.000000] percpu: Embedded 25 pages/cpu s62280 r8192 d31928 u102400
+> [    0.000000] pcpu-alloc: s62280 r8192 d31928 u102400 alloc=25*4096
+> [    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3 [0] 4 [0] 5
+> [    0.000000] Detected VIPT I-cache on CPU0
+> [    0.000000] CPU features: enabling workaround for ARM erratum 845719
+> [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 2060288
+> [    0.000000] Policy zone: Normal
+> [    0.000000] Kernel command line: console=ttyAMA0,115200n8
+> root=/dev/nfs rw
+> nfsroot=10.66.16.123:/var/lib/lava/dispatcher/tmp/1004132/extract-nfsrootfs-jn9hl2x_,tcp,hard,intr,vers=3
+> rootwait earlycon=pl011,0x7ff80000 debug systemd.log_target=null
+> user_debug=31 androidboot.hardware=juno loglevel=9
+> sky2.mac_address=0x00,0x02,0xF7,0x00,0x68,0x15 ip=dhcp
+> [    0.000000] PID hash table entries: 4096 (order: 3, 32768 bytes)
+> [    0.000000] software IO TLB: mapped [mem 0xf9fff000-0xfdfff000] (64MB)
+> [    0.000000] Memory: 8123672K/8372224K available (12988K kernel
+> code, 1878K rwdata, 5196K rodata, 1728K init, 12356K bss, 232168K
+> reserved, 16384K cma-reserved)
+> [    0.000000] Virtual kernel memory layout:
+> [    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
+> (   128 MB)
+> [    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7dffbfff0000
+> (129022 GB)
+> [    0.000000]       .text : 0xffff000008080000 - 0xffff000008d30000
+> ( 12992 KB)
+> [    0.000000]     .rodata : 0xffff000008d30000 - 0xffff000009250000
+> (  5248 KB)
+> [    0.000000]       .init : 0xffff000009250000 - 0xffff000009400000
+> (  1728 KB)
+> [    0.000000]       .data : 0xffff000009400000 - 0xffff0000095d5a00
+> (  1879 KB)
+> [    0.000000]        .bss : 0xffff0000095d5a00 - 0xffff00000a1e6dd0
+> ( 12357 KB)
+> [    0.000000]     fixed   : 0xffff7dfffe7f9000 - 0xffff7dfffec00000
+> (  4124 KB)
+> [    0.000000]     PCI I/O : 0xffff7dfffee00000 - 0xffff7dffffe00000
+> (    16 MB)
+> [    0.000000]     vmemmap : 0xffff7e0000000000 - 0xffff800000000000
+> (  2048 GB maximum)
+> [    0.000000]               0xffff7e0000000000 - 0xffff7e0026000000
+> (   608 MB actual)
+> [    0.000000]     memory  : 0xffff800000000000 - 0xffff800980000000
+> ( 38912 MB)
+> [    0.000000] Unable to handle kernel NULL pointer dereference at
+> virtual address 00000510
+> [    0.000000] Mem abort info:
+> [    0.000000]   Exception class = DABT (current EL), IL = 32 bits
+> [    0.000000]   SET = 0, FnV = 0
+> [    0.000000]   EA = 0, S1PTW = 0
+> [    0.000000] Data abort info:
+> [    0.000000]   ISV = 0, ISS = 0x00000004
+> [    0.000000]   CM = 0, WnR = 0
+> [    0.000000] [0000000000000510] user address but active_mm is swapper
+> [    0.000000] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> [    0.000000] Modules linked in:
+> [    0.000000] Process swapper (pid: 0, stack limit = 0xffff000009400000)
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.154-rc1 #1
+> [    0.000000] Hardware name: ARM Juno development board (r2) (DT)
+> [    0.000000] task: ffff000009419780 task.stack: ffff000009400000
+> [    0.000000] PC is at __rmqueue+0x3c4/0x908
+> [    0.000000] LR is at __rmqueue+0x384/0x908
+> [    0.000000] pc : [<ffff0000082594ec>] lr : [<ffff0000082594ac>]
+> pstate: 600000c5
+> [    0.000000] sp : ffff000009403b10
+> [    0.000000] x29: ffff000009403b10 x28: 0000000000000000
+> [    0.000000] x27: 000000000000000a x26: ffff80097ffc7700
+> [    0.000000] x25: 00007ff6800387c0 x24: 0000000000000000
+> [    0.000000] x23: ffff00000940f000 x22: ffff80097ffc7800
+> [    0.000000] x21: ffffffffffffff00 x20: ffff80097ffc7840
+> [    0.000000] x19: ffff0000093ef000 x18: 0000000000000001
+> [    0.000000] x17: 000000000000001c x16: 000000000000001b
+> [    0.000000] x15: 000000000000001a x14: ffff0000096833f8
+> [    0.000000] x13: ffff0000095e3198 x12: 000000000c67c24e
+> [    0.000000] x11: ffff000009419fb0 x10: ffff00000a174000
+> [    0.000000] x9 : ffff00000988b728 x8 : 0000000000000000
+> [    0.000000] x7 : ffff0000092cf3a4 x6 : 0000000000000000
+> [    0.000000] x5 : fffffffffffff1ff x4 : ffff7e0025de0020
+> [    0.000000] x3 : ffff7e0025dd0020 x2 : 000000000000000a
+> [    0.000000] x1 : 000000000000001e x0 : 0000000000000410
+> [    0.000000] Call trace:
+> [    0.000000] Exception stack(0xffff0000094039d0 to 0xffff000009403b10)
+> [    0.000000] 39c0:
+> 0000000000000410 000000000000001e
+> [    0.000000] 39e0: 000000000000000a ffff7e0025dd0020
+> ffff7e0025de0020 fffffffffffff1ff
+> [    0.000000] 3a00: 0000000000000000 ffff0000092cf3a4
+> 0000000000000000 ffff00000988b728
+> [    0.000000] 3a20: ffff00000a174000 ffff000009419fb0
+> 000000000c67c24e ffff0000095e3198
+> [    0.000000] 3a40: ffff0000096833f8 000000000000001a
+> 000000000000001b 000000000000001c
+> [    0.000000] 3a60: 0000000000000001 ffff0000093ef000
+> ffff80097ffc7840 ffffffffffffff00
+> [    0.000000] 3a80: ffff80097ffc7800 ffff00000940f000
+> 0000000000000000 00007ff6800387c0
+> [    0.000000] 3aa0: ffff80097ffc7700 000000000000000a
+> 0000000000000000 ffff000009403b10
+> [    0.000000] 3ac0: ffff0000082594ac ffff000009403b10
+> ffff0000082594ec 00000000600000c5
+> [    0.000000] 3ae0: ffffffffffffff00 ffff80097ffc7800
+> ffffffffffffffff ffff0000082594ac
+> [    0.000000] 3b00: ffff000009403b10 ffff0000082594ec
+> [    0.000000] [<ffff0000082594ec>] __rmqueue+0x3c4/0x908
+> [    0.000000] [<ffff000008259e98>] get_page_from_freelist+0x468/0xcb8
+> [    0.000000] [<ffff00000825aa3c>] __alloc_pages_nodemask+0x12c/0x1248
+> [    0.000000] [<ffff0000082cdba8>] new_slab+0xc0/0x568
+> [    0.000000] [<ffff0000082d5328>] __kmem_cache_create+0x2e0/0x628
+> [    0.000000] [<ffff000009271dec>] create_boot_cache+0xa8/0xdc
+> [    0.000000] [<ffff000009275b40>] kmem_cache_init+0x58/0x120
+> [    0.000000] [<ffff000009250b3c>] start_kernel+0x200/0x3d8
+> [    0.000000] Code: 8b000401 8b010800 d37df000 8b081000 (f9408000)
+> [    0.000000] random: get_random_bytes called from
+> print_oops_end_marker+0x54/0x70 with crng_init=0
+> [    0.000000] ---[ end trace c75a488acdeef932 ]---
+> [    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
+> [    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill
+> the idle task!
+> 
+> 
+> Full test log link,
+> https://lkft.validation.linaro.org/scheduler/job/1004132#L482
 
-[ Upstream commit 1c44ce560b4de639f237b458be1729489ff44d0a ]
+Any chance you can bisect?
 
-Background information: the driver operates the hardware in a mode where
-a single VLAN can be transmitted as untagged on a particular egress
-port. That is the "native VLAN on trunk port" use case. Its value is
-held in port->vid.
+thanks,
 
-Consider the following command sequence (no network manager, all
-interfaces are down, debugging prints added by me):
-
-$ ip link add dev br0 type bridge vlan_filtering 1
-$ ip link set dev swp0 master br0
-
-Kernel code path during last command:
-
-br_add_slave -> ocelot_netdevice_port_event (NETDEV_CHANGEUPPER):
-[   21.401901] ocelot_vlan_port_apply: port 0 vlan aware 0 pvid 0 vid 0
-
-br_add_slave -> nbp_vlan_init -> switchdev_port_attr_set -> ocelot_port_attr_set (SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING):
-[   21.413335] ocelot_vlan_port_apply: port 0 vlan aware 1 pvid 0 vid 0
-
-br_add_slave -> nbp_vlan_init -> nbp_vlan_add -> br_switchdev_port_vlan_add -> switchdev_port_obj_add -> ocelot_port_obj_add -> ocelot_vlan_vid_add
-[   21.667421] ocelot_vlan_port_apply: port 0 vlan aware 1 pvid 1 vid 1
-
-So far so good. The bridge has replaced the driver's default pvid used
-in standalone mode (0) with its own default_pvid (1). The port's vid
-(native VLAN) has also changed from 0 to 1.
-
-$ ip link set dev swp0 up
-
-[   31.722956] 8021q: adding VLAN 0 to HW filter on device swp0
-do_setlink -> dev_change_flags -> vlan_vid_add -> ocelot_vlan_rx_add_vid -> ocelot_vlan_vid_add:
-[   31.728700] ocelot_vlan_port_apply: port 0 vlan aware 1 pvid 1 vid 0
-
-The 8021q module uses the .ndo_vlan_rx_add_vid API on .ndo_open to make
-ports be able to transmit and receive 802.1p-tagged traffic by default.
-This API is supposed to offload a VLAN sub-interface, which for a switch
-port means to add a VLAN that is not a pvid, and tagged on egress.
-
-But the driver implementation of .ndo_vlan_rx_add_vid is wrong: it adds
-back vid 0 as "egress untagged". Now back to the initial paragraph:
-there is a single untagged VID that the driver keeps track of, and that
-has just changed from 1 (the pvid) to 0. So this breaks the bridge
-core's expectation, because it has changed vid 1 from untagged to
-tagged, when what the user sees is.
-
-$ bridge vlan
-port    vlan ids
-swp0     1 PVID Egress Untagged
-
-br0      1 PVID Egress Untagged
-
-But curiously, instead of manifesting itself as "untagged and
-pvid-tagged traffic gets sent as tagged on egress", the bug:
-
-- is hidden when vlan_filtering=0
-- manifests as dropped traffic when vlan_filtering=1, due to this setting:
-
-	if (port->vlan_aware && !port->vid)
-		/* If port is vlan-aware and tagged, drop untagged and priority
-		 * tagged frames.
-		 */
-		val |= ANA_PORT_DROP_CFG_DROP_UNTAGGED_ENA |
-		       ANA_PORT_DROP_CFG_DROP_PRIO_S_TAGGED_ENA |
-		       ANA_PORT_DROP_CFG_DROP_PRIO_C_TAGGED_ENA;
-
-which would have made sense if it weren't for this bug. The setting's
-intention was "this is a trunk port with no native VLAN, so don't accept
-untagged traffic". So the driver was never expecting to set VLAN 0 as
-the value of the native VLAN, 0 was just encoding for "invalid".
-
-So the fix is to not send 802.1p traffic as untagged, because that would
-change the port's native vlan to 0, unbeknownst to the bridge, and
-trigger unexpected code paths in the driver.
-
-Cc: Antoine Tenart <antoine.tenart@bootlin.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Fixes: 7142529f1688 ("net: mscc: ocelot: add VLAN filtering")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/mscc/ocelot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index dc78940f08fb1..07ca3e0cdf92b 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -877,7 +877,7 @@ end:
- static int ocelot_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 				  u16 vid)
- {
--	return ocelot_vlan_vid_add(dev, vid, false, true);
-+	return ocelot_vlan_vid_add(dev, vid, false, false);
- }
- 
- static int ocelot_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
--- 
-2.20.1
-
-
-
+greg k-h
