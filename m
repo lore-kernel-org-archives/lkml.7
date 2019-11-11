@@ -2,122 +2,97 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03458C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01F8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1042084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9AC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dT2s5dAm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l1S+sgbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfKKITx (ORCPT
+        id S1726877AbfKKIVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:19:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25972 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726793AbfKKITx (ORCPT
+        Mon, 11 Nov 2019 03:21:40 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40115 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfKKIVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:19:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573460390;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y+d9HgiQd/ROeqheIWevtzZ1281FA0vSMCBkopaTcHI=;
-        b=dT2s5dAmT+wheA83Nw7+lNiR+wyzwBWdaTMts40zzh7gCofBz/D28p5hpBH715/RDn+HEz
-        78eWT0b2c69dvtYYuDNzPO4jcjrnh5tpMH0DzlTa5vZK9U0YsaN2mtfRKIqKrOVVjN2p6H
-        wdpBvHDpOJ4zO15Y+mUNodmBqz2sC5A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-_0XAJepROSaUejme0jEEIQ-1; Mon, 11 Nov 2019 03:19:44 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0CAFC107ACC4;
-        Mon, 11 Nov 2019 08:19:42 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BFE4100EBA6;
-        Mon, 11 Nov 2019 08:19:41 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9754118089C8;
-        Mon, 11 Nov 2019 08:19:40 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 03:19:40 -0500 (EST)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        LTP List <ltp@lists.linux.it>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        lkft-triage@lists.linaro.org,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Message-ID: <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20191111012614.GC6235@magnolia>
-References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com> <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com> <20191111012614.GC6235@magnolia>
-Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0:
- Success
+        Mon, 11 Nov 2019 03:21:40 -0500
+Received: by mail-pf1-f194.google.com with SMTP id r4so10175943pfl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:21:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nfjsyq2Iq/Rw9u6HFg97pk+5ilhQojT1W/XVqRvMGCI=;
+        b=l1S+sgbDmKwsK3KdNOInjmrTtKoY+QFQDoK3J7scMGzoRJETn4h+veC+eMcmkjUVDY
+         7TcbMVC0WW70zXUr6CxwXO0/a7EWTyrhRj33bQB2MKWI38ScfJtAbMRYFkTrbGasRO/j
+         D2w6pLBAW0eKonVrwIW4FpiEvML7zkecMmCIk7654QfSPF4lt7lbYP73wtTdAEY+mzmv
+         it2vGHrGG+cA2Sf1s9ONhihNPk6mu0oBrWdQ+xzP5PbIKIvTM35NJsKmCb6+hHCKFZFu
+         nLT9jM3h/o0EQ0Mxx3ujDl57b5zLhm3JAqtroSe9WhE9ELh2TlrZGERTV5IddKQ2cv/d
+         AIDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nfjsyq2Iq/Rw9u6HFg97pk+5ilhQojT1W/XVqRvMGCI=;
+        b=JJEyT6Pg4h6ELEUngNZAUtdflX1Yrna9GjTUXG9VeA3bC5gOPULfUdNOJ7WaygtZx+
+         oUOHIZb+rREwwhsvl7Ri9BybNV2Izcvp4vp7ElBzd62cj2yKJ7gbf06GQO5lD6oLfV3k
+         tCBSMEPfwjcZtwL6h8PJt6siGEkl6BLsxdFFsfGK0l/4SKfveHtAvfdY2npGuCnLWEP7
+         iB206zRbitTbCu3i8z1DxJQTYFx6Q3J+0SpbphTZeBbM5KB3MocCv1d7M+D+62Y3ofkL
+         l787UkQWE2tD585vxmV2IuodPWXxvIi2LBoOBwFR+TSed028KM4155sAGk49ZT7WWAXv
+         dWeQ==
+X-Gm-Message-State: APjAAAVQ0q07JR3eLrlXF1nt7lkck0CBEoOoVrwtAc+Rxx4VPbl9CVZq
+        mXGJsJxN35NMuuKdQ+EKOqNrzQ==
+X-Google-Smtp-Source: APXvYqxbPpX+ZDuwq064KytIpco8Gqd8luDwvH9dqnhPt3x5p0nKMfogB4vWGZgRM01d07R/WWIyiA==
+X-Received: by 2002:a63:d405:: with SMTP id a5mr27375485pgh.79.1573460499492;
+        Mon, 11 Nov 2019 00:21:39 -0800 (PST)
+Received: from localhost ([122.171.110.253])
+        by smtp.gmail.com with ESMTPSA id l62sm15251440pgl.24.2019.11.11.00.21.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Nov 2019 00:21:37 -0800 (PST)
+Date:   Mon, 11 Nov 2019 13:51:31 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] opp: Reinitialize the list_kref before adding the static
+ OPPs again
+Message-ID: <20191111082131.ysngb7dfal6fpu2h@vireshk-i7>
+References: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org>
+ <20191018211214.444D32089C@mail.kernel.org>
+ <20191021022516.gecunkpahu7okvm5@vireshk-i7>
+ <20191028120133.3E85F2086D@mail.kernel.org>
+ <CAKohpo=ky8FR4thsuW1xPnZrEW8zgXL0n4e+9rkRE0RLKKk1uQ@mail.gmail.com>
+ <20191030143400.1680D20656@mail.kernel.org>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.17.163, 10.4.195.18]
-Thread-Topic: diotest4.c:476: read to read-only space. returns 0: Success
-Thread-Index: OoFxfOUloBUkdPsY/du59GUryWTVqQ==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: _0XAJepROSaUejme0jEEIQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030143400.1680D20656@mail.kernel.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 30-10-19, 07:33, Stephen Boyd wrote:
+> I agree a simple refcount_t makes more sense here instead of using a
+> kref. That would be clearer.
 
------ Original Message -----
-> I can't do a whole lot with a code snippet that lacks a proper SOB
-> header.
+I was using kref as I wanted to call the cleanup routine when kref
+reaches 0. A refcount_t will have the same problem as the warning in
+this came from refcount mechanism only (which is used by kref). You
+can't increment a refcount_t if it is zero :)
 
-I'll resend as a patch, maybe split it to 2 returns instead.
+Any other suggestions other than local counting ?
 
-> > diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> > index 2f88d64c2a4d..8615b1f78389 100644
-> > --- a/fs/iomap/direct-io.c
-> > +++ b/fs/iomap/direct-io.c
-> > @@ -318,7 +318,7 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos=
-,
-> > loff_t length,
-> >                 if (pad)
-> >                         iomap_dio_zero(dio, iomap, pos, fs_block_size -
-> >                         pad);
-> >         }
-> > -       return copied ? copied : ret;
-> > +       return copied ? (loff_t) copied : ret;
->=20
-> I'm a little confused on this proposed fix -- why does casting size_t
-> (aka unsigned long) to loff_t (long long) on a 32-bit system change the
-> test outcome?
-
-Ternary operator has a return type and an attempt is made to convert
-each of operands to the type of the other. So, in this case "ret"
-appears to be converted to type of "copied" first. Both have size of
-4 bytes on 32-bit x86:
-
-size_t copied =3D 0;
-int ret =3D -14;
-long long actor_ret =3D copied ? copied : ret;
-
-On x86_64: actor_ret =3D=3D -14;
-On x86   : actor_ret =3D=3D 4294967282
-
-> Does this same diotest4 failure happen with XFS?  I ask
-> because XFS has been using iomap for directio for ages.
-
-Yes, it fails on XFS too.
-
+-- 
+viresh
