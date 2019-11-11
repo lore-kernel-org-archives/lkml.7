@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB27C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B973C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EBC2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7B121872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497194;
-	bh=Umhrk4I3/8m4n1PENLs+C//lxigBRjVE7+2A8v6Wleo=;
+	s=default; t=1573497198;
+	bh=mqyEWFvgOemgk+WYbPoXVJtGwlTN2nroQNnURcth40M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TmhfnvFTVICxZAEDaxUd8YW4Dmdr1wbUud7d7zVsP0lUOW1gpcorRW4KfS9C72QO1
-	 M1wpC3tamj2SUAuHqIhfHXQPnTG16G7VLAvPF1kijIUmfDwmglDKvrR1r7Wbfwe79S
-	 IeOJ0YTgA9ERh0XGckNxnevuo/us1m4ytajKmuZ8=
+	b=2kfkjLInlcI3ufj3Z19lChO6JQI6ORJg9pCnJw3aL8fKBzGwwDmsM76v6o8A5+Vim
+	 66BUjTn3f8HzutJWQrPS3fjrn4K0Ow6k3x0f5R6KiL+fg+pu4Q6ZlcLOwB83LxaPm5
+	 L6zLpopl1PK3pyIqBfzi6pPOexCo91UFMSlPcbVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfKKSdM (ORCPT
+        id S1728113AbfKKSdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50450 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbfKKSdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:10 -0500
+        id S1727161AbfKKSdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B475120674;
-        Mon, 11 Nov 2019 18:33:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8109521655;
+        Mon, 11 Nov 2019 18:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497187;
-        bh=Umhrk4I3/8m4n1PENLs+C//lxigBRjVE7+2A8v6Wleo=;
+        s=default; t=1573497193;
+        bh=mqyEWFvgOemgk+WYbPoXVJtGwlTN2nroQNnURcth40M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcM7T8n2PaSJbXm+z9dkrXOp/hwIvqP2rJwmo/OtcH/led+2+iy1RDOddn8UeA1W8
-         nuL+j9GyjyjEMF2Tfuw8B7MOy/x/4hOE/Hho7nOaDFYn9Deoz4+Bb/ZQvvqTcVFacb
-         I+iEybMmxkTNuWCGH+pBxkMwywsYERK2cXZQZy18=
+        b=cO/jrqRFcuS37HDhO5FGYs/0+/Sr9/2aai9kITJftgXrDqCfpslFtWlAtraiIGX6T
+         kp1pg2JKMHeGU3qaBVxHaibVWUjQJ4Bi3iMeOTGmkXkwhBxeGlciPy5j1JHJxku58o
+         FzOGFnzBaTTNAHmdfuKnz6tmKyuquobfl2MEwNXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.9 32/65] configfs: fix a deadlock in configfs_symlink()
-Date:   Mon, 11 Nov 2019 19:28:32 +0100
-Message-Id: <20191111181346.721864795@linuxfoundation.org>
+        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>
+Subject: [PATCH 4.9 34/65] usbip: Fix vhci_urb_enqueue() URB null transfer buffer error path
+Date:   Mon, 11 Nov 2019 19:28:34 +0100
+Message-Id: <20191111181346.896360052@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -59,81 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Shuah Khan <shuah@kernel.org>
 
-commit 351e5d869e5ac10cb40c78b5f2d7dfc816ad4587 upstream.
+commit 2c904963b1dd2acd4bc785b6c72e10a6283c2081 upstream.
 
-Configfs abuses symlink(2).  Unlike the normal filesystems, it
-wants the target resolved at symlink(2) time, like link(2) would've
-done.  The problem is that ->symlink() is called with the parent
-directory locked exclusive, so resolving the target inside the
-->symlink() is easily deadlocked.
+Fix vhci_urb_enqueue() to print debug msg and return error instead of
+failing with BUG_ON.
 
-Short of really ugly games in sys_symlink() itself, all we can
-do is to unlock the parent before resolving the target and
-relock it after.  However, that invalidates the checks done
-by the caller of ->symlink(), so we have to
-	* check that dentry is still where it used to be
-(it couldn't have been moved, but it could've been unhashed)
-	* recheck that it's still negative (somebody else
-might've successfully created a symlink with the same name
-while we were looking the target up)
-	* recheck the permissions on the parent directory.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/configfs/symlink.c |   33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ drivers/usb/usbip/vhci_hcd.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/configfs/symlink.c
-+++ b/fs/configfs/symlink.c
-@@ -157,11 +157,42 @@ int configfs_symlink(struct inode *dir,
- 	    !type->ct_item_ops->allow_link)
- 		goto out_put;
+--- a/drivers/usb/usbip/vhci_hcd.c
++++ b/drivers/usb/usbip/vhci_hcd.c
+@@ -512,8 +512,10 @@ static int vhci_urb_enqueue(struct usb_h
+ 	}
+ 	vdev = &vhci->vdev[portnum-1];
  
-+	/*
-+	 * This is really sick.  What they wanted was a hybrid of
-+	 * link(2) and symlink(2) - they wanted the target resolved
-+	 * at syscall time (as link(2) would've done), be a directory
-+	 * (which link(2) would've refused to do) *AND* be a deep
-+	 * fucking magic, making the target busy from rmdir POV.
-+	 * symlink(2) is nothing of that sort, and the locking it
-+	 * gets matches the normal symlink(2) semantics.  Without
-+	 * attempts to resolve the target (which might very well
-+	 * not even exist yet) done prior to locking the parent
-+	 * directory.  This perversion, OTOH, needs to resolve
-+	 * the target, which would lead to obvious deadlocks if
-+	 * attempted with any directories locked.
-+	 *
-+	 * Unfortunately, that garbage is userland ABI and we should've
-+	 * said "no" back in 2005.  Too late now, so we get to
-+	 * play very ugly games with locking.
-+	 *
-+	 * Try *ANYTHING* of that sort in new code, and you will
-+	 * really regret it.  Just ask yourself - what could a BOFH
-+	 * do to me and do I want to find it out first-hand?
-+	 *
-+	 *  AV, a thoroughly annoyed bastard.
-+	 */
-+	inode_unlock(dir);
- 	ret = get_target(symname, &path, &target_item, dentry->d_sb);
-+	inode_lock(dir);
- 	if (ret)
- 		goto out_put;
+-	/* patch to usb_sg_init() is in 2.5.60 */
+-	BUG_ON(!urb->transfer_buffer && urb->transfer_buffer_length);
++	if (!urb->transfer_buffer && urb->transfer_buffer_length) {
++		dev_dbg(dev, "Null URB transfer buffer\n");
++		return -EINVAL;
++	}
  
--	ret = type->ct_item_ops->allow_link(parent_item, target_item);
-+	if (dentry->d_inode || d_unhashed(dentry))
-+		ret = -EEXIST;
-+	else
-+		ret = inode_permission(dir, MAY_WRITE | MAY_EXEC);
-+	if (!ret)
-+		ret = type->ct_item_ops->allow_link(parent_item, target_item);
- 	if (!ret) {
- 		mutex_lock(&configfs_symlink_mutex);
- 		ret = create_link(parent_item, target_item, dentry);
+ 	spin_lock_irqsave(&vhci->lock, flags);
+ 
 
 
