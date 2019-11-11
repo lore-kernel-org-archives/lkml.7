@@ -2,594 +2,234 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3C4C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C0EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6372067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBA52067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:31:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fzz6eTmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfKKLbP convert rfc822-to-8bit (ORCPT
+        id S1726976AbfKKLb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:31:15 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6185 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726810AbfKKLbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:31:14 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D2786BB4C074B09DD814;
-        Mon, 11 Nov 2019 19:31:10 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 11 Nov 2019
- 19:31:01 +0800
-Date:   Mon, 11 Nov 2019 11:30:52 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     zhangfei <zhangfei.gao@linaro.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        <grant.likely@arm.com>, jean-philippe <jean-philippe@linaro.org>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        <ilias.apalodimas@linaro.org>, <francois.ozog@linaro.org>,
-        <kenneth-lee-2012@foxmail.com>, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        <guodong.xu@linaro.org>, <linux-accelerators@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH v7 3/3] crypto: hisilicon - register zip engine to uacce
-Message-ID: <20191111113052.00003819@huawei.com>
-In-Reply-To: <bd967044-6283-47c9-c6fd-9c7240cf7d98@linaro.org>
-References: <1572331216-9503-1-git-send-email-zhangfei.gao@linaro.org>
-        <1572331216-9503-4-git-send-email-zhangfei.gao@linaro.org>
-        <20191031175311.000013e8@huawei.com>
-        <bd967044-6283-47c9-c6fd-9c7240cf7d98@linaro.org>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 Nov 2019 06:31:27 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32845 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKLb1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:31:27 -0500
+Received: by mail-pf1-f194.google.com with SMTP id c184so10566306pfb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 03:31:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wQ8N+KA4QdswtlAn03t/0lkW6AyogqYP1p+/zebuU3k=;
+        b=fzz6eTmnCHSzgfHm+F9KSKSXxf8LVByz/JTIJZO7G2LjaoT0RjN6qPPKdXs+3LL/IA
+         1GVailmzDlDeuREvMUxvJ+xqG/CGEEg/pAFDrlchlEIWLIU9SmuxCVgPABW+jGSZ9eW3
+         GuQIx32Ab1FQDK5sOCHX8Nns0vGXPw651PQ6ru00m08ZE+7veSa6Ns9sbmwsXcTpWa54
+         8Vg6oPZTr4wAwI9IU3GWh1zoOppOwxHmuzBotnjTMZGDIFRv6VAG2T0fCMz2uawbCQCS
+         ENr2HN7tWHQ71sJ9yrfyNR8ENxwg7kXrppAFoeHz64zPrHZfmv0HNb/geYRVj+2Bb+sa
+         S50w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wQ8N+KA4QdswtlAn03t/0lkW6AyogqYP1p+/zebuU3k=;
+        b=uKRd/s5VAljjFVR7OFQe1XD3pUx8YO1njwnMgnTJTmN1+vWwpwMLz1ox4R2LBb6HCK
+         NApdwMmFdZ9ZCJEkcJ6yvNY80Thd7LyPLKUF0pJdHZkrOpulsaaUbAtuWLkYmpkCOYky
+         8I+XtWfaZoPf2DBEZ6NL0GFexhin/H6VMQmd/p7B/i2nKCRy1OpdcATvt3avcn4y3dJE
+         +8LCHEtaezNHMvFUXtv1HtQXM4gwZY2pds0mgJrTlo31RwTJuRqkm+VgP5dv1uvyzqrj
+         +6sIwjyP6UtoKzm9WJkmMJ1kBiL2lF/mrUn3ffrwR5V5VJjs7LqQ9Ce9sqGbCnacSE9k
+         UDog==
+X-Gm-Message-State: APjAAAXs0bP3b7J36FYQo0O4RjZHBIf2ip77QWYUIb5FbYeXn51Hy4zf
+        o+T1AaYFxX2SVD6kTb0tQKY6Og==
+X-Google-Smtp-Source: APXvYqyRN+ytjyasbPOi1n+bkrl3ZY1icxCMoBihsUQ6BVbam4FcrrAYUXBdsKV/iv1gSI0SvP+c+A==
+X-Received: by 2002:a63:d916:: with SMTP id r22mr28461215pgg.45.1573471885985;
+        Mon, 11 Nov 2019 03:31:25 -0800 (PST)
+Received: from localhost ([122.171.110.253])
+        by smtp.gmail.com with ESMTPSA id f24sm12918778pjp.12.2019.11.11.03.31.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Nov 2019 03:31:24 -0800 (PST)
+Date:   Mon, 11 Nov 2019 17:01:17 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] opp: Reinitialize the list_kref before adding the static
+ OPPs again
+Message-ID: <20191111113117.d7jdolfetb24rgmb@vireshk-i7>
+References: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org>
+ <20191018211214.444D32089C@mail.kernel.org>
+ <20191021022516.gecunkpahu7okvm5@vireshk-i7>
+ <20191028120133.3E85F2086D@mail.kernel.org>
+ <CAKohpo=ky8FR4thsuW1xPnZrEW8zgXL0n4e+9rkRE0RLKKk1uQ@mail.gmail.com>
+ <20191030143400.1680D20656@mail.kernel.org>
+ <20191111082131.ysngb7dfal6fpu2h@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111082131.ysngb7dfal6fpu2h@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 16:34:48 +0800
-zhangfei <zhangfei.gao@linaro.org> wrote:
-
-> Hi, Jonathan
+On 11-11-19, 13:51, Viresh Kumar wrote:
+> On 30-10-19, 07:33, Stephen Boyd wrote:
+> > I agree a simple refcount_t makes more sense here instead of using a
+> > kref. That would be clearer.
 > 
-> On 2019/11/1 上午1:53, Jonathan Cameron wrote:
-> > On Tue, 29 Oct 2019 14:40:16 +0800
-> > Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-> >  
-> >> Register qm to uacce framework for user crypto driver
-> >>
-> >> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> >> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>  
-> > Hi.
-> >
-> > This shows there is probably a race during setup that you should close.
-> > Userspace interface is exposed before the driver is ready to handle it.
-> >
-> > Few other bits inline.
-> >
-> > Thanks,
-> >
-> > Jonathan
-> >  
-> >> ---
-> >>   drivers/crypto/hisilicon/qm.c           | 253 ++++++++++++++++++++++++++++++--
-> >>   drivers/crypto/hisilicon/qm.h           |  13 +-
-> >>   drivers/crypto/hisilicon/zip/zip_main.c |  39 ++---
-> >>   include/uapi/misc/uacce/qm.h            |  23 +++
-> >>   4 files changed, 292 insertions(+), 36 deletions(-)
-> >>   create mode 100644 include/uapi/misc/uacce/qm.h
-> >>
-> >> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-> >> index a8ed6990..4b9cced 100644
-> >> --- a/drivers/crypto/hisilicon/qm.c
-> >> +++ b/drivers/crypto/hisilicon/qm.c
-> >> @@ -9,6 +9,9 @@
-> >>   #include <linux/log2.h>
-> >>   #include <linux/seq_file.h>
-> >>   #include <linux/slab.h>
-> >> +#include <linux/uacce.h>
-> >> +#include <linux/uaccess.h>
-> >> +#include <uapi/misc/uacce/qm.h>
-> >>   #include "qm.h"
-> >>   
-> >>   /* eq/aeq irq enable */
-> >> @@ -465,17 +468,22 @@ static void qm_cq_head_update(struct hisi_qp *qp)
-> >>   
-> >>   static void qm_poll_qp(struct hisi_qp *qp, struct hisi_qm *qm)
-> >>   {
-> >> -	struct qm_cqe *cqe = qp->cqe + qp->qp_status.cq_head;
-> >> -
-> >> -	if (qp->req_cb) {
-> >> -		while (QM_CQE_PHASE(cqe) == qp->qp_status.cqc_phase) {
-> >> -			dma_rmb();
-> >> -			qp->req_cb(qp, qp->sqe + qm->sqe_size * cqe->sq_head);
-> >> -			qm_cq_head_update(qp);
-> >> -			cqe = qp->cqe + qp->qp_status.cq_head;
-> >> -			qm_db(qm, qp->qp_id, QM_DOORBELL_CMD_CQ,
-> >> -			      qp->qp_status.cq_head, 0);
-> >> -			atomic_dec(&qp->qp_status.used);
-> >> +	struct qm_cqe *cqe;
-> >> +
-> >> +	if (qp->event_cb) {
-> >> +		qp->event_cb(qp);
-> >> +	} else {
-> >> +		cqe = qp->cqe + qp->qp_status.cq_head;
-> >> +
-> >> +		if (qp->req_cb) {
-> >> +			while (QM_CQE_PHASE(cqe) == qp->qp_status.cqc_phase) {
-> >> +				dma_rmb();
-> >> +				qp->req_cb(qp, qp->sqe + qm->sqe_size *
-> >> +					   cqe->sq_head);
-> >> +				qm_cq_head_update(qp);
-> >> +				cqe = qp->cqe + qp->qp_status.cq_head;
-> >> +				atomic_dec(&qp->qp_status.used);
-> >> +			}
-> >>   		}
-> >>   
-> >>   		/* set c_flag */
-> >> @@ -1397,6 +1405,220 @@ static void hisi_qm_cache_wb(struct hisi_qm *qm)
-> >>   	}
-> >>   }
-> >>   
-> >> +static void qm_qp_event_notifier(struct hisi_qp *qp)
-> >> +{
-> >> +	wake_up_interruptible(&qp->uacce_q->wait);
-> >> +}
-> >> +
-> >> +static int hisi_qm_get_available_instances(struct uacce_device *uacce)
-> >> +{
-> >> +	int i, ret;
-> >> +	struct hisi_qm *qm = uacce->priv;
-> >> +
-> >> +	read_lock(&qm->qps_lock);
-> >> +	for (i = 0, ret = 0; i < qm->qp_num; i++)
-> >> +		if (!qm->qp_array[i])
-> >> +			ret++;
-> >> +	read_unlock(&qm->qps_lock);
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int hisi_qm_uacce_get_queue(struct uacce_device *uacce,
-> >> +				   unsigned long arg,
-> >> +				   struct uacce_queue *q)
-> >> +{
-> >> +	struct hisi_qm *qm = uacce->priv;
-> >> +	struct hisi_qp *qp;
-> >> +	u8 alg_type = 0;
-> >> +
-> >> +	qp = hisi_qm_create_qp(qm, alg_type);
-> >> +	if (IS_ERR(qp))
-> >> +		return PTR_ERR(qp);
-> >> +
-> >> +	q->priv = qp;
-> >> +	q->uacce = uacce;
-> >> +	qp->uacce_q = q;
-> >> +	qp->event_cb = qm_qp_event_notifier;
-> >> +	qp->pasid = arg;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static void hisi_qm_uacce_put_queue(struct uacce_queue *q)
-> >> +{
-> >> +	struct hisi_qp *qp = q->priv;
-> >> +
-> >> +	/*
-> >> +	 * As put_queue is only called in uacce_mode=1, and only one queue can  
-> > We got rid of the modes I think so comment needs an update.  
-> Yes
-> >  
-> >> +	 * be used in this mode. we flush all sqc cache back in put queue.
-> >> +	 */
-> >> +	hisi_qm_cache_wb(qp->qm);
-> >> +
-> >> +	/* need to stop hardware, but can not support in v1 */
-> >> +	hisi_qm_release_qp(qp);  
-> > Should we just drop support for the v1 hardware if we can't do this?
-> >  
-> >> +}
-> >> +
-> >> +/* map sq/cq/doorbell to user space */
-> >> +static int hisi_qm_uacce_mmap(struct uacce_queue *q,
-> >> +			      struct vm_area_struct *vma,
-> >> +			      struct uacce_qfile_region *qfr)
-> >> +{
-> >> +	struct hisi_qp *qp = q->priv;
-> >> +	struct hisi_qm *qm = qp->qm;
-> >> +	size_t sz = vma->vm_end - vma->vm_start;
-> >> +	struct pci_dev *pdev = qm->pdev;
-> >> +	struct device *dev = &pdev->dev;
-> >> +	unsigned long vm_pgoff;
-> >> +	int ret;
-> >> +
-> >> +	switch (qfr->type) {
-> >> +	case UACCE_QFRT_MMIO:
-> >> +		if (qm->ver == QM_HW_V2) {
-> >> +			if (sz > PAGE_SIZE * (QM_DOORBELL_PAGE_NR +
-> >> +			    QM_DOORBELL_SQ_CQ_BASE_V2 / PAGE_SIZE))
-> >> +				return -EINVAL;
-> >> +		} else {
-> >> +			if (sz > PAGE_SIZE * QM_DOORBELL_PAGE_NR)
-> >> +				return -EINVAL;
-> >> +		}
-> >> +
-> >> +		vma->vm_flags |= VM_IO;
-> >> +
-> >> +		return remap_pfn_range(vma, vma->vm_start,
-> >> +				       qm->phys_base >> PAGE_SHIFT,
-> >> +				       sz, pgprot_noncached(vma->vm_page_prot));
-> >> +	case UACCE_QFRT_DUS:
-> >> +		if (sz != qp->qdma.size)
-> >> +			return -EINVAL;
-> >> +  
-> > Comment style in here is inconsistent. Match the existing code.  
-> OK
-> >> +		/* dma_mmap_coherent() requires vm_pgoff as 0
-> >> +		 * restore vm_pfoff to initial value for mmap()
-> >> +		 */
-> >> +		vm_pgoff = vma->vm_pgoff;
-> >> +		vma->vm_pgoff = 0;
-> >> +		ret = dma_mmap_coherent(dev, vma, qp->qdma.va,
-> >> +					qp->qdma.dma, sz);
-> >> +		vma->vm_pgoff = vm_pgoff;
-> >> +		return ret;
-> >> +
-> >> +	default:
-> >> +		return -EINVAL;
-> >> +	}
-> >> +}
-> >> +
-> >> +static int hisi_qm_uacce_start_queue(struct uacce_queue *q)
-> >> +{
-> >> +	struct hisi_qp *qp = q->priv;
-> >> +
-> >> +	return hisi_qm_start_qp(qp, qp->pasid);
-> >> +}
-> >> +
-> >> +static void hisi_qm_uacce_stop_queue(struct uacce_queue *q)
-> >> +{
-> >> +	struct hisi_qp *qp = q->priv;
-> >> +
-> >> +	hisi_qm_stop_qp(qp);  
-> > I'm a great fan of minimalism on these
-> > 	hisi_qm_stop_qp(q->priv); doesn't really loose any clarity.  
-> OK
-> >> +}
-> >> +
-> >> +static int qm_set_sqctype(struct uacce_queue *q, u16 type)
-> >> +{
-> >> +	struct hisi_qm *qm = q->uacce->priv;
-> >> +	struct hisi_qp *qp = q->priv;
-> >> +
-> >> +	write_lock(&qm->qps_lock);
-> >> +	qp->alg_type = type;
-> >> +	write_unlock(&qm->qps_lock);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static long hisi_qm_uacce_ioctl(struct uacce_queue *q, unsigned int cmd,
-> >> +				unsigned long arg)
-> >> +{
-> >> +	struct hisi_qp *qp = q->priv;
-> >> +	struct hisi_qp_ctx qp_ctx;
-> >> +
-> >> +	if (cmd == UACCE_CMD_QM_SET_QP_CTX) {
-> >> +		if (copy_from_user(&qp_ctx, (void __user *)arg,
-> >> +				   sizeof(struct hisi_qp_ctx)))
-> >> +			return -EFAULT;
-> >> +
-> >> +		if (qp_ctx.qc_type != 0 && qp_ctx.qc_type != 1)
-> >> +			return -EINVAL;
-> >> +
-> >> +		qm_set_sqctype(q, qp_ctx.qc_type);
-> >> +		qp_ctx.id = qp->qp_id;
-> >> +
-> >> +		if (copy_to_user((void __user *)arg, &qp_ctx,
-> >> +				 sizeof(struct hisi_qp_ctx)))
-> >> +			return -EFAULT;
-> >> +	} else {
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static struct uacce_ops uacce_qm_ops = {
-> >> +	.get_available_instances = hisi_qm_get_available_instances,
-> >> +	.get_queue = hisi_qm_uacce_get_queue,
-> >> +	.put_queue = hisi_qm_uacce_put_queue,
-> >> +	.start_queue = hisi_qm_uacce_start_queue,
-> >> +	.stop_queue = hisi_qm_uacce_stop_queue,
-> >> +	.mmap = hisi_qm_uacce_mmap,
-> >> +	.ioctl = hisi_qm_uacce_ioctl,
-> >> +};
-> >> +
-> >> +static int qm_register_uacce(struct hisi_qm *qm)
-> >> +{
-> >> +	struct pci_dev *pdev = qm->pdev;
-> >> +	struct uacce_device *uacce;
-> >> +	unsigned long mmio_page_nr;
-> >> +	unsigned long dus_page_nr;
-> >> +	struct uacce_interface interface = {
-> >> +		.flags = UACCE_DEV_SVA,
-> >> +		.ops = &uacce_qm_ops,
-> >> +	};
-> >> +
-> >> +	strncpy(interface.name, pdev->driver->name, sizeof(interface.name));
-> >> +
-> >> +	uacce = uacce_register(&pdev->dev, &interface);
-> >> +	if (IS_ERR(uacce))
-> >> +		return PTR_ERR(uacce);  
-> > Is there a potential race here as we have exposed the character device before
-> > the driver is ready for it to be used?  Probably need to split the code that
-> > allocates a uacce interface from the bit that actually exposes it to userspace.  
-> I don't think it is a race condition.
-> Since no requirement of get sysfs ready then register character device.
-> Also sysfs does not always refect constant members, like available_instance.
-> Currently we set the sysfs members after uacce_register, which alloc 
-> uacce device.
-> So no problem if they are ready before character device open.
-
-The ordering of sysfs and chrdev inside the uacce_register wasn't what
-I was referring to. It is the remaining setup done on the uacce below
-after both chrdev and sysfs interface are ready.
-
+> I was using kref as I wanted to call the cleanup routine when kref
+> reaches 0. A refcount_t will have the same problem as the warning in
+> this came from refcount mechanism only (which is used by kref). You
+> can't increment a refcount_t if it is zero :)
 > 
-> If we split the code, allocate an uacce interface first then expose to 
-> usersapce, an additional api maybe required.
+> Any other suggestions other than local counting ?
 
-I'd pay the price of the extra api.  It's still far from clear to me
-why we don't have a race.   For example, if we stop right here for
-a long time, the entire UACCE interface is exposed but we haven't
-set the various priv pointers etc below.  Seems unlikely to be safe.
+i.e. something like this, untested.
 
-> 
-> >  
-> >> +
-> >> +	if (uacce->flags & UACCE_DEV_SVA) {
-> >> +		qm->use_sva = true;
-> >> +	} else {
-> >> +		/* only consider sva case */
-> >> +		uacce_unregister(uacce);
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	uacce->is_vf = pdev->is_virtfn;
-> >> +	uacce->priv = qm;
-> >> +	uacce->algs = qm->algs;
-> >> +
-> >> +	if (qm->ver == QM_HW_V1) {
-> >> +		mmio_page_nr = QM_DOORBELL_PAGE_NR;
-> >> +		uacce->api_ver = HISI_QM_API_VER_BASE;
-> >> +	} else {
-> >> +		mmio_page_nr = QM_DOORBELL_PAGE_NR +
-> >> +			QM_DOORBELL_SQ_CQ_BASE_V2 / PAGE_SIZE;
-> >> +		uacce->api_ver = HISI_QM_API_VER2_BASE;
-> >> +	}
-> >> +
-> >> +	dus_page_nr = (PAGE_SIZE - 1 + qm->sqe_size * QM_Q_DEPTH +
-> >> +		       sizeof(struct qm_cqe) * QM_Q_DEPTH) >> PAGE_SHIFT;
-> >> +
-> >> +	uacce->qf_pg_size[UACCE_QFRT_MMIO] = mmio_page_nr;
-> >> +	uacce->qf_pg_size[UACCE_QFRT_DUS]  = dus_page_nr;
-> >> +
-> >> +	qm->uacce = uacce;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >>   /**
-> >>    * hisi_qm_init() - Initialize configures about qm.
-> >>    * @qm: The qm needing init.
-> >> @@ -1421,6 +1643,10 @@ int hisi_qm_init(struct hisi_qm *qm)
-> >>   		return -EINVAL;
-> >>   	}
-> >>   
-> >> +	ret = qm_register_uacce(qm);
-> >> +	if (ret < 0)
-> >> +		dev_warn(&pdev->dev, "fail to register uacce (%d)\n", ret);
-> >> +  
-> > looks like there are error paths in qm_init in which we should call
-> > the uacce_unregister?  
-> OK
-> >  
-> >>   	ret = pci_enable_device_mem(pdev);
-> >>   	if (ret < 0) {
-> >>   		dev_err(&pdev->dev, "Failed to enable device mem!\n");
-> >> @@ -1433,6 +1659,8 @@ int hisi_qm_init(struct hisi_qm *qm)
-> >>   		goto err_disable_pcidev;
-> >>   	}
-> >>   
-> >> +	qm->phys_base = pci_resource_start(pdev, PCI_BAR_2);
-> >> +	qm->size = pci_resource_len(qm->pdev, PCI_BAR_2);
-> >>   	qm->io_base = ioremap(pci_resource_start(pdev, PCI_BAR_2),
-> >>   			      pci_resource_len(qm->pdev, PCI_BAR_2));  
-> > Use qm->phys_base/size in the ioremap here to avoid repeating the code.  
-> OK
-> >  
-> >>   	if (!qm->io_base) {
-> >> @@ -1504,6 +1732,9 @@ void hisi_qm_uninit(struct hisi_qm *qm)
-> >>   	iounmap(qm->io_base);
-> >>   	pci_release_mem_regions(pdev);
-> >>   	pci_disable_device(pdev);
-> >> +
-> >> +	if (qm->uacce)
-> >> +		uacce_unregister(qm->uacce);  
-> > Can we make uacce_unregister check the input?
-> > Might make for cleaner users.  
-> OK,
-> >  
-> >>   }
-> >>   EXPORT_SYMBOL_GPL(hisi_qm_uninit);
-> >>   
-> >> diff --git a/drivers/crypto/hisilicon/qm.h b/drivers/crypto/hisilicon/qm.h
-> >> index 103e2fd..84a3be9 100644
-> >> --- a/drivers/crypto/hisilicon/qm.h
-> >> +++ b/drivers/crypto/hisilicon/qm.h
-> >> @@ -77,6 +77,10 @@
-> >>   
-> >>   #define HISI_ACC_SGL_SGE_NR_MAX		255
-> >>   
-> >> +/* page number for queue file region */
-> >> +#define QM_DOORBELL_PAGE_NR		1
-> >> +  
-> > 1 blank line only is almost always enough.
-> >  
-> >> +
-> >>   enum qp_state {
-> >>   	QP_STOP,
-> >>   };
-> >> @@ -161,7 +165,12 @@ struct hisi_qm {
-> >>   	u32 error_mask;
-> >>   	u32 msi_mask;
-> >>   
-> >> +	const char *algs;
-> >>   	bool use_dma_api;
-> >> +	bool use_sva;
-> >> +	resource_size_t phys_base;
-> >> +	resource_size_t size;
-> >> +	struct uacce_device *uacce;
-> >>   };
-> >>   
-> >>   struct hisi_qp_status {
-> >> @@ -191,10 +200,12 @@ struct hisi_qp {
-> >>   	struct hisi_qp_ops *hw_ops;
-> >>   	void *qp_ctx;
-> >>   	void (*req_cb)(struct hisi_qp *qp, void *data);
-> >> +	void (*event_cb)(struct hisi_qp *qp);
-> >>   	struct work_struct work;
-> >>   	struct workqueue_struct *wq;
-> >> -  
-> > unrelated change.
-> >  
-> >>   	struct hisi_qm *qm;
-> >> +	u16 pasid;
-> >> +	struct uacce_queue *uacce_q;
-> >>   };
-> >>   
-> >>   int hisi_qm_init(struct hisi_qm *qm);
-> >> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-> >> index 1b2ee96..48860d2 100644
-> >> --- a/drivers/crypto/hisilicon/zip/zip_main.c
-> >> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
-> >> @@ -316,8 +316,14 @@ static void hisi_zip_set_user_domain_and_cache(struct hisi_zip *hisi_zip)
-> >>   	writel(AXUSER_BASE, base + HZIP_BD_RUSER_32_63);
-> >>   	writel(AXUSER_BASE, base + HZIP_SGL_RUSER_32_63);
-> >>   	writel(AXUSER_BASE, base + HZIP_BD_WUSER_32_63);
-> >> -	writel(AXUSER_BASE, base + HZIP_DATA_RUSER_32_63);
-> >> -	writel(AXUSER_BASE, base + HZIP_DATA_WUSER_32_63);
-> >> +
-> >> +	if (hisi_zip->qm.use_sva) {
-> >> +		writel(AXUSER_BASE | AXUSER_SSV, base + HZIP_DATA_RUSER_32_63);
-> >> +		writel(AXUSER_BASE | AXUSER_SSV, base + HZIP_DATA_WUSER_32_63);
-> >> +	} else {
-> >> +		writel(AXUSER_BASE, base + HZIP_DATA_RUSER_32_63);
-> >> +		writel(AXUSER_BASE, base + HZIP_DATA_WUSER_32_63);
-> >> +	}
-> >>   
-> >>   	/* let's open all compression/decompression cores */
-> >>   	writel(DECOMP_CHECK_ENABLE | ALL_COMP_DECOMP_EN,
-> >> @@ -671,24 +677,12 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >>   	qm = &hisi_zip->qm;
-> >>   	qm->pdev = pdev;
-> >>   	qm->ver = rev_id;
-> >> -  
-> > Try to avoid noise from white space changes.  No huge help to delete the blank line here.
-> >  
-> >> +	qm->use_dma_api = true;
-> >> +	qm->algs = "zlib\ngzip\n";
-> >>   	qm->sqe_size = HZIP_SQE_SIZE;
-> >>   	qm->dev_name = hisi_zip_name;
-> >>   	qm->fun_type = (pdev->device == PCI_DEVICE_ID_ZIP_PF) ? QM_HW_PF :
-> >>   								QM_HW_VF;  
-> > Unrelated changes I think.  Can we clean out the old left overs
-> > of uacce from the driver in a precursor patch? Also if it's no longer
-> > used can we drop the module param?  
-> This patch is an example, so just in one patch to make it work.
-> >  
-> >> -	switch (uacce_mode) {
-> >> -	case 0:
-> >> -		qm->use_dma_api = true;
-> >> -		break;
-> >> -	case 1:
-> >> -		qm->use_dma_api = false;
-> >> -		break;
-> >> -	case 2:
-> >> -		qm->use_dma_api = true;
-> >> -		break;
-> >> -	default:
-> >> -		return -EINVAL;
-> >> -	}
-> >>   
-> >>   	ret = hisi_qm_init(qm);
-> >>   	if (ret) {
-> >> @@ -976,12 +970,10 @@ static int __init hisi_zip_init(void)
-> >>   		goto err_pci;
-> >>   	}
-> >>   
-> >> -	if (uacce_mode == 0 || uacce_mode == 2) {
-> >> -		ret = hisi_zip_register_to_crypto();
-> >> -		if (ret < 0) {
-> >> -			pr_err("Failed to register driver to crypto.\n");
-> >> -			goto err_crypto;
-> >> -		}
-> >> +	ret = hisi_zip_register_to_crypto();
-> >> +	if (ret < 0) {
-> >> +		pr_err("Failed to register driver to crypto.\n");
-> >> +		goto err_crypto;
-> >>   	}
-> >>   
-> >>   	return 0;
-> >> @@ -996,8 +988,7 @@ static int __init hisi_zip_init(void)
-> >>   
-> >>   static void __exit hisi_zip_exit(void)
-> >>   {
-> >> -	if (uacce_mode == 0 || uacce_mode == 2)
-> >> -		hisi_zip_unregister_from_crypto();
-> >> +	hisi_zip_unregister_from_crypto();  
-> >
-> >  
-> >>   	pci_unregister_driver(&hisi_zip_pci_driver);
-> >>   	hisi_zip_unregister_debugfs();
-> >>   }
-> >> diff --git a/include/uapi/misc/uacce/qm.h b/include/uapi/misc/uacce/qm.h
-> >> new file mode 100644
-> >> index 0000000..d79a8f2
-> >> --- /dev/null
-> >> +++ b/include/uapi/misc/uacce/qm.h  
-> > Given generic directory (assuming uacce becomes heavily used) probably
-> > want to prefix that if it is unique to hisilicon.
-> >
-> > hisi_qm.h?  
-> OK, good idea.
-> >  
-> >> @@ -0,0 +1,23 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-> >> +#ifndef HISI_QM_USR_IF_H
-> >> +#define HISI_QM_USR_IF_H
-> >> +
-> >> +#include <linux/types.h>
-> >> +
-> >> +/**
-> >> + * struct hisi_qp_ctx - User data for hisi qp.
-> >> + * @id: Specifies which Turbo decode algorithm to use  
-> > What's a Turbo algorithm?  I don't know and I have the manuals ;)  
-> Sorry, will change that
-> 
-> Thanks
-> 
+---
+ drivers/opp/core.c | 26 ++++++++------------------
+ drivers/opp/of.c   | 14 +++++---------
+ drivers/opp/opp.h  |  6 ++----
+ 3 files changed, 15 insertions(+), 31 deletions(-)
 
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 467b2348a289..ea1d89177511 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -988,7 +988,6 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
+ 	INIT_LIST_HEAD(&opp_table->opp_list);
+ 	kref_init(&opp_table->kref);
+-	kref_init(&opp_table->list_kref);
+ 
+ 	/* Secure the device table modification */
+ 	list_add(&opp_table->node, &opp_tables);
+@@ -1076,27 +1075,18 @@ static void _opp_remove_all_static(struct opp_table *opp_table)
+ {
+ 	struct dev_pm_opp *opp, *tmp;
+ 
++	mutex_lock(&opp_table->lock);
++
++	if (!opp_table->parsed_static_opps || --opp_table->parsed_static_opps)
++		goto unlock;
++
+ 	list_for_each_entry_safe(opp, tmp, &opp_table->opp_list, node) {
+ 		if (!opp->dynamic)
+ 			dev_pm_opp_put(opp);
+ 	}
+ 
+-	opp_table->parsed_static_opps = false;
+-}
+-
+-static void _opp_table_list_kref_release(struct kref *kref)
+-{
+-	struct opp_table *opp_table = container_of(kref, struct opp_table,
+-						   list_kref);
+-
+-	_opp_remove_all_static(opp_table);
+-	mutex_unlock(&opp_table_lock);
+-}
+-
+-void _put_opp_list_kref(struct opp_table *opp_table)
+-{
+-	kref_put_mutex(&opp_table->list_kref, _opp_table_list_kref_release,
+-		       &opp_table_lock);
++unlock:
++	mutex_unlock(&opp_table->lock);
+ }
+ 
+ void dev_pm_opp_put_opp_table(struct opp_table *opp_table)
+@@ -2276,7 +2266,7 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
+ 		return;
+ 	}
+ 
+-	_put_opp_list_kref(opp_table);
++	_opp_remove_all_static(opp_table);
+ 
+ 	/* Drop reference taken by _find_opp_table() */
+ 	dev_pm_opp_put_opp_table(opp_table);
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index 1cbb58240b80..2c433e9f9223 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -658,17 +658,15 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
+ 	struct dev_pm_opp *opp;
+ 
+ 	/* OPP table is already initialized for the device */
++	mutex_lock(&opp_table->lock);
+ 	if (opp_table->parsed_static_opps) {
+-		kref_get(&opp_table->list_kref);
++		opp_table->parsed_static_opps++;
++		mutex_unlock(&opp_table->lock);
+ 		return 0;
+ 	}
+ 
+-	/*
+-	 * Re-initialize list_kref every time we add static OPPs to the OPP
+-	 * table as the reference count may be 0 after the last tie static OPPs
+-	 * were removed.
+-	 */
+-	kref_init(&opp_table->list_kref);
++	opp_table->parsed_static_opps = 1;
++	mutex_unlock(&opp_table->lock);
+ 
+ 	/* We have opp-table node now, iterate over it and add OPPs */
+ 	for_each_available_child_of_node(opp_table->np, np) {
+@@ -701,8 +699,6 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
+ 	if (pstate_count)
+ 		opp_table->genpd_performance_state = true;
+ 
+-	opp_table->parsed_static_opps = true;
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+index 51ad942d1b6b..4e69b855a6a0 100644
+--- a/drivers/opp/opp.h
++++ b/drivers/opp/opp.h
+@@ -127,11 +127,10 @@ enum opp_table_access {
+  * @dev_list:	list of devices that share these OPPs
+  * @opp_list:	table of opps
+  * @kref:	for reference count of the table.
+- * @list_kref:	for reference count of the OPP list.
+  * @lock:	mutex protecting the opp_list and dev_list.
+  * @np:		struct device_node pointer for opp's DT node.
+  * @clock_latency_ns_max: Max clock latency in nanoseconds.
+- * @parsed_static_opps: True if OPPs are initialized from DT.
++ * @parsed_static_opps: Count of devices for which OPPs are initialized from DT.
+  * @shared_opp: OPP is shared between multiple devices.
+  * @suspend_opp: Pointer to OPP to be used during device suspend.
+  * @genpd_virt_dev_lock: Mutex protecting the genpd virtual device pointers.
+@@ -167,7 +166,6 @@ struct opp_table {
+ 	struct list_head dev_list;
+ 	struct list_head opp_list;
+ 	struct kref kref;
+-	struct kref list_kref;
+ 	struct mutex lock;
+ 
+ 	struct device_node *np;
+@@ -176,7 +174,7 @@ struct opp_table {
+ 	/* For backward compatibility with v1 bindings */
+ 	unsigned int voltage_tolerance_v1;
+ 
+-	bool parsed_static_opps;
++	unsigned int parsed_static_opps;
+ 	enum opp_table_access shared_opp;
+ 	struct dev_pm_opp *suspend_opp;
 
+-- 
+viresh
