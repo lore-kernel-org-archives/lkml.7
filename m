@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A47AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED497C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689092173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91C22173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497289;
-	bh=Jlv9ukXX2oMCUigdyLnVYSC/Qt/S2pddvMuA9duPMcs=;
+	s=default; t=1573497291;
+	bh=FEoAUQmdVsjexuDgVhGqVl+xGVNFwzVQlo4Jed45Uyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQubpOz2vQYOROi5vEDUQAgjTOgWxd39jORLoEqiU/qn/YAscJ7MyzVGO/gVDcEEk
-	 +sOy3mV7gtGRWHNG5XPeXBVehg4iLv9OpxdKThcnw8OAukOCkT81oNPA+OIDavEGx6
-	 5cbFwih3cgR1myK59izeUy2WmQ6hCDSwQO3SYOvo=
+	b=Fzi10DW3ig3/pzptUYDb+yC9VUpu1KmzNepTlA2dBBbIrl2yk/mCtJAWV/zhcywdN
+	 ys2BcS3Zfo0UlBh+2oA8eXj85RTPmyvQEH+0Hg7hGM0mHRyM+L1xxJPo1p8G36wiEP
+	 YzwTC91Qf7tbEk3nNjX/tE59n9EYx18OObaACAbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfKKSes (ORCPT
+        id S1728422AbfKKSet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:34:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52450 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:34:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbfKKSeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:44 -0500
+        id S1728407AbfKKSer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96DED2173B;
-        Mon, 11 Nov 2019 18:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 481242173B;
+        Mon, 11 Nov 2019 18:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497284;
-        bh=Jlv9ukXX2oMCUigdyLnVYSC/Qt/S2pddvMuA9duPMcs=;
+        s=default; t=1573497286;
+        bh=FEoAUQmdVsjexuDgVhGqVl+xGVNFwzVQlo4Jed45Uyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uFz8EJvRBqHifok2T4X5uWnloqI8tPPKetdkJUNaiNQ5j6C/mhQAjfLJtuOrWRkgB
-         PdlrJ4rdn+mvJNlabRscJ8hcrQe9xqNHZH21Gs/x05Amm46NRHZ365lZZtHnF2ZoCy
-         J16m7o/Bk8oXeMuF4O6FrS0OdJBmTWKRVjq3NmYE=
+        b=S9Sxl4t9V45SDnPKeYQkOqGe/oIDL+5eNgzLUeGg+y81NyWRYmHueQrw3gLqfk2+P
+         ZH/hVk/mU2zphkBRGs31Ka0sgiFtTd4wUzi6gGf7vMGVKENlnpREx7TBi7yOuQ0533
+         PU8bF+COL4JYdwn6LdpdoFGqXZ8vfjo/AS3qKMZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 52/65] RDMA/iw_cxgb4: Avoid freeing skb twice in arp failure case
-Date:   Mon, 11 Nov 2019 19:28:52 +0100
-Message-Id: <20191111181351.621458821@linuxfoundation.org>
+Subject: [PATCH 4.9 53/65] scsi: qla2xxx: stop timer in shutdown path
+Date:   Mon, 11 Nov 2019 19:28:53 +0100
+Message-Id: <20191111181352.133190505@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -61,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit d4934f45693651ea15357dd6c7c36be28b6da884 ]
+[ Upstream commit d3566abb1a1e7772116e4d50fb6a58d19c9802e5 ]
 
-_put_ep_safe() and _put_pass_ep_safe() free the skb before it is freed by
-process_work(). fix double free by freeing the skb only in process_work().
+In shutdown/reboot paths, the timer is not stopped:
 
-Fixes: 1dad0ebeea1c ("iw_cxgb4: Avoid touch after free error in ARP failure handlers")
-Link: https://lore.kernel.org/r/1572006880-5800-1-git-send-email-bharat@chelsio.com
-Signed-off-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+  qla2x00_shutdown
+  pci_device_shutdown
+  device_shutdown
+  kernel_restart_prepare
+  kernel_restart
+  sys_reboot
+
+This causes lockups (on powerpc) when firmware config space access calls
+are interrupted by smp_send_stop later in reboot.
+
+Fixes: e30d1756480dc ("[SCSI] qla2xxx: Addition of shutdown callback handler.")
+Link: https://lore.kernel.org/r/20191024063804.14538-1-npiggin@gmail.com
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index e5752352e0fb1..605d50ad123cc 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -490,7 +490,6 @@ static int _put_ep_safe(struct c4iw_dev *dev, struct sk_buff *skb)
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index c813c9b75a10b..3bae56b202f87 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3077,6 +3077,10 @@ qla2x00_shutdown(struct pci_dev *pdev)
+ 	/* Stop currently executing firmware. */
+ 	qla2x00_try_to_stop_firmware(vha);
  
- 	ep = *((struct c4iw_ep **)(skb->cb + 2 * sizeof(void *)));
- 	release_ep_resources(ep);
--	kfree_skb(skb);
- 	return 0;
- }
- 
-@@ -501,7 +500,6 @@ static int _put_pass_ep_safe(struct c4iw_dev *dev, struct sk_buff *skb)
- 	ep = *((struct c4iw_ep **)(skb->cb + 2 * sizeof(void *)));
- 	c4iw_put_ep(&ep->parent_ep->com);
- 	release_ep_resources(ep);
--	kfree_skb(skb);
- 	return 0;
- }
++	/* Disable timer */
++	if (vha->timer_active)
++		qla2x00_stop_timer(vha);
++
+ 	/* Turn adapter off line */
+ 	vha->flags.online = 0;
  
 -- 
 2.20.1
