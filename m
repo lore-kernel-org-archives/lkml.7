@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A084C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB21C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C272196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB472190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497014;
-	bh=jlnTzvoyGLFnWfdd3rhWLJ0o0stvG4YQ6aaLNBAKQag=;
+	s=default; t=1573497018;
+	bh=/6P89LKFLnV4atW4E8l4Q+dc5K4YUqiskhCGJJztcIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cWJxHtB/mwSyBEtoNS1N0QAvJ7hIv/wE2eUgTYs37TyZJXndgxq37Qqt7J9yjDXs2
-	 Jq2P01mUSQk6tti5onWpVDZizwa4SliE4G+gtdqyYbPN3h8i4lMhBAUkWKLbumere3
-	 HN3MFcCOKdy7yz7PGWPPTtjtdyBztnBAy4kQaKIs=
+	b=NuEXYk0aupdXwipm5nScIyR3TV5zGDqfg4i2xfqeqGvuXagJZUOQkY2SRoDLaDPmD
+	 BjrHkLtqOqIZwG+MstlGLFMExfVMVSNBiOHB3Dygs/OulI1MX3T1GVt1IvP1BLn9qw
+	 Bkf3UPILa1Ukt1IRdhTUFixSeq0hACLN2L2PMp8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfKKSaN (ORCPT
+        id S1727226AbfKKSaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:30:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:30:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfKKSaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:09 -0500
+        id S1727192AbfKKSaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F4B921783;
-        Mon, 11 Nov 2019 18:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D86214E0;
+        Mon, 11 Nov 2019 18:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497009;
-        bh=jlnTzvoyGLFnWfdd3rhWLJ0o0stvG4YQ6aaLNBAKQag=;
+        s=default; t=1573497015;
+        bh=/6P89LKFLnV4atW4E8l4Q+dc5K4YUqiskhCGJJztcIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1h/qXSmphk+5uua7dZ5bpwkPpaZwkEle+gwMU0oRBbTsAH0cIJYg94MtaJugpMDu
-         YeIGdpJOM+C7a8atXx09KmuHxI6DgpDqCbAkhwpxDP9q9RvBUDD68TnVxie68K8f+4
-         /QZ26/ptbnsmhNhj1ghmNYAtIQe93olwPaTfFNqM=
+        b=Y7+XGVwGSOeKCARDsNX+i8MT/vNNtf7o1No53RjdzZy9iv+0KMGuDNtTqqRl8Ssl3
+         a1Co835krVbSUPkCuvU+C067194zZWGFOAI9DEBRvAWB4skrMM+YR34A0ZDxk/89hC
+         JhM8Beiq+fO0wdw330x9UjJ1wei9cpLwMGdoxVK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.4 15/43] iio: imu: adis16480: make sure provided frequency is positive
-Date:   Mon, 11 Nov 2019 19:28:29 +0100
-Message-Id: <20191111181305.391419048@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>
+Subject: [PATCH 4.4 17/43] netfilter: ipset: Fix an error code in ip_set_sockfn_get()
+Date:   Mon, 11 Nov 2019 19:28:31 +0100
+Message-Id: <20191111181307.797092015@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -61,40 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 24e1eb5c0d78cfb9750b690bbe997d4d59170258 upstream.
+commit 30b7244d79651460ff114ba8f7987ed94c86b99a upstream.
 
-It could happen that either `val` or `val2` [provided from userspace] is
-negative. In that case the computed frequency could get a weird value.
+The copy_to_user() function returns the number of bytes remaining to be
+copied.  In this code, that positive return is checked at the end of the
+function and we return zero/success.  What we should do instead is
+return -EFAULT.
 
-Fix this by checking that neither of the 2 variables is negative, and check
-that the computed result is not-zero.
-
-Fixes: e4f959390178 ("iio: imu: adis16480 switch sampling frequency attr to core support")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: a7b4f989a629 ("netfilter: ipset: IP set core support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/adis16480.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_core.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -266,8 +266,11 @@ static int adis16480_set_freq(struct iio
- 	struct adis16480 *st = iio_priv(indio_dev);
- 	unsigned int t;
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1930,8 +1930,9 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 		}
  
-+	if (val < 0 || val2 < 0)
-+		return -EINVAL;
-+
- 	t =  val * 1000 + val2 / 1000;
--	if (t <= 0)
-+	if (t == 0)
- 		return -EINVAL;
+ 		req_version->version = IPSET_PROTOCOL;
+-		ret = copy_to_user(user, req_version,
+-				   sizeof(struct ip_set_req_version));
++		if (copy_to_user(user, req_version,
++				 sizeof(struct ip_set_req_version)))
++			ret = -EFAULT;
+ 		goto done;
+ 	}
+ 	case IP_SET_OP_GET_BYNAME: {
+@@ -1988,7 +1989,8 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 	}	/* end of switch(op) */
  
- 	t = 2460000 / t;
+ copy:
+-	ret = copy_to_user(user, data, copylen);
++	if (copy_to_user(user, data, copylen))
++		ret = -EFAULT;
+ 
+ done:
+ 	vfree(data);
 
 
