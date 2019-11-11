@@ -2,119 +2,152 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8EAC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88883C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099BC20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B0120818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rSj1IqJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfKKRh7 (ORCPT
+        id S1727020AbfKKRia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:37:59 -0500
-Received: from mga09.intel.com ([134.134.136.24]:11669 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbfKKRh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:37:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 09:37:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
-   d="scan'208";a="287236950"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 11 Nov 2019 09:37:57 -0800
-Date:   Mon, 11 Nov 2019 09:37:57 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Lamprecht <t.lamprecht@proxmox.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Doug Reiland <doug.reiland@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
- when loading PDPTRS
-Message-ID: <20191111173757.GB11805@linux.intel.com>
-References: <20191003154447.010950442@linuxfoundation.org>
- <20191003154525.870373223@linuxfoundation.org>
- <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
+        Mon, 11 Nov 2019 12:38:30 -0500
+Received: from mail-eopbgr820045.outbound.protection.outlook.com ([40.107.82.45]:57152
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726763AbfKKRi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:38:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JmDCo7kEnxQZBpjD8GdkdsZ3i+wI3Q3lyuvWmS9zFFUAMa+j/iEGHm3EmkUpHGy3BtxDxqVmVvs3wpEV6hJyBHpJIoq6ykHodOZSg1wyDkUSFI7L3XgJMLHR8Jc4zU30S9VSS1qc3coKDGZwrdmwa11fjdbhJ3M+A5zVlj3KCFU6TWBK/8YzZxd9sOaIH74ELG6KyjgdkCHa+vkqZ+pAJsnY8H995kF0oY85qJug2MVf1Ift7FtR5V8Gtvoph3b6339VaVZc/jfGM3HdwL1sO4F+xmhmNPEUHarlJTOVyEGR6VBM5TewSQoQRGhOD/5Wh6cpBN/d4HpZ20sVZ2ZuGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZboYDEVDu7mJC++0b/wfsSali1Okmw/KU8KrcZ8ZbQo=;
+ b=WCF1HEuI2cRU+fTmkfNIFDcoJgI5vkIrcAMfSzjsDYLpxPWL1vAkzZyANmB0Pe2Xbv7I5pGqRsnReMshUjb35p69a2PqAgyMYp9GLdKlBt+RyR6ZD7vcM3PgPq2iNRhkB0TEF92vd2K7oclY9+OpE5ZgMzGMgk/6QB+tgx6ZdhFneIr36SXvGY38RIyFNVz8f3QfaszQ6ZEwoiR5MUTbjJWz33e2WwGL1gw9Xmw4ITpsC4Bn/TBLMTH1mwnh3bol9KOEfOGMDPsD6VMBBn0mO7+0NC7kbx84gnLCnGpZGB4xTpcdphbwnOWxQsfzCGU54dCqTVkGFDXsi3aNOBcrjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZboYDEVDu7mJC++0b/wfsSali1Okmw/KU8KrcZ8ZbQo=;
+ b=rSj1IqJjVJJaFpPQCEjwFtdw6Eg5gUcyCGc8ncoQJOi8nAMujaGe0I8YLIVxvchlbd+HJjchNhHqq2fwIyzQH8wzFtKWWWLyNu1P/JtTvl05kcDMfpqTluFusE6wcn3SdhD2V4wNFT1k8s5QV56VHmWU/RjG7HBtIqL5dRe+LvY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
+ DM6PR12MB3931.namprd12.prod.outlook.com (10.255.174.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Mon, 11 Nov 2019 17:38:25 +0000
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
+ 17:38:25 +0000
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
+ in-kernel PIT re-injection mode.
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1572648072-84536-14-git-send-email-suravee.suthikulpanit@amd.com>
+ <70fb2b49-2198-bde4-a38b-f37bc8bc9847@redhat.com>
+ <20191104231712.GD23545@rkaganb.lan>
+ <ac4313a6-df96-2223-bed3-33c3a8555c98@redhat.com>
+Message-ID: <9361adbc-77e8-4964-c859-8956e1fbb182@amd.com>
+Date:   Mon, 11 Nov 2019 11:37:53 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <ac4313a6-df96-2223-bed3-33c3a8555c98@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR16CA0046.namprd16.prod.outlook.com
+ (2603:10b6:805:ca::23) To DM6PR12MB3865.namprd12.prod.outlook.com
+ (2603:10b6:5:1c8::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 414015f7-b405-4949-a65a-08d766cdf4ba
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3931:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB393138A1301C850870BB4056F3740@DM6PR12MB3931.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0218A015FA
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(346002)(376002)(199004)(189003)(316002)(6486002)(110136005)(2201001)(2501003)(11346002)(50466002)(2906002)(446003)(2486003)(23676004)(58126008)(66066001)(8676002)(65956001)(14444005)(81156014)(81166006)(6636002)(52116002)(36756003)(47776003)(65806001)(186003)(8936002)(229853002)(99286004)(6512007)(6116002)(6436002)(76176011)(486006)(3846002)(386003)(478600001)(230700001)(5660300002)(66946007)(2616005)(476003)(26005)(31696002)(44832011)(7416002)(66476007)(66556008)(6246003)(6506007)(14454004)(86362001)(6666004)(31686004)(305945005)(25786009)(53546011)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3931;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8JwT3qtnJSbbV+yqqKXnLQjH6Lpo8/ZfpYKXn8u+p0zm/3/v9W56BMlhP2Usry59z7vqyIZkcsShShZA6g1FODEEcfeCiVwZXgvRKYObM9NKzGJ+HtT+BTn6RM/QTFpcIYMIE6W3fdRlYwZdjpPL8Oa9+SxOnw9s+skK5/EjzJy7+lGzO5aqXW753Rfbo/T1I7b7VrEo3m3cj9rlI11zoOXhdclMmbYRoehmpN7Jg2/ETD+Uibvt22deXwzW01vLurM5Yxq81eHtIR8CLL6lwlYIDLA1edtC0uf1PbjAfZGFfZYyaWXdAo7/Hm/2nqLInuib396hMzmuMN3Hk1H+J2oaklbalrRQJm5vz9VV+OWHl474ZLgt25koyd5zd1VitBWIXjthqLUWI8nEoQ6+H249C4wdbzW5200EOwxWT8hZxbYlxuURIodvbt1G5I+p
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 414015f7-b405-4949-a65a-08d766cdf4ba
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2019 17:38:25.8645
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SFPhlcBxwjFgfaFyfwfXFbvSlba8KePFUOLCduk76EczLVqChwLpyxi20SKaD+Y3Hs/nhe18+NiCGxVGM8c2hQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3931
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 10:32:05AM +0100, Thomas Lamprecht wrote:
-> On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
-> > 
-> > Manually generate the PDPTR reserved bit mask when explicitly loading
-> > PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
-> It seems that a backport of this to stable and distro kernels tickled out
-> some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
-> Intel CPUs[1].
+Roman/Paolo
 
-It manifests specifically when running with EPT disabled (no surprise
-there).  Actually, it probably would reproduce simply with unrestricted
-guest disabled, but that's beside the point.
-
-The issue is a flawed PAE-paging check in kvm_set_cr3(), which causes KVM
-to incorrectly load PDPTRs in 64-bit mode and inject a #GP.  It's a sneaky
-little bugger because the "if (is_long_mode() ..." makes it appear to be
-correct at first glance.
-
-	if (is_long_mode(vcpu) &&
-	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
-		return 1;
-	else if (is_pae(vcpu) && is_paging(vcpu) &&  <--- needs !is_long_mode()
-		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-		return 1;
-
-With unrestricted guest, KVM doesn't intercept writes to CR3 and so doesn't
-trigger the buggy code.  This doesn't fail upstream because the offending
-code was refactored to encapsulate the PAE checks in a single helper,
-precisely to avoid this type of headache.
-
-  commit bf03d4f9334728bf7c8ffc7de787df48abd6340e
-  Author: Paolo Bonzini <pbonzini@redhat.com>
-  Date:   Thu Jun 6 18:52:44 2019 +0200
-
-    KVM: x86: introduce is_pae_paging
-
-    Checking for 32-bit PAE is quite common around code that fiddles with
-    the PDPTRs.  Add a function to compress all checks into a single
-    invocation.
-
-
-Commit bf03d4f93347 ("KVM: x86: introduce is_pae_paging") doesn't apply
-cleanly to 4.19 or earlier because of the VMX file movement in 4.20.  But,
-the revelant changes in x86.c do apply cleanly, and I've quadruple checked
-that the PAE checks in vmx.c are correct, i.e. applying the patch and
-ignoring the nested.c/vmx.c conflicts would be a viable lazy option.
-
-> Basically, booting this kernel as host, then running an KVM guest distro
-> or kernel fails it that guest kernel early in the boot phase without any
-> error or other log to serial console, earlyprintk.
-
-...
-
+On 11/5/2019 4:47 PM, Paolo Bonzini wrote:
+> On 05/11/19 00:17, Roman Kagan wrote:
+>>> This is not too nice for Intel which does support (through the EOI exit
+>>> mask) APICv even if PIT reinjection active.
+>> Hmm, it's tempting to just make svm_load_eoi_exitmap() disable AVIC when
+>> given a non-empty eoi_exit_bitmap, and enable it back on a clear
+>> eoi_exit_bitmap.  This may remove the need to add special treatment to
+>> PIT etc.
 > 
-> [0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
-> [1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
->      westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
->      has VMX support (i.e. is 64bit based)
+> That is a very nice idea---we can make that a single disable reason,
+> like APICV_DEACTIVATE_REASON_EOI, and Intel can simply never use it.
 
-Note, not Westmere, which has EPT and unrestricted guest.  Xeon E5420 is
-Harpertown, a.k.a. Penryn, the shrink of Conroe.  
+I took at look at the svm_load_eoi_exitmap() and it is called via:
+     kvm_make_scan_ioapic_request() ->
+         KVM_REQ_SCAN_IOAPIC -> vcpu_scan_ioapic() ->
+             KVM_REQ_LOAD_EOI_EXITMAP -> vcpu_load_eoi_exitmap()
+
+The kvm_make_scan_ioapic_request() is called from multiple places:
+
+arch/x86/kvm/irq_comm.c:
+     * kvm_arch_post_irq_routing_update() : Called from kvm_set_irq_routing()
+
+arch/x86/kvm/ioapic.c:
+     * kvm_arch_post_irq_ack_notifier_list_update() : (Un)registering irq ack notifier
+     * kvm_set_ioapic() : Setting ioapic irqchip
+     * ioapic_mmio_write() -> ioapic_write_indirect()
+
+arch/x86/kvm/lapic.c:
+     * recalculate_apic_map()
+
+Most calls would be from ioapic_mmio_write()->ioapic_write_indirect().
+
+In case of AMD AVIC, the svm_load_e::vsoi_exitmap() is called several times, and requesting
+APICV (de)activate from here when the eoi_exit_bitmap is set/clear would introduce
+large overhead especially with SMP machine. So, for now, let's just disable APICv
+when in-kernel PIT is in reinject (delay) mode.
+
+I'll also add the logic to avoid unnecessary overhead for Intel.
+
+Thanks,
+Suravee
