@@ -2,144 +2,221 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C55CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756A3C17447
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA88921783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD50206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:41:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DFPombtt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YK0y7OEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfKKVio (ORCPT
+        id S1727517AbfKKVlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:38:44 -0500
-Received: from mout.web.de ([212.227.15.4]:57027 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfKKVio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 16:38:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573508319;
-        bh=wy+c4oquk6E0ChKo/LOL0mYKRewC/xnPYTJIenkxXYg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=DFPombttEBs9/S/7/XEvA3GBGB/xo8ay7ubOQ81IoSS6RHOMbVZyTGvKawgyHEdNd
-         ggW3tIUCJWrJfln930e2jEoBMa+dYROgdEvN+ZU1w9LTo54qIx3QRgicJdN7ko+Bp7
-         4CpZhDd+VyPtcQrWVMzNq5mW59bEcFtsRHJvADSg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MZRnx-1iBF4M1iqD-00LENl; Mon, 11
- Nov 2019 22:38:39 +0100
-Subject: Re: [3/4] pwm: omap-dmtimer: put_device() after
- of_find_device_by_node()
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-pwm@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Neil Brown <neilb@suse.de>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de
-References: <20191111071952.6pbswbboqreen6im@pengutronix.de>
- <20191111090357.13903-1-u.kleine-koenig@pengutronix.de>
- <20191111090357.13903-3-u.kleine-koenig@pengutronix.de>
- <812c95a0-7eb6-7ad6-16fa-c9e8339ff213@web.de>
- <20191111200907.vclloogaiu3mqxsn@pengutronix.de>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d4c63704-8c4c-c1c8-ab97-ce9701cf2da4@web.de>
-Date:   Mon, 11 Nov 2019 22:38:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 11 Nov 2019 16:41:52 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45884 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKKVlw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 16:41:52 -0500
+Received: by mail-pf1-f193.google.com with SMTP id z4so11581662pfn.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:41:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3he+QtfifQ3bgJ/yyvcxgVo2dz6VZH6CuJDagxiiqO0=;
+        b=YK0y7OEXAYek4HKT2x2A9HNewczn8bgLVljRK6e4KmPjx4AqMZIvtBam+zJFOT2l+2
+         C2pjfCq8g4vfa4HJoCjQPQhHmsM/kllaeSAjPbCZ5uSdhRnwJtZW8XPxvh+yrj5Y2eVm
+         SDfw0p9t4EBgCGs9SaDPGasYcX77jUscvVv7C/u+vELVsmZccSYTOqf7E7nOuIf6kCeg
+         u+zr3b4JWLm5EhI/cH/UZhJTJn7MGeE3e+OoBui2rDS2XFhLFQL3aRb4drS+YfW4MAP/
+         y2PLKLByUnJK3/wROWHrKpDXCC15u8JV4ZT0+3NnJVYT/yezNGl+cUHhOlsD02L8Lkz5
+         grzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3he+QtfifQ3bgJ/yyvcxgVo2dz6VZH6CuJDagxiiqO0=;
+        b=tA4jqP0DHG1rnuAsfLkZeO6MGYc9h9xOb2FATGl+CCgLIXVN034dQ/99FW9tdiF6t7
+         RWiX2FKAjyKW9WDYnit6ZzjXtneG3BqSjLGpMdpjI9swrkVvCIl6iDHZgbY9k4W7mNdo
+         9cY6FLIb7P9kvrdAcQXIU8/v/Z0mgpTFb/9dsaUraJ+1qaFnmhl0993+HcpknuHLoGX3
+         aJ/eC1CnZNbsVCHR7k1h50bL/ZkUwtOri1i2Msv4/XygMDiRC2FPbryPJxvbYhzhMftp
+         voNaxeY9bULeZ1bUCCL9ODDezyLWsGTlaxtMxiGmAlu/9U6/S8n0eKZWE41UoJvc4hxY
+         wr+w==
+X-Gm-Message-State: APjAAAVBSlwFUm9ucDSWJgUqtMz3rx09CXjLZffOpZzSOW5Gx42NrZ8e
+        mXSeGfXVJDgwlNDIgfsKlam82hNPgum75TOuYXd9rg==
+X-Google-Smtp-Source: APXvYqzy/af2x31SqiZ0T4qLxwoFESxbRuTnuVa7dS8IFhRlfQ+werW7nPW6tbVH+2zxkAxDA/t/GlVa72LeUDHx9dI=
+X-Received: by 2002:a63:712:: with SMTP id 18mr20831195pgh.384.1573508510293;
+ Mon, 11 Nov 2019 13:41:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191111200907.vclloogaiu3mqxsn@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nP9Z7W5UiLyx/EffgYoTkPSszofWkQ0e+kZHHzlzYvb8OpEMMDY
- 76kiaSGN5u5hkQSjyYco2D78gCsi2D8H3Ky9FBpgrWtcH7QxaaJVoeKIvYwObbgAd3ByUE6
- lIotJfPg6g+ImoWY55DwonxLOPVGV1W0sr+X7Re2RlVOj2hTv0OBhJZs+YoMSnaKd+11qPj
- 355dXBdH66LlM/dJEFvwA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6CPD/RWlefM=:TJCzaL8/4u9A3/QA5YZS1a
- HktkhBYUq0eVJBleZDktWEAcAXZ6ifkkykAKEC6n99iP9LW9/dZz/wZYEPZw3W/iSKUpqiwC3
- ACedoEeB5MV+Lvgiz1EOAYlCas+AY9GCY549C6peeEjG4VozafWEKs1wyfOT9qBN0iUifCgnV
- v0awSR3pfa8Pp33sQfClfZKvRgMI+ZWDZi7cy6DypvYqm1uIBw9A5EgCniRuDZi8yZOJ/3zdc
- z4CpwA0pbGGDWDrtYIyti9JSx5ip4WEDBB/+AoVEFq5M9V2Xd2V5XiISdioLnRC4w0rYzh16n
- PK6Wtsb1v8yGnRAMx0F9IKSkjmNyqgXqBvKXigsM6HKG881144hEx2Wt8L3T/MWm9pSeWCaAA
- o6nHL839Q2D5FUEvno0ukv5mMBb22G3hQ99xuQEV9F/Ohj+AQq2V9ZserrE1JV1xnLBylfJga
- PMPnPK9VB3mlUz/Yv5oYl041KM0V4UNQAd6xEOcHWuPJoxWXFBbC1bQ1iunyU5uG3hF8RpRzP
- i5zUIAeWdZ5r4zFHey/T+XlevN7RBoCoJMVILhiO4xFindXnMsyTq4ElGjBQkZMINbrZN6uDz
- ffQeB8r0qzU25eQgUMIvCq7l4cG2YdFdK/7Db6sKC3qFrckaszjfsng0EgsMLNIffVi/7kE9J
- F1aEeV+cYKWjYjMtxZHlJZEsxKMQeCY1BOEvTCHAcYwh0Y4uadqEhURPQ/BuHPr/djEmYsREk
- dDwJ+A5QehT5BGRGnV7UFIf9geHKQ/JDXBQb1evFO0HPb/SK0qmOJh02In6iK9EfpDQMQ3usG
- aoWYrYkbbTjIerC+qU2dER+VLCnavq+rR2jhR1VwCsHY8hsZvAiSItGyHNe5uJELUUHKRpKBu
- kBBTqGufjkJPLjQStMOmLzVFRmXHJ4whOiRkayvVZji7Vf0jp1YSSDdK3WtyvPw7Wc/7+SDbk
- YMlcRNUPIfX9cSiCU2lzUQJzuRZmwunA/X8VtWODFIkIxFlhTP6UTpk/wZ+I9udEHtKMGkdW0
- ljM48jvBvLU8ozRU2tT2DTSZWLwgpM5ORPTVlhHL8lm0CZnGaC9q+sXPzpWYmyTOhpfwCYPCT
- wyOYc4Np3ygq5ooSVEmn4+Zif453TGnwNUNzP6NB3HkPfJVbHDh1rjMpJwOiaMUYw6tz9GnKI
- gQspsgNFx1GsGY5gha1Lrk2ZxDvHceyQ5LZmL7pTUSQOOkY3PfOnUItmIf8AL55r6B+qDPsUa
- LjXOkiFxkv/E02HGe+YKmMQZKBo9ctghxYdjt1OV3Q0tRS8jrN1CX6/oBQlA=
+References: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com>
+ <1571335639-21675-6-git-send-email-alan.maguire@oracle.com>
+ <CAFd5g46s4eY4qEB5UZPeOKNdZXm4+sA9N=4g8gDYAhyhMahZKw@mail.gmail.com> <alpine.LRH.2.20.1911081520550.24027@dhcp-10-175-178-67.vpn.oracle.com>
+In-Reply-To: <alpine.LRH.2.20.1911081520550.24027@dhcp-10-175-178-67.vpn.oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 11 Nov 2019 13:41:38 -0800
+Message-ID: <CAFd5g44vYUkLQmJFq_vQ5ruvBC_1vrkSd9DeW3oQ_vLzrNcpgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 linux-kselftest-test 5/6] kunit: allow kunit to be
+ loaded as a module
+To:     Alan Maguire <alan.maguire@oracle.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/submitting-patches.rst?id=3D31f4f5b495a62c9a8b15b1c=
-3581acd5efeb9af8c#n151
++Stephen Boyd - since he is more of an expert on the hung task timer than I am.
+
+On Fri, Nov 8, 2019 at 7:30 AM Alan Maguire <alan.maguire@oracle.com> wrote:
 >
-> Are you a bot?
+> On Thu, 7 Nov 2019, Brendan Higgins wrote:
+>
+> > On Thu, Oct 17, 2019 at 11:09 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > >
+> > > Making kunit itself buildable as a module allows for "always-on"
+> > > kunit configuration; specifying CONFIG_KUNIT=m means the module
+> > > is built but only used when loaded.  Kunit test modules will load
+> > > kunit.ko as an implicit dependency, so simply running
+> > > "modprobe my-kunit-tests" will load the tests along with the kunit
+> > > module and run them.
+> > >
+> > > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> > > ---
+> > >  lib/kunit/Kconfig     | 2 +-
+> > >  lib/kunit/Makefile    | 4 +++-
+> > >  lib/kunit/test.c      | 2 ++
+> > >  lib/kunit/try-catch.c | 3 +++
+> > >  4 files changed, 9 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+> > > index 9ebd5e6..065aa16 100644
+> > > --- a/lib/kunit/Kconfig
+> > > +++ b/lib/kunit/Kconfig
+> > > @@ -3,7 +3,7 @@
+> > >  #
+> > >
+> > >  menuconfig KUNIT
+> > > -       bool "KUnit - Enable support for unit tests"
+> > > +       tristate "KUnit - Enable support for unit tests"
+> > >         help
+> > >           Enables support for kernel unit tests (KUnit), a lightweight unit
+> > >           testing and mocking framework for the Linux kernel. These tests are
+> > > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+> > > index 769d940..8e2635a 100644
+> > > --- a/lib/kunit/Makefile
+> > > +++ b/lib/kunit/Makefile
+> > > @@ -1,4 +1,6 @@
+> > > -obj-$(CONFIG_KUNIT) +=                 test.o \
+> > > +obj-$(CONFIG_KUNIT) +=                 kunit.o
+> > > +
+> > > +kunit-objs +=                          test.o \
+> > >                                         string-stream.o \
+> > >                                         assert.o \
+> > >                                         try-catch.o
+> > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> > > index e8b2443..c0ace36 100644
+> > > --- a/lib/kunit/test.c
+> > > +++ b/lib/kunit/test.c
+> > > @@ -523,3 +523,5 @@ void *kunit_find_symbol(const char *sym)
+> > >         return ERR_PTR(-ENOENT);
+> > >  }
+> > >  EXPORT_SYMBOL(kunit_find_symbol);
+> > > +
+> > > +MODULE_LICENSE("GPL");
+> > > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+> > > index 1c1e9af..72fc8ed 100644
+> > > --- a/lib/kunit/try-catch.c
+> > > +++ b/lib/kunit/try-catch.c
+> > > @@ -31,6 +31,8 @@ static int kunit_generic_run_threadfn_adapter(void *data)
+> > >         complete_and_exit(try_catch->try_completion, 0);
+> > >  }
+> > >
+> > > +KUNIT_VAR_SYMBOL(sysctl_hung_task_timeout_secs, unsigned long);
+> >
+> > Can you just export sysctl_hung_task_timeout_secs?
+> >
+> > I don't mean to make you redo all this work for one symbol twice, but
+> > I thought we agreed on just exposing this symbol, but in a namespace.
+> > It seemed like a good use case for that namespaced exporting thing
+> > that Luis was talking about. As I understood it, you would have to
+> > export it in the module that defines it, and then use the new
+> > MODULE_IMPORT_NS() macro here.
+> >
+>
+> Sure, I can certainly look into that, though I wonder if we should
+> consider another possibility - should kunit have its own sysctl table for
+> things like configuring timeouts? I can look at adding a patch for that
 
-I hope not.
+So on the one hand, yes, I would like to have configurable test
+timeouts for KUnit, but that is not what the parameter check is for
+here. This is to make sure KUnit times a test case out before the hung
+task timer does.
 
-But I got used to the need to point specific suggestions out several times=
-.
-Would you like to mention any actions in the commit message explicitly?
+> prior to the module patch so the issues with exporting the hung task
+> timeout would go away. Now the reason I suggest this isn't as much a hack
+> to solve this specific problem, rather it seems to fit better with the
+> longer-term intent expressed by the comment around use of the field (at
+> least as I read it, I may be wrong).
 
-Regards,
-Markus
+Not really. Although I do agree that adding configurability here might
+be a good idea, I believe we would need to clamp such a value by
+sysctl_hung_task_timeout_secs regardless since we don't want to be
+killed by the hung task timer; thus, we still need access to
+sysctl_hung_task_timeout_secs either way, and so doing what you are
+proposing would be off topic.
+
+> Exporting the symbol does allow us to piggy-back on an existing value, but
+> maybe we should support out our own tunable "kunit_timeout_secs" here?
+> Doing so would also lay the groundwork for supporting other kunit
+> tunables in the future if needed. What do you think?
+
+The goal is not to piggy back on the value as I mentioned above.
+Stephen, do you have any thoughts on this? Do you see any other
+preferable solution to what Alan is trying to do?
+
+> Many thanks for the review! I've got an updated patchset almost
+> ready with the symbol lookup stuff removed; the above is the last issue
+> outstanding from my side.
+
+Awesome! No thanks necessary, I appreciate the work you are doing!
+There were some other people who mentioned that they wanted this in
+the past, so it is a really big help having you do this. I feel bad
+that I couldn't get the review back to you faster. :-)
+
+>
+> > > +
+> > >  static unsigned long kunit_test_timeout(void)
+> > >  {
+> > >         unsigned long timeout_msecs;
+> > > @@ -52,6 +54,7 @@ static unsigned long kunit_test_timeout(void)
+> > >          * For more background on this topic, see:
+> > >          * https://mike-bland.com/2011/11/01/small-medium-large.html
+> > >          */
+> > > +       KUNIT_INIT_VAR_SYMBOL(NULL, sysctl_hung_task_timeout_secs);
+> > >         if (sysctl_hung_task_timeout_secs) {
+> > >                 /*
+> > >                  * If sysctl_hung_task is active, just set the timeout to some
+> > > --
+> > > 1.8.3.1
+> > >
+> >
