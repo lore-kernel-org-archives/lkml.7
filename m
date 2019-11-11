@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ADCC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00706C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13175204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD812173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497440;
-	bh=71lSMN3s+ULUntBXqkytyqM8Ok4PqSN8px6hPOw24DU=;
+	s=default; t=1573497442;
+	bh=qQ5L4rfGHyWCFEcxEHYJAqF8P0ll5C/kHsoR9YbzQ1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIxTQa1DQHGwcYkL888PeQyaAcan1sNSmwj0oYwddqF+cBBoc4afNDJua3wDenj+d
-	 oylxnHmD6V3szuR94W5eMY3ePXRBhEy98RcqyvP24UJfUQCf2SqPmTziDBVrx03MeC
-	 4ZsNidr5SL1Pa0o65wEs/gVsC+YtoFypQCAAHz6w=
+	b=Fjyuodp0YH1qDBgJsFEf7L8DmS4XKzoPG2nApJClmDcBGQ+zpJ6UAKiQV6mg2/ZQr
+	 G/PgmPbjYY03uhDkUxmh5lOXIQRtkqEeWY6NBpmlvG5uzyiim0eZwua2bs6MVe1FtK
+	 cGg8mj2jJ4byQzYvH5+AmvThWQOnKyvE2zegPMek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbfKKShS (ORCPT
+        id S1728847AbfKKShV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:37:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727812AbfKKShI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:08 -0500
+        id S1728828AbfKKShR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A3C321925;
-        Mon, 11 Nov 2019 18:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEA7B204FD;
+        Mon, 11 Nov 2019 18:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497427;
-        bh=71lSMN3s+ULUntBXqkytyqM8Ok4PqSN8px6hPOw24DU=;
+        s=default; t=1573497436;
+        bh=qQ5L4rfGHyWCFEcxEHYJAqF8P0ll5C/kHsoR9YbzQ1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CM5fV89mreQq2xc9AU4Lz36DfNmJlv4JxfvOYkRKXQZRO/dYylR+svrDt2DTkUMNV
-         E6odhEoY6sdSKjjyeVTa85mJ7pqW97fPXVtxlvjRmm+bmDGMCmPzlCH75e1YF4THbY
-         DaLAI4MNInafVtxZ6qWR9/KbrFWhCI5XweiRsWfw=
+        b=pvsbFIkdQJ1k0jeuqUcch/lnrUDLFqTXIadVeMse7q1dK6kxA4XWqJLn0KUGhdFtK
+         MILE9n1i54wTj+ZebmkOKlkv+c4kSlby36QibIKO32ZXQyhf8Dkl5Nn8wFT/lXxcTq
+         ZQxLDjLOIX1KS0NGX8UikGj5NZIyXwBOoFk+hjls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexey Klimov <alexey.klimov@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 051/105] misc: pci_endpoint_test: Prevent some integer overflows
-Date:   Mon, 11 Nov 2019 19:28:21 +0100
-Message-Id: <20191111181442.731528689@linuxfoundation.org>
+Subject: [PATCH 4.14 054/105] mailbox: reset txdone_method TXDONE_BY_POLL if client knows_txdone
+Date:   Mon, 11 Nov 2019 19:28:24 +0100
+Message-Id: <20191111181443.524703978@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,56 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-commit 378f79cab12b669928f3a4037f023837ead2ce0c upstream
+commit 33cd7123ac0ba5360656ae27db453de5b9aa711f upstream
 
-"size + max" can have an arithmetic overflow when we're allocating:
+Currently the mailbox framework sets txdone_method to TXDONE_BY_POLL if
+the controller sets txdone_by_poll. However some clients can have a
+mechanism to do TXDONE_BY_ACK which they can specify by knows_txdone.
+However, we endup setting both TXDONE_BY_POLL and TXDONE_BY_ACK in that
+case. In such scenario, we may end up with below warnings as the tx
+ticker is run both by mailbox framework and the client.
 
-	orig_src_addr = dma_alloc_coherent(dev, size + alignment, ...
+WARNING: CPU: 1 PID: 0 at kernel/time/hrtimer.c:805 hrtimer_forward+0x88/0xd8
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.12.0-rc5 #242
+Hardware name: ARM LTD ARM Juno Development Platform
+task: ffff8009768ca700 task.stack: ffff8009768f8000
+PC is at hrtimer_forward+0x88/0xd8
+LR is at txdone_hrtimer+0xd4/0xf8
+Call trace:
+ hrtimer_forward+0x88/0xd8
+ __hrtimer_run_queues+0xe4/0x158
+ hrtimer_interrupt+0xa4/0x220
+ arch_timer_handler_phys+0x30/0x40
+ handle_percpu_devid_irq+0x78/0x130
+ generic_handle_irq+0x24/0x38
+ __handle_domain_irq+0x5c/0xb8
+ gic_handle_irq+0x54/0xa8
 
-I've added a few checks to prevent that.
+This patch fixes the issue by resetting TXDONE_BY_POLL if client has set
+knows_txdone.
 
-Fixes: 13107c60681f ("misc: pci_endpoint_test: Add support to provide aligned buffer addresses")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexey Klimov <alexey.klimov@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/misc/pci_endpoint_test.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/mailbox/mailbox.c |    4 ++--
+ drivers/mailbox/pcc.c     |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -226,6 +226,9 @@ static bool pci_endpoint_test_copy(struc
- 	u32 src_crc32;
- 	u32 dst_crc32;
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -351,7 +351,7 @@ struct mbox_chan *mbox_request_channel(s
+ 	init_completion(&chan->tx_complete);
  
-+	if (size > SIZE_MAX - alignment)
-+		goto err;
-+
- 	orig_src_addr = dma_alloc_coherent(dev, size + alignment,
- 					   &orig_src_phys_addr, GFP_KERNEL);
- 	if (!orig_src_addr) {
-@@ -311,6 +314,9 @@ static bool pci_endpoint_test_write(stru
- 	size_t alignment = test->alignment;
- 	u32 crc32;
+ 	if (chan->txdone_method	== TXDONE_BY_POLL && cl->knows_txdone)
+-		chan->txdone_method |= TXDONE_BY_ACK;
++		chan->txdone_method = TXDONE_BY_ACK;
  
-+	if (size > SIZE_MAX - alignment)
-+		goto err;
-+
- 	orig_addr = dma_alloc_coherent(dev, size + alignment, &orig_phys_addr,
- 				       GFP_KERNEL);
- 	if (!orig_addr) {
-@@ -369,6 +375,9 @@ static bool pci_endpoint_test_read(struc
- 	size_t alignment = test->alignment;
- 	u32 crc32;
+ 	spin_unlock_irqrestore(&chan->lock, flags);
  
-+	if (size > SIZE_MAX - alignment)
-+		goto err;
-+
- 	orig_addr = dma_alloc_coherent(dev, size + alignment, &orig_phys_addr,
- 				       GFP_KERNEL);
- 	if (!orig_addr) {
+@@ -420,7 +420,7 @@ void mbox_free_channel(struct mbox_chan
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 	chan->cl = NULL;
+ 	chan->active_req = NULL;
+-	if (chan->txdone_method == (TXDONE_BY_POLL | TXDONE_BY_ACK))
++	if (chan->txdone_method == TXDONE_BY_ACK)
+ 		chan->txdone_method = TXDONE_BY_POLL;
+ 
+ 	module_put(chan->mbox->dev->driver->owner);
+--- a/drivers/mailbox/pcc.c
++++ b/drivers/mailbox/pcc.c
+@@ -266,7 +266,7 @@ struct mbox_chan *pcc_mbox_request_chann
+ 	init_completion(&chan->tx_complete);
+ 
+ 	if (chan->txdone_method == TXDONE_BY_POLL && cl->knows_txdone)
+-		chan->txdone_method |= TXDONE_BY_ACK;
++		chan->txdone_method = TXDONE_BY_ACK;
+ 
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+@@ -312,7 +312,7 @@ void pcc_mbox_free_channel(struct mbox_c
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 	chan->cl = NULL;
+ 	chan->active_req = NULL;
+-	if (chan->txdone_method == (TXDONE_BY_POLL | TXDONE_BY_ACK))
++	if (chan->txdone_method == TXDONE_BY_ACK)
+ 		chan->txdone_method = TXDONE_BY_POLL;
+ 
+ 	spin_unlock_irqrestore(&chan->lock, flags);
 
 
