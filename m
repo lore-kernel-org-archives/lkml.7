@@ -2,124 +2,114 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75515C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E769C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48800206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573503731;
-	bh=Wqbn+tidqU83D7t30PIQyhJur335s0cWd98DIQZWxbg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0c985fjSNYKgHBn54BGjTfUiW1Hg3rBnLa3Lp6TRjSFO3rm4EBSeT7u4ApaVmKAsv
-	 vA7UkJjG52dti1glLkR2pLg4ixHjaOrN/GxvHjdv8r5KxhCAQJxdNTAWsza+k3SEiZ
-	 c/+jga1C0fGe2rGFJ6HA7faSt1FlYdUZwFwNoMl0=
+	by mail.kernel.org (Postfix) with ESMTP id 4A6B121E6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfKKUWK (ORCPT
+        id S1727729AbfKKUWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:22:10 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40954 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbfKKUWH (ORCPT
+        Mon, 11 Nov 2019 15:22:03 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:34829 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfKKUWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:22:07 -0500
-Received: by mail-qt1-f194.google.com with SMTP id o49so17057268qta.7;
-        Mon, 11 Nov 2019 12:22:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Xeq2lcRUVceDqmGyTHaj5d+0Pjk/GmEvYbMYOaMNQzg=;
-        b=I+isjLS5f/apV9ftRVQ09plliCCSpaqV3/UG7fSAdpU4mXCS9TaslJ2OzYYcJa+j4n
-         QSq2fKk559J9ZwzNBSmRcRWOqDKtJFMut2l4D4AysPeV4nNRjuINtm0bSDdbt9IW5WqH
-         fk7DBoj1Gfk75bFq/L1incchih0DAFe4toGXAMySezDb4h0C8qnQ85GO/CZmhr7Xmn2Z
-         YmkIWBnZ5XrTRzEhwYSUSYhKq4/mrelNXQJIAWahBjVhyaHz09RNaDbErBL8JsSE/2Fm
-         nF7x3JxoNiQc4F8UFz+deld6cUww6o5u4xPk2EwGcjDPCXrN1kQZ4MIem70TJeY2ZEmj
-         Rchg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=Xeq2lcRUVceDqmGyTHaj5d+0Pjk/GmEvYbMYOaMNQzg=;
-        b=WDtNaI/JGyYRTR04uW+IxzxoiRZdJG01GReahRFuLYF7j6gvUDhNkkY7KrHZUw4PWn
-         mVy7htEpiQKIpCCuFxg1TRsoTmTyAuzDah3t4HKfyv9KoQkNCIswL/m0ZRPBWRl+4sR9
-         eBoDnlLV39VzxYxx/0mNgdpLUPYfNgTMbdZ/NqxQV1go4S1ABmk4P8uR4r3HATQIR7nd
-         2t/w/3CfGg5lt577XD7OUr3KKr58RkUsPMcd9MxA15kpVA51KEU6C6MgR2zNEoeTLsdP
-         Cam51SKpY6R3VEY+h7m5MEBiMBdTyvJm2nfRPRIjKHhW3q9rpKUU0i5DcZ9qIMprBSUd
-         x2qQ==
-X-Gm-Message-State: APjAAAVsje4oQLs74AzCHqmQiJUi97udJQ0yGmpO9lKH/z2vMk9t9EYb
-        mo5411ZF8JwkSqM/TH49mIjHRaAG
-X-Google-Smtp-Source: APXvYqwa00JjUN0TOeR6m2QaHZ1qxjWiq2WnqYCIB/Dud8d6Y2hjnVEpkXsiVWMbx5a69qCX7z3+Ng==
-X-Received: by 2002:ac8:1084:: with SMTP id a4mr28347343qtj.114.1573503726517;
-        Mon, 11 Nov 2019 12:22:06 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:d6e0])
-        by smtp.gmail.com with ESMTPSA id n49sm9587576qtk.94.2019.11.11.12.22.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Nov 2019 12:22:05 -0800 (PST)
-Date:   Mon, 11 Nov 2019 12:22:03 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Subject: [GIT PULL] cgroup fixes for v5.4-rc7
-Message-ID: <20191111202203.GC4163745@devbig004.ftw2.facebook.com>
+        Mon, 11 Nov 2019 15:22:00 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mw9Hm-1heMNx137E-00s7xT; Mon, 11 Nov 2019 21:16:49 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-nfs@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 09/19] nfsd: print 64-bit timestamps in client_info_show
+Date:   Mon, 11 Nov 2019 21:16:29 +0100
+Message-Id: <20191111201639.2240623-10-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
+References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:seMJ42v1081bEPvwevwNuzbDoR7i4rBfE32rXv/gDtp4js7XnsP
+ 3mzBJKVOUnKQzd/TGe/g65oEGys9jaUxG0wIzDBcSa+JTTscwYceqlTvZUCW+8c4PrwGNvV
+ CdeUvJniXZuKdka9Ghw1sJqdwNPM9MM6rEo3zek+pKcuyxqshdiOXcVNYhowEWAWp7ReExJ
+ BJBq5/czH5wa1umRKjtQA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K1X4+M5ldbg=:eF0eHB+aTr06giF3z8cGgN
+ 84/NB54bm3WbUg9w+tbttFcqp+6u0p859BIRQYodo/PbBtjm0ALNVgTft7nIEcmQnSpVvl2Oa
+ urm78C7A5dVRl2ykLyxoFaKSwmG7vYFiHeioxVIFwZpduF830CAC9ddzCzClpLCP9H+b7KUoN
+ 9BR3HTN2ddA5hPwcuzU1fTNgU0zI0RNtEP+VKaplIrh6o6PC1A8qm0qIpQqoM8gj56/qz4zeW
+ DhhG0fiSpc47p4ca3LOjRI85/OjvA+VuRcR+4IxAHzxo90TuTG/QpGhgi80uhQDOaU8GChksw
+ J1+KbaIQOw4JbA6GuhKtwJEcD6Xve9dcUcPyBfhvTPNwuxyay0Oyd+fS7K82oBhzR0J93uX9W
+ H3ZjGuFA6VsnCPOeHRfCQ2JEou/IMvZeQUWeIP1VKASfYm/pylNTzxZwv2IobYj7jx1R33v0C
+ wApZ3sF4ub3LhOD9i1LNq6RzdUwWryOkXLUFKUgL6zflcBNLTq4kkHcRUfZU+qQm1JyeJ/Lh5
+ Ouf0LvGvtZh0xwCSrBcMwPeXaBS2uJGMjk6H68HiC+nQrRVP51AhOj8fY/EIwcwhV1HZIfnhF
+ J6pz3Eb9StxeSOYUgKHBHuSmi4wjFkI5sTqLe5m0dAKrsrlgkGcffD0LLXkZs4+ZRxWWf3ZgW
+ eY+yZ0K8rGTFp4sMdHxns6YG1G+cYk+sQR37/sbotvq6Y9JfbA2ZOwQ7p9BBIwnYjtemIlmbD
+ 9FfP2pk2Ml+HEY4IUzGGE9izUggir7KspodBvNZWol1V1Z8Iwo+aai9TGojjaCIZxvaFlxrUp
+ /m7adYvW9mQS8xbITdpN+cH38UFRMQK2O644oT4upRfXcRM8r4FR5DA4uJK6Nh5EwekCwg22J
+ zSUwzSRZPyzeVhMzJdQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Linus.
+The nii_time field gets truncated to 'time_t' on 32-bit architectures
+before printing.
 
-Sorry, I sat on this for too long.
+Remove the use of 'struct timespec' to product the correct output
+beyond 2038.
 
-There's an inadvertent preemption point in ptrace_stop() which was
-reliably triggering for a test scenario significantly slowing it down.
-This pull request contains Oleg's fix to remove the unwanted
-preemption point.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/nfsd/nfs4state.c | 5 ++---
+ fs/nfsd/state.h     | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Thanks.
-
-The following changes since commit 9e208aa06c2109b45eec6be049a8e47034748c20:
-
-  Merge tag 'xfs-5.4-fixes-3' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux (2019-10-10 11:47:16 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.4-fixes
-
-for you to fetch changes up to 937c6b27c73e02cd4114f95f5c37ba2c29fadba1:
-
-  cgroup: freezer: call cgroup_enter_frozen() with preemption disabled in ptrace_stop() (2019-10-11 08:39:57 -0700)
-
-----------------------------------------------------------------
-Oleg Nesterov (1):
-      cgroup: freezer: call cgroup_enter_frozen() with preemption disabled in ptrace_stop()
-
- kernel/signal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index c4da1ef56fdf..bcd46f547db3 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2205,8 +2205,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
- 		 */
- 		preempt_disable();
- 		read_unlock(&tasklist_lock);
--		preempt_enable_no_resched();
- 		cgroup_enter_frozen();
-+		preempt_enable_no_resched();
- 		freezable_schedule();
- 		cgroup_leave_frozen(true);
- 	} else {
-
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a20795b5053c..2333924d7c6b 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2292,7 +2292,7 @@ static int client_info_show(struct seq_file *m, void *v)
+ 					clp->cl_nii_domain.len);
+ 		seq_printf(m, "\nImplementation name: ");
+ 		seq_quote_mem(m, clp->cl_nii_name.data, clp->cl_nii_name.len);
+-		seq_printf(m, "\nImplementation time: [%ld, %ld]\n",
++		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
+ 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
+ 	}
+ 	drop_client(clp);
+@@ -2946,8 +2946,7 @@ static __be32 copy_impl_id(struct nfs4_client *clp,
+ 	xdr_netobj_dup(&clp->cl_nii_name, &exid->nii_name, GFP_KERNEL);
+ 	if (!clp->cl_nii_name.data)
+ 		return nfserr_jukebox;
+-	clp->cl_nii_time.tv_sec = exid->nii_time.tv_sec;
+-	clp->cl_nii_time.tv_nsec = exid->nii_time.tv_nsec;
++	clp->cl_nii_time = exid->nii_time;
+ 	return 0;
+ }
+ 
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 46f56afb6cb8..ce32ba445343 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -320,7 +320,7 @@ struct nfs4_client {
+ 	/* NFSv4.1 client implementation id: */
+ 	struct xdr_netobj	cl_nii_domain;
+ 	struct xdr_netobj	cl_nii_name;
+-	struct timespec		cl_nii_time;
++	struct timespec64	cl_nii_time;
+ 
+ 	/* for v4.0 and v4.1 callbacks: */
+ 	struct nfs4_cb_conn	cl_cb_conn;
 -- 
-tejun
+2.20.0
+
