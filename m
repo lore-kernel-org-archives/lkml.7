@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12221C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E0BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D112173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F57121783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499335;
-	bh=jbszZ+pK438idjmG/hhKzxYfkMI4SQrnmhW1whPaf/Y=;
+	s=default; t=1573499347;
+	bh=7dXXsH7X6GxxR3lsUezPDfcCSac/BRCkT7gmmTpCPzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GhGl9Z4jJvCBbeaU0FfZ0ygphuC2AEanStYq4cEonoBw/UIk5vIZ0XVciSkEyoHmb
-	 YeyNl3BGU6J8bCE6ks0rqKsJaVulLk/BT7wa9LqLMJxnHrSNczR7JUBNzlMDu1pLl7
-	 rLIFRd7X9wTMB8gej4zdi8sqkLolBqCwIRSNE8O0=
+	b=abumOUYRDveqc1swbvczR/BfVYSbbM16K7tl9yv5wWQgDYLWyeDcCFwDnxFr69Xa9
+	 893uH9l+5I2lx2zAwnR0Uz5jVPTFo5V0xPt4BLvMGvxutvgNL45EgRw0nSY3VhRRyf
+	 3PomXgD8jk/blByn+3elpkkTJtHekpxi7XU04Xz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfKKSfC (ORCPT
+        id S1728379AbfKKSeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52770 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:34:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbfKKSe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:58 -0500
+        id S1728368AbfKKSed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E41252190F;
-        Mon, 11 Nov 2019 18:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A202173B;
+        Mon, 11 Nov 2019 18:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497298;
-        bh=jbszZ+pK438idjmG/hhKzxYfkMI4SQrnmhW1whPaf/Y=;
+        s=default; t=1573497272;
+        bh=7dXXsH7X6GxxR3lsUezPDfcCSac/BRCkT7gmmTpCPzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sg7lLxvApHI8XS0kyRxlnWDpjUb9g3MmzxaG4Kw55ZzXMnEeDBAqqJTnUtpenHI02
-         +cGfmtSqvQkE5jqe5680PHC3Va1RInYYh4yRsRv3SrO63M4JVLoXWyZMljTq1/JWy4
-         iGLjBmHLrRgVIfb6qg+/INpT8ykImxoxkdeIL/xk=
+        b=UbAlQ16976AlT2Zq8FWuH9bfdotn/ZWQmvqfWUo7SWf5lrS1H/jwq9ADxwOmCl+0g
+         2ItGzMP1gCGg55gWQNNfUPrQILEIwReDkRjOjkXzYM9+oi+4zOlz2KpmjapHI+TuVd
+         knlvIuiIi30NzC0O6CA9D2wBBkl858ckIjoeRwik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 57/65] net: ethernet: arc: add the missed clk_disable_unprepare
-Date:   Mon, 11 Nov 2019 19:28:57 +0100
-Message-Id: <20191111181353.785421590@linuxfoundation.org>
+Subject: [PATCH 4.9 63/65] can: flexcan: disable completely the ECC mechanism
+Date:   Mon, 11 Nov 2019 19:29:03 +0100
+Message-Id: <20191111181356.319463216@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -60,35 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-[ Upstream commit 4202e219edd6cc164c042e16fa327525410705ae ]
+[ Upstream commit 5e269324db5adb2f5f6ec9a93a9c7b0672932b47 ]
 
-The remove misses to disable and unprepare priv->macclk like what is done
-when probe fails.
-Add the missed call in remove.
+The ECC (memory error detection and correction) mechanism can be
+activated or not, controlled by the ECCDIS bit in CAN_MECR. When
+disabled, updates on indications and reporting registers are stopped.
+So if want to disable ECC completely, had better assert ECCDIS bit, not
+just mask the related interrupts.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: cdce844865be ("can: flexcan: add vf610 support for FlexCAN")
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/arc/emac_rockchip.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/can/flexcan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/arc/emac_rockchip.c b/drivers/net/ethernet/arc/emac_rockchip.c
-index c770ca37c9b21..a7d30731d376f 100644
---- a/drivers/net/ethernet/arc/emac_rockchip.c
-+++ b/drivers/net/ethernet/arc/emac_rockchip.c
-@@ -261,6 +261,9 @@ static int emac_rockchip_remove(struct platform_device *pdev)
- 	if (priv->regulator)
- 		regulator_disable(priv->regulator);
- 
-+	if (priv->soc_data->need_div_macclk)
-+		clk_disable_unprepare(priv->macclk);
-+
- 	free_netdev(ndev);
- 	return err;
- }
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index baef09b9449f9..6b866d0451b21 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -923,6 +923,7 @@ static int flexcan_chip_start(struct net_device *dev)
+ 		reg_mecr = flexcan_read(&regs->mecr);
+ 		reg_mecr &= ~FLEXCAN_MECR_ECRWRDIS;
+ 		flexcan_write(reg_mecr, &regs->mecr);
++		reg_mecr |= FLEXCAN_MECR_ECCDIS;
+ 		reg_mecr &= ~(FLEXCAN_MECR_NCEFAFRZ | FLEXCAN_MECR_HANCEI_MSK |
+ 			      FLEXCAN_MECR_FANCEI_MSK);
+ 		flexcan_write(reg_mecr, &regs->mecr);
 -- 
 2.20.1
 
