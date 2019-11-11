@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4A8C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC4121925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18E0214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497494;
-	bh=fVttVjr+D6cUItgUAufminP6729wf7iFYBif/RxkV9A=;
+	s=default; t=1573497498;
+	bh=wEqq2Gp2cFmHyhYl4WEbc33WFOLcIfzbyW5YtyCoAHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nw108aAya1ai8V8s3v3k5CnM8d5SZ/4+3rCt/9p2zBoSiGHfgPHjlRRhrLWo+m1lp
-	 9o5ASKAsirno9UeYUk0OmRS95Nle2QAqWWUV+ZIA9SA7dWO6CE8knup9BS/qlro81f
-	 7jHCgTNAR3DhLZyUQZGTZ+3rB+41hengLsqQqzhc=
+	b=LrZrw/90Us/zDOv1EMZCQSKWoE+kG98jzIwMBMDVFISZhx6ANypIsGK4ZM/m+Klv3
+	 rD4nLsDNMBOgmsO6SxivlE0FyE3bADXxNVktDAqgt2WZhjOWpwLoi0oW7uTygLn/nR
+	 A6ejPi+ovkQzVXdRqMaNJ1djCHzF6sKu2Hy0FQ3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfKKSiN (ORCPT
+        id S1728968AbfKKSiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57006 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbfKKSiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:10 -0500
+        id S1727103AbfKKSiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEC0E214E0;
-        Mon, 11 Nov 2019 18:38:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B0FC204FD;
+        Mon, 11 Nov 2019 18:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497489;
-        bh=fVttVjr+D6cUItgUAufminP6729wf7iFYBif/RxkV9A=;
+        s=default; t=1573497491;
+        bh=wEqq2Gp2cFmHyhYl4WEbc33WFOLcIfzbyW5YtyCoAHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUBmD/wO1MMQkhU5/fIT0jwJD1+Kzo4H3LHANsI3iEajqYuAVTcxCmzneNTZJtzo2
-         IM6lML6Z8MpscrREtoM1Yxp2wERyOD25WzY7d9E4x6/WqAobelFM+iJWKIrFwwNuZX
-         YX3O5BtqyLWUNu348gWvOYVaIHLblx42brmStLz8=
+        b=O7QO7oIz3G4yk7zNjjxrzRZHqxCp7aknuz/f1kBPj7i51MIDF2KKJfB1Rd/J7huEU
+         Ag1ObXzadz0h0TmHySL21XMEX6ELLgrCtKGQuHcK+N4m8wgzg4mHoryt4gkqE6vj1K
+         ZLPxhywAKd6U5hAOH4+WuhfSWS1sZpd4zq4ZAJ5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Heib <kamalheib1@gmail.com>,
-        =?UTF-8?q?Michal=20Kalderon=C2=A0?= <michal.kalderon@marvell.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 071/105] RDMA/qedr: Fix reported firmware version
-Date:   Mon, 11 Nov 2019 19:28:41 +0100
-Message-Id: <20191111181445.791561925@linuxfoundation.org>
+Subject: [PATCH 4.14 072/105] net/mlx5: prevent memory leak in mlx5_fpga_conn_create_cq
+Date:   Mon, 11 Nov 2019 19:28:42 +0100
+Message-Id: <20191111181445.863075653@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,42 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Heib <kamalheib1@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit b806c94ee44e53233b8ce6c92d9078d9781786a5 ]
+[ Upstream commit c8c2a057fdc7de1cd16f4baa51425b932a42eb39 ]
 
-Remove spaces from the reported firmware version string.
-Actual value:
-$ cat /sys/class/infiniband/qedr0/fw_ver
-8. 37. 7. 0
+In mlx5_fpga_conn_create_cq if mlx5_vector2eqn fails the allocated
+memory should be released.
 
-Expected value:
-$ cat /sys/class/infiniband/qedr0/fw_ver
-8.37.7.0
-
-Fixes: ec72fce401c6 ("qedr: Add support for RoCE HW init")
-Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
-Acked-by: Michal Kalderon <michal.kalderon@marvell.com>
-Link: https://lore.kernel.org/r/20191007210730.7173-1-kamalheib1@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fixes: 537a50574175 ("net/mlx5: FPGA, Add high-speed connection routines")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qedr/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/qedr/main.c b/drivers/infiniband/hw/qedr/main.c
-index ddb05b42e5e6a..3e48ed64760b7 100644
---- a/drivers/infiniband/hw/qedr/main.c
-+++ b/drivers/infiniband/hw/qedr/main.c
-@@ -73,7 +73,7 @@ static void qedr_get_dev_fw_str(struct ib_device *ibdev, char *str)
- 	struct qedr_dev *qedr = get_qedr_dev(ibdev);
- 	u32 fw_ver = (u32)qedr->attr.fw_ver;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+index c4392f741c5fe..5212428031a43 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+@@ -462,8 +462,10 @@ static int mlx5_fpga_conn_create_cq(struct mlx5_fpga_conn *conn, int cq_size)
+ 	}
  
--	snprintf(str, IB_FW_VERSION_NAME_MAX, "%d. %d. %d. %d",
-+	snprintf(str, IB_FW_VERSION_NAME_MAX, "%d.%d.%d.%d",
- 		 (fw_ver >> 24) & 0xFF, (fw_ver >> 16) & 0xFF,
- 		 (fw_ver >> 8) & 0xFF, fw_ver & 0xFF);
- }
+ 	err = mlx5_vector2eqn(mdev, smp_processor_id(), &eqn, &irqn);
+-	if (err)
++	if (err) {
++		kvfree(in);
+ 		goto err_cqwq;
++	}
+ 
+ 	cqc = MLX5_ADDR_OF(create_cq_in, in, cq_context);
+ 	MLX5_SET(cqc, cqc, log_cq_size, ilog2(cq_size));
 -- 
 2.20.1
 
