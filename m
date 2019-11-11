@@ -2,123 +2,142 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8EDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618BBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE8E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322AF20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:21:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r2tbYsVK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VI7Vbmgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKKRUc (ORCPT
+        id S1727078AbfKKRVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:20:32 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47980 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKRUb (ORCPT
+        Mon, 11 Nov 2019 12:21:35 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:40092 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfKKRVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:20:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3BImvdb2SjGg8FjjNsGxYBZHiJBQpDDVPvVag5XpsOE=; b=r2tbYsVKwZIBwdlDgP2eTSjCn
-        pu8VDDf2gMnj8yMwXNGYiA6rmXhMNS6ntXgudtDU5KYpGhvU5BNxwpRNra0BLXXijHVKRGEy0eAZs
-        2nRhMJxJAPQ12q1BBW22S4y6jSG1JSlbzUcZvyUC4oS5Cy6UR1OLN9kwsUIdIoBZaiTav0iNU7emJ
-        7AEzD5fZgKtp/DEPmLvKmKi7G/JrXIh362rnqwhqqZqh1rGWLCY/dpM68AWA/x6L0PZDu7hxtvh6s
-        mfgfDmObvaa38xcDubCR488ESw4i18FOmt0gzl4C6RL8Op+W+fZiQQGgMZ62m8aQweW7ewGnCiQ5r
-        BkjU2Zx8w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUDM6-0004mb-IG; Mon, 11 Nov 2019 17:19:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 639CD3056BE;
-        Mon, 11 Nov 2019 18:18:49 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C28C120302EF3; Mon, 11 Nov 2019 18:19:55 +0100 (CET)
-Date:   Mon, 11 Nov 2019 18:19:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        alexei.starovoitov@gmail.com, rabin@rab.in,
-        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
-Subject: Re: [PATCH -v5 13/17] arm/ftrace: Use __patch_text_real()
-Message-ID: <20191111171955.GO4114@hirez.programming.kicks-ass.net>
-References: <20191111131252.921588318@infradead.org>
- <20191111132458.220458362@infradead.org>
- <20191111164703.GA11521@willie-the-truck>
+        Mon, 11 Nov 2019 12:21:34 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABH9AoR033271;
+        Mon, 11 Nov 2019 17:20:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=426E+3tZ3P7XAvx0RdbuUGJqDwgjBVmFHPsj3Cn88VA=;
+ b=VI7VbmgnGf6rV6T1muUGly0uwijnTrelnAepUJfbfmWVM0Wh/LXLY1CAyd+KHkLStT3h
+ vyxU493FkviyTW/pbcDKIaEjdE2pxoMZjf4AgDys1zuEjinhucrP2uw0e3tO8wvJ5z6M
+ auYL6NNvwk8hegrw19LzksU8suXJA5fXGVSd7Ot3fc56kNQ6pYDpRfUpIEewvvj96vXG
+ B5IAjfDberXUFtzVobK6MMTr/EjyMfKyHhlCNr2oS74FeP3NQrlwtHJqxFA7h2dFJzT0
+ oN6JSbgfUH5C8ZLqfLyUY81ek0S3XDHAj4ZU4w6oFSKjs9b60GmcC2RmXj23eod2Si+q fg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w5p3qg2ek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 17:20:27 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABHEbKm130490;
+        Mon, 11 Nov 2019 17:20:27 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2w6r8jx9wc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 17:20:26 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xABHKQx7032399;
+        Mon, 11 Nov 2019 17:20:26 GMT
+Received: from paddy.uk.oracle.com (/10.175.169.52)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 Nov 2019 09:20:26 -0800
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     kvm@vger.kernel.org
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Jag Raman <jag.raman@oracle.com>
+Subject: [PATCH v2 1/3] KVM: VMX: Consider PID.PIR to determine if vCPU has pending interrupts
+Date:   Mon, 11 Nov 2019 17:20:10 +0000
+Message-Id: <20191111172012.28356-2-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191111172012.28356-1-joao.m.martins@oracle.com>
+References: <20191111172012.28356-1-joao.m.martins@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111164703.GA11521@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=948
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911110155
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911110155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 04:47:03PM +0000, Will Deacon wrote:
+Commit 17e433b54393 ("KVM: Fix leak vCPU's VMCS value into other pCPU")
+introduced vmx_dy_apicv_has_pending_interrupt() in order to determine
+if a vCPU have a pending posted interrupt. This routine is used by
+kvm_vcpu_on_spin() when searching for a a new runnable vCPU to schedule
+on pCPU instead of a vCPU doing busy loop.
 
-> I'd still prefer to pass 'true' unconditionally here, since I don't think
-> this is a hot path.
+vmx_dy_apicv_has_pending_interrupt() determines if a
+vCPU has a pending posted interrupt solely based on PID.ON. However,
+when a vCPU is preempted, vmx_vcpu_pi_put() sets PID.SN which cause
+raised posted interrupts to only set bit in PID.PIR without setting
+PID.ON (and without sending notification vector), as depicted in VT-d
+manual section 5.2.3 "Interrupt-Posting Hardware Operation".
 
-If you can give me a Tested-by, I'll replace it with the below... :-)
+Therefore, checking PID.ON is insufficient to determine if a vCPU has
+pending posted interrupts and instead we should also check if there is
+some bit set on PID.PIR if PID.SN=1.
 
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -22,6 +22,7 @@
- #include <asm/ftrace.h>
- #include <asm/insn.h>
- #include <asm/set_memory.h>
-+#include <asm/patch.h>
+Fixes: 17e433b54393 ("KVM: Fix leak vCPU's VMCS value into other pCPU")
+Reviewed-by: Jagannathan Raman <jag.raman@oracle.com>
+Co-developed-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+---
+v2:
+* Fixed broken Sob Chain;
+* Add missing tags;
+* Only test PID.PIR if PID.SN=1 and reflect that in commit message last
+paragraph;
+---
+ arch/x86/kvm/vmx/vmx.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 31ce6bc2c371..4c7d2935f7ec 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6141,7 +6141,11 @@ static int vmx_sync_pir_to_irr(struct kvm_vcpu *vcpu)
  
- #ifdef CONFIG_THUMB2_KERNEL
- #define	NOP		0xf85deb04	/* pop.w {lr} */
-@@ -35,9 +36,7 @@ static int __ftrace_modify_code(void *da
+ static bool vmx_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
  {
- 	int *command = data;
- 
--	set_kernel_text_rw();
- 	ftrace_modify_all_code(*command);
--	set_kernel_text_ro();
- 
- 	return 0;
- }
-@@ -59,13 +58,11 @@ static unsigned long adjust_address(stru
- 
- int ftrace_arch_code_modify_prepare(void)
- {
--	set_all_modules_text_rw();
- 	return 0;
+-	return pi_test_on(vcpu_to_pi_desc(vcpu));
++	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);
++
++	return pi_test_on(pi_desc) ||
++		(pi_test_sn(pi_desc) &&
++		!bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS));
  }
  
- int ftrace_arch_code_modify_post_process(void)
- {
--	set_all_modules_text_ro();
- 	/* Make sure any TLB misses during machine stop are cleared. */
- 	flush_tlb_all();
- 	return 0;
-@@ -97,10 +94,7 @@ static int ftrace_modify_code(unsigned l
- 			return -EINVAL;
- 	}
- 
--	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
--		return -EPERM;
--
--	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
-+	__patch_text_real((void *)pc, new, true);
- 
- 	return 0;
- }
+ static void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap)
+-- 
+2.11.0
+
