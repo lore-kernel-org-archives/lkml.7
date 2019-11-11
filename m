@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A8CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE47DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053B82196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40A02196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497578;
-	bh=iRSg4wD3BHuGV4aMK0iULp9PHyr2skPxAlyGY1lKHn0=;
+	s=default; t=1573497583;
+	bh=qMniKZ600avFidGQRAxOvWNIc/Fv4rGe7VfVytJg73A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bRykoSHwrqep5NHgLPFHvs5rFnrPsqrAm99dShL242rLvZNHrU4pX3oVRbBbui48V
-	 qnzyx9G9pZAAPN2FyA2zTQ8GslZ9LTdEFXcBNqTvKBWdTlZNAVtpQUvOWULk091BYL
-	 2KVsrbFIC1xxOrg+xte5hq7wRvnp9UD5UvJviJYY=
+	b=wqqcdxwa8cqp1CJyp62UtrPyDaZUhEK2D0fT/LGYoul+eTGvNrVf9ZTHfXve7iTLP
+	 +0P53wXad/Vom5ctClseuByJsWj9Uol9KZmmJTPrtMfK+WRpVH/akzDWGMoDIhXT7W
+	 KPXXyTys29TGW2Dlz+vnVP9nKb79h7mmlfgug1RI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfKKSjg (ORCPT
+        id S1728507AbfKKSjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58608 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727865AbfKKSjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:31 -0500
+        id S1728254AbfKKSjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3CF521925;
-        Mon, 11 Nov 2019 18:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C1B02196E;
+        Mon, 11 Nov 2019 18:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497571;
-        bh=iRSg4wD3BHuGV4aMK0iULp9PHyr2skPxAlyGY1lKHn0=;
+        s=default; t=1573497579;
+        bh=qMniKZ600avFidGQRAxOvWNIc/Fv4rGe7VfVytJg73A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12ebJzthUmCKo/8rQkSRKnyFBVSlcx9+4mIBLVfROxD4PR001HUqFSaHURIE4IgNu
-         oYNdb+4ggAvNK9UtG8SuyR3OWr5kY1Y7JojUqkcS4b24D3e1h12STo5r2jzBRPw9LR
-         tnQ8ySN4N0NCWZQp3345eWtjTYXgPsb3phMhEIFc=
+        b=MRQnRZSlUtJGHesKKqFljNDheoXWyHT8lWM8DgPEymN3QeTwtSRp4f/DsZibuO4Qo
+         M7+y7CEux/ZQGGflV66AdkVb7qY0JxKXEPTlgujBo3s+lSyFNz5k+fE3HVhArwiXQF
+         QoHU2+aUBxBCBdRTlW6OpcvqoqgKp6sVBgZ0mhc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        andy.shevchenko@gmail.com, bhe@redhat.com, ebiederm@xmission.com,
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/105] x86/apic: Drop logical_smp_processor_id() inline
-Date:   Mon, 11 Nov 2019 19:29:11 +0100
-Message-Id: <20191111181449.332092047@linuxfoundation.org>
+Subject: [PATCH 4.14 103/105] can: flexcan: disable completely the ECC mechanism
+Date:   Mon, 11 Nov 2019 19:29:13 +0100
+Message-Id: <20191111181449.558889091@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,78 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dou Liyang <douly.fnst@cn.fujitsu.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-[ Upstream commit 8f1561680f42a5491b371b513f1ab8197f31fd62 ]
+[ Upstream commit 5e269324db5adb2f5f6ec9a93a9c7b0672932b47 ]
 
-The logical_smp_processor_id() inline which is only called in
-setup_local_APIC() on x86_32 systems has no real value.
+The ECC (memory error detection and correction) mechanism can be
+activated or not, controlled by the ECCDIS bit in CAN_MECR. When
+disabled, updates on indications and reporting registers are stopped.
+So if want to disable ECC completely, had better assert ECCDIS bit, not
+just mask the related interrupts.
 
-Drop it and directly use GET_APIC_LOGICAL_ID() at the call site and use a
-more suitable variable name for readability
-
-Signed-off-by: Dou Liyang <douly.fnst@cn.fujitsu.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: andy.shevchenko@gmail.com
-Cc: bhe@redhat.com
-Cc: ebiederm@xmission.com
-Link: https://lkml.kernel.org/r/20180301055930.2396-4-douly.fnst@cn.fujitsu.com
+Fixes: cdce844865be ("can: flexcan: add vf610 support for FlexCAN")
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/smp.h  | 10 ----------
- arch/x86/kernel/apic/apic.c | 10 +++++-----
- 2 files changed, 5 insertions(+), 15 deletions(-)
+ drivers/net/can/flexcan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index fe2ee61880a86..a14730ca9d1e2 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -175,16 +175,6 @@ static inline int wbinvd_on_all_cpus(void)
- extern unsigned disabled_cpus;
- 
- #ifdef CONFIG_X86_LOCAL_APIC
--
--#ifndef CONFIG_X86_64
--static inline int logical_smp_processor_id(void)
--{
--	/* we don't want to mark this access volatile - bad code generation */
--	return GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
--}
--
--#endif
--
- extern int hard_smp_processor_id(void);
- 
- #else /* CONFIG_X86_LOCAL_APIC */
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 98fecdbec6402..97d1290d1f0d8 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1423,7 +1423,7 @@ void setup_local_APIC(void)
- 	int cpu = smp_processor_id();
- 	unsigned int value;
- #ifdef CONFIG_X86_32
--	int i;
-+	int logical_apicid, ldr_apicid;
- #endif
- 
- 
-@@ -1470,11 +1470,11 @@ void setup_local_APIC(void)
- 	 * initialized during get_smp_config(), make sure it matches the
- 	 * actual value.
- 	 */
--	i = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
--	WARN_ON(i != BAD_APICID && i != logical_smp_processor_id());
-+	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
-+	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
-+	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
- 	/* always use the value from LDR */
--	early_per_cpu(x86_cpu_to_logical_apicid, cpu) =
--		logical_smp_processor_id();
-+	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
- #endif
- 
- 	/*
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 7280f3a8aa041..84dd79041285a 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -1018,6 +1018,7 @@ static int flexcan_chip_start(struct net_device *dev)
+ 		reg_mecr = flexcan_read(&regs->mecr);
+ 		reg_mecr &= ~FLEXCAN_MECR_ECRWRDIS;
+ 		flexcan_write(reg_mecr, &regs->mecr);
++		reg_mecr |= FLEXCAN_MECR_ECCDIS;
+ 		reg_mecr &= ~(FLEXCAN_MECR_NCEFAFRZ | FLEXCAN_MECR_HANCEI_MSK |
+ 			      FLEXCAN_MECR_FANCEI_MSK);
+ 		flexcan_write(reg_mecr, &regs->mecr);
 -- 
 2.20.1
 
