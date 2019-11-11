@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B3AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51855C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A4B2196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F21220659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497553;
-	bh=tz9uFoefhrKH621KyE+P/p8W+zKZJg99OToA1UNMPLY=;
+	s=default; t=1573497558;
+	bh=EMX2mwMsPDVTT5OCb9gPwQH/OyP+Vv3ygfv94ADuU+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pXYqU4gQ3VoyyhlH7IEukJh3B9iiv+Xjv6+7UZfRrLwaTNRq4jKF8oDmvUXGqtzf2
-	 pnz7v3srPerL0IhP1T4PEv4ht1SiFaD0qyNZ1mcb5ewdN73vcvG0TT4Fuy0d/Et2rc
-	 6vcb+mtu3RRV6j00Yik49sdHB/YwjWc9yzElDvVI=
+	b=HXyYN/felBZ88m13QLAvwPrxpb8HQTbbEBOm9vUtvC5mFsHsykzpvGqYc63YURS3l
+	 zJu16riKTxewESawjzw4Tv6UMtZW3rgc6zbp9/1VTNqFsuc9Ys3A2hNRYyb1nZmhIN
+	 w6caoq0cq3/MGQBe3gUOvpcbiaV/Rn60E+HSaYFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfKKSjN (ORCPT
+        id S1728600AbfKKSjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbfKKSjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:05 -0500
+        id S1727166AbfKKSjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF4BE214E0;
-        Mon, 11 Nov 2019 18:39:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDCC021783;
+        Mon, 11 Nov 2019 18:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497544;
-        bh=tz9uFoefhrKH621KyE+P/p8W+zKZJg99OToA1UNMPLY=;
+        s=default; t=1573497553;
+        bh=EMX2mwMsPDVTT5OCb9gPwQH/OyP+Vv3ygfv94ADuU+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GV5P0a01R3iVf0R6mQWyCzQjm4b8bqkV13g5bvmprVt0Y+vJnbj3pjAvD3rhejcCH
-         2HTTuMc6RHTA/rx9Q10tyR2nfrBH8rTIKEx++8suPm76bczylUaEjdLU95sFZuy0k+
-         jaYERvGe84ToWXAXN2NxOrLELk7/X+NZs9JPsdEE=
+        b=zIUFu9v2adjpElE8goL92/ehRPmuSi7gxBJtUHr+HQUcZrBAbd49vyGI8Pd7Jl394
+         zUROA0YalKISBoDRsAA12w+QFwg9YhCi705THWvG9KHVjA2qRYitf+AGV0imyFyuZa
+         L1x5UH+cTyYBSA8+mRrVVsss6EcvTCqjv8psWlBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 092/105] scsi: qla2xxx: stop timer in shutdown path
-Date:   Mon, 11 Nov 2019 19:29:02 +0100
-Message-Id: <20191111181448.078837994@linuxfoundation.org>
+Subject: [PATCH 4.14 095/105] hv_netvsc: Fix error handling in netvsc_attach()
+Date:   Mon, 11 Nov 2019 19:29:05 +0100
+Message-Id: <20191111181448.566869694@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,47 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit d3566abb1a1e7772116e4d50fb6a58d19c9802e5 ]
+[ Upstream commit 719b85c336ed35565d0f3982269d6f684087bb00 ]
 
-In shutdown/reboot paths, the timer is not stopped:
+If rndis_filter_open() fails, we need to remove the rndis device created
+in earlier steps, before returning an error code. Otherwise, the retry of
+netvsc_attach() from its callers will fail and hang.
 
-  qla2x00_shutdown
-  pci_device_shutdown
-  device_shutdown
-  kernel_restart_prepare
-  kernel_restart
-  sys_reboot
-
-This causes lockups (on powerpc) when firmware config space access calls
-are interrupted by smp_send_stop later in reboot.
-
-Fixes: e30d1756480dc ("[SCSI] qla2xxx: Addition of shutdown callback handler.")
-Link: https://lore.kernel.org/r/20191024063804.14538-1-npiggin@gmail.com
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/hyperv/netvsc_drv.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 7d7fb5bbb6007..343fbaa6d2a2d 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3437,6 +3437,10 @@ qla2x00_shutdown(struct pci_dev *pdev)
- 	/* Stop currently executing firmware. */
- 	qla2x00_try_to_stop_firmware(vha);
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 33c1f6548fb79..5a44b97952669 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -969,7 +969,7 @@ static int netvsc_attach(struct net_device *ndev,
+ 	if (netif_running(ndev)) {
+ 		ret = rndis_filter_open(nvdev);
+ 		if (ret)
+-			return ret;
++			goto err;
  
-+	/* Disable timer */
-+	if (vha->timer_active)
-+		qla2x00_stop_timer(vha);
+ 		rdev = nvdev->extension;
+ 		if (!rdev->link_state)
+@@ -977,6 +977,13 @@ static int netvsc_attach(struct net_device *ndev,
+ 	}
+ 
+ 	return 0;
 +
- 	/* Turn adapter off line */
- 	vha->flags.online = 0;
++err:
++	netif_device_detach(ndev);
++
++	rndis_filter_device_remove(hdev, nvdev);
++
++	return ret;
+ }
  
+ static int netvsc_set_channels(struct net_device *net,
 -- 
 2.20.1
 
