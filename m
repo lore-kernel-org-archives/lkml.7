@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1F7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CBEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE98320659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108FB2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497407;
-	bh=ljrWGzOGn6UAkX7KKKE5DU7p6azqofj8gRGH8zTTCTo=;
+	s=default; t=1573497411;
+	bh=Y5D9GcuV9dNx+iJHuMsVUXhTTDTAUNdLvvepNGOsPLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EESpkJ5lcsVktRHxv1cA3zlXbD9pAfhErYmROzDCbRFJR3SXEwr/vCMUtYXnPRgIi
-	 KpC9j6rJC0qhrwQkJ9Kze1G0kOSmwslZc4hDB/dWsCJboyCFYmtClwDdZ0garP/6Um
-	 yhvxBU4pOLRf8so1apKzA+UEio/PfWTvxLWnChmI=
+	b=MAmVIaYexlN/P040H9Qd5qK6LwIlLKsibFtPUM7WtrwH2NAHZSMY3C0B0yiNUfhH8
+	 jxQMcASkMcpjJ3XADm8JciL2t8PJ2sJhkk1yAPxPJaEgL+zvJbbHlgpIEE7fMXW66f
+	 /ryV7AovHMPThjSATBYweyWbT+EAURIkMMmPuenw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfKKSgq (ORCPT
+        id S1728777AbfKKSgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbfKKSgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:44 -0500
+        id S1728754AbfKKSgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DC1521E6F;
-        Mon, 11 Nov 2019 18:36:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA36204FD;
+        Mon, 11 Nov 2019 18:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497403;
-        bh=ljrWGzOGn6UAkX7KKKE5DU7p6azqofj8gRGH8zTTCTo=;
+        s=default; t=1573497407;
+        bh=Y5D9GcuV9dNx+iJHuMsVUXhTTDTAUNdLvvepNGOsPLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jziKjqO3U7R19shTVljHDP8eo9VbiBwQhdq/NFP7d2BWuWQN6+q1P+yECe7nGqaYz
-         jmCaMkuSMKRTLK9Vu2sXvYw32/45K/rhAkdPxMi8o0q8z4+taLwG1aYE8kfYmsBZlz
-         fiKwrY1kTRi7zhVrK+LZqnv8MCehgmnMYkFTNgCk=
+        b=TBRcT3YRg83VH7ywElzfZEcSqVRawcvbvMeeT/3o9iA8ICFNK3omRVt0iCLDtN4ca
+         wh8bOukUuvaPZdzKRMftBj0F2yI85V6PAmLzSMMPIYQJD5alfzCerd8MiMaXCVFfxb
+         bs4kfm513YDhhqgEy7vkXSM4WdyLzTWMA+13df50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
+        stable@vger.kernel.org,
+        Aleksander Morgado <aleksander@aleksander.es>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 006/105] net: qualcomm: rmnet: Fix potential UAF when unregistering
-Date:   Mon, 11 Nov 2019 19:27:36 +0100
-Message-Id: <20191111181424.363210324@linuxfoundation.org>
+Subject: [PATCH 4.14 007/105] net: usb: qmi_wwan: add support for DW5821e with eSIM support
+Date:   Mon, 11 Nov 2019 19:27:37 +0100
+Message-Id: <20191111181424.758584182@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Tranchetti <stranche@codeaurora.org>
+From: Aleksander Morgado <aleksander@aleksander.es>
 
-[ Upstream commit e7a86c687e64ab24f88330ad24ecc9442ce40c5a ]
+[ Upstream commit e497df686e8fed8c1dd69179010656362858edb3 ]
 
-During the exit/unregistration process of the RmNet driver, the function
-rmnet_unregister_real_device() is called to handle freeing the driver's
-internal state and removing the RX handler on the underlying physical
-device. However, the order of operations this function performs is wrong
-and can lead to a use after free of the rmnet_port structure.
+Exactly same layout as the default DW5821e module, just a different
+vid/pid.
 
-Before calling netdev_rx_handler_unregister(), this port structure is
-freed with kfree(). If packets are received on any RmNet devices before
-synchronize_net() completes, they will attempt to use this already-freed
-port structure when processing the packet. As such, before cleaning up any
-other internal state, the RX handler must be unregistered in order to
-guarantee that no further packets will arrive on the device.
+The QMI interface is exposed in USB configuration #1:
 
-Fixes: ceed73a2cf4a ("drivers: net: ethernet: qualcomm: rmnet: Initial implementation")
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+P:  Vendor=413c ProdID=81e0 Rev=03.18
+S:  Manufacturer=Dell Inc.
+S:  Product=DW5821e-eSIM Snapdragon X20 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+
+Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -84,10 +84,10 @@ static int rmnet_unregister_real_device(
- 	if (port->nr_rmnet_devs)
- 		return -EINVAL;
- 
--	kfree(port);
--
- 	netdev_rx_handler_unregister(real_dev);
- 
-+	kfree(port);
-+
- 	/* release reference on real_dev */
- 	dev_put(real_dev);
- 
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1286,6 +1286,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
++	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
+ 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
+ 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
+ 	{QMI_FIXED_INTF(0x22de, 0x9061, 3)},	/* WeTelecom WPD-600N */
 
 
