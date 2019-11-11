@@ -2,101 +2,234 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDA2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDE5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8ADE2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567FD2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="idmSHDSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfKKWPf (ORCPT
+        id S1727031AbfKKWUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:15:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55802 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726939AbfKKWPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:15:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0439DAC52;
-        Mon, 11 Nov 2019 22:15:29 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH] soc: amlogic: socinfo: Avoid soc_device_to_device()
-Date:   Mon, 11 Nov 2019 23:15:21 +0100
-Message-Id: <20191111221521.1587-1-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Mon, 11 Nov 2019 17:20:34 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58961 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726928AbfKKWUd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 17:20:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573510832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=UIFl6RmKYvRvDaC9fCanWXjZvHHx2uDomG3MEDvY3qg=;
+        b=idmSHDSDHkyBbCT66Y1lnQNF36NATim8YPh41M/JRZOKIpIZCSesjosimZZ9qL76x7tlfn
+        nJKeKJZqNJ21Mycv8fYDW7PhTPis3VsF+BJ5Y+uUzCBuvkpjSR4eryxDApVf8z9cJji95C
+        mI1CoAi6gBfwBN37Rv8unQTtFnAySqE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-lP46nyTrNGazN40oUa4Wfg-1; Mon, 11 Nov 2019 17:20:30 -0500
+Received: by mail-wr1-f70.google.com with SMTP id j17so10812764wru.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 14:20:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ElUsUIBHVYFueoajxjC1Kl74zzWp1gWpLdEqumq8Hjw=;
+        b=lNlCx7XQg8i/Jj8eFji8zw3papXAkkz7gO+fxW9bg66AnPt0HjcieHgicYOfqprn8B
+         ogWlwBZD4uJaw+yD6EpUKlpdj8EQcX8OaC5xCz+w0cl/cLdd7PvVMMRQ/llkHqkbaF+l
+         CxuN9lny7wRThr5xzWwwc0gEeKn1UxzCblUZTdRr+WwnEVew1TOuGU0JpuVTRrG8BJKj
+         5ANcPTnlhc6uoeLRHDkwL+TUChsAvXHc/8t0nMIkjKUiDbtKUajDZddNjH9K97wJFKx+
+         pNzZ5g35TtECkJD/gHCDX1+5Bba/fuZ9Dmm1t9+p1EotM3Asz++WtwzJqfwW1uXTfW/X
+         kF4w==
+X-Gm-Message-State: APjAAAXqvVR2dwqgAXWCDTUT4CbC26DDvaGQH/57SI6JFfiRcDosPmqz
+        aUg6f0yYlPXblEWsyshAJTKT7Fw06018ynCLOPBie1rMXNkevIzeE+SJe8hD46+OQjIQU7Jal2Y
+        vw0b4UFI9LLlNsI0EpcuICWMH
+X-Received: by 2002:adf:f9c4:: with SMTP id w4mr13729955wrr.88.1573510829300;
+        Mon, 11 Nov 2019 14:20:29 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzFPwqxhXxeAs0oL0Dbs5sot6UdqdoMZ4qtgoJqKMBpzKaZcxnJ8IkS9GT/UFBY0Amj9EWzQg==
+X-Received: by 2002:adf:f9c4:: with SMTP id w4mr13729930wrr.88.1573510828911;
+        Mon, 11 Nov 2019 14:20:28 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
+        by smtp.gmail.com with ESMTPSA id 4sm1494255wmd.33.2019.11.11.14.20.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Nov 2019 14:20:28 -0800 (PST)
+Subject: Re: [PATCH v2 1/3] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191111221229.24732-1-sean.j.christopherson@intel.com>
+ <20191111221229.24732-2-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <85ab4f91-973f-f12d-5361-6125ac524bb4@redhat.com>
+Date:   Mon, 11 Nov 2019 23:20:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191111221229.24732-2-sean.j.christopherson@intel.com>
+Content-Language: en-US
+X-MC-Unique: lP46nyTrNGazN40oUa4Wfg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The helper soc_device_to_device() is considered deprecated.
-For a driver __init function the predictable prefix text
-"soc soc0:" from dev_info() does not add real value, so use
-pr_info() to emit the info text without such prefix.
+On 11/11/19 23:12, Sean Christopherson wrote:
+> Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
+> instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
+> like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
+> pages, e.g. put pages grabbed via gup().  But for flows such as setting
+> A/D bits or shifting refcounts for transparent huge pages, KVM needs to
+> to avoid processing ZONE_DEVICE pages as the flows in question lack the
+> underlying machinery for proper handling of ZONE_DEVICE pages.
+>=20
+> This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
+> when running a KVM guest backed with /dev/dax memory, as KVM straight up
+> doesn't put any references to ZONE_DEVICE pages acquired by gup().
+>=20
+> Note, Dan Williams proposed an alternative solution of doing put_page()
+> on ZONE_DEVICE pages immediately after gup() in order to simplify the
+> auditing needed to ensure is_zone_device_page() is called if and only if
+> the backing device is pinned (via gup()).  But that approach would break
+> kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
+> unmap() when accessing guest memory, unlike KVM's secondary MMU, which
+> coordinates with mmu_notifier invalidations to avoid creating stale
+> page references, i.e. doesn't rely on pages being pinned.
+>=20
+> [*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
+>=20
+> Reported-by: Adam Borowski <kilobyte@angband.pl>
+> Debugged-by: David Hildenbrand <david@redhat.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/mmu.c       |  8 ++++----
+>  include/linux/kvm_host.h |  1 +
+>  virt/kvm/kvm_main.c      | 26 +++++++++++++++++++++++---
+>  3 files changed, 28 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index 24c23c66b226..bf82b1f2e834 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -3306,7 +3306,7 @@ static void transparent_hugepage_adjust(struct kvm_=
+vcpu *vcpu,
+>  =09 * here.
+>  =09 */
+>  =09if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+> -=09    level =3D=3D PT_PAGE_TABLE_LEVEL &&
+> +=09    !kvm_is_zone_device_pfn(pfn) && level =3D=3D PT_PAGE_TABLE_LEVEL =
+&&
+>  =09    PageTransCompoundMap(pfn_to_page(pfn)) &&
+>  =09    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
+>  =09=09unsigned long mask;
+> @@ -5914,9 +5914,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm=
+ *kvm,
+>  =09=09 * the guest, and the guest page table is using 4K page size
+>  =09=09 * mapping if the indirect sp has level =3D 1.
+>  =09=09 */
+> -=09=09if (sp->role.direct &&
+> -=09=09=09!kvm_is_reserved_pfn(pfn) &&
+> -=09=09=09PageTransCompoundMap(pfn_to_page(pfn))) {
+> +=09=09if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+> +=09=09    !kvm_is_zone_device_pfn(pfn) &&
+> +=09=09    PageTransCompoundMap(pfn_to_page(pfn))) {
+>  =09=09=09pte_list_remove(rmap_head, sptep);
+> =20
+>  =09=09=09if (kvm_available_flush_tlb_with_range())
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index a817e446c9aa..4ad1cd7d2d4d 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -966,6 +966,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
+>  void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
+> =20
+>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
+> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
+> =20
+>  struct kvm_irq_ack_notifier {
+>  =09struct hlist_node link;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index b8534c6b8cf6..bc9d10a0a334 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -149,10 +149,30 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(s=
+truct kvm *kvm,
+>  =09return 0;
+>  }
+> =20
+> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
+> +{
+> +=09/*
+> +=09 * The metadata used by is_zone_device_page() to determine whether or
+> +=09 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
+> +=09 * the device has been pinned, e.g. by get_user_pages().  WARN if the
+> +=09 * page_count() is zero to help detect bad usage of this helper.
+> +=09 */
+> +=09if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
+> +=09=09return false;
+> +
+> +=09return is_zone_device_page(pfn_to_page(pfn));
+> +}
+> +
+>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+>  {
+> +=09/*
+> +=09 * ZONE_DEVICE pages currently set PG_reserved, but from a refcountin=
+g
+> +=09 * perspective they are "normal" pages, albeit with slightly differen=
+t
+> +=09 * usage rules.
+> +=09 */
+>  =09if (pfn_valid(pfn))
+> -=09=09return PageReserved(pfn_to_page(pfn));
+> +=09=09return PageReserved(pfn_to_page(pfn)) &&
+> +=09=09       !kvm_is_zone_device_pfn(pfn);
+> =20
+>  =09return true;
+>  }
+> @@ -1865,7 +1885,7 @@ EXPORT_SYMBOL_GPL(kvm_release_pfn_dirty);
+> =20
+>  void kvm_set_pfn_dirty(kvm_pfn_t pfn)
+>  {
+> -=09if (!kvm_is_reserved_pfn(pfn)) {
+> +=09if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
+>  =09=09struct page *page =3D pfn_to_page(pfn);
+> =20
+>  =09=09SetPageDirty(page);
+> @@ -1875,7 +1895,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
+> =20
+>  void kvm_set_pfn_accessed(kvm_pfn_t pfn)
+>  {
+> -=09if (!kvm_is_reserved_pfn(pfn))
+> +=09if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
+>  =09=09mark_page_accessed(pfn_to_page(pfn));
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
+>=20
 
-While at it, normalize the casing of "detected" for GX.
+Queued, thanks -- the other two will wait for after the merge window to
+avoid pointless conflicts.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- drivers/soc/amlogic/meson-gx-socinfo.c | 4 +---
- drivers/soc/amlogic/meson-mx-socinfo.c | 4 ++--
- 2 files changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 01fc0d20a70d..105b819bbd5f 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -129,7 +129,6 @@ static int __init meson_gx_socinfo_init(void)
- 	struct device_node *np;
- 	struct regmap *regmap;
- 	unsigned int socinfo;
--	struct device *dev;
- 	int ret;
- 
- 	/* look up for chipid node */
-@@ -192,9 +191,8 @@ static int __init meson_gx_socinfo_init(void)
- 		kfree(soc_dev_attr);
- 		return PTR_ERR(soc_dev);
- 	}
--	dev = soc_device_to_device(soc_dev);
- 
--	dev_info(dev, "Amlogic Meson %s Revision %x:%x (%x:%x) Detected\n",
-+	pr_info("Amlogic Meson %s Revision %x:%x (%x:%x) detected\n",
- 			soc_dev_attr->soc_id,
- 			socinfo_to_major(socinfo),
- 			socinfo_to_minor(socinfo),
-diff --git a/drivers/soc/amlogic/meson-mx-socinfo.c b/drivers/soc/amlogic/meson-mx-socinfo.c
-index 78f0f1aeca57..7db2c94a7130 100644
---- a/drivers/soc/amlogic/meson-mx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-mx-socinfo.c
-@@ -167,8 +167,8 @@ static int __init meson_mx_socinfo_init(void)
- 		return PTR_ERR(soc_dev);
- 	}
- 
--	dev_info(soc_device_to_device(soc_dev), "Amlogic %s %s detected\n",
--		 soc_dev_attr->soc_id, soc_dev_attr->revision);
-+	pr_info("Amlogic %s %s detected\n",
-+		soc_dev_attr->soc_id, soc_dev_attr->revision);
- 
- 	return 0;
- }
--- 
-2.16.4
+Paolo
 
