@@ -2,124 +2,119 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966F9C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CB7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7169E22467
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06AF21925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfKKWgi (ORCPT
+        id S1727626AbfKKWha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:36:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60000 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKKWfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:35:45 -0500
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iUIHb-0000tR-Hv; Mon, 11 Nov 2019 23:35:39 +0100
-Message-Id: <20191111220314.519933535@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Mon, 11 Nov 2019 23:03:14 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [patch V2 00/16] x86/iopl: Prevent user space from using CLI/STI with
- iopl(3)
+        Mon, 11 Nov 2019 17:37:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33642 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726912AbfKKWha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 17:37:30 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AAEA9AC8B;
+        Mon, 11 Nov 2019 22:37:28 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH] ARM: ep93xx: Avoid soc_device_to_device()
+Date:   Mon, 11 Nov 2019 23:37:22 +0100
+Message-Id: <20191111223722.2364-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the second version of the attempt to confine the unwanted side
-effects of iopl(). The first version of this series can be found here:
+ep93xx_init_soc() uses soc_device_to_device() to return a device
+to ep93xx_init_devices(), where it is passed on to its callers,
+who all ignore the return value. As this helper is deprecated,
+change the return type of ep93xx_init_devices() to void and
+have ep93xx_init_soc() return the soc_device instead.
 
-   https://lore.kernel.org/r/20191106193459.581614484@linutronix.de
-
-The V1 cover letter also contains a longer variant of the
-background. Summary:
-
-iopl(level = 3) enables aside of access to all 65536 I/O ports also the
-usage of CLI/STI in user space.
-
-Disabling interrupts in user space can lead to system lockups and breaks
-assumptions in the kernel that userspace always runs with interrupts
-enabled.
-
-iopl() is often preferred over ioperm() as it avoids the overhead of
-copying the tasks I/O bitmap to the TSS bitmap on context switch. This
-overhead can be avoided by providing a all zeroes bitmap in the TSS and
-switching the TSS bitmap offset to this permit all IO bitmap. It's
-marginally slower than iopl() which is a one time setup, but prevents the
-usage of CLI/STI in user space.
-
-The changes vs. V1:
-
-    - Fix the reported fallout on 32bit (0-day/Ingo)
-
-    - Implement a sequence count based conditional update (Linus)
-
-    - Drop the copy optimization
-
-    - Move the bitmap copying out of the context switch into the exit to
-      user mode machinery. The context switch merely invalidates the TSS
-      bitmap offset when a task using an I/O bitmap gets scheduled out.
-
-    - Move all bitmap information into a data structure to avoid adding
-      more fields to thread_struct.
-
-    - Add a refcount so the potentially pointless duplication of the bitmap
-      at fork can be avoided. 
-
-    - Better sharing of update functions (Andy)
-
-    - More updates to self tests to verify the share/unshare mechanism and
-      the restore of an I/O bitmap when iopl() permissions are dropped.
-
-    - Pick up a few acked/reviewed-by tags as applicable
-
-The series is also available from git:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/iopl
-
-Thanks,
-
-	tglx
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/x86/Kconfig                        |   26 ++++
- arch/x86/entry/common.c                 |    4 
- arch/x86/include/asm/iobitmap.h         |   25 ++++
- arch/x86/include/asm/paravirt.h         |    4 
- arch/x86/include/asm/paravirt_types.h   |    2 
- arch/x86/include/asm/pgtable_32_types.h |    2 
- arch/x86/include/asm/processor.h        |   97 +++++++++-------
- arch/x86/include/asm/ptrace.h           |    6 
- arch/x86/include/asm/switch_to.h        |   10 +
- arch/x86/include/asm/xen/hypervisor.h   |    2 
- arch/x86/kernel/cpu/common.c            |  175 +++++++++++-----------------
- arch/x86/kernel/doublefault.c           |    2 
- arch/x86/kernel/ioport.c                |  176 ++++++++++++++++++-----------
- arch/x86/kernel/paravirt.c              |    2 
- arch/x86/kernel/process.c               |  194 +++++++++++++++++++++++++-------
- arch/x86/kernel/process_32.c            |   77 ------------
- arch/x86/kernel/process_64.c            |   86 --------------
- arch/x86/kernel/ptrace.c                |   12 +
- arch/x86/kvm/vmx/vmx.c                  |    8 -
- arch/x86/mm/cpu_entry_area.c            |    8 +
- arch/x86/xen/enlighten_pv.c             |   10 -
- tools/testing/selftests/x86/ioperm.c    |   16 ++
- tools/testing/selftests/x86/iopl.c      |  129 +++++++++++++++++++--
- 23 files changed, 614 insertions(+), 459 deletions(-)
+ arch/arm/mach-ep93xx/core.c     | 12 ++++--------
+ arch/arm/mach-ep93xx/platform.h |  2 +-
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
+diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
+index 6fb19a393fd2..7a0c82b30564 100644
+--- a/arch/arm/mach-ep93xx/core.c
++++ b/arch/arm/mach-ep93xx/core.c
+@@ -937,7 +937,7 @@ static const char __init *ep93xx_get_machine_name(void)
+ 	return kasprintf(GFP_KERNEL,"%s", machine_desc->name);
+ }
+ 
+-static struct device __init *ep93xx_init_soc(void)
++static struct soc_device __init *ep93xx_init_soc(void)
+ {
+ 	struct soc_device_attribute *soc_dev_attr;
+ 	struct soc_device *soc_dev;
+@@ -958,13 +958,11 @@ static struct device __init *ep93xx_init_soc(void)
+ 		return NULL;
+ 	}
+ 
+-	return soc_device_to_device(soc_dev);
++	return soc_dev;
+ }
+ 
+-struct device __init *ep93xx_init_devices(void)
++void __init ep93xx_init_devices(void)
+ {
+-	struct device *parent;
+-
+ 	/* Disallow access to MaverickCrunch initially */
+ 	ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_CPENA);
+ 
+@@ -975,7 +973,7 @@ struct device __init *ep93xx_init_devices(void)
+ 			       EP93XX_SYSCON_DEVCFG_GONIDE |
+ 			       EP93XX_SYSCON_DEVCFG_HONIDE);
+ 
+-	parent = ep93xx_init_soc();
++	ep93xx_init_soc();
+ 
+ 	/* Get the GPIO working early, other devices need it */
+ 	platform_device_register(&ep93xx_gpio_device);
+@@ -989,8 +987,6 @@ struct device __init *ep93xx_init_devices(void)
+ 	platform_device_register(&ep93xx_wdt_device);
+ 
+ 	gpio_led_register_device(-1, &ep93xx_led_data);
+-
+-	return parent;
+ }
+ 
+ void ep93xx_restart(enum reboot_mode mode, const char *cmd)
+diff --git a/arch/arm/mach-ep93xx/platform.h b/arch/arm/mach-ep93xx/platform.h
+index b4045a186239..8a3a2be50f11 100644
+--- a/arch/arm/mach-ep93xx/platform.h
++++ b/arch/arm/mach-ep93xx/platform.h
+@@ -34,7 +34,7 @@ void ep93xx_register_ac97(void);
+ void ep93xx_register_ide(void);
+ void ep93xx_register_adc(void);
+ 
+-struct device *ep93xx_init_devices(void);
++void ep93xx_init_devices(void);
+ extern void ep93xx_timer_init(void);
+ 
+ void ep93xx_restart(enum reboot_mode, const char *);
+-- 
+2.16.4
 
