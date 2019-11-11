@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0CFC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F7BC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA36D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E59520659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499476;
-	bh=gpJkM8tSzbzYkk30CQsNGrRPwbI6TaIqNSKozZigDIs=;
+	s=default; t=1573499478;
+	bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xbZqBxhsM/VwByOXpmH+/+Y4LquSHEqPl4aTOlqdEW5lHgdajWMEURu1z6ELPpdy1
-	 fJuyO/pZ3eTDlalms4WIVKrgzGrrooEYhGgiZpjgkQIf3fwr1CfxcjMd1ygh2y3BV8
-	 23646A5uxJC/qWHR6GmVrzcr9jF2lKhPrtRr8wuo=
+	b=vnyuFJHe+TtlLs8hXIXxE3ftxMjA8MXFe997krVMslx6Q5KsGkL9MFJURrQcAjt/p
+	 zj79DmcCdFw+Hhdg+gg8PDyFClERdrTaC0qFRHVu2/mIuTwjJN0TlIoBrDSw7Mi95l
+	 0R8L+LjN88XHXcLGA//a27lWW3Eo7v/ECSEinfj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfKKSaa (ORCPT
+        id S1727276AbfKKSaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:30:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46740 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:30:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfKKSa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:28 -0500
+        id S1726949AbfKKSaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4856A21872;
-        Mon, 11 Nov 2019 18:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5030B21872;
+        Mon, 11 Nov 2019 18:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497026;
-        bh=gpJkM8tSzbzYkk30CQsNGrRPwbI6TaIqNSKozZigDIs=;
+        s=default; t=1573497020;
+        bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gLYt0yZVyJew8ysSKKpObXg4AOtn3SpA2nvsnJjIj+K2cY0Eeo06s20TG7148+73
-         Rkc3sZq298Z5zCdihztRyCdNd2YSVqlOPWkTJMy0tNVVjRNGS5XY+0TnJJFNg1eXnT
-         cTYKhvMW5zwLcA5zaKFlLT/S3JY9hKcGh/hbIavM=
+        b=LowKHiSZD8KmweMKpsKjnMyLcUozEZLtZaRLktWqoHrHDVMYCUKBiNyMi70lN58Du
+         2siHjSB68Ofr+dcWZz8yEhl/e11UV5wkyJFN3y9yroKVr78aNMpjNpklF28+GfTHLN
+         36WK6JN6u9MViheNZK/1U7AS9XXtCZcqOe7gDOPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 03/43] NFC: fdp: fix incorrect free object
-Date:   Mon, 11 Nov 2019 19:28:17 +0100
-Message-Id: <20191111181252.561390022@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Joe Burmeister <joe.burmeister@devtank.co.uk>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.4 19/43] can: c_can: c_can_poll(): only read status register after status IRQ
+Date:   Mon, 11 Nov 2019 19:28:33 +0100
+Message-Id: <20191111181309.592648424@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -59,31 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
 
-[ Upstream commit 517ce4e93368938b204451285e53014549804868 ]
+commit 3cb3eaac52c0f145d895f4b6c22834d5f02b8569 upstream.
 
-The address of fw_vsc_cfg is on stack. Releasing it with devm_kfree() is
-incorrect, which may result in a system crash or other security impacts.
-The expected object to free is *fw_vsc_cfg.
+When the status register is read without the status IRQ pending, the
+chip may not raise the interrupt line for an upcoming status interrupt
+and the driver may miss a status interrupt.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It is critical that the BUSOFF status interrupt is forwarded to the
+higher layers, since no more interrupts will follow without
+intervention.
+
+Thanks to Wolfgang and Joe for bringing up the first idea.
+
+Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Joe Burmeister <joe.burmeister@devtank.co.uk>
+Fixes: fa39b54ccf28 ("can: c_can: Get rid of pointless interrupts")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/nfc/fdp/i2c.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nfc/fdp/i2c.c
-+++ b/drivers/nfc/fdp/i2c.c
-@@ -268,7 +268,7 @@ static void fdp_nci_i2c_read_device_prop
- 						  *fw_vsc_cfg, len);
+---
+ drivers/net/can/c_can/c_can.c |   25 ++++++++++++++++++++-----
+ drivers/net/can/c_can/c_can.h |    1 +
+ 2 files changed, 21 insertions(+), 5 deletions(-)
+
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -97,6 +97,9 @@
+ #define BTR_TSEG2_SHIFT		12
+ #define BTR_TSEG2_MASK		(0x7 << BTR_TSEG2_SHIFT)
  
- 		if (r) {
--			devm_kfree(dev, fw_vsc_cfg);
-+			devm_kfree(dev, *fw_vsc_cfg);
- 			goto vsc_read_err;
- 		}
- 	} else {
++/* interrupt register */
++#define INT_STS_PENDING		0x8000
++
+ /* brp extension register */
+ #define BRP_EXT_BRPE_MASK	0x0f
+ #define BRP_EXT_BRPE_SHIFT	0
+@@ -1029,10 +1032,16 @@ static int c_can_poll(struct napi_struct
+ 	u16 curr, last = priv->last_status;
+ 	int work_done = 0;
+ 
+-	priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
+-	/* Ack status on C_CAN. D_CAN is self clearing */
+-	if (priv->type != BOSCH_D_CAN)
+-		priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
++	/* Only read the status register if a status interrupt was pending */
++	if (atomic_xchg(&priv->sie_pending, 0)) {
++		priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
++		/* Ack status on C_CAN. D_CAN is self clearing */
++		if (priv->type != BOSCH_D_CAN)
++			priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
++	} else {
++		/* no change detected ... */
++		curr = last;
++	}
+ 
+ 	/* handle state changes */
+ 	if ((curr & STATUS_EWARN) && (!(last & STATUS_EWARN))) {
+@@ -1083,10 +1092,16 @@ static irqreturn_t c_can_isr(int irq, vo
+ {
+ 	struct net_device *dev = (struct net_device *)dev_id;
+ 	struct c_can_priv *priv = netdev_priv(dev);
++	int reg_int;
+ 
+-	if (!priv->read_reg(priv, C_CAN_INT_REG))
++	reg_int = priv->read_reg(priv, C_CAN_INT_REG);
++	if (!reg_int)
+ 		return IRQ_NONE;
+ 
++	/* save for later use */
++	if (reg_int & INT_STS_PENDING)
++		atomic_set(&priv->sie_pending, 1);
++
+ 	/* disable all interrupts and schedule the NAPI */
+ 	c_can_irq_control(priv, false);
+ 	napi_schedule(&priv->napi);
+--- a/drivers/net/can/c_can/c_can.h
++++ b/drivers/net/can/c_can/c_can.h
+@@ -198,6 +198,7 @@ struct c_can_priv {
+ 	struct net_device *dev;
+ 	struct device *device;
+ 	atomic_t tx_active;
++	atomic_t sie_pending;
+ 	unsigned long tx_dir;
+ 	int last_status;
+ 	u16 (*read_reg) (const struct c_can_priv *priv, enum reg index);
 
 
