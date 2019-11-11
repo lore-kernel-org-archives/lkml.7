@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20981C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5CFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4E220659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036972173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499386;
-	bh=u2bTk1fuFSWK2W7igBb3oFb4c2ppAh1UEJtkSLG8omw=;
+	s=default; t=1573499390;
+	bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oFCVT9tSz56pju9oopMx5HNxg2wITovNWyo0LSHKm7D2geuJ9rZCeHC2keQd2wEYU
-	 g7u31DHkvaePlQOkaxQVax18RTfZkM1Ce+P8Akef/KyiI4Mu33xD2Y3xTW+puF4xo9
-	 tQAXpfwu9iBRdRGe0YDTvO3FeDQnoPxNxD3bH4tA=
+	b=hB43wEOxO02BTpDueJzCjO+11X5ozFGk9hSguqCMxzYYjoBBOZRwRlOQVnUh5hvOO
+	 UwARyRkNGKNZampMRGbbYxunSt1DQAxrVXxn+emEw/lJtduX7MtD/vV4tAXA3SmPIY
+	 +XUWMh82D8WoHfpxtexWuB7ikzfMhJKuS6LrYNbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfKKSdo (ORCPT
+        id S1727440AbfKKSdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbfKKSdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:37 -0500
+        id S1728153AbfKKSdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19DA121655;
-        Mon, 11 Nov 2019 18:33:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E5D5214E0;
+        Mon, 11 Nov 2019 18:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497216;
-        bh=u2bTk1fuFSWK2W7igBb3oFb4c2ppAh1UEJtkSLG8omw=;
+        s=default; t=1573497210;
+        bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uPOxeeo8TB7xF0Ntnvk1RHeaTwYFBtQ+epBDCfB6aeTGxo51upd00HaHZBtIOunaC
-         kHONigmZjelnb9QT1wYkXAgnFFoYWzFJvXIsRBLA+FlniFFnq2/FIbVf+JJcsp4tVP
-         DahuBR0T7R6RkHirE/3buauO1SQg/C0RyFLXRiuI=
+        b=rbNnJuQqHn0jMf5a8JkIJNtuopr33hQ69zPb5SghZU1Ih9m3ceW2Xis9Bd3RxGacY
+         BzyCW6DpURn4ORB1SLyHBhvrkD5OapaVOpkI0E4Po98pKabNUeLs36MOBgRz0vDILm
+         rNsLVzAHC3qrZ4bxvdHlNRDxCBpBNrZ0Kzh2Kns4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Daniel Wagner <dwagner@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 41/65] scsi: lpfc: Honor module parameter lpfc_use_adisc
-Date:   Mon, 11 Nov 2019 19:28:41 +0100
-Message-Id: <20191111181348.129999692@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Lixu <lixu.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 39/65] HID: intel-ish-hid: fix wrong error handling in ishtp_cl_alloc_tx_ring()
+Date:   Mon, 11 Nov 2019 19:28:39 +0100
+Message-Id: <20191111181347.530950048@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -63,63 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Wagner <dwagner@suse.de>
+From: Zhang Lixu <lixu.zhang@intel.com>
 
-[ Upstream commit 0fd103ccfe6a06e40e2d9d8c91d96332cc9e1239 ]
+[ Upstream commit 16ff7bf6dbcc6f77d2eec1ac9120edf44213c2f1 ]
 
-The initial lpfc_desc_set_adisc implementation in commit
-dea3101e0a5c ("lpfc: add Emulex FC driver version 8.0.28") enabled ADISC if
+When allocating tx ring buffers failed, should free tx buffers, not rx buffers.
 
-	cfg_use_adisc && RSCN_MODE && FCP_2_DEVICE
-
-In commit 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of
-SLI-3") this changed to
-
-	(cfg_use_adisc && RSC_MODE) || FCP_2_DEVICE
-
-and later in commit ffc954936b13 ("[SCSI] lpfc 8.3.13: FC Discovery Fixes
-and enhancements.") to
-
-	(cfg_use_adisc && RSC_MODE) || (FCP_2_DEVICE && FCP_TARGET)
-
-A customer reports that after a devloss, an ADISC failure is logged. It
-turns out the ADISC flag is set even the user explicitly set lpfc_use_adisc
-= 0.
-
-[Sat Dec 22 22:55:58 2018] lpfc 0000:82:00.0: 2:(0):0203 Devloss timeout on WWPN 50:01:43:80:12:8e:40:20 NPort x05df00 Data: x82000000 x8 xa
-[Sat Dec 22 23:08:20 2018] lpfc 0000:82:00.0: 2:(0):2755 ADISC failure DID:05DF00 Status:x9/x70000
-
-[mkp: fixed Hannes' email]
-
-Fixes: 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of SLI-3")
-Cc: Dick Kennedy <dick.kennedy@broadcom.com>
-Cc: James Smart <james.smart@broadcom.com>
-Link: https://lore.kernel.org/r/20191022072112.132268-1-dwagner@suse.de
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nportdisc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/intel-ish-hid/ishtp/client-buffers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index 56a3df4fddb05..21ec7b5b6c85c 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -759,9 +759,9 @@ lpfc_disc_set_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
+diff --git a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
+index b9b917d2d50db..c41dbb167c91b 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
++++ b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
+@@ -90,7 +90,7 @@ int ishtp_cl_alloc_tx_ring(struct ishtp_cl *cl)
+ 	return	0;
+ out:
+ 	dev_err(&cl->device->dev, "error in allocating Tx pool\n");
+-	ishtp_cl_free_rx_ring(cl);
++	ishtp_cl_free_tx_ring(cl);
+ 	return	-ENOMEM;
+ }
  
- 	if (!(vport->fc_flag & FC_PT2PT)) {
- 		/* Check config parameter use-adisc or FCP-2 */
--		if ((vport->cfg_use_adisc && (vport->fc_flag & FC_RSCN_MODE)) ||
-+		if (vport->cfg_use_adisc && ((vport->fc_flag & FC_RSCN_MODE) ||
- 		    ((ndlp->nlp_fcp_info & NLP_FCP_2_DEVICE) &&
--		     (ndlp->nlp_type & NLP_FCP_TARGET))) {
-+		     (ndlp->nlp_type & NLP_FCP_TARGET)))) {
- 			spin_lock_irq(shost->host_lock);
- 			ndlp->nlp_flag |= NLP_NPR_ADISC;
- 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
