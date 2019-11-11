@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36DCC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848B5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A8A21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5157721655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497088;
-	bh=LlBFQcgukcH07D0j5oVhm+Y8lUYSM7b8k8pUkeQrGuM=;
+	s=default; t=1573497092;
+	bh=xr/Dd1JcudKThJha1471Fr+uThR/E6hFHmTW6eILGXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zkvn/rU3tyT5WkMSSh6swuNIYb6/IxE52+TZLydWcLS6wFehG96FgQURD350lFEcK
-	 LiDCyrbfXM6DjUT+jGM092hNWPhVZ88DMLuSVcVHm9CIxVZXPj65d/DARleZCB3+Fc
-	 RlAKk2SQwy0gov0l/tA8WfgbyBIzez5jDeSLseKM=
+	b=HloEAr+HqudyIipcR9GEhTgG5ctxYxZwLmYVzMBU94BdtlijLyYGKEko/XB95J2h4
+	 eDA2DdGTWl0g4fzYYIp8mdotddJWRFfrnNujGhiGhw+3CCllyqaZ0mg9BEHtMpvd0h
+	 1BHxPlAK63rLEwfpANTWMHCqUo/kyY/+9je/pNJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfKKSb1 (ORCPT
+        id S1727677AbfKKSbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfKKSbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:25 -0500
+        id S1727654AbfKKSb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 921D021655;
-        Mon, 11 Nov 2019 18:31:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4060421783;
+        Mon, 11 Nov 2019 18:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497085;
-        bh=LlBFQcgukcH07D0j5oVhm+Y8lUYSM7b8k8pUkeQrGuM=;
+        s=default; t=1573497087;
+        bh=xr/Dd1JcudKThJha1471Fr+uThR/E6hFHmTW6eILGXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LfY1UYxjerNQgeM/Dr+OBNpoNms/+r9ERuHxSg39EL8O/Esw4uUP6YkdhXXulrPWy
-         pIibiWG7iSpvak5DBjgXbsSY7wVsH2+ftv6SrKT4Cfou8zHU9XFUeFt6ccGFslcFb7
-         Vzxz4uI+ELMo5jkLlk6nyZsAgFM4oEKi6GiRA+mQ=
+        b=FpaoU3vmyJR6Tzlk3DnP/J+ptqwpJv1jMslmrMN/0ZJEPpo8btmu0PO+Bb4kLZz5b
+         nGdZmSY7mcZIbnCWHn39OE96GOVmrfO7R2vgdaT9hwSgU0W7ndtbsqw770fflyQTGc
+         9wohTqRjGDFYO+v8PCjyPc8Sbj6R/zoPV9quf350=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         Aaron Brown <aaron.f.brown@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 39/43] igb: Fix constant media auto sense switching when no cable is connected
-Date:   Mon, 11 Nov 2019 19:28:53 +0100
-Message-Id: <20191111181327.603797230@linuxfoundation.org>
+Subject: [PATCH 4.4 40/43] e1000: fix memory leaks
+Date:   Mon, 11 Nov 2019 19:28:54 +0100
+Message-Id: <20191111181328.008691412@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -62,45 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 8d5cfd7f76a2414e23c74bb8858af7540365d985 ]
+[ Upstream commit 8472ba62154058b64ebb83d5f57259a352d28697 ]
 
-At least on the i350 there is an annoying behavior that is maybe also
-present on 82580 devices, but was probably not noticed yet as MAS is not
-widely used.
+In e1000_set_ringparam(), 'tx_old' and 'rx_old' are not deallocated if
+e1000_up() fails, leading to memory leaks. Refactor the code to fix this
+issue.
 
-If no cable is connected on both fiber/copper ports the media auto sense
-code will constantly swap between them as part of the watchdog task and
-produce many unnecessary kernel log messages.
-
-The swap code responsible for this behavior (switching to fiber) should
-not be executed if the current media type is copper and there is no signal
-detected on the fiber port. In this case we can safely wait until the
-AUTOSENSE_EN bit is cleared.
-
-Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Tested-by: Aaron Brown <aaron.f.brown@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000/e1000_ethtool.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 70ed5e5c35147..9404f38d9d0d0 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -1673,7 +1673,8 @@ static void igb_check_swap_media(struct igb_adapter *adapter)
- 	if ((hw->phy.media_type == e1000_media_type_copper) &&
- 	    (!(connsw & E1000_CONNSW_AUTOSENSE_EN))) {
- 		swap_now = true;
--	} else if (!(connsw & E1000_CONNSW_SERDESD)) {
-+	} else if ((hw->phy.media_type != e1000_media_type_copper) &&
-+		   !(connsw & E1000_CONNSW_SERDESD)) {
- 		/* copper signal takes time to appear */
- 		if (adapter->copper_tries < 4) {
- 			adapter->copper_tries++;
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
+index d70b2e5d52228..cbb0bdf851770 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
+@@ -628,6 +628,7 @@ static int e1000_set_ringparam(struct net_device *netdev,
+ 	for (i = 0; i < adapter->num_rx_queues; i++)
+ 		rxdr[i].count = rxdr->count;
+ 
++	err = 0;
+ 	if (netif_running(adapter->netdev)) {
+ 		/* Try to get new resources before deleting old */
+ 		err = e1000_setup_all_rx_resources(adapter);
+@@ -648,14 +649,13 @@ static int e1000_set_ringparam(struct net_device *netdev,
+ 		adapter->rx_ring = rxdr;
+ 		adapter->tx_ring = txdr;
+ 		err = e1000_up(adapter);
+-		if (err)
+-			goto err_setup;
+ 	}
+ 	kfree(tx_old);
+ 	kfree(rx_old);
+ 
+ 	clear_bit(__E1000_RESETTING, &adapter->flags);
+-	return 0;
++	return err;
++
+ err_setup_tx:
+ 	e1000_free_all_rx_resources(adapter);
+ err_setup_rx:
+@@ -667,7 +667,6 @@ err_alloc_rx:
+ err_alloc_tx:
+ 	if (netif_running(adapter->netdev))
+ 		e1000_up(adapter);
+-err_setup:
+ 	clear_bit(__E1000_RESETTING, &adapter->flags);
+ 	return err;
+ }
 -- 
 2.20.1
 
