@@ -2,116 +2,132 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1F9C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7EBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C6720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D9lcEG+U"
+	by mail.kernel.org (Postfix) with ESMTP id 96D4620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKKInY (ORCPT
+        id S1727047AbfKKIns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:43:24 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35969 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKKInY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:43:24 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r10so13639201wrx.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:43:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=yijfmtJwvjVfjSh/iMpqao7i4KpAQCiVixkHXW9ffmA=;
-        b=D9lcEG+UQ9cUtO25g1fWxz9Bnr/97aA3IPoeKSdb5rWz0xLMphURrMP1po553ga+Se
-         1WiFnvBHaw7P0Rt8SA7c7bUWZLSDrJgzNL5aVQo8mqpqVt1pQ93K0v/aG224hf+qztMK
-         h6bcnH9YKWm4ZYOjppwJTomcx5CwofQz+GqofrVdWPf6pk5a46OhasH8F4FORRWNvYm1
-         wqYciednr9xdAy8TiLHBObC3Kky9O8ZJkjxGSU44XFrqgn8h/+guLWdJDXuuBolNb0Jt
-         al9XIuSHpPnaMjgrAo615viz4q6uthbF6cpjMjN+eKZueUWdtgk9AnUIyTHJaru5BujZ
-         DFAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=yijfmtJwvjVfjSh/iMpqao7i4KpAQCiVixkHXW9ffmA=;
-        b=PuISRH3Nxm3d71daVqn4yV90HYI0aNXOVFxv/h/GBDmHfWskAL/c+4MPf8mqJIk/Gh
-         MHk/1fJZwdH1zOOhvnx+3guX+ge42XPQ1mUX8ezBAKUw0v3R7NDXv6Mt3rnIvbqrDbtv
-         G9UcSnnWiRXHJaqkGGjW2xGKC2uOrCdxUBzWWrXKSppBSMpZagXqYF2TGPyAqS0g1w6K
-         o7T02hk+n0FQmuU9fYPo4ixdd5xuXqxLI7pYAp5yQIMXfdFk4EtwVNH8+LNMOxcayZh/
-         siRj6u5b7jEDjsQM/hi4pgtHQtpK88Y/zFy9YayWaqHkwvtECfgVi/o6qP7LdRuY3bJy
-         qsWQ==
-X-Gm-Message-State: APjAAAV69LsfKJDjgCZ/OCuz2lMylE3tPGOTPWCvu9cHNSzM1tkF15XJ
-        4ldBp5qz7awn7JERMY/SpDZlsg==
-X-Google-Smtp-Source: APXvYqz/5sYO8j8IKMy2CtTBzfn9BeDThVlHrP/qTuKPoWIvo5MWoZnsC1e0J8BaOwggVY1/Kc8lHg==
-X-Received: by 2002:adf:e8ce:: with SMTP id k14mr19073835wrn.393.1573461801604;
-        Mon, 11 Nov 2019 00:43:21 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id 4sm16631352wmd.33.2019.11.11.00.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 00:43:21 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:43:13 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tuowen Zhao <ztuowen@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, acelan.kao@canonical.com,
-        mcgrof@kernel.org, davem@davemloft.net
-Subject: [GIT PULL] Immutable branch between MFD, Docs, Sparc and Lib Devres
- due for the v5.5 merge window
-Message-ID: <20191111084313.GL18902@dell>
-References: <20191016210629.1005086-1-ztuowen@gmail.com>
+        Mon, 11 Nov 2019 03:43:48 -0500
+Received: from mga06.intel.com ([134.134.136.31]:35315 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbfKKInr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 03:43:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 00:43:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
+   d="scan'208";a="405132573"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 11 Nov 2019 00:43:43 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iU5IV-0006mB-6r; Mon, 11 Nov 2019 10:43:43 +0200
+Date:   Mon, 11 Nov 2019 10:43:43 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        =?iso-8859-1?Q?Cl=E9ment?= Perrochaud 
+        <clement.perrochaud@effinnov.com>,
+        Charles Gorand <charles.gorand@effinnov.com>,
+        linux-nfc@lists.01.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sedat Dilek <sedat.dilek@credativ.de>
+Subject: Re: [PATCH] NFC: nxp-nci: Fix NULL pointer dereference after I2C
+ communication error
+Message-ID: <20191111084343.GM32742@smile.fi.intel.com>
+References: <20191110161915.11059-1-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191016210629.1005086-1-ztuowen@gmail.com>
+In-Reply-To: <20191110161915.11059-1-stephan@gerhold.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
+On Sun, Nov 10, 2019 at 05:19:15PM +0100, Stephan Gerhold wrote:
+> I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
+> result in a NULL pointer dereference at the moment:
+> 
+>     BUG: kernel NULL pointer dereference, address: 0000000000000000
+>     Oops: 0002 [#1] PREEMPT SMP NOPTI
+>     CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
+>     RIP: 0010:skb_queue_tail+0x25/0x50
+>     Call Trace:
+>      nci_recv_frame+0x36/0x90 [nci]
+>      nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
+>      ? preempt_count_add+0x68/0xa0
+>      ? irq_forced_thread_fn+0x80/0x80
+>      irq_thread_fn+0x20/0x60
+>      irq_thread+0xee/0x180
+>      ? wake_threads_waitq+0x30/0x30
+>      kthread+0xfb/0x130
+>      ? irq_thread_check_affinity+0xd0/0xd0
+>      ? kthread_park+0x90/0x90
+>      ret_from_fork+0x1f/0x40
+> 
+> Afterward the kernel must be rebooted to work properly again.
+> 
+> This happens because it attempts to call nci_recv_frame() with skb == NULL.
+> However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
+> NULL checks for skb, causing the NULL pointer dereference.
+> 
+> Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
+> Make sure to log it so it is obvious that a communication error occurred.
+> The error above then becomes:
+> 
+>     nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+>     nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
+>     nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+> 
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-doc-sparc-libdevres-v5.5
-
-for you to fetch changes up to 7b8c4d73d7fe68f371d11b38a353134e1ffe199f:
-
-  docs: driver-model: add devm_ioremap_uc (2019-11-11 08:40:27 +0000)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Docs, Sparc and Lib Devres due for the v5.5 merge window
-
-----------------------------------------------------------------
-Tuowen Zhao (4):
-      sparc64: implement ioremap_uc
-      lib: devres: add a helper function for ioremap_uc
-      mfd: intel-lpss: Use devm_ioremap_uc for MMIO
-      docs: driver-model: add devm_ioremap_uc
-
- Documentation/driver-api/driver-model/devres.rst |  1 +
- arch/sparc/include/asm/io_64.h                   |  1 +
- drivers/mfd/intel-lpss.c                         |  2 +-
- include/linux/io.h                               |  2 ++
- lib/devres.c                                     | 19 +++++++++++++++++++
- 5 files changed, 24 insertions(+), 1 deletion(-)
+> Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+> Note: Not sure why NFC is broken on this laptop (a Lenovo ThinkPad L490).
+> It runs into the I2C communication errors immediately when enabling NFC.
+> This patch fixes the NULL pointer dereference at least.
+> ---
+>  drivers/nfc/nxp-nci/i2c.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+> index 307bd2afbe05..4d1909aecd6c 100644
+> --- a/drivers/nfc/nxp-nci/i2c.c
+> +++ b/drivers/nfc/nxp-nci/i2c.c
+> @@ -220,8 +220,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
+>  
+>  	if (r == -EREMOTEIO) {
+>  		phy->hard_fault = r;
+> -		skb = NULL;
+> -	} else if (r < 0) {
+> +		if (info->mode == NXP_NCI_MODE_FW)
+> +			nxp_nci_fw_recv_frame(phy->ndev, NULL);
+> +	}
+> +	if (r < 0) {
+>  		nfc_err(&client->dev, "Read failed with error %d\n", r);
+>  		goto exit_irq_handled;
+>  	}
+> -- 
+> 2.23.0
+> 
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
