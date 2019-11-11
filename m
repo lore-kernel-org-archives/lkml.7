@@ -2,162 +2,138 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E114EC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F13C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1868206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5335C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfKKJtg (ORCPT
+        id S1726903AbfKKJvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:49:36 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23694 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726960AbfKKJtf (ORCPT
+        Mon, 11 Nov 2019 04:51:17 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:38048 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726768AbfKKJvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:49:35 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAB9kpxC013958
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 04:49:34 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w741ub496-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 04:49:33 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
-        Mon, 11 Nov 2019 09:49:32 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Nov 2019 09:49:28 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAB9nRvh35520728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 09:49:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 777474C059;
-        Mon, 11 Nov 2019 09:49:27 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 181CF4C044;
-        Mon, 11 Nov 2019 09:49:27 +0000 (GMT)
-Received: from bahia.lan (unknown [9.145.184.11])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Nov 2019 09:49:27 +0000 (GMT)
-Subject: [PATCH] KVM: PPC: Book3S HV: XIVE: Free previous EQ page when
- setting up a new one
-From:   Greg Kurz <groug@kaod.org>
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Lijun Pan <ljp@linux.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 11 Nov 2019 10:49:26 +0100
-User-Agent: StGit/unknown-version
+        Mon, 11 Nov 2019 04:51:16 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iU6Lj-0004sK-2G; Mon, 11 Nov 2019 10:51:07 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAB9p4Uv000587
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 11 Nov 2019 10:51:05 +0100
+Subject: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
+To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        shawn.lin@rock-chips.com
+Cc:     devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        linux-kernel@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Randy Li <ayaka@soulik.info>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
+ <20190301153348.29870-2-christoph.muellner@theobroma-systems.com>
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
+Date:   Mon, 11 Nov 2019 10:51:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190301153348.29870-2-christoph.muellner@theobroma-systems.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111109-4275-0000-0000-0000037CAF98
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111109-4276-0000-0000-00003890081E
-Message-Id: <157346576671.818016.10401178701091199969.stgit@bahia.lan>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911110097
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573465875;71ea6dc5;
+X-HE-SMSGID: 1iU6Lj-0004sK-2G
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EQ page is allocated by the guest and then passed to the hypervisor
-with the H_INT_SET_QUEUE_CONFIG hcall. A reference is taken on the page
-before handing it over to the HW. This reference is dropped either when
-the guest issues the H_INT_RESET hcall or when the KVM device is released.
-But, the guest can legitimately call H_INT_SET_QUEUE_CONFIG several times
-to reset the EQ (vCPU hot unplug) or set a new EQ (guest reboot). In both
-cases the EQ page reference is leaked. This is especially visible when
-the guest memory is backed with huge pages: start a VM up to the guest
-userspace, either reboot it or unplug a vCPU, quit QEMU. The leak is
-observed by comparing the value of HugePages_Free in /proc/meminfo before
-and after the VM is run.
+Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
 
-Note that the EQ reset path seems to be calling put_page() but this is
-done after xive_native_configure_queue() which clears the qpage field
-in the XIVE queue structure, ie. the put_page() block is a nop and the
-previous page pointer was just overwritten anyway. In the other case of
-configuring a new EQ page, nothing seems to be done to release the old
-one.
+One (mmc name 128G72, one screw hole) works fine in HS400 mode.
+Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
+mmc1: "running CQE recovery", even hangs with damaged fs,
+when running under heavy load, e.g. compiling kernel.
+Both run fine with HS200.
 
-Fix both cases by always calling put_page() on the existing EQ page in
-kvmppc_xive_native_set_queue_config(). This is a seemless change for the
-EQ reset case. However this causes xive_native_configure_queue() to be
-called twice for the new EQ page case: one time to reset the EQ and another
-time to configure the new page. This is needed because we cannot release
-the EQ page before calling xive_native_configure_queue() since it may still
-be used by the HW. We cannot modify xive_native_configure_queue() to drop
-the reference either because this function is also used by the XICS-on-XIVE
-device which requires free_pages() instead of put_page(). This isn't a big
-deal anyway since H_INT_SET_QUEUE_CONFIG isn't a hot path.
+Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
+[0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
 
-Reported-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org # v5.2
-Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
-Signed-off-by: Greg Kurz <groug@kaod.org>
+Therefore I propose to disable HS400 mode on roc-pc for now.
+
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 ---
- arch/powerpc/kvm/book3s_xive_native.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-index 34bd123fa024..8ab908d23dc2 100644
---- a/arch/powerpc/kvm/book3s_xive_native.c
-+++ b/arch/powerpc/kvm/book3s_xive_native.c
-@@ -570,10 +570,12 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
- 		 __func__, server, priority, kvm_eq.flags,
- 		 kvm_eq.qshift, kvm_eq.qaddr, kvm_eq.qtoggle, kvm_eq.qindex);
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+index 29a50a083c42..33df95e384b4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+@@ -660,8 +660,6 @@
  
--	/* reset queue and disable queueing */
--	if (!kvm_eq.qshift) {
--		q->guest_qaddr  = 0;
--		q->guest_qshift = 0;
-+	/*
-+	 * Reset queue and disable queueing. It will be re-enabled
-+	 * later on if the guest is configuring a new EQ page.
-+	 */
-+	if (q->guest_qshift) {
-+		page = virt_to_page(q->qpage);
- 
- 		rc = xive_native_configure_queue(xc->vp_id, q, priority,
- 						 NULL, 0, true);
-@@ -583,12 +585,13 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
- 			return rc;
- 		}
- 
--		if (q->qpage) {
--			put_page(virt_to_page(q->qpage));
--			q->qpage = NULL;
--		}
-+		put_page(page);
- 
--		return 0;
-+		if (!kvm_eq.qshift) {
-+			q->guest_qaddr  = 0;
-+			q->guest_qshift = 0;
-+			return 0;
-+		}
- 	}
- 
- 	/*
-
+ &sdhci {
+ 	bus-width = <8>;
+-	mmc-hs400-1_8v;
+-	mmc-hs400-enhanced-strobe;
+ 	non-removable;
+ 	status = "okay";
+ };
+-- 
+2.20.1
