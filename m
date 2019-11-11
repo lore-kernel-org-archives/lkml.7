@@ -2,127 +2,116 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A165EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF74C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E66F214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C3C214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEWMCqgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKKKJ2 (ORCPT
+        id S1726983AbfKKKJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:09:28 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:51191 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKKKJ1 (ORCPT
+        Mon, 11 Nov 2019 05:09:44 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37425 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfKKKJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:09:27 -0500
-Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MplsZ-1i6pZu2YgP-00qAkb; Mon, 11 Nov 2019 11:09:23 +0100
-Received: by mail-qt1-f174.google.com with SMTP id p20so15068843qtq.5;
-        Mon, 11 Nov 2019 02:09:22 -0800 (PST)
-X-Gm-Message-State: APjAAAWMTElxLIn+TusbrWobNiXOjtpxQMS46Ez741GNIi710E9PfCEJ
-        U/6/TCNLB077W7zb1GM5toTYM3dBYCJyDVtd06o=
-X-Google-Smtp-Source: APXvYqwUFI9CNnIwrAVKasmsTd09tLHKshCq1NYJLSrtULcDmOA+h22x7/m2tzlDDqS3Yhkmt+6zqdhU/D75oBqf0Ro=
-X-Received: by 2002:aed:3e41:: with SMTP id m1mr16150881qtf.142.1573466961656;
- Mon, 11 Nov 2019 02:09:21 -0800 (PST)
+        Mon, 11 Nov 2019 05:09:43 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t1so13943482wrv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 02:09:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=q1gcdAuprbatyWKkiOOKDI/wj2JLtRiEXlBcqAh4zX4=;
+        b=rEWMCqggEUDE7cVXtoWuQexxvnbKSDQV6c6U/fkxvFGJm7L4aF1SeWXpAjgAZ7x+Yk
+         WfKOWLDkFrYWNFG0RPV/2Osii2ceVDIJ526aWPkKLacohkDqw/yQEtPLwVWB4PmoZR+n
+         mkVXScsTN6ntyA0myz0WBHaA9xbC/1qVDON0Psf+bj6BcBd6FzL1vLu7qH/fs2ubu56G
+         9sj5EMGDTlfyOUH/z0yBZfVsBS3cLqRIquMy3Ej/bIXSQ6sa26zmWMw58TxwXIBdGt+R
+         40ibglcoJK/qarkFYtWh69f3ScLmDdycMHyCDKZF6pCw9vAhBJ1NSPUQFh6X7CoQt3Oy
+         4XvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=q1gcdAuprbatyWKkiOOKDI/wj2JLtRiEXlBcqAh4zX4=;
+        b=qKPpprrl0JSqfldUmK98nbPEgdnZLt8lj3QNNEnraXctYtr/q13IYygCD3+Hu50h0u
+         IbQIiJJIYYC7T7ePfoAFpnBBUPv47gNQqYbAun5Fv/S2GneUQovWmJ8cWKgUkkoZu30k
+         0sKfQcCd/ia7BA1DoNUoDcoFBSiAB0uBR3lVSH13eMI3O9kURhs5IakkjlHGdwDipJ9r
+         17iQTbX3ILQSu+0wGSGlzkHId6uoCu7y9MI3tcIUQuojyene85VBSb5LVUnf9WQKgUtc
+         7C06iYTLfAU7yjjxmyPhpInX/20TY6Xl/Jws79nHWkOCJi7Jo+qFCqnoi9WooVtO/JQW
+         wvgw==
+X-Gm-Message-State: APjAAAVYQqUicpzOdoeX7qbEN98U2BJiHR2UX7eZmJcqvhN3I9DrZk0j
+        W0RCXhBt/BeKIBSLDEKJ0WUtPw==
+X-Google-Smtp-Source: APXvYqzED02dA+VSYRlFFbMfPRcHWDXKauK0WK6Gg2MePenGPqevIQ+u8VGs6q8usm8QJOEUhROmDg==
+X-Received: by 2002:a5d:4584:: with SMTP id p4mr20886825wrq.345.1573466981232;
+        Mon, 11 Nov 2019 02:09:41 -0800 (PST)
+Received: from dell ([95.147.198.88])
+        by smtp.gmail.com with ESMTPSA id 11sm19310682wmb.34.2019.11.11.02.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 02:09:40 -0800 (PST)
+Date:   Mon, 11 Nov 2019 10:09:33 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/5] devicetree: mfd: max14577: Add reference to
+ max14040_battery.txt descriptions
+Message-ID: <20191111100933.GE3218@dell>
+References: <20191105095905.GA31721@pi3>
+ <20191107031710.5672-1-matheus@castello.eng.br>
+ <20191107031710.5672-4-matheus@castello.eng.br>
 MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-11-hch@lst.de>
-In-Reply-To: <20191029064834.23438-11-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:09:05 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2o4R+E2hTrHrmNy7K1ki3_98aWE5a-fjkQ_NWW=xd_gQ@mail.gmail.com>
-Message-ID: <CAK8P3a2o4R+E2hTrHrmNy7K1ki3_98aWE5a-fjkQ_NWW=xd_gQ@mail.gmail.com>
-Subject: Re: [PATCH 10/21] asm-generic: ioremap_uc should behave the same with
- and without MMU
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:WLrPbPJDqsNolBBa0EtV84o8X3QWGuIcje+jyjzvu8qxYvKalRW
- vVo3TWozXagE9Gvkhv9RKhJCAXh4rrcVLnVGcy2T4hm5OBp58YkOEUFIh/Am/mvfM7WC+1g
- 94Ejh/WA6YNMtjZhLH3lXLLLVeLx0FrPhlZupRdQqVfwuImvK9gIMd+COj25ZFAUArh4v9w
- Wv1F7eDVgjndwTfa+DiwQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3DPxP3/AzH8=:DPOxQ1enriSFjxUu68vquX
- eGUcgshsAuMmTHkBY5dxmuUJPWWz6fubUKJoFZWeGiMRwxNYkQUHc74ubpDvEsEBOlQQ5kT8u
- f/aCJbLJc1CN7aYnn/FNDsbkGVuMUEpJE2tQVGEUyLPelCunzAJzsnukVx350hKhiVoG36wBL
- F3M/LNcc4vQE2KyZ7k7dfwsNgMUyYkUuiumKsP7EyaFU21YGtAQQjDL2ESuolSjkyTiGN5+jH
- G25CY3eWC9gJz/qY2zMyJ1QW1Mh46wHFF5wt+/j3PQHeltjdtINqad1SZ7OHQ/sEJkb9fbOBt
- 9yyHmhrgWHj/dN55PM0GPvDdfe/5WlR3RDW46+W5XuZrPXJyk7FCNGxmtYlpvaA7D+PD1OPVR
- Ynfbi7O0CwVvlXzkvcjkRSEFFt4NYYcQy38A8NuxlRKVD/KL3uiCpxULhcPefsOtyWv4ecOSd
- CapTeIfnKNX7x8k3nxIrClwuCl01JQ1dHjqOwtbJSkf/JdQq1Mg+QRs1FmCVzafhM1mOL43Ab
- joYrEOzkOqPXLk9jXVvPuhAaoLoA3mP+DzFLVi1LF2iteAkmCqwdYNxlozO5bWCKFDECBEKvS
- ECBSQGX4K++EgBVd3QVoBipRwQMCLSpwD8tGk/dAPNG1cp6T00k88oSatqHkbN20tZrzvPnwz
- SyXdghQoLAHldOS9pIwizYXHqPmexdevUFWkAvVI1jPN1DybWWAQxUy6kVswrrVaFLUYpqWEp
- xr7k3KMT4BWFHMXUTuqI6PqyLm2zQou5Quti0hyT/vEOzOmrKm9cTozfJuvWjcGZ7dT+Gohp9
- hTPghZ5YdHuzcD0z2FaoD+G3QwPOi6fjkvhrW/e7iOJ/phyVUx2hqY3mfT1NmmBL7muZMzFXl
- nZROTB/e9eIAWJvNN9og==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191107031710.5672-4-matheus@castello.eng.br>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:49 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Whatever reason there is for the existence of ioremap_uc, and the fact
-> that it returns NULL by default on architectures with an MMU applies
-> equally to nommu architectures, so don't provide different defaults.
+On Thu, 07 Nov 2019, Matheus Castello wrote:
 
-Makes sense.
+> max77836 MFD has a fuel gauge that has a low SOC alert feature that is
+> described in Documentation/devicetree/bindings/power/supply/max17040_battery.txt.
+> Adding the reference to de documentation here.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  Documentation/devicetree/bindings/mfd/max14577.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+> index fc6f0f4e8beb..04d790b1513c 100644
+> --- a/Documentation/devicetree/bindings/mfd/max14577.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+> @@ -5,6 +5,8 @@ Battery Charger and SFOUT LDO output for powering USB devices. It is
+>  interfaced to host controller using I2C.
+> 
+>  MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
+> +For the description of Fuel Gauge low SOC alert interrupt see:
+> +Documentation/devicetree/bindings/power/supply/max17040_battery.txt
 
-> In practice the difference is meaningless as the only portable driver
-> that uses ioremap_uc is atyfb which probably doesn't show up on nommu
-> devices.
+I would prefer the use of relative paths in documentation.
 
+Once fixed, please apply my:
 
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> +/*
-> + * ioremap_uc is special in that we do require an explicit architecture
-> + * implementation.  In general you do now want to use this function in a
-> + * driver and use plain ioremap, which is uncached by default.  Similarly
-> + * architectures should not implement it unless they have a very good
-> + * reason.
-> + */
-> +#ifndef ioremap_uc
-> +#define ioremap_uc ioremap_uc
-> +static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
-> +{
-> +       return NULL;
-> +}
-> +#endif
-
-Maybe we could move the definition into the atyfb driver itself?
-
-As I understand it, the difference between ioremap()/ioremap_nocache()
-and ioremap_uc() only exists on pre-PAT x86-32 systems (i.e. 486, P5,
-Ppro, PII, K6, VIA C3), while on more modern systems (all non-x86,
-PentiumIII, Athlon, VIA C7)  those three are meant to be synonyms
-anyway.
-
-      Arnd
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
