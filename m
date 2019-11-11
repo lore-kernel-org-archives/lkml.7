@@ -2,165 +2,137 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41DFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1D4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86F72184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0984B214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573490833;
+	bh=kSP+F/NVvB3fNUcJQ5Oagfi0flczXLZxFEKPPzqYf60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lssw5g/Fc4SZXvqYK9xQKfezbGMmEDsFXY5aa4NR5Yb8y+G5/jai1/VcnpuCXiJol
+	 JBPzkQlCvI4vTwojAkVP/bl1CMnGgf2vkfGgX/CP2uWlg0Gmod8IbXD2pc6bIYcq1g
+	 3N3McRtqZO3UlU2Yb8HtQc8rE9dx/VAkNnEql+t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKKQlX (ORCPT
+        id S1726943AbfKKQrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:41:23 -0500
-Received: from mga11.intel.com ([192.55.52.93]:28029 "EHLO mga11.intel.com"
+        Mon, 11 Nov 2019 11:47:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfKKQlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:41:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 08:41:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
-   d="scan'208";a="193986462"
-Received: from magalleg-mobl3.amr.corp.intel.com (HELO [10.251.146.103]) ([10.251.146.103])
-  by orsmga007.jf.intel.com with ESMTP; 11 Nov 2019 08:41:19 -0800
-Subject: Re: [alsa-devel] [PATCH 1/4] soundwire: sdw_slave: add new fields to
- track probe status
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20191023210657.32440-1-pierre-louis.bossart@linux.intel.com>
- <20191023210657.32440-2-pierre-louis.bossart@linux.intel.com>
- <20191103045604.GE2695@vkoul-mobl.Dlink>
- <f53b28bb-1ec7-a400-54ed-51fd55819ecd@linux.intel.com>
- <20191108042940.GW952516@vkoul-mobl>
- <e3e10c25-84dc-f4e7-e94b-d18493450021@linux.intel.com>
- <20191109111211.GB952516@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <5a2a40b3-5a3c-f80a-b2a4-33d821d5b0e6@linux.intel.com>
-Date:   Mon, 11 Nov 2019 10:34:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1726902AbfKKQrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:47:11 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52420206A3;
+        Mon, 11 Nov 2019 16:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573490830;
+        bh=kSP+F/NVvB3fNUcJQ5Oagfi0flczXLZxFEKPPzqYf60=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CxETDiwWhDE/KPIV+o7n5KxlVfcoNIUsLrpbBGnZik9L63DTwAHISigMlly9j4XPC
+         eVVc2+Ml5DurIQS5mv0o180W45s0hLA+AuvMzAfj4cXDa/aahXstZ3BCDsN9FRqxBI
+         ke76eNCh6lllByvT3w9qhgc1ClShZNheyXa6FgMo=
+Date:   Mon, 11 Nov 2019 16:47:03 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        alexei.starovoitov@gmail.com, rabin@rab.in,
+        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
+Subject: Re: [PATCH -v5 13/17] arm/ftrace: Use __patch_text_real()
+Message-ID: <20191111164703.GA11521@willie-the-truck>
+References: <20191111131252.921588318@infradead.org>
+ <20191111132458.220458362@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20191109111211.GB952516@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111132458.220458362@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/9/19 5:12 AM, Vinod Koul wrote:
-> On 08-11-19, 08:55, Pierre-Louis Bossart wrote:
->>
->>
->> On 11/7/19 10:29 PM, Vinod Koul wrote:
->>> On 04-11-19, 08:32, Pierre-Louis Bossart wrote:
->>>>
->>>>
->>>> On 11/2/19 11:56 PM, Vinod Koul wrote:
->>>>> On 23-10-19, 16:06, Pierre-Louis Bossart wrote:
->>>>>> Changes to the sdw_slave structure needed to solve race conditions on
->>>>>> driver probe.
->>>>>
->>>>> Can you please explain the race you have observed, it would be a very
->>>>> useful to document it as well
->>>>
->>>> the races are explained in the [PATCH 00/18] soundwire: code hardening and
->>>> suspend-resume support series.
->>>
->>> It would make sense to explain it here as well to give details to
->>> reviewers, there is nothing wrong with too much detail!
->>>
->>>>>>
->>>>>> The functionality is added in the next patch.
->>>>>
->>>>> which one..?
->>>>
->>>> [PATCH 00/18] soundwire: code hardening and suspend-resume support
->>>
->>> Yeah great! let me play detective with 18 patch series. I asked for a
->>> patch and got a series!
->>>
->>> Again, please help the maintainer to help you. We would love to see this
->>> merged as well, but please step up and give more details in cover
->>> letter and changelogs. I shouldn't need to do guesswork and scan through the
->>> inbox to find the context!
->>
->> We are clearly not going anywhere.
+On Mon, Nov 11, 2019 at 02:13:05PM +0100, Peter Zijlstra wrote:
+> Instead of flipping text protection, use the patch_text infrastructure
+> that uses a fixmap alias where required.
 > 
-> Correct as you don't seem to provide clear answers, I am asking again
-> which patch implements the new fields added here, how difficult is it to
-> provide the *specific* patch which implements this so that I can compare
-> the implementation and see why this is needed and apply if fine!
+> This removes the last user of set_all_modules_text_*().
 > 
-> But no you will not provide a clear answer and start ranting!
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: ard.biesheuvel@linaro.org
+> Cc: rabin@rab.in
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: james.morse@arm.com
+> ---
+>  arch/arm/kernel/ftrace.c |   16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
->> I partitioned the patches to make your maintainer life easier and help the
->> integration of SoundWire across two trees. All I get is negative feedback,
->> grand-standing, and zero comments on actual changes.
-> 
-> No you get asked specific question which you do not like and start off
-> on a tangent!
-> 
->> For the record, I am mindful of reviewer/maintainer workload, and I did
->> contact you in September to check your availability and provided a pointer
->> to initial code changes. I did send a first version a week prior to your
->> travel/vacation, I resend another version when you were back and waited yet
->> another two weeks to resend a second version. I also contacted Takashi, Mark
->> and you to suggest this code partition, and did not get any pushback. It's
->> not like I am pushing stuff down your throat, I have been patient and
->> considerate.
->>
->> Please start with the patches "soundwire: code hardening and suspend-resume
->> support" and come back to this interface description when you have reviewed
->> these changes. It's not detective work, it's working around the consequences
->> of having separate trees for Audio and SoundWire.
-> 
-> Again, which patch in the series does implement these new members!
+> --- a/arch/arm/kernel/ftrace.c
+> +++ b/arch/arm/kernel/ftrace.c
+> @@ -22,6 +22,7 @@
+>  #include <asm/ftrace.h>
+>  #include <asm/insn.h>
+>  #include <asm/set_memory.h>
+> +#include <asm/patch.h>
+>  
+>  #ifdef CONFIG_THUMB2_KERNEL
+>  #define	NOP		0xf85deb04	/* pop.w {lr} */
+> @@ -31,13 +32,15 @@
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  
+> +static int patch_text_remap = 0;
+> +
+>  static int __ftrace_modify_code(void *data)
+>  {
+>  	int *command = data;
+>  
+> -	set_kernel_text_rw();
+> +	patch_text_remap++;
+>  	ftrace_modify_all_code(*command);
+> -	set_kernel_text_ro();
+> +	patch_text_remap--;
+>  
+>  	return 0;
+>  }
+> @@ -59,13 +62,13 @@ static unsigned long adjust_address(stru
+>  
+>  int ftrace_arch_code_modify_prepare(void)
+>  {
+> -	set_all_modules_text_rw();
+> +	patch_text_remap++;
+>  	return 0;
+>  }
+>  
+>  int ftrace_arch_code_modify_post_process(void)
+>  {
+> -	set_all_modules_text_ro();
+> +	patch_text_remap--;
+>  	/* Make sure any TLB misses during machine stop are cleared. */
+>  	flush_tlb_all();
+>  	return 0;
+> @@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
+>  			return -EINVAL;
+>  	}
+>  
+> -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
+> -		return -EPERM;
+> -
+> -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
+> +	__patch_text_real((void *)pc, new, patch_text_remap);
 
-It's really straightforward...here is the match between headers and 
-functionality:
+I'd still prefer to pass 'true' unconditionally here, since I don't think
+this is a hot path.
 
-[PATCH v2 1/5] soundwire: sdw_slave: add new fields to track probe status
-[PATCH v2 02/19] soundwire: fix race between driver probe and 
-update_status callback
-
-[PATCH v2 2/5] soundwire: add enumeration_complete structure
-[PATCH v2 12/19] soundwire: add enumeration_complete signaling
-
-[PATCH v2 3/5] soundwire: add initialization_complete definition
-[PATCH v2 13/19] soundwire: bus: add initialization_complete signaling
-
-[PATCH v2 4/5] soundwire: intel: update interfaces between ASoC and 
-SoundWire
-[PATCH v2 5/5] soundwire: intel: update stream callbacks for 
-hwparams/free stream operations
-[PATCH v2 13/14] soundwire: intel: free all resources on hw_free()
-
-I suggested an approach that you didn't comment on, and now I am not 
-sure what to make of the heated wording and exclamation marks. You did 
-not answer to Liam's question on links between ASoC/SoundWire - despite 
-the fact that drivers/soundwire cannot be an isolated subsystem, both 
-the Intel and Qualcomm solutions have a big fat 'depends on SND_SOC'.
-
-At this point I am formally asking for your view and guidance on how we 
-are going to do the SoundWire/ASoC integration. It's now your time to 
-make suggestions on what the flow should be between you and 
-Mark/Takashi. If you don't want this initial change to the header files, 
-then what is your proposal?
-
-
+Will
