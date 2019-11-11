@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03446C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8898EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EE3214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52EAB20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498109;
-	bh=k87w9jQo4jl4H1STReJGVJk1oCFwtUoA02ot0Lfe2jQ=;
+	s=default; t=1573498116;
+	bh=xFBlIuhONq+naCWyfL6jszbnWwxREMT+IEYwbtlTFTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7wedtzExg1lPI3OPD07hVN/lheKr0B8l8QAQ7bOUN32UhOOhBwkmXVWQ0RJmJBgr
-	 HcJs7HiQy9dzO1KNkKSC494Py7pdwr0rZj3lCnst9/+YdaiDGl1DRRun4OI12Qrt4e
-	 rXFuitH/qXsXBNWHu2YOLuaC2aF6pfMu8+Pdhtlw=
+	b=yBptnX6m1iewBGqcRBRihg9YFjGNoa4BoBQ6wPXHdbenkgOy7g5hYx5//ZVfybfeh
+	 qohmgyLX5xfCLNW3Hh0BaNSXpnjRcFpBGN7RvI2TsVJv0Wop/k8eizXUVHV0jpT7+T
+	 s7p47ZrUJDZxVnL881k0DA0hb8WopoJ2MiqDVv98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730246AbfKKSs2 (ORCPT
+        id S1729718AbfKKSse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:48:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41492 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:48:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730247AbfKKSsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:48:24 -0500
+        id S1729865AbfKKSsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:48:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAA2920674;
-        Mon, 11 Nov 2019 18:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB0E20674;
+        Mon, 11 Nov 2019 18:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498104;
-        bh=k87w9jQo4jl4H1STReJGVJk1oCFwtUoA02ot0Lfe2jQ=;
+        s=default; t=1573498110;
+        bh=xFBlIuhONq+naCWyfL6jszbnWwxREMT+IEYwbtlTFTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vjgheSmcWEVlSRYzpN5vOacAXtcKW6IbgeUCz6sRU2IirKp43SDhPx6ez/ZTqkc3S
-         N8/OHPhhuQhoLf8JVDxwTVSfPYBSKCIY8RtSzcsN7JAq6unWWJGYpoL56oJrSIb4DF
-         Y6DVd/P+oGsjl33E7SgbnVcDzgXXHq35rzoZZrEA=
+        b=THdsZqC93Agg3FmpAO9lwe3GkUHuVi/dBVRoXK/T5VfpYauLtn4s0jKyayMbAzHU5
+         eB1xqob5sPEp9xKChccAdVWfQ5F0XnkdVfTOhysmZyVzMz1h8GPNTezdC3OBoxVkDf
+         VlENLJ098pgC9KaV7n/hae5NWMXMDamdZypLTfBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 004/193] net: ethernet: octeon_mgmt: Account for second possible VLAN header
-Date:   Mon, 11 Nov 2019 19:26:26 +0100
-Message-Id: <20191111181500.174903055@linuxfoundation.org>
+Subject: [PATCH 5.3 006/193] net: qualcomm: rmnet: Fix potential UAF when unregistering
+Date:   Mon, 11 Nov 2019 19:26:28 +0100
+Message-Id: <20191111181500.307705719@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,31 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Sean Tranchetti <stranche@codeaurora.org>
 
-[ Upstream commit e4dd5608033efe7b6030cde359bfdbaeb73bc22d ]
+[ Upstream commit e7a86c687e64ab24f88330ad24ecc9442ce40c5a ]
 
-Octeon's input ring-buffer entry has 14 bits-wide size field, so to account
-for second possible VLAN header max_mtu must be further reduced.
+During the exit/unregistration process of the RmNet driver, the function
+rmnet_unregister_real_device() is called to handle freeing the driver's
+internal state and removing the RX handler on the underlying physical
+device. However, the order of operations this function performs is wrong
+and can lead to a use after free of the rmnet_port structure.
 
-Fixes: 109cc16526c6d ("ethernet/cavium: use core min/max MTU checking")
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Before calling netdev_rx_handler_unregister(), this port structure is
+freed with kfree(). If packets are received on any RmNet devices before
+synchronize_net() completes, they will attempt to use this already-freed
+port structure when processing the packet. As such, before cleaning up any
+other internal state, the RX handler must be unregistered in order to
+guarantee that no further packets will arrive on the device.
+
+Fixes: ceed73a2cf4a ("drivers: net: ethernet: qualcomm: rmnet: Initial implementation")
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/octeon/octeon_mgmt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-+++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-@@ -1499,7 +1499,7 @@ static int octeon_mgmt_probe(struct plat
- 	netdev->ethtool_ops = &octeon_mgmt_ethtool_ops;
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
+@@ -57,10 +57,10 @@ static int rmnet_unregister_real_device(
+ 	if (port->nr_rmnet_devs)
+ 		return -EINVAL;
  
- 	netdev->min_mtu = 64 - OCTEON_MGMT_RX_HEADROOM;
--	netdev->max_mtu = 16383 - OCTEON_MGMT_RX_HEADROOM;
-+	netdev->max_mtu = 16383 - OCTEON_MGMT_RX_HEADROOM - VLAN_HLEN;
+-	kfree(port);
+-
+ 	netdev_rx_handler_unregister(real_dev);
  
- 	mac = of_get_mac_address(pdev->dev.of_node);
++	kfree(port);
++
+ 	/* release reference on real_dev */
+ 	dev_put(real_dev);
  
 
 
