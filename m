@@ -2,102 +2,95 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0F3C17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D994C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241F320674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1596A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfKKJUL (ORCPT
+        id S1726959AbfKKJUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:20:11 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60374 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfKKJUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:20:10 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 0656328EB4A
-Subject: Re: [PATCH v4 07/17] Revert "Input: cros_ec_keyb - add back missing
- mask for event_type"
-To:     Gwendal Grignou <gwendal@chromium.org>, briannorris@chromium.org,
-        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, Dmitry Torokhov <dtor@google.com>
-References: <20191105222652.70226-1-gwendal@chromium.org>
- <20191105222652.70226-8-gwendal@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <30edd741-310a-9c94-78ed-74dec084f382@collabora.com>
-Date:   Mon, 11 Nov 2019 10:20:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191105222652.70226-8-gwendal@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Nov 2019 04:20:17 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:42238 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfKKJUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:20:16 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A3572200031;
+        Mon, 11 Nov 2019 10:20:14 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 93BBD2005D1;
+        Mon, 11 Nov 2019 10:20:08 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D7F6F402C7;
+        Mon, 11 Nov 2019 17:20:00 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH V3 1/2] ASoC: dt-bindings: fsl_asrc: add compatible string for imx8qm
+Date:   Mon, 11 Nov 2019 17:18:22 +0800
+Message-Id: <b1c922b3496020f611ecd6ea27d262369646d830.1573462647.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add compatible string "fsl,imx8qm-asrc" for imx8qm platform.
 
-cc'in Dmitry and linux-input list which is missing
+There are two asrc modules in imx8qm, the clock mapping is
+different for each other, so add new property "fsl,asrc-clk-map"
+to distinguish them.
 
-On 5/11/19 23:26, Gwendal Grignou wrote:
-> This reverts commit 62c3801619e16b68a37ea899b76572145dfe41c9.
-> 
-> This patch is not needed anymore since we clear EC_MKBP_HAS_MORE_EVENTS
-> flag before calling the notifiers in patch
-> "9d9518f5b52a (platform: chrome: cros_ec: handle MKBP more events flag)"
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
-> No changes in v4, v3.
-> New to v2.
-> 
->  drivers/input/keyboard/cros_ec_keyb.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
-> index 8d4d9786cc74..a29e81fdf186 100644
-> --- a/drivers/input/keyboard/cros_ec_keyb.c
-> +++ b/drivers/input/keyboard/cros_ec_keyb.c
-> @@ -226,8 +226,6 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
->  {
->  	struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
->  						  notifier);
-> -	uint8_t mkbp_event_type = ckdev->ec->event_data.event_type &
-> -				  EC_MKBP_EVENT_TYPE_MASK;
->  	u32 val;
->  	unsigned int ev_type;
->  
-> @@ -239,7 +237,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
->  	if (queued_during_suspend && !device_may_wakeup(ckdev->dev))
->  		return NOTIFY_OK;
->  
-> -	switch (mkbp_event_type) {
-> +	switch (ckdev->ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK) {
->  	case EC_MKBP_EVENT_KEY_MATRIX:
->  		pm_wakeup_event(ckdev->dev, 0);
->  
-> @@ -266,7 +264,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
->  	case EC_MKBP_EVENT_SWITCH:
->  		pm_wakeup_event(ckdev->dev, 0);
->  
-> -		if (mkbp_event_type == EC_MKBP_EVENT_BUTTON) {
-> +		if (ckdev->ec->event_data.event_type == EC_MKBP_EVENT_BUTTON) {
->  			val = get_unaligned_le32(
->  					&ckdev->ec->event_data.data.buttons);
->  			ev_type = EV_KEY;
-> 
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+changes in v2
+-none
+
+changes in v3
+-use only one compatible string "fsl,imx8qm-asrc",
+-add new property "fsl,asrc-clk-map".
+
+ Documentation/devicetree/bindings/sound/fsl,asrc.txt | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+index 1d4d9f938689..02edab7cf3e0 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+@@ -8,7 +8,8 @@ three substreams within totally 10 channels.
+ 
+ Required properties:
+ 
+-  - compatible		: Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
++  - compatible		: Contains "fsl,imx35-asrc", "fsl,imx53-asrc",
++			  "fsl,imx8qm-asrc".
+ 
+   - reg			: Offset and length of the register set for the device.
+ 
+@@ -35,6 +36,13 @@ Required properties:
+ 
+    - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
+ 
++   - fsl,asrc-clk-map   : Defines clock map used in driver. which is required
++			  by imx8qm/imx8qxp platform
++			  <0> - select the map for asrc0 in imx8qm
++			  <1> - select the map for asrc1 in imx8qm
++			  <2> - select the map for asrc0 in imx8qxp
++			  <3> - select the map for asrc1 in imx8qxp
++
+ Optional properties:
+ 
+    - big-endian		: If this property is absent, the little endian mode
+-- 
+2.21.0
+
