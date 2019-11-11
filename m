@@ -2,154 +2,126 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D76C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF2EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF23420818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573495705;
-	bh=MbEqUAIaN0KyIlMJYMO+dgKL3ZN2z8aikzRbWFd2yso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kcFj6Oc3nEi+bfIi/IOwQb4twIfrVuG2xCN6IFUHIWcOY9xUp24yj91eJuLAkzVog
-	 TAcp/WGy7B/Eo9qg2mogX0JQxORPkp0CIMuE0jGbl+W3PovKOF9gf0WmveA2TECtsG
-	 5TroICiBDdlsb28ziDcxvo8XjxLE8UEsCCu5IA3E=
+	by mail.kernel.org (Postfix) with ESMTP id D8BBD206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfKKSIY (ORCPT
+        id S1726965AbfKKSJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:08:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfKKSIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:08:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C190D206C3;
-        Mon, 11 Nov 2019 18:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573495703;
-        bh=MbEqUAIaN0KyIlMJYMO+dgKL3ZN2z8aikzRbWFd2yso=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X32PaJw/RZvBCpWWhSxjXPnIypK+9PrM7XCiKJ+CL5oD9n7Y6JqesfvFbcwZm76M2
-         94rBTa0T3xioRqGAAdxu7ozUvg1Fbd077tytI7peYTzkh0MTr5FOuEvQzs4eBUITh1
-         mo9A29Y7J+lWSCnIDoWP0rZfSR3mZdz+2fkCGcEw=
-Date:   Mon, 11 Nov 2019 19:08:20 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Lamprecht <t.lamprecht@proxmox.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Doug Reiland <doug.reiland@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
- when loading PDPTRS
-Message-ID: <20191111180820.GB1088065@kroah.com>
-References: <20191003154447.010950442@linuxfoundation.org>
- <20191003154525.870373223@linuxfoundation.org>
- <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
- <20191111173757.GB11805@linux.intel.com>
- <20191111174859.GB1083018@kroah.com>
- <20191111175719.GD11805@linux.intel.com>
+        Mon, 11 Nov 2019 13:09:06 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40280 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKSJF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:09:05 -0500
+Received: by mail-ot1-f67.google.com with SMTP id m15so12001148otq.7;
+        Mon, 11 Nov 2019 10:09:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pB6c4pFOe94ggxtiHB2kKLTOBOYOEpvnXnv9wnKmZAU=;
+        b=luYxNq6bcrrIs2W4O7SePDvZw1OC5S0MQ7G6zJ7sw5xfflJdnihMEzrsTOQqV/S32q
+         a0QXYP7RqbnI6I+OmlIZlrcadOAWHXz4RoYRe/taKivpl5SF2k6ovB+B1/5f/JMP4VTk
+         MSI8Ci0xTrmkqAixhwXODH/oB9TFmsCw57Ku50KLb1zp8qsmS0kRj4cTMJPOAkp0Vjoq
+         nQ1Bd0yXzm4t5B1AErOJwFXz+zNsxjrJ4t4AAJ1e8s1feMDIusXg/p29e8i8Sgj8gqli
+         wQiv3vx4iFOP5vMVqoWA6IpOF+UXvlvvnHv75qvjrowOm/nOul9i4OWVBGIKzKV6takV
+         IJsQ==
+X-Gm-Message-State: APjAAAUvX2rzovSYfe6TAWedBo6muyJ2GzckAFLigVv/ZrqOxFka0ndO
+        fDc69Tbk9tjbOUwTKAbZJfxP/QF+U+nCAReRqZw=
+X-Google-Smtp-Source: APXvYqwz3yURFWyrc4txNYG5Aijjty7ogMGADNC5Z1wYd4gVa5brKlAgJqkxDayccnlPhvVhacX5bel06VJjIpOaGlc=
+X-Received: by 2002:a05:6830:2363:: with SMTP id r3mr22934879oth.39.1573495742542;
+ Mon, 11 Nov 2019 10:09:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111175719.GD11805@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-12-keescook@chromium.org>
+ <CAMuHMdXfPyti1wFBb0hhf3CeDSQ=zVv7cV-taeYCmDswMQkXPQ@mail.gmail.com> <201911110922.17A2112B0@keescook>
+In-Reply-To: <201911110922.17A2112B0@keescook>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Nov 2019 19:08:51 +0100
+Message-ID: <CAMuHMdUJ8QPvqf51nVmOg1Zm20SNT7pXR72z=qmco=ecwawZ7A@mail.gmail.com>
+Subject: Re: [PATCH v2 11/29] vmlinux.lds.h: Replace RODATA with RO_DATA
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:57:19AM -0800, Sean Christopherson wrote:
-> On Mon, Nov 11, 2019 at 06:48:59PM +0100, Greg Kroah-Hartman wrote:
-> > On Mon, Nov 11, 2019 at 09:37:57AM -0800, Sean Christopherson wrote:
-> > > On Mon, Nov 11, 2019 at 10:32:05AM +0100, Thomas Lamprecht wrote:
-> > > > On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
-> > > > > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > > > 
-> > > > > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
-> > > > > 
-> > > > > Manually generate the PDPTR reserved bit mask when explicitly loading
-> > > > > PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
-> > > > It seems that a backport of this to stable and distro kernels tickled out
-> > > > some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
-> > > > Intel CPUs[1].
-> > > 
-> > > It manifests specifically when running with EPT disabled (no surprise
-> > > there).  Actually, it probably would reproduce simply with unrestricted
-> > > guest disabled, but that's beside the point.
-> > > 
-> > > The issue is a flawed PAE-paging check in kvm_set_cr3(), which causes KVM
-> > > to incorrectly load PDPTRs in 64-bit mode and inject a #GP.  It's a sneaky
-> > > little bugger because the "if (is_long_mode() ..." makes it appear to be
-> > > correct at first glance.
-> > > 
-> > > 	if (is_long_mode(vcpu) &&
-> > > 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
-> > > 		return 1;
-> > > 	else if (is_pae(vcpu) && is_paging(vcpu) &&  <--- needs !is_long_mode()
-> > > 		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-> > > 		return 1;
-> > > 
-> > > With unrestricted guest, KVM doesn't intercept writes to CR3 and so doesn't
-> > > trigger the buggy code.  This doesn't fail upstream because the offending
-> > > code was refactored to encapsulate the PAE checks in a single helper,
-> > > precisely to avoid this type of headache.
-> > > 
-> > >   commit bf03d4f9334728bf7c8ffc7de787df48abd6340e
-> > >   Author: Paolo Bonzini <pbonzini@redhat.com>
-> > >   Date:   Thu Jun 6 18:52:44 2019 +0200
-> > > 
-> > >     KVM: x86: introduce is_pae_paging
-> > > 
-> > >     Checking for 32-bit PAE is quite common around code that fiddles with
-> > >     the PDPTRs.  Add a function to compress all checks into a single
-> > >     invocation.
-> > > 
-> > > 
-> > > Commit bf03d4f93347 ("KVM: x86: introduce is_pae_paging") doesn't apply
-> > > cleanly to 4.19 or earlier because of the VMX file movement in 4.20.  But,
-> > > the revelant changes in x86.c do apply cleanly, and I've quadruple checked
-> > > that the PAE checks in vmx.c are correct, i.e. applying the patch and
-> > > ignoring the nested.c/vmx.c conflicts would be a viable lazy option.
-> > > 
-> > > > Basically, booting this kernel as host, then running an KVM guest distro
-> > > > or kernel fails it that guest kernel early in the boot phase without any
-> > > > error or other log to serial console, earlyprintk.
-> > > 
-> > > ...
-> > > 
-> > > > 
-> > > > [0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
-> > > > [1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
-> > > >      westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
-> > > >      has VMX support (i.e. is 64bit based)
-> > > 
-> > > Note, not Westmere, which has EPT and unrestricted guest.  Xeon E5420 is
-> > > Harpertown, a.k.a. Penryn, the shrink of Conroe.  
-> > 
-> > 
-> > Thanks for figuring this out, can you send us a patch that we can apply
-> > to fix this issue in the stable tree?
-> 
-> Can do.  A custom backport will be need for 4.20 and earlier, not 4.19 and
-> earlier.  I misremembered when we did the VMX refactoring.
-> 
-> For 5.0, 5.1 and 5.2, commit bf03d4f93347 can be applied directly.
+Hi Kees,
 
-5.0, 5.1, and 5.2 are all long end-of-life, they are not getting any
-updates and no one should be using them, so nothing to worry about
-there.
+On Mon, Nov 11, 2019 at 6:23 PM Kees Cook <keescook@chromium.org> wrote:
+> On Mon, Nov 11, 2019 at 05:58:06PM +0100, Geert Uytterhoeven wrote:
+> > On Fri, Oct 11, 2019 at 2:07 AM Kees Cook <keescook@chromium.org> wrote:
+> > > There's no reason to keep the RODATA macro: replace the callers with
+> > > the expected RO_DATA macro.
+> > >
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  arch/alpha/kernel/vmlinux.lds.S      | 2 +-
+> > >  arch/ia64/kernel/vmlinux.lds.S       | 2 +-
+> > >  arch/microblaze/kernel/vmlinux.lds.S | 2 +-
+> > >  arch/mips/kernel/vmlinux.lds.S       | 2 +-
+> > >  arch/um/include/asm/common.lds.S     | 2 +-
+> > >  arch/xtensa/kernel/vmlinux.lds.S     | 2 +-
+> > >  include/asm-generic/vmlinux.lds.h    | 4 +---
+> > >  7 files changed, 7 insertions(+), 9 deletions(-)
+> >
+> > Somehow you missed:
+> >
+> >     arch/m68k/kernel/vmlinux-std.lds:  RODATA
+> >     arch/m68k/kernel/vmlinux-sun3.lds:      RODATA
+>
+> Argh. I've sent a patch; sorry and thanks for catching this. For my own
+> cross-build testing, which defconfig targets will hit these two linker
+> scripts?
 
-Look at the releases page on kernel.org to see the currently active
-trees.
+vmlinux-sun3.lds: sun3_defconfig
+vmlinux-std.lds: All other classic 680x0 targets with an MMU, e.g. plain
+                 defconfig aka multi_defconfig.
 
-thanks,
+> > Leading to build failures in next-20191111:
+> >
+> >     /opt/cross/kisskb/gcc-4.6.3-nolibc/m68k-linux/bin/m68k-linux-ld:./arch/m68k/kernel/vmlinux.lds:29:
+> > syntax error
+> >     make[1]: *** [/kisskb/src/Makefile:1075: vmlinux] Error 1
+> >
+> > Reported-by: noreply@ellerman.id.au
+> > http://kisskb.ellerman.id.au/kisskb/buildresult/14022846/
 
-greg k-h
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
