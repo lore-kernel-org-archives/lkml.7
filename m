@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97616C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452AFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E53222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131712190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497122;
-	bh=HNqy7dCWHOAhnEqVQn3eWdl3OjUnIi+Gkos2zhsq6Iw=;
+	s=default; t=1573497126;
+	bh=bqUZM0e0m0Ho7WKKwjxcz6xINycYFrC3+ZvPAG4tpYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EiGgNvOQLRLI4+wo3Xn2Pb/NKw3akCZ0BLgOTLh7ygEdiZVJAriU5BSb8y5xRQSYI
-	 jpNKMf3ly2jYmlHJ9bzg/4IvUofJJ/0iL43lvfju52v988dLi25xwxJBqK1fNrX+Q/
-	 8ADZTSDPFfxPw58NGfqJ1vZSQ2pTdnrW8vO3QHDY=
+	b=PObRg4UMZiiSA5/hkmNNOrFy3EB1NP0QylWJaHHw8ua8Nd95Lx8UARX0jh+cenmHS
+	 /PxpzWJ0/KkC6FP18K1GRmXk+ERX8zF7M1WtUx3z08kjBjYkZAxShC25cGPCbgdjzE
+	 sJJLJg8oak9r2avDuuZl1uZ7WVhZ8nDUpvPU7da0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfKKScB (ORCPT
+        id S1727866AbfKKScF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:32:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:32:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbfKKSb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:57 -0500
+        id S1727591AbfKKScC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:32:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC3B22184C;
-        Mon, 11 Nov 2019 18:31:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2432190F;
+        Mon, 11 Nov 2019 18:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497116;
-        bh=HNqy7dCWHOAhnEqVQn3eWdl3OjUnIi+Gkos2zhsq6Iw=;
+        s=default; t=1573497121;
+        bh=bqUZM0e0m0Ho7WKKwjxcz6xINycYFrC3+ZvPAG4tpYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OpkyrrFztYjYJVi0xOcMLa3JUP7/THSL58dwLg7zIEBSjq+XoDsGYGx5o2KRol+S
-         Ks4C1tpqprmR2+ztII0ssoNzvbnSsVhjb7JaEQTpJPpO3978MPWi2MyLc0Uc/yKbCs
-         Ie4EOGSQ1OXSi4V2+V2dPYFG0MAE9QEc4hJgQ8xc=
+        b=tY7RsibqISbhX1FH6aCFw7PolVznUAIdmezjWtfw7meysrDNkuKEgkKY9BL5UcK/+
+         K8tLnre98Pm8MJKuOlpb2uITwIW1v3TBckf6BObc/+3ZRJpBusvfjGUdPrntuFN2Wv
+         PoJNVUwQewtCbBlIzlGoXJMpsxotRI1HM9G4qBDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jan Kara <jack@suse.cz>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 42/43] mm/filemap.c: dont initiate writeback if mapping has no dirty pages
-Date:   Mon, 11 Nov 2019 19:28:56 +0100
-Message-Id: <20191111181328.697316041@linuxfoundation.org>
+        stable@vger.kernel.org, Hendrik Donner <hd@os-cillation.de>,
+        David Ahern <dsahern@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 02/65] ipv4: Fix table id reference in fib_sync_down_addr
+Date:   Mon, 11 Nov 2019 19:28:02 +0100
+Message-Id: <20191111181333.187209221@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
-References: <20191111181246.772983347@linuxfoundation.org>
+In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
+References: <20191111181331.917659011@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,49 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: David Ahern <dsahern@kernel.org>
 
-commit c3aab9a0bd91b696a852169479b7db1ece6cbf8c upstream.
+[ Upstream commit e0a312629fefa943534fc46f7bfbe6de3fdaf463 ]
 
-Functions like filemap_write_and_wait_range() should do nothing if inode
-has no dirty pages or pages currently under writeback.  But they anyway
-construct struct writeback_control and this does some atomic operations if
-CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
-updates state of writeback ownership, on slow path might be more work.
-Current this path is safely avoided only when inode mapping has no pages.
+Hendrik reported routes in the main table using source address are not
+removed when the address is removed. The problem is that fib_sync_down_addr
+does not account for devices in the default VRF which are associated
+with the main table. Fix by updating the table id reference.
 
-For example generic_file_read_iter() calls filemap_write_and_wait_range()
-at each O_DIRECT read - pretty hot path.
-
-This patch skips starting new writeback if mapping has no dirty tags set.
-If writeback is already in progress filemap_write_and_wait_range() will
-wait for it.
-
-Link: http://lkml.kernel.org/r/156378816804.1087.8607636317907921438.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 5a56a0b3a45d ("net: Don't delete routes in different VRFs")
+Reported-by: Hendrik Donner <hd@os-cillation.de>
+Signed-off-by: David Ahern <dsahern@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/filemap.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/fib_semantics.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -340,7 +340,8 @@ int __filemap_fdatawrite_range(struct ad
- 		.range_end = end,
- 	};
+--- a/net/ipv4/fib_semantics.c
++++ b/net/ipv4/fib_semantics.c
+@@ -1358,8 +1358,8 @@ int fib_sync_down_addr(struct net_device
+ 	int ret = 0;
+ 	unsigned int hash = fib_laddr_hashfn(local);
+ 	struct hlist_head *head = &fib_info_laddrhash[hash];
++	int tb_id = l3mdev_fib_table(dev) ? : RT_TABLE_MAIN;
+ 	struct net *net = dev_net(dev);
+-	int tb_id = l3mdev_fib_table(dev);
+ 	struct fib_info *fi;
  
--	if (!mapping_cap_writeback_dirty(mapping))
-+	if (!mapping_cap_writeback_dirty(mapping) ||
-+	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
- 		return 0;
- 
- 	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
+ 	if (!fib_info_laddrhash || local == 0)
 
 
