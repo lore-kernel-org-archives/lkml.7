@@ -2,53 +2,52 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848B5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2D0C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5157721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE5F21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497092;
-	bh=xr/Dd1JcudKThJha1471Fr+uThR/E6hFHmTW6eILGXc=;
+	s=default; t=1573497097;
+	bh=+OcbpRDk8vmqcpdXP162JIV+eV/Y2V5IJpuBxfMkdiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HloEAr+HqudyIipcR9GEhTgG5ctxYxZwLmYVzMBU94BdtlijLyYGKEko/XB95J2h4
-	 eDA2DdGTWl0g4fzYYIp8mdotddJWRFfrnNujGhiGhw+3CCllyqaZ0mg9BEHtMpvd0h
-	 1BHxPlAK63rLEwfpANTWMHCqUo/kyY/+9je/pNJI=
+	b=my7eYi9Ckq6+wo8XBhZzAA64F0NBbip6YKbFQPghYmN+fni1BRLlIs8+Ni7xaWeHF
+	 cFAyy5Sbj5Lqy43GJ5M0AB1ZCBnHpCgoVwajczy9cGcrwi4AL8VogQRJJJBZAx53V7
+	 5nrC9aomKizUmdPydVthS2+iXj0ZE3CqzAyutmTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfKKSbb (ORCPT
+        id S1727691AbfKKSbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfKKSb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:28 -0500
+        id S1726978AbfKKSbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4060421783;
-        Mon, 11 Nov 2019 18:31:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AFAD2173B;
+        Mon, 11 Nov 2019 18:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497087;
-        bh=xr/Dd1JcudKThJha1471Fr+uThR/E6hFHmTW6eILGXc=;
+        s=default; t=1573497093;
+        bh=+OcbpRDk8vmqcpdXP162JIV+eV/Y2V5IJpuBxfMkdiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FpaoU3vmyJR6Tzlk3DnP/J+ptqwpJv1jMslmrMN/0ZJEPpo8btmu0PO+Bb4kLZz5b
-         nGdZmSY7mcZIbnCWHn39OE96GOVmrfO7R2vgdaT9hwSgU0W7ndtbsqw770fflyQTGc
-         9wohTqRjGDFYO+v8PCjyPc8Sbj6R/zoPV9quf350=
+        b=YGlDqSXG75L4FUO0NE0qXxuaAjxzql/vW55/CwLquG4seZ1gnszr2ikBltRB5gGYY
+         fWz9/Fg1c1/RzvbV6hDD+e1t1UHsMchnM1znq1mlz+NkAN6QREnXnS9MgSb/vMFzZb
+         xhhzJ5qTM2HNfgY5LIucLy2VKvnPIj9flgIfNxkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 40/43] e1000: fix memory leaks
-Date:   Mon, 11 Nov 2019 19:28:54 +0100
-Message-Id: <20191111181328.008691412@linuxfoundation.org>
+Subject: [PATCH 4.4 41/43] can: flexcan: disable completely the ECC mechanism
+Date:   Mon, 11 Nov 2019 19:28:55 +0100
+Message-Id: <20191111181328.218240801@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -61,61 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-[ Upstream commit 8472ba62154058b64ebb83d5f57259a352d28697 ]
+[ Upstream commit 5e269324db5adb2f5f6ec9a93a9c7b0672932b47 ]
 
-In e1000_set_ringparam(), 'tx_old' and 'rx_old' are not deallocated if
-e1000_up() fails, leading to memory leaks. Refactor the code to fix this
-issue.
+The ECC (memory error detection and correction) mechanism can be
+activated or not, controlled by the ECCDIS bit in CAN_MECR. When
+disabled, updates on indications and reporting registers are stopped.
+So if want to disable ECC completely, had better assert ECCDIS bit, not
+just mask the related interrupts.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: cdce844865be ("can: flexcan: add vf610 support for FlexCAN")
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_ethtool.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/can/flexcan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
-index d70b2e5d52228..cbb0bdf851770 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
-@@ -628,6 +628,7 @@ static int e1000_set_ringparam(struct net_device *netdev,
- 	for (i = 0; i < adapter->num_rx_queues; i++)
- 		rxdr[i].count = rxdr->count;
- 
-+	err = 0;
- 	if (netif_running(adapter->netdev)) {
- 		/* Try to get new resources before deleting old */
- 		err = e1000_setup_all_rx_resources(adapter);
-@@ -648,14 +649,13 @@ static int e1000_set_ringparam(struct net_device *netdev,
- 		adapter->rx_ring = rxdr;
- 		adapter->tx_ring = txdr;
- 		err = e1000_up(adapter);
--		if (err)
--			goto err_setup;
- 	}
- 	kfree(tx_old);
- 	kfree(rx_old);
- 
- 	clear_bit(__E1000_RESETTING, &adapter->flags);
--	return 0;
-+	return err;
-+
- err_setup_tx:
- 	e1000_free_all_rx_resources(adapter);
- err_setup_rx:
-@@ -667,7 +667,6 @@ err_alloc_rx:
- err_alloc_tx:
- 	if (netif_running(adapter->netdev))
- 		e1000_up(adapter);
--err_setup:
- 	clear_bit(__E1000_RESETTING, &adapter->flags);
- 	return err;
- }
--- 
-2.20.1
-
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -923,6 +923,7 @@ static int flexcan_chip_start(struct net
+ 		reg_mecr = flexcan_read(&regs->mecr);
+ 		reg_mecr &= ~FLEXCAN_MECR_ECRWRDIS;
+ 		flexcan_write(reg_mecr, &regs->mecr);
++		reg_mecr |= FLEXCAN_MECR_ECCDIS;
+ 		reg_mecr &= ~(FLEXCAN_MECR_NCEFAFRZ | FLEXCAN_MECR_HANCEI_MSK |
+ 			      FLEXCAN_MECR_FANCEI_MSK);
+ 		flexcan_write(reg_mecr, &regs->mecr);
 
 
