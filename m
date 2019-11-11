@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0379BC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D61C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13812173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BF92196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498585;
-	bh=6GKlE5c1X7Fx/I6EQaAYcQY55nqx95iZiiBVJ7+o18o=;
+	s=default; t=1573498589;
+	bh=xfEgfX5Tk17FlbuIssIAcm1s/tupxh1PPvYDHYPfdbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0ENWUF3WRV8XE+F3CoAjpBZuE38dpECFZv0ZmzoG1RUCLbHQT/pgZJTV8Sxr9oyd
-	 Lkgau2TAU2gJUOgIdqJLt/6BlqzX6NX9nXuNS5go3inGORQC2UOlCCfJWRrib7lObA
-	 HTkWBzAcYv6VaU0dTUByg9UVZ7SbUrZNUkpxxvUw=
+	b=cB2BPPkH0ofRfLVwNras+vxCm5MdH8cpLjZSpyAH2hj9wJZKw7Mun+s/oYtA1uXn0
+	 Gns17ZR25Bv5CZKcWUAP1HuYXZ+XNvt8BPeAEpPUpUBBhg+2Z5TajCjERHXBYOh0IJ
+	 cW3AZGDugN1oLeZLTJn7yYEvZgUahuoMG586/zOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbfKKS4Y (ORCPT
+        id S1729959AbfKKS41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:56:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:56:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730701AbfKKS4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:56:19 -0500
+        id S1729132AbfKKS4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:56:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 379E32173B;
-        Mon, 11 Nov 2019 18:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC132173B;
+        Mon, 11 Nov 2019 18:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498578;
-        bh=6GKlE5c1X7Fx/I6EQaAYcQY55nqx95iZiiBVJ7+o18o=;
+        s=default; t=1573498582;
+        bh=xfEgfX5Tk17FlbuIssIAcm1s/tupxh1PPvYDHYPfdbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sG8IYItIOp6ji3ILSwvtBVuArFHUAcHZb6vN7KWpyKpWlCcFHLNFn9olFDwz48991
-         BMDdWnOSNTACCaSKv+4voJub03T//D0zbvdTlfD2IO9jzDV8LCXS/h/0RCk7Q/9hOC
-         N9/WdGChTUsh4BkhoPlHO0QiKshsnWVoHRFYqiCw=
+        b=Yu8ZLQSk72pXzfssojLFdQhb6weVcReWuxffoeKyP+19IYsWgTqGYiKCXEh+kbXge
+         uAulr5EyPaZdn9eLkEoy6L76QLCV+9XQQOv6GBYBlHY2+OWhkFpD1TJrnldgd2KBtV
+         qIex18b9mcOpzUPZfWo7W9vl5qFmX0kcEFwPOWf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 161/193] net: mscc: ocelot: refuse to overwrite the ports native vlan
-Date:   Mon, 11 Nov 2019 19:29:03 +0100
-Message-Id: <20191111181513.003301670@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 162/193] iommu/amd: Apply the same IVRS IOAPIC workaround to Acer Aspire A315-41
+Date:   Mon, 11 Nov 2019 19:29:04 +0100
+Message-Id: <20191111181513.079727590@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -64,69 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit b9cd75e6689560140dadaed98eb4b41aad75d55d ]
+[ Upstream commit ad3e8da2d422c63c13819a53d3c5ea9312cc0b9d ]
 
-The switch driver keeps a "vid" variable per port, which signifies _the_
-VLAN ID that is stripped on that port's egress (aka the native VLAN on a
-trunk port).
+Acer Aspire A315-41 requires the very same workaround as the existing
+quirk for Dell Latitude 5495.  Add the new entry for that.
 
-That is the way the hardware is designed (mostly). The port->vid is
-programmed into REW:PORT:PORT_VLAN_CFG:PORT_VID and the rewriter is told
-to send all traffic as tagged except the one having port->vid.
-
-There exists a possibility of finer-grained egress untagging decisions:
-using the VCAP IS1 engine, one rule can be added to match every
-VLAN-tagged frame whose VLAN should be untagged, and set POP_CNT=1 as
-action. However, the IS1 can hold at most 512 entries, and the VLANs are
-in the order of 6 * 4096.
-
-So the code is fine for now. But this sequence of commands:
-
-$ bridge vlan add dev swp0 vid 1 pvid untagged
-$ bridge vlan add dev swp0 vid 2 untagged
-
-makes untagged and pvid-tagged traffic be sent out of swp0 as tagged
-with VID 1, despite user's request.
-
-Prevent that from happening. The user should temporarily remove the
-existing untagged VLAN (1 in this case), add it back as tagged, and then
-add the new untagged VLAN (2 in this case).
-
-Cc: Antoine Tenart <antoine.tenart@bootlin.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Fixes: 7142529f1688 ("net: mscc: ocelot: add VLAN filtering")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1137799
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/iommu/amd_iommu_quirks.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 07ca3e0cdf92b..7ffe5959a7e73 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -260,8 +260,15 @@ static int ocelot_vlan_vid_add(struct net_device *dev, u16 vid, bool pvid,
- 		port->pvid = vid;
- 
- 	/* Untagged egress vlan clasification */
--	if (untagged)
-+	if (untagged && port->vid != vid) {
-+		if (port->vid) {
-+			dev_err(ocelot->dev,
-+				"Port already has a native VLAN: %d\n",
-+				port->vid);
-+			return -EBUSY;
-+		}
- 		port->vid = vid;
-+	}
- 
- 	ocelot_vlan_port_apply(ocelot, port);
- 
+diff --git a/drivers/iommu/amd_iommu_quirks.c b/drivers/iommu/amd_iommu_quirks.c
+index c235f79b7a200..5120ce4fdce32 100644
+--- a/drivers/iommu/amd_iommu_quirks.c
++++ b/drivers/iommu/amd_iommu_quirks.c
+@@ -73,6 +73,19 @@ static const struct dmi_system_id ivrs_quirks[] __initconst = {
+ 		},
+ 		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_LATITUDE_5495],
+ 	},
++	{
++		/*
++		 * Acer Aspire A315-41 requires the very same workaround as
++		 * Dell Latitude 5495
++		 */
++		.callback = ivrs_ioapic_quirk_cb,
++		.ident = "Acer Aspire A315-41",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-41"),
++		},
++		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_LATITUDE_5495],
++	},
+ 	{
+ 		.callback = ivrs_ioapic_quirk_cb,
+ 		.ident = "Lenovo ideapad 330S-15ARR",
 -- 
 2.20.1
 
