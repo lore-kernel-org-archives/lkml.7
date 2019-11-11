@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF11C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B55BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CC6214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E902184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497392;
-	bh=27fDGEpqKQPn9KccCyYX91hENaUtYZICVPP1diLkpYY=;
+	s=default; t=1573497394;
+	bh=HnFFDYxUvaBTgrEftAE9AwROrLlOKZdZoREsjO6/fcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcC+x91Wn8D6cSkcEN2wHiOblMZ4n+8UXGldwVuxnIN6GYw16D7EFHj+YYRTjCoLt
-	 vBK8lO0DTWYHhgdBnc5Xp4889rVUBlNNiVx+bp27ZJP0eGspy9P+4Fp/MUhTL/1Mat
-	 ZTssLjkIuB0P5R51xPXTwpO7cPaOwsxg4xRhce9I=
+	b=eOvEYgTSKBxBKxj6/A6XxBP0bK/6OGP5forXvXCAhMccd30ug1C13bW27/RdU2v6N
+	 mTT3eNoDZYMEZuFkG4kXsjKpbBagS+NhDoMevdiiJz4eRDKZdQI41mOvcoiH3S4+0X
+	 H+RaX1AkRtAcCWpJ/hP/orM+J/sUBaDtLv6zfC40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfKKSgb (ORCPT
+        id S1728744AbfKKSgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728072AbfKKSg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:27 -0500
+        id S1728723AbfKKSga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD8521655;
-        Mon, 11 Nov 2019 18:36:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0648F214E0;
+        Mon, 11 Nov 2019 18:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497386;
-        bh=27fDGEpqKQPn9KccCyYX91hENaUtYZICVPP1diLkpYY=;
+        s=default; t=1573497389;
+        bh=HnFFDYxUvaBTgrEftAE9AwROrLlOKZdZoREsjO6/fcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZxd0A7hWD10Fch3dGtQrByZW2D7nbHxjYrFktY8pziDKbAl4pTfzqoxWqOR/GXpg
-         KFHAeGiiMZ1NbiuzhmcA8cyzKghH5lpS2CP0DViw7tkfBa9G1e/AYZJCQb++bu8Xgj
-         yOEY38QIxl2JXvO8qwy8/BKvD812+la+y3oRaeXQ=
+        b=cua6MEJax65t7BUr0HAX3eE1bkXMwmOR4iABsOQqJIpbAv5wUyc7ZO9Q8gyIaydki
+         L8/AYkq+rqqIea4M40yQ6Vq1Nb0/rkoP7a0gY91JyLVSJ5zXRW5EkDPst6dQF3bJbd
+         mVPlrP4weyAv1cuj2GMSzM+JxmUBJqdBO5LvUDMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Stephane Grosjean <s.grosjean@peak-system.com>,
+        =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.14 035/105] can: peak_usb: fix a potential out-of-sync while decoding packets
-Date:   Mon, 11 Nov 2019 19:28:05 +0100
-Message-Id: <20191111181439.071913273@linuxfoundation.org>
+Subject: [PATCH 4.14 036/105] can: rx-offload: can_rx_offload_queue_sorted(): fix error handling, avoid skb mem leak
+Date:   Mon, 11 Nov 2019 19:28:06 +0100
+Message-Id: <20191111181439.261699885@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,80 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Grosjean <s.grosjean@peak-system.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-commit de280f403f2996679e2607384980703710576fed upstream.
+commit ca913f1ac024559ebc17f0b599af262f0ad997c9 upstream.
 
-When decoding a buffer received from PCAN-USB, the first timestamp read in
-a packet is a 16-bit coded time base, and the next ones are an 8-bit
-offset to this base, regardless of the type of packet read.
+If the rx-offload skb_queue is full can_rx_offload_queue_sorted() will
+not queue the skb and return with an error.
 
-This patch corrects a potential loss of synchronization by using a
-timestamp index read from the buffer, rather than an index of received
-data packets, to determine on the sizeof the timestamp to be read from the
-packet being decoded.
+None of the callers of this function, issue a kfree_skb() to free the
+not queued skb. This results in a memory leak.
 
-Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
-Fixes: 46be265d3388 ("can: usb: PEAK-System Technik PCAN-USB specific part")
+This patch fixes the problem by freeing the skb in case of a full queue.
+The return value is adjusted to -ENOBUFS to better reflect the actual
+problem.
+
+The device stats handling is left to the callers, as this function might
+be used in both the rx and tx path.
+
+Fixes: 55059f2b7f86 ("can: rx-offload: introduce can_rx_offload_get_echo_skb() and can_rx_offload_queue_sorted() functions")
 Cc: linux-stable <stable@vger.kernel.org>
+Cc: Martin Hundebøll <martin@geanix.com>
+Reported-by: Martin Hundebøll <martin@geanix.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/peak_usb/pcan_usb.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/net/can/rx-offload.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
-@@ -108,7 +108,7 @@ struct pcan_usb_msg_context {
- 	u8 *end;
- 	u8 rec_cnt;
- 	u8 rec_idx;
--	u8 rec_data_idx;
-+	u8 rec_ts_idx;
- 	struct net_device *netdev;
- 	struct pcan_usb *pdev;
- };
-@@ -552,10 +552,15 @@ static int pcan_usb_decode_status(struct
- 	mc->ptr += PCAN_USB_CMD_ARGS;
+--- a/drivers/net/can/rx-offload.c
++++ b/drivers/net/can/rx-offload.c
+@@ -216,8 +216,10 @@ int can_rx_offload_queue_sorted(struct c
+ 	unsigned long flags;
  
- 	if (status_len & PCAN_USB_STATUSLEN_TIMESTAMP) {
--		int err = pcan_usb_decode_ts(mc, !mc->rec_idx);
-+		int err = pcan_usb_decode_ts(mc, !mc->rec_ts_idx);
+ 	if (skb_queue_len(&offload->skb_queue) >
+-	    offload->skb_queue_len_max)
+-		return -ENOMEM;
++	    offload->skb_queue_len_max) {
++		kfree_skb(skb);
++		return -ENOBUFS;
++	}
  
- 		if (err)
- 			return err;
-+
-+		/* Next packet in the buffer will have a timestamp on a single
-+		 * byte
-+		 */
-+		mc->rec_ts_idx++;
- 	}
- 
- 	switch (f) {
-@@ -638,10 +643,13 @@ static int pcan_usb_decode_data(struct p
- 
- 	cf->can_dlc = get_can_dlc(rec_len);
- 
--	/* first data packet timestamp is a word */
--	if (pcan_usb_decode_ts(mc, !mc->rec_data_idx))
-+	/* Only first packet timestamp is a word */
-+	if (pcan_usb_decode_ts(mc, !mc->rec_ts_idx))
- 		goto decode_failed;
- 
-+	/* Next packet in the buffer will have a timestamp on a single byte */
-+	mc->rec_ts_idx++;
-+
- 	/* read data */
- 	memset(cf->data, 0x0, sizeof(cf->data));
- 	if (status_len & PCAN_USB_STATUSLEN_RTR) {
-@@ -695,7 +703,6 @@ static int pcan_usb_decode_msg(struct pe
- 		/* handle normal can frames here */
- 		} else {
- 			err = pcan_usb_decode_data(&mc, sl);
--			mc.rec_data_idx++;
- 		}
- 	}
- 
+ 	cb = can_rx_offload_get_cb(skb);
+ 	cb->timestamp = timestamp;
 
 
