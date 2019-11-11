@@ -2,244 +2,164 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF43C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25002C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB8021783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45BC20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:27:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Bm8ip3yM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfKKQ0i (ORCPT
+        id S1727083AbfKKQ1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:26:38 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:40315 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKQ0h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:26:37 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MI4gb-1iipMW3UJz-00FAzq; Mon, 11 Nov 2019 17:26:31 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] [v2] drm/etnaviv: avoid deprecated timespec
-Date:   Mon, 11 Nov 2019 17:25:32 +0100
-Message-Id: <20191111162547.2221524-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191111162547.2221524-1-arnd@arndb.de>
-References: <20191111162547.2221524-1-arnd@arndb.de>
+        Mon, 11 Nov 2019 11:27:32 -0500
+Received: from mail-eopbgr720083.outbound.protection.outlook.com ([40.107.72.83]:35828
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbfKKQ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:27:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fDVBZvng1L1nZE7ijn2zvodLoxKCtZoznf+XlfFe9yNlhX71zHu6LoHebsYDCE5LGB0Ij9+wyk7pp+yA3tbgUu+rth9sP/eFSei6osXy9JSzaLySZqsWwzvKte9QkCxOSdi6fXdOI++ukWA6Ul+uGahfN1AkAwxtMUdNLcqTBg4Vo8eOLaI3FPYmoDoJuw5x/8/wtQdaHeoAJMa9zru9C49KnWXfGra1AZ2ijqxJTxPe25fJ8yRgVon6ertGuQv4bQOyTbzq/+TelBhkDXAB5ZYnTSgiUjgWFGnFktpSnuzFCS8fo1qxIAMdYysBR5/DsY8vXZYF2TE1c1fygUa5Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AXvAtoe6H0nGMj7s82Yhp9LrKED1RsO+HXsUKBqTz9M=;
+ b=R8ijmwXW4MtAAcqwkjDcWjAWiUDxiFl0OB3zgQR5S/HroXrd4G/nfu+OhIQbk1MiXVsS7kNVkTl5WuFM84smOWFvkthOAGAMvOhlmq/q+ZzxfUIgneZ4VQNmbFUe4fm9mp0ewV0lxnAwDcMABeq/eshNo/ZJkrn4LohYudZ9Y+/hSFU9GiWnXxYQHWzxFNBW/9/7X6kBZczzv7s9iWYbWpgUdYAi0a7Zkqm4nYh1r/b1y8mc48w04vsjEDAPahm9esg6edvIrDRTh7sCSfmKIFS7ICFiIlM5TpDynlq4bCWHdbc5HlwC60YWpoETbhxxcMTfSAG2kxmUfrVYcY44ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AXvAtoe6H0nGMj7s82Yhp9LrKED1RsO+HXsUKBqTz9M=;
+ b=Bm8ip3yME644tIOCnCxoUiMoucUIjJTxSBkF8+qXkv3YE1NsP8qDB7KPpltb6Ttc/3WvWFg2L0Znmrf4rA3Sa0rW1F0btSYf1UwLBB2tjKR0/sntf7+pdD4HESBYJQaU7YmY4indZJRTCRgdtSWAQiqfv7kBMIlPpjcm3d1X2WQ=
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
+ MWHPR05MB3486.namprd05.prod.outlook.com (10.174.250.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.17; Mon, 11 Nov 2019 16:27:28 +0000
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2451.018; Mon, 11 Nov 2019
+ 16:27:28 +0000
+From:   Jorgen Hansen <jhansen@vmware.com>
+To:     'Stefano Garzarella' <sgarzare@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: RE: [PATCH net-next 12/14] vsock/vmci: register vmci_transport only
+ when VMCI guest/host are active
+Thread-Topic: [PATCH net-next 12/14] vsock/vmci: register vmci_transport only
+ when VMCI guest/host are active
+Thread-Index: AQHViYhpRc2q1qJxVEORBsxH5VDhoaeGP/hg
+Date:   Mon, 11 Nov 2019 16:27:28 +0000
+Message-ID: <MWHPR05MB3376266BC6AE9E6E0B75F1A1DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
+References: <20191023095554.11340-1-sgarzare@redhat.com>
+ <20191023095554.11340-13-sgarzare@redhat.com>
+In-Reply-To: <20191023095554.11340-13-sgarzare@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhansen@vmware.com; 
+x-originating-ip: [208.91.2.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a36f301-eeef-4b0b-3e63-08d766c40b58
+x-ms-traffictypediagnostic: MWHPR05MB3486:
+x-microsoft-antispam-prvs: <MWHPR05MB34869134C628EC8AE5E94152DA740@MWHPR05MB3486.namprd05.prod.outlook.com>
+x-vmwhitelist: True
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0218A015FA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(199004)(189003)(9686003)(14454004)(55016002)(6506007)(256004)(7696005)(81166006)(229853002)(54906003)(2501003)(102836004)(186003)(110136005)(6436002)(81156014)(7416002)(99286004)(26005)(8936002)(4326008)(71190400001)(71200400001)(2906002)(76176011)(478600001)(446003)(3846002)(6116002)(25786009)(6246003)(74316002)(305945005)(7736002)(76116006)(316002)(8676002)(86362001)(52536014)(66066001)(476003)(33656002)(486006)(66476007)(5660300002)(64756008)(66556008)(11346002)(66446008)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB3486;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fexRGydaepfMKWtbl4XysVBFMqAFL73AQytNS1zhQu8sVwe1zj6bNYBsloVpasVJn+Etkebh3yMq293S/YPvN4B7sb8i7whCh1+bme4tHGKorgZuUpm2okqQYOXuBgUOK5rqKUTxN97gkPAXquvliUChnh5Izi5P0dbQL9/OFFV/VRxe19byHFPlHRdC7ucq2Wcyt1I6q4Hi1sl8o8Q1UcJePDnZiNBL6oUps+K10Y9POmCMpXcL+aartSNqb7Cr3RpnreubcgB/Ml2DIoE5UgmFc1/tyNcTkzcjQUGBHoLOFQNUevbMVoK00jnvufP0SEwJ3v+wZIJNNHpEp+X6x8zLC0BJwawW3N/tBdjAOK4qAHIZg/V0HyHhUdPmmXZJeaZKYJEJvrfElqOvKi9k83evnzscSCibeK4WBe31Lr65L1wj+fl6mVCvWU4WHj1H
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:RnQ+mfEVAlKYgxL5lmB1o2ooX//bBZbsI9rNFLD36UF/KkPz7BG
- 4xpUbcY2ykHcP7iyX5tRrPhkGXwF56JAAG0DruikQKuZZSxzUzt0zgoqmq/9jWvsXBx1xKv
- RBMVIcu4kaG7C9HKeYneRxC1LACW0pvU85ykgKq8CKLHGxxFC6fx2c0jL6LlWQzPN0YeraV
- fQrERd1v0oERemb7cxReg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ExkpKdVh5SY=:gHsJ0Dcl3xyb2seQp8MhE5
- Ap9Cuv4+poI0xjdJFHPQQ5ZLPezz54C12AJBviqk3FLQdz2VAGZkS30Vwvq4MCCM8i79I9MDe
- RHjMdtyMqtj46iFMzi4qeXLdyj4VuJBA8PyNkwvMfVJIGi4NZmtKJ1oQcl/wB4eBUA/Zkg+cI
- QJ3XxmYmmgQkTyFRg1x8DXri5ouc9bYcPQdlKToh3bs1wRI6hz/o3sx2SNK1pRVgJvYc3JIaJ
- vCBWIfXb7dWGDTKMmeR+SjOSaMytkOlRfFBN0HAdVsRdKAzR/ZThEA+nAjrffz3IqWJtrpI+d
- mobHfRxxnxE3x1+pMwxRAraI6SFsVon+5P5viOkMt/m/rEf0ZT/fo9WLwXCyVCggKwrsDK6Ax
- 0DcnnEapyXAH08FSVVgFupjCRQHgcjR4ZRvlr/VvUzJTnWxUzwmTfhNthNUbRLvCTbc+Vcwp8
- Tcz44Gfa6J42JGCf/1ToePSahjhJBh9mujvuTPLK/RDWUR2mNWYOa4De08atNop6wza0uy0/+
- DKfdqmF96ewU5f80U24dC/Tf2BIY5VKApMfXD98/EKnHSK/YFuoIQsjGhHmfPiF4KYRzjyHpD
- ObajI7S52SD4+9FTe4u7mJ4WWbtRKLaSJv8W+JJqlmlDfdHJVueAodaUdV7YftYf7bamv9hPQ
- h8FqGbm4PCKf+1MlRzzaNWl3boncPV+DZTHyioJ7Lx2UjvYqXvCUMDxZ+cXmJaM4Ux9gl+1jn
- QhrBNvf0xNQ7cArrtitRkadgpzXtRGnSrwx0U0taRAIB/Nafs3S7kFsjbGXZKPm38CoKcn1jp
- fXnLG5EPEfZbvV0qxwuqRJ9jbh9Akp2MKpVIDCCnlH+2CG2Fbwhjx4AOL0/Llz9p9ZwPbSOL3
- am+sI0cm0bdWDFv8eJfQ==
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a36f301-eeef-4b0b-3e63-08d766c40b58
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 16:27:28.4501
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zes/fuRBeZrVaUaxor5w4oSlnj5fdFyL10fL4oTqcXlREj841iXVflQPPiHYSg/SqqZtcwHpSo8XqTW3elt8ww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB3486
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct timespec is being removed from the kernel because it often leads
-to code that is not y2038-safe.
+> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> Sent: Wednesday, October 23, 2019 11:56 AM
+>=20
+> To allow other transports to be loaded with vmci_transport,
+> we register the vmci_transport as G2H or H2G only when a VMCI guest
+> or host is active.
+>=20
+> To do that, this patch adds a callback registered in the vmci driver
+> that will be called when a new host or guest become active.
+> This callback will register the vmci_transport in the VSOCK core.
+> If the transport is already registered, we ignore the error coming
+> from vsock_core_register().
 
-In the etnaviv driver, monotonic timestamps are used, which do not suffer
-from overflow, but the usage of timespec here gets in the way of removing
-the interface completely.
+So today this is mainly an issue for the VMCI vsock transport, because
+VMCI autoloads with vsock (and with this solution it can continue to
+do that, so none of our old products break due to changed behavior,
+which is great). Shouldn't vhost behave similar, so that any module
+that registers a h2g transport only does so if it is in active use?
 
-Pass down the user-supplied 64-bit value here rather than converting
-it to an intermediate timespec to avoid the conversion.
 
-The conversion is transparent for all regular CLOCK_MONOTONIC values,
-but is a small change in behavior for excessively large values: the
-existing code would treat e.g. tv_sec=0x100000000 the same as tv_sec=0
-and not block, while the new code it would block for up to 2^31
-seconds. The new behavior is more logical here, but if it causes problems,
-the truncation can be put back.
+> --- a/drivers/misc/vmw_vmci/vmci_host.c
+> +++ b/drivers/misc/vmw_vmci/vmci_host.c
+> @@ -108,6 +108,11 @@ bool vmci_host_code_active(void)
+>  	     atomic_read(&vmci_host_active_users) > 0);
+>  }
+>=20
+> +int vmci_host_users(void)
+> +{
+> +	return atomic_read(&vmci_host_active_users);
+> +}
+> +
+>  /*
+>   * Called on open of /dev/vmci.
+>   */
+> @@ -338,6 +343,8 @@ static int vmci_host_do_init_context(struct
+> vmci_host_dev *vmci_host_dev,
+>  	vmci_host_dev->ct_type =3D VMCIOBJ_CONTEXT;
+>  	atomic_inc(&vmci_host_active_users);
+>=20
+> +	vmci_call_vsock_callback(true);
+> +
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 11 +++--------
- drivers/gpu/drm/etnaviv/etnaviv_drv.h | 11 ++++++-----
- drivers/gpu/drm/etnaviv/etnaviv_gem.c |  4 ++--
- drivers/gpu/drm/etnaviv/etnaviv_gem.h |  2 +-
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c |  5 +++--
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  5 +++--
- 6 files changed, 18 insertions(+), 20 deletions(-)
+Since we don't unregister the transport if user count drops back to 0, we c=
+ould
+just call this the first time, a VM is powered on after the module is loade=
+d.
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 95d72dc00280..3eb0f9223bea 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -282,11 +282,6 @@ static int etnaviv_ioctl_gem_new(struct drm_device *dev, void *data,
- 			args->flags, &args->handle);
- }
- 
--#define TS(t) ((struct timespec){ \
--	.tv_sec = (t).tv_sec, \
--	.tv_nsec = (t).tv_nsec \
--})
--
- static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
- 		struct drm_file *file)
- {
-@@ -304,7 +299,7 @@ static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
- 	if (!obj)
- 		return -ENOENT;
- 
--	ret = etnaviv_gem_cpu_prep(obj, args->op, &TS(args->timeout));
-+	ret = etnaviv_gem_cpu_prep(obj, args->op, &args->timeout);
- 
- 	drm_gem_object_put_unlocked(obj);
- 
-@@ -357,7 +352,7 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
- {
- 	struct drm_etnaviv_wait_fence *args = data;
- 	struct etnaviv_drm_private *priv = dev->dev_private;
--	struct timespec *timeout = &TS(args->timeout);
-+	struct drm_etnaviv_timespec *timeout = &args->timeout;
- 	struct etnaviv_gpu *gpu;
- 
- 	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
-@@ -409,7 +404,7 @@ static int etnaviv_ioctl_gem_wait(struct drm_device *dev, void *data,
- {
- 	struct etnaviv_drm_private *priv = dev->dev_private;
- 	struct drm_etnaviv_gem_wait *args = data;
--	struct timespec *timeout = &TS(args->timeout);
-+	struct drm_etnaviv_timespec *timeout = &args->timeout;
- 	struct drm_gem_object *obj;
- 	struct etnaviv_gpu *gpu;
- 	int ret;
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-index 32cfa5a48d42..efc656efeb0f 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-@@ -61,7 +61,7 @@ int etnaviv_gem_prime_pin(struct drm_gem_object *obj);
- void etnaviv_gem_prime_unpin(struct drm_gem_object *obj);
- void *etnaviv_gem_vmap(struct drm_gem_object *obj);
- int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
--		struct timespec *timeout);
-+		struct drm_etnaviv_timespec *timeout);
- int etnaviv_gem_cpu_fini(struct drm_gem_object *obj);
- void etnaviv_gem_free_object(struct drm_gem_object *obj);
- int etnaviv_gem_new_handle(struct drm_device *dev, struct drm_file *file,
-@@ -107,11 +107,12 @@ static inline size_t size_vstruct(size_t nelem, size_t elem_size, size_t base)
-  * between the specified timeout and the current CLOCK_MONOTONIC time.
-  */
- static inline unsigned long etnaviv_timeout_to_jiffies(
--	const struct timespec *timeout)
-+	const struct drm_etnaviv_timespec *timeout)
- {
--	struct timespec64 ts, to;
--
--	to = timespec_to_timespec64(*timeout);
-+	struct timespec64 ts, to = {
-+		.tv_sec = timeout->tv_sec,
-+		.tv_nsec = timeout->tv_nsec,
-+	};
- 
- 	ktime_get_ts64(&ts);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-index cb1faaac380a..6adea180d629 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-@@ -373,7 +373,7 @@ static inline enum dma_data_direction etnaviv_op_to_dma_dir(u32 op)
- }
- 
- int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
--		struct timespec *timeout)
-+		struct drm_etnaviv_timespec *timeout)
- {
- 	struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
- 	struct drm_device *dev = obj->dev;
-@@ -431,7 +431,7 @@ int etnaviv_gem_cpu_fini(struct drm_gem_object *obj)
- }
- 
- int etnaviv_gem_wait_bo(struct etnaviv_gpu *gpu, struct drm_gem_object *obj,
--	struct timespec *timeout)
-+	struct drm_etnaviv_timespec *timeout)
- {
- 	struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.h b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-index d6270acce619..6b68fe16041b 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-@@ -112,7 +112,7 @@ struct etnaviv_gem_submit {
- void etnaviv_submit_put(struct etnaviv_gem_submit * submit);
- 
- int etnaviv_gem_wait_bo(struct etnaviv_gpu *gpu, struct drm_gem_object *obj,
--	struct timespec *timeout);
-+	struct drm_etnaviv_timespec *timeout);
- int etnaviv_gem_new_private(struct drm_device *dev, size_t size, u32 flags,
- 	const struct etnaviv_gem_ops *ops, struct etnaviv_gem_object **res);
- void etnaviv_gem_obj_add(struct drm_device *dev, struct drm_gem_object *obj);
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index d47d1a8e0219..799ec20b267d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1132,7 +1132,7 @@ static void event_free(struct etnaviv_gpu *gpu, unsigned int event)
-  * Cmdstream submission/retirement:
-  */
- int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
--	u32 id, struct timespec *timeout)
-+	u32 id, struct drm_etnaviv_timespec *timeout)
- {
- 	struct dma_fence *fence;
- 	int ret;
-@@ -1179,7 +1179,8 @@ int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
-  * that lock in this function while waiting.
-  */
- int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
--	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout)
-+	struct etnaviv_gem_object *etnaviv_obj,
-+	struct drm_etnaviv_timespec *timeout)
- {
- 	unsigned long remaining;
- 	long ret;
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-index 8f9bd4edc96a..97bb48042b4d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-@@ -169,9 +169,10 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m);
- void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu);
- void etnaviv_gpu_retire(struct etnaviv_gpu *gpu);
- int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
--	u32 fence, struct timespec *timeout);
-+	u32 fence, struct drm_etnaviv_timespec *timeout);
- int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
--	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout);
-+	struct etnaviv_gem_object *etnaviv_obj,
-+	struct drm_etnaviv_timespec *timeout);
- struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit);
- int etnaviv_gpu_pm_get_sync(struct etnaviv_gpu *gpu);
- void etnaviv_gpu_pm_put(struct etnaviv_gpu *gpu);
--- 
-2.20.0
+>  	retval =3D 0;
+>=20
+>  out:
 
