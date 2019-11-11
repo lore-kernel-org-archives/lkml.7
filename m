@@ -2,98 +2,134 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4308C17448
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A3CC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5AC214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6B0214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J0pC0vQN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/zMtGeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfKKKao (ORCPT
+        id S1726960AbfKKKbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:30:44 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54336 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKKKao (ORCPT
+        Mon, 11 Nov 2019 05:31:20 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34313 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKKbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:30:44 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABAUaL6024709;
-        Mon, 11 Nov 2019 04:30:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573468236;
-        bh=J49vO9a5Q6nbdkFfwrMnpwhRrLhy3uz8gGzESzCD4oo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=J0pC0vQNOwWzcvvyyQL76SmlVuEzN0Z+CjL83wyC4lp4rBJiQ2R1WTU+ky0182CGU
-         FTXTm6Qn7grF70n77I6mtxC44f2VRRamde1Mg5BmLaZlzhLGa12VcCNxC08G61KIOA
-         d5uzuQB+yddSy3ouqSKbKhg+hMh59KTqSgK/uEBU=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABAUZfl057030
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 04:30:35 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 04:30:17 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 04:30:17 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABAUVBd048429;
-        Mon, 11 Nov 2019 04:30:31 -0600
-Subject: Re: [PATCH v4 15/15] dmaengine: ti: k3-udma: Add glue layer for non
- DMAengine users
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-16-peter.ujfalusi@ti.com>
- <20191111061258.GS952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
-Date:   Mon, 11 Nov 2019 12:31:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 05:31:20 -0500
+Received: by mail-ed1-f65.google.com with SMTP id b72so11528093edf.1;
+        Mon, 11 Nov 2019 02:31:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2uBfmf0jH0jW8Ak0g/jqH8W5nvxj13Znc64ubl99LEk=;
+        b=j/zMtGeO0BmSNrdrMu1SrfaRsr4kigGMqwYv0UE8ouLUl0QDdAy7Vq7okOCjjiczEI
+         AJSlSD12qhlSltHaaDllK52o2Lx5tRVWiAmru4rU/7QDtDYi+4GMVTqhIdFAY7ZY4C9H
+         nizOi5STW/rjZCCb+R/gICoFmHmybIoh0sYpC4IEtGQVvo8C3hBPO1oH/QZuiMbxf05D
+         I7Ho9imA4KVUgXtAvuePxP4ocgRXdNyiGa/PtJynLhQQNJu5m4AVAOmzi0RfnJUommCd
+         ULvVXSf/igtLDOanbypmSP6SQ/gLhDNYTxggh2EJqGMU8WzLZ0BMK8mLuUe9OPxJNMCg
+         JNQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2uBfmf0jH0jW8Ak0g/jqH8W5nvxj13Znc64ubl99LEk=;
+        b=ZM8ctCv8kgFo8+TlydR4+YX1Ouh7Mp96U01YzIkHg8DpZRcPoIKJnjR2lbD8E9FiKT
+         rcmJ8Fm0Btq9Qt/B5kiXo17obP2EEg+mamv5OUOVKZl8KPE7emorvs1I1uymsn+Uln//
+         tja2gha5GVJ3RsPgtuJj7vibjzB0gIKf+SiuSasKKcKDh+0HXEvHhj1mr0sjhOkfHJAH
+         A/cIOYJ9aTaMqHWxqG1PwqycGhxtp2sZP4bJROkLNjFMJ6aSIs0cDEryV96Lxqt8zJoA
+         epJ+/HPfoqksMXfiVBtDqi500Q+tC2EEwUsDCVOHGpm3EhUjkIFVDRIz6fqulKjIEESv
+         Lm0g==
+X-Gm-Message-State: APjAAAUE28RD0ncEggse8KXPhpVhEnzwt/4mssMP3MueC3tw2cBJTAOf
+        jNiSqb9eaXLrdVaMdt97rcpaKyB5DZqGp+3tKpgwkh4x
+X-Google-Smtp-Source: APXvYqwIRl3G1diHLMcxzPXPFWdQZe1LF8G9C/IgjC26glYSasbKQj+LOcE8QAX5/X4q48KWqOHZ9LlZj/uZgBX9dE4=
+X-Received: by 2002:a17:906:1d19:: with SMTP id n25mr21347136ejh.151.1573468276893;
+ Mon, 11 Nov 2019 02:31:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191111061258.GS952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191107122115.6244-1-linux@rasmusvillemoes.dk> <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
+In-Reply-To: <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 11 Nov 2019 12:31:05 +0200
+Message-ID: <CA+h21ho-P3P+ZwVp4uYHYrTzF0V-b+OsBkMKVo3rHC_OV5Y_6Q@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt lines
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        Kurt Kanzenbach <kurt@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 11 Nov 2019 at 12:24, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2019-11-07 13:30, Rasmus Villemoes wrote:
+> > In v7, I've tried to change from a custom binding to use
+> > interrupt-map, modelled on the recent addition of the
+> > renesas,rza1-irqc (commits a644ccb819bc and 5e27a314a11f). It's
+> > possible that the interrupt-map parsing code can be factored to a
+> > common helper, but it's a bit hard to generalize from two examples to
+> > know what a good interface would look like.
+> >
+> > The interrupt-map-mask is a bit arbitrary. 0xff would likely work
+> > just
+> > as well (but I think the ls2088a has 32 external lines, so it has to
+> > be a least 0x1f).
+> >
+> > Also, this drops the fsl,bit-reverse property and instead reads the
+> > SCFGREVCR register to determine if bit-reversing is needed.
+> >
+> > The dt/bindings patch now comes first in accordance with
+> > Documentation/devicetree/bindings/submitting-patches.txt.
+> >
+> > Earlier versions can be found here:
+> >
+> > v6:
+> > https://lore.kernel.org/lkml/20190923101513.32719-1-kurt@linutronix.de/
+> > v5:
+> >
+> > https://lore.kernel.org/lkml/20180223210901.23480-1-rasmus.villemoes@prevas.dk/
+> >
+> > Rasmus Villemoes (2):
+> >   dt/bindings: Add bindings for Layerscape external irqs
+> >   irqchip: add support for Layerscape external interrupt lines
+> >
+> >  .../interrupt-controller/fsl,ls-extirq.txt    |  49 +++++
+> >  drivers/irqchip/Kconfig                       |   4 +
+> >  drivers/irqchip/Makefile                      |   1 +
+> >  drivers/irqchip/irq-ls-extirq.c               | 197
+> > ++++++++++++++++++
+> >  4 files changed, 251 insertions(+)
+> >  create mode 100644
+> >
+> > Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+> >  create mode 100644 drivers/irqchip/irq-ls-extirq.c
+>
+> Applied to irqchip-next.
+>
+> Thanks,
+>
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
 
+A bit late, but for what it's worth,
 
-On 11/11/2019 8.12, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
->> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>
->> Certain users can not use right now the DMAengine API due to missing
->> features in the core. Prime example is Networking.
->>
->> These users can use the glue layer interface to avoid misuse of DMAengine
->> API and when the core gains the needed features they can be converted to
->> use generic API.
-> 
-> Can you add some notes on what all features does this layer implement..
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-In the commit message or in the code?
+Background: https://www.spinics.net/lists/netdev/msg611505.html
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+-Vladimir
