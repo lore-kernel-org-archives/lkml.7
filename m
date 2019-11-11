@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B689EC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF54FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869CA21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964B021655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499148;
-	bh=6BoxzKJfoTLRXFSyM632xFz5OUUPUolpB2hF7Y4yUR8=;
+	s=default; t=1573499155;
+	bh=kiDTsuVHTMiEWSIL275Ny5D5Tpvc9FYAKfy5rRCxoQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CBE7EqOw+uzGLFOokgSV54GcL+xo6Ll9LbGJrEkoy3zLT31FtD4IS1ueLzCj5o+ps
-	 Am/MzMbD0eFPgfewEG3A0z/TB08Af831RWKkMH8EN8/gJpf3vLUwG9oV9Mzbqpi7WB
-	 p7pqQRvpvjCzdLNUfQKxdQ4PA6Vd0jchblOghY3g=
+	b=x6SWKlTYq0AIdo6n5uwWXOuWbTUIYan0eo1OYVGfxQAaibTYk83Ju+T8xAf8Kmuit
+	 1JF08V6hW1uxGWrMWJAq9Xcx36uuZS6d13/y7UeffvSkpu6Oi5i5VeQc/6XCF3sg9o
+	 iLIWR3c4oeVDA3DpIIEyViZT2s/Xvcbz+WLDu73Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfKKTFr (ORCPT
+        id S1728708AbfKKTFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:05:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58682 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:05:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbfKKSje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:34 -0500
+        id S1729151AbfKKSj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F8E3204FD;
-        Mon, 11 Nov 2019 18:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7670221655;
+        Mon, 11 Nov 2019 18:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497573;
-        bh=6BoxzKJfoTLRXFSyM632xFz5OUUPUolpB2hF7Y4yUR8=;
+        s=default; t=1573497568;
+        bh=kiDTsuVHTMiEWSIL275Ny5D5Tpvc9FYAKfy5rRCxoQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=laPJSurAMMyajXt235KpEnRWZS0dx+X3WKdtMA7aPbZMqm2X5hIIy+xUSJ3MXeLI5
-         FGRBsSD+vRw7L+9CA6SISDsQA0NBd71ULTUFfKpVcaQD8t5DvH+IVO+Y/uPVkkyQcH
-         9wnzkQe93XGzwgx9ExxUHaLUDriBrYTreVyXysxo=
+        b=l2DMyFlwaeUoXxmI66sgHTqScDb2LuhhYUMgZPK2Gfu3on1SF4YQ5/pvOX8Ua+7S5
+         CAMfHpnHXOBcgqMzIAULgDCwv70ePKP6YcqpnpcxzxHzs2/4VUhoJPNqzA7JR8Me1O
+         SPairmXbncbTArfqTQZTGthfTquJBpxnwm+tPvAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/105] usb: gadget: composite: Fix possible double free memory bug
-Date:   Mon, 11 Nov 2019 19:28:54 +0100
-Message-Id: <20191111181447.248454698@linuxfoundation.org>
+        stable@vger.kernel.org, Dou Liyang <douly.fnst@cn.fujitsu.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>, bhe@redhat.com,
+        ebiederm@xmission.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 100/105] x86/apic: Move pending interrupt check code into its own function
+Date:   Mon, 11 Nov 2019 19:29:10 +0100
+Message-Id: <20191111181449.206849538@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,65 +61,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+From: Dou Liyang <douly.fnst@cn.fujitsu.com>
 
-[ Upstream commit 1c20c89b0421b52b2417bb0f62a611bc669eda1d ]
+[ Upstream commit 9b217f33017715903d0956dfc58f82d2a2d00e63 ]
 
-composite_dev_cleanup call from the failure of configfs_composite_bind
-frees up the cdev->os_desc_req and cdev->req. If the previous calls of
-bind and unbind is successful these will carry stale values.
+The pending interrupt check code is mixed with the local APIC setup code,
+that looks messy.
 
-Consider the below sequence of function calls:
-configfs_composite_bind()
-        composite_dev_prepare()
-                - Allocate cdev->req, cdev->req->buf
-        composite_os_desc_req_prepare()
-                - Allocate cdev->os_desc_req, cdev->os_desc_req->buf
-configfs_composite_unbind()
-        composite_dev_cleanup()
-                - free the cdev->os_desc_req->buf and cdev->req->buf
-Next composition switch
-configfs_composite_bind()
-        - If it fails goto err_comp_cleanup will call the
-	  composite_dev_cleanup() function
-        composite_dev_cleanup()
-	        - calls kfree up with the stale values of cdev->req->buf and
-		  cdev->os_desc_req from the previous configfs_composite_bind
-		  call. The free call on these stale values leads to double free.
+Extract the related code, move it into a new function named
+apic_pending_intr_clear().
 
-Hence, Fix this issue by setting request and buffer pointer to NULL after
-kfree.
-
-Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Dou Liyang <douly.fnst@cn.fujitsu.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: bhe@redhat.com
+Cc: ebiederm@xmission.com
+Link: https://lkml.kernel.org/r/20180301055930.2396-2-douly.fnst@cn.fujitsu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/composite.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/apic/apic.c | 100 ++++++++++++++++++++----------------
+ 1 file changed, 55 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 75c42393b64ba..b29cd3979391e 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -2187,14 +2187,18 @@ void composite_dev_cleanup(struct usb_composite_dev *cdev)
- 			usb_ep_dequeue(cdev->gadget->ep0, cdev->os_desc_req);
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index ea2de324ab021..98fecdbec6402 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1362,6 +1362,56 @@ static void lapic_setup_esr(void)
+ 			oldvalue, value);
+ }
  
- 		kfree(cdev->os_desc_req->buf);
-+		cdev->os_desc_req->buf = NULL;
- 		usb_ep_free_request(cdev->gadget->ep0, cdev->os_desc_req);
-+		cdev->os_desc_req = NULL;
- 	}
- 	if (cdev->req) {
- 		if (cdev->setup_pending)
- 			usb_ep_dequeue(cdev->gadget->ep0, cdev->req);
++static void apic_pending_intr_clear(void)
++{
++	long long max_loops = cpu_khz ? cpu_khz : 1000000;
++	unsigned long long tsc = 0, ntsc;
++	unsigned int value, queued;
++	int i, j, acked = 0;
++
++	if (boot_cpu_has(X86_FEATURE_TSC))
++		tsc = rdtsc();
++	/*
++	 * After a crash, we no longer service the interrupts and a pending
++	 * interrupt from previous kernel might still have ISR bit set.
++	 *
++	 * Most probably by now CPU has serviced that pending interrupt and
++	 * it might not have done the ack_APIC_irq() because it thought,
++	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
++	 * does not clear the ISR bit and cpu thinks it has already serivced
++	 * the interrupt. Hence a vector might get locked. It was noticed
++	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
++	 */
++	do {
++		queued = 0;
++		for (i = APIC_ISR_NR - 1; i >= 0; i--)
++			queued |= apic_read(APIC_IRR + i*0x10);
++
++		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
++			value = apic_read(APIC_ISR + i*0x10);
++			for (j = 31; j >= 0; j--) {
++				if (value & (1<<j)) {
++					ack_APIC_irq();
++					acked++;
++				}
++			}
++		}
++		if (acked > 256) {
++			printk(KERN_ERR "LAPIC pending interrupts after %d EOI\n",
++			       acked);
++			break;
++		}
++		if (queued) {
++			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
++				ntsc = rdtsc();
++				max_loops = (cpu_khz << 10) - (ntsc - tsc);
++			} else
++				max_loops--;
++		}
++	} while (queued && max_loops > 0);
++	WARN_ON(max_loops <= 0);
++}
++
+ /**
+  * setup_local_APIC - setup the local APIC
+  *
+@@ -1371,13 +1421,11 @@ static void lapic_setup_esr(void)
+ void setup_local_APIC(void)
+ {
+ 	int cpu = smp_processor_id();
+-	unsigned int value, queued;
+-	int i, j, acked = 0;
+-	unsigned long long tsc = 0, ntsc;
+-	long long max_loops = cpu_khz ? cpu_khz : 1000000;
++	unsigned int value;
++#ifdef CONFIG_X86_32
++	int i;
++#endif
  
- 		kfree(cdev->req->buf);
-+		cdev->req->buf = NULL;
- 		usb_ep_free_request(cdev->gadget->ep0, cdev->req);
-+		cdev->req = NULL;
- 	}
- 	cdev->next_string_id = 0;
- 	device_remove_file(&cdev->gadget->dev, &dev_attr_suspended);
+-	if (boot_cpu_has(X86_FEATURE_TSC))
+-		tsc = rdtsc();
+ 
+ 	if (disable_apic) {
+ 		disable_ioapic_support();
+@@ -1437,45 +1485,7 @@ void setup_local_APIC(void)
+ 	value &= ~APIC_TPRI_MASK;
+ 	apic_write(APIC_TASKPRI, value);
+ 
+-	/*
+-	 * After a crash, we no longer service the interrupts and a pending
+-	 * interrupt from previous kernel might still have ISR bit set.
+-	 *
+-	 * Most probably by now CPU has serviced that pending interrupt and
+-	 * it might not have done the ack_APIC_irq() because it thought,
+-	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
+-	 * does not clear the ISR bit and cpu thinks it has already serivced
+-	 * the interrupt. Hence a vector might get locked. It was noticed
+-	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
+-	 */
+-	do {
+-		queued = 0;
+-		for (i = APIC_ISR_NR - 1; i >= 0; i--)
+-			queued |= apic_read(APIC_IRR + i*0x10);
+-
+-		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
+-			value = apic_read(APIC_ISR + i*0x10);
+-			for (j = 31; j >= 0; j--) {
+-				if (value & (1<<j)) {
+-					ack_APIC_irq();
+-					acked++;
+-				}
+-			}
+-		}
+-		if (acked > 256) {
+-			printk(KERN_ERR "LAPIC pending interrupts after %d EOI\n",
+-			       acked);
+-			break;
+-		}
+-		if (queued) {
+-			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
+-				ntsc = rdtsc();
+-				max_loops = (cpu_khz << 10) - (ntsc - tsc);
+-			} else
+-				max_loops--;
+-		}
+-	} while (queued && max_loops > 0);
+-	WARN_ON(max_loops <= 0);
++	apic_pending_intr_clear();
+ 
+ 	/*
+ 	 * Now that we are all set up, enable the APIC
 -- 
 2.20.1
 
