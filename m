@@ -2,215 +2,86 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB48EC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8FDC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9724F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:26:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="h8lrbRMr"
+	by mail.kernel.org (Postfix) with ESMTP id 8F2F020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfKKF0s (ORCPT
+        id S1726958AbfKKF1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 00:26:48 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:44476 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfKKF0s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 00:26:48 -0500
-Received: by mail-vk1-f196.google.com with SMTP id o198so2857890vko.11
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 21:26:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DXwG7Htt8xNu0lrk1CpbOO5TmV59fWwZQbJzjoVIM78=;
-        b=h8lrbRMrrhVlG6DWJGLEMzVAA3RZl2r6zZCSH8Buo45xvL6NfgvfUszEX1y9lILLGN
-         V8mlpV90yp5XtQmkx1Q9RteWm9G1IL5Fj5+d1ZiO16Dm4IQ0oi4H7iJxttg49FfFIFEu
-         4o3XmqaUvlKymwS514aX4+oaXdsEuBuAnWQt3ofclnGD340pPa8BqmX0cMTcMuEtlHb/
-         ZuPtFOpOJcKDMLhgLXTPCk959aHIeQWOPpNInWwdWDCijdZJGKZCZ88DhFDpFbTKBYa8
-         CfBi0wPSBklojiNhead9uXF5ha7uIcwFiQozmx5fsG2wgSyNfyipe2u0og2QTv4B9+tZ
-         pW3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DXwG7Htt8xNu0lrk1CpbOO5TmV59fWwZQbJzjoVIM78=;
-        b=BoRHPQPKbaNWGuYSmpuLJO741yGfq0HFU4X6dL1lTMoAiJKvIELN71Lb3eEdEGqRzi
-         vvyPPrBYdIxsuS3/QkTFkbKmXS3NTfmkuB6HSrU40BUrzdIH3cSPUi7JnWVDvogWmMxj
-         cUeJB0E2ajpHUQ5mZM36SnvOBOuibsnvRZK8G5ldSOq1auU//+eqNEkBG3uERDcby1gP
-         LIlxmkIoq1/ZfdJxPzzQAt5inTvlh2+HZMa7qys6NJFtV7snTbQZ25+RaR9QErs+iGaU
-         9Yz+zmLDjdqT8knCRgPEHgAN8IrRr8kFz+CX5ryhIA5vL9ceHbrY0NYRfVeAdPCbNUbo
-         bbJg==
-X-Gm-Message-State: APjAAAWYxj3hab1x2cUKp8y4R7m9wfBIHw12JM5LzhIcUxENMT04PgH6
-        Kw+Ynj7V0xQRoypyxOMzNSYyWoO9hpkMfFEuxpedmg==
-X-Google-Smtp-Source: APXvYqyvRzUFxvAr+4U1TJibsN+f5gff9mvIlEY8CgnrfvYIwjzf6AmIsl3DKsTnNOun/OG9RsaKkKkkUDn2wYlAr7w=
-X-Received: by 2002:a1f:7387:: with SMTP id o129mr16986118vkc.73.1573450005202;
- Sun, 10 Nov 2019 21:26:45 -0800 (PST)
+        Mon, 11 Nov 2019 00:27:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:40610 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726768AbfKKF1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 00:27:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D41F531B;
+        Sun, 10 Nov 2019 21:27:04 -0800 (PST)
+Received: from [10.163.1.187] (unknown [10.163.1.187])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C75D73F6C4;
+        Sun, 10 Nov 2019 21:27:01 -0800 (PST)
+Subject: Re: [PATCH] efi: Fix comment for efi_mem_type() wrt absent physical
+ addresses
+To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+References: <1573449229-13918-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <dcca9d9b-449a-1a97-c792-467966d8eec2@arm.com>
+Date:   Mon, 11 Nov 2019 10:57:37 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20191015061349.141448-1-wvw@google.com> <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
- <CAHLCerN0CWOox-_=ywVO40R9LCahBRoU6Myg3Ca3p_TkZyJAMw@mail.gmail.com> <CAGXk5yp4uSCESvve5j_LbCr7b_55DqBagjNr_Dsdi=HppSpBPg@mail.gmail.com>
-In-Reply-To: <CAGXk5yp4uSCESvve5j_LbCr7b_55DqBagjNr_Dsdi=HppSpBPg@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Mon, 11 Nov 2019 10:56:34 +0530
-Message-ID: <CAHLCerN4ymf7LOGQPRLuAwirwCUaQGynrnUMfgU6+frDswey5A@mail.gmail.com>
-Subject: Re: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
-To:     Wei Wang <wvw@google.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1573449229-13918-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 3:04 AM Wei Wang <wvw@google.com> wrote:
->
-> On Wed, Oct 16, 2019 at 10:16 AM Amit Kucheria
-> <amit.kucheria@verdurent.com> wrote:
-> >
-> > On Wed, Oct 16, 2019 at 10:20 PM Amit Kucheria
-> > <amit.kucheria@verdurent.com> wrote:
-> > >
-> > > On Tue, Oct 15, 2019 at 11:43 AM Wei Wang <wvw@google.com> wrote:
-> > > >
-> > > > The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> > > > numbers are subject to change due to device tree change. This usually
-> > > > leads to tree traversal in userspace code.
-> > > > The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> > > > cooling_device respectively.
-> > >
-> > > I like this.
-> > >
-> > > > Signed-off-by: Wei Wang <wvw@google.com>
-> > > > ---
-> > > >  drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
-> > > >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> > > > index d4481cc8958f..0ff8fb1d7b0a 100644
-> > > > --- a/drivers/thermal/thermal_core.c
-> > > > +++ b/drivers/thermal/thermal_core.c
-> > > > @@ -22,6 +22,7 @@
-> > > >  #include <net/netlink.h>
-> > > >  #include <net/genetlink.h>
-> > > >  #include <linux/suspend.h>
-> > > > +#include <linux/kobject.h>
-> > > >
-> > > >  #define CREATE_TRACE_POINTS
-> > > >  #include <trace/events/thermal.h>
-> > > > @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
-> > > >
-> > > >  static atomic_t in_suspend;
-> > > >  static bool power_off_triggered;
-> > > > +static struct kobject *cdev_link_kobj;
-> > > > +static struct kobject *tz_link_kobj;
-> > > >
-> > > >  static struct thermal_governor *def_governor;
-> > > >
-> > > > @@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > >         struct thermal_zone_device *pos = NULL;
-> > > >         int result;
-> > > >
-> > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > +       if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
-> > > >                 return ERR_PTR(-EINVAL);
-> > >
-> > > This should be a separate fix, if needed.
-> Agree, but the link now requires that "" as invalid _type_.
+On 11/11/2019 10:43 AM, Anshuman Khandual wrote:
+> A previous commit f99afd08a45f ("efi: Update efi_mem_type() to return an
+> error rather than 0") changed the return type from EFI_RESERVED_TYPE to
+> -EINVAL when the searched physical address is not present in any memory
+> descriptor. But the comment preceding the function never changed. Lets
+> change the comment now to reflect the new return type -EINVAL.
 
-I'm not sure I understand. What does this change have to do with
-adding symlinks below?
+In the subject line, s/PATCH/PATCH V2/. Not sending yet another patch just
+to fix this (in order to reduce spam). But please let me know in case that
+will be essential.
 
-> > >
-> > > >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-> > > > @@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > >                 return ERR_PTR(result);
-> > > >         }
-> > > >
-> > > > -       /* Add 'this' new cdev to the global cdev list */
-> > > > +       /* Add 'this' new cdev to the global cdev list and create link*/
-> > > >         mutex_lock(&thermal_list_lock);
-> > > >         list_add(&cdev->node, &thermal_cdev_list);
-> > > > +       if (!cdev_link_kobj)
-> > > > +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > > > +                                               cdev->device.kobj.parent);
-> > > > +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-> > > > +                                               &cdev->device.kobj, cdev->type))
-> > > > +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
-> > >
-> > > Any reason not to use the following form instead? It seems easier to read.
-> > >
-> > > if (!cdev_link_kobj) {
-> > >                cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > >                                                cdev->device.kobj.parent);
-> > >               ret = sysfs_create_link(cdev_link_kobj,
-> > >                                               &cdev->device.kobj, cdev->type))
-> > >               if (ret)
-> > >                        dev_err(&cdev->device, "Failed to create
-> > > cdev-by-name link\n");
-> > > }
-> >
-> > I can now see why you had to do that - none of the other links would
-> > get created after the first one.
-> >
-> > Perhaps create the directories in the __init functions and only create
-> > the links here?
-> >
-> AFAICT, this is no such API except the private get_device_parent()
-> under driver/base/. Also the lazy initialization makes sense in such
-> case when there is no thermal device attached. Looks like the class
-> dir is also lazy-initialized when first device registered
-> https://elixir.bootlin.com/linux/v5.3.5/source/drivers/base/core.c#L1790.
-
-OK.
-
-> >
-> > > >         mutex_unlock(&thermal_list_lock);
-> > > >
-> > > >         /* Update binding information for 'this' new cdev */
-> > > > @@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
-> > > >                         }
-> > > >                 }
-> > > >         }
-> > > > +       if (cdev_link_kobj)
-> > > > +               sysfs_remove_link(cdev_link_kobj, cdev->type);
-> > > >
-> > > >         mutex_unlock(&thermal_list_lock);
-> > > >
-> > > > @@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
-> > > >
-> > > >         mutex_lock(&thermal_list_lock);
-> > > >         list_add_tail(&tz->node, &thermal_tz_list);
-> > > > +       if (!tz_link_kobj)
-> > > > +               tz_link_kobj = kobject_create_and_add("tz-by-name",
-> > > > +                                               tz->device.kobj.parent);
-> > > > +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-> > > > +                                               &tz->device.kobj, tz->type))
-> > > > +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
-> > >
-> > > Same as above.
-> > >
-> > > >         mutex_unlock(&thermal_list_lock);
-> > > >
-> > > >         /* Bind cooling devices for this zone */
-> > > > @@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
-> > > >                         }
-> > > >                 }
-> > > >         }
-> > > > +       if (tz_link_kobj)
-> > > > +               sysfs_remove_link(tz_link_kobj, tz->type);
-> > > >
-> > > >         mutex_unlock(&thermal_list_lock);
-> > > >
-> > > > --
-> > > > 2.23.0.700.g56cf767bdb-goog
-> > > >
+> 
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: linux-efi@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V2:
+> 
+> - Changed comment for efi_mem_type() instead of the return type per Ard
+> 
+> V1: (https://lore.kernel.org/patchwork/patch/1149002/)
+> 
+>  drivers/firmware/efi/efi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 77ca52d86e30..47b0bf7a2b7f 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -899,7 +899,7 @@ u64 efi_mem_attributes(unsigned long phys_addr)
+>   *
+>   * Search in the EFI memory map for the region covering @phys_addr.
+>   * Returns the EFI memory type if the region was found in the memory
+> - * map, EFI_RESERVED_TYPE (zero) otherwise.
+> + * map, -EINVAL otherwise.
+>   */
+>  int efi_mem_type(unsigned long phys_addr)
+>  {
+> 
