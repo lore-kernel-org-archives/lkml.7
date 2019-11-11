@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C6EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330C0C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680EB2196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C2E21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497982;
-	bh=Cy38CBA9w5CE8lj9VSGlg26w/40zREJw3/30CScJPXw=;
+	s=default; t=1573497987;
+	bh=c33AECLfdkLw9jMvT37q32hJX80dIXfiA4ZnBHOxKt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LHOChuk2hkFNeZzCc5MWYntumeGainWTkaaTYQqQpNhpFqwFVrY9XoOlpwsCnW1f3
-	 0tZMPRhhEef/p1f/cC1gBM39GGPwa8GVQShnlTC7nnjyNR2IWLdcw7EBLmGVp4+1Nh
-	 UnV4/X9uAmZ4C7dh2yaxzgmlM3T09IdQB5yl7GWI=
+	b=hiSvRrgLzGq44XySwCrPXMG7pmMUhW7OftHPtx9kNvu6suKKCJ5KAmemaF5ebDIxk
+	 I/e2rtuEE9/z/YmiCDlWiLvtdXQ/Oyqm3k64OsjkSurAykM7N02dbuwK5f/K0uQ7Ep
+	 cFUblU4tVOzBO9/ARBYASC823Anr/IpiGTqeqQ64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbfKKSqV (ORCPT
+        id S1729997AbfKKSqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:46:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38756 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:46:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbfKKSqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:46:18 -0500
+        id S1729984AbfKKSqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:46:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E3921655;
-        Mon, 11 Nov 2019 18:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96AB02173B;
+        Mon, 11 Nov 2019 18:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497977;
-        bh=Cy38CBA9w5CE8lj9VSGlg26w/40zREJw3/30CScJPXw=;
+        s=default; t=1573497981;
+        bh=c33AECLfdkLw9jMvT37q32hJX80dIXfiA4ZnBHOxKt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHWchNXDT3MTFeHcYATqeHfYmNKPa95BdsRBIBUyImhwEJIaBNI7zL1dCr1XxN9bn
-         gT/zYdBip8QmyRD3iA3vjI+5sZOIb3cjI4huKjeQ4n04o0JbVkNVzzP9VzEHttsClN
-         2Hvu3vJh7yZgh5rZ9vLfTfzL8oxS0n6GF+zfBvLE=
+        b=Pnz+9rZvSoYokpfFvwUgPrU2xdeks/uJR33Ll4AGP0HsNtNaOs277koKX++yA3nVS
+         +TjZBC6A+PUGaSBW5hWx25q4vnqu2bHub/R3i57BS9yw6AxB8Z6iRsYEWC75r4G/tB
+         n6C/xj4wOzUsrCWyUB1Io7fhi/4IS+yeEcSEqXoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/125] hv_netvsc: Fix error handling in netvsc_attach()
-Date:   Mon, 11 Nov 2019 19:29:11 +0100
-Message-Id: <20191111181454.792993510@linuxfoundation.org>
+Subject: [PATCH 4.19 113/125] usb: dwc3: gadget: fix race when disabling ep with cancelled xfers
+Date:   Mon, 11 Nov 2019 19:29:12 +0100
+Message-Id: <20191111181454.916507789@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,49 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
 
-[ Upstream commit 719b85c336ed35565d0f3982269d6f684087bb00 ]
+[ Upstream commit d8eca64eec7103ab1fbabc0a187dbf6acfb2af93 ]
 
-If rndis_filter_open() fails, we need to remove the rndis device created
-in earlier steps, before returning an error code. Otherwise, the retry of
-netvsc_attach() from its callers will fail and hang.
+When disabling an endpoint which has cancelled requests, we should
+make sure to giveback requests that are currently pending in the
+cancelled list, otherwise we may fall into a situation where command
+completion interrupt fires after endpoint has been disabled, therefore
+causing a splat.
 
-Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fec9095bdef4 "usb: dwc3: gadget: remove wait_end_transfer"
+Reported-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Link: https://lore.kernel.org/r/20191031090713.1452818-1-felipe.balbi@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 6f6c0dbd91fc8..b7a71c203aa37 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -993,7 +993,7 @@ static int netvsc_attach(struct net_device *ndev,
- 	if (netif_running(ndev)) {
- 		ret = rndis_filter_open(nvdev);
- 		if (ret)
--			return ret;
-+			goto err;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 54de732550648..8398c33d08e7c 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -698,6 +698,12 @@ static void dwc3_remove_requests(struct dwc3 *dwc, struct dwc3_ep *dep)
  
- 		rdev = nvdev->extension;
- 		if (!rdev->link_state)
-@@ -1001,6 +1001,13 @@ static int netvsc_attach(struct net_device *ndev,
+ 		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
  	}
- 
- 	return 0;
 +
-+err:
-+	netif_device_detach(ndev);
++	while (!list_empty(&dep->cancelled_list)) {
++		req = next_request(&dep->cancelled_list);
 +
-+	rndis_filter_device_remove(hdev, nvdev);
-+
-+	return ret;
++		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
++	}
  }
  
- static int netvsc_set_channels(struct net_device *net,
+ /**
 -- 
 2.20.1
 
