@@ -2,146 +2,121 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75283C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379EAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4956821872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:03:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATwkMiIl"
+	by mail.kernel.org (Postfix) with ESMTP id 1208621872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKKMDy (ORCPT
+        id S1727025AbfKKMFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 07:03:54 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57974 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726810AbfKKMDy (ORCPT
+        Mon, 11 Nov 2019 07:05:06 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39569 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfKKMFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 07:03:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573473832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P6iw74DnvADLDHD+oyZ5sT4nFBJD2T/ZL85QnTrbp6k=;
-        b=ATwkMiIlGsmOWFJaNVIdqbI8UGI0ALPbG/DVGY2ySbdVpsQUWCwpWZJWOYClSgWNpidy/3
-        pwigYBKr/bkK0WbvnUsST+mkm6TPKvEWu1ttyC6f+MnCo4YVCwsqQwhwAF6FacRBHlBARW
-        vxoZrIwaBluIrvX3wa9C2tbJO1VrzzI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-QPZNRhliNKOL4UeCniFU4Q-1; Mon, 11 Nov 2019 07:03:49 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1631B8C51EA;
-        Mon, 11 Nov 2019 12:03:47 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3078B5C651;
-        Mon, 11 Nov 2019 12:03:42 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 13:03:41 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf tools: report initial event parsing error
-Message-ID: <20191111120341.GE9791@krava>
-References: <20191107222315.GA7261@kernel.org>
- <20191108181533.222053-1-irogers@google.com>
+        Mon, 11 Nov 2019 07:05:06 -0500
+Received: by mail-io1-f72.google.com with SMTP id e17so12044801ioc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 04:05:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=w6Keuok1ehG5NCdltR+WKRqu0HOKnkFWU+V9KF3Usgo=;
+        b=Na+7+YeC1TTiOJ25DzX/2oMJTPcJkc/04t8uTvzTtVM0OwB4VJ57O3urCM+NF+JNhl
+         ZhZ6RaY+pn8EgI/2n7odziSSazwNIM5nunloMABHgOLJZFQmsi0Ab5bstPn0n/n3h6ec
+         EavYKXSeflVYWA49vxSWQcZxz0AReXYhH7y2i3AcgCrw/CFAH6Xo5YwvHeXoP1zv5a9G
+         2XAOW/YCgpRnaaLhET4YGEUbSFHHPTwBkWKXKhMO+K1aR3yYdzZ3p4pwKNbQtU0nTQez
+         209Y+Z6lmpdbKPEmYmaMSx1qZG4x3YBCvR3UmiZBYEoA7e2WhEM5sk3t+T5WQ1bO+VaP
+         Wx/w==
+X-Gm-Message-State: APjAAAXwHzi/jpO0EFGcUTEaZkpKeKq+/n6rg24flQvYvZbV7o5B9cwR
+        7mY5cpxrLJwaKfkzZZH7M5C1U7TxNyKgVNMB+JHsIFwx9Aq+
+X-Google-Smtp-Source: APXvYqyGNxoHm5qEhquhgLNmVnuxdWzdo/mULggNwaAXSfOclHHEPGVPdP00z/rDTo2e9m8L5TxlKcjkzTvmXoVJ4F6hHQ8JrpPM
 MIME-Version: 1.0
-In-Reply-To: <20191108181533.222053-1-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: QPZNRhliNKOL4UeCniFU4Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+X-Received: by 2002:a6b:cc01:: with SMTP id c1mr9250843iog.7.1573473905580;
+ Mon, 11 Nov 2019 04:05:05 -0800 (PST)
+Date:   Mon, 11 Nov 2019 04:05:05 -0800
+In-Reply-To: <000000000000aae1480596a5632b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000034a246059710f18a@google.com>
+Subject: Re: WARNING: refcount bug in j1939_netdev_start
+From:   syzbot <syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kernel@pengutronix.de,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
+        robin@protonic.nl, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:15:33AM -0800, Ian Rogers wrote:
-> Record the first event parsing error and report. Implementing feedback
-> from Jiri Olsa:
-> https://lkml.org/lkml/2019/10/28/680
->=20
-> An example error is:
->=20
-> $ tools/perf/perf stat -e c/c/
-> WARNING: multiple event parsing errors
-> event syntax error: 'c/c/'
->                        \___ unknown term
->=20
-> valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,fil=
-ter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_=
-not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
->=20
-> Initial error:
-> event syntax error: 'c/c/'
->                     \___ Cannot find PMU `c'. Missing kernel support?
-> Run 'perf list' for a list of valid events
->=20
->  Usage: perf stat [<options>] [<command>]
->=20
->     -e, --event <event>   event selector. use 'perf list' to list availab=
-le events
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/powerpc/util/kvm-stat.c |  9 ++-
->  tools/perf/builtin-stat.c               |  2 +
->  tools/perf/builtin-trace.c              | 16 ++++--
->  tools/perf/tests/parse-events.c         |  3 +-
->  tools/perf/util/metricgroup.c           |  2 +-
->  tools/perf/util/parse-events.c          | 76 ++++++++++++++++++-------
->  tools/perf/util/parse-events.h          |  4 ++
->  7 files changed, 84 insertions(+), 28 deletions(-)
->=20
-> diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/po=
-werpc/util/kvm-stat.c
-> index 9cc1c4a9dec4..30f5310373ca 100644
-> --- a/tools/perf/arch/powerpc/util/kvm-stat.c
-> +++ b/tools/perf/arch/powerpc/util/kvm-stat.c
-> @@ -113,10 +113,15 @@ static int is_tracepoint_available(const char *str,=
- struct evlist *evlist)
->  =09struct parse_events_error err;
->  =09int ret;
-> =20
-> -=09err.str =3D NULL;
-> +=09bzero(&err, sizeof(err));
->  =09ret =3D parse_events(evlist, str, &err);
-> -=09if (err.str)
-> +=09if (err.str) {
->  =09=09pr_err("%s : %s\n", str, err.str);
-> +=09=09free(&err->str);
-> +=09=09free(&err->help);
-> +=09=09free(&err->first_str);
-> +=09=09free(&err->first_help);
+syzbot has found a reproducer for the following crash on:
 
-it's used in other places, so it's better to put it in
-parse_events_error__exit or such..
+HEAD commit:    9805a683 Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=133de01ce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
+dashboard link: https://syzkaller.appspot.com/bug?extid=afd421337a736d6c1ee6
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d713c6e00000
 
-jirka
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+refcount_t: increment on 0; use-after-free.
+WARNING: CPU: 1 PID: 8514 at lib/refcount.c:156  
+refcount_inc_checked+0x4b/0x50 lib/refcount.c:156
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8514 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+  panic+0x264/0x7a9 kernel/panic.c:221
+  __warn+0x20e/0x210 kernel/panic.c:582
+  report_bug+0x1b6/0x2f0 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:refcount_inc_checked+0x4b/0x50 lib/refcount.c:156
+Code: 3d f7 ab 75 05 01 75 08 e8 12 e2 2d fe 5b 5d c3 e8 0a e2 2d fe c6 05  
+e1 ab 75 05 01 48 c7 c7 b4 c5 40 88 31 c0 e8 a5 78 00 fe <0f> 0b eb df 90  
+55 48 89 e5 41 57 41 56 41 55 41 54 53 48 83 ec 10
+RSP: 0018:ffff8880816dfd10 EFLAGS: 00010246
+RAX: 8358cd98639ffe00 RBX: ffff8880975b50f0 RCX: ffff8880a4010540
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: ffff8880816dfd18 R08: ffffffff815ca054 R09: ffffed1015d640d2
+R10: ffffed1015d640d2 R11: 0000000000000000 R12: ffff88808e820588
+R13: dffffc0000000000 R14: ffff88808e820000 R15: 1ffff11011d04047
+  j1939_netdev_start+0x47c/0x730 net/can/j1939/main.c:267
+  j1939_sk_bind+0x2c0/0xac0 net/can/j1939/socket.c:438
+  __sys_bind+0x2c2/0x3a0 net/socket.c:1647
+  __do_sys_bind net/socket.c:1658 [inline]
+  __se_sys_bind net/socket.c:1656 [inline]
+  __x64_sys_bind+0x7a/0x90 net/socket.c:1656
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a219
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007efc734cbc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a219
+RDX: 0000000000000018 RSI: 0000000020000240 RDI: 0000000000000005
+RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007efc734cc6d4
+R13: 00000000004c057e R14: 00000000004d2c50 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
