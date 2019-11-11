@@ -2,115 +2,114 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AEEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA744C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1872A20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573505242;
-	bh=3zQMEK7OYr48r4YyOSUY29EhrSqUnXImkEn3hXa4OeY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xhTOZovWFXD5ejXAMtRYb6N1nNUHPnHuncZUOpjeHKrYW8V2nbOBDXNhKhKjNvshW
-	 nHvXHbnrMQjpMdt1zwLfQmnchn+7o+zEic4gKgwgBOcFK1cvoYYpqe9ImFHI0ziVrp
-	 z+SlF8PLA5J7QQjFfuASoqnkBnhpcOIG0MfraB2o=
+	by mail.kernel.org (Postfix) with ESMTP id BB35020578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:51:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDfr7FzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfKKUrV (ORCPT
+        id S1727137AbfKKUvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:47:21 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45305 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKUrT (ORCPT
+        Mon, 11 Nov 2019 15:51:24 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35619 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKUvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:47:19 -0500
-Received: by mail-lj1-f193.google.com with SMTP id n21so15275955ljg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 12:47:18 -0800 (PST)
+        Mon, 11 Nov 2019 15:51:24 -0500
+Received: by mail-io1-f66.google.com with SMTP id x21so16146150iol.2;
+        Mon, 11 Nov 2019 12:51:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OaEDXSnozFKU9AfcCmi3n5mppwBp0l4bFT/aQieMhC0=;
-        b=Zs8Zzq88VsL2T86KxW7IgVWl6ZhIIzNKAf9FuqchaKJtKHaYsoAYP+TPoclakBI6l3
-         ljes5eRvglTxez5EmHsBrnpio1cu+VIFH8/TCGhqHn3GzE608nn3f94tnbKbNvbVffrZ
-         6m3v2QDJ6S7Hl1KbBOeyM4E0K5JCKzaUiZKxc=
+        bh=B5hctI9CUIkowY+km5A5wQbF2v/7Tj6av1qpKeqwyrs=;
+        b=GDfr7FzLA89ibKp/TteL4uMThinW3HdCRBPytMDcFym1rWJzwhvVn8wemgnWP0SW2V
+         BQd7RLoT/DCWnUAELlCwfQMtbVU+HXUmVlFw4zyD3gb8vPal4x7qcnCoWwbSAoXYFUm0
+         hY3DH8rYLUEcAcnfimeT9zFWS2YIDR7pTCakpIB7bfKfi2dYlm5fd7Vw/PceIbl/hodE
+         bQd+Pva8d1Ygi2aMsM/lhnkY+atkDAQz/xcIxUJWaRH+eFFPT9eE5Hh51AFcIAniRZBz
+         8A9UvuoEzEf9kVNyORsgqRRSAlV/WMVdMNMHUcLvsoYV3J2BpgSBaPsTes60ayoqjbGM
+         EOJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OaEDXSnozFKU9AfcCmi3n5mppwBp0l4bFT/aQieMhC0=;
-        b=he3hLOk+aP+ohJZaoTDT5Bw2sxIobjlbZnz1d7gppdFWta2scjV2+VnOp5x1kwO361
-         BoYCnAClVL2TriWcLLwaMj8HXcF5YO4O7JFMXtgWGmMONna9SBZAnZ0ZmD3hAY5vBdpE
-         qmhC+TRjM2/+G7Gpx2LaWvoIuO6uZao7Gm6GUEyUdSvVzWX9jQImj9gvSfWwHzvt3guF
-         1meoypsRSMSY2yu0+xCsAPJhNTcgk5au8p1NKR5boy0xSnc7fR++lP0tS5vzOVuuzjgj
-         /dvNn0H735XRiM5Zx+TG01Rs+4LtYDHapXQ9n098KsRy9i86KGJ6yv6RXEG40JXlCxhQ
-         aaag==
-X-Gm-Message-State: APjAAAU+mPgY8fADSFVyL3GG1Mu6jDnwOvfzA79cyaZ7lTRpANJCpqmG
-        RDZ0aSK3ymCwvwgTWlMc9AFTb5inmSo=
-X-Google-Smtp-Source: APXvYqxPMU1H+06lAzEc2assGSH0uW78hGxUMg52WKZD0OkztfxIuVtB7YoVfbkJ47oQvIM4ALtCeQ==
-X-Received: by 2002:a05:651c:238:: with SMTP id z24mr10301264ljn.36.1573505237219;
-        Mon, 11 Nov 2019 12:47:17 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id 15sm7088090ljq.62.2019.11.11.12.47.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 12:47:14 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id d5so5782305ljl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 12:47:14 -0800 (PST)
-X-Received: by 2002:a2e:982:: with SMTP id 124mr9131365ljj.48.1573505233789;
- Mon, 11 Nov 2019 12:47:13 -0800 (PST)
+        bh=B5hctI9CUIkowY+km5A5wQbF2v/7Tj6av1qpKeqwyrs=;
+        b=Z6XStFVlt2KQrl5wq9Ev7LCUlsbWQLTE0RKeswnCratUyZEqqmJ7Ki/xGTd2Yf3BUH
+         d8AI7V0N4CZSrbVxSlId5RU2t736pMYMKjlwgH8DoYJoInbkE2TBejhUOtzlq7s03LhR
+         IBVN3o29GlJh/a6pZx/jLhw9Gc/eTfVTHWpDxwo8P+ntblb4X27fDAd8TauzYwgd/5C4
+         MBZsNSpiymAYiOFKF2Ny1ubeDlh315XkeQrBiNKGzJBuMZbF8Gpg9gKUGCmFanMOIOK2
+         WKBEQfqgLI61lQM6r0PCifGngwBRvCcVhwP9eof4Pl+Hu/0MQ4IjVJulrZmYq5UDErba
+         Dm0A==
+X-Gm-Message-State: APjAAAXXiMKoYKPA3KIckxBLH2IYjDDqcH00PUSyHr/1cj2EegukV4dZ
+        NlGykppKMbNzkHCo5ExFyRYnNU/YsQ0i1VjTVBc=
+X-Google-Smtp-Source: APXvYqx7TbCA0VMFIwZ7QPh43X0cxelSdVqxZJWzCtGp7jk1wFzD1Ax/6SGUznNEvTwl+kbMjT5A93iaS4dyH/ho21A=
+X-Received: by 2002:a02:ac07:: with SMTP id a7mr2559123jao.39.1573505481508;
+ Mon, 11 Nov 2019 12:51:21 -0800 (PST)
 MIME-Version: 1.0
-References: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
- <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com>
- <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
- <CAHk-=wg6Zaf09i0XNgCmOzKKWnoAPMfA7WX9OY1Ow1YtF0ZP3A@mail.gmail.com>
- <CANn89i+hRhweL2N=r1chMpWKU2ue8fiQO=dLxGs9sgLFbgHEWQ@mail.gmail.com>
- <CANn89iJiuOkKc2AVmccM8z9e_d4zbV61K-3z49ao1UwRDdFiHw@mail.gmail.com>
- <CAHk-=wgkwBjQWyDQi8mu06DXr_v_4zui+33fk3eK89rPof5b+A@mail.gmail.com>
- <CANn89i+x7Yxjxr4Fdaow-51-A-oBK3MqTscbQ4VXQuk4pX9aCg@mail.gmail.com> <CAHk-=whRQuSrstW+cwNmUdLNwkZsKsXuie_1uTqJeKjMBWmr6Q@mail.gmail.com>
-In-Reply-To: <CAHk-=whRQuSrstW+cwNmUdLNwkZsKsXuie_1uTqJeKjMBWmr6Q@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Nov 2019 12:46:56 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whWNkk7vCQr7LLshcB6B_=ikmpMXQ7RtO2FyDx-Np_UKg@mail.gmail.com>
-Message-ID: <CAHk-=whWNkk7vCQr7LLshcB6B_=ikmpMXQ7RtO2FyDx-Np_UKg@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+References: <20191108141555.31176-1-lhenriques@suse.com> <CAOi1vP-sVQKvpiPLoZ=9s7Hy=c2eQRocxSs1nPrXAUCbbZUZ-g@mail.gmail.com>
+ <20191108164758.GA1760@hermes.olymp> <alpine.DEB.2.21.1911081656320.10553@piezo.novalocal>
+ <20191108171616.GA2569@hermes.olymp> <alpine.DEB.2.21.1911081721120.28682@piezo.novalocal>
+ <20191108173101.GA3300@hermes.olymp> <20191111163036.GA20513@hermes.olymp>
+In-Reply-To: <20191111163036.GA20513@hermes.olymp>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 11 Nov 2019 21:51:47 +0100
+Message-ID: <CAOi1vP-kFnu_mJaTERHbSjBxQRvfXhFWF=9_nCaaFbh7ACiVhg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] ceph: safely use 'copy-from' Op on Octopus OSDs
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Sage Weil <sage@newdream.net>, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <ukernel@gmail.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 12:43 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Mon, Nov 11, 2019 at 5:30 PM Luis Henriques <lhenriques@suse.com> wrote:
 >
-> Yeah, maybe we could have some model for marking "this is statistics,
-> doesn't need to be exact".
+> On Fri, Nov 08, 2019 at 05:31:01PM +0000, Luis Henriques wrote:
+> <snip>
+> > > - You'll need to add it for both OSDMap::Incremental and OSDMap
+> > > - You'll need to make the encoding condition by updating the block like
+> > > the one below from OSDMap::encode()
+> > >
+> > >     uint8_t v = 9;
+> > >     if (!HAVE_FEATURE(features, SERVER_LUMINOUS)) {
+> > >       v = 3;
+> > >     } else if (!HAVE_FEATURE(features, SERVER_MIMIC)) {
+> > >       v = 6;
+> > >     } else if (!HAVE_FEATURE(features, SERVER_NAUTILUS)) {
+> > >       v = 7;
+> > >     }
+> > >
+> > > to include a SERVER_OCTOPUS case too.  Same goes for Incremental::encode()
+> >
+> > Awesome, thanks!  I'll give it a try, and test it with the appropriate
+> > kernel client side changes to use this.
+>
+> Ok, I've got the patch bellow for the OSD code, which IIRC should do
+> exactly what we want: duplicate the require_osd_release in the client
+> side.
+>
+> Now, in order to quickly test this I've started adding flags to the
+> CEPH_FEATURES_SUPPORTED_DEFAULT definition.  SERVER_MIMIC *seemed* to be
+> Ok, but once I've added SERVER_NAUTILUS I've realized that we'll need to
+> handle TYPE_MSGR2 address.  Which is a _big_ thing.  Is anyone already
+> looking into adding support for msgr v2 to the kernel client?
 
-Side note: that marking MUST NOT be "READ_ONCE + WRITE_ONCE", because
-that makes gcc create horrible code, and only makes the race worse.
+It should be easy enough to hack around it for testing purposes.
 
-At least with a regular add, it might stay as a single r-m-w
-instruction on architectures that have that, and makes the quality of
-the statistics slightly better (no preemption etc).
+I made some initial steps and hope to be able to dedicate the 5.6 cycle
+to it.
 
-So that's an excellent example of where changing code to use
-WRITE_ONCE actually makes the code objectively worse in practice -
-even if it might be the same in theory.
+Thanks,
 
-                Linus
+                Ilya
