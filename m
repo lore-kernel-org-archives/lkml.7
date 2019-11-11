@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7A5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E3BC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1310A2245C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEB122459
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499023;
-	bh=3iNS7/C6a0Lio62IpjKjE3izWfZiLXsULx097bg3Q/U=;
+	s=default; t=1573499037;
+	bh=dywrqtEgRpBStaOON3XI5ekgKLo9hIVBLPXy10+jWHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LzgLYhgNOGNnCZFnVZnNR4CnfIemf/z5reVQqWfgjJ32ONSzke0X926dETg9ES21k
-	 u7YvMLeRKbSwrZqqx1RMUmEWT7XNp9pBbhXXQ+wwgaHSRq3/GPj5YXRu7UdfIadi8r
-	 z9pydBVnZ4pqqkWqL2NN+hnMaxcD6H0RU5XcGX1k=
+	b=Qe9DHQYgyMNKA9x3TkBxEey48HsjKQxqgSPYybA4fpFqBEgSKWd8UIOxZhQcO0aDq
+	 v84rLJuI4tyALzFiOpmS+WePNEwStYzn9e3XCtGGXWTSo8KFENauOOa17Zo81yNdwY
+	 Di8aZhqlTqv20dmJSuF3MobRqVyhCdHitIEIU+j8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfKKSoy (ORCPT
+        id S1729698AbfKKSoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:44:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36530 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:44:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729759AbfKKSoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:44:46 -0500
+        id S1728130AbfKKSoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:44:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED5FF204FD;
-        Mon, 11 Nov 2019 18:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55BD6204FD;
+        Mon, 11 Nov 2019 18:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497885;
-        bh=3iNS7/C6a0Lio62IpjKjE3izWfZiLXsULx097bg3Q/U=;
+        s=default; t=1573497841;
+        bh=dywrqtEgRpBStaOON3XI5ekgKLo9hIVBLPXy10+jWHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=abm00pVSy6Cjysd3dl7h8HbDu3TrAnG5hhGIS4siGI414hRPC4QZhww3lTr3FwGkR
-         31TiMxqKR+2FNYoQf0qPOJwiDvKGUIyzlLfhvcsxySW6q+WImOEzNIB8mKVBdAlYpt
-         t+AXgIJWuRNwFCM2kfTL3nTQtp+4TwvBKr0iMn10=
+        b=sscScEYyhU1DXMlrhNckLb9Z9ehXvUR3UZ/FemxJHkID7jebj3rMTeApHbZVouaaE
+         4W+BEQb7Xw8bwslitM1q3huFJf+vJVJtc+II+62OuYYMzV+WT8DrMvUzN1AsS3nm7+
+         d3F3/9OfblZrBQQ2hhWdU0AmCXEPH9QH4zMhTafc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/125] bonding: fix unexpected IFF_BONDING bit unset
-Date:   Mon, 11 Nov 2019 19:28:46 +0100
-Message-Id: <20191111181451.722271158@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenfang Wang <zhenfang.wang@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 072/125] dmaengine: sprd: Fix the possible memory leak issue
+Date:   Mon, 11 Nov 2019 19:28:31 +0100
+Message-Id: <20191111181449.739146488@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,98 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-[ Upstream commit 65de65d9033750d2cf1b336c9d6e9da3a8b5cc6e ]
+[ Upstream commit ec1ac309596a7bdf206743b092748205f6cd5720 ]
 
-The IFF_BONDING means bonding master or bonding slave device.
-->ndo_add_slave() sets IFF_BONDING flag and ->ndo_del_slave() unsets
-IFF_BONDING flag.
+If we terminate the channel to free all descriptors associated with this
+channel, we will leak the memory of current descriptor if the current
+descriptor is not completed, since it had been deteled from the desc_issued
+list and have not been added into the desc_completed list.
 
-bond0<--bond1
+Thus we should check if current descriptor is completed or not, when freeing
+the descriptors associated with one channel, if not, we should free it to
+avoid this issue.
 
-Both bond0 and bond1 are bonding device and these should keep having
-IFF_BONDING flag until they are removed.
-But bond1 would lose IFF_BONDING at ->ndo_del_slave() because that routine
-do not check whether the slave device is the bonding type or not.
-This patch adds the interface type check routine before removing
-IFF_BONDING flag.
-
-Test commands:
-    ip link add bond0 type bond
-    ip link add bond1 type bond
-    ip link set bond1 master bond0
-    ip link set bond1 nomaster
-    ip link del bond1 type bond
-    ip link add bond1 type bond
-
-Splat looks like:
-[  226.665555] proc_dir_entry 'bonding/bond1' already registered
-[  226.666440] WARNING: CPU: 0 PID: 737 at fs/proc/generic.c:361 proc_register+0x2a9/0x3e0
-[  226.667571] Modules linked in: bonding af_packet sch_fq_codel ip_tables x_tables unix
-[  226.668662] CPU: 0 PID: 737 Comm: ip Not tainted 5.4.0-rc3+ #96
-[  226.669508] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  226.670652] RIP: 0010:proc_register+0x2a9/0x3e0
-[  226.671612] Code: 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 39 01 00 00 48 8b 04 24 48 89 ea 48 c7 c7 a0 0b 14 9f 48 8b b0 e
-0 00 00 00 e8 07 e7 88 ff <0f> 0b 48 c7 c7 40 2d a5 9f e8 59 d6 23 01 48 8b 4c 24 10 48 b8 00
-[  226.675007] RSP: 0018:ffff888050e17078 EFLAGS: 00010282
-[  226.675761] RAX: dffffc0000000008 RBX: ffff88805fdd0f10 RCX: ffffffff9dd344e2
-[  226.676757] RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff88806c9f6b8c
-[  226.677751] RBP: ffff8880507160f3 R08: ffffed100d940019 R09: ffffed100d940019
-[  226.678761] R10: 0000000000000001 R11: ffffed100d940018 R12: ffff888050716008
-[  226.679757] R13: ffff8880507160f2 R14: dffffc0000000000 R15: ffffed100a0e2c1e
-[  226.680758] FS:  00007fdc217cc0c0(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
-[  226.681886] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  226.682719] CR2: 00007f49313424d0 CR3: 0000000050e46001 CR4: 00000000000606f0
-[  226.683727] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  226.684725] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  226.685681] Call Trace:
-[  226.687089]  proc_create_seq_private+0xb3/0xf0
-[  226.687778]  bond_create_proc_entry+0x1b3/0x3f0 [bonding]
-[  226.691458]  bond_netdev_event+0x433/0x970 [bonding]
-[  226.692139]  ? __module_text_address+0x13/0x140
-[  226.692779]  notifier_call_chain+0x90/0x160
-[  226.693401]  register_netdevice+0x9b3/0xd80
-[  226.694010]  ? alloc_netdev_mqs+0x854/0xc10
-[  226.694629]  ? netdev_change_features+0xa0/0xa0
-[  226.695278]  ? rtnl_create_link+0x2ed/0xad0
-[  226.695849]  bond_newlink+0x2a/0x60 [bonding]
-[  226.696422]  __rtnl_newlink+0xb9f/0x11b0
-[  226.696968]  ? rtnl_link_unregister+0x220/0x220
-[ ... ]
-
-Fixes: 0b680e753724 ("[PATCH] bonding: Add priv_flag to avoid event mishandling")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9b3b8171f7f4 ("dmaengine: sprd: Add Spreadtrum DMA driver")
+Reported-by: Zhenfang Wang <zhenfang.wang@unisoc.com>
+Tested-by: Zhenfang Wang <zhenfang.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Link: https://lore.kernel.org/r/170dbbc6d5366b6fa974ce2d366652e23a334251.1570609788.git.baolin.wang@linaro.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/dma/sprd-dma.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 136a972ea903a..9b8143dca5123 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1798,7 +1798,8 @@ err_detach:
- 	slave_disable_netpoll(new_slave);
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 1ed1c7efa2885..9e8ce56a83d8a 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -181,6 +181,7 @@ struct sprd_dma_dev {
+ 	struct sprd_dma_chn	channels[0];
+ };
  
- err_close:
--	slave_dev->priv_flags &= ~IFF_BONDING;
-+	if (!netif_is_bond_master(slave_dev))
-+		slave_dev->priv_flags &= ~IFF_BONDING;
- 	dev_close(slave_dev);
++static void sprd_dma_free_desc(struct virt_dma_desc *vd);
+ static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param);
+ static struct of_dma_filter_info sprd_dma_info = {
+ 	.filter_fn = sprd_dma_filter_fn,
+@@ -493,12 +494,19 @@ static int sprd_dma_alloc_chan_resources(struct dma_chan *chan)
+ static void sprd_dma_free_chan_resources(struct dma_chan *chan)
+ {
+ 	struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
++	struct virt_dma_desc *cur_vd = NULL;
+ 	unsigned long flags;
  
- err_restore_mac:
-@@ -2004,7 +2005,8 @@ static int __bond_release_one(struct net_device *bond_dev,
- 	else
- 		dev_set_mtu(slave_dev, slave->original_mtu);
+ 	spin_lock_irqsave(&schan->vc.lock, flags);
++	if (schan->cur_desc)
++		cur_vd = &schan->cur_desc->vd;
++
+ 	sprd_dma_stop(schan);
+ 	spin_unlock_irqrestore(&schan->vc.lock, flags);
  
--	slave_dev->priv_flags &= ~IFF_BONDING;
-+	if (!netif_is_bond_master(slave_dev))
-+		slave_dev->priv_flags &= ~IFF_BONDING;
++	if (cur_vd)
++		sprd_dma_free_desc(cur_vd);
++
+ 	vchan_free_chan_resources(&schan->vc);
+ 	pm_runtime_put(chan->device->dev);
+ }
+@@ -814,15 +822,22 @@ static int sprd_dma_resume(struct dma_chan *chan)
+ static int sprd_dma_terminate_all(struct dma_chan *chan)
+ {
+ 	struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
++	struct virt_dma_desc *cur_vd = NULL;
+ 	unsigned long flags;
+ 	LIST_HEAD(head);
  
- 	bond_free_slave(slave);
+ 	spin_lock_irqsave(&schan->vc.lock, flags);
++	if (schan->cur_desc)
++		cur_vd = &schan->cur_desc->vd;
++
+ 	sprd_dma_stop(schan);
  
+ 	vchan_get_all_descriptors(&schan->vc, &head);
+ 	spin_unlock_irqrestore(&schan->vc.lock, flags);
+ 
++	if (cur_vd)
++		sprd_dma_free_desc(cur_vd);
++
+ 	vchan_dma_desc_free_list(&schan->vc, &head);
+ 	return 0;
+ }
 -- 
 2.20.1
 
