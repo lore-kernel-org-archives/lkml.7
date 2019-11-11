@@ -2,101 +2,94 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3953C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A9DC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89761214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="ZGldm3S4"
+	by mail.kernel.org (Postfix) with ESMTP id 2704F206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKKQrX (ORCPT
+        id S1726979AbfKKQuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:47:23 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42467 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfKKQrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:47:23 -0500
-Received: by mail-pf1-f193.google.com with SMTP id s5so11022381pfh.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 08:47:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1uln3PQWpJHVN0cvSdX7VnkuLpysZdK64D1CGthDMQQ=;
-        b=ZGldm3S4bKZDsolIkr062FeCWNvgqBDCbXBCZQSlgjXHxjrJOCNka+55vftk5tfbjO
-         xM+8nieUBc2AaHtdsnK3zOkygz7oCeH3iSjCF9E/DpsUwm0ogx6DuoGw4RGJIIjds2xf
-         9QVw5/y5wXbeGEku9KqrasNNLbW1Qyp1qCPhJFXZov/EYKd0Mdxb2X5C3QjYJ208kiTX
-         Wkw6tBRfnSUeC1R+4MgsXVLIXOE9875v0yvZ1QQsQbBYTzmu+DXPa8l2DiT2+UHlkYlu
-         QJJcdoqKQO0+K+L/5aRb7X+ffsioxLikRuP7FuWx6HD1CpQs+uDJ9EaAgwKeCl2k9QSN
-         FsYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1uln3PQWpJHVN0cvSdX7VnkuLpysZdK64D1CGthDMQQ=;
-        b=I2Q881HbCxVPwHNABMw1MNY/WXZpO31kRERFtZfSEGz3gwbimjEhpVFGkUSm4MF6+L
-         oQ3lC9R9Td1vw2vBA87aoh0/2i/cDoDH78N8mNDQM9ack87ZjrTFgJz5395iVbmE0o28
-         gCnF5Hy4YKCzB2fsgBw03RI1fan9Ha+duZgWV+ZEqXXSNrVkTWyq8N3bON7CazweGxae
-         XnqGQVjOJIqUO2asJ4nA8XiXHcWoa9GHHMC4yINZB4pk+QMBldCP32Z611HPUkisCiJL
-         hXG9N01kDlG1+/XK/bE4CcC20kO7bvRE10nJ16mqrKGjx6Nw9R0hFt/KAwIc2HEa/OTr
-         ZxiQ==
-X-Gm-Message-State: APjAAAVn/Y1KVPWkyYvi8GdE0EFfr+E91bROqODy77sLi/4+8UzQhBPN
-        ZX3Horu/zwEZ8V1Hcm5xxsgraw==
-X-Google-Smtp-Source: APXvYqxIqglx9JQpZhfV6sn5yZId682STyaqTWhX69LzBX/PclD2m0DM/D8mPbJZgsMlMwbmAnwP5g==
-X-Received: by 2002:a62:1bd0:: with SMTP id b199mr31175476pfb.44.1573490842323;
-        Mon, 11 Nov 2019 08:47:22 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id 186sm4038077pfe.141.2019.11.11.08.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 08:47:21 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:47:12 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     "Greg KH" <gregkh@linuxfoundation.org>
-Cc:     <lantianyu1986@gmail.com>, <alex.williamson@redhat.com>,
-        <cohuck@redhat.com>, "KY Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
-        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
-        <robh@kernel.org>, <Jonathan.Cameron@huawei.com>,
-        <paulmck@linux.ibm.com>, "Michael Kelley" <mikelley@microsoft.com>,
-        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
-Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
-Message-ID: <20191111084712.37ba7d5a@hermes.lan>
-In-Reply-To: <20191111094920.GA135867@kroah.com>
-References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
-        <20191111094920.GA135867@kroah.com>
+        Mon, 11 Nov 2019 11:50:09 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:41546 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfKKQuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:50:09 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1iUCtC-0007wi-MA; Mon, 11 Nov 2019 09:50:07 -0700
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-2-logang@deltatee.com>
+ <20191109171853.GF952516@vkoul-mobl>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
+Date:   Mon, 11 Nov 2019 09:50:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191109171853.GF952516@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 01:49:20 -0800
-"Greg KH" <gregkh@linuxfoundation.org> wrote:
 
-> > +	ret = sysfs_create_bin_file(&channel->kobj,  
-> &ring_buffer_bin_attr);
-> > +	if (ret)
-> > +		dev_notice(&dev->device,
-> > +			   "sysfs create ring bin file failed; %d\n",  
-> ret);
-> > +  
-> 
-> Again, don't create sysfs files on your own, the bus code should be
-> doing this for you automatically and in a way that is race-free.
-> 
-> thanks,
-> 
-> greg k-h
 
-The sysfs file is only created if the VFIO/UIO driveris used.
+On 2019-11-09 10:18 a.m., Vinod Koul wrote:
+> Hi Logan,
+> 
+> Sorry for delay in reply!
+> 
+> On 22-10-19, 15:46, Logan Gunthorpe wrote:
+>> dma_chan_to_owner() dereferences the driver from the struct device to
+>> obtain the owner and call module_[get|put](). However, if the backing
+>> device is unbound before the dma_device is unregistered, the driver
+>> will be cleared and this will cause a NULL pointer dereference.
+> 
+> Have you been able to repro this? If so how..?
+> 
+> The expectation is that the driver shall unregister before removed.
+
+Yes, with my new driver, if I do a PCI unbind (which unregisters) while
+the DMA engine is in use, it panics. The point is the underlying driver
+can go away before the channel is removed.
+
+I suspect this is less of an issue for most devices as they wouldn't
+normally be unbound while in use (for example there's really no reason
+to ever unbind IOAT seeing it's built into the system). Though, the fact
+is, the user could unbind these devices at anytime and we don't want to
+panic if they do.
+
+>>
+>> Instead, store a pointer to the owner module in the dma_device struct
+>> so the module reference can be properly put when the channel is put, even
+>> if the backing device was destroyed first.
+>>
+>> This change helps to support a safer unbind of DMA engines.
+> 
+> For error cases which should be fixed, so maybe this is a right way and
+> gets things fixed :)
+
+Yes, if you'd like to merge the first two patches ahead of the rest,
+that would make sense to me.
+
+Thanks,
+
+Logan
