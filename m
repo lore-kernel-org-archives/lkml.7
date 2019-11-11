@@ -4,43 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549ABC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980E9C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32011215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E67920B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 05:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfKKFDO (ORCPT
+        id S1726805AbfKKFKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 00:03:14 -0500
-Received: from mga02.intel.com ([134.134.136.20]:6747 "EHLO mga02.intel.com"
+        Mon, 11 Nov 2019 00:10:53 -0500
+Received: from mga09.intel.com ([134.134.136.24]:31379 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfKKFDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 00:03:13 -0500
+        id S1725860AbfKKFKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 00:10:52 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 21:03:13 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 21:10:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
-   d="scan'208";a="228820825"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2019 21:03:12 -0800
-Cc:     baolu.lu@linux.intel.com, dwmw2@infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v2] iommu/vt-d: Turn off translations at shutdown
-To:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-kernel@vger.kernel.org, joro@8bytes.org
-References: <20191110172744.12541-1-deepa.kernel@gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <9f6b30fd-a827-c555-cc8f-f182e1be711f@linux.intel.com>
-Date:   Mon, 11 Nov 2019 13:00:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+   d="scan'208";a="207021996"
+Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.239.198.110]) ([10.239.198.110])
+  by orsmga006.jf.intel.com with ESMTP; 10 Nov 2019 21:10:49 -0800
+Subject: Re: [PATCH v2] KVM: X86: Fix initialization of MSR
+ lists(msrs_to_save[], emulated_msrs[] and msr_based_features[])
+From:   cqiang <chenyi.qiang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191106063520.1915-1-chenyi.qiang@intel.com>
+Message-ID: <7a148552-f5d2-2415-c33d-a162e095a3e5@intel.com>
+Date:   Mon, 11 Nov 2019 13:10:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191110172744.12541-1-deepa.kernel@gmail.com>
+In-Reply-To: <20191106063520.1915-1-chenyi.qiang@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -49,112 +54,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Ping for comments :)
 
-On 11/11/19 1:27 AM, Deepa Dinamani wrote:
-> The intel-iommu driver assumes that the iommu state is
-> cleaned up at the start of the new kernel.
-> But, when we try to kexec boot something other than the
-> Linux kernel, the cleanup cannot be relied upon.
-> Hence, cleanup before we go down for reboot.
+On 11/6/2019 2:35 PM, Chenyi Qiang wrote:
+> The three MSR lists(msrs_to_save[], emulated_msrs[] and
+> msr_based_features[]) are global arrays of kvm.ko, which are
+> adjusted (copy supported MSRs forward to override the unsupported MSRs)
+> when insmod kvm-{intel,amd}.ko, but it doesn't reset these three arrays
+> to their initial value when rmmod kvm-{intel,amd}.ko. Thus, at the next
+> installation, kvm-{intel,amd}.ko will do operations on the modified
+> arrays with some MSRs lost and some MSRs duplicated.
 > 
-> Keeping the cleanup at initialization also, in case BIOS
-> leaves the IOMMU enabled.
+> So define three constant arrays to hold the initial MSR lists and
+> initialize msrs_to_save[], emulated_msrs[] and msr_based_features[]
+> based on the constant arrays.
 > 
-> I considered turning off iommu only during kexec reboot, but a clean
-> shutdown seems always a good idea. But if someone wants to make it
-> conditional, such as VMM live update, we can do that.  There doesn't
-> seem to be such a condition at this time.
-> 
-> Tested that before, the info message
-> 'DMAR: Translation was enabled for <iommu> but we are not in kdump mode'
-> would be reported for each iommu. The message will not appear when the
-> DMA-remapping is not enabled on entry to the kernel.
-> 
-> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-
-This patch looks good to me.
-
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-baolu
-
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
 > ---
-> Changes since v1:
-> * move shutdown registration to iommu detection
+> Changes in v2:
+>   - define initial MSR lists with static const.
+>   - change the dynamic allocation of supported MSR lists to static allocation.
 > 
->   drivers/iommu/dmar.c        |  5 ++++-
->   drivers/iommu/intel-iommu.c | 20 ++++++++++++++++++++
->   include/linux/dmar.h        |  2 ++
->   3 files changed, 26 insertions(+), 1 deletion(-)
+>   arch/x86/kvm/x86.c | 51 +++++++++++++++++++++++++---------------------
+>   1 file changed, 28 insertions(+), 23 deletions(-)
 > 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index eecd6a421667..3acfa6a25fa2 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -895,8 +895,11 @@ int __init detect_intel_iommu(void)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 89621025577a..0b4b6db5b13f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1138,13 +1138,15 @@ EXPORT_SYMBOL_GPL(kvm_rdpmc);
+>    * List of msr numbers which we expose to userspace through KVM_GET_MSRS
+>    * and KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.
+>    *
+> - * This list is modified at module load time to reflect the
+> + * The three MSR lists(msrs_to_save, emulated_msrs, msr_based_features)
+> + * extract the supported MSRs from the related const lists.
+> + * msrs_to_save is selected from the msrs_to_save_all to reflect the
+>    * capabilities of the host cpu. This capabilities test skips MSRs that are
+> - * kvm-specific. Those are put in emulated_msrs; filtering of emulated_msrs
+> + * kvm-specific. Those are put in emulated_msrs_all; filtering of emulated_msrs
+>    * may depend on host virtualization features rather than host cpu features.
+>    */
+>   
+> -static u32 msrs_to_save[] = {
+> +static const u32 msrs_to_save_all[] = {
+>   	MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP, MSR_IA32_SYSENTER_EIP,
+>   	MSR_STAR,
+>   #ifdef CONFIG_X86_64
+> @@ -1185,9 +1187,10 @@ static u32 msrs_to_save[] = {
+>   	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
+>   };
+>   
+> +static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
+>   static unsigned num_msrs_to_save;
+>   
+> -static u32 emulated_msrs[] = {
+> +static const u32 emulated_msrs_all[] = {
+>   	MSR_KVM_SYSTEM_TIME, MSR_KVM_WALL_CLOCK,
+>   	MSR_KVM_SYSTEM_TIME_NEW, MSR_KVM_WALL_CLOCK_NEW,
+>   	HV_X64_MSR_GUEST_OS_ID, HV_X64_MSR_HYPERCALL,
+> @@ -1226,7 +1229,7 @@ static u32 emulated_msrs[] = {
+>   	 * by arch/x86/kvm/vmx/nested.c based on CPUID or other MSRs.
+>   	 * We always support the "true" VMX control MSRs, even if the host
+>   	 * processor does not, so I am putting these registers here rather
+> -	 * than in msrs_to_save.
+> +	 * than in msrs_to_save_all.
+>   	 */
+>   	MSR_IA32_VMX_BASIC,
+>   	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
+> @@ -1245,13 +1248,14 @@ static u32 emulated_msrs[] = {
+>   	MSR_KVM_POLL_CONTROL,
+>   };
+>   
+> +static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
+>   static unsigned num_emulated_msrs;
+>   
+>   /*
+>    * List of msr numbers which are used to expose MSR-based features that
+>    * can be used by a hypervisor to validate requested CPU features.
+>    */
+> -static u32 msr_based_features[] = {
+> +static const u32 msr_based_features_all[] = {
+>   	MSR_IA32_VMX_BASIC,
+>   	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
+>   	MSR_IA32_VMX_PINBASED_CTLS,
+> @@ -1276,6 +1280,7 @@ static u32 msr_based_features[] = {
+>   	MSR_IA32_ARCH_CAPABILITIES,
+>   };
+>   
+> +static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all)];
+>   static unsigned int num_msr_based_features;
+>   
+>   static u64 kvm_get_arch_capabilities(void)
+> @@ -5131,19 +5136,19 @@ static void kvm_init_msr_list(void)
+>   	unsigned i, j;
+>   
+>   	BUILD_BUG_ON_MSG(INTEL_PMC_MAX_FIXED != 4,
+> -			 "Please update the fixed PMCs in msrs_to_save[]");
+> +			 "Please update the fixed PMCs in msrs_to_saved_all[]");
+>   
+>   	perf_get_x86_pmu_capability(&x86_pmu);
+>   
+> -	for (i = j = 0; i < ARRAY_SIZE(msrs_to_save); i++) {
+> -		if (rdmsr_safe(msrs_to_save[i], &dummy[0], &dummy[1]) < 0)
+> +	for (i = j = 0; i < ARRAY_SIZE(msrs_to_save_all); i++) {
+> +		if (rdmsr_safe(msrs_to_save_all[i], &dummy[0], &dummy[1]) < 0)
+>   			continue;
+>   
+>   		/*
+>   		 * Even MSRs that are valid in the host may not be exposed
+>   		 * to the guests in some cases.
+>   		 */
+> -		switch (msrs_to_save[i]) {
+> +		switch (msrs_to_save_all[i]) {
+>   		case MSR_IA32_BNDCFGS:
+>   			if (!kvm_mpx_supported())
+>   				continue;
+> @@ -5171,17 +5176,17 @@ static void kvm_init_msr_list(void)
+>   			break;
+>   		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
+>   			if (!kvm_x86_ops->pt_supported() ||
+> -				msrs_to_save[i] - MSR_IA32_RTIT_ADDR0_A >=
+> +				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
+>   				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
+>   				continue;
+>   			break;
+>   		case MSR_ARCH_PERFMON_PERFCTR0 ... MSR_ARCH_PERFMON_PERFCTR0 + 17:
+> -			if (msrs_to_save[i] - MSR_ARCH_PERFMON_PERFCTR0 >=
+> +			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_PERFCTR0 >=
+>   			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+>   				continue;
+>   			break;
+>   		case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL0 + 17:
+> -			if (msrs_to_save[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
+> +			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
+>   			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+>   				continue;
+>   		}
+> @@ -5189,31 +5194,31 @@ static void kvm_init_msr_list(void)
+>   			break;
+>   		}
+>   
+> -		if (j < i)
+> -			msrs_to_save[j] = msrs_to_save[i];
+> +		if (j <= i)
+> +			msrs_to_save[j] = msrs_to_save_all[i];
+>   		j++;
 >   	}
+>   	num_msrs_to_save = j;
 >   
->   #ifdef CONFIG_X86
-> -	if (!ret)
-> +	if (!ret) {
->   		x86_init.iommu.iommu_init = intel_iommu_init;
-> +		x86_platform.iommu_shutdown = intel_iommu_shutdown;
-> +	}
-> +
->   #endif
+> -	for (i = j = 0; i < ARRAY_SIZE(emulated_msrs); i++) {
+> -		if (!kvm_x86_ops->has_emulated_msr(emulated_msrs[i]))
+> +	for (i = j = 0; i < ARRAY_SIZE(emulated_msrs_all); i++) {
+> +		if (!kvm_x86_ops->has_emulated_msr(emulated_msrs_all[i]))
+>   			continue;
 >   
->   	if (dmar_tbl) {
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index fe8097078669..7ac73410ba8e 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -4764,6 +4764,26 @@ static void intel_disable_iommus(void)
->   		iommu_disable_translation(iommu);
->   }
+> -		if (j < i)
+> -			emulated_msrs[j] = emulated_msrs[i];
+> +		if (j <= i)
+> +			emulated_msrs[j] = emulated_msrs_all[i];
+>   		j++;
+>   	}
+>   	num_emulated_msrs = j;
 >   
-> +void intel_iommu_shutdown(void)
-> +{
-> +	struct dmar_drhd_unit *drhd;
-> +	struct intel_iommu *iommu = NULL;
-> +
-> +	if (no_iommu || dmar_disabled)
-> +		return;
-> +
-> +	down_write(&dmar_global_lock);
-> +
-> +	/* Disable PMRs explicitly here. */
-> +	for_each_iommu(iommu, drhd)
-> +		iommu_disable_protect_mem_regions(iommu);
-> +
-> +	/* Make sure the IOMMUs are switched off */
-> +	intel_disable_iommus();
-> +
-> +	up_write(&dmar_global_lock);
-> +}
-> +
->   static inline struct intel_iommu *dev_to_intel_iommu(struct device *dev)
->   {
->   	struct iommu_device *iommu_dev = dev_to_iommu_device(dev);
-> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
-> index a7cf3599d9a1..f64ca27dc210 100644
-> --- a/include/linux/dmar.h
-> +++ b/include/linux/dmar.h
-> @@ -129,6 +129,7 @@ static inline int dmar_res_noop(struct acpi_dmar_header *hdr, void *arg)
->   #ifdef CONFIG_INTEL_IOMMU
->   extern int iommu_detected, no_iommu;
->   extern int intel_iommu_init(void);
-> +extern void intel_iommu_shutdown(void);
->   extern int dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg);
->   extern int dmar_parse_one_atsr(struct acpi_dmar_header *header, void *arg);
->   extern int dmar_check_one_atsr(struct acpi_dmar_header *hdr, void *arg);
-> @@ -137,6 +138,7 @@ extern int dmar_iommu_hotplug(struct dmar_drhd_unit *dmaru, bool insert);
->   extern int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info);
->   #else /* !CONFIG_INTEL_IOMMU: */
->   static inline int intel_iommu_init(void) { return -ENODEV; }
-> +static inline void intel_iommu_shutdown(void) { }
+> -	for (i = j = 0; i < ARRAY_SIZE(msr_based_features); i++) {
+> +	for (i = j = 0; i < ARRAY_SIZE(msr_based_features_all); i++) {
+>   		struct kvm_msr_entry msr;
 >   
->   #define	dmar_parse_one_rmrr		dmar_res_noop
->   #define	dmar_parse_one_atsr		dmar_res_noop
+> -		msr.index = msr_based_features[i];
+> +		msr.index = msr_based_features_all[i];
+>   		if (kvm_get_msr_feature(&msr))
+>   			continue;
+>   
+> -		if (j < i)
+> -			msr_based_features[j] = msr_based_features[i];
+> +		if (j <= i)
+> +			msr_based_features[j] = msr_based_features_all[i];
+>   		j++;
+>   	}
+>   	num_msr_based_features = j;
 > 
