@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6809DC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B16CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C5E222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C08222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497521;
-	bh=57KxOYVTuDY69khiQTp58sePyP5LQXXbGr+MNUXlIGU=;
+	s=default; t=1573497525;
+	bh=a0YyOLp9BJGIlRbcwVhG0isF00a6whUm2Sm5dUxTKjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NaKZcGeH1CtSEID1TWJJ+OcZMmA6KxGdqqi3U0TfjMqlpl6E6tyc0jJwh6Hh01Rpt
-	 oxliEQmGb+t0yMV6FpUyTfdSAHvetQqcoN3HRWDqJ4n01hw4eTWjpPDRn17faAozL3
-	 9Ju03dbVxXNSF1IpbGsDSFlu6Duhwzg+EyN7xe30=
+	b=2D4Q6YPtuxeXMiBioqa/XEg86c1t/2KV1GGHPf+SOoRWOwJefz48gvemnyHd4Jpie
+	 kDEf2+qCWvnDBdAuWiZeisijh1QyTdvn7KbC8Q+8HSaI87IC69qOnokTK8tjKYGj6C
+	 08Z1aQuSPqwWyIXxtFq/Ow72P7+PVcdxTqyOTPz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfKKSij (ORCPT
+        id S1729059AbfKKSin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57544 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729030AbfKKSig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:36 -0500
+        id S1728482AbfKKSij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF92C204FD;
-        Mon, 11 Nov 2019 18:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E38E021655;
+        Mon, 11 Nov 2019 18:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497515;
-        bh=57KxOYVTuDY69khiQTp58sePyP5LQXXbGr+MNUXlIGU=;
+        s=default; t=1573497518;
+        bh=a0YyOLp9BJGIlRbcwVhG0isF00a6whUm2Sm5dUxTKjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W2IS6fju1W8khmWjUAsayT/z6xcwEDFQWVuErnO+Q+zZlyKDpApuGszkCpLKZyXiy
-         /kMcaXgxxLuOTPmltn7F0uxXQyw6HQW5qNFub4JFQq8WqqYtejnXg7WfQIWJe0UpzH
-         oC962t43K32rEz0pE8Bk1k5tCeheWpRNHTmyaAqQ=
+        b=cMqg/jGYISu6yey6vEol5II5SGA8otfVUqlKcEUVd5SxnTHIJJ3p0PgAvPZShaaAR
+         B5HXIUQz2is008Y/ZgcyjMU8y7AEC3Cy8GuH/c0DJrLN426locn7n0KBigbuz+OvF7
+         hX3tE/V1LiW2dJITB2bjflHsHqoEs11WNFq8xY00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Simon Horman <horms@verge.net.au>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/105] ipvs: move old_secure_tcp into struct netns_ipvs
-Date:   Mon, 11 Nov 2019 19:28:49 +0100
-Message-Id: <20191111181446.644076205@linuxfoundation.org>
+Subject: [PATCH 4.14 080/105] bonding: fix unexpected IFF_BONDING bit unset
+Date:   Mon, 11 Nov 2019 19:28:50 +0100
+Message-Id: <20191111181446.748747349@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,115 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit c24b75e0f9239e78105f81c5f03a751641eb07ef ]
+[ Upstream commit 65de65d9033750d2cf1b336c9d6e9da3a8b5cc6e ]
 
-syzbot reported the following issue :
+The IFF_BONDING means bonding master or bonding slave device.
+->ndo_add_slave() sets IFF_BONDING flag and ->ndo_del_slave() unsets
+IFF_BONDING flag.
 
-BUG: KCSAN: data-race in update_defense_level / update_defense_level
+bond0<--bond1
 
-read to 0xffffffff861a6260 of 4 bytes by task 3006 on cpu 1:
- update_defense_level+0x621/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:177
- defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+Both bond0 and bond1 are bonding device and these should keep having
+IFF_BONDING flag until they are removed.
+But bond1 would lose IFF_BONDING at ->ndo_del_slave() because that routine
+do not check whether the slave device is the bonding type or not.
+This patch adds the interface type check routine before removing
+IFF_BONDING flag.
 
-write to 0xffffffff861a6260 of 4 bytes by task 7333 on cpu 0:
- update_defense_level+0xa62/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:205
- defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+Test commands:
+    ip link add bond0 type bond
+    ip link add bond1 type bond
+    ip link set bond1 master bond0
+    ip link set bond1 nomaster
+    ip link del bond1 type bond
+    ip link add bond1 type bond
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 7333 Comm: kworker/0:5 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events defense_work_handler
+Splat looks like:
+[  226.665555] proc_dir_entry 'bonding/bond1' already registered
+[  226.666440] WARNING: CPU: 0 PID: 737 at fs/proc/generic.c:361 proc_register+0x2a9/0x3e0
+[  226.667571] Modules linked in: bonding af_packet sch_fq_codel ip_tables x_tables unix
+[  226.668662] CPU: 0 PID: 737 Comm: ip Not tainted 5.4.0-rc3+ #96
+[  226.669508] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  226.670652] RIP: 0010:proc_register+0x2a9/0x3e0
+[  226.671612] Code: 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 39 01 00 00 48 8b 04 24 48 89 ea 48 c7 c7 a0 0b 14 9f 48 8b b0 e
+0 00 00 00 e8 07 e7 88 ff <0f> 0b 48 c7 c7 40 2d a5 9f e8 59 d6 23 01 48 8b 4c 24 10 48 b8 00
+[  226.675007] RSP: 0018:ffff888050e17078 EFLAGS: 00010282
+[  226.675761] RAX: dffffc0000000008 RBX: ffff88805fdd0f10 RCX: ffffffff9dd344e2
+[  226.676757] RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff88806c9f6b8c
+[  226.677751] RBP: ffff8880507160f3 R08: ffffed100d940019 R09: ffffed100d940019
+[  226.678761] R10: 0000000000000001 R11: ffffed100d940018 R12: ffff888050716008
+[  226.679757] R13: ffff8880507160f2 R14: dffffc0000000000 R15: ffffed100a0e2c1e
+[  226.680758] FS:  00007fdc217cc0c0(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
+[  226.681886] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  226.682719] CR2: 00007f49313424d0 CR3: 0000000050e46001 CR4: 00000000000606f0
+[  226.683727] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  226.684725] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  226.685681] Call Trace:
+[  226.687089]  proc_create_seq_private+0xb3/0xf0
+[  226.687778]  bond_create_proc_entry+0x1b3/0x3f0 [bonding]
+[  226.691458]  bond_netdev_event+0x433/0x970 [bonding]
+[  226.692139]  ? __module_text_address+0x13/0x140
+[  226.692779]  notifier_call_chain+0x90/0x160
+[  226.693401]  register_netdevice+0x9b3/0xd80
+[  226.694010]  ? alloc_netdev_mqs+0x854/0xc10
+[  226.694629]  ? netdev_change_features+0xa0/0xa0
+[  226.695278]  ? rtnl_create_link+0x2ed/0xad0
+[  226.695849]  bond_newlink+0x2a/0x60 [bonding]
+[  226.696422]  __rtnl_newlink+0xb9f/0x11b0
+[  226.696968]  ? rtnl_link_unregister+0x220/0x220
+[ ... ]
 
-Indeed, old_secure_tcp is currently a static variable, while it
-needs to be a per netns variable.
-
-Fixes: a0840e2e165a ("IPVS: netns, ip_vs_ctl local vars moved to ipvs struct.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
+Fixes: 0b680e753724 ("[PATCH] bonding: Add priv_flag to avoid event mishandling")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h            |  1 +
- net/netfilter/ipvs/ip_vs_ctl.c | 15 +++++++--------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/bonding/bond_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 82bc9f0e8a769..f4e5ac8aa3668 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -891,6 +891,7 @@ struct netns_ipvs {
- 	struct delayed_work	defense_work;   /* Work handler */
- 	int			drop_rate;
- 	int			drop_counter;
-+	int			old_secure_tcp;
- 	atomic_t		dropentry;
- 	/* locks in ctl.c */
- 	spinlock_t		dropentry_lock;  /* drop entry handling */
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 6155fd6386bf4..5ec80818ace2c 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -98,7 +98,6 @@ static bool __ip_vs_addr_is_local_v6(struct net *net,
- static void update_defense_level(struct netns_ipvs *ipvs)
- {
- 	struct sysinfo i;
--	static int old_secure_tcp = 0;
- 	int availmem;
- 	int nomem;
- 	int to_change = -1;
-@@ -179,35 +178,35 @@ static void update_defense_level(struct netns_ipvs *ipvs)
- 	spin_lock(&ipvs->securetcp_lock);
- 	switch (ipvs->sysctl_secure_tcp) {
- 	case 0:
--		if (old_secure_tcp >= 2)
-+		if (ipvs->old_secure_tcp >= 2)
- 			to_change = 0;
- 		break;
- 	case 1:
- 		if (nomem) {
--			if (old_secure_tcp < 2)
-+			if (ipvs->old_secure_tcp < 2)
- 				to_change = 1;
- 			ipvs->sysctl_secure_tcp = 2;
- 		} else {
--			if (old_secure_tcp >= 2)
-+			if (ipvs->old_secure_tcp >= 2)
- 				to_change = 0;
- 		}
- 		break;
- 	case 2:
- 		if (nomem) {
--			if (old_secure_tcp < 2)
-+			if (ipvs->old_secure_tcp < 2)
- 				to_change = 1;
- 		} else {
--			if (old_secure_tcp >= 2)
-+			if (ipvs->old_secure_tcp >= 2)
- 				to_change = 0;
- 			ipvs->sysctl_secure_tcp = 1;
- 		}
- 		break;
- 	case 3:
--		if (old_secure_tcp < 2)
-+		if (ipvs->old_secure_tcp < 2)
- 			to_change = 1;
- 		break;
- 	}
--	old_secure_tcp = ipvs->sysctl_secure_tcp;
-+	ipvs->old_secure_tcp = ipvs->sysctl_secure_tcp;
- 	if (to_change >= 0)
- 		ip_vs_protocol_timeout_change(ipvs,
- 					      ipvs->sysctl_secure_tcp > 1);
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index cf8385a22de59..5f6602cb191f2 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1779,7 +1779,8 @@ err_hwaddr_unsync:
+ 		bond_hw_addr_flush(bond_dev, slave_dev);
+ 
+ err_close:
+-	slave_dev->priv_flags &= ~IFF_BONDING;
++	if (!netif_is_bond_master(slave_dev))
++		slave_dev->priv_flags &= ~IFF_BONDING;
+ 	dev_close(slave_dev);
+ 
+ err_restore_mac:
+@@ -1985,7 +1986,8 @@ static int __bond_release_one(struct net_device *bond_dev,
+ 	else
+ 		dev_set_mtu(slave_dev, slave->original_mtu);
+ 
+-	slave_dev->priv_flags &= ~IFF_BONDING;
++	if (!netif_is_bond_master(slave_dev))
++		slave_dev->priv_flags &= ~IFF_BONDING;
+ 
+ 	bond_free_slave(slave);
+ 
 -- 
 2.20.1
 
