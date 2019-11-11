@@ -2,121 +2,196 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379EAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766FAC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1208621872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3990521925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:13:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="k7SIFq9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfKKMFG (ORCPT
+        id S1726912AbfKKMNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 07:05:06 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:39569 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKMFG (ORCPT
+        Mon, 11 Nov 2019 07:13:35 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:60994 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKMNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 07:05:06 -0500
-Received: by mail-io1-f72.google.com with SMTP id e17so12044801ioc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 04:05:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=w6Keuok1ehG5NCdltR+WKRqu0HOKnkFWU+V9KF3Usgo=;
-        b=Na+7+YeC1TTiOJ25DzX/2oMJTPcJkc/04t8uTvzTtVM0OwB4VJ57O3urCM+NF+JNhl
-         ZhZ6RaY+pn8EgI/2n7odziSSazwNIM5nunloMABHgOLJZFQmsi0Ab5bstPn0n/n3h6ec
-         EavYKXSeflVYWA49vxSWQcZxz0AReXYhH7y2i3AcgCrw/CFAH6Xo5YwvHeXoP1zv5a9G
-         2XAOW/YCgpRnaaLhET4YGEUbSFHHPTwBkWKXKhMO+K1aR3yYdzZ3p4pwKNbQtU0nTQez
-         209Y+Z6lmpdbKPEmYmaMSx1qZG4x3YBCvR3UmiZBYEoA7e2WhEM5sk3t+T5WQ1bO+VaP
-         Wx/w==
-X-Gm-Message-State: APjAAAXwHzi/jpO0EFGcUTEaZkpKeKq+/n6rg24flQvYvZbV7o5B9cwR
-        7mY5cpxrLJwaKfkzZZH7M5C1U7TxNyKgVNMB+JHsIFwx9Aq+
-X-Google-Smtp-Source: APXvYqyGNxoHm5qEhquhgLNmVnuxdWzdo/mULggNwaAXSfOclHHEPGVPdP00z/rDTo2e9m8L5TxlKcjkzTvmXoVJ4F6hHQ8JrpPM
+        Mon, 11 Nov 2019 07:13:34 -0500
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: rPe7UUR+w4PxbCsqf1V5kPkaW0OF2vSpu67v5j5AiwXoDYUxpsg06Gw2eJ5lD4CeWoEby2q+l+
+ t7P0Ed9717AAdvW/6aDoQA6HikRSZ3dQq4Pj+C3JvTpY4mLKuaknEWM6STlOxSECJEZLQgmWIn
+ bzHXM05aUg+V2Y+IbW8D5CyKaHlYZq7CY5e6m1ziP19MBTXHv8u6O9CDR9o8MOYWx4PLDKH+aS
+ kEyoS1YWFkkIyIUfqW4H3qwY0t12dQkl+4MYNoE/fKZbCfbAS7uP1V84ZmAdPzH3U7P09554o/
+ RTk=
+X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
+   d="scan'208";a="54869699"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Nov 2019 05:13:32 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 11 Nov 2019 05:13:32 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Mon, 11 Nov 2019 05:13:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cLnj05HhKgb7gAxqtGOCe4s5Ki4YJkDxNoMhxyMOs15PD3pvDdzh5R9rkD8sSeDh4zLuljy2ULpkS1vK7t1AIyE1OgBubNwnO7pzc/zjV3vWq53mQCcQuG6ovEn8kcG6wvI6QNacFWhOMp1NEHeWiCOsXCnjBA7iuk+3Db38f19gLLF7RR6G/3jbBdgomkT4qetNfX75e8JPTAcbEgdO4h5EvtLct6i4iNdtWVVv4NaYq+MzPC6VJAmIrn/54ZhOSbePg4WrVahseZ7KrZYpIsrmNrSt/GoTnGjWBhT2bgPk0aDY1IGc+sQiWcWmbBUmBsH88Ow28WaHIsY7aJndQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7kHc9yLhMquk7WXejTeQY3rYWwu451qsyDb0SMPSyI=;
+ b=lvC1gJL3U25o/N6QY0IdG2cY0OiAFZ0BILBfTTx8ebBAazcczVE9GyfqxKoVbYjc7cu/58JzXSAvLMskb0XG+NmcZSVHLZJd+S2+zytngXftoIH7Sx4G1jtdloXo71Xf7SjtjosmjS5NZtCVnsiGKrmyPCNK+aU7DiW8kt58q8C+QNv68FpdmogH1aQEWT14N7TYhOQtD32GT3K+A0G6vIFRye8iSk/m60xlvAQ6rJlmGLr9dIfvS55jIqB4lQ8Vj0tgnwJgd5mv1owELqEDgiwHuE94P5LDKI0OKg1fO6dN00HuXJTIg3QBHT9WNIsN34bBoYRl2sMGoaPLdFQfGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7kHc9yLhMquk7WXejTeQY3rYWwu451qsyDb0SMPSyI=;
+ b=k7SIFq9MaiSKVeEfxrvXuNIuotsirVTF+FQQ7ue4uVhHhvXYA4FZMHRI81QI3fi1cq2iGtplM2XBxEDmWWd5vNp8SLQrH8M9fZ7rSICMl7+JAPdfIdasuA5xoEh1WXZ6AREewsm4hPEKW7ib3WDLUhwVlwkki0OdSeiaq5Jom/M=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB0073.namprd11.prod.outlook.com (10.164.155.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Mon, 11 Nov 2019 12:13:31 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::d594:bcd0:98a9:d2c8]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::d594:bcd0:98a9:d2c8%4]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
+ 12:13:30 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        <wim@linux-watchdog.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux-watchdog@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Eugen.Hristev@microchip.com>
+Subject: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
+Thread-Topic: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit
+ definitions
+Thread-Index: AQHVmIlu6IftJNh+5UamBWHFg3A6Og==
+Date:   Mon, 11 Nov 2019 12:13:30 +0000
+Message-ID: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR05CA0060.eurprd05.prod.outlook.com
+ (2603:10a6:208:be::37) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-mailer: git-send-email 2.7.4
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 95d048f9-c44e-4c7c-b14b-08d766a090d2
+x-ms-traffictypediagnostic: DM5PR11MB0073:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB0073978D0EF06C1252EE0A0CE8740@DM5PR11MB0073.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0218A015FA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(346002)(136003)(199004)(189003)(14454004)(6506007)(386003)(110136005)(102836004)(66476007)(66556008)(64756008)(66446008)(478600001)(3846002)(99286004)(36756003)(6116002)(6436002)(66946007)(305945005)(66066001)(7736002)(5660300002)(25786009)(6486002)(86362001)(52116002)(316002)(71200400001)(71190400001)(2201001)(6512007)(256004)(2906002)(81166006)(81156014)(4326008)(186003)(50226002)(8936002)(8676002)(107886003)(476003)(2616005)(486006)(26005)(2501003)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0073;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AwViMZYugrgdEEXUwovFDnH/SSh2VW8I6T6lGA7AhXEmxBKAdUryzy6mIwvfd4JSTiJLKmVabSe44sm64q4Pb011SDN9eu3aYTYwaENtqyhP4XudvKJSATP9vfm2rY1JoiSeuggK3JZfSldxALgMx5u9M2v7lw6K6W+5Fcsffp6Lcswop8DClug9W05ygZQV8U7a22UGcK5BEegNvVAHiBGdD/tGEFUzviq4pfqGEdxufku8XO/YG5b4KpEAv0MLDcL+skmOogDUN/JbBYkb3IiZ9pT7nj78ACcaqMTms+ZkUQJ/m0A+0RgF8buzF4XR4VCEP3qi86OcLtHcIednusy4tpmNGuwLIj+Jw+eKMWKcd18XqJctP+ssp+HCrBk0XNxw5ij8/js+IBcikt2+wTsbduZnhTe+PWPZVAWF3/gIlIlPxmd+V4q4V3gMgvVF
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a6b:cc01:: with SMTP id c1mr9250843iog.7.1573473905580;
- Mon, 11 Nov 2019 04:05:05 -0800 (PST)
-Date:   Mon, 11 Nov 2019 04:05:05 -0800
-In-Reply-To: <000000000000aae1480596a5632b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000034a246059710f18a@google.com>
-Subject: Re: WARNING: refcount bug in j1939_netdev_start
-From:   syzbot <syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95d048f9-c44e-4c7c-b14b-08d766a090d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 12:13:30.8991
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8rL4msIFCL4OwM0EHWT7DqmtzkEUHzU4Q1eplfW+gyWzX6xWiyJCmA2LNh2rnez0r9kWX+OOLq57IVprPBUxedMGFO1+uhm4JlDXrjYo2oU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-HEAD commit:    9805a683 Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=133de01ce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
-dashboard link: https://syzkaller.appspot.com/bug?extid=afd421337a736d6c1ee6
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d713c6e00000
+Cleanup the macro definitions to use BIT and align with two spaces.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+Changes in v3:
+- new patch as requested from review on ML
 
-------------[ cut here ]------------
-refcount_t: increment on 0; use-after-free.
-WARNING: CPU: 1 PID: 8514 at lib/refcount.c:156  
-refcount_inc_checked+0x4b/0x50 lib/refcount.c:156
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8514 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
-  panic+0x264/0x7a9 kernel/panic.c:221
-  __warn+0x20e/0x210 kernel/panic.c:582
-  report_bug+0x1b6/0x2f0 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:refcount_inc_checked+0x4b/0x50 lib/refcount.c:156
-Code: 3d f7 ab 75 05 01 75 08 e8 12 e2 2d fe 5b 5d c3 e8 0a e2 2d fe c6 05  
-e1 ab 75 05 01 48 c7 c7 b4 c5 40 88 31 c0 e8 a5 78 00 fe <0f> 0b eb df 90  
-55 48 89 e5 41 57 41 56 41 55 41 54 53 48 83 ec 10
-RSP: 0018:ffff8880816dfd10 EFLAGS: 00010246
-RAX: 8358cd98639ffe00 RBX: ffff8880975b50f0 RCX: ffff8880a4010540
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: ffff8880816dfd18 R08: ffffffff815ca054 R09: ffffed1015d640d2
-R10: ffffed1015d640d2 R11: 0000000000000000 R12: ffff88808e820588
-R13: dffffc0000000000 R14: ffff88808e820000 R15: 1ffff11011d04047
-  j1939_netdev_start+0x47c/0x730 net/can/j1939/main.c:267
-  j1939_sk_bind+0x2c0/0xac0 net/can/j1939/socket.c:438
-  __sys_bind+0x2c2/0x3a0 net/socket.c:1647
-  __do_sys_bind net/socket.c:1658 [inline]
-  __se_sys_bind net/socket.c:1656 [inline]
-  __x64_sys_bind+0x7a/0x90 net/socket.c:1656
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a219
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007efc734cbc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a219
-RDX: 0000000000000018 RSI: 0000000020000240 RDI: 0000000000000005
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007efc734cc6d4
-R13: 00000000004c057e R14: 00000000004d2c50 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ drivers/watchdog/at91sam9_wdt.h | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wd=
+t.h
+index 390941c..2ca5fc5 100644
+--- a/drivers/watchdog/at91sam9_wdt.h
++++ b/drivers/watchdog/at91sam9_wdt.h
+@@ -14,23 +14,23 @@
+ #define AT91_WDT_H
+=20
+ #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
+-#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
+-#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
++#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
++#define  AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
+=20
+ #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+-#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+-#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+-#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
+-#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
+-#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
+-#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
+-#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+-#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+-#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
+-#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
++#define  AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
++#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
++#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
++#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
++#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
++#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
++#define  AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
++#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
++#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
++#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
+=20
+-#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
+-#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
+-#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
++#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
++#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
++#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
+=20
+ #endif
+--=20
+2.7.4
 
