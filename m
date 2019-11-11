@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D27EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E412196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D0D21E6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497356;
-	bh=ymMzqYQ+VVBlEqzUmugAMn430vp94Z3zOxOl6rrV9RY=;
+	s=default; t=1573497359;
+	bh=itA/gofEKBXl+aHgWT2pDgX3eQRUWSUJzmUvvslkKBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l73yt6bGW2qhjHc4EW1qn7BVCbXioTFdkkl7KgGZtFE06KRhBH9uui/A2cclPNFlt
-	 +cDdHnMtvuEVJWzxhgC+vp+KiD+ZMl74x25m8FZbVpreGm1L2ibbdRVBX/U5r9B1rk
-	 NcwiCxmFgchGtmj2H0DVqkx6Kppn/RCKyAbw1Tss=
+	b=ouohKxGWWuK2FF6poM7XYE69MBgeaAB6zjpT8XKO26SCiG3ADqmeckZc14hrQ651l
+	 GXLSSc1AaxdagfmV/YYt+WchYk6zK1M+Hj/ZkHv97RPRaQSRHaYM1od/lHGrtt13Zr
+	 PF7R7Ongu9miweH88DALEHgDaulQQcecZFb07ETY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKKSfz (ORCPT
+        id S1728638AbfKKSf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53894 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbfKKSfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:52 -0500
+        id S1728451AbfKKSfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A62992173B;
-        Mon, 11 Nov 2019 18:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46CF21655;
+        Mon, 11 Nov 2019 18:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497351;
-        bh=ymMzqYQ+VVBlEqzUmugAMn430vp94Z3zOxOl6rrV9RY=;
+        s=default; t=1573497354;
+        bh=itA/gofEKBXl+aHgWT2pDgX3eQRUWSUJzmUvvslkKBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I/NgiF4Xisk1gL+fMcsbLqD0elRYFsjxeDrASE4C+u9NrotckwFsBrvvBNnaxy1xH
-         npuus7/vLe0lg2OFAcSjxGI1PLUKj+UmdB7T+jhGc8bhTSJvgxevnb/Upshun+Wxv0
-         MQAYBG17goSu0zEwWzLbU2phBpy83lD+YO7+WapA=
+        b=Z6QHH/CgHUebMlkby/lc9mj1mXmFSosLyPPt2loGN1ke7Rm3qVE9eCg6lHLlBAk+o
+         QCi81/MquDC/BjeXHhZV3Hwi1XjVlzkzvWvJcxCMrx+DLlGrGWqnllMlw3kFENRYEL
+         OcSq+7TAOFoZlcYnFUse/jXELNhBGStQANAPrgDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Jeff Layton <jlayton@kernel.org>,
         Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.14 024/105] ceph: fix use-after-free in __ceph_remove_cap()
-Date:   Mon, 11 Nov 2019 19:27:54 +0100
-Message-Id: <20191111181437.427359229@linuxfoundation.org>
+Subject: [PATCH 4.14 025/105] ceph: add missing check in d_revalidate snapdir handling
+Date:   Mon, 11 Nov 2019 19:27:55 +0100
+Message-Id: <20191111181437.535498809@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,73 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit ea60ed6fcf29eebc78f2ce91491e6309ee005a01 upstream.
+commit 1f08529c84cfecaf1261ed9b7e17fab18541c58f upstream.
 
-KASAN reports a use-after-free when running xfstest generic/531, with the
-following trace:
-
-[  293.903362]  kasan_report+0xe/0x20
-[  293.903365]  rb_erase+0x1f/0x790
-[  293.903370]  __ceph_remove_cap+0x201/0x370
-[  293.903375]  __ceph_remove_caps+0x4b/0x70
-[  293.903380]  ceph_evict_inode+0x4e/0x360
-[  293.903386]  evict+0x169/0x290
-[  293.903390]  __dentry_kill+0x16f/0x250
-[  293.903394]  dput+0x1c6/0x440
-[  293.903398]  __fput+0x184/0x330
-[  293.903404]  task_work_run+0xb9/0xe0
-[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
-[  293.903413]  do_syscall_64+0x1a0/0x1c0
-[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-This happens because __ceph_remove_cap() may queue a cap release
-(__ceph_queue_cap_release) which can be scheduled before that cap is
-removed from the inode list with
-
-	rb_erase(&cap->ci_node, &ci->i_caps);
-
-And, when this finally happens, the use-after-free will occur.
-
-This can be fixed by removing the cap from the inode list before being
-removed from the session list, and thus eliminating the risk of an UAF.
+We should not play with dcache without parent locked...
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/caps.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/ceph/inode.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -935,6 +935,11 @@ void __ceph_remove_cap(struct ceph_cap *
- 
- 	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
- 
-+	/* remove from inode's cap rbtree, and clear auth cap */
-+	rb_erase(&cap->ci_node, &ci->i_caps);
-+	if (ci->i_auth_cap == cap)
-+		ci->i_auth_cap = NULL;
-+
- 	/* remove from session list */
- 	spin_lock(&session->s_cap_lock);
- 	if (session->s_cap_iterator == cap) {
-@@ -970,11 +975,6 @@ void __ceph_remove_cap(struct ceph_cap *
- 
- 	spin_unlock(&session->s_cap_lock);
- 
--	/* remove from inode list */
--	rb_erase(&cap->ci_node, &ci->i_caps);
--	if (ci->i_auth_cap == cap)
--		ci->i_auth_cap = NULL;
--
- 	if (removed)
- 		ceph_put_cap(mdsc, cap);
- 
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -1347,6 +1347,7 @@ retry_lookup:
+ 		dout(" final dn %p\n", dn);
+ 	} else if ((req->r_op == CEPH_MDS_OP_LOOKUPSNAP ||
+ 		    req->r_op == CEPH_MDS_OP_MKSNAP) &&
++	           test_bit(CEPH_MDS_R_PARENT_LOCKED, &req->r_req_flags) &&
+ 		   !test_bit(CEPH_MDS_R_ABORTED, &req->r_req_flags)) {
+ 		struct dentry *dn = req->r_dentry;
+ 		struct inode *dir = req->r_parent;
 
 
