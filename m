@@ -2,126 +2,119 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB63C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8EAC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73349214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2Ew9GMf"
+	by mail.kernel.org (Postfix) with ESMTP id 099BC20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfKKRf0 (ORCPT
+        id S1726951AbfKKRh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:35:26 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36812 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfKKRf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:35:26 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r10so15586751wrx.3;
-        Mon, 11 Nov 2019 09:35:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Hr0XZ+W95Fq8mqP7g5xaelC6Vx3m15yqOwH0Jnse00=;
-        b=e2Ew9GMfSUxRzx7YWxu6vGIT1uYNAUiOY9ivjlvAsecN6phDGzODfdsbD3pacZtgIq
-         1TKhZPVClxclFXrKxi25zD6ZguKi/bxPme4O5nqEjs9Q/EuaddiWwchMpHQb4ojeFI/W
-         +Z8KsqOocqbBsBqH/WUX8mpC/R2cj9PNBzLMkYizXe+M9L/QoTtzf4sJIFvMn3IUVcS8
-         1EPUUP/83jBAkAMU+kWNau2TxKgnEBfFfMdmTTvesmByRZfObnz5YIBcC1VOeqr71tgR
-         /dL6GhxmlSceWOMaL0mWSis4LnTwXehs8BaBwdsQw9+50FGstcjrZ07Acb24dJ41ZJhT
-         i2jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Hr0XZ+W95Fq8mqP7g5xaelC6Vx3m15yqOwH0Jnse00=;
-        b=oFs5XNywttofbZGdEr82OmO+YVgyH3eFy43pVYvGYGy8dIyYBNpI7NOEO+xLdJpTO+
-         llo4ED2f1CzaFptw84WEHOthphjvGKuKWy+38Stb5Jqqg7nmyEihrKZqnWwVFT1CquhC
-         VGxRA8sH3xPFE867brYYKI4onxpLeq+LtiwwaLSuhMlfwMOd8Tm6NFDTTvBtZ5SF4LSf
-         1HL58+Lh+vdGqEDSGC+VwjRbRxSprRyimpg5UOHkBwrqZ1yvkhPvPPlhbWqbqmQrGLuS
-         jH27t4f0barDxnehHJWNBpa5KRcV4X7x0lIGPO1VCSkNXnqw3QfPsQCbK8uJ9ASabfVl
-         fLaA==
-X-Gm-Message-State: APjAAAW7aud6fWGop+++cOXDjF26a9f/gWtsfXrMEN8/P5BKDTAjYVK1
-        m6xB6iOqwX7XhN/4uHIf0cZeLOeFbSf1+pbRr2g=
-X-Google-Smtp-Source: APXvYqweEiabjLuuO8H9HV68rYsXJ4G5OK+vh51GktRkh2PtT8iyT8F9Kc+znoIEOavWyTstNfVv2xS3Cb9ocnbXU8Q=
-X-Received: by 2002:adf:fb0b:: with SMTP id c11mr22736594wrr.50.1573493723544;
- Mon, 11 Nov 2019 09:35:23 -0800 (PST)
+        Mon, 11 Nov 2019 12:37:59 -0500
+Received: from mga09.intel.com ([134.134.136.24]:11669 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbfKKRh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:37:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 09:37:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
+   d="scan'208";a="287236950"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga001.jf.intel.com with ESMTP; 11 Nov 2019 09:37:57 -0800
+Date:   Mon, 11 Nov 2019 09:37:57 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Lamprecht <t.lamprecht@proxmox.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
+ when loading PDPTRS
+Message-ID: <20191111173757.GB11805@linux.intel.com>
+References: <20191003154447.010950442@linuxfoundation.org>
+ <20191003154525.870373223@linuxfoundation.org>
+ <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
 MIME-Version: 1.0
-References: <20191109154921.223093-1-colin.king@canonical.com> <0700f347-8590-7ab7-411d-0ae08fe9263d@amd.com>
-In-Reply-To: <0700f347-8590-7ab7-411d-0ae08fe9263d@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 11 Nov 2019 12:35:10 -0500
-Message-ID: <CADnq5_MKFh3v+qnjO-bmpepTc_XTgEKTomP0PLRJu==_UBTkZA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: remove duplicated comparison expression
-To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Charlene Liu <Charlene.Liu@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On Mon, Nov 11, 2019 at 10:32:05AM +0100, Thomas Lamprecht wrote:
+> On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
+> > 
+> > Manually generate the PDPTR reserved bit mask when explicitly loading
+> > PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+> It seems that a backport of this to stable and distro kernels tickled out
+> some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
+> Intel CPUs[1].
 
-Alex
+It manifests specifically when running with EPT disabled (no surprise
+there).  Actually, it probably would reproduce simply with unrestricted
+guest disabled, but that's beside the point.
 
-On Mon, Nov 11, 2019 at 8:38 AM Kazlauskas, Nicholas
-<nicholas.kazlauskas@amd.com> wrote:
->
-> On 2019-11-09 10:49 a.m., Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > There is comparison expression that is duplicated and hence one
-> > of the expressions can be removed.  Remove it.
-> >
-> > Addresses-Coverity: ("Same on both sides")
-> > Fixes: 12e2b2d4c65f ("drm/amd/display: add dcc programming for dual plane")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
->
-> Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
->
-> Thanks!
->
-> Nicholas Kazlauskas
->
-> > ---
-> >   drivers/gpu/drm/amd/display/dc/core/dc.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> > index 1fdba13b3d0f..1fa255e077d0 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> > @@ -1491,7 +1491,6 @@ static enum surface_update_type get_plane_info_update_type(const struct dc_surfa
-> >       }
-> >
-> >       if (u->plane_info->plane_size.surface_pitch != u->surface->plane_size.surface_pitch
-> > -                     || u->plane_info->plane_size.surface_pitch != u->surface->plane_size.surface_pitch
-> >                       || u->plane_info->plane_size.chroma_pitch != u->surface->plane_size.chroma_pitch) {
-> >               update_flags->bits.plane_size_change = 1;
-> >               elevate_update_type(&update_type, UPDATE_TYPE_MED);
-> >
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+The issue is a flawed PAE-paging check in kvm_set_cr3(), which causes KVM
+to incorrectly load PDPTRs in 64-bit mode and inject a #GP.  It's a sneaky
+little bugger because the "if (is_long_mode() ..." makes it appear to be
+correct at first glance.
+
+	if (is_long_mode(vcpu) &&
+	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
+		return 1;
+	else if (is_pae(vcpu) && is_paging(vcpu) &&  <--- needs !is_long_mode()
+		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+		return 1;
+
+With unrestricted guest, KVM doesn't intercept writes to CR3 and so doesn't
+trigger the buggy code.  This doesn't fail upstream because the offending
+code was refactored to encapsulate the PAE checks in a single helper,
+precisely to avoid this type of headache.
+
+  commit bf03d4f9334728bf7c8ffc7de787df48abd6340e
+  Author: Paolo Bonzini <pbonzini@redhat.com>
+  Date:   Thu Jun 6 18:52:44 2019 +0200
+
+    KVM: x86: introduce is_pae_paging
+
+    Checking for 32-bit PAE is quite common around code that fiddles with
+    the PDPTRs.  Add a function to compress all checks into a single
+    invocation.
+
+
+Commit bf03d4f93347 ("KVM: x86: introduce is_pae_paging") doesn't apply
+cleanly to 4.19 or earlier because of the VMX file movement in 4.20.  But,
+the revelant changes in x86.c do apply cleanly, and I've quadruple checked
+that the PAE checks in vmx.c are correct, i.e. applying the patch and
+ignoring the nested.c/vmx.c conflicts would be a viable lazy option.
+
+> Basically, booting this kernel as host, then running an KVM guest distro
+> or kernel fails it that guest kernel early in the boot phase without any
+> error or other log to serial console, earlyprintk.
+
+...
+
+> 
+> [0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
+> [1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
+>      westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
+>      has VMX support (i.e. is 64bit based)
+
+Note, not Westmere, which has EPT and unrestricted guest.  Xeon E5420 is
+Harpertown, a.k.a. Penryn, the shrink of Conroe.  
