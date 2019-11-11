@@ -2,122 +2,229 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F31C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85E6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E2C2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7193C21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LaQUYxSA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfKKK6M (ORCPT
+        id S1726927AbfKKK6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:58:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:50599 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfKKK6L (ORCPT
+        Mon, 11 Nov 2019 05:58:15 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36785 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfKKK6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:58:11 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MzCMN-1hiBRi44ah-00wA8T; Mon, 11 Nov 2019 11:58:10 +0100
-Received: by mail-qk1-f182.google.com with SMTP id q70so10718563qke.12;
-        Mon, 11 Nov 2019 02:58:09 -0800 (PST)
-X-Gm-Message-State: APjAAAVGs/HLw5w5QN7PdknxvBbPPa+/ga1tchoz59C0U9Znw6TnUbO3
-        UsyHt/OO8nyJKMh2suz6LlEXAm9EtYZ0RAhH2AE=
-X-Google-Smtp-Source: APXvYqwtj3vQp0nBoe8lUhBg7fu+umYPtBqAlXL7Ou/7zD2CSxh8G+dzFTQnCdpIa8Cx3MCrbYL6C7CzieMWIfRccMU=
-X-Received: by 2002:a37:4f0a:: with SMTP id d10mr9793076qkb.286.1573469888741;
- Mon, 11 Nov 2019 02:58:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
- <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com>
- <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com> <CAFqZXNsp3JxqW-ahCvtiZBECX5PWonpzMRK0MOn=6a28WzF4cA@mail.gmail.com>
-In-Reply-To: <CAFqZXNsp3JxqW-ahCvtiZBECX5PWonpzMRK0MOn=6a28WzF4cA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:57:52 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2FZ2_v6uUJJOurMAE7xYG6wq7T7ZvpLVAPA6FG2pm0dQ@mail.gmail.com>
-Message-ID: <CAK8P3a2FZ2_v6uUJJOurMAE7xYG6wq7T7ZvpLVAPA6FG2pm0dQ@mail.gmail.com>
-Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mon, 11 Nov 2019 05:58:12 -0500
+Received: by mail-wr1-f66.google.com with SMTP id r10so14119542wrx.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 02:58:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ff/OMC2uAau2mAhoofAs4UHMiQyAXj1c9pkY1OLPdoo=;
+        b=LaQUYxSAfzZQj1a+zLxcy0Bq4BPZXruN2Hxaf+yfK5bqy4gcUXMQvhDQfCa6Yd+azj
+         Bn4Hzk7Zw65+tT5QtfUkt19a6HtUsl+smEI8Fy3Pu2pqZuBi7NxHilp8UY47PBKdSWPA
+         JTDvBQ1FSdHz19EGtx/6oPc7RTZx+Ln4H5fBqaytmDr1gyqhNy5hIVtntxwl3tZeh0U4
+         vkexstcL+mlHtM67IvlNwNCB+EHkRhwFXQCSBgnYqTVD1ZYwUw8ycjp9YF8fyuesQB14
+         Nz2ybFFtUfVysQqiF4iqzR51IFPGbbbim9u5hnyAE4j4sCLWOpbXS5l8mmFWTPcwIZJ2
+         K4Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ff/OMC2uAau2mAhoofAs4UHMiQyAXj1c9pkY1OLPdoo=;
+        b=jzCPdbV264WgRO/ZpNMN8mJRupAlQWwYQpb7u/9QJTaOBfdVk5vo+nGHvJnfenBMY5
+         SCRSx1j7VtGTUErmPFgFTbaAzXRJ5v13won8rT9m1O6D862IgnqGTap9eKUqMwLGFVTW
+         y+sRgblG9zjGgeGYSDv5PcXNN7gUrNNFQkivMqgY8uGSoeu5QqEmBC6oFzZ6W6EjMbom
+         atxItIOzoWOqE7lcEpn5vZiM1dDz3Imdwz9oe2o3ZuG7WWnudoaeGzZ+u22wysdQ9fRt
+         pQsOZuc41Fa+ggj8DebtFOIowCviUIvJXBsdxPcBK7fMb/ZC6NwILaR02aKcdfvPeYuT
+         1F8w==
+X-Gm-Message-State: APjAAAWmC+DLko0vwGnv6tbB3BUTPWy3YYD+lKXLEfjPTrVd697MIfUZ
+        toGVf7PvgS3VTSsmQyNT12WNog==
+X-Google-Smtp-Source: APXvYqx8xObmE5fwQgmIoKQH3kqqcFm/LXo1giQF34YvA+BOHYlXNSI8WpZX656F+0hWaH4gE1NXpA==
+X-Received: by 2002:adf:f084:: with SMTP id n4mr20238286wro.369.1573469887033;
+        Mon, 11 Nov 2019 02:58:07 -0800 (PST)
+Received: from dell ([95.147.198.88])
+        by smtp.gmail.com with ESMTPSA id x205sm23261337wmb.5.2019.11.11.02.58.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 02:58:06 -0800 (PST)
+Date:   Mon, 11 Nov 2019 10:57:58 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:talTFI+q4JcUPtrySBmEjOPKUX09D5LJWAeHUZ9hJvNb739cZt9
- beNlgaGDcvAG6HfQekZh9C1WXKFXZVY+PnMf1cp+rBsPF8iCawUpVm/+B2VsDIcvrmW9DoX
- S+TTeCJIJP+aLnKW6OXhOQJ1UlI5VO1bs1T97GHY/AAVcxY5xwsuYi3cCkEP3kwKO6yJXOd
- ppjy5hRI3OLgEMEj8GOqw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kVY/Hkf8KzU=:pIeNep2ZsiaPrEk1sTX9vl
- UgWYRr7g53x76Rco7DZ7BQVwqeNBhsZsmtWe++MfRbgJ55SxQOf7QGjcLlMDMEwuzRFJ1d7bm
- ioY3q7iNCYVBPzdyXgG5wGf9446ceDEr9m3AGZj26nCfckAfr8Pcf58WRom4V352d3A7SJ5J+
- R1PwWR29vwIxV3PnNVYjGfo8ao9i3oOkQDOHJFc3bK3zVkoxmUmq8S5u8kUvTuUIGxAsO6WGR
- UyP/uhYziM87FY8YflxQNBQBSAu/nhHO/um3mUQHN3ACDoZ2FAEJx+RkaKLDgiOxWseMUBxFQ
- X14OWzQ1k6M2sFPFkiUjvOvjXFvhmw5CaZHV2Y0MWIMO+5KQ+qa3C1azxaT4BMAWAWBda84sf
- GN1qbWtJd1/fagJxkA+7p2fDf22TbK0gZRHh4a5sTP/UD+q+IK6b9Sr2eXIRIfTFkHplvPfbu
- j224YhRg+sabtqCQKv60QVYT2XmKnp//Qq9+TMCDWUktsO/l1IkUCp0FR8MABhLz3YZnCtYMI
- bQ31NS2SVhS3ShQkE8wVDJVo3Wrj/O9oJUpJ9jdP6cVb1pARgTAQCBn2OOKuNBKsrqYfkoJJs
- F/XVqvSVzQiPtW3du8a41o5n9/dOpehRpVx5ts1iea32YrkqMVT0XhVBue/d4zEC2NCgVsYWX
- mRO2YmELI7uNwyVvKQjxGcC1DGJsdnWlsITP/QoFXEFrLJAI7yT4BlglBIJWV/NZpV0sOomPB
- /BBnDDjg2sPTX97yhQJnvQ74fkqpOLc573MnLdKRyhqyoti01trSoGuob1TZ6LI3fv3yhlh6A
- S6tcfVTFRmOFj6W09hA28klBnJhPES5sOxEi5tJD6zjc8wAGVsdOu+258i4dZrk1ebqEKohMS
- tYGZ1AsqLEKvpuBjfv5g==
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [RFC PATCH v3 01/15] mfd: bd71828: Support ROHM BD71828 PMIC -
+ core
+Message-ID: <20191111105758.GF3218@dell>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <9ce6f5810847422f4def629d30bae7b43dd4c6c6.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ce6f5810847422f4def629d30bae7b43dd4c6c6.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 12:07 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> On Sat, Nov 9, 2019 at 10:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Sat, Nov 9, 2019 at 2:43 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> >
-> > > > -struct itimerval;
-> > > > -extern int do_setitimer(int which, struct itimerval *value,
-> > > > -                       struct itimerval *ovalue);
-> > > > -extern int do_getitimer(int which, struct itimerval *value);
-> > > > +#ifdef CONFIG_POSIX_TIMERS
-> > > > +extern void clear_itimer(void);
-> > > > +#else
-> > > > +static inline void clear_itimer(void) {}
-> > > > +#endif
-> > > >
-> >
-> > > > @@ -249,6 +249,17 @@ int do_setitimer(int which, struct itimerval *value, struct itimerval *ovalue)
-> > > >         return 0;
-> > > >  }
-> > > >
-> > > > +#ifdef CONFIG_SECURITY_SELINUX
-> > >
-> > > Did you mean "#ifdef CONFIG_POSIX_TIMERS" here to match the header?
-> >
-> > No, this part is intentional, CONFIG_POSIX_TIMERS already controls
-> > whether itimer.c is
-> > compiled in the first place, but this function is only needed when called from
-> > the selinux driver.
->
-> All right, but you declare the function in time.h even if
-> CONFIG_SECURITY_SELINUX is not enabled... it is kind of awkward when
-> it can happen that the function is declared but not defined anywhere
-> (even if it shouldn't be used by new users). Maybe you could at least
-> put the header declaration/definition inside #ifdef
-> CONFIG_SECURITY_SELINUX as well so it is clear that this function is
-> intended for SELinux only?
+On Fri, 01 Nov 2019, Matti Vaittinen wrote:
 
-I don't see that as a problem, we rarely put declarations inside of an #ifdef.
-The main effect that would have is forcing any file that includes linux/time.h
-to be rebuilt when selinux is turned on or off in the .config.
+> BD71828GW is a single-chip power management IC for battery-powered portable
+> devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
+> single-cell linear charger. Also included is a Coulomb counter, a real-time
+> clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768 kHz
+> clock gate.
+> 
+> Add MFD core driver providing interrupt controller facilities and i2c
+> access to sub device drivers.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> No changes compared to v2
+> 
+>  drivers/mfd/Kconfig              |  15 ++
+>  drivers/mfd/Makefile             |   2 +-
+>  drivers/mfd/rohm-bd71828.c       | 322 +++++++++++++++++++++++
+>  include/linux/mfd/rohm-bd71828.h | 425 +++++++++++++++++++++++++++++++
+>  include/linux/mfd/rohm-generic.h |   1 +
+>  5 files changed, 764 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/rohm-bd71828.c
+>  create mode 100644 include/linux/mfd/rohm-bd71828.h
 
-     Arnd
+/me wonders why this is still an RFC after 3 revisions?
+
+[...]
+
+> +static struct mfd_cell bd71828_mfd_cells[] = {
+> +	{ .name = "bd71828-pmic", },
+> +	{ .name = "bd71828-gpio", },
+> +	{ .name = "bd71828-led", },
+> +	/*
+> +	 * We use BD71837 driver to drive the clock block. Only differences to
+> +	 * BD70528 clock gate are the register address and mask.
+> +	 */
+> +	{ .name = "bd718xx-clk", },
+> +	{
+> +		.name = "bd71827-power",
+
+Why isn't this on one line, like the others above?
+
+> +	}, {
+> +		.name = "bd70528-rtc",
+> +		.resources = rtc_irqs,
+> +		.num_resources = ARRAY_SIZE(rtc_irqs),
+> +	},
+> +};
+
+[...]
+
+> +unsigned int bit0_offsets[] = {11};		/* RTC IRQ register */
+> +unsigned int bit1_offsets[] = {10};		/* TEMP IRQ register */
+> +unsigned int bit2_offsets[] = {6, 7, 8, 9};	/* BAT MON IRQ registers */
+> +unsigned int bit3_offsets[] = {5};		/* BAT IRQ register */
+> +unsigned int bit4_offsets[] = {4};		/* CHG IRQ register */
+> +unsigned int bit5_offsets[] = {3};		/* VSYS IRQ register */
+> +unsigned int bit6_offsets[] = {1, 2};		/* DCIN IRQ registers */
+
+Something actually wrong with the tabbing here, or is this a
+Git/patch/mailer anomaly?
+
+[...]
+
+> +static int bd71828_i2c_probe(struct i2c_client *i2c,
+> +			     const struct i2c_device_id *id)
+> +{
+> +	struct rohm_regmap_dev *chip;
+> +	struct regmap_irq_chip_data *irq_data;
+> +	int ret;
+> +
+> +	if (!i2c->irq) {
+> +		dev_err(&i2c->dev, "No IRQ configured\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&i2c->dev, chip);
+> +
+> +	chip->chip_type = ROHM_CHIP_TYPE_BD71828;
+> +	chip->regmap = devm_regmap_init_i2c(i2c, &bd71828_regmap);
+> +	if (IS_ERR(chip->regmap)) {
+> +		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
+> +		return PTR_ERR(chip->regmap);
+> +	}
+> +
+> +	ret = devm_regmap_add_irq_chip(&i2c->dev, chip->regmap,
+> +				       i2c->irq, IRQF_ONESHOT, 0,
+> +				       &bd71828_irq_chip, &irq_data);
+> +	if (ret) {
+> +		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
+> +		return ret;
+> +	}
+
+Nit: '\n' here.
+
+> +	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+> +		bd71828_irq_chip.num_irqs);
+> +
+> +	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+> +				   bd71828_mfd_cells,
+> +				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
+> +				   regmap_irq_get_domain(irq_data));
+> +	if (ret)
+> +		dev_err(&i2c->dev, "Failed to create subdevices\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id bd71828_of_match[] = {
+> +	{ .compatible = "rohm,bd71828", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, bd71828_of_match);
+> +
+> +static struct i2c_driver bd71828_drv = {
+> +	.driver = {
+> +		.name = "rohm-bd71828",
+> +		.of_match_table = bd71828_of_match,
+> +	},
+> +	.probe = &bd71828_i2c_probe,
+
+If 'id' isn't used, perhaps you should be using probe2?
+
+[...]
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
