@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E266C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A79C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8D2222D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44B620818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3jArJre"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWSmRnOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfKKVRF (ORCPT
+        id S1727753AbfKKVRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:17:05 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36867 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbfKKVQm (ORCPT
+        Mon, 11 Nov 2019 16:17:13 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46707 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727366AbfKKVQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 16:16:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b20so11000729lfp.4;
-        Mon, 11 Nov 2019 13:16:40 -0800 (PST)
+        Mon, 11 Nov 2019 16:16:39 -0500
+Received: by mail-lf1-f65.google.com with SMTP id o65so7309316lff.13;
+        Mon, 11 Nov 2019 13:16:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qtewG2tFtrOkG6LmK5Q27KrhDGQGO21rKK/v65ssGts=;
-        b=Z3jArJre5fk5INNVmmqCp7BIaxt7epTw+3qEgBfJS7To1a6vLzxu4fWsK8SKKlplge
-         ZSWyG5p6qR1wIqiq7khn6IzXHYJ2Pedux5JDUrb/sWgLkqICkB9USEYaY3XRvHbgzGpJ
-         +JdU8sjY5LudIL+pQCltyVGrrGkxBfcflRC99C7Vz5P2FP8enjMoHwnES4aS6ZSxmbKd
-         /2e1g8VPXf03szXAueWz00XirsfzCW3tep5VRx4O0YcOJlIZ2B97STsTL9p1Yfi0RCKT
-         zZZxAaWBQJISAtE47pdjxCgOD/EpSbc16aweAigcivKM9KzHg+KrDZhKaU6lUvMoSchk
-         X3qw==
+        bh=0El1r5sR/3XS90TExiIvdI2lmehipmygt0wHnvPAxUQ=;
+        b=cWSmRnOm5ugBk6/Snx7xQzymzMdIhnOaqFgdTWKHqyrSdHbP6p/FEYRQedUk9abRRE
+         zXCAN2gtRDA3VrLB8MzkdmSOMuBqQ7sBArUn35dxWK136eYwppfOr8P9sq2Tz3Ih0iRy
+         IGRlHLKco/8jAb4YSk7LMWiXtyLL999HJros8/b77/nfm6RA3kA4I4SAw4RPmiIULiNf
+         9gf+1u6nm23d4hH4bEnj4dgWvSR3k5t5+0nMPuYmsXK4mBAC9sBHdm5sdywzyj+cxHnK
+         nIZbOEqCz0ndqMOzb1hyBuYvP9zQLqD5E2q8l1MwTybtVed+eQ3CdhTKd+nNfmaDq4Ub
+         ytrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qtewG2tFtrOkG6LmK5Q27KrhDGQGO21rKK/v65ssGts=;
-        b=enf5YnUQ73/VoDba4iOsgRwrSUZ/5thwoUI2hjUXa9V/vHvWDIJjr3GYAdlbArnQsu
-         6LMibUXzJIulgSML3LtJog1fTN4ERL5z57bhPE/xgrP1bwtfcjwBb/jyWkO6cRV3XrZW
-         XCgEVtI9LzqyCSwr5qEDU9vpR+oAJQkxbRHB/nW4z3mWYAin780Frn8pntORR0wcI24W
-         /Zdqj1I8Hkam702bMqjmzW+cuWScRom29u9e4EfcAXKbVb8saD8nbX9+6IGOP/8FX899
-         TzAm/Xaj0QVtZq3E92uz0bzyBsfuA5T8IkPtEUk8I6SvfIKqbMBYcv3XqcngmTkgfONe
-         9qMw==
-X-Gm-Message-State: APjAAAUGnXS3BK+6XE85Iqd8f3aLMCnLTMSHE8jYaAKdrRdj4CwTYJrW
-        VJ3cpOKh8vLPJnGWtCHpDWQ=
-X-Google-Smtp-Source: APXvYqxm2OFj3PO18wPjzDtaui7sM+zxTOiPxyR/t/WlF+L+/Mx0w2MUhTYdZZdXOh3MuWHWAAI7aw==
-X-Received: by 2002:ac2:55a3:: with SMTP id y3mr17062908lfg.108.1573507000350;
-        Mon, 11 Nov 2019 13:16:40 -0800 (PST)
+        bh=0El1r5sR/3XS90TExiIvdI2lmehipmygt0wHnvPAxUQ=;
+        b=n4fzK0VgcCOIh3JlT+ZWvyJHBWLtavmnK55yHpBWM0MACmt6TVRLVuhkuzOr5q9QG0
+         8o6bP+PcfpMcUH4bRqiY90DK6QidygwR0nyY/Qs1evzh8kPVONHRdyddgJ4P18DF006g
+         OLz36OXVzfcjvauvcg8gbS6kQVAN/tloPRQNBYFNoeCQ6+Hf+tx5bTtVyMbEFB1boqr6
+         +ITC50M7FlELga/cONdg35kjI/RfgdU84bKT2lLDtSnI8VvAD/J054KQAHKru+3oq5v/
+         bj+9/bAlHI7LMkBoQqyDNYOuj8umKQixLOBF5SLwBwoTb669vZbTfHWrKYlPkt3H7rmf
+         6y5Q==
+X-Gm-Message-State: APjAAAWdvUM2xtil1cVbFjH0Vwr834mMxumkF0JbrnUfaiJDMP8WNtkn
+        AMyRc9SU4npokWeu+Tt8Ce0=
+X-Google-Smtp-Source: APXvYqwI2DYik2l74mXPwId3GVHdWw0UbWtR9+K8IEReNeyySyIhaLnkA9FVn/+0OqPoTHg+GeRLhA==
+X-Received: by 2002:ac2:4474:: with SMTP id y20mr2907375lfl.95.1573506995316;
+        Mon, 11 Nov 2019 13:16:35 -0800 (PST)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id n19sm7913150lfl.85.2019.11.11.13.16.39
+        by smtp.gmail.com with ESMTPSA id n19sm7913150lfl.85.2019.11.11.13.16.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 13:16:39 -0800 (PST)
+        Mon, 11 Nov 2019 13:16:34 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 16/17] ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
-Date:   Tue, 12 Nov 2019 00:15:55 +0300
-Message-Id: <20191111211556.20723-17-digetx@gmail.com>
+Subject: [PATCH v7 11/17] arm: tegra20/30: cpuidle: Remove unnecessary memory barrier
+Date:   Tue, 12 Nov 2019 00:15:50 +0300
+Message-Id: <20191111211556.20723-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191111211556.20723-1-digetx@gmail.com>
 References: <20191111211556.20723-1-digetx@gmail.com>
@@ -78,26 +78,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Tegra CPU Idle driver was moved out into driver/cpuidle/ directory and
-it is now a proper platform driver.
+There is no good justification for smp_rmb() after returning from LP2
+because there are no memory operations that require SMP synchronization.
+Thus remove the confusing barrier.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-tegra/cpuidle-tegra20.c | 2 --
+ arch/arm/mach-tegra/cpuidle-tegra30.c | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 86b37af38952..a341259160c9 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -113,6 +113,7 @@ CONFIG_CPU_IDLE=y
- CONFIG_ARM_CPUIDLE=y
- CONFIG_ARM_ZYNQ_CPUIDLE=y
- CONFIG_ARM_EXYNOS_CPUIDLE=y
-+CONFIG_ARM_TEGRA_CPUIDLE=y
- CONFIG_KERNEL_MODE_NEON=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
- CONFIG_TRUSTED_FOUNDATIONS=y
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
+index fe80f1988120..af2cd339db43 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra20.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
+@@ -193,8 +193,6 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+ 
+ 	local_fiq_enable();
+ 
+-	smp_rmb();
+-
+ 	return entered_lp2 ? index : 0;
+ }
+ #endif
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
+index a4f0add46a27..80ae64bcdf50 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra30.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
+@@ -113,8 +113,6 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
+ 
+ 	local_fiq_enable();
+ 
+-	smp_rmb();
+-
+ 	return (entered_lp2) ? index : 0;
+ }
+ #endif
 -- 
 2.23.0
 
