@@ -2,168 +2,223 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D655C17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7324D2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:38:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fAPuyBKr"
+	by mail.kernel.org (Postfix) with ESMTP id 54064206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfKKHiW (ORCPT
+        id S1726830AbfKKHlv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:38:22 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51522 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfKKHiW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:38:22 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB7bxs9019718;
-        Mon, 11 Nov 2019 01:37:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573457879;
-        bh=9D1qH61QLDyxQW4aYPv6eSClSjnsnxJWzJVKKh7GxIo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fAPuyBKrrQXFB8WnFArOtRnMtSytXCCciyPVf/agF9dBQdnzlZhrRhLrpBzklKS7M
-         9GC9nJ5IXfhYxvKUJECYSL7Fv6Ytt/o4XSd4VfNJ8Y4OO9GyFjHt45ZMEyOygUBYQS
-         XORkAdBd0rhCCie0hb4ElJ7J/Kdpv4gtP92XqA6c=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB7bxaF015948;
-        Mon, 11 Nov 2019 01:37:59 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 01:37:42 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 01:37:42 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB7btm1005431;
-        Mon, 11 Nov 2019 01:37:55 -0600
-Subject: Re: [PATCH v4 02/15] soc: ti: k3: add navss ringacc driver
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-3-peter.ujfalusi@ti.com>
- <20191111042119.GK952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f24947f4-53d0-bdb8-fc29-7a985aba2052@ti.com>
-Date:   Mon, 11 Nov 2019 09:39:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 02:41:51 -0500
+Received: from out1.zte.com.cn ([202.103.147.172]:49780 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfKKHlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 02:41:51 -0500
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 9E3E6162B64E7E894F6A;
+        Mon, 11 Nov 2019 15:41:40 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id xAB7d6ej071507;
+        Mon, 11 Nov 2019 15:39:06 +0800 (GMT-8)
+        (envelope-from zhong.shiqi@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019111115391041-386045 ;
+          Mon, 11 Nov 2019 15:39:10 +0800 
+From:   zhongshiqi <zhong.shiqi@zte.com.cn>
+To:     Julia.Lawall@lip6.fr
+Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, corbet@lwn.net, cocci@systeme.lip6.fr,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, zhongshiqi <zhong.shiqi@zte.com.cn>
+Subject: [PATCH v7] coccicheck: Support search for SmPL scripts within selected directory hierarchy
+Date:   Mon, 11 Nov 2019 15:42:04 +0800
+Message-Id: <1573458124-14528-1-git-send-email-zhong.shiqi@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191111042119.GK952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-11-11 15:39:10,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-11-11 15:39:07
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl1.zte.com.cn xAB7d6ej071507
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+*Allow defining the environment variable “COCCI” as a directory to
+ search SmPL scripts.
 
+*Start a corresponding file determination if it contains an acceptable
+ path.
 
-On 11/11/2019 6.21, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
->> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
->> +config TI_K3_RINGACC
->> +	tristate "K3 Ring accelerator Sub System"
->> +	depends on ARCH_K3 || COMPILE_TEST
->> +	depends on TI_SCI_INTA_IRQCHIP
->> +	default y
-> 
-> You want to get an earful from Linus? We dont do default y on new stuff,
-> never :)
+*Adjust software documentation for using coccicheck with
+ a selected directory.
 
-OK
+Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
+---
+Changes in v7:
+        1:adjust coccinelle.rst documentation
+        2:fix a repo of "default"
 
->> +struct k3_ring_rt_regs {
->> +	u32	resv_16[4];
->> +	u32	db;		/* RT Ring N Doorbell Register */
->> +	u32	resv_4[1];
->> +	u32	occ;		/* RT Ring N Occupancy Register */
->> +	u32	indx;		/* RT Ring N Current Index Register */
->> +	u32	hwocc;		/* RT Ring N Hardware Occupancy Register */
->> +	u32	hwindx;		/* RT Ring N Current Index Register */
-> 
-> nice comments, how about moving them up into kernel-doc style? (here and
-> other places as well)
+Changes in v6:
+        update coccinelle.rst documents and add instructions for use this
 
-Sure, I'll convert the comments.
+Changes in v5:
+        rewrite change description as an enumeration
 
->> +struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
->> +					int id, u32 flags)
->> +{
->> +	int proxy_id = K3_RINGACC_PROXY_NOT_USED;
->> +
->> +	mutex_lock(&ringacc->req_lock);
->> +
->> +	if (id == K3_RINGACC_RING_ID_ANY) {
->> +		/* Request for any general purpose ring */
->> +		struct ti_sci_resource_desc *gp_rings =
->> +						&ringacc->rm_gp_range->desc[0];
->> +		unsigned long size;
->> +
->> +		size = gp_rings->start + gp_rings->num;
->> +		id = find_next_zero_bit(ringacc->rings_inuse, size,
->> +					gp_rings->start);
->> +		if (id == size)
->> +			goto error;
->> +	} else if (id < 0) {
->> +		goto error;
->> +	}
->> +
->> +	if (test_bit(id, ringacc->rings_inuse) &&
->> +	    !(ringacc->rings[id].flags & K3_RING_FLAG_SHARED))
->> +		goto error;
->> +	else if (ringacc->rings[id].flags & K3_RING_FLAG_SHARED)
->> +		goto out;
->> +
->> +	if (flags & K3_RINGACC_RING_USE_PROXY) {
->> +		proxy_id = find_next_zero_bit(ringacc->proxy_inuse,
->> +					      ringacc->num_proxies, 0);
->> +		if (proxy_id == ringacc->num_proxies)
->> +			goto error;
->> +	}
->> +
->> +	if (!try_module_get(ringacc->dev->driver->owner))
->> +		goto error;
-> 
-> should this not be one of the first things to do?
+Changes in v4:
+        rewrite change description in another wording
 
-I'll move it.
+Changes in v3:
+        1:rewrite change description
+        2:fix patch subject
+        3:modify commit log
 
-> 
->> +
->> +	if (proxy_id != K3_RINGACC_PROXY_NOT_USED) {
->> +		set_bit(proxy_id, ringacc->proxy_inuse);
->> +		ringacc->rings[id].proxy_id = proxy_id;
->> +		dev_dbg(ringacc->dev, "Giving ring#%d proxy#%d\n", id,
->> +			proxy_id);
->> +	} else {
->> +		dev_dbg(ringacc->dev, "Giving ring#%d\n", id);
->> +	}
-> 
-> how bout removing else and doing common print?
+Changes in v2:
+        1.fix patch subject according to the reply by Markus
+        <Markus.Elfring@web.de>
+        2.change description in “imperative mood”
 
-When the proxy is used we want to print that as well, I think it is
-cleaner to have separate prints for the two cases.
+---
+ Documentation/dev-tools/coccinelle.rst | 69 +++++++++++++++++++++-------------
+ scripts/coccicheck                     |  4 ++
+ 2 files changed, 47 insertions(+), 26 deletions(-)
 
-- Péter
+diff --git a/Documentation/dev-tools/coccinelle.rst b/Documentation/dev-tools/coccinelle.rst
+index 00a3409..90abe21 100644
+--- a/Documentation/dev-tools/coccinelle.rst
++++ b/Documentation/dev-tools/coccinelle.rst
+@@ -100,8 +100,8 @@ Two other modes provide some common combinations of these modes.
+   It should be used with the C option (described later)
+   which checks the code on a file basis.
+ 
+-Examples
+-~~~~~~~~
++Using Coccinelle with the default configuration
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ To make a report for every semantic patch, run the following command::
+ 
+@@ -127,41 +127,36 @@ To enable verbose messages set the V= variable, for example::
+ 
+    make coccicheck MODE=report V=1
+ 
+-Coccinelle parallelization
+----------------------------
++Using Coccinelle with a single file selection
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+-By default, coccicheck tries to run as parallel as possible. To change
+-the parallelism, set the J= variable. For example, to run across 4 CPUs::
++The optional make variable COCCI can be used to check a single
++semantic patch. In that case, the variable must be initialized with
++the name of the semantic patch to apply.
+ 
+-   make coccicheck MODE=report J=4
++For instance::
+ 
+-As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization,
+-if support for this is detected you will benefit from parmap parallelization.
++	make coccicheck COCCI=<my_SP.cocci> MODE=patch
+ 
+-When parmap is enabled coccicheck will enable dynamic load balancing by using
+-``--chunksize 1`` argument, this ensures we keep feeding threads with work
+-one by one, so that we avoid the situation where most work gets done by only
+-a few threads. With dynamic load balancing, if a thread finishes early we keep
+-feeding it more work.
++or::
+ 
+-When parmap is enabled, if an error occurs in Coccinelle, this error
+-value is propagated back, the return value of the ``make coccicheck``
+-captures this return value.
++	make coccicheck COCCI=<my_SP.cocci> MODE=report
+ 
+-Using Coccinelle with a single semantic patch
+----------------------------------------------
+ 
+-The optional make variable COCCI can be used to check a single
+-semantic patch. In that case, the variable must be initialized with
+-the name of the semantic patch to apply.
++Using Coccinelle with directory selection
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++The optional make variable COCCI can be used to search semantic patch in a
++directory. In that case, the variable must be initialized with the name of
++a directory which contains semantic patches.
+ 
+ For instance::
+ 
+-	make coccicheck COCCI=<my_SP.cocci> MODE=patch
++	make coccicheck COCCI=<my_SPDIR> MODE=patch
+ 
+ or::
+ 
+-	make coccicheck COCCI=<my_SP.cocci> MODE=report
++	make coccicheck COCCI=<my_SPDIR> MODE=report
+ 
+ 
+ Controlling Which Files are Processed by Coccinelle
+@@ -187,12 +182,34 @@ In these modes, which works on a file basis, there is no information
+ about semantic patches displayed, and no commit message proposed.
+ 
+ This runs every semantic patch in scripts/coccinelle by default. The
+-COCCI variable may additionally be used to only apply a single
+-semantic patch as shown in the previous section.
++COCCI variable may additionally be used to apply a single semantic
++patch or a directory which contains semantic patches as shown in the
++previous section.
+ 
+ The "report" mode is the default. You can select another one with the
+ MODE variable explained above.
+ 
++Coccinelle parallelization
++--------------------------
++
++By default, coccicheck tries to run as parallel as possible. To change
++the parallelism, set the J= variable. For example, to run across 4 CPUs::
++
++   make coccicheck MODE=report J=4
++
++As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization,
++if support for this is detected you will benefit from parmap parallelization.
++
++When parmap is enabled coccicheck will enable dynamic load balancing by using
++``--chunksize 1`` argument, this ensures we keep feeding threads with work
++one by one, so that we avoid the situation where most work gets done by only
++a few threads. With dynamic load balancing, if a thread finishes early we keep
++feeding it more work.
++
++When parmap is enabled, if an error occurs in Coccinelle, this error
++value is propagated back, the return value of the ``make coccicheck``
++captures this return value.
++
+ Debugging Coccinelle SmPL patches
+ ---------------------------------
+ 
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e04d328..e64a22e 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -257,6 +257,10 @@ if [ "$COCCI" = "" ] ; then
+     for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f | sort`; do
+ 	coccinelle $f
+     done
++elif [ -d "$COCCI" ] ; then
++    for f in `find $COCCI/ -name '*.cocci' -type f | sort`; do
++    coccinelle $f
++    done
+ else
+     coccinelle $COCCI
+ fi
+-- 
+2.9.5
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
