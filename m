@@ -2,53 +2,52 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDF1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0D1C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5354204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8ED7204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499462;
-	bh=sZm9OB5ufSxzSMHNmt8bxYi6l9HN+YeT7KVGd3d+tek=;
+	s=default; t=1573499468;
+	bh=xBY9KLAK1d8S4cs3Js4dOxZAJaPz5wbidMGeRJhHRQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eGJG78iV4h8p8b897eGEpcuXpIvG4J9IYGAIxbVgWgduvocTudE/AFcgazLRcyFMu
-	 UcnXTEeRUsWfm0GUYFepZuLIKKyqlkBpUh/4LvGKBZ2RS7frmPF35mFtWX8fWN2Oog
-	 ZyTtvV5IpXRNIJ7xZRW+blSYpeqdyy2d35gYAYhY=
+	b=Fb16IXJ0aWUxFQmXCY7Z4vsBpm23JdkR3cGLuCRcQnvXhP/H6vNdBqX7Lk6qvFbye
+	 CTdVleMrOJFEZRRb30lBpP+3dkxZXbGkNQqLPGAL0bDqojBS0aW8r2r9jgnWI9UoNW
+	 W3ZtWkaowfhRWac7Qj7MTvAa7kRhT8tVdd1U16pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfKKSbK (ORCPT
+        id S1727431AbfKKSap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47574 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:30:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727536AbfKKSbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:05 -0500
+        id S1727411AbfKKSam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAD8A21D7F;
-        Mon, 11 Nov 2019 18:31:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84FE720674;
+        Mon, 11 Nov 2019 18:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497064;
-        bh=sZm9OB5ufSxzSMHNmt8bxYi6l9HN+YeT7KVGd3d+tek=;
+        s=default; t=1573497041;
+        bh=xBY9KLAK1d8S4cs3Js4dOxZAJaPz5wbidMGeRJhHRQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpkxcNKJO5T4KiJipmiupneVUGPviiP+bJBSRN1nN7+IrFwDzAtN/trd9qKQ0yFCX
-         /CHbrqerM9imIOFJNyyw8YlY7oZQp6YtDbJdKut+ZDJG6tMuz5pM7Z2cus9qnKfIT1
-         BZNOXXnoF/5K4Pnddz6goOTjJ/4EAF6Al/+JGSnI=
+        b=wx7U8tbOEPC/YR5evKeA8SsrUDl3Ggtmi3hUpZXKEDuVNUN3dLxqoF0BCMS+fOhiz
+         7D3d2EKzxBDjgz9QEIK/JpyvlVZCB8tAWCwufNMoX3DgHVQxcl/7EiNjPwT0Ko3xsS
+         tyRggJ2WFZqp5Riwq3VDFJWYJatsEz26OnGsKDTo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 32/43] usb: gadget: composite: Fix possible double free memory bug
-Date:   Mon, 11 Nov 2019 19:28:46 +0100
-Message-Id: <20191111181323.665254368@linuxfoundation.org>
+        stable@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.4 25/43] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
+Date:   Mon, 11 Nov 2019 19:28:39 +0100
+Message-Id: <20191111181316.742248806@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -61,67 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit 1c20c89b0421b52b2417bb0f62a611bc669eda1d ]
+commit 7be142caabc4780b13a522c485abc806de5c4114 upstream.
 
-composite_dev_cleanup call from the failure of configfs_composite_bind
-frees up the cdev->os_desc_req and cdev->req. If the previous calls of
-bind and unbind is successful these will carry stale values.
+The PCI Tegra controller conversion to a device tree configurable
+driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
+to drivers/pci/host") implied that code for the driver can be
+compiled in for a kernel supporting multiple platforms.
 
-Consider the below sequence of function calls:
-configfs_composite_bind()
-        composite_dev_prepare()
-                - Allocate cdev->req, cdev->req->buf
-        composite_os_desc_req_prepare()
-                - Allocate cdev->os_desc_req, cdev->os_desc_req->buf
-configfs_composite_unbind()
-        composite_dev_cleanup()
-                - free the cdev->os_desc_req->buf and cdev->req->buf
-Next composition switch
-configfs_composite_bind()
-        - If it fails goto err_comp_cleanup will call the
-	  composite_dev_cleanup() function
-        composite_dev_cleanup()
-	        - calls kfree up with the stale values of cdev->req->buf and
-		  cdev->os_desc_req from the previous configfs_composite_bind
-		  call. The free call on these stale values leads to double free.
+Unfortunately, a blind move of the code did not check that some of the
+quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
+all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
+for both Vendor-ID and Device-ID) are now applied in all kernels that
+compile the PCI Tegra controlled driver, DT and ACPI alike.
 
-Hence, Fix this issue by setting request and buffer pointer to NULL after
-kfree.
+This is completely wrong, in that enablement of Relaxed Ordering is only
+required by default in Tegra20 platforms as described in the Tegra20
+Technical Reference Manual (available at
+https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
+Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
+be enabled in its root ports to avoid deadlock in hardware) and in the
+Tegra30 platforms for the same reasons (unfortunately not documented
+in the TRM).
 
-Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+There is no other strict requirement on PCI devices Relaxed Ordering
+enablement on any other Tegra platforms or PCI host bridge driver.
+
+Fix this quite upsetting situation by limiting the vendor and device IDs
+to which the Relaxed Ordering quirk applies to the root ports in
+question, reported above.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/gadget/composite.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/host/pci-tegra.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 351a406b97af7..0f2d1e98481fb 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -2068,14 +2068,18 @@ void composite_dev_cleanup(struct usb_composite_dev *cdev)
- 			usb_ep_dequeue(cdev->gadget->ep0, cdev->os_desc_req);
+--- a/drivers/pci/host/pci-tegra.c
++++ b/drivers/pci/host/pci-tegra.c
+@@ -586,12 +586,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NV
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
  
- 		kfree(cdev->os_desc_req->buf);
-+		cdev->os_desc_req->buf = NULL;
- 		usb_ep_free_request(cdev->gadget->ep0, cdev->os_desc_req);
-+		cdev->os_desc_req = NULL;
- 	}
- 	if (cdev->req) {
- 		if (cdev->setup_pending)
- 			usb_ep_dequeue(cdev->gadget->ep0, cdev->req);
+-/* Tegra PCIE requires relaxed ordering */
++/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
+ static void tegra_pcie_relax_enable(struct pci_dev *dev)
+ {
+ 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
  
- 		kfree(cdev->req->buf);
-+		cdev->req->buf = NULL;
- 		usb_ep_free_request(cdev->gadget->ep0, cdev->req);
-+		cdev->req = NULL;
- 	}
- 	cdev->next_string_id = 0;
- 	device_remove_file(&cdev->gadget->dev, &dev_attr_suspended);
--- 
-2.20.1
-
+ static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
+ {
 
 
