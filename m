@@ -2,236 +2,832 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9412C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73A6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2D3214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997C420659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqXVMqbD"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="etOj3QfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfKKOvf (ORCPT
+        id S1727167AbfKKOvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:51:35 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35014 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfKKOvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:51:35 -0500
-Received: by mail-il1-f195.google.com with SMTP id z12so12347792ilp.2;
-        Mon, 11 Nov 2019 06:51:34 -0800 (PST)
+        Mon, 11 Nov 2019 09:51:52 -0500
+Received: from mail-eopbgr720083.outbound.protection.outlook.com ([40.107.72.83]:39970
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbfKKOvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 09:51:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oLRSS+fBJBKlwl9wFq0utXQ2zwN4wUWpkYcQ5QWb2u1R2TRxqaiR3tefN4S2VFouKSs1NBlUJC6nyZJ534W0jd25NgXR0KgGEMmpTvfXxQaw014vlOinVETDtMX75xBuwOYQhepk++Le4Yeqxgmcw76XP9OL5pXnQQWO+ji42ErHLKT90awOrpeIPlpjTPkuFzwwyNtT57uxeDC//lr7tGwBSaqa+8/9Sg1ORpW/SD+FD9uVIxV2Oq4rrENlc4WjR4aBoQWZaidbc4qeFVA9JXWJ22urk9+z7ocUKuG560virpICf2Bnd2JA5J/Bg212aDaSlWWEHMCJNF/hGqRe1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EMEk7D7bUWS5B9VjKITeeBSxp1iauoOcPgB8EANZXbU=;
+ b=ZKy4auCg8A8nVVZc+VQF9GHWoaYOtTP+/zKXQbkYlNt1VDTLEfCpBygfxnxWSJ6vxtydZjedHl5ygwmAW8UAwBjDLU6JrINfyfIkTFVcc3z9QvwqEYuDzjEyrnW8VglM/pWSmplUVR8YlKwssCg2DCQ6O65zEvYnHu54qnSfJ8XWX3GAndE/zdkE9bjwSEmRjuGHNT7u7QH70NhLLgkinLB3BhZCa3j2dpd65bJIGiJqRzi5oDC5qTyWJsj8RnPsknYhSGRlSx1KKvZJKUX2pbCvhGHHv0NFoBNFw2nwDPYfRR/KP+buRraD1r1SQAzGH1tZycCQdQG6KDD8kTAeIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QU4yU61+3fayjyL9mE4IWRckozBFaj3LyGNPua+usXc=;
-        b=hqXVMqbDU09cA/B9pjbODxjD7KzvqSrFRzwh4OChsYl0qILx6FWFebhCFMYf0r19+f
-         E4gSBgzqxBK+3sBMIlMftHjmkZfLfu0rHsdHk46FDh8xEVWvyqfAKy52zty6Gfjxfqqs
-         Klq89MvrOVq2LO83O5TRSVXytj3/3ZIBNZ4NPluqxJyd4qatSTnvCNefHLXgRJqzXS6J
-         EKVzldbnZ678YFF6l+PYO847ob05z2gK78LJ7oHi7d4viCFvib//OjdmIlZ0zwfAyNzo
-         EflJQbWE+NboRzJZEXABQck/yKfuqk5Q167x2t8wvGB/lD2eWVXdYsLE5KwZLwNd9wCz
-         WLgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QU4yU61+3fayjyL9mE4IWRckozBFaj3LyGNPua+usXc=;
-        b=Jx6nQVlmboaYZ4+bBdf9K9x3Id+2oZLD/YJzi+NQzVzQzpAy0bmGvbfA8ENgni0tBR
-         Ih0KCPebAarEEPDLUn8w+ZFIu3ZbCXvgQkopriKO1VuPMkc5ohtKZvfaGpEUQ3yIQ3qe
-         2/D5p8BJg6mXCvdQull5YxMv5l5OnrEkmN3eu/OxegUoEX9WxjOET5+oBVUT3eQmUZr0
-         7agaRbhafz91ANYW3PQIYJ+zJTgtFuUIZbsRE9owsWEMz26xU2gGN1hJra3xK1mY3qOA
-         N8RrChI+ht86chbxBg8uwFXbG2wVtOSr4xdd13jCrfXRaFszOLMGusYJohFMFzlRjnxU
-         Dxpw==
-X-Gm-Message-State: APjAAAW8kMC2djiXBJaZXHHaQ8bqG0rFkbv7cGJ16aVPZ/MUjs7mMvNE
-        GyesehLablytPBSeViyymPLl1LL9569eDfyYSC5QQQ==
-X-Google-Smtp-Source: APXvYqyBrTqggbYFjqSKn7Om6vOd9yMZd9sm82KfW9R2lj449n45l/jzPlkJjjQXdNsyL5Ebyx3ubk/0nyIKhnZy5fo=
-X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr29129843ile.33.1573483893905;
- Mon, 11 Nov 2019 06:51:33 -0800 (PST)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EMEk7D7bUWS5B9VjKITeeBSxp1iauoOcPgB8EANZXbU=;
+ b=etOj3QfQtXpayDrBCVsvYhOz0V+QnC+OoHQvaH+XbjOTXZvhlBWzZ89gPU03fvuuA4qVtaZV1XzOzKLCTOsUok+0plywpo9H9iGLeDjetva9qfWy12Jvj4zAc3k3/DEgpQDoVciLfCgrrUe28gatDz6qRsf/NfVxDPCT+98y4Ik=
+Received: from MWHPR1201CA0004.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::14) by BYAPR12MB3462.namprd12.prod.outlook.com
+ (2603:10b6:a03:ad::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22; Mon, 11 Nov
+ 2019 14:51:43 +0000
+Received: from CO1NAM03FT008.eop-NAM03.prod.protection.outlook.com
+ (2a01:111:f400:7e48::200) by MWHPR1201CA0004.outlook.office365.com
+ (2603:10b6:301:4a::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2430.20 via Frontend
+ Transport; Mon, 11 Nov 2019 14:51:43 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB02.amd.com (165.204.84.17) by
+ CO1NAM03FT008.mail.protection.outlook.com (10.152.80.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.2430.20 via Frontend Transport; Mon, 11 Nov 2019 14:51:42 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 11 Nov
+ 2019 08:51:41 -0600
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 11 Nov
+ 2019 08:51:41 -0600
+Received: from vishnu-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
+ via Frontend Transport; Mon, 11 Nov 2019 08:51:32 -0600
+From:   Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
+        <Akshu.Agrawal@amd.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        "Maruthi Bayyavarapu" <maruthi.bayyavarapu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>
+Subject: [PATCH v4 2/6] ASoC: amd: Refactoring of DAI from DMA driver
+Date:   Mon, 11 Nov 2019 20:19:50 +0530
+Message-ID: <1573483794-8921-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573483794-8921-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+References: <1573483794-8921-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-References: <CAF6AEGuEO1jg6KhOFWEMUjq4ZQy5w61dWJk6uLWRzHnMZYZv=g@mail.gmail.com>
- <CAOCk7NomH2MsZ+FvPFAMWeabOFpyOwODCb_Ro07v+2k2v_C4NA@mail.gmail.com>
- <CAF6AEGsZkJJTNZ8SzHsSioEnkpekr1Texu5_EeBW1hP-bsOyjQ@mail.gmail.com>
- <20191107111019.GA24028@onstation.org> <CAF6AEGtbP=X2+DELajQq9zMZYGgmhyUhe62ncvHvyFnyZexTXg@mail.gmail.com>
- <CAOCk7NrPdGqc4vo70NmTuyszkPaPe41-e89ym2vAYBY+GTt9BA@mail.gmail.com>
- <CAJs_Fx4UJYd-k3_3AAGJo-8udThhvf6t-J=OZi3jappWjTNnFQ@mail.gmail.com>
- <CAOCk7Nq7rPmraofy+o8vWTwSAd1+dTRsoZ4QN0mRAOOz7u7TUg@mail.gmail.com>
- <20191110135321.GA6728@onstation.org> <CAOCk7Nr3nkUWOynxVK_0SxWKUss803_fhkdVehRajtiA9vi8ng@mail.gmail.com>
- <20191111113806.GA1420@onstation.org>
-In-Reply-To: <20191111113806.GA1420@onstation.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 11 Nov 2019 07:51:22 -0700
-Message-ID: <CAOCk7NoZN63zZQrbw-RRnbUko3OREy=15FMC7sN5M95oNb5JNw@mail.gmail.com>
-Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async commit changes
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(1496009)(136003)(39860400002)(376002)(396003)(346002)(428003)(189003)(199004)(70206006)(30864003)(7696005)(76176011)(53416004)(51416003)(186003)(8936002)(70586007)(4326008)(2906002)(109986005)(5660300002)(50466002)(48376002)(14444005)(86362001)(54906003)(316002)(1671002)(16586007)(81156014)(486006)(126002)(305945005)(36756003)(426003)(8676002)(476003)(336012)(47776003)(446003)(2616005)(26005)(50226002)(11346002)(6666004)(478600001)(356004)(81166006)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3462;H:SATLEXMB02.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4cb881f1-4213-4203-2156-08d766b6aaa5
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3462:|BYAPR12MB3462:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB346226CB9307593B3EB4D807E7740@BYAPR12MB3462.namprd12.prod.outlook.com>
+X-MS-Exchange-Transport-Forked: True
+X-MS-Oob-TLC-OOBClassifiers: OLM:82;
+X-Forefront-PRVS: 0218A015FA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: y/5mVBX80gpDpXCIHkT9T3eQcsdygWVecfN150lemoA+wXqy6s4mjDMpjbBhqOqdgfyjssT0PHupT1FMr6lNVysKsdNBCJKZhZoJfh+aVw/byqx8Mrws0iOk00VN1Ajl5qK8tUatZ6oqFmx67L9fL7opznvEzuB+0HmctytmehAQCqOpVJPY0+MXkZgILFxde4hEOCQuLRpwmd6H6+7MLoUICBZHo7/u6KgG0YFT/7uN0BxD7TUxuwN4Hr2ZPQnehnIeCGfbHzLfVnZZgTzRfX9MKSM60r7RsDMG64Gh9a3QK1pKINxuLq7OB1Hsx2a9v7N4wD0G8PwQQQxwhiC0B6bH8NsZ4oYEPGaDCMQ/FAKZXj/oqIHcNbuC2rr4VSGwlxEHtFpDEJ50JmkLp6VZDh/oD6WP86M+Fzp22x/+Qpp5WFmpTdd61mWXfBFiP9Ve
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2019 14:51:42.7622
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cb881f1-4213-4203-2156-08d766b6aaa5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3462
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 4:38 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Sun, Nov 10, 2019 at 10:37:33AM -0700, Jeffrey Hugo wrote:
-> > On Sun, Nov 10, 2019 at 6:53 AM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > On Fri, Nov 08, 2019 at 07:56:25AM -0700, Jeffrey Hugo wrote:
-> > > There's a REG_MDP5_PP_AUTOREFRESH_CONFIG() macro upstream here:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/msm/disp/mdp5/mdp5.xml.h#n1383
-> > >
-> > > I'm not sure what to put in that register but I tried configuring it
-> > > with a 1 this way and still have the same issue.
-> > >
-> > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > > index eeef41fcd4e1..6b9acf68fd2c 100644
-> > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > > @@ -80,6 +80,7 @@ static int pingpong_tearcheck_setup(struct drm_encoder *encoder,
-> > >         mdp5_write(mdp5_kms, REG_MDP5_PP_SYNC_THRESH(pp_id),
-> > >                         MDP5_PP_SYNC_THRESH_START(4) |
-> > >                         MDP5_PP_SYNC_THRESH_CONTINUE(4));
-> > > +       mdp5_write(mdp5_kms, REG_MDP5_PP_AUTOREFRESH_CONFIG(pp_id), 1);
-> > >
-> > >         return 0;
-> > >  }
-> >
-> > bit 31 is the enable bit (set that to 1), bits 15:0 are the
-> > frame_count (how many te events before the MDP sends a frame, I'd
-> > recommend set to 1).  Then after its programmed, you'll have to flush
-> > the config, and probably use a _START to make sure the flush takes
-> > effect.
->
-> I think that I initially get autorefresh enabled based on your
-> description above since the ping pong IRQs occur much more frequently.
-> However pretty quickly the error 'dsi_err_worker: status=c' is shown,
-> the contents on the screen shift to the right, and the screen no longer
-> updates after that. That error decodes to
-> DSI_ERR_STATE_DLN0_PHY | DSI_ERR_STATE_FIFO according to dsi_host.c.
->
-> Here's the relevant code that I have so far:
+Asoc: PCM DMA driver should only have dma ops.
+So Removed all DAI related functionality.Refactoring
+the PCM DMA diver code.Added new file containing only DAI ops.
 
-So, Unless I missed it, you haven't disabled using _start when
-autorefresh is enabled.  If you are using both at the same time,
-you'll overload the DSI and get those kinds of errors.
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+---
+ sound/soc/amd/raven/Makefile        |   2 +
+ sound/soc/amd/raven/acp3x-i2s.c     | 272 ++++++++++++++++++++++++++++++++++++
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 251 +++++----------------------------
+ sound/soc/amd/raven/acp3x.h         |  42 ++++++
+ 4 files changed, 348 insertions(+), 219 deletions(-)
+ create mode 100644 sound/soc/amd/raven/acp3x-i2s.c
 
->
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> index eeef41fcd4e1..85a5cfe54ce8 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> @@ -157,6 +157,7 @@ void mdp5_cmd_encoder_enable(struct drm_encoder *encoder)
->         struct mdp5_ctl *ctl = mdp5_cmd_enc->ctl;
->         struct mdp5_interface *intf = mdp5_cmd_enc->intf;
->         struct mdp5_pipeline *pipeline = mdp5_crtc_get_pipeline(encoder->crtc);
-> +       struct mdp5_kms *mdp5_kms = get_kms(encoder);;
->
->         if (WARN_ON(mdp5_cmd_enc->enabled))
->                 return;
-> @@ -167,6 +168,14 @@ void mdp5_cmd_encoder_enable(struct drm_encoder *encoder)
->
->         mdp5_ctl_commit(ctl, pipeline, mdp_ctl_flush_mask_encoder(intf), true);
->
-> +       if (intf->type == INTF_DSI &&
-> +           intf->mode == MDP5_INTF_DSI_MODE_COMMAND) {
-> +               mdp5_write(mdp5_kms,
-> +                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
-> +                          BIT(31) | BIT(0));
-> +               mdp5_crtc_flush_all(encoder->crtc);
-> +       }
-> +
->         mdp5_ctl_set_encoder_state(ctl, pipeline, true);
->
->         mdp5_cmd_enc->enabled = true;
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> index 05cc04f729d6..369746ebbc42 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> @@ -103,7 +104,7 @@ static u32 crtc_flush(struct drm_crtc *crtc, u32 flush_mask)
->   * so that we can safely queue unref to current fb (ie. next
->   * vblank we know hw is done w/ previous scanout_fb).
->   */
-> -static u32 crtc_flush_all(struct drm_crtc *crtc)
-> +u32 mdp5_crtc_flush_all(struct drm_crtc *crtc)
->  {
->         struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
->         struct mdp5_hw_mixer *mixer, *r_mixer;
-> @@ -734,7 +735,7 @@ static void mdp5_crtc_atomic_flush(struct drm_crtc *crtc,
->         if (mdp5_cstate->cmd_mode)
->                 request_pp_done_pending(crtc);
->
-> -       mdp5_crtc->flushed_mask = crtc_flush_all(crtc);
-> +       mdp5_crtc->flushed_mask = mdp5_crtc_flush_all(crtc);
->
->         /* XXX are we leaking out state here? */
->         mdp5_crtc->vblank.irqmask = mdp5_cstate->vblank_irqmask;
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h
-> index 128866742593..3490328ab63e 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h
-> @@ -278,6 +278,7 @@ enum mdp5_pipe mdp5_plane_right_pipe(struct drm_plane *plane);
->  struct drm_plane *mdp5_plane_init(struct drm_device *dev,
->                                   enum drm_plane_type type);
->
-> +u32 mdp5_crtc_flush_all(struct drm_crtc *crtc);
->  struct mdp5_ctl *mdp5_crtc_get_ctl(struct drm_crtc *crtc);
->  uint32_t mdp5_crtc_vblank(struct drm_crtc *crtc);
->
->
-> Note that mdp5_ctl_set_encoder_state() will call send_start_signal()
-> for a command-mode panel.
->
-> I put a HERE log statement in request_pp_done_pending() and
-> mdp5_crtc_pp_done_irq() and here's the relevant part of dmesg:
->
-> [   13.832596] msm fd900000.mdss: pp done time out, lm=0
-> [   13.832690] request_pp_done_pending: HERE
-> [   13.899890] mdp5_crtc_pp_done_irq: HERE
-> [   13.899981] Console: switching to colour frame buffer device 135x120
-> [   13.916662] mdp5_crtc_pp_done_irq: HERE
-> [   13.916813] request_pp_done_pending: HERE
-> [   13.933439] mdp5_crtc_pp_done_irq: HERE
-> [   13.950217] mdp5_crtc_pp_done_irq: HERE
-> [   13.950295] request_pp_done_pending: HERE
-> [   13.959973] msm fd900000.mdss: fb0: msmdrmfb frame buffer device
-> [   13.964469] i2c i2c-4: Added multiplexed i2c bus 5
-> [   13.966998] mdp5_crtc_pp_done_irq: HERE
-> [   13.983780] mdp5_crtc_pp_done_irq: HERE
-> [   13.983932] request_pp_done_pending: HERE
-> [   14.000617] mdp5_crtc_pp_done_irq: HERE
-> [   14.017393] mdp5_crtc_pp_done_irq: HERE
-> [   14.017539] request_pp_done_pending: HERE
-> [   14.034173] mdp5_crtc_pp_done_irq: HERE
-> [   14.050956] mdp5_crtc_pp_done_irq: HERE
-> [   14.067738] mdp5_crtc_pp_done_irq: HERE
-> [   14.084521] mdp5_crtc_pp_done_irq: HERE
-> [   14.101305] mdp5_crtc_pp_done_irq: HERE
-> [   14.118085] mdp5_crtc_pp_done_irq: HERE
-> [   14.134866] mdp5_crtc_pp_done_irq: HERE
-> [   14.151646] mdp5_crtc_pp_done_irq: HERE
-> [   14.168425] mdp5_crtc_pp_done_irq: HERE
-> [   14.185204] mdp5_crtc_pp_done_irq: HERE
-> [   14.192790] request_pp_done_pending: HERE
-> [   14.192967] dsi_err_worker: status=c
-> [   14.241759] dsi_err_worker: status=c
-> [   14.252650] msm fd900000.mdss: pp done time out, lm=0
-> [   14.462645] msm fd900000.mdss: pp done time out, lm=0
-> [   14.462704] request_pp_done_pending: HERE
-> [   14.522644] msm fd900000.mdss: pp done time out, lm=0
-> [   14.672643] msm fd900000.mdss: pp done time out, lm=0
-> [   14.672702] request_pp_done_pending: HERE
-> [   14.732643] msm fd900000.mdss: pp done time out, lm=0
-> [   14.882644] msm fd900000.mdss: pp done time out, lm=0
->
-> Brian
+diff --git a/sound/soc/amd/raven/Makefile b/sound/soc/amd/raven/Makefile
+index 108d1ac..8eef292 100644
+--- a/sound/soc/amd/raven/Makefile
++++ b/sound/soc/amd/raven/Makefile
+@@ -1,6 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ # Raven Ridge platform Support
+ snd-pci-acp3x-objs	:= pci-acp3x.o
++snd-acp3x-i2s-objs	:= acp3x-i2s.o
+ snd-acp3x-pcm-dma-objs	:= acp3x-pcm-dma.o
+ obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-pci-acp3x.o
++obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-acp3x-i2s.o
+ obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-acp3x-pcm-dma.o
+diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
+new file mode 100644
+index 0000000..0f27abc
+--- /dev/null
++++ b/sound/soc/amd/raven/acp3x-i2s.c
+@@ -0,0 +1,272 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// AMD ALSA SoC PCM Driver
++//
++//Copyright 2016 Advanced Micro Devices, Inc.
++
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/pm_runtime.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/soc-dai.h>
++#include <linux/dma-mapping.h>
++
++#include "acp3x.h"
++
++#define DRV_NAME "acp3x-i2s"
++
++static int acp3x_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
++{
++
++	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
++
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++
++	case SND_SOC_DAIFMT_I2S:
++		adata->tdm_mode = false;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		adata->tdm_mode = true;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
++		u32 rx_mask, int slots, int slot_width)
++{
++	u32 val;
++	u16 slot_len;
++
++	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
++
++	/* These values are as per Hardware Spec */
++
++	switch (slot_width) {
++	case SLOT_WIDTH_8:
++		slot_len = 8;
++		break;
++	case SLOT_WIDTH_16:
++		slot_len = 16;
++		break;
++	case SLOT_WIDTH_24:
++		slot_len = 24;
++		break;
++	case SLOT_WIDTH_32:
++		slot_len = 0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
++	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_ITER);
++	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
++	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_IRER);
++
++	val = (FRM_LEN | (slots << 15) | (slot_len << 18));
++	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
++	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
++
++	adata->tdm_fmt = val;
++	return 0;
++}
++
++static int acp3x_i2s_hwparams(struct snd_pcm_substream *substream,
++		struct snd_pcm_hw_params *params,
++		struct snd_soc_dai *dai)
++{
++	u32 val = 0;
++	struct i2s_stream_instance *rtd = substream->runtime->private_data;
++
++	switch (params_format(params)) {
++	case SNDRV_PCM_FORMAT_U8:
++	case SNDRV_PCM_FORMAT_S8:
++		rtd->xfer_resolution = 0x0;
++		break;
++	case SNDRV_PCM_FORMAT_S16_LE:
++		rtd->xfer_resolution = 0x02;
++		break;
++	case SNDRV_PCM_FORMAT_S24_LE:
++		rtd->xfer_resolution = 0x04;
++		break;
++	case SNDRV_PCM_FORMAT_S32_LE:
++		rtd->xfer_resolution = 0x05;
++		break;
++	default:
++		return -EINVAL;
++	}
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
++		val = val | (rtd->xfer_resolution  << 3);
++		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
++	} else {
++		val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
++		val = val | (rtd->xfer_resolution  << 3);
++		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
++	}
++	return 0;
++}
++
++static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
++		int cmd, struct snd_soc_dai *dai)
++{
++	int ret = 0;
++	struct i2s_stream_instance *rtd = substream->runtime->private_data;
++	u32 val, period_bytes;
++
++	period_bytes = frames_to_bytes(substream->runtime,
++			substream->runtime->period_size);
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_RESUME:
++	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		rtd->bytescount = acp_get_byte_count(rtd,
++						substream->stream);
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++			rv_writel(period_bytes, rtd->acp3x_base +
++					mmACP_BT_TX_INTR_WATERMARK_SIZE);
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
++			val = val | BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
++		} else {
++			rv_writel(period_bytes, rtd->acp3x_base +
++					mmACP_BT_RX_INTR_WATERMARK_SIZE);
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
++			val = val | BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
++		}
++		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
++		break;
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
++			val = val & ~BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
++		} else {
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
++			val = val & ~BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
++		}
++		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	return ret;
++}
++
++static struct snd_soc_dai_ops acp3x_i2s_dai_ops = {
++	.hw_params = acp3x_i2s_hwparams,
++	.trigger   = acp3x_i2s_trigger,
++	.set_fmt = acp3x_i2s_set_fmt,
++	.set_tdm_slot = acp3x_i2s_set_tdm_slot,
++};
++
++static const struct snd_soc_component_driver acp3x_dai_component = {
++	.name           = "acp3x-i2s",
++};
++
++static struct snd_soc_dai_driver acp3x_i2s_dai = {
++	.playback = {
++		.rates = SNDRV_PCM_RATE_8000_96000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
++			SNDRV_PCM_FMTBIT_U8 |
++			SNDRV_PCM_FMTBIT_S24_LE |
++			SNDRV_PCM_FMTBIT_S32_LE,
++		.channels_min = 2,
++		.channels_max = 8,
++
++		.rate_min = 8000,
++		.rate_max = 96000,
++	},
++	.capture = {
++		.rates = SNDRV_PCM_RATE_8000_48000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
++			SNDRV_PCM_FMTBIT_U8 |
++			SNDRV_PCM_FMTBIT_S24_LE |
++			SNDRV_PCM_FMTBIT_S32_LE,
++		.channels_min = 2,
++		.channels_max = 2,
++		.rate_min = 8000,
++		.rate_max = 48000,
++	},
++	.ops = &acp3x_i2s_dai_ops,
++};
++
++
++static int acp3x_dai_probe(struct platform_device *pdev)
++{
++	int status;
++	struct resource *res;
++	struct i2s_dev_data *adata;
++
++	adata = devm_kzalloc(&pdev->dev, sizeof(struct i2s_dev_data),
++			GFP_KERNEL);
++	if (!adata)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "IORESOURCE_MEM FAILED\n");
++		goto err;
++	}
++
++	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
++			resource_size(res));
++	if (IS_ERR(adata->acp3x_base))
++		return PTR_ERR(adata->acp3x_base);
++
++	adata->i2s_irq = res->start;
++	dev_set_drvdata(&pdev->dev, adata);
++	status = devm_snd_soc_register_component(&pdev->dev,
++			&acp3x_dai_component,
++			&acp3x_i2s_dai, 1);
++	if (status) {
++		dev_err(&pdev->dev, "Fail to register acp i2s dai\n");
++		goto dev_err;
++	}
++	pm_runtime_set_autosuspend_delay(&pdev->dev, 10000);
++	pm_runtime_use_autosuspend(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++	return 0;
++err:
++	kfree(adata);
++	return -ENOMEM;
++dev_err:
++	kfree(adata->acp3x_base);
++	kfree(adata);
++	kfree(res);
++	return -ENODEV;
++}
++
++static int acp3x_dai_remove(struct platform_device *pdev)
++{
++	pm_runtime_disable(&pdev->dev);
++	return 0;
++}
++static struct platform_driver acp3x_dai_driver = {
++	.probe = acp3x_dai_probe,
++	.remove = acp3x_dai_remove,
++	.driver = {
++		.name = "acp3x_i2s_playcap",
++	},
++};
++
++module_platform_driver(acp3x_dai_driver);
++
++MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
++MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" DRV_NAME);
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 60709e3..8db2812 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -18,24 +18,6 @@
+ 
+ #define DRV_NAME "acp3x-i2s-audio"
+ 
+-struct i2s_dev_data {
+-	bool tdm_mode;
+-	unsigned int i2s_irq;
+-	u32 tdm_fmt;
+-	void __iomem *acp3x_base;
+-	struct snd_pcm_substream *play_stream;
+-	struct snd_pcm_substream *capture_stream;
+-};
+-
+-struct i2s_stream_instance {
+-	u16 num_pages;
+-	u16 channels;
+-	u32 xfer_resolution;
+-	u64 bytescount;
+-	dma_addr_t dma_addr;
+-	void __iomem *acp3x_base;
+-};
+-
+ static const struct snd_pcm_hardware acp3x_pcm_hardware_playback = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+@@ -280,6 +262,9 @@ static int acp3x_dma_open(struct snd_soc_component *component,
+ {
+ 	int ret = 0;
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct snd_soc_pcm_runtime *prtd = substream->private_data;
++
++	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
+ 	struct i2s_dev_data *adata = dev_get_drvdata(component->dev);
+ 	struct i2s_stream_instance *i2s_data = kzalloc(sizeof(struct i2s_stream_instance),
+ 						       GFP_KERNEL);
+@@ -312,23 +297,6 @@ static int acp3x_dma_open(struct snd_soc_component *component,
+ 	return 0;
+ }
+ 
+-static u64 acp_get_byte_count(struct i2s_stream_instance *rtd, int direction)
+-{
+-	u64 byte_count;
+-
+-	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
+-		byte_count = rv_readl(rtd->acp3x_base +
+-				      mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
+-		byte_count |= rv_readl(rtd->acp3x_base +
+-				       mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
+-	} else {
+-		byte_count = rv_readl(rtd->acp3x_base +
+-				      mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
+-		byte_count |= rv_readl(rtd->acp3x_base +
+-				       mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
+-	}
+-	return byte_count;
+-}
+ 
+ static int acp3x_dma_hw_params(struct snd_soc_component *component,
+ 			       struct snd_pcm_substream *substream,
+@@ -380,6 +348,7 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
+ static int acp3x_dma_new(struct snd_soc_component *component,
+ 			 struct snd_soc_pcm_runtime *rtd)
+ {
++	component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
+ 	struct device *parent = component->dev->parent;
+ 	snd_pcm_lib_preallocate_pages_for_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
+ 					      parent, MIN_BUFFER, MAX_BUFFER);
+@@ -402,7 +371,9 @@ static int acp3x_dma_mmap(struct snd_soc_component *component,
+ static int acp3x_dma_close(struct snd_soc_component *component,
+ 			   struct snd_pcm_substream *substream)
+ {
++	struct snd_soc_pcm_runtime *prtd = substream->private_data;
+ 	struct i2s_stream_instance *rtd = substream->runtime->private_data;
++	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
+ 	struct i2s_dev_data *adata = dev_get_drvdata(component->dev);
+ 
+ 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+@@ -419,182 +390,6 @@ static int acp3x_dma_close(struct snd_soc_component *component,
+ 	return 0;
+ }
+ 
+-static int acp3x_dai_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
+-{
+-
+-	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
+-
+-	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+-	case SND_SOC_DAIFMT_I2S:
+-		adata->tdm_mode = false;
+-		break;
+-	case SND_SOC_DAIFMT_DSP_A:
+-		adata->tdm_mode = true;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+-static int acp3x_dai_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
+-				  u32 rx_mask, int slots, int slot_width)
+-{
+-	u32 val = 0;
+-	u16 slot_len;
+-
+-	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
+-
+-	switch (slot_width) {
+-	case SLOT_WIDTH_8:
+-		slot_len = 8;
+-		break;
+-	case SLOT_WIDTH_16:
+-		slot_len = 16;
+-		break;
+-	case SLOT_WIDTH_24:
+-		slot_len = 24;
+-		break;
+-	case SLOT_WIDTH_32:
+-		slot_len = 0;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
+-	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_ITER);
+-	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
+-	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_IRER);
+-
+-	val = (FRM_LEN | (slots << 15) | (slot_len << 18));
+-	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
+-	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
+-
+-	adata->tdm_fmt = val;
+-	return 0;
+-}
+-
+-static int acp3x_dai_i2s_hwparams(struct snd_pcm_substream *substream,
+-				  struct snd_pcm_hw_params *params,
+-				  struct snd_soc_dai *dai)
+-{
+-	u32 val = 0;
+-	struct i2s_stream_instance *rtd = substream->runtime->private_data;
+-
+-	switch (params_format(params)) {
+-	case SNDRV_PCM_FORMAT_U8:
+-	case SNDRV_PCM_FORMAT_S8:
+-		rtd->xfer_resolution = 0x0;
+-		break;
+-	case SNDRV_PCM_FORMAT_S16_LE:
+-		rtd->xfer_resolution = 0x02;
+-		break;
+-	case SNDRV_PCM_FORMAT_S24_LE:
+-		rtd->xfer_resolution = 0x04;
+-		break;
+-	case SNDRV_PCM_FORMAT_S32_LE:
+-		rtd->xfer_resolution = 0x05;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-	val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
+-	val = val | (rtd->xfer_resolution  << 3);
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
+-	else
+-		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
+-
+-	return 0;
+-}
+-
+-static int acp3x_dai_i2s_trigger(struct snd_pcm_substream *substream,
+-				 int cmd, struct snd_soc_dai *dai)
+-{
+-	int ret = 0;
+-	struct i2s_stream_instance *rtd = substream->runtime->private_data;
+-	u32 val, period_bytes;
+-
+-	period_bytes = frames_to_bytes(substream->runtime,
+-				       substream->runtime->period_size);
+-	switch (cmd) {
+-	case SNDRV_PCM_TRIGGER_START:
+-	case SNDRV_PCM_TRIGGER_RESUME:
+-	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+-		rtd->bytescount = acp_get_byte_count(rtd, substream->stream);
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			rv_writel(period_bytes, rtd->acp3x_base +
+-				  mmACP_BT_TX_INTR_WATERMARK_SIZE);
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
+-			val = val | BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
+-		} else {
+-			rv_writel(period_bytes, rtd->acp3x_base +
+-				  mmACP_BT_RX_INTR_WATERMARK_SIZE);
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
+-			val = val | BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
+-		}
+-		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
+-		break;
+-	case SNDRV_PCM_TRIGGER_STOP:
+-	case SNDRV_PCM_TRIGGER_SUSPEND:
+-	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
+-			val = val & ~BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
+-		} else {
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
+-			val = val & ~BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
+-		}
+-		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
+-		break;
+-	default:
+-		ret = -EINVAL;
+-		break;
+-	}
+-
+-	return ret;
+-}
+-
+-static struct snd_soc_dai_ops acp3x_dai_i2s_ops = {
+-	.hw_params = acp3x_dai_i2s_hwparams,
+-	.trigger   = acp3x_dai_i2s_trigger,
+-	.set_fmt = acp3x_dai_i2s_set_fmt,
+-	.set_tdm_slot = acp3x_dai_set_tdm_slot,
+-};
+-
+-static struct snd_soc_dai_driver acp3x_i2s_dai_driver = {
+-	.playback = {
+-		.rates = SNDRV_PCM_RATE_8000_96000,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
+-					SNDRV_PCM_FMTBIT_U8 |
+-					SNDRV_PCM_FMTBIT_S24_LE |
+-					SNDRV_PCM_FMTBIT_S32_LE,
+-		.channels_min = 2,
+-		.channels_max = 8,
+-
+-		.rate_min = 8000,
+-		.rate_max = 96000,
+-	},
+-	.capture = {
+-		.rates = SNDRV_PCM_RATE_8000_48000,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
+-					SNDRV_PCM_FMTBIT_U8 |
+-					SNDRV_PCM_FMTBIT_S24_LE |
+-					SNDRV_PCM_FMTBIT_S32_LE,
+-		.channels_min = 2,
+-		.channels_max = 2,
+-		.rate_min = 8000,
+-		.rate_max = 48000,
+-	},
+-	.ops = &acp3x_dai_i2s_ops,
+-};
+-
+ static const struct snd_soc_component_driver acp3x_i2s_component = {
+ 	.name		= DRV_NAME,
+ 	.open		= acp3x_dma_open,
+@@ -628,31 +423,31 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+ 
+ 	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
+ 	if (!adata)
+-		return -ENOMEM;
++		goto err;
+ 
+ 	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
+ 					 resource_size(res));
++	if (!adata->acp3x_base)
++		goto base_err;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+ 	if (!res) {
+ 		dev_err(&pdev->dev, "IORESOURCE_IRQ FAILED\n");
+-		return -ENODEV;
++		goto io_irq;
+ 	}
+ 
+ 	adata->i2s_irq = res->start;
+-	adata->play_stream = NULL;
+-	adata->capture_stream = NULL;
+ 
+ 	dev_set_drvdata(&pdev->dev, adata);
+ 	/* Initialize ACP */
+ 	status = acp3x_init(adata->acp3x_base);
+ 	if (status)
+-		return -ENODEV;
++		goto io_irq;
+ 	status = devm_snd_soc_register_component(&pdev->dev,
+ 						 &acp3x_i2s_component,
+-						 &acp3x_i2s_dai_driver, 1);
++						 NULL, 0);
+ 	if (status) {
+-		dev_err(&pdev->dev, "Fail to register acp i2s dai\n");
++		dev_err(&pdev->dev, "Fail to register acp i2s component\n");
+ 		goto dev_err;
+ 	}
+ 	status = devm_request_irq(&pdev->dev, adata->i2s_irq, i2s_irq_handler,
+@@ -666,7 +461,24 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 	return 0;
++
++err:
++	kfree(res);
++	return -ENOMEM;
++base_err:
++	kfree(res);
++	kfree(adata);
++	return -ENOMEM;
++io_irq:
++	kfree(res);
++	kfree(adata->acp3x_base);
++	kfree(adata);
++	return -ENOMEM;
++
+ dev_err:
++	kfree(res);
++	kfree(adata->acp3x_base);
++	kfree(adata);
+ 	status = acp3x_deinit(adata->acp3x_base);
+ 	if (status)
+ 		dev_err(&pdev->dev, "ACP de-init failed\n");
+@@ -774,13 +586,14 @@ static struct platform_driver acp3x_dma_driver = {
+ 	.probe = acp3x_audio_probe,
+ 	.remove = acp3x_audio_remove,
+ 	.driver = {
+-		.name = "acp3x_rv_i2s",
++		.name = "acp3x_rv_i2s_dma",
+ 		.pm = &acp3x_pm_ops,
+ 	},
+ };
+ 
+ module_platform_driver(acp3x_dma_driver);
+ 
++MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
+ MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
+ MODULE_AUTHOR("Vijendar.Mukunda@amd.com");
+ MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
+diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
+index 2f15fe1..72c1a23 100644
+--- a/sound/soc/amd/raven/acp3x.h
++++ b/sound/soc/amd/raven/acp3x.h
+@@ -51,6 +51,29 @@
+ #define SLOT_WIDTH_24 0x18
+ #define SLOT_WIDTH_32 0x20
+ 
++struct acp3x_platform_info {
++	u16 play_i2s_instance;
++	u16 cap_i2s_instance;
++	u16 capture_channel;
++};
++
++struct i2s_dev_data {
++	bool tdm_mode;
++	unsigned int i2s_irq;
++	u32 tdm_fmt;
++	void __iomem *acp3x_base;
++	struct snd_pcm_substream *play_stream;
++	struct snd_pcm_substream *capture_stream;
++};
++
++struct i2s_stream_instance {
++	u16 num_pages;
++	u16 channels;
++	u32 xfer_resolution;
++	u64 bytescount;
++	dma_addr_t dma_addr;
++	void __iomem *acp3x_base;
++};
+ 
+ static inline u32 rv_readl(void __iomem *base_addr)
+ {
+@@ -61,3 +84,22 @@ static inline void rv_writel(u32 val, void __iomem *base_addr)
+ {
+ 	writel(val, base_addr - ACP3x_PHY_BASE_ADDRESS);
+ }
++
++static inline u64 acp_get_byte_count(struct i2s_stream_instance *rtd,
++							int direction)
++{
++	u64 byte_count;
++
++	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		byte_count = rv_readl(rtd->acp3x_base +
++				mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
++		byte_count |= rv_readl(rtd->acp3x_base +
++				mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
++	} else {
++		byte_count = rv_readl(rtd->acp3x_base +
++				mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
++		byte_count |= rv_readl(rtd->acp3x_base +
++				mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
++	}
++	return byte_count;
++}
+-- 
+2.7.4
+
