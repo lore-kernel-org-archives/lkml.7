@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE749C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC83C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3A721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FBF204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499260;
-	bh=bD4K1NaAFhMCwSJwgVe/D3+stuw+uSmAlZ6tLzZuNNc=;
+	s=default; t=1573499266;
+	bh=ezdMpOZBc7nuvT/RQXHfOgSv42XWpVPhTvjDuhk/2xE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dWHMGwfK3466L0qKu7iVlCRHNwz/Y4GCMezaDhNQfwM1Cz1nkkr7rOhB/GwSrgrwA
-	 /PeMitg0xIXV8l9tvQWbM7R0W0BnVbr2QWkInNrd9daC9yHIY58MbDzNFTxOqX1udT
-	 Cuv048SW3NyWD4wPZWc9Om9mwSgfLfRNiykvLk6g=
+	b=UIo14YyvrcbM7vButDpyY8xfnKKhbmy0Db6vPg9Ieda+qUD/8WBazog0xFeDQ1KAJ
+	 24Yfth6+Us/2LxAZEPDRm7nLKmWFQHHFUhDHWnJndbdPvZo8nAKM/ECAjTXoitFiWq
+	 MEvINUw37TcelX2DarQDTFp/rWoiaMiZquAqydqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfKKTHj (ORCPT
+        id S1728833AbfKKShP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:07:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:37:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728849AbfKKShW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:22 -0500
+        id S1727785AbfKKShL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFF95204FD;
-        Mon, 11 Nov 2019 18:37:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F2FB204FD;
+        Mon, 11 Nov 2019 18:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497442;
-        bh=bD4K1NaAFhMCwSJwgVe/D3+stuw+uSmAlZ6tLzZuNNc=;
+        s=default; t=1573497430;
+        bh=ezdMpOZBc7nuvT/RQXHfOgSv42XWpVPhTvjDuhk/2xE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnKX3o5xFH0+YCpnGA812F3Nw0/RJnt00aVgy49v4sA+Xn4ViV9a+9qdt/I33DzPU
-         cOXRIBtknrDV+xsPT+moTMVdfC1tWVBKdSgA4z1e/bSHjvQcyYvDBtZU5JtKfeh3MF
-         JKaA9cgAvtQfRcI0x9jfH71Lq9ZWnTeMo++4/QU8=
+        b=uDYh4bgpExrGzK4CZtURnB5TsVNjdo4SiOJraKzZLOUk/Dh8ppPCarVboCsmc5kcJ
+         bpXp50SEV7sMcsDaN9W9YBljy9XlgJ6lX1qzY3gt2dxsI9iv/8Ah58zQFpgA/TEp//
+         dltixqhvFAR1QnnLHNu0s4nkmn3jXXSexSpN3BV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arvind Yadav <arvind.yadav.cs@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        Keerthy <j-keerthy@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 056/105] ASoC: davinci-mcasp: Handle return value of devm_kasprintf
-Date:   Mon, 11 Nov 2019 19:28:26 +0100
-Message-Id: <20191111181444.051082593@linuxfoundation.org>
+Subject: [PATCH 4.14 052/105] PCI: dra7xx: Add shutdown handler to cleanly turn off clocks
+Date:   Mon, 11 Nov 2019 19:28:22 +0100
+Message-Id: <20191111181443.084527801@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,55 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Yadav <arvind.yadav.cs@gmail.com>
+From: Keerthy <j-keerthy@ti.com>
 
-commit 0c8b794c4a10aaf7ac0d4a49be2b2638e2038adb upstream
+commit 9c049bea083fea21373b8baf51fe49acbe24e105 upstream
 
-devm_kasprintf() can fail here and we must check its return value.
+Add shutdown handler to cleanly turn off clocks.  This will help in cases of
+kexec where in a new kernel can boot abruptly.
 
-Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/davinci/davinci-mcasp.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/pci/dwc/pci-dra7xx.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
---- a/sound/soc/davinci/davinci-mcasp.c
-+++ b/sound/soc/davinci/davinci-mcasp.c
-@@ -1894,6 +1894,10 @@ static int davinci_mcasp_probe(struct pl
- 	if (irq >= 0) {
- 		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s_common",
- 					  dev_name(&pdev->dev));
-+		if (!irq_name) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
- 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
- 						davinci_mcasp_common_irq_handler,
- 						IRQF_ONESHOT | IRQF_SHARED,
-@@ -1911,6 +1915,10 @@ static int davinci_mcasp_probe(struct pl
- 	if (irq >= 0) {
- 		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s_rx",
- 					  dev_name(&pdev->dev));
-+		if (!irq_name) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
- 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
- 						davinci_mcasp_rx_irq_handler,
- 						IRQF_ONESHOT, irq_name, mcasp);
-@@ -1926,6 +1934,10 @@ static int davinci_mcasp_probe(struct pl
- 	if (irq >= 0) {
- 		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s_tx",
- 					  dev_name(&pdev->dev));
-+		if (!irq_name) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
- 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
- 						davinci_mcasp_tx_irq_handler,
- 						IRQF_ONESHOT, irq_name, mcasp);
+--- a/drivers/pci/dwc/pci-dra7xx.c
++++ b/drivers/pci/dwc/pci-dra7xx.c
+@@ -817,6 +817,22 @@ static int dra7xx_pcie_resume_noirq(stru
+ }
+ #endif
+ 
++void dra7xx_pcie_shutdown(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct dra7xx_pcie *dra7xx = dev_get_drvdata(dev);
++	int ret;
++
++	dra7xx_pcie_stop_link(dra7xx->pci);
++
++	ret = pm_runtime_put_sync(dev);
++	if (ret < 0)
++		dev_dbg(dev, "pm_runtime_put_sync failed\n");
++
++	pm_runtime_disable(dev);
++	dra7xx_pcie_disable_phy(dra7xx);
++}
++
+ static const struct dev_pm_ops dra7xx_pcie_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(dra7xx_pcie_suspend, dra7xx_pcie_resume)
+ 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(dra7xx_pcie_suspend_noirq,
+@@ -830,5 +846,6 @@ static struct platform_driver dra7xx_pci
+ 		.suppress_bind_attrs = true,
+ 		.pm	= &dra7xx_pcie_pm_ops,
+ 	},
++	.shutdown = dra7xx_pcie_shutdown,
+ };
+ builtin_platform_driver_probe(dra7xx_pcie_driver, dra7xx_pcie_probe);
 
 
