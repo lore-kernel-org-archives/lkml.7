@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E66C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1686EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C7121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12532184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497382;
-	bh=uYFt5Jv5oeU56nOMZRh2gwtCkP6ppAH6wLKlAArvihA=;
+	s=default; t=1573497386;
+	bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mirb4fh71SmEb0GUcjRYDaK5JW27m/8I6ne9wkyTGb/jLBnVl4FLcW0JmOUm9t1YE
-	 gVEf4dxc/UxaawedBKorP27nBBfXcOEI5eOrHGjc3HWCVVPvvXR3UxiCqLSbNXoqYw
-	 RBPxnOXnGGevXERvs+luf9hGvOiglK4TpnRTq+d4=
+	b=pW5fvARXmcuec+YF04hd12qegqgJER/lMQRRC9AjaZhsPbNVjAT/gV4P3Ev8h5f4c
+	 Cd5+Bo5ss+pHT4sC5jl8sXFvu4Ds3wI3LqyOehS3PhYKf4sX/mJ2Cnjo8FDjODoH7D
+	 3vJ97J3chdS7/aUvlyyuJ1Ii9iBTaKSDYEbx85UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfKKSgV (ORCPT
+        id S1728711AbfKKSgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54510 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbfKKSgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:18 -0500
+        id S1728701AbfKKSgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E2852184C;
-        Mon, 11 Nov 2019 18:36:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 058562184C;
+        Mon, 11 Nov 2019 18:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497377;
-        bh=uYFt5Jv5oeU56nOMZRh2gwtCkP6ppAH6wLKlAArvihA=;
+        s=default; t=1573497380;
+        bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jWtrmF46h4hzkc9f1ahskzigugj5mARW32pmbvgsCxPDHgRhaEGdA964hpJxUSVkq
-         kviyfTrQS5DPPGDtmZB7zdA7JCo1wvUAVxlJiz4YABLYcQ0fIzb0+K5ZeqfeACZw4q
-         kklQP6YCnc+k/n5+iliez0BKcXd/Nicw19rE2xuU=
+        b=lefi1gxcsa1NGs8ad5kYlriRSYKxD46M6C91FIdr+Rag+jbEH7fTa4xtLBUwbp36i
+         HRqgQlhlFdnPNSobYs3ob42KjLmi/fxziKh3QLr/uIeSDArBbcVxtZ+9PqnNidSKcg
+         78SLLtJXCkCK95oZycCBWiWlBQde4adEyJVKo9mY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 032/105] intel_th: pci: Add Jasper Lake PCH support
-Date:   Mon, 11 Nov 2019 19:28:02 +0100
-Message-Id: <20191111181438.405431106@linuxfoundation.org>
+        stable@vger.kernel.org, Bernd Krumboeck <b.krumboeck@gmail.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Johan Hovold <johan@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.14 033/105] can: usb_8dev: fix use-after-free on disconnect
+Date:   Mon, 11 Nov 2019 19:28:03 +0100
+Message-Id: <20191111181438.542525502@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,35 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 9d55499d8da49e9261e95a490f3fda41d955f505 upstream.
+commit 3759739426186a924675651b388d1c3963c5710e upstream.
 
-This adds support for Intel TH on Jasper Lake PCH.
+The driver was accessing its driver data after having freed it.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191028070651.9770-8-alexander.shishkin@linux.intel.com
+Fixes: 0024d8ad1639 ("can: usb_8dev: Add support for USB2CAN interface from 8 devices")
+Cc: stable <stable@vger.kernel.org>     # 3.9
+Cc: Bernd Krumboeck <b.krumboeck@gmail.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/can/usb/usb_8dev.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -198,6 +198,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Jasper Lake PCH */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4da6),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{ 0 },
- };
+--- a/drivers/net/can/usb/usb_8dev.c
++++ b/drivers/net/can/usb/usb_8dev.c
+@@ -1007,9 +1007,8 @@ static void usb_8dev_disconnect(struct u
+ 		netdev_info(priv->netdev, "device disconnected\n");
  
+ 		unregister_netdev(priv->netdev);
+-		free_candev(priv->netdev);
+-
+ 		unlink_all_urbs(priv);
++		free_candev(priv->netdev);
+ 	}
+ 
+ }
 
 
