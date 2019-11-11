@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0D1C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0CFC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8ED7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA36D204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499468;
-	bh=xBY9KLAK1d8S4cs3Js4dOxZAJaPz5wbidMGeRJhHRQo=;
+	s=default; t=1573499476;
+	bh=gpJkM8tSzbzYkk30CQsNGrRPwbI6TaIqNSKozZigDIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fb16IXJ0aWUxFQmXCY7Z4vsBpm23JdkR3cGLuCRcQnvXhP/H6vNdBqX7Lk6qvFbye
-	 CTdVleMrOJFEZRRb30lBpP+3dkxZXbGkNQqLPGAL0bDqojBS0aW8r2r9jgnWI9UoNW
-	 W3ZtWkaowfhRWac7Qj7MTvAa7kRhT8tVdd1U16pM=
+	b=xbZqBxhsM/VwByOXpmH+/+Y4LquSHEqPl4aTOlqdEW5lHgdajWMEURu1z6ELPpdy1
+	 fJuyO/pZ3eTDlalms4WIVKrgzGrrooEYhGgiZpjgkQIf3fwr1CfxcjMd1ygh2y3BV8
+	 23646A5uxJC/qWHR6GmVrzcr9jF2lKhPrtRr8wuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfKKSap (ORCPT
+        id S1727337AbfKKSaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:30:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:30:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727411AbfKKSam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:42 -0500
+        id S1726910AbfKKSa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FE720674;
-        Mon, 11 Nov 2019 18:30:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4856A21872;
+        Mon, 11 Nov 2019 18:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497041;
-        bh=xBY9KLAK1d8S4cs3Js4dOxZAJaPz5wbidMGeRJhHRQo=;
+        s=default; t=1573497026;
+        bh=gpJkM8tSzbzYkk30CQsNGrRPwbI6TaIqNSKozZigDIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wx7U8tbOEPC/YR5evKeA8SsrUDl3Ggtmi3hUpZXKEDuVNUN3dLxqoF0BCMS+fOhiz
-         7D3d2EKzxBDjgz9QEIK/JpyvlVZCB8tAWCwufNMoX3DgHVQxcl/7EiNjPwT0Ko3xsS
-         tyRggJ2WFZqp5Riwq3VDFJWYJatsEz26OnGsKDTo=
+        b=0gLYt0yZVyJew8ysSKKpObXg4AOtn3SpA2nvsnJjIj+K2cY0Eeo06s20TG7148+73
+         Rkc3sZq298Z5zCdihztRyCdNd2YSVqlOPWkTJMy0tNVVjRNGS5XY+0TnJJFNg1eXnT
+         cTYKhvMW5zwLcA5zaKFlLT/S3JY9hKcGh/hbIavM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 4.4 25/43] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
-Date:   Mon, 11 Nov 2019 19:28:39 +0100
-Message-Id: <20191111181316.742248806@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 03/43] NFC: fdp: fix incorrect free object
+Date:   Mon, 11 Nov 2019 19:28:17 +0100
+Message-Id: <20191111181252.561390022@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -60,66 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Pan Bian <bianpan2016@163.com>
 
-commit 7be142caabc4780b13a522c485abc806de5c4114 upstream.
+[ Upstream commit 517ce4e93368938b204451285e53014549804868 ]
 
-The PCI Tegra controller conversion to a device tree configurable
-driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
-to drivers/pci/host") implied that code for the driver can be
-compiled in for a kernel supporting multiple platforms.
+The address of fw_vsc_cfg is on stack. Releasing it with devm_kfree() is
+incorrect, which may result in a system crash or other security impacts.
+The expected object to free is *fw_vsc_cfg.
 
-Unfortunately, a blind move of the code did not check that some of the
-quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
-all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
-for both Vendor-ID and Device-ID) are now applied in all kernels that
-compile the PCI Tegra controlled driver, DT and ACPI alike.
-
-This is completely wrong, in that enablement of Relaxed Ordering is only
-required by default in Tegra20 platforms as described in the Tegra20
-Technical Reference Manual (available at
-https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
-Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
-be enabled in its root ports to avoid deadlock in hardware) and in the
-Tegra30 platforms for the same reasons (unfortunately not documented
-in the TRM).
-
-There is no other strict requirement on PCI devices Relaxed Ordering
-enablement on any other Tegra platforms or PCI host bridge driver.
-
-Fix this quite upsetting situation by limiting the vendor and device IDs
-to which the Relaxed Ordering quirk applies to the root ports in
-question, reported above.
-
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pci/host/pci-tegra.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/nfc/fdp/i2c.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/host/pci-tegra.c
-+++ b/drivers/pci/host/pci-tegra.c
-@@ -586,12 +586,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NV
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+--- a/drivers/nfc/fdp/i2c.c
++++ b/drivers/nfc/fdp/i2c.c
+@@ -268,7 +268,7 @@ static void fdp_nci_i2c_read_device_prop
+ 						  *fw_vsc_cfg, len);
  
--/* Tegra PCIE requires relaxed ordering */
-+/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
- static void tegra_pcie_relax_enable(struct pci_dev *dev)
- {
- 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
- }
--DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
- 
- static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
- {
+ 		if (r) {
+-			devm_kfree(dev, fw_vsc_cfg);
++			devm_kfree(dev, *fw_vsc_cfg);
+ 			goto vsc_read_err;
+ 		}
+ 	} else {
 
 
