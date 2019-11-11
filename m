@@ -2,286 +2,111 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC1DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7103CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B007222CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C5A222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dcs045wz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emidFNVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfKKNam (ORCPT
+        id S1727308AbfKKNat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:30:42 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47352 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727223AbfKKNaj (ORCPT
+        Mon, 11 Nov 2019 08:30:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42341 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727054AbfKKNar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:30:39 -0500
+        Mon, 11 Nov 2019 08:30:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573479037;
+        s=mimecast20190719; t=1573479046;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=rcIPx/5ogsYeXG7OzIvC6+U0YsBC2zFglCGdLOXfT5M=;
-        b=dcs045wzc/+XsBgMH7DxUi8/fvuRp4KASdkepL2ixaqvXKZyEX6dMrL21IgDhSNtd/4i+5
-        LFdQTDkTtwn91HN5Z3pu0FjiPtvLgY28tYNYXKVj3r4iiQ6AlMvxbzewsQN/hldutfdO7u
-        y3ck5Z/FeSjwQLO6z6+ugeMpGbAJhOw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-372-TTVnYlDJP-e2wAHwxOaFyg-1; Mon, 11 Nov 2019 08:30:34 -0500
-Received: by mail-wm1-f71.google.com with SMTP id l184so8326861wmf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 05:30:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e+cTauSYxvUARdKLAc5A7RMT6Ok2c2ubkvwx/ni9mok=;
-        b=j1oZR8nmnawOgXANTCzcUE4VMbBzhnvhLNDsmEY/Zv3SBBLhw3fpc5RSAYdhxqug72
-         FXbcuFW8L/YRLLG5KmVMl707tvkUlcFJasn5nzWO97oUIbY4ZZrSEnBjt4pQQzxAVjxZ
-         fCuLB7vbGVQLlK7AEXgV45SAGuc6i/+IxByReTpAStbASo8T4bDJGVIDqM7PRmW1RhAY
-         s+R4Ru7KgVsHbHyeRGCI69EDHdfDA6UpdKQ8bTQ+U5XCta/b+sSzWyLpITht1N2a1Zll
-         4acADU/2+TrwGI00K4At9gsTmN3IPG+4mx73ip4Bp2obqZj2tcT5aQfK1ZNfcMfZ1qBq
-         mdaA==
-X-Gm-Message-State: APjAAAXGJznNy5e0aB7C6yb11e4Rr0w1AO0H6OpHMWY4MbodECKJmxKV
-        l9n7hX2GWuxoKePiewcVJ73nJD8qb+EqmHb7r2jauU4hAkLvjmZNAX2v2mS5vPBn9nsE9OjlkXH
-        doisCxgQvNEIicJAfEarA5Cs1
-X-Received: by 2002:a1c:814b:: with SMTP id c72mr21525075wmd.167.1573479033172;
-        Mon, 11 Nov 2019 05:30:33 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwp88fUA9D9DG2jgjImcScFjHKuZOp3iwIpo8VnWaraYdMBrBUgxC9lbkl1AvxOj6Xvb+BXbg==
-X-Received: by 2002:a1c:814b:: with SMTP id c72mr21525041wmd.167.1573479032767;
-        Mon, 11 Nov 2019 05:30:32 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:a0f7:472a:1e7:7ef? ([2001:b07:6468:f312:a0f7:472a:1e7:7ef])
-        by smtp.gmail.com with ESMTPSA id m15sm17278510wrq.97.2019.11.11.05.30.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 05:30:32 -0800 (PST)
-Subject: Re: [PATCH v2] KVM: X86: Fix initialization of MSR
- lists(msrs_to_save[], emulated_msrs[] and msr_based_features[])
-To:     Chenyi Qiang <chenyi.qiang@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20191106063520.1915-1-chenyi.qiang@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <72f9e7f2-d57f-7c63-3bb1-34f0353d5aa6@redhat.com>
-Date:   Mon, 11 Nov 2019 14:30:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+         in-reply-to:in-reply-to:references:references;
+        bh=4iGX2jLwwPPOlI45s5Dwmf/HhqeeZarjqN7A9t+rnbw=;
+        b=emidFNVx2WSF4KEx10J5jZLilWoHAvh71bHKp12ZJfy0KzMu/U276feA4SHwM6fTZxi5+k
+        gom7xaUzdNS4G/CIaTlUfjTIaSzxaFUmWDN4ZOkgYhBE9AeMgIlwe4Nye+0goKQQE5ShTV
+        Pgf8325rH0wovrWQlIFvQRGpDVFzE+k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-PQKZox66MXGI_06u9m3fmQ-1; Mon, 11 Nov 2019 08:30:43 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 890A68064DC;
+        Mon, 11 Nov 2019 13:30:42 +0000 (UTC)
+Received: from krava (unknown [10.40.205.88])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 67B0450;
+        Mon, 11 Nov 2019 13:30:41 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 14:30:40 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, acme@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v5 12/13] perf evsel: Add functions to enable/disable for
+ a specific CPU
+Message-ID: <20191111133040.GD12923@krava>
+References: <20191107181646.506734-1-andi@firstfloor.org>
+ <20191107181646.506734-13-andi@firstfloor.org>
 MIME-Version: 1.0
-In-Reply-To: <20191106063520.1915-1-chenyi.qiang@intel.com>
-Content-Language: en-US
-X-MC-Unique: TTVnYlDJP-e2wAHwxOaFyg-1
+In-Reply-To: <20191107181646.506734-13-andi@firstfloor.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: PQKZox66MXGI_06u9m3fmQ-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/19 07:35, Chenyi Qiang wrote:
-> The three MSR lists(msrs_to_save[], emulated_msrs[] and
-> msr_based_features[]) are global arrays of kvm.ko, which are
-> adjusted (copy supported MSRs forward to override the unsupported MSRs)
-> when insmod kvm-{intel,amd}.ko, but it doesn't reset these three arrays
-> to their initial value when rmmod kvm-{intel,amd}.ko. Thus, at the next
-> installation, kvm-{intel,amd}.ko will do operations on the modified
-> arrays with some MSRs lost and some MSRs duplicated.
->=20
-> So define three constant arrays to hold the initial MSR lists and
-> initialize msrs_to_save[], emulated_msrs[] and msr_based_features[]
-> based on the constant arrays.
->=20
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> ---
-> Changes in v2:
->  - define initial MSR lists with static const.
->  - change the dynamic allocation of supported MSR lists to static allocat=
-ion.
->=20
->  arch/x86/kvm/x86.c | 51 +++++++++++++++++++++++++---------------------
->  1 file changed, 28 insertions(+), 23 deletions(-)
->=20
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 89621025577a..0b4b6db5b13f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1138,13 +1138,15 @@ EXPORT_SYMBOL_GPL(kvm_rdpmc);
->   * List of msr numbers which we expose to userspace through KVM_GET_MSRS
->   * and KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.
->   *
-> - * This list is modified at module load time to reflect the
-> + * The three MSR lists(msrs_to_save, emulated_msrs, msr_based_features)
-> + * extract the supported MSRs from the related const lists.
-> + * msrs_to_save is selected from the msrs_to_save_all to reflect the
->   * capabilities of the host cpu. This capabilities test skips MSRs that =
-are
-> - * kvm-specific. Those are put in emulated_msrs; filtering of emulated_m=
-srs
-> + * kvm-specific. Those are put in emulated_msrs_all; filtering of emulat=
-ed_msrs
->   * may depend on host virtualization features rather than host cpu featu=
-res.
->   */
-> =20
-> -static u32 msrs_to_save[] =3D {
-> +static const u32 msrs_to_save_all[] =3D {
->  =09MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP, MSR_IA32_SYSENTER_EIP,
->  =09MSR_STAR,
->  #ifdef CONFIG_X86_64
-> @@ -1185,9 +1187,10 @@ static u32 msrs_to_save[] =3D {
->  =09MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
->  };
-> =20
-> +static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
->  static unsigned num_msrs_to_save;
-> =20
-> -static u32 emulated_msrs[] =3D {
-> +static const u32 emulated_msrs_all[] =3D {
->  =09MSR_KVM_SYSTEM_TIME, MSR_KVM_WALL_CLOCK,
->  =09MSR_KVM_SYSTEM_TIME_NEW, MSR_KVM_WALL_CLOCK_NEW,
->  =09HV_X64_MSR_GUEST_OS_ID, HV_X64_MSR_HYPERCALL,
-> @@ -1226,7 +1229,7 @@ static u32 emulated_msrs[] =3D {
->  =09 * by arch/x86/kvm/vmx/nested.c based on CPUID or other MSRs.
->  =09 * We always support the "true" VMX control MSRs, even if the host
->  =09 * processor does not, so I am putting these registers here rather
-> -=09 * than in msrs_to_save.
-> +=09 * than in msrs_to_save_all.
->  =09 */
->  =09MSR_IA32_VMX_BASIC,
->  =09MSR_IA32_VMX_TRUE_PINBASED_CTLS,
-> @@ -1245,13 +1248,14 @@ static u32 emulated_msrs[] =3D {
->  =09MSR_KVM_POLL_CONTROL,
->  };
-> =20
-> +static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
->  static unsigned num_emulated_msrs;
-> =20
->  /*
->   * List of msr numbers which are used to expose MSR-based features that
->   * can be used by a hypervisor to validate requested CPU features.
->   */
-> -static u32 msr_based_features[] =3D {
-> +static const u32 msr_based_features_all[] =3D {
->  =09MSR_IA32_VMX_BASIC,
->  =09MSR_IA32_VMX_TRUE_PINBASED_CTLS,
->  =09MSR_IA32_VMX_PINBASED_CTLS,
-> @@ -1276,6 +1280,7 @@ static u32 msr_based_features[] =3D {
->  =09MSR_IA32_ARCH_CAPABILITIES,
->  };
-> =20
-> +static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all)];
->  static unsigned int num_msr_based_features;
-> =20
->  static u64 kvm_get_arch_capabilities(void)
-> @@ -5131,19 +5136,19 @@ static void kvm_init_msr_list(void)
->  =09unsigned i, j;
-> =20
->  =09BUILD_BUG_ON_MSG(INTEL_PMC_MAX_FIXED !=3D 4,
-> -=09=09=09 "Please update the fixed PMCs in msrs_to_save[]");
-> +=09=09=09 "Please update the fixed PMCs in msrs_to_saved_all[]");
-> =20
->  =09perf_get_x86_pmu_capability(&x86_pmu);
-> =20
-> -=09for (i =3D j =3D 0; i < ARRAY_SIZE(msrs_to_save); i++) {
-> -=09=09if (rdmsr_safe(msrs_to_save[i], &dummy[0], &dummy[1]) < 0)
-> +=09for (i =3D j =3D 0; i < ARRAY_SIZE(msrs_to_save_all); i++) {
-> +=09=09if (rdmsr_safe(msrs_to_save_all[i], &dummy[0], &dummy[1]) < 0)
->  =09=09=09continue;
-> =20
->  =09=09/*
->  =09=09 * Even MSRs that are valid in the host may not be exposed
->  =09=09 * to the guests in some cases.
->  =09=09 */
-> -=09=09switch (msrs_to_save[i]) {
-> +=09=09switch (msrs_to_save_all[i]) {
->  =09=09case MSR_IA32_BNDCFGS:
->  =09=09=09if (!kvm_mpx_supported())
->  =09=09=09=09continue;
-> @@ -5171,17 +5176,17 @@ static void kvm_init_msr_list(void)
->  =09=09=09break;
->  =09=09case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
->  =09=09=09if (!kvm_x86_ops->pt_supported() ||
-> -=09=09=09=09msrs_to_save[i] - MSR_IA32_RTIT_ADDR0_A >=3D
-> +=09=09=09=09msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=3D
->  =09=09=09=09intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
->  =09=09=09=09continue;
->  =09=09=09break;
->  =09=09case MSR_ARCH_PERFMON_PERFCTR0 ... MSR_ARCH_PERFMON_PERFCTR0 + 17:
-> -=09=09=09if (msrs_to_save[i] - MSR_ARCH_PERFMON_PERFCTR0 >=3D
-> +=09=09=09if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_PERFCTR0 >=3D
->  =09=09=09    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
->  =09=09=09=09continue;
->  =09=09=09break;
->  =09=09case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL0 + 1=
-7:
-> -=09=09=09if (msrs_to_save[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=3D
-> +=09=09=09if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=3D
->  =09=09=09    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
->  =09=09=09=09continue;
->  =09=09}
-> @@ -5189,31 +5194,31 @@ static void kvm_init_msr_list(void)
->  =09=09=09break;
->  =09=09}
-> =20
-> -=09=09if (j < i)
-> -=09=09=09msrs_to_save[j] =3D msrs_to_save[i];
-> +=09=09if (j <=3D i)
-> +=09=09=09msrs_to_save[j] =3D msrs_to_save_all[i];
+On Thu, Nov 07, 2019 at 10:16:45AM -0800, Andi Kleen wrote:
 
-J is always <=3D i, so we can remove the ifs.
+SNIP
 
->  =09=09j++;
->  =09}
->  =09num_msrs_to_save =3D j;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 7106f9a067df..79050a6f4991 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1205,13 +1205,26 @@ int perf_evsel__append_addr_filter(struct evsel *=
+evsel, const char *filter)
+>  =09return perf_evsel__append_filter(evsel, "%s,%s", filter);
+>  }
 > =20
-> -=09for (i =3D j =3D 0; i < ARRAY_SIZE(emulated_msrs); i++) {
-> -=09=09if (!kvm_x86_ops->has_emulated_msr(emulated_msrs[i]))
-> +=09for (i =3D j =3D 0; i < ARRAY_SIZE(emulated_msrs_all); i++) {
-> +=09=09if (!kvm_x86_ops->has_emulated_msr(emulated_msrs_all[i]))
->  =09=09=09continue;
-> =20
-> -=09=09if (j < i)
-> -=09=09=09emulated_msrs[j] =3D emulated_msrs[i];
-> +=09=09if (j <=3D i)
-> +=09=09=09emulated_msrs[j] =3D emulated_msrs_all[i];
->  =09=09j++;
->  =09}
->  =09num_emulated_msrs =3D j;
-> =20
-> -=09for (i =3D j =3D 0; i < ARRAY_SIZE(msr_based_features); i++) {
-> +=09for (i =3D j =3D 0; i < ARRAY_SIZE(msr_based_features_all); i++) {
->  =09=09struct kvm_msr_entry msr;
-> =20
-> -=09=09msr.index =3D msr_based_features[i];
-> +=09=09msr.index =3D msr_based_features_all[i];
->  =09=09if (kvm_get_msr_feature(&msr))
->  =09=09=09continue;
-> =20
-> -=09=09if (j < i)
-> -=09=09=09msr_based_features[j] =3D msr_based_features[i];
-> +=09=09if (j <=3D i)
-> +=09=09=09msr_based_features[j] =3D msr_based_features_all[i];
->  =09=09j++;
->  =09}
->  =09num_msr_based_features =3D j;
->=20
+> +/* Caller has to clear disabled after going through all CPUs. */
+> +int evsel__enable_cpu(struct evsel *evsel, int cpu)
+> +{
+> +=09int err =3D perf_evsel__enable_cpu(&evsel->core, cpu);
+> +=09return err;
 
-Queued, thanks.
+=09return perf_evsel__enable_cpu(... ?
 
-Paolo
+> +}
+> +
+>  int evsel__enable(struct evsel *evsel)
+>  {
+>  =09int err =3D perf_evsel__enable(&evsel->core);
+> =20
+>  =09if (!err)
+>  =09=09evsel->disabled =3D false;
+> +=09return err;
+> +}
+> =20
+> +/* Caller has to set disabled after going through all CPUs. */
+> +int evsel__disable_cpu(struct evsel *evsel, int cpu)
+> +{
+> +=09int err =3D perf_evsel__disable_cpu(&evsel->core, cpu);
+>  =09return err;
+
+=09return perf_evsel__disable_cpu(... ?
+
+jirka
 
