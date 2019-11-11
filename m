@@ -2,109 +2,103 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9B7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2DCC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091D32067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rcn2b3Vr"
+	by mail.kernel.org (Postfix) with ESMTP id 0CABA215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfKKCdB (ORCPT
+        id S1726888AbfKKCfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 21:33:01 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:59590 "EHLO vps0.lunn.ch"
+        Sun, 10 Nov 2019 21:35:42 -0500
+Received: from mga04.intel.com ([192.55.52.120]:35111 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbfKKCdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 21:33:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=0gk5JpqASg8bcLIxIJ4kjpyHSqpkm2lPRGxNCUB5uAE=; b=rcn2b3VrcS7YhQbm7sQSIvFhwx
-        bVZ7JGry3NxqUiI9C7CGfgGNNUaHl4SVt+GHSz6cZMYKFD4w6UJiKg7b4Y5ldOI71rf6AOBtwJ2V5
-        3w04RZ5DI2EdKLilGCS8Q9Y5eC1jbFgaaDNYfnpnqTByaWUQzUvXKa4PMyFJM8aQCJa8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iTzVf-0000IA-57; Mon, 11 Nov 2019 03:32:55 +0100
-Date:   Mon, 11 Nov 2019 03:32:55 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] net: mdio-octeon: Fix pointer/integer casts
-Message-ID: <20191111023255.GY25889@lunn.ch>
-References: <20191111004211.96425-1-olof@lixom.net>
+        id S1726805AbfKKCfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 21:35:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 18:35:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
+   d="scan'208";a="403673432"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Nov 2019 18:35:41 -0800
+Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 10 Nov 2019 18:35:41 -0800
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+ FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 10 Nov 2019 18:35:41 -0800
+Received: from shsmsx103.ccr.corp.intel.com ([169.254.4.60]) by
+ SHSMSX101.ccr.corp.intel.com ([169.254.1.213]) with mapi id 14.03.0439.000;
+ Mon, 11 Nov 2019 10:35:39 +0800
+From:   "Zeng, Jason" <jason.zeng@intel.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+CC:     David Woodhouse <dwmw2@infradead.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "rminnich@google.com" <rminnich@google.com>,
+        "Zeng, Jason" <jason.zeng@intel.com>
+Subject: RE: [PATCH] intel-iommu: Turn off translations at shutdown
+Thread-Topic: [PATCH] intel-iommu: Turn off translations at shutdown
+Thread-Index: AQHVlgnIrRA21rplp0+PB/+PXXgW6aeA7hBA//+Ew4CAAInEMIAAXpqAgALawYCAACUFgIAAyexg
+Date:   Mon, 11 Nov 2019 02:35:38 +0000
+Message-ID: <8D8B600C3EC1B64FAD4503F0B66C61F23BC208@SHSMSX103.ccr.corp.intel.com>
+References: <20191107205914.10611-1-deepa.kernel@gmail.com>
+ <1672a5861c82c2e3c0c54b5311fd413a8eee5e64.camel@infradead.org>
+ <8D8B600C3EC1B64FAD4503F0B66C61F23BB95B@SHSMSX103.ccr.corp.intel.com>
+ <addba4e401c3bf23b86cf8dff97256282895e29f.camel@infradead.org>
+ <8D8B600C3EC1B64FAD4503F0B66C61F23BBA24@SHSMSX103.ccr.corp.intel.com>
+ <CABeXuvoiX639HchLbgTHLiXPh=Yr2dJHUp2Yqc6pNJ3As1OJ8A@mail.gmail.com>
+ <CABeXuvqMpXbSNasET4-u16Hrj710fe-V706tsFZhOTJoir8Xjw@mail.gmail.com>
+ <CABeXuvrYzLoc7YGtmXDJqEovwyERbndN4cC6UaYAw5+qABRr8A@mail.gmail.com>
+In-Reply-To: <CABeXuvrYzLoc7YGtmXDJqEovwyERbndN4cC6UaYAw5+qABRr8A@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmNhNjc0ODctNjRkOC00YTYxLTk5Y2QtYjc1MjI4OGNjMTM0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieUZINjZDZ2JtT2szZlowWENvOVlwa1NMTUoyNmZcL0ZYQktVY1BxQ0pQenZYSmlmMHdtMzgyRHZQOXhlMkR4SWcifQ==
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111004211.96425-1-olof@lixom.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 04:42:11PM -0800, Olof Johansson wrote:
-> Fixes a bunch of these warnings on arm allmodconfig:
-> 
-> In file included from /build/drivers/net/phy/mdio-cavium.c:11:
-> /build/drivers/net/phy/mdio-cavium.c: In function 'cavium_mdiobus_set_mode':
-> /build/drivers/net/phy/mdio-cavium.h:114:37: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->   114 | #define oct_mdio_readq(addr)  readq((void *)addr)
->       |                                     ^
-> /build/drivers/net/phy/mdio-cavium.c:21:16: note: in expansion of macro 'oct_mdio_readq'
->    21 |  smi_clk.u64 = oct_mdio_readq(p->register_base + SMI_CLK);
->       |                ^~~~~~~~~~~~~~
-> 
-> Fixes: 171a9bae68c7 ("staging/octeon: Allow test build on !MIPS")
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> ---
->  drivers/net/phy/mdio-cavium.h  | 14 +++++++-------
->  drivers/net/phy/mdio-octeon.c  |  5 ++---
->  drivers/net/phy/mdio-thunder.c |  2 +-
->  3 files changed, 10 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/net/phy/mdio-cavium.h b/drivers/net/phy/mdio-cavium.h
-> index b7f89ad27465f..1cf81f0bc585f 100644
-> --- a/drivers/net/phy/mdio-cavium.h
-> +++ b/drivers/net/phy/mdio-cavium.h
-> @@ -90,7 +90,7 @@ union cvmx_smix_wr_dat {
->  
->  struct cavium_mdiobus {
->  	struct mii_bus *mii_bus;
-> -	u64 register_base;
-> +	void __iomem *register_base;
->  	enum cavium_mdiobus_mode mode;
->  };
->  
-> @@ -98,20 +98,20 @@ struct cavium_mdiobus {
->  
->  #include <asm/octeon/octeon.h>
->  
-> -static inline void oct_mdio_writeq(u64 val, u64 addr)
-> +static inline void oct_mdio_writeq(u64 val, void __iomem *addr)
->  {
-> -	cvmx_write_csr(addr, val);
-> +	cvmx_write_csr((u64)addr, val);
->  }
-
-Hi Olof
-
-Humm. The warning goes away, but is it really any better?
-
-Did you try also changing the stub function in
-drivers/staging/octeon/octeon-stubs.h so it takes void __iomem?  Or
-did that cause a lot more warnings from other places?
-
-Thanks
-     Andrew
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IE9uIFN1biwgTm92IDEwLCAyMDE5IGF0
+IDEwOjI0IEFNIERlZXBhIERpbmFtYW5pDQo+ID4gSSd2ZSBwb3N0ZWQgdGhlIHYyIHdpdGhvdXQg
+dGhlIGNvbmRpdGlvbmFsIGZvciBub3c6DQo+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0
+Y2h3b3JrL3BhdGNoLzExNTEyMjUvDQo+ID4NCj4gPiBBcyBhIHNpZGUgdG9waWMsIEknbSB0cnlp
+bmcgdG8gc3VwcG9ydCBodHRwczovL3d3dy5saW51eGJvb3Qub3JnLy4gSQ0KPiA+IGhhdmUgYSBj
+b3VwbGUgb2YgbW9yZSBzdWNoIGNsZWFudXBzIGNvbWluZy4gVGhlIFZNTSBsaXZlIHVwZGF0ZXMg
+YW5kDQo+ID4gbGludXhib290IHNlZW0gdG8gaGF2ZSBjb250cmFkaWN0aW5nIHJlcXVpcmVtZW50
+cyBhbmQgdGhleSBib3RoIHVzZQ0KPiA+IGtleGVjLiBTbyBrZXhlY19pbl9wcm9ncmVzcyBkb2Vz
+bid0IHNlZW0gbGlrZSBhIHN1ZmZpY2llbnQgaW5kaWNhdG9yDQo+ID4gdG8gZGlzdGluZ3Vpc2gg
+YmV0d2VlbiB0aGUgdHdvLiBEbyB5b3UgYWxyZWFkeSBoYXZlIGFuIGlkZWEgb24gaG93IHRvDQo+
+ID4gZGlzdGlndWlzaCBiZXR3ZWVuIHRoZW0/IERvZXMgYSBzZXBhcmF0ZSBzeXNfcmVib290KCkg
+Y29tbWFuZA0KPiA+IHBhcmFtZXRlciBzb3VuZCBvaz8gT3IsIHdlIGNvdWxkIHVzZSB0aGUgZmxh
+Z3MgaW4gdGhlIHN5c19rZXhlY19sb2FkKCkNCj4gPiBkZXBlbmRpbmcgb24gaG93IHRoZSBsaXZl
+IHVwZGF0ZSBmZWF0dXJlIGlzIGltcGxlbWVudGVkLg0KPiANCj4gQWxzbywgdGhlIEFNRCBkcml2
+ZXIgZGlzYWJsZXMgaW9tbXUgYXQgc2h1dGRvd24gYWxyZWFkeS4gU28gdGhlIGxpdmUgdXBkYXRl
+DQo+IGZlYXR1cmUgaXMgYWxyZWFkeSBicm9rZW4gb24gQU1ELg0KPiANCg0KSGkgRGVlcGEsDQoN
+CkkgdGhpbmsgeW91IG1heSBub3QgbmVlZCB0byBjb25zaWRlciB0b28gbXVjaCBWTU0gbGl2ZSB1
+cGRhdGUgaGVyZSAoYWx0aG91Z2ggaXQNCndvdWxkIGJlIGdvb2QgdG8gY29uc2lkZXIgcG9zc2li
+bGUgZnV0dXJlIGZlYXR1cmVzKSwgYWZ0ZXIgYWxsIGl0IGlzIGFuIG9uLWdvaW5nIGVmZm9ydCwN
+CndlIGFyZSBzdGlsbCBub3QgcXVpdGUgc3VyZSB3aGF0IGV4YWN0IG1vZGlmaWNhdGlvbnMgaXQg
+bmVlZHMuIFRoZSBWTU0gbGl2ZSB1cGRhdGUNCml0c2VsZiB3aWxsIGZpZ3VyZSBvdXQgd2hhdCBp
+cyB0aGUgYmVzdCB3YXkgdG8gbW9kaWZ5IHRoZSBjb2RlLg0KDQpUaGFua3MsDQpKYXNvbg0KDQo+
+IC1EZWVwYQ0K
