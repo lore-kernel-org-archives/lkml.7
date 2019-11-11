@@ -2,52 +2,52 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5CFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A83C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036972173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319AB2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499390;
-	bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
+	s=default; t=1573499393;
+	bh=AtAWPOCu6lMVkXMXhsRugQz95QvYSlyLDAkluKdUCrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hB43wEOxO02BTpDueJzCjO+11X5ozFGk9hSguqCMxzYYjoBBOZRwRlOQVnUh5hvOO
-	 UwARyRkNGKNZampMRGbbYxunSt1DQAxrVXxn+emEw/lJtduX7MtD/vV4tAXA3SmPIY
-	 +XUWMh82D8WoHfpxtexWuB7ikzfMhJKuS6LrYNbc=
+	b=AQBxW5+REQ9DgzDibeJtMyh0AsY1w5XXR8BvorVOa4vPM3Xs9ZC1FqxxqGoVAjkcb
+	 7yLNyMdKYRKLbRUtG2c/Cbavn5CFUulBwhVxluJ6OjmFy1mZt/JXN8ZNb7m2F2L2/I
+	 YE1FHTXNyGGfmCXP2MbP72WSidcroO+/1SaH9DKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfKKSdj (ORCPT
+        id S1727872AbfKKTJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50906 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:09:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728153AbfKKSdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:31 -0500
+        id S1728148AbfKKSd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E5D5214E0;
-        Mon, 11 Nov 2019 18:33:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33DF721872;
+        Mon, 11 Nov 2019 18:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497210;
-        bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
+        s=default; t=1573497204;
+        bh=AtAWPOCu6lMVkXMXhsRugQz95QvYSlyLDAkluKdUCrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rbNnJuQqHn0jMf5a8JkIJNtuopr33hQ69zPb5SghZU1Ih9m3ceW2Xis9Bd3RxGacY
-         BzyCW6DpURn4ORB1SLyHBhvrkD5OapaVOpkI0E4Po98pKabNUeLs36MOBgRz0vDILm
-         rNsLVzAHC3qrZ4bxvdHlNRDxCBpBNrZ0Kzh2Kns4=
+        b=nn78vLvdhHN9LO07ZPb/p6PncdQow/Qgg72h4IxA8M2GQi61GRxymy4Jq63sNdR4R
+         wu8HH6RGdXdihhtajJiTQh9E6mwbI3GicH3dv5D1eoQGfgVIGh5cNJJjW7s0G+1vpB
+         3IMLAl/f3nK7EDjO23xCkHNQXpNSnClop5IxTOws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Lixu <lixu.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 39/65] HID: intel-ish-hid: fix wrong error handling in ishtp_cl_alloc_tx_ring()
-Date:   Mon, 11 Nov 2019 19:28:39 +0100
-Message-Id: <20191111181347.530950048@linuxfoundation.org>
+        stable@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.9 37/65] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
+Date:   Mon, 11 Nov 2019 19:28:37 +0100
+Message-Id: <20191111181347.225448602@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -60,35 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Lixu <lixu.zhang@intel.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit 16ff7bf6dbcc6f77d2eec1ac9120edf44213c2f1 ]
+commit 7be142caabc4780b13a522c485abc806de5c4114 upstream.
 
-When allocating tx ring buffers failed, should free tx buffers, not rx buffers.
+The PCI Tegra controller conversion to a device tree configurable
+driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
+to drivers/pci/host") implied that code for the driver can be
+compiled in for a kernel supporting multiple platforms.
 
-Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Unfortunately, a blind move of the code did not check that some of the
+quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
+all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
+for both Vendor-ID and Device-ID) are now applied in all kernels that
+compile the PCI Tegra controlled driver, DT and ACPI alike.
+
+This is completely wrong, in that enablement of Relaxed Ordering is only
+required by default in Tegra20 platforms as described in the Tegra20
+Technical Reference Manual (available at
+https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
+Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
+be enabled in its root ports to avoid deadlock in hardware) and in the
+Tegra30 platforms for the same reasons (unfortunately not documented
+in the TRM).
+
+There is no other strict requirement on PCI devices Relaxed Ordering
+enablement on any other Tegra platforms or PCI host bridge driver.
+
+Fix this quite upsetting situation by limiting the vendor and device IDs
+to which the Relaxed Ordering quirk applies to the root ports in
+question, reported above.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/intel-ish-hid/ishtp/client-buffers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/host/pci-tegra.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-index b9b917d2d50db..c41dbb167c91b 100644
---- a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-@@ -90,7 +90,7 @@ int ishtp_cl_alloc_tx_ring(struct ishtp_cl *cl)
- 	return	0;
- out:
- 	dev_err(&cl->device->dev, "error in allocating Tx pool\n");
--	ishtp_cl_free_rx_ring(cl);
-+	ishtp_cl_free_tx_ring(cl);
- 	return	-ENOMEM;
- }
+--- a/drivers/pci/host/pci-tegra.c
++++ b/drivers/pci/host/pci-tegra.c
+@@ -603,12 +603,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NV
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
  
--- 
-2.20.1
-
+-/* Tegra PCIE requires relaxed ordering */
++/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
+ static void tegra_pcie_relax_enable(struct pci_dev *dev)
+ {
+ 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
+ 
+ static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
+ {
 
 
