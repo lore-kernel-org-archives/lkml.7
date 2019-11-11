@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FFAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350BEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5742184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D57221E6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497367;
-	bh=xs/uc3tSF9YOdmddui/dzZ64YJC7ZTdzZFgbGi7P0Yc=;
+	s=default; t=1573497371;
+	bh=NZhrlxQ18TlRomQloYcGBR/p7FgXeL0TLBcyqc7zA5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=poEXCDfcE7VIUz+RM6HfR89wo4aWSYXZ30QtdKhaYLfFxb+bRb6IHwsQUbPUdvo0V
-	 T8gPLW6oFygeBqo7HWlItawkg0T4z4m/6cwwBBf1vaI+4IfQpmnyT5uN7JxZFrxitx
-	 hZ10gMyg8HrDytC+U7JVENYwz0Jr67+ez/x8FbaQ=
+	b=KZ1D3wgDJeT+rZBjRy33/yfVXOFN8YsN1A3kO0ZkADr05DQokR4+etJwvDt1tSMAe
+	 CkVAE6R1xvtVrvFQ9lRHVjQbdn9ZLSQPxrwxeBb4vTgsjgs7CF+2EZrFr6jrivu2N4
+	 mY/2J6itaL8D5piFxW2QBcwSOTGuXXjH7N4mSdjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfKKSgF (ORCPT
+        id S1728674AbfKKSgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727515AbfKKSgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:03 -0500
+        id S1727515AbfKKSgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3757221655;
-        Mon, 11 Nov 2019 18:36:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72137222C2;
+        Mon, 11 Nov 2019 18:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497362;
-        bh=xs/uc3tSF9YOdmddui/dzZ64YJC7ZTdzZFgbGi7P0Yc=;
+        s=default; t=1573497366;
+        bh=NZhrlxQ18TlRomQloYcGBR/p7FgXeL0TLBcyqc7zA5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/FXrQPkQvC/orwkKmBUzqBcDWJHXeIgPTyQrcLkNrpLyFt191G1rGCOjaPMI6Wrs
-         5ptJs8Nlana/H0xp0TN+c/9uv62JTnEVHzSQDEtRYwkq0qcxQwSjokF/W59ynSMD45
-         jen1fmxlw/5uyAVwYCHekeI7cjPUFNZ56IHwBZeA=
+        b=VjnWIjmYOmK0Ozr/lTZL3sr1PvF9NhGMnyn5HX97iHR319NfZ5z3yhhUdL459T8mf
+         AkbHuarjF7JkjBua/Epp6ztKdz9nexG54ATO4HuF7U5S0gOb3t4jpYJ8zjxNBXTtoJ
+         stqZOFmZhFUITKtydlhQV6gtgEl89VcEN9wkf8W8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Zbyn=C4=9Bk=20Kocur?= <zbynek.kocur@fel.cvut.cz>,
-        Andreas Klinger <ak@it-klinger.de>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 028/105] iio: srf04: fix wrong limitation in distance measuring
-Date:   Mon, 11 Nov 2019 19:27:58 +0100
-Message-Id: <20191111181437.842601796@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.14 029/105] netfilter: nf_tables: Align nft_expr private data to 64-bit
+Date:   Mon, 11 Nov 2019 19:27:59 +0100
+Message-Id: <20191111181437.943063174@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,105 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Klinger <ak@it-klinger.de>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 431f7667bd6889a274913162dfd19cce9d84848e upstream.
+commit 250367c59e6ba0d79d702a059712d66edacd4a1a upstream.
 
-The measured time value in the driver is limited to the maximum distance
-which can be read by the sensor. This limitation was wrong and is fixed
-by this patch.
+Invoking the following commands on a 32-bit architecture with strict
+alignment requirements (such as an ARMv7-based Raspberry Pi) results
+in an alignment exception:
 
-It also takes into account that we are supporting a variety of sensors
-today and that the recently added sensors have a higher maximum
-distance range.
+ # nft add table ip test-ip4
+ # nft add chain ip test-ip4 output { type filter hook output priority 0; }
+ # nft add rule  ip test-ip4 output quota 1025 bytes
 
-Changes in v2:
-- Added a Tested-by
+Alignment trap: not handling instruction e1b26f9f at [<7f4473f8>]
+Unhandled fault: alignment exception (0x001) at 0xb832e824
+Internal error: : 1 [#1] PREEMPT SMP ARM
+Hardware name: BCM2835
+[<7f4473fc>] (nft_quota_do_init [nft_quota])
+[<7f447448>] (nft_quota_init [nft_quota])
+[<7f4260d0>] (nf_tables_newrule [nf_tables])
+[<7f4168dc>] (nfnetlink_rcv_batch [nfnetlink])
+[<7f416bd0>] (nfnetlink_rcv [nfnetlink])
+[<8078b334>] (netlink_unicast)
+[<8078b664>] (netlink_sendmsg)
+[<8071b47c>] (sock_sendmsg)
+[<8071bd18>] (___sys_sendmsg)
+[<8071ce3c>] (__sys_sendmsg)
+[<8071ce94>] (sys_sendmsg)
 
-Suggested-by: Zbyněk Kocur <zbynek.kocur@fel.cvut.cz>
-Tested-by: Zbyněk Kocur <zbynek.kocur@fel.cvut.cz>
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Cc:<Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The reason is that nft_quota_do_init() calls atomic64_set() on an
+atomic64_t which is only aligned to 32-bit, not 64-bit, because it
+succeeds struct nft_expr in memory which only contains a 32-bit pointer.
+Fix by aligning the nft_expr private data to 64-bit.
+
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.13+
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/proximity/srf04.c |   29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ include/net/netfilter/nf_tables.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/proximity/srf04.c
-+++ b/drivers/iio/proximity/srf04.c
-@@ -105,7 +105,7 @@ static int srf04_read(struct srf04_data
- 	udelay(10);
- 	gpiod_set_value(data->gpiod_trig, 0);
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -759,7 +759,8 @@ struct nft_expr_ops {
+  */
+ struct nft_expr {
+ 	const struct nft_expr_ops	*ops;
+-	unsigned char			data[];
++	unsigned char			data[]
++		__attribute__((aligned(__alignof__(u64))));
+ };
  
--	/* it cannot take more than 20 ms */
-+	/* it should not take more than 20 ms until echo is rising */
- 	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
- 	if (ret < 0) {
- 		mutex_unlock(&data->lock);
-@@ -115,7 +115,8 @@ static int srf04_read(struct srf04_data
- 		return -ETIMEDOUT;
- 	}
- 
--	ret = wait_for_completion_killable_timeout(&data->falling, HZ/50);
-+	/* it cannot take more than 50 ms until echo is falling */
-+	ret = wait_for_completion_killable_timeout(&data->falling, HZ/20);
- 	if (ret < 0) {
- 		mutex_unlock(&data->lock);
- 		return ret;
-@@ -130,19 +131,19 @@ static int srf04_read(struct srf04_data
- 
- 	dt_ns = ktime_to_ns(ktime_dt);
- 	/*
--	 * measuring more than 3 meters is beyond the capabilities of
--	 * the sensor
-+	 * measuring more than 6,45 meters is beyond the capabilities of
-+	 * the supported sensors
- 	 * ==> filter out invalid results for not measuring echos of
- 	 *     another us sensor
- 	 *
- 	 * formula:
--	 *         distance       3 m
--	 * time = ---------- = --------- = 9404389 ns
--	 *          speed       319 m/s
-+	 *         distance     6,45 * 2 m
-+	 * time = ---------- = ------------ = 40438871 ns
-+	 *          speed         319 m/s
- 	 *
- 	 * using a minimum speed at -20 °C of 319 m/s
- 	 */
--	if (dt_ns > 9404389)
-+	if (dt_ns > 40438871)
- 		return -EIO;
- 
- 	time_ns = dt_ns;
-@@ -154,20 +155,20 @@ static int srf04_read(struct srf04_data
- 	 *   with Temp in °C
- 	 *   and speed in m/s
- 	 *
--	 * use 343 m/s as ultrasonic speed at 20 °C here in absence of the
-+	 * use 343,5 m/s as ultrasonic speed at 20 °C here in absence of the
- 	 * temperature
- 	 *
- 	 * therefore:
--	 *             time     343
--	 * distance = ------ * -----
--	 *             10^6       2
-+	 *             time     343,5     time * 106
-+	 * distance = ------ * ------- = ------------
-+	 *             10^6         2         617176
- 	 *   with time in ns
- 	 *   and distance in mm (one way)
- 	 *
--	 * because we limit to 3 meters the multiplication with 343 just
-+	 * because we limit to 6,45 meters the multiplication with 106 just
- 	 * fits into 32 bit
- 	 */
--	distance_mm = time_ns * 343 / 2000000;
-+	distance_mm = time_ns * 106 / 617176;
- 
- 	return distance_mm;
- }
+ static inline void *nft_expr_priv(const struct nft_expr *expr)
 
 
