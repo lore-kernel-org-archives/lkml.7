@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90385C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750EAC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3C5214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439E52190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497344;
-	bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
+	s=default; t=1573497347;
+	bh=s5h+oVp6iAHIinVU39+Bpvfa6kUNdNmBoQA7BY/ZAfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aO2Ye4EPOHhd9lSDyyHE4g0ph1dcTMlzLwvJqrIKf5OLY+Csea7WlNkpf1jHxNEcq
-	 1O+UWTZevS8PZ6C+eP8gKWFHyk732ZtI/zCkFfQzcFiw09VK+b+EazEf3SSvENpeSA
-	 ioMT52C65P3WtWkqYOobFDD4SJ56BcJuPHcvswTE=
+	b=RSakx9KWn7jv9BTkdrzm21cesK9UXuAH3HjfM30m4R9hanR+4xbDvHo7IvUnTZzfS
+	 tAhQe+rADhe+fyJTzcWR6F5ml3KZWDRXLBur6lCPtpMuaW425189b+3AOwKCWhd2vM
+	 GLCfpLUs7CqEc1n1woOvs+O8VpZ+WbYpGMHgbvOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfKKSfm (ORCPT
+        id S1727340AbfKKSfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfKKSfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:38 -0500
+        id S1727435AbfKKSfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D9FB21783;
-        Mon, 11 Nov 2019 18:35:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D1D214E0;
+        Mon, 11 Nov 2019 18:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497337;
-        bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
+        s=default; t=1573497340;
+        bh=s5h+oVp6iAHIinVU39+Bpvfa6kUNdNmBoQA7BY/ZAfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWzX311XaB38ezuKJHWuffEVeNYMZu4IcnenIoRRyfczWmIQwRdnkX1zvZIQzUffT
-         aucLJZK778GfcuD1xo1qnJD2pshL3xhi+iynQDMuZ940GgBLufqtsqMnXxYlq9jbED
-         M7X0BLaJLI1dt/pSRkOOpV+hnjoU/1obGFrxFM0I=
+        b=Demv49z6vwbEYfP/JPmY0EKN/uzLHk4CLI6qlfW2trtoKNcxhjr1J78ztgcRQm0HO
+         UshWJbcDYQ79aL5Vbu+BobXsJHbwvrJaJJcalr7f1HKJX7SkTp9iNOCK6XteYHAALQ
+         Mpiz03g+vq3YdLv/OaasEvq+CWUCNo2sYP0syzxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 002/105] CDC-NCM: handle incomplete transfer of MTU
-Date:   Mon, 11 Nov 2019 19:27:32 +0100
-Message-Id: <20191111181422.777911819@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 020/105] perf tools: Fix time sorting
+Date:   Mon, 11 Nov 2019 19:27:50 +0100
+Message-Id: <20191111181434.144368704@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,46 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 332f989a3b0041b810836c5c3747e59aad7e9d0b ]
+commit 722ddfde366fd46205456a9c5ff9b3359dc9a75e upstream.
 
-A malicious device may give half an answer when asked
-for its MTU. The driver will proceed after this with
-a garbage MTU. Anything but a complete answer must be treated
-as an error.
+The final sort might get confused when the comparison is done over
+bigger numbers than int like for -s time.
 
-V2: used sizeof as request by Alexander
+Check the following report for longer workloads:
 
-Reported-and-tested-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  $ perf report -s time -F time,overhead --stdio
+
+Fix hist_entry__sort() to properly return int64_t and not possible cut
+int.
+
+Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org # v3.16+
+Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/cdc_ncm.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/usb/cdc_ncm.c
-+++ b/drivers/net/usb/cdc_ncm.c
-@@ -578,8 +578,8 @@ static void cdc_ncm_set_dgram_size(struc
- 	/* read current mtu value from device */
- 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
- 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
--			      0, iface_no, &max_datagram_size, 2);
--	if (err < 0) {
-+			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
-+	if (err < sizeof(max_datagram_size)) {
- 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
- 		goto out;
- 	}
-@@ -590,7 +590,7 @@ static void cdc_ncm_set_dgram_size(struc
- 	max_datagram_size = cpu_to_le16(ctx->max_datagram_size);
- 	err = usbnet_write_cmd(dev, USB_CDC_SET_MAX_DATAGRAM_SIZE,
- 			       USB_TYPE_CLASS | USB_DIR_OUT | USB_RECIP_INTERFACE,
--			       0, iface_no, &max_datagram_size, 2);
-+			       0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
- 	if (err < 0)
- 		dev_dbg(&dev->intf->dev, "SET_MAX_DATAGRAM_SIZE failed\n");
+---
+ tools/perf/util/hist.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1504,7 +1504,7 @@ int hists__collapse_resort(struct hists
+ 	return 0;
+ }
  
+-static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
++static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+ {
+ 	struct hists *hists = a->hists;
+ 	struct perf_hpp_fmt *fmt;
 
 
