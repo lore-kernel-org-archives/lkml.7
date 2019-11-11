@@ -2,51 +2,54 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5ECBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB04EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0BD20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED9320659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497840;
-	bh=hbb7MuaPZaqdvEjSeViM3WM9/Zb0UaWiSQzu5+zwwjA=;
+	s=default; t=1573497843;
+	bh=8oNkIOiv5Va1epVVjrY/bljrdj9DIi333mUax+51ZZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11KbI7CiGxCFwgF/fTyseTkFiNUTiKl6bdH7LxE6P2I+5HLG1AyLndnojkS6oDmiy
-	 ahkHmu7yPaqxUlEfuU0+V4MdsRt2VGxDOqYeF8JIlHsy3kXnpjJR1Sz+oP4+jhVYs8
-	 82O/C+REsCSqn4R46mOyCZjM7dgosl3icQehR5Z4=
+	b=EGTOtZZIKRL72K2UBIVwdqc6J2HRoyZ/v2ZPTitsBKeavvgpojFRa2sP8tgwEC+ym
+	 c79Q0zeGYUPfINpHUtHywYPbEfueFEVngfKHlA7nGfsEiLODE1Ss6XNdVHNrhysIpu
+	 D5Mn9VsOn/t+rXFDbJwV7Ww8J157J6w4PT67YLJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbfKKSn7 (ORCPT
+        id S1729207AbfKKSoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:43:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:44:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729682AbfKKSn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:43:56 -0500
+        id S1728130AbfKKSn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:43:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2ED920674;
-        Mon, 11 Nov 2019 18:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DA7204FD;
+        Mon, 11 Nov 2019 18:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497835;
-        bh=hbb7MuaPZaqdvEjSeViM3WM9/Zb0UaWiSQzu5+zwwjA=;
+        s=default; t=1573497838;
+        bh=8oNkIOiv5Va1epVVjrY/bljrdj9DIi333mUax+51ZZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJCkj0Fq/QMZxTZbvmuLAqFTQtwYiPjUkbM5LinKQAbaasOm3WJg2bjNFsVE+V7gH
-         VgSWDI/CcYgqZv2ht2YobRtHhnQ97q0408mRSm7PxnjHifYCJ0TDM+thWPGbiy3D8w
-         VsQl7SfBjG9hcGLa4KK3zwXql1FdP4+OUDEfr5fo=
+        b=Zo8Er6ZVfyjf8A1j1nHxSK0Lq//k4DjfhE6Aejxbka7NIry0AqeZ70+cxLiaglXSq
+         aOZUTDfbyKHbDa4n68a7CRs9hd7H8RpiGuh7s2QFJiTYU7W36m798lSxHGZBDqluM6
+         mgJSwB6i//C2q3r2nihCI2R6paMvst8lk++Ipd0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/125] HID: google: add magnemite/masterball USB ids
-Date:   Mon, 11 Nov 2019 19:28:29 +0100
-Message-Id: <20191111181449.479293828@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 071/125] dmaengine: xilinx_dma: Fix control reg update in vdma_channel_set_config
+Date:   Mon, 11 Nov 2019 19:28:30 +0100
+Message-Id: <20191111181449.613331688@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -59,48 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 
-[ Upstream commit 9e4dbc4646a84b2562ea7c64a542740687ff7daf ]
+[ Upstream commit 6c6de1ddb1be3840f2ed5cc9d009a622720940c9 ]
 
-Add 2 additional hammer-like devices.
+In vdma_channel_set_config clear the delay, frame count and master mask
+before updating their new values. It avoids programming incorrect state
+when input parameters are different from default.
 
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Acked-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Link: https://lore.kernel.org/r/1569495060-18117-3-git-send-email-radhey.shyam.pandey@xilinx.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-google-hammer.c | 4 ++++
- drivers/hid/hid-ids.h           | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/dma/xilinx/xilinx_dma.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-index 6bf4da7ad63a5..8cb63ea9977d6 100644
---- a/drivers/hid/hid-google-hammer.c
-+++ b/drivers/hid/hid-google-hammer.c
-@@ -120,6 +120,10 @@ static int hammer_input_configured(struct hid_device *hdev,
- static const struct hid_device_id hammer_devices[] = {
- 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
- 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_HAMMER) },
-+	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
-+		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MAGNEMITE) },
-+	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
-+		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MASTERBALL) },
- 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
- 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_STAFF) },
- 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 6b33117ca60e5..02c263a4c0836 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -466,6 +466,8 @@
- #define USB_DEVICE_ID_GOOGLE_STAFF	0x502b
- #define USB_DEVICE_ID_GOOGLE_WAND	0x502d
- #define USB_DEVICE_ID_GOOGLE_WHISKERS	0x5030
-+#define USB_DEVICE_ID_GOOGLE_MASTERBALL	0x503c
-+#define USB_DEVICE_ID_GOOGLE_MAGNEMITE	0x503d
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index c124423125951..8aec137b4fcaa 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -72,6 +72,9 @@
+ #define XILINX_DMA_DMACR_CIRC_EN		BIT(1)
+ #define XILINX_DMA_DMACR_RUNSTOP		BIT(0)
+ #define XILINX_DMA_DMACR_FSYNCSRC_MASK		GENMASK(6, 5)
++#define XILINX_DMA_DMACR_DELAY_MASK		GENMASK(31, 24)
++#define XILINX_DMA_DMACR_FRAME_COUNT_MASK	GENMASK(23, 16)
++#define XILINX_DMA_DMACR_MASTER_MASK		GENMASK(11, 8)
  
- #define USB_VENDOR_ID_GOTOP		0x08f2
- #define USB_DEVICE_ID_SUPER_Q2		0x007f
+ #define XILINX_DMA_REG_DMASR			0x0004
+ #define XILINX_DMA_DMASR_EOL_LATE_ERR		BIT(15)
+@@ -2112,8 +2115,10 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+ 	chan->config.gen_lock = cfg->gen_lock;
+ 	chan->config.master = cfg->master;
+ 
++	dmacr &= ~XILINX_DMA_DMACR_GENLOCK_EN;
+ 	if (cfg->gen_lock && chan->genlock) {
+ 		dmacr |= XILINX_DMA_DMACR_GENLOCK_EN;
++		dmacr &= ~XILINX_DMA_DMACR_MASTER_MASK;
+ 		dmacr |= cfg->master << XILINX_DMA_DMACR_MASTER_SHIFT;
+ 	}
+ 
+@@ -2129,11 +2134,13 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+ 	chan->config.delay = cfg->delay;
+ 
+ 	if (cfg->coalesc <= XILINX_DMA_DMACR_FRAME_COUNT_MAX) {
++		dmacr &= ~XILINX_DMA_DMACR_FRAME_COUNT_MASK;
+ 		dmacr |= cfg->coalesc << XILINX_DMA_DMACR_FRAME_COUNT_SHIFT;
+ 		chan->config.coalesc = cfg->coalesc;
+ 	}
+ 
+ 	if (cfg->delay <= XILINX_DMA_DMACR_DELAY_MAX) {
++		dmacr &= ~XILINX_DMA_DMACR_DELAY_MASK;
+ 		dmacr |= cfg->delay << XILINX_DMA_DMACR_DELAY_SHIFT;
+ 		chan->config.delay = cfg->delay;
+ 	}
 -- 
 2.20.1
 
