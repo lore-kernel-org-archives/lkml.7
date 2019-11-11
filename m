@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C402C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B689EC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEA621655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869CA21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499140;
-	bh=4NAm3x63MqEBoEc1MXh1AeWlJFcd6N+VLDeC6aeUhFI=;
+	s=default; t=1573499148;
+	bh=6BoxzKJfoTLRXFSyM632xFz5OUUPUolpB2hF7Y4yUR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JaQy844kMTLqwx7HIqhAdEt2Y/zGMuduE4cABaNq/aZ0Y8UpvmXXrkqaz8Edwlzpg
-	 hAsLLTsZ0aQUX3PRfVvMvOHT84/Dejjrp4KOEUFJhQkHu5i/U/43CfCM8jGnJlF69c
-	 FSnLXRam6XzRoZEY6IQy6+tWh3EpQKeof36y+/qs=
+	b=CBE7EqOw+uzGLFOokgSV54GcL+xo6Ll9LbGJrEkoy3zLT31FtD4IS1ueLzCj5o+ps
+	 Am/MzMbD0eFPgfewEG3A0z/TB08Af831RWKkMH8EN8/gJpf3vLUwG9oV9Mzbqpi7WB
+	 p7pqQRvpvjCzdLNUfQKxdQ4PA6Vd0jchblOghY3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfKKSjk (ORCPT
+        id S1728534AbfKKTFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58708 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:05:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728287AbfKKSji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:38 -0500
+        id S1727977AbfKKSje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B23C204FD;
-        Mon, 11 Nov 2019 18:39:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F8E3204FD;
+        Mon, 11 Nov 2019 18:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497577;
-        bh=4NAm3x63MqEBoEc1MXh1AeWlJFcd6N+VLDeC6aeUhFI=;
+        s=default; t=1573497573;
+        bh=6BoxzKJfoTLRXFSyM632xFz5OUUPUolpB2hF7Y4yUR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n83Kh3CAY90Uu1K8qFrjD16bqNcsq6xeK0z6G4i8VxZvCyw9ZbuU2jlTT3QkGudF+
-         pIhYypFaEouiFnQrSFu17Lv86XB6vsEWkh7El8CSvvwaUH/2aYX6oZ3Ox+C/fC1Xbj
-         MwbTKGw/leMur1voLFD6lH1MmpqTZN1jmWvtV8pg=
+        b=laPJSurAMMyajXt235KpEnRWZS0dx+X3WKdtMA7aPbZMqm2X5hIIy+xUSJ3MXeLI5
+         FGRBsSD+vRw7L+9CA6SISDsQA0NBd71ULTUFfKpVcaQD8t5DvH+IVO+Y/uPVkkyQcH
+         9wnzkQe93XGzwgx9ExxUHaLUDriBrYTreVyXysxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 102/105] x86/apic/32: Avoid bogus LDR warnings
-Date:   Mon, 11 Nov 2019 19:29:12 +0100
-Message-Id: <20191111181449.454254098@linuxfoundation.org>
+Subject: [PATCH 4.14 084/105] usb: gadget: composite: Fix possible double free memory bug
+Date:   Mon, 11 Nov 2019 19:28:54 +0100
+Message-Id: <20191111181447.248454698@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,83 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Beulich <jbeulich@suse.com>
+From: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
 
-[ Upstream commit fe6f85ca121e9c74e7490fe66b0c5aae38e332c3 ]
+[ Upstream commit 1c20c89b0421b52b2417bb0f62a611bc669eda1d ]
 
-The removal of the LDR initialization in the bigsmp_32 APIC code unearthed
-a problem in setup_local_APIC().
+composite_dev_cleanup call from the failure of configfs_composite_bind
+frees up the cdev->os_desc_req and cdev->req. If the previous calls of
+bind and unbind is successful these will carry stale values.
 
-The code checks unconditionally for a mismatch of the logical APIC id by
-comparing the early APIC id which was initialized in get_smp_config() with
-the actual LDR value in the APIC.
+Consider the below sequence of function calls:
+configfs_composite_bind()
+        composite_dev_prepare()
+                - Allocate cdev->req, cdev->req->buf
+        composite_os_desc_req_prepare()
+                - Allocate cdev->os_desc_req, cdev->os_desc_req->buf
+configfs_composite_unbind()
+        composite_dev_cleanup()
+                - free the cdev->os_desc_req->buf and cdev->req->buf
+Next composition switch
+configfs_composite_bind()
+        - If it fails goto err_comp_cleanup will call the
+	  composite_dev_cleanup() function
+        composite_dev_cleanup()
+	        - calls kfree up with the stale values of cdev->req->buf and
+		  cdev->os_desc_req from the previous configfs_composite_bind
+		  call. The free call on these stale values leads to double free.
 
-Due to the removal of the bogus LDR initialization the check now can
-trigger on bigsmp_32 APIC systems emitting a warning for every booting
-CPU. This is of course a false positive because the APIC is not using
-logical destination mode.
+Hence, Fix this issue by setting request and buffer pointer to NULL after
+kfree.
 
-Restrict the check and the possibly resulting fixup to systems which are
-actually using the APIC in logical destination mode.
-
-[ tglx: Massaged changelog and added Cc stable ]
-
-Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
-Signed-off-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com
+Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/usb/gadget/composite.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 97d1290d1f0d8..6415b4aead546 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1422,9 +1422,6 @@ void setup_local_APIC(void)
- {
- 	int cpu = smp_processor_id();
- 	unsigned int value;
--#ifdef CONFIG_X86_32
--	int logical_apicid, ldr_apicid;
--#endif
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 75c42393b64ba..b29cd3979391e 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -2187,14 +2187,18 @@ void composite_dev_cleanup(struct usb_composite_dev *cdev)
+ 			usb_ep_dequeue(cdev->gadget->ep0, cdev->os_desc_req);
  
+ 		kfree(cdev->os_desc_req->buf);
++		cdev->os_desc_req->buf = NULL;
+ 		usb_ep_free_request(cdev->gadget->ep0, cdev->os_desc_req);
++		cdev->os_desc_req = NULL;
+ 	}
+ 	if (cdev->req) {
+ 		if (cdev->setup_pending)
+ 			usb_ep_dequeue(cdev->gadget->ep0, cdev->req);
  
- 	if (disable_apic) {
-@@ -1465,16 +1462,21 @@ void setup_local_APIC(void)
- 	apic->init_apic_ldr();
- 
- #ifdef CONFIG_X86_32
--	/*
--	 * APIC LDR is initialized.  If logical_apicid mapping was
--	 * initialized during get_smp_config(), make sure it matches the
--	 * actual value.
--	 */
--	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
--	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
--	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
--	/* always use the value from LDR */
--	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	if (apic->dest_logical) {
-+		int logical_apicid, ldr_apicid;
-+
-+		/*
-+		 * APIC LDR is initialized.  If logical_apicid mapping was
-+		 * initialized during get_smp_config(), make sure it matches
-+		 * the actual value.
-+		 */
-+		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
-+		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
-+		if (logical_apicid != BAD_APICID)
-+			WARN_ON(logical_apicid != ldr_apicid);
-+		/* Always use the value from LDR. */
-+		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	}
- #endif
- 
- 	/*
+ 		kfree(cdev->req->buf);
++		cdev->req->buf = NULL;
+ 		usb_ep_free_request(cdev->gadget->ep0, cdev->req);
++		cdev->req = NULL;
+ 	}
+ 	cdev->next_string_id = 0;
+ 	device_remove_file(&cdev->gadget->dev, &dev_attr_suspended);
 -- 
 2.20.1
 
