@@ -2,190 +2,101 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BFEC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03390C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E936A2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573452098;
-	bh=r2/46Oo7bzlP9QELn0pm6e6LdiAFm+dgs0+pcUxGDOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q8NikzusUpCwt/Dr5druLNS6jVEKP8V1RDPAj0Q2Ms4FIr9Xn5/2PxhXxKbtGVpfw
-	 OER6EahKAvj8XrjHAg97L03bXRZ//91g9fgu4xIDnNv2txNvLBYrcsiEykq4locxe6
-	 6rJC6oO0atruSAwz+MG42c9F4V3VejY1kOCr1DTg=
+	by mail.kernel.org (Postfix) with ESMTP id CD4CF20869
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:01:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="jGcWj7Os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKKGBg (ORCPT
+        id S1727021AbfKKGBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:01:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfKKGBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 01:01:36 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D88320656;
-        Mon, 11 Nov 2019 06:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573452094;
-        bh=r2/46Oo7bzlP9QELn0pm6e6LdiAFm+dgs0+pcUxGDOQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WlVHQzIJM20xcbXlcK1Ol8oaCuqcHpKxgfD4GWSGZ890mzTBiDyJocMWMK/aajIoH
-         zFEHtHcOpa+qWbMSIWCY1uyqCuFSyrpbnu15vhkyvsKgfLDNJC3dtC1zA6XlkMTyNi
-         wFW4EpAhLRmhgJW/gN20IziDGpQejHQXTUTHFvMI=
-Date:   Mon, 11 Nov 2019 07:01:29 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andres Freund <andres@anarazel.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        John Keeping <john@metanate.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.3 111/344] perf unwind: Fix libunwind when tid != pid
-Message-ID: <20191111060129.GA3197363@kroah.com>
-References: <20191003154540.062170222@linuxfoundation.org>
- <20191003154551.163214533@linuxfoundation.org>
- <20191110014621.n5yfednqfl7g3atr@alap3.anarazel.de>
+        Mon, 11 Nov 2019 01:01:39 -0500
+Received: from mail-eopbgr40139.outbound.protection.outlook.com ([40.107.4.139]:24958
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726780AbfKKGBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 01:01:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NHmK2kjDK52VKMtj/XbFxGCAfxlxKLAVZ15a7sfOWmpirZvZPIfIYHZaQe/ScPDnhoNjoJwqBUf3uZ8jJH00ityg+fqWqLuvoejVDZ2/oxSPLju/hCfEsGzgkVPJ6gjVnLbMwK25HS61S6HKIAPZxawdBmtWnAheGT9kd4PvE+wT1DpbIB0oiX+viRbfVGnZPnNDn5qx4bFbU8ry2eZjMaMxJJFCEsHr6rwMSqJshpPU6FIHhQP45Izzo00zjZH4qMSMchCNTvj65nK9kWn7/Val6MlDgjKsBUOd9HHvKz5HCf/yJoZBGla4dZipM3aZIdzlIJfmpHPKfXl4q/NTsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mrKz/JGeAMcYogAV+kTxwDp31ubUPX8FuiXIAOlBpbY=;
+ b=CI56fMdYU7bRbO8S59wIXD7YpIpoDwFOP/XkEFTIMoEsC9wSlsKSQoXSng3xw82Yh0QsV2u7umzVUMSWR6qaG84u/qiLHFxbd1I6lW7ET+UCDMfKbxUTKnlWF919DOyJLg3Xt9DZxB5q1LnWTlS+v6ZgDcMV6pFA0ArJPkWLDLHVSxhTBIyRTas+q40MP4tHZXFjoWrSPLjXTtxNzHOmXjM0H7xzWv/HLTTliONycLZpBWNwm+kZTVeKPgP35G8rxXIEuHw6bSVoF/rbfApPM0QMRPKU3OLtatwvRCxlflpqOhVXeZLkSpbTtCf77n7iGF7j1yRkvbcCy/FGj3/dXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mrKz/JGeAMcYogAV+kTxwDp31ubUPX8FuiXIAOlBpbY=;
+ b=jGcWj7OszBWY4HgJnkXu/NpuAAU1l1TT7t4JC+tKCHDc9sjbUaMGNUPim98tST/QXK/74MsoU5OnUUGQ8cM9lo80P4yIODc9yMI2YklMd1/9l0VtoQVAtpQYRKCkBKebVUR1Ufg8LyKL+vvcqdqNljW51rlEpaYMJkzdp9e7gJM=
+Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com (52.133.8.16) by
+ AM6PR0202MB3368.eurprd02.prod.outlook.com (52.133.10.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Mon, 11 Nov 2019 06:01:32 +0000
+Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com
+ ([fe80::240e:7545:887b:939e]) by AM6PR0202MB3382.eurprd02.prod.outlook.com
+ ([fe80::240e:7545:887b:939e%4]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
+ 06:01:32 +0000
+From:   Omer Shpigelman <oshpigelman@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomer Tayar <ttayar@habana.ai>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH 3/6] habanalabs: set ETR as non-secured
+Thread-Topic: [PATCH 3/6] habanalabs: set ETR as non-secured
+Thread-Index: AQHVmBGXX2drukS2bEWeUYrNJGMNgqeFeouQ
+Date:   Mon, 11 Nov 2019 06:01:32 +0000
+Message-ID: <AM6PR0202MB3382576D2A8E491F80446F70B8740@AM6PR0202MB3382.eurprd02.prod.outlook.com>
+References: <20191110215533.754-1-oded.gabbay@gmail.com>
+ <20191110215533.754-3-oded.gabbay@gmail.com>
+In-Reply-To: <20191110215533.754-3-oded.gabbay@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oshpigelman@habana.ai; 
+x-originating-ip: [141.226.8.173]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0bb4e77-b39f-4e08-9259-08d7666c9a61
+x-ms-traffictypediagnostic: AM6PR0202MB3368:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0202MB3368F9B177662643AFF5C4A2B8740@AM6PR0202MB3368.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-forefront-prvs: 0218A015FA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(366004)(39840400004)(376002)(136003)(189003)(199004)(476003)(11346002)(26005)(229853002)(7696005)(66066001)(4326008)(256004)(186003)(102836004)(6436002)(446003)(6246003)(5660300002)(86362001)(52536014)(9686003)(6636002)(486006)(55016002)(71200400001)(71190400001)(53546011)(6506007)(76176011)(74316002)(305945005)(7736002)(66946007)(2906002)(66556008)(76116006)(33656002)(3846002)(66476007)(6116002)(66446008)(81156014)(8936002)(81166006)(8676002)(2501003)(478600001)(558084003)(99286004)(25786009)(64756008)(110136005)(14454004)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3368;H:AM6PR0202MB3382.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2Br4I1agntw4RC2oBOx91CH5hJVdF6Mk3mph7kIKhnviW1ipxzqOvfmqr+Z+PbM0xQqDRPUo5UgcpPVSswfyhvRmSZU8Bzr1k1GKMSinjs8F9LwtxpcQ7eKT82C75NNkin8BXs8HC46NAvDCNuFJEhqqsdwPkXkMvHEx9NP3lWmFwLrTbhM9PatgfjeN/aQsruFkW6RY0u8qOwYT+4b+9ysNaXAhSlr6nu/KIxAMlLLMY+zvbw4HlqhHGmm8aKNBXTBxasz9V2cfQoaqCuvMdYYUiq5LV05yBQ0pWNO59Pi0s55HgbDVPN+/zo75IUKL4ivVYmg9pG7an/NF2ASfNJQhGyGQqYVOjVTHKKl3Io2P/AduQFmYJUEz0YcQg1P2rWxtgYMB1bEt/EoAwej547WjIsqZMCnRpceYSu5Gvsn5GSem1UWFGs+QldZitaL8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191110014621.n5yfednqfl7g3atr@alap3.anarazel.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0bb4e77-b39f-4e08-9259-08d7666c9a61
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 06:01:32.7622
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FfI8A6eZqcxc92RdOxgC8pXzAFNc896gYQxRolZ6WPWDi8cCLVW9lIoyUWKjhIHTVKtlxLQ9Z1gCc3rhVVeWVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3368
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 09, 2019 at 05:46:21PM -0800, Andres Freund wrote:
-> Hi,
-> 
-> On 2019-10-03 17:51:16 +0200, Greg Kroah-Hartman wrote:
-> > From: John Keeping <john@metanate.com>
-> >
-> > [ Upstream commit e8ba2906f6b9054102ad035ac9cafad9d4168589 ]
-> >
-> > Commit e5adfc3e7e77 ("perf map: Synthesize maps only for thread group
-> > leader") changed the recording side so that we no longer get mmap events
-> > for threads other than the thread group leader (when synthesising these
-> > events for threads which exist before perf is started).
-> >
-> > When a file recorded after this change is loaded, the lack of mmap
-> > records mean that unwinding is not set up for any other threads.
-> >
-> > This can be seen in a simple record/report scenario:
-> >
-> > 	perf record --call-graph=dwarf -t $TID
-> > 	perf report
-> >
-> > If $TID is a process ID then the report will show call graphs, but if
-> > $TID is a secondary thread the output is as if --call-graph=none was
-> > specified.
-> >
-> > Following the rationale in that commit, move the libunwind fields into
-> > struct map_groups and update the libunwind functions to take this
-> > instead of the struct thread.  This is only required for
-> > unwind__finish_access which must now be called from map_groups__delete
-> > and the others are changed for symmetry.
-> >
-> > Note that unwind__get_entries keeps the thread argument since it is
-> > required for symbol lookup and the libdw unwind provider uses the thread
-> > ID.
-> >
-> > Signed-off-by: John Keeping <john@metanate.com>
-> > Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Fixes: e5adfc3e7e77 ("perf map: Synthesize maps only for thread group leader")
-> > Link: http://lkml.kernel.org/r/20190815100146.28842-2-john@metanate.com
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> This unfortunately broke --call-graph dwarf on 5.3 (and presumably older
-> branches), because while this commit has been included in stable, the
-> prerequisite
-> 
-> commit ab6cd0e5276e24403751e0b3b8ed807738a8571f
-> Author:     John Keeping <john@metanate.com>
-> AuthorDate: 2019-08-15 11:01:44 +0100
-> Commit:     Arnaldo Carvalho de Melo <acme@redhat.com>
-> CommitDate: 2019-08-16 12:25:23 -0300
-> 
->     perf map: Use zalloc for map_groups
-> 
->     In the next commit we will add new fields to map_groups and we need
->     these to be null if no value is assigned.  The simplest way to achieve
->     this is to request zeroed memory from the allocator.
-> 
->     Signed-off-by: John Keeping <john@metanate.com>
->     Reviewed-by: Jiri Olsa <jolsa@kernel.org>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: john keeping <john@metanate.com>
->     Link: http://lkml.kernel.org/r/20190815100146.28842-1-john@metanate.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> has not.
-> 
-> 
-> The crash I get is:
-> 
-> Thread 1 "perf" received signal SIGSEGV, Segmentation fault.
-> 0x0000555555872238 in unwind__flush_access (mg=0x555555c53b50) at util/unwind-libunwind.c:76
-> 76			mg->unwind_libunwind_ops->flush_access(mg);
-> (gdb) bt
-> #0  0x0000555555872238 in unwind__flush_access (mg=0x555555c53b50) at util/unwind-libunwind.c:76
-> #1  0x0000555555800ac4 in ____thread__set_comm (exec=true, timestamp=325096707055731, str=0x7ffff7f96ed8 "sleep", thread=0x555555c53bc0) at util/thread.c:254
-> #2  __thread__set_comm (thread=thread@entry=0x555555c53bc0, str=str@entry=0x7ffff7f96ed8 "sleep", timestamp=325096707055731, exec=exec@entry=true)
->     at util/thread.c:268
-> #3  0x00005555557f132a in machine__process_comm_event (machine=0x555555c4bc68, event=0x7ffff7f96ec8, sample=0x7fffffff8f70) at util/machine.c:600
-> #4  0x00005555557fa93b in perf_session__deliver_event (session=0x555555c4baf0, event=0x7ffff7f96ec8, tool=0x555555acb9a0 <record>, file_offset=73416)
->     at util/session.c:1473
-> #5  0x00005555557feae8 in do_flush (show_progress=true, oe=0x555555c52610) at util/ordered-events.c:243
-> #6  __ordered_events__flush (oe=oe@entry=0x555555c52610, how=how@entry=OE_FLUSH__FINAL, timestamp=timestamp@entry=0) at util/ordered-events.c:322
-> #7  0x00005555557fef45 in __ordered_events__flush (timestamp=<optimized out>, how=<optimized out>, oe=<optimized out>) at util/ordered-events.c:338
-> #8  ordered_events__flush (how=OE_FLUSH__FINAL, oe=0x555555c52610) at util/ordered-events.c:340
-> #9  ordered_events__flush (oe=oe@entry=0x555555c52610, how=how@entry=OE_FLUSH__FINAL) at util/ordered-events.c:338
-> #10 0x00005555557fd17c in __perf_session__process_events (session=0x555555c4baf0) at util/session.c:2152
-> #11 perf_session__process_events (session=session@entry=0x555555c4baf0) at util/session.c:2181
-> #12 0x0000555555729379 in process_buildids (rec=0x555555acb9a0 <record>) at builtin-record.c:829
-> #13 record__finish_output (rec=0x555555acb9a0 <record>) at builtin-record.c:1037
-> #14 0x000055555572c000 in __cmd_record (rec=0x555555acb9a0 <record>, argv=<optimized out>, argc=2) at builtin-record.c:1661
-> #15 cmd_record (argc=2, argv=<optimized out>) at builtin-record.c:2450
-> #16 0x000055555579cd9d in run_builtin (p=0x555555ad4958 <commands+216>, argc=5, argv=0x7fffffffdcc0) at perf.c:304
-> #17 0x0000555555714baa in handle_internal_command (argv=0x7fffffffdcc0, argc=5) at perf.c:356
-> #18 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:400
-> #19 main (argc=5, argv=0x7fffffffdcc0) at perf.c:525
-> 
-> (gdb) p *mg
-> $7 = {maps = {entries = {rb_node = 0x0}, names = {rb_node = 0x0}, lock = {lock = pthread_rwlock_t = {Status = Not acquired, Shared = No,
->         Prefers = Readers}}}, machine = 0x555555c4bc68, refcnt = {refs = {counter = 1}}, addr_space = 0x693f6967632e6775,
->   unwind_libunwind_ops = 0xa32313438313d64}
-> 
-> (gdb) p mg->unwind_libunwind_ops
-> $8 = (struct unwind_libunwind_ops *) 0xa32313438313d64
-> 
-> (gdb) p *mg->unwind_libunwind_ops
-> Cannot access memory at address 0xa32313438313d64
-> 
-> which makes sense, because map_groups__new() allocates the group with
-> malloc, and map_groups__init() only initializes map_groups->{maps,machine,refcnt}
-> 
-> 
-> A bit surprised that nobody complained about this so far...
-
-Thanks, I've queued up the other patch for 5.3.y now.
-
-greg k-h
+T24gU3VuLCBOb3YgMTAsIDIwMTkgYXQgMTE6NTYgUE0gT2RlZCBHYWJiYXkgd3JvdGU6DQo+IEVU
+UiBzaG91bGQgYWx3YXlzIGJlIG5vbi1zZWN1cmVkIGFzIGl0IGlzIHVzZWQgYnkgdGhlIHVzZXJz
+IHRvIHJlY29yZA0KPiBwcm9maWxpbmcvdHJhY2UgZGF0YS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IE9kZWQgR2FiYmF5IDxvZGVkLmdhYmJheUBnbWFpbC5jb20+DQoNClJldmlld2VkLWJ5OiBPbWVy
+IFNocGlnZWxtYW4gPG9zaHBpZ2VsbWFuQGhhYmFuYS5haT4NCg0K
