@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD9DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71216C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562BC2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409952196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497350;
-	bh=cIA2Er4jQ/jeqXZOLNDmggGDCTaLVlwFasMubnHygrk=;
+	s=default; t=1573497354;
+	bh=DgOeGiA0kYlJ1pwptbjhYwSRiBmoHrCye0hH9BMijLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUre00wks5dSu+yxIJ0rrzZDFMXF4vJuXzH909KZjGtcsIsAWDVBydKvv9W8KI5mZ
-	 95XGcBp0wUbwXBVJJGS2uWA9UaxvEDlFFPfRF9b9840GaX862BXmHI1H/Gc7tyHJTO
-	 eZ3c/VBRKzbOXx8R9TIq48cRjjCKOufQwu3NKm0k=
+	b=lY1QlHeqlW2YDTOsxcANVKWoY//y3JhV0SWzX6hjYDX06/Ph2nnf9oR4brHkyjaYb
+	 LtmNsSO16v++mNM0T3CCtWN2ZigkPGJMPLYv9dX+aVQ7hXX9umH0gllXfmwAibPVHz
+	 TV4mFa8FkmUqh9yQZxei0+M4hU1/A3z+LKW/rhok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfKKSfs (ORCPT
+        id S1728618AbfKKSfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53690 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728583AbfKKSfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:43 -0500
+        id S1728596AbfKKSft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6E352173B;
-        Mon, 11 Nov 2019 18:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03D812196E;
+        Mon, 11 Nov 2019 18:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497343;
-        bh=cIA2Er4jQ/jeqXZOLNDmggGDCTaLVlwFasMubnHygrk=;
+        s=default; t=1573497348;
+        bh=DgOeGiA0kYlJ1pwptbjhYwSRiBmoHrCye0hH9BMijLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zBUmLrDynvq+kcDj8ImZ1bwf8T8BC0OdzBjkYnP3L5DY62PS/P6mysFGM1xKZcA4l
-         QdwVEuFzoeBDr1phL9jc4R8KD7ri1BgQFBUJYYJSBJ1Ymi8io0eG0VsK2gXNbS7j2B
-         Cudq6BV8lJmGQtrT6jKsmuFZgkcQ9K1m4AXjJgtw=
+        b=yDfc0waTE+mJ83/fjioNmFOwQvf60cCPnTLaLpk4RyaIlTJ3J8WQPjlXnxB4mqLGo
+         KWnrmMBJxHfGWnlpGr4Mhn9ePDHq7L6d4pd/MCdU0VIzMh3hxJRe50xL+W/HJaVMhs
+         mzeWMNqrnsck4LvKBTmvMxCisKugWI4zHTEI+Nw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yong Zhao <yong.zhao@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.14 021/105] drm/radeon: fix si_enable_smc_cac() failed issue
-Date:   Mon, 11 Nov 2019 19:27:51 +0100
-Message-Id: <20191111181435.385078451@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.14 023/105] arm64: Do not mask out PTE_RDONLY in pte_same()
+Date:   Mon, 11 Nov 2019 19:27:53 +0100
+Message-Id: <20191111181436.637567352@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,33 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-commit 2c409ba81be25516afe05ae27a4a15da01740b01 upstream.
+commit 6767df245f4736d0cf0c6fb7cf9cf94b27414245 upstream.
 
-Need to set the dte flag on this asic.
+Following commit 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out
+of set_pte_at()"), the PTE_RDONLY bit is no longer managed by
+set_pte_at() but built into the PAGE_* attribute definitions.
+Consequently, pte_same() must include this bit when checking two PTEs
+for equality.
 
-Port the fix from amdgpu:
-5cb818b861be114 ("drm/amd/amdgpu: fix si_enable_smc_cac() failed issue")
+Remove the arm64-specific pte_same() function, practically reverting
+commit 747a70e60b72 ("arm64: Fix copy-on-write referencing in HugeTLB")
 
-Reviewed-by: Yong Zhao <yong.zhao@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out of set_pte_at()")
+Cc: <stable@vger.kernel.org> # 4.14.x-
+Cc: Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/radeon/si_dpm.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/pgtable.h |   17 -----------------
+ 1 file changed, 17 deletions(-)
 
---- a/drivers/gpu/drm/radeon/si_dpm.c
-+++ b/drivers/gpu/drm/radeon/si_dpm.c
-@@ -1956,6 +1956,7 @@ static void si_initialize_powertune_defa
- 		case 0x682C:
- 			si_pi->cac_weights = cac_weights_cape_verde_pro;
- 			si_pi->dte_data = dte_data_sun_xt;
-+			update_dte_from_pl2 = true;
- 			break;
- 		case 0x6825:
- 		case 0x6827:
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -258,23 +258,6 @@ static inline void set_pte_at(struct mm_
+ 	set_pte(ptep, pte);
+ }
+ 
+-#define __HAVE_ARCH_PTE_SAME
+-static inline int pte_same(pte_t pte_a, pte_t pte_b)
+-{
+-	pteval_t lhs, rhs;
+-
+-	lhs = pte_val(pte_a);
+-	rhs = pte_val(pte_b);
+-
+-	if (pte_present(pte_a))
+-		lhs &= ~PTE_RDONLY;
+-
+-	if (pte_present(pte_b))
+-		rhs &= ~PTE_RDONLY;
+-
+-	return (lhs == rhs);
+-}
+-
+ /*
+  * Huge pte definitions.
+  */
 
 
