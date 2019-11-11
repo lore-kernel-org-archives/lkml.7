@@ -6,59 +6,56 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A7AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20C8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A287E2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79EDB222CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfKKNzY (ORCPT
+        id S1726950AbfKKOBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:55:24 -0500
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:38897 "EHLO
+        Mon, 11 Nov 2019 09:01:09 -0500
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:41951 "EHLO
         lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726916AbfKKNzY (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbfKKOBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:55:24 -0500
+        Mon, 11 Nov 2019 09:01:09 -0500
 Received: from [192.168.2.10] ([46.9.232.237])
         by smtp-cloud9.xs4all.net with ESMTPA
-        id UA9fiVFfsQBsYUA9ki6cYM; Mon, 11 Nov 2019 14:55:18 +0100
-Subject: Re: WARNING in dma_buf_vunmap
-To:     syzbot <syzbot+a9317fe7ad261fc76b88@syzkaller.appspotmail.com>,
-        andy@greyhouse.net, davem@davemloft.net,
-        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        j.vosburgh@gmail.com, kyungmin.park@samsung.com,
-        linaro-mm-sig-owner@lists.linaro.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, m.szyprowski@samsung.com,
-        maheshb@google.com, mchehab+samsung@kernel.org, mchehab@kernel.org,
-        netdev@vger.kernel.org, pawel@osciak.com, sumit.semwal@linaro.org,
+        id UAFViVIMgQBsYUAFYi6fAY; Mon, 11 Nov 2019 15:01:07 +0100
+Subject: Re: INFO: task hung in vivid_stop_generating_vid_cap
+To:     syzbot <syzbot+06283a66a648cd073885@syzkaller.appspotmail.com>,
+        andy@greyhouse.net, davem@davemloft.net, dvyukov@google.com,
+        hans.verkuil@cisco.com, helen.koike@collabora.com,
+        hverkuil@xs4all.nl, j.vosburgh@gmail.com,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, maheshb@google.com,
+        mchehab+samsung@kernel.org, mchehab@kernel.org,
+        mchehab@s-opensource.com, netdev@vger.kernel.org,
         syzkaller-bugs@googlegroups.com, tfiga@chromium.org,
         vfalico@gmail.com
-References: <000000000000d2c94e0596c1d47b@google.com>
+References: <000000000000c9f0a40596c1d46b@google.com>
 From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <5ed667c7-36ee-466c-7f6d-cd52ccb71c28@xs4all.nl>
-Date:   Mon, 11 Nov 2019 14:54:55 +0100
+Message-ID: <64d6d60b-bf1c-5fee-7049-9998afa0b91a@xs4all.nl>
+Date:   Mon, 11 Nov 2019 15:00:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <000000000000d2c94e0596c1d47b@google.com>
+In-Reply-To: <000000000000c9f0a40596c1d46b@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOVyIXaOdZqyrZFAcLrvkaNOhPcmisjimCJz25F9XwmH9nD5lWqPr+Wf1+q27L8QJeRigdxxQPwscLrsW01Py/OJfmCjP6ls8p7ZDuOLtAyj6LtYfqLk
- AGRud3HQKuid40ueqTwCHVZluw0DxJ4VCYZI5TOBG06jns6XG0xc4cCKVQeiZ5LW6sIY14VK9AUSjSSwPdwAYNrBVlU6u4UUhb7+vY1jcwy5zHGHGD62hHDX
- 1aMHRhXeUCtUmVi6U/6rKqXY4/aOgyChPds2EMDB5CRUX9FmoAw9NKkwVF5Vl354yBFw2J/TF3mj1nOXFRApFc4tck43MoqHD3Vck0FekoeF4cqBjCOmAo+r
- 1Hbxl0GcagIo0Rnsu0SKz8KvFBWY1f0V/XQpgk1Jd+zuzdDtECNNuD1EaOzqtXnnBzjCc6RWZaPoOVRuErgusCtdnLWvDpeN5H2YpoyMhvZoubK0Lj96TzZ7
- MB7n5u6rCAzB/XbpaldT4dUTqj7eQBVElUCg71RpVuet68YMPNbvPaM9e2vB092mqgUQRG4ufzJ61GHsGKhQn54duhF/7Ve23frFlgwcxN5pdPEpeU+sT5ix
- DzIunwN828xBm6v7P/W5A/PQa50xNq2hdKND0Qxxc/K/RgR9C11emf5X4FBn1gUWdvzAhuxYE9+adGq2wGUOC5+lUFqRXfTavXd6CBSPftfMf3LF9MngJOlI
- xAK9gMhtdlJsJPZspCDsPfQVWn6U+Wn9mNEikBsXTBLDjbeGI0TTgtetuSNuahWHEl9LLGOHi2333/yekdP03Pysh23Mt7HCUE5/cDQHMUatEkqZNw3Ucc1K
- iOV3ggiTx5oK46cuTRt1qg0FTx96jylWsG0PNnGhU2lDyMCElFc55pf/6MoChq8dKuAtWGED+fkTRREvoWLp+TvXMEhOwG9rPpXLK4XjoyrrJDIOdyX01o6m
- 8MjInQ==
+X-CMAE-Envelope: MS4wfOHl9D+wKyXB/UKHzhTRNo/bH0ptWRXA/RYcpikmgu6qL0hiSXRduykPRWGLkrxvQx+BwdB4og683bob5Ie6B3rhZq0FJOuPn7Cv0rnyOenbDsLiSkPl
+ MznSaZ9gqcGpEaCg+CdMrJjtIkvhyleO2uRjtXe3idj+BI5VmjOmVSjCqlzEkSbe4KT3RW5tkAK/amMQ3Z1u+AgkSQJ3fnB/gR1q//EaPnfUm1QNfA9wqwCz
+ yrjHBdU8/cLv9KLRF6hBs6S3NFFkV383NGdVu+oLQBRJF+DL9p9raeyFjOU61oBEngkc1vuepGKwWCYT0Af/tftddaAMDbxBM+kaElkUwQEReMS1U0D2NGND
+ 1dPUCZlK3QSn9EeGc8jWnVLW9/hmeiYCBXMEDxTl9KQICbMcgF7fjhWHnZCwU6BYwLw2msNPKvx3OTdGikzY2q3UOSTmyEcVi2c9sxPCMIZfEKeOLbVgjrq6
+ Z8XdCF41X0n4XgOctykRvz3A/trneh1DiLf5vFCUWNf02U7RskUMam8a/QDGlM3pdHPMNrfAH1R6arQAZA8qf9yRSQEflVYIPmJJyC2BZ0J5k+YRgtnIUj8+
+ 4AwSgoRtrcIVx9Kc+4IimkYx87GRHePI19aRIODPo9hQXq3zN2Y6nxH2L5QHli1dd9HAlMHb7+ppUh6GDm3aeqKU56oOmOOQ5Cd8/sMqko63yFWRPRH9/FkN
+ /mse348+Hjh0jwFKTGyfpnnSQ/3R1VIxDlGmT6IARw7Z0ikaOjDqCIjYaYaHm0c0ltFsTYwfpkaclIjjknf6PqNNmDSEz9wnGKi8eHdS57j204nRnlx6NX4b
+ Gp+lKpBuhaCa5l0eSM0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: media: vb2: check memory model for VIDIOC_CREATE_BUFS
-
+#syz fix: media: vb2: add waiting_in_dqbuf flag
