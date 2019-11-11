@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9597DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD30C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63EBF21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA6220659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499412;
-	bh=27fDGEpqKQPn9KccCyYX91hENaUtYZICVPP1diLkpYY=;
+	s=default; t=1573499424;
+	bh=V7fR2feFxpMluVrwWC+xnfViuaQzXmb080OJoqaBQr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eeC+s7K7WnZoIstHOdWAfAB84KvXDcLYCyO97i+3dZRNBvXMvtqmcI7go4gopFtNs
-	 J7w5NTQ36r8zA+bIL7+txX7DI20IegOwo56aoXjVB8m273XCbc+hjqoAowbOSbFK5O
-	 97snfd7MAjTzOuqkB3ucY+eLBwWovys4lADYS07k=
+	b=ocZngC5oJ83ZosBFJup3Cpgo+qd5D7/gxXAO6T/k9UywiEqnas6F6W8294hVcxPYy
+	 ozHh0B+quxUV+T+L8EFRvqAhdzKwoUWws6Xp0RuaQosGBm3uJCvCBy6J3lHRR7R8RY
+	 es7+m+h1I6mlzIMFc/Gl98L+HNu0XLSBe+P4fQeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfKKTKK (ORCPT
+        id S1727850AbfKKScE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:10:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:32:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727999AbfKKScl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:32:41 -0500
+        id S1727770AbfKKSb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FA020674;
-        Mon, 11 Nov 2019 18:32:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 649FF21872;
+        Mon, 11 Nov 2019 18:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497161;
-        bh=27fDGEpqKQPn9KccCyYX91hENaUtYZICVPP1diLkpYY=;
+        s=default; t=1573497118;
+        bh=V7fR2feFxpMluVrwWC+xnfViuaQzXmb080OJoqaBQr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1p/5TybSN2SAUm9pg4zGEBEbv/zt0E1HpFD0XAEP9mtl86VQsV1idUtSylTQFegOW
-         J6Z9gc/BcO1/wirGJtd2wSiQHGoAPFrXISnipWUwbA+EMRE2RNQsRKvYtgpYS+JhqQ
-         Ae1dKfH69+NvxPT1OIxTYzXX/NwODUCdp3YDCBn0=
+        b=uEkeiclkiUlxRiMgFR65O2of/UnbXS46dhT4sjnUZcN9PK15lzFdc7Av+t3CNkwlu
+         PtLY+jQuNtn8cDKQabJ6QC0A4soRG2D3T31q0FTg1v5kNh9i1y/Arlir55FuE7S5nl
+         vWmtOgCqWXfIIlq2jgaGvNQ3mnr7GI06cNHeOjp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stephane Grosjean <s.grosjean@peak-system.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.9 24/65] can: peak_usb: fix a potential out-of-sync while decoding packets
-Date:   Mon, 11 Nov 2019 19:28:24 +0100
-Message-Id: <20191111181345.547015472@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 01/65] CDC-NCM: handle incomplete transfer of MTU
+Date:   Mon, 11 Nov 2019 19:28:01 +0100
+Message-Id: <20191111181332.043906842@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,80 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Grosjean <s.grosjean@peak-system.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit de280f403f2996679e2607384980703710576fed upstream.
+[ Upstream commit 332f989a3b0041b810836c5c3747e59aad7e9d0b ]
 
-When decoding a buffer received from PCAN-USB, the first timestamp read in
-a packet is a 16-bit coded time base, and the next ones are an 8-bit
-offset to this base, regardless of the type of packet read.
+A malicious device may give half an answer when asked
+for its MTU. The driver will proceed after this with
+a garbage MTU. Anything but a complete answer must be treated
+as an error.
 
-This patch corrects a potential loss of synchronization by using a
-timestamp index read from the buffer, rather than an index of received
-data packets, to determine on the sizeof the timestamp to be read from the
-packet being decoded.
+V2: used sizeof as request by Alexander
 
-Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
-Fixes: 46be265d3388 ("can: usb: PEAK-System Technik PCAN-USB specific part")
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Reported-and-tested-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/can/usb/peak_usb/pcan_usb.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
-@@ -108,7 +108,7 @@ struct pcan_usb_msg_context {
- 	u8 *end;
- 	u8 rec_cnt;
- 	u8 rec_idx;
--	u8 rec_data_idx;
-+	u8 rec_ts_idx;
- 	struct net_device *netdev;
- 	struct pcan_usb *pdev;
- };
-@@ -552,10 +552,15 @@ static int pcan_usb_decode_status(struct
- 	mc->ptr += PCAN_USB_CMD_ARGS;
- 
- 	if (status_len & PCAN_USB_STATUSLEN_TIMESTAMP) {
--		int err = pcan_usb_decode_ts(mc, !mc->rec_idx);
-+		int err = pcan_usb_decode_ts(mc, !mc->rec_ts_idx);
- 
- 		if (err)
- 			return err;
-+
-+		/* Next packet in the buffer will have a timestamp on a single
-+		 * byte
-+		 */
-+		mc->rec_ts_idx++;
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -576,8 +576,8 @@ static void cdc_ncm_set_dgram_size(struc
+ 	/* read current mtu value from device */
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+-			      0, iface_no, &max_datagram_size, 2);
+-	if (err < 0) {
++			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
++	if (err < sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
  	}
- 
- 	switch (f) {
-@@ -638,10 +643,13 @@ static int pcan_usb_decode_data(struct p
- 
- 	cf->can_dlc = get_can_dlc(rec_len);
- 
--	/* first data packet timestamp is a word */
--	if (pcan_usb_decode_ts(mc, !mc->rec_data_idx))
-+	/* Only first packet timestamp is a word */
-+	if (pcan_usb_decode_ts(mc, !mc->rec_ts_idx))
- 		goto decode_failed;
- 
-+	/* Next packet in the buffer will have a timestamp on a single byte */
-+	mc->rec_ts_idx++;
-+
- 	/* read data */
- 	memset(cf->data, 0x0, sizeof(cf->data));
- 	if (status_len & PCAN_USB_STATUSLEN_RTR) {
-@@ -695,7 +703,6 @@ static int pcan_usb_decode_msg(struct pe
- 		/* handle normal can frames here */
- 		} else {
- 			err = pcan_usb_decode_data(&mc, sl);
--			mc.rec_data_idx++;
- 		}
- 	}
+@@ -588,7 +588,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	max_datagram_size = cpu_to_le16(ctx->max_datagram_size);
+ 	err = usbnet_write_cmd(dev, USB_CDC_SET_MAX_DATAGRAM_SIZE,
+ 			       USB_TYPE_CLASS | USB_DIR_OUT | USB_RECIP_INTERFACE,
+-			       0, iface_no, &max_datagram_size, 2);
++			       0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+ 	if (err < 0)
+ 		dev_dbg(&dev->intf->dev, "SET_MAX_DATAGRAM_SIZE failed\n");
  
 
 
