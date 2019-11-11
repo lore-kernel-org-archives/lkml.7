@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116D9C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D17C17446
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CE22245C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BD121655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499082;
-	bh=U+Q2q91h71IfZLyPrlsO+f3m6IWcblCUU/aQJzpN5uU=;
+	s=default; t=1573499095;
+	bh=OWJ7KVQesTndgseJLu0omQM+a7vLVTgBhg5gHiP44jY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZEGxo6akWcOmBm1gSekNJjmjO3yt9f0DuThuxrrdMT6MS2NNvDwZZcKyb7HT9rxCN
-	 WYlQJkd3Vi1AmyHcMD3rzARQJ6XWE5ow0yjtr3yiaat4ce4RBNXjyD1hNrgSlQk8T6
-	 Ve6w+OxCh6MXXn1SQxJmV5OwOu8+ezNxN3rlByOU=
+	b=FhWEYUnlrwlP15UisLt4Hkq6Ke5d5woNPHNB3bjAc14MaVBjT+o9rXl362uJ2JwGW
+	 nlkgxqlWk/rOIxkQyKq39dFbc7jpQra5alikicrWkgBIHevkHrmdahspSd17AdLDzS
+	 a1GY7U72250/XqQGCqApkx2m8rOhp2K5d6XhSSQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfKKSm0 (ORCPT
+        id S1729423AbfKKSlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:42:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33538 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729496AbfKKSmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:42:20 -0500
+        id S1729344AbfKKSlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76AF214E0;
-        Mon, 11 Nov 2019 18:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993DE20659;
+        Mon, 11 Nov 2019 18:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497739;
-        bh=U+Q2q91h71IfZLyPrlsO+f3m6IWcblCUU/aQJzpN5uU=;
+        s=default; t=1573497700;
+        bh=OWJ7KVQesTndgseJLu0omQM+a7vLVTgBhg5gHiP44jY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=obtWx5AxBh5Jm+HIcGDKSAXCZf1+0zFmOu23ALmO4fKQURRhF49fssOj5DlajgH27
-         nr0z21uCHQeQSzWkC0Xzi//rWDHxULwZuCa/3cqwMk6N0Yw4t9kc8P+nebEA/s+j4c
-         cXqt9clJVMQbTxNxdIUAjE2F6V5TbQXT2tM+Fez0=
+        b=TQfy4k43hHuMHQswcvwTSyLf7781F5dRZFcFJXW1Mgr7IBmtaIlmsX5iuGLMCPW57
+         OHoe+OjFD8Qj/nM+FFB8VoxhModobGGrXxs4bXty6hrOkeSxRi94fdTLO8mWMGtmCt
+         gVYxwyyGUsRoGlkEwKPsTWyRcFGpY+R+6BeCR4o8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH 4.19 036/125] ARM: sunxi: Fix CPU powerdown on A83T
-Date:   Mon, 11 Nov 2019 19:27:55 +0100
-Message-Id: <20191111181445.383112547@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.19 030/125] arm64: Do not mask out PTE_RDONLY in pte_same()
+Date:   Mon, 11 Nov 2019 19:27:49 +0100
+Message-Id: <20191111181444.832642671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,46 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-commit e690053e97e7a9c968df9a97cef9089dfa8e6a44 upstream.
+commit 6767df245f4736d0cf0c6fb7cf9cf94b27414245 upstream.
 
-PRCM_PWROFF_GATING_REG has CPU0 at bit 4 on A83T. So without this
-patch, instead of gating the CPU0, the whole cluster was power gated,
-when shutting down first CPU in the cluster.
+Following commit 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out
+of set_pte_at()"), the PTE_RDONLY bit is no longer managed by
+set_pte_at() but built into the PAGE_* attribute definitions.
+Consequently, pte_same() must include this bit when checking two PTEs
+for equality.
 
-Fixes: 6961275e72a8c1 ("ARM: sun8i: smp: Add support for A83T")
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Remove the arm64-specific pte_same() function, practically reverting
+commit 747a70e60b72 ("arm64: Fix copy-on-write referencing in HugeTLB")
+
+Fixes: 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out of set_pte_at()")
+Cc: <stable@vger.kernel.org> # 4.14.x-
+Cc: Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-sunxi/mc_smp.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/pgtable.h |   17 -----------------
+ 1 file changed, 17 deletions(-)
 
---- a/arch/arm/mach-sunxi/mc_smp.c
-+++ b/arch/arm/mach-sunxi/mc_smp.c
-@@ -478,14 +478,18 @@ static void sunxi_mc_smp_cpu_die(unsigne
- static int sunxi_cpu_powerdown(unsigned int cpu, unsigned int cluster)
- {
- 	u32 reg;
-+	int gating_bit = cpu;
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -274,23 +274,6 @@ static inline void set_pte_at(struct mm_
+ 	set_pte(ptep, pte);
+ }
  
- 	pr_debug("%s: cluster %u cpu %u\n", __func__, cluster, cpu);
- 	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
- 		return -EINVAL;
- 
-+	if (is_a83t && cpu == 0)
-+		gating_bit = 4;
-+
- 	/* gate processor power */
- 	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
--	reg |= PRCM_PWROFF_GATING_REG_CORE(cpu);
-+	reg |= PRCM_PWROFF_GATING_REG_CORE(gating_bit);
- 	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
- 	udelay(20);
- 
+-#define __HAVE_ARCH_PTE_SAME
+-static inline int pte_same(pte_t pte_a, pte_t pte_b)
+-{
+-	pteval_t lhs, rhs;
+-
+-	lhs = pte_val(pte_a);
+-	rhs = pte_val(pte_b);
+-
+-	if (pte_present(pte_a))
+-		lhs &= ~PTE_RDONLY;
+-
+-	if (pte_present(pte_b))
+-		rhs &= ~PTE_RDONLY;
+-
+-	return (lhs == rhs);
+-}
+-
+ /*
+  * Huge pte definitions.
+  */
 
 
