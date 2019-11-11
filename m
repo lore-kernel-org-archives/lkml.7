@@ -2,110 +2,95 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2F8C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A13EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AF720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573489752;
-	bh=k0yKxYG7YYQn6/z4LuiNzgCLnQUCfr6MpxgggPEt1j4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L1dr5ZdOPNM5SASGmwqasr9Li4Njy2xgxcabjlBjJo03ExVMMLilIWacmTqScye1C
-	 09HzifRTV20SJe1fylD16BCZucMwngKNHSOEbwWRPKj7Vl0Gs9sudQGhcg03C7RJD9
-	 d5jlfzITxRHPDJzUgepdzGNsqEbZlpbnPWhSgdQo=
+	by mail.kernel.org (Postfix) with ESMTP id D142020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="oue6YP5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfKKQ3L (ORCPT
+        id S1727113AbfKKQ3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:29:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbfKKQ3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:29:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59CAE20656;
-        Mon, 11 Nov 2019 16:29:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573489749;
-        bh=k0yKxYG7YYQn6/z4LuiNzgCLnQUCfr6MpxgggPEt1j4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CnEnZ7YTDtXFLQ0tNgqHC6wLHoOi4pfKQQ1yBRqnDAfrigKMB7Hu+GSrH0+jSPyOG
-         HMyk9kdswqJj9Jb5HExtNTk2tZ7Cc4yvTMYb/ktF+8C4lnJeQKv4B52SD3ajruSRH0
-         Yp7na36mAs/WHjy3YpN2b65xiaPtpJWFMYeWKmno=
-Date:   Mon, 11 Nov 2019 17:29:07 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Omer Shalev <omerdeshalev@gmail.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media:usb:cpia2: Properly check framebuffer mmap offsets
-Message-ID: <20191111162907.GA1017642@kroah.com>
-References: <20191108215038.59170-1-omerdeshalev@gmail.com>
- <20191108204949.GA1277001@kroah.com>
- <a1c55e7d-4710-70e9-f4d0-8fc155197f07@xs4all.nl>
- <20191111114615.GA418224@kroah.com>
- <20191111182409.GA20121@arch-vook>
+        Mon, 11 Nov 2019 11:29:19 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:23054 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726878AbfKKQ3T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:29:19 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xABGOcTX022487;
+        Mon, 11 Nov 2019 10:27:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=LA4A7J6Ne2Y8iSl9rFw0dPXecqUpEhjzWKaWvos0f0o=;
+ b=oue6YP5qiYN+D+UQarAK7G2NDFJrU0GWj2njbUpNUTSZQPDvteW6p0LWZuN7e/AJPSdX
+ toGNXGDncHcU+c2Inmryf/ertpuoAgjtx4JMyXR1voAqWPpEJcey7CUBRIpuzmghz/+4
+ 3zKyx+uZaesjPpEYktk3++y5TLXKafvSQ+3Ftw71uz29OtUkNMvCXbb2oe1fQAF4lqiM
+ n5XkZy279pC8Wqm94ZIEqMMbETDVUYEy/6ikGdMdJ/3M+u86FRe5j6mu4prOjXYttD5A
+ 4STv9XPSV8Z36StXpIpW9XfzsvhoqRkicf3u6QZs3sI9y4nUqYlssrJxvJUgg4/XvLxr Ew== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2w5ur2khbk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 11 Nov 2019 10:27:10 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 11 Nov
+ 2019 16:27:08 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 11 Nov 2019 16:27:08 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 696E82A1;
+        Mon, 11 Nov 2019 16:27:08 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 16:27:08 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Michael Walle <michael@walle.cc>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v2] ASoC: wm8904: configure sysclk/FLL automatically
+Message-ID: <20191111162708.GC10439@ediswmail.ad.cirrus.com>
+References: <20191108203152.19098-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191111182409.GA20121@arch-vook>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191108203152.19098-1-michael@walle.cc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=579
+ priorityscore=1501 impostorscore=0 mlxscore=0 clxscore=1015 spamscore=0
+ suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911110149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 06:24:42PM +0000, Omer Shalev wrote:
-> On Mon, Nov 11, 2019 at 12:46:15PM +0100, Greg Kroah-Hartman wrote:
-> > On Sat, Nov 09, 2019 at 12:39:43PM +0100, Hans Verkuil wrote:
-> > > Hi Greg,
-> > > 
-> > > On 11/8/19 9:49 PM, Greg Kroah-Hartman wrote:
-> > > > On Fri, Nov 08, 2019 at 09:50:36PM +0000, Omer Shalev wrote:
-> > > >> The cpai2 driver's mmap implementation wasn't properly check for all
-> > > >> possible offset values. Given a huge offset value , the calculation
-> > > >> start_offset + size can wrap around to a low value and pass the check
-> > > > 
-> > > > I thought we checked that in the core of the kernel now, to keep all
-> > > > drivers from not having to do this type of thing (as they obviously all
-> > > > forgot to.)  Why is this still needed here as well?
-> > > 
-> > > Where is that checked in the core? I couldn't find anything, but I might
-> > > have been looking in the wrong place.
-> > 
-> > Sorry, took me a while to find it.  Look at be83bbf80682 ("mmap:
-> > introduce sane default mmap limits") as I think this should handle the
-> > problem already.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+On Fri, Nov 08, 2019 at 09:31:52PM +0100, Michael Walle wrote:
+> This adds a new mode WM8904_CLK_AUTO which automatically enables the FLL
+> if a frequency different than the MCLK is set.
 > 
-> Thanks Greg. But All other drivers I've seen implement it like that: if(size > total_size || offset >
-> total_size - size). Which I think, is a better way to write this code, and generally more
-> secure. Plus, no extra code is needed (just changing this line).
+> These additions make the codec work with the simple-card driver in
+> general and especially in systems where the MCLK doesn't match the
+> required clock.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
 
-The point of the above commit that is in the tree is that no driver has
-to do this check at all, it's already been done before the driver ever
-gets called, right?
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-So yes, there's lots of history of drivers doing the check themselves
-(and getting it wrong as you point out), but that should not matter
-anymore.
-
-Can you verify that your change isn't even needed due to the above
-mentioned core check for valid values?
-
-thanks,
-
-greg k-h
+Thanks,
+Charles
