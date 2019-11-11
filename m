@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69258C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5F3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3648521783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0974D20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498603;
-	bh=P0xW9POmQTznkNapmDxgM+/xOySToWOv2Nm0fg7d5sw=;
+	s=default; t=1573498608;
+	bh=CKpL9Mzfne8s7/6HlpgrHeezbAsQHaYqTZTaJ60r60Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+OrJHlB4VvdzxiAccKe1cTyyl53iC3TCe5R+yGEG67+WpEytHJg1Xsm268GfvRCK
-	 ILFoCHRPszlXeO/ympgUcGQN+XuDQlCUUp+wXTKkRKfYX8NXqx/PBspg+pVi+nHQfY
-	 /bGKa+iezQjOBHBiJ0GuIAfVBLI0ih3NhW9NL81M=
+	b=GkPCoM3gYcENzc4XRHiL++V2ecRX+5EjChBA/8ng6qd1nbWijAwB+p5Wlec+liF9C
+	 jP1LM2ohzGNiFPasrvfG7G7rW1M2ViFWbelVLyCJz2RzLHM9abhZmZ6DKZaC944nLZ
+	 5JT/UrtlbRZgbfYSyVRg3Z2nXCiZTyq8fI7JJgJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbfKKS4l (ORCPT
+        id S1729941AbfKKS4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:56:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:56:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfKKS4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:56:36 -0500
+        id S1729594AbfKKS4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:56:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0631E20818;
-        Mon, 11 Nov 2019 18:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF86620818;
+        Mon, 11 Nov 2019 18:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498595;
-        bh=P0xW9POmQTznkNapmDxgM+/xOySToWOv2Nm0fg7d5sw=;
+        s=default; t=1573498602;
+        bh=CKpL9Mzfne8s7/6HlpgrHeezbAsQHaYqTZTaJ60r60Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ky32dlcD+PJXxtygRHqz9GVq83MXsmGS+1bw6ZTvXJ9a8KoenidIxPKCCVE03S97W
-         tchvyMNFUgp5UsS7K7fPgrKQ8VLNl+ivpUtFxvx2OZ1Yf/3FSmiirFcfWhKO+m6Jxx
-         fyjpe1PXrjvKS0/5M4XexXI6XzesdtSyVwZOY+sY=
+        b=OT6giaG3TpF+XlJLlNVv3G5YjrQSjCzmlMH94CnGhnGEyQjGNGkK3IUjFdYv5W+Ly
+         HPukxftoA59MImMO1W57j6pE7Rvg88PTYnd0JAFSEwGv8c9A+Gr+6bPObkWnbnQ8Tx
+         pfkleUBNCSuPheTSB87Ri/2JYT577ZZU5xBVaT1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Jun Lei <Jun.Lei@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 166/193] drm/amdgpu: If amdgpu_ib_schedule fails return back the error.
-Date:   Mon, 11 Nov 2019 19:29:08 +0100
-Message-Id: <20191111181513.370232254@linuxfoundation.org>
+Subject: [PATCH 5.3 168/193] drm/amd/display: add 50us buffer as WA for pstate switch in active
+Date:   Mon, 11 Nov 2019 19:29:10 +0100
+Message-Id: <20191111181513.523629386@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -62,42 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+From: Jun Lei <Jun.Lei@amd.com>
 
-[ Upstream commit 57c0f58e9f562089de5f0b60da103677d232374c ]
+[ Upstream commit 7c37d399c2b84d4b79de4d512a38373f1d71ab90 ]
 
-Use ERR_PTR to return back the error happened during amdgpu_ib_schedule.
-
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Jun Lei <Jun.Lei@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_job.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dml/dcn20/display_mode_vba_20.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-index 9d76e0923a5a3..96b2a31ccfed3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-@@ -218,7 +218,7 @@ static struct dma_fence *amdgpu_job_run(struct drm_sched_job *sched_job)
- 	struct amdgpu_ring *ring = to_amdgpu_ring(sched_job->sched);
- 	struct dma_fence *fence = NULL, *finished;
- 	struct amdgpu_job *job;
--	int r;
-+	int r = 0;
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_mode_vba_20.c b/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_mode_vba_20.c
+index 649883777f62a..6c6c486b774a4 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_mode_vba_20.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_mode_vba_20.c
+@@ -2577,7 +2577,8 @@ static void dml20_DISPCLKDPPCLKDCFCLKDeepSleepPrefetchParametersWatermarksAndPer
+ 			mode_lib->vba.MinActiveDRAMClockChangeMargin
+ 					+ mode_lib->vba.DRAMClockChangeLatency;
  
- 	job = to_amdgpu_job(sched_job);
- 	finished = &job->base.s_fence->finished;
-@@ -243,6 +243,8 @@ static struct dma_fence *amdgpu_job_run(struct drm_sched_job *sched_job)
- 	job->fence = dma_fence_get(fence);
- 
- 	amdgpu_job_free_resources(job);
-+
-+	fence = r ? ERR_PTR(r) : fence;
- 	return fence;
- }
- 
+-	if (mode_lib->vba.MinActiveDRAMClockChangeMargin > 0) {
++	if (mode_lib->vba.MinActiveDRAMClockChangeMargin > 50) {
++		mode_lib->vba.DRAMClockChangeWatermark += 25;
+ 		mode_lib->vba.DRAMClockChangeSupport[0][0] = dm_dram_clock_change_vactive;
+ 	} else {
+ 		if (mode_lib->vba.SynchronizedVBlank || mode_lib->vba.NumberOfActivePlanes == 1) {
 -- 
 2.20.1
 
