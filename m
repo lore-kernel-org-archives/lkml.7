@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40D1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56366C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF782184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6E62196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498653;
-	bh=jciIuqN6+XJ0SohuD/SxNfkHQ9OpVxARqL5y9dtpxGw=;
+	s=default; t=1573498660;
+	bh=nRbuoaP0ls5mMuvPlcnbXxC++POTCv9TaXemck2nBYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yKFroEPPKmfMtipFFinzP7Z1FKoRHySeHmJD44EJ28G7b2W3nkMsOI1Jt9ICGEGxw
-	 L2kYX5GYDs5rnlnm4eO0jCULEGgIDVEHX39AKmO72K/JLK4RE8S1pSHLypjAMQIOWc
-	 sCaFGZZcHvdPntiHZbQMvSQfHDJ1HHGwuxSthv+Q=
+	b=ItW6mdF5ip8qpTgjIOATib2wem0CfviGJ4d21lJqA4FFPJsaAJ7Bi0MjcEaev6/Bd
+	 4W+fN0O7VRwCbJLCunhSyoK619yvOqYPRDm8v6aVAH9vT29uuaXLZUhP8rR5VMcRkQ
+	 oMpLqe7F8jf5TobqRyoK66OZ0dpd6z3k41AgXMpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbfKKS5c (ORCPT
+        id S1730478AbfKKS5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:57:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfKKS5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:57:30 -0500
+        id S1729045AbfKKS5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:57:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AFCD222C1;
-        Mon, 11 Nov 2019 18:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A412222C2;
+        Mon, 11 Nov 2019 18:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498649;
-        bh=jciIuqN6+XJ0SohuD/SxNfkHQ9OpVxARqL5y9dtpxGw=;
+        s=default; t=1573498652;
+        bh=nRbuoaP0ls5mMuvPlcnbXxC++POTCv9TaXemck2nBYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+clynyva2d7wCrL1UoFWj3U+fkp2cKm6kA2OEbPyyeaA+spqvgcQ+wUK9V6eG/wx
-         OPdafkbHOJWqroSNs/3m5gob+spbyEmlZkgWcupx99joOJa6rZFtPGvbPB+CaBItnC
-         rRtiPDbSAinNxOVaqxdmJ979Lk6EBhrLxKh4b0hU=
+        b=haFJOXT0WewyYFCKMh18x39cNXism/hLLNnQ4KkMwW+yoyaZTF9Zf/PeqBSL6Crq0
+         deGX4qMiJqqWczqh2cn008DJByFoB9GKrDulcw8zoXoOxDlztZ9jWC3rfEJF6fEEtX
+         kwRuy1QjOd3kePvfeyfzB5unwkwR9Vf7ROqXioxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 180/193] arm64: apply ARM64_ERRATUM_845719 workaround for Brahma-B53 core
-Date:   Mon, 11 Nov 2019 19:29:22 +0100
-Message-Id: <20191111181514.384894649@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dietmar.Eggemann@arm.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, hannes@cmpxchg.org,
+        lizefan@huawei.com, morten.rasmussen@arm.com, qperret@google.com,
+        tj@kernel.org, vincent.guittot@linaro.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 154/193] sched/topology: Dont try to build empty sched domains
+Date:   Mon, 11 Nov 2019 19:28:56 +0100
+Message-Id: <20191111181512.492886334@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,94 +66,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-[ Upstream commit bfc97f9f199cb041cf897af3af096540948cc705 ]
+[ Upstream commit cd1cb3350561d2bf544ddfef76fbf0b1c9c7178f ]
 
-The Broadcom Brahma-B53 core is susceptible to the issue described by
-ARM64_ERRATUM_845719 so this commit enables the workaround to be applied
-when executing on that core.
+Turns out hotplugging CPUs that are in exclusive cpusets can lead to the
+cpuset code feeding empty cpumasks to the sched domain rebuild machinery.
 
-Since there are now multiple entries to match, we must convert the
-existing ARM64_ERRATUM_845719 into an erratum list.
+This leads to the following splat:
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+    Internal error: Oops: 96000004 [#1] PREEMPT SMP
+    Modules linked in:
+    CPU: 0 PID: 235 Comm: kworker/5:2 Not tainted 5.4.0-rc1-00005-g8d495477d62e #23
+    Hardware name: ARM Juno development board (r0) (DT)
+    Workqueue: events cpuset_hotplug_workfn
+    pstate: 60000005 (nZCv daif -PAN -UAO)
+    pc : build_sched_domains (./include/linux/arch_topology.h:23 kernel/sched/topology.c:1898 kernel/sched/topology.c:1969)
+    lr : build_sched_domains (kernel/sched/topology.c:1966)
+    Call trace:
+    build_sched_domains (./include/linux/arch_topology.h:23 kernel/sched/topology.c:1898 kernel/sched/topology.c:1969)
+    partition_sched_domains_locked (kernel/sched/topology.c:2250)
+    rebuild_sched_domains_locked (./include/linux/bitmap.h:370 ./include/linux/cpumask.h:538 kernel/cgroup/cpuset.c:955 kernel/cgroup/cpuset.c:978 kernel/cgroup/cpuset.c:1019)
+    rebuild_sched_domains (kernel/cgroup/cpuset.c:1032)
+    cpuset_hotplug_workfn (kernel/cgroup/cpuset.c:3205 (discriminator 2))
+    process_one_work (./arch/arm64/include/asm/jump_label.h:21 ./include/linux/jump_label.h:200 ./include/trace/events/workqueue.h:114 kernel/workqueue.c:2274)
+    worker_thread (./include/linux/compiler.h:199 ./include/linux/list.h:268 kernel/workqueue.c:2416)
+    kthread (kernel/kthread.c:255)
+    ret_from_fork (arch/arm64/kernel/entry.S:1167)
+    Code: f860dae2 912802d6 aa1603e1 12800000 (f8616853)
+
+The faulty line in question is:
+
+  cap = arch_scale_cpu_capacity(cpumask_first(cpu_map));
+
+and we're not checking the return value against nr_cpu_ids (we shouldn't
+have to!), which leads to the above.
+
+Prevent generate_sched_domains() from returning empty cpumasks, and add
+some assertion in build_sched_domains() to scream bloody murder if it
+happens again.
+
+The above splat was obtained on my Juno r0 with the following reproducer:
+
+  $ cgcreate -g cpuset:asym
+  $ cgset -r cpuset.cpus=0-3 asym
+  $ cgset -r cpuset.mems=0 asym
+  $ cgset -r cpuset.cpu_exclusive=1 asym
+
+  $ cgcreate -g cpuset:smp
+  $ cgset -r cpuset.cpus=4-5 smp
+  $ cgset -r cpuset.mems=0 smp
+  $ cgset -r cpuset.cpu_exclusive=1 smp
+
+  $ cgset -r cpuset.sched_load_balance=0 .
+
+  $ echo 0 > /sys/devices/system/cpu/cpu4/online
+  $ echo 0 > /sys/devices/system/cpu/cpu5/online
+
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Dietmar.Eggemann@arm.com
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: hannes@cmpxchg.org
+Cc: lizefan@huawei.com
+Cc: morten.rasmussen@arm.com
+Cc: qperret@google.com
+Cc: tj@kernel.org
+Cc: vincent.guittot@linaro.org
+Fixes: 05484e098448 ("sched/topology: Add SD_ASYM_CPUCAPACITY flag detection")
+Link: https://lkml.kernel.org/r/20191023153745.19515-2-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm64/silicon-errata.rst |  3 +++
- arch/arm64/include/asm/cputype.h       |  2 ++
- arch/arm64/kernel/cpu_errata.c         | 13 +++++++++++--
- 3 files changed, 16 insertions(+), 2 deletions(-)
+ kernel/cgroup/cpuset.c  | 3 ++-
+ kernel/sched/topology.c | 5 ++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
-index 47feda6c15bcc..8c87c68dcc324 100644
---- a/Documentation/arm64/silicon-errata.rst
-+++ b/Documentation/arm64/silicon-errata.rst
-@@ -91,6 +91,9 @@ stable kernels.
- | ARM            | MMU-500         | #841119,826419  | N/A                         |
- +----------------+-----------------+-----------------+-----------------------------+
- +----------------+-----------------+-----------------+-----------------------------+
-+| Broadcom       | Brahma-B53      | N/A             | ARM64_ERRATUM_845719        |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX ITS    | #22375,24313    | CAVIUM_ERRATUM_22375        |
- +----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX ITS    | #23144          | CAVIUM_ERRATUM_23144        |
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index b1454d117cd2c..aca07c2f6e6e3 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -79,6 +79,7 @@
- #define CAVIUM_CPU_PART_THUNDERX_83XX	0x0A3
- #define CAVIUM_CPU_PART_THUNDERX2	0x0AF
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 5aa37531ce76f..a8122c405603b 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -786,7 +786,8 @@ static int generate_sched_domains(cpumask_var_t **domains,
+ 		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+ 			continue;
  
-+#define BRCM_CPU_PART_BRAHMA_B53	0x100
- #define BRCM_CPU_PART_VULCAN		0x516
+-		if (is_sched_load_balance(cp))
++		if (is_sched_load_balance(cp) &&
++		    !cpumask_empty(cp->effective_cpus))
+ 			csa[csn++] = cp;
  
- #define QCOM_CPU_PART_FALKOR_V1		0x800
-@@ -105,6 +106,7 @@
- #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
- #define MIDR_THUNDERX_83XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_83XX)
- #define MIDR_CAVIUM_THUNDERX2 MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX2)
-+#define MIDR_BRAHMA_B53 MIDR_CPU_MODEL(ARM_CPU_IMP_BRCM, BRCM_CPU_PART_BRAHMA_B53)
- #define MIDR_BRCM_VULCAN MIDR_CPU_MODEL(ARM_CPU_IMP_BRCM, BRCM_CPU_PART_VULCAN)
- #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR_V1)
- #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR)
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 4465be78ee466..d9da4201ba858 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -743,6 +743,16 @@ static const struct midr_range erratum_1418040_list[] = {
- };
- #endif
+ 		/* skip @cp's subtree if not a partition root */
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index f751ce0b783e5..1906edb44d63c 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1927,7 +1927,7 @@ next_level:
+ static int
+ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *attr)
+ {
+-	enum s_alloc alloc_state;
++	enum s_alloc alloc_state = sa_none;
+ 	struct sched_domain *sd;
+ 	struct s_data d;
+ 	struct rq *rq = NULL;
+@@ -1935,6 +1935,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+ 	struct sched_domain_topology_level *tl_asym;
+ 	bool has_asym = false;
  
-+#ifdef CONFIG_ARM64_ERRATUM_845719
-+static const struct midr_range erratum_845719_list[] = {
-+	/* Cortex-A53 r0p[01234] */
-+	MIDR_REV_RANGE(MIDR_CORTEX_A53, 0, 0, 4),
-+	/* Brahma-B53 r0p[0] */
-+	MIDR_REV(MIDR_BRAHMA_B53, 0, 0),
-+	{},
-+};
-+#endif
++	if (WARN_ON(cpumask_empty(cpu_map)))
++		goto error;
 +
- const struct arm64_cpu_capabilities arm64_errata[] = {
- #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
- 	{
-@@ -783,10 +793,9 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- #endif
- #ifdef CONFIG_ARM64_ERRATUM_845719
- 	{
--	/* Cortex-A53 r0p[01234] */
- 		.desc = "ARM erratum 845719",
- 		.capability = ARM64_WORKAROUND_845719,
--		ERRATA_MIDR_REV_RANGE(MIDR_CORTEX_A53, 0, 0, 4),
-+		ERRATA_MIDR_RANGE_LIST(erratum_845719_list),
- 	},
- #endif
- #ifdef CONFIG_CAVIUM_ERRATUM_23154
+ 	alloc_state = __visit_domain_allocation_hell(&d, cpu_map);
+ 	if (alloc_state != sa_rootdomain)
+ 		goto error;
 -- 
 2.20.1
 
