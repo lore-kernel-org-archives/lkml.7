@@ -2,116 +2,102 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF74C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9550EC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C3C214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEWMCqgg"
+	by mail.kernel.org (Postfix) with ESMTP id 74CBE214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKKKJo (ORCPT
+        id S1727002AbfKKKK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:09:44 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37425 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKKKJn (ORCPT
+        Mon, 11 Nov 2019 05:10:29 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:46443 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfKKKK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:09:43 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t1so13943482wrv.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 02:09:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=q1gcdAuprbatyWKkiOOKDI/wj2JLtRiEXlBcqAh4zX4=;
-        b=rEWMCqggEUDE7cVXtoWuQexxvnbKSDQV6c6U/fkxvFGJm7L4aF1SeWXpAjgAZ7x+Yk
-         WfKOWLDkFrYWNFG0RPV/2Osii2ceVDIJ526aWPkKLacohkDqw/yQEtPLwVWB4PmoZR+n
-         mkVXScsTN6ntyA0myz0WBHaA9xbC/1qVDON0Psf+bj6BcBd6FzL1vLu7qH/fs2ubu56G
-         9sj5EMGDTlfyOUH/z0yBZfVsBS3cLqRIquMy3Ej/bIXSQ6sa26zmWMw58TxwXIBdGt+R
-         40ibglcoJK/qarkFYtWh69f3ScLmDdycMHyCDKZF6pCw9vAhBJ1NSPUQFh6X7CoQt3Oy
-         4XvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=q1gcdAuprbatyWKkiOOKDI/wj2JLtRiEXlBcqAh4zX4=;
-        b=qKPpprrl0JSqfldUmK98nbPEgdnZLt8lj3QNNEnraXctYtr/q13IYygCD3+Hu50h0u
-         IbQIiJJIYYC7T7ePfoAFpnBBUPv47gNQqYbAun5Fv/S2GneUQovWmJ8cWKgUkkoZu30k
-         0sKfQcCd/ia7BA1DoNUoDcoFBSiAB0uBR3lVSH13eMI3O9kURhs5IakkjlHGdwDipJ9r
-         17iQTbX3ILQSu+0wGSGlzkHId6uoCu7y9MI3tcIUQuojyene85VBSb5LVUnf9WQKgUtc
-         7C06iYTLfAU7yjjxmyPhpInX/20TY6Xl/Jws79nHWkOCJi7Jo+qFCqnoi9WooVtO/JQW
-         wvgw==
-X-Gm-Message-State: APjAAAVYQqUicpzOdoeX7qbEN98U2BJiHR2UX7eZmJcqvhN3I9DrZk0j
-        W0RCXhBt/BeKIBSLDEKJ0WUtPw==
-X-Google-Smtp-Source: APXvYqzED02dA+VSYRlFFbMfPRcHWDXKauK0WK6Gg2MePenGPqevIQ+u8VGs6q8usm8QJOEUhROmDg==
-X-Received: by 2002:a5d:4584:: with SMTP id p4mr20886825wrq.345.1573466981232;
-        Mon, 11 Nov 2019 02:09:41 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id 11sm19310682wmb.34.2019.11.11.02.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 02:09:40 -0800 (PST)
-Date:   Mon, 11 Nov 2019 10:09:33 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/5] devicetree: mfd: max14577: Add reference to
- max14040_battery.txt descriptions
-Message-ID: <20191111100933.GE3218@dell>
-References: <20191105095905.GA31721@pi3>
- <20191107031710.5672-1-matheus@castello.eng.br>
- <20191107031710.5672-4-matheus@castello.eng.br>
+        Mon, 11 Nov 2019 05:10:29 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N9d91-1hrUX90ShR-015dsV; Mon, 11 Nov 2019 11:10:26 +0100
+Received: by mail-qt1-f171.google.com with SMTP id r20so986965qtp.13;
+        Mon, 11 Nov 2019 02:10:25 -0800 (PST)
+X-Gm-Message-State: APjAAAWp5mGPBDRxjUb8bwZW7YbOkDgA+TyCfkBGKpjv6I7pRTPXR3/j
+        Kh4e/mRyKtOkUzL4PHkZFeBwf2mZZFOa0iIQi10=
+X-Google-Smtp-Source: APXvYqyqP0GEnKlLDcc3YXGxYPpIsc43oy+/l9orRIfJHYpq8HDGEADC0l7WhZk0kMzg516CeAScWIBjk4MnQDDCwV4=
+X-Received: by 2002:ac8:1908:: with SMTP id t8mr24584774qtj.18.1573467024165;
+ Mon, 11 Nov 2019 02:10:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191107031710.5672-4-matheus@castello.eng.br>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-13-hch@lst.de>
+In-Reply-To: <20191029064834.23438-13-hch@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 Nov 2019 11:10:07 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a28UDPEP7Bqu_wEXsfwSpT-5i30STB2iX3RfxdvbfzrNQ@mail.gmail.com>
+Message-ID: <CAK8P3a28UDPEP7Bqu_wEXsfwSpT-5i30STB2iX3RfxdvbfzrNQ@mail.gmail.com>
+Subject: Re: [PATCH 12/21] arch: rely on asm-generic/io.h for default
+ ioremap_* definitions
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        "moderated list:NIOS2 ARCHITECTURE" 
+        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Ry3F/dh+b1z3bnsQ+UBRP9D/K3Mz/7Ju4+2xCL86KzNyw2dTCJf
+ e9poGQj3rifB+4n2zHUDJR2bT4YBOZ99Ww6lJ803taaMFYDciQmV7FBTtmlnWKZqiBGj5at
+ xlipTkzdIa6iP21zusJMcEKnGQf9+zy8gzfdg+2sjrbPSEMbDVj19UGoKuTfSje6z8ZYhnD
+ ztTAx0Fuyk4d5lLeNPgSA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uDzvIBywqVo=:3NpQWLViLFRhGeSVNjkbVY
+ Bwz6nPtittmtPBWklwQCfn5DpZ1HcX98NVE3Fn1q2B2RD4WAkJnlaiA3JHdhIzauhME8vle9G
+ 33Ay/bZbzOJJEKTyGZrZ9W6ajRHTwpyq0XZV00s4O31g09K4JSX5sXn1563Zz93AFYvazL6GV
+ Vv2ICs6jv/cng1C0JHN9DTj3z7bPgkPs75LD9UXqdymZiYp1+pujYFFAjPdDxFzC76KPfcUak
+ xne2EaAtgIdTVQFNpaEPZt57Yv28urArJyhIkWs2BSoa77QBEqgFg7ufYyNHeG7LEu2RKJ4fW
+ 6xEUwWzi/eWOD9g1M50df33LH7f0YLK/BttLQGj1qVrWHexRf/vCBKFQq04KzPraSoC8AF95x
+ NWR+Wg1P1YjimlNUBgtcL76eyxjpx88jTKMpXnGY5ErgfUruZdb7J+5hfGwUNPBJwZ7Y40oxy
+ wCYU3cziQehzifLVXSFDk/ZjJD1qHXMlhu5zqUUT6QPjWLYhcLXA43bemDyJYSk3ESr3PKqkC
+ GkFCWrY7fG06OtF+5sDLpodKZ9RKp2yrF4GeMYfcjn1WFNenNOIu6AhF+HMUhYXS/KJwkjOtc
+ H6IAQenCm1dMZMCdiAZcWCSETV/UwPa0Y+Wx7HIcdP9aX/l0dbdvEwVXbT7hhXvDaZHJvBgm3
+ cGh/KwAHc9HoQezFUqzo/vDPun0t3sVSib0KWzgAFE/VgOR7Qb1FBPvQdssc22H3pr5eKDUAl
+ E83zpJ+wouG9+G4GHJMlZB+sII/FSGh8HFAvEQRvZnacNwx2QfEENwQTJxdwoMzZ7xBLzlg2w
+ j8QbhO3/ij/s9reO7VdEGCb17ZSrquutOrhUYwe0r5ac/LBgmzRFRND12wjrbDUM6SNrsmotw
+ FhTjtkwvwKbFmDXOEGUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Nov 2019, Matheus Castello wrote:
+On Tue, Oct 29, 2019 at 7:49 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Various architectures that use asm-generic/io.h still defined their
+> own default versions of ioremap_nocache, ioremap_wt and ioremap_wc
+> that point back to plain ioremap directly or indirectly.  Remove these
+> definitions and rely on asm-generic/io.h instead.  For this to work
+> the backup ioremap_* defintions needs to be changed to purely cpp
+> macros instea of inlines to cover for architectures like openrisc
+> that only define ioremap after including <asm-generic/io.h>.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-> max77836 MFD has a fuel gauge that has a low SOC alert feature that is
-> described in Documentation/devicetree/bindings/power/supply/max17040_battery.txt.
-> Adding the reference to de documentation here.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  Documentation/devicetree/bindings/mfd/max14577.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-> index fc6f0f4e8beb..04d790b1513c 100644
-> --- a/Documentation/devicetree/bindings/mfd/max14577.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> @@ -5,6 +5,8 @@ Battery Charger and SFOUT LDO output for powering USB devices. It is
->  interfaced to host controller using I2C.
-> 
->  MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-> +For the description of Fuel Gauge low SOC alert interrupt see:
-> +Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-
-I would prefer the use of relative paths in documentation.
-
-Once fixed, please apply my:
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
