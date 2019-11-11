@@ -2,91 +2,89 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B6AC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FF6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA3320818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE4A21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jcc2cAsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfKKTSd (ORCPT
+        id S1727126AbfKKTVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:18:33 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:55351 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfKKTSc (ORCPT
+        Mon, 11 Nov 2019 14:21:37 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40215 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbfKKTVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:18:32 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M1pk0-1iS3Li26zw-002Fgs; Mon, 11 Nov 2019 20:18:30 +0100
-Received: by mail-qt1-f171.google.com with SMTP id o3so16843234qtj.8;
-        Mon, 11 Nov 2019 11:18:30 -0800 (PST)
-X-Gm-Message-State: APjAAAVTJORSwpc1e4OKZwFVLchsIdcNuDMfZTuGgefWoOz1AQONTcdM
-        vFBrOy04wM36dn+hNS7eofp3pE9aM3Bbwtv6zUk=
-X-Google-Smtp-Source: APXvYqwMVw3H+iof+ix+/L2TJ9lLRKjD4R0tC3c40dtcOhrtVO3sEPmg679ulBD5HjGCDawg+phWJyVcA3g8siZqOAA=
-X-Received: by 2002:ac8:18eb:: with SMTP id o40mr27497636qtk.304.1573499909109;
- Mon, 11 Nov 2019 11:18:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20191108203435.112759-1-arnd@arndb.de> <20191108203435.112759-9-arnd@arndb.de>
- <20191111182828.GC57214@dtor-ws>
-In-Reply-To: <20191111182828.GC57214@dtor-ws>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 20:18:12 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1coj4GpwcCgL0rEvZKb4OvktopjRETCNWEwfaLxgbcHQ@mail.gmail.com>
-Message-ID: <CAK8P3a1coj4GpwcCgL0rEvZKb4OvktopjRETCNWEwfaLxgbcHQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] Input: input_event: fix struct padding on sparc64
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:TxRoHKMo2qW71QlQNSP/PK/SfamwG+mthBc1VrRvIyixftshMpd
- 5TArJhIk165GPHIEthUQe/I6ZVXC2pyru/7/ZCaj4T6C8Tso3ylqWcuBxUt5DBM3HVRp7Q1
- wWXAIq1X6PPMliWWQuQP3sipuLlUx6HgowiHw95uAJMAnGkjHfEGQ+aRBhmcIBwgsWX1EUq
- l/SJ5szI7aA/nsoCH3+pg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P3jbIN4wk2o=:yu62QjFqdHZLVZCYL1aChf
- ApgvGBT3NMq6uEL30XfY8BMPTfiHB4RibqozDfMc6OldJ3HHvi6o3y52nKaeq05xNVMWZtBzH
- P4uhlbYHUn2VlPAsz4Hd2rnjY5/5L+V6gCrwAVFkGz7RSnZbUa7wxOQD1TXFindLQIliJSKVF
- EkFaZL16HUmpNmkCmgs6PbYPCSMQUO1UGyLz8ziKXdVnGiEPJASMVBa4VgEjMbEbrB8J3el+N
- yEmQBgcfnw9dG9p961GoCnZOw+oWlg9tZIqYN8ECEsRmvyu8jNXnomPKIZQiLaPMPqFQw4jGG
- ZC72w4cqrGUuSNB9FnBCW1NYzrvluthYrCiaMK9HyYOphY1AubKDc04t6TBq1tQdsm8Stt3s1
- aF6KuW+9QwEEYkOLYEUXohjz5J3JboL/4G3NORQJ0wzlf+tTCAWZtBgPmhEhxRBSw4Nbx/xAj
- cKHdqOXycVZUsK6uWhiYSZo1xh6uE+UbmBWfrF+4jFOK/inrdRdb1+h4O0xeO9j4F+whhywIe
- CphyX8fq0L2zGV0wmQqbcNBmioMV2pqA4DrNTKryVam1atxJtlSG9aPMz9+DaORDytsjz20yJ
- eb3HK3Qgd/Ey8HCyxYsL7+1KPyRZM7xkp7CCfELVtu/v7ka6sX7FDwyInq+/xv/+i51ZZvGpa
- MCnNy80w6nTjDzC85Mqcbl6SaE6ND9Qv09JBT8wjN7JfA1E5NFMd3/00321wc0UaMo58KSjgh
- mN+wvqUjq5aeJtXO7uowLKlSFrrEq+PCl5BjAUzmLHczeFx+jvAB94wSjoYqa7OA3UZDLZdNk
- 1546pWVrmvrG0ilFQkKxrdty9y6lUa3+/UzD96ftz0XY8L0aIUmOCbQsuQwhHJmUunzjTJpzY
- 8vM9nsijd8B+Fa4LaudA==
+        Mon, 11 Nov 2019 14:21:36 -0500
+Received: by mail-pf1-f195.google.com with SMTP id r4so11311918pfl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 11:21:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zZILD+44OX1q5dyQzdM2BbgJv0kkr/NqvYdzqJF0VWU=;
+        b=jcc2cAskjWBgTeYwsSv3lvsFyjpx3z/2/dQVMzCjv1lmIFKWhkHxwaMJrmIvvzX4Zr
+         OF/rQM08+qFfbfpDc8ai8eZ0IFQ4+o3hIYKkDKyXMOLL24DVR1C15WLDsCUXefgV4oKA
+         pMO1W8OkboYcq+mtU/Rj1PxtqnJR3JahYQwmQeCGRHFcMGdwDyYM2RtjQwMqyZJKryNL
+         Ax08rcC/xS5IEgOE60HRwPIja/rZ2eeyJTh3DI9MAGLckAXXO4Tr5GPKw9R3kv6Kq3ye
+         lYqLrULR/t+MCbEALuBHLQJacFwZUVEGlAqbpTSFu5C3nv2uCt0XwGTOVxA099KQGn/h
+         IfUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zZILD+44OX1q5dyQzdM2BbgJv0kkr/NqvYdzqJF0VWU=;
+        b=PzH+oNwo8ISmvLHHsMnbIRgrj5RhWJj1RrCvdGdvIVkcaDNHbESVGtfkexubS/dQaG
+         3CE7d+C9IeUHZ4x3McXvSwB9swVWpYQcgtAm2cfEn1A/02NTvc56AJRMtqPuW4l5gSie
+         QRjWyuWcz9cMnyS1hLuW6x8D0EH76VTER/HKkWzV8rCG7jmigfY/++rLMZ/Vt8pGAAQq
+         d3IXmK5OwKlklRi482A7VQZy/vqRBf1bgBlsVpK5kG9qO5eBAGLTkMfG2xd18ob/Rgp0
+         OZfwrnGjCSe0GFipCVzE+CRnaErMtAk3jTZYuJ+AorZnn+BVy49WuLc1/JkOzABiAuCg
+         nE4w==
+X-Gm-Message-State: APjAAAVYcVKHTE3umiyK8swz8+zvVgBjLkUV5w400b0+rh5AQ205pKzo
+        3+xs8zwlsbtTMcJv8xBagBM+eKnEG6+fmQ==
+X-Google-Smtp-Source: APXvYqzvHgUVjW/Rd7K/W+r2O5+4vx7SxfEQkH5rCRHJfWJtzF7eQkUWs7LcfgNd2hnpOUHjHrobqg==
+X-Received: by 2002:a17:90a:2623:: with SMTP id l32mr861971pje.70.1573500094683;
+        Mon, 11 Nov 2019 11:21:34 -0800 (PST)
+Received: from localhost ([49.248.192.129])
+        by smtp.gmail.com with ESMTPSA id v24sm4331651pfn.53.2019.11.11.11.21.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Nov 2019 11:21:33 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH 0/3] thermal: tsens: Handle critical interrupts
+Date:   Tue, 12 Nov 2019 00:51:26 +0530
+Message-Id: <cover.1573499020.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 7:28 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog support
+in case the FSM is frozen. Enable support in the driver.
 
-> I do not like ifdefs here, do you think we could write:
->
->                 client->buffer[client->tail] = (struct input_event) {
->                         .input_event_sec = event->input_event_sec,
->                         .input_event_usec = event->input_event_usec,
->                         .type = EV_SYN,
->                         .code = SYN_DROPPED,
->                 };
->
-> to ensure all padded fields are initialized? This is not hot path as we
-> do not expect queue to overfill too often.
+Amit Kucheria (3):
+  drivers: thermal: tsens: Add critical interrupt support
+  drivers: thermal: tsens: Add watchdog support
+  arm64: dts: sdm845: thermal: Add critical interrupt support
 
-Good idea, changed both instances now. Thanks for taking a look!
+ arch/arm64/boot/dts/qcom/sdm845.dtsi |  10 +-
+ drivers/thermal/qcom/tsens-common.c  | 170 +++++++++++++++++++++++++--
+ drivers/thermal/qcom/tsens-v2.c      |  18 ++-
+ drivers/thermal/qcom/tsens.c         |  21 ++++
+ drivers/thermal/qcom/tsens.h         |  85 ++++++++++++++
+ 5 files changed, 289 insertions(+), 15 deletions(-)
 
-      Arnd
+-- 
+2.17.1
+
