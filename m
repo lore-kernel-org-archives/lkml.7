@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFC1C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549CCC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A219321783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234FA21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498031;
-	bh=tMSlTZeITOMBO+19vFLa2Z7xTvijr+tIOOrFZPPkRV4=;
+	s=default; t=1573498035;
+	bh=kTmUC/kT/1UyJ9+YbANHS2wxCM4gFA/irWodXxNT4e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QAQ0iKCqZUtPnYbBnC31A7FQc5UnQ8vItX8HZHUIxhgxhgYSoZXPVDi42ZHr4GjMa
-	 gQbZ76+CStHmK1PziyNEOERxRG75Ki3U6mbwfjVVQ2WHqu2t6oYgUCY0oLOZG0n9RD
-	 itYg0pMcD/ZZ1fFb1NMHAyYAuLlJKtfW7nsx2og8=
+	b=m9PS+ShCJT6zofJzdroacr1LZhGhfdptXzZWDlOMkmliftSZi4U63229hT1FqZ8Am
+	 oJLZAsJf4K/Zj0Hcg6rSlDck9GqsxPuM4FZpM/dzzbh31o6/KlpN/yHvAktGihGWld
+	 5zmvm1zDslQ9lr8nHu+te4v0B9hCwIlThkkVVLqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbfKKSrK (ORCPT
+        id S1730083AbfKKSrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:47:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:47:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730026AbfKKSrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:47:05 -0500
+        id S1730072AbfKKSrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:47:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0737121655;
-        Mon, 11 Nov 2019 18:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AE8420659;
+        Mon, 11 Nov 2019 18:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498024;
-        bh=tMSlTZeITOMBO+19vFLa2Z7xTvijr+tIOOrFZPPkRV4=;
+        s=default; t=1573498028;
+        bh=kTmUC/kT/1UyJ9+YbANHS2wxCM4gFA/irWodXxNT4e4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jDtFf0nUrGL1C45gS5KSlQAsBA5kVwaTKckue9eB41kmmgI5LDvjzsYusIsn2W7Wm
-         BcoVE/eTyKB8CjPGizjezl3fgnvQnsuZBCj5SdYDXpvi1XhvPhWX1dpv16H4CfF9B1
-         0GsazpciujaEdhDaFGkV5/EsaJ2MKgobgTpdXZno=
+        b=W1DQIu/w8DkDRVP7JUPUcupmaodhB+8a87+5BdEPAfRuhI1UqxXAdZcENJIHajL4e
+         UYesyl6gopIp4IFcS5Nt/Tlg7ci1A3FOvNt3LmO3AqyfVVDfmHOASfIR2aMMtwNp/V
+         RwPIPkzn0fninhQpNFbzipFcU8DokrXcZ3054v2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Simon Horman <horms@verge.net.au>,
+        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 086/125] ipvs: move old_secure_tcp into struct netns_ipvs
-Date:   Mon, 11 Nov 2019 19:28:45 +0100
-Message-Id: <20191111181451.622366905@linuxfoundation.org>
+Subject: [PATCH 4.19 077/125] net/mlx5e: TX, Fix consumer index of error cqe dump
+Date:   Mon, 11 Nov 2019 19:28:36 +0100
+Message-Id: <20191111181450.396864099@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -61,115 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit c24b75e0f9239e78105f81c5f03a751641eb07ef ]
+[ Upstream commit 61ea02d2c13106116c6e4916ac5d9dd41151c959 ]
 
-syzbot reported the following issue :
+The completion queue consumer index increments upon a call to
+mlx5_cqwq_pop().
+When dumping an error CQE, the index is already incremented.
+Decrease one for the print command.
 
-BUG: KCSAN: data-race in update_defense_level / update_defense_level
-
-read to 0xffffffff861a6260 of 4 bytes by task 3006 on cpu 1:
- update_defense_level+0x621/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:177
- defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-write to 0xffffffff861a6260 of 4 bytes by task 7333 on cpu 0:
- update_defense_level+0xa62/0xb30 net/netfilter/ipvs/ip_vs_ctl.c:205
- defense_work_handler+0x3d/0xd0 net/netfilter/ipvs/ip_vs_ctl.c:225
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 7333 Comm: kworker/0:5 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events defense_work_handler
-
-Indeed, old_secure_tcp is currently a static variable, while it
-needs to be a per netns variable.
-
-Fixes: a0840e2e165a ("IPVS: netns, ip_vs_ctl local vars moved to ipvs struct.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
+Fixes: 16cc14d81733 ("net/mlx5e: Dump xmit error completions")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h            |  1 +
- net/netfilter/ipvs/ip_vs_ctl.c | 15 +++++++--------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 0e3c0d83bd991..af0ede9ad4d0b 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -885,6 +885,7 @@ struct netns_ipvs {
- 	struct delayed_work	defense_work;   /* Work handler */
- 	int			drop_rate;
- 	int			drop_counter;
-+	int			old_secure_tcp;
- 	atomic_t		dropentry;
- 	/* locks in ctl.c */
- 	spinlock_t		dropentry_lock;  /* drop entry handling */
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index b2134c3894289..c339b5e386b78 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -98,7 +98,6 @@ static bool __ip_vs_addr_is_local_v6(struct net *net,
- static void update_defense_level(struct netns_ipvs *ipvs)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index 0b03d65474e93..73dce92c41c44 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -462,7 +462,10 @@ netdev_tx_t mlx5e_xmit(struct sk_buff *skb, struct net_device *dev)
+ static void mlx5e_dump_error_cqe(struct mlx5e_txqsq *sq,
+ 				 struct mlx5_err_cqe *err_cqe)
  {
- 	struct sysinfo i;
--	static int old_secure_tcp = 0;
- 	int availmem;
- 	int nomem;
- 	int to_change = -1;
-@@ -179,35 +178,35 @@ static void update_defense_level(struct netns_ipvs *ipvs)
- 	spin_lock(&ipvs->securetcp_lock);
- 	switch (ipvs->sysctl_secure_tcp) {
- 	case 0:
--		if (old_secure_tcp >= 2)
-+		if (ipvs->old_secure_tcp >= 2)
- 			to_change = 0;
- 		break;
- 	case 1:
- 		if (nomem) {
--			if (old_secure_tcp < 2)
-+			if (ipvs->old_secure_tcp < 2)
- 				to_change = 1;
- 			ipvs->sysctl_secure_tcp = 2;
- 		} else {
--			if (old_secure_tcp >= 2)
-+			if (ipvs->old_secure_tcp >= 2)
- 				to_change = 0;
- 		}
- 		break;
- 	case 2:
- 		if (nomem) {
--			if (old_secure_tcp < 2)
-+			if (ipvs->old_secure_tcp < 2)
- 				to_change = 1;
- 		} else {
--			if (old_secure_tcp >= 2)
-+			if (ipvs->old_secure_tcp >= 2)
- 				to_change = 0;
- 			ipvs->sysctl_secure_tcp = 1;
- 		}
- 		break;
- 	case 3:
--		if (old_secure_tcp < 2)
-+		if (ipvs->old_secure_tcp < 2)
- 			to_change = 1;
- 		break;
- 	}
--	old_secure_tcp = ipvs->sysctl_secure_tcp;
-+	ipvs->old_secure_tcp = ipvs->sysctl_secure_tcp;
- 	if (to_change >= 0)
- 		ip_vs_protocol_timeout_change(ipvs,
- 					      ipvs->sysctl_secure_tcp > 1);
+-	u32 ci = mlx5_cqwq_get_ci(&sq->cq.wq);
++	struct mlx5_cqwq *wq = &sq->cq.wq;
++	u32 ci;
++
++	ci = mlx5_cqwq_ctr2ix(wq, wq->cc - 1);
+ 
+ 	netdev_err(sq->channel->netdev,
+ 		   "Error cqe on cqn 0x%x, ci 0x%x, sqn 0x%x, syndrome 0x%x, vendor syndrome 0x%x\n",
 -- 
 2.20.1
 
