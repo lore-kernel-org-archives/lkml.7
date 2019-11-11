@@ -2,109 +2,109 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27D8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2BEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A9B2196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D73821925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GNzzqjZE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcidApTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfKKOP5 (ORCPT
+        id S1727047AbfKKOQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:15:57 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47148 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726853AbfKKOP5 (ORCPT
+        Mon, 11 Nov 2019 09:16:09 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41815 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfKKOQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:15:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573481756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y3WDQ1uC4gfTvXKgZQUE0k17gaSPZ7fT5q8w1d8GJzg=;
-        b=GNzzqjZESPdVVRz/Uk4eNXaMYJDsNPWn6/+dcxaqTKqKCjSjA/ZU5v2ntUdHXWEWVqkMbU
-        P5ydaAWirBmDprO1ln3Clf7TfCoR89v/K4HmUJzP3AOqrYgznfaOdhlyOlBgayTf8qxmQO
-        QwduFb4Gnf1XVCYYfI2nKhP3vbgqlvw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-9gJXOk2dNn6w9ytHuqfzag-1; Mon, 11 Nov 2019 09:15:53 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 744D48C68D7;
-        Mon, 11 Nov 2019 14:15:51 +0000 (UTC)
-Received: from treble (ovpn-122-108.rdu2.redhat.com [10.10.122.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D554160852;
-        Mon, 11 Nov 2019 14:15:44 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 08:15:42 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Subject: Re: [PATCH 00/10] ftrace: Add register_ftrace_direct()
-Message-ID: <20191111141542.dmr3l3gugcir3poh@treble>
-References: <20191108212834.594904349@goodmis.org>
- <20191108225100.ea3bhsbdf6oerj6g@treble>
- <20191111084728.GO4131@hirez.programming.kicks-ass.net>
+        Mon, 11 Nov 2019 09:16:09 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p26so10783924pfq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:16:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=febfKlWJi5gGxYdmeWZw4Fi5Cx8ThIzR9wUIWuDizCE=;
+        b=dcidApTOUPNVuSFDYFLRSDVmUaujchonwjxB3OPh3A8fUBSMjJ1VijN6wTxjziztJ3
+         mMfB+A9a6kbau0dpDL15pcCI4gsrXB3ITA0mQ+ZxnFb/ql20jhYY1ZjqWVhp40kaQz1o
+         8H+YWXud1Pd6HQhbT4SSOQ59OQr6M6n7rRbikjvv632blP/8RGM70rCTdDkAkRz7JV7k
+         oJ3LCt9MvQRCX3Ut75e0mjcdhtthxh1zH9G9yPxpFLLLtLPi+rkRWwqKnQmvV/fhXquy
+         +mvPG8CnJL7MNS40XwnttmrXtPzkbUwiSwsP3IZtdFZ6ni2BfmvE42ABruSG65PYhbh6
+         VgWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=febfKlWJi5gGxYdmeWZw4Fi5Cx8ThIzR9wUIWuDizCE=;
+        b=EMvx5/vm32vkjMl0OViVq6ciQo+RMNjg1CTgoMLe11Tky2g7sR4vDNO7bWoA8LWj8R
+         LFA/g63q35zmRXv6D1Mu2zwQ0EM7bEhlmnUE+ecN4rLiMMrncexIqqXmi2gn99ykrG34
+         Rcm9+/sumtH8pXYe4ViBxe05rsPP3ShshfAdfDy4njAWHFue8tu90RC/ka7VjGJivyxA
+         v1Oke2oCktqqjpAkLe3pXQH9Mnbix+mTyLb9BPxCLygtYxcMrtTRDnkQP2CWVOqGTqkm
+         srEZE+b+OBxD60Vti5A4fquV36dKzh4jefnttbxEcNIXTrX7IVo9443unN7Xa3xLvhPI
+         se8Q==
+X-Gm-Message-State: APjAAAXOjbAjNzajK0i0SK6HFAvpykWEiAj9J2h6+V5vM4FD/cYB/QYN
+        rMyDgdfc7Yq7s2NkCn9sEQADsvNt
+X-Google-Smtp-Source: APXvYqwKi/pjpY+1q9oCaxglZOH6Jtmslpke/PA4yi6SHCxe0djIH9S8SnYfqxtXvP4AihM0ZUNDpg==
+X-Received: by 2002:a17:90a:9741:: with SMTP id i1mr35005987pjw.41.1573481768634;
+        Mon, 11 Nov 2019 06:16:08 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u8sm3700134pga.47.2019.11.11.06.16.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Nov 2019 06:16:07 -0800 (PST)
+Subject: Re: [PATCH -next] fsi: aspeed: Use devm_kfree in
+ aspeed_master_release()
+To:     YueHaibing <yuehaibing@huawei.com>, jk@ozlabs.org, joel@jms.id.au,
+        eajames@linux.ibm.com, andrew@aj.id.au
+Cc:     linux-aspeed@lists.ozlabs.org, alistair@popple.id.au,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsi@lists.ozlabs.org
+References: <20191109033209.45244-1-yuehaibing@huawei.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <62eacd00-300c-bc3e-b680-605bd0b7a983@roeck-us.net>
+Date:   Mon, 11 Nov 2019 06:16:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191111084728.GO4131@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 9gJXOk2dNn6w9ytHuqfzag-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191109033209.45244-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:47:28AM +0100, Peter Zijlstra wrote:
-> On Fri, Nov 08, 2019 at 04:51:00PM -0600, Josh Poimboeuf wrote:
->=20
-> > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Subject: [PATCH] ftrace/x86: Tell objtool to ignore nondeterministic ft=
-race stack layout
-> >=20
-> > Objtool complains about the new ftrace direct trampoline code:
-> >=20
-> >   arch/x86/kernel/ftrace_64.o: warning: objtool: ftrace_regs_caller()+0=
-x190: stack state mismatch: cfa1=3D7+16 cfa2=3D7+24
-> >=20
-> > Typically, code has a deterministic stack layout, such that at a given
-> > instruction address, the stack frame size is always the same.
-> >=20
-> > That's not the case for the new ftrace_regs_caller() code after it
-> > adjusts the stack for the direct case.  Just plead ignorance and assume
-> > it's always the non-direct path.  Note this creates a tiny window for
-> > ORC to get confused.
->=20
-> How is that not a problem for livepatch?
+On 11/8/19 7:32 PM, YueHaibing wrote:
+> 'aspeed' is allocted by devm_kfree(), it should not be
+> freed bt kfree().
+> 
+> Fixes: 1edac1269c02 ("fsi: Add ast2600 master driver")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/fsi/fsi-master-aspeed.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
+> index 3dd82dd..0f63eec 100644
+> --- a/drivers/fsi/fsi-master-aspeed.c
+> +++ b/drivers/fsi/fsi-master-aspeed.c
+> @@ -361,7 +361,7 @@ static void aspeed_master_release(struct device *dev)
+>   	struct fsi_master_aspeed *aspeed =
+>   		to_fsi_master_aspeed(dev_to_fsi_master(dev));
+>   
+> -	kfree(aspeed);
+> +	devm_kfree(dev, aspeed);
+>   }
+>   
+>   /* mmode encoders */
+> 
+The memory is attached to the device, and will thus be freed once the device
+is released. Why is the release function needed in the first place ?
 
-If this code were preempted at the point where the ORC data is wrong,
-and then livepatch tried to unwind it, the reliable unwinder would error
-out because it doesn't get all the way to the user-space pt_regs.  Then
-it will just try again later.
-
-I view this as a temporary fix; the code should be restructured to
-follow normal rules.
-
---=20
-Josh
-
+Guenter
