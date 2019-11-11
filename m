@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F164CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36349C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B5220856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D63820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w56mXCzC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XRCUl0nt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKKJZe (ORCPT
+        id S1727141AbfKKJZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:25:34 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35808 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfKKJZd (ORCPT
+        Mon, 11 Nov 2019 04:25:40 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40417 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbfKKJZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:25:33 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 8so12435573wmo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 01:25:30 -0800 (PST)
+        Mon, 11 Nov 2019 04:25:39 -0500
+Received: by mail-wr1-f66.google.com with SMTP id i10so13758646wrs.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 01:25:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=EAGdmecmIYQMbogASNQhQtQecAe8bZ2za4Rdh2+08ME=;
-        b=w56mXCzCV0zuIKf5UgKd73iw22KzOjcm/ewjieo905GNM8iSDbjgrHD9m2hsv4+N/p
-         w3Mrdp0iqj4WQ1ftEYaBeJpjglqxWWNcz+udxPTk7EkuKxVsG1VrLYriVu2Qy/zPxpYf
-         zdpT9yI5Ck0J21noqDhFuBPAhKcW2CzERSW7Yghx7OUbF/hN1Ns78XszQtXvGzy6T39t
-         mC6KK5ZBZpkR3k8WPvTegUKeDltIcVUzVyd7IJnqcBRvH74F3hh3QEv9b+DmzXEqnXQr
-         6RzPTXp4Pp6QzLoHKgzOsZotTPAXj+8X6qaPo+b4Mg473QAe284G+Ntxo8Xhv2Kh6x86
-         Bfww==
+        bh=4p0qtiatlV0SP4T6lSPVHVPXlgHULFnSfHizAyGU0hg=;
+        b=XRCUl0ntONH7UguamnyewxwL8FNRl5jKFpvkjL2XRuqeAejncL98iTV2xLCkpWbQSr
+         xBN25JtyymE8a0XBGrYbJI5pHr8jvfi0oM24AqCtNC6LxJle9FvadHt/1gNdE3v0GMOu
+         PtJMlSAGdQc/4xD3d1HmBJ3IY1rsgmEOP8jxOtf8VMGGc+riDbT9UFXW500Axiv1SEfi
+         0bRZFvpuzSv3jHUUzJhoB9NVmj50aPYp5xy7XWDvbOINxxrUj2MjSW6qg8nReOpGUj5Y
+         dhuqErqUx3hv3Y17uJUEdWu8XNeW9ln1h57kAE62ZheE7LKr2WhsS1Y89TThUjnCQ5uZ
+         cDUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=EAGdmecmIYQMbogASNQhQtQecAe8bZ2za4Rdh2+08ME=;
-        b=gsULx0100NSMNSVIKsjJZL+pcldgQBa718ufKkYXN6gcxdFPBhAlx7rHhS9Og5hu99
-         5rZr5kO9b5IwQDrH04c/rPYN9J4DPOnutq64fpqxqwTWPptthw07pNeRI0vyZvPdDaWg
-         QGd7rwBVcpp2gaU/itN8khh63+bHg8CedgwJcWerTPMqnVQUOMVN7ui57hRZ4P5sQ6Wc
-         MMhj0OFgD9JTOIfo6YgHyN1bU57iuM5yd+c0dwWCLGGcePl3hJC1bj7QCd62jGqdue+o
-         JRAVBNhNteYN5p4VSAO4EIjy0qhFC6EGwxH2AMz77M0qvkMTDlkUDl+MosQH9Q4UTr3S
-         sYTg==
-X-Gm-Message-State: APjAAAXrwZp1tD9x5ZGjCQvPbRHp/1SHfIWtLE69hgKQhYBCPoHXMvvv
-        Hgm9STE+veLPOKfMU6GcdKQ+fA==
-X-Google-Smtp-Source: APXvYqxsuEZoMa82YymohR63zheNj31pQiSiawLEKigrwQP7JSqSDgwgZGuFELRxkBAXjKVnTla1UA==
-X-Received: by 2002:a7b:c95a:: with SMTP id i26mr20598305wml.41.1573464329856;
-        Mon, 11 Nov 2019 01:25:29 -0800 (PST)
+        bh=4p0qtiatlV0SP4T6lSPVHVPXlgHULFnSfHizAyGU0hg=;
+        b=IShoKrCQfTeutUCOouAYXrXHevz4ChT/i0vhKPocoGHsebqQrK1OL+QHcu6fZnqnlK
+         j9LSXFKpBl+CQ3v1xqqYIKVcZdrYEqYkAcTGpBsaQ055Djdh9D77waZk0RaW8+EODjbi
+         +z0HiEalPWG920Smn8Kf03FQqVv/BSF6Jdt7loUSDeSt4vpn1OUwoy1/WIgA7IJZ2f3u
+         EblvZNq5o7JtXIe44B2Z7bsX36G6vbCLd0yicuOoSO6wnXFObt8QaSQHNGlwuAsYGe5y
+         1N/wgutase6isGZJKXRdD6hUIm6RztupJUZDpTEQUf2RWTuwLf/oqm34CQC2bJzRYFMt
+         P4Fw==
+X-Gm-Message-State: APjAAAXGHHJ/Img+6hCW1Pebsl11LmX0XcTxv9Oli5csNlL+2GcabZD8
+        L2qdj4i1CX9DWQhiV1tXfr6cRQ==
+X-Google-Smtp-Source: APXvYqz33HioT48RXV/AkDamtjCdumAIK3ppi3Q+UqUVT538LwYEY3/vW7NqUhgVByAGLe4va+taaA==
+X-Received: by 2002:adf:fa4a:: with SMTP id y10mr15491628wrr.177.1573464337262;
+        Mon, 11 Nov 2019 01:25:37 -0800 (PST)
 Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id c144sm17688300wmd.1.2019.11.11.01.25.29
+        by smtp.gmail.com with ESMTPSA id c144sm17688792wmd.1.2019.11.11.01.25.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 01:25:29 -0800 (PST)
-Date:   Mon, 11 Nov 2019 09:25:21 +0000
+        Mon, 11 Nov 2019 01:25:36 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:25:29 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Kiran Gunda <kgunda@codeaurora.org>
 Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
@@ -68,16 +68,16 @@ Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH V10 5/8] backlight: qcom-wled: Restructure the driver for
- WLED3.
-Message-ID: <20191111092521.GS18902@dell>
+Subject: Re: [PATCH V10 6/8] backlight: qcom-wled: Add support for WLED4
+ peripheral.
+Message-ID: <20191111092529.GT18902@dell>
 References: <1572589624-6095-1-git-send-email-kgunda@codeaurora.org>
- <1572589624-6095-6-git-send-email-kgunda@codeaurora.org>
+ <1572589624-6095-7-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1572589624-6095-6-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <1572589624-6095-7-git-send-email-kgunda@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,14 +86,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, 01 Nov 2019, Kiran Gunda wrote:
 
-> Restructure the driver to add the support for new WLED
-> peripherals.
+> WLED4 peripheral is present on some PMICs like pmi8998 and
+> pm660l. It has a different register map and configurations
+> are also different. Add support for it.
 > 
 > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
->  drivers/video/backlight/qcom-wled.c | 373 ++++++++++++++++++++++--------------
->  1 file changed, 234 insertions(+), 139 deletions(-)
+>  drivers/video/backlight/qcom-wled.c | 255 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 253 insertions(+), 2 deletions(-)
 
 Applied, thanks.
 
