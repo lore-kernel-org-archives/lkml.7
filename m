@@ -2,101 +2,102 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A978EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B17BC17447
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D77206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWfGQJGb"
+	by mail.kernel.org (Postfix) with ESMTP id 7B0EB206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfKKUZB (ORCPT
+        id S1727811AbfKKUZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:25:01 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33122 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKUZB (ORCPT
+        Mon, 11 Nov 2019 15:25:11 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:47769 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfKKUZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:25:01 -0500
-Received: by mail-oi1-f196.google.com with SMTP id m193so12687670oig.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 12:25:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vOfyNjirhZJpCYD/14r+NEmeylR+17cr7FHoRrl56Eg=;
-        b=dWfGQJGbeWaicejJBkwOAjX8oYfy6+0uZOeGW/ISyKeITlGByBW9LZD0ef0cBcubzE
-         5VowYn+IFL3EjC5xJN98eoBJ9cxZurvUFXmKGHv1gMlwUAt2IJQhnG3HCcFE4yDs3pWb
-         XLdbPgHB58v6MJSb7XzlKSm8nHqKiutilSbBjh40Ow8IDfWkiK9Zc47coLaMutfIxTpv
-         xiOAoKCAR3q6SIm1Xx6H30p83uuVTAoIrXdrC6aCa9jLbptNxGMx/X6uQA01wED4UyBo
-         ad+zy/cCPRnzazbtYB2TFdfXk0pT7JRbUbwCY3lgBPQdFIOMfyQqU8r4WxBMICIuDJ57
-         wbYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vOfyNjirhZJpCYD/14r+NEmeylR+17cr7FHoRrl56Eg=;
-        b=SEachN9Lv8vdewPtCXIKMywvx544UHmeOl0aFPKr4zVnucrnp5eFZCp3OPQX3BeRLP
-         IMkTH5vwx7n2eh7tYQq3FQocmt8/6Re9sL4TA+lQOkk24DtgK835JuV0ouL3HMaIdHRS
-         TeXlEnFE+GJeLVC/6IaiFawmCzqlBaZeOQsL7wWszBqWIDT+q7orkKVN0QptEpwW5JPm
-         lFL4wix5vycgDxM+6OC4igoKo9GFysQTHGhiPkn5/xPEdbF24Wmr7iO9bvngD9fK6eGx
-         iYG8asqR4Ah/5pmpQVtvlKwF5CpCnvlf53Hucn+K9UjjamiCShqdfU8zqyBpPslS907+
-         0UlA==
-X-Gm-Message-State: APjAAAVeaQc4gHc51WOF9l4Tolj3lbXMqmhkqLFs+qVZn+SqZb2dL5QP
-        JBrxQ1fAK04gdOIEzA7J00PW571xBkyRg7qvh5/SaQ==
-X-Google-Smtp-Source: APXvYqy1VzfjRJuVb1MDElB7+dHlzd2kffgrpg+vPM+DJzWy3J/vzxZA0hSOvGwfYP2VYVG9yRo/VcuFRjBJ95zHNq8=
-X-Received: by 2002:a05:6808:9a1:: with SMTP id e1mr689381oig.175.1573503899982;
- Mon, 11 Nov 2019 12:24:59 -0800 (PST)
+        Mon, 11 Nov 2019 15:25:11 -0500
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MYNW6-1iQONL2Pbe-00VQFV; Mon, 11 Nov 2019 21:25:09 +0100
+Received: by mail-qt1-f181.google.com with SMTP id y10so17088264qto.3;
+        Mon, 11 Nov 2019 12:25:09 -0800 (PST)
+X-Gm-Message-State: APjAAAV+2PBGLq+67cID09YvSZq+exVi39pbXUyxlF+SDNPVPKakEAJg
+        /81+mKjsn2nJqKINk8cb7OSTp/3sGTdDZedjVLY=
+X-Google-Smtp-Source: APXvYqxYKwc9AQItiNIOwZ2+wxDyN2mshA68mKukz40flGha4d3PjHaLU7oc+tzqqumjcL7RS5kXZzgs7n2BU3mg3Y4=
+X-Received: by 2002:ac8:67d9:: with SMTP id r25mr27768950qtp.7.1573503908430;
+ Mon, 11 Nov 2019 12:25:08 -0800 (PST)
 MIME-Version: 1.0
-References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
- <20191107151941.dw4gtul5lrtax4se@wittgenstein> <2eb2ab4c-b177-29aa-cdc4-420b24cfd7b3@gmail.com>
- <CAG48ez2of684J6suPZpko7JFV6hg5KQsrP0KAn8B8-C3PM9OfQ@mail.gmail.com> <20191111165800.GD7017@mit.edu>
-In-Reply-To: <20191111165800.GD7017@mit.edu>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 11 Nov 2019 21:24:33 +0100
-Message-ID: <CAG48ez3K6g7NSFmeuw-4paqPQTDYmNkZ-nVvufk25EB+Us850w@mail.gmail.com>
-Subject: Re: For review: documentation of clone3() system call
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ingo Molnar <mingo@elte.hu>
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-4-arnd@arndb.de>
+In-Reply-To: <20191108211323.1806194-4-arnd@arndb.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 Nov 2019 21:24:51 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2k-ZHAiCMBHWHvtwRfYqnz7aFGfqSYT8sLSyOf7Dm8Aw@mail.gmail.com>
+Message-ID: <CAK8P3a2k-ZHAiCMBHWHvtwRfYqnz7aFGfqSYT8sLSyOf7Dm8Aw@mail.gmail.com>
+Subject: Re: [PATCH 13/23] y2038: socket: remove timespec reference in timestamping
+To:     y2038 Mailman List <y2038@lists.linaro.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Networking <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mRBSh5cgFckhT9zUEAiAAIs6/5cxzy7bsSmB45MHXVbF7cTR5oG
+ d7z3+vKE+Qe207ONHjMT1yhf1ifvJOvcJItomItB6pPBlNFdbGoNk6WU5k3adlr61gM9M6Z
+ E2d54s5sTnK8cHUI1J4oCEoifT/xSWlcP6xLCsFosvoe7KI2o7w9twpbFoyfsCazEDz9HXT
+ j/x7so+S6Wub4J8QhiNYA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zY3+0hYuvcE=:Q+KyCStI0dTtUZUMMAG01+
+ xa47pkOOOVSBOrKs3IvYlPMpJFmt25hstitgqyY7wYrxLZTfYXylrxKGNv7KAETeu44b1Kbnz
+ 25OBPQpNfDSVcrUEdW4MwQnKqpWO8YajjKZrXKAHLnVSDTARP6jRQMV983uUbURkmcy2ImZMD
+ nkKP9FpLcXT86/EGtRKAyisk0NVqTVaTV3hdBIphCcYBbNrLYA9bgAnDD8CiXdpiXxcuK8rzs
+ iBFCk51YYbjewZKRJoMcSwnL3KQCcA9/JFp672uqp0uRTmz7oeOU1BnaysRSc22mRkNWRH/M2
+ BfJwgxj3ab3EVenLPyttOzfOucOCmJjKuTW+MaoS8jFyv71mo9w1UmQX/odkBZfXySleuFxMI
+ PTvOpDwCtt89ldRaZS89PDcKhyevp/dKnq2OMLNkzp9Q0CRIWzfQMIpEQ2JmUEIF2C2Iuy80y
+ vv6YaJmikkWcq1XpxWWhrrEJKKVv8YKqvjZQXvk9tJQfJYefmb/6rlmffddoai2JSiIv7av5a
+ 36g+neO83AqdtG2xwBYB9SKquhtgja7iA7iHo9Y5+YPclfiRqGJ4CZfA7Uyi2+uL1HBOMa6Op
+ JZhrHbt8lgGGyWUWFtZlYwHmtYFiv0yODjLnJYZ8HnLgL6r07+fG9Si1ANoCXiK5bBtKNp2HB
+ gwm69TWRNbQqlpfFdl7c8tmaiwccWI0Sp7OCMHSv++qwJvqQ+crWK4P5DQPhamLCFb+7/CtqA
+ 0qWWRcriyzqmQbFbHAkqfolJuDMaNOW4TBX8RAPbvMZ6D0nfZZ5rObVltR4UJ0TR9b12E2hD4
+ gSdkaHxC+IRV9rO8/uEW5/ejsTdKHYqilpfKvR+3Ibax3mx71pU23DHgun/oqCT6Gr852LwGp
+ sVahtqQryfXJ4EyT7Suw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 5:58 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> On Mon, Nov 11, 2019 at 03:55:35PM +0100, Jann Horn wrote:
-> > Not on Linux, but on OpenBSD, they do use MAP_STACK now AFAIK; this
-> > was announced here:
-> > <http://openbsd-archive.7691.n7.nabble.com/stack-register-checking-td338238.html>.
-> > Basically they periodically check whether the userspace stack pointer
-> > points into a MAP_STACK region, and if not, they kill the process. So
-> > even if it's a no-op on Linux...
->
-> Hmm, is that something we should do in Linux?  Even if we only check
-> on syscall entry, which should be pretty inexpensive, it seems like it
-> would be very effective in protecting various ROP techniques.
+On Fri, Nov 8, 2019 at 10:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-I'm not a big fan, especially if that would only happen on syscall
-entry; at the point where you have enough control to perform syscalls,
-it probably isn't too difficult to move your ROP stack over to a
-legitimate stack.
+> diff --git a/include/uapi/linux/errqueue.h b/include/uapi/linux/errqueue.h
+> index 28491dac074b..0cca19670fd2 100644
+> --- a/include/uapi/linux/errqueue.h
+> +++ b/include/uapi/linux/errqueue.h
+> @@ -37,9 +37,16 @@ struct sock_extended_err {
+>   *     The timestamping interfaces SO_TIMESTAMPING, MSG_TSTAMP_*
+>   *     communicate network timestamps by passing this struct in a cmsg with
+>   *     recvmsg(). See Documentation/networking/timestamping.txt for details.
+> + *     User space sees a timespec definition that matches either
+> + *     __kernel_timespec or __kernel_old_timespec, in the kernel we
+> + *     require two structure definitions to provide both.
+>   */
+>  struct scm_timestamping {
+> +#ifdef __KERNEL__
+> +       struct __kernel_old_timespec ts[3];
+> +#else
+>         struct timespec ts[3];
+> +#endif
+>  };
+
+The kbuild bot pointed out that the way I sent this series, the use of
+__kernel_old_timespec
+causes a build failure, because I introduce this in a separate submission. I'm
+moving this patch over to the other series, and changing the subject to
+
+y2038: socket: use __kernel_old_timespec instead of timespec
+
+With the expectation of merging it along with the other core patches.
+
+      Arnd
