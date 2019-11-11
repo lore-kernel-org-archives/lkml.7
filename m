@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671BEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E959C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE0620818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9B5214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498412;
-	bh=PqiC49kc30tvGS27xJH3WX24/feVFXmbvnQN0nLxgJ0=;
+	s=default; t=1573498416;
+	bh=5b8/2op+ItCBvm/1g6xyyc4i0Q7+o/zfLH0FOPa8fHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohDHMGPdLR4/nl/Iu4+C7rrSzA2pHsmyVWWM+oQ2AWW4YofBkCJK7zhjOE7rRGQEl
-	 rJRx+ObEiaRwAq9NtoHQO7CvpQGCrnzBii8J6RHqLdc838R2y+Wo7PK/1QpeQr0Oeu
-	 kdOIpPf1V/Rw4J33ga0bDmv7MF7hxNrpn8hobZ/0=
+	b=sViHpQp1LroK5ft98WGVIQ5l4S4jue6n35r4+U8StSVU/xMsdb7JRe+DZzYk7QUJX
+	 ydDHCXrdf/yzmW78+bmIcSgw8bR9WENvZGSc13l82jhL6MDZy3ho8x/7x9qOPSPy7n
+	 30WZLYx78CfDUqwq4iJV2xlCg8LvqmaPwp6Fb8GA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbfKKSxa (ORCPT
+        id S1730382AbfKKSxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:53:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48220 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbfKKSx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:53:26 -0500
+        id S1730389AbfKKSxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:53:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84078204EC;
-        Mon, 11 Nov 2019 18:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C067520818;
+        Mon, 11 Nov 2019 18:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498405;
-        bh=PqiC49kc30tvGS27xJH3WX24/feVFXmbvnQN0nLxgJ0=;
+        s=default; t=1573498409;
+        bh=5b8/2op+ItCBvm/1g6xyyc4i0Q7+o/zfLH0FOPa8fHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xuc/M00klHF1RhOiVf2Sr2ckRCLv4V8otAusOpdOOv5n1UvJBvAmAcwI6Pnfl1TIS
-         8Hmhagjv/4DCOXaYKPuhdrJjUSCj3z13PveHn6ANxyYdH2appftpZXe3OQqzqVo7Ae
-         h6wq8gXWP4FBy7mas9srWuyDMvIoAoL5QRvSyCxw=
+        b=15kwTQ0EGxeXsCO060QdvyRzbZ/gNQ+TNu0FSgJ/pHCgioR8k/vpTBqlNvNXBypUN
+         J2vDpb4u7vk+kUspvzhzUPP1qmAK9pUdjiYjsa44pBQb6a9GeOonRQ4IU81t+aafaU
+         aZoqRHdU8fswqA1+lOJNwGE3WoNWgrTB4YEssnVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.3 070/193] x86/apic/32: Avoid bogus LDR warnings
-Date:   Mon, 11 Nov 2019 19:27:32 +0100
-Message-Id: <20191111181506.275154395@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.3 071/193] SMB3: Fix persistent handles reconnect
+Date:   Mon, 11 Nov 2019 19:27:33 +0100
+Message-Id: <20191111181506.350324816@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,81 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Beulich <jbeulich@suse.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit fe6f85ca121e9c74e7490fe66b0c5aae38e332c3 upstream.
+commit d243af7ab9feb49f11f2c0050d2077e2d9556f9b upstream.
 
-The removal of the LDR initialization in the bigsmp_32 APIC code unearthed
-a problem in setup_local_APIC().
+When the client hits a network reconnect, it re-opens every open
+file with a create context to reconnect a persistent handle. All
+create context types should be 8-bytes aligned but the padding
+was missed for that one. As a result, some servers don't allow
+us to reconnect handles and return an error. The problem occurs
+when the problematic context is not at the end of the create
+request packet. Fix this by adding a proper padding at the end
+of the reconnect persistent handle context.
 
-The code checks unconditionally for a mismatch of the logical APIC id by
-comparing the early APIC id which was initialized in get_smp_config() with
-the actual LDR value in the APIC.
-
-Due to the removal of the bogus LDR initialization the check now can
-trigger on bigsmp_32 APIC systems emitting a warning for every booting
-CPU. This is of course a false positive because the APIC is not using
-logical destination mode.
-
-Restrict the check and the possibly resulting fixup to systems which are
-actually using the APIC in logical destination mode.
-
-[ tglx: Massaged changelog and added Cc stable ]
-
-Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
-Signed-off-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com
+Cc: Stable <stable@vger.kernel.org> # 4.19.x
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/apic.c |   28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ fs/cifs/smb2pdu.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1573,9 +1573,6 @@ static void setup_local_APIC(void)
- {
- 	int cpu = smp_processor_id();
- 	unsigned int value;
--#ifdef CONFIG_X86_32
--	int logical_apicid, ldr_apicid;
--#endif
+--- a/fs/cifs/smb2pdu.h
++++ b/fs/cifs/smb2pdu.h
+@@ -836,6 +836,7 @@ struct create_durable_handle_reconnect_v
+ 	struct create_context ccontext;
+ 	__u8   Name[8];
+ 	struct durable_reconnect_context_v2 dcontext;
++	__u8   Pad[4];
+ } __packed;
  
- 
- 	if (disable_apic) {
-@@ -1616,16 +1613,21 @@ static void setup_local_APIC(void)
- 	apic->init_apic_ldr();
- 
- #ifdef CONFIG_X86_32
--	/*
--	 * APIC LDR is initialized.  If logical_apicid mapping was
--	 * initialized during get_smp_config(), make sure it matches the
--	 * actual value.
--	 */
--	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
--	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
--	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
--	/* always use the value from LDR */
--	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	if (apic->dest_logical) {
-+		int logical_apicid, ldr_apicid;
-+
-+		/*
-+		 * APIC LDR is initialized.  If logical_apicid mapping was
-+		 * initialized during get_smp_config(), make sure it matches
-+		 * the actual value.
-+		 */
-+		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
-+		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
-+		if (logical_apicid != BAD_APICID)
-+			WARN_ON(logical_apicid != ldr_apicid);
-+		/* Always use the value from LDR. */
-+		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	}
- #endif
- 
- 	/*
+ /* See MS-SMB2 2.2.13.2.5 */
 
 
