@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFCBC17441
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852F2C17447
 	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF55222CD
+	by mail.kernel.org (Postfix) with ESMTP id 640B6222C1
 	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfKKWfp (ORCPT
+        id S1727283AbfKKWfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:35:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60010 "EHLO
+        Mon, 11 Nov 2019 17:35:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60016 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfKKWfo (ORCPT
+        with ESMTP id S1726951AbfKKWfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:35:44 -0500
+        Mon, 11 Nov 2019 17:35:46 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iUIHc-0000tU-5M; Mon, 11 Nov 2019 23:35:40 +0100
-Message-Id: <20191111223051.570732877@linutronix.de>
+        id 1iUIHf-0000tp-4o; Mon, 11 Nov 2019 23:35:43 +0100
+Message-Id: <20191111223052.086299881@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 11 Nov 2019 23:03:15 +0100
+Date:   Mon, 11 Nov 2019 23:03:20 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
@@ -34,8 +34,8 @@ Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
         Stephen Hemminger <stephen@networkplumber.org>,
         Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>
-Subject: [patch V2 01/16] x86/ptrace: Prevent truncation of bitmap size
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [patch V2 06/16] x86/io: Speedup schedule out of I/O bitmap user
 References: <20191111220314.519933535@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -46,31 +46,251 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-The active() callback of the IO bitmap regset divides the IO bitmap size by
-the word size (32/64 bit). As the I/O bitmap size is in bytes the active
-check fails for bitmap sizes of 1-3 bytes on 32bit and 1-7 bytes on 64bit.
+There is no requirement to update the TSS I/O bitmap when a thread using it is
+scheduled out and the incoming thread does not use it.
 
-Use DIV_ROUND_UP() instead.
+For the permission check based on the TSS I/O bitmap the CPU calculates the memory
+location of the I/O bitmap by the address of the TSS and the io_bitmap_base member
+of the tss_struct. The easiest way to invalidate the I/O bitmap is to switch the
+offset to an address outside of the TSS limit.
+
+If an I/O instruction is issued from user space the TSS limit causes #GP to be
+raised in the same was as valid I/O bitmap with all bits set to 1 would do.
+
+This removes the extra work when an I/O bitmap using task is scheduled out
+and puts the burden on the rare I/O bitmap users when they are scheduled
+in.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
 
 ---
- arch/x86/kernel/ptrace.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/processor.h |   38 ++++++++++++++++-------
+ arch/x86/kernel/cpu/common.c     |    3 +
+ arch/x86/kernel/doublefault.c    |    2 -
+ arch/x86/kernel/ioport.c         |    7 +++-
+ arch/x86/kernel/process.c        |   63 ++++++++++++++++++++++-----------------
+ 5 files changed, 70 insertions(+), 43 deletions(-)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -697,7 +697,7 @@ static int ptrace_set_debugreg(struct ta
- static int ioperm_active(struct task_struct *target,
- 			 const struct user_regset *regset)
- {
--	return target->thread.io_bitmap_max / regset->size;
-+	return DIV_ROUND_UP(target->thread.io_bitmap_max, regset->size);
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -330,8 +330,23 @@ struct x86_hw_tss {
+ #define IO_BITMAP_BITS			65536
+ #define IO_BITMAP_BYTES			(IO_BITMAP_BITS/8)
+ #define IO_BITMAP_LONGS			(IO_BITMAP_BYTES/sizeof(long))
+-#define IO_BITMAP_OFFSET		(offsetof(struct tss_struct, io_bitmap) - offsetof(struct tss_struct, x86_tss))
+-#define INVALID_IO_BITMAP_OFFSET	0x8000
++
++#define IO_BITMAP_OFFSET_VALID				\
++	(offsetof(struct tss_struct, io_bitmap) -	\
++	 offsetof(struct tss_struct, x86_tss))
++
++/*
++ * sizeof(unsigned long) coming from an extra "long" at the end
++ * of the iobitmap.
++ *
++ * -1? seg base+limit should be pointing to the address of the
++ * last valid byte
++ */
++#define __KERNEL_TSS_LIMIT	\
++	(IO_BITMAP_OFFSET_VALID + IO_BITMAP_BYTES + sizeof(unsigned long) - 1)
++
++/* Base offset outside of TSS_LIMIT so unpriviledged IO causes #GP */
++#define IO_BITMAP_OFFSET_INVALID	(__KERNEL_TSS_LIMIT + 1)
+ 
+ struct entry_stack {
+ 	unsigned long		words[64];
+@@ -350,6 +365,15 @@ struct tss_struct {
+ 	struct x86_hw_tss	x86_tss;
+ 
+ 	/*
++	 * Store the dirty size of the last io bitmap offender. The next
++	 * one will have to do the cleanup as the switch out to a non io
++	 * bitmap user will just set x86_tss.io_bitmap_base to a value
++	 * outside of the TSS limit. So for sane tasks there is no need to
++	 * actually touch the io_bitmap at all.
++	 */
++	unsigned int		io_bitmap_prev_max;
++
++	/*
+ 	 * The extra 1 is there because the CPU will access an
+ 	 * additional byte beyond the end of the IO permission
+ 	 * bitmap. The extra byte must be all 1 bits, and must
+@@ -360,16 +384,6 @@ struct tss_struct {
+ 
+ DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);
+ 
+-/*
+- * sizeof(unsigned long) coming from an extra "long" at the end
+- * of the iobitmap.
+- *
+- * -1? seg base+limit should be pointing to the address of the
+- * last valid byte
+- */
+-#define __KERNEL_TSS_LIMIT	\
+-	(IO_BITMAP_OFFSET + IO_BITMAP_BYTES + sizeof(unsigned long) - 1)
+-
+ /* Per CPU interrupt stacks */
+ struct irq_stack {
+ 	char		stack[IRQ_STACK_SIZE];
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1860,7 +1860,8 @@ void cpu_init(void)
+ 
+ 	/* Initialize the TSS. */
+ 	tss_setup_ist(tss);
+-	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
++	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
++	tss->io_bitmap_prev_max = 0;
+ 	memset(tss->io_bitmap, 0xff, sizeof(tss->io_bitmap));
+ 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+ 
+--- a/arch/x86/kernel/doublefault.c
++++ b/arch/x86/kernel/doublefault.c
+@@ -54,7 +54,7 @@ struct x86_hw_tss doublefault_tss __cach
+ 	.sp0		= STACK_START,
+ 	.ss0		= __KERNEL_DS,
+ 	.ldt		= 0,
+-	.io_bitmap_base	= INVALID_IO_BITMAP_OFFSET,
++	.io_bitmap_base	= IO_BITMAP_OFFSET_INVALID,
+ 
+ 	.ip		= (unsigned long) doublefault_fn,
+ 	/* 0x2 bit is always set */
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -40,8 +40,6 @@ long ksys_ioperm(unsigned long from, uns
+ 			return -ENOMEM;
+ 
+ 		memset(bitmap, 0xff, IO_BITMAP_BYTES);
+-		t->io_bitmap_ptr = bitmap;
+-		set_thread_flag(TIF_IO_BITMAP);
+ 
+ 		/*
+ 		 * Now that we have an IO bitmap, we need our TSS limit to be
+@@ -50,6 +48,11 @@ long ksys_ioperm(unsigned long from, uns
+ 		 * limit correct.
+ 		 */
+ 		preempt_disable();
++		t->io_bitmap_ptr = bitmap;
++		set_thread_flag(TIF_IO_BITMAP);
++		/* Make the bitmap base in the TSS valid */
++		tss = this_cpu_ptr(&cpu_tss_rw);
++		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
+ 		refresh_tss_limit();
+ 		preempt_enable();
+ 	}
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -72,18 +72,9 @@
+ #ifdef CONFIG_X86_32
+ 		.ss0 = __KERNEL_DS,
+ 		.ss1 = __KERNEL_CS,
+-		.io_bitmap_base	= INVALID_IO_BITMAP_OFFSET,
+ #endif
++		.io_bitmap_base	= IO_BITMAP_OFFSET_INVALID,
+ 	 },
+-#ifdef CONFIG_X86_32
+-	 /*
+-	  * Note that the .io_bitmap member must be extra-big. This is because
+-	  * the CPU will access an additional byte beyond the end of the IO
+-	  * permission bitmap. The extra byte must be all 1 bits, and must
+-	  * be within the limit.
+-	  */
+-	.io_bitmap		= { [0 ... IO_BITMAP_LONGS] = ~0 },
+-#endif
+ };
+ EXPORT_PER_CPU_SYMBOL(cpu_tss_rw);
+ 
+@@ -112,18 +103,18 @@ void exit_thread(struct task_struct *tsk
+ 	struct thread_struct *t = &tsk->thread;
+ 	unsigned long *bp = t->io_bitmap_ptr;
+ 	struct fpu *fpu = &t->fpu;
++	struct tss_struct *tss;
+ 
+ 	if (bp) {
+-		struct tss_struct *tss = &per_cpu(cpu_tss_rw, get_cpu());
++		preempt_disable();
++		tss = this_cpu_ptr(&cpu_tss_rw);
+ 
+ 		t->io_bitmap_ptr = NULL;
+-		clear_thread_flag(TIF_IO_BITMAP);
+-		/*
+-		 * Careful, clear this in the TSS too:
+-		 */
+-		memset(tss->io_bitmap, 0xff, t->io_bitmap_max);
+ 		t->io_bitmap_max = 0;
+-		put_cpu();
++		clear_thread_flag(TIF_IO_BITMAP);
++		/* Invalidate the io bitmap base in the TSS */
++		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
++		preempt_enable();
+ 		kfree(bp);
+ 	}
+ 
+@@ -363,29 +354,47 @@ void arch_setup_new_exec(void)
+ 	}
  }
  
- static int ioperm_get(struct task_struct *target,
-
-
+-static inline void switch_to_bitmap(struct thread_struct *prev,
+-				    struct thread_struct *next,
++static inline void switch_to_bitmap(struct thread_struct *next,
+ 				    unsigned long tifp, unsigned long tifn)
+ {
+ 	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
+ 
+ 	if (tifn & _TIF_IO_BITMAP) {
+ 		/*
+-		 * Copy the relevant range of the IO bitmap.
+-		 * Normally this is 128 bytes or less:
++		 * Copy at least the size of the incoming tasks bitmap
++		 * which covers the last permitted I/O port.
++		 *
++		 * If the previous task which used an io bitmap had more
++		 * bits permitted, then the copy needs to cover those as
++		 * well so they get turned off.
+ 		 */
+ 		memcpy(tss->io_bitmap, next->io_bitmap_ptr,
+-		       max(prev->io_bitmap_max, next->io_bitmap_max));
++		       max(tss->io_bitmap_prev_max, next->io_bitmap_max));
++
++		/* Store the new max and set io_bitmap_base valid */
++		tss->io_bitmap_prev_max = next->io_bitmap_max;
++		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
++
+ 		/*
+-		 * Make sure that the TSS limit is correct for the CPU
+-		 * to notice the IO bitmap.
++		 * Make sure that the TSS limit is covering the io bitmap.
++		 * It might have been cut down by a VMEXIT to 0x67 which
++		 * would cause a subsequent I/O access from user space to
++		 * trigger a #GP because tbe bitmap is outside the TSS
++		 * limit.
+ 		 */
+ 		refresh_tss_limit();
+ 	} else if (tifp & _TIF_IO_BITMAP) {
+ 		/*
+-		 * Clear any possible leftover bits:
++		 * Do not touch the bitmap. Let the next bitmap using task
++		 * deal with the mess. Just make the io_bitmap_base invalid
++		 * by moving it outside the TSS limit so any subsequent I/O
++		 * access from user space will trigger a #GP.
++		 *
++		 * This is correct even when VMEXIT rewrites the TSS limit
++		 * to 0x67 as the only requirement is that the base points
++		 * outside the limit.
+ 		 */
+-		memset(tss->io_bitmap, 0xff, prev->io_bitmap_max);
++		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
+ 	}
+ }
+ 
+@@ -599,7 +608,7 @@ void __switch_to_xtra(struct task_struct
+ 
+ 	tifn = READ_ONCE(task_thread_info(next_p)->flags);
+ 	tifp = READ_ONCE(task_thread_info(prev_p)->flags);
+-	switch_to_bitmap(prev, next, tifp, tifn);
++	switch_to_bitmap(next, tifp, tifn);
+ 
+ 	propagate_user_return_notify(prev_p, next_p);
+ 
 
 
