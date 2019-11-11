@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1964C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB69C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DE22173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79322173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497297;
-	bh=mENUcsyP8U4Z9kgmBjen1ZITceKxhUGaaV9IBTNDxTY=;
+	s=default; t=1573497300;
+	bh=TEiizNpeGGn/64SlXyUHTweTnVZKaRelha1g5chG8j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dZUoMhBEN8kX+ENMbLFfLU2qwynIsiCu2bhoAQerXYBtnJiKfasoEraeOJOJpk8Lx
-	 WHSjI3Jw9tE50spH2ULXg9Tu2Haubkg8vkWcLBJMV2UflGoAte14I8Cgdku7FDzGBG
-	 1vQP1PUTl146OkdoRQo552zPrPTqzcI1Na37PiLU=
+	b=OnftKcCTvRDjKDnCJEqw6N2GCVKGbWzSnqZGj842RjEKwdo7uAFkimiFX7sKV9TNn
+	 u9s6prkb/zFbdg4L0fpR2Tsv1iiSsFvsNj3z9UeJOmQbi8BbPesMXUmuIYSNPvgzO2
+	 Vnz5Xz+lT95weaQZPEC/yiQDlP5CeN+m+G/4P8ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfKKSe4 (ORCPT
+        id S1727753AbfKKSe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:34:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52638 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:34:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728431AbfKKSex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:53 -0500
+        id S1728445AbfKKSe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F6B214E0;
-        Mon, 11 Nov 2019 18:34:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A7B52173B;
+        Mon, 11 Nov 2019 18:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497292;
-        bh=mENUcsyP8U4Z9kgmBjen1ZITceKxhUGaaV9IBTNDxTY=;
+        s=default; t=1573497295;
+        bh=TEiizNpeGGn/64SlXyUHTweTnVZKaRelha1g5chG8j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLZf9GMgAJb0wH3n0GqSjbV6eQQOk4mZIXW6wHYBOEq88Tnu0JTW21BUJzByTA4sC
-         3FOS2MALGnjqSaorpRopw2tbelGKAF+b0cGtSksiyQNwg0Hn8e+pM0URL5LsMw2h+2
-         do77b/1OqRfkie7SAlgtwprg7U22ffopH/unA+AE=
+        b=Elz9X8buQzX30V8y1EBE1o364hcaiXqXVxcP3BR0g3rqVqAksDo2BWbGvKsxTjw3q
+         76TIsXgYcYWl019IH0qp6CSaWvUeoqlmp61MgCmFIN3whVtYYv7hMSSy5GDXMYxy70
+         htaD/MZVjkd4YntYjZdP8cRNJ9eLQ/T9kQyrXuNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 55/65] net: hisilicon: Fix "Trying to free already-free IRQ"
-Date:   Mon, 11 Nov 2019 19:28:55 +0100
-Message-Id: <20191111181352.898909744@linuxfoundation.org>
+Subject: [PATCH 4.9 56/65] NFSv4: Dont allow a cached open with a revoked delegation
+Date:   Mon, 11 Nov 2019 19:28:56 +0100
+Message-Id: <20191111181353.479829307@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -60,57 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 63a41746827cb16dc6ad0d4d761ab4e7dda7a0c3 ]
+[ Upstream commit be3df3dd4c70ee020587a943a31b98a0fb4b6424 ]
 
-When rmmod hip04_eth.ko, we can get the following warning:
+If the delegation is marked as being revoked, we must not use it
+for cached opens.
 
-Task track: rmmod(1623)>bash(1591)>login(1581)>init(1)
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1623 at kernel/irq/manage.c:1557 __free_irq+0xa4/0x2ac()
-Trying to free already-free IRQ 200
-Modules linked in: ping(O) pramdisk(O) cpuinfo(O) rtos_snapshot(O) interrupt_ctrl(O) mtdblock mtd_blkdevrtfs nfs_acl nfs lockd grace sunrpc xt_tcpudp ipt_REJECT iptable_filter ip_tables x_tables nf_reject_ipv
-CPU: 0 PID: 1623 Comm: rmmod Tainted: G           O    4.4.193 #1
-Hardware name: Hisilicon A15
-[<c020b408>] (rtos_unwind_backtrace) from [<c0206624>] (show_stack+0x10/0x14)
-[<c0206624>] (show_stack) from [<c03f2be4>] (dump_stack+0xa0/0xd8)
-[<c03f2be4>] (dump_stack) from [<c021a780>] (warn_slowpath_common+0x84/0xb0)
-[<c021a780>] (warn_slowpath_common) from [<c021a7e8>] (warn_slowpath_fmt+0x3c/0x68)
-[<c021a7e8>] (warn_slowpath_fmt) from [<c026876c>] (__free_irq+0xa4/0x2ac)
-[<c026876c>] (__free_irq) from [<c0268a14>] (free_irq+0x60/0x7c)
-[<c0268a14>] (free_irq) from [<c0469e80>] (release_nodes+0x1c4/0x1ec)
-[<c0469e80>] (release_nodes) from [<c0466924>] (__device_release_driver+0xa8/0x104)
-[<c0466924>] (__device_release_driver) from [<c0466a80>] (driver_detach+0xd0/0xf8)
-[<c0466a80>] (driver_detach) from [<c0465e18>] (bus_remove_driver+0x64/0x8c)
-[<c0465e18>] (bus_remove_driver) from [<c02935b0>] (SyS_delete_module+0x198/0x1e0)
-[<c02935b0>] (SyS_delete_module) from [<c0202ed0>] (__sys_trace_return+0x0/0x10)
----[ end trace bb25d6123d849b44 ]---
-
-Currently "rmmod hip04_eth.ko" call free_irq more than once
-as devres_release_all and hip04_remove both call free_irq.
-This results in a 'Trying to free already-free IRQ' warning.
-To solve the problem free_irq has been moved out of hip04_remove.
-
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 869f9dfa4d6d ("NFSv4: Fix races between nfs_remove_bad_delegation() and delegation return")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/nfs/delegation.c | 10 ++++++++++
+ fs/nfs/delegation.h |  1 +
+ fs/nfs/nfs4proc.c   |  7 ++-----
+ 3 files changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 407e1177d9d1a..4436a0307f32e 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -953,7 +953,6 @@ static int hip04_remove(struct platform_device *pdev)
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index dff600ae0d747..46afd7cdcc378 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -52,6 +52,16 @@ nfs4_is_valid_delegation(const struct nfs_delegation *delegation,
+ 	return false;
+ }
  
- 	hip04_free_ring(ndev, d);
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
- 	of_node_put(priv->phy_node);
- 	cancel_work_sync(&priv->tx_timeout_task);
- 	free_netdev(ndev);
++struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode)
++{
++	struct nfs_delegation *delegation;
++
++	delegation = rcu_dereference(NFS_I(inode)->delegation);
++	if (nfs4_is_valid_delegation(delegation, 0))
++		return delegation;
++	return NULL;
++}
++
+ static int
+ nfs4_do_check_delegation(struct inode *inode, fmode_t flags, bool mark)
+ {
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index e9d5557968739..2c6cb7fb7d5ee 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -62,6 +62,7 @@ int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state
+ int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state, const nfs4_stateid *stateid);
+ bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_stateid *dst, struct rpc_cred **cred);
+ 
++struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode);
+ void nfs_mark_delegation_referenced(struct nfs_delegation *delegation);
+ int nfs4_have_delegation(struct inode *inode, fmode_t flags);
+ int nfs4_check_delegation(struct inode *inode, fmode_t flags);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 8354dfae7038e..ca4249ae644f2 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1368,8 +1368,6 @@ static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
+ 		return 0;
+ 	if ((delegation->type & fmode) != fmode)
+ 		return 0;
+-	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
+-		return 0;
+ 	switch (claim) {
+ 	case NFS4_OPEN_CLAIM_NULL:
+ 	case NFS4_OPEN_CLAIM_FH:
+@@ -1628,7 +1626,6 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
+ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
+ {
+ 	struct nfs4_state *state = opendata->state;
+-	struct nfs_inode *nfsi = NFS_I(state->inode);
+ 	struct nfs_delegation *delegation;
+ 	int open_mode = opendata->o_arg.open_flags;
+ 	fmode_t fmode = opendata->o_arg.fmode;
+@@ -1645,7 +1642,7 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
+ 		}
+ 		spin_unlock(&state->owner->so_lock);
+ 		rcu_read_lock();
+-		delegation = rcu_dereference(nfsi->delegation);
++		delegation = nfs4_get_valid_delegation(state->inode);
+ 		if (!can_open_delegated(delegation, fmode, claim)) {
+ 			rcu_read_unlock();
+ 			break;
+@@ -2142,7 +2139,7 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
+ 		if (can_open_cached(data->state, data->o_arg.fmode, data->o_arg.open_flags))
+ 			goto out_no_action;
+ 		rcu_read_lock();
+-		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
++		delegation = nfs4_get_valid_delegation(data->state->inode);
+ 		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
+ 			goto unlock_no_action;
+ 		rcu_read_unlock();
 -- 
 2.20.1
 
