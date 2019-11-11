@@ -2,119 +2,322 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC19BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634C6C17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C8120818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386232075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfKKJdJ convert rfc822-to-8bit (ORCPT
+        id S1726877AbfKKJfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:33:09 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:37501 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfKKJdF (ORCPT
+        Mon, 11 Nov 2019 04:35:37 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60706 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfKKJfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:33:05 -0500
-Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N3Xvv-1hmXq031f9-010c8d; Mon, 11 Nov 2019 10:33:03 +0100
-Received: by mail-qt1-f169.google.com with SMTP id i17so3427310qtq.1;
-        Mon, 11 Nov 2019 01:33:03 -0800 (PST)
-X-Gm-Message-State: APjAAAURrjL9lSo1/lhXvCwwaHgw4a7Egm+xqt4M4B/vnou+5fvBE93I
-        o/IXm5K/AdyiDnMYa4NzpnSeMGx5sPcF2k9GNAk=
-X-Google-Smtp-Source: APXvYqwOhN6uGhpVV7oJjqzny+sTYzdo1sn49fbiHpAlcC9Kw6k8lGkjxmDhtfyM6aJGaXQYZ3jsCTErYxjUnsB4S54=
-X-Received: by 2002:ac8:67d9:: with SMTP id r25mr24767924qtp.7.1573464782536;
- Mon, 11 Nov 2019 01:33:02 -0800 (PST)
+        Mon, 11 Nov 2019 04:35:37 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2B640283D30
+Subject: Re: [PATCH v4 12/17] iio: cros_ec: Move function description to .c
+ file
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        dianders@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+References: <20191105222652.70226-1-gwendal@chromium.org>
+ <20191105222652.70226-13-gwendal@chromium.org>
+ <20191110130827.12583c30@archlinux>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <9af7416b-d324-8401-5137-d5dcc37277f3@collabora.com>
+Date:   Mon, 11 Nov 2019 10:35:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191108170120.22331-1-will@kernel.org> <20191108170120.22331-2-will@kernel.org>
- <CAK8P3a0f=WvSQSBQ4t0FmEkcFE_mC3oARxaeTviTSkSa-D2qhg@mail.gmail.com> <93f80017-d65e-7c3a-29b0-d9a568d08f58@de.ibm.com>
-In-Reply-To: <93f80017-d65e-7c3a-29b0-d9a568d08f58@de.ibm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 10:32:46 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a21KdGKMDDPs3jc9XEg3=LbzFnGwVm+xDTB+EqGXiZorA@mail.gmail.com>
-Message-ID: <CAK8P3a21KdGKMDDPs3jc9XEg3=LbzFnGwVm+xDTB+EqGXiZorA@mail.gmail.com>
-Subject: Re: [PATCH 01/13] compiler.h: Split {READ,WRITE}_ONCE definitions out
- into rwonce.h
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yunjae Lee <lyj7694@gmail.com>,
-        SeongJae Park <sj38.park@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Joe Perches <joe@perches.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:5vTUeZVKZsm8p4fRceaPnnbV7UUKqQe+zXfZWql/hhv4b8yiJK5
- IqdJHHEoHwgfYywSYW6BDZaAFENI20ZZvi60GP5zq7dmTsPIb1rBCRU/v5J5BWt1HxQSgCl
- 3QFgCRm4+wMgHwlsVWvTxb8JPePQKjcHNpr4KLw7Paj+GuEUS6dHx133Sp/Ge/VzbAEj+Xy
- 2EES4VTSoF7OO8uMKC4xw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HmaHvMo4ELQ=:dWEo9CK8fojEWWfVWxtit/
- b4ptuDBuqPdE4BczXGK65KQTt3ALnytgcwtHgXMEsKUbC8bYkISOiW5I+0tG/V+OEN0sQS8dE
- nXb+rQEDMb0MyMQUYHGMfOybKwMDmwQWDuG0SV5mKk4yBFyZXmEVMafPwx49uKITx+s0+4gDN
- pWdWFfQGubOYUfVgJSLWBrZIi3SqM3X8lLe6Aj7zRck8tk/LqVUDsW7/ZuYYtcsUcSo9Gp5Fl
- UJKuVY66G/eim3V5ctB2w2YQSkfmZUDk18z5M5Qf+Si5YTRt4IOUhRJWcjel58vaZBfS9RWfk
- RQgZh7QlD9oUD0HH+pXhZ47rE4rpMybQWOJfvSQJFnkL0+3B6XGiZSXEIl7uFs7EAjo/3cEXp
- 80gYOec8DoOInGxngQ7q/jy+OFiZI/LVFgddCvcw/FbnOFxxrm+Ql5X7DxQey9f9WTPmWgNsA
- B8/PQcmGAcjRpIFD0HMzCH5vILlQUKrb02NE4ADGxnGFyKfWDxUtTcEiupDyup2y19Jf+br/6
- IQ9oCcaWt2PjpVHmJCamgDmQgFiUZ3Jybozp11mIgfmsKHHls8wU+W/FS3lLjOQIp0tEuX9z7
- Gsp7g8npa66aVaSLCnzuMBJgTBznyQHQRoxOP9Gbj85tCshhjJUr0JYy4jgxOmGDdF03guem7
- Hvd7nBxRAT2j3E6uv/NJyTdXE19p0RU7WpK5mf70+utvySbWMA6Wd4aOxNrwv71ZJ1/j0CABx
- XI4kA0GLvbQ/kRGAejBel87kBzeGeJsvFqsrT7qeONyicTVdY5vp3RoKsMZk3imHbGw4VG7uI
- dhApGCHk42wHAw6Q7B07GB43y/OciYsDnFbCRzoGjc1+f8UrqyHEn46a2ZHnOhc3io7ooLl71
- 7mPRFREm6/O4DINcGiXg==
+In-Reply-To: <20191110130827.12583c30@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 9:10 AM Christian Borntraeger
-<borntraeger@de.ibm.com> wrote:
-> On 08.11.19 20:57, Arnd Bergmann wrote:
-> > On Fri, Nov 8, 2019 at 6:01 PM Will Deacon <will@kernel.org> wrote:
-> >>
-> >> In preparation for allowing architectures to define their own
-> >> implementation of the 'READ_ONCE()' macro, move the generic
-> >> '{READ,WRITE}_ONCE()' definitions out of the unwieldy 'linux/compiler.h'
-> >> and into a new 'rwonce.h' header under 'asm-generic'.
-> >
-> > Adding Christian Bornträger to Cc, he originally added the
-> > READ_ONCE()/WRITE_ONCE()
-> > code.
-> >
-> > I wonder if it would be appropriate now to revert back to a much simpler version
-> > of these helpers for any modern compiler. As I understand, only gcc-4.6 and
-> > gcc4.7 actually need the song-and-dance version with the union and switch/case,
-> > while for others, we can might be able back to a macro doing a volatile access.
->
-> As far as I know this particular issue with  volatile access on aggregate types
-> was fixed in gcc 4.8. On the other hand we know that the current construct will
-> work on all compilers. Not so sure about the orignal ACCESS_ONCE implementation.
 
-I've seen problems with clang on the current version, leading to unnecessary
-temporaries being spilled to the stack in some cases, so I think it would still
-help to simplify it.
 
-We probably don't want the exact ACCESS_ONCE() implementation back
-that existed before, but rather something that implements the stricter
-READ_ONCE() and WRITE_ONCE(). I'd probably also want to avoid the
-__builtin_memcpy() exception for odd-sized accesses and instead have
-a separate way to do those.
+On 10/11/19 14:08, Jonathan Cameron wrote:
+> On Tue,  5 Nov 2019 14:26:47 -0800
+> Gwendal Grignou <gwendal@chromium.org> wrote:
+> 
+>> To prevent comment rot, move function description to
+>> cros_ec_sensors_core.c.
+>>
+>> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> Thanks for tidying this up.
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 
-      Arnd
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Thanks,
+ Enric
+
+>> ---
+>> No changes in v4.
+>> Changes in v3:
+>>   fix spelling.
+>> New in v2.
+>>
+>>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 69 ++++++++++++++++
+>>  .../linux/iio/common/cros_ec_sensors_core.h   | 80 -------------------
+>>  2 files changed, 69 insertions(+), 80 deletions(-)
+>>
+>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> index 81a7f692de2f..b47da497a3c3 100644
+>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> @@ -83,6 +83,14 @@ static void get_default_min_max_freq(enum motionsensor_type type,
+>>  	}
+>>  }
+>>  
+>> +/**
+>> + * cros_ec_sensors_core_init() - basic initialization of the core structure
+>> + * @pdev:		platform device created for the sensors
+>> + * @indio_dev:		iio device structure of the device
+>> + * @physical_device:	true if the device refers to a physical device
+>> + *
+>> + * Return: 0 on success, -errno on failure.
+>> + */
+>>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  			      struct iio_dev *indio_dev,
+>>  			      bool physical_device)
+>> @@ -160,6 +168,16 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  }
+>>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
+>>  
+>> +/**
+>> + * cros_ec_motion_send_host_cmd() - send motion sense host command
+>> + * @state:		pointer to state information for device
+>> + * @opt_length:	optional length to reduce the response size, useful on the data
+>> + *		path. Otherwise, the maximal allowed response size is used
+>> + *
+>> + * When called, the sub-command is assumed to be set in param->cmd.
+>> + *
+>> + * Return: 0 on success, -errno on failure.
+>> + */
+>>  int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+>>  				 u16 opt_length)
+>>  {
+>> @@ -422,6 +440,14 @@ int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev,
+>>  }
+>>  EXPORT_SYMBOL_GPL(cros_ec_sensors_read_lpc);
+>>  
+>> +/**
+>> + * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
+>> + * @indio_dev:	pointer to IIO device
+>> + * @scan_mask:	bitmap of the sensor indices to scan
+>> + * @data:	location to store data
+>> + *
+>> + * Return: 0 on success, -errno on failure.
+>> + */
+>>  int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
+>>  			     unsigned long scan_mask, s16 *data)
+>>  {
+>> @@ -446,6 +472,18 @@ int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
+>>  }
+>>  EXPORT_SYMBOL_GPL(cros_ec_sensors_read_cmd);
+>>  
+>> +/**
+>> + * cros_ec_sensors_capture() - the trigger handler function
+>> + * @irq:	the interrupt number.
+>> + * @p:		a pointer to the poll function.
+>> + *
+>> + * On a trigger event occurring, if the pollfunc is attached then this
+>> + * handler is called as a threaded interrupt (and hence may sleep). It
+>> + * is responsible for grabbing data from the device and pushing it into
+>> + * the associated buffer.
+>> + *
+>> + * Return: IRQ_HANDLED
+>> + */
+>>  irqreturn_t cros_ec_sensors_capture(int irq, void *p)
+>>  {
+>>  	struct iio_poll_func *pf = p;
+>> @@ -481,6 +519,16 @@ irqreturn_t cros_ec_sensors_capture(int irq, void *p)
+>>  }
+>>  EXPORT_SYMBOL_GPL(cros_ec_sensors_capture);
+>>  
+>> +/**
+>> + * cros_ec_sensors_core_read() - function to request a value from the sensor
+>> + * @st:		pointer to state information for device
+>> + * @chan:	channel specification structure table
+>> + * @val:	will contain one element making up the returned value
+>> + * @val2:	will contain another element making up the returned value
+>> + * @mask:	specifies which values to be requested
+>> + *
+>> + * Return:	the type of value returned by the device
+>> + */
+>>  int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+>>  			  struct iio_chan_spec const *chan,
+>>  			  int *val, int *val2, long mask)
+>> @@ -521,6 +569,17 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+>>  }
+>>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read);
+>>  
+>> +/**
+>> + * cros_ec_sensors_core_read_avail() - get available values
+>> + * @indio_dev:		pointer to state information for device
+>> + * @chan:	channel specification structure table
+>> + * @vals:	list of available values
+>> + * @type:	type of data returned
+>> + * @length:	number of data returned in the array
+>> + * @mask:	specifies which values to be requested
+>> + *
+>> + * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
+>> + */
+>>  int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+>>  				    struct iio_chan_spec const *chan,
+>>  				    const int **vals,
+>> @@ -542,6 +601,16 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+>>  }
+>>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read_avail);
+>>  
+>> +/**
+>> + * cros_ec_sensors_core_write() - function to write a value to the sensor
+>> + * @st:		pointer to state information for device
+>> + * @chan:	channel specification structure table
+>> + * @val:	first part of value to write
+>> + * @val2:	second part of value to write
+>> + * @mask:	specifies which values to write
+>> + *
+>> + * Return:	the type of value returned by the device
+>> + */
+>>  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>>  			       struct iio_chan_spec const *chan,
+>>  			       int val, int val2, long mask)
+>> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+>> index bb331e6356a9..0af918978f97 100644
+>> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+>> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+>> @@ -79,95 +79,25 @@ struct cros_ec_sensors_core_state {
+>>  	int frequencies[3];
+>>  };
+>>  
+>> -/**
+>> - * cros_ec_sensors_read_lpc() - retrieve data from EC shared memory
+>> - * @indio_dev:	pointer to IIO device
+>> - * @scan_mask:	bitmap of the sensor indices to scan
+>> - * @data:	location to store data
+>> - *
+>> - * This is the safe function for reading the EC data. It guarantees that the
+>> - * data sampled was not modified by the EC while being read.
+>> - *
+>> - * Return: 0 on success, -errno on failure.
+>> - */
+>>  int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev, unsigned long scan_mask,
+>>  			     s16 *data);
+>>  
+>> -/**
+>> - * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
+>> - * @indio_dev:	pointer to IIO device
+>> - * @scan_mask:	bitmap of the sensor indices to scan
+>> - * @data:	location to store data
+>> - *
+>> - * Return: 0 on success, -errno on failure.
+>> - */
+>>  int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev, unsigned long scan_mask,
+>>  			     s16 *data);
+>>  
+>>  struct platform_device;
+>> -/**
+>> - * cros_ec_sensors_core_init() - basic initialization of the core structure
+>> - * @pdev:		platform device created for the sensors
+>> - * @indio_dev:		iio device structure of the device
+>> - * @physical_device:	true if the device refers to a physical device
+>> - *
+>> - * Return: 0 on success, -errno on failure.
+>> - */
+>>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  			      struct iio_dev *indio_dev, bool physical_device);
+>>  
+>> -/**
+>> - * cros_ec_sensors_capture() - the trigger handler function
+>> - * @irq:	the interrupt number.
+>> - * @p:		a pointer to the poll function.
+>> - *
+>> - * On a trigger event occurring, if the pollfunc is attached then this
+>> - * handler is called as a threaded interrupt (and hence may sleep). It
+>> - * is responsible for grabbing data from the device and pushing it into
+>> - * the associated buffer.
+>> - *
+>> - * Return: IRQ_HANDLED
+>> - */
+>>  irqreturn_t cros_ec_sensors_capture(int irq, void *p);
+>>  
+>> -/**
+>> - * cros_ec_motion_send_host_cmd() - send motion sense host command
+>> - * @st:		pointer to state information for device
+>> - * @opt_length:	optional length to reduce the response size, useful on the data
+>> - *		path. Otherwise, the maximal allowed response size is used
+>> - *
+>> - * When called, the sub-command is assumed to be set in param->cmd.
+>> - *
+>> - * Return: 0 on success, -errno on failure.
+>> - */
+>>  int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *st,
+>>  				 u16 opt_length);
+>>  
+>> -/**
+>> - * cros_ec_sensors_core_read() - function to request a value from the sensor
+>> - * @st:		pointer to state information for device
+>> - * @chan:	channel specification structure table
+>> - * @val:	will contain one element making up the returned value
+>> - * @val2:	will contain another element making up the returned value
+>> - * @mask:	specifies which values to be requested
+>> - *
+>> - * Return:	the type of value returned by the device
+>> - */
+>>  int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+>>  			      struct iio_chan_spec const *chan,
+>>  			      int *val, int *val2, long mask);
+>>  
+>> -/**
+>> - * cros_ec_sensors_core_read_avail() - get available values
+>> - * @indio_dev:		pointer to state information for device
+>> - * @chan:	channel specification structure table
+>> - * @vals:	list of available values
+>> - * @type:	type of data returned
+>> - * @length:	number of data returned in the array
+>> - * @mask:	specifies which values to be requested
+>> - *
+>> - * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
+>> - */
+>>  int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+>>  				    struct iio_chan_spec const *chan,
+>>  				    const int **vals,
+>> @@ -175,16 +105,6 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+>>  				    int *length,
+>>  				    long mask);
+>>  
+>> -/**
+>> - * cros_ec_sensors_core_write() - function to write a value to the sensor
+>> - * @st:		pointer to state information for device
+>> - * @chan:	channel specification structure table
+>> - * @val:	first part of value to write
+>> - * @val2:	second part of value to write
+>> - * @mask:	specifies which values to write
+>> - *
+>> - * Return:	the type of value returned by the device
+>> - */
+>>  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>>  			       struct iio_chan_spec const *chan,
+>>  			       int val, int val2, long mask);
+> 
