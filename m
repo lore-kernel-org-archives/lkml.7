@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E969C43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0DEC17441
 	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50DB21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C082021783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1573498260;
-	bh=AxjSEsBuqLMR7CGO0L2PJe8Z58LIy3vQxJ+3lq10mw8=;
+	bh=rkmLoaAJO0IPfco4Q0wQ7qYtCDweohjA2q8aZ0sOLSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13W0Pxlv7m+jmj7KxLDmh/7Tdj6hrQnbHflyhZmAc56gCVoMH+qbdLhblFOKVib+0
-	 8CliMenLQWBZbAKj+i+TU+ZTrznKDFQZqeCdcnf0o7aFsQLsHTOIL+DB2vlxmLXbwH
-	 EyP+dayjUgBUiuhFzjUjPSOQd7MmlGb/KRJdxKV8=
+	b=YPXX3wE5syY++WXLroOxd827yoGls+tc5Oloa/kYxNBgI1p30Xu23Q5LIyIjwjr0J
+	 kHpxa7HxXQVF95d0ATHIQs9P2/z++m8uPsQiz/xxgcf4D/vG+VN5APe0Aigt7+/BPB
+	 dhnwv2f8hX5bSIA4rRqsrb8HTf1iLmQx965TWWJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbfKKSu4 (ORCPT
+        id S1730384AbfKKSu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44772 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbfKKSuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:51 -0500
+        id S1730028AbfKKSuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 534A7214E0;
-        Mon, 11 Nov 2019 18:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C21C521655;
+        Mon, 11 Nov 2019 18:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498250;
-        bh=AxjSEsBuqLMR7CGO0L2PJe8Z58LIy3vQxJ+3lq10mw8=;
+        s=default; t=1573498254;
+        bh=rkmLoaAJO0IPfco4Q0wQ7qYtCDweohjA2q8aZ0sOLSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QM+S8LUO0es9TxyGUoIlElFHgCPi52BMHJO5aQqyAZ8X6OSNw+UYAGtbayo+ypkel
-         CQ3agWQeSFTd9Lvr516LNaIm0HpZk/iGx6hGqsY3cesCVzs31KKvQHMFZ0/ZWxSy8/
-         FbUcGmOJfVYw3IQWwL1i+QIRS/kSDpm/sWpCfynY=
+        b=jbXwt5AmtkFPigaBkH47TecOalkpuYJNPJuUIUONnjUy7JDf2pmrepzOKMg0M/8sB
+         sCm5tXnQvCSvEdF+9qzm86Y5CQzyfvtWv/wkVydJQULFRqaA1ChdZgOR6lbDOp+/+j
+         lxEcXvy+UvkiCoDfuYgI0yh8FTckkkxRH/I+QYms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.3 064/193] netfilter: nf_tables: Align nft_expr private data to 64-bit
-Date:   Mon, 11 Nov 2019 19:27:26 +0100
-Message-Id: <20191111181505.729127861@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 027/193] ALSA: hda/ca0132 - Fix possible workqueue stall
+Date:   Mon, 11 Nov 2019 19:26:49 +0100
+Message-Id: <20191111181502.260219355@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,60 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 250367c59e6ba0d79d702a059712d66edacd4a1a upstream.
+commit 15c2b3cc09a31620914955cb2a89c277c18ee999 upstream.
 
-Invoking the following commands on a 32-bit architecture with strict
-alignment requirements (such as an ARMv7-based Raspberry Pi) results
-in an alignment exception:
+The unsolicited event handler for the headphone jack on CA0132 codec
+driver tries to reschedule the another delayed work with
+cancel_delayed_work_sync().  It's no good idea, unfortunately,
+especially after we changed the work queue to the standard global
+one; this may lead to a stall because both works are using the same
+global queue.
 
- # nft add table ip test-ip4
- # nft add chain ip test-ip4 output { type filter hook output priority 0; }
- # nft add rule  ip test-ip4 output quota 1025 bytes
+Fix it by dropping the _sync but does call cancel_delayed_work()
+instead.
 
-Alignment trap: not handling instruction e1b26f9f at [<7f4473f8>]
-Unhandled fault: alignment exception (0x001) at 0xb832e824
-Internal error: : 1 [#1] PREEMPT SMP ARM
-Hardware name: BCM2835
-[<7f4473fc>] (nft_quota_do_init [nft_quota])
-[<7f447448>] (nft_quota_init [nft_quota])
-[<7f4260d0>] (nf_tables_newrule [nf_tables])
-[<7f4168dc>] (nfnetlink_rcv_batch [nfnetlink])
-[<7f416bd0>] (nfnetlink_rcv [nfnetlink])
-[<8078b334>] (netlink_unicast)
-[<8078b664>] (netlink_sendmsg)
-[<8071b47c>] (sock_sendmsg)
-[<8071bd18>] (___sys_sendmsg)
-[<8071ce3c>] (__sys_sendmsg)
-[<8071ce94>] (sys_sendmsg)
-
-The reason is that nft_quota_do_init() calls atomic64_set() on an
-atomic64_t which is only aligned to 32-bit, not 64-bit, because it
-succeeds struct nft_expr in memory which only contains a 32-bit pointer.
-Fix by aligning the nft_expr private data to 64-bit.
-
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v3.13+
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 993884f6a26c ("ALSA: hda/ca0132 - Delay HP amp turnon.")
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1155836
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191105134316.19294-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/netfilter/nf_tables.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_ca0132.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -801,7 +801,8 @@ struct nft_expr_ops {
-  */
- struct nft_expr {
- 	const struct nft_expr_ops	*ops;
--	unsigned char			data[];
-+	unsigned char			data[]
-+		__attribute__((aligned(__alignof__(u64))));
- };
- 
- static inline void *nft_expr_priv(const struct nft_expr *expr)
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -7604,7 +7604,7 @@ static void hp_callback(struct hda_codec
+ 	/* Delay enabling the HP amp, to let the mic-detection
+ 	 * state machine run.
+ 	 */
+-	cancel_delayed_work_sync(&spec->unsol_hp_work);
++	cancel_delayed_work(&spec->unsol_hp_work);
+ 	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
+ 	tbl = snd_hda_jack_tbl_get(codec, cb->nid);
+ 	if (tbl)
 
 
