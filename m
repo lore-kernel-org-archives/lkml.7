@@ -2,128 +2,143 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FE1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAB6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8B021872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EDF21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ORDXZUoo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fL7Vo58n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKKV7V (ORCPT
+        id S1726955AbfKKWEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:59:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54264 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726958AbfKKV7V (ORCPT
+        Mon, 11 Nov 2019 17:04:21 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34731 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKWEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 16:59:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573509560;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=5JMGc6ZNt3Kt87cTt6dbWaP1bAXTKUa7TPW46Nj75J0=;
-        b=ORDXZUooyGBo2nhzVIVJDq/ouENVi0NFHFMkdMHNnouUffy90R8thDymqwOAla8zY9g0Ig
-        w3C7/+dCTkBvcudEu8gKH9l4SYRGm/hmJpC6+kpajHKl8BaxRw6rK4AwJL6x4B5kdsjLJT
-        VFaRs/O9harQFLk4qMyoBD+F7EZEPHk=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-kaTE4whwPeebLX5Z03K9mw-1; Mon, 11 Nov 2019 16:59:16 -0500
-Received: by mail-wr1-f71.google.com with SMTP id q12so2932464wrr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:59:16 -0800 (PST)
+        Mon, 11 Nov 2019 17:04:21 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z188so4409966pgb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 14:04:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b6mNCX/KX4boUEtiC4AfiPV9MtFO5pIWwbz7PSRKAGA=;
+        b=fL7Vo58nzJhGzD6mdJp1QeRvNGKLgdPvqHWFIW8gS1JkcmXyMkkZooq1lWwqynq6jy
+         ye9GJKZGGhLs5Gl1BIidWCcJcwsg4S0ZHHYBS64Ac3uKvYlrHTkQ+YaNa+zP4iWIxUyl
+         NKdUycwDJ1c5ARuP1+Hb8YD8aOl+oAgsTQ4s5Syi1t0XHfH8GII5MHsizKKYIGa0uj4S
+         K0Jrl3XwFs7A2XZMG1qY6oo8LcTv7dHjA6fJPAM+ofy8gUxtLY6AqOsZ+g7CnDF7+caI
+         ueNzcWI2NWy5M4toTT7ymIUUoTzAMD2T1uPphNtcdZ8XBjTU7tafFBd5QVB8ZTtOarMA
+         MRjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n2KX+tENMt/6R+J+74Qa4Dthv4cuV76s4hBzTDosBdo=;
-        b=h5WWc5x9eY/2SLKbvcDPXEchiiOs/YC6s4M5zJHETZdEgvq7gACSrG++gbqNVDMN4d
-         CWN+8QdNY9J0LYNTchAjoAV1DlcwUaHNQX892GiKXqITZjQ1zVUqtaGqjC+Iqx7Axpt6
-         hZZ0jOcnFtfmivFmwz2w22Koa1nqC4AFy104EosKlURHbO+vbJ5r+FGvsF6p9h93jpSb
-         5dkx/KXYHLSPX79sROx/8HtfECbrOsmxSjFVq1K2EAw/oYDVv9QvB1Ojk3cbKj2QqxFC
-         NYs/dDkxIjUh3GjAeOT8QrwVKMBHdoeTuy+urq/iM91XFYWwH45OXsSflUzkoM0dwi7u
-         5lYA==
-X-Gm-Message-State: APjAAAUGdnHz4CZ+vrKElUdLxy7ZDtudS+y2wQnBlocCGt2pBLetLMyi
-        BkDvDA7iQD7Q+zmh/bQhIJIlhCCveQORrObJpV2oliddrpbPnJbPTJQVvVTkJubnb66Bpj6LyRr
-        vCjZMYLn4K6GH/cZ1UdRgQAV6
-X-Received: by 2002:adf:de86:: with SMTP id w6mr22575217wrl.220.1573509555614;
-        Mon, 11 Nov 2019 13:59:15 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzFH81eJPsJFWm6/v9HDiXiBPV2gYCw4cA0ZvscuxcTs7YdwXTZJmbkmW8OAhesOnXybRQw5g==
-X-Received: by 2002:adf:de86:: with SMTP id w6mr22575197wrl.220.1573509555313;
-        Mon, 11 Nov 2019 13:59:15 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
-        by smtp.gmail.com with ESMTPSA id n23sm960755wmc.18.2019.11.11.13.59.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 13:59:14 -0800 (PST)
-Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <4418c734-68e1-edaf-c939-f24d041acf2e@redhat.com>
-Date:   Mon, 11 Nov 2019 22:59:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b6mNCX/KX4boUEtiC4AfiPV9MtFO5pIWwbz7PSRKAGA=;
+        b=naqSI8n/Wbs5ERZ4SxraAfyGjmYhIPyIOA4Aaoix0K36v8sF6u6EaqQbRWRoucT7ON
+         ycOemNIlhL8LZjEXIRzD5D/b0USZSAHI7F0pJVWpt9DzfTO6RFP6pf/uvBEdkMMKI+Lr
+         pgIgOwIxducwA893OCDo1muzYGDeEbNtFYFtFZDTJ89PKaR206OcWp5rqk96OzOSm7By
+         YIUWo1wwdOxwkw/BqvCdkN/sG4qtDK/i9DAxg2mVOY564pzyNRBxSWkjUIoq0nIXte05
+         PKSZR4TBRvusGc7nG5jP57wzXe2ZfgEKEPSh5DdZULYWvVAJnY33IyPwDKy2l+oeaW8R
+         40BQ==
+X-Gm-Message-State: APjAAAUkUAaeabyY8wEZoDUSMauJCIAbg1CrRCw7M4UTbWMb0uxc58TT
+        6Uu85lgfdP0a+83UjwYycTxVbsSH3ms=
+X-Google-Smtp-Source: APXvYqyWTI6bisXzwWbs7tADpWb7qCtkjIYrZwQXbVFK2S/mZ3Li94In+tKU3yps+tF5SFtBvVa+6g==
+X-Received: by 2002:aa7:870c:: with SMTP id b12mr32518116pfo.30.1573509860257;
+        Mon, 11 Nov 2019 14:04:20 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f19sm11173159pfk.109.2019.11.11.14.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 14:04:19 -0800 (PST)
+Date:   Mon, 11 Nov 2019 14:04:16 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v2] remoteproc: stm32: fix probe error case
+Message-ID: <20191111220416.GB3108315@builder>
+References: <1570433991-16353-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-In-Reply-To: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
-Content-Language: en-US
-X-MC-Unique: kaTE4whwPeebLX5Z03K9mw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570433991-16353-1-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/11/19 08:05, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
->=20
-> This patch tries to optimize x2apic physical destination mode, fixed deli=
-very
-> mode single target IPI by delivering IPI to receiver immediately after se=
-nder
-> writes ICR vmexit to avoid various checks when possible.
->=20
-> Testing on Xeon Skylake server:
->=20
-> The virtual IPI latency from sender send to receiver receive reduces more=
- than
-> 330+ cpu cycles.
->=20
-> Running hackbench(reschedule ipi) in the guest, the avg handle time of MS=
-R_WRITE
-> caused vmexit reduces more than 1000+ cpu cycles:
->=20
-> Before patch:
->=20
->   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg ti=
-me
-> MSR_WRITE    5417390    90.01%    16.31%      0.69us    159.60us    1.08u=
-s
->=20
-> After patch:
->=20
->   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg ti=
-me
-> MSR_WRITE    6726109    90.73%    62.18%      0.48us    191.27us    0.58u=
-s
+On Mon 07 Oct 00:39 PDT 2019, Fabien Dessenne wrote:
 
-Do you have retpolines enabled?  The bulk of the speedup might come just
-from the indirect jump.
+> If the rproc driver is probed before the mailbox driver and if the rproc
+> Device Tree node has some mailbox properties, the rproc driver probe
+> shall be deferred instead of being probed without mailbox support.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+> Changes since v1: test IS_ERR() before checking PTR_ERR()
+> ---
+>  drivers/remoteproc/stm32_rproc.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+> index 2cf4b29..a507332 100644
+> --- a/drivers/remoteproc/stm32_rproc.c
+> +++ b/drivers/remoteproc/stm32_rproc.c
+> @@ -310,7 +310,7 @@ static const struct stm32_mbox stm32_rproc_mbox[MBOX_NB_MBX] = {
+>  	}
+>  };
+>  
+> -static void stm32_rproc_request_mbox(struct rproc *rproc)
+> +static int stm32_rproc_request_mbox(struct rproc *rproc)
+>  {
+>  	struct stm32_rproc *ddata = rproc->priv;
+>  	struct device *dev = &rproc->dev;
+> @@ -329,10 +329,14 @@ static void stm32_rproc_request_mbox(struct rproc *rproc)
+>  
+>  		ddata->mb[i].chan = mbox_request_channel_byname(cl, name);
+>  		if (IS_ERR(ddata->mb[i].chan)) {
+> +			if (PTR_ERR(ddata->mb[i].chan) == -EPROBE_DEFER)
+> +				return -EPROBE_DEFER;
 
-Paolo
+If for some reason you get EPROBE_DEFER when i > 0 you need to
+mbox_free_channel() channels [0..i) before returning.
 
+Regards,
+Bjorn
+
+>  			dev_warn(dev, "cannot get %s mbox\n", name);
+>  			ddata->mb[i].chan = NULL;
+>  		}
+>  	}
+> +
+> +	return 0;
+>  }
+>  
+>  static int stm32_rproc_set_hold_boot(struct rproc *rproc, bool hold)
+> @@ -596,7 +600,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto free_rproc;
+>  
+> -	stm32_rproc_request_mbox(rproc);
+> +	ret = stm32_rproc_request_mbox(rproc);
+> +	if (ret)
+> +		goto free_rproc;
+>  
+>  	ret = rproc_add(rproc);
+>  	if (ret)
+> -- 
+> 2.7.4
+> 
