@@ -2,134 +2,114 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A3CC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F50C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6B0214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/zMtGeO"
+	by mail.kernel.org (Postfix) with ESMTP id B55FB214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKKKbU (ORCPT
+        id S1727128AbfKKKb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:31:20 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34313 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKKbU (ORCPT
+        Mon, 11 Nov 2019 05:31:27 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:60767 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfKKKb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:31:20 -0500
-Received: by mail-ed1-f65.google.com with SMTP id b72so11528093edf.1;
-        Mon, 11 Nov 2019 02:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2uBfmf0jH0jW8Ak0g/jqH8W5nvxj13Znc64ubl99LEk=;
-        b=j/zMtGeO0BmSNrdrMu1SrfaRsr4kigGMqwYv0UE8ouLUl0QDdAy7Vq7okOCjjiczEI
-         AJSlSD12qhlSltHaaDllK52o2Lx5tRVWiAmru4rU/7QDtDYi+4GMVTqhIdFAY7ZY4C9H
-         nizOi5STW/rjZCCb+R/gICoFmHmybIoh0sYpC4IEtGQVvo8C3hBPO1oH/QZuiMbxf05D
-         I7Ho9imA4KVUgXtAvuePxP4ocgRXdNyiGa/PtJynLhQQNJu5m4AVAOmzi0RfnJUommCd
-         ULvVXSf/igtLDOanbypmSP6SQ/gLhDNYTxggh2EJqGMU8WzLZ0BMK8mLuUe9OPxJNMCg
-         JNQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2uBfmf0jH0jW8Ak0g/jqH8W5nvxj13Znc64ubl99LEk=;
-        b=ZM8ctCv8kgFo8+TlydR4+YX1Ouh7Mp96U01YzIkHg8DpZRcPoIKJnjR2lbD8E9FiKT
-         rcmJ8Fm0Btq9Qt/B5kiXo17obP2EEg+mamv5OUOVKZl8KPE7emorvs1I1uymsn+Uln//
-         tja2gha5GVJ3RsPgtuJj7vibjzB0gIKf+SiuSasKKcKDh+0HXEvHhj1mr0sjhOkfHJAH
-         A/cIOYJ9aTaMqHWxqG1PwqycGhxtp2sZP4bJROkLNjFMJ6aSIs0cDEryV96Lxqt8zJoA
-         epJ+/HPfoqksMXfiVBtDqi500Q+tC2EEwUsDCVOHGpm3EhUjkIFVDRIz6fqulKjIEESv
-         Lm0g==
-X-Gm-Message-State: APjAAAUE28RD0ncEggse8KXPhpVhEnzwt/4mssMP3MueC3tw2cBJTAOf
-        jNiSqb9eaXLrdVaMdt97rcpaKyB5DZqGp+3tKpgwkh4x
-X-Google-Smtp-Source: APXvYqwIRl3G1diHLMcxzPXPFWdQZe1LF8G9C/IgjC26glYSasbKQj+LOcE8QAX5/X4q48KWqOHZ9LlZj/uZgBX9dE4=
-X-Received: by 2002:a17:906:1d19:: with SMTP id n25mr21347136ejh.151.1573468276893;
- Mon, 11 Nov 2019 02:31:16 -0800 (PST)
+        Mon, 11 Nov 2019 05:31:26 -0500
+Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M1YxX-1iSBIl08Wh-00394l; Mon, 11 Nov 2019 11:31:24 +0100
+Received: by mail-qv1-f46.google.com with SMTP id y18so4653500qve.2;
+        Mon, 11 Nov 2019 02:31:22 -0800 (PST)
+X-Gm-Message-State: APjAAAUxlJXW97+1cBVSkWYmUR6nUAyzY7pFnWR1j64svdk137UqnkjB
+        L3rL1AV0PwZOn0xobSNrp1i1ToAK7xZJ7ywQxfA=
+X-Google-Smtp-Source: APXvYqxD4F/fwy7LIVnyFzyiMun+f+kScDaMuxMbPMHFdHwTAmNy4Oax48ObAzH1ZmZyCVG2W0sxl5/9Apu79krhc7g=
+X-Received: by 2002:a0c:a9cc:: with SMTP id c12mr4561842qvb.222.1573468282069;
+ Mon, 11 Nov 2019 02:31:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20191107122115.6244-1-linux@rasmusvillemoes.dk> <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
-In-Reply-To: <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 11 Nov 2019 12:31:05 +0200
-Message-ID: <CA+h21ho-P3P+ZwVp4uYHYrTzF0V-b+OsBkMKVo3rHC_OV5Y_6Q@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt lines
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        Kurt Kanzenbach <kurt@linutronix.de>
+References: <20191029064834.23438-12-hch@lst.de> <mhng-33ea9141-2440-4a2d-8133-62094486fc48@palmer-si-x1c4>
+ <CAMuHMdVuDp_8UDeWv8tdPAH5JS84=-yfwZjOk-YQcoYKM9za+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdVuDp_8UDeWv8tdPAH5JS84=-yfwZjOk-YQcoYKM9za+w@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 Nov 2019 11:31:05 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2a7jwmAKhh3WsowCmvdQpsde5A5nz+3NXRn7amhwUxQg@mail.gmail.com>
+Message-ID: <CAK8P3a2a7jwmAKhh3WsowCmvdQpsde5A5nz+3NXRn7amhwUxQg@mail.gmail.com>
+Subject: Re: [PATCH 11/21] asm-generic: don't provide ioremap for CONFIG_MMU
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Vincent Chen <deanbo422@gmail.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-mips@vger.kernel.org, alpha <linux-alpha@vger.kernel.org>,
+        "moderated list:NIOS2 ARCHITECTURE" 
+        <nios2-dev@lists.rocketboards.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GhVqUNVJ6NcFflSOEwN3xNZ+WDbcZEBsdfOJy5lHGcUzStPON3S
+ sdvrlkVnzJ4K/x3cf5tYPugN5XhSBeh1PoZWPALuD9vHbiqs7LkvRtku4dgNCYPfg2hTWD3
+ aVB9H4AYQg+3P/o5HUXDoffXlGofXmGsR9gAnSPoqG/6NQQYwaLa49lQwiosiJF/NEYAPps
+ lqR0sQiFoqXofI25s5XJA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:URlU+6+rc6w=:y5PGJEge8OBUWHMAmN3LJO
+ jIxpuP7dwcb+ik9HrK0VliiW2etopAEFn7uaY69aK9jGrqr7zmd1UGZJRBqB6CpVskEG/zCmk
+ BUxZlaXSP2HfoBeDI1gCu7bYcY4fzXvLBrG9aPN+zildJOs7QeBcOfLC01M7htudy1pUPdFtA
+ dR7SDHkntfBffPPssOnu6ozRPDnU6vL2KUZ/ZH/UXiHM1JH0SCQi3S+xNy26Z9u7aOGtjVuuO
+ PboGcUnXnq3UHc+4dGBkWnBZqMiP3HYXGf5s9IXYstXi/3xPJcP434DY79oHGBb5Q5QCS7pK3
+ Uh0sK/c6JlDeEuv/gL/RRCD0bvXv2SlkehmX2f9FT7bNgJYnNvApyh/P0EK+ylKyicCH785sG
+ xC8SI2udds3P3++DOPOSazbC3AFpHQUODsb9TOd8/7q76Uvk2Q8Cx7y4Bpi6wlIxtGNHhFxG+
+ GrbYr9XnYxkfFIfbc09D32LUFSRMlQbiKhK+f9ulUq1+DzdAaz5KJQCOdG8j5T2PMF+tZQKOX
+ fxrqTQQnVV5QO3UZ9eprc58Gh9+a+JmAzuRVILazR9h+Q4YMNvlH6mMi2Y6SEyIlDBf75q2Kb
+ ssAh+zE1KqjhRdsofdjkMYHkRgsTuR/y6OSetAY5mWDaBpp0F/+tlvsTaWXWGYx9ipHHQyRQe
+ h1E8Nf2100ZVK2stQXODwrwsTyFzK6/Jxt9vt/fi8F6opD9MMsohnz1+WQLVVQfS0XnJiJhtc
+ LNLskA15FjzURVAbK5EZaI1b5UJGTHvdRXycVdprQUsFnJ7JZaPMWksiXLm9r+Ndyaeklwakd
+ OhiMwOoJE6qrOjB9QpYGAepCg/KlNGFz3AaQBpWbKb0wXzSS4NfVpn80UjiPCOnoHPmJ6ogZ8
+ Hg9JY1zIFq3kTEw9eITg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 at 12:24, Marc Zyngier <maz@kernel.org> wrote:
+On Wed, Nov 6, 2019 at 7:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> On 2019-11-07 13:30, Rasmus Villemoes wrote:
-> > In v7, I've tried to change from a custom binding to use
-> > interrupt-map, modelled on the recent addition of the
-> > renesas,rza1-irqc (commits a644ccb819bc and 5e27a314a11f). It's
-> > possible that the interrupt-map parsing code can be factored to a
-> > common helper, but it's a bit hard to generalize from two examples to
-> > know what a good interface would look like.
-> >
-> > The interrupt-map-mask is a bit arbitrary. 0xff would likely work
-> > just
-> > as well (but I think the ls2088a has 32 external lines, so it has to
-> > be a least 0x1f).
-> >
-> > Also, this drops the fsl,bit-reverse property and instead reads the
-> > SCFGREVCR register to determine if bit-reversing is needed.
-> >
-> > The dt/bindings patch now comes first in accordance with
-> > Documentation/devicetree/bindings/submitting-patches.txt.
-> >
-> > Earlier versions can be found here:
-> >
-> > v6:
-> > https://lore.kernel.org/lkml/20190923101513.32719-1-kurt@linutronix.de/
-> > v5:
-> >
-> > https://lore.kernel.org/lkml/20180223210901.23480-1-rasmus.villemoes@prevas.dk/
-> >
-> > Rasmus Villemoes (2):
-> >   dt/bindings: Add bindings for Layerscape external irqs
-> >   irqchip: add support for Layerscape external interrupt lines
-> >
-> >  .../interrupt-controller/fsl,ls-extirq.txt    |  49 +++++
-> >  drivers/irqchip/Kconfig                       |   4 +
-> >  drivers/irqchip/Makefile                      |   1 +
-> >  drivers/irqchip/irq-ls-extirq.c               | 197
-> > ++++++++++++++++++
-> >  4 files changed, 251 insertions(+)
-> >  create mode 100644
-> >
-> > Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-> >  create mode 100644 drivers/irqchip/irq-ls-extirq.c
+> Hi Palmer,
 >
-> Applied to irqchip-next.
+> On Wed, Nov 6, 2019 at 7:11 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> > It looks like the difference in prototype between the architectures is between
+> >
+> >     void __iomem *ioremap(resource_size_t, size_t)
+> >     void __iomem *ioremap(phys_addr_t, size_t)
+> >     void __iomem *ioremap(phys_addr_t, unsigned long)
+> >     void __iomem *ioremap(unsigned long, unsigned long)
+> >
+> > shouldn't they all just be that first one?  In other words, wouldn't it be
+> > better to always provide the generic ioremap prototype and unify the ports
+> > instead?
 >
-> Thanks,
->
->          M.
-> --
-> Jazz is not dead. It just smells funny...
+> Agreed. But I'd go for the second one.
 
-A bit late, but for what it's worth,
+Right, phys_addr_t is the correct type here, resource_size_t is just a generic
+type that is at least as long as any resource, and usually the same as
+phys_addr_t, which is supposed to be used for physical addresses.
 
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-
-Background: https://www.spinics.net/lists/netdev/msg611505.html
-
-Thanks,
--Vladimir
+      Arnd
