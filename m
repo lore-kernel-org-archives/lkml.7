@@ -2,77 +2,64 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C298C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA16C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6DA214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E4C214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:34:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="hjBW8tL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfKKMdl (ORCPT
+        id S1727001AbfKKMeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 07:33:41 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:48237 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKKMdl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 07:33:41 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iU8sx-0000T0-6M; Mon, 11 Nov 2019 12:33:35 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jon Maloy <jon.maloy@ericsson.com>,
-        Ying Xue <ying.xue@windreiver.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
-        netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] tipc: fix update of the uninitialized variable err
-Date:   Mon, 11 Nov 2019 12:33:34 +0000
-Message-Id: <20191111123334.68401-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 11 Nov 2019 07:34:06 -0500
+Received: from first.geanix.com ([116.203.34.67]:35130 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726810AbfKKMeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 07:34:06 -0500
+Received: from localhost (87-49-44-45-mobile.dk.customer.tdc.net [87.49.44.45])
+        by first.geanix.com (Postfix) with ESMTPSA id 5BF5C8ED32;
+        Mon, 11 Nov 2019 12:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1573475489; bh=vA/ubZR8WQd44V047oybkMR4vUaL0pxjJypRZvbCbbs=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=hjBW8tL26FwkpKD8J+BU7qs8IoykYAp7kKcMG9wO7Iov5uOUV4FUMPUVxzl/glzAc
+         Sn0czBzaUarv/s6i1n3/ftKsZRMHfTSbYhePNmwVV3r12SgJesoRbaXVzan8CdvpZJ
+         MB/Rjgm7S1ev1Z5f5/TLqUcIzio7vV+kozbdPe/upd0SpAl/l+kIUnQ1QIilf3+Fst
+         iHXClrWfpGVZ/dJZ2tCq4U3/Osg11niramaMZuuPSLLeqrt1p9xf3eHv+mYtOi2AmI
+         VcL50cvfn3p91/E9D44XxuSFrhbSi0avGLLi3AXmxi7PjGdEw3RZKTeNlOdsq9w+iK
+         /URiJp6QPthzg==
+From:   Esben Haabendal <esben@geanix.com>
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     <linux-kernel@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] net: ll_temac: Remove set but not used variable 'start_p'
+References: <20191110103937.124600-1-zhengyongjun3@huawei.com>
+Date:   Mon, 11 Nov 2019 13:34:02 +0100
+In-Reply-To: <20191110103937.124600-1-zhengyongjun3@huawei.com> (Zheng
+        Yongjun's message of "Sun, 10 Nov 2019 18:39:37 +0800")
+Message-ID: <87r22ed22t.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Zheng Yongjun <zhengyongjun3@huawei.com> writes:
 
-Variable err is not uninitialized and hence can potentially contain
-any garbage value.  This may cause an error when logical or'ing the
-return values from the calls to functions crypto_aead_setauthsize or
-crypto_aead_setkey.  Fix this by setting err to the return of
-crypto_aead_setauthsize rather than or'ing in the return into the
-uninitialized variable
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/net/ethernet/xilinx/ll_temac_main.c: In function temac_start_xmit:
+> drivers/net/ethernet/xilinx/ll_temac_main.c:737:13: warning: variable start_p set but not used [-Wunused-but-set-variable]
+>
+> start_p is never used, so remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: fc1b6d6de220 ("tipc: introduce TIPC encryption & authentication")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/tipc/crypto.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-index 05f7ca76e8ce..990a872cec46 100644
---- a/net/tipc/crypto.c
-+++ b/net/tipc/crypto.c
-@@ -463,7 +463,7 @@ static int tipc_aead_init(struct tipc_aead **aead, struct tipc_aead_key *ukey,
- 			break;
- 		}
- 
--		err |= crypto_aead_setauthsize(tfm, TIPC_AES_GCM_TAG_SIZE);
-+		err = crypto_aead_setauthsize(tfm, TIPC_AES_GCM_TAG_SIZE);
- 		err |= crypto_aead_setkey(tfm, ukey->key, keylen);
- 		if (unlikely(err)) {
- 			crypto_free_aead(tfm);
--- 
-2.20.1
-
+Acked-by: Esben Haabendal <esben@geanix.com>
