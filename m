@@ -6,65 +6,61 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE2AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED505C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F2A21925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FA82190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKKNSB (ORCPT
+        id S1727016AbfKKNSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:18:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44994 "EHLO mx1.suse.de"
+        Mon, 11 Nov 2019 08:18:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45086 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726897AbfKKNSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:18:00 -0500
+        id S1726845AbfKKNSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 08:18:24 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EC112B590;
-        Mon, 11 Nov 2019 13:17:58 +0000 (UTC)
-Subject: Re: [PATCH][next] xen/gntdev: remove redundant non-zero check on ret
-To:     Colin Ian King <colin.king@canonical.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191111122009.67789-1-colin.king@canonical.com>
- <04efe197-2914-ab1d-918b-8899aa0354af@suse.com>
- <ec4ffabf-9cfa-2db6-7e23-60f84947d0a9@canonical.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <767fe18a-c3d6-4200-9eb5-31e1665811a0@suse.com>
-Date:   Mon, 11 Nov 2019 14:17:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        by mx1.suse.de (Postfix) with ESMTP id 05DF4B595;
+        Mon, 11 Nov 2019 13:18:23 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 14:18:17 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Diego Elio =?iso-8859-1?Q?Petten=F2?= <flameeyes@flameeyes.com>
+Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org
+Subject: Re: cdrom: make debug logging rely on pr_debug and debugfs only.
+Message-ID: <20191111131817.GA2770@kitsune.suse.cz>
+References: <20190826151640.5036-3-flameeyes@flameeyes.com>
+ <20191103160030.GO1384@kitsune.suse.cz>
+ <CAHcsgXRtWAt0mEQoW2rn1v6yYZ8ZKygKVetk4mnm_o+pwgwcVw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ec4ffabf-9cfa-2db6-7e23-60f84947d0a9@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHcsgXRtWAt0mEQoW2rn1v6yYZ8ZKygKVetk4mnm_o+pwgwcVw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.11.19 13:31, Colin Ian King wrote:
-> On 11/11/2019 12:25, JÃ¼rgen GroÃŸ wrote:
->> On 11.11.19 13:20, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> The non-zero check on ret is always going to be false because
->>> ret was initialized as zero and the only place it is set to
->>> non-zero contains a return path before the non-zero check. Hence
->>> the check is redundant and can be removed.
->>
->> Which version did you patch against? In current master the above
->> statement is not true.
+On Mon, Nov 11, 2019 at 12:21:38PM +0000, Diego Elio Pettenò wrote:
+> On Sun, Nov 3, 2019 at 4:00 PM Michal Suchánek <msuchanek@suse.de> wrote:
+> > can you change cd_dbg to a macro that always prints the device name
+> > using pr_debug instead of removing it?
 > 
-> against today's linux-next
+> I can try doing that (need to figure out how, of course.)
+> 
+> Should I split the change that removes the debug parameter /
+> ERRORLOGMASK parts? To be honest those are the parts that appear more
+> of a duplication than the macro itself, so it might make sense to
+> remove the custom debug selection, and then add the device name on top
+> of that?
 
-Ah, okay, this is likely the result of the recent mm-notifier patch
-series. I'll put this patch on hold until the recent patches have
-hit master.
+I wrote a patch that does just that because I am debugging an issue with
+cdrom and I need to know which device the messages relate to.
 
+Maybe you can drop this part entirely to not get conflicts.
 
-Juergen
+Thanks
+
+Michal
