@@ -2,98 +2,113 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB6EC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BA1C17446
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEAF214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FC121783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKKKLW (ORCPT
+        id S1727024AbfKKKLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:11:22 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:41619 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKKKLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:11:21 -0500
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MY60L-1iOMQt1XnZ-00YS76; Mon, 11 Nov 2019 11:11:18 +0100
-Received: by mail-qv1-f49.google.com with SMTP id g12so4612896qvy.12;
-        Mon, 11 Nov 2019 02:11:17 -0800 (PST)
-X-Gm-Message-State: APjAAAVw0WGVa93bX2rRIm+r96RX/85x++Y6Y+1THc5M39Nr7QXeXTz9
-        FNDCsmaP71q+RB31ugbw6lq7BlY3FYpr83v54fA=
-X-Google-Smtp-Source: APXvYqyPlYZ0IqFyt+F/Kw+2cGPdhPemO7nTBHjMV2hNTSSGSuWp0EuM7jgO4bHxqVV9VdMKLREBG37EpIWZ8cUBhPs=
-X-Received: by 2002:a05:6214:2c2:: with SMTP id g2mr4941532qvu.210.1573467075908;
- Mon, 11 Nov 2019 02:11:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-18-hch@lst.de>
-In-Reply-To: <20191029064834.23438-18-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:10:59 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0zfmup8DYQQnT3GNCkgcv9cWxejj2QAr+FmYWs46ZuHQ@mail.gmail.com>
-Message-ID: <CAK8P3a0zfmup8DYQQnT3GNCkgcv9cWxejj2QAr+FmYWs46ZuHQ@mail.gmail.com>
-Subject: Re: [PATCH 17/21] lib: provide a simple generic ioremap implementation
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Jw6R9MgtvptgNXqV/w46V9xoWHwD8XE4Gouh0J/yWwM5otV+kEB
- 7FSvlqisGkXoarQq9FFf3XFSjfP9Khv9CrlcIQDIkUSwECgEvjTVagVGR3QxPZgRg3l/GuQ
- 8OUkBeqU9izVWQKnuUGe6AdIB/gzwRuFEcYqOXkH7nn3G2TyXwgwM5Aa+PTWKQRCxiPSwDu
- MOI9JFOzby7qtJJf103xg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:S8NSDlRnK1o=:vMqksgfFRp2mw5k/tQhbgV
- lcIyqgT3ki2FIY87+u2D27KifRyeL6ThUGNX+z7MhqRBYT30ekG9g9ObGFmZYrNhCLSU5JIi4
- 8QegsEKJ++4cbA7zusaA5qWw8EYeM54yokC/uBbDTwNxFoPYBmFIRaDyYRi3sbvoJS0aa7SPu
- EEgGXecEUIb9p2vRpZj76b8gAKvZdxLpHHfgeJfcHQYBvC3xzw6YrQ/I5TLOgAmjswUEWoNVc
- O2E7mq8OsfFcUwB29XiNw4PkDISlajRGQjLPBesn7pMrecfwZXFthvD5s9vCD/FQ9UUVRvi1f
- g95QZpXTUPtqDH/KeUrh734/pxm4boI10A3DlmZNWEQE9kqVGzvtU9yLgzMHW1XfyN60r2NBv
- Dfh804PlU/WAsfEOzP5tPUULYHw3EvRj3cbteSU3mFgTi+OrLrlTgSgdZbDF9anAMzSZ90f6o
- SW6PEJ9IqSwzXQOVUd1YZArqfER7aBrrLblIgay+udsRoWRLP1JlMCNF92ESsTzAA6ZlOMnp2
- XqIfHoPIQ2Gurj1lz0M1nxy4NqswmYl0JPQ11J7XH7X6k4k5kcxPKttsXPL2G1pW/uKAjld17
- e6mFgvd6YLnYn1IHWKaW9aRCy3uXLuaGI9G59UlW2dUyrhwoxn3Pea4l2TZErVFeQx+Cl6EIb
- knSdZ1rCFRdbIW50xX839USHFCSoTk9LxqZQvZPKKNOK7Ttiy7i+/p9M/qUD13TkmQ4ZGl56Q
- EX4wiVhKo9JAU3CFkhOF3rpWiNyy+nxZmyL/rM+3kjfCpTgO5gtyavQJaF4GCfR0c3lYs9+N3
- QDaQTfW5fYZWeGYexqmlIJNk5GRYSgfZQ0ajmBqUxjPZtn/u7CEiY87+wGnf/ANO+Lugo5i1b
- M4G8dKUkBnc1NwtYJFrA==
+        Mon, 11 Nov 2019 05:11:36 -0500
+Received: from mga01.intel.com ([192.55.52.88]:35383 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfKKKLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:11:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 02:11:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
+   d="scan'208";a="213737171"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Nov 2019 02:11:32 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v6 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Mon, 11 Nov 2019 18:11:28 +0800
+Message-Id: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:49 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> A lot of architectures reuse the same simple ioremap implementation, so
-> start lifting the most simple variant to lib/ioremap.c.  It provides
-> ioremap_prot and iounmap, plus a default ioremap that uses prot_noncached,
-> although that can be overridden by asm/io.h.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi,
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
+
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+
+v6:
+- Fix code quality/style/readability related review concerns.
+- Remove enum usage from pinmux property in dt bindings.
+
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
+
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        |  98 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 953 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 ++++
+ 5 files changed, 1214 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
+-- 
+2.11.0
+
