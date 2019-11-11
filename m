@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFE2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38F1C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E762921925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B045D21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497058;
-	bh=8Dm4+kdLqO+TbLDhdygXJ78ykpJU9KVLQFQitgP3Y7M=;
+	s=default; t=1573497059;
+	bh=CUXlu8NZW03WkyDCebKAp5bWiJQw0Dd3ZEeLxh35JVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hoAzb1SMHiZZh1y4OP5rHJzCtn2yPGcL9GGxnR/dmgMXsRxKB9JyornGzt8ErCCeL
-	 w/tRxyXJZBIw5fEpGlqNwqpXtRu2ZBU22GNIQZYuceGzdGQm5W/F9Epw2PSOee3Gwo
-	 Ivf41Z2Wq/VvJXtU2r95UetwT8EAkWHChdMECaBM=
+	b=uDtOVPoEmrVo9yNQzrK4x7i37dEnrOoLHc45UJOSdwMieDdm5uA8vgRDvsOS8DoDq
+	 jKrwQfv9MTKcP5KM4TRVnFihSBgYtjEDPJGwG3vWPv16i/s7fM5rY4rvdkWl0Fk6I/
+	 oJoxyW/7+g2LhsK+A9bHpbYqajTuUuiWbZMXi2e0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfKKSa4 (ORCPT
+        id S1727036AbfKKSa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:30:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:30:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727483AbfKKSay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:54 -0500
+        id S1727498AbfKKSa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F38D21925;
-        Mon, 11 Nov 2019 18:30:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AAE221872;
+        Mon, 11 Nov 2019 18:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497052;
-        bh=8Dm4+kdLqO+TbLDhdygXJ78ykpJU9KVLQFQitgP3Y7M=;
+        s=default; t=1573497055;
+        bh=CUXlu8NZW03WkyDCebKAp5bWiJQw0Dd3ZEeLxh35JVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gOL/O6scxoXI/llLrnlzYBu4IJ9uAId3f6uDV9DTCOvUFIxg993aIeAuGPs3393jB
-         ppo4Gu73M/J9SFFAiShjxL1FYgo7Uf8QMpy79+huW6xguZF2YJn7AJQ6J1vBt160DM
-         KTJRd4xOOiQNzWy5fIZ4IvvvOY9daqnDSRr7KeDk=
+        b=mdsvgeW7BWRUftlGNbbAGz+K6qZxfPe/AG8C8DeCzic7BMCquSIiv7PYqWrFEbKw9
+         yTZQjQMC/tRpVlqj381HNENtQ9Sk2tY+05P5TdR3w6h+0R/HwBRXSdBPDydKgW7U5C
+         vHxVQV2e4uWLzDuSjdyreS221z364cHDyWjtGc1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nikhil Badola <nikhil.badola@freescale.com>,
+        Ran Wang <ran.wang_1@nxp.com>, Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 29/43] bonding: fix unexpected IFF_BONDING bit unset
-Date:   Mon, 11 Nov 2019 19:28:43 +0100
-Message-Id: <20191111181319.707800595@linuxfoundation.org>
+Subject: [PATCH 4.4 30/43] usb: fsl: Check memory resource before releasing it
+Date:   Mon, 11 Nov 2019 19:28:44 +0100
+Message-Id: <20191111181320.739683111@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -60,98 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Nikhil Badola <nikhil.badola@freescale.com>
 
-[ Upstream commit 65de65d9033750d2cf1b336c9d6e9da3a8b5cc6e ]
+[ Upstream commit bc1e3a2dd0c9954fd956ac43ca2876bbea018c01 ]
 
-The IFF_BONDING means bonding master or bonding slave device.
-->ndo_add_slave() sets IFF_BONDING flag and ->ndo_del_slave() unsets
-IFF_BONDING flag.
+Check memory resource existence before releasing it to avoid NULL
+pointer dereference
 
-bond0<--bond1
-
-Both bond0 and bond1 are bonding device and these should keep having
-IFF_BONDING flag until they are removed.
-But bond1 would lose IFF_BONDING at ->ndo_del_slave() because that routine
-do not check whether the slave device is the bonding type or not.
-This patch adds the interface type check routine before removing
-IFF_BONDING flag.
-
-Test commands:
-    ip link add bond0 type bond
-    ip link add bond1 type bond
-    ip link set bond1 master bond0
-    ip link set bond1 nomaster
-    ip link del bond1 type bond
-    ip link add bond1 type bond
-
-Splat looks like:
-[  226.665555] proc_dir_entry 'bonding/bond1' already registered
-[  226.666440] WARNING: CPU: 0 PID: 737 at fs/proc/generic.c:361 proc_register+0x2a9/0x3e0
-[  226.667571] Modules linked in: bonding af_packet sch_fq_codel ip_tables x_tables unix
-[  226.668662] CPU: 0 PID: 737 Comm: ip Not tainted 5.4.0-rc3+ #96
-[  226.669508] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  226.670652] RIP: 0010:proc_register+0x2a9/0x3e0
-[  226.671612] Code: 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 39 01 00 00 48 8b 04 24 48 89 ea 48 c7 c7 a0 0b 14 9f 48 8b b0 e
-0 00 00 00 e8 07 e7 88 ff <0f> 0b 48 c7 c7 40 2d a5 9f e8 59 d6 23 01 48 8b 4c 24 10 48 b8 00
-[  226.675007] RSP: 0018:ffff888050e17078 EFLAGS: 00010282
-[  226.675761] RAX: dffffc0000000008 RBX: ffff88805fdd0f10 RCX: ffffffff9dd344e2
-[  226.676757] RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff88806c9f6b8c
-[  226.677751] RBP: ffff8880507160f3 R08: ffffed100d940019 R09: ffffed100d940019
-[  226.678761] R10: 0000000000000001 R11: ffffed100d940018 R12: ffff888050716008
-[  226.679757] R13: ffff8880507160f2 R14: dffffc0000000000 R15: ffffed100a0e2c1e
-[  226.680758] FS:  00007fdc217cc0c0(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
-[  226.681886] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  226.682719] CR2: 00007f49313424d0 CR3: 0000000050e46001 CR4: 00000000000606f0
-[  226.683727] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  226.684725] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  226.685681] Call Trace:
-[  226.687089]  proc_create_seq_private+0xb3/0xf0
-[  226.687778]  bond_create_proc_entry+0x1b3/0x3f0 [bonding]
-[  226.691458]  bond_netdev_event+0x433/0x970 [bonding]
-[  226.692139]  ? __module_text_address+0x13/0x140
-[  226.692779]  notifier_call_chain+0x90/0x160
-[  226.693401]  register_netdevice+0x9b3/0xd80
-[  226.694010]  ? alloc_netdev_mqs+0x854/0xc10
-[  226.694629]  ? netdev_change_features+0xa0/0xa0
-[  226.695278]  ? rtnl_create_link+0x2ed/0xad0
-[  226.695849]  bond_newlink+0x2a/0x60 [bonding]
-[  226.696422]  __rtnl_newlink+0xb9f/0x11b0
-[  226.696968]  ? rtnl_link_unregister+0x220/0x220
-[ ... ]
-
-Fixes: 0b680e753724 ("[PATCH] bonding: Add priv_flag to avoid event mishandling")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
+Reviewed-by: Ran Wang <ran.wang_1@nxp.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/fsl_udc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 1bf4f54c2befb..e31b4c7d2522b 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1719,7 +1719,8 @@ err_detach:
- 	slave_disable_netpoll(new_slave);
+diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/udc/fsl_udc_core.c
+index 8991a40707926..bd98557caa280 100644
+--- a/drivers/usb/gadget/udc/fsl_udc_core.c
++++ b/drivers/usb/gadget/udc/fsl_udc_core.c
+@@ -2570,7 +2570,7 @@ static int fsl_udc_remove(struct platform_device *pdev)
+ 	dma_pool_destroy(udc_controller->td_pool);
+ 	free_irq(udc_controller->irq, udc_controller);
+ 	iounmap(dr_regs);
+-	if (pdata->operating_mode == FSL_USB2_DR_DEVICE)
++	if (res && (pdata->operating_mode == FSL_USB2_DR_DEVICE))
+ 		release_mem_region(res->start, resource_size(res));
  
- err_close:
--	slave_dev->priv_flags &= ~IFF_BONDING;
-+	if (!netif_is_bond_master(slave_dev))
-+		slave_dev->priv_flags &= ~IFF_BONDING;
- 	dev_close(slave_dev);
- 
- err_restore_mac:
-@@ -1915,7 +1916,8 @@ static int __bond_release_one(struct net_device *bond_dev,
- 
- 	dev_set_mtu(slave_dev, slave->original_mtu);
- 
--	slave_dev->priv_flags &= ~IFF_BONDING;
-+	if (!netif_is_bond_master(slave_dev))
-+		slave_dev->priv_flags &= ~IFF_BONDING;
- 
- 	bond_free_slave(slave);
- 
+ 	/* free udc --wait for the release() finished */
 -- 
 2.20.1
 
