@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B973C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A03C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7B121872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48F221872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497198;
-	bh=mqyEWFvgOemgk+WYbPoXVJtGwlTN2nroQNnURcth40M=;
+	s=default; t=1573497201;
+	bh=ffjaODsYTvbGyDYsiW9Bkd7LaAZfNiZXUzp88mmNdBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2kfkjLInlcI3ufj3Z19lChO6JQI6ORJg9pCnJw3aL8fKBzGwwDmsM76v6o8A5+Vim
-	 66BUjTn3f8HzutJWQrPS3fjrn4K0Ow6k3x0f5R6KiL+fg+pu4Q6ZlcLOwB83LxaPm5
-	 L6zLpopl1PK3pyIqBfzi6pPOexCo91UFMSlPcbVM=
+	b=IQJfWbFYl6/7JVkc3FFpCaoen4hGV9f9zRkqADiO0BuEkIppn9jPGPJMoD7TAyOoS
+	 ACjkuNG9XzsrlWGNcukuP0yFPa5tnpe6GfBzlpKXO7lBGmXneIe4jHaIIYNfta4bjS
+	 YqVcYuoXhBw4LKTFIKzVCUGtD95jwff4jH0j+h+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfKKSdQ (ORCPT
+        id S1728134AbfKKSdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50568 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbfKKSdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:14 -0500
+        id S1728122AbfKKSdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8109521655;
-        Mon, 11 Nov 2019 18:33:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B736521655;
+        Mon, 11 Nov 2019 18:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497193;
-        bh=mqyEWFvgOemgk+WYbPoXVJtGwlTN2nroQNnURcth40M=;
+        s=default; t=1573497196;
+        bh=ffjaODsYTvbGyDYsiW9Bkd7LaAZfNiZXUzp88mmNdBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cO/jrqRFcuS37HDhO5FGYs/0+/Sr9/2aai9kITJftgXrDqCfpslFtWlAtraiIGX6T
-         kp1pg2JKMHeGU3qaBVxHaibVWUjQJ4Bi3iMeOTGmkXkwhBxeGlciPy5j1JHJxku58o
-         FzOGFnzBaTTNAHmdfuKnz6tmKyuquobfl2MEwNXY=
+        b=ZuOaGUDvDAD0hJEnvrpC6M5U1qL1gEoedQzQk5KKUxZIzhfKk1fi27TZDmgs4B5lN
+         XM5GO1+/ytYgOEPxtinCGCAfZEPFMgftoXy/yccaARu/yevCwFqfZjQ+V+m4QCADmb
+         +XNfLlQEgleWWTipw/kRoOJiassVUEs4YwAmMA/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>
-Subject: [PATCH 4.9 34/65] usbip: Fix vhci_urb_enqueue() URB null transfer buffer error path
-Date:   Mon, 11 Nov 2019 19:28:34 +0100
-Message-Id: <20191111181346.896360052@linuxfoundation.org>
+        stable@vger.kernel.org, Nobuo Iwata <nobuo.iwata@fujixerox.co.jp>
+Subject: [PATCH 4.9 35/65] usbip: fix possibility of dereference by NULLL pointer in vhci_hcd.c
+Date:   Mon, 11 Nov 2019 19:28:35 +0100
+Message-Id: <20191111181346.989434977@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -58,34 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <shuah@kernel.org>
+From: Nobuo Iwata <nobuo.iwata@fujixerox.co.jp>
 
-commit 2c904963b1dd2acd4bc785b6c72e10a6283c2081 upstream.
+commit d79cda045e3bacb7e754a5324cd3d4ce80708eb1 upstream.
 
-Fix vhci_urb_enqueue() to print debug msg and return error instead of
-failing with BUG_ON.
+This patch fixes possibility of dereference by NULLL pointer in "[PATCH
+v5 1/3] usbip: vhci extension: modifications to vhci driver" which has
+been merged to 4.9-rc1. It occurs when a URB with pointer to invalid
+USB/IP device is enqueued in race condition against detach operation.
 
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+A pointer was passed to vdev_to_vhci() before NULL check.
+In vdev_to_vhci(), there's a dereference by the pointer.
+
+This patch moves vdev_to_vhci() after NULL check of the pointer.
+
+Signed-off-by: Nobuo Iwata <nobuo.iwata@fujixerox.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/usbip/vhci_hcd.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/usbip/vhci_hcd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/drivers/usb/usbip/vhci_hcd.c
 +++ b/drivers/usb/usbip/vhci_hcd.c
-@@ -512,8 +512,10 @@ static int vhci_urb_enqueue(struct usb_h
+@@ -465,13 +465,14 @@ static void vhci_tx_urb(struct urb *urb)
+ {
+ 	struct vhci_device *vdev = get_vdev(urb->dev);
+ 	struct vhci_priv *priv;
+-	struct vhci_hcd *vhci = vdev_to_vhci(vdev);
++	struct vhci_hcd *vhci;
+ 	unsigned long flags;
+ 
+ 	if (!vdev) {
+ 		pr_err("could not get virtual device");
+ 		return;
  	}
- 	vdev = &vhci->vdev[portnum-1];
++	vhci = vdev_to_vhci(vdev);
  
--	/* patch to usb_sg_init() is in 2.5.60 */
--	BUG_ON(!urb->transfer_buffer && urb->transfer_buffer_length);
-+	if (!urb->transfer_buffer && urb->transfer_buffer_length) {
-+		dev_dbg(dev, "Null URB transfer buffer\n");
-+		return -EINVAL;
-+	}
- 
- 	spin_lock_irqsave(&vhci->lock, flags);
- 
+ 	priv = kzalloc(sizeof(struct vhci_priv), GFP_ATOMIC);
+ 	if (!priv) {
 
 
