@@ -7,92 +7,95 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1039C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9D32190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635B6222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573486805;
-	bh=fIMS1YCPUO+d4NLi94WgM6DC/eRYtzSD8x7U2/QuiQs=;
+	s=default; t=1573486841;
+	bh=2iS64xZOYjvYvoLUUfe8qlTRll7p5DjvBX1t3/+GG/I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vzR84fmZ/rpWAMzmS7t3f0BJTw5qnWGIBmo0qp8EXRpvtTY01W7Zorb3tNjKBxiBK
-	 Oq+zjk/W/xXteVsm2OC0sbKtsoYJoLhe8jwY5ynFkFnhhbn/9ITrVak41By2k6G0k9
-	 1MAn4XVvSOIedS+xrwabJi52cpfVcjT6FUxLtIoY=
+	b=YKe6iGsyfBJx4sA6RU46QTWTUWj5603hbWSAdhbE5JiDEDJFROOMeNPfd53qdBtjH
+	 7GtQYxVgKSBNr9ZoVpf9Racpk1kiSEJqe6/s6GIBxNInZiHX7vbebKEgcS1duAPHh6
+	 t+zugOkh2Zt4/UfnrQnz8aEGjJREyuqwkQjz02R4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfKKPkE (ORCPT
+        id S1727047AbfKKPkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:40:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33518 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 10:40:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbfKKPkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:40:03 -0500
+        id S1726845AbfKKPkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:40:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57D22196E;
-        Mon, 11 Nov 2019 15:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0953E222BD;
+        Mon, 11 Nov 2019 15:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573486803;
-        bh=fIMS1YCPUO+d4NLi94WgM6DC/eRYtzSD8x7U2/QuiQs=;
+        s=default; t=1573486839;
+        bh=2iS64xZOYjvYvoLUUfe8qlTRll7p5DjvBX1t3/+GG/I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zp6k4XU7wY4KEfsrdTGJ3QbS7/ydrxCFaPi4ky5+hjFqCqymmtiKfH0BmU+dCixYv
-         RV3rqMCVH8jycSEIfwUWOJbs2fn7eEECn9ITOX63fykqBS/dN5A5651lbCOvvjmC5V
-         OqCGiNGZpFlBXgP9+VFeMf0IPc1FIgqEQM6zvOCg=
-Date:   Mon, 11 Nov 2019 16:40:01 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     devel@driverdev.osuosl.org, Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging/octeon: Fix test build on MIPS
-Message-ID: <20191111154001.GA813474@kroah.com>
-References: <20191110175620.20290-1-linux@roeck-us.net>
+        b=Mwq5EAHecQ97ip678b/pa0+doG30SMQbMzhZcL4fA9B4Gno/cnf5Xc2gj2oPjp7jS
+         4YRxMqyutLmGGMZN4oOoBAR6lBSu4tdiHevigMtIyOX++pc2Paj4S9BdN14/XEWqlC
+         v1/yTPNwgdYr898kjIE8z2XkEbQQHyyLU5vUbzZg=
+Date:   Mon, 11 Nov 2019 16:40:37 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     dri-devel@lists.freedesktop.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] staging: fbtft: Remove set but not used variable 'ret'
+Message-ID: <20191111154037.GA816982@kroah.com>
+References: <20191110105707.136956-1-zhengyongjun3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191110175620.20290-1-linux@roeck-us.net>
+In-Reply-To: <20191110105707.136956-1-zhengyongjun3@huawei.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 09:56:20AM -0800, Guenter Roeck wrote:
-> mips:allmodconfig fails to build.
+On Sun, Nov 10, 2019 at 06:57:07PM +0800, Zheng Yongjun wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> drivers/staging/octeon/ethernet-rx.c: In function 'cvm_oct_poll':
-> drivers/staging/octeon/ethernet-defines.h:30:38: error:
-> 	'CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE' undeclared
+> drivers/staging/fbtft/fb_ili9320.c: In function read_devicecode:
+> drivers/staging/fbtft/fb_ili9320.c:25:6: warning: variable ret set but not used [-Wunused-but-set-variable]
 > 
-> Octeon defines are only available if CONFIG_CPU_CAVIUM_OCTEON
-> is enabled. Since the driver uses those defines, we have to use
-> the dummy defines if this flag is not enabled.
+> ret is never used, so remove it.
 > 
-> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Fixes: 171a9bae68c7 ("staging/octeon: Allow test build on !MIPS")
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> Cc: stable <stable@vger.kernel.org>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
 > ---
->  drivers/staging/octeon/octeon-ethernet.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/staging/fbtft/fb_ili9320.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/staging/octeon/octeon-ethernet.h b/drivers/staging/octeon/octeon-ethernet.h
-> index a8a864b40913..70848c6c86ec 100644
-> --- a/drivers/staging/octeon/octeon-ethernet.h
-> +++ b/drivers/staging/octeon/octeon-ethernet.h
-> @@ -14,7 +14,7 @@
->  #include <linux/of.h>
->  #include <linux/phy.h>
+> diff --git a/drivers/staging/fbtft/fb_ili9320.c b/drivers/staging/fbtft/fb_ili9320.c
+> index f2e72d14431d..f0ebc40857b3 100644
+> --- a/drivers/staging/fbtft/fb_ili9320.c
+> +++ b/drivers/staging/fbtft/fb_ili9320.c
+> @@ -22,11 +22,10 @@
 >  
-> -#ifdef CONFIG_MIPS
-> +#ifdef CONFIG_CPU_CAVIUM_OCTEON
+>  static unsigned int read_devicecode(struct fbtft_par *par)
+>  {
+> -	int ret;
+>  	u8 rxbuf[8] = {0, };
 >  
->  #include <asm/octeon/octeon.h>
+>  	write_reg(par, 0x0000);
+> -	ret = par->fbtftops.read(par, rxbuf, 4);
+> +	par->fbtftops.read(par, rxbuf, 4);
+>  	return (rxbuf[2] << 8) | rxbuf[3];
+>  }
 >  
 
-Already in my tree, sorry for the delay, will show up in 5.5-rc1 and get
-backported to 5.4.y
+If the read call can fail, shouldn't you be passing back the error
+value instead?
 
 thanks,
 
 greg k-h
+
+> -- 
+> 2.23.0
+> 
