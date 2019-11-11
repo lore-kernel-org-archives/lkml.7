@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3798C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7C3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928F1222CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170B821655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499070;
-	bh=DF2XagEljl5TZRagMPSj2QJvEvvc3sLNxi3EckVbH7M=;
+	s=default; t=1573499080;
+	bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjABMcaWmYYieAL6iUnVxCR7X3LG19Il1oL1V1FOrZ4VuIxx90G60wEkOBVA+h5Ff
-	 0NvuT/JQ7QP9ML7RE1RQcMtmdfJz6yTpD6tzWQEjQXESfwHGcqNmT9lsXTYgdzIGoI
-	 5PP+/KR72wTJIchvmXhZWGPN1Cn4iFc4x4hq5kF0=
+	b=RwbM8JpBOM64PIClzdmAU8Xr+PI3RodiFfVBVTV9Swg30PIoGaiaUCIAHHnkgSknV
+	 edB7vnTzoM9Rf9cV9QTnaHGY27F5fXb1iQJombGcoZod9msRWNUJ3Pk6wFGoa6x2mN
+	 bDMPaSVyA+Qg3snGg5ZoRk4RHNmnYHl8djH0Us8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbfKKTE3 (ORCPT
+        id S1729099AbfKKSm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:04:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34136 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:42:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbfKKSmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:42:55 -0500
+        id S1729072AbfKKSmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:42:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E176E21783;
-        Mon, 11 Nov 2019 18:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07CEB21783;
+        Mon, 11 Nov 2019 18:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497773;
-        bh=DF2XagEljl5TZRagMPSj2QJvEvvc3sLNxi3EckVbH7M=;
+        s=default; t=1573497742;
+        bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJ01nVZnogI5o9SEYhlLiihIlopX57aMLAJDKDNs6FeGS1KUZDCMQ3LfjH/v066t2
-         dL0gZRQXOpA14edqlg0K4rj4vjs4WcWl+H5qrYcP3CSJ+kRKt8tgHgxAC8gjwOJZfc
-         KX/CBqNEpr+kflXDJv/RJ9x4HhViuxMXqxm9vFGA=
+        b=IDXJgJt2aSdsPbDj6FacpTakxTm+khjAFAYy1WuHH7IhSRbwvMjGehDvPlM0SZiKU
+         8aDInVwkJjqI6ZQDggr+tX0uxhxCsZzMVJ4/TgP/1z2V1Zos/vaSLtYomyVfFmANXx
+         LqiEO1orXsfQsWMAvq0cvQ4lTbRWoQ4SjE2lRs3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.19 054/125] configfs: new object reprsenting tree fragments
-Date:   Mon, 11 Nov 2019 19:28:13 +0100
-Message-Id: <20191111181447.508626825@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Joe Burmeister <joe.burmeister@devtank.co.uk>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.19 045/125] can: c_can: c_can_poll(): only read status register after status IRQ
+Date:   Mon, 11 Nov 2019 19:28:04 +0100
+Message-Id: <20191111181446.305910183@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -59,396 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
 
-commit 47320fbe11a6059ae502c9c16b668022fdb4cf76 upstream.
+commit 3cb3eaac52c0f145d895f4b6c22834d5f02b8569 upstream.
 
-Refcounted, hangs of configfs_dirent, created by operations that add
-fragments to configfs tree (mkdir and configfs_register_{subsystem,group}).
-Will be used in the next commit to provide exclusion between fragment
-removal and ->show/->store calls.
+When the status register is read without the status IRQ pending, the
+chip may not raise the interrupt line for an upcoming status interrupt
+and the driver may miss a status interrupt.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+It is critical that the BUSOFF status interrupt is forwarded to the
+higher layers, since no more interrupts will follow without
+intervention.
+
+Thanks to Wolfgang and Joe for bringing up the first idea.
+
+Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Joe Burmeister <joe.burmeister@devtank.co.uk>
+Fixes: fa39b54ccf28 ("can: c_can: Get rid of pointless interrupts")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/configfs/configfs_internal.h |   15 ++++-
- fs/configfs/dir.c               |  105 +++++++++++++++++++++++++++++++---------
- fs/configfs/file.c              |    4 -
- 3 files changed, 97 insertions(+), 27 deletions(-)
+ drivers/net/can/c_can/c_can.c |   25 ++++++++++++++++++++-----
+ drivers/net/can/c_can/c_can.h |    1 +
+ 2 files changed, 21 insertions(+), 5 deletions(-)
 
---- a/fs/configfs/configfs_internal.h
-+++ b/fs/configfs/configfs_internal.h
-@@ -34,6 +34,15 @@
- #include <linux/list.h>
- #include <linux/spinlock.h>
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -97,6 +97,9 @@
+ #define BTR_TSEG2_SHIFT		12
+ #define BTR_TSEG2_MASK		(0x7 << BTR_TSEG2_SHIFT)
  
-+struct configfs_fragment {
-+	atomic_t frag_count;
-+	struct rw_semaphore frag_sem;
-+	bool frag_dead;
-+};
++/* interrupt register */
++#define INT_STS_PENDING		0x8000
 +
-+void put_fragment(struct configfs_fragment *);
-+struct configfs_fragment *get_fragment(struct configfs_fragment *);
-+
- struct configfs_dirent {
- 	atomic_t		s_count;
- 	int			s_dependent_count;
-@@ -48,6 +57,7 @@ struct configfs_dirent {
- #ifdef CONFIG_LOCKDEP
- 	int			s_depth;
- #endif
-+	struct configfs_fragment *s_frag;
- };
+ /* brp extension register */
+ #define BRP_EXT_BRPE_MASK	0x0f
+ #define BRP_EXT_BRPE_SHIFT	0
+@@ -1029,10 +1032,16 @@ static int c_can_poll(struct napi_struct
+ 	u16 curr, last = priv->last_status;
+ 	int work_done = 0;
  
- #define CONFIGFS_ROOT		0x0001
-@@ -75,8 +85,8 @@ extern int configfs_create(struct dentry
- extern int configfs_create_file(struct config_item *, const struct configfs_attribute *);
- extern int configfs_create_bin_file(struct config_item *,
- 				    const struct configfs_bin_attribute *);
--extern int configfs_make_dirent(struct configfs_dirent *,
--				struct dentry *, void *, umode_t, int);
-+extern int configfs_make_dirent(struct configfs_dirent *, struct dentry *,
-+				void *, umode_t, int, struct configfs_fragment *);
- extern int configfs_dirent_is_ready(struct configfs_dirent *);
- 
- extern void configfs_hash_and_remove(struct dentry * dir, const char * name);
-@@ -151,6 +161,7 @@ static inline void release_configfs_dire
- {
- 	if (!(sd->s_type & CONFIGFS_ROOT)) {
- 		kfree(sd->s_iattr);
-+		put_fragment(sd->s_frag);
- 		kmem_cache_free(configfs_dir_cachep, sd);
- 	}
- }
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -164,11 +164,38 @@ configfs_adjust_dir_dirent_depth_after_p
- 
- #endif /* CONFIG_LOCKDEP */
- 
-+static struct configfs_fragment *new_fragment(void)
-+{
-+	struct configfs_fragment *p;
-+
-+	p = kmalloc(sizeof(struct configfs_fragment), GFP_KERNEL);
-+	if (p) {
-+		atomic_set(&p->frag_count, 1);
-+		init_rwsem(&p->frag_sem);
-+		p->frag_dead = false;
-+	}
-+	return p;
-+}
-+
-+void put_fragment(struct configfs_fragment *frag)
-+{
-+	if (frag && atomic_dec_and_test(&frag->frag_count))
-+		kfree(frag);
-+}
-+
-+struct configfs_fragment *get_fragment(struct configfs_fragment *frag)
-+{
-+	if (likely(frag))
-+		atomic_inc(&frag->frag_count);
-+	return frag;
-+}
-+
- /*
-  * Allocates a new configfs_dirent and links it to the parent configfs_dirent
-  */
- static struct configfs_dirent *configfs_new_dirent(struct configfs_dirent *parent_sd,
--						   void *element, int type)
-+						   void *element, int type,
-+						   struct configfs_fragment *frag)
- {
- 	struct configfs_dirent * sd;
- 
-@@ -188,6 +215,7 @@ static struct configfs_dirent *configfs_
- 		kmem_cache_free(configfs_dir_cachep, sd);
- 		return ERR_PTR(-ENOENT);
- 	}
-+	sd->s_frag = get_fragment(frag);
- 	list_add(&sd->s_sibling, &parent_sd->s_children);
- 	spin_unlock(&configfs_dirent_lock);
- 
-@@ -222,11 +250,11 @@ static int configfs_dirent_exists(struct
- 
- int configfs_make_dirent(struct configfs_dirent * parent_sd,
- 			 struct dentry * dentry, void * element,
--			 umode_t mode, int type)
-+			 umode_t mode, int type, struct configfs_fragment *frag)
- {
- 	struct configfs_dirent * sd;
- 
--	sd = configfs_new_dirent(parent_sd, element, type);
-+	sd = configfs_new_dirent(parent_sd, element, type, frag);
- 	if (IS_ERR(sd))
- 		return PTR_ERR(sd);
- 
-@@ -273,7 +301,8 @@ static void init_symlink(struct inode *
-  *	until it is validated by configfs_dir_set_ready()
-  */
- 
--static int configfs_create_dir(struct config_item *item, struct dentry *dentry)
-+static int configfs_create_dir(struct config_item *item, struct dentry *dentry,
-+				struct configfs_fragment *frag)
- {
- 	int error;
- 	umode_t mode = S_IFDIR| S_IRWXU | S_IRUGO | S_IXUGO;
-@@ -286,7 +315,8 @@ static int configfs_create_dir(struct co
- 		return error;
- 
- 	error = configfs_make_dirent(p->d_fsdata, dentry, item, mode,
--				     CONFIGFS_DIR | CONFIGFS_USET_CREATING);
-+				     CONFIGFS_DIR | CONFIGFS_USET_CREATING,
-+				     frag);
- 	if (unlikely(error))
- 		return error;
- 
-@@ -351,9 +381,10 @@ int configfs_create_link(struct configfs
- {
- 	int err = 0;
- 	umode_t mode = S_IFLNK | S_IRWXUGO;
-+	struct configfs_dirent *p = parent->d_fsdata;
- 
--	err = configfs_make_dirent(parent->d_fsdata, dentry, sl, mode,
--				   CONFIGFS_ITEM_LINK);
-+	err = configfs_make_dirent(p, dentry, sl, mode,
-+				   CONFIGFS_ITEM_LINK, p->s_frag);
- 	if (!err) {
- 		err = configfs_create(dentry, mode, init_symlink);
- 		if (err) {
-@@ -612,7 +643,8 @@ static int populate_attrs(struct config_
- 
- static int configfs_attach_group(struct config_item *parent_item,
- 				 struct config_item *item,
--				 struct dentry *dentry);
-+				 struct dentry *dentry,
-+				 struct configfs_fragment *frag);
- static void configfs_detach_group(struct config_item *item);
- 
- static void detach_groups(struct config_group *group)
-@@ -660,7 +692,8 @@ static void detach_groups(struct config_
-  * try using vfs_mkdir.  Just a thought.
-  */
- static int create_default_group(struct config_group *parent_group,
--				struct config_group *group)
-+				struct config_group *group,
-+				struct configfs_fragment *frag)
- {
- 	int ret;
- 	struct configfs_dirent *sd;
-@@ -676,7 +709,7 @@ static int create_default_group(struct c
- 		d_add(child, NULL);
- 
- 		ret = configfs_attach_group(&parent_group->cg_item,
--					    &group->cg_item, child);
-+					    &group->cg_item, child, frag);
- 		if (!ret) {
- 			sd = child->d_fsdata;
- 			sd->s_type |= CONFIGFS_USET_DEFAULT;
-@@ -690,13 +723,14 @@ static int create_default_group(struct c
- 	return ret;
- }
- 
--static int populate_groups(struct config_group *group)
-+static int populate_groups(struct config_group *group,
-+			   struct configfs_fragment *frag)
- {
- 	struct config_group *new_group;
- 	int ret = 0;
- 
- 	list_for_each_entry(new_group, &group->default_groups, group_entry) {
--		ret = create_default_group(group, new_group);
-+		ret = create_default_group(group, new_group, frag);
- 		if (ret) {
- 			detach_groups(group);
- 			break;
-@@ -810,11 +844,12 @@ static void link_group(struct config_gro
-  */
- static int configfs_attach_item(struct config_item *parent_item,
- 				struct config_item *item,
--				struct dentry *dentry)
-+				struct dentry *dentry,
-+				struct configfs_fragment *frag)
- {
- 	int ret;
- 
--	ret = configfs_create_dir(item, dentry);
-+	ret = configfs_create_dir(item, dentry, frag);
- 	if (!ret) {
- 		ret = populate_attrs(item);
- 		if (ret) {
-@@ -844,12 +879,13 @@ static void configfs_detach_item(struct
- 
- static int configfs_attach_group(struct config_item *parent_item,
- 				 struct config_item *item,
--				 struct dentry *dentry)
-+				 struct dentry *dentry,
-+				 struct configfs_fragment *frag)
- {
- 	int ret;
- 	struct configfs_dirent *sd;
- 
--	ret = configfs_attach_item(parent_item, item, dentry);
-+	ret = configfs_attach_item(parent_item, item, dentry, frag);
- 	if (!ret) {
- 		sd = dentry->d_fsdata;
- 		sd->s_type |= CONFIGFS_USET_DIR;
-@@ -865,7 +901,7 @@ static int configfs_attach_group(struct
- 		 */
- 		inode_lock_nested(d_inode(dentry), I_MUTEX_CHILD);
- 		configfs_adjust_dir_dirent_depth_before_populate(sd);
--		ret = populate_groups(to_config_group(item));
-+		ret = populate_groups(to_config_group(item), frag);
- 		if (ret) {
- 			configfs_detach_item(item);
- 			d_inode(dentry)->i_flags |= S_DEAD;
-@@ -1260,6 +1296,7 @@ static int configfs_mkdir(struct inode *
- 	struct configfs_dirent *sd;
- 	const struct config_item_type *type;
- 	struct module *subsys_owner = NULL, *new_item_owner = NULL;
-+	struct configfs_fragment *frag;
- 	char *name;
- 
- 	sd = dentry->d_parent->d_fsdata;
-@@ -1278,6 +1315,12 @@ static int configfs_mkdir(struct inode *
- 		goto out;
- 	}
- 
-+	frag = new_fragment();
-+	if (!frag) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
- 	/* Get a working ref for the duration of this function */
- 	parent_item = configfs_get_config_item(dentry->d_parent);
- 	type = parent_item->ci_type;
-@@ -1380,9 +1423,9 @@ static int configfs_mkdir(struct inode *
- 	spin_unlock(&configfs_dirent_lock);
- 
- 	if (group)
--		ret = configfs_attach_group(parent_item, item, dentry);
-+		ret = configfs_attach_group(parent_item, item, dentry, frag);
- 	else
--		ret = configfs_attach_item(parent_item, item, dentry);
-+		ret = configfs_attach_item(parent_item, item, dentry, frag);
- 
- 	spin_lock(&configfs_dirent_lock);
- 	sd->s_type &= ~CONFIGFS_USET_IN_MKDIR;
-@@ -1419,6 +1462,7 @@ out_put:
- 	 * reference.
- 	 */
- 	config_item_put(parent_item);
-+	put_fragment(frag);
- 
- out:
- 	return ret;
-@@ -1587,7 +1631,7 @@ static int configfs_dir_open(struct inod
- 	 */
- 	err = -ENOENT;
- 	if (configfs_dirent_is_ready(parent_sd)) {
--		file->private_data = configfs_new_dirent(parent_sd, NULL, 0);
-+		file->private_data = configfs_new_dirent(parent_sd, NULL, 0, NULL);
- 		if (IS_ERR(file->private_data))
- 			err = PTR_ERR(file->private_data);
- 		else
-@@ -1743,8 +1787,13 @@ int configfs_register_group(struct confi
- {
- 	struct configfs_subsystem *subsys = parent_group->cg_subsys;
- 	struct dentry *parent;
-+	struct configfs_fragment *frag;
- 	int ret;
- 
-+	frag = new_fragment();
-+	if (!frag)
-+		return -ENOMEM;
-+
- 	mutex_lock(&subsys->su_mutex);
- 	link_group(parent_group, group);
- 	mutex_unlock(&subsys->su_mutex);
-@@ -1752,7 +1801,7 @@ int configfs_register_group(struct confi
- 	parent = parent_group->cg_item.ci_dentry;
- 
- 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
--	ret = create_default_group(parent_group, group);
-+	ret = create_default_group(parent_group, group, frag);
- 	if (ret)
- 		goto err_out;
- 
-@@ -1760,12 +1809,14 @@ int configfs_register_group(struct confi
- 	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
- 	spin_unlock(&configfs_dirent_lock);
- 	inode_unlock(d_inode(parent));
-+	put_fragment(frag);
- 	return 0;
- err_out:
- 	inode_unlock(d_inode(parent));
- 	mutex_lock(&subsys->su_mutex);
- 	unlink_group(group);
- 	mutex_unlock(&subsys->su_mutex);
-+	put_fragment(frag);
- 	return ret;
- }
- EXPORT_SYMBOL(configfs_register_group);
-@@ -1852,10 +1903,17 @@ int configfs_register_subsystem(struct c
- 	struct dentry *dentry;
- 	struct dentry *root;
- 	struct configfs_dirent *sd;
-+	struct configfs_fragment *frag;
-+
-+	frag = new_fragment();
-+	if (!frag)
-+		return -ENOMEM;
- 
- 	root = configfs_pin_fs();
--	if (IS_ERR(root))
-+	if (IS_ERR(root)) {
-+		put_fragment(frag);
- 		return PTR_ERR(root);
+-	priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
+-	/* Ack status on C_CAN. D_CAN is self clearing */
+-	if (priv->type != BOSCH_D_CAN)
+-		priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
++	/* Only read the status register if a status interrupt was pending */
++	if (atomic_xchg(&priv->sie_pending, 0)) {
++		priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
++		/* Ack status on C_CAN. D_CAN is self clearing */
++		if (priv->type != BOSCH_D_CAN)
++			priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
++	} else {
++		/* no change detected ... */
++		curr = last;
 +	}
  
- 	if (!group->cg_item.ci_name)
- 		group->cg_item.ci_name = group->cg_item.ci_namebuf;
-@@ -1871,7 +1929,7 @@ int configfs_register_subsystem(struct c
- 		d_add(dentry, NULL);
+ 	/* handle state changes */
+ 	if ((curr & STATUS_EWARN) && (!(last & STATUS_EWARN))) {
+@@ -1083,10 +1092,16 @@ static irqreturn_t c_can_isr(int irq, vo
+ {
+ 	struct net_device *dev = (struct net_device *)dev_id;
+ 	struct c_can_priv *priv = netdev_priv(dev);
++	int reg_int;
  
- 		err = configfs_attach_group(sd->s_element, &group->cg_item,
--					    dentry);
-+					    dentry, frag);
- 		if (err) {
- 			BUG_ON(d_inode(dentry));
- 			d_drop(dentry);
-@@ -1889,6 +1947,7 @@ int configfs_register_subsystem(struct c
- 		unlink_group(group);
- 		configfs_release_fs();
- 	}
-+	put_fragment(frag);
+-	if (!priv->read_reg(priv, C_CAN_INT_REG))
++	reg_int = priv->read_reg(priv, C_CAN_INT_REG);
++	if (!reg_int)
+ 		return IRQ_NONE;
  
- 	return err;
- }
---- a/fs/configfs/file.c
-+++ b/fs/configfs/file.c
-@@ -502,7 +502,7 @@ int configfs_create_file(struct config_i
- 
- 	inode_lock_nested(d_inode(dir), I_MUTEX_NORMAL);
- 	error = configfs_make_dirent(parent_sd, NULL, (void *) attr, mode,
--				     CONFIGFS_ITEM_ATTR);
-+				     CONFIGFS_ITEM_ATTR, parent_sd->s_frag);
- 	inode_unlock(d_inode(dir));
- 
- 	return error;
-@@ -524,7 +524,7 @@ int configfs_create_bin_file(struct conf
- 
- 	inode_lock_nested(dir->d_inode, I_MUTEX_NORMAL);
- 	error = configfs_make_dirent(parent_sd, NULL, (void *) bin_attr, mode,
--				     CONFIGFS_ITEM_BIN_ATTR);
-+				     CONFIGFS_ITEM_BIN_ATTR, parent_sd->s_frag);
- 	inode_unlock(dir->d_inode);
- 
- 	return error;
++	/* save for later use */
++	if (reg_int & INT_STS_PENDING)
++		atomic_set(&priv->sie_pending, 1);
++
+ 	/* disable all interrupts and schedule the NAPI */
+ 	c_can_irq_control(priv, false);
+ 	napi_schedule(&priv->napi);
+--- a/drivers/net/can/c_can/c_can.h
++++ b/drivers/net/can/c_can/c_can.h
+@@ -198,6 +198,7 @@ struct c_can_priv {
+ 	struct net_device *dev;
+ 	struct device *device;
+ 	atomic_t tx_active;
++	atomic_t sie_pending;
+ 	unsigned long tx_dir;
+ 	int last_status;
+ 	u16 (*read_reg) (const struct c_can_priv *priv, enum reg index);
 
 
