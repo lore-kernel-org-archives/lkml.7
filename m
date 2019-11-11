@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D8AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E29C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8F921925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2933E21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498377;
-	bh=Y/9ZF/qkWTu/dii41AfiaaBg+fpgYSY0I8bBp49s4gc=;
+	s=default; t=1573498385;
+	bh=fTZoUzI/i+jvnxmLsu/vAClMnYcE6ZUOXks8Tl+koEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LgdPwzwYvPY6rLFVBQVxCs7Doz8eancW0bCxmQ5q9PZ5+LD3As7u3YHummLbKRZKf
-	 eLPP/2yhmKYC+tI7X41X8lp7LB9A4nQmLO6XvHyI8x3y4I3fxONRZyNE7L0zdZQte5
-	 C8CU0vitEyQo7vZ6tq2PxXqRKxv7utb1OctvUPXQ=
+	b=Q1KEj8HI0rB6QklGL+sbldnbYGphUb6J1KwiB230M9sc6MNlWcgYcuOs414cZ4til
+	 xSR7DyUlCKo+o6qm4y01flvGQFkPDRRElmL4yi3k0Amft+i4PGeyMpiaHp6P+jOgiK
+	 SYBQu6L7k85Zzjge6vLbVSu85wEDTKVDjNQG2q3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfKKSwz (ORCPT
+        id S1728657AbfKKSxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:52:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47424 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbfKKSwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:52:51 -0500
+        id S1728500AbfKKSw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:52:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B21222C5;
-        Mon, 11 Nov 2019 18:52:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE3E120818;
+        Mon, 11 Nov 2019 18:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498370;
-        bh=Y/9ZF/qkWTu/dii41AfiaaBg+fpgYSY0I8bBp49s4gc=;
+        s=default; t=1573498377;
+        bh=fTZoUzI/i+jvnxmLsu/vAClMnYcE6ZUOXks8Tl+koEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b/jWDwSRWZmoFfyRq+QwJZhi1hJGvb0VxbaLTFTuoVMtRIchP35doSyTsqX2e2eOt
-         xI4Ted/ABEZQr49a5f5WCimssVeNhK27ulfUiJm49aCPHwfFKjpblKYmc1uZ4Jeqi7
-         AaeOM80uzhuYq3dpRnFG7beGhaYKePKx7amzq86o=
+        b=R0wOlSPymLkqWn8y1iOVFytQPOgOwbeAvnNO4p9ec3VhKl9EPuFVVOzPkaJ1OeuMh
+         r1AbaXjcXUmjF+CN0bp7yc9+20tFbxstsTCZ0JqlG5XMv6cz69B80j/QsaDUjhjACX
+         U5qnIEaWbGYBZ/wRINk60zFwC5RxWNAZ7CdYxPT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rafi Wiener <rafiw@mellanox.com>,
-        Oleg Kuporosov <olegk@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org,
+        Krishnamraju Eraparaju <krishna2@chelsio.com>,
         Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 099/193] RDMA/mlx5: Clear old rate limit when closing QP
-Date:   Mon, 11 Nov 2019 19:28:01 +0100
-Message-Id: <20191111181508.435528730@linuxfoundation.org>
+Subject: [PATCH 5.3 101/193] RDMA/siw: free siw_base_qp in kref release routine
+Date:   Mon, 11 Nov 2019 19:28:03 +0100
+Message-Id: <20191111181508.589926499@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -62,45 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafi Wiener <rafiw@mellanox.com>
+From: Krishnamraju Eraparaju <krishna2@chelsio.com>
 
-[ Upstream commit c8973df2da677f375f8b12b6eefca2f44c8884d5 ]
+[ Upstream commit e17fa5c95ef2434a08e0be217969d246d037f0c2 ]
 
-Before QP is closed it changes to ERROR state, when this happens
-the QP was left with old rate limit that was already removed from
-the table.
+As siw_free_qp() is the last routine to access 'siw_base_qp' structure,
+freeing this structure early in siw_destroy_qp() could cause
+touch-after-free issue.
+Hence, moved kfree(siw_base_qp) from siw_destroy_qp() to siw_free_qp().
 
-Fixes: 7d29f349a4b9 ("IB/mlx5: Properly adjust rate limit on QP state transitions")
-Signed-off-by: Rafi Wiener <rafiw@mellanox.com>
-Signed-off-by: Oleg Kuporosov <olegk@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191002120243.16971-1-leon@kernel.org
+Fixes: 303ae1cdfdf7 ("rdma/siw: application interface")
+Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
+Link: https://lore.kernel.org/r/20191007104229.29412-1-krishna2@chelsio.com
 Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/qp.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/infiniband/sw/siw/siw_qp.c    | 2 ++
+ drivers/infiniband/sw/siw/siw_verbs.c | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
-index 72869ff4a3342..3903141a387ed 100644
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -3249,10 +3249,12 @@ static int modify_raw_packet_qp_sq(
- 	}
+diff --git a/drivers/infiniband/sw/siw/siw_qp.c b/drivers/infiniband/sw/siw/siw_qp.c
+index 52d402f39df93..b4317480cee74 100644
+--- a/drivers/infiniband/sw/siw/siw_qp.c
++++ b/drivers/infiniband/sw/siw/siw_qp.c
+@@ -1312,6 +1312,7 @@ int siw_qp_add(struct siw_device *sdev, struct siw_qp *qp)
+ void siw_free_qp(struct kref *ref)
+ {
+ 	struct siw_qp *found, *qp = container_of(ref, struct siw_qp, ref);
++	struct siw_base_qp *siw_base_qp = to_siw_base_qp(qp->ib_qp);
+ 	struct siw_device *sdev = qp->sdev;
+ 	unsigned long flags;
  
- 	/* Only remove the old rate after new rate was set */
--	if ((old_rl.rate &&
--	     !mlx5_rl_are_equal(&old_rl, &new_rl)) ||
--	    (new_state != MLX5_SQC_STATE_RDY))
-+	if ((old_rl.rate && !mlx5_rl_are_equal(&old_rl, &new_rl)) ||
-+	    (new_state != MLX5_SQC_STATE_RDY)) {
- 		mlx5_rl_remove_rate(dev, &old_rl);
-+		if (new_state != MLX5_SQC_STATE_RDY)
-+			memset(&new_rl, 0, sizeof(new_rl));
-+	}
+@@ -1334,4 +1335,5 @@ void siw_free_qp(struct kref *ref)
+ 	atomic_dec(&sdev->num_qp);
+ 	siw_dbg_qp(qp, "free QP\n");
+ 	kfree_rcu(qp, rcu);
++	kfree(siw_base_qp);
+ }
+diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
+index da52c90e06d48..ac08d84d84cbf 100644
+--- a/drivers/infiniband/sw/siw/siw_verbs.c
++++ b/drivers/infiniband/sw/siw/siw_verbs.c
+@@ -603,7 +603,6 @@ out:
+ int siw_destroy_qp(struct ib_qp *base_qp, struct ib_udata *udata)
+ {
+ 	struct siw_qp *qp = to_siw_qp(base_qp);
+-	struct siw_base_qp *siw_base_qp = to_siw_base_qp(base_qp);
+ 	struct siw_ucontext *uctx =
+ 		rdma_udata_to_drv_context(udata, struct siw_ucontext,
+ 					  base_ucontext);
+@@ -640,7 +639,6 @@ int siw_destroy_qp(struct ib_qp *base_qp, struct ib_udata *udata)
+ 	qp->scq = qp->rcq = NULL;
  
- 	ibqp->rl = new_rl;
- 	sq->state = new_state;
+ 	siw_qp_put(qp);
+-	kfree(siw_base_qp);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
