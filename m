@@ -2,186 +2,94 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42F1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF57C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891D321783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:13:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="kQInzmaK"
+	by mail.kernel.org (Postfix) with ESMTP id 7F9F7214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKKLNL (ORCPT
+        id S1726888AbfKKLSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:13:11 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35124 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKKLNK (ORCPT
+        Mon, 11 Nov 2019 06:18:06 -0500
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:20733 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfKKLSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:13:10 -0500
-Received: by mail-wr1-f67.google.com with SMTP id s5so3064107wrw.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 03:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=huepVau9eYwtL+cGD72B7PJ62OYK8YHlVG/n0gyRX58=;
-        b=kQInzmaKutNdAOJ/yrXdo642ND2z7EloykAYSkti3D4LAnjAltx+u5SceqN4I8yY8Z
-         jGhRGn8kJJjVIMq79PqkJYbh3ap2k6Zd2Ur96I0kqpplJChBY8b4377VdIquRxkb9vQ8
-         Y0yTEVqNAN5kPhbZBIYghehhBRKLqEu0qvrSMs8rBlqYRz/80srP9L+kmpGkg732Vn7F
-         YsISrjZgHuJR38wd8+QEq3iKsBDR04HZEBNAvg0QB4ukyuSbSk6DsK3OYO+OHazWh1z+
-         2WQkIEXY1eb2zBzS8fWaJ0bqykiNz+nfA56MqBZi3ormWtr684df5jmAOnFOi8fqmjCE
-         KWfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=huepVau9eYwtL+cGD72B7PJ62OYK8YHlVG/n0gyRX58=;
-        b=UNcccIe2D2o5olVq8HRiCunfXyfx3dI0kzW8iQo9h45UxyQlEljXvyp/jla778Y+qa
-         fdw7y/tBBw+97+22XhNv01DNdj1fThtPKhabNQc0cvlzlCh9uZ/v8WcBd03ZHYqmop3X
-         rLm7skrrQPEe1+fx+WIJF0AAkibP4So86VKReQzPWvnV2ajEJER5x6TMrlcSVJSqmy2+
-         zgqyGV9oMdQ7MaZ3URYc0TjJxd7CZqLtzwEmIZEP/MTskukAb3aSJex//5BnCvEkl7ll
-         ERzdBpH98qCYWhUO76/X4rvO6GqrzbisTPcpzyon/hnu2NxI2rT83rc5taDwLmi3sRpb
-         6qGg==
-X-Gm-Message-State: APjAAAUOa6uMaFeAB2F/LbOmV1sJxpIZqZcz1odAHvgilsP2zPDWf3XW
-        trSd5u3GD3HZ3/buK67CYprnyA==
-X-Google-Smtp-Source: APXvYqygK+ckQKVRF2PLnKNkKlloC6R8mN1s4qRfqcce/aZc014V+/SiN6BmIrzM0xXUP0+liR+VmQ==
-X-Received: by 2002:a5d:6350:: with SMTP id b16mr5315860wrw.357.1573470785783;
-        Mon, 11 Nov 2019 03:13:05 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id h205sm18230112wmf.35.2019.11.11.03.13.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 03:13:05 -0800 (PST)
-Message-ID: <6732099548daec7b69afddb04887c5dba4af851d.camel@unipv.it>
-Subject: Re: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Date:   Mon, 11 Nov 2019 12:13:04 +0100
-In-Reply-To: <20191111110558.GA22228@ming.t460p>
-References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
-         <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
-         <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
-         <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
-         <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
-         <20191109222828.GA30568@ming.t460p>
-         <928d17b00c66caeef30410cf5a472056ae3722d4.camel@unipv.it>
-         <20191111110558.GA22228@ming.t460p>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 11 Nov 2019 06:18:06 -0500
+IronPort-SDR: 8ul6lPwye0br03r2TOSidBFiJv5F9OKrE3WNxHbsTJC/DYlC5Wv06kU1fW6OGSY25G8EHy53mN
+ /I+KgXagucklYKluJjjX/6E6N0NnEO1DxPwEDpye0kFGlhYWbEl4F7GPPQLMqabqnMVM7V+S0a
+ OV+PigHwHngHh7eme3vOSazqDugPbyiu/1sNUmttuEyR5UrqbKriBBxt1ONNAJyk8Mizl6wIJw
+ jRSiCgCWkjRRmAStRV3K2yLJhyQTSe0UxwdqOGqJfK/GVQVU5vhECH4a8daMqGRx9gnSGG/7w3
+ XAs=
+X-IronPort-AV: E=Sophos;i="5.68,292,1569312000"; 
+   d="scan'208";a="43051262"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 11 Nov 2019 03:18:05 -0800
+IronPort-SDR: 6KRljqEPFy4kP0bWVsq1qphgjWHTuQ8NIN4S7farfvusPhHEuQyUWPOhLwjIFs03EOw/h1P0hz
+ WFGidB+fDtPeMYLr7LGNVA8OpFGNtMQP8zwwgFBeBUKAvA6XQGOOBF9P0VLreiOf43Ai6r1rna
+ J5TePq5zg0/INcedVPVbbvTWiCwAwAJdphsUUfEVF5jvL9wbmt5lVyjcr3J78tTVBUjPtw1TZ1
+ V2cw/m0xddSEVoyT4NhiCv62dPNm0mT5uywNzZV5Pslcmm2lolHklqjUaGo6uGL4mRnWWWgWZm
+ M54=
+From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
+To:     'Takashi Iwai' <tiwai@suse.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        'Jaroslav Kysela' <perex@perex.cz>,
+        'Takashi Iwai' <tiwai@suse.com>,
+        'Timo Wischer' <twischer@de.adit-jv.com>
+References: <20191105143218.5948-1-andrew_gabbasov@mentor.com>  <20191105143218.5948-2-andrew_gabbasov@mentor.com>      <20191105143218.5948-3-andrew_gabbasov@mentor.com>      <20191105143218.5948-4-andrew_gabbasov@mentor.com>      <20191105143218.5948-5-andrew_gabbasov@mentor.com>      <20191105143218.5948-6-andrew_gabbasov@mentor.com>      <20191105143218.5948-7-andrew_gabbasov@mentor.com>      <20191105143218.5948-8-andrew_gabbasov@mentor.com> <s5hlfss862t.wl-tiwai@suse.de> 
+In-Reply-To: 
+Subject: RE: [PATCH v2 7/8] ALSA: aloop: Support selection of snd_timer instead of jiffies
+Date:   Mon, 11 Nov 2019 14:17:03 +0300
+Organization: Mentor Graphics Corporation
+Message-ID: <000001d59881$96979fa0$c3c6dee0$@mentor.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQHVk+YmK3KlOO6PeUGxcY472O0ao6d/XF4AgAB4QPCABgZDwA==
+Content-Language: en-us
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno lun, 11/11/2019 alle 19.05 +0800, Ming Lei ha scritto:
-> On Mon, Nov 11, 2019 at 11:50:49AM +0100, Andrea Vai wrote:
-> > Il giorno dom, 10/11/2019 alle 06.28 +0800, Ming Lei ha scritto:
-> > > On Thu, Nov 07, 2019 at 07:59:44PM +0100, Andrea Vai wrote:
-> > > > [Sorry for the duplicate message, it didn't reach the lists
-> due to
-> > > > html formatting]
-> > > > Il giorno gio 7 nov 2019 alle ore 08:54 Damien Le Moal
-> > > > <Damien.LeMoal@wdc.com> ha scritto:
-> > > > >
-> > > > > On 2019/11/07 16:04, Andrea Vai wrote:
-> > > > > > Il giorno mer, 06/11/2019 alle 22.13 +0000, Damien Le Moal
-> ha
-> > > scritto:
-> > > > > >>
-> > > > > >>
-> > > > > >> Please simply try your write tests after doing this:
-> > > > > >>
-> > > > > >> echo mq-deadline > /sys/block/<name of your USB
-> > > > > >> disk>/queue/scheduler
-> > > > > >>
-> > > > > >> And confirm that mq-deadline is selected with:
-> > > > > >>
-> > > > > >> cat /sys/block/<name of your USB disk>/queue/scheduler
-> > > > > >> [mq-deadline] kyber bfq none
-> > > > > >
-> > > > > > ok, which kernel should I test with this: the fresh git
-> > > cloned, or the
-> > > > > > one just patched with Alan's patch, or doesn't matter
-> which
-> > > one?
-> > > > >
-> > > > > Probably all of them to see if there are any differences.
-> > > > 
-> > > > with both kernels, the output of
-> > > > cat /sys/block/sdh/queue/schedule
-> > > > 
-> > > > already contains [mq-deadline]: is it correct to assume that
-> the
-> > > echo
-> > > > command and the subsequent testing is useless? What to do now?
-> > > 
-> > > Another thing we could try is to use 'none' via the following
-> > > command:
-> > > 
-> > >  echo none > /sys/block/sdh/queue/scheduler  #suppose 'sdh'
-> points
-> > > to the usb storage disk
-> > > 
-> > > Because USB storage HBA is single hw queue, which depth is 1.
-> This
-> > > way
-> > > should change to dispatch IO in the order of bio submission.
-> > > 
-> > > Andrea, could you switch io scheduler to none and update us if
-> > > difference
-> > > can be made?
-> > 
-> > Of course I would to it, but I see that with the "good" kernel the
-> > output of "cat /sys/block/sdf/queue/scheduler" (yes, now it's sdf)
-> is
-> > 
-> > noop deadline [cfq]
+The update (v3) of this patch set is sent to the mailing list:
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-November/158312.h
+tml
+
+Thanks.
+
+Best regards,
+Andrew
+
+> -----Original Message-----
+> From: Andrew Gabbasov [mailto:andrew_gabbasov@mentor.com]
+> Sent: Friday, November 08, 2019 9:09 PM
+> To: 'Takashi Iwai'
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
+> Kysela; Takashi Iwai; Timo Wischer
+> Subject: RE: [PATCH v2 7/8] ALSA: aloop: Support selection of snd_timer
+> instead of jiffies
 > 
-> Not sure if cfq makes a difference, and I guess you may get same
-> result
-> with noop or deadline. However, if you only see good write
-> performance with
-> cfq, you may try 'bfq' and see if it works as cfq.
+> Hello Takashi,
 > 
-> > 
-> > , i.e. it doesn't show "none". Does it matter? (sorry if it's a
-> silly
-> > question)
-> 
-> We are talking about new kernel in which there can't be 'noop
-> deadline [cfq]'
-> any more. And you should see the following output from
-> '/sys/block/sdf/queue/scheduler'
-> in the new kernel:
-> 
-> 	[mq-deadline] kyber bfq none
-> 
+> Thank you very much for your feedback.
 > 
 
-ok sorry I misunderstood, assumed you wanted me to compare the "none"
-setting in the old kernel with the same setting in the new kernel. Now
-it's clear to me that you want me to compare the different scheduler
-settings in the new kernel.
+[ skipped ]
 
-Thanks, and bye
-Andrea
+> I'm preparing the next version of this patch set with the changes,
+> described above, and some more code cleanup. It will be submitted soon.
+> 
+> Thanks!
+> 
+> Best regards,
+> Andrew
 
