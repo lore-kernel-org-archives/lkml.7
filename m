@@ -2,107 +2,124 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703A7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4A9C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50758204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627BC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSt1U5kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfKKTXs (ORCPT
+        id S1727485AbfKKTXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:23:48 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:34355 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKKTXr (ORCPT
+        Mon, 11 Nov 2019 14:23:54 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44832 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfKKTXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:23:47 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MTi9N-1iK6p22quT-00Tzhu; Mon, 11 Nov 2019 20:23:05 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Christoph Hellwig <hch@lst.de>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and ia64
-Date:   Mon, 11 Nov 2019 20:22:50 +0100
-Message-Id: <20191111192258.2234502-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 11 Nov 2019 14:23:53 -0500
+Received: by mail-pl1-f195.google.com with SMTP id az9so7352766plb.11;
+        Mon, 11 Nov 2019 11:23:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hMyiPGiqfzCIbwdoJWpKshm10Xf96sxNnAB97j+N96w=;
+        b=nSt1U5kR6w9pKa5jHSRtw90WvjxFIDPIzb/lhes4TFCAkccJu00BgrQirXd1mUy3O7
+         jAhyt61k0QzOa2Tv3tGYXR9ZyQGFQZGU4UFgXFWm2Rga+xKonnl7AUgU93mBAMrLmH4K
+         WNqa7NgudMyPoc3NlG7DMtmM+rIkxzIAd0l1NSGx0o2wlWNR8nJ0heQ4Z7JesD04Rz0q
+         G8kbYpRWvJ66g3Pv7BFBqy2y6s36fevFFN4Rc4XsY+5CFrKdq88/EFPswoGuE8EYyXIy
+         yVOFSe6tQ/t/kQHW5/DsYYbbOWV96eTGBSvqRp/iWYeRGAdcoEfOwqU6W7/6czg8hZm/
+         eKlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hMyiPGiqfzCIbwdoJWpKshm10Xf96sxNnAB97j+N96w=;
+        b=W4uM0JxGnkcf6ZwXnThtWJ6nhYmRvOCFldtTopzW3jUKm+EZ1OKrtldGx9w5v+zEJS
+         B5EGvXqihEP7NefiDKngR1owOI0VRtpsL1sXnTw5xhAZbYsYL5h2Lm70J7fCr4qzwC3K
+         ZE/jONe/Kz9unyTDNAfO7T9kbhQxiIX9wQX/voUfiTONvgWtLKro2oXh7EKkLQ2pCnrK
+         NoTpvDgCrvGbyuuaNKWIbZoZ2BrTNeRCw3nGmbrPsuf39rRozS1x+Mjzvd1XuQYzv+jZ
+         hjQV8Szqt3OJ7z0Gx42OOBFiL8t/as1ntB1I/u4R9Tf5ndiRMrXyv/ML5QqjVQ1oRfLI
+         3EUA==
+X-Gm-Message-State: APjAAAXZ930n2NGMru9FBG+SjEQJbkqwRil+kaGCLXeWu3H7vB4AFRER
+        7lkLdZavFkauyeVFGb+O+lM=
+X-Google-Smtp-Source: APXvYqyTtZCpDJHF6XZZezNIh/nLSfeRoWevB1Pki8/AGEXRF1ibb539in1lpk6oEvtSpa3opKJdSQ==
+X-Received: by 2002:a17:902:d88a:: with SMTP id b10mr13822365plz.302.1573500232652;
+        Mon, 11 Nov 2019 11:23:52 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id k9sm17227891pfk.72.2019.11.11.11.23.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 11:23:52 -0800 (PST)
+Date:   Mon, 11 Nov 2019 11:23:49 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, briannorris@chromium.org,
+        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        dianders@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        Dmitry Torokhov <dtor@google.com>
+Subject: Re: [PATCH v4 08/17] Revert "Input: cros_ec_keyb: mask out extra
+ flags in event_type"
+Message-ID: <20191111192349.GE57214@dtor-ws>
+References: <20191105222652.70226-1-gwendal@chromium.org>
+ <20191105222652.70226-9-gwendal@chromium.org>
+ <b8abe5c0-991f-5ba2-daf9-de3e011e60fe@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:G7fVZrN2su3CbpdSj/kq71EeeeKTYZoe6x6zvxOtFZEbiSWv0zR
- Xw+By6rp1RvmAwdIceDuVMJG6W49a4GYU5M7TsOb4PVcuFbmtc4zDHnbboKsEbR9a/vwmVG
- gMfZ9mqmc9EZcj6sVDak1e2jRHvgU1GfZC4GJJZ+6geK8zKloktS54pQoixLcw3apObAvgo
- 37ky04f59Xwy19jvSnR4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gTxDTasTuXo=:DtDj9YCkmH7bphqvBqN2kc
- y2HCCFlcKtkkxIT1zvuffgBD/NjjOrR4LAaUWC38J7zAv3ccLY7YoCKr7esjNGTPU4Bm7vfNW
- 3+Sj80/UK2nG5u3ic8f7jrj5w+4S1r9X4YsEQ+46xyqiQsao7J6xBlOrqgR1IrpM3fwT9OBuB
- oqdwG3t6hG3AqDJxC09ls/SRfvVndfBmyO3ruCNtKApuxM5M2kjSBPYq1ZCt18nmkxnwNm5h9
- 48Ra3ulZBQxlDoJJ4ceP+De+h+EU0nZknsRvpNuVJLPZw8nqgksAWCComGiuatMGtr3RsPXrO
- NxMgDA0DFe2/FUx21eVhAt2TD39hUOHS2W4/RPBFZ1nrffYh6we0SK+AWn75lOjkzTiz5jdBt
- sFKRUSl2edXQXlZStoDBByKUF7qMwQBvn6ZKt8Q0+Is0FyaGCUyCxVA8QzH5cH87e8eHdKQB/
- pXGZpoJGuNGDlhIg7LO38RnKy0xfTlWMsZcFT0CcHuD14fzrXfQ4EJfQi3VlONjX2pMKmTYoy
- uYRBC9HrfTpInyi+GMPZOE3NoNWZ15CzZC7vEsPxb63kNjQyglrGrjnLHq/z39MNcVvaIY/9G
- T17lcEpSTAVBSOo85r2PPWOI6B8f9PKLpVlW4lvn8MGWYqz3UMX8v2Y6hMYvCfpjCMMInNxF1
- B408DQyNh/c7kt24ojj+STA80/0IuB8tVTbT6BCwyDzwBq615+5FIHAe37/brRYdCA5WJHYhJ
- aboiguFX21swpruRbFolY595RugViK+R8oN9ovjz9pLuBYx0eF7TMmxkMk9A3LUZTTOK9pRSh
- KgVlttJjfHZ2lQelvU3AwaGH06fVl23G9NaclTxJ8k1DV1iUcl4W6Y2Cy2WrPO32aqWaY3ZqG
- QuRPIIlhHo3Yt4D6gr9w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8abe5c0-991f-5ba2-daf9-de3e011e60fe@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioremap_uc() is only meaningful on old x86-32 systems with the PAT
-extension, and on ia64 with its slightly unconventional ioremap()
-behavior, everywhere else this is the same as ioremap() anyway.
+On Mon, Nov 11, 2019 at 10:20:41AM +0100, Enric Balletbo i Serra wrote:
+> Hi,
+> 
+> cc'in Dmitry and linux-input list which is missing
 
-Change the only driver that still references ioremap_uc() to only do so
-on x86-32/ia64 in order to allow removing that interface at some
-point in the future for the other architectures.
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On some architectures, ioremap_uc() just returns NULL, changing
-the driver to call ioremap() means that they now have a chance
-of working correctly.
+> 
+> On 5/11/19 23:26, Gwendal Grignou wrote:
+> > This reverts commit d096aa3eb6045a6a475a0239f3471c59eedf3d61.
+> > 
+> > This patch is not needed anymore since we clear EC_MKBP_HAS_MORE_EVENTS
+> > flag before calling the notifiers in patch
+> > "9d9518f5b52a (platform: chrome: cros_ec: handle MKBP more events flag)"
+> > 
+> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> > ---
+> > No changes in v4, v3.
+> > New to v2.
+> > 
+> >  drivers/input/keyboard/cros_ec_keyb.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
+> > index a29e81fdf186..2b71c5a51f90 100644
+> > --- a/drivers/input/keyboard/cros_ec_keyb.c
+> > +++ b/drivers/input/keyboard/cros_ec_keyb.c
+> > @@ -237,7 +237,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
+> >  	if (queued_during_suspend && !device_may_wakeup(ckdev->dev))
+> >  		return NOTIFY_OK;
+> >  
+> > -	switch (ckdev->ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK) {
+> > +	switch (ckdev->ec->event_data.event_type) {
+> >  	case EC_MKBP_EVENT_KEY_MATRIX:
+> >  		pm_wakeup_event(ckdev->dev, 0);
+> >  
+> > 
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/video/fbdev/aty/atyfb_base.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
-index 79d548746efd..bdbaca7200b2 100644
---- a/drivers/video/fbdev/aty/atyfb_base.c
-+++ b/drivers/video/fbdev/aty/atyfb_base.c
-@@ -3420,11 +3420,15 @@ static int atyfb_setup_generic(struct pci_dev *pdev, struct fb_info *info,
- 	}
- 
- 	info->fix.mmio_start = raddr;
-+#if defined(__i386__) || defined(__ia64__)
- 	/*
- 	 * By using strong UC we force the MTRR to never have an
- 	 * effect on the MMIO region on both non-PAT and PAT systems.
- 	 */
- 	par->ati_regbase = ioremap_uc(info->fix.mmio_start, 0x1000);
-+#else
-+	par->ati_regbase = ioremap(info->fix.mmio_start, 0x1000);
-+#endif
- 	if (par->ati_regbase == NULL)
- 		return -ENOMEM;
- 
 -- 
-2.20.0
-
+Dmitry
