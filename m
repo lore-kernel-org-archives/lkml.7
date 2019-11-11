@@ -2,169 +2,98 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F571C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 00:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB5AC17442
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 00:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DD1206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 00:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F152080F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 00:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="BNJyTMuI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuUZTZU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfKKAm2 (ORCPT
+        id S1726768AbfKKAwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 19:42:28 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33993 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfKKAm2 (ORCPT
+        Sun, 10 Nov 2019 19:52:20 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43413 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbfKKAwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 19:42:28 -0500
-Received: by mail-pl1-f195.google.com with SMTP id h13so1686442plr.1
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 16:42:28 -0800 (PST)
+        Sun, 10 Nov 2019 19:52:19 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l24so8296097pgh.10;
+        Sun, 10 Nov 2019 16:52:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=3MUQrv52TDHwJI3WWySmoks9iAuFFLfSTiDPcJnHPn0=;
-        b=BNJyTMuIiu7bkk4Gdu9Vp1CKAa2THv9QSYi4w06lKhwGvC9MLb0jb1my6nrOyleSwL
-         1fw3DtGHxfi4d8mJelG8yQy4kiWmLkBX1d6SmtYlmdj4IZRKbSp0SdAo4z78JND0kg7T
-         fZLiz8E9k9pdtw7L7KDGo0r9SamIzBdjevXmeP/Z1f/MRryOZ4TlB6hmr4QRPszMRGEh
-         48AwJxRwm7OmoS+EXF2v5F5qOydLL0ZH3R/Jcj81+y4HzOwsTvChR0CIM71fThjuA7Xp
-         RZE1Yvr+iUDeuvn6AVen+Bk+pjwTmo4lH3oRAwQFJ8MJAOSghs2Zuaidp+ps6ruiaIil
-         idXA==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=7JBZMDJ/jQpvGVhkPi30utKHejoieOrOST93jaHrfvk=;
+        b=uuUZTZU4ugdpCAeFHhqDRbg8HA2vYG1ELckLdXzZrkOa3J9YX3rpx3TUbe8gn8j/AR
+         cW5MPpJLNwnQ2F6EOJLzuA8WXQ3RIAbH8AJyX4vZzXgLuTOkCVTyYDA6k2a1JZ80GdMd
+         Kwh3FoIyH3SpQBLtdPaOnPCpLIOEZHFcm+CLf2vR2PyuuwtltWXVipmyjbIubmZGRDgO
+         KToeWqkbgRtYlXi0Thd2U3BuG2RX6WQjpmMrUvY/LlAGzY8g59ZK80J3c3IrGz5VdRyV
+         Yxs5nqzGGqk+axRolveimuomUZoMc8EPNzCZiqwvjYhvsXjykpQnV6m5OhkFP7f2wcYA
+         lFdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3MUQrv52TDHwJI3WWySmoks9iAuFFLfSTiDPcJnHPn0=;
-        b=AH3V/TgX1TefdPB4VNqpn7uy7SfgNi+RguSgzFRVtKeaZbDDH4SBhIuaXU2WIbKBUA
-         y4mbRZPU8Z5fPYVGK1WO6UUXCBW8dTcvk8z4B7/wuYmYj02WzY+rSxwFde7oa9u9kChj
-         jGVkMa47vENI+DfZC5s+j5JZZiO8uD0Qvjgp6Vqudf7De2JjmCcT5lnBO6c1ANTJiXJd
-         TP3Ij0QV1E/RzVmcHoqN1E3Rd7cSrnY3uuyQ1NjzsG6+QVKMXwP00pkYvX2sFSCjS9Pn
-         CpcOf38N0t0DkBhgQwEcmnoDlvIfheddCUucWYLFe9iWhy7y2k2qNe4x1jQoq8GvUbz0
-         LIPw==
-X-Gm-Message-State: APjAAAV6jZsq2G0ZrC3otnjClLc0zRIMKuFO2eNk1cVwYaE4GLuq3CFY
-        bUDl3kHLnWuW3gr2SJST8HJ1LA==
-X-Google-Smtp-Source: APXvYqyT7MQhZB8LfN4EFcd7B/ijKS5GyMgGJ7iKgxWmshjq8k/VJJA9BkAmTCAQhj8rg/anY8MuGw==
-X-Received: by 2002:a17:902:a987:: with SMTP id bh7mr22392010plb.181.1573432947678;
-        Sun, 10 Nov 2019 16:42:27 -0800 (PST)
-Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id q8sm10557061pjp.10.2019.11.10.16.42.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Nov 2019 16:42:26 -0800 (PST)
-From:   Olof Johansson <olof@lixom.net>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Olof Johansson <olof@lixom.net>
-Subject: [PATCH] net: mdio-octeon: Fix pointer/integer casts
-Date:   Sun, 10 Nov 2019 16:42:11 -0800
-Message-Id: <20191111004211.96425-1-olof@lixom.net>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=7JBZMDJ/jQpvGVhkPi30utKHejoieOrOST93jaHrfvk=;
+        b=fdyNjjikuH0ogNMG82eOYhoaJhaQMzUWAibm1h73mbKB9M89xhodtDu2U7lji/pqRZ
+         G0qiNvAgOfCopNGEh9r0msCWL2H6cRx9inLSpU+dMLWdidzK21WlKA1N9rFqf3bbQ+Bi
+         ZMtUWx8vZDCxCwLrPcEKkeJORNNCBWyK2Go57kUnkpSlLXeBPnAyAHiz24ec8DEuO5ry
+         pXSdr6/1jVPaphYbIhHHQsp4mAvsQHOwtZNS8xLP2bbr/7fhlnWFqrotUFv3LEAcBdZE
+         U8aEIiS/zkKj86+aLAKCjDdxm6OvzBAmrxQF+7f6qZdzoICnCsiSAO9cL4VLkqg3eTyk
+         me0g==
+X-Gm-Message-State: APjAAAV0fT+e7CAM3ed3qcl3IMTgMq8FITuy+AIxuhRXTcXAnFb3Jr4w
+        IoNiEC/zlvY9wHbP/9d1iJ8=
+X-Google-Smtp-Source: APXvYqwDRChvidhBwhHK5/pGQamQPfZb8pb7/YDluV+1KaXPBs9O8AoWBZkEJTB4TUYKdk4p9DdhvA==
+X-Received: by 2002:a63:f94e:: with SMTP id q14mr21190084pgk.411.1573433538888;
+        Sun, 10 Nov 2019 16:52:18 -0800 (PST)
+Received: from localhost.localdomain ([103.29.142.67])
+        by smtp.gmail.com with ESMTPSA id e8sm12449215pga.17.2019.11.10.16.52.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Nov 2019 16:52:18 -0800 (PST)
+From:   Kever Yang <kever.yang@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     linux-rockchip@lists.infradead.org,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] arm64: dts: rockchip: Fix min voltage for rk3399-firefly vdd_log
+Date:   Mon, 11 Nov 2019 08:51:56 +0800
+Message-Id: <20191111005158.25070-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes a bunch of these warnings on arm allmodconfig:
+The min/max value of vdd_log is decide by pwm IO voltage and its
+resistors, the rk3399-firefly board's pwm regulator circuit is designed
+for IO voltage at 1.8V, while the board actually use 3.0V for IO, which
+at last lead to the min-microvolt to '430mV' instead of '800mV'.
 
-In file included from /build/drivers/net/phy/mdio-cavium.c:11:
-/build/drivers/net/phy/mdio-cavium.c: In function 'cavium_mdiobus_set_mode':
-/build/drivers/net/phy/mdio-cavium.h:114:37: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-  114 | #define oct_mdio_readq(addr)  readq((void *)addr)
-      |                                     ^
-/build/drivers/net/phy/mdio-cavium.c:21:16: note: in expansion of macro 'oct_mdio_readq'
-   21 |  smi_clk.u64 = oct_mdio_readq(p->register_base + SMI_CLK);
-      |                ^~~~~~~~~~~~~~
-
-Fixes: 171a9bae68c7 ("staging/octeon: Allow test build on !MIPS")
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 ---
- drivers/net/phy/mdio-cavium.h  | 14 +++++++-------
- drivers/net/phy/mdio-octeon.c  |  5 ++---
- drivers/net/phy/mdio-thunder.c |  2 +-
- 3 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/phy/mdio-cavium.h b/drivers/net/phy/mdio-cavium.h
-index b7f89ad27465f..1cf81f0bc585f 100644
---- a/drivers/net/phy/mdio-cavium.h
-+++ b/drivers/net/phy/mdio-cavium.h
-@@ -90,7 +90,7 @@ union cvmx_smix_wr_dat {
- 
- struct cavium_mdiobus {
- 	struct mii_bus *mii_bus;
--	u64 register_base;
-+	void __iomem *register_base;
- 	enum cavium_mdiobus_mode mode;
- };
- 
-@@ -98,20 +98,20 @@ struct cavium_mdiobus {
- 
- #include <asm/octeon/octeon.h>
- 
--static inline void oct_mdio_writeq(u64 val, u64 addr)
-+static inline void oct_mdio_writeq(u64 val, void __iomem *addr)
- {
--	cvmx_write_csr(addr, val);
-+	cvmx_write_csr((u64)addr, val);
- }
- 
--static inline u64 oct_mdio_readq(u64 addr)
-+static inline u64 oct_mdio_readq(void __iomem *addr)
- {
--	return cvmx_read_csr(addr);
-+	return cvmx_read_csr((u64)addr);
- }
- #else
- #include <linux/io-64-nonatomic-lo-hi.h>
- 
--#define oct_mdio_writeq(val, addr)	writeq(val, (void *)addr)
--#define oct_mdio_readq(addr)		readq((void *)addr)
-+#define oct_mdio_writeq(val, addr)	writeq(val, addr)
-+#define oct_mdio_readq(addr)		readq(addr)
- #endif
- 
- int cavium_mdiobus_read(struct mii_bus *bus, int phy_id, int regnum);
-diff --git a/drivers/net/phy/mdio-octeon.c b/drivers/net/phy/mdio-octeon.c
-index 8327382aa5689..c58ab8acd485a 100644
---- a/drivers/net/phy/mdio-octeon.c
-+++ b/drivers/net/phy/mdio-octeon.c
-@@ -44,8 +44,7 @@ static int octeon_mdiobus_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
- 
--	bus->register_base =
--		(u64)devm_ioremap(&pdev->dev, mdio_phys, regsize);
-+	bus->register_base = devm_ioremap(&pdev->dev, mdio_phys, regsize);
- 	if (!bus->register_base) {
- 		dev_err(&pdev->dev, "dev_ioremap failed\n");
- 		return -ENOMEM;
-@@ -56,7 +55,7 @@ static int octeon_mdiobus_probe(struct platform_device *pdev)
- 	oct_mdio_writeq(smi_en.u64, bus->register_base + SMI_EN);
- 
- 	bus->mii_bus->name = KBUILD_MODNAME;
--	snprintf(bus->mii_bus->id, MII_BUS_ID_SIZE, "%llx", bus->register_base);
-+	snprintf(bus->mii_bus->id, MII_BUS_ID_SIZE, "%p", bus->register_base);
- 	bus->mii_bus->parent = &pdev->dev;
- 
- 	bus->mii_bus->read = cavium_mdiobus_read;
-diff --git a/drivers/net/phy/mdio-thunder.c b/drivers/net/phy/mdio-thunder.c
-index b6128ae7f14f3..280cf84d4116e 100644
---- a/drivers/net/phy/mdio-thunder.c
-+++ b/drivers/net/phy/mdio-thunder.c
-@@ -84,7 +84,7 @@ static int thunder_mdiobus_pci_probe(struct pci_dev *pdev,
- 		nexus->buses[i] = bus;
- 		i++;
- 
--		bus->register_base = (u64)nexus->bar0 +
-+		bus->register_base = nexus->bar0 +
- 			r.start - pci_resource_start(pdev, 0);
- 
- 		smi_en.u64 = 0;
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+index c706db0ee9ec..92de83dd4dbc 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+@@ -206,7 +206,7 @@
+ 		regulator-name = "vdd_log";
+ 		regulator-always-on;
+ 		regulator-boot-on;
+-		regulator-min-microvolt = <800000>;
++		regulator-min-microvolt = <430000>;
+ 		regulator-max-microvolt = <1400000>;
+ 		vin-supply = <&vcc_sys>;
+ 	};
 -- 
-2.11.0
+2.17.1
 
