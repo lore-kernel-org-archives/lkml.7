@@ -2,253 +2,145 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91744C17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD402C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5810D20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B652075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:58:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g63j6COv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="spGmlapH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfKKH5t (ORCPT
+        id S1726960AbfKKH6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:57:49 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39380 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfKKH5t (ORCPT
+        Mon, 11 Nov 2019 02:58:11 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40048 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfKKH6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:57:49 -0500
-Received: by mail-qv1-f67.google.com with SMTP id v16so4508005qvq.6
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 23:57:48 -0800 (PST)
+        Mon, 11 Nov 2019 02:58:10 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q2so12706735ljg.7
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 23:58:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H7y4zy6OrzaKCbmt5VnQkSfOPrSCD4IzJM4CsQhV4vc=;
-        b=g63j6COvu8/gYONRQt9DCMBKG/vdfAoAIq4kFVCoQhW0YwHdPfzPFVjXRltUzcXy2M
-         4M19/g5navLrOWvbxmDK/dkpTzke5fDPVwWhmBPpgXLTx40JhXcXvRV6iiqyWyzya82P
-         BU8PgrRkZoODSqCPT2homm3jFH4r+tvEgnMem6528jRA3HsYRbAEMVMobBxRwCJnBlO5
-         4vKiHw+Y9wHjBbI3BACQ6pwr5HzfcSSTpN/LA6x4Hb3pJFzbHdMx8Otzz6pMqk9NDAhI
-         rDzRU5zSfuaBi543fvixREZ3C9D/JjYgJzpgOlHzGoYxwHBzTlm0mtHSt4p0sxQJNRCq
-         OKsg==
+        bh=N+N5m8FTDI4LC8i+HnAMwL79Bhle6k8rUOunQ/muSsc=;
+        b=spGmlapHE1+lGEZL84dffiInKqqQ5vRsE26C+U2Ca1WAyoW5MC4n11IwxZ/LEQ37iX
+         ujtADjNeDMser9ZDTqS/BO1AQ091dOPhG5ZSR/cVNhuPEjcNTxAEJwz3zOoslNFPKj8+
+         djCAx8dfx2/8Mh7Y3LfQnXxy72FTydxwgzi04u0h0id7yBPWxuIMWAW9wESgQ/jsEKEm
+         GjAUwFvnuTrcahTuiYUpMpIssVIGbrVA6cUknLlpcTmiC0gSvV1o4QedFkG2Ns0ZM4VL
+         q7UY5FtT1vy4CU+SGlf6aQ9PeAhQK2b4+SkMIpeT6Fzf1kjr0Ts+CVhbB4XqhMpGqfuG
+         sOaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H7y4zy6OrzaKCbmt5VnQkSfOPrSCD4IzJM4CsQhV4vc=;
-        b=AdjaGKZdaXjQcyecZJR2ILn0FhyNczVV0ij+sbLxDtcE++mWzjIoc3VzInNwwwrUG8
-         K7MOTD8InvfSix2TsMYbm1Mum5vHhdpn0K2qEEtTNpiM24vYgIEebbyjBoEiy5VoUBvn
-         n5ePR9gvxPYMijZvZxrmoR61Co4+pbSgEm2o8jimE+QMCVtRN3WzLnRKdn2phhqETSbV
-         y6kssB3/iwWgqTf5yfc9fVUit391gK+803WgrZMEMdHGjoIRooWcD4Xv1DSkfIdKPl7I
-         7QQgbwfg+UqlUrHi/GEk67erlGiPDepqyXtFN31Nx1HIDkZzD0jNO+SK/fqeowuVMthD
-         /sGg==
-X-Gm-Message-State: APjAAAVe++qhntMYV/NLyF4dihIeU4QEQA6ZmWqiTV2xCQrTufHydm8+
-        F3pjyt13fu8tfuhUV6bAjrRHtcsrMrjm5WcPZYIZ2w==
-X-Google-Smtp-Source: APXvYqwfegIIk1e1zoYpAwU83F6r6f1P4e2x+T1xLBRYcBCusyP997BoiwHQt2Bm/a3lw7Hh2aH9A36AFHU/5KoT4bs=
-X-Received: by 2002:a05:6214:8ee:: with SMTP id dr14mr22829788qvb.122.1573459067244;
- Sun, 10 Nov 2019 23:57:47 -0800 (PST)
+        bh=N+N5m8FTDI4LC8i+HnAMwL79Bhle6k8rUOunQ/muSsc=;
+        b=UqqXckavPFxOXTE2cOKRvN5Vf8Nj1/ZpJDw98gPE48/3+lkSBf1d++I9FHQu8EcYBu
+         g2B/o1QIMYPZ8ul2O8CkRZiXO+cK21j6boOAXgkHEKDFkb97wXaBTmMsTSkletI9bkvI
+         Gt3teUjepqILemaSGN5WdPdJiMwIQ/PHl3FuXkqie/UD5q66uIiP2/eBoclofgjbND9R
+         BlCaRGoEuz80Fv8CBlb6yOntxtb6SR1sbRL2v9mLLN/fixgqLWG3Epg6QFzyHya8cANK
+         bkrS+sCko6UXTO3cn9FCuqujFcbw0tkRJmlyaups6jaS3SQuq81U0U9RJvpsJWaSN/WN
+         kSwA==
+X-Gm-Message-State: APjAAAWxRPw0Z0VYKtF5fs1LuACDYlKa7dCKeqyAxpaaqfUwkGnfXwtD
+        7h/zMsTlqv268sH1B6LIt20be1omDQcWFFPRawgqNA==
+X-Google-Smtp-Source: APXvYqwiYeqMPmrYbnCKFvpE/W6RPaIQmQ+CidWHLC3r5XWS0ydnr9KVNBj+ajw38MgeOY5U+SZy6SJ2PAWkBsMnsc4=
+X-Received: by 2002:a2e:864f:: with SMTP id i15mr3167166ljj.29.1573459088663;
+ Sun, 10 Nov 2019 23:58:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20191104020519.27988-1-walter-zh.wu@mediatek.com> <34bf9c08-d2f2-a6c6-1dbe-29b1456d8284@virtuozzo.com>
-In-Reply-To: <34bf9c08-d2f2-a6c6-1dbe-29b1456d8284@virtuozzo.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 11 Nov 2019 08:57:35 +0100
-Message-ID: <CACT4Y+bfGrJemwyMVqd2Kt19mF2i=3GwXRKHP0qGJaT_5OhSCA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] kasan: detect negative size in memory operation function
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Walter Wu <walter-zh.wu@mediatek.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
+References: <cover.1573456283.git.baolin.wang@linaro.org> <119d3285ab610967b43f7c822dfdc0ebb8d521cb.1573456284.git.baolin.wang@linaro.org>
+ <d4ff481f-1ed9-bd24-db9b-61e0479de12f@intel.com>
+In-Reply-To: <d4ff481f-1ed9-bd24-db9b-61e0479de12f@intel.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 11 Nov 2019 15:57:56 +0800
+Message-ID: <CAMz4ku+7AVSyZzj0xYRT-rXAc4b=jPF98ekFuHbKYqZcCZxD-g@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] mmc: host: sdhci: Add a variable to defer to
+ complete requests if needed
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        baolin.wang7@gmail.com, linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 11:32 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
-> > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> > index 6814d6d6a023..4ff67e2fd2db 100644
-> > --- a/mm/kasan/common.c
-> > +++ b/mm/kasan/common.c
-> > @@ -99,10 +99,14 @@ bool __kasan_check_write(const volatile void *p, unsigned int size)
-> >  }
-> >  EXPORT_SYMBOL(__kasan_check_write);
-> >
-> > +extern bool report_enabled(void);
-> > +
-> >  #undef memset
-> >  void *memset(void *addr, int c, size_t len)
-> >  {
-> > -     check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-> > +     if (report_enabled() &&
-> > +         !check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-> > +             return NULL;
-> >
-> >       return __memset(addr, c, len);
-> >  }
-> > @@ -110,8 +114,10 @@ void *memset(void *addr, int c, size_t len)
-> >  #undef memmove
-> >  void *memmove(void *dest, const void *src, size_t len)
-> >  {
-> > -     check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > -     check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > +     if (report_enabled() &&
-> > +        (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-> > +         !check_memory_region((unsigned long)dest, len, true, _RET_IP_)))
-> > +             return NULL;
-> >
-> >       return __memmove(dest, src, len);
-> >  }
-> > @@ -119,8 +125,10 @@ void *memmove(void *dest, const void *src, size_t len)
-> >  #undef memcpy
-> >  void *memcpy(void *dest, const void *src, size_t len)
-> >  {
-> > -     check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > -     check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > +     if (report_enabled() &&
+On Mon, 11 Nov 2019 at 15:45, Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
->             report_enabled() checks seems to be useless.
->
-> > +        (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-> > +         !check_memory_region((unsigned long)dest, len, true, _RET_IP_)))
-> > +             return NULL;
+> On 11/11/19 9:34 AM, Baolin Wang wrote:
+> > When using the host software queue, it will trigger the next request in
+> > irq handler without a context switch. But the sdhci_request() can not be
+> > called in interrupt context when using host software queue for some host
+> > drivers, due to the get_cd() ops can be sleepable.
 > >
-> >       return __memcpy(dest, src, len);
-> >  }
-> > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > index 616f9dd82d12..02148a317d27 100644
-> > --- a/mm/kasan/generic.c
-> > +++ b/mm/kasan/generic.c
-> > @@ -173,6 +173,11 @@ static __always_inline bool check_memory_region_inline(unsigned long addr,
-> >       if (unlikely(size == 0))
-> >               return true;
+> > But for some host drivers, such as Spreadtrum host driver, the card is
+> > nonremovable, so the get_cd() ops is not sleepable, which means we can
+> > complete the data request and trigger the next request in irq handler
+> > to remove the context switch for the Spreadtrum host driver.
 > >
-> > +     if (unlikely((long)size < 0)) {
+> > Thus we still need introduce a variable in struct sdhci_host to indicate
+> > that we will always to defer to complete requests if the sdhci_request()
+> > can not be called in interrupt context for some host drivers, when using
+> > the host software queue.
 >
->         if (unlikely(addr + size < addr)) {
->
-> > +             kasan_report(addr, size, write, ret_ip);
-> > +             return false;
-> > +     }
-> > +
-> >       if (unlikely((void *)addr <
-> >               kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
-> >               kasan_report(addr, size, write, ret_ip);
-> > diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-> > index 36c645939bc9..52a92c7db697 100644
-> > --- a/mm/kasan/generic_report.c
-> > +++ b/mm/kasan/generic_report.c
-> > @@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct kasan_access_info *info)
-> >
-> >  const char *get_bug_type(struct kasan_access_info *info)
-> >  {
-> > +     /*
-> > +      * If access_size is negative numbers, then it has three reasons
-> > +      * to be defined as heap-out-of-bounds bug type.
-> > +      * 1) Casting negative numbers to size_t would indeed turn up as
-> > +      *    a large size_t and its value will be larger than ULONG_MAX/2,
-> > +      *    so that this can qualify as out-of-bounds.
-> > +      * 2) If KASAN has new bug type and user-space passes negative size,
-> > +      *    then there are duplicate reports. So don't produce new bug type
-> > +      *    in order to prevent duplicate reports by some systems
-> > +      *    (e.g. syzbot) to report the same bug twice.
-> > +      * 3) When size is negative numbers, it may be passed from user-space.
-> > +      *    So we always print heap-out-of-bounds in order to prevent that
-> > +      *    kernel-space and user-space have the same bug but have duplicate
-> > +      *    reports.
-> > +      */
->
-> Completely fail to understand 2) and 3). 2) talks something about *NOT* producing new bug
-> type, but at the same time you code actually does that.
-> 3) says something about user-space which have nothing to do with kasan.
+> Sorry, I assumed you would set host->always_defer_done in = true for the
+> Spreadtrum host driver in patch "mmc: host: sdhci-sprd: Add software queue
+> support" and put this patch before it.
 
-The idea was to use one of the existing bug titles so that syzbot does
-not produce 2 versions for OOBs where size is user-controlled. We
-don't know if it's overflow from heap, global or stack, but heap is
-the most common bug, so saying heap overflow will reduce chances of
-producing duplicates the most.
-But for all of this to work we do need to use one of the existing bug titles.
+Ah, sorry, I misunderstood your point.
+So you still expect the Spreadtrum host driver should defer to
+complete requests firstly, then introducing a request_atomic API in
+next patch set to let our Spreadtrum host driver can call
+request_atomic() in the interrupt context. OK, will do in next
+version. Thanks.
 
-> > +     if ((long)info->access_size < 0)
->
->         if (info->access_addr + info->access_size < info->access_addr)
->
-> > +             return "heap-out-of-bounds";
-> > +
-> >       if (addr_has_shadow(info->access_addr))
-> >               return get_shadow_bug_type(info);
-> >       return get_wild_bug_type(info);
-> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > index 621782100eaa..c79e28814e8f 100644
-> > --- a/mm/kasan/report.c
-> > +++ b/mm/kasan/report.c
-> > @@ -446,7 +446,7 @@ static void print_shadow_for_address(const void *addr)
-> >       }
+> > Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  drivers/mmc/host/sdhci.c |    2 +-
+> >  drivers/mmc/host/sdhci.h |    1 +
+> >  2 files changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> > index 850241f..4bef066 100644
+> > --- a/drivers/mmc/host/sdhci.c
+> > +++ b/drivers/mmc/host/sdhci.c
+> > @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct sdhci_host *host,
+> >  {
+> >       struct mmc_data *data = mrq->data;
+> >
+> > -     return host->pending_reset ||
+> > +     return host->pending_reset || host->always_defer_done ||
+> >              ((host->flags & SDHCI_REQ_USE_DMA) && data &&
+> >               data->host_cookie == COOKIE_MAPPED);
 > >  }
+> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> > index d89cdb9..a73ce89 100644
+> > --- a/drivers/mmc/host/sdhci.h
+> > +++ b/drivers/mmc/host/sdhci.h
+> > @@ -533,6 +533,7 @@ struct sdhci_host {
+> >       bool pending_reset;     /* Cmd/data reset is pending */
+> >       bool irq_wake_enabled;  /* IRQ wakeup is enabled */
+> >       bool v4_mode;           /* Host Version 4 Enable */
+> > +     bool always_defer_done; /* Always defer to complete requests */
 > >
-> > -static bool report_enabled(void)
-> > +bool report_enabled(void)
-> >  {
-> >       if (current->kasan_depth)
-> >               return false;
-> > diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-> > index 0e987c9ca052..b829535a3ad7 100644
-> > --- a/mm/kasan/tags.c
-> > +++ b/mm/kasan/tags.c
-> > @@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
-> >       if (unlikely(size == 0))
-> >               return true;
+> >       struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];  /* Requests done */
+> >       struct mmc_command *cmd;        /* Current command */
 > >
-> > +     if (unlikely((long)size < 0)) {
 >
->         if (unlikely(addr + size < addr)) {
->
-> > +             kasan_report(addr, size, write, ret_ip);
-> > +             return false;
-> > +     }
-> > +
-> >       tag = get_tag((const void *)addr);
-> >
-> >       /*
-> > diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-> > index 969ae08f59d7..f7ae474aef3a 100644
-> > --- a/mm/kasan/tags_report.c
-> > +++ b/mm/kasan/tags_report.c
-> > @@ -36,6 +36,24 @@
-> >
-> >  const char *get_bug_type(struct kasan_access_info *info)
-> >  {
-> > +     /*
-> > +      * If access_size is negative numbers, then it has three reasons
-> > +      * to be defined as heap-out-of-bounds bug type.
-> > +      * 1) Casting negative numbers to size_t would indeed turn up as
-> > +      *    a large size_t and its value will be larger than ULONG_MAX/2,
-> > +      *    so that this can qualify as out-of-bounds.
-> > +      * 2) If KASAN has new bug type and user-space passes negative size,
-> > +      *    then there are duplicate reports. So don't produce new bug type
-> > +      *    in order to prevent duplicate reports by some systems
-> > +      *    (e.g. syzbot) to report the same bug twice.
-> > +      * 3) When size is negative numbers, it may be passed from user-space.
-> > +      *    So we always print heap-out-of-bounds in order to prevent that
-> > +      *    kernel-space and user-space have the same bug but have duplicate
-> > +      *    reports.
-> > +      */
-> > +     if ((long)info->access_size < 0)
->
->         if (info->access_addr + info->access_size < info->access_addr)
->
-> > +             return "heap-out-of-bounds";
-> > +
-> >  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> >       struct kasan_alloc_meta *alloc_meta;
-> >       struct kmem_cache *cache;
-> >
+
+
+-- 
+Baolin Wang
+Best Regards
