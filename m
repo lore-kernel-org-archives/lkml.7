@@ -2,120 +2,126 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F96EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB385C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C88206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937C821655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:12:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAOdIV0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfKKSLr (ORCPT
+        id S1727097AbfKKSM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:11:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37330 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfKKSLr (ORCPT
+        Mon, 11 Nov 2019 13:12:27 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42046 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfKKSM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:11:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id y194so12325855oie.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:11:46 -0800 (PST)
+        Mon, 11 Nov 2019 13:12:27 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s5so11170409pfh.9;
+        Mon, 11 Nov 2019 10:12:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nVbr8MtQ7ZO4CacZdX8JXbKAIcqSlSq2oEAfHRt0wK4=;
+        b=rAOdIV0cCiN/zHYvwhWIVgXx6j5+Wf+Kltc5JVcq3LZqB2idl67vTbao209IAhsOJO
+         980kByl8h8gzi5u9MoLkuIMU+J1tK13rnVQSpcIfxDynST3M8SY3mbwuUZmQnRjCzSVU
+         xjyNPeWM+AOJWH8eAgXI0u7hoqLP+LFGs+D7Tgg3EYKvTEJy0i8MBPtSwU7LEQwNZIVC
+         oFXqEEX2LUkWS48LTsa4ZCJarmvwhpV9sovnHsrGelEG2OW8+UQ9vhX82MdJCZcg2CIJ
+         1l/iM03xHSUoVRcAr6zMMoTmIgNdySjl/H3XT9ofIHmTIeZWMdMox2/3Jq1KZWnRIovv
+         +E5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3pgVptoZYzsTOg+Xnbn8wJxFJTLIjKkmJmwvN7XoJgQ=;
-        b=i9ch4lILRaYqfz/biLOzhARRxhRCCeK3gnVplQShtM/nd+5UbGdqmLYsR4tPaMnvI8
-         rU8IX4XJ1RembDWbHn9/sJ+e8tJV/laUzzjIBHFMeSQarQkEjliPeJw4B3Di1Iux8h1w
-         uBcLlToGB33i6Gpb5sjZqMf73JEiORYGDmOKqY5ggBLWwSjxgPKxELtKOHLiyMG+RiKR
-         sOIWk+uQ5sdPG8uhsZutjfrlq09+BFLi5TCrEiRl9hzwOKTIOD5oIhHTP5JnGNvnVmZw
-         Z4NqFP+Vimio1Y/iJHx7Maj4hxEtpcnCBKm1gE9OMacV4wCyudog46ejd5l5JlVflGBl
-         LNwA==
-X-Gm-Message-State: APjAAAWbJM5laRBlAP1Iv0+lrnMfgJhiDbnSdBOAByyEYZGa1OkyO6+p
-        RQEdqVCoKjdiCi43jBuHkyRy2ssE
-X-Google-Smtp-Source: APXvYqy1X0wUWZC/1e18BAMqn7WeVSGS3O2hmYUeKDVYF64U8jTw3M0qNMsxoRWRrfZio7C6Hh1zTg==
-X-Received: by 2002:a05:6808:8e9:: with SMTP id d9mr241839oic.29.1573495906199;
-        Mon, 11 Nov 2019 10:11:46 -0800 (PST)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
-        by smtp.gmail.com with ESMTPSA id z13sm5118596otq.29.2019.11.11.10.11.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 10:11:45 -0800 (PST)
-Received: by mail-oi1-f174.google.com with SMTP id l20so12289218oie.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:11:45 -0800 (PST)
-X-Received: by 2002:aca:1702:: with SMTP id j2mr240762oii.13.1573495904943;
- Mon, 11 Nov 2019 10:11:44 -0800 (PST)
-MIME-Version: 1.0
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
- <20191108130123.6839-48-linux@rasmusvillemoes.dk> <CADRPPNQwnmPCh8nzQ5vBTLoieO-r2u0huh17mwcinhfhNgo04A@mail.gmail.com>
- <14894529-a6bd-9b7e-eacc-06d5e49cc8e8@rasmusvillemoes.dk>
-In-Reply-To: <14894529-a6bd-9b7e-eacc-06d5e49cc8e8@rasmusvillemoes.dk>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Mon, 11 Nov 2019 12:11:33 -0600
-X-Gmail-Original-Message-ID: <CADRPPNQHtRhZOw0DuTQoPF_RgFHSFG4rGCtETFvCCSS8H6i=iQ@mail.gmail.com>
-Message-ID: <CADRPPNQHtRhZOw0DuTQoPF_RgFHSFG4rGCtETFvCCSS8H6i=iQ@mail.gmail.com>
-Subject: Re: [PATCH v4 47/47] soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nVbr8MtQ7ZO4CacZdX8JXbKAIcqSlSq2oEAfHRt0wK4=;
+        b=gl2NmYtWsgSKU1FBdfEoSbr5PGoKbBMKnPB1tsdXVXOIsKUoWwRvLQtXlcy4oVVbse
+         K1j1SakYm2df3UXp6RVbuWLSvbnJqCiFdzUHao762f98z5/nhF46hcMSxQoaXz10yQxW
+         XKkdg+OWXuquToNlhJLIWMmZWfOcyM7/EhcOA5RU+lnyEa1+armVF968ervgaxLz+5jL
+         rWTpS5H+Pn8iy9GzEjUPhQ/luLTbg1zirfq1MH9cOMxQyb6fi1qnrC4iTeHqdydbGFsS
+         KEmVbTUmpEoiAfE6Ch6x0AxiLkt08qqih3+YtFRKZb0KogxMVzv/jDwIEOFh3SlzVlfZ
+         VNMg==
+X-Gm-Message-State: APjAAAXmtCbnrZPGfHo4NBAWsiHRInVkkG2U1LIA2EP8IYMUWgbkGOJi
+        Y4vWUIzkrilQ1V+Hf3uf//g=
+X-Google-Smtp-Source: APXvYqzqab4rU4p2tyKosUenhapYrI0ueVPZGyWP01XeA+pX8HJKu1zEfgSHrqmDQY9JAg6YU5WFvA==
+X-Received: by 2002:a65:6843:: with SMTP id q3mr24328556pgt.361.1573495945788;
+        Mon, 11 Nov 2019 10:12:25 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:533:7f79:a8e9:b74c:7d75:d0c])
+        by smtp.gmail.com with ESMTPSA id c12sm18301057pfp.67.2019.11.11.10.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 10:12:25 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     paulmck@kernel.org, joel@joelfernandes.org, corbet@lwn.net,
+        mchehab@kernel.org
+Cc:     rcu@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH] Documentation: RCU: whatisRCU: Updated full list of RCU API
+Date:   Mon, 11 Nov 2019 23:41:22 +0530
+Message-Id: <20191111181122.28083-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 1:36 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> On 09/11/2019 00.48, Li Yang wrote:
-> > On Fri, Nov 8, 2019 at 7:05 AM Rasmus Villemoes
-> > <linux@rasmusvillemoes.dk> wrote:
-> >>
-> >> There are also ARM and ARM64 based SOCs with a QUICC Engine, and the
-> >> core QE code as well as net/wan/fsl_ucc_hdlc and tty/serial/ucc_uart
-> >> has now been modified to not rely on ppcisms.
-> >>
-> >> So extend the architectures that can select QUICC_ENGINE, and add the
-> >> rather modest requirements of OF && HAS_IOMEM.
-> >>
-> >> The core code as well as the ucc_uart driver has been tested on an
-> >> LS1021A (arm), and it has also been tested that the QE code still
-> >> works on an mpc8309 (ppc).
-> >>
-> >> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> >> ---
-> >>  drivers/soc/fsl/qe/Kconfig | 3 ++-
-> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/soc/fsl/qe/Kconfig b/drivers/soc/fsl/qe/Kconfig
-> >> index cfa4b2939992..f1974f811572 100644
-> >> --- a/drivers/soc/fsl/qe/Kconfig
-> >> +++ b/drivers/soc/fsl/qe/Kconfig
-> >> @@ -5,7 +5,8 @@
-> >>
-> >>  config QUICC_ENGINE
-> >>         bool "QUICC Engine (QE) framework support"
-> >> -       depends on FSL_SOC && PPC32
-> >> +       depends on OF && HAS_IOMEM
-> >> +       depends on PPC32 || ARM || ARM64 || COMPILE_TEST
-> >
-> > Can you also add PPC64?  It is also used on some PPC64 platforms
-> > (QorIQ T series).
->
-> Sure, but if that's the only thing in the whole series, perhaps you
-> could amend it when applying instead of me sending all 47 patches again.
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-Sure.  I can do that.
+This patch updates the list of RCU API in whatisRCU.rst.
 
->
-> Should PPC32 || PPC64 be spelled PPC?
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+---
+ Documentation/RCU/whatisRCU.rst | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Yes.  That will be good.
+diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
+index 2f6f6ebbc8b0..c7f147b8034f 100644
+--- a/Documentation/RCU/whatisRCU.rst
++++ b/Documentation/RCU/whatisRCU.rst
+@@ -884,11 +884,14 @@ in docbook.  Here is the list, by category.
+ RCU list traversal::
+ 
+ 	list_entry_rcu
++	list_entry_lockless
+ 	list_first_entry_rcu
+ 	list_next_rcu
+ 	list_for_each_entry_rcu
+ 	list_for_each_entry_continue_rcu
+ 	list_for_each_entry_from_rcu
++	list_first_or_null_rcu
++	list_next_or_null_rcu
+ 	hlist_first_rcu
+ 	hlist_next_rcu
+ 	hlist_pprev_rcu
+@@ -902,7 +905,7 @@ RCU list traversal::
+ 	hlist_bl_first_rcu
+ 	hlist_bl_for_each_entry_rcu
+ 
+-RCU pointer/list udate::
++RCU pointer/list update::
+ 
+ 	rcu_assign_pointer
+ 	list_add_rcu
+@@ -912,10 +915,12 @@ RCU pointer/list udate::
+ 	hlist_add_behind_rcu
+ 	hlist_add_before_rcu
+ 	hlist_add_head_rcu
++	hlist_add_tail_rcu
+ 	hlist_del_rcu
+ 	hlist_del_init_rcu
+ 	hlist_replace_rcu
+-	list_splice_init_rcu()
++	list_splice_init_rcu
++	list_splice_tail_init_rcu
+ 	hlist_nulls_del_init_rcu
+ 	hlist_nulls_del_rcu
+ 	hlist_nulls_add_head_rcu
+-- 
+2.17.1
 
-Regards,
-Leo
