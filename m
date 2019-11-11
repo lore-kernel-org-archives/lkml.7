@@ -7,56 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8726CC17446
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3699AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61131204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0354F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499319;
-	bh=WdSQ5vWXEyP8ro0z4UkL//M/o1Kxc67vm1QhRJiAKvk=;
+	s=default; t=1573499326;
+	bh=O8JqrFNL5fiRfUfBZHt8d/7Bp/awQ18JHCgSuhlLIGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hwQtqFiqe+vSck6AOVRV50tSayEz3ZDw8o8qZbs4uCIb030a6EJhDt4RgYDyWsLQr
-	 MojHheb1DgyxCKNpNGmieU1zxEil1V+ew0gBj1Ax0BBoTwb9zgbBWcYnyrt4jquHVX
-	 zRvuVIfco7BHrLJWQaLeJKMOEaBz6sk8tJXdkSrA=
+	b=sRILCddsEF+F+Vxv7v/Xz5Xwft/Aw17NRgYUQYQ62A2NHWuFQDCCPyvxb/zH9AZ81
+	 3c2uq93tLjT0+stWkhwDOVUWTjX+J/WLrOb9X0DfMDP0dJSFs3EXow7c0asFDiD0cQ
+	 BsOY25GnsfE4BwzYomIa7qmostV/uNvb7FPP78YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfKKSfe (ORCPT
+        id S1728508AbfKKSfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728535AbfKKSfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:31 -0500
+        id S1728503AbfKKSfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330B520656;
-        Mon, 11 Nov 2019 18:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 474592173B;
+        Mon, 11 Nov 2019 18:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497329;
-        bh=WdSQ5vWXEyP8ro0z4UkL//M/o1Kxc67vm1QhRJiAKvk=;
+        s=default; t=1573497321;
+        bh=O8JqrFNL5fiRfUfBZHt8d/7Bp/awQ18JHCgSuhlLIGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k9h1jiQNwBd/2ssE8kZWquTIXHkzhQ/wHxYE7zSLw28jIMwID3mOYyot52PgRpSke
-         e9GLW4UGuYBm1BQsVDRGd1P3c+EICz1BGFXqGOWSya3V+8vJlG7oXQkyXxJOmuPLaH
-         58sYuHt0rGLuE2D/X3Y/XMRYNYmZIfjuKu20YC58=
+        b=SuLXTfTSXiffYgm4TxU7JMtisgdfhbi2Pt/gr4XjE7gDSv6hffq07dYeQ2GhBwyR8
+         qsxbhR+CI3tBRdNgOYmS625cNkDL+7ILiup8xdZvwi36ptmXaPk8pvcpV5NXi7/VaJ
+         q2Oudxu4WW/BoplzXgqG2sQuCAcTwe/Dmuplsz3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Waiman Long <longman@redhat.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Rafael Aquini <aquini@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 017/105] mm, vmstat: hide /proc/pagetypeinfo from normal users
-Date:   Mon, 11 Nov 2019 19:27:47 +0100
-Message-Id: <20191111181432.592761389@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 014/105] ALSA: hda/ca0132 - Fix possible workqueue stall
+Date:   Mon, 11 Nov 2019 19:27:44 +0100
+Message-Id: <20191111181430.867150113@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -69,57 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit abaed0112c1db08be15a784a2c5c8a8b3063cdd3 upstream.
+commit 15c2b3cc09a31620914955cb2a89c277c18ee999 upstream.
 
-/proc/pagetypeinfo is a debugging tool to examine internal page
-allocator state wrt to fragmentation.  It is not very useful for any
-other use so normal users really do not need to read this file.
+The unsolicited event handler for the headphone jack on CA0132 codec
+driver tries to reschedule the another delayed work with
+cancel_delayed_work_sync().  It's no good idea, unfortunately,
+especially after we changed the work queue to the standard global
+one; this may lead to a stall because both works are using the same
+global queue.
 
-Waiman Long has noticed that reading this file can have negative side
-effects because zone->lock is necessary for gathering data and that a)
-interferes with the page allocator and its users and b) can lead to hard
-lockups on large machines which have very long free_list.
+Fix it by dropping the _sync but does call cancel_delayed_work()
+instead.
 
-Reduce both issues by simply not exporting the file to regular users.
-
-Link: http://lkml.kernel.org/r/20191025072610.18526-2-mhocko@kernel.org
-Fixes: 467c996c1e19 ("Print out statistics in relation to fragmentation avoidance to /proc/pagetypeinfo")
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Waiman Long <longman@redhat.com>
-Acked-by: Mel Gorman <mgorman@suse.de>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Waiman Long <longman@redhat.com>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Jann Horn <jannh@google.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 993884f6a26c ("ALSA: hda/ca0132 - Delay HP amp turnon.")
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1155836
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20191105134316.19294-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmstat.c |    2 +-
+ sound/pci/hda/patch_ca0132.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1951,7 +1951,7 @@ void __init init_mm_internals(void)
- #endif
- #ifdef CONFIG_PROC_FS
- 	proc_create("buddyinfo", 0444, NULL, &buddyinfo_file_operations);
--	proc_create("pagetypeinfo", 0444, NULL, &pagetypeinfo_file_operations);
-+	proc_create("pagetypeinfo", 0400, NULL, &pagetypeinfo_file_operations);
- 	proc_create("vmstat", 0444, NULL, &vmstat_file_operations);
- 	proc_create("zoneinfo", 0444, NULL, &zoneinfo_file_operations);
- #endif
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -4440,7 +4440,7 @@ static void hp_callback(struct hda_codec
+ 	/* Delay enabling the HP amp, to let the mic-detection
+ 	 * state machine run.
+ 	 */
+-	cancel_delayed_work_sync(&spec->unsol_hp_work);
++	cancel_delayed_work(&spec->unsol_hp_work);
+ 	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
+ 	tbl = snd_hda_jack_tbl_get(codec, cb->nid);
+ 	if (tbl)
 
 
