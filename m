@@ -2,127 +2,139 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E7EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18478C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F25206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="viQc/Kpk"
+	by mail.kernel.org (Postfix) with ESMTP id EEDEB206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfKKSLP (ORCPT
+        id S1727040AbfKKSLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:11:15 -0500
-Received: from gateway20.websitewelcome.com ([192.185.48.38]:14685 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726763AbfKKSLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:11:14 -0500
-X-Greylist: delayed 1501 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 13:11:13 EST
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 19956400C47C9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:16:44 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id UDRXiLk0wW4frUDRXinZfu; Mon, 11 Nov 2019 11:25:35 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=obJGNctpNomw0ORl8GMTnOXHVQTOW6QwMfGlRbchZDQ=; b=viQc/KpkyqpjaooaNayckCTFw5
-        jPT+0IfyxeHPWb8eVLnXjU0UNzYGM+p0EvVAX8Ex1+EUwP1W+zbACBcdlQaS8+bCFJnU7q1PjsXXu
-        bC0NPhCyZxaLPIp76IzUT8B2V/swRFzeHxsKtalaVs43Pc8DQ+vNNE1B+cJA78YL3wZ6fl9fZegLg
-        n4/aIk6NZOtbzzNEKxJad2pCp/locExG7MJulTuSwcfXn/84kPBCbUQGwylAdhgCNHGmU9h4XCBqs
-        Br+CFXHcgMvh2BTDHzYfbkhfWPE8MP1uDDjm0hnx5Tltn0FYqZ7SvKEb7Peel/MPrZ9EbCzSs3rHL
-        giAKWVQg==;
-Received: from [187.192.2.30] (port=45762 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iUDRU-001CZi-Un; Mon, 11 Nov 2019 11:25:33 -0600
-Date:   Mon, 11 Nov 2019 11:25:43 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] drm/amd/display: Fix unsigned variable compared to less than
- zero
-Message-ID: <20191111172543.GA31748@embeddedor>
+        Mon, 11 Nov 2019 13:11:30 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:42812 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbfKKSL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:11:29 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1iUE9v-00016C-J6; Mon, 11 Nov 2019 11:11:28 -0700
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-6-logang@deltatee.com>
+ <20191109174047.GH952516@vkoul-mobl>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <746371aa-b3f6-aaca-35f2-0f815294dc71@deltatee.com>
+Date:   Mon, 11 Nov 2019 11:11:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.2.30
-X-Source-L: No
-X-Exim-ID: 1iUDRU-001CZi-Un
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.2.30]:45762
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20191109174047.GH952516@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 5/5] dmaengine: plx-dma: Implement descriptor submission
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currenly, the error check below on variable *vcpi_slots* is always
-false because it is a uint64_t type variable, hence, the values
-this variable can hold are never less than zero:
 
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:
-4870         if (dm_new_connector_state->vcpi_slots < 0) {
-4871                 DRM_DEBUG_ATOMIC("failed finding vcpi slots: %d\n", (int)dm_new_connector_stat     e->vcpi_slots);
-4872                 return dm_new_connector_state->vcpi_slots;
-4873         }
 
-Fix this by making *vcpi_slots* of int type.
+On 2019-11-09 10:40 a.m., Vinod Koul wrote:
+>> +static dma_cookie_t plx_dma_tx_submit(struct dma_async_tx_descriptor *desc)
+>> +	__releases(plxdev->ring_lock)
+>> +{
+>> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(desc->chan);
+>> +	struct plx_dma_desc *plxdesc = to_plx_desc(desc);
+>> +	dma_cookie_t cookie;
+>> +
+>> +	cookie = dma_cookie_assign(desc);
+>> +
+>> +	/*
+>> +	 * Ensure the descriptor updates are visible to the dma device
+>> +	 * before setting the valid bit.
+>> +	 */
+>> +	wmb();
+>> +
+>> +	plxdesc->hw->flags_and_size |= cpu_to_le32(PLX_DESC_FLAG_VALID);
+> 
+> so where do you store the submitted descriptor?
 
-Addresses-Coverity: 1487838 ("Unsigned compared against 0")
-Fixes: b4c578f08378 ("drm/amd/display: Add MST atomic routines")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The descriptors are stored in a ring in memory which the DMA engine
+reads. The ring is at (struct plx_dma_dev)->hw_ring. plxdesc->hw is a
+pointer to the descriptor's specific entry in the hardware's ring. The
+hardware descriptor is populated in plx_dma_prep_memcpy(). Once the
+valid flag is set, the hardware owns the descriptor and may start
+processing it.
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
-index 6db07e9e33ab..a8fc90a927d6 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
-@@ -403,7 +403,7 @@ struct dm_connector_state {
- 	bool underscan_enable;
- 	bool freesync_capable;
- 	uint8_t abm_level;
--	uint64_t vcpi_slots;
-+	int vcpi_slots;
- 	uint64_t pbn;
- };
- 
--- 
-2.23.0
+>> +
+>> +	spin_unlock_bh(&plxdev->ring_lock);
+>> +
+>> +	return cookie;
+>> +}
+>> +
+>> +static enum dma_status plx_dma_tx_status(struct dma_chan *chan,
+>> +		dma_cookie_t cookie, struct dma_tx_state *txstate)
+>> +{
+>> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
+>> +	enum dma_status ret;
+>> +
+>> +	ret = dma_cookie_status(chan, cookie, txstate);
+>> +	if (ret == DMA_COMPLETE)
+>> +		return ret;
+>> +
+>> +	plx_dma_process_desc(plxdev);
+> 
+> why is this done here..? Query of status should not make you process
+> something!
 
+When descriptors are submitted without interrupts, something has to
+cleanup the completed descriptors and this is the only sensible place to
+do that. This is exactly what IOAT does[1] (but with a different name
+and a bit more complexity).
+
+>> +
+>> +	return dma_cookie_status(chan, cookie, txstate);
+>> +}
+>> +
+>> +static void plx_dma_issue_pending(struct dma_chan *chan)
+>> +{
+>> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
+>> +
+>> +	rcu_read_lock();
+>> +	if (!rcu_dereference(plxdev->pdev)) {
+>> +		rcu_read_unlock();
+>> +		return;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Ensure the valid bits are visible before starting the
+>> +	 * DMA engine.
+>> +	 */
+>> +	wmb();
+>> +
+>> +	writew(PLX_REG_CTRL_START_VAL, plxdev->bar + PLX_REG_CTRL);
+> 
+> start what? 
+
+The hardware processes entries in the ring and once it reaches the end
+of the submitted descriptors, then it simply stops forever. Setting this
+bit will start it processing entries again (or, if it is already
+running, nothing will happen).
+
+Logan
+
+[1]
+https://elixir.bootlin.com/linux/latest/source/drivers/dma/ioat/dma.c#L962
