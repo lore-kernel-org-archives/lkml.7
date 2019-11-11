@@ -2,101 +2,116 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC60BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AF5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2AC220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:56:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="ebFjG3a7"
+	by mail.kernel.org (Postfix) with ESMTP id 688F520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKKQ4p (ORCPT
+        id S1726985AbfKKQ6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:56:45 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36488 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfKKQ4n (ORCPT
+        Mon, 11 Nov 2019 11:58:19 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38250 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfKKQ6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:56:43 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k13so9821245pgh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 08:56:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jQ+E6czJ4DNaGOkMLTz7dyfB5cXcK4wWj6bFDEgy1h0=;
-        b=ebFjG3a7GurRBYEtFEzgyjSkDQrPT+h3Oeke2Fjt6QWFc1kk89q1scDl25V3vMp0Z3
-         9RCiD+1QK1wu6ZSFHVD5gc4qxQ8wRwhW0jtrBlwLzEvFeOuYXX23CfnIPAwdJ6bk3lkO
-         FIJS8C3imAMAgF+Q34zvN5SK9ucCPIvVramajPclRHIMIlmgq8l4oBAMcX0GlNsJI7A9
-         dUgVkCehUDS/bcO9t6QuxUUIZPngPGWnIqZBbQsEkVS4WvQy6u9BS+q7hKd2chF6QPa/
-         K58vsA3r9KTC9VBQHCJmtvUEMsENBGbHJIMdIT8iKdW+oa0gfgo83xuDaaypZnb5HGaX
-         l3Cw==
+        Mon, 11 Nov 2019 11:58:18 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a14so12092567oid.5;
+        Mon, 11 Nov 2019 08:58:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jQ+E6czJ4DNaGOkMLTz7dyfB5cXcK4wWj6bFDEgy1h0=;
-        b=Chv2TUFSz4MhAHgN7G14tL4ZdekpqeO4Wkx2tfzYtWEo8G+iY3hhKhy53JMSVGxTuW
-         Kd89Kxps1mP5dCUOfBXqWMN3P5/25Q9YyVJqnmjwQxcOUqnirz8Vq9Dhhwh0vXl51fSu
-         9T7XiCuAYKXJAhdgtuS25nqldkR2Gww/6CaciG8FwJpePetoUv9PP9gsZKljrAfIk/Zb
-         3ppU1LZ/nu/UktXxiXYJnuuJXBH7UYCniOB5xaHOPYqobkJjDlY/r7DmuLOx+6/o9xq0
-         kLoUT+3CnXL8DIept6b30si+Na6sUfg09gqzv26aq9AgVPWBe7tYzMZo8TL4g4C4veHF
-         /8aA==
-X-Gm-Message-State: APjAAAUJLJZmi/e2nHWIUFImY+SXIlOOxTy99gtPAbAHaje3RRLlEazj
-        dw1AtYkMUuR4KjCfnOUubgZbgfmctHngIw==
-X-Google-Smtp-Source: APXvYqzUshE6db9IdPvXjjrLX/g9qtWYzSDysJ4A1JV3KsHmRlMG+2hrZcbvDkueZZaRowkldzfB0A==
-X-Received: by 2002:a17:90a:22a6:: with SMTP id s35mr34591908pjc.3.1573491401372;
-        Mon, 11 Nov 2019 08:56:41 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id r5sm15009594pfh.179.2019.11.11.08.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 08:56:41 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:56:32 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Tony Lu <tonylu@linux.alibaba.com>
-Cc:     davem@davemloft.net, shemminger@osdl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: remove static inline from dev_put/dev_hold
-Message-ID: <20191111085632.24d88706@hermes.lan>
-In-Reply-To: <20191111140502.17541-1-tonylu@linux.alibaba.com>
-References: <20191111140502.17541-1-tonylu@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N5Vcj3yE2rkXP4doP0O2V7gRihUnv+nSjX4pf/13Rw8=;
+        b=CBQ8W26nBhfvyynYKCEr3k8TGOtrtm34pDWrxm8OKM7Um9zQELtwz7Umd1M/a6q8Mi
+         Onlte7cJBZM/IajBJgyVCrO1wacbaIh/ws+ue+BsmgLhbtThvvFKBs602VdJbQkt/CXu
+         CmWa51IaSDH4hnQUuJpCm2FcvVpAXPYVqoDA8mWAFIRfCnxU9gKgBFR2QJ1aZfoWWhiz
+         WoIdYP+9++Y2feuBw5/gKL2Ke8sd2f6XlgPYionZf2kwaaityTsdGBnoMNtP12Y2XWFF
+         RLAkdyR+pOj1alVTcfuWhByYoYDkHMH1MgKwbB9k63qBkauP4Yor8yI9HM/Yr8ZLo6MR
+         bs0w==
+X-Gm-Message-State: APjAAAUHXO2fEm89dRaWb3V9JHhwcK3sJ+QcJL7RokoyXfyCOgZip+hS
+        JiDyK5/jBvsdjxM3r2XN9eFHc5BwGqc8LxHCzOw=
+X-Google-Smtp-Source: APXvYqy/vMjYcYeqIvTqdLd5GGnLez7ZmWGDKl5AqUc+6PF8GisVTiuTjJisyx2dw7CZpTj+GRrxuJBIdtOSyrbYjfw=
+X-Received: by 2002:aca:fc92:: with SMTP id a140mr23499698oii.153.1573491497306;
+ Mon, 11 Nov 2019 08:58:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-12-keescook@chromium.org>
+In-Reply-To: <20191011000609.29728-12-keescook@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Nov 2019 17:58:06 +0100
+Message-ID: <CAMuHMdXfPyti1wFBb0hhf3CeDSQ=zVv7cV-taeYCmDswMQkXPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/29] vmlinux.lds.h: Replace RODATA with RO_DATA
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 22:05:03 +0800
-Tony Lu <tonylu@linux.alibaba.com> wrote:
+Hi Kees,
 
-> This patch removes static inline from dev_put/dev_hold in order to help
-> trace the pcpu_refcnt leak of net_device.
-> 
-> We have sufferred this kind of issue for several times during
-> manipulating NIC between different net namespaces. It prints this
-> log in dmesg:
-> 
->   unregister_netdevice: waiting for eth0 to become free. Usage count = 1
-> 
-> However, it is hard to find out who called and leaked refcnt in time. It
-> only left the crime scene but few evidence. Once leaked, it is not
-> safe to fix it up on the running host. We can't trace dev_put/dev_hold
-> directly, for the functions are inlined and used wildly amoung modules.
-> And this issue is common, there are tens of patches fix net_device
-> refcnt leak for various causes.
-> 
-> To trace the refcnt manipulating, this patch removes static inline from
-> dev_put/dev_hold. We can use handy tools, such as eBPF with kprobe, to
-> find out who holds but forgets to put refcnt. This will not be called
-> frequently, so the overhead is limited.
-> 
-> Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
+On Fri, Oct 11, 2019 at 2:07 AM Kees Cook <keescook@chromium.org> wrote:
+> There's no reason to keep the RODATA macro: replace the callers with
+> the expected RO_DATA macro.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/alpha/kernel/vmlinux.lds.S      | 2 +-
+>  arch/ia64/kernel/vmlinux.lds.S       | 2 +-
+>  arch/microblaze/kernel/vmlinux.lds.S | 2 +-
+>  arch/mips/kernel/vmlinux.lds.S       | 2 +-
+>  arch/um/include/asm/common.lds.S     | 2 +-
+>  arch/xtensa/kernel/vmlinux.lds.S     | 2 +-
+>  include/asm-generic/vmlinux.lds.h    | 4 +---
+>  7 files changed, 7 insertions(+), 9 deletions(-)
 
-In the past dev_hold/dev_put was in the hot path for several
-operations. What is the performance implication of doing this?
+Somehow you missed:
+
+    arch/m68k/kernel/vmlinux-std.lds:  RODATA
+    arch/m68k/kernel/vmlinux-sun3.lds:      RODATA
+
+Leading to build failures in next-20191111:
+
+    /opt/cross/kisskb/gcc-4.6.3-nolibc/m68k-linux/bin/m68k-linux-ld:./arch/m68k/kernel/vmlinux.lds:29:
+syntax error
+    make[1]: *** [/kisskb/src/Makefile:1075: vmlinux] Error 1
+
+Reported-by: noreply@ellerman.id.au
+http://kisskb.ellerman.id.au/kisskb/buildresult/14022846/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
