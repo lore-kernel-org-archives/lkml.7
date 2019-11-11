@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6B2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E31FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF83222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89E921783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497427;
-	bh=9m7fxcMc2GNnUSTvql4YYI41iueAMpIprbSenMgn4rk=;
+	s=default; t=1573497431;
+	bh=9LITEAuRyIZhYRJVxwQK6W2uLPQIgX/2QCfk2ObGUsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JiGI6yc1Fmt8+t0CEh6Tr/d3/oVkXDRxY1VV27IVEMdliRZCnRW4GLuEPEgBl7NAU
-	 23CdjSt6RZ3i184p2pAbKhoMnV1BQNbfB8VVoqLfasuH1J0ftSd36LLNFim+DtKItE
-	 Md2N56596wm1anNVBHAjSMNrvclNrZbEZE22wZZs=
+	b=gbAS6jvy9T7uLFRZ3L3eOVkgtnMnuZfX+zacMSVG+qSs9OF1Z0RM6V9E63jgA1U+T
+	 gcgDwlycCbCGt8rsgsA67kA2beq7VFrlWdQQ7bc8vjEFQbBVhc/7vEpFTpO3v21OTR
+	 ac1+5nfTQIjt67XJyVYYZVfCmobDfM85MVbeewVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfKKShG (ORCPT
+        id S1727159AbfKKShJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55644 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:37:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727531AbfKKShC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:02 -0500
+        id S1727785AbfKKShH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18A6821783;
-        Mon, 11 Nov 2019 18:37:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A7222196E;
+        Mon, 11 Nov 2019 18:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497421;
-        bh=9m7fxcMc2GNnUSTvql4YYI41iueAMpIprbSenMgn4rk=;
+        s=default; t=1573497424;
+        bh=9LITEAuRyIZhYRJVxwQK6W2uLPQIgX/2QCfk2ObGUsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MpUz4qaNlkcBaETi4G/KlMPzys5quC20FiYVSIuxW6RXc+PMkEJbQzG69vvayuATe
-         3r7IA43ptH1chagAGuFQoCYoV69+7v8L2ZvOvkujpUdgNUTU9xRTpLTTj989yagzki
-         GFo0mZQip12Vm2+KKk08GQW0auVTbbf7a4Fp6dDw=
+        b=LRxXkXzPv4IV39Tutox3+NOd31/0tHImTCKCI4VmDIJaFe8xa5TUd0G8i1S8XOlyb
+         wZWCBnSGGPe+giAbocpvoWhF15yuTNhMbyYni3kNW9dPzzXQbyEO8eYdDM2iUHIhF7
+         VYecCn4/p1y1wLTg12dMfiLAESjXPqNQPLXc1ND0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Roman Yeryomin <roman@advem.lv>,
+        Vignesh R <vigneshr@ti.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
         Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 049/105] mtd: spi-nor: enable 4B opcodes for mx66l51235l
-Date:   Mon, 11 Nov 2019 19:28:19 +0100
-Message-Id: <20191111181441.992998033@linuxfoundation.org>
+Subject: [PATCH 4.14 050/105] mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+Date:   Mon, 11 Nov 2019 19:28:20 +0100
+Message-Id: <20191111181442.336862799@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,28 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Yeryomin <leroi.lists@gmail.com>
+From: Vignesh R <vigneshr@ti.com>
 
-commit d342b6a973af459f6104cad6effc8efc71a0558d upstream
+commit 61dc8493bae9ba82a1c72edbc6c6065f6a94456a upstream
 
-Signed-off-by: Roman Yeryomin <roman@advem.lv>
+As per 66AK2G02 TRM[1] SPRUHY8F section 11.15.5.3 Indirect Access
+Controller programming sequence, a delay equal to couple of QSPI master
+clock(~5ns) is required after setting CQSPI_REG_INDIRECTWR_START bit and
+writing data to the flash. Introduce a quirk flag CQSPI_NEEDS_WR_DELAY
+to handle this and set this flag for TI 66AK2G SoC.
+
+[1]http://www.ti.com/lit/ug/spruhy8f/spruhy8f.pdf
+
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Acked-by: Marek Vasut <marek.vasut@gmail.com>
 Signed-off-by: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mtd/spi-nor/spi-nor.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/spi-nor/cadence-quadspi.c |   27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1030,7 +1030,7 @@ static const struct flash_info spi_nor_i
- 	{ "mx25l25635e", INFO(0xc22019, 0, 64 * 1024, 512, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_4B_OPCODES) },
- 	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
--	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-+	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
- 	{ "mx66u51235f", INFO(0xc2253a, 0, 64 * 1024, 1024, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
- 	{ "mx66l1g45g",  INFO(0xc2201b, 0, 64 * 1024, 2048, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048, SPI_NOR_QUAD_READ) },
+--- a/drivers/mtd/spi-nor/cadence-quadspi.c
++++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+@@ -38,6 +38,9 @@
+ #define CQSPI_NAME			"cadence-qspi"
+ #define CQSPI_MAX_CHIPSELECT		16
+ 
++/* Quirks */
++#define CQSPI_NEEDS_WR_DELAY		BIT(0)
++
+ struct cqspi_st;
+ 
+ struct cqspi_flash_pdata {
+@@ -76,6 +79,7 @@ struct cqspi_st {
+ 	u32			fifo_depth;
+ 	u32			fifo_width;
+ 	u32			trigger_address;
++	u32			wr_delay;
+ 	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
+ };
+ 
+@@ -623,6 +627,15 @@ static int cqspi_indirect_write_execute(
+ 	reinit_completion(&cqspi->transfer_complete);
+ 	writel(CQSPI_REG_INDIRECTWR_START_MASK,
+ 	       reg_base + CQSPI_REG_INDIRECTWR);
++	/*
++	 * As per 66AK2G02 TRM SPRUHY8F section 11.15.5.3 Indirect Access
++	 * Controller programming sequence, couple of cycles of
++	 * QSPI_REF_CLK delay is required for the above bit to
++	 * be internally synchronized by the QSPI module. Provide 5
++	 * cycles of delay.
++	 */
++	if (cqspi->wr_delay)
++		ndelay(cqspi->wr_delay);
+ 
+ 	while (remaining > 0) {
+ 		size_t write_words, mod_bytes;
+@@ -1184,6 +1197,7 @@ static int cqspi_probe(struct platform_d
+ 	struct cqspi_st *cqspi;
+ 	struct resource *res;
+ 	struct resource *res_ahb;
++	unsigned long data;
+ 	int ret;
+ 	int irq;
+ 
+@@ -1241,6 +1255,10 @@ static int cqspi_probe(struct platform_d
+ 	}
+ 
+ 	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
++	data  = (unsigned long)of_device_get_match_data(dev);
++	if (data & CQSPI_NEEDS_WR_DELAY)
++		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
++						   cqspi->master_ref_clk_hz);
+ 
+ 	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
+ 			       pdev->name, cqspi);
+@@ -1312,7 +1330,14 @@ static const struct dev_pm_ops cqspi__de
+ #endif
+ 
+ static const struct of_device_id cqspi_dt_ids[] = {
+-	{.compatible = "cdns,qspi-nor",},
++	{
++		.compatible = "cdns,qspi-nor",
++		.data = (void *)0,
++	},
++	{
++		.compatible = "ti,k2g-qspi",
++		.data = (void *)CQSPI_NEEDS_WR_DELAY,
++	},
+ 	{ /* end of table */ }
+ };
+ 
 
 
