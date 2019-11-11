@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11F5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B4BC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE5A2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514462184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498648;
-	bh=DM4dbc8qci9+aEw015cRNaVM6ammj5FoIyYGEmVmkZA=;
+	s=default; t=1573498652;
+	bh=Ax+FHhCtRxVEODSOPHtaJSLKyHegr8sUfHtfHtlD4OM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UbxwkHYTo74XVKoOD6uxn/mrr17460LUyEgAMxo4UrdRfvXHkUBuUEVtdyIBqHDKJ
-	 enKHtQ/C+iWO+uPht4Bon9ksqkhjeFVAxJCVDaWMxYoC51tVyG5C15+qo3VFuAkBWC
-	 ubkw6ury8r3ylXB46inMnUv5I+YSvwuDU7S3wUR4=
+	b=tyEw6HGyj9QVHPzih3bYzBKIjFzH2dZcDcbHMAtmjqBkbNi1vLGGN8AXVNeqOlw8E
+	 HA8GG+Jju7rUbg/wbnYJiInvdWdakBKJBvuKihX/KITch+M7yQdQAPUbqewqPocl5o
+	 H2ojcxHjV7Iv16/xVo5hkl//II3aOQ/zmkZULOl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbfKKS51 (ORCPT
+        id S1728391AbfKKS5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:57:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:57:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730824AbfKKS5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:57:22 -0500
+        id S1730833AbfKKS50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:57:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E683B2184C;
-        Mon, 11 Nov 2019 18:57:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 304072184C;
+        Mon, 11 Nov 2019 18:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498641;
-        bh=DM4dbc8qci9+aEw015cRNaVM6ammj5FoIyYGEmVmkZA=;
+        s=default; t=1573498645;
+        bh=Ax+FHhCtRxVEODSOPHtaJSLKyHegr8sUfHtfHtlD4OM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3DByFK5KvcAX9czNGD4A6QQKPtTTVKHkjQhYBsUkb/QvoSxy1H100gBuUCwxG02Y
-         BCe2tfcDWNjLL1TfBlFS/sxpy85KNFpTBXz7yzmBggLWfoTYZDUfXuumHDccoB0X2t
-         pOrQ9Bh6gIp6vDMbAwIoyYQJcPG65dXPZeQmH3Ik=
+        b=ohz2HvdCPOUdsVDtdKkVXNzT6fdWRw0EZtzd1dMmgdsxG5xWc5ggLIINYEqlfUHLg
+         Xq1szUB+RxrKt3DTAA8+DGZleBKrCeYMA7BhzTkxYlG3YC8FjgPtvU/rhKbTcv1UCi
+         0rWAlnZzo5K/XuJhLRQ0o78KvBBSgNy/zw1LiN58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 178/193] arm64: cpufeature: Enable Qualcomm Falkor errata 1009 for Kryo
-Date:   Mon, 11 Nov 2019 19:29:20 +0100
-Message-Id: <20191111181514.236855312@linuxfoundation.org>
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 179/193] usb: dwc3: gadget: fix race when disabling ep with cancelled xfers
+Date:   Mon, 11 Nov 2019 19:29:21 +0100
+Message-Id: <20191111181514.307807909@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,79 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
 
-[ Upstream commit 36c602dcdd872e9f9b91aae5266b6d7d72b69b96 ]
+[ Upstream commit d8eca64eec7103ab1fbabc0a187dbf6acfb2af93 ]
 
-The Kryo cores share errata 1009 with Falkor, so add their model
-definitions and enable it for them as well.
+When disabling an endpoint which has cancelled requests, we should
+make sure to giveback requests that are currently pending in the
+cancelled list, otherwise we may fall into a situation where command
+completion interrupt fires after endpoint has been disabled, therefore
+causing a splat.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[will: Update entry in silicon-errata.rst]
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: fec9095bdef4 "usb: dwc3: gadget: remove wait_end_transfer"
+Reported-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Link: https://lore.kernel.org/r/20191031090713.1452818-1-felipe.balbi@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm64/silicon-errata.rst |  2 +-
- arch/arm64/kernel/cpu_errata.c         | 20 ++++++++++++++------
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ drivers/usb/dwc3/gadget.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
-index 6e52d334bc555..47feda6c15bcc 100644
---- a/Documentation/arm64/silicon-errata.rst
-+++ b/Documentation/arm64/silicon-errata.rst
-@@ -124,7 +124,7 @@ stable kernels.
- +----------------+-----------------+-----------------+-----------------------------+
- | Qualcomm Tech. | Kryo/Falkor v1  | E1003           | QCOM_FALKOR_ERRATUM_1003    |
- +----------------+-----------------+-----------------+-----------------------------+
--| Qualcomm Tech. | Falkor v1       | E1009           | QCOM_FALKOR_ERRATUM_1009    |
-+| Qualcomm Tech. | Kryo/Falkor v1  | E1009           | QCOM_FALKOR_ERRATUM_1009    |
- +----------------+-----------------+-----------------+-----------------------------+
- | Qualcomm Tech. | QDF2400 ITS     | E0065           | QCOM_QDF2400_ERRATUM_0065   |
- +----------------+-----------------+-----------------+-----------------------------+
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 1e0b9ae9bf7e2..4465be78ee466 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -659,17 +659,23 @@ static const struct midr_range arm64_harden_el2_vectors[] = {
- #endif
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 173f5329d3d9e..56bd6ae0c18f9 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -707,6 +707,12 @@ static void dwc3_remove_requests(struct dwc3 *dwc, struct dwc3_ep *dep)
  
- #ifdef CONFIG_ARM64_WORKAROUND_REPEAT_TLBI
--
--static const struct midr_range arm64_repeat_tlbi_cpus[] = {
-+static const struct arm64_cpu_capabilities arm64_repeat_tlbi_list[] = {
- #ifdef CONFIG_QCOM_FALKOR_ERRATUM_1009
--	MIDR_RANGE(MIDR_QCOM_FALKOR_V1, 0, 0, 0, 0),
-+	{
-+		ERRATA_MIDR_REV(MIDR_QCOM_FALKOR_V1, 0, 0)
-+	},
-+	{
-+		.midr_range.model = MIDR_QCOM_KRYO,
-+		.matches = is_kryo_midr,
-+	},
- #endif
- #ifdef CONFIG_ARM64_ERRATUM_1286807
--	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 0),
-+	{
-+		ERRATA_MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 0),
-+	},
- #endif
- 	{},
- };
--
- #endif
+ 		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
+ 	}
++
++	while (!list_empty(&dep->cancelled_list)) {
++		req = next_request(&dep->cancelled_list);
++
++		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
++	}
+ }
  
- #ifdef CONFIG_CAVIUM_ERRATUM_27456
-@@ -825,7 +831,9 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- 	{
- 		.desc = "Qualcomm erratum 1009, ARM erratum 1286807",
- 		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
--		ERRATA_MIDR_RANGE_LIST(arm64_repeat_tlbi_cpus),
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = cpucap_multi_entry_cap_matches,
-+		.match_list = arm64_repeat_tlbi_list,
- 	},
- #endif
- #ifdef CONFIG_ARM64_ERRATUM_858921
+ /**
 -- 
 2.20.1
 
