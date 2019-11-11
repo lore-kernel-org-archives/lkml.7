@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2B7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDEBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25072184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC19214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497156;
-	bh=jzd8bCuaKS3R/qCkg6PjO2h88t4oeDAWV0bb695XCu8=;
+	s=default; t=1573497160;
+	bh=xyMvxFs3n+DXTMRN/z4818+BuC0ek5IfaKxMsXLPTRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XlrbPS/10HmlisBS/A2sN1DSN5zvYu/9ckZCPY2mPE8Fi7CwcxKao560sKjgZzmSQ
-	 Qw8n6bg6/gRHmMMqj9xkBqDh5KEu5oS8roIgfjftlRd3115340dYk4f/oGVRInEvTK
-	 H6xHnG571wFc9LTkw4SafcA2lrOsTB/6x8Y/bmxI=
+	b=uCocXVbf22pybdxFhoAYnLTDZ0H/15oa4wSMjolGwXxf40eRzHkkb593YPNIrBIs9
+	 xaPwXcUPpe16XKpqYQGRj87cxCZ9HXItZJE96z/nXkeeEitGwJwCAPIj4FIn0Gs0KS
+	 2ezg0WthBQvgip8WuF+b0CSJGn1/EB5x0tCVrYZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfKKScf (ORCPT
+        id S1727991AbfKKScj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:32:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:32:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbfKKSca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:32:30 -0500
+        id S1727962AbfKKScc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:32:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEE1221655;
-        Mon, 11 Nov 2019 18:32:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85129214E0;
+        Mon, 11 Nov 2019 18:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497149;
-        bh=jzd8bCuaKS3R/qCkg6PjO2h88t4oeDAWV0bb695XCu8=;
+        s=default; t=1573497152;
+        bh=xyMvxFs3n+DXTMRN/z4818+BuC0ek5IfaKxMsXLPTRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4OoadAy2Qxc++k9gbLC1/RdRoS7IPcBPi1ysWcFt/hk/vAw4VVfCrg7O50DiL1sx
-         bLlK/gR+5rm+F9C2IH79ye4nBrWmuDAzInZZ+4285Ism6X8rKJLaPGImlOefqtRzOL
-         DU56vq1iozRm49EgHlolL5X2J0CS/lxtdzUoxVuk=
+        b=eyZbAPGvynZg4M8H7Bxu74yYj+37rJrG20PFvWokrL5rsWwaD25MZlMH+fhuOfuja
+         jJi8nGTqr2kiRp9520KGjzqBO4amYbvi+vM13/nxuxkwrsDX2F63LisZjQlDC18Uwq
+         WhqY13A3vJfqZIjOpbcJ8OdV/YWGIvl8tnBd1TYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.9 20/65] netfilter: nf_tables: Align nft_expr private data to 64-bit
-Date:   Mon, 11 Nov 2019 19:28:20 +0100
-Message-Id: <20191111181344.684135289@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>
+Subject: [PATCH 4.9 21/65] netfilter: ipset: Fix an error code in ip_set_sockfn_get()
+Date:   Mon, 11 Nov 2019 19:28:21 +0100
+Message-Id: <20191111181344.889126080@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -59,60 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 250367c59e6ba0d79d702a059712d66edacd4a1a upstream.
+commit 30b7244d79651460ff114ba8f7987ed94c86b99a upstream.
 
-Invoking the following commands on a 32-bit architecture with strict
-alignment requirements (such as an ARMv7-based Raspberry Pi) results
-in an alignment exception:
+The copy_to_user() function returns the number of bytes remaining to be
+copied.  In this code, that positive return is checked at the end of the
+function and we return zero/success.  What we should do instead is
+return -EFAULT.
 
- # nft add table ip test-ip4
- # nft add chain ip test-ip4 output { type filter hook output priority 0; }
- # nft add rule  ip test-ip4 output quota 1025 bytes
-
-Alignment trap: not handling instruction e1b26f9f at [<7f4473f8>]
-Unhandled fault: alignment exception (0x001) at 0xb832e824
-Internal error: : 1 [#1] PREEMPT SMP ARM
-Hardware name: BCM2835
-[<7f4473fc>] (nft_quota_do_init [nft_quota])
-[<7f447448>] (nft_quota_init [nft_quota])
-[<7f4260d0>] (nf_tables_newrule [nf_tables])
-[<7f4168dc>] (nfnetlink_rcv_batch [nfnetlink])
-[<7f416bd0>] (nfnetlink_rcv [nfnetlink])
-[<8078b334>] (netlink_unicast)
-[<8078b664>] (netlink_sendmsg)
-[<8071b47c>] (sock_sendmsg)
-[<8071bd18>] (___sys_sendmsg)
-[<8071ce3c>] (__sys_sendmsg)
-[<8071ce94>] (sys_sendmsg)
-
-The reason is that nft_quota_do_init() calls atomic64_set() on an
-atomic64_t which is only aligned to 32-bit, not 64-bit, because it
-succeeds struct nft_expr in memory which only contains a 32-bit pointer.
-Fix by aligning the nft_expr private data to 64-bit.
-
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v3.13+
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: a7b4f989a629 ("netfilter: ipset: IP set core support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/netfilter/nf_tables.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_core.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -705,7 +705,8 @@ struct nft_expr_ops {
-  */
- struct nft_expr {
- 	const struct nft_expr_ops	*ops;
--	unsigned char			data[];
-+	unsigned char			data[]
-+		__attribute__((aligned(__alignof__(u64))));
- };
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1942,8 +1942,9 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 		}
  
- static inline void *nft_expr_priv(const struct nft_expr *expr)
+ 		req_version->version = IPSET_PROTOCOL;
+-		ret = copy_to_user(user, req_version,
+-				   sizeof(struct ip_set_req_version));
++		if (copy_to_user(user, req_version,
++				 sizeof(struct ip_set_req_version)))
++			ret = -EFAULT;
+ 		goto done;
+ 	}
+ 	case IP_SET_OP_GET_BYNAME: {
+@@ -2000,7 +2001,8 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 	}	/* end of switch(op) */
+ 
+ copy:
+-	ret = copy_to_user(user, data, copylen);
++	if (copy_to_user(user, data, copylen))
++		ret = -EFAULT;
+ 
+ done:
+ 	vfree(data);
 
 
