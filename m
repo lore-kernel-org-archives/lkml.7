@@ -2,137 +2,101 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1D4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3953C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0984B214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573490833;
-	bh=kSP+F/NVvB3fNUcJQ5Oagfi0flczXLZxFEKPPzqYf60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lssw5g/Fc4SZXvqYK9xQKfezbGMmEDsFXY5aa4NR5Yb8y+G5/jai1/VcnpuCXiJol
-	 JBPzkQlCvI4vTwojAkVP/bl1CMnGgf2vkfGgX/CP2uWlg0Gmod8IbXD2pc6bIYcq1g
-	 3N3McRtqZO3UlU2Yb8HtQc8rE9dx/VAkNnEql+t8=
+	by mail.kernel.org (Postfix) with ESMTP id 89761214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:47:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="ZGldm3S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfKKQrL (ORCPT
+        id S1726970AbfKKQrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:47:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbfKKQrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:47:11 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52420206A3;
-        Mon, 11 Nov 2019 16:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573490830;
-        bh=kSP+F/NVvB3fNUcJQ5Oagfi0flczXLZxFEKPPzqYf60=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CxETDiwWhDE/KPIV+o7n5KxlVfcoNIUsLrpbBGnZik9L63DTwAHISigMlly9j4XPC
-         eVVc2+Ml5DurIQS5mv0o180W45s0hLA+AuvMzAfj4cXDa/aahXstZ3BCDsN9FRqxBI
-         ke76eNCh6lllByvT3w9qhgc1ClShZNheyXa6FgMo=
-Date:   Mon, 11 Nov 2019 16:47:03 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        alexei.starovoitov@gmail.com, rabin@rab.in,
-        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
-Subject: Re: [PATCH -v5 13/17] arm/ftrace: Use __patch_text_real()
-Message-ID: <20191111164703.GA11521@willie-the-truck>
-References: <20191111131252.921588318@infradead.org>
- <20191111132458.220458362@infradead.org>
+        Mon, 11 Nov 2019 11:47:23 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42467 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfKKQrX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:47:23 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s5so11022381pfh.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 08:47:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1uln3PQWpJHVN0cvSdX7VnkuLpysZdK64D1CGthDMQQ=;
+        b=ZGldm3S4bKZDsolIkr062FeCWNvgqBDCbXBCZQSlgjXHxjrJOCNka+55vftk5tfbjO
+         xM+8nieUBc2AaHtdsnK3zOkygz7oCeH3iSjCF9E/DpsUwm0ogx6DuoGw4RGJIIjds2xf
+         9QVw5/y5wXbeGEku9KqrasNNLbW1Qyp1qCPhJFXZov/EYKd0Mdxb2X5C3QjYJ208kiTX
+         Wkw6tBRfnSUeC1R+4MgsXVLIXOE9875v0yvZ1QQsQbBYTzmu+DXPa8l2DiT2+UHlkYlu
+         QJJcdoqKQO0+K+L/5aRb7X+ffsioxLikRuP7FuWx6HD1CpQs+uDJ9EaAgwKeCl2k9QSN
+         FsYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1uln3PQWpJHVN0cvSdX7VnkuLpysZdK64D1CGthDMQQ=;
+        b=I2Q881HbCxVPwHNABMw1MNY/WXZpO31kRERFtZfSEGz3gwbimjEhpVFGkUSm4MF6+L
+         oQ3lC9R9Td1vw2vBA87aoh0/2i/cDoDH78N8mNDQM9ack87ZjrTFgJz5395iVbmE0o28
+         gCnF5Hy4YKCzB2fsgBw03RI1fan9Ha+duZgWV+ZEqXXSNrVkTWyq8N3bON7CazweGxae
+         XnqGQVjOJIqUO2asJ4nA8XiXHcWoa9GHHMC4yINZB4pk+QMBldCP32Z611HPUkisCiJL
+         hXG9N01kDlG1+/XK/bE4CcC20kO7bvRE10nJ16mqrKGjx6Nw9R0hFt/KAwIc2HEa/OTr
+         ZxiQ==
+X-Gm-Message-State: APjAAAVn/Y1KVPWkyYvi8GdE0EFfr+E91bROqODy77sLi/4+8UzQhBPN
+        ZX3Horu/zwEZ8V1Hcm5xxsgraw==
+X-Google-Smtp-Source: APXvYqxIqglx9JQpZhfV6sn5yZId682STyaqTWhX69LzBX/PclD2m0DM/D8mPbJZgsMlMwbmAnwP5g==
+X-Received: by 2002:a62:1bd0:: with SMTP id b199mr31175476pfb.44.1573490842323;
+        Mon, 11 Nov 2019 08:47:22 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id 186sm4038077pfe.141.2019.11.11.08.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 08:47:21 -0800 (PST)
+Date:   Mon, 11 Nov 2019 08:47:12 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     "Greg KH" <gregkh@linuxfoundation.org>
+Cc:     <lantianyu1986@gmail.com>, <alex.williamson@redhat.com>,
+        <cohuck@redhat.com>, "KY Srinivasan" <kys@microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
+        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
+        <robh@kernel.org>, <Jonathan.Cameron@huawei.com>,
+        <paulmck@linux.ibm.com>, "Michael Kelley" <mikelley@microsoft.com>,
+        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
+Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
+Message-ID: <20191111084712.37ba7d5a@hermes.lan>
+In-Reply-To: <20191111094920.GA135867@kroah.com>
+References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
+        <20191111094920.GA135867@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111132458.220458362@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 02:13:05PM +0100, Peter Zijlstra wrote:
-> Instead of flipping text protection, use the patch_text infrastructure
-> that uses a fixmap alias where required.
-> 
-> This removes the last user of set_all_modules_text_*().
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: ard.biesheuvel@linaro.org
-> Cc: rabin@rab.in
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: james.morse@arm.com
-> ---
->  arch/arm/kernel/ftrace.c |   16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> --- a/arch/arm/kernel/ftrace.c
-> +++ b/arch/arm/kernel/ftrace.c
-> @@ -22,6 +22,7 @@
->  #include <asm/ftrace.h>
->  #include <asm/insn.h>
->  #include <asm/set_memory.h>
-> +#include <asm/patch.h>
->  
->  #ifdef CONFIG_THUMB2_KERNEL
->  #define	NOP		0xf85deb04	/* pop.w {lr} */
-> @@ -31,13 +32,15 @@
->  
->  #ifdef CONFIG_DYNAMIC_FTRACE
->  
-> +static int patch_text_remap = 0;
-> +
->  static int __ftrace_modify_code(void *data)
->  {
->  	int *command = data;
->  
-> -	set_kernel_text_rw();
-> +	patch_text_remap++;
->  	ftrace_modify_all_code(*command);
-> -	set_kernel_text_ro();
-> +	patch_text_remap--;
->  
->  	return 0;
->  }
-> @@ -59,13 +62,13 @@ static unsigned long adjust_address(stru
->  
->  int ftrace_arch_code_modify_prepare(void)
->  {
-> -	set_all_modules_text_rw();
-> +	patch_text_remap++;
->  	return 0;
->  }
->  
->  int ftrace_arch_code_modify_post_process(void)
->  {
-> -	set_all_modules_text_ro();
-> +	patch_text_remap--;
->  	/* Make sure any TLB misses during machine stop are cleared. */
->  	flush_tlb_all();
->  	return 0;
-> @@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
->  			return -EINVAL;
->  	}
->  
-> -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
-> -		return -EPERM;
-> -
-> -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
-> +	__patch_text_real((void *)pc, new, patch_text_remap);
+On Mon, 11 Nov 2019 01:49:20 -0800
+"Greg KH" <gregkh@linuxfoundation.org> wrote:
 
-I'd still prefer to pass 'true' unconditionally here, since I don't think
-this is a hot path.
+> > +	ret = sysfs_create_bin_file(&channel->kobj,  
+> &ring_buffer_bin_attr);
+> > +	if (ret)
+> > +		dev_notice(&dev->device,
+> > +			   "sysfs create ring bin file failed; %d\n",  
+> ret);
+> > +  
+> 
+> Again, don't create sysfs files on your own, the bus code should be
+> doing this for you automatically and in a way that is race-free.
+> 
+> thanks,
+> 
+> greg k-h
 
-Will
+The sysfs file is only created if the VFIO/UIO driveris used.
