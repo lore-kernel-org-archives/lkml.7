@@ -2,84 +2,163 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D235DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285ACC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0388320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKKPuB (ORCPT
+        id S1726979AbfKKPvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:50:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:47304 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbfKKPuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:50:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C61B931B;
-        Mon, 11 Nov 2019 07:50:00 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16A893F534;
-        Mon, 11 Nov 2019 07:49:59 -0800 (PST)
-Subject: Re: [PATCH] firmware: arm_scmi: Remove set but not used variable
- 'val'
-To:     Zheng Yongjun <zhengyongjun3@huawei.com>, sudeep.holla@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-References: <20191110103010.117132-1-zhengyongjun3@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <64a46661-40a6-eb7e-d225-1085b86572d0@arm.com>
-Date:   Mon, 11 Nov 2019 15:49:55 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 10:51:13 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:41255 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726857AbfKKPvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:51:12 -0500
+Received: (qmail 14399 invoked by uid 500); 11 Nov 2019 10:51:11 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 11 Nov 2019 10:51:11 -0500
+Date:   Mon, 11 Nov 2019 10:51:11 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Marco Elver <elver@google.com>
+cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+In-Reply-To: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20191110103010.117132-1-zhengyongjun3@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/11/2019 10:30, Zheng Yongjun wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/firmware/arm_scmi/perf.c: In function scmi_perf_fc_ring_db:
-> drivers/firmware/arm_scmi/perf.c:323:7: warning: variable val set but not used [-Wunused-but-set-variable]
-> 
-> val is never used, so remove it.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
-> ---
->   drivers/firmware/arm_scmi/perf.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-> index 4a8012e3cb8c..efa98d2ee045 100644
-> --- a/drivers/firmware/arm_scmi/perf.c
-> +++ b/drivers/firmware/arm_scmi/perf.c
-> @@ -319,10 +319,8 @@ static void scmi_perf_fc_ring_db(struct scmi_fc_db_info *db)
->   		SCMI_PERF_FC_RING_DB(64);
->   #else
->   	{
-> -		u64 val = 0;
-> -
->   		if (db->mask)
-> -			val = ioread64_hi_lo(db->addr) & db->mask;
-> +			ioread64_hi_lo(db->addr) & db->mask;
->   		iowrite64_hi_lo(db->set, db->addr);
+On Sun, 10 Nov 2019, Marco Elver wrote:
 
-FWIW, compared to the SCMI_PERF_FC_RING_DB() macro, this looks like the 
-wrong "fix".
+> On Sun, 10 Nov 2019 at 17:09, Alan Stern <stern@rowland.harvard.edu> wrote:
+...
 
-Robin.
-
->   	}
->   #endif
+> > For those used to thinking in terms of litmus tests, consider this one:
+> >
+> > C equivalent-writes
+> >
+> > {}
+> >
+> > P0(int *x)
+> > {
+> >         *x = 1;
+> > }
+> >
+> > P1(int *x)
+> > {
+> >         *x = 1;
+> > }
+> >
+> > exists (~x=1)
+> >
+> > Should the LKMM say that this litmus test contains a race?
+> >
+> > This suggests that we might also want to relax the notion of a write
+> > racing with a read, although in that case I'm not at all sure what the
+> > appropriate change to the memory model would be.  Something along the
+> > lines of: If a write W races with a read R, but W stores the same value
+> > that R would have read if W were not present, then it's not really a
+> > race.  But of course this is far too vague to be useful.
 > 
+> What if you introduce to the above litmus test:
+> 
+> P2(int *x) { *x = 2; }
+
+Then clearly the test _would_ contain a data race.
+
+> How can a developer, using the LKMM as a reference, hope to prove
+> their code is free from data races without having to enumerate all
+> possible values a variable could contain (in addition to all possible
+> interleavings)?
+
+Well, for one thing the new rule doesn't say anything about all
+possible values a variable could contain; it only talks about the
+values of a pair of concurrent writes.  Of course, this would still
+require you to be aware of (if not to fully enumerate) all possible
+values a write could store, so perhaps it's not much of an improvement.
+
+On the other hand, one way to prove your code is data-race-free under
+the revised LKMM would be to show that it is data-race-free under the
+original (i.e., current) LKMM.  Then you wouldn't have to enumerate any
+lists of possible values.
+
+> I view introducing data value dependencies, for the sake of allowing
+> more programs, to a language memory model as a slippery slope, and am
+> not aware of any precedent where this worked out. The additional
+> complexity in the memory model would put a burden on developers and
+> the compiler that is unlikely to be a real benefit (as you pointed
+> out, the compiler may even need to disable some transformations).
+
+This may be so.  But if the resulting model is a better match to the
+way kernel developers think about their code, wouldn't it be
+appropriate?
+
+>  From
+> a practical point of view, if the LKMM departs further and further
+> from C11's memory model, how do we ensure all compilers do the right
+> thing?
+
+Linus has already committed to doing this.  To quote the latest example
+(from a message he posted shortly after yours):
+
+	I don't care one whit about C11. Made-up stores to shared data
+	are not acceptable. Ever. We will turn that off with a compiler
+	switch if the compiler thinks it can do them, the same way we
+	turn off other incorrect optimizations like the type-based
+	aliasing or the insane "signed integer arithmetic can have
+	undefined behavior" stupidity that the standards people
+	allowed.
+
+Given that the kernel _requires_ compilers to behave this way, 
+shouldn't the LKMM reflect this requirement?
+
+> My vote would go to explicit annotation, not only because it reduces
+> hidden complexity, but also because it makes the code more
+> understandable, for developers and tooling. As an additional point, I
+> find the original suggestion to add WRITE_ONCE to be the least bad (or
+> some other better named WRITE_). Consider somebody changing the code,
+> changing the semantics and the values written to "non_rcu". With a
+> WRITE_ONCE, the developer would be clear about the fact that the write
+> can happen concurrently, and ensure new code is written with the
+> assumption that concurrent writes can happen.
+
+I dislike the explicit annotation approach, because it shifts the
+burden of proving correctness from the automatic verifier to the
+programmer.  Let's take the litmus test above as example.  I could
+annotate it to read:
+
+P0(int *x) { WRITE_IDEMPOTENT(*x, 1); }
+P1(int *x) { WRITE_IDEMPOTENT(*x, 1); }
+
+and then KCSAN would take my word for it that the two writes don't race
+with each other (or if they do race, it doesn't matter).  But now if
+the code was changed by adding:
+
+P2(int *x) { WRITE_IDEMPOTENT(*x, 2); }
+
+then KCSAN would still believe there was no race, meaning it would be
+up to me to audit all possible writes to x to make sure they store the
+same value.  That is not how automated tooling should work.
+
+Alan Stern
+
