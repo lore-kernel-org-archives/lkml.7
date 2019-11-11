@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F0AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DCFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B112190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7209A2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 12:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NejELK8a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ClXUZ8PG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfKKMCd (ORCPT
+        id S1726950AbfKKMCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 07:02:33 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35497 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726810AbfKKMCd (ORCPT
+        Mon, 11 Nov 2019 07:02:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34325 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726810AbfKKMCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 07:02:33 -0500
+        Mon, 11 Nov 2019 07:02:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573473752;
+        s=mimecast20190719; t=1573473761;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ZX77dlGVfs5zLCgF16lmUTyr3KZ7aqDcwM5gBK/oIvQ=;
-        b=NejELK8ax2PWlhi3azBMq0MvT7UyLbMdkaDR1vmmwvumQbs4l23dczTptdX6k57Xu9n5s2
-        YL5fKAZM4imTsyHfoHqLIiChl3bb5q+kJ9LPmWdZ+uIA6vZsZF7304pRFqgZS9EYk6WaIk
-        p93bsoGNherPdku3QuOTMPQm6PIZsXU=
+        bh=asuKFrmfRkgz31jPShyl4Uq8GY2UyMyCxsRRtK4N75o=;
+        b=ClXUZ8PGn11ZqlYr3/2DfzKeT70NlGnqyrVGyPXHki2yFPRJSGwB4GaBgggmZ4pfz7/5b+
+        dR9HzzUIjWFslJ6c9QkgmgHa8CjvkJUibCi2vp28yczAoSKXsScTBf0UXXzGO4hCsDEVG8
+        otW8HqJxJ8K1le1jnAkQ5dAhouejH/E=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-FX5Taea7OpKScG0ACy2yfg-1; Mon, 11 Nov 2019 07:02:28 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-259-oDGmOIugO7uT3CWU4KMMNw-1; Mon, 11 Nov 2019 07:02:37 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27EA2108FB95;
-        Mon, 11 Nov 2019 12:02:26 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7DC21854E76;
+        Mon, 11 Nov 2019 12:02:34 +0000 (UTC)
 Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 58DFE4B4;
-        Mon, 11 Nov 2019 12:02:21 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 13:02:20 +0100
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7C32D608FD;
+        Mon, 11 Nov 2019 12:02:31 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 13:02:30 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -65,14 +65,14 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH] perf tools: report initial event parsing error
-Message-ID: <20191111120220.GC9791@krava>
+Message-ID: <20191111120230.GD9791@krava>
 References: <20191107222315.GA7261@kernel.org>
  <20191108181533.222053-1-irogers@google.com>
 MIME-Version: 1.0
 In-Reply-To: <20191108181533.222053-1-irogers@google.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: FX5Taea7OpKScG0ACy2yfg-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: oDGmOIugO7uT3CWU4KMMNw-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -83,27 +83,45 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Nov 08, 2019 at 10:15:33AM -0800, Ian Rogers wrote:
+> Record the first event parsing error and report. Implementing feedback
+> from Jiri Olsa:
+> https://lkml.org/lkml/2019/10/28/680
+>=20
+> An example error is:
+>=20
+> $ tools/perf/perf stat -e c/c/
+> WARNING: multiple event parsing errors
+> event syntax error: 'c/c/'
+>                        \___ unknown term
+>=20
+> valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,fil=
+ter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_=
+not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
+>=20
+> Initial error:
+> event syntax error: 'c/c/'
+>                     \___ Cannot find PMU `c'. Missing kernel support?
 
-SNIP
-
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 43c05eae1768..46a72ecac427 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist=
- *evlist)
->  {
->  =09bool found =3D false;
->  =09struct evsel *evsel, *tmp;
-> -=09struct parse_events_error err =3D { .idx =3D 0, };
-> -=09int ret =3D parse_events(evlist, "probe:vfs_getname*", &err);
-> +=09struct parse_events_error err;
-> +=09int ret;
-> =20
-> -=09if (ret)
-> +=09bzero(&err, sizeof(err));
-
-hum, what's the problem with the zero init above?
+not sure where this got lost or if it was there before,
+but the index should point to zero to have the 'arrow' aligned
 
 jirka
+
+
+---
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.=
+c
+index a369bbc289b2..6bae9d6edc12 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1366,7 +1366,7 @@ int parse_events_add_pmu(struct parse_events_state *p=
+arse_state,
+ =09=09if (asprintf(&err_str,
+ =09=09=09=09"Cannot find PMU `%s'. Missing kernel support?",
+ =09=09=09=09name) >=3D 0)
+-=09=09=09parse_events__handle_error(err, -1, err_str, NULL);
++=09=09=09parse_events__handle_error(err, 0, err_str, NULL);
+ =09=09return -EINVAL;
+ =09}
+=20
 
