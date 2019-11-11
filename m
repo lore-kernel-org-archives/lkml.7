@@ -2,81 +2,127 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9798EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E7EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A9F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F25206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:11:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="viQc/Kpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfKKSKr (ORCPT
+        id S1727028AbfKKSLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:10:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34660 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfKKSKr (ORCPT
+        Mon, 11 Nov 2019 13:11:15 -0500
+Received: from gateway20.websitewelcome.com ([192.185.48.38]:14685 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726763AbfKKSLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:10:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l202so12318172oig.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:10:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U0dm5D6eillHbo+SYeBB7f0hErK0a+Kk33c8eTHG8H4=;
-        b=uBlfCgXqo7AHGAgUEqHHHg8XNyocTzO00ikzLes8lxILlAohEc7WBWYNwBmgyDB16n
-         GMnGGZ1u7pjJHra3S+s+3Z3p04cMAv9MAr2Wu4/d3yRziyv+eaMsRgMaDf8pEP4Fyp5+
-         atTY3cUvR8Pc5qUuvO0aQ5jNN5jQJt0PDvwPCh7GP+wIDNw+h8O7Go3AwDfQ8430L/2w
-         87SDrUwSwVFO7xIU5ktQ/rsFiNbnbtpCGdGuL1pJACWV1XjTZw+j9MoSYv72ewztdVNA
-         7zXSJdjUaWMfZRncQjt+f343vB5c3GRAOHiYha0cdm5KlXIc2i5Qt9RnQMGdTivGiMOd
-         eMdA==
-X-Gm-Message-State: APjAAAXzZNO23iYqvBtrZjHqPi7HlrmCVGZWnEeeM2T3mErCZfnvezaU
-        FRXs/3nz819hzHYgX8eNuQPLMOIw3ikppUBSII+giQ==
-X-Google-Smtp-Source: APXvYqy5+K5Ca70nfdLzLpsHL1LP47SJMH7uBNWJHVoxDJt89nuKEY13OiKJzKEWbKRlo+wgCcXId9NnMQPQFowaWfc=
-X-Received: by 2002:aca:882:: with SMTP id 124mr284378oii.54.1573495843776;
- Mon, 11 Nov 2019 10:10:43 -0800 (PST)
+        Mon, 11 Nov 2019 13:11:14 -0500
+X-Greylist: delayed 1501 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 13:11:13 EST
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 19956400C47C9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:16:44 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id UDRXiLk0wW4frUDRXinZfu; Mon, 11 Nov 2019 11:25:35 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=obJGNctpNomw0ORl8GMTnOXHVQTOW6QwMfGlRbchZDQ=; b=viQc/KpkyqpjaooaNayckCTFw5
+        jPT+0IfyxeHPWb8eVLnXjU0UNzYGM+p0EvVAX8Ex1+EUwP1W+zbACBcdlQaS8+bCFJnU7q1PjsXXu
+        bC0NPhCyZxaLPIp76IzUT8B2V/swRFzeHxsKtalaVs43Pc8DQ+vNNE1B+cJA78YL3wZ6fl9fZegLg
+        n4/aIk6NZOtbzzNEKxJad2pCp/locExG7MJulTuSwcfXn/84kPBCbUQGwylAdhgCNHGmU9h4XCBqs
+        Br+CFXHcgMvh2BTDHzYfbkhfWPE8MP1uDDjm0hnx5Tltn0FYqZ7SvKEb7Peel/MPrZ9EbCzSs3rHL
+        giAKWVQg==;
+Received: from [187.192.2.30] (port=45762 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1iUDRU-001CZi-Un; Mon, 11 Nov 2019 11:25:33 -0600
+Date:   Mon, 11 Nov 2019 11:25:43 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] drm/amd/display: Fix unsigned variable compared to less than
+ zero
+Message-ID: <20191111172543.GA31748@embeddedor>
 MIME-Version: 1.0
-References: <201911110920.5840E9AF1@keescook>
-In-Reply-To: <201911110920.5840E9AF1@keescook>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 11 Nov 2019 19:10:32 +0100
-Message-ID: <CAMuHMdX_EM0e=fN6udZsPfa-YGX7KkNEgCQtdC0M51LGmWOxzA@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Convert missed RODATA to RO_DATA
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.2.30
+X-Source-L: No
+X-Exim-ID: 1iUDRU-001CZi-Un
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.2.30]:45762
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 6:22 PM Kees Cook <keescook@chromium.org> wrote:
-> I missed two instances of the old RODATA macro (seems I was searching
-> for vmlinux.lds* not vmlinux*lds*). Fix both instances and double-check
-> the entire tree for other "RODATA" instances in linker scripts.
->
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: c82318254d15 ("vmlinux.lds.h: Replace RODATA with RO_DATA")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/m68k/kernel/vmlinux-std.lds  | 2 +-
->  arch/m68k/kernel/vmlinux-sun3.lds | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+Currenly, the error check below on variable *vcpi_slots* is always
+false because it is a uint64_t type variable, hence, the values
+this variable can hold are never less than zero:
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:
+4870         if (dm_new_connector_state->vcpi_slots < 0) {
+4871                 DRM_DEBUG_ATOMIC("failed finding vcpi slots: %d\n", (int)dm_new_connector_stat     e->vcpi_slots);
+4872                 return dm_new_connector_state->vcpi_slots;
+4873         }
 
-Gr{oetje,eeting}s,
+Fix this by making *vcpi_slots* of int type.
 
-                        Geert
+Addresses-Coverity: 1487838 ("Unsigned compared against 0")
+Fixes: b4c578f08378 ("drm/amd/display: Add MST atomic routines")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+index 6db07e9e33ab..a8fc90a927d6 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+@@ -403,7 +403,7 @@ struct dm_connector_state {
+ 	bool underscan_enable;
+ 	bool freesync_capable;
+ 	uint8_t abm_level;
+-	uint64_t vcpi_slots;
++	int vcpi_slots;
+ 	uint64_t pbn;
+ };
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.23.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
