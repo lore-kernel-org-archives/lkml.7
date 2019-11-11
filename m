@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418A7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1191C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F42121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B8821655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497188;
-	bh=LLWwTlzKdjmy5s1VIl+pq4uOGDlreo98Jg/Th1Ac00U=;
+	s=default; t=1573497190;
+	bh=LbnEZgm2BvH2olWHVKKrQ0U9lIl1aIiEKSTyer5PYJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cVPgVushGZhSwJab07axDy7D7exfMrCF9kcSaY9rZw3lLwvwwxZDk4bkNud7qKmob
-	 zNG6w305VvHCI5CEmDj89SaAI13J4Qjy4dB9cPhtyXsf7WmZ3qGs0A9vxSGTUVf7sc
-	 9FRBRhtchQ1PWt/v68pru4PWcTyiih8rF8CH8+Uc=
+	b=JNs2iLbIGULG47IniWNTuZzp2oMbVqpBkqTL7ZW505NuHbYlpeBhUsZpqSvi1W/hm
+	 CE3A6N74VKCAAhKC8lUBROicSS+FVoDRDKuueS84czd5IUKnHStj/wcA5Eh3ENGbB2
+	 WP8aMZtFjDpS0N6aDzfrChYWEj6SrL72/9jz0adM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfKKSdH (ORCPT
+        id S1728107AbfKKSdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbfKKSdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:02 -0500
+        id S1728091AbfKKSdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D320F21E6F;
-        Mon, 11 Nov 2019 18:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC3020656;
+        Mon, 11 Nov 2019 18:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497181;
-        bh=LLWwTlzKdjmy5s1VIl+pq4uOGDlreo98Jg/Th1Ac00U=;
+        s=default; t=1573497184;
+        bh=LbnEZgm2BvH2olWHVKKrQ0U9lIl1aIiEKSTyer5PYJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GRZNhHyZMs7/vZ1udBxDebHZj7zHuGM3SJYeV7mo9kDugB7NWy1GpfSqnX8OOTWAB
-         oIV55tVT2VC1yXiDGTbmCSZZrZqvjIZnv6/fruG6MOA+nT6tmxQvXa+jQ3+HxY6oKV
-         X16TN0evUg2kiHjxtyAapmJT6kfOO7tN0tmiKr3Y=
+        b=NUFu9u2EbYc8fPjbmbfnPnG+g3KXLbLWCguq7rqZwhEhcdtnjtcoubH9PaxKdeqkI
+         s5Nnb/RQFkZfszLLtOLgnIQ6cXefdTg3NcRUTDxkPaJNeSAJLYYnkpOIkrYt1XB5RI
+         gJvwrEGjN5eg4N4sTCR8V2GoQ7PPAR9MEOkCW0JY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.9 30/65] configfs: new object reprsenting tree fragments
-Date:   Mon, 11 Nov 2019 19:28:30 +0100
-Message-Id: <20191111181346.474391104@linuxfoundation.org>
+Subject: [PATCH 4.9 31/65] configfs: provide exclusion between IO and removals
+Date:   Mon, 11 Nov 2019 19:28:31 +0100
+Message-Id: <20191111181346.600326765@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -61,394 +61,275 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 47320fbe11a6059ae502c9c16b668022fdb4cf76 upstream.
+commit b0841eefd9693827afb9888235e26ddd098f9cef upstream.
 
-Refcounted, hangs of configfs_dirent, created by operations that add
-fragments to configfs tree (mkdir and configfs_register_{subsystem,group}).
-Will be used in the next commit to provide exclusion between fragment
-removal and ->show/->store calls.
+Make sure that attribute methods are not called after the item
+has been removed from the tree.  To do so, we
+	* at the point of no return in removals, grab ->frag_sem
+exclusive and mark the fragment dead.
+	* call the methods of attributes with ->frag_sem taken
+shared and only after having verified that the fragment is still
+alive.
+
+	The main benefit is for method instances - they are
+guaranteed that the objects they are accessing *and* all ancestors
+are still there.  Another win is that we don't need to bother
+with extra refcount on config_item when opening a file -
+the item will be alive for as long as it stays in the tree, and
+we won't touch it/attributes/any associated data after it's
+been removed from the tree.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/configfs/configfs_internal.h |   15 ++++-
- fs/configfs/dir.c               |  105 +++++++++++++++++++++++++++++++---------
- fs/configfs/file.c              |    4 -
- 3 files changed, 97 insertions(+), 27 deletions(-)
+ fs/configfs/dir.c  |   23 ++++++++++++++++
+ fs/configfs/file.c |   75 ++++++++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 80 insertions(+), 18 deletions(-)
 
---- a/fs/configfs/configfs_internal.h
-+++ b/fs/configfs/configfs_internal.h
-@@ -34,6 +34,15 @@
- #include <linux/list.h>
- #include <linux/spinlock.h>
- 
-+struct configfs_fragment {
-+	atomic_t frag_count;
-+	struct rw_semaphore frag_sem;
-+	bool frag_dead;
-+};
-+
-+void put_fragment(struct configfs_fragment *);
-+struct configfs_fragment *get_fragment(struct configfs_fragment *);
-+
- struct configfs_dirent {
- 	atomic_t		s_count;
- 	int			s_dependent_count;
-@@ -48,6 +57,7 @@ struct configfs_dirent {
- #ifdef CONFIG_LOCKDEP
- 	int			s_depth;
- #endif
-+	struct configfs_fragment *s_frag;
- };
- 
- #define CONFIGFS_ROOT		0x0001
-@@ -75,8 +85,8 @@ extern int configfs_create(struct dentry
- extern int configfs_create_file(struct config_item *, const struct configfs_attribute *);
- extern int configfs_create_bin_file(struct config_item *,
- 				    const struct configfs_bin_attribute *);
--extern int configfs_make_dirent(struct configfs_dirent *,
--				struct dentry *, void *, umode_t, int);
-+extern int configfs_make_dirent(struct configfs_dirent *, struct dentry *,
-+				void *, umode_t, int, struct configfs_fragment *);
- extern int configfs_dirent_is_ready(struct configfs_dirent *);
- 
- extern void configfs_hash_and_remove(struct dentry * dir, const char * name);
-@@ -151,6 +161,7 @@ static inline void release_configfs_dire
- {
- 	if (!(sd->s_type & CONFIGFS_ROOT)) {
- 		kfree(sd->s_iattr);
-+		put_fragment(sd->s_frag);
- 		kmem_cache_free(configfs_dir_cachep, sd);
- 	}
- }
 --- a/fs/configfs/dir.c
 +++ b/fs/configfs/dir.c
-@@ -164,11 +164,38 @@ configfs_adjust_dir_dirent_depth_after_p
- 
- #endif /* CONFIG_LOCKDEP */
- 
-+static struct configfs_fragment *new_fragment(void)
-+{
-+	struct configfs_fragment *p;
-+
-+	p = kmalloc(sizeof(struct configfs_fragment), GFP_KERNEL);
-+	if (p) {
-+		atomic_set(&p->frag_count, 1);
-+		init_rwsem(&p->frag_sem);
-+		p->frag_dead = false;
-+	}
-+	return p;
-+}
-+
-+void put_fragment(struct configfs_fragment *frag)
-+{
-+	if (frag && atomic_dec_and_test(&frag->frag_count))
-+		kfree(frag);
-+}
-+
-+struct configfs_fragment *get_fragment(struct configfs_fragment *frag)
-+{
-+	if (likely(frag))
-+		atomic_inc(&frag->frag_count);
-+	return frag;
-+}
-+
- /*
-  * Allocates a new configfs_dirent and links it to the parent configfs_dirent
-  */
- static struct configfs_dirent *configfs_new_dirent(struct configfs_dirent *parent_sd,
--						   void *element, int type)
-+						   void *element, int type,
-+						   struct configfs_fragment *frag)
- {
- 	struct configfs_dirent * sd;
- 
-@@ -188,6 +215,7 @@ static struct configfs_dirent *configfs_
- 		kmem_cache_free(configfs_dir_cachep, sd);
- 		return ERR_PTR(-ENOENT);
- 	}
-+	sd->s_frag = get_fragment(frag);
- 	list_add(&sd->s_sibling, &parent_sd->s_children);
- 	spin_unlock(&configfs_dirent_lock);
- 
-@@ -222,11 +250,11 @@ static int configfs_dirent_exists(struct
- 
- int configfs_make_dirent(struct configfs_dirent * parent_sd,
- 			 struct dentry * dentry, void * element,
--			 umode_t mode, int type)
-+			 umode_t mode, int type, struct configfs_fragment *frag)
- {
- 	struct configfs_dirent * sd;
- 
--	sd = configfs_new_dirent(parent_sd, element, type);
-+	sd = configfs_new_dirent(parent_sd, element, type, frag);
- 	if (IS_ERR(sd))
- 		return PTR_ERR(sd);
- 
-@@ -273,7 +301,8 @@ static void init_symlink(struct inode *
-  *	until it is validated by configfs_dir_set_ready()
-  */
- 
--static int configfs_create_dir(struct config_item *item, struct dentry *dentry)
-+static int configfs_create_dir(struct config_item *item, struct dentry *dentry,
-+				struct configfs_fragment *frag)
- {
- 	int error;
- 	umode_t mode = S_IFDIR| S_IRWXU | S_IRUGO | S_IXUGO;
-@@ -286,7 +315,8 @@ static int configfs_create_dir(struct co
- 		return error;
- 
- 	error = configfs_make_dirent(p->d_fsdata, dentry, item, mode,
--				     CONFIGFS_DIR | CONFIGFS_USET_CREATING);
-+				     CONFIGFS_DIR | CONFIGFS_USET_CREATING,
-+				     frag);
- 	if (unlikely(error))
- 		return error;
- 
-@@ -351,9 +381,10 @@ int configfs_create_link(struct configfs
- {
- 	int err = 0;
- 	umode_t mode = S_IFLNK | S_IRWXUGO;
-+	struct configfs_dirent *p = parent->d_fsdata;
- 
--	err = configfs_make_dirent(parent->d_fsdata, dentry, sl, mode,
--				   CONFIGFS_ITEM_LINK);
-+	err = configfs_make_dirent(p, dentry, sl, mode,
-+				   CONFIGFS_ITEM_LINK, p->s_frag);
- 	if (!err) {
- 		err = configfs_create(dentry, mode, init_symlink);
- 		if (err) {
-@@ -612,7 +643,8 @@ static int populate_attrs(struct config_
- 
- static int configfs_attach_group(struct config_item *parent_item,
- 				 struct config_item *item,
--				 struct dentry *dentry);
-+				 struct dentry *dentry,
-+				 struct configfs_fragment *frag);
- static void configfs_detach_group(struct config_item *item);
- 
- static void detach_groups(struct config_group *group)
-@@ -660,7 +692,8 @@ static void detach_groups(struct config_
-  * try using vfs_mkdir.  Just a thought.
-  */
- static int create_default_group(struct config_group *parent_group,
--				struct config_group *group)
-+				struct config_group *group,
-+				struct configfs_fragment *frag)
- {
- 	int ret;
+@@ -1474,6 +1474,7 @@ static int configfs_rmdir(struct inode *
+ 	struct config_item *item;
+ 	struct configfs_subsystem *subsys;
  	struct configfs_dirent *sd;
-@@ -676,7 +709,7 @@ static int create_default_group(struct c
- 		d_add(child, NULL);
- 
- 		ret = configfs_attach_group(&parent_group->cg_item,
--					    &group->cg_item, child);
-+					    &group->cg_item, child, frag);
- 		if (!ret) {
- 			sd = child->d_fsdata;
- 			sd->s_type |= CONFIGFS_USET_DEFAULT;
-@@ -690,13 +723,14 @@ static int create_default_group(struct c
- 	return ret;
- }
- 
--static int populate_groups(struct config_group *group)
-+static int populate_groups(struct config_group *group,
-+			   struct configfs_fragment *frag)
- {
- 	struct config_group *new_group;
- 	int ret = 0;
- 
- 	list_for_each_entry(new_group, &group->default_groups, group_entry) {
--		ret = create_default_group(group, new_group);
-+		ret = create_default_group(group, new_group, frag);
- 		if (ret) {
- 			detach_groups(group);
- 			break;
-@@ -810,11 +844,12 @@ static void link_group(struct config_gro
-  */
- static int configfs_attach_item(struct config_item *parent_item,
- 				struct config_item *item,
--				struct dentry *dentry)
-+				struct dentry *dentry,
-+				struct configfs_fragment *frag)
- {
- 	int ret;
- 
--	ret = configfs_create_dir(item, dentry);
-+	ret = configfs_create_dir(item, dentry, frag);
- 	if (!ret) {
- 		ret = populate_attrs(item);
- 		if (ret) {
-@@ -844,12 +879,13 @@ static void configfs_detach_item(struct
- 
- static int configfs_attach_group(struct config_item *parent_item,
- 				 struct config_item *item,
--				 struct dentry *dentry)
-+				 struct dentry *dentry,
-+				 struct configfs_fragment *frag)
- {
- 	int ret;
- 	struct configfs_dirent *sd;
- 
--	ret = configfs_attach_item(parent_item, item, dentry);
-+	ret = configfs_attach_item(parent_item, item, dentry, frag);
- 	if (!ret) {
- 		sd = dentry->d_fsdata;
- 		sd->s_type |= CONFIGFS_USET_DIR;
-@@ -865,7 +901,7 @@ static int configfs_attach_group(struct
- 		 */
- 		inode_lock_nested(d_inode(dentry), I_MUTEX_CHILD);
- 		configfs_adjust_dir_dirent_depth_before_populate(sd);
--		ret = populate_groups(to_config_group(item));
-+		ret = populate_groups(to_config_group(item), frag);
- 		if (ret) {
- 			configfs_detach_item(item);
- 			d_inode(dentry)->i_flags |= S_DEAD;
-@@ -1260,6 +1296,7 @@ static int configfs_mkdir(struct inode *
- 	struct configfs_dirent *sd;
- 	struct config_item_type *type;
- 	struct module *subsys_owner = NULL, *new_item_owner = NULL;
 +	struct configfs_fragment *frag;
- 	char *name;
+ 	struct module *subsys_owner = NULL, *dead_item_owner = NULL;
+ 	int ret;
  
- 	sd = dentry->d_parent->d_fsdata;
-@@ -1278,6 +1315,12 @@ static int configfs_mkdir(struct inode *
- 		goto out;
- 	}
+@@ -1531,6 +1532,16 @@ static int configfs_rmdir(struct inode *
+ 		}
+ 	} while (ret == -EAGAIN);
  
-+	frag = new_fragment();
-+	if (!frag) {
-+		ret = -ENOMEM;
-+		goto out;
++	frag = sd->s_frag;
++	if (down_write_killable(&frag->frag_sem)) {
++		spin_lock(&configfs_dirent_lock);
++		configfs_detach_rollback(dentry);
++		spin_unlock(&configfs_dirent_lock);
++		return -EINTR;
 +	}
++	frag->frag_dead = true;
++	up_write(&frag->frag_sem);
 +
  	/* Get a working ref for the duration of this function */
- 	parent_item = configfs_get_config_item(dentry->d_parent);
- 	type = parent_item->ci_type;
-@@ -1380,9 +1423,9 @@ static int configfs_mkdir(struct inode *
- 	spin_unlock(&configfs_dirent_lock);
+ 	item = configfs_get_config_item(dentry);
  
- 	if (group)
--		ret = configfs_attach_group(parent_item, item, dentry);
-+		ret = configfs_attach_group(parent_item, item, dentry, frag);
- 	else
--		ret = configfs_attach_item(parent_item, item, dentry);
-+		ret = configfs_attach_item(parent_item, item, dentry, frag);
- 
- 	spin_lock(&configfs_dirent_lock);
- 	sd->s_type &= ~CONFIGFS_USET_IN_MKDIR;
-@@ -1419,6 +1462,7 @@ out_put:
- 	 * reference.
- 	 */
- 	config_item_put(parent_item);
-+	put_fragment(frag);
- 
- out:
- 	return ret;
-@@ -1587,7 +1631,7 @@ static int configfs_dir_open(struct inod
- 	 */
- 	err = -ENOENT;
- 	if (configfs_dirent_is_ready(parent_sd)) {
--		file->private_data = configfs_new_dirent(parent_sd, NULL, 0);
-+		file->private_data = configfs_new_dirent(parent_sd, NULL, 0, NULL);
- 		if (IS_ERR(file->private_data))
- 			err = PTR_ERR(file->private_data);
- 		else
-@@ -1743,8 +1787,13 @@ int configfs_register_group(struct confi
- {
- 	struct configfs_subsystem *subsys = parent_group->cg_subsys;
- 	struct dentry *parent;
-+	struct configfs_fragment *frag;
- 	int ret;
- 
-+	frag = new_fragment();
-+	if (!frag)
-+		return -ENOMEM;
+@@ -1832,6 +1843,12 @@ void configfs_unregister_group(struct co
+ 	struct configfs_subsystem *subsys = group->cg_subsys;
+ 	struct dentry *dentry = group->cg_item.ci_dentry;
+ 	struct dentry *parent = group->cg_item.ci_parent->ci_dentry;
++	struct configfs_dirent *sd = dentry->d_fsdata;
++	struct configfs_fragment *frag = sd->s_frag;
 +
- 	mutex_lock(&subsys->su_mutex);
- 	link_group(parent_group, group);
- 	mutex_unlock(&subsys->su_mutex);
-@@ -1752,7 +1801,7 @@ int configfs_register_group(struct confi
- 	parent = parent_group->cg_item.ci_dentry;
++	down_write(&frag->frag_sem);
++	frag->frag_dead = true;
++	up_write(&frag->frag_sem);
  
  	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
--	ret = create_default_group(parent_group, group);
-+	ret = create_default_group(parent_group, group, frag);
- 	if (ret)
- 		goto err_out;
+ 	spin_lock(&configfs_dirent_lock);
+@@ -1957,12 +1974,18 @@ void configfs_unregister_subsystem(struc
+ 	struct config_group *group = &subsys->su_group;
+ 	struct dentry *dentry = group->cg_item.ci_dentry;
+ 	struct dentry *root = dentry->d_sb->s_root;
++	struct configfs_dirent *sd = dentry->d_fsdata;
++	struct configfs_fragment *frag = sd->s_frag;
  
-@@ -1760,12 +1809,14 @@ int configfs_register_group(struct confi
- 	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
- 	spin_unlock(&configfs_dirent_lock);
- 	inode_unlock(d_inode(parent));
-+	put_fragment(frag);
- 	return 0;
- err_out:
- 	inode_unlock(d_inode(parent));
- 	mutex_lock(&subsys->su_mutex);
- 	unlink_group(group);
- 	mutex_unlock(&subsys->su_mutex);
-+	put_fragment(frag);
- 	return ret;
- }
- EXPORT_SYMBOL(configfs_register_group);
-@@ -1852,10 +1903,17 @@ int configfs_register_subsystem(struct c
- 	struct dentry *dentry;
- 	struct dentry *root;
- 	struct configfs_dirent *sd;
-+	struct configfs_fragment *frag;
-+
-+	frag = new_fragment();
-+	if (!frag)
-+		return -ENOMEM;
- 
- 	root = configfs_pin_fs();
--	if (IS_ERR(root))
-+	if (IS_ERR(root)) {
-+		put_fragment(frag);
- 		return PTR_ERR(root);
-+	}
- 
- 	if (!group->cg_item.ci_name)
- 		group->cg_item.ci_name = group->cg_item.ci_namebuf;
-@@ -1871,7 +1929,7 @@ int configfs_register_subsystem(struct c
- 		d_add(dentry, NULL);
- 
- 		err = configfs_attach_group(sd->s_element, &group->cg_item,
--					    dentry);
-+					    dentry, frag);
- 		if (err) {
- 			BUG_ON(d_inode(dentry));
- 			d_drop(dentry);
-@@ -1889,6 +1947,7 @@ int configfs_register_subsystem(struct c
- 		unlink_group(group);
- 		configfs_release_fs();
+ 	if (dentry->d_parent != root) {
+ 		pr_err("Tried to unregister non-subsystem!\n");
+ 		return;
  	}
-+	put_fragment(frag);
  
- 	return err;
- }
++	down_write(&frag->frag_sem);
++	frag->frag_dead = true;
++	up_write(&frag->frag_sem);
++
+ 	inode_lock_nested(d_inode(root),
+ 			  I_MUTEX_PARENT);
+ 	inode_lock_nested(d_inode(dentry), I_MUTEX_CHILD);
 --- a/fs/configfs/file.c
 +++ b/fs/configfs/file.c
-@@ -502,7 +502,7 @@ int configfs_create_file(struct config_i
+@@ -62,22 +62,32 @@ struct configfs_buffer {
+ 	};
+ };
  
- 	inode_lock_nested(d_inode(dir), I_MUTEX_NORMAL);
- 	error = configfs_make_dirent(parent_sd, NULL, (void *) attr, mode,
--				     CONFIGFS_ITEM_ATTR);
-+				     CONFIGFS_ITEM_ATTR, parent_sd->s_frag);
- 	inode_unlock(d_inode(dir));
++static inline struct configfs_fragment *to_frag(struct file *file)
++{
++	struct configfs_dirent *sd = file->f_path.dentry->d_fsdata;
++
++	return sd->s_frag;
++}
  
+-static int fill_read_buffer(struct configfs_buffer * buffer)
++static int fill_read_buffer(struct file *file, struct configfs_buffer *buffer)
+ {
+-	ssize_t count;
++	struct configfs_fragment *frag = to_frag(file);
++	ssize_t count = -ENOENT;
+ 
+ 	if (!buffer->page)
+ 		buffer->page = (char *) get_zeroed_page(GFP_KERNEL);
+ 	if (!buffer->page)
+ 		return -ENOMEM;
+ 
+-	count = buffer->attr->show(buffer->item, buffer->page);
++	down_read(&frag->frag_sem);
++	if (!frag->frag_dead)
++		count = buffer->attr->show(buffer->item, buffer->page);
++	up_read(&frag->frag_sem);
++
+ 	if (count < 0)
+ 		return count;
+ 	if (WARN_ON_ONCE(count > (ssize_t)SIMPLE_ATTR_SIZE))
+ 		return -EIO;
+-
+ 	buffer->needs_read_fill = 0;
+ 	buffer->count = count;
+ 	return 0;
+@@ -110,7 +120,7 @@ configfs_read_file(struct file *file, ch
+ 
+ 	mutex_lock(&buffer->mutex);
+ 	if (buffer->needs_read_fill) {
+-		retval = fill_read_buffer(buffer);
++		retval = fill_read_buffer(file, buffer);
+ 		if (retval)
+ 			goto out;
+ 	}
+@@ -147,6 +157,7 @@ static ssize_t
+ configfs_read_bin_file(struct file *file, char __user *buf,
+ 		       size_t count, loff_t *ppos)
+ {
++	struct configfs_fragment *frag = to_frag(file);
+ 	struct configfs_buffer *buffer = file->private_data;
+ 	ssize_t retval = 0;
+ 	ssize_t len = min_t(size_t, count, PAGE_SIZE);
+@@ -162,7 +173,12 @@ configfs_read_bin_file(struct file *file
+ 
+ 	if (buffer->needs_read_fill) {
+ 		/* perform first read with buf == NULL to get extent */
+-		len = buffer->bin_attr->read(buffer->item, NULL, 0);
++		down_read(&frag->frag_sem);
++		if (!frag->frag_dead)
++			len = buffer->bin_attr->read(buffer->item, NULL, 0);
++		else
++			len = -ENOENT;
++		up_read(&frag->frag_sem);
+ 		if (len <= 0) {
+ 			retval = len;
+ 			goto out;
+@@ -182,8 +198,13 @@ configfs_read_bin_file(struct file *file
+ 		buffer->bin_buffer_size = len;
+ 
+ 		/* perform second read to fill buffer */
+-		len = buffer->bin_attr->read(buffer->item,
+-					     buffer->bin_buffer, len);
++		down_read(&frag->frag_sem);
++		if (!frag->frag_dead)
++			len = buffer->bin_attr->read(buffer->item,
++						     buffer->bin_buffer, len);
++		else
++			len = -ENOENT;
++		up_read(&frag->frag_sem);
+ 		if (len < 0) {
+ 			retval = len;
+ 			vfree(buffer->bin_buffer);
+@@ -234,9 +255,16 @@ fill_write_buffer(struct configfs_buffer
+ }
+ 
+ static int
+-flush_write_buffer(struct configfs_buffer *buffer, size_t count)
++flush_write_buffer(struct file *file, struct configfs_buffer *buffer, size_t count)
+ {
+-	return buffer->attr->store(buffer->item, buffer->page, count);
++	struct configfs_fragment *frag = to_frag(file);
++	int res = -ENOENT;
++
++	down_read(&frag->frag_sem);
++	if (!frag->frag_dead)
++		res = buffer->attr->store(buffer->item, buffer->page, count);
++	up_read(&frag->frag_sem);
++	return res;
+ }
+ 
+ 
+@@ -266,7 +294,7 @@ configfs_write_file(struct file *file, c
+ 	mutex_lock(&buffer->mutex);
+ 	len = fill_write_buffer(buffer, buf, count);
+ 	if (len > 0)
+-		len = flush_write_buffer(buffer, len);
++		len = flush_write_buffer(file, buffer, len);
+ 	if (len > 0)
+ 		*ppos += len;
+ 	mutex_unlock(&buffer->mutex);
+@@ -342,6 +370,7 @@ out:
+ static int __configfs_open_file(struct inode *inode, struct file *file, int type)
+ {
+ 	struct dentry *dentry = file->f_path.dentry;
++	struct configfs_fragment *frag = to_frag(file);
+ 	struct configfs_attribute *attr;
+ 	struct configfs_buffer *buffer;
+ 	int error;
+@@ -351,8 +380,13 @@ static int __configfs_open_file(struct i
+ 	if (!buffer)
+ 		goto out;
+ 
++	error = -ENOENT;
++	down_read(&frag->frag_sem);
++	if (unlikely(frag->frag_dead))
++		goto out_free_buffer;
++
+ 	error = -EINVAL;
+-	buffer->item = configfs_get_config_item(dentry->d_parent);
++	buffer->item = to_item(dentry->d_parent);
+ 	if (!buffer->item)
+ 		goto out_free_buffer;
+ 
+@@ -410,6 +444,7 @@ static int __configfs_open_file(struct i
+ 	buffer->read_in_progress = false;
+ 	buffer->write_in_progress = false;
+ 	file->private_data = buffer;
++	up_read(&frag->frag_sem);
+ 	return 0;
+ 
+ out_put_module:
+@@ -417,6 +452,7 @@ out_put_module:
+ out_put_item:
+ 	config_item_put(buffer->item);
+ out_free_buffer:
++	up_read(&frag->frag_sem);
+ 	kfree(buffer);
+ out:
  	return error;
-@@ -524,7 +524,7 @@ int configfs_create_bin_file(struct conf
+@@ -426,8 +462,6 @@ static int configfs_release(struct inode
+ {
+ 	struct configfs_buffer *buffer = filp->private_data;
  
- 	inode_lock_nested(dir->d_inode, I_MUTEX_NORMAL);
- 	error = configfs_make_dirent(parent_sd, NULL, (void *) bin_attr, mode,
--				     CONFIGFS_ITEM_BIN_ATTR);
-+				     CONFIGFS_ITEM_BIN_ATTR, parent_sd->s_frag);
- 	inode_unlock(dir->d_inode);
+-	if (buffer->item)
+-		config_item_put(buffer->item);
+ 	module_put(buffer->owner);
+ 	if (buffer->page)
+ 		free_page((unsigned long)buffer->page);
+@@ -453,12 +487,17 @@ static int configfs_release_bin_file(str
+ 	buffer->read_in_progress = false;
  
- 	return error;
+ 	if (buffer->write_in_progress) {
++		struct configfs_fragment *frag = to_frag(file);
+ 		buffer->write_in_progress = false;
+ 
+-		/* result of ->release() is ignored */
+-		buffer->bin_attr->write(buffer->item, buffer->bin_buffer,
+-				buffer->bin_buffer_size);
+-
++		down_read(&frag->frag_sem);
++		if (!frag->frag_dead) {
++			/* result of ->release() is ignored */
++			buffer->bin_attr->write(buffer->item,
++					buffer->bin_buffer,
++					buffer->bin_buffer_size);
++		}
++		up_read(&frag->frag_sem);
+ 		/* vfree on NULL is safe */
+ 		vfree(buffer->bin_buffer);
+ 		buffer->bin_buffer = NULL;
 
 
