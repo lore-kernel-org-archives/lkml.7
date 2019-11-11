@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7C3C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116D9C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170B821655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0CE22245C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499080;
-	bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
+	s=default; t=1573499082;
+	bh=U+Q2q91h71IfZLyPrlsO+f3m6IWcblCUU/aQJzpN5uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RwbM8JpBOM64PIClzdmAU8Xr+PI3RodiFfVBVTV9Swg30PIoGaiaUCIAHHnkgSknV
-	 edB7vnTzoM9Rf9cV9QTnaHGY27F5fXb1iQJombGcoZod9msRWNUJ3Pk6wFGoa6x2mN
-	 bDMPaSVyA+Qg3snGg5ZoRk4RHNmnYHl8djH0Us8s=
+	b=ZEGxo6akWcOmBm1gSekNJjmjO3yt9f0DuThuxrrdMT6MS2NNvDwZZcKyb7HT9rxCN
+	 WYlQJkd3Vi1AmyHcMD3rzARQJ6XWE5ow0yjtr3yiaat4ce4RBNXjyD1hNrgSlQk8T6
+	 Ve6w+OxCh6MXXn1SQxJmV5OwOu8+ezNxN3rlByOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfKKSm2 (ORCPT
+        id S1727347AbfKKSm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:42:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33602 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:42:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729072AbfKKSmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:42:23 -0500
+        id S1729496AbfKKSmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:42:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07CEB21783;
-        Mon, 11 Nov 2019 18:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E76AF214E0;
+        Mon, 11 Nov 2019 18:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497742;
-        bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
+        s=default; t=1573497739;
+        bh=U+Q2q91h71IfZLyPrlsO+f3m6IWcblCUU/aQJzpN5uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IDXJgJt2aSdsPbDj6FacpTakxTm+khjAFAYy1WuHH7IhSRbwvMjGehDvPlM0SZiKU
-         8aDInVwkJjqI6ZQDggr+tX0uxhxCsZzMVJ4/TgP/1z2V1Zos/vaSLtYomyVfFmANXx
-         LqiEO1orXsfQsWMAvq0cvQ4lTbRWoQ4SjE2lRs3I=
+        b=obtWx5AxBh5Jm+HIcGDKSAXCZf1+0zFmOu23ALmO4fKQURRhF49fssOj5DlajgH27
+         nr0z21uCHQeQSzWkC0Xzi//rWDHxULwZuCa/3cqwMk6N0Yw4t9kc8P+nebEA/s+j4c
+         cXqt9clJVMQbTxNxdIUAjE2F6V5TbQXT2tM+Fez0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Joe Burmeister <joe.burmeister@devtank.co.uk>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 045/125] can: c_can: c_can_poll(): only read status register after status IRQ
-Date:   Mon, 11 Nov 2019 19:28:04 +0100
-Message-Id: <20191111181446.305910183@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH 4.19 036/125] ARM: sunxi: Fix CPU powerdown on A83T
+Date:   Mon, 11 Nov 2019 19:27:55 +0100
+Message-Id: <20191111181445.383112547@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -62,93 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+From: Ondrej Jirman <megous@megous.com>
 
-commit 3cb3eaac52c0f145d895f4b6c22834d5f02b8569 upstream.
+commit e690053e97e7a9c968df9a97cef9089dfa8e6a44 upstream.
 
-When the status register is read without the status IRQ pending, the
-chip may not raise the interrupt line for an upcoming status interrupt
-and the driver may miss a status interrupt.
+PRCM_PWROFF_GATING_REG has CPU0 at bit 4 on A83T. So without this
+patch, instead of gating the CPU0, the whole cluster was power gated,
+when shutting down first CPU in the cluster.
 
-It is critical that the BUSOFF status interrupt is forwarded to the
-higher layers, since no more interrupts will follow without
-intervention.
-
-Thanks to Wolfgang and Joe for bringing up the first idea.
-
-Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Joe Burmeister <joe.burmeister@devtank.co.uk>
-Fixes: fa39b54ccf28 ("can: c_can: Get rid of pointless interrupts")
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 6961275e72a8c1 ("ARM: sun8i: smp: Add support for A83T")
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/c_can/c_can.c |   25 ++++++++++++++++++++-----
- drivers/net/can/c_can/c_can.h |    1 +
- 2 files changed, 21 insertions(+), 5 deletions(-)
+ arch/arm/mach-sunxi/mc_smp.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/can/c_can/c_can.c
-+++ b/drivers/net/can/c_can/c_can.c
-@@ -97,6 +97,9 @@
- #define BTR_TSEG2_SHIFT		12
- #define BTR_TSEG2_MASK		(0x7 << BTR_TSEG2_SHIFT)
- 
-+/* interrupt register */
-+#define INT_STS_PENDING		0x8000
-+
- /* brp extension register */
- #define BRP_EXT_BRPE_MASK	0x0f
- #define BRP_EXT_BRPE_SHIFT	0
-@@ -1029,10 +1032,16 @@ static int c_can_poll(struct napi_struct
- 	u16 curr, last = priv->last_status;
- 	int work_done = 0;
- 
--	priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
--	/* Ack status on C_CAN. D_CAN is self clearing */
--	if (priv->type != BOSCH_D_CAN)
--		priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
-+	/* Only read the status register if a status interrupt was pending */
-+	if (atomic_xchg(&priv->sie_pending, 0)) {
-+		priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
-+		/* Ack status on C_CAN. D_CAN is self clearing */
-+		if (priv->type != BOSCH_D_CAN)
-+			priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
-+	} else {
-+		/* no change detected ... */
-+		curr = last;
-+	}
- 
- 	/* handle state changes */
- 	if ((curr & STATUS_EWARN) && (!(last & STATUS_EWARN))) {
-@@ -1083,10 +1092,16 @@ static irqreturn_t c_can_isr(int irq, vo
+--- a/arch/arm/mach-sunxi/mc_smp.c
++++ b/arch/arm/mach-sunxi/mc_smp.c
+@@ -478,14 +478,18 @@ static void sunxi_mc_smp_cpu_die(unsigne
+ static int sunxi_cpu_powerdown(unsigned int cpu, unsigned int cluster)
  {
- 	struct net_device *dev = (struct net_device *)dev_id;
- 	struct c_can_priv *priv = netdev_priv(dev);
-+	int reg_int;
+ 	u32 reg;
++	int gating_bit = cpu;
  
--	if (!priv->read_reg(priv, C_CAN_INT_REG))
-+	reg_int = priv->read_reg(priv, C_CAN_INT_REG);
-+	if (!reg_int)
- 		return IRQ_NONE;
+ 	pr_debug("%s: cluster %u cpu %u\n", __func__, cluster, cpu);
+ 	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
+ 		return -EINVAL;
  
-+	/* save for later use */
-+	if (reg_int & INT_STS_PENDING)
-+		atomic_set(&priv->sie_pending, 1);
++	if (is_a83t && cpu == 0)
++		gating_bit = 4;
 +
- 	/* disable all interrupts and schedule the NAPI */
- 	c_can_irq_control(priv, false);
- 	napi_schedule(&priv->napi);
---- a/drivers/net/can/c_can/c_can.h
-+++ b/drivers/net/can/c_can/c_can.h
-@@ -198,6 +198,7 @@ struct c_can_priv {
- 	struct net_device *dev;
- 	struct device *device;
- 	atomic_t tx_active;
-+	atomic_t sie_pending;
- 	unsigned long tx_dir;
- 	int last_status;
- 	u16 (*read_reg) (const struct c_can_priv *priv, enum reg index);
+ 	/* gate processor power */
+ 	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
+-	reg |= PRCM_PWROFF_GATING_REG_CORE(cpu);
++	reg |= PRCM_PWROFF_GATING_REG_CORE(gating_bit);
+ 	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
+ 	udelay(20);
+ 
 
 
