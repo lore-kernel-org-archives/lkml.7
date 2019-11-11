@@ -2,51 +2,53 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE36C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0568EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171FF21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C657621872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497043;
-	bh=Umhrk4I3/8m4n1PENLs+C//lxigBRjVE7+2A8v6Wleo=;
+	s=default; t=1573497047;
+	bh=UEy7KH4A/4mCBkcVdLytqSpgFF0Uz+nEJMakBLOHAIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJhDIklp7acB/+sid+ekwK/D+M+Cude/JxFlMYSwSrYeh0IrTLQm/D2QejAYSYRKu
-	 zO56q/eKEzQPLB8SxNteihpwJQvhED8WXWBPebHKlCJ+edbBK/6AWqy0d1d/0zWVjr
-	 bSpTegjLlLuwCHoLAVJm/p8sgZ7xr+NQjG6Ho1DE=
+	b=w52/cGxpYEl4eDbm6yZMHx0ea1j9gKZWX0J8ElQ1T3qOmzGC+LkBsdjc1LWBjBYd4
+	 mD5JoelU7jsy32o4duPDPvLh7mjpZcGdKkiTg2G60N6UXvbE4DrQ1DtN1V/UGgD9FV
+	 KctJ0PcfW0Ry60MC2WDVNXCMlTjm648kCsfJ5sTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKKSam (ORCPT
+        id S1727447AbfKKSaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:30:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47016 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:30:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727366AbfKKSaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:39 -0500
+        id S1727420AbfKKSao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE92B21925;
-        Mon, 11 Nov 2019 18:30:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C1320674;
+        Mon, 11 Nov 2019 18:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497038;
-        bh=Umhrk4I3/8m4n1PENLs+C//lxigBRjVE7+2A8v6Wleo=;
+        s=default; t=1573497044;
+        bh=UEy7KH4A/4mCBkcVdLytqSpgFF0Uz+nEJMakBLOHAIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UyiwXI7QEhPDfBHWEE/VM7E9NTOc8OODLR1kWIujkzV2xM3zE8tduFvQfM5Zdslxn
-         d71gHmli0oOznUjr4ieE90JhWc5EPvLsJ8Ou8y2dptpmCtvxxcB6wUYf2yr8+5fZv7
-         8dzzbOOcchAKjO9y9ZiSkGWKyy28DC0potuozLb0=
+        b=TEKE+7e2zzwuvlqvoaxeKdRAASLgavD71unvRE0R+lVia6jb4AtolGBRjR7gfh02C
+         /qnP6NAto7aK56MHNT+/UtUhoIDI1/hBMjmbLCV6C7JyExFwEwa6hNbXgu+64VgRkK
+         UhcVjm0UN+F/WMvk5S81YpEQiBh1cQe/Q2Vpq3Sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.4 24/43] configfs: fix a deadlock in configfs_symlink()
-Date:   Mon, 11 Nov 2019 19:28:38 +0100
-Message-Id: <20191111181316.605135587@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 26/43] scsi: qla2xxx: fixup incorrect usage of host_byte
+Date:   Mon, 11 Nov 2019 19:28:40 +0100
+Message-Id: <20191111181317.115100793@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -59,81 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Hannes Reinecke <hare@suse.com>
 
-commit 351e5d869e5ac10cb40c78b5f2d7dfc816ad4587 upstream.
+[ Upstream commit 66cf50e65b183c863825f5c28a818e3f47a72e40 ]
 
-Configfs abuses symlink(2).  Unlike the normal filesystems, it
-wants the target resolved at symlink(2) time, like link(2) would've
-done.  The problem is that ->symlink() is called with the parent
-directory locked exclusive, so resolving the target inside the
-->symlink() is easily deadlocked.
+DRIVER_ERROR is a a driver byte setting, not a host byte.  The qla2xxx
+driver should rather return DID_ERROR here to be in line with the other
+drivers.
 
-Short of really ugly games in sys_symlink() itself, all we can
-do is to unlock the parent before resolving the target and
-relock it after.  However, that invalidates the checks done
-by the caller of ->symlink(), so we have to
-	* check that dentry is still where it used to be
-(it couldn't have been moved, but it could've been unhashed)
-	* recheck that it's still negative (somebody else
-might've successfully created a symlink with the same name
-while we were looking the target up)
-	* recheck the permissions on the parent directory.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20191018140458.108278-1-hare@suse.de
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/symlink.c |   33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_bsg.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/configfs/symlink.c
-+++ b/fs/configfs/symlink.c
-@@ -157,11 +157,42 @@ int configfs_symlink(struct inode *dir,
- 	    !type->ct_item_ops->allow_link)
- 		goto out_put;
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index c26acde797f0d..2d5375d677367 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -252,7 +252,7 @@ qla2x00_process_els(struct fc_bsg_job *bsg_job)
+ 	srb_t *sp;
+ 	const char *type;
+ 	int req_sg_cnt, rsp_sg_cnt;
+-	int rval =  (DRIVER_ERROR << 16);
++	int rval =  (DID_ERROR << 16);
+ 	uint16_t nextlid = 0;
  
-+	/*
-+	 * This is really sick.  What they wanted was a hybrid of
-+	 * link(2) and symlink(2) - they wanted the target resolved
-+	 * at syscall time (as link(2) would've done), be a directory
-+	 * (which link(2) would've refused to do) *AND* be a deep
-+	 * fucking magic, making the target busy from rmdir POV.
-+	 * symlink(2) is nothing of that sort, and the locking it
-+	 * gets matches the normal symlink(2) semantics.  Without
-+	 * attempts to resolve the target (which might very well
-+	 * not even exist yet) done prior to locking the parent
-+	 * directory.  This perversion, OTOH, needs to resolve
-+	 * the target, which would lead to obvious deadlocks if
-+	 * attempted with any directories locked.
-+	 *
-+	 * Unfortunately, that garbage is userland ABI and we should've
-+	 * said "no" back in 2005.  Too late now, so we get to
-+	 * play very ugly games with locking.
-+	 *
-+	 * Try *ANYTHING* of that sort in new code, and you will
-+	 * really regret it.  Just ask yourself - what could a BOFH
-+	 * do to me and do I want to find it out first-hand?
-+	 *
-+	 *  AV, a thoroughly annoyed bastard.
-+	 */
-+	inode_unlock(dir);
- 	ret = get_target(symname, &path, &target_item, dentry->d_sb);
-+	inode_lock(dir);
- 	if (ret)
- 		goto out_put;
- 
--	ret = type->ct_item_ops->allow_link(parent_item, target_item);
-+	if (dentry->d_inode || d_unhashed(dentry))
-+		ret = -EEXIST;
-+	else
-+		ret = inode_permission(dir, MAY_WRITE | MAY_EXEC);
-+	if (!ret)
-+		ret = type->ct_item_ops->allow_link(parent_item, target_item);
- 	if (!ret) {
- 		mutex_lock(&configfs_symlink_mutex);
- 		ret = create_link(parent_item, target_item, dentry);
+ 	if (bsg_job->request->msgcode == FC_BSG_RPT_ELS) {
+@@ -426,7 +426,7 @@ qla2x00_process_ct(struct fc_bsg_job *bsg_job)
+ 	struct Scsi_Host *host = bsg_job->shost;
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	int req_sg_cnt, rsp_sg_cnt;
+ 	uint16_t loop_id;
+ 	struct fc_port *fcport;
+@@ -1910,7 +1910,7 @@ qlafx00_mgmt_cmd(struct fc_bsg_job *bsg_job)
+ 	struct Scsi_Host *host = bsg_job->shost;
+ 	scsi_qla_host_t *vha = shost_priv(host);
+ 	struct qla_hw_data *ha = vha->hw;
+-	int rval = (DRIVER_ERROR << 16);
++	int rval = (DID_ERROR << 16);
+ 	struct qla_mt_iocb_rqst_fx00 *piocb_rqst;
+ 	srb_t *sp;
+ 	int req_sg_cnt = 0, rsp_sg_cnt = 0;
+-- 
+2.20.1
+
 
 
