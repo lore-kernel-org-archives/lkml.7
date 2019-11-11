@@ -2,55 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D778C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8635DC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E0E21925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A26921655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497645;
-	bh=kUBUtkFGhTWmRy3K6qas81XFSNfOybMzFRFT3CAK3ck=;
+	s=default; t=1573497650;
+	bh=5shsiuGVpMOzq5flnd+ZIoIzHgqAS7cOLYrX4/j23uI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zm3NMOnKTH6RT6ayLlaQ2egiR/09+Ht6/vpbWIEsBahHeVGJm3aHfulbIuLvagksN
-	 fxw44fVt8PSuBK+ChIhaypGRG4wb6WO568DIfXNyU8a8XDIgPc3YCjigTF49/Xl5TN
-	 rROn9vTpImVnOA8DD6eGpWanm2Chn5sOHfOkay7g=
+	b=oYqzFT2YjrxSyOprF7R/x2et1TeKtusVmsNtsgHad6+Tz4SVrSxdaltK5jByYlUYf
+	 z5bwxIR/3Xlw4C8L4cXC0eN2WaIoP8cGbOS4X9ELHX4ArmwPBpU9ZkRws1QPzMZe6x
+	 yIaob//SDqSd72e/zPb4irP2/E/AF4lt0dUKMd7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbfKKSko (ORCPT
+        id S1728822AbfKKSkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:40:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59870 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:40:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbfKKSkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:40:42 -0500
+        id S1727854AbfKKSkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:40:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1887B20659;
-        Mon, 11 Nov 2019 18:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3AA21655;
+        Mon, 11 Nov 2019 18:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497641;
-        bh=kUBUtkFGhTWmRy3K6qas81XFSNfOybMzFRFT3CAK3ck=;
+        s=default; t=1573497645;
+        bh=5shsiuGVpMOzq5flnd+ZIoIzHgqAS7cOLYrX4/j23uI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h33zMjtLYXOVdPewq3impcZsRfpUO2g0hHu9fYFkttZ97+oK5iu+ERfGuZWcB1/VS
-         LMrEgpIObdwWr+CRSMpPYXdFdzo+L632bBWIojfWWtAkSgvLYh3PpBdoTff4AZ3oJC
-         V5NxyI9qhfynmCyyvYZ3/wGbY6Vnm5nO7OjAqNqE=
+        b=EKjZ3oXbL/ibvl2nsuaudyGtD2xSJdD3XLsD0mrNYpGECQVJiGl/0C/SyIgFRdbJx
+         fGGXle0kU6KNs2rbvuhuFzZSDXeZcne4HpVez5fKKZcQMm7D2HsCSXvfQuon0x7b3u
+         CJP6JVyutgvbUdpWfbd3tGF81vN1EF3HXLU4OKEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, lipeng <lipeng321@huawei.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Salil Mehta <salil.mehta@huawei.com>
-Subject: [PATCH 4.19 015/125] net: hns: Fix the stray netpoll locks causing deadlock in NAPI path
-Date:   Mon, 11 Nov 2019 19:27:34 +0100
-Message-Id: <20191111181441.661895796@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Tristan Madani <tristmd@gmail.com>
+Subject: [PATCH 4.19 016/125] ALSA: timer: Fix incorrectly assigned timer instance
+Date:   Mon, 11 Nov 2019 19:27:35 +0100
+Message-Id: <20191111181441.922397171@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -63,142 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Salil Mehta <salil.mehta@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit bf5a6b4c474c589244dc25ee1af2c3c829228ef8 ]
+commit e7af6307a8a54f0b873960b32b6a644f2d0fbd97 upstream.
 
-This patch fixes the problem of the spin locks, originally
-meant for the netpoll path of hns driver, causing deadlock in
-the normal NAPI poll path. The issue happened due to the presence
-of the stray leftover spin lock code related to the netpoll,
-whose support was earlier removed from the HNS[1], got activated
-due to enabling of NET_POLL_CONTROLLER switch.
+The clean up commit 41672c0c24a6 ("ALSA: timer: Simplify error path in
+snd_timer_open()") unified the error handling code paths with the
+standard goto, but it introduced a subtle bug: the timer instance is
+stored in snd_timer_open() incorrectly even if it returns an error.
+This may eventually lead to UAF, as spotted by fuzzer.
 
-Earlier background:
-The netpoll handling code originally had this bug(as identified
-by Marc Zyngier[2]) of wrong spin lock API being used which did
-not disable the interrupts and hence could cause locking issues.
-i.e. if the lock were first acquired in context to thread like
-'ip' util and this lock if ever got later acquired again in
-context to the interrupt context like TX/RX (Interrupts could
-always pre-empt the lock holding task and acquire the lock again)
-and hence could cause deadlock.
+The culprit is the snd_timer_open() code checks the
+SNDRV_TIMER_IFLG_EXCLUSIVE flag with the common variable timeri.
+This variable is supposed to be the newly created instance, but we
+(ab-)used it for a temporary check before the actual creation of a
+timer instance.  After that point, there is another check for the max
+number of instances, and it bails out if over the threshold.  Before
+the refactoring above, it worked fine because the code returned
+directly from that point.  After the refactoring, however, it jumps to
+the unified error path that stores the timeri variable in return --
+even if it returns an error.  Unfortunately this stored value is kept
+in the caller side (snd_timer_user_tselect()) in tu->timeri.  This
+causes inconsistency later, as if the timer was successfully
+assigned.
 
-Proposed Solution:
-1. If the netpoll was enabled in the HNS driver, which is not
-   right now, we could have simply used spin_[un]lock_irqsave()
-2. But as netpoll is disabled, therefore, it is best to get rid
-   of the existing locks and stray code for now. This should
-   solve the problem reported by Marc.
+In this patch, we fix it by not re-using timeri variable but a
+temporary variable for testing the exclusive connection, so timeri
+remains NULL at that point.
 
-[1] https://git.kernel.org/torvalds/c/4bd2c03be7
-[2] https://patchwork.ozlabs.org/patch/1189139/
-
-Fixes: 4bd2c03be707 ("net: hns: remove ndo_poll_controller")
-Cc: lipeng <lipeng321@huawei.com>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: David S. Miller <davem@davemloft.net>
-Reported-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 41672c0c24a6 ("ALSA: timer: Simplify error path in snd_timer_open()")
+Reported-and-tested-by: Tristan Madani <tristmd@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191106165547.23518-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/hisilicon/hns/hnae.c     |    1 -
- drivers/net/ethernet/hisilicon/hns/hnae.h     |    3 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c |   22 +---------------------
- 3 files changed, 1 insertion(+), 25 deletions(-)
 
---- a/drivers/net/ethernet/hisilicon/hns/hnae.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
-@@ -203,7 +203,6 @@ hnae_init_ring(struct hnae_queue *q, str
- 
- 	ring->q = q;
- 	ring->flags = flags;
--	spin_lock_init(&ring->lock);
- 	ring->coal_param = q->handle->coal_param;
- 	assert(!ring->desc && !ring->desc_cb && !ring->desc_dma_addr);
- 
---- a/drivers/net/ethernet/hisilicon/hns/hnae.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
-@@ -278,9 +278,6 @@ struct hnae_ring {
- 	/* statistic */
- 	struct ring_stats stats;
- 
--	/* ring lock for poll one */
--	spinlock_t lock;
--
- 	dma_addr_t desc_dma_addr;
- 	u32 buf_size;       /* size for hnae_desc->addr, preset by AE */
- 	u16 desc_num;       /* total number of desc */
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -947,15 +947,6 @@ static int is_valid_clean_head(struct hn
- 	return u > c ? (h > c && h <= u) : (h > c || h <= u);
- }
- 
--/* netif_tx_lock will turn down the performance, set only when necessary */
--#ifdef CONFIG_NET_POLL_CONTROLLER
--#define NETIF_TX_LOCK(ring) spin_lock(&(ring)->lock)
--#define NETIF_TX_UNLOCK(ring) spin_unlock(&(ring)->lock)
--#else
--#define NETIF_TX_LOCK(ring)
--#define NETIF_TX_UNLOCK(ring)
--#endif
--
- /* reclaim all desc in one budget
-  * return error or number of desc left
-  */
-@@ -969,21 +960,16 @@ static int hns_nic_tx_poll_one(struct hn
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = readl_relaxed(ring->io_base + RCB_REG_HEAD);
- 	rmb(); /* make sure head is ready before touch any data */
- 
--	if (is_ring_empty(ring) || head == ring->next_to_clean) {
--		NETIF_TX_UNLOCK(ring);
-+	if (is_ring_empty(ring) || head == ring->next_to_clean)
- 		return 0; /* no data to poll */
--	}
- 
- 	if (!is_valid_clean_head(ring, head)) {
- 		netdev_err(ndev, "wrong head (%d, %d-%d)\n", head,
- 			   ring->next_to_use, ring->next_to_clean);
- 		ring->stats.io_err_cnt++;
--		NETIF_TX_UNLOCK(ring);
- 		return -EIO;
+---
+ sound/core/timer.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -298,11 +298,11 @@ int snd_timer_open(struct snd_timer_inst
+ 		goto unlock;
  	}
- 
-@@ -998,8 +984,6 @@ static int hns_nic_tx_poll_one(struct hn
- 	ring->stats.tx_pkts += pkts;
- 	ring->stats.tx_bytes += bytes;
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
- 
-@@ -1059,16 +1043,12 @@ static void hns_nic_tx_clr_all_bufs(stru
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = ring->next_to_use; /* ntu :soft setted ring position*/
- 	bytes = 0;
- 	pkts = 0;
- 	while (head != ring->next_to_clean)
- 		hns_nic_reclaim_one_desc(ring, &bytes, &pkts);
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_reset_queue(dev_queue);
- }
+ 	if (!list_empty(&timer->open_list_head)) {
+-		timeri = list_entry(timer->open_list_head.next,
++		struct snd_timer_instance *t =
++			list_entry(timer->open_list_head.next,
+ 				    struct snd_timer_instance, open_list);
+-		if (timeri->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
++		if (t->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
+ 			err = -EBUSY;
+-			timeri = NULL;
+ 			goto unlock;
+ 		}
+ 	}
 
 
