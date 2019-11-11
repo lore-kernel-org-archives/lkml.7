@@ -2,133 +2,62 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98475C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CC9C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CD5214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:35:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aa95pT1k"
+	by mail.kernel.org (Postfix) with ESMTP id 44A932184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKKOfX (ORCPT
+        id S1727046AbfKKOf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:35:23 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37298 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKKOfW (ORCPT
+        Mon, 11 Nov 2019 09:35:26 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:48811 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726889AbfKKOfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:35:22 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g8so3689116plt.4;
-        Mon, 11 Nov 2019 06:35:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wVpzF31OGbAVdKg6jPR/iV3MMv02WhIXAFIA8zdlv9M=;
-        b=Aa95pT1k4LnfW47XFYnSD+qrMbsU6diTyfv0sq1/xAq0NiufdDCN5KMEyRzylrWnt/
-         wBomtU2KNTMlQeItRmfm2c9zY+2Ma9IAUw2SMGwHKDllvU1jZEqZvjCpI8Q6LOayc4zf
-         iOs8iwqDSFlIEN0A/YxNrEfKYF6aFTnf/h9//luqtwI9y9j8gNG4mpsiIw4VonNtdMCL
-         HVUlNjWJNBxmE6P826XEnFic7kOZiM4MEdbDNhqHmYmmZ9P47QMAP73O5KGIFjNRXnEZ
-         rTlzs7hFB/grF1z5NudzaIrQlcV6GRQjZCNIGFe9qvbZGpwzgReGwQIV73gJysfi9CPs
-         eQaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wVpzF31OGbAVdKg6jPR/iV3MMv02WhIXAFIA8zdlv9M=;
-        b=OZ9qnE+x4WLeazZeTLinUQfM4bstadtwqQjGKvh5zLbe/5xYbk5ALux2r/k1lGLvZA
-         iBlMiF41BED/TIUI3eNTF3yaBiUod9CWoxNgZFQE6ZBpRNlO6gB/JNX6ryR9WlTnrFTi
-         nO6TtQOw/ex3cYIX2P0HFDzKS6JIxATAm7qctanWPHB+Hk7yfCK9b4LY1SvmThps4FRY
-         dZcLY4A5qKCbruFsv//u8bh/cnaxWBBjBS2SCbLk8t2llEW7Hw7+9m4NwN9ujNhnD4fS
-         60jJiBhVYqrhZyNU1xYgpo3OehGW+IPw86KSCSX5K27+OeSDVwpt1WOCGKDpFOgzY6RH
-         4urg==
-X-Gm-Message-State: APjAAAU0MRZgNouOrsS/yHVAdpRnBDuUQKp9rPBEK4wLhWTV6XH7PQr1
-        ACr0m1Ay+Wa8rgMkMHJMLM4=
-X-Google-Smtp-Source: APXvYqxX94RrUM14gzC+9zpvyiWgF/HEMGlO5jBbTg8TD45NGboL5i1MLrTd9itrFpNBDQ/xQxt7Vg==
-X-Received: by 2002:a17:902:7d96:: with SMTP id a22mr24926854plm.318.1573482922072;
-        Mon, 11 Nov 2019 06:35:22 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c64sm8095993pfb.177.2019.11.11.06.35.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Nov 2019 06:35:21 -0800 (PST)
-Subject: Re: [PATCH] sparc: vdso: Fix build failure seen due to kbuild changes
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        David Miller <davem@davemloft.net>
-Cc:     sparclinux <sparclinux@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-References: <20191111011106.18427-1-linux@roeck-us.net>
- <20191110.173203.1243596361382467520.davem@davemloft.net>
- <CAK7LNAQTCyEVKkJQfoTpd5USk5tibmcro6EeoonjXKm-OAFJ_g@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <591a9e5e-1347-8883-c080-38940fffd535@roeck-us.net>
-Date:   Mon, 11 Nov 2019 06:35:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAK7LNAQTCyEVKkJQfoTpd5USk5tibmcro6EeoonjXKm-OAFJ_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Nov 2019 09:35:24 -0500
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from sramani@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 11 Nov 2019 16:35:17 +0200
+Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id xABEZFh7019158;
+        Mon, 11 Nov 2019 09:35:15 -0500
+Received: (from sramani@localhost)
+        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id xABEZAKl019808;
+        Mon, 11 Nov 2019 09:35:10 -0500
+From:   Shravan Kumar Ramani <sramani@mellanox.com>
+To:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>
+Cc:     lsun@mellanox.com, Shravan Kumar Ramani <sramani@mellanox.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] platform/mellanox: Add Mellanox TRIO driver
+Date:   Mon, 11 Nov 2019 09:34:38 -0500
+Message-Id: <cover.1573460910.git.sramani@mellanox.com>
+X-Mailer: git-send-email 2.1.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/10/19 5:47 PM, Masahiro Yamada wrote:
-> On Mon, Nov 11, 2019 at 10:32 AM David Miller <davem@davemloft.net> wrote:
->>
->> From: Guenter Roeck <linux@roeck-us.net>
->> Date: Sun, 10 Nov 2019 17:11:06 -0800
->>
->>> sparc64:allmodconfig fails to build with the following error.
->>>
->>> unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
->>> arch/sparc/vdso/vdso32/vclock_gettime.o: failed
->>> make[2]: *** [arch/sparc/vdso/vdso32/vclock_gettime.o] Error 1
->>> make[2]: *** Deleting file 'arch/sparc/vdso/vdso32/vclock_gettime.o'
->>> make[2]: *** Waiting for unfinished jobs....
->>>
->>> The problem bisects to commit a3de7a72c517 ("kbuild: change
->>> *FLAGS_<basetarget>.o to take the path relative to $(obj)").
->>> Duplicate the x86 specific defines from this commit to the sparc
->>> vdso Makefile to fix the problem.
->>>
->>> Fixes: a3de7a72c517 ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
->>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->>> Cc: Marc Zyngier <maz@kernel.org>
->>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>
->> Acked-by: David S. Miller <davem@davemloft.net>
-> 
-> 
-> Yeah, I had submitted a fix a long time before.
-> 
-> https://lore.kernel.org/patchwork/patch/1130469/
-> 
-> I do not know why it was not picked up.
-> 
+This patch adds support for Mellanox BlueField TRIO PCIe host controller.
+The driver supports multiple TRIO instances and provides a sysfs interface
+to allow the user to read/set the L3 cache profile for transactions going
+through the TRIO. It also provides an interrupt handler for the TRIO blocks.
 
-Why don't you just push it upstream yourself ?
+Shravan Kumar Ramani (1):
+  platform/mellanox: Add Mellanox TRIO driver
 
-> 
-> It is OK whether any patch is picked up
-> as long as the build error is fixed.
-> 
-Same here.
+ MAINTAINERS                            |   5 +
+ drivers/platform/mellanox/Kconfig      |   8 +
+ drivers/platform/mellanox/Makefile     |   1 +
+ drivers/platform/mellanox/mlxbf-trio.c | 624 +++++++++++++++++++++++++++++++++
+ 4 files changed, 638 insertions(+)
+ create mode 100644 drivers/platform/mellanox/mlxbf-trio.c
 
-> 
-> (I think  CFLAGS_REMOVE_vdso32/vdso-note.o
-> should be added too, though)
-> 
-Hard to decide for someone not involved in vdso development.
-It wasn't added for x86, and it compiles without, so I rather
-left it alone.
+-- 
+2.1.2
 
-Guenter
