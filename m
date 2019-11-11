@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD0FC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA5BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A05220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40944214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498245;
-	bh=zBMoCn20EK+hY3wb8aj4t/El2JV1Jt5wJ4xnEA4Cxgw=;
+	s=default; t=1573498248;
+	bh=SLOivCk1713bYurRj/oTAO4NkgPSRFCVrj6Tjlrqb6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3aYAR6UoYgx3ruCrKpYSGHxXGKGoeTjZjC2gXleS2o2G5I8aPnMy5ZbVjicI6D7t
-	 B0ZwfJ0W4HfvaV5sVbSL70c7bGWuW5nxJT1jccfs/vwIM9g4r/YFZq19aXVTL/vkdl
-	 NeEvjT1Yp4qf5sUXaC5rR6CMgOVFhFmrebkv7874=
+	b=sPieGuaww3AfzZoPR1gd/MycG3Aia91AE8psl9OF+pBXu8u/lSwFZcjYFx1bq55B4
+	 CrgUenElMTM5e4n45n47deKovSWrfa+78i/3aWqoVGCDaSMT0G3i8aRG/UIwBGLBYL
+	 jujzrqzkfvRVDrsnC92tJwzsYoE9QWwpjb8f4sfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730183AbfKKSun (ORCPT
+        id S1729750AbfKKSur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbfKKSuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:40 -0500
+        id S1728938AbfKKSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 771E020674;
-        Mon, 11 Nov 2019 18:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ECC120674;
+        Mon, 11 Nov 2019 18:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498240;
-        bh=zBMoCn20EK+hY3wb8aj4t/El2JV1Jt5wJ4xnEA4Cxgw=;
+        s=default; t=1573498244;
+        bh=SLOivCk1713bYurRj/oTAO4NkgPSRFCVrj6Tjlrqb6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTiM+92bAOI+n/rYM7n3IiQqwzOuo1sw89SngF/JmJmatWF0wZpgW2amQ7zXIFo1L
-         C7IBrBKuIdq6IsP6Z8uOAgPWtNFajEDSO/aiYdyXP0nz1MlBJPidgItkK9hKrdL2PC
-         15J41cHOVHXvAK05R5dpylsD3zj3hb1rJGFjwFvs=
+        b=yF+LLEDMUpB7WqEKJyZfxQWySLo1O8hQBJvZ4psmL7h3TgBY0UHHArrfPEuyONdiQ
+         EwVUxbkq17OSn6JvBwBq9k6839CSzM8lmTKgHN34F7tCLMDR859rDEfgZnjNx62+4w
+         DckqaCWWXEf/WFhXJjA6EqBG5rPPbhq2douxGIYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 026/193] ALSA: bebob: fix to detect configured source of sampling clock for Focusrite Saffire Pro i/o series
-Date:   Mon, 11 Nov 2019 19:26:48 +0100
-Message-Id: <20191111181502.178879216@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.3 062/193] cpufreq: intel_pstate: Fix invalid EPB setting
+Date:   Mon, 11 Nov 2019 19:27:24 +0100
+Message-Id: <20191111181505.577283585@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,50 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-commit 706ad6746a66546daf96d4e4a95e46faf6cf689a upstream.
+commit c31432fa7f825de0e19838f1ac7746381c509ec4 upstream.
 
-For Focusrite Saffire Pro i/o, the lowest 8 bits of register represents
-configured source of sampling clock. The next lowest 8 bits represents
-whether the configured source is actually detected or not just after
-the register is changed for the source.
+The max value of EPB can only be 0x0F. Attempting to set more than that
+triggers an "unchecked MSR access error" warning which happens in
+intel_pstate_hwp_force_min_perf() called via cpufreq stop_cpu().
 
-Current implementation evaluates whole the register to detect configured
-source. This results in failure due to the next lowest 8 bits when the
-source is connected in advance.
+However, it is not even necessary to touch the EPB from intel_pstate,
+because it is restored on every CPU online by the intel_epb.c code,
+so let that code do the right thing and drop the redundant (and
+incorrect) EPB update from intel_pstate.
 
-This commit fixes the bug.
-
-Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
-Cc: <stable@vger.kernel.org> # v3.16+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20191102150920.20367-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: af3b7379e2d70 ("cpufreq: intel_pstate: Force HWP min perf before offline")
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: 5.2+ <stable@vger.kernel.org> # 5.2+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+[ rjw: Changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/bebob/bebob_focusrite.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/cpufreq/intel_pstate.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/sound/firewire/bebob/bebob_focusrite.c
-+++ b/sound/firewire/bebob/bebob_focusrite.c
-@@ -27,6 +27,8 @@
- #define SAFFIRE_CLOCK_SOURCE_SPDIF		1
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -846,11 +846,9 @@ static void intel_pstate_hwp_force_min_p
+ 	value |= HWP_MAX_PERF(min_perf);
+ 	value |= HWP_MIN_PERF(min_perf);
  
- /* clock sources as returned from register of Saffire Pro 10 and 26 */
-+#define SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK	0x000000ff
-+#define SAFFIREPRO_CLOCK_SOURCE_DETECT_MASK	0x0000ff00
- #define SAFFIREPRO_CLOCK_SOURCE_INTERNAL	0
- #define SAFFIREPRO_CLOCK_SOURCE_SKIP		1 /* never used on hardware */
- #define SAFFIREPRO_CLOCK_SOURCE_SPDIF		2
-@@ -189,6 +191,7 @@ saffirepro_both_clk_src_get(struct snd_b
- 		map = saffirepro_clk_maps[1];
+-	/* Set EPP/EPB to min */
++	/* Set EPP to min */
+ 	if (boot_cpu_has(X86_FEATURE_HWP_EPP))
+ 		value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
+-	else
+-		intel_pstate_set_epb(cpu, HWP_EPP_BALANCE_POWERSAVE);
  
- 	/* In a case that this driver cannot handle the value of register. */
-+	value &= SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK;
- 	if (value >= SAFFIREPRO_CLOCK_SOURCE_COUNT || map[value] < 0) {
- 		err = -EIO;
- 		goto end;
+ 	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
+ }
 
 
