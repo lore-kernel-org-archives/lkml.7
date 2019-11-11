@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA001C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD28C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934B9222C5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D925121655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498943;
-	bh=orNErqbrr4tO6yUqJftFB1DtVa5WXG7SJAGvXxVIO44=;
+	s=default; t=1573498955;
+	bh=rfmAehunEdpVebtmUwggjQET1YynDZix6Sa7tZjv/Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2ANvm1/Yaa1lhRiWApfhuoELG1Wqe4fOzZgLjUq2wAU6z2ynrmELZfeYY8yC6SaS
-	 dtB0l9x6tr5ldRXUh+z/cGFZIhv3zMUL/vH+W09v/wPMiN329PIAQSh6FB4fiahSAV
-	 3Ryssi2qAy4jhtvT1uiE0mowFj/ViZP4Mi3rTlvQ=
+	b=vqxH7ujbaEHxS8mJWcfxLBs4mSmAZYAHzRzizkxKkKoEt+HXlcp4w9Mt7fA8E3ecM
+	 0NZG4XbQALap3W82N6KqmnV9bHk+K8Xr43mUE2O9JiNJ0K1k2M0sPG+eqXE334XnMT
+	 xnJtH99KRqmd3MAbqEWJcA15mlyruFbFAbJfQba8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfKKStK (ORCPT
+        id S1729458AbfKKSsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:49:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:48:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfKKStF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:49:05 -0500
+        id S1730232AbfKKSs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:48:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9552184C;
-        Mon, 11 Nov 2019 18:49:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBF0221655;
+        Mon, 11 Nov 2019 18:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498144;
-        bh=orNErqbrr4tO6yUqJftFB1DtVa5WXG7SJAGvXxVIO44=;
+        s=default; t=1573498107;
+        bh=rfmAehunEdpVebtmUwggjQET1YynDZix6Sa7tZjv/Ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1SvfjRPlprz5Ryj8QeUA/hbjBER5+EpOIPB00hCAlHCBA2Z/qC0EkDWTaAInS3w8
-         cXW7VSZrWm7zWV5cCNMfXoXljVOMAqO1S2+vwZ6gxWbMdf5bSPbPbPxnIrgueQYKFr
-         XrTXEsMTcV41aqOL6tJ9BpdrJOnE6Z+xuAcT6Gj4=
+        b=Uva2T8cnAqAGZEYFYOorWJKzOmx3VJzyAC0maz4RkylVxNpYlNuzKvYsnLBn7dMJk
+         E+xwm7bBhWZKigVyGdS3wGCjK5wKy68OK9bwv69ja7mgwvvkr434/92r9AlX6ULHJj
+         Ku3JctEwpVub7QMLisnJcbugKysD/QUFXdu+5pWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 036/193] btrfs: tree-checker: Fix wrong check on max devid
-Date:   Mon, 11 Nov 2019 19:26:58 +0100
-Message-Id: <20191111181503.665875209@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 005/193] net: fix data-race in neigh_event_send()
+Date:   Mon, 11 Nov 2019 19:26:27 +0100
+Message-Id: <20191111181500.241458849@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,93 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 8bb177d18f114358a57d8ae7e206861b48b8b4de upstream.
+[ Upstream commit 1b53d64435d56902fc234ff2507142d971a09687 ]
 
-[BUG]
-The following script will cause false alert on devid check.
-  #!/bin/bash
+KCSAN reported the following data-race [1]
 
-  dev1=/dev/test/test
-  dev2=/dev/test/scratch1
-  mnt=/mnt/btrfs
+The fix will also prevent the compiler from optimizing out
+the condition.
 
-  umount $dev1 &> /dev/null
-  umount $dev2 &> /dev/null
-  umount $mnt &> /dev/null
+[1]
 
-  mkfs.btrfs -f $dev1
+BUG: KCSAN: data-race in neigh_resolve_output / neigh_resolve_output
 
-  mount $dev1 $mnt
+write to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 1:
+ neigh_event_send include/net/neighbour.h:443 [inline]
+ neigh_resolve_output+0x78/0x480 net/core/neighbour.c:1474
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
+ __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+ __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
+ ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
+ __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:237
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+ tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
+ __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
+ tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
+ tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:618
 
-  _fail()
-  {
-          echo "!!! FAILED !!!"
-          exit 1
-  }
+read to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 0:
+ neigh_event_send include/net/neighbour.h:442 [inline]
+ neigh_resolve_output+0x57/0x480 net/core/neighbour.c:1474
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
+ __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+ __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
+ ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
+ __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:237
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+ tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
+ __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
+ tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
+ tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
 
-  for ((i = 0; i < 4096; i++)); do
-          btrfs dev add -f $dev2 $mnt || _fail
-          btrfs dev del $dev1 $mnt || _fail
-          dev_tmp=$dev1
-          dev1=$dev2
-          dev2=$dev_tmp
-  done
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 
-[CAUSE]
-Tree-checker uses BTRFS_MAX_DEVS() and BTRFS_MAX_DEVS_SYS_CHUNK() as
-upper limit for devid.  But we can have devid holes just like above
-script.
-
-So the check for devid is incorrect and could cause false alert.
-
-[FIX]
-Just remove the whole devid check.  We don't have any hard requirement
-for devid assignment.
-
-Furthermore, even devid could get corrupted by a bitflip, we still have
-dev extents verification at mount time, so corrupted data won't sneak
-in.
-
-This fixes fstests btrfs/194.
-
-Reported-by: Anand Jain <anand.jain@oracle.com>
-Fixes: ab4ba2e13346 ("btrfs: tree-checker: Verify dev item")
-CC: stable@vger.kernel.org # 5.2+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/tree-checker.c |    8 --------
- 1 file changed, 8 deletions(-)
+ include/net/neighbour.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -686,9 +686,7 @@ static void dev_item_err(const struct ex
- static int check_dev_item(struct extent_buffer *leaf,
- 			  struct btrfs_key *key, int slot)
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -439,8 +439,8 @@ static inline int neigh_event_send(struc
  {
--	struct btrfs_fs_info *fs_info = leaf->fs_info;
- 	struct btrfs_dev_item *ditem;
--	u64 max_devid = max(BTRFS_MAX_DEVS(fs_info), BTRFS_MAX_DEVS_SYS_CHUNK);
- 
- 	if (key->objectid != BTRFS_DEV_ITEMS_OBJECTID) {
- 		dev_item_err(leaf, slot,
-@@ -696,12 +694,6 @@ static int check_dev_item(struct extent_
- 			     key->objectid, BTRFS_DEV_ITEMS_OBJECTID);
- 		return -EUCLEAN;
- 	}
--	if (key->offset > max_devid) {
--		dev_item_err(leaf, slot,
--			     "invalid devid: has=%llu expect=[0, %llu]",
--			     key->offset, max_devid);
--		return -EUCLEAN;
--	}
- 	ditem = btrfs_item_ptr(leaf, slot, struct btrfs_dev_item);
- 	if (btrfs_device_id(leaf, ditem) != key->offset) {
- 		dev_item_err(leaf, slot,
+ 	unsigned long now = jiffies;
+ 	
+-	if (neigh->used != now)
+-		neigh->used = now;
++	if (READ_ONCE(neigh->used) != now)
++		WRITE_ONCE(neigh->used, now);
+ 	if (!(neigh->nud_state&(NUD_CONNECTED|NUD_DELAY|NUD_PROBE)))
+ 		return __neigh_event_send(neigh, skb);
+ 	return 0;
 
 
