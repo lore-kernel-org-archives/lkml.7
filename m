@@ -2,102 +2,114 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B74C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B343C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1313A20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fw0twQqH"
+	by mail.kernel.org (Postfix) with ESMTP id 07A9F20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfKKS1O (ORCPT
+        id S1727046AbfKKS1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:27:14 -0500
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:33078 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbfKKS1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:27:13 -0500
-Received: by mail-lj1-f180.google.com with SMTP id t5so14917776ljk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:27:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MThzuPE5GHK9HkxVsoX5XDICTVaynruuXSaosaKjcs8=;
-        b=Fw0twQqHYcZerf7R7Z3mbmARQOIFlH3pXVj4Yjat2DM7woJjV+SUtLUFxaEmeBl+U5
-         szMKEvHO9eLWrC8gGlF9I60PdiM4n2eVfToqoV5409n1CtsBTL3vU6t0ClyXdYIp4Xvt
-         nWXLT0OSdbsl0Wx6bZ6d8xeGYVa8JX7gNAf+7micSQJLTdtOlEcyFzX48Yb1d5PPyBxL
-         DefhaGvaBR5etVxoKduL7AjUCl4udWuhNJWtuhe24rPNevBh9yKJxiS6oY/UpubbNHmA
-         SamzTvPY1gSEo+YFXpeKBxJxPZAYb3un85/OrkIjyB8A71lPT+Iigg7yWZpwMiCJ6xq1
-         VNXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MThzuPE5GHK9HkxVsoX5XDICTVaynruuXSaosaKjcs8=;
-        b=ey2u5Ut2hWPB0GQUSGL8VbfG2sxZX4u+mHM7W6mzl/qHaDK0+tCtvQC/eImoodhzad
-         uoMK9zO0v7k6+wHAWfhvk02ThX/kHjNGJqpbYwdLV1ZM6e3iIECbkdGwm9eAVyi+Nb73
-         bFEhFbJ5xjw4Dz6GjGE7cFLQWuMO852SlpKOQk3jMahSBXAWKtRKUhJq1ImEhe9o/wi1
-         KgjEJx2nUPjGutEPRLD8cu9Iq9XxIqvuFYipirmp+7DK6eUzIDk344rJTBJAcw3/py+n
-         H3dQyKpFPCjPH2BJeTOstR7fvnErJIecZFQYRGhtMoxJ6V54fxnB7wgzzfG0bh9O0h6j
-         Lf5w==
-X-Gm-Message-State: APjAAAUp3r3A5hhZLMB9IMqLz62JvH9ok1yLga6EyJskA7nZFs9H5VuY
-        1MJs+lIt47CdDjRGFkNu/P8OhjwfwbtGvTIYJ3FcHg==
-X-Google-Smtp-Source: APXvYqyWMSR5OPToEop6rDei4ILQee/UuxXH+ZjV7ZXKAeitGVZS2Lw9zm51FtgZf6Xt1NfAsveDiRmS7Mfl3wUydIw=
-X-Received: by 2002:a2e:a410:: with SMTP id p16mr17228931ljn.46.1573496829912;
- Mon, 11 Nov 2019 10:27:09 -0800 (PST)
+        Mon, 11 Nov 2019 13:27:53 -0500
+Received: from mga07.intel.com ([134.134.136.100]:18333 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726821AbfKKS1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:27:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 10:27:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
+   d="scan'208";a="403968409"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga005.fm.intel.com with ESMTP; 11 Nov 2019 10:27:51 -0800
+Date:   Mon, 11 Nov 2019 10:27:51 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+Message-ID: <20191111182750.GE11805@linux.intel.com>
+References: <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+ <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
+ <20191106233913.GC21617@linux.intel.com>
+ <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
+ <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
+ <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
+ <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
+ <20191107155846.GA7760@linux.intel.com>
+ <20191109014323.GB8254@linux.intel.com>
+ <CAPcyv4hAY_OfExNP+_067Syh9kZAapppNwKZemVROfxgbDLLYQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com>
- <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com>
- <20191111012614.GC6235@magnolia> <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
- <20191111083815.GA29540@infradead.org> <1757087132.11450258.1573468734360.JavaMail.zimbra@redhat.com>
-In-Reply-To: <1757087132.11450258.1573468734360.JavaMail.zimbra@redhat.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 11 Nov 2019 23:56:58 +0530
-Message-ID: <CA+G9fYtuwT_vkQL-RfAMcmH_HBHUWQ5ZPHdwsGoNTALhwyiZgg@mail.gmail.com>
-Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0: Success
-To:     Jan Stancek <jstancek@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        LTP List <ltp@lists.linux.it>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        lkft-triage@lists.linaro.org,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hAY_OfExNP+_067Syh9kZAapppNwKZemVROfxgbDLLYQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 at 16:09, Jan Stancek <jstancek@redhat.com> wrote:
->
->
-> ----- Original Message -----
-> > Is this a new test?
->
-> No, it's not new.
->
-> > If not why was this never reported?  Sounds like
-> > we should add this test case to xfstests.
->
-> I'm guessing not that many users still run 32bit kernels.
-> Naresh' setup is using ext4, so I assume he noticed only
-> after recent changes in linux-next wrt. directio and ext4.
+On Fri, Nov 08, 2019 at 06:00:46PM -0800, Dan Williams wrote:
+> On Fri, Nov 8, 2019 at 5:43 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> > On Thu, Nov 07, 2019 at 07:58:46AM -0800, Sean Christopherson wrote:
+> > > Insertion into KVM's secondary MMU is mutually exclusive with an invalidate
+> > > from the mmu_notifier.  KVM holds a reference to the to-be-inserted page
+> > > until the page has been inserted, which ensures that the page is pinned and
+> > > thus won't be invalidated until after the page is inserted.  This prevents
+> > > an invalidate from racing with insertion.  Dropping the reference
+> > > immediately after gup() would allow the invalidate to run prior to the page
+> > > being inserted, and so KVM would map the stale PFN into the guest's page
+> > > tables after it was invalidated in the host.
+> >
+> > My previous analysis is wrong, although I did sort of come to the right
+> > conclusion.
+> >
+> > The part that's wrong is that KVM does not rely on pinning a page/pfn when
+> > installing the pfn into its secondary MMU (guest page tables).  Instead,
+> > KVM keeps track of mmu_notifier invalidate requests and cancels insertion
+> > if an invalidate occured at any point between the start of hva_to_pfn(),
+> > i.e. the get_user_pages() call, and acquiring KVM's mmu lock (which must
+> > also be grabbed by mmu_notifier invalidate).  So for any pfn, regardless
+> > of whether it's backed by a struct page, KVM inserts a pfn if and only if
+> > it is guaranteed to get an mmu_notifier invalidate for the pfn (and isn't
+> > already invalidated).
+> >
+> > In the page fault flow, KVM doesn't care whether or not the pfn remains
+> > valid in the associated vma.  In other words, Dan's idea of immediately
+> > doing put_page() on ZONE_DEVICE pages would work for *page faults*...
+> >
+> > ...but not for all the other flows where KVM uses gfn_to_pfn(), and thus
+> > get_user_pages().  When accessing entire pages of guest memory, e.g. for
+> > nested virtualization, KVM gets the page associated with a gfn, maps it
+> > with kmap() to get a kernel address and keeps the mapping/page until it's
+> > done reading/writing the page.  Immediately putting ZONE_DEVICE pages
+> > would result in use-after-free scenarios for these flows.
+> 
+> Thanks for this clarification. I do want to put out though that
+> ZONE_DEVICE pages go idle, they don't get freed. As long as KVM drops
+> its usage on invalidate it's perfectly fine for KVM to operate on idle
+> ZONE_DEVICE pages. The common case is that ZONE_DEVICE pages are
+> accessed and mapped while idle. Only direct-I/O temporarily marks them
+> busy to synchronize with invalidate. KVM obviates that need by
+> coordinating with mmu-notifiers instead.
 
-That's true.
-Started noticing recently from Linux next-20191107 kernel on i386 and arm32.
+Only the KVM MMU, e.g. page fault handler, coordinates via mmu_notifier,
+the kvm_vcpu_map() case would continue using pages across an invalidate.
 
-Steps to reproduce:
-./runltp -f dio -d /mounted-ext4-drive
-
-- Naresh
+Or did I misunderstand?
