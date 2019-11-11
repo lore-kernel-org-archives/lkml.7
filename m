@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D17C17446
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59929C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30BD121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257E7222CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499095;
-	bh=OWJ7KVQesTndgseJLu0omQM+a7vLVTgBhg5gHiP44jY=;
+	s=default; t=1573499107;
+	bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FhWEYUnlrwlP15UisLt4Hkq6Ke5d5woNPHNB3bjAc14MaVBjT+o9rXl362uJ2JwGW
-	 nlkgxqlWk/rOIxkQyKq39dFbc7jpQra5alikicrWkgBIHevkHrmdahspSd17AdLDzS
-	 a1GY7U72250/XqQGCqApkx2m8rOhp2K5d6XhSSQo=
+	b=yN7XJcgwG0uxuh5BtxV62dORJNyHlTeUKLenN6Zx+WXRKzwm6v7y5Xka/1teoP8F3
+	 2zIj88GmR9T+6UsuWBwy6dEcDcLktJhz1oPesDHsS1mS3akyKdKkHqw6o4moynujTU
+	 n5CxZCG859Ht+j8Vmx1qTxTl0DAVl135KSajEvDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfKKSlo (ORCPT
+        id S1729332AbfKKSlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:41:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32774 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729344AbfKKSlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:41:40 -0500
+        id S1727916AbfKKSlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 993DE20659;
-        Mon, 11 Nov 2019 18:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B39C8204FD;
+        Mon, 11 Nov 2019 18:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497700;
-        bh=OWJ7KVQesTndgseJLu0omQM+a7vLVTgBhg5gHiP44jY=;
+        s=default; t=1573497660;
+        bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TQfy4k43hHuMHQswcvwTSyLf7781F5dRZFcFJXW1Mgr7IBmtaIlmsX5iuGLMCPW57
-         OHoe+OjFD8Qj/nM+FFB8VoxhModobGGrXxs4bXty6hrOkeSxRi94fdTLO8mWMGtmCt
-         gVYxwyyGUsRoGlkEwKPsTWyRcFGpY+R+6BeCR4o8=
+        b=LESdrdiHMK0VU1cO4QMHiFe3AmMZ/dDCvWOkNuUv+DnkAgY6OIqTM8xX2qaFQK9ys
+         4tDF+/ulwHoEM5IzpjaNUv62eHVe+SaJYCor4zT8+Au603bdoWAmE24GzTsNk92ZiH
+         pf5BArBS7VmB8YqeKvOe5wtNQQ2Le5CiCHZBoH28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.19 030/125] arm64: Do not mask out PTE_RDONLY in pte_same()
-Date:   Mon, 11 Nov 2019 19:27:49 +0100
-Message-Id: <20191111181444.832642671@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 002/125] CDC-NCM: handle incomplete transfer of MTU
+Date:   Mon, 11 Nov 2019 19:27:21 +0100
+Message-Id: <20191111181439.367240413@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -61,57 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 6767df245f4736d0cf0c6fb7cf9cf94b27414245 upstream.
+[ Upstream commit 332f989a3b0041b810836c5c3747e59aad7e9d0b ]
 
-Following commit 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out
-of set_pte_at()"), the PTE_RDONLY bit is no longer managed by
-set_pte_at() but built into the PAGE_* attribute definitions.
-Consequently, pte_same() must include this bit when checking two PTEs
-for equality.
+A malicious device may give half an answer when asked
+for its MTU. The driver will proceed after this with
+a garbage MTU. Anything but a complete answer must be treated
+as an error.
 
-Remove the arm64-specific pte_same() function, practically reverting
-commit 747a70e60b72 ("arm64: Fix copy-on-write referencing in HugeTLB")
+V2: used sizeof as request by Alexander
 
-Fixes: 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out of set_pte_at()")
-Cc: <stable@vger.kernel.org> # 4.14.x-
-Cc: Will Deacon <will@kernel.org>
-Cc: Steve Capper <steve.capper@arm.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-and-tested-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm64/include/asm/pgtable.h |   17 -----------------
- 1 file changed, 17 deletions(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -274,23 +274,6 @@ static inline void set_pte_at(struct mm_
- 	set_pte(ptep, pte);
- }
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -578,8 +578,8 @@ static void cdc_ncm_set_dgram_size(struc
+ 	/* read current mtu value from device */
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+-			      0, iface_no, &max_datagram_size, 2);
+-	if (err < 0) {
++			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
++	if (err < sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
+ 	}
+@@ -590,7 +590,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	max_datagram_size = cpu_to_le16(ctx->max_datagram_size);
+ 	err = usbnet_write_cmd(dev, USB_CDC_SET_MAX_DATAGRAM_SIZE,
+ 			       USB_TYPE_CLASS | USB_DIR_OUT | USB_RECIP_INTERFACE,
+-			       0, iface_no, &max_datagram_size, 2);
++			       0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+ 	if (err < 0)
+ 		dev_dbg(&dev->intf->dev, "SET_MAX_DATAGRAM_SIZE failed\n");
  
--#define __HAVE_ARCH_PTE_SAME
--static inline int pte_same(pte_t pte_a, pte_t pte_b)
--{
--	pteval_t lhs, rhs;
--
--	lhs = pte_val(pte_a);
--	rhs = pte_val(pte_b);
--
--	if (pte_present(pte_a))
--		lhs &= ~PTE_RDONLY;
--
--	if (pte_present(pte_b))
--		rhs &= ~PTE_RDONLY;
--
--	return (lhs == rhs);
--}
--
- /*
-  * Huge pte definitions.
-  */
 
 
