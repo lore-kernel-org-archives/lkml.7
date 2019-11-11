@@ -2,202 +2,208 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939A5C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDF3C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73ED62075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B202075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKKJhp (ORCPT
+        id S1726943AbfKKJix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:37:45 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60720 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfKKJhp (ORCPT
+        Mon, 11 Nov 2019 04:38:53 -0500
+Received: from proxmox-new.maurer-it.com ([212.186.127.180]:52551 "EHLO
+        proxmox-new.maurer-it.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKJix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:37:45 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5A76C28EE70
-Subject: Re: [PATCH v4 14/17] iio: cros_ec: Remove pm function
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-References: <20191105222652.70226-1-gwendal@chromium.org>
- <20191105222652.70226-15-gwendal@chromium.org>
- <20191110131805.2b592b3b@archlinux>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <c6b309c6-0b27-44bd-11e0-187f449b043c@collabora.com>
-Date:   Mon, 11 Nov 2019 10:37:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 04:38:53 -0500
+X-Greylist: delayed 403 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 04:38:51 EST
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+        by proxmox-new.maurer-it.com (Proxmox) with ESMTP id DE1AB46945;
+        Mon, 11 Nov 2019 10:32:07 +0100 (CET)
+Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
+ when loading PDPTRS
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20191003154447.010950442@linuxfoundation.org>
+ <20191003154525.870373223@linuxfoundation.org>
+From:   Thomas Lamprecht <t.lamprecht@proxmox.com>
+Message-ID: <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
+Date:   Mon, 11 Nov 2019 10:32:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:71.0) Gecko/20100101
+ Thunderbird/71.0
 MIME-Version: 1.0
-In-Reply-To: <20191110131805.2b592b3b@archlinux>
+In-Reply-To: <20191003154525.870373223@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/11/19 14:18, Jonathan Cameron wrote:
-> On Tue,  5 Nov 2019 14:26:49 -0800
-> Gwendal Grignou <gwendal@chromium.org> wrote:
+On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
->> Since cros_ec_sensorhub is shutting down the FIFO when the device
->> suspends, no need to slow down the EC sampling period rate.
->> It was necesseary to do that before command CMD_FIFO_INT_ENABLE was
->> introduced, but now all supported chromebooks have it.
->>
->> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
 > 
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Manually generate the PDPTR reserved bit mask when explicitly loading
+> PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+> current paging mode, which is unlikely to be PAE paging in the vast
+> majority of flows that use load_pdptrs(), e.g. CR0 and CR4 emulation,
+> __set_sregs(), etc...  This can cause KVM to incorrectly signal a bad
+> PDPTR, or more likely, miss a reserved bit check and subsequently fail
+> a VM-Enter due to a bad VMCS.GUEST_PDPTR.
+> 
+> Add a one off helper to generate the reserved bits instead of sharing
+> code across the MMU's calculations and the PDPTR emulation.  The PDPTR
+> reserved bits are basically set in stone, and pushing a helper into
+> the MMU's calculation adds unnecessary complexity without improving
+> readability.
+> 
+> Oppurtunistically fix/update the comment for load_pdptrs().
+> 
+> Note, the buggy commit also introduced a deliberate functional change,
+> "Also remove bit 5-6 from rsvd_bits_mask per latest SDM.", which was
+> effectively (and correctly) reverted by commit cd9ae5fe47df ("KVM: x86:
+> Fix page-tables reserved bits").  A bit of SDM archaeology shows that
+> the SDM from late 2008 had a bug (likely a copy+paste error) where it
+> listed bits 6:5 as AVL and A for PDPTEs used for 4k entries but reserved
+> for 2mb entries.  I.e. the SDM contradicted itself, and bits 6:5 are and
+> always have been reserved.
+> 
+> Fixes: 20c466b56168d ("KVM: Use rsvd_bits_mask in load_pdptrs()")
+> Cc: stable@vger.kernel.org
+> Cc: Nadav Amit <nadav.amit@gmail.com>
+> Reported-by: Doug Reiland <doug.reiland@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Reviewed-by: Peter Xu <peterx@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  arch/x86/kvm/x86.c |   11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -581,8 +581,14 @@ static int kvm_read_nested_guest_page(st
+>  				       data, offset, len, access);
+>  }
+>  
+> +static inline u64 pdptr_rsvd_bits(struct kvm_vcpu *vcpu)
+> +{
+> +	return rsvd_bits(cpuid_maxphyaddr(vcpu), 63) | rsvd_bits(5, 8) |
+> +	       rsvd_bits(1, 2);
+> +}
+> +
+>  /*
+> - * Load the pae pdptrs.  Return true is they are all valid.
+> + * Load the pae pdptrs.  Return 1 if they are all valid, 0 otherwise.
+>   */
+>  int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
+>  {
+> @@ -601,8 +607,7 @@ int load_pdptrs(struct kvm_vcpu *vcpu, s
+>  	}
+>  	for (i = 0; i < ARRAY_SIZE(pdpte); ++i) {
+>  		if ((pdpte[i] & PT_PRESENT_MASK) &&
+> -		    (pdpte[i] &
+> -		     vcpu->arch.mmu.guest_rsvd_check.rsvd_bits_mask[0][2])) {
+> +		    (pdpte[i] & pdptr_rsvd_bits(vcpu))) {
+>  			ret = 0;
+>  			goto out;
+>  		}
+> 
+> 
 > 
 
-Also looks good to me
 
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+first off, I hope that I'm not a bit blunt to just message you all here :)
 
-Thanks,
- Enric
+It seems that a backport of this to stable and distro kernels tickled out
+some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
+Intel CPUs[1].
 
->> ---
->> No changes in v4, v3.
->> New in v2.
->>
->>  .../cros_ec_sensors/cros_ec_lid_angle.c       |  1 -
->>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  1 -
->>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 47 -------------------
->>  drivers/iio/light/cros_ec_light_prox.c        |  1 -
->>  .../linux/iio/common/cros_ec_sensors_core.h   |  5 --
->>  5 files changed, 55 deletions(-)
->>
->> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
->> index e30a59fcf0f9..af801e203623 100644
->> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
->> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
->> @@ -127,7 +127,6 @@ MODULE_DEVICE_TABLE(platform, cros_ec_lid_angle_ids);
->>  static struct platform_driver cros_ec_lid_angle_platform_driver = {
->>  	.driver = {
->>  		.name	= DRV_NAME,
->> -		.pm	= &cros_ec_sensors_pm_ops,
->>  	},
->>  	.probe		= cros_ec_lid_angle_probe,
->>  	.id_table	= cros_ec_lid_angle_ids,
->> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
->> index 62a0dd970988..9d0b8ad7a0a5 100644
->> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
->> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
->> @@ -315,7 +315,6 @@ MODULE_DEVICE_TABLE(platform, cros_ec_sensors_ids);
->>  static struct platform_driver cros_ec_sensors_platform_driver = {
->>  	.driver = {
->>  		.name	= "cros-ec-sensors",
->> -		.pm	= &cros_ec_sensors_pm_ops,
->>  	},
->>  	.probe		= cros_ec_sensors_probe,
->>  	.id_table	= cros_ec_sensors_ids,
->> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> index 904cd26dd31f..879b69527cae 100644
->> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> @@ -723,52 +723,5 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_write);
->>  
->> -static int __maybe_unused cros_ec_sensors_prepare(struct device *dev)
->> -{
->> -	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->> -	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
->> -
->> -	if (st->curr_sampl_freq == 0)
->> -		return 0;
->> -
->> -	/*
->> -	 * If the sensors are sampled at high frequency, we will not be able to
->> -	 * sleep. Set sampling to a long period if necessary.
->> -	 */
->> -	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
->> -		mutex_lock(&st->cmd_lock);
->> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
->> -		st->param.ec_rate.data = CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY;
->> -		cros_ec_motion_send_host_cmd(st, 0);
->> -		mutex_unlock(&st->cmd_lock);
->> -	}
->> -	return 0;
->> -}
->> -
->> -static void __maybe_unused cros_ec_sensors_complete(struct device *dev)
->> -{
->> -	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->> -	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
->> -
->> -	if (st->curr_sampl_freq == 0)
->> -		return;
->> -
->> -	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
->> -		mutex_lock(&st->cmd_lock);
->> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
->> -		st->param.ec_rate.data = st->curr_sampl_freq;
->> -		cros_ec_motion_send_host_cmd(st, 0);
->> -		mutex_unlock(&st->cmd_lock);
->> -	}
->> -}
->> -
->> -const struct dev_pm_ops cros_ec_sensors_pm_ops = {
->> -#ifdef CONFIG_PM_SLEEP
->> -	.prepare = cros_ec_sensors_prepare,
->> -	.complete = cros_ec_sensors_complete
->> -#endif
->> -};
->> -EXPORT_SYMBOL_GPL(cros_ec_sensors_pm_ops);
->> -
->>  MODULE_DESCRIPTION("ChromeOS EC sensor hub core functions");
->>  MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
->> index 698b2ee81ebf..ccdc6d8958c6 100644
->> --- a/drivers/iio/light/cros_ec_light_prox.c
->> +++ b/drivers/iio/light/cros_ec_light_prox.c
->> @@ -256,7 +256,6 @@ MODULE_DEVICE_TABLE(platform, cros_ec_light_prox_ids);
->>  static struct platform_driver cros_ec_light_prox_platform_driver = {
->>  	.driver = {
->>  		.name	= "cros-ec-light-prox",
->> -		.pm	= &cros_ec_sensors_pm_ops,
->>  	},
->>  	.probe		= cros_ec_light_prox_probe,
->>  	.id_table	= cros_ec_light_prox_ids,
->> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
->> index b8f573ca9dcc..96ea4551945e 100644
->> --- a/include/linux/iio/common/cros_ec_sensors_core.h
->> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
->> @@ -30,9 +30,6 @@ enum {
->>   */
->>  #define CROS_EC_SAMPLE_SIZE  (sizeof(s64) * 2)
->>  
->> -/* Minimum sampling period to use when device is suspending */
->> -#define CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY 1000  /* 1 second */
->> -
->>  typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
->>  
->>  /**
->> @@ -117,8 +114,6 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->>  			       struct iio_chan_spec const *chan,
->>  			       int val, int val2, long mask);
->>  
->> -extern const struct dev_pm_ops cros_ec_sensors_pm_ops;
->> -
->>  /* List of extended channel specification for all sensors */
->>  extern const struct iio_chan_spec_ext_info cros_ec_sensors_ext_info[];
->>  
-> 
+Basically, booting this kernel as host, then running an KVM guest distro
+or kernel fails it that guest kernel early in the boot phase without any
+error or other log to serial console, earlyprintk.
+
+Quickest test here, boot the booted kernel with QEMU/KVM, e.g.:
+# qemu-system-x86_64 -enable-kvm -kernel /boot/vmlinuz-4.19.77 -nographic -append console=ttyS0
+
+FYI: booting a "problematic" kernel (e.g., 4.19.77) as guest kernel while
+having a good host kernel (e.g., 4.19.76) works just fine.
+
+As this does not happen when applying it on a 5.3.7 kernel (e.g.,
+Ubuntu-5.3.0-21.22 which includes this works just fine), so IMO the
+questions is: what other patch is missing from the backport of this one?
+
+I did not immediately find a fix or some related change which seemed like
+the reason for above working with 5.3.7 but not with the stable 4.19.77 to
+4.19.81 or Ubuntu's Disco 5.0.21 based kernel, so I started a reverse bisect
+between the known-bad 5.2 and the known-good 5.3-rc1, at each step
+cherry-picking this "manual calculate reserved bits when loading PDPTRS"
+commit, which made the issues show up.
+
+But I could not single out a definitive (supporting) commit for this,
+albeit, as you see in the rev-bisect log[2], I had found some promising
+commit, but once I only applied that one as single cherry-pick, the
+"reboot looping KVM Linux guest" issue did show up again... But maybe I
+also just made an error during bisecting, and came to wrong conclusions..
+
+In a act of desperation I then tried to cherry-pick all "arch/x86/kvm"
+commits, i.e., those found with:
+# git log --no-merges --oneline v5.2..v5.3-rc1 -- arch/x86/kvm/
+but to no avail, so there may be more than one supporting commit needed,
+but that's just guessing. I think you people have surely an better idea
+about what the underlying issue could be.
+
+cheers,
+Thomas
+
+[0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
+[1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
+     westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
+     has VMX support (i.e. is 64bit based)
+[2]: git reverse bisect log:
+ git bisect start '--term-new=fixed' '--term-old=broken'
+ # fixed: [4d856f72c10ecb060868ed10ff1b1453943fc6c8] Linux 5.3
+ git bisect fixed 4d856f72c10ecb060868ed10ff1b1453943fc6c8
+ # broken: [0ecfebd2b52404ae0c54a878c872bb93363ada36] Linux 5.2
+ git bisect broken 0ecfebd2b52404ae0c54a878c872bb93363ada36
+ # fixed: [43c95d3694cc448fdf50bd53b7ff3a5bb4655883] Merge tag 'pinctrl-v5.3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+ git bisect fixed 43c95d3694cc448fdf50bd53b7ff3a5bb4655883
+ # broken: [8f6ccf6159aed1f04c6d179f61f6fb2691261e84] Merge tag 'clone3-v5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux
+ git bisect broken 8f6ccf6159aed1f04c6d179f61f6fb2691261e84
+ # broken: [753c8d9b7d81206bb5d011b28abe829d364b028e] Merge branch 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+ git bisect broken 753c8d9b7d81206bb5d011b28abe829d364b028e
+ # broken: [d72619706abc4aa7e540ea882dae883cee7cc3b3] Merge tag 'tty-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
+ git bisect broken d72619706abc4aa7e540ea882dae883cee7cc3b3
+ # broken: [f632a8170a6b667ee4e3f552087588f0fe13c4bb] Merge tag 'driver-core-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+ git bisect broken f632a8170a6b667ee4e3f552087588f0fe13c4bb
+ # fixed: [5010fe9f095414b959fd6fda63986dc90fd0c419] Merge tag 'vfs-fix-ioctl-checking-3' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+ git bisect fixed 5010fe9f095414b959fd6fda63986dc90fd0c419
+ # fixed: [a45ff5994c9cde41af627c46abb9f32beae68943] Merge tag 'kvm-arm-for-5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+ git bisect fixed a45ff5994c9cde41af627c46abb9f32beae68943
+ # fixed: [2183f5645ae7e074ed1777f3de9a782dd23db248] KVM: VMX: Shadow VMCS primary execution controls
+ git bisect fixed 2183f5645ae7e074ed1777f3de9a782dd23db248
+ # fixed: [2ea72039808d50c909c2eb00eaebfaaaa743927a] kvm: nVMX: small cleanup in handle_exception
+ git bisect fixed 2ea72039808d50c909c2eb00eaebfaaaa743927a
+ # fixed: [fb89f4ea7feb1e605f8f405d256c56d8ad69125c] kvm: selftests: introduce aarch64_vcpu_add_default
+ git bisect fixed fb89f4ea7feb1e605f8f405d256c56d8ad69125c
+ # fixed: [f257d6dcda0187693407e0c2e5dab69bdab3223f] KVM: Directly return result from kvm_arch_check_processor_compat()
+ git bisect fixed f257d6dcda0187693407e0c2e5dab69bdab3223f
+ # fixed: [84ea3acaa01fb90861b341038998e27a5198e1a0] KVM: LAPIC: Extract adaptive tune timer advancement logic
+ git bisect fixed 84ea3acaa01fb90861b341038998e27a5198e1a0
+ # fixed: [f3ecb59dd49f1742b97df6ba071aaa3d031154ac] kvm: x86: Fix reserved bits related calculation errors caused by MKTME
+ git bisect fixed f3ecb59dd49f1742b97df6ba071aaa3d031154ac 
+
