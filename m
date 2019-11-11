@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A7DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAFDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D624222C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD63222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498635;
-	bh=+5/pU0gbGGuMiC4hy+LUaYzqzR/jLjZp+mldKJOoD4o=;
+	s=default; t=1573498642;
+	bh=9VlzYfDK4xB2zu0xHS/uE7JswxMQCb8hawKUTinRw1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z0SuDvWCNltxlXzj9r855SWv61JyBJ1FZCVseQ8WAbSwhpr++o3RnQ/aXOACn+U9l
-	 ZxIm+k0CGw11G9QLuDOcFp+RpHSfvcYJRPixyJXrvQNner5aALHYDpICyFNrt0GXhe
-	 cXUWdIhO9hIN0FCNDbRNuoB6RlGFSGR5tS79X1mc=
+	b=YfOV5NgSZaZmhlGhMaY7C7M0VtHcOu84/joyn/yR0R4xkuDjFhvOINatwykEEgDLz
+	 m2s/EQCHEvikfqfnb9rMfukwXm2wroqh0w31ZROQGv4x7ZEqnygkxervk3TihOp0m5
+	 XsCGJWeOCJrAayu0mxqUMMFbXrN+NqfnV98JsRQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfKKS5O (ORCPT
+        id S1730820AbfKKS5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56232 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:57:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730591AbfKKS5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:57:10 -0500
+        id S1730493AbfKKS5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:57:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6773721783;
-        Mon, 11 Nov 2019 18:57:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 803FB21783;
+        Mon, 11 Nov 2019 18:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498629;
-        bh=+5/pU0gbGGuMiC4hy+LUaYzqzR/jLjZp+mldKJOoD4o=;
+        s=default; t=1573498635;
+        bh=9VlzYfDK4xB2zu0xHS/uE7JswxMQCb8hawKUTinRw1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Loh0fsIZqMQi2dlygUGpInJfD8gLxLM+jWLMDoELbtiJ5dpZBAoBYJs6R236eYyv8
-         RD+ysUA8LDlLjrAghSFkATcb8CfyuhnwIBHuJOQ++BLqTfDgbdVc/i6KngfxXXolg/
-         dBbE1DeTZlJaCAlWjkjFVjVR7rrBNaY9UdfFk1GE=
+        b=dyQYtVuNTfoPQ1lQD8BK7Vd6byFvQ3M+4jUm/e3RQbNLwMdYM7mMEg0ssiHwh1KOZ
+         94BQYWyqgSDCb0bLaEaiBnj0giS2k+yJoiBTROxrqZe7FWhXnjtwhjMfd2JpsEz1U6
+         Voh3E0GvvECCkYpMD4RtBNRwU7ORxAo0643GjQhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Chester Lin <clin@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 174/193] hv_netvsc: Fix error handling in netvsc_attach()
-Date:   Mon, 11 Nov 2019 19:29:16 +0100
-Message-Id: <20191111181513.956647550@linuxfoundation.org>
+Subject: [PATCH 5.3 176/193] efi: libstub/arm: Account for firmware reserved memory at the base of RAM
+Date:   Mon, 11 Nov 2019 19:29:18 +0100
+Message-Id: <20191111181514.101511069@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,49 +66,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 719b85c336ed35565d0f3982269d6f684087bb00 ]
+[ Upstream commit 41cd96fa149b29684ebd38759fefb07f9c7d5276 ]
 
-If rndis_filter_open() fails, we need to remove the rndis device created
-in earlier steps, before returning an error code. Otherwise, the retry of
-netvsc_attach() from its callers will fail and hang.
+The EFI stubloader for ARM starts out by allocating a 32 MB window
+at the base of RAM, in order to ensure that the decompressor (which
+blindly copies the uncompressed kernel into that window) does not
+overwrite other allocations that are made while running in the context
+of the EFI firmware.
 
-Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In some cases, (e.g., U-Boot running on the Raspberry Pi 2), this is
+causing boot failures because this initial allocation conflicts with
+a page of reserved memory at the base of RAM that contains the SMP spin
+tables and other pieces of firmware data and which was put there by
+the bootloader under the assumption that the TEXT_OFFSET window right
+below the kernel is only used partially during early boot, and will be
+left alone once the memory reservations are processed and taken into
+account.
+
+So let's permit reserved memory regions to exist in the region starting
+at the base of RAM, and ending at TEXT_OFFSET - 5 * PAGE_SIZE, which is
+the window below the kernel that is not touched by the early boot code.
+
+Tested-by: Guillaume Gardet <Guillaume.Gardet@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Acked-by: Chester Lin <clin@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191029173755.27149-5-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/Makefile     |  1 +
+ drivers/firmware/efi/libstub/arm32-stub.c | 16 +++++++++++++---
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index e8fce6d715ef0..8ed79b418d88a 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -982,7 +982,7 @@ static int netvsc_attach(struct net_device *ndev,
- 	if (netif_running(ndev)) {
- 		ret = rndis_filter_open(nvdev);
- 		if (ret)
--			return ret;
-+			goto err;
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 0460c7581220e..ee0661ddb25bb 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -52,6 +52,7 @@ lib-$(CONFIG_EFI_ARMSTUB)	+= arm-stub.o fdt.o string.o random.o \
  
- 		rdev = nvdev->extension;
- 		if (!rdev->link_state)
-@@ -990,6 +990,13 @@ static int netvsc_attach(struct net_device *ndev,
- 	}
+ lib-$(CONFIG_ARM)		+= arm32-stub.o
+ lib-$(CONFIG_ARM64)		+= arm64-stub.o
++CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+ CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
  
- 	return 0;
-+
-+err:
-+	netif_device_detach(ndev);
-+
-+	rndis_filter_device_remove(hdev, nvdev);
-+
-+	return ret;
- }
+ #
+diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
+index e8f7aefb6813d..ffa242ad0a82e 100644
+--- a/drivers/firmware/efi/libstub/arm32-stub.c
++++ b/drivers/firmware/efi/libstub/arm32-stub.c
+@@ -195,6 +195,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
+ 				 unsigned long dram_base,
+ 				 efi_loaded_image_t *image)
+ {
++	unsigned long kernel_base;
+ 	efi_status_t status;
  
- static int netvsc_set_channels(struct net_device *net,
+ 	/*
+@@ -204,9 +205,18 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
+ 	 * loaded. These assumptions are made by the decompressor,
+ 	 * before any memory map is available.
+ 	 */
+-	dram_base = round_up(dram_base, SZ_128M);
++	kernel_base = round_up(dram_base, SZ_128M);
+ 
+-	status = reserve_kernel_base(sys_table, dram_base, reserve_addr,
++	/*
++	 * Note that some platforms (notably, the Raspberry Pi 2) put
++	 * spin-tables and other pieces of firmware at the base of RAM,
++	 * abusing the fact that the window of TEXT_OFFSET bytes at the
++	 * base of the kernel image is only partially used at the moment.
++	 * (Up to 5 pages are used for the swapper page tables)
++	 */
++	kernel_base += TEXT_OFFSET - 5 * PAGE_SIZE;
++
++	status = reserve_kernel_base(sys_table, kernel_base, reserve_addr,
+ 				     reserve_size);
+ 	if (status != EFI_SUCCESS) {
+ 		pr_efi_err(sys_table, "Unable to allocate memory for uncompressed kernel.\n");
+@@ -220,7 +230,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
+ 	*image_size = image->image_size;
+ 	status = efi_relocate_kernel(sys_table, image_addr, *image_size,
+ 				     *image_size,
+-				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
++				     kernel_base + MAX_UNCOMP_KERNEL_SIZE, 0);
+ 	if (status != EFI_SUCCESS) {
+ 		pr_efi_err(sys_table, "Failed to relocate kernel.\n");
+ 		efi_free(sys_table, *reserve_size, *reserve_addr);
 -- 
 2.20.1
 
