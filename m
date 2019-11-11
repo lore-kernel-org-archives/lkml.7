@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC344C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAD8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A19214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98C420659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497812;
-	bh=wvUzQEadWN/VgQ5ZZU2lNYzDF824oKCzfHjNlPBhoqA=;
+	s=default; t=1573497815;
+	bh=VIQSG7glfoUTAKYUaH51Z9lnqPzkGWvFKJyxBPJD8pI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ktpe9zQf8kHnPcRF9cR8D3mKgw7NjaA3Y/D9Hb9SzOlzYrQYfHqWKeH5LWdAZKGcj
-	 ZV6k163s/A5ZmVgxRqxqHV5vgS2UfiWlCwGQBsbTTqBKY3v0taExTj5CSYsLl5d9W+
-	 XfvLwoUfzqT4dx7LdMNksTx/4Xph3Ksu4vNcrWDA=
+	b=1NKkUraa1sdDbfIvtolDC+yN1k0t7pwymu+yWk5TarBWG8FUl8rrZwUzEsqUH96yF
+	 i0JJZEV3Iw09tbKi/UJuBa6NP58sXwpU7DgXjdkSmYV+ZfarDWqaLqQL7lOvrcfYut
+	 lC921XmADunTIvNfVUvwb7Wf1TIUGLyupiBn7XUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbfKKSnb (ORCPT
+        id S1729641AbfKKSne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:43:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:43:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729082AbfKKSn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:43:28 -0500
+        id S1728057AbfKKSnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:43:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56B49214E0;
-        Mon, 11 Nov 2019 18:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE32204FD;
+        Mon, 11 Nov 2019 18:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497807;
-        bh=wvUzQEadWN/VgQ5ZZU2lNYzDF824oKCzfHjNlPBhoqA=;
+        s=default; t=1573497811;
+        bh=VIQSG7glfoUTAKYUaH51Z9lnqPzkGWvFKJyxBPJD8pI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRkrNxg/fOLxpYJYVr7jrpP0E1fvsvQAdxnYVV+g5Au+BKV57MJBHIo/8aT7HmIgj
-         9fAtK0f+lHCzOHGuuRKktVni93RbPXHfBxuu+f/5FPJKMR1JeC2XHA3ErUWtWKFGf0
-         NI82tN6rm0A6qtBTQN13P8X70iFdMKqhL4rOIYrw=
+        b=fVHbToHAriwdsnLc2A+MMhnOBSGPkYWUjwJwY+sDz2nGGeiL+VkjEVjShTym4uJlt
+         3HkWi41sNT1CfxHL54YhzVIwrirFLQsXt+VEPvr870+a9O3MrHFHHvLXCEI7fa6gNh
+         tRseXDsryQQFwGjpj/lC78sKw76IIKiR0HU/NJhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org,
+        syzbot+0620f79a1978b1133fd7@syzkaller.appspotmail.com,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 063/125] ALSA: usb-audio: remove some dead code
-Date:   Mon, 11 Nov 2019 19:28:22 +0100
-Message-Id: <20191111181448.702698852@linuxfoundation.org>
+Subject: [PATCH 4.19 064/125] ALSA: usb-audio: Fix copy&paste error in the validator
+Date:   Mon, 11 Nov 2019 19:28:23 +0100
+Message-Id: <20191111181448.793514433@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -59,32 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit b39e077fcb283dd96dd251a3abeba585402c61fe upstream.
+commit ba8bf0967a154796be15c4983603aad0b05c3138 upstream.
 
-We recently cleaned up the error handling in commit 52c3e317a857 ("ALSA:
-usb-audio: Unify the release of usb_mixer_elem_info objects") but
-accidentally left this stray return.
+The recently introduced USB-audio descriptor validator had a stupid
+copy&paste error that may lead to an unexpected overlook of too short
+descriptors for processing and extension units.  It's likely the cause
+of the report triggered by syzkaller fuzzer.  Let's fix it.
 
-Fixes: 52c3e317a857 ("ALSA: usb-audio: Unify the release of usb_mixer_elem_info objects")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 57f8770620e9 ("ALSA: usb-audio: More validations of descriptor units")
+Reported-by: syzbot+0620f79a1978b1133fd7@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/s5hsgnkdbsl.wl-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    1 -
- 1 file changed, 1 deletion(-)
+ sound/usb/validate.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2670,7 +2670,6 @@ static int parse_audio_selector_unit(str
- 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
- 		err = -ENOMEM;
- 		goto error_name;
--		return -ENOMEM;
- 	}
- 	kctl->private_value = (unsigned long)namelist;
- 	kctl->private_free = usb_mixer_selector_elem_free;
+--- a/sound/usb/validate.c
++++ b/sound/usb/validate.c
+@@ -75,7 +75,7 @@ static bool validate_processing_unit(con
+ 
+ 	if (d->bLength < sizeof(*d))
+ 		return false;
+-	len = d->bLength < sizeof(*d) + d->bNrInPins;
++	len = sizeof(*d) + d->bNrInPins;
+ 	if (d->bLength < len)
+ 		return false;
+ 	switch (v->protocol) {
 
 
