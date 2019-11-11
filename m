@@ -2,114 +2,152 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36265C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A432AC17442
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012362075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CF62075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:14:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vg3TC9L3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QheMlhNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfKKBLL (ORCPT
+        id S1726791AbfKKBOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 20:11:11 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41709 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfKKBLL (ORCPT
+        Sun, 10 Nov 2019 20:14:03 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:51682 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfKKBOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 20:11:11 -0500
-Received: by mail-pg1-f196.google.com with SMTP id h4so8326240pgv.8;
-        Sun, 10 Nov 2019 17:11:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=ZT7hBDoeXOqqMvo+S9MUnqrXtKd3dKsoJu8zfEhQFVQ=;
-        b=vg3TC9L3QVYFXoXpX3cPkvdGbaacXBm9LYHUvaOfg/yxNT0kzDN82/asbv/o8s+6rM
-         wiXVZi7sWSi2D/nS4W/WwceSj9K7IuwCb+x/kh4X9Pypi1AcX4yEvbqSEDwcqVCzPWD8
-         ym4/3JRv/KLD4wnAgHAALWe3X9+OLHQnvrb9d7FgLOyzZHtAf4iF7kTylyoWhRt3CFMs
-         7lmkdcL8/IJJX9FOAERq/25c+Ra2KxagmLB9a7j9LyPGU0I9+niKZWQGuUa5kzZ027Rh
-         YqUt8AGmxFUDL0UPAhfSO98xOb6+Wrz5TEkSKO4W6cfsjBTdPVdym+JLdr1ibOKt05mx
-         mX3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=ZT7hBDoeXOqqMvo+S9MUnqrXtKd3dKsoJu8zfEhQFVQ=;
-        b=do7bDpIn/zvYSiFcbqnEyEkDTTNmjxI0EfGSZeaiQlqmm97kFwI6P+4NlHSTtX5WiQ
-         h3fHIag7gXZ3WG8t9dRbKzj2/K2VNY3adJGiiHPHgMBKLnoQhWoSaOuRG5SI7w83/Jy5
-         dVa4wmApqIqTlhmy2nCiEekWLQDfFZRu0DvF4NoygLO5h4cKrQkp/KKcOMuJ54jpJcKZ
-         nVcUB4sNUFrHotYRCpp7g3ofD3x6PJvsfRsoL1sLv6cVLbHtWtVpwPens2KuUTpCwI3N
-         Jcc6lrvEC5bVIVTkyBZbSNAReSM5uW2COGNCVZcdGIoea9o1H5TJSHP5b7+CyT23dmHM
-         tzZA==
-X-Gm-Message-State: APjAAAXy+hCsz/ezT871J70jCfKwDsPO0PByjXw4wSpwx/X3wsTid0vy
-        e5xeY0+WFCrgXTMd5c/4lS7GORVK
-X-Google-Smtp-Source: APXvYqxYab7RGX5Ti0t9cegFQSyWnngYtUxiwMdWsErNNbvIzPt7Mz4NrHnDuoj2HALlg2quqaVztA==
-X-Received: by 2002:a62:ac06:: with SMTP id v6mr26212960pfe.210.1573434670471;
-        Sun, 10 Nov 2019 17:11:10 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q185sm17741656pfc.153.2019.11.10.17.11.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 10 Nov 2019 17:11:09 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH] sparc: vdso: Fix build failure seen due to kbuild changes
-Date:   Sun, 10 Nov 2019 17:11:06 -0800
-Message-Id: <20191111011106.18427-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Sun, 10 Nov 2019 20:14:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1573434838; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RkvKZSkNZr28wpzu05MKt1aQUXGxsl91Pokk2fWN4Qw=;
+        b=QheMlhNY8AlqAU877HUpnGMawf1WXJKYU/RvJoWDclx03zy/8IqWxEsXQVcxAdythEXz0H
+        QHbKHuHyPKbUjY28RI+l8fT6knUGnK8gOuKjZPMpgV2SzZAaw6jFUH7zrcgHpIZ5U3r5F+
+        +1NUYctE4KovooPncb6Q+XGFaxtsAsM=
+Date:   Mon, 11 Nov 2019 02:13:52 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, paul.burton@mips.com, sboyd@kernel.org,
+        robh+dt@kernel.org, syq@debian.org, mark.rutland@arm.com
+Message-Id: <1573434832.3.1@crapouillou.net>
+In-Reply-To: <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+        <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
+        <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sparc64:allmodconfig fails to build with the following error.
+Hi Zhou,
 
-unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
-arch/sparc/vdso/vdso32/vclock_gettime.o: failed
-make[2]: *** [arch/sparc/vdso/vdso32/vclock_gettime.o] Error 1
-make[2]: *** Deleting file 'arch/sparc/vdso/vdso32/vclock_gettime.o'
-make[2]: *** Waiting for unfinished jobs....
 
-The problem bisects to commit a3de7a72c517 ("kbuild: change
-*FLAGS_<basetarget>.o to take the path relative to $(obj)").
-Duplicate the x86 specific defines from this commit to the sparc
-vdso Makefile to fix the problem.
+Le dim., nov. 10, 2019 at 17:28, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Add the clock bindings for the X1000 Soc from Ingenic.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 
-Fixes: a3de7a72c517 ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/sparc/vdso/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-index 324a23947585..cb72a205cd7e 100644
---- a/arch/sparc/vdso/Makefile
-+++ b/arch/sparc/vdso/Makefile
-@@ -67,6 +67,7 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(SPARC_REG_CFLAGS
- #
- CFLAGS_REMOVE_vdso-note.o = -pg
- CFLAGS_REMOVE_vclock_gettime.o = -pg
-+CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
- 
- $(obj)/%.so: OBJCOPYFLAGS := -S
- $(obj)/%.so: $(obj)/%.so.dbg FORCE
-@@ -74,6 +75,7 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
- 
- CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
- VDSO_LDFLAGS_vdso32.lds = -m elf32_sparc -soname linux-gate.so.1
-+VDSO_LDFLAGS_vdso32/vdso32.lds = -m elf32_sparc -soname linux-gate.so.1
- 
- #This makes sure the $(obj) subdirectory exists even though vdso32/
- #is not a kbuild sub-make subdirectory
--- 
-2.17.1
+> ---
+>  .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+>  include/dt-bindings/clock/x1000-cgu.h              | 44=20
+> ++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/x1000-cgu.h
+
+When you send a revised version of a patchset, it's common practice to=20
+have a per-patch changelog right here. Then a cover letter is only=20
+really needed for big patchsets that need extra information.
+
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt=20
+> b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+> index ba5a442..75598e6 100644
+> --- a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+> +++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>    * ingenic,jz4725b-cgu
+>    * ingenic,jz4770-cgu
+>    * ingenic,jz4780-cgu
+> +  * ingenic,x1000-cgu
+>  - reg : The address & length of the CGU registers.
+>  - clocks : List of phandle & clock specifiers for clocks external to=20
+> the CGU.
+>    Two such external clocks should be specified - first the external=20
+> crystal
+> diff --git a/include/dt-bindings/clock/x1000-cgu.h=20
+> b/include/dt-bindings/clock/x1000-cgu.h
+> new file mode 100644
+> index 00000000..bbaebaf
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/x1000-cgu.h
+> @@ -0,0 +1,44 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides clock numbers for the ingenic,x1000-cgu DT=20
+> binding.
+> + *
+> + * They are roughly ordered as:
+> + *   - external clocks
+> + *   - PLLs
+> + *   - muxes/dividers in the order they appear in the x1000=20
+> programmers manual
+> + *   - gates in order of their bit in the CLKGR* registers
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_X1000_CGU_H__
+> +#define __DT_BINDINGS_CLOCK_X1000_CGU_H__
+> +
+> +#define X1000_CLK_EXCLK		0
+> +#define X1000_CLK_RTCLK		1
+> +#define X1000_CLK_APLL		2
+> +#define X1000_CLK_MPLL		3
+> +#define X1000_CLK_SCLKA		4
+> +#define X1000_CLK_CPUMUX	5
+> +#define X1000_CLK_CPU		6
+> +#define X1000_CLK_L2CACHE	7
+> +#define X1000_CLK_AHB0		8
+> +#define X1000_CLK_AHB2PMUX	9
+> +#define X1000_CLK_AHB2		10
+> +#define X1000_CLK_PCLK		11
+> +#define X1000_CLK_DDR		12
+> +#define X1000_CLK_MAC		13
+> +#define X1000_CLK_MSCMUX	14
+> +#define X1000_CLK_MSC0		15
+> +#define X1000_CLK_MSC1		16
+> +#define X1000_CLK_SSIPLL	17
+> +#define X1000_CLK_SSIMUX	18
+> +#define X1000_CLK_SFC		19
+> +#define X1000_CLK_I2C0		20
+> +#define X1000_CLK_I2C1		21
+> +#define X1000_CLK_I2C2		22
+> +#define X1000_CLK_UART0		23
+> +#define X1000_CLK_UART1		24
+> +#define X1000_CLK_UART2		25
+> +#define X1000_CLK_SSI		26
+> +#define X1000_CLK_PDMA		27
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
+> --
+> 2.7.4
+>=20
+>=20
+
+=
 
