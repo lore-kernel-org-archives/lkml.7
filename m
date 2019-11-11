@@ -2,322 +2,127 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634C6C17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C80BC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386232075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0110520818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573465004;
+	bh=10fPEu9FZrhk6J1j7t879mqhJ3XB2/xSo4oLnUX/mUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y71PKivV2Qi6D9Pv9JiOZtyxgE42FKO8WhHeqrZ1+TY4ImaVgracqbLYDz/5D316t
+	 pOAJPvD7uDL1G7ZpfbxwrE/mfTTgHHYmA6HVZ4Vlt/uZOV8AMl/9rd3rrv7S3oDszM
+	 2RekIF06xRH4ktxcDipXL0KBSsfdJGFrmAj22+0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfKKJfh (ORCPT
+        id S1726903AbfKKJgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:35:37 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60706 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfKKJfh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:35:37 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 2B640283D30
-Subject: Re: [PATCH v4 12/17] iio: cros_ec: Move function description to .c
- file
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-References: <20191105222652.70226-1-gwendal@chromium.org>
- <20191105222652.70226-13-gwendal@chromium.org>
- <20191110130827.12583c30@archlinux>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <9af7416b-d324-8401-5137-d5dcc37277f3@collabora.com>
-Date:   Mon, 11 Nov 2019 10:35:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 04:36:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726768AbfKKJgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:36:42 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8502075B;
+        Mon, 11 Nov 2019 09:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573465001;
+        bh=10fPEu9FZrhk6J1j7t879mqhJ3XB2/xSo4oLnUX/mUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cIXR3fs4XsjhXq1ExFdK/YS942Ly/v7iv6y3lZoG2sCdymoknCYpZodIN9yBO8sct
+         n86fPGr6jHtPg5rt4BrMUoth0beZsKKi8leZs2pHOQi1NRoY29PB8hgv5jQ2DBBetL
+         UsGekVUimWIBOrYqHjF7nJjxcGDxvm7GoPxs0sJU=
+Date:   Mon, 11 Nov 2019 10:36:38 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Oliver Neukum <oneukum@suse.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 4.19 114/149] UAS: Revert commit 3ae62a42090f ("UAS: fix
+ alignment of scatter/gather segments")
+Message-ID: <20191111093638.GD4139389@kroah.com>
+References: <1573396023.2662.4.camel@suse.com>
+ <Pine.LNX.4.44L0.1911101028430.29192-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20191110130827.12583c30@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1911101028430.29192-100000@netrider.rowland.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/11/19 14:08, Jonathan Cameron wrote:
-> On Tue,  5 Nov 2019 14:26:47 -0800
-> Gwendal Grignou <gwendal@chromium.org> wrote:
+On Sun, Nov 10, 2019 at 10:34:02AM -0500, Alan Stern wrote:
+> On Sun, 10 Nov 2019, Oliver Neukum wrote:
 > 
->> To prevent comment rot, move function description to
->> cros_ec_sensors_core.c.
->>
->> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> Thanks for tidying this up.
+> > Am Freitag, den 08.11.2019, 10:35 -0500 schrieb Alan Stern:
+> > > On Fri, 8 Nov 2019, Greg Kroah-Hartman wrote:
+> > > 
+> > > > On Thu, Nov 07, 2019 at 12:32:45PM +0100, Oliver Neukum wrote:
+> > > > > Am Dienstag, den 05.11.2019, 17:38 +0100 schrieb Greg Kroah-Hartman:
+> > > > > > > > Given this information, perhaps you will decide that the revert is 
+> > > > > > > > worthwhile.
+> > > > > > > 
+> > > > > > > Damned if I do, damned if I do not.
+> > > > > > > Check for usbip and special case it?
+> > > > > > 
+> > > > > > We should be able to do that in the host controller driver for usbip,
+> > > > > > right?  What is the symptom if you use a UAS device with usbip and this
+> > > > > > commit?
+> > > > > 
+> > > > > Yes, that patch should then also be applied. Then it will work.
+> > > > > Without it, commands will fail, as transfers will end prematurely.
+> > > > 
+> > > > Ok, I'm confused now.  I just checked, and I really have no idea what
+> > > > needs to be backported anymore.  3ae62a42090f ("UAS: fix alignment of
+> > > > scatter/gather segments") was backported to all of the stable kernels,
+> > > > and now we reverted it.
+> > > > 
+> > > > So what else needs to be done here?
+> > > 
+> > > In one sense, nothing needs to be done.  3ae62a42090f was intended to
+> > > fix a long-standing problem with USBIP, but people reported a
+> > 
+> > OK, now I am a bit confused. AFAICT 3ae62a42090f actually did fix the
+> > issue. So if you simply revert it, the issue will reappear.
 > 
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Correct.  I think.
 > 
-
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Thanks,
- Enric
-
->> ---
->> No changes in v4.
->> Changes in v3:
->>   fix spelling.
->> New in v2.
->>
->>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 69 ++++++++++++++++
->>  .../linux/iio/common/cros_ec_sensors_core.h   | 80 -------------------
->>  2 files changed, 69 insertions(+), 80 deletions(-)
->>
->> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> index 81a7f692de2f..b47da497a3c3 100644
->> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> @@ -83,6 +83,14 @@ static void get_default_min_max_freq(enum motionsensor_type type,
->>  	}
->>  }
->>  
->> +/**
->> + * cros_ec_sensors_core_init() - basic initialization of the core structure
->> + * @pdev:		platform device created for the sensors
->> + * @indio_dev:		iio device structure of the device
->> + * @physical_device:	true if the device refers to a physical device
->> + *
->> + * Return: 0 on success, -errno on failure.
->> + */
->>  int cros_ec_sensors_core_init(struct platform_device *pdev,
->>  			      struct iio_dev *indio_dev,
->>  			      bool physical_device)
->> @@ -160,6 +168,16 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
->>  
->> +/**
->> + * cros_ec_motion_send_host_cmd() - send motion sense host command
->> + * @state:		pointer to state information for device
->> + * @opt_length:	optional length to reduce the response size, useful on the data
->> + *		path. Otherwise, the maximal allowed response size is used
->> + *
->> + * When called, the sub-command is assumed to be set in param->cmd.
->> + *
->> + * Return: 0 on success, -errno on failure.
->> + */
->>  int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
->>  				 u16 opt_length)
->>  {
->> @@ -422,6 +440,14 @@ int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev,
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_sensors_read_lpc);
->>  
->> +/**
->> + * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
->> + * @indio_dev:	pointer to IIO device
->> + * @scan_mask:	bitmap of the sensor indices to scan
->> + * @data:	location to store data
->> + *
->> + * Return: 0 on success, -errno on failure.
->> + */
->>  int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
->>  			     unsigned long scan_mask, s16 *data)
->>  {
->> @@ -446,6 +472,18 @@ int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_sensors_read_cmd);
->>  
->> +/**
->> + * cros_ec_sensors_capture() - the trigger handler function
->> + * @irq:	the interrupt number.
->> + * @p:		a pointer to the poll function.
->> + *
->> + * On a trigger event occurring, if the pollfunc is attached then this
->> + * handler is called as a threaded interrupt (and hence may sleep). It
->> + * is responsible for grabbing data from the device and pushing it into
->> + * the associated buffer.
->> + *
->> + * Return: IRQ_HANDLED
->> + */
->>  irqreturn_t cros_ec_sensors_capture(int irq, void *p)
->>  {
->>  	struct iio_poll_func *pf = p;
->> @@ -481,6 +519,16 @@ irqreturn_t cros_ec_sensors_capture(int irq, void *p)
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_sensors_capture);
->>  
->> +/**
->> + * cros_ec_sensors_core_read() - function to request a value from the sensor
->> + * @st:		pointer to state information for device
->> + * @chan:	channel specification structure table
->> + * @val:	will contain one element making up the returned value
->> + * @val2:	will contain another element making up the returned value
->> + * @mask:	specifies which values to be requested
->> + *
->> + * Return:	the type of value returned by the device
->> + */
->>  int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->>  			  struct iio_chan_spec const *chan,
->>  			  int *val, int *val2, long mask)
->> @@ -521,6 +569,17 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read);
->>  
->> +/**
->> + * cros_ec_sensors_core_read_avail() - get available values
->> + * @indio_dev:		pointer to state information for device
->> + * @chan:	channel specification structure table
->> + * @vals:	list of available values
->> + * @type:	type of data returned
->> + * @length:	number of data returned in the array
->> + * @mask:	specifies which values to be requested
->> + *
->> + * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
->> + */
->>  int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->>  				    struct iio_chan_spec const *chan,
->>  				    const int **vals,
->> @@ -542,6 +601,16 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read_avail);
->>  
->> +/**
->> + * cros_ec_sensors_core_write() - function to write a value to the sensor
->> + * @st:		pointer to state information for device
->> + * @chan:	channel specification structure table
->> + * @val:	first part of value to write
->> + * @val2:	second part of value to write
->> + * @mask:	specifies which values to write
->> + *
->> + * Return:	the type of value returned by the device
->> + */
->>  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->>  			       struct iio_chan_spec const *chan,
->>  			       int val, int val2, long mask)
->> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
->> index bb331e6356a9..0af918978f97 100644
->> --- a/include/linux/iio/common/cros_ec_sensors_core.h
->> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
->> @@ -79,95 +79,25 @@ struct cros_ec_sensors_core_state {
->>  	int frequencies[3];
->>  };
->>  
->> -/**
->> - * cros_ec_sensors_read_lpc() - retrieve data from EC shared memory
->> - * @indio_dev:	pointer to IIO device
->> - * @scan_mask:	bitmap of the sensor indices to scan
->> - * @data:	location to store data
->> - *
->> - * This is the safe function for reading the EC data. It guarantees that the
->> - * data sampled was not modified by the EC while being read.
->> - *
->> - * Return: 0 on success, -errno on failure.
->> - */
->>  int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev, unsigned long scan_mask,
->>  			     s16 *data);
->>  
->> -/**
->> - * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
->> - * @indio_dev:	pointer to IIO device
->> - * @scan_mask:	bitmap of the sensor indices to scan
->> - * @data:	location to store data
->> - *
->> - * Return: 0 on success, -errno on failure.
->> - */
->>  int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev, unsigned long scan_mask,
->>  			     s16 *data);
->>  
->>  struct platform_device;
->> -/**
->> - * cros_ec_sensors_core_init() - basic initialization of the core structure
->> - * @pdev:		platform device created for the sensors
->> - * @indio_dev:		iio device structure of the device
->> - * @physical_device:	true if the device refers to a physical device
->> - *
->> - * Return: 0 on success, -errno on failure.
->> - */
->>  int cros_ec_sensors_core_init(struct platform_device *pdev,
->>  			      struct iio_dev *indio_dev, bool physical_device);
->>  
->> -/**
->> - * cros_ec_sensors_capture() - the trigger handler function
->> - * @irq:	the interrupt number.
->> - * @p:		a pointer to the poll function.
->> - *
->> - * On a trigger event occurring, if the pollfunc is attached then this
->> - * handler is called as a threaded interrupt (and hence may sleep). It
->> - * is responsible for grabbing data from the device and pushing it into
->> - * the associated buffer.
->> - *
->> - * Return: IRQ_HANDLED
->> - */
->>  irqreturn_t cros_ec_sensors_capture(int irq, void *p);
->>  
->> -/**
->> - * cros_ec_motion_send_host_cmd() - send motion sense host command
->> - * @st:		pointer to state information for device
->> - * @opt_length:	optional length to reduce the response size, useful on the data
->> - *		path. Otherwise, the maximal allowed response size is used
->> - *
->> - * When called, the sub-command is assumed to be set in param->cmd.
->> - *
->> - * Return: 0 on success, -errno on failure.
->> - */
->>  int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *st,
->>  				 u16 opt_length);
->>  
->> -/**
->> - * cros_ec_sensors_core_read() - function to request a value from the sensor
->> - * @st:		pointer to state information for device
->> - * @chan:	channel specification structure table
->> - * @val:	will contain one element making up the returned value
->> - * @val2:	will contain another element making up the returned value
->> - * @mask:	specifies which values to be requested
->> - *
->> - * Return:	the type of value returned by the device
->> - */
->>  int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->>  			      struct iio_chan_spec const *chan,
->>  			      int *val, int *val2, long mask);
->>  
->> -/**
->> - * cros_ec_sensors_core_read_avail() - get available values
->> - * @indio_dev:		pointer to state information for device
->> - * @chan:	channel specification structure table
->> - * @vals:	list of available values
->> - * @type:	type of data returned
->> - * @length:	number of data returned in the array
->> - * @mask:	specifies which values to be requested
->> - *
->> - * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
->> - */
->>  int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->>  				    struct iio_chan_spec const *chan,
->>  				    const int **vals,
->> @@ -175,16 +105,6 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->>  				    int *length,
->>  				    long mask);
->>  
->> -/**
->> - * cros_ec_sensors_core_write() - function to write a value to the sensor
->> - * @st:		pointer to state information for device
->> - * @chan:	channel specification structure table
->> - * @val:	first part of value to write
->> - * @val2:	second part of value to write
->> - * @mask:	specifies which values to write
->> - *
->> - * Return:	the type of value returned by the device
->> - */
->>  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->>  			       struct iio_chan_spec const *chan,
->>  			       int val, int val2, long mask);
+> > > regression in performance.  (Admittedly, the report was about the
+> > > correponding change to usb-storage, not the change to uas, but it's
+> > > reasonable to think the effect would be the same.)  So in line with the
+> > 
+> > Yes.
+> > 
+> > > no-regressions policy, we only need to revert the commit -- which you 
+> > > have already done.
+> > 
+> > But that breaks UAS over USBIP, doesn't it?
 > 
+> It was already broken to start with.  The attempted fix caused a
+> regression, so the fix must be reverted.
+> 
+> > > On the other hand, the long-standing problem in USBIP can be fixed by
+> > > back-porting commit ea44d190764b.  But since that commit isn't a
+> > > bug-fix (and since it's rather large), you may question whether it is
+> > > appropriate for the -stable kernel series.
+> > 
+> > It certainly is large. But without it UAS won't work over USBIP, will
+> > it? I think that is the central question we need to answer here.
+> 
+> You are right.  If Greg is okay with porting ea44d190764b to the stable 
+> kernels, I won't object.
+
+Ok, I've backported this to 4.14.y, 4.19.y, and 5.3.y.  As superspeed
+support was not added to vhci until the 4.13 release, I don't think that
+UAS will be an issue on those older kernels.
+
+thanks,
+
+greg k-h
