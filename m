@@ -2,148 +2,95 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C084C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CE1C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202C8206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:00:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gh9pPPuf"
+	by mail.kernel.org (Postfix) with ESMTP id 3E859206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKKPAK (ORCPT
+        id S1727134AbfKKPAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:00:10 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:43910 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKKPAI (ORCPT
+        Mon, 11 Nov 2019 10:00:21 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:50227 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKPAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:00:08 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABEmWUU112017;
-        Mon, 11 Nov 2019 14:59:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Aw3n/NGCKepXhXPI8k6tnOfYauE1E+r2KFX4bsTX2pk=;
- b=gh9pPPufBbS4gmhrOSpdetJA7eLe3ZSZ4T7VDdkipRccus7XehJ1dS2XrDcNL+UwPhHH
- xnOgBiW9EfhDhyEmWtILPxFAs/PxNoJuF7MuJvO0FnmubhXHgzP/xu5UmvB+YFmOjU8e
- kyQ47toh5LK/Itr6sbz9E4W1SrIaz3wpDuD84tJs8IBYwmxs+raVYyt32ee6gHhT1waJ
- pm1z+UCLoVeKNgGfvzbqSsE1cZBMOGBgF26S1BHwy8RuVB54RIV1DSLaspl3FRn2usdF
- FsCsmCIXJQkwlmqPZvBDMJxt0T/4GawLmM7amn2J0yl2kiJy/Zu79XXMKNbH0kz//rvk Fg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2w5p3qfbf2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 14:59:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xABEmeuk181513;
-        Mon, 11 Nov 2019 14:59:09 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2w67km691t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 14:59:09 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xABEx8JU028858;
-        Mon, 11 Nov 2019 14:59:08 GMT
-Received: from [10.175.169.52] (/10.175.169.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Nov 2019 14:59:08 +0000
-Subject: Re: [PATCH v1 1/3] KVM: VMX: Consider PID.PIR to determine if vCPU
- has pending interrupts
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Jag Raman <jag.raman@oracle.com>
-References: <20191106175602.4515-1-joao.m.martins@oracle.com>
- <20191106175602.4515-2-joao.m.martins@oracle.com>
- <67bca655-fea3-4b57-be3c-7dc58026b5d9@redhat.com>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <030dd147-8c4f-d6e3-85a8-ee743ce4d5b0@oracle.com>
-Date:   Mon, 11 Nov 2019 14:59:03 +0000
+        Mon, 11 Nov 2019 10:00:20 -0500
+Received: from [192.168.0.108] (223.167.21.236) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 11 Nov
+ 2019 23:00:39 +0800
+Subject: Re: [PATCH v4 3/4] soc: amlogic: Add support for Secure power domains
+ controller
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
+ <1572868028-73076-4-git-send-email-jianxin.pan@amlogic.com>
+ <7hmud4stfo.fsf@baylibre.com>
+ <57b9c706-c341-c7cf-698a-66335b34442b@amlogic.com>
+ <7h36eucw1u.fsf@baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <8e227a22-97af-fbdf-945f-f99b12d736c2@amlogic.com>
+Date:   Mon, 11 Nov 2019 23:00:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <67bca655-fea3-4b57-be3c-7dc58026b5d9@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7h36eucw1u.fsf@baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9437 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911110137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9437 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911110137
+X-Originating-IP: [223.167.21.236]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 2:46 PM, Paolo Bonzini wrote:
-> On 06/11/19 18:56, Joao Martins wrote:
->> Commit 17e433b54393 ("KVM: Fix leak vCPU's VMCS value into other pCPU")
->> introduced vmx_dy_apicv_has_pending_interrupt() in order to determine
->> if a vCPU have a pending posted interrupt. This routine is used by
->> kvm_vcpu_on_spin() when searching for a a new runnable vCPU to schedule
->> on pCPU instead of a vCPU doing busy loop.
->>
->> vmx_dy_apicv_has_pending_interrupt() determines if a
->> vCPU has a pending posted interrupt solely based on PID.ON. However,
->> when a vCPU is preempted, vmx_vcpu_pi_put() sets PID.SN which cause
->> raised posted interrupts to only set bit in PID.PIR without setting
->> PID.ON (and without sending notification vector), as depicted in VT-d
->> manual section 5.2.3 "Interrupt-Posting Hardware Operation".
->>
->> Therefore, checking PID.ON is insufficient to determine if a vCPU has
->> pending posted interrupts and instead we should also check if there is
->> some bit set on PID.PIR.
->>
->> Fixes: 17e433b54393 ("KVM: Fix leak vCPU's VMCS value into other pCPU")
->> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
->> Signed-off-by: Liran Alon <liran.alon@oracle.com>
->> ---
->>  arch/x86/kvm/vmx/vmx.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 31ce6bc2c371..18b0bee662a5 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -6141,7 +6141,10 @@ static int vmx_sync_pir_to_irr(struct kvm_vcpu *vcpu)
->>  
->>  static bool vmx_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
->>  {
->> -	return pi_test_on(vcpu_to_pi_desc(vcpu));
->> +	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);
->> +
->> +	return pi_test_on(pi_desc) ||
->> +		!bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
->>  }
->>  
->>  static void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap)
+Hi Kevin,
+
+On 2019/11/11 22:44, Kevin Hilman wrote:
+> Hi Jianxin,
 > 
-> Should we check the bitmap only if SN is false?  We have a precondition
-> that if SN is clear then non-empty PIR implies ON=1 (modulo the small
-> window in vmx_vcpu_pi_load of course), so that'd be a bit faster.
+> Jianxin Pan <jianxin.pan@amlogic.com> writes:
+> 
+> [...]
+> 
+>>>> +	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
+>>>> +	SEC_PD(IR,	0),
+>>>> +	SEC_PD(SPICC,	0),
+>>>> +	SEC_PD(SPIFC,	0),
+>>>> +	SEC_PD(USB,	0),
+>>>> +	/* NIC is for NIC400, and should be always on */
+>>>
+>>> Why?
+>>>
+>> NIC domain is for ARM CoreLink NIC-400 Network Interconnect, and should be always on since bootloader.
+> 
+> OK, makes sense.  I suggest a minor change to the comment to remind that
+> this is an interconnect:
+> 
+>    /* NIC is for the Arm NIC-400 interconnect, and should be always on */
+> 
+OK, I will update it, and thanks for the advice.
+> Thanks,
+> 
+> Kevin
+> 
+> .
+> 
 
-Makes sense;
-
-The bitmap check was really meant for SN=1.
-
-Should SN=0 we would be saving ~22-27 cycles as far as I micro-benchmarked a few
-weeks ago. Now that you suggest it, it would be also good for older platforms too.
-
-Cheers,
-	Joao
