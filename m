@@ -2,127 +2,154 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE0DC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D76C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C35D206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF23420818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573495518;
-	bh=D4j7yAa9xAY9us41sVbrmAc7dvEFhURazhNLhVZqnww=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G8DNUcOUGhzbcuEJzz8N3C20u2Ub49L4Ci0GcgyFE+Ha4MpkTnIEhvWrNe7vOIgKm
-	 uzpaEoODoX+Rr61iKp9zRcSSy2TbTMHIsZxqNXYJyApdlYWtU8gOxQOsCCS9tNtXso
-	 XYR+wbp7XrhQ6QgA35n8f5o2AeJkvdp4y7rZZUcM=
+	s=default; t=1573495705;
+	bh=MbEqUAIaN0KyIlMJYMO+dgKL3ZN2z8aikzRbWFd2yso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kcFj6Oc3nEi+bfIi/IOwQb4twIfrVuG2xCN6IFUHIWcOY9xUp24yj91eJuLAkzVog
+	 TAcp/WGy7B/Eo9qg2mogX0JQxORPkp0CIMuE0jGbl+W3PovKOF9gf0WmveA2TECtsG
+	 5TroICiBDdlsb28ziDcxvo8XjxLE8UEsCCu5IA3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfKKSFR (ORCPT
+        id S1726946AbfKKSIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:05:17 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35621 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKSFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:05:17 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r7so14826288ljg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:05:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NvHuArWQZSt4FAfTL9KeJpBsocvaDQs9zK3jRy53Tcc=;
-        b=ag0ij2l3tpP9oh4bJbAnRGep+63OugvYZJhjMCwlauwgfrGQ7pqUmJvv8qj0uakSts
-         ZDSkRSJFWChbxsuYWUpcogXRNaLW+mnwqdTCozn5LsyQqxp2G8J+ESzbHFLEaLpk8fc1
-         Wny6vPFLNuEJ1jLedmt1cN279S4odF0GC9reA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NvHuArWQZSt4FAfTL9KeJpBsocvaDQs9zK3jRy53Tcc=;
-        b=eYxB1ChF2BlqMjk/96kxg/FKtAfCYj43KWMnPddUa5kie5C8eqyJX95HJGyQioUMDQ
-         a41sAIOzEUJX6K1pio1JOoMnCbqBBmxOML1nnNHPnJfobISMDxJIMX1izsIsi0oYyfi0
-         62e/D1/ANm7//1XPag4xgMFWD83bkt03JGtqh4Xv0dMclI4pNuh6yDiu7T65au2I5N0p
-         09j57xzCH7vCLmunQE3SUc+MQN1PVLtSJNfeFYkUbue5jTzgZ4Uf3fDyIaKiXlzDHFjj
-         QB1AX04vNjzSZ+8GVwUCHIx07Sv0xloq4QVLC0tfRbatYFRzhN2TroM0Kca4PPlbFU2q
-         e8SA==
-X-Gm-Message-State: APjAAAVZWHf9cxpGCUt6ZYaSdZVH05nVNjk5jgwhl9qpcXCz6vRX2GjG
-        vbN0Z4iFeIY2VefKVGXicwG0PwEOXKE=
-X-Google-Smtp-Source: APXvYqw29lH3zxk41alcWpSnLyRUPps85P0iCS5mmPFXPpPn4DR8BDcYHGnHm0JHEDSUtlnmAaLVFA==
-X-Received: by 2002:a2e:b4f0:: with SMTP id s16mr8187414ljm.123.1573495514543;
-        Mon, 11 Nov 2019 10:05:14 -0800 (PST)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id c12sm8732853ljk.77.2019.11.11.10.05.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 10:05:11 -0800 (PST)
-Received: by mail-lf1-f46.google.com with SMTP id b20so10594467lfp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 10:05:11 -0800 (PST)
-X-Received: by 2002:ac2:498a:: with SMTP id f10mr4549583lfl.170.1573495511138;
- Mon, 11 Nov 2019 10:05:11 -0800 (PST)
+        Mon, 11 Nov 2019 13:08:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbfKKSIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:08:24 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C190D206C3;
+        Mon, 11 Nov 2019 18:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573495703;
+        bh=MbEqUAIaN0KyIlMJYMO+dgKL3ZN2z8aikzRbWFd2yso=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X32PaJw/RZvBCpWWhSxjXPnIypK+9PrM7XCiKJ+CL5oD9n7Y6JqesfvFbcwZm76M2
+         94rBTa0T3xioRqGAAdxu7ozUvg1Fbd077tytI7peYTzkh0MTr5FOuEvQzs4eBUITh1
+         mo9A29Y7J+lWSCnIDoWP0rZfSR3mZdz+2fkCGcEw=
+Date:   Mon, 11 Nov 2019 19:08:20 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Lamprecht <t.lamprecht@proxmox.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
+ when loading PDPTRS
+Message-ID: <20191111180820.GB1088065@kroah.com>
+References: <20191003154447.010950442@linuxfoundation.org>
+ <20191003154525.870373223@linuxfoundation.org>
+ <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
+ <20191111173757.GB11805@linux.intel.com>
+ <20191111174859.GB1083018@kroah.com>
+ <20191111175719.GD11805@linux.intel.com>
 MIME-Version: 1.0
-References: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
- <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com> <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
-In-Reply-To: <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Nov 2019 10:04:54 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wg6Zaf09i0XNgCmOzKKWnoAPMfA7WX9OY1Ow1YtF0ZP3A@mail.gmail.com>
-Message-ID: <CAHk-=wg6Zaf09i0XNgCmOzKKWnoAPMfA7WX9OY1Ow1YtF0ZP3A@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111175719.GD11805@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 9:52 AM Eric Dumazet <edumazet@google.com> wrote:
->
-> Now I wonder what to do with the ~400 KCSAN reports sitting in
-> pre-moderation queue.
+On Mon, Nov 11, 2019 at 09:57:19AM -0800, Sean Christopherson wrote:
+> On Mon, Nov 11, 2019 at 06:48:59PM +0100, Greg Kroah-Hartman wrote:
+> > On Mon, Nov 11, 2019 at 09:37:57AM -0800, Sean Christopherson wrote:
+> > > On Mon, Nov 11, 2019 at 10:32:05AM +0100, Thomas Lamprecht wrote:
+> > > > On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
+> > > > > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > > > 
+> > > > > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
+> > > > > 
+> > > > > Manually generate the PDPTR reserved bit mask when explicitly loading
+> > > > > PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+> > > > It seems that a backport of this to stable and distro kernels tickled out
+> > > > some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
+> > > > Intel CPUs[1].
+> > > 
+> > > It manifests specifically when running with EPT disabled (no surprise
+> > > there).  Actually, it probably would reproduce simply with unrestricted
+> > > guest disabled, but that's beside the point.
+> > > 
+> > > The issue is a flawed PAE-paging check in kvm_set_cr3(), which causes KVM
+> > > to incorrectly load PDPTRs in 64-bit mode and inject a #GP.  It's a sneaky
+> > > little bugger because the "if (is_long_mode() ..." makes it appear to be
+> > > correct at first glance.
+> > > 
+> > > 	if (is_long_mode(vcpu) &&
+> > > 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
+> > > 		return 1;
+> > > 	else if (is_pae(vcpu) && is_paging(vcpu) &&  <--- needs !is_long_mode()
+> > > 		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+> > > 		return 1;
+> > > 
+> > > With unrestricted guest, KVM doesn't intercept writes to CR3 and so doesn't
+> > > trigger the buggy code.  This doesn't fail upstream because the offending
+> > > code was refactored to encapsulate the PAE checks in a single helper,
+> > > precisely to avoid this type of headache.
+> > > 
+> > >   commit bf03d4f9334728bf7c8ffc7de787df48abd6340e
+> > >   Author: Paolo Bonzini <pbonzini@redhat.com>
+> > >   Date:   Thu Jun 6 18:52:44 2019 +0200
+> > > 
+> > >     KVM: x86: introduce is_pae_paging
+> > > 
+> > >     Checking for 32-bit PAE is quite common around code that fiddles with
+> > >     the PDPTRs.  Add a function to compress all checks into a single
+> > >     invocation.
+> > > 
+> > > 
+> > > Commit bf03d4f93347 ("KVM: x86: introduce is_pae_paging") doesn't apply
+> > > cleanly to 4.19 or earlier because of the VMX file movement in 4.20.  But,
+> > > the revelant changes in x86.c do apply cleanly, and I've quadruple checked
+> > > that the PAE checks in vmx.c are correct, i.e. applying the patch and
+> > > ignoring the nested.c/vmx.c conflicts would be a viable lazy option.
+> > > 
+> > > > Basically, booting this kernel as host, then running an KVM guest distro
+> > > > or kernel fails it that guest kernel early in the boot phase without any
+> > > > error or other log to serial console, earlyprintk.
+> > > 
+> > > ...
+> > > 
+> > > > 
+> > > > [0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
+> > > > [1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
+> > > >      westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
+> > > >      has VMX support (i.e. is 64bit based)
+> > > 
+> > > Note, not Westmere, which has EPT and unrestricted guest.  Xeon E5420 is
+> > > Harpertown, a.k.a. Penryn, the shrink of Conroe.  
+> > 
+> > 
+> > Thanks for figuring this out, can you send us a patch that we can apply
+> > to fix this issue in the stable tree?
+> 
+> Can do.  A custom backport will be need for 4.20 and earlier, not 4.19 and
+> earlier.  I misremembered when we did the VMX refactoring.
+> 
+> For 5.0, 5.1 and 5.2, commit bf03d4f93347 can be applied directly.
 
-So regular KASAN reports are fairly easy to deal with: they report
-actual bugs. They may be hard to hit, but generally there's no
-question about something like a use-after-free or whatever.
+5.0, 5.1, and 5.2 are all long end-of-life, they are not getting any
+updates and no one should be using them, so nothing to worry about
+there.
 
-The problem with KCSAN is that it's not clear how many of the reports
-have been actual real honest-to-goodness bugs that could cause
-problems, and how many of them are "this isn't actually a bug, but an
-annotation will shut up KCSAN".
+Look at the releases page on kernel.org to see the currently active
+trees.
 
-My gut feeling would be that it would be best to ignore the ones that
-are "an annotation will shut up KCSAN", and look at the ones that are
-real bugs.
+thanks,
 
-Is there a pattern to those real bugs? Is there perhaps a way to make
-KCSAN notice _that_ pattern in particular, and suppress the ones that
-are "we can shut these up with annotations that don't really change
-the code"?
-
-I think it would be much better for the kernel - and much better for
-KCSAN - if the problem reports KCSAN reports are real problems that
-can actually be triggered as problems, and that it behaves much more
-like KASAN in that respect.
-
-Yes, yes, then once the *real* problems have been handled, maybe we
-can expand the search to be "stylistic issues" and "in theory, this
-could cause problems with a compiler that did X" issues.
-
-But I think the "just annotate" thing makes people more likely to
-dismiss KCSAN issues, and I don't think it's healthy.
-
-                Linus
+greg k-h
