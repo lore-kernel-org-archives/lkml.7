@@ -2,157 +2,186 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F74C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42F1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D442190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891D321783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="kQInzmaK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKKLKF (ORCPT
+        id S1726912AbfKKLNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:10:05 -0500
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:30879 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKLKF (ORCPT
+        Mon, 11 Nov 2019 06:13:11 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35124 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfKKLNK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:10:05 -0500
-IronPort-SDR: 19wiJVNAPVTtyZTCu0W8IIB0vHKrqFzh/VYR1yfR1+Ja+U8To7J8FQ+P3G9izTvkePS8VMen6G
- WjlnvOFINbv6LSuSZIWaEUArFZ+XMGrLADhp5P0QUvnKo+3x4Yr5QP4Io1HDOrgKiHil8gQpv6
- Bi4DIUAAAtWJFWLavlgZ6hy5eOZYtO4doRNwphGacTVYFFBv5TNLtB1drPu3hem1sERTUErCID
- mm/FXAXFUxNzUxLTjGd8tuLrNmZKuq1SzUuAkaXTYaDIR+MbrLLlU7NlD9M+qwswJV4Qz5zaqi
- lxs=
-X-IronPort-AV: E=Sophos;i="5.68,292,1569312000"; 
-   d="scan'208";a="42981217"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 11 Nov 2019 03:10:04 -0800
-IronPort-SDR: i5nuYU4PmjFemi4jFGKxgJ8k6bM8E2x1VCxSi3kJn+hQ3M4horDJCv6WX/JqWmawukx4De5s9K
- FUuP0TT/JIZ3kYj+Z8GmoUIcitoCgXh6oxNswWbUo410HGX2aeT65TsZWknHqF2/yriz5gPvsm
- 9E8Tux54li/18A2Wb8lrzpUVJspnLB14/JDVaud40SAwitylW0jAuFwsVfUr3PkrhCfkA6r7ev
- dp6TDN8T/Il1WHsFp5C9kI/pJ/hscUVa3GN6zmLPX9G00/KkBLLwVBfiDdT9tzwDAREUSQX/MC
- NyA=
-From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
-To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Subject: [PATCH v3 7/7] ALSA: aloop: Support runtime change of snd_timer via info interface
-Date:   Mon, 11 Nov 2019 05:08:46 -0600
-Message-ID: <20191111110846.18223-8-andrew_gabbasov@mentor.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191111110846.18223-7-andrew_gabbasov@mentor.com>
-References: <20191111110846.18223-1-andrew_gabbasov@mentor.com>
- <20191111110846.18223-2-andrew_gabbasov@mentor.com>
- <20191111110846.18223-3-andrew_gabbasov@mentor.com>
- <20191111110846.18223-4-andrew_gabbasov@mentor.com>
- <20191111110846.18223-5-andrew_gabbasov@mentor.com>
- <20191111110846.18223-6-andrew_gabbasov@mentor.com>
- <20191111110846.18223-7-andrew_gabbasov@mentor.com>
+        Mon, 11 Nov 2019 06:13:10 -0500
+Received: by mail-wr1-f67.google.com with SMTP id s5so3064107wrw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 03:13:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=huepVau9eYwtL+cGD72B7PJ62OYK8YHlVG/n0gyRX58=;
+        b=kQInzmaKutNdAOJ/yrXdo642ND2z7EloykAYSkti3D4LAnjAltx+u5SceqN4I8yY8Z
+         jGhRGn8kJJjVIMq79PqkJYbh3ap2k6Zd2Ur96I0kqpplJChBY8b4377VdIquRxkb9vQ8
+         Y0yTEVqNAN5kPhbZBIYghehhBRKLqEu0qvrSMs8rBlqYRz/80srP9L+kmpGkg732Vn7F
+         YsISrjZgHuJR38wd8+QEq3iKsBDR04HZEBNAvg0QB4ukyuSbSk6DsK3OYO+OHazWh1z+
+         2WQkIEXY1eb2zBzS8fWaJ0bqykiNz+nfA56MqBZi3ormWtr684df5jmAOnFOi8fqmjCE
+         KWfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=huepVau9eYwtL+cGD72B7PJ62OYK8YHlVG/n0gyRX58=;
+        b=UNcccIe2D2o5olVq8HRiCunfXyfx3dI0kzW8iQo9h45UxyQlEljXvyp/jla778Y+qa
+         fdw7y/tBBw+97+22XhNv01DNdj1fThtPKhabNQc0cvlzlCh9uZ/v8WcBd03ZHYqmop3X
+         rLm7skrrQPEe1+fx+WIJF0AAkibP4So86VKReQzPWvnV2ajEJER5x6TMrlcSVJSqmy2+
+         zgqyGV9oMdQ7MaZ3URYc0TjJxd7CZqLtzwEmIZEP/MTskukAb3aSJex//5BnCvEkl7ll
+         ERzdBpH98qCYWhUO76/X4rvO6GqrzbisTPcpzyon/hnu2NxI2rT83rc5taDwLmi3sRpb
+         6qGg==
+X-Gm-Message-State: APjAAAUOa6uMaFeAB2F/LbOmV1sJxpIZqZcz1odAHvgilsP2zPDWf3XW
+        trSd5u3GD3HZ3/buK67CYprnyA==
+X-Google-Smtp-Source: APXvYqygK+ckQKVRF2PLnKNkKlloC6R8mN1s4qRfqcce/aZc014V+/SiN6BmIrzM0xXUP0+liR+VmQ==
+X-Received: by 2002:a5d:6350:: with SMTP id b16mr5315860wrw.357.1573470785783;
+        Mon, 11 Nov 2019 03:13:05 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id h205sm18230112wmf.35.2019.11.11.03.13.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 03:13:05 -0800 (PST)
+Message-ID: <6732099548daec7b69afddb04887c5dba4af851d.camel@unipv.it>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Date:   Mon, 11 Nov 2019 12:13:04 +0100
+In-Reply-To: <20191111110558.GA22228@ming.t460p>
+References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
+         <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
+         <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
+         <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
+         <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
+         <20191109222828.GA30568@ming.t460p>
+         <928d17b00c66caeef30410cf5a472056ae3722d4.camel@unipv.it>
+         <20191111110558.GA22228@ming.t460p>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-05.mgc.mentorg.com (139.181.222.5) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show and change sound card timer source with read-write info
-file in proc filesystem. Initial string can still be set as
-module parameter.
+Il giorno lun, 11/11/2019 alle 19.05 +0800, Ming Lei ha scritto:
+> On Mon, Nov 11, 2019 at 11:50:49AM +0100, Andrea Vai wrote:
+> > Il giorno dom, 10/11/2019 alle 06.28 +0800, Ming Lei ha scritto:
+> > > On Thu, Nov 07, 2019 at 07:59:44PM +0100, Andrea Vai wrote:
+> > > > [Sorry for the duplicate message, it didn't reach the lists
+> due to
+> > > > html formatting]
+> > > > Il giorno gio 7 nov 2019 alle ore 08:54 Damien Le Moal
+> > > > <Damien.LeMoal@wdc.com> ha scritto:
+> > > > >
+> > > > > On 2019/11/07 16:04, Andrea Vai wrote:
+> > > > > > Il giorno mer, 06/11/2019 alle 22.13 +0000, Damien Le Moal
+> ha
+> > > scritto:
+> > > > > >>
+> > > > > >>
+> > > > > >> Please simply try your write tests after doing this:
+> > > > > >>
+> > > > > >> echo mq-deadline > /sys/block/<name of your USB
+> > > > > >> disk>/queue/scheduler
+> > > > > >>
+> > > > > >> And confirm that mq-deadline is selected with:
+> > > > > >>
+> > > > > >> cat /sys/block/<name of your USB disk>/queue/scheduler
+> > > > > >> [mq-deadline] kyber bfq none
+> > > > > >
+> > > > > > ok, which kernel should I test with this: the fresh git
+> > > cloned, or the
+> > > > > > one just patched with Alan's patch, or doesn't matter
+> which
+> > > one?
+> > > > >
+> > > > > Probably all of them to see if there are any differences.
+> > > > 
+> > > > with both kernels, the output of
+> > > > cat /sys/block/sdh/queue/schedule
+> > > > 
+> > > > already contains [mq-deadline]: is it correct to assume that
+> the
+> > > echo
+> > > > command and the subsequent testing is useless? What to do now?
+> > > 
+> > > Another thing we could try is to use 'none' via the following
+> > > command:
+> > > 
+> > >  echo none > /sys/block/sdh/queue/scheduler  #suppose 'sdh'
+> points
+> > > to the usb storage disk
+> > > 
+> > > Because USB storage HBA is single hw queue, which depth is 1.
+> This
+> > > way
+> > > should change to dispatch IO in the order of bio submission.
+> > > 
+> > > Andrea, could you switch io scheduler to none and update us if
+> > > difference
+> > > can be made?
+> > 
+> > Of course I would to it, but I see that with the "good" kernel the
+> > output of "cat /sys/block/sdf/queue/scheduler" (yes, now it's sdf)
+> is
+> > 
+> > noop deadline [cfq]
+> 
+> Not sure if cfq makes a difference, and I guess you may get same
+> result
+> with noop or deadline. However, if you only see good write
+> performance with
+> cfq, you may try 'bfq' and see if it works as cfq.
+> 
+> > 
+> > , i.e. it doesn't show "none". Does it matter? (sorry if it's a
+> silly
+> > question)
+> 
+> We are talking about new kernel in which there can't be 'noop
+> deadline [cfq]'
+> any more. And you should see the following output from
+> '/sys/block/sdf/queue/scheduler'
+> in the new kernel:
+> 
+> 	[mq-deadline] kyber bfq none
+> 
+> 
 
-The timer source string value can be changed at any time,
-but it is latched by PCM substream open callback (the first one
-for a particular cable). At this point it is actually used, that
-is the string is parsed, and the timer is looked up and opened.
+ok sorry I misunderstood, assumed you wanted me to compare the "none"
+setting in the old kernel with the same setting in the new kernel. Now
+it's clear to me that you want me to compare the different scheduler
+settings in the new kernel.
 
-The timer source is set for a loopback card (the same as initial
-setting by module parameter), but every cable uses the value,
-current at the moment of open.
-
-Setting the value to empty string switches the timer to jiffies.
-
-Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
----
- sound/drivers/aloop.c | 45 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 3 deletions(-)
-
-diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
-index 2f08038f8792..430ab757a4c4 100644
---- a/sound/drivers/aloop.c
-+++ b/sound/drivers/aloop.c
-@@ -1667,7 +1667,7 @@ static void print_cable_info(struct snd_info_entry *entry,
- 	mutex_unlock(&loopback->cable_lock);
- }
- 
--static int loopback_proc_new(struct loopback *loopback, int cidx)
-+static int loopback_cable_proc_new(struct loopback *loopback, int cidx)
- {
- 	char name[32];
- 
-@@ -1688,6 +1688,44 @@ static void loopback_set_timer_source(struct loopback *loopback,
- 						      value, GFP_KERNEL);
- }
- 
-+static void print_timer_source_info(struct snd_info_entry *entry,
-+				    struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+
-+	mutex_lock(&loopback->cable_lock);
-+	snd_iprintf(buffer, "%s\n",
-+		    loopback->timer_source ? loopback->timer_source : "");
-+	mutex_unlock(&loopback->cable_lock);
-+}
-+
-+static void change_timer_source_info(struct snd_info_entry *entry,
-+				     struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+	char line[64];
-+
-+	mutex_lock(&loopback->cable_lock);
-+	if (!snd_info_get_line(buffer, line, sizeof(line)))
-+		loopback_set_timer_source(loopback, strim(line));
-+	mutex_unlock(&loopback->cable_lock);
-+}
-+
-+static int loopback_timer_source_proc_new(struct loopback *loopback)
-+{
-+	struct snd_info_entry *entry;
-+	int err;
-+
-+	err = snd_card_proc_new(loopback->card, "timer_source", &entry);
-+	if (err < 0)
-+		return err;
-+
-+	snd_info_set_text_ops(entry, loopback, print_timer_source_info);
-+	entry->mode |= S_IWUSR;
-+	entry->c.text.write = change_timer_source_info;
-+	return 0;
-+}
-+
- static int loopback_probe(struct platform_device *devptr)
- {
- 	struct snd_card *card;
-@@ -1720,8 +1758,9 @@ static int loopback_probe(struct platform_device *devptr)
- 	err = loopback_mixer_new(loopback, pcm_notify[dev] ? 1 : 0);
- 	if (err < 0)
- 		goto __nodev;
--	loopback_proc_new(loopback, 0);
--	loopback_proc_new(loopback, 1);
-+	loopback_cable_proc_new(loopback, 0);
-+	loopback_cable_proc_new(loopback, 1);
-+	loopback_timer_source_proc_new(loopback);
- 	strcpy(card->driver, "Loopback");
- 	strcpy(card->shortname, "Loopback");
- 	sprintf(card->longname, "Loopback %i", dev + 1);
--- 
-2.21.0
+Thanks, and bye
+Andrea
 
