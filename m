@@ -2,101 +2,83 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B98C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43598C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA9D206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:15:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573467315;
-	bh=gm+O7SDvmRrd2N9uRuvDOnFtNkovJrlzrws1Xw8+/SM=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=EX7EWjC7sJaHkrH9byPSTjpOfVZExKkHqLV7+qzEXdaS+jf4y5XpZPiqcJZp0e6Xe
-	 cwF2S8oC3ExEVn6Cfn5dlcukfZecYbnsn1OoDsmNIRyZ7Qk8wRdFam2JBwNgmX4M2m
-	 78+QJXitB64uk/VHmA80a2tDD3/azH1awmD+N6AQ=
+	by mail.kernel.org (Postfix) with ESMTP id 185F1214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfKKKPO (ORCPT
+        id S1726994AbfKKKPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:15:14 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:50993 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726768AbfKKKPN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:15:13 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iU6it-0007sA-5c; Mon, 11 Nov 2019 11:15:03 +0100
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH] irqchip/ti-sci-inta: Use =?UTF-8?Q?ERR=5FCAST=20inlin?=  =?UTF-8?Q?ed=20function=20instead=20of=20ERR=5FPTR=28PTR=5FERR=28=2E=2E?=  =?UTF-8?Q?=2E=29=29?=
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 11 Nov 2019 05:15:37 -0500
+Received: from verein.lst.de ([213.95.11.211]:48523 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726829AbfKKKPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:15:36 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8B1EE68BE1; Mon, 11 Nov 2019 11:15:31 +0100 (CET)
+Date:   Mon, 11 Nov 2019 11:15:31 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        "moderated list:NIOS2 ARCHITECTURE" 
+        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 10/21] asm-generic: ioremap_uc should behave the same
+ with and without MMU
+Message-ID: <20191111101531.GA12294@lst.de>
+References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-11-hch@lst.de> <CAK8P3a2o4R+E2hTrHrmNy7K1ki3_98aWE5a-fjkQ_NWW=xd_gQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 Nov 2019 11:24:24 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Markus Elfring <markus.elfring@web.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-In-Reply-To: <670cd9a2-2083-bb5e-7bfc-58d5c90ec756@ti.com>
-References: <776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de>
- <670cd9a2-2083-bb5e-7bfc-58d5c90ec756@ti.com>
-Message-ID: <29a69991ec7726d133e54a2891159e86@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: lokeshvutla@ti.com, markus.elfring@web.de, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net, nm@ti.com, ssantosh@kernel.org, t-kristo@ti.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2o4R+E2hTrHrmNy7K1ki3_98aWE5a-fjkQ_NWW=xd_gQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-11 04:45, Lokesh Vutla wrote:
-> On 05/11/19 5:00 PM, Markus Elfring wrote:
->> From: Markus Elfring <elfring@users.sourceforge.net>
->> Date: Tue, 5 Nov 2019 12:19:39 +0100
->>
->> A coccicheck run provided information like the following.
->>
->> drivers/irqchip/irq-ti-sci-inta.c:250:9-16: WARNING: ERR_CAST can be 
->> used
->> with vint_desc.
->>
->> Generated by: scripts/coccinelle/api/err_cast.cocci
->>
->> Thus adjust the exception handling in one if branch.
->>
->> Fixes: 9f1463b86c13277d0bd88d5ee359577ef40f4da7 
->> ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
->
-> Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt 
-> Aggregator driver")
+On Mon, Nov 11, 2019 at 11:09:05AM +0100, Arnd Bergmann wrote:
+> Maybe we could move the definition into the atyfb driver itself?
+> 
+> As I understand it, the difference between ioremap()/ioremap_nocache()
+> and ioremap_uc() only exists on pre-PAT x86-32 systems (i.e. 486, P5,
+> Ppro, PII, K6, VIA C3), while on more modern systems (all non-x86,
+> PentiumIII, Athlon, VIA C7)  those three are meant to be synonyms
+> anyway.
 
-I fundamentally disagree with the "Fixes:" tag. This isn't a fix,
-just a minor readability improvement. Flagging things as "Fixes:"
-ends up triggering all kind of unnecessary backports to -stable.
-
-> With this:
->
-> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-
-I'll otherwise take this patch in -next.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+That's not how I understood it.  Based on the code and the UC-
+explanation ioremap_uc always overrides the MTRR, which can still
+be present on more modern x86 systems.  In fact I remember a patch
+floating around very recently adding another ioremap_uc caller in
+some Atom platform device driver that works around buggy MTRR
+tables.  Also this series actually adds a new override and a few
+callers for ia64 platform code, which works very similar to x86
+based on the comments in the code.  That being said I'm not sure
+the callers in ia64 are really required, but it was the safest thing
+to do as part of this cleanup.
