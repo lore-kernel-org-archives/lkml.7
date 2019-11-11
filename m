@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BEAC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6386BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B634206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FFB206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfKKUWE (ORCPT
+        id S1727814AbfKKUWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:22:04 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:38207 "EHLO
+        Mon, 11 Nov 2019 15:22:07 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:35595 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbfKKUWA (ORCPT
+        with ESMTP id S1727183AbfKKUWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:22:00 -0500
+        Mon, 11 Nov 2019 15:22:02 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MMXcP-1iDyJd3NSx-00Jc5Q; Mon, 11 Nov 2019 21:16:46 +0100
+ 1MhUHt-1hzcGS466d-00eYkO; Mon, 11 Nov 2019 21:16:48 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -30,321 +30,141 @@ To:     linux-nfs@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 02/19] nfs: use time64_t internally
-Date:   Mon, 11 Nov 2019 21:16:22 +0100
-Message-Id: <20191111201639.2240623-3-arnd@arndb.de>
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH 05/19] nfs: fscache: use timespec64 in inode auxdata
+Date:   Mon, 11 Nov 2019 21:16:25 +0100
+Message-Id: <20191111201639.2240623-6-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
 References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:fAf2gAwX1eREIgqWnD/xnaA+lKEXHqO4cu9OJVKvRvoYHhZaQru
- CItU67QBzAi+i1+WixBdOxy2Ka0D7v+R0HRRUnJ+muD/WddljAq64Q1kKfp+a4Y0NzEl3Yg
- bCljuD7YpUhwXmX+7VjnKaPAfzBhWrzJiyPtdhzo9EntEcQdLQMpfNEMS4q2wUE2t6/nS6G
- 7WhVGcfTJGiE1r3b4kUfQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:g35q0nZQPNM=:mAGIyZFY5uDS36gskSacpR
- dczgXgs3Joq2m8/9oheWXDzbxvITp8ajekY9Ty3zeNgKiItKjQDpzGPG6I87LBH7aPm6QmpNG
- iZ+LDEwDDhap0bwUoJLhMpRQQiSTUmv6Nyrulv/yJMGTYe1dXE2ggBl3ZxrxjJFNvSEsnDXJc
- y+KHreNqgCkFVs+qNAYuJa1+flqhDLV8mgp6kIEKv4bvbgMhRrVVfTKAQ6OHlOdfyUmvrUrSn
- 5vMMTrPd18ESzCpJH2OZoKFyNqV4cu85XSIzJgEikToynOInxrbvxMc8iHPywlYLpgU0finFt
- GI5OBgxJtFcwBZ8doTHNL4Bc2OYVhHvq1zF4SUyOqXGrGKNhZMuiZBpTyJNPb+r47YcbIbA7N
- oLc+3u4ppCAdi87e7ZvkdyYD1nX/8CaeqJqjKDLWWsp1okmTJC4m6r3ipcxTJDIEvp2NihlSu
- 21BOWmdPqADY9uYFku2NWul185SfIuxmaaRstnN/nPlp7FAp/+0+e6czvr6n6qKRHtTBwBMC8
- VVPBNKhD/qdymTiortmVptSTwuHUemFO0lz9x4Fn2lGDgMA5y+WI97YVDvFjhJ01Xyx1kAA5N
- b2nVUnfb+nZ/aDmatvEjtYSvzZ6OsVNPol/nCxhrLuuUM6aerDbG18GNLT26gSUEviWkLeDv0
- hgkwekllb2wJOhjyjBnWlBIKl7WeUa4npUAqemtUssZ1UrJo3ZSIBuG9bxFdoAw13+WfBIeOk
- vSeMI2Kbv3q6uoOc+l3P7hXsI1EnqqoMMpgWj6R2QuE7m0yimMpwOrA8s6lNQCytrvHMnHMlV
- KX64kuKEoPQ6EuHdJ3+XYWqUekxn5ryQBjRHZTcKpCUIZztkNSqRDVGbasm/vFXoF7T6vYAZl
- ezuA3nk5e96ckLpY2ZoQ==
+X-Provags-ID: V03:K1:R85AnppbPpRbASBN+qeQQkooI5x2H4Dl4b39qnIy/84P06Psutx
+ 1UgpJewoA+26kC3RGAFzMl4tr537CnsdCYpMzZpqaquzBmda48YFiq1sp4JBpKVAm/6hG6B
+ T+xjyEzQBA78TjjLjPu3UkZokiY0Cf7wC2JTPJNzmWhI28vtCMwD+TomKV1+kSoNGHlQIcf
+ llNfgK00g8glajmY6FJtQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2/4Mf+qV6d4=:n2dwiOweaOHyBIYwZrNd0B
+ lW+2gm7GVpKURbp6YNWNUA8VTknHJ7ALNzPgpoTOVu3r7Wg9S4I2Px9rDC0QfF/SE6EldpIbo
+ CJvNUVX4ltU9rErfId/9EY8HKSvEbnHWwVCcgoYgoy7DdMtkFEdFWxilBJ/c+l8gONahbmerQ
+ NPrmWqfZaBHWY2ycepLz/G1MTFalmgp6VtSk1amgbw6cfSazCx8AcUTgP7clC8QxDpivYDRM6
+ 5hDAlsr95+SXafhF3L+ZtPOYHciUXr/wd0TtVLLoueMzlW8J40VLmIei6wh9vIRFeoG7PTSyx
+ om8Pt1ty7SX7kPnFDeyYDCSaRvtp2Th7OpO+M3/NWeY5XIsb5QhIn+o3dN3chTD+MVn0hRc+8
+ ycsqCJ4xnF2NqOZveetUawN2/rU++A8EOC9F/533Pg8Ir1E9mnjdEPRdibWtZZ2al+62ZeYZ1
+ t4Zg5Qkf1sanO5G9h5hs50/zPeEBQNTMPwULx+ZP1G2rXdGnxjwWbt9cFvsoopQCWC3OwGnhA
+ n8PG53tvIf4XHMKpR3afjThw8ETdOcVTfvrvT5j2cUpHh8naebWzhaHxG0gcx5EL4ywuefUk1
+ w1oLs1mq+UMkGKyosBlEm42IR6lrxD892zI02mL7Z11qJv3WlVglJmFBQUUWnwxNeQKB9+tu7
+ mDYTgpW6KIE2/+MiHdC2zc8mp+57bcTONSgqdwte/taLeXcMtMUJBeyG/5adgslOhg20m+WA6
+ +UVgE5D+RV6VMrgvrNiK6Va91JEr2RFCCzUHq3c0GSD0davk251oOKxp+LbLeFau6k25cOiy1
+ QqkTYcHcnHIPNrWY3eF8pxvBR7bOs+mw7UrSQfKwSxMsGHsq6vSw+/t5Sg8i8YDO7R4S3fSr4
+ +mKI+XhmaPHChuLJPLhg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The timestamps for the cache are all in boottime seconds, so they
-don't overflow 32-bit values, but the use of time_t is deprecated
-because it generally does overflow when used with wall-clock time.
+nfs currently behaves differently on 32-bit and 64-bit kernels regarding
+the on-disk format of nfs_fscache_inode_auxdata.
 
-There are multiple possible ways of avoiding it:
+That format should really be the same on any kernel, and we should avoid
+the 'timespec' type in order to remove that from the kernel later on.
 
-- leave time_t, which is safe here, but forces others to
-  look into this code to determine that it is over and over.
+Using plain 'timespec64' would not be good here, since that includes
+implied padding and would possibly leak kernel stack data to the on-disk
+format on 32-bit architectures.
 
-- use a more generic type, like 'int' or 'long', which is known
-  to be sufficient here but loses the documentation of referring
-  to timestamps
+struct __kernel_timespec would work as a replacement, but open-coding
+the two struct members in nfs_fscache_inode_auxdata makes it more
+obvious what's going on here, and keeps the current format for 64-bit
+architectures.
 
-- use ktime_t everywhere, and convert into seconds in the few
-  places where we want realtime-seconds. The conversion is
-  sometimes expensive, but not more so than the conversion we
-  do today.
-
-- use time64_t to clarify that this code is safe. Nothing would
-  change for 64-bit architectures, but it is slightly less
-  efficient on 32-bit architectures.
-
-Without a clear winner of the three approaches above, this picks
-the last one, favouring readability over a small performance
-loss on 32-bit architectures.
-
+Cc: David Howells <dhowells@redhat.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/sunrpc/cache.h      | 42 +++++++++++++++++--------------
- net/sunrpc/auth_gss/svcauth_gss.c |  2 +-
- net/sunrpc/cache.c                | 18 ++++++-------
- net/sunrpc/svcauth_unix.c         | 10 ++++----
- 4 files changed, 38 insertions(+), 34 deletions(-)
+ fs/nfs/fscache-index.c |  6 ++++--
+ fs/nfs/fscache.c       | 18 ++++++++++++------
+ fs/nfs/fscache.h       |  8 +++++---
+ 3 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
-index f8603724fbee..fa46de3a8f2b 100644
---- a/include/linux/sunrpc/cache.h
-+++ b/include/linux/sunrpc/cache.h
-@@ -45,8 +45,8 @@
+diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
+index 15f271401dcc..573b1da9342c 100644
+--- a/fs/nfs/fscache-index.c
++++ b/fs/nfs/fscache-index.c
+@@ -84,8 +84,10 @@ enum fscache_checkaux nfs_fscache_inode_check_aux(void *cookie_netfs_data,
+ 		return FSCACHE_CHECKAUX_OBSOLETE;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 3800ab6f08fa..7def925d3af5 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -238,8 +238,10 @@ void nfs_fscache_init_inode(struct inode *inode)
+ 		return;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+@@ -263,8 +265,10 @@ void nfs_fscache_clear_inode(struct inode *inode)
+ 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 	fscache_relinquish_cookie(cookie, &auxdata, false);
+ 	nfsi->fscache = NULL;
+ }
+@@ -305,8 +309,10 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
+ 		return;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (inode_is_open_for_write(inode)) {
+ 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
+diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
+index ad041cfbf9ec..6754c8607230 100644
+--- a/fs/nfs/fscache.h
++++ b/fs/nfs/fscache.h
+@@ -62,9 +62,11 @@ struct nfs_fscache_key {
+  * cache object.
   */
- struct cache_head {
- 	struct hlist_node	cache_list;
--	time_t		expiry_time;	/* After time time, don't use the data */
--	time_t		last_refresh;   /* If CACHE_PENDING, this is when upcall was
-+	time64_t	expiry_time;	/* After time time, don't use the data */
-+	time64_t	last_refresh;   /* If CACHE_PENDING, this is when upcall was
- 					 * sent, else this is when update was
- 					 * received, though it is alway set to
- 					 * be *after* ->flush_time.
-@@ -95,22 +95,22 @@ struct cache_detail {
- 	/* fields below this comment are for internal use
- 	 * and should not be touched by cache owners
- 	 */
--	time_t			flush_time;		/* flush all cache items with
-+	time64_t		flush_time;		/* flush all cache items with
- 							 * last_refresh at or earlier
- 							 * than this.  last_refresh
- 							 * is never set at or earlier
- 							 * than this.
- 							 */
- 	struct list_head	others;
--	time_t			nextcheck;
-+	time64_t		nextcheck;
- 	int			entries;
+ struct nfs_fscache_inode_auxdata {
+-	struct timespec	mtime;
+-	struct timespec	ctime;
+-	u64		change_attr;
++	s64	mtime_sec;
++	s64	mtime_nsec;
++	s64	ctime_sec;
++	s64	ctime_nsec;
++	u64	change_attr;
+ };
  
- 	/* fields for communication over channel */
- 	struct list_head	queue;
- 
- 	atomic_t		writers;		/* how many time is /channel open */
--	time_t			last_close;		/* if no writers, when did last close */
--	time_t			last_warn;		/* when we last warned about no writers */
-+	time64_t		last_close;		/* if no writers, when did last close */
-+	time64_t		last_warn;		/* when we last warned about no writers */
- 
- 	union {
- 		struct proc_dir_entry	*procfs;
-@@ -147,18 +147,22 @@ struct cache_deferred_req {
-  * timestamps kept in the cache are expressed in seconds
-  * since boot.  This is the best for measuring differences in
-  * real time.
-+ * This reimplemnts ktime_get_boottime_seconds() in a slightly
-+ * faster but less accurate way. When we end up converting
-+ * back to wallclock (CLOCK_REALTIME), that error often
-+ * cancels out during the reverse operation.
-  */
--static inline time_t seconds_since_boot(void)
-+static inline time64_t seconds_since_boot(void)
- {
--	struct timespec boot;
--	getboottime(&boot);
--	return get_seconds() - boot.tv_sec;
-+	struct timespec64 boot;
-+	getboottime64(&boot);
-+	return ktime_get_seconds() - boot.tv_sec;
- }
- 
--static inline time_t convert_to_wallclock(time_t sinceboot)
-+static inline time64_t convert_to_wallclock(time64_t sinceboot)
- {
--	struct timespec boot;
--	getboottime(&boot);
-+	struct timespec64 boot;
-+	getboottime64(&boot);
- 	return boot.tv_sec + sinceboot;
- }
- 
-@@ -273,7 +277,7 @@ static inline int get_uint(char **bpp, unsigned int *anint)
- 	return 0;
- }
- 
--static inline int get_time(char **bpp, time_t *time)
-+static inline int get_time(char **bpp, time64_t *time)
- {
- 	char buf[50];
- 	long long ll;
-@@ -287,20 +291,20 @@ static inline int get_time(char **bpp, time_t *time)
- 	if (kstrtoll(buf, 0, &ll))
- 		return -EINVAL;
- 
--	*time = (time_t)ll;
-+	*time = ll;
- 	return 0;
- }
- 
--static inline time_t get_expiry(char **bpp)
-+static inline time64_t get_expiry(char **bpp)
- {
--	time_t rv;
--	struct timespec boot;
-+	time64_t rv;
-+	struct timespec64 boot;
- 
- 	if (get_time(bpp, &rv))
- 		return 0;
- 	if (rv < 0)
- 		return 0;
--	getboottime(&boot);
-+	getboottime64(&boot);
- 	return rv - boot.tv_sec;
- }
- 
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 30ed5585a42a..6268a2c7229d 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -200,7 +200,7 @@ static int rsi_parse(struct cache_detail *cd,
- 	char *ep;
- 	int len;
- 	struct rsi rsii, *rsip = NULL;
--	time_t expiry;
-+	time64_t expiry;
- 	int status = -EINVAL;
- 
- 	memset(&rsii, 0, sizeof(rsii));
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index a349094f6fb7..18d73d1f6734 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -42,7 +42,7 @@ static bool cache_listeners_exist(struct cache_detail *detail);
- 
- static void cache_init(struct cache_head *h, struct cache_detail *detail)
- {
--	time_t now = seconds_since_boot();
-+	time64_t now = seconds_since_boot();
- 	INIT_HLIST_NODE(&h->cache_list);
- 	h->flags = 0;
- 	kref_init(&h->ref);
-@@ -54,7 +54,7 @@ static void cache_init(struct cache_head *h, struct cache_detail *detail)
- }
- 
- static inline int cache_is_valid(struct cache_head *h);
--static void cache_fresh_locked(struct cache_head *head, time_t expiry,
-+static void cache_fresh_locked(struct cache_head *head, time64_t expiry,
- 				struct cache_detail *detail);
- static void cache_fresh_unlocked(struct cache_head *head,
- 				struct cache_detail *detail);
-@@ -145,10 +145,10 @@ EXPORT_SYMBOL_GPL(sunrpc_cache_lookup_rcu);
- 
- static void cache_dequeue(struct cache_detail *detail, struct cache_head *ch);
- 
--static void cache_fresh_locked(struct cache_head *head, time_t expiry,
-+static void cache_fresh_locked(struct cache_head *head, time64_t expiry,
- 			       struct cache_detail *detail)
- {
--	time_t now = seconds_since_boot();
-+	time64_t now = seconds_since_boot();
- 	if (now <= detail->flush_time)
- 		/* ensure it isn't immediately treated as expired */
- 		now = detail->flush_time + 1;
-@@ -280,7 +280,7 @@ int cache_check(struct cache_detail *detail,
- 		    struct cache_head *h, struct cache_req *rqstp)
- {
- 	int rv;
--	long refresh_age, age;
-+	time64_t refresh_age, age;
- 
- 	/* First decide return status as best we can */
- 	rv = cache_is_valid(h);
-@@ -294,7 +294,7 @@ int cache_check(struct cache_detail *detail,
- 			rv = -ENOENT;
- 	} else if (rv == -EAGAIN ||
- 		   (h->expiry_time != 0 && age > refresh_age/2)) {
--		dprintk("RPC:       Want update, refage=%ld, age=%ld\n",
-+		dprintk("RPC:       Want update, refage=%lld, age=%lld\n",
- 				refresh_age, age);
- 		if (!test_and_set_bit(CACHE_PENDING, &h->flags)) {
- 			switch (cache_make_upcall(detail, h)) {
-@@ -1410,7 +1410,7 @@ static int c_show(struct seq_file *m, void *p)
- 		return cd->cache_show(m, cd, NULL);
- 
- 	ifdebug(CACHE)
--		seq_printf(m, "# expiry=%ld refcnt=%d flags=%lx\n",
-+		seq_printf(m, "# expiry=%lld refcnt=%d flags=%lx\n",
- 			   convert_to_wallclock(cp->expiry_time),
- 			   kref_read(&cp->ref), cp->flags);
- 	cache_get(cp);
-@@ -1483,7 +1483,7 @@ static ssize_t read_flush(struct file *file, char __user *buf,
- 	char tbuf[22];
- 	size_t len;
- 
--	len = snprintf(tbuf, sizeof(tbuf), "%lu\n",
-+	len = snprintf(tbuf, sizeof(tbuf), "%llu\n",
- 			convert_to_wallclock(cd->flush_time));
- 	return simple_read_from_buffer(buf, count, ppos, tbuf, len);
- }
-@@ -1494,7 +1494,7 @@ static ssize_t write_flush(struct file *file, const char __user *buf,
- {
- 	char tbuf[20];
- 	char *ep;
--	time_t now;
-+	time64_t now;
- 
- 	if (*ppos || count > sizeof(tbuf)-1)
- 		return -EINVAL;
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 5c04ba7d456b..04aa80a2d752 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -166,7 +166,7 @@ static void ip_map_request(struct cache_detail *cd,
- }
- 
- static struct ip_map *__ip_map_lookup(struct cache_detail *cd, char *class, struct in6_addr *addr);
--static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm, struct unix_domain *udom, time_t expiry);
-+static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm, struct unix_domain *udom, time64_t expiry);
- 
- static int ip_map_parse(struct cache_detail *cd,
- 			  char *mesg, int mlen)
-@@ -187,7 +187,7 @@ static int ip_map_parse(struct cache_detail *cd,
- 
- 	struct ip_map *ipmp;
- 	struct auth_domain *dom;
--	time_t expiry;
-+	time64_t expiry;
- 
- 	if (mesg[mlen-1] != '\n')
- 		return -EINVAL;
-@@ -308,7 +308,7 @@ static inline struct ip_map *ip_map_lookup(struct net *net, char *class,
- }
- 
- static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm,
--		struct unix_domain *udom, time_t expiry)
-+		struct unix_domain *udom, time64_t expiry)
- {
- 	struct ip_map ip;
- 	struct cache_head *ch;
-@@ -328,7 +328,7 @@ static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm,
- }
- 
- static inline int ip_map_update(struct net *net, struct ip_map *ipm,
--		struct unix_domain *udom, time_t expiry)
-+		struct unix_domain *udom, time64_t expiry)
- {
- 	struct sunrpc_net *sn;
- 
-@@ -491,7 +491,7 @@ static int unix_gid_parse(struct cache_detail *cd,
- 	int rv;
- 	int i;
- 	int err;
--	time_t expiry;
-+	time64_t expiry;
- 	struct unix_gid ug, *ugp;
- 
- 	if (mesg[mlen - 1] != '\n')
+ /*
 -- 
 2.20.0
 
