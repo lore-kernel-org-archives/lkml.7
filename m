@@ -2,110 +2,77 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CE4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37339C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECF9222BD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573478844;
-	bh=3khfY817g3PS5TkES+rklqgKgMSJFdurf0htRIWV3E8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KXhbXw1HoJI4gtXC8NnZbtm+04+V8TwOA9pPSNo6RCNm4MnhD4ddLiEAbjd3YEssT
-	 2PrIbKhCgNU2xm0U/vqhIwZ8HfNeaBrY2GkLrUT3/lG1g9GNS83kR5E3mXAWPs4IJ/
-	 mrFxa18lw0L5M3P2Ez5B6bvGqPoxjPp1k/5JorP4=
+	by mail.kernel.org (Postfix) with ESMTP id 04EEC21E6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:27:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=flameeyes-com.20150623.gappssmtp.com header.i=@flameeyes-com.20150623.gappssmtp.com header.b="WzrvYiMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfKKN1X (ORCPT
+        id S1727031AbfKKN13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:27:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbfKKN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:27:23 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBCC32196E;
-        Mon, 11 Nov 2019 13:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573478842;
-        bh=3khfY817g3PS5TkES+rklqgKgMSJFdurf0htRIWV3E8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m+qMg8uHBw99MxUsk26njdjGjDT/Ta8ES+ZVEG2GQ0udk7tYSiKb+Jd1xciKXpB8F
-         twU/HuO8oIndjNsYOzuMjoEa907GWnUixaMXCV1d3Wa3GFZc5BFH+gfgMfWCP1lcli
-         Fpo2XworndBJncJiA4o6dYYhc2YNDoBJat65lfPM=
-Date:   Mon, 11 Nov 2019 13:27:17 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     catalin.marinas@arm.com, maz@kernel.org, suzuki.poulose@arm.com,
-        mark.rutland@arm.com, tangnianyao@huawei.com,
-        xiexiangyou@huawei.com, linux-kernel@vger.kernel.org,
-        arm@kernel.org
-Subject: Re: [RFC PATCH v2] arm64: cpufeatures: add support for tlbi range
- instructions
-Message-ID: <20191111132716.GA9394@willie-the-truck>
-References: <5DC960EB.9050503@huawei.com>
+        Mon, 11 Nov 2019 08:27:29 -0500
+Received: from mail-qt1-f170.google.com ([209.85.160.170]:40734 "EHLO
+        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfKKN13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 08:27:29 -0500
+Received: by mail-qt1-f170.google.com with SMTP id o49so15623604qta.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 05:27:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flameeyes-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vzVvMTX2LFv9S1B1exKBhiHOJQP/YcVxVxCKJ0piDj4=;
+        b=WzrvYiMQ8gZNIHiDTEN7JpWKgxp+gKJEVubolXb9QKspoTw5cbOxKpK6Wo339j8k4E
+         1if/iSjrxQaOimdHRtwFTGRMyz029WHGzHlytiH8JX93gbkk7SqPGoN5tVcQ5tJoBXUZ
+         xa4fhcCcXUBU63Bx+l1GRe18gRIOl1d6YkCqvOzu7Wa46Lg484AQz/kGvXL7i6DjwIbH
+         9rRYh6lfO3L7676LfOd0sg06neB5H7SQXJOFgUL+0NztCa+YfFMbVkYNvQ80wBlD5eD2
+         EhTp2mtZWGlXBs4y0fW73c+ZoyevYhQ71EN1CZe7SZliDcZXRkjUtlW/4bvHcaRGYi9V
+         Jy0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vzVvMTX2LFv9S1B1exKBhiHOJQP/YcVxVxCKJ0piDj4=;
+        b=dOXgMXNSMfjtpPzVxN3OBkk2JuVJ8cuqYdohDjkGNh8pSKMeEoQFZkTRHA630ks8zG
+         Mr1HsHP/n/LRTIk+Ua8uLD8JpBz0hqER4ntSBzdhzJ61ny8AZ2qAaOUHvfpskdGcS8TL
+         uwGWideEb1T4Ay0GxDBIjKStlOGxpIldyzH3WRDQK7oInTu2oSDRPMic3wL2DKgCY3rS
+         Hb2kCwmnC8mNe6f4ARwCKjioynUXCCInA2pVKQdTN5Uec415lgdLdXdeuR9QXbwfq/EC
+         /1vqwvXovs0dkYy5acgIDfIhSnqebVc8nDhAJ75NDGJSQMeO8cRVS43nH92kaR7tnpum
+         DhHg==
+X-Gm-Message-State: APjAAAV23VAYrjNNuZxll5d9Eaep39u3RECnVZ07+gcUMryQg4/cMQSd
+        wwPXa03olnwZysFMZXXeoIFrAkI3dkPsLjyy7AcQgw==
+X-Google-Smtp-Source: APXvYqyqP4a+Cm1qniSn+zMVmWEo3DkyXOj+WGA0fpNz+Ps5uCLUiezR7sALC0kVqPIkrX/dnB2zk3AmXTwz7Mf0OuU=
+X-Received: by 2002:ac8:1859:: with SMTP id n25mr24772767qtk.333.1573478847837;
+ Mon, 11 Nov 2019 05:27:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5DC960EB.9050503@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190826151640.5036-3-flameeyes@flameeyes.com>
+ <20191103160030.GO1384@kitsune.suse.cz> <CAHcsgXRtWAt0mEQoW2rn1v6yYZ8ZKygKVetk4mnm_o+pwgwcVw@mail.gmail.com>
+ <20191111131817.GA2770@kitsune.suse.cz>
+In-Reply-To: <20191111131817.GA2770@kitsune.suse.cz>
+From:   =?UTF-8?Q?Diego_Elio_Petten=C3=B2?= <flameeyes@flameeyes.com>
+Date:   Mon, 11 Nov 2019 13:27:17 +0000
+Message-ID: <CAHcsgXTXcT4uoBH2NfZ-A2sqvEYX5a3Rg-GpA+ZB0JnCTWcVjw@mail.gmail.com>
+Subject: Re: cdrom: make debug logging rely on pr_debug and debugfs only.
+To:     =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>
+Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:23:55PM +0800, Zhenyu Ye wrote:
-> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
-> range of input addresses. This patch adds support for this feature.
-> This is the second version of the patch.
-> 
-> I traced the __flush_tlb_range() for a minute and get some statistical
-> data as below:
-> 
-> 	PAGENUM		COUNT
-> 	1		34944
-> 	2		5683
-> 	3		1343
-> 	4		7857
-> 	5		838
-> 	9		339
-> 	16		933
-> 	19		427
-> 	20		5821
-> 	23		279
-> 	41		338
-> 	141		279
-> 	512		428
-> 	1668		120
-> 	2038		100
-> 
-> Those data are based on kernel-5.4.0, where PAGENUM = end - start, COUNT
-> shows number of calls to the __flush_tlb_range() in a minute. There only
-> shows the data which COUNT >= 100. The kernel is started normally, and
-> transparent hugepage is opened. As we can see, though most user TLBI
-> ranges were 1 pages long, the num of long-range can not be ignored.
-> 
-> The new feature of TLB range can improve lots of performance compared to
-> the current implementation. As an example, flush 512 ranges needs only 1
-> instruction as opposed to 512 instructions using current implementation.
-> 
-> And for a new hardware feature, support is better than not.
-> 
-> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
-> ---
-> ChangeLog v1 -> v2:
-> - Change the main implementation of this feature.
-> - Add some comments.
+On Mon, Nov 11, 2019 at 1:18 PM Michal Such=C3=A1nek <msuchanek@suse.de> wr=
+ote:
+> Maybe you can drop this part entirely to not get conflicts.
 
-How does this address my concerns here:
-
-https://lore.kernel.org/linux-arm-kernel/20191031131649.GB27196@willie-the-truck/
-
-?
-
-Will
+That's awesome, thanks! I just managed to get something that looks
+right but I'm not sure how right it is, I'll skip this part in the
+series and re-send the rest!
