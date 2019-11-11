@@ -2,92 +2,77 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17C4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1540DC17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46B8206B6
+	by mail.kernel.org (Postfix) with ESMTP id DF177207FA
 	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dmSbbkVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfKKC7A (ORCPT
+        id S1726834AbfKKC7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 21:59:00 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37943 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfKKC7A (ORCPT
+        Sun, 10 Nov 2019 21:59:02 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:45369 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbfKKC7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 21:59:00 -0500
-Received: by mail-qt1-f194.google.com with SMTP id p20so14154323qtq.5
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 18:58:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=65bhuoPgriNtBUE2R+ohrdrdN/rvxnp383N9kf00A4s=;
-        b=dmSbbkVEbFq3Auqxd7cNVOfavGXhUuzR/jNDxWcpYZsb/q5otj5juiciqFQLs5h9zu
-         ua8wpEmtXRG49V+5P/HRsP8O5U1OgNREa/hCWX85nLnyvR+pIvYWO8pyTnnOGgTgrPwg
-         ytx7Ll+rB1zUqY22w/s3m4fbnn94LFpxK1s/YMhyHR0/q/DPboqWMsPIu+WhxBb4N1ej
-         WiPWDyK9nT7cThdxDd0bn7yBFfsFaXJwjrGzb2J7IrhEl3XuWFfyzsOxt7J85W/iQChi
-         73+Xuu5oCmnJfCcbRdhWgFfA3/8KENy2CKbN8AuXD/bjuJUZsyVREd+a/7dGd37Yy6cT
-         jyDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=65bhuoPgriNtBUE2R+ohrdrdN/rvxnp383N9kf00A4s=;
-        b=eOj7JtRzwSe0I+JDGyYKoZpfnjx9yFWuMlEman2eFcYA5569ux+90uXliwDrrzetn8
-         BmIdR1In5OIHuIwj5n1YZXxRTDXPUxpnISNfZEo3wOJQiwvrwjohwcnEXn2HJiqilTf1
-         hQ0N9yXT5/sHM0vElz7YewhqRnD1pJHRdVp3do9n+gI4ilYJw4io79CKuR3piAG3sn9s
-         OsxQWaKHgooekQbYD3cEbwmIvo/cWhSScdlgtDD1ohmLgnt6LoF1oAPgOJ90tOUg5MKc
-         XuWCoUl1CADvoMDOUpsaDeOl1P4w0lyb0iClLgXqrhTyIUc2i8vDYtIQRIf8XDZ5quc7
-         nzGQ==
-X-Gm-Message-State: APjAAAXK9WV5qFWXIX0Ge+R/xDy6juPq2ccM2whGinOAf74Ys3rI3AxP
-        wc5y7wx6qtoAuWquTxPekHIFDyd9FNCmgg==
-X-Google-Smtp-Source: APXvYqzgxJuH1MyOEI2dRYJeUBelSt0rQZuJ56c5fwz39EZF78E2gj0SlimsTSCYTi0Z+TMmH4PwUw==
-X-Received: by 2002:ac8:524a:: with SMTP id y10mr23155907qtn.325.1573441137896;
-        Sun, 10 Nov 2019 18:58:57 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r80sm6465873qke.121.2019.11.10.18.58.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 18:58:57 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 1/1] iommu/vt-d: Add Kconfig option to enable/disable scalable mode
-Date:   Sun, 10 Nov 2019 21:58:56 -0500
-Message-Id: <472617D4-1652-45FB-90A4-0D45766DB78B@lca.pw>
-References: <20191109034039.27964-1-baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, kevin.tian@intel.com,
-        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com
-In-Reply-To: <20191109034039.27964-1-baolu.lu@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-X-Mailer: iPhone Mail (17A878)
+        Sun, 10 Nov 2019 21:59:02 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAB2wPMa006243, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAB2wPMa006243
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 11 Nov 2019 10:58:26 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Mon, 11 Nov 2019 10:58:25 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 11 Nov 2019 10:58:24 +0800
+Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
+ ([fe80::3d7d:f7db:e1fb:307b%12]) with mapi id 15.01.1779.005; Mon, 11 Nov
+ 2019 10:58:24 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rob Herring" <robh+dt@kernel.org>
+Subject: RE: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Topic: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Index: AdWTrwRiu8TDC5guRneVMItRk6mPLwAihi8AAIJriSD//6UUgP/7v8ZQ
+Date:   Mon, 11 Nov 2019 02:58:24 +0000
+Message-ID: <309cd67da48e4702ae3dcc4ca8ab4309@realtek.com>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+ <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
+ <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
+ <7a05ac2c-00bc-b2ac-0a33-be0242d33188@suse.de>
+In-Reply-To: <7a05ac2c-00bc-b2ac-0a33-be0242d33188@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Nov 8, 2019, at 10:43 PM, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->=20
-> +config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
-> +    prompt "Enable Intel IOMMU scalable mode by default"
-> +    depends on INTEL_IOMMU
-> +    help
-> +      Selecting this option will enable the scalable mode if
-> +      hardware presents the capability. If this option is not
-> +      selected, scalable mode support could also be enabled
-> +      by passing intel_iommu=3Dsm_on to the kernel.
-> +
-
-Does it also make sense to mention which hardware presents this capability o=
-r how to check it?=
+SGkgQW5kcmVhcywNCg0KPiBIb3cgbXVjaD8gTW9yZSB0aGFuIDB4OTgwMDAwMDA/IFRoZSBSVEQx
+Mzk1IGRhdGFzaGVldCBzYXlzIHVwIHRvIDQgR0IgLQ0KPiBkb2VzIHRoYXQgbWVhbiBpdCBjb250
+aW51ZXMgaW4gYSBzZWNvbmQgcmVnaW9uIGJleW9uZCAweGZmZmZmZmZmPyBUaG9zZQ0KPiBsb2Nh
+dGlvbnMgc2hvdWxkIGJlIGV4Y2x1ZGVkIGluIHRoZSBzb2Mgbm9kZSByYW5nZXMgKHdoaWNoIHlv
+dSBzYWRseSBhcHBlYXIgdG8NCj4gaGF2ZSBkcm9wcGVkIGluIHYyKS4NCj4gDQoNClNvcnJ5IGZv
+ciBteSBtaXN1bmRlcnN0YW5kaW5nLiBUaGUgUkFNIHJlZ2lvbiBkb24ndCByZXF1aXJlIA0KdHdv
+IGNlbGxzIGZvciBtZW1vcnkgbm9kZXMsIHNvIEknbGwgZml4IGl0IGluIHYzIHBhdGNoLg0KDQpS
+ZWdhcmRzLA0KSmFtZXMNCg0KDQo=
