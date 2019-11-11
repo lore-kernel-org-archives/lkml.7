@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA98C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EE2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C323B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE6A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498008;
-	bh=joAlmJwFdGMLIvio/Y3ktCQ43gYYcMvWGpbSsVHlXnM=;
+	s=default; t=1573498016;
+	bh=vSa3OwHpZ8OUxXteH9FhHaMegSgNgzkJ4irP9Ed/s90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tlQhtRqMOBjXyc5BOpNrVqrUiEOMU7zb9mbddbY2VJ2YYZF2BS2/khvICF7IQopwO
-	 QaNjlht/hxJXzOLqjP2ApNU18DTMgBV1uQUcDwIrDUMjMzELKP+T3ue2MqpLQlYP98
-	 gkUUvel2FJxNnsKPlAyVGo3BosqnNWuB4/KKqJ+U=
+	b=NwqQNwHuvvURkVCBemP6+X22+0eQH3VkSXg+CO0KIMnQ/yQdixV/ZYgAs7sulPX3P
+	 ef5ZL7aCqJFErZEEmr6MFnkqzFFloORZqmF2Tfqx/IH580wIOnXjkf8Q47gT2/y5m+
+	 HkzTkmeXCE+4HOA3ubwJsuX4thJvkK9EXAPwcpvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbfKKSqr (ORCPT
+        id S1729178AbfKKSqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:46:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:46:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbfKKSqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:46:45 -0500
+        id S1728474AbfKKSqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:46:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4608D20674;
-        Mon, 11 Nov 2019 18:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FB821783;
+        Mon, 11 Nov 2019 18:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498003;
-        bh=joAlmJwFdGMLIvio/Y3ktCQ43gYYcMvWGpbSsVHlXnM=;
+        s=default; t=1573498011;
+        bh=vSa3OwHpZ8OUxXteH9FhHaMegSgNgzkJ4irP9Ed/s90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnCn+ff9guOI3j0ctRgSFEFjbCBYPzHwHtdM/VtqwlpGlGqdFouLvrK5XXR7Wo/cJ
-         QAboxzVBiC6XNrrYgV3rMVNOZv/Uhl8PniERwqLeN+bzXpEPl802tZXRMijI1vL0PL
-         +7YRd+B5tDuuHzjPH1SPQXqlbVN01zhmP2BczHsI=
+        b=aNP51DAJDtB+1S8XoqxGshO0mm0bJPIxHrHF8tdkEMUMfaE+kX8UnYLQ58/eUNDqj
+         Zf+Gqn8gVAzunhuq1Eya+rVu3hVZlkJFGcNTqrX1/tBICD47vTo6AxfLO7sooiF3Sk
+         dq+Rh7QnTEdVyETTCgPSkUOdHUr8lINbz8F5UHV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, fei.yang@intel.com,
-        Oliver Barta <oliver.barta@aptiv.com>,
-        Malin Jonsson <malin.jonsson@ericsson.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 118/125] pinctrl: intel: Avoid potential glitches if pin is in GPIO mode
-Date:   Mon, 11 Nov 2019 19:29:17 +0100
-Message-Id: <20191111181455.539752769@linuxfoundation.org>
+Subject: [PATCH 4.19 082/125] scsi: lpfc: Honor module parameter lpfc_use_adisc
+Date:   Mon, 11 Nov 2019 19:28:41 +0100
+Message-Id: <20191111181451.116334245@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -63,87 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Daniel Wagner <dwagner@suse.de>
 
-[ Upstream commit 29c2c6aa32405dfee4a29911a51ba133edcedb0f ]
+[ Upstream commit 0fd103ccfe6a06e40e2d9d8c91d96332cc9e1239 ]
 
-When consumer requests a pin, in order to be on the safest side,
-we switch it first to GPIO mode followed by immediate transition
-to the input state. Due to posted writes it's luckily to be a single
-I/O transaction.
+The initial lpfc_desc_set_adisc implementation in commit
+dea3101e0a5c ("lpfc: add Emulex FC driver version 8.0.28") enabled ADISC if
 
-However, if firmware or boot loader already configures the pin
-to the GPIO mode, user expects no glitches for the requested pin.
-We may check if the pin is pre-configured and leave it as is
-till the actual consumer toggles its state to avoid glitches.
+	cfg_use_adisc && RSCN_MODE && FCP_2_DEVICE
 
-Fixes: 7981c0015af2 ("pinctrl: intel: Add Intel Sunrisepoint pin controller and GPIO support")
-Depends-on: f5a26acf0162 ("pinctrl: intel: Initialize GPIO properly when used through irqchip")
-Cc: stable@vger.kernel.org
-Cc: fei.yang@intel.com
-Reported-by: Oliver Barta <oliver.barta@aptiv.com>
-Reported-by: Malin Jonsson <malin.jonsson@ericsson.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+In commit 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of
+SLI-3") this changed to
+
+	(cfg_use_adisc && RSC_MODE) || FCP_2_DEVICE
+
+and later in commit ffc954936b13 ("[SCSI] lpfc 8.3.13: FC Discovery Fixes
+and enhancements.") to
+
+	(cfg_use_adisc && RSC_MODE) || (FCP_2_DEVICE && FCP_TARGET)
+
+A customer reports that after a devloss, an ADISC failure is logged. It
+turns out the ADISC flag is set even the user explicitly set lpfc_use_adisc
+= 0.
+
+[Sat Dec 22 22:55:58 2018] lpfc 0000:82:00.0: 2:(0):0203 Devloss timeout on WWPN 50:01:43:80:12:8e:40:20 NPort x05df00 Data: x82000000 x8 xa
+[Sat Dec 22 23:08:20 2018] lpfc 0000:82:00.0: 2:(0):2755 ADISC failure DID:05DF00 Status:x9/x70000
+
+[mkp: fixed Hannes' email]
+
+Fixes: 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of SLI-3")
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+Cc: James Smart <james.smart@broadcom.com>
+Link: https://lore.kernel.org/r/20191022072112.132268-1-dwagner@suse.de
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 1ea3438ea67e9..89ff2795a8b55 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -49,6 +49,7 @@
- #define PADCFG0_GPIROUTNMI		BIT(17)
- #define PADCFG0_PMODE_SHIFT		10
- #define PADCFG0_PMODE_MASK		(0xf << PADCFG0_PMODE_SHIFT)
-+#define PADCFG0_PMODE_GPIO		0
- #define PADCFG0_GPIORXDIS		BIT(9)
- #define PADCFG0_GPIOTXDIS		BIT(8)
- #define PADCFG0_GPIORXSTATE		BIT(1)
-@@ -301,7 +302,7 @@ static void intel_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
- 	cfg1 = readl(intel_get_padcfg(pctrl, pin, PADCFG1));
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index a6619fd8238c1..ae6301c796785 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -844,9 +844,9 @@ lpfc_disc_set_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
  
- 	mode = (cfg0 & PADCFG0_PMODE_MASK) >> PADCFG0_PMODE_SHIFT;
--	if (!mode)
-+	if (mode == PADCFG0_PMODE_GPIO)
- 		seq_puts(s, "GPIO ");
- 	else
- 		seq_printf(s, "mode %d ", mode);
-@@ -422,6 +423,11 @@ static void __intel_gpio_set_direction(void __iomem *padcfg0, bool input)
- 	writel(value, padcfg0);
- }
- 
-+static int intel_gpio_get_gpio_mode(void __iomem *padcfg0)
-+{
-+	return (readl(padcfg0) & PADCFG0_PMODE_MASK) >> PADCFG0_PMODE_SHIFT;
-+}
-+
- static void intel_gpio_set_gpio_mode(void __iomem *padcfg0)
- {
- 	u32 value;
-@@ -450,7 +456,20 @@ static int intel_gpio_request_enable(struct pinctrl_dev *pctldev,
- 	}
- 
- 	padcfg0 = intel_get_padcfg(pctrl, pin, PADCFG0);
-+
-+	/*
-+	 * If pin is already configured in GPIO mode, we assume that
-+	 * firmware provides correct settings. In such case we avoid
-+	 * potential glitches on the pin. Otherwise, for the pin in
-+	 * alternative mode, consumer has to supply respective flags.
-+	 */
-+	if (intel_gpio_get_gpio_mode(padcfg0) == PADCFG0_PMODE_GPIO) {
-+		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+		return 0;
-+	}
-+
- 	intel_gpio_set_gpio_mode(padcfg0);
-+
- 	/* Disable TX buffer and enable RX (this will be input) */
- 	__intel_gpio_set_direction(padcfg0, true);
- 
+ 	if (!(vport->fc_flag & FC_PT2PT)) {
+ 		/* Check config parameter use-adisc or FCP-2 */
+-		if ((vport->cfg_use_adisc && (vport->fc_flag & FC_RSCN_MODE)) ||
++		if (vport->cfg_use_adisc && ((vport->fc_flag & FC_RSCN_MODE) ||
+ 		    ((ndlp->nlp_fcp_info & NLP_FCP_2_DEVICE) &&
+-		     (ndlp->nlp_type & NLP_FCP_TARGET))) {
++		     (ndlp->nlp_type & NLP_FCP_TARGET)))) {
+ 			spin_lock_irq(shost->host_lock);
+ 			ndlp->nlp_flag |= NLP_NPR_ADISC;
+ 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
