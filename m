@@ -2,53 +2,56 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFD6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75D5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB8721783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820C9204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499354;
-	bh=EQQrDM4SDoY+LFlYDSrXnqCfNeEYCk61TU+DLzuUP48=;
+	s=default; t=1573499364;
+	bh=PKvJWswNVsV4B/70R/VWDrhEscmzr0kHbjUdJ4NGXTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fFlkciDbDLt34Vg03MoZvnrsN5Dfj/aOXeESaycEME3GbJ9TmeXEKGaQTjeR0Hczr
-	 eIi9Ayt2pzM9n5xDBrwGe/VLNwP7J2Dknyq4mNThzDgqDJJ4kZlq2qQlngo2k7Ys3D
-	 kzTCAZ4LncF3m/ByPuZxCX3p0Y0CNEI3zTIRs1Sw=
+	b=IH0DZbNcfS+VgdkOSfB2zw77KmNuuZcDx2MI5tRd6S/s0AV1GKWA9ew6lo7ff0PJU
+	 RVjswRpSyWB3wQtFAkbsrtQ/oEIW6rjbNHQb4on+AOFK07SnEi85wS9euxRgz+pVc5
+	 /AycixH3hfAvDgxiOgcD85C2MM+HhjTdDBnQaBko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbfKKSe0 (ORCPT
+        id S1727597AbfKKTJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:34:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52036 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:09:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728313AbfKKSeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:22 -0500
+        id S1728305AbfKKSeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12BA421655;
-        Mon, 11 Nov 2019 18:34:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48E872190F;
+        Mon, 11 Nov 2019 18:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497261;
-        bh=EQQrDM4SDoY+LFlYDSrXnqCfNeEYCk61TU+DLzuUP48=;
+        s=default; t=1573497253;
+        bh=PKvJWswNVsV4B/70R/VWDrhEscmzr0kHbjUdJ4NGXTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gb+pyIMf0xQZohONvRY6+Q1HiDF7wInyS7vl5MMbM4N1KFqD30C/V6Y9tJGdkZ1iq
-         HefA4qKx5YVSrUDpiTeb+3ztdDP6ipYABUzm5liGnAKkk7rO67IHfGjNwoG0CUXooP
-         rcivW2Sd6tywkBb7+tHJgS2+FDnZVCv5YDI0u2uQ=
+        b=sdPaa7/8qpH+a5ZM6HpHJ4dQj7/ZtrH8Py4qG1uGzZO6Xebi3hqu6gmpGRT7ERv+A
+         /MPiCGc48fHSG1xxTC3fxWr/IbnkKeeHRgzWK/W1qfbKL04OgWNnefm3vO+sX1XIPy
+         xlNA7Sj+Q8FNZ1Au173R8LT0KWNaF48rlInQDzJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 59/65] e1000: fix memory leaks
-Date:   Mon, 11 Nov 2019 19:28:59 +0100
-Message-Id: <20191111181355.181472836@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.9 16/65] perf tools: Fix time sorting
+Date:   Mon, 11 Nov 2019 19:28:16 +0100
+Message-Id: <20191111181344.035381042@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -61,61 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 8472ba62154058b64ebb83d5f57259a352d28697 ]
+commit 722ddfde366fd46205456a9c5ff9b3359dc9a75e upstream.
 
-In e1000_set_ringparam(), 'tx_old' and 'rx_old' are not deallocated if
-e1000_up() fails, leading to memory leaks. Refactor the code to fix this
-issue.
+The final sort might get confused when the comparison is done over
+bigger numbers than int like for -s time.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Check the following report for longer workloads:
+
+  $ perf report -s time -F time,overhead --stdio
+
+Fix hist_entry__sort() to properly return int64_t and not possible cut
+int.
+
+Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org # v3.16+
+Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/e1000/e1000_ethtool.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/util/hist.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
-index 2a81f6d721404..8936f19e9325f 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
-@@ -628,6 +628,7 @@ static int e1000_set_ringparam(struct net_device *netdev,
- 	for (i = 0; i < adapter->num_rx_queues; i++)
- 		rxdr[i].count = rxdr->count;
- 
-+	err = 0;
- 	if (netif_running(adapter->netdev)) {
- 		/* Try to get new resources before deleting old */
- 		err = e1000_setup_all_rx_resources(adapter);
-@@ -648,14 +649,13 @@ static int e1000_set_ringparam(struct net_device *netdev,
- 		adapter->rx_ring = rxdr;
- 		adapter->tx_ring = txdr;
- 		err = e1000_up(adapter);
--		if (err)
--			goto err_setup;
- 	}
- 	kfree(tx_old);
- 	kfree(rx_old);
- 
- 	clear_bit(__E1000_RESETTING, &adapter->flags);
--	return 0;
-+	return err;
-+
- err_setup_tx:
- 	e1000_free_all_rx_resources(adapter);
- err_setup_rx:
-@@ -667,7 +667,6 @@ err_alloc_rx:
- err_alloc_tx:
- 	if (netif_running(adapter->netdev))
- 		e1000_up(adapter);
--err_setup:
- 	clear_bit(__E1000_RESETTING, &adapter->flags);
- 	return err;
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1485,7 +1485,7 @@ int hists__collapse_resort(struct hists
+ 	return 0;
  }
--- 
-2.20.1
-
+ 
+-static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
++static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+ {
+ 	struct hists *hists = a->hists;
+ 	struct perf_hpp_fmt *fmt;
 
 
