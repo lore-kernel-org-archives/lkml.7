@@ -7,72 +7,72 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DB8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D56C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B7F20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C97C20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y8OzICbs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DAu2HnwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKKIlQ (ORCPT
+        id S1726973AbfKKIlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:41:16 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36755 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKKIlQ (ORCPT
+        Mon, 11 Nov 2019 03:41:24 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53982 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfKKIlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:41:16 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r10so13632823wrx.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:41:13 -0800 (PST)
+        Mon, 11 Nov 2019 03:41:23 -0500
+Received: by mail-wm1-f67.google.com with SMTP id u18so4683667wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:41:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=KCmc19tl0wgB8bUYraCEnB0e8NL+pKss8TeCjXS/jF0=;
-        b=Y8OzICbse73309NMJ0VjUGZCXN/87gY7N1Zjw2jaQerfgMOfFaswH3mL1xiDp0WTLp
-         sasui6q5LZqGo8WTiMj6LyfPRc3+L9vnG5nv8+9rqkCRH4p8yFfP5rtEWaxQDpWmUxX8
-         ZaJsidNBEvNG7iO9kBIKut8qTWbO4rxJIH9AmgWBE70l/GX3fWi6P1c3kL+AxYfBX5yh
-         y7Mhd2s2TxaTdn9NTsN2ZA+u1J6zkt/NRRkhHg6N158vRohMwuGLm+PeWshYi6ZSFfe7
-         Fu6/wgsMic4pNetCtv3s6g1qLg5q2tugKW0P7u1SNTxwdY6SvY8LC2G1T97WleOmeC34
-         zFkw==
+        bh=D9ANwiExHt1yTMKRwFIcJkkf6Wu2KVUdWv6iFNiEGAA=;
+        b=DAu2HnwLPOnhy8v0K0GB+6pFXgIA76ujbDLaAKDLnUy+UOcn0kdZAfgLyeJV7aBYOO
+         ZtP7Lub1GggntYGQZhKlXdsBVMVyKIw/q6ucqxcxHpvovYVVWWXmXSkCFkl3FVORINxZ
+         6JwPTGmn4tDFavjLKE8+U2SkwufzzlQUpoDb5aEL3QgxwvSazJ+bOrVeMezRQKaxX0be
+         zsLkAzBnIJHNUVl9a+x+Wc967jUi//D0gxSKGynPgkkRdDXMjV4VzNvDfr1suGIYSsPU
+         qQyEWSXCYFiaravcRo/tvNMGgmp/oHldr0WbE8vsSW3bTWgPB6d2JhJ13Wzcml4gvpEC
+         G4bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=KCmc19tl0wgB8bUYraCEnB0e8NL+pKss8TeCjXS/jF0=;
-        b=uXLYLdGzZfFbmaXKXunI3foDdUsMUeeIOQOLKN4BQ1OCXEHBbN/m64MC59Fd6vGm58
-         rH7Q5wDX4UZXoZ67PoaO3X7MGHq3i90XCyuJhG+3oHdAFHhVDIwzjozkn4+VEEOCd+wh
-         PgtGX7LMVtplcr8Hug+llogwtF5Xt8TYVs4+o+2+pNWSADzXcy7bGhPHo3iKhJuFPgSV
-         bO4W4/du+oACsWq1BZ/cN2cwz1iB90B+Ra6mbo3Rt0cQ2SF8zJs1S4ZU/iSHG1UVKIRU
-         02/DB5kacugtLXolbWKjq7AZlLINfIFhHsgcqBbBD3p8EtMgJMdCxzqltkEssJKIVocV
-         Keew==
-X-Gm-Message-State: APjAAAXWBcg5L7BxJkbcvN24kjNDW+W9tnVs0c8O3mMItyuEBvkV2W8c
-        SE1YqnqQzg6kJVYkbWvhXU3+Rw==
-X-Google-Smtp-Source: APXvYqwovfXUYQZzwcYemWjNFlXPIj6YWwZTBOIPv8OqmNdKOB1tnj0rQhHNx/arAXytBG2Eynagzw==
-X-Received: by 2002:adf:a553:: with SMTP id j19mr15552326wrb.184.1573461672797;
-        Mon, 11 Nov 2019 00:41:12 -0800 (PST)
+        bh=D9ANwiExHt1yTMKRwFIcJkkf6Wu2KVUdWv6iFNiEGAA=;
+        b=uJ2vFqHZU9DXRlw0Gj9TKbN3w/5Mw4BLAjNDX3JTmX2ZME4seqK34Wh5bBuPkv7g0a
+         vtGvOjsvb5eZwbB328CBnzYwxdZ3Mvg5qp7vaCvrORITM2Fbxsl9D21x3Xwk8VpYeym9
+         hT2NVGcyTJUnXYrKf8qhhqhpgg3icinRJDyjg5wxKXMMZNjouUAZgXlc+Z5wHlGwL1H7
+         DEQe8FAnykPwfuF8910r+80/MBrF0kUd7O4FTJ/0qw/3ZC6QU4qNoLj15vrxkOwgR8qB
+         LCPWPvBm9pnYmhr7UwaN7EcY9ByRYsI/v6puy21UkQiGjlWQWyyfH60Xxde14TfyaD8M
+         MFsg==
+X-Gm-Message-State: APjAAAWnDlg+y8tadAGilqsIhcTL9mEYAmPvmDVteHcbQKDA/u0WZo4i
+        ZocHFXV0Ujh1uBig5afbAbIVEw==
+X-Google-Smtp-Source: APXvYqxkSb+iisYPp5FReOjbmZuJmU+bKJxivtEunqIqofhaA6gynDXj0PAas1OyQbuYC5ErQnOgzQ==
+X-Received: by 2002:a05:600c:3cc:: with SMTP id z12mr20946217wmd.151.1573461682052;
+        Mon, 11 Nov 2019 00:41:22 -0800 (PST)
 Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id x7sm39693490wrg.63.2019.11.11.00.41.12
+        by smtp.gmail.com with ESMTPSA id b8sm14298485wrt.39.2019.11.11.00.41.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 00:41:12 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:41:05 +0000
+        Mon, 11 Nov 2019 00:41:21 -0800 (PST)
+Date:   Mon, 11 Nov 2019 08:41:14 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Tuowen Zhao <ztuowen@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
         mika.westerberg@linux.intel.com, acelan.kao@canonical.com,
         mcgrof@kernel.org, davem@davemloft.net
-Subject: Re: [PATCH v5 2/4] lib: devres: add a helper function for ioremap_uc
-Message-ID: <20191111084105.GI18902@dell>
+Subject: Re: [PATCH v5 3/4] mfd: intel-lpss: use devm_ioremap_uc for MMIO
+Message-ID: <20191111084114.GJ18902@dell>
 References: <20191016210629.1005086-1-ztuowen@gmail.com>
- <20191016210629.1005086-3-ztuowen@gmail.com>
+ <20191016210629.1005086-4-ztuowen@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191016210629.1005086-3-ztuowen@gmail.com>
+In-Reply-To: <20191016210629.1005086-4-ztuowen@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,19 +81,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, 16 Oct 2019, Tuowen Zhao wrote:
 
-> Implement a resource managed strongly uncachable ioremap function.
+> Some BIOS erroneously specifies write-combining BAR for intel-lpss-pci
+> in MTRR. This will cause the system to hang during boot. If possible,
+> this bug could be corrected with a firmware update.
 > 
+> This patch use devm_ioremap_uc to overwrite/ignore the MTRR settings
+> by forcing the use of strongly uncachable pages for intel-lpss.
+> 
+> The BIOS bug is present on Dell XPS 13 7390 2-in-1:
+> 
+> [    0.001734]   5 base 4000000000 mask 6000000000 write-combining
+> 
+> 4000000000-7fffffffff : PCI Bus 0000:00
+>   4000000000-400fffffff : 0000:00:02.0 (i915)
+>   4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
 > Cc: <stable@vger.kernel.org>
 > Tested-by: AceLan Kao <acelan.kao@canonical.com>
 > Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
 > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  include/linux/io.h |  2 ++
->  lib/devres.c       | 19 +++++++++++++++++++
->  2 files changed, 21 insertions(+)
+>  drivers/mfd/intel-lpss.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Applied, thanks.
 
