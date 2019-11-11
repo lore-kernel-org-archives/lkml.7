@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E769C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F4DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6B121E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75ABF21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfKKUWD (ORCPT
+        id S1727857AbfKKUWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:22:03 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:34829 "EHLO
+        Mon, 11 Nov 2019 15:22:19 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:42475 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfKKUWA (ORCPT
+        with ESMTP id S1727693AbfKKUWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:22:00 -0500
+        Mon, 11 Nov 2019 15:22:02 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mw9Hm-1heMNx137E-00s7xT; Mon, 11 Nov 2019 21:16:49 +0100
+ 1N8XLj-1hqEL53gMD-014Vte; Mon, 11 Nov 2019 21:16:51 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -31,85 +31,58 @@ To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 09/19] nfsd: print 64-bit timestamps in client_info_show
-Date:   Mon, 11 Nov 2019 21:16:29 +0100
-Message-Id: <20191111201639.2240623-10-arnd@arndb.de>
+Subject: [PATCH 14/19] nfsd: use time64_t in nfsd_proc_setattr() check
+Date:   Mon, 11 Nov 2019 21:16:34 +0100
+Message-Id: <20191111201639.2240623-15-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
 References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:seMJ42v1081bEPvwevwNuzbDoR7i4rBfE32rXv/gDtp4js7XnsP
- 3mzBJKVOUnKQzd/TGe/g65oEGys9jaUxG0wIzDBcSa+JTTscwYceqlTvZUCW+8c4PrwGNvV
- CdeUvJniXZuKdka9Ghw1sJqdwNPM9MM6rEo3zek+pKcuyxqshdiOXcVNYhowEWAWp7ReExJ
- BJBq5/czH5wa1umRKjtQA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K1X4+M5ldbg=:eF0eHB+aTr06giF3z8cGgN
- 84/NB54bm3WbUg9w+tbttFcqp+6u0p859BIRQYodo/PbBtjm0ALNVgTft7nIEcmQnSpVvl2Oa
- urm78C7A5dVRl2ykLyxoFaKSwmG7vYFiHeioxVIFwZpduF830CAC9ddzCzClpLCP9H+b7KUoN
- 9BR3HTN2ddA5hPwcuzU1fTNgU0zI0RNtEP+VKaplIrh6o6PC1A8qm0qIpQqoM8gj56/qz4zeW
- DhhG0fiSpc47p4ca3LOjRI85/OjvA+VuRcR+4IxAHzxo90TuTG/QpGhgi80uhQDOaU8GChksw
- J1+KbaIQOw4JbA6GuhKtwJEcD6Xve9dcUcPyBfhvTPNwuxyay0Oyd+fS7K82oBhzR0J93uX9W
- H3ZjGuFA6VsnCPOeHRfCQ2JEou/IMvZeQUWeIP1VKASfYm/pylNTzxZwv2IobYj7jx1R33v0C
- wApZ3sF4ub3LhOD9i1LNq6RzdUwWryOkXLUFKUgL6zflcBNLTq4kkHcRUfZU+qQm1JyeJ/Lh5
- Ouf0LvGvtZh0xwCSrBcMwPeXaBS2uJGMjk6H68HiC+nQrRVP51AhOj8fY/EIwcwhV1HZIfnhF
- J6pz3Eb9StxeSOYUgKHBHuSmi4wjFkI5sTqLe5m0dAKrsrlgkGcffD0LLXkZs4+ZRxWWf3ZgW
- eY+yZ0K8rGTFp4sMdHxns6YG1G+cYk+sQR37/sbotvq6Y9JfbA2ZOwQ7p9BBIwnYjtemIlmbD
- 9FfP2pk2Ml+HEY4IUzGGE9izUggir7KspodBvNZWol1V1Z8Iwo+aai9TGojjaCIZxvaFlxrUp
- /m7adYvW9mQS8xbITdpN+cH38UFRMQK2O644oT4upRfXcRM8r4FR5DA4uJK6Nh5EwekCwg22J
- zSUwzSRZPyzeVhMzJdQQ==
+X-Provags-ID: V03:K1:bZJ6dABjb/h5bnFGHvp5XdGnpOQ48DZK/y9xvfcHGKpTQoH3/bT
+ 1UeC7EXkGuZ29jsdi41tFt6HfOuEKjy2GfgdYIX/v+IXZR1U1EcEqzS/o8ilLDIy+b9S6kr
+ GcfvrHS9+6QfIMVctOIbx3+o1NRJAZJYtvryMigWubxt8VxFp91emStVv1L6jsg8J2tG1am
+ HXOJqCfyLJUodT6uk5vKw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dbRhCZ12aTc=:oN8DIUR5xf8YebZvljt4E8
+ jPI/c8keSlfSxzvYD/z5yoA72BNX/qGRs04Ak8r5YoeQbEnFdEyxmsWWOFzmMbEhO/5xY+twG
+ H/iQpwPjy9TOqbZ2SDar1vulM1B0gwjZ+E/endUeaCpK6XwffIbE2qOcgrGr/uCVWjtlHZutV
+ xMlPe4j5UUk3iCbAbFRtBovVfpWc+7x75nnMEygcuZy+DlVpkfeOLcYGKhQW6kjZgGPVu8jag
+ 9E5OXqI9x7LAzZwMSWnqAI/Exo3vycLihrEZ7wSLEAayyQf8EtnV9tY8w+NIszevrwD10RVOG
+ 1InLkIUpLSYaVFy0tkT7sT/kIQ5mcdnmF23o+tlySVQEbfrKeJYcSqvtJAR0dfSpMZEDA3A04
+ ZNgH01oG2db9GXQ7G3XIlyFZmiBh9Pw/XxlA3BVIthiktvBr7v3Pr5aFfmz9iKPtTZKR6paVW
+ LWl+13SSBK37GAXxxt9UVwvGyE+eT0luaWfAHlwoJgf12+98EYTll+eBWZtKcxGouH6UsmArP
+ mBFd4I7/fUqeaIr88b+aOTG00jWnVhw4XqksfWo3XoDSMnpqyfF2DSRikjv64nC6LlXllFOiB
+ WFPKOzj6XOhVWerSKTVmbXc95MRtN/IyyaLF+2wG3TG57AFtj6b5ZGoJb2d79DY6yqQfQseJJ
+ BZQeezjtsxE9vCZZmZbZy9rRjDqouKzKzquMSPfvyiNkoBGQ/BRAzHiixkArQ04qG7yCesSfP
+ kqAS4UyDLfdekrxB+Zo61Gz+aoTQmpDLP1u9yqJQQYjCf00YRR39Ie+XNLuN9miN5KGcfqQ37
+ Kr+Fm0MMLspmle0KiTpkVRRQe5pYtLPa981QTn50S/BCs5rI5G9hnugAQivEv6Uam6wIY9LKR
+ Z/Zx6iJNL0/SMqiwPm3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nii_time field gets truncated to 'time_t' on 32-bit architectures
-before printing.
-
-Remove the use of 'struct timespec' to product the correct output
-beyond 2038.
+Change to time64_t and ktime_get_real_seconds() to make the
+logic work correctly on 32-bit architectures beyond 2038.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfs4state.c | 5 ++---
- fs/nfsd/state.h     | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ fs/nfsd/nfsproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a20795b5053c..2333924d7c6b 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2292,7 +2292,7 @@ static int client_info_show(struct seq_file *m, void *v)
- 					clp->cl_nii_domain.len);
- 		seq_printf(m, "\nImplementation name: ");
- 		seq_quote_mem(m, clp->cl_nii_name.data, clp->cl_nii_name.len);
--		seq_printf(m, "\nImplementation time: [%ld, %ld]\n",
-+		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
- 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
- 	}
- 	drop_client(clp);
-@@ -2946,8 +2946,7 @@ static __be32 copy_impl_id(struct nfs4_client *clp,
- 	xdr_netobj_dup(&clp->cl_nii_name, &exid->nii_name, GFP_KERNEL);
- 	if (!clp->cl_nii_name.data)
- 		return nfserr_jukebox;
--	clp->cl_nii_time.tv_sec = exid->nii_time.tv_sec;
--	clp->cl_nii_time.tv_nsec = exid->nii_time.tv_nsec;
-+	clp->cl_nii_time = exid->nii_time;
- 	return 0;
- }
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index aa013b736073..b25c90be29fb 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -94,7 +94,7 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
+ 		 * Solaris, at least, doesn't seem to care what the time
+ 		 * request is.  We require it be within 30 minutes of now.
+ 		 */
+-		time_t delta = iap->ia_atime.tv_sec - get_seconds();
++		time64_t delta = iap->ia_atime.tv_sec - ktime_get_real_seconds();
  
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 46f56afb6cb8..ce32ba445343 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -320,7 +320,7 @@ struct nfs4_client {
- 	/* NFSv4.1 client implementation id: */
- 	struct xdr_netobj	cl_nii_domain;
- 	struct xdr_netobj	cl_nii_name;
--	struct timespec		cl_nii_time;
-+	struct timespec64	cl_nii_time;
- 
- 	/* for v4.0 and v4.1 callbacks: */
- 	struct nfs4_cb_conn	cl_cb_conn;
+ 		nfserr = fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP);
+ 		if (nfserr)
 -- 
 2.20.0
 
