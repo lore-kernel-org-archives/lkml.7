@@ -2,153 +2,101 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB07C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDA2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04EFA2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="UysnqbJj"
+	by mail.kernel.org (Postfix) with ESMTP id B8ADE2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKKWPb (ORCPT
+        id S1727247AbfKKWPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 11 Nov 2019 17:15:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55802 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726939AbfKKWPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Nov 2019 17:15:31 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38250 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfKKWPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:15:31 -0500
-Received: by mail-lf1-f68.google.com with SMTP id q28so11123894lfa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 14:15:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JRXrodVHYhiGAfwYVYOvpqNqKsOaJKtvlzrom6mvWYM=;
-        b=UysnqbJjbZklK2plaqyIEe+XW5WofM07UNZ/iralSzFfBCjam7qpOU2k0pD/PSeHMh
-         6a/D31RBqtZB9pgmEoumiBOjb8orhAaDSK7pXCUApMgFV0LdjwZbELZPs+cxaiPfonUR
-         2pdP//ukce48f3YrL24RkhoCF99krNL+g2GKY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JRXrodVHYhiGAfwYVYOvpqNqKsOaJKtvlzrom6mvWYM=;
-        b=GToS+4PIiO3u2pAjsNBO2Q5TxgOh/X1AlTmnmBYISaUTaYxp7lJ+ku+zh5fKvdy5CB
-         BTSclsEC6+vNQhgxFvpG3+LDbYDR+Ek0jN6OmB2tRGmaDoAe1gtEkFlU2oMpDaGq7SeN
-         70JSP0u8BAziZA9dHo4M+TNMaqXL2PTrXKb9PDImbwZqcu0vM+zTytnN7tFuHHfgu6wc
-         4udTFwFyX/ZhFXO1AZ0KNTANeeylWp2qGzs1+REbSWPSTumcUGGA+BV1aiMhQulMz6Fy
-         YccuqBYrZcA0P3YS52ciDhS3+ur4VwUEhTGCOVCHmpHpLrZ/XhXZUNhP3knqu4HToe56
-         E9YQ==
-X-Gm-Message-State: APjAAAV562LCSQwFy3jWMS1jZGm3vthYlAtD3479u9BN1Qhto/gg8eUi
-        k724jT9L/ooNh3mZiMfcJD0lBBSgBdc=
-X-Google-Smtp-Source: APXvYqxkHnYkKqHXF33wJikEKSAcRL+wwJC3Liou9mSqBVHPdLOM/v67G69jS60uz532oU/4kZLUqQ==
-X-Received: by 2002:ac2:4a8a:: with SMTP id l10mr16950312lfp.185.1573510527947;
-        Mon, 11 Nov 2019 14:15:27 -0800 (PST)
-Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id r19sm7432742lfi.13.2019.11.11.14.15.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 14:15:27 -0800 (PST)
-Subject: Re: [PATCH net-next 2/2] bridge: implement get_link_ksettings ethtool
- method
-To:     Matthias Schiffer <mschiffer@universe-factory.net>,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net,
-        roopa@cumulusnetworks.com
-References: <cover.1573321597.git.mschiffer@universe-factory.net>
- <8e414e98928aba7f11ea997498fb18af05434f5f.1573321597.git.mschiffer@universe-factory.net>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <5da07a98-bae3-2d67-d60b-2e58be9d8377@cumulusnetworks.com>
-Date:   Tue, 12 Nov 2019 00:15:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0439DAC52;
+        Mon, 11 Nov 2019 22:15:29 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-amlogic@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] soc: amlogic: socinfo: Avoid soc_device_to_device()
+Date:   Mon, 11 Nov 2019 23:15:21 +0100
+Message-Id: <20191111221521.1587-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-In-Reply-To: <8e414e98928aba7f11ea997498fb18af05434f5f.1573321597.git.mschiffer@universe-factory.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/11/2019 19:54, Matthias Schiffer wrote:
-> We return the maximum speed of all active ports. This matches how the link
-> speed would give an upper limit for traffic to/from any single peer if the
-> bridge were replaced with a hardware switch.
-> 
-> Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
-> ---
->  net/bridge/br_device.c | 37 +++++++++++++++++++++++++++++++++++--
->  1 file changed, 35 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
-> index e804a3016902..e8a2d0c13592 100644
-> --- a/net/bridge/br_device.c
-> +++ b/net/bridge/br_device.c
-> @@ -263,6 +263,38 @@ static void br_getinfo(struct net_device *dev, struct ethtool_drvinfo *info)
->  	strlcpy(info->bus_info, "N/A", sizeof(info->bus_info));
->  }
->  
-> +static int br_get_link_ksettings(struct net_device *dev,
-> +				 struct ethtool_link_ksettings *cmd)
-> +{
-> +	struct net_bridge *br = netdev_priv(dev);
-> +	struct net_bridge_port *p;
-> +
-> +	cmd->base.duplex = DUPLEX_UNKNOWN;
-> +	cmd->base.port = PORT_OTHER;
-> +	cmd->base.speed = SPEED_UNKNOWN;
-> +
-> +	list_for_each_entry(p, &br->port_list, list) {
-> +		struct ethtool_link_ksettings ecmd;
-> +		struct net_device *pdev = p->dev;
-> +
-> +		if (!netif_running(pdev) || !netif_oper_up(pdev))
-> +			continue;
-> +
-> +		if (__ethtool_get_link_ksettings(pdev, &ecmd))
-> +			continue;
-> +
-> +		if (ecmd.base.speed == (__u32)SPEED_UNKNOWN)
-> +			continue;
-> +
-> +		if (cmd->base.speed == (__u32)SPEED_UNKNOWN ||
-> +		    cmd->base.speed < ecmd.base.speed) {
-> +			cmd->base.speed = ecmd.base.speed;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static netdev_features_t br_fix_features(struct net_device *dev,
->  	netdev_features_t features)
->  {
-> @@ -365,8 +397,9 @@ static int br_del_slave(struct net_device *dev, struct net_device *slave_dev)
->  }
->  
->  static const struct ethtool_ops br_ethtool_ops = {
-> -	.get_drvinfo    = br_getinfo,
-> -	.get_link	= ethtool_op_get_link,
-> +	.get_drvinfo		 = br_getinfo,
-> +	.get_link		 = ethtool_op_get_link,
-> +	.get_link_ksettings	 = br_get_link_ksettings,
->  };
->  
->  static const struct net_device_ops br_netdev_ops = {
-> 
+The helper soc_device_to_device() is considered deprecated.
+For a driver __init function the predictable prefix text
+"soc soc0:" from dev_info() does not add real value, so use
+pr_info() to emit the info text without such prefix.
 
-Code-wise this is ok, but it could cause potential issues because devices will suddenly
-have speed (without duplex), and macvlan/8021q are examples which use the lowerdev's
-get_link_ksettings. I searched for potential problems with some user-space software
-but couldn't find any, so I hope it will be fine. :)
-Let's see where this goes.
+While at it, normalize the casing of "detected" for GX.
 
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ drivers/soc/amlogic/meson-gx-socinfo.c | 4 +---
+ drivers/soc/amlogic/meson-mx-socinfo.c | 4 ++--
+ 2 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 01fc0d20a70d..105b819bbd5f 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -129,7 +129,6 @@ static int __init meson_gx_socinfo_init(void)
+ 	struct device_node *np;
+ 	struct regmap *regmap;
+ 	unsigned int socinfo;
+-	struct device *dev;
+ 	int ret;
+ 
+ 	/* look up for chipid node */
+@@ -192,9 +191,8 @@ static int __init meson_gx_socinfo_init(void)
+ 		kfree(soc_dev_attr);
+ 		return PTR_ERR(soc_dev);
+ 	}
+-	dev = soc_device_to_device(soc_dev);
+ 
+-	dev_info(dev, "Amlogic Meson %s Revision %x:%x (%x:%x) Detected\n",
++	pr_info("Amlogic Meson %s Revision %x:%x (%x:%x) detected\n",
+ 			soc_dev_attr->soc_id,
+ 			socinfo_to_major(socinfo),
+ 			socinfo_to_minor(socinfo),
+diff --git a/drivers/soc/amlogic/meson-mx-socinfo.c b/drivers/soc/amlogic/meson-mx-socinfo.c
+index 78f0f1aeca57..7db2c94a7130 100644
+--- a/drivers/soc/amlogic/meson-mx-socinfo.c
++++ b/drivers/soc/amlogic/meson-mx-socinfo.c
+@@ -167,8 +167,8 @@ static int __init meson_mx_socinfo_init(void)
+ 		return PTR_ERR(soc_dev);
+ 	}
+ 
+-	dev_info(soc_device_to_device(soc_dev), "Amlogic %s %s detected\n",
+-		 soc_dev_attr->soc_id, soc_dev_attr->revision);
++	pr_info("Amlogic %s %s detected\n",
++		soc_dev_attr->soc_id, soc_dev_attr->revision);
+ 
+ 	return 0;
+ }
+-- 
+2.16.4
 
