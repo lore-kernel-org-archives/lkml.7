@@ -2,184 +2,372 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3D5C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA5EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3556521783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:00:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gds7b1wi"
+	by mail.kernel.org (Postfix) with ESMTP id 1BDE121783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfKKLAG (ORCPT
+        id S1726952AbfKKLBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:00:06 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43894 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKKLAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:00:06 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so14066260wra.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 03:00:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=TYoTnmxtieLkll/Leqoa1DJhCx8L4akQBrFiPa7ShkQ=;
-        b=gds7b1wir0aQ7njohNYUaOjiRjXjdxQt2R2dXFLUyaIaBiii6c/tJCNwHkHV0fZM6t
-         ni5mB5W0ZdShI/TVclwG5A2ovUP/c1HggiQgPUe+NuHK43DANgc4//J4wJyIxk8NNVY9
-         NT7V15COgO6pKoiIFGeu5NQp2rA/K31k9AW5X8frG/X3U8a0+8DJV+t+0SSab8wmX4hh
-         vh7Gvx7UqindMzLD2bNHQ3AQf9mxb9rKmcA9prgFSY892MLE/hsVDXvqPBxn2ncc7SaB
-         iafgnCndvQIi4kFryeXd3NErkTWaSA6uX69HDF4nDu4DWrLma+Cu1zkk4J/p6ZvUT57w
-         RMCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=TYoTnmxtieLkll/Leqoa1DJhCx8L4akQBrFiPa7ShkQ=;
-        b=Cip+kijTKkUecsIACgR5vynOzqYh0wn8Jiw0DL0q05iU4Ly8HSHkFjKlFONY2Qub15
-         yq1kZtY+kfpW3We1RHbXjahnikPK6MeWj1u862V8iSCRGrKyYNjkkY8jfDwEtJ1a9bvx
-         cPXBkCfN1jKV2dn6Jm3OVThJ2TJEo36t4x1Rj9R9XXFlNzImtKTl6cIsmtiTMFDNBh8h
-         M2gCZahtfokP8p2jY//EEwKv4YHeAVuKtKHeYnHgKKx9393XR7aipdhQCm/9js5Zkt+3
-         KcWzowANK3Ixd1TtoTuMoRFNH99CQeU9Is+iIuPTJ4yuh1DTsnEyAyWkKqMCNNvz/rOX
-         mQVQ==
-X-Gm-Message-State: APjAAAUH+6tUtlN/6ofR0Pdd0qdmmQS8LW9zgeRNFpv8aysigB6DxdiL
-        7xrVROhGH4OcklhwdATUMjCOiA==
-X-Google-Smtp-Source: APXvYqw1xrTXnJrhBxh8P/A8uStccEhy7+/qu3o4uWIkYoYjhVhXXQjMB6DXFsKksquWgg9sZYWfdQ==
-X-Received: by 2002:a05:6000:12c4:: with SMTP id l4mr9236312wrx.110.1573470003617;
-        Mon, 11 Nov 2019 03:00:03 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id t5sm14215954wro.76.2019.11.11.03.00.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 03:00:03 -0800 (PST)
-Date:   Mon, 11 Nov 2019 10:59:55 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [RFC PATCH v3 05/15] mfd: input: bd71828: Add power-key support
-Message-ID: <20191111105955.GG3218@dell>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 11 Nov 2019 06:01:07 -0500
+Received: from relay.sw.ru ([185.231.240.75]:35558 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfKKLBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:01:07 -0500
+Received: from dhcp-172-16-24-163.sw.ru ([172.16.24.163] helo=snorch.sw.ru)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ptikhomirov@virtuozzo.com>)
+        id 1iU7Qu-00028X-SV; Mon, 11 Nov 2019 14:00:33 +0300
+From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        Andrei Vagin <avagin@gmail.com>, <devel@openvz.org>
+Subject: [PATCH] fs: add new O_MNT flag for opening mount root from mountpoint fd
+Date:   Mon, 11 Nov 2019 14:00:29 +0300
+Message-Id: <20191111110029.16483-1-ptikhomirov@virtuozzo.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 01 Nov 2019, Matti Vaittinen wrote:
+Imagine that we have an open fd on the directory (or file) - dfd, and a
+new mount - mnt is created with these directory as a mountpoint. Before
+this patch we had no way to access the contents of mnt through these
+dfd.
 
-> Use gpio_keys to send power input-event to user-space when power
-> button (short) press is detected.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> Changes from v2 - No changes
-> 
->  drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-> index b7de79e1fcdb..f77ba1ec3e99 100644
-> --- a/drivers/mfd/rohm-bd71828.c
-> +++ b/drivers/mfd/rohm-bd71828.c
-> @@ -4,7 +4,9 @@
->  //
->  // ROHM BD71828 PMIC driver
->  
-> +#include <linux/gpio_keys.h>
->  #include <linux/i2c.h>
-> +#include <linux/input.h>
->  #include <linux/interrupt.h>
->  #include <linux/ioport.h>
->  #include <linux/irq.h>
-> @@ -15,6 +17,18 @@
->  #include <linux/regmap.h>
->  #include <linux/types.h>
->  
-> +static struct gpio_keys_button button = {
-> +	.code = KEY_POWER,
-> +	.gpio = -1,
-> +	.type = EV_KEY,
-> +};
-> +
-> +static struct gpio_keys_platform_data bd71828_powerkey_data = {
-> +	.buttons = &button,
-> +	.nbuttons = 1,
-> +	.name = "bd71828-pwrkey",
-> +};
-> +
->  static const struct resource rtc_irqs[] = {
->  	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
->  	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
-> @@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
->  		.name = "bd70528-rtc",
->  		.resources = rtc_irqs,
->  		.num_resources = ARRAY_SIZE(rtc_irqs),
-> +	}, {
-> +		.name = "gpio-keys",
-> +		.platform_data = &bd71828_powerkey_data,
-> +		.pdata_size = sizeof(bd71828_powerkey_data),
->  	},
->  };
->  
-> @@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
->  		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
->  		return ret;
->  	}
-> +
+You would say - who cares, we can just open it by path. But actually it
+is not always possible: one can make a (I call it) "propagation trap"
+when mnt's propagation overmounts mnt and makes it unresolvable with
+simple open just after creation.
 
-This should be fixed in the last patch.
+You can say - just pre-open the dfd's parent directory - pdfd like you
+did with dfd, and you will have access to mnt, but what is not generic,
+e.g. if mount point is '/', it can't have pdfd. And also this pdfd
+pre-open does not work in case you want to create a mount under some
+other mount (these can happen through propagation) there is no way to
+access the root of such a mount currently after it was created. (*)
 
->  	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
->  		bd71828_irq_chip.num_irqs);
->  
-> +	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
-> +
+To be extra safe here, add a check that the new path which will be
+opened with O_MNT is not getting under MNT_LOCKED mount and can be
+accessed. Currently I see no way to get such an fd under locked mount
+but better have a precaution here.
 
-Remove this empty line.
+But why I actually need these:
 
-> +	if (ret < 0) {
-> +		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
-> +		return ret;
-> +	}
-> +
-> +	button.irq = ret;
-> +
+When we recreate mount tree in CRIU, we do it by recreating one mount at
+a time (we don't have mount-save / mount-restore like with iptables) and
+it is quiet hard to determine the right order in which mounts should be
+restored: if we mount mnt it can hide directories under it's mountpoint,
+so either we need to first create all mounts under mnt's mountpoint and
+only after these  mount mnt, or all mounts under mnt can be propagated
+and we can safely mount mnt now? Moreover if mnt is not mounted, it can
+also block other mounts with other "dependencies" (something like mnt's
+child can be in a propagation group with some of mnt's undermounts and
+they need to be mounted as one), and we can have circular dependency if
+we have wrong order chosen and will fail.
 
-Once fixed, please apply my:
+So it would be easier for us if we can create mounts in the file tree
+even if the mountpoint is invisible from root. And one way how it could
+be done is: First, to have open fd to mountpoint under each mount,
+second, to have open fd to each mount root.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+More precisely the algorithm is:
+a) openat mpfd to a new mountpoint through parent mount's root -
+p_rootfd (which we already have) or mountpoint fd under a sibling mount
+- s_mpfd if our mountpoint is already overmounted.
+b) create a new mount on mpfd via /proc/<pid>/fd/<N> interface
+c) openat it's rootfd via O_MNT from mpfd
 
+If we have mpfd and rootfd for each mount through /proc/<pid>/fd/<N>
+interface we will be able to bindmount any part of each of already
+created mounts to restore other mounts  and we will be able to configure
+mounts, e.g. change sharing or other options even if mounts are
+invisible from fs-root.
+
+Here is an example of how O_MNT works:
+
+  #term1
+	  #term2
+
+  mkdir /test-mounts
+  mount -t tmpfs tmpfs-test-mounts /test-mounts
+  mount --make-private /test-mounts
+  cd /test-mounts/
+  mkdir sh1 sh2
+  mount -t tmpfs tmpfs_sh sh1
+  mount --make-shared sh1
+  mkdir sh1/mp
+  touch sh1/mp/1
+
+	  ./test_o_mnt /test-mounts/sh1/mp
+
+  mount -t tmpfs tmpfs_mp sh1/mp
+  touch sh1/mp/2
+
+	  input
+
+  mount --bind sh1 sh2
+  mount -t tmpfs tmpfs_prop sh2/mp
+  touch sh2/mp/3
+
+	  input
+
+And now through fds we have an access to all three files:
+
+  ls /proc/3799/fd/*
+  /proc/3799/fd/0  /proc/3799/fd/1  /proc/3799/fd/2
+
+  /proc/3799/fd/3:
+  1
+
+  /proc/3799/fd/4:
+  2
+
+  /proc/3799/fd/5:
+  1
+
+  /proc/3799/fd/6:
+  3
+
+  /proc/3799/fd/7:
+  1
+
+Code of test_o_mnt.c:
+
+  #include <stdio.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+
+  #define O_MNT 040000000
+
+  int main(int argc, char **argv)
+  {
+  	int dfd, fd, fd2;
+
+  	if (argc != 2) {
+  		printf("usage: %s <path/under/mountpoint>\n", argv[0]);
+  		return 1;
+  	}
+
+  	dfd = open(argv[1], O_DIRECTORY);
+  	if (dfd < 0) {
+  		perror("open");
+  		return 1;
+  	}
+
+  	scanf("%*s");
+
+  	fd = openat(dfd, ".", O_DIRECTORY | O_MNT);
+  	if (fd < 0) {
+  		perror("open");
+  		return 1;
+  	}
+
+  	fd2 = openat(dfd, ".", O_DIRECTORY);
+  	if (fd2 < 0) {
+  		perror("open");
+  		return 1;
+  	}
+
+  	scanf("%*s");
+
+  	fd = openat(dfd, ".", O_DIRECTORY | O_MNT);
+  	if (fd < 0) {
+  		perror("open");
+  		return 1;
+  	}
+
+  	fd2 = openat(dfd, ".", O_DIRECTORY);
+  	if (fd2 < 0) {
+  		perror("open");
+  		return 1;
+  	}
+
+  	while (1) {}
+
+  	return 0;
+  }
+
+Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+---
+ fs/fcntl.c                       |  2 +-
+ fs/namei.c                       | 66 ++++++++++++++++++++++++++++++++
+ fs/open.c                        |  2 +
+ include/linux/fcntl.h            |  2 +-
+ include/linux/namei.h            |  1 +
+ include/uapi/asm-generic/fcntl.h |  4 ++
+ 6 files changed, 75 insertions(+), 2 deletions(-)
+
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index 3d40771e8e7c..4cf05a2fd162 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -1031,7 +1031,7 @@ static int __init fcntl_init(void)
+ 	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
+ 	 * is defined as O_NONBLOCK on some platforms and not on others.
+ 	 */
+-	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=
++	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=
+ 		HWEIGHT32(
+ 			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
+ 			__FMODE_EXEC | __FMODE_NONOTIFY));
+diff --git a/fs/namei.c b/fs/namei.c
+index 671c3c1a3425..7b4c733fc5ef 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2158,10 +2158,71 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ 	}
+ }
+ 
++static int handle_mnt(struct nameidata *nd, unsigned int flags)
++{
++	if (!(flags & LOOKUP_MNT) || !d_mountpoint(nd->path.dentry))
++		return 0;
++
++	if (flags & LOOKUP_RCU) {
++		struct mount *mounted;
++
++		mounted = __lookup_mnt(nd->path.mnt, nd->path.dentry);
++		if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
++			return -ECHILD;
++		if (!mounted)
++			return 0;
++
++		if (d_mountpoint(mounted->mnt.mnt_root)) {
++			struct mount *omounted;
++
++			omounted = __lookup_mnt(&mounted->mnt,
++						mounted->mnt.mnt_root);
++			if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
++				return -ECHILD;
++			if (omounted && omounted->mnt.mnt_flags & MNT_LOCKED)
++				return -EINVAL;
++		}
++
++		nd->path.mnt = &mounted->mnt;
++		nd->path.dentry = mounted->mnt.mnt_root;
++		nd->inode = nd->path.dentry->d_inode;
++		nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
++	} else {
++		struct vfsmount *mounted;
++		struct path path;
++
++		mounted = lookup_mnt(&nd->path);
++		if (!mounted)
++			return 0;
++
++		path.mnt = mounted;
++		path.dentry = dget(mounted->mnt_root);
++
++		if (d_mountpoint(mounted->mnt_root)) {
++			struct vfsmount *omounted;
++
++			omounted = lookup_mnt(&path);
++			if (omounted && omounted->mnt_flags & MNT_LOCKED) {
++				mntput(omounted);
++				path_put(&path);
++				return -EINVAL;
++			}
++		}
++
++		dput(nd->path.dentry);
++		mntput(nd->path.mnt);
++		nd->path = path;
++		nd->inode = nd->path.dentry->d_inode;
++	}
++
++	return 0;
++}
++
+ /* must be paired with terminate_walk() */
+ static const char *path_init(struct nameidata *nd, unsigned flags)
+ {
+ 	const char *s = nd->name->name;
++	int ret;
+ 
+ 	if (!*s)
+ 		flags &= ~LOOKUP_RCU;
+@@ -2238,6 +2299,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+ 			nd->inode = nd->path.dentry->d_inode;
+ 		}
+ 		fdput(f);
++
++		ret = handle_mnt(nd, flags);
++		if (ret)
++			return ERR_PTR(ret);
++
+ 		return s;
+ 	}
+ }
+diff --git a/fs/open.c b/fs/open.c
+index b62f5c0923a8..5bebd98c2154 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1022,6 +1022,8 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
+ 		lookup_flags |= LOOKUP_DIRECTORY;
+ 	if (!(flags & O_NOFOLLOW))
+ 		lookup_flags |= LOOKUP_FOLLOW;
++	if (flags & O_MNT)
++		lookup_flags |= LOOKUP_MNT;
+ 	op->lookup_flags = lookup_flags;
+ 	return 0;
+ }
+diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
+index d019df946cb2..06bdc2b70554 100644
+--- a/include/linux/fcntl.h
++++ b/include/linux/fcntl.h
+@@ -9,7 +9,7 @@
+ 	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
+ 	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
+ 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
+-	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
++	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_MNT)
+ 
+ #ifndef force_o_largefile
+ #define force_o_largefile() (!IS_ENABLED(CONFIG_ARCH_32BIT_OFF_T))
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 397a08ade6a2..63414f065927 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -22,6 +22,7 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
+ #define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
+ #define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
+ #define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
++#define LOOKUP_MNT		0x10000 /* switch mountpoint fd to mount root */
+ 
+ #define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
+ #define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
+diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
+index 9dc0bf0c5a6e..dcd5844b955e 100644
+--- a/include/uapi/asm-generic/fcntl.h
++++ b/include/uapi/asm-generic/fcntl.h
+@@ -89,6 +89,10 @@
+ #define __O_TMPFILE	020000000
+ #endif
+ 
++#ifndef O_MNT
++#define O_MNT		040000000
++#endif
++
+ /* a horrid kludge trying to make sure that this will fail on old kernels */
+ #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
+ #define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)      
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.21.0
+
