@@ -2,70 +2,158 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A371C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012D2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0123206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70892080F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfKKBcH (ORCPT
+        id S1726765AbfKKBfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 20:32:07 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:48012 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfKKBcH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 20:32:07 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4E1E5154245B8;
-        Sun, 10 Nov 2019 17:32:06 -0800 (PST)
-Date:   Sun, 10 Nov 2019 17:32:03 -0800 (PST)
-Message-Id: <20191110.173203.1243596361382467520.davem@davemloft.net>
-To:     linux@roeck-us.net
-Cc:     sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, yamada.masahiro@socionext.com,
-        maz@kernel.org
-Subject: Re: [PATCH] sparc: vdso: Fix build failure seen due to kbuild
- changes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191111011106.18427-1-linux@roeck-us.net>
-References: <20191111011106.18427-1-linux@roeck-us.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Sun, 10 Nov 2019 20:35:13 -0500
+Received: from mga11.intel.com ([192.55.52.93]:45568 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726733AbfKKBfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 20:35:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 17:35:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,290,1569308400"; 
+   d="scan'208";a="228787010"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2019 17:35:11 -0800
+Cc:     baolu.lu@linux.intel.com, dwmw2@infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2] iommu/vt-d: Turn off translations at shutdown
+To:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        linux-kernel@vger.kernel.org, joro@8bytes.org
+References: <20191110172744.12541-1-deepa.kernel@gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <9e2e95e2-37ac-c0d6-d438-bd09ba7064bd@linux.intel.com>
+Date:   Mon, 11 Nov 2019 09:32:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191110172744.12541-1-deepa.kernel@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 10 Nov 2019 17:32:06 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
-Date: Sun, 10 Nov 2019 17:11:06 -0800
+Hi,
 
-> sparc64:allmodconfig fails to build with the following error.
+On 11/11/19 1:27 AM, Deepa Dinamani wrote:
+> The intel-iommu driver assumes that the iommu state is
+> cleaned up at the start of the new kernel.
+> But, when we try to kexec boot something other than the
+> Linux kernel, the cleanup cannot be relied upon.
+> Hence, cleanup before we go down for reboot.
 > 
-> unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
-> arch/sparc/vdso/vdso32/vclock_gettime.o: failed
-> make[2]: *** [arch/sparc/vdso/vdso32/vclock_gettime.o] Error 1
-> make[2]: *** Deleting file 'arch/sparc/vdso/vdso32/vclock_gettime.o'
-> make[2]: *** Waiting for unfinished jobs....
-> 
-> The problem bisects to commit a3de7a72c517 ("kbuild: change
-> *FLAGS_<basetarget>.o to take the path relative to $(obj)").
-> Duplicate the x86 specific defines from this commit to the sparc
-> vdso Makefile to fix the problem.
-> 
-> Fixes: a3de7a72c517 ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> Keeping the cleanup at initialization also, in case BIOS
+> leaves the IOMMU enabled.
 
-Acked-by: David S. Miller <davem@davemloft.net>
+Do you mind shining more light on this statement? I can't get your point
+here. Currently iommu_shutdown() only happens for reboot, right?
+
+Best regards,
+baolu
+
+> 
+> I considered turning off iommu only during kexec reboot, but a clean
+> shutdown seems always a good idea. But if someone wants to make it
+> conditional, such as VMM live update, we can do that.  There doesn't
+> seem to be such a condition at this time.
+> 
+> Tested that before, the info message
+> 'DMAR: Translation was enabled for <iommu> but we are not in kdump mode'
+> would be reported for each iommu. The message will not appear when the
+> DMA-remapping is not enabled on entry to the kernel.
+> 
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> ---
+> Changes since v1:
+> * move shutdown registration to iommu detection
+> 
+>   drivers/iommu/dmar.c        |  5 ++++-
+>   drivers/iommu/intel-iommu.c | 20 ++++++++++++++++++++
+>   include/linux/dmar.h        |  2 ++
+>   3 files changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> index eecd6a421667..3acfa6a25fa2 100644
+> --- a/drivers/iommu/dmar.c
+> +++ b/drivers/iommu/dmar.c
+> @@ -895,8 +895,11 @@ int __init detect_intel_iommu(void)
+>   	}
+>   
+>   #ifdef CONFIG_X86
+> -	if (!ret)
+> +	if (!ret) {
+>   		x86_init.iommu.iommu_init = intel_iommu_init;
+> +		x86_platform.iommu_shutdown = intel_iommu_shutdown;
+> +	}
+> +
+>   #endif
+>   
+>   	if (dmar_tbl) {
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index fe8097078669..7ac73410ba8e 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -4764,6 +4764,26 @@ static void intel_disable_iommus(void)
+>   		iommu_disable_translation(iommu);
+>   }
+>   
+> +void intel_iommu_shutdown(void)
+> +{
+> +	struct dmar_drhd_unit *drhd;
+> +	struct intel_iommu *iommu = NULL;
+> +
+> +	if (no_iommu || dmar_disabled)
+> +		return;
+> +
+> +	down_write(&dmar_global_lock);
+> +
+> +	/* Disable PMRs explicitly here. */
+> +	for_each_iommu(iommu, drhd)
+> +		iommu_disable_protect_mem_regions(iommu);
+> +
+> +	/* Make sure the IOMMUs are switched off */
+> +	intel_disable_iommus();
+> +
+> +	up_write(&dmar_global_lock);
+> +}
+> +
+>   static inline struct intel_iommu *dev_to_intel_iommu(struct device *dev)
+>   {
+>   	struct iommu_device *iommu_dev = dev_to_iommu_device(dev);
+> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+> index a7cf3599d9a1..f64ca27dc210 100644
+> --- a/include/linux/dmar.h
+> +++ b/include/linux/dmar.h
+> @@ -129,6 +129,7 @@ static inline int dmar_res_noop(struct acpi_dmar_header *hdr, void *arg)
+>   #ifdef CONFIG_INTEL_IOMMU
+>   extern int iommu_detected, no_iommu;
+>   extern int intel_iommu_init(void);
+> +extern void intel_iommu_shutdown(void);
+>   extern int dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg);
+>   extern int dmar_parse_one_atsr(struct acpi_dmar_header *header, void *arg);
+>   extern int dmar_check_one_atsr(struct acpi_dmar_header *hdr, void *arg);
+> @@ -137,6 +138,7 @@ extern int dmar_iommu_hotplug(struct dmar_drhd_unit *dmaru, bool insert);
+>   extern int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info);
+>   #else /* !CONFIG_INTEL_IOMMU: */
+>   static inline int intel_iommu_init(void) { return -ENODEV; }
+> +static inline void intel_iommu_shutdown(void) { }
+>   
+>   #define	dmar_parse_one_rmrr		dmar_res_noop
+>   #define	dmar_parse_one_atsr		dmar_res_noop
+> 
