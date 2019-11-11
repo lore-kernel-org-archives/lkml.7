@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83174C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F77C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFD620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0104C204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497892;
-	bh=XXU3KuVpPqvwxj/p7e1akCU0d/Vt4OZCokodGA0grYY=;
+	s=default; t=1573497898;
+	bh=Uwa8wS0dmARYNw/g0YO2nMdEBPNRIqFT6GX1YFH3etI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlIkOe1ZumLW022EIjk3MHiIBweRnS5ymljXDPNV0Fe9pTeuJFdQbtxhaqf6C6NjK
-	 2dAOY40KjDSfu+CykD3MjjNgZSGzyuI0xWaCWhM+btJrsmghTxpFX2NVQCNYLbKmsf
-	 WOzPI5yNUeQ/40vcRIJjkH5fzeDb4Mes16Pn/U04=
+	b=Kxa6e0PqjSoQq5ptSHHQhrihQw5D4F2G3/Hlh4R1Po9OoGLBmSKql8azP+WwYQS8m
+	 StvP4/ZI0VSEPSBF7SS5ZCQpgNp/r0bLB/Fb/am17wvaKCRUidofS9ISVexk2E/119
+	 uWFcEcg9JFS86L+fAzmC1Xo1RnWFV3s6aCgrEnc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfKKSou (ORCPT
+        id S1729756AbfKKSo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:44:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36598 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:44:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbfKKSot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:44:49 -0500
+        id S1729776AbfKKSox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:44:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AADF20674;
-        Mon, 11 Nov 2019 18:44:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B15E0204FD;
+        Mon, 11 Nov 2019 18:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497888;
-        bh=XXU3KuVpPqvwxj/p7e1akCU0d/Vt4OZCokodGA0grYY=;
+        s=default; t=1573497892;
+        bh=Uwa8wS0dmARYNw/g0YO2nMdEBPNRIqFT6GX1YFH3etI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nppqzqb67HjYHrVchW+x3dCyjXMfhFkhhtzfy/PLRSMXw1rOH+mQN5Jb9Kbo3st+f
-         uA1GkB0HFIIubMZKwy0hANPuzhX5n307LAVc7SL3N7d0W77ubo2tOvGQGvOipAUY93
-         pxQGhOFFJ5x55V1729uMObSTTGB+No3i0ii9VwDI=
+        b=Q7uIhPXdtel4naEE8llrpm8DCeoBuCgy6JGwN6z1lNZ/071dK/KRXMmp8xs2EM650
+         LcKSG9x07No2Elkyy4YKbsqKWzaFhV23uknEtDeMxL1TfdoyCLup5anq1ybEqC7V8e
+         dOd1UG82r8JHu45Md81AJ8aCHA/XFks7xTQpu2EY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nikhil Badola <nikhil.badola@freescale.com>,
+        Ran Wang <ran.wang_1@nxp.com>, Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/125] macsec: fix refcnt leak in module exit routine
-Date:   Mon, 11 Nov 2019 19:28:47 +0100
-Message-Id: <20191111181451.823737572@linuxfoundation.org>
+Subject: [PATCH 4.19 089/125] usb: fsl: Check memory resource before releasing it
+Date:   Mon, 11 Nov 2019 19:28:48 +0100
+Message-Id: <20191111181451.931107178@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,74 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Nikhil Badola <nikhil.badola@freescale.com>
 
-[ Upstream commit 2bce1ebed17da54c65042ec2b962e3234bad5b47 ]
+[ Upstream commit bc1e3a2dd0c9954fd956ac43ca2876bbea018c01 ]
 
-When a macsec interface is created, it increases a refcnt to a lower
-device(real device). when macsec interface is deleted, the refcnt is
-decreased in macsec_free_netdev(), which is ->priv_destructor() of
-macsec interface.
+Check memory resource existence before releasing it to avoid NULL
+pointer dereference
 
-The problem scenario is this.
-When nested macsec interfaces are exiting, the exit routine of the
-macsec module makes refcnt leaks.
-
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add macsec0 link dummy0 type macsec
-    ip link add macsec1 link macsec0 type macsec
-    modprobe -rv macsec
-
-[  208.629433] unregister_netdevice: waiting for macsec0 to become free. Usage count = 1
-
-Steps of exit routine of macsec module are below.
-1. Calls ->dellink() in __rtnl_link_unregister().
-2. Checks refcnt and wait refcnt to be 0 if refcnt is not 0 in
-netdev_run_todo().
-3. Calls ->priv_destruvtor() in netdev_run_todo().
-
-Step2 checks refcnt, but step3 decreases refcnt.
-So, step2 waits forever.
-
-This patch makes the macsec module do not hold a refcnt of the lower
-device because it already holds a refcnt of the lower device with
-netdev_upper_dev_link().
-
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
+Reviewed-by: Ran Wang <ran.wang_1@nxp.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/usb/gadget/udc/fsl_udc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 0dc92d2faa64d..05115fb0c97a9 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -3008,12 +3008,10 @@ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
- static void macsec_free_netdev(struct net_device *dev)
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
--	struct net_device *real_dev = macsec->real_dev;
+diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/udc/fsl_udc_core.c
+index be59309e848c3..d44b26d5b2a2c 100644
+--- a/drivers/usb/gadget/udc/fsl_udc_core.c
++++ b/drivers/usb/gadget/udc/fsl_udc_core.c
+@@ -2552,7 +2552,7 @@ static int fsl_udc_remove(struct platform_device *pdev)
+ 	dma_pool_destroy(udc_controller->td_pool);
+ 	free_irq(udc_controller->irq, udc_controller);
+ 	iounmap(dr_regs);
+-	if (pdata->operating_mode == FSL_USB2_DR_DEVICE)
++	if (res && (pdata->operating_mode == FSL_USB2_DR_DEVICE))
+ 		release_mem_region(res->start, resource_size(res));
  
- 	free_percpu(macsec->stats);
- 	free_percpu(macsec->secy.tx_sc.stats);
- 
--	dev_put(real_dev);
- }
- 
- static void macsec_setup(struct net_device *dev)
-@@ -3268,8 +3266,6 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 	if (err < 0)
- 		return err;
- 
--	dev_hold(real_dev);
--
- 	macsec->nest_level = dev_get_nest_level(real_dev) + 1;
- 	netdev_lockdep_set_classes(dev);
- 	lockdep_set_class_and_subclass(&dev->addr_list_lock,
+ 	/* free udc --wait for the release() finished */
 -- 
 2.20.1
 
