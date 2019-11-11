@@ -2,97 +2,65 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9DBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4D4C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EC6222C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E2E20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Swru49g7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKKKeM (ORCPT
+        id S1726888AbfKKKga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:34:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:59291 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfKKKeL (ORCPT
+        Mon, 11 Nov 2019 05:36:30 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57580 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKKga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:34:11 -0500
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MAOa3-1iawdn3mtn-00BubF; Mon, 11 Nov 2019 11:34:09 +0100
-Received: by mail-qk1-f171.google.com with SMTP id m125so10686797qkd.8;
-        Mon, 11 Nov 2019 02:34:07 -0800 (PST)
-X-Gm-Message-State: APjAAAXBLhPZlSPXhqcGeeCNRdMDtYj7c7RP3FBKTzorNwKWV9N6IY/h
-        dsGYRHX/iMu9ieQ2kMEDeVvtcIjaW+7sm+yx5so=
-X-Google-Smtp-Source: APXvYqzESzY62F14rsigxKLBXM91nKVjfO+E517KtV1rTG3fdeRCW+MOilAesC4Pz85XDKVkv4qCW/mxeD7p5CII2Ks=
-X-Received: by 2002:a37:4f13:: with SMTP id d19mr9320005qkb.138.1573468446947;
- Mon, 11 Nov 2019 02:34:06 -0800 (PST)
+        Mon, 11 Nov 2019 05:36:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=Swru49g7s+A94QhHKZRBNdA6C
+        k60AaFFEPs7AMy17/rEKs+sBONGiV2W42BotF5KCRcdxI+hx/S/PgvVwvbZcjiPZtqFATl74qkZWp
+        k6dyUb94on2lnXQ4SY8ws/qbU5lATtgfKAzjXrHL3eTIzLCoJvI2OTxmL/sS+zX7MzL2EeIl1hrF0
+        J6gtImUnhDKxgeBu1UlbCjo14cVJdcRPJJSW2zD2niWBiErzo/IK3+yVL25rCY15sC8Yjpbjf1FKw
+        GGz2eSTK0O3fIZFrzceSD5Kah6lGgZLSZXZ32PkAJIPYRqR7/rmXmpu5oXfnYEkPVbHUkI965S7PZ
+        MNG+g2EJw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iU73T-0007BK-Hy; Mon, 11 Nov 2019 10:36:19 +0000
+Date:   Mon, 11 Nov 2019 02:36:19 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     darrick.wong@oracle.com, naresh.kamboju@linaro.org,
+        hch@infradead.org, ltp@lists.linux.it, linux-next@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, chrubis@suse.cz,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        broonie@kernel.org, arnd@arndb.de, lkft-triage@lists.linaro.org,
+        linux-ext4@vger.kernel.org, tytso@mit.edu
+Subject: Re: [PATCH] iomap: fix return value of iomap_dio_bio_actor on 32bit
+ systems
+Message-ID: <20191111103619.GA25583@infradead.org>
+References: <20191111083815.GA29540@infradead.org>
+ <b757ff64ddf68519fc3d55b66fcd8a1d4b436395.1573467154.git.jstancek@redhat.com>
 MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-2-hch@lst.de>
-In-Reply-To: <20191029064834.23438-2-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:33:50 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3xk-mQic84Cv7CYhm2DqDCyu69+qH=i8M=JoE3xkpM=g@mail.gmail.com>
-Message-ID: <CAK8P3a3xk-mQic84Cv7CYhm2DqDCyu69+qH=i8M=JoE3xkpM=g@mail.gmail.com>
-Subject: Re: [PATCH 01/21] arm: remove ioremap_cached
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Q7k81wFvoFE5E6wkXe8aVkg4UtIIhdO42eNTJCWF2OH8BAKNIYC
- ktqFVT/gUxHCzKTuvIteocEc6dCMNSblmwTqy1u69ZFn9QjpmWgW6PLcr3ijxS847YwhU+c
- GBYtgFx+LwY4VCvhh4uFz2h42SqTW/LXCUgI6o4ZQqjSZwKNrU2Hv7GTYzJItkd0nVZ06yn
- wJQX7E/0e7Av7MMyGkB9w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oR2Ibl1tMpg=:Qch93j4jtU7v7an1WaRtUY
- uQTKMSgbmv0EPsSZPfTgOVFZIWbmvPIEaWQXjS5b3cpXTDONxq3NV1AFL+oCqQR3fYn2G93Pp
- wkFmNZV9cUErVOTSsNMD6c5v3f+lmaJvWvCuYuaQfTESl8FT84aX4OwSgqDkwbp03RC/qRwwd
- cQQgtjfeaSC08MOEdxEE2oCFqW2aNpdpKU8+eX0yMEtdAIfcWVJ4axf1VSY1wycvW3Dj1uUVS
- VCktrzuSKnryj1bRphPhi4P5N9iad/8cLMOMrSWr+cS1WDmwrOztyoB3d8S9+bC+uhkJmpEe7
- EcfZ8jKZP9/DD2n6C979ElHhh8ziwOJF5aCbu9FJ/3Hwccjix+idScCwc95ajahJo34ezl3lP
- EWrM/tGIP3Z1HimZqAorMW6Kd0QIrcoqwfGD5mT9Nnj1PcSurMuSLPyN2b2lT11Qw4p0ww6B+
- oeOcMJ3fbXiNaNzLDWPI87bji3C/R/KY7rBYn5JT0MpO5pM3315Lo0hfT1CpHuMvy/kUOaN/w
- kUJYL9rH7UR0Gs13qvxRBu+Qn5t/8Lp508AYjr+SO4FU4eR3D0c/bl0AXvq1GNfOF0BMPwn9g
- GBMFaNMpAJFF9p6TcCeT6TZK+gEp8bhzkARZyPnpy65YdnXsF7gvEu10r9nhH+RM+kkPrJ/yt
- 3DoVsdY8pcVlWdCGz6eIAShOQwEvqzvLEa55zcqxLePkPrh1mYUk2JnAr8OAQp6sfgPU12HHR
- dH54ArhwI5PevKmKQK9Qx+VVtLUKVhXEm+VW2q47zxQaN3TliTK/bJYO0GJKfVqR/esKvLyQg
- 2o9ETmvdOIgOoXxzJH6TW/6+NtkBymQJzfxn4BPT2LC5PT4/SAjAvWDWBQjkLmSGfmUGljMCd
- t9k/ZM/dYSmuz8qpNCWdLYv72qTheL6z9GztXaJ1tPMJ396fIiD9u+iOlZKl1/g3gse85yPrx
- isOPo/23/1q/RDLGEpv78pVtJzsJNS0CrsUW3c5uUe/PAMdEfxCPFEerurnYjhlHEMaRzDNOb
- DqZ1WkpzuyGejI8CcALxCNpPVoDWdS4P55/uMZZfngrqEXWbis11Wvy9mUQQiFVYzg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b757ff64ddf68519fc3d55b66fcd8a1d4b436395.1573467154.git.jstancek@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:48 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> No users of ioremap_cached are left, remove it.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Looks good,
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
