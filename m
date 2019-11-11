@@ -2,143 +2,90 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078EEC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED00C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE00D2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5140320818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mXaHGQTW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NHqcjmFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfKKIq1 (ORCPT
+        id S1727022AbfKKIrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:46:27 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56048 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKIq1 (ORCPT
+        Mon, 11 Nov 2019 03:47:49 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49676 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfKKIrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:46:27 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB8kFjp047825;
-        Mon, 11 Nov 2019 02:46:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573461975;
-        bh=bPsdV3D16S4/f/dE/JDv9mNF3nvxhJIfXWIaWmitlCY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mXaHGQTW3V1k5l+az7PK9qrALszJvuc6fkBps1mPRoWCUC9eXPnedgV5DUDxYuHv6
-         g9E7oN45MK9ILrYHZGMIN2+6dBw6BWc9/HGDwcZz+2CI4lvRLEdew9a8772mJj13A/
-         X8xm14x3Ju/vIpOsQydYM+IDfjBI0Rd1gnU+XBlw=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB8kE99038243
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 02:46:15 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 02:45:57 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 02:45:57 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB8kArs100093;
-        Mon, 11 Nov 2019 02:46:11 -0600
-Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
- configuration
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-8-peter.ujfalusi@ti.com>
- <20191111044716.GM952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <0a9d570a-0942-6e98-9e5a-798546c9c677@ti.com>
-Date:   Mon, 11 Nov 2019 10:47:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 03:47:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MWS4iDPKXqL9aeVZvrVY5JzKZIFEOsCQmC2rJZ7GvJc=; b=NHqcjmFTU72YEQ0NHLL0PvlhJ
+        xmrjrC0pkf+ZWjbzkGG768hJ4OOzZ6NZsiYjbv4lGfcv42sKXJQJGhCxq75Ooo45OL01QBHliVmtS
+        lsOGfX6aMkN5+3hNCGRQyGVfs+BLJ9hABBS6YFqYfqb8mKU5J53PYGHik7+oKseyZ2ZCH7YgP4YPo
+        DIymuLRtZY9v4lKMXU6RMHFGuWQqN9+N9tBbCRlrz1jIarTi2Z5tPa/Uafai/Qjz21GnkxMFLdfUy
+        K5kHQirn2/CRckRRDbA6FL7iV6UfNHkQ4jJdwNd+SG6kgYfcR+GhBbGkbPD/d5Y1/l18Y2lABz0IQ
+        J+/iSQKIQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iU5MB-0003TQ-31; Mon, 11 Nov 2019 08:47:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BAB7B305615;
+        Mon, 11 Nov 2019 09:46:22 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EF09A2026E904; Mon, 11 Nov 2019 09:47:28 +0100 (CET)
+Date:   Mon, 11 Nov 2019 09:47:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Subject: Re: [PATCH 00/10] ftrace: Add register_ftrace_direct()
+Message-ID: <20191111084728.GO4131@hirez.programming.kicks-ass.net>
+References: <20191108212834.594904349@goodmis.org>
+ <20191108225100.ea3bhsbdf6oerj6g@treble>
 MIME-Version: 1.0
-In-Reply-To: <20191111044716.GM952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108225100.ea3bhsbdf6oerj6g@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 08, 2019 at 04:51:00PM -0600, Josh Poimboeuf wrote:
 
-
-On 11/11/2019 6.47, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+> Subject: [PATCH] ftrace/x86: Tell objtool to ignore nondeterministic ftrace stack layout
 > 
->> --- /dev/null
->> +++ b/drivers/dma/ti/k3-psil.c
->> @@ -0,0 +1,97 @@
->> +// SPDX-License-Identifier: GPL-2.0
+> Objtool complains about the new ftrace direct trampoline code:
 > 
-> ...
+>   arch/x86/kernel/ftrace_64.o: warning: objtool: ftrace_regs_caller()+0x190: stack state mismatch: cfa1=7+16 cfa2=7+24
 > 
->> +extern struct psil_ep_map am654_ep_map;
->> +extern struct psil_ep_map j721e_ep_map;
->> +
->> +static DEFINE_MUTEX(ep_map_mutex);
->> +static struct psil_ep_map *soc_ep_map;
->> +
->> +struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
->> +{
->> +	int i;
->> +
->> +	mutex_lock(&ep_map_mutex);
->> +	if (!soc_ep_map) {
->> +		if (of_machine_is_compatible("ti,am654")) {
->> +			soc_ep_map = &am654_ep_map;
->> +		} else if (of_machine_is_compatible("ti,j721e")) {
->> +			soc_ep_map = &j721e_ep_map;
->> +		} else {
->> +			pr_err("PSIL: No compatible machine found for map\n");
->> +			return ERR_PTR(-ENOTSUPP);
->> +		}
->> +		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
->> +	}
->> +	mutex_unlock(&ep_map_mutex);
->> +
->> +	if (thread_id & K3_PSIL_DST_THREAD_ID_OFFSET && soc_ep_map->dst) {
->> +		/* check in destination thread map */
->> +		for (i = 0; i < soc_ep_map->dst_count; i++) {
->> +			if (soc_ep_map->dst[i].thread_id == thread_id)
->> +				return &soc_ep_map->dst[i].ep_config;
->> +		}
->> +	}
->> +
->> +	thread_id &= ~K3_PSIL_DST_THREAD_ID_OFFSET;
->> +	if (soc_ep_map->src) {
->> +		for (i = 0; i < soc_ep_map->src_count; i++) {
->> +			if (soc_ep_map->src[i].thread_id == thread_id)
->> +				return &soc_ep_map->src[i].ep_config;
->> +		}
->> +	}
->> +
->> +	return ERR_PTR(-ENOENT);
->> +}
->> +EXPORT_SYMBOL(psil_get_ep_config);
+> Typically, code has a deterministic stack layout, such that at a given
+> instruction address, the stack frame size is always the same.
 > 
-> This doesn't match the license of this module, we need it to be
-> EXPORT_SYMBOL_GPL
+> That's not the case for the new ftrace_regs_caller() code after it
+> adjusts the stack for the direct case.  Just plead ignorance and assume
+> it's always the non-direct path.  Note this creates a tiny window for
+> ORC to get confused.
 
-Oops, will fix it.
-
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+How is that not a problem for livepatch?
