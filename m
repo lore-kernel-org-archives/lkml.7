@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B94FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DD1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434B8204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E9F21E6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498193;
-	bh=6aIYRFn4mz/rizev/wF2Fgg4Ky0sLc65bJWXzf+yNH4=;
+	s=default; t=1573498199;
+	bh=9FcN9T5Rfa+rfMnTwfI/2gS9KdF/tVXPP5ae4wU0P30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JBeKybprta2p/arhkU6MzGcGuCqLW6sKZtB+5mmlqryMNg2CYy/JjJF19hQou+F2t
-	 Rw2l3pKsx7/tPtPUVFmjuikfhV4C8kg2fr8tlLzqRUaPj5NXHIzyKwFo8Av/QGQU7F
-	 izeSEqu/Yc3buYG+c7LaY/RrflQfqCu19LLyFXlo=
+	b=HSEa8PxuRGKFOx+pIPMCErfYXfdWJJDwcByl1Jyf9fsxXw0wvrrDDBlKWwWuqWMxC
+	 XU4imF8+61HAWGKJswf5UF3OYZJV8oeBTsE0E2dy/CCJMLWGzLwW9aqqc4Hc3aJR1R
+	 lGa8teZgnJJrJ7iTlc8WTH3pYpK3MejJPbGEzdEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfKKStw (ORCPT
+        id S1730317AbfKKSt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:49:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:49:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728080AbfKKStt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:49:49 -0500
+        id S1729344AbfKKStx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:49:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27FC32196E;
-        Mon, 11 Nov 2019 18:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC5E421E6F;
+        Mon, 11 Nov 2019 18:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498189;
-        bh=6aIYRFn4mz/rizev/wF2Fgg4Ky0sLc65bJWXzf+yNH4=;
+        s=default; t=1573498192;
+        bh=9FcN9T5Rfa+rfMnTwfI/2gS9KdF/tVXPP5ae4wU0P30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vIgqyEdbLf18/W2XxBTDSepg/AsIfaQbOH1BBblj5mT+haONzwv7CQU/sRJV1iij/
-         hKuPjb+1aSJFlpsBWCrgOHiBDQ1AslRZfBQfoecuMeFSMcYidIlKTWfVcO+RypfTyq
-         xQ8HpQdBdv7KKi+/D94Mv3Z7yVurl/XXbyJDrgzE=
+        b=mB3pzccFwK+biqhe3xMSAxRSoYLFmkBlPXcUWjmzKBOI67MvI/+VB8i9JutLLCgb9
+         o1dnB391KIEHTDsrMdbxYqk3hE9Rz6bvM469Fm9wMin5klDg/eREW8CqopEGUYfpVj
+         NnsZSvaqY7ppPaPNGgSuaTWhwloaycNerzmAIXNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, Josef Bacik <jbacik@fb.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.3 048/193] blkcg: make blkcg_print_stat() print stats only for online blkgs
-Date:   Mon, 11 Nov 2019 19:27:10 +0100
-Message-Id: <20191111181504.507282441@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.3 049/193] arm64: Do not mask out PTE_RDONLY in pte_same()
+Date:   Mon, 11 Nov 2019 19:27:11 +0100
+Message-Id: <20191111181504.586119821@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,76 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-commit b0814361a25cba73a224548843ed92d8ea78715a upstream.
+commit 6767df245f4736d0cf0c6fb7cf9cf94b27414245 upstream.
 
-blkcg_print_stat() iterates blkgs under RCU and doesn't test whether
-the blkg is online.  This can call into pd_stat_fn() on a pd which is
-still being initialized leading to an oops.
+Following commit 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out
+of set_pte_at()"), the PTE_RDONLY bit is no longer managed by
+set_pte_at() but built into the PAGE_* attribute definitions.
+Consequently, pte_same() must include this bit when checking two PTEs
+for equality.
 
-The heaviest operation - recursively summing up rwstat counters - is
-already done while holding the queue_lock.  Expand queue_lock to cover
-the other operations and skip the blkg if it isn't online yet.  The
-online state is protected by both blkcg and queue locks, so this
-guarantees that only online blkgs are processed.
+Remove the arm64-specific pte_same() function, practically reverting
+commit 747a70e60b72 ("arm64: Fix copy-on-write referencing in HugeTLB")
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Roman Gushchin <guro@fb.com>
-Cc: Josef Bacik <jbacik@fb.com>
-Fixes: 903d23f0a354 ("blk-cgroup: allow controllers to output their own stats")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out of set_pte_at()")
+Cc: <stable@vger.kernel.org> # 4.14.x-
+Cc: Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-cgroup.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/pgtable.h |   17 -----------------
+ 1 file changed, 17 deletions(-)
 
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -908,9 +908,14 @@ static int blkcg_print_stat(struct seq_f
- 		int i;
- 		bool has_stats = false;
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -283,23 +283,6 @@ static inline void set_pte_at(struct mm_
+ 	set_pte(ptep, pte);
+ }
  
-+		spin_lock_irq(&blkg->q->queue_lock);
-+
-+		if (!blkg->online)
-+			goto skip;
-+
- 		dname = blkg_dev_name(blkg);
- 		if (!dname)
--			continue;
-+			goto skip;
- 
- 		/*
- 		 * Hooray string manipulation, count is the size written NOT
-@@ -920,8 +925,6 @@ static int blkcg_print_stat(struct seq_f
- 		 */
- 		off += scnprintf(buf+off, size-off, "%s ", dname);
- 
--		spin_lock_irq(&blkg->q->queue_lock);
+-#define __HAVE_ARCH_PTE_SAME
+-static inline int pte_same(pte_t pte_a, pte_t pte_b)
+-{
+-	pteval_t lhs, rhs;
 -
- 		blkg_rwstat_recursive_sum(blkg, NULL,
- 				offsetof(struct blkcg_gq, stat_bytes), &rwstat);
- 		rbytes = rwstat.cnt[BLKG_RWSTAT_READ];
-@@ -934,8 +937,6 @@ static int blkcg_print_stat(struct seq_f
- 		wios = rwstat.cnt[BLKG_RWSTAT_WRITE];
- 		dios = rwstat.cnt[BLKG_RWSTAT_DISCARD];
- 
--		spin_unlock_irq(&blkg->q->queue_lock);
+-	lhs = pte_val(pte_a);
+-	rhs = pte_val(pte_b);
 -
- 		if (rbytes || wbytes || rios || wios) {
- 			has_stats = true;
- 			off += scnprintf(buf+off, size-off,
-@@ -973,6 +974,8 @@ static int blkcg_print_stat(struct seq_f
- 				seq_commit(sf, -1);
- 			}
- 		}
-+	skip:
-+		spin_unlock_irq(&blkg->q->queue_lock);
- 	}
- 
- 	rcu_read_unlock();
+-	if (pte_present(pte_a))
+-		lhs &= ~PTE_RDONLY;
+-
+-	if (pte_present(pte_b))
+-		rhs &= ~PTE_RDONLY;
+-
+-	return (lhs == rhs);
+-}
+-
+ /*
+  * Huge pte definitions.
+  */
 
 
