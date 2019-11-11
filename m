@@ -2,106 +2,107 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F7AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3C6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37322184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B57F2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xR/rfmwJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lmKD+5OS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfKKLll (ORCPT
+        id S1726906AbfKKLnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:41:41 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52102 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfKKLll (ORCPT
+        Mon, 11 Nov 2019 06:43:40 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42013 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfKKLnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:41:41 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q70so12964900wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 03:41:39 -0800 (PST)
+        Mon, 11 Nov 2019 06:43:39 -0500
+Received: by mail-wr1-f68.google.com with SMTP id a15so14235387wrf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 03:43:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=QrjCfBQcJwKIUUDAjSOiaKTYkFf5ndTaGfgn7ED2v/8=;
-        b=xR/rfmwJkeoO0nfTViXcVfHVxtjQPIw+/g/mwtDyiWl0xvZzkju6l8kehaXwzlh2hE
-         N1caFwcFkMVVjG7mM4hS1Blyhb6dQzMq3+L4kUjJL7APe9OhT789Q95imMdQbJBfa0pQ
-         vSqM98PXFHwYP30Pq63EGCZNqrne1AYiDuqsb+LDO5ixEeUtq3iWulMX0I0BfR1te1hR
-         Am4LMzfA9QgqbhrIfmXKSTmNE5mYxbuQVgCl78YPyliG86quWG85iMrVE6FPq8mHZZWB
-         sux1xYxifK6ex8Q9BAODwMIaAlOmKV8P9Sc/tZOdcAfUTD3EagSv9YO0fIxUmlGiDJfy
-         8isA==
+        bh=btwpyE4DKhSXy4FwJ2ZD9A7dltuQxSGv5JHsll8DI20=;
+        b=lmKD+5OS0vjqFt56pnvwLZFFro7OfkevToyeur/XuWHxeJ0Vk+XDK5YjVCvmrD615p
+         gWflCdfIAN2jW4H6Y1kMf1wEiOQjzReY1Bd1YX8tUr+Lq8c0vMiDgavy+vGKdet/qXBn
+         rZe0PDn9ELo3/RXuNhxhBpR+Q5TgjV8TLFpWQX/a/6xueaBHXGj0fVM2ujqg8m02PwB2
+         b+/vWx+ilnjUisD0BXGtA++yPVLfSDAv07zuEn4ZCS6k0R5a3+33/iH0OoUmWgPozECI
+         czwHujbbNUYtlVbolr32G/KAIWgUf3gnkZoREabNFo6xsQq/hhjpFNTHa5Sh5Zdma/W5
+         z2mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=QrjCfBQcJwKIUUDAjSOiaKTYkFf5ndTaGfgn7ED2v/8=;
-        b=YKBHLlgmSgAZrDmNI25gQtN169nECuW20itQys9jQrIBOT/H2SY2aqQZko/y+4LLQg
-         fFt7fhmMEk0eq0sx48TEqp8N2TbzcNA7YijOn2Bn0f4ACXGHgRA3PMcll6bRUG750eai
-         Hkf25+vmbnXW77gwo4q8akwCKeTKiEpIoYcXpqEDugsPKGLUFqemGnBWoPKZQKmX6MBx
-         r2qGVNWLo3wPVIGIylt5gXV3S3QK0ymzhOtGUhYoxVXUbUY2Q3hZ/cxVGCzZpTt1jKGL
-         K0zgRZfnxre1iBUZHqg1CxSORlR2kbr/9FqGgMcG8Au3Z+mXc+O5T3TT954z615QH+hz
-         ZXgw==
-X-Gm-Message-State: APjAAAXN9hT60CluYlupfS7GYopp2UETO2/RZNcCHTEb6729Q9qO6IG2
-        8Px/szcK8mnEGn2uChjY22u90Q==
-X-Google-Smtp-Source: APXvYqzVlKEucZs/sDv+ll++yan1K7OhNmoAUm0WJEXWNZIj5Q9haqGMCwNCLqw05ElIJj46eF9uUw==
-X-Received: by 2002:a1c:e915:: with SMTP id q21mr9278569wmc.164.1573472498674;
-        Mon, 11 Nov 2019 03:41:38 -0800 (PST)
+        bh=btwpyE4DKhSXy4FwJ2ZD9A7dltuQxSGv5JHsll8DI20=;
+        b=arIBYuMK6MlBKK4rDvM5cu2gKvhUWI/Cm+IB0AOHno+TIeHa4zSnngWUgqN+MjFCnN
+         dDNoALvftA9WwqqTFmycdAtw2JaW89RMY0tEe0Mu1HC/en6hEH8w3cO5UMcl71n/iW+E
+         tGlIG6P7wXk9ZD16ok5opQQwr7DAIHwchHNWagSt8/Vo6pBQlfg7BqQ5QZZLYOWdTlJy
+         AOiE08xNiStk0Wj0QIb6F8lktgfANZ2NMbCS2DYxi0PwVjbfshXKJTtWVNAU97LZj3z6
+         lIipQpNVdYQHJ0okhRqOeLUIm++HcZI5h4IJcG64nJHjknC6IRLxm93VS5/7L7zPqi6A
+         ITvQ==
+X-Gm-Message-State: APjAAAWsO+4XFoJIwc80aV27hjFXsdt2ZbV6cqZvKcGSKHcFQ1k3cyoe
+        dd+OCtfjkrWGSRj2nHsWzrRcAQ==
+X-Google-Smtp-Source: APXvYqxe0V7wxbe9LxXQ7Boi59XGm4VrGwzmHV65LvzGKaVJcLUW13/9tnDcvZeFl8ZE8L2l2442Yg==
+X-Received: by 2002:a5d:678c:: with SMTP id v12mr8778108wru.116.1573472617414;
+        Mon, 11 Nov 2019 03:43:37 -0800 (PST)
 Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id g8sm15865768wmk.23.2019.11.11.03.41.37
+        by smtp.gmail.com with ESMTPSA id 4sm17320362wmd.33.2019.11.11.03.43.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 03:41:38 -0800 (PST)
-Date:   Mon, 11 Nov 2019 11:41:30 +0000
+        Mon, 11 Nov 2019 03:43:36 -0800 (PST)
+Date:   Mon, 11 Nov 2019 11:43:29 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v7 0/9] backlight: gpio: simplify the driver
-Message-ID: <20191111114130.GL3218@dell>
-References: <20191022083630.28175-1-brgl@bgdev.pl>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 03/17] platform/mfd:iio: cros_ec: Register sensor
+ through sensorhub
+Message-ID: <20191111114329.GM3218@dell>
+References: <20191105222652.70226-1-gwendal@chromium.org>
+ <20191105222652.70226-4-gwendal@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191022083630.28175-1-brgl@bgdev.pl>
+In-Reply-To: <20191105222652.70226-4-gwendal@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019, Bartosz Golaszewski wrote:
+On Tue, 05 Nov 2019, Gwendal Grignou wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> - Remove duplicate code in mfd, since mfd just register
+>   cros_ec_sensorhub if at least one sensor is present
+> - Change iio cros_ec driver to get the pointer to the cros_ec_dev
+>   through cros_ec_sensorhub.
 > 
-> While working on my other series related to gpio-backlight[1] I noticed
-> that we could simplify the driver if we made the only user of platform
-> data use GPIO lookups and device properties. This series tries to do
-> that.
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+> No changes in v4, v3.
+> Changes in v2:
+> - Remove unerelated changes.
+> - Remove ec presence test in iio driver, done in cros_ec_sensorhub.
 > 
-> First two patches contain minor fixes. Third patch makes the driver
-> explicitly drive the GPIO line. Fourth patch adds all necessary data
-> structures to ecovec24. Patch 5/9 unifies much of the code for both
-> pdata and non-pdata cases. Patches 6-7/9 remove unused platform data
-> fields. Last two patches contain additional improvements for the GPIO
-> backlight driver while we're already modifying it.
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |   6 -
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |   6 -
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   4 +-
+>  drivers/iio/light/cros_ec_light_prox.c        |   6 -
+>  drivers/mfd/cros_ec_dev.c                     | 203 ++----------------
 
-All applied, thanks.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
 Lee Jones [李琼斯]
