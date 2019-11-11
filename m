@@ -2,54 +2,62 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B59C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F85FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79994204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AC420659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498769;
-	bh=/5o7LaMl3y15TxiYn3Ng6YMwWWRx3K5V37qTdQwql9E=;
+	s=default; t=1573498774;
+	bh=xkQSr6cVSLOhEhVT50/PAHpLXGVaRfzIFdfdKxDfGkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0tPjbYSie66faW6BV71B5G0wx+lzUvZCdNSb9sJhG1D+pshC32MxoyMddNPI7wBL
-	 M3kLJmR0zmm6WvQjfZf2l6LShs24MQZTTbUctjM2V/TlSi7Ym9ObW/ieWSroR93vq/
-	 c2LaglsAbW/Om55OL7scFc1T/c4Gtyd/sDvOlhxc=
+	b=w1JFeSZ89irJ0XkE1fe5bJ2DbutS7PjRGqOgkLi5Y/1g7zonf4b/zFd+sQBep0/zG
+	 cZw+CCW9lUfxoRCGl+lQLuqsA9QcLLcSNkxvIBDB6ZtIeA75QtI6bMqphoTBT60Ctc
+	 wkSdBT8IWDgOO8hVgXkA7VC8wTqb2OAbCvsiDflk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbfKKS4h (ORCPT
+        id S1730460AbfKKS4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:56:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54846 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729132AbfKKS43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:56:29 -0500
+        id S1730450AbfKKS4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:56:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 122022184C;
-        Mon, 11 Nov 2019 18:56:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DE742173B;
+        Mon, 11 Nov 2019 18:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498588;
-        bh=/5o7LaMl3y15TxiYn3Ng6YMwWWRx3K5V37qTdQwql9E=;
+        s=default; t=1573498568;
+        bh=xkQSr6cVSLOhEhVT50/PAHpLXGVaRfzIFdfdKxDfGkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jBC5ND2naDCT2oOK84o8lKb3k++COb1h9l7PzX5oFKie1v6gtWfG/gZ2s4dhUx6tB
-         6O90vEUa9fbt9zhpbthkA/S3OSPidAZM5JDrOr+oAU5SGCuvgtSqGJC7dZYhoSX91Y
-         l6xrE5vRkTkBA34RcdC00zIsu20VAuPRKJOGaCOU=
+        b=cTJIJatBHTS5cAGk3XaVV4fkc3I1loGxIsy36zdWZ3euwEgoHuzcSXP9n+Ns3lXWc
+         PzU0OANdkW0BwPIJgOCD02OBl0hhwC+cpsoe5J2beGHdNytfmxjcqAV+L7EI2G0VXE
+         ybdyBqB59QJGZsx3NNJWaC5iB77iXDci/Fr6O094=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com,
+        Taehee Yoo <ap420073@gmail.com>,
+        Greg Rose <gvrose8192@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 164/193] drm/amdgpu/sdma5: do not execute 0-sized IBs (v2)
-Date:   Mon, 11 Nov 2019 19:29:06 +0100
-Message-Id: <20191111181513.220655267@linuxfoundation.org>
+Subject: [PATCH 5.3 117/193] net: openvswitch: free vport unless register_netdevice() succeeds
+Date:   Mon, 11 Nov 2019 19:28:19 +0100
+Message-Id: <20191111181509.775192349@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -62,34 +70,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+From: Hillf Danton <hdanton@sina.com>
 
-[ Upstream commit 9bdf63d3579e36942f4b91d3558a90da8116bb40 ]
+[ Upstream commit 9464cc37f3671ee69cb1c00662b5e1f113a96b23 ]
 
-This seems to help with https://bugs.freedesktop.org/show_bug.cgi?id=111481.
+syzbot found the following crash on:
 
-v2: insert a NOP instead of skipping all 0-sized IBs to avoid breaking older hw
+HEAD commit:    1e78030e Merge tag 'mmc-v5.3-rc1' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=148d3d1a600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=30cef20daf3e9977
+dashboard link: https://syzkaller.appspot.com/bug?extid=13210896153522fe1ee5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136aa8c4600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109ba792600000
 
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+=====================================================================
+BUG: memory leak
+unreferenced object 0xffff8881207e4100 (size 128):
+   comm "syz-executor032", pid 7014, jiffies 4294944027 (age 13.830s)
+   hex dump (first 32 bytes):
+     00 70 16 18 81 88 ff ff 80 af 8c 22 81 88 ff ff  .p........."....
+     00 b6 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  ..#.............
+   backtrace:
+     [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
+     [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
+     [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
+     [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
+     [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
+     [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
+     [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
+     [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
+     [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
+     [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
+     [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
+     [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+     [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
+     [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
+     [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
+     [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
+     [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
+     [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
+     [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
+     [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
+     [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
+     [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
+
+BUG: memory leak
+unreferenced object 0xffff88811723b600 (size 64):
+   comm "syz-executor032", pid 7014, jiffies 4294944027 (age 13.830s)
+   hex dump (first 32 bytes):
+     01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 02 00 00 00 05 35 82 c1  .............5..
+   backtrace:
+     [<00000000352f46d8>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
+     [<00000000352f46d8>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000352f46d8>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000352f46d8>] __do_kmalloc mm/slab.c:3653 [inline]
+     [<00000000352f46d8>] __kmalloc+0x169/0x300 mm/slab.c:3664
+     [<000000008e48f3d1>] kmalloc include/linux/slab.h:557 [inline]
+     [<000000008e48f3d1>] ovs_vport_set_upcall_portids+0x54/0xd0  net/openvswitch/vport.c:343
+     [<00000000541e4f4a>] ovs_vport_alloc+0x7f/0xf0  net/openvswitch/vport.c:139
+     [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
+     [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
+     [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
+     [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
+     [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
+     [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
+     [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
+     [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+     [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
+     [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
+     [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
+     [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
+     [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
+     [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
+     [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
+
+BUG: memory leak
+unreferenced object 0xffff8881228ca500 (size 128):
+   comm "syz-executor032", pid 7015, jiffies 4294944622 (age 7.880s)
+   hex dump (first 32 bytes):
+     00 f0 27 18 81 88 ff ff 80 ac 8c 22 81 88 ff ff  ..'........"....
+     40 b7 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  @.#.............
+   backtrace:
+     [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
+     [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
+     [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
+     [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
+     [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
+     [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
+     [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
+     [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
+     [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
+     [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
+     [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
+     [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+     [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
+     [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
+     [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
+     [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
+     [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
+     [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
+     [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
+     [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
+     [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
+     [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
+=====================================================================
+
+The function in net core, register_netdevice(), may fail with vport's
+destruction callback either invoked or not. After commit 309b66970ee2
+("net: openvswitch: do not free vport if register_netdevice() is failed."),
+the duty to destroy vport is offloaded from the driver OTOH, which ends
+up in the memory leak reported.
+
+It is fixed by releasing vport unless device is registered successfully.
+To do that, the callback assignment is defered until device is registered.
+
+Reported-by: syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com
+Fixes: 309b66970ee2 ("net: openvswitch: do not free vport if register_netdevice() is failed.")
+Cc: Taehee Yoo <ap420073@gmail.com>
+Cc: Greg Rose <gvrose8192@gmail.com>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc: Ying Xue <ying.xue@windriver.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Acked-by: Pravin B Shelar <pshelar@ovn.org>
+[sbrivio: this was sent to dev@openvswitch.org and never made its way
+ to netdev -- resending original patch]
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Greg Rose <gvrose8192@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/openvswitch/vport-internal_dev.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-index 5eeb72fcc123a..6a51e6a4a035b 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-@@ -264,6 +264,7 @@ static void gmc_v10_0_flush_gpu_tlb(struct amdgpu_device *adev,
+diff --git a/net/openvswitch/vport-internal_dev.c b/net/openvswitch/vport-internal_dev.c
+index d2437b5b2f6ad..baa33103108a5 100644
+--- a/net/openvswitch/vport-internal_dev.c
++++ b/net/openvswitch/vport-internal_dev.c
+@@ -137,7 +137,7 @@ static void do_setup(struct net_device *netdev)
+ 	netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE | IFF_OPENVSWITCH |
+ 			      IFF_NO_QUEUE;
+ 	netdev->needs_free_netdev = true;
+-	netdev->priv_destructor = internal_dev_destructor;
++	netdev->priv_destructor = NULL;
+ 	netdev->ethtool_ops = &internal_dev_ethtool_ops;
+ 	netdev->rtnl_link_ops = &internal_dev_link_ops;
  
- 	job->vm_pd_addr = amdgpu_gmc_pd_addr(adev->gart.bo);
- 	job->vm_needs_flush = true;
-+	job->ibs->ptr[job->ibs->length_dw++] = ring->funcs->nop;
- 	amdgpu_ring_pad_ib(ring, &job->ibs[0]);
- 	r = amdgpu_job_submit(job, &adev->mman.entity,
- 			      AMDGPU_FENCE_OWNER_UNDEFINED, &fence);
+@@ -159,7 +159,6 @@ static struct vport *internal_dev_create(const struct vport_parms *parms)
+ 	struct internal_dev *internal_dev;
+ 	struct net_device *dev;
+ 	int err;
+-	bool free_vport = true;
+ 
+ 	vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
+ 	if (IS_ERR(vport)) {
+@@ -190,10 +189,9 @@ static struct vport *internal_dev_create(const struct vport_parms *parms)
+ 
+ 	rtnl_lock();
+ 	err = register_netdevice(vport->dev);
+-	if (err) {
+-		free_vport = false;
++	if (err)
+ 		goto error_unlock;
+-	}
++	vport->dev->priv_destructor = internal_dev_destructor;
+ 
+ 	dev_set_promiscuity(vport->dev, 1);
+ 	rtnl_unlock();
+@@ -207,8 +205,7 @@ error_unlock:
+ error_free_netdev:
+ 	free_netdev(dev);
+ error_free_vport:
+-	if (free_vport)
+-		ovs_vport_free(vport);
++	ovs_vport_free(vport);
+ error:
+ 	return ERR_PTR(err);
+ }
 -- 
 2.20.1
 
