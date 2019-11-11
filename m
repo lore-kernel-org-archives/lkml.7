@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1D1C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44700C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC031222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D462222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498143;
-	bh=0X9NP6AA4C5Pok2ipJC483Zn772eJcPhllHCRHphyX0=;
+	s=default; t=1573498145;
+	bh=j5CCEFjOwFx4QIPsec2MwI1geNv6hrXs7BjEbUEosnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJ9b2vGyDcwo6cWoEevsN6pQLXhwCDYzzZsrZb8I0XJZeZTtfcG26LK0y8cUkoHfl
-	 Cu/dwiZ3f1r5tSoUzyqg1EiIVeUI6kgtneA4MnDzsUJ94MLi4IF520Vsq6uGGuaoDL
-	 oAya5JmPCx15S0x3Ll3EFjjmlnyt0TV0PoFAWs7U=
+	b=LXNMpZIql7slSDUiBzqgYh1YFpq5NYffQAzXYxRK/M6uU6t0YKJ2HBbNonpPHOVg/
+	 BS80mmQ0Wr9NVM/Za2iaOvR9o3o3I62xM86t3HztwhhLLKxM8jB+/3ylxU9ru9TVoT
+	 Fon3MGHeFX5smrWrwOzOyHX4pBKoVwV87P98oEhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfKKStB (ORCPT
+        id S1730280AbfKKStD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:49:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:49:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbfKKSs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:48:58 -0500
+        id S1727031AbfKKStC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:49:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794082173B;
-        Mon, 11 Nov 2019 18:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B56B21925;
+        Mon, 11 Nov 2019 18:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498138;
-        bh=0X9NP6AA4C5Pok2ipJC483Zn772eJcPhllHCRHphyX0=;
+        s=default; t=1573498141;
+        bh=j5CCEFjOwFx4QIPsec2MwI1geNv6hrXs7BjEbUEosnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x5KTpLRAqwREgkjihVd900rCOxpLysaF7q1SWi4xJVqnsxdcpL4d5sP5c2ChXxxGI
-         O+qPIWNKNG9LnZXQ4HFcwJeJV7AV8hwM95macRfNiQqZlHQiId5bnwTEZZNTCMRec4
-         0u1agqAEEtF4Evq/DstQqA1pQvawB63KduNLc6G8=
+        b=s0NKV+Vmihu5wre5bajD944IDjdbz9hA9uqqb9H0GMoAIHNA+KmTeDkIsEcSOMFsk
+         emLVqQs/Plr6OKxH6cefbUIRMrMD3nUx2YDX2QXjdqhwYkWIDAdyjdXAEDBspvzFjJ
+         Uz6qP0fckwGYNxr2ODUl0rCLT8VXliQF0lR+dQ/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 034/193] mm: slab: make page_cgroup_ino() to recognize non-compound slab pages properly
-Date:   Mon, 11 Nov 2019 19:26:56 +0100
-Message-Id: <20191111181503.283304344@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.3 035/193] btrfs: Consider system chunk array size for new SYSTEM chunks
+Date:   Mon, 11 Nov 2019 19:26:57 +0100
+Message-Id: <20191111181503.569237542@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -65,74 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 221ec5c0a46c1a1740f34fb36fc661a5284d01b0 upstream.
+commit c17add7a1c61a15578e4071ed7bfd460fd041c43 upstream.
 
-page_cgroup_ino() doesn't return a valid memcg pointer for non-compound
-slab pages, because it depends on PgHead AND PgSlab flags to be set to
-determine the memory cgroup from the kmem_cache.  It's correct for
-compound pages, but not for generic small pages.  Those don't have PgHead
-set, so it ends up returning zero.
+For SYSTEM chunks, despite the regular chunk item size limit, there is
+another limit due to system chunk array size.
 
-Fix this by replacing the condition to PageSlab() && !PageTail().
+The extra limit was removed in a refactoring, so add it back.
 
-Before this patch:
-  [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
-  0x0000000000000080	        38        0  _______S___________________________________	slab
-
-After this patch:
-  [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
-  0x0000000000000080	       147        0  _______S___________________________________	slab
-
-Also, hwpoison_filter_task() uses output of page_cgroup_ino() in order
-to filter error injection events based on memcg.  So if
-page_cgroup_ino() fails to return memcg pointer, we just fail to inject
-memory error.  Considering that hwpoison filter is for testing, affected
-users are limited and the impact should be marginal.
-
-[n-horiguchi@ah.jp.nec.com: changelog additions]
-Link: http://lkml.kernel.org/r/20191031012151.2722280-1-guro@fb.com
-Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: e3ecdb3fdecf ("btrfs: factor out devs_max setting in __btrfs_alloc_chunk")
+CC: stable@vger.kernel.org # 5.3+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |    2 +-
- mm/slab.h       |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/volumes.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -486,7 +486,7 @@ ino_t page_cgroup_ino(struct page *page)
- 	unsigned long ino = 0;
- 
- 	rcu_read_lock();
--	if (PageHead(page) && PageSlab(page))
-+	if (PageSlab(page) && !PageTail(page))
- 		memcg = memcg_from_slab_page(page);
- 	else
- 		memcg = READ_ONCE(page->mem_cgroup);
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -259,8 +259,8 @@ static inline struct kmem_cache *memcg_r
-  * Expects a pointer to a slab page. Please note, that PageSlab() check
-  * isn't sufficient, as it returns true also for tail compound slab pages,
-  * which do not have slab_cache pointer set.
-- * So this function assumes that the page can pass PageHead() and PageSlab()
-- * checks.
-+ * So this function assumes that the page can pass PageSlab() && !PageTail()
-+ * check.
-  *
-  * The kmem_cache can be reparented asynchronously. The caller must ensure
-  * the memcg lifetime, e.g. by taking rcu_read_lock() or cgroup_mutex.
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4976,6 +4976,7 @@ static int __btrfs_alloc_chunk(struct bt
+ 	} else if (type & BTRFS_BLOCK_GROUP_SYSTEM) {
+ 		max_stripe_size = SZ_32M;
+ 		max_chunk_size = 2 * max_stripe_size;
++		devs_max = min_t(int, devs_max, BTRFS_MAX_DEVS_SYS_CHUNK);
+ 	} else {
+ 		btrfs_err(info, "invalid chunk type 0x%llx requested",
+ 		       type);
 
 
