@@ -2,144 +2,124 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BBAC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB801C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1680D20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFC120818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hRd+mz4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKKRuV (ORCPT
+        id S1727050AbfKKRvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:50:21 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:42502 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfKKRuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:50:20 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1iUDpR-0000Z8-Ls; Mon, 11 Nov 2019 10:50:19 -0700
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20191022214616.7943-1-logang@deltatee.com>
- <20191022214616.7943-4-logang@deltatee.com>
- <20191109173510.GG952516@vkoul-mobl>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <ff43b1f9-c620-17eb-fc6c-4c7d7577250b@deltatee.com>
-Date:   Mon, 11 Nov 2019 10:50:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 12:51:03 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39592 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfKKRvD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:51:03 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so12228411oif.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:51:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tn39DxU04+DSsZr8kND2VIZkOzQxYXWDgGYNHU/AaPM=;
+        b=hRd+mz4f8xgu9UGqp+JB5w2XVjuC6AM5vJq8lX54ZYlKOZy/nB7PDAOXGqjR0F84eY
+         YqAgormfY5752xJQkwv8SeEGwVgpQseunydRopDDDUgbojrTBH+WtiGpq8YsF228P8Hz
+         ZwGnV06TT9wni26K8ZyoHr2ketlmDOV4AdnSs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tn39DxU04+DSsZr8kND2VIZkOzQxYXWDgGYNHU/AaPM=;
+        b=JXjThfn22intjI2WZKmIR2df4KOQqhSFmeP0dDKn7rW36DFQoR0ZLVwNqfeg8+ZOvX
+         3TksfITusa7z6p9cX2BdpIO2Hl0KoA1/HahlCisXohjaS9Sca4Rd7chPoRGpIAmYU64A
+         UPPNmkSo0+eQbx/PF7zeJRMofqRTANtxAdLTxFlzal0SQxWMXp3Ys5uMI8Rp13gy1S6H
+         xfsMOurOyOJ8NmR1M+Ol16dNbchl5jELObQ53YDNpYQJiDMmko8BDyPfpLiBS88XXm6x
+         gew7x8f3i/uj1W6HooR29CbTVFmCB9+H5YyVZUQpnTxUKqGEaWU/SRr1jldEjEAFVufq
+         qJWQ==
+X-Gm-Message-State: APjAAAUq3B40rw3eZ/UC0bhP4rXEkGfx7y8b3siCCVZRkUEhhD3WAfTB
+        nQgiteLMUPc7ThGkD4jXPd69LmA5dLg+iG178J+sAw==
+X-Google-Smtp-Source: APXvYqytxCcqPCMEqfFAueO6g/FMl4IwXESWckL/rgEvXl+6gdqL56xWWUP+3VFZtWrCD9a4CTyjsObDDXrAZcFYYrM=
+X-Received: by 2002:aca:5cd5:: with SMTP id q204mr199928oib.14.1573494661964;
+ Mon, 11 Nov 2019 09:51:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191109173510.GG952516@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 3/5] dmaengine: plx-dma: Introduce PLX DMA engine PCI
- driver skeleton
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20191111020855.20775-1-olof@lixom.net>
+In-Reply-To: <20191111020855.20775-1-olof@lixom.net>
+From:   Michael Chan <michael.chan@broadcom.com>
+Date:   Mon, 11 Nov 2019 09:50:51 -0800
+Message-ID: <CACKFLim64Yd=yp+P5FTFmVh3w-s1rWMROO_cbn940TkzKOFUCw@mail.gmail.com>
+Subject: Re: [PATCH] net: bnxt_en: Fix array overrun in bnxt_fill_l2_rewrite_fields()
+To:     Olof Johansson <olof@lixom.net>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-11-09 10:35 a.m., Vinod Koul wrote:
-> On 22-10-19, 15:46, Logan Gunthorpe wrote:
->> +static irqreturn_t plx_dma_isr(int irq, void *devid)
->> +{
->> +	return IRQ_HANDLED;
-> 
-> ??
-
-Yes, sorry this is more of an artifact of how I chose to split the
-patches up. The ISR is filled-in in patch 4.
-
-
->> +	 */
->> +	schedule_work(&plxdev->release_work);
->> +}
->> +
->> +static void plx_dma_put(struct plx_dma_dev *plxdev)
->> +{
->> +	kref_put(&plxdev->ref, plx_dma_release);
->> +}
->> +
->> +static int plx_dma_alloc_chan_resources(struct dma_chan *chan)
->> +{
->> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
->> +
->> +	kref_get(&plxdev->ref);
-> 
-> why do you need to do this?
-
-This has to do with being able to probably unbind while a channel is in
-use. If we don't hold a reference to the struct plx_dma_dev between
-alloc_chan_resources() and free_chan_resources() then it will panic if a
-call back is called after plx_dma_remove(). The way I've done it, once a
-device is removed, subsequent calls to dma_prep_memcpy() will fail (see
-ring_active).
-
-struct plx_dma_dev needs to be alive between plx_dma_probe() and
-plx_dma_remove(), and between calls to alloc_chan_resources() and
-free_chan_resources(). So we use a reference count to ensure this.
-
->> +}
->> +
->> +static void plx_dma_release_work(struct work_struct *work)
->> +{
->> +	struct plx_dma_dev *plxdev = container_of(work, struct plx_dma_dev,
->> +						  release_work);
->> +
->> +	dma_async_device_unregister(&plxdev->dma_dev);
->> +	put_device(plxdev->dma_dev.dev);
->> +	kfree(plxdev);
->> +}
->> +
->> +static void plx_dma_release(struct kref *ref)
->> +{
->> +	struct plx_dma_dev *plxdev = container_of(ref, struct plx_dma_dev, ref);
->> +
->> +	/*
->> +	 * The dmaengine reference counting and locking is a bit of a
->> +	 * mess so we have to work around it a bit here. We might put
->> +	 * the reference while the dmaengine holds the dma_list_mutex
->> +	 * which means we can't call dma_async_device_unregister() directly
->> +	 * here and it must be delayed.
+On Sun, Nov 10, 2019 at 6:09 PM Olof Johansson <olof@lixom.net> wrote:
 >
-> why is that, i have not heard any complaints about locking, can you
-> elaborate on why you need to do this?
+> This is caused by what seems to be a fragile typing approach by
+> the Broadcom firmware/driver:
+>
+> /* FW expects smac to be in u16 array format */
+>
+> So the driver uses eth_addr and eth_addr_mask as u16[6] instead of u8[12],
+> so the math in bnxt_fill_l2_rewrite_fields does a [6] deref of the u16
+> pointer, it goes out of bounds on the array.
+>
+> Just a few lines below, they use ETH_ALEN/2, so this must have been
+> overlooked. I'm surprised original developers didn't notice the compiler
+> warnings?!
+>
+> Fixes: 90f906243bf6 ("bnxt_en: Add support for L2 rewrite")
+> Signed-off-by: Olof Johansson <olof@lixom.net>
+> ---
+>  drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c | 25 ++++++++++++++-----------
+>  1 file changed, 14 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+> index 174412a55e53c..cde2b81f6fe54 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+> @@ -149,29 +149,32 @@ static void bnxt_set_l2_key_mask(u32 part_key, u32 part_mask,
+>
+>  static int
+>  bnxt_fill_l2_rewrite_fields(struct bnxt_tc_actions *actions,
+> -                           u16 *eth_addr, u16 *eth_addr_mask)
+> +                           u8 *eth_addr, u8 *eth_addr_mask)
+>  {
+>         u16 *p;
+> +       u8 *am;
+>         int j;
+>
+>         if (unlikely(bnxt_eth_addr_key_mask_invalid(eth_addr, eth_addr_mask)))
+>                 return -EINVAL;
+>
+> -       if (!is_wildcard(&eth_addr_mask[0], ETH_ALEN)) {
+> -               if (!is_exactmatch(&eth_addr_mask[0], ETH_ALEN))
+> +       am = eth_addr_mask;
+> +       if (!is_wildcard(am, ETH_ALEN)) {
+> +               if (!is_exactmatch(am, ETH_ALEN))
+>                         return -EINVAL;
+>                 /* FW expects dmac to be in u16 array format */
+> -               p = eth_addr;
+> -               for (j = 0; j < 3; j++)
+> +               p = (u16 *)am;
 
-Per the above explanation, we need to call plx_dma_put() in
-plx_dma_free_chan_resources(); and plx_dma_release() is when we can call
-dma_async_device_unregister() (seeing that's when we know there are no
-longer any active channels).
+Wouldn't this cause unaligned access?  am may not be u16 aligned, right?
 
-However, dma_chan_put() (which calls device_free_chan_resources()) holds
-the dma_list_mutex and dma_async_device_unregister() tries to take the
-dma_list_mutex so, if we call unregister inside free_chan_resources we
-would deadlock.
-
-I suspect that most dmaengine drivers will WARN[1] and then panic if
-they are unbound while in use. The locking, reference counting and
-structure of the API didn't seem to consider it and required extra
-reference counts and workarounds to make it work correctly at all.
-
-This is the mess I'm referring to and would require some significant
-restructuring to fix generally.
-
-Logan
-
-[1]
-https://elixir.bootlin.com/linux/latest/source/drivers/dma/dmaengine.c#L1119
-
-
+> +               for (j = 0; j < ETH_ALEN / 2; j++)
+>                         actions->l2_rewrite_dmac[j] = cpu_to_be16(*(p + j));
+>         }
+>
