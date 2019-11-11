@@ -2,52 +2,61 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA5BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097CBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40944214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D7821783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498248;
-	bh=SLOivCk1713bYurRj/oTAO4NkgPSRFCVrj6Tjlrqb6E=;
+	s=default; t=1573498253;
+	bh=1HGeQd+i51xc2/LbpOvoli3yDDNk5PN3cNjdO+/G3zA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sPieGuaww3AfzZoPR1gd/MycG3Aia91AE8psl9OF+pBXu8u/lSwFZcjYFx1bq55B4
-	 CrgUenElMTM5e4n45n47deKovSWrfa+78i/3aWqoVGCDaSMT0G3i8aRG/UIwBGLBYL
-	 jujzrqzkfvRVDrsnC92tJwzsYoE9QWwpjb8f4sfk=
+	b=uazf8br070tdxwFZrzYB095+jarga6/dMItToyJ2baE0LgFhM/v45zbnQHw2TG6aC
+	 GVu7lp484fX5rjtb78qYSTryOc0tMIcqY+UQcQCbOOWLMsaMy0sbe3x1B59Stdau2a
+	 0ymNPTl1rwfU7fE8NHj6S3KTUJY1vbOybnISayqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbfKKSur (ORCPT
+        id S1730377AbfKKSuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44590 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728938AbfKKSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:45 -0500
+        id S1728938AbfKKSut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ECC120674;
-        Mon, 11 Nov 2019 18:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11199222C1;
+        Mon, 11 Nov 2019 18:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498244;
-        bh=SLOivCk1713bYurRj/oTAO4NkgPSRFCVrj6Tjlrqb6E=;
+        s=default; t=1573498247;
+        bh=1HGeQd+i51xc2/LbpOvoli3yDDNk5PN3cNjdO+/G3zA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yF+LLEDMUpB7WqEKJyZfxQWySLo1O8hQBJvZ4psmL7h3TgBY0UHHArrfPEuyONdiQ
-         EwVUxbkq17OSn6JvBwBq9k6839CSzM8lmTKgHN34F7tCLMDR859rDEfgZnjNx62+4w
-         DckqaCWWXEf/WFhXJjA6EqBG5rPPbhq2douxGIYI=
+        b=HaFLHoFnlHlZ7JjhKfaMLP/iK/D45hwY2yzYCOclLu/x7jfSEnIBmax9BITdQhUve
+         k/t1DJnhCOP2S2qhbImm+Ent2lAOaXbHCt6xSORB/TULdPdVfc7UcFWml83ftGYGnQ
+         mOVODQNWf/S9uG4EnSB8tgRZxWEyrVE3hW+oTN68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 062/193] cpufreq: intel_pstate: Fix invalid EPB setting
-Date:   Mon, 11 Nov 2019 19:27:24 +0100
-Message-Id: <20191111181505.577283585@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api@vger.kernel.org,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Arnd Bergmann <arnd@arndb.de>, Aleksa Sarai <cyphar@cyphar.com>
+Subject: [PATCH 5.3 063/193] clone3: validate stack arguments
+Date:   Mon, 11 Nov 2019 19:27:25 +0100
+Message-Id: <20191111181505.649555239@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,45 +69,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-commit c31432fa7f825de0e19838f1ac7746381c509ec4 upstream.
+commit fa729c4df558936b4a1a7b3e2234011f44ede28b upstream.
 
-The max value of EPB can only be 0x0F. Attempting to set more than that
-triggers an "unchecked MSR access error" warning which happens in
-intel_pstate_hwp_force_min_perf() called via cpufreq stop_cpu().
+Validate the stack arguments and setup the stack depening on whether or not
+it is growing down or up.
 
-However, it is not even necessary to touch the EPB from intel_pstate,
-because it is restored on every CPU online by the intel_epb.c code,
-so let that code do the right thing and drop the redundant (and
-incorrect) EPB update from intel_pstate.
+Legacy clone() required userspace to know in which direction the stack is
+growing and pass down the stack pointer appropriately. To make things more
+confusing microblaze uses a variant of the clone() syscall selected by
+CONFIG_CLONE_BACKWARDS3 that takes an additional stack_size argument.
+IA64 has a separate clone2() syscall which also takes an additional
+stack_size argument. Finally, parisc has a stack that is growing upwards.
+Userspace therefore has a lot nasty code like the following:
 
-Fixes: af3b7379e2d70 ("cpufreq: intel_pstate: Force HWP min perf before offline")
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: 5.2+ <stable@vger.kernel.org> # 5.2+
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-[ rjw: Changelog ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ #define __STACK_SIZE (8 * 1024 * 1024)
+ pid_t sys_clone(int (*fn)(void *), void *arg, int flags, int *pidfd)
+ {
+         pid_t ret;
+         void *stack;
+
+         stack = malloc(__STACK_SIZE);
+         if (!stack)
+                 return -ENOMEM;
+
+ #ifdef __ia64__
+         ret = __clone2(fn, stack, __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
+ #elif defined(__parisc__) /* stack grows up */
+         ret = clone(fn, stack, flags | SIGCHLD, arg, pidfd);
+ #else
+         ret = clone(fn, stack + __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
+ #endif
+         return ret;
+ }
+
+or even crazier variants such as [3].
+
+With clone3() we have the ability to validate the stack. We can check that
+when stack_size is passed, the stack pointer is valid and the other way
+around. We can also check that the memory area userspace gave us is fine to
+use via access_ok(). Furthermore, we probably should not require
+userspace to know in which direction the stack is growing. It is easy
+for us to do this in the kernel and I couldn't find the original
+reasoning behind exposing this detail to userspace.
+
+/* Intentional user visible API change */
+clone3() was released with 5.3. Currently, it is not documented and very
+unclear to userspace how the stack and stack_size argument have to be
+passed. After talking to glibc folks we concluded that trying to change
+clone3() to setup the stack instead of requiring userspace to do this is
+the right course of action.
+Note, that this is an explicit change in user visible behavior we introduce
+with this patch. If it breaks someone's use-case we will revert! (And then
+e.g. place the new behavior under an appropriate flag.)
+Breaking someone's use-case is very unlikely though. First, neither glibc
+nor musl currently expose a wrapper for clone3(). Second, there is no real
+motivation for anyone to use clone3() directly since it does not provide
+features that legacy clone doesn't. New features for clone3() will first
+happen in v5.5 which is why v5.4 is still a good time to try and make that
+change now and backport it to v5.3. Searches on [4] did not reveal any
+packages calling clone3().
+
+[1]: https://lore.kernel.org/r/CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com
+[2]: https://lore.kernel.org/r/20191028172143.4vnnjpdljfnexaq5@wittgenstein
+[3]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2ff9effa3b338/src/basic/raw-clone.h#L31
+[4]: https://codesearch.debian.net
+Fixes: 7f192e3cd316 ("fork: add clone3")
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-api@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: <stable@vger.kernel.org> # 5.3
+Cc: GNU C Library <libc-alpha@sourceware.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Aleksa Sarai <cyphar@cyphar.com>
+Link: https://lore.kernel.org/r/20191031113608.20713-1-christian.brauner@ubuntu.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/intel_pstate.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/fork.c |   33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -846,11 +846,9 @@ static void intel_pstate_hwp_force_min_p
- 	value |= HWP_MAX_PERF(min_perf);
- 	value |= HWP_MIN_PERF(min_perf);
- 
--	/* Set EPP/EPB to min */
-+	/* Set EPP to min */
- 	if (boot_cpu_has(X86_FEATURE_HWP_EPP))
- 		value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
--	else
--		intel_pstate_set_epb(cpu, HWP_EPP_BALANCE_POWERSAVE);
- 
- 	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2586,7 +2586,35 @@ noinline static int copy_clone_args_from
+ 	return 0;
  }
+ 
+-static bool clone3_args_valid(const struct kernel_clone_args *kargs)
++/**
++ * clone3_stack_valid - check and prepare stack
++ * @kargs: kernel clone args
++ *
++ * Verify that the stack arguments userspace gave us are sane.
++ * In addition, set the stack direction for userspace since it's easy for us to
++ * determine.
++ */
++static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
++{
++	if (kargs->stack == 0) {
++		if (kargs->stack_size > 0)
++			return false;
++	} else {
++		if (kargs->stack_size == 0)
++			return false;
++
++		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
++			return false;
++
++#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
++		kargs->stack += kargs->stack_size;
++#endif
++	}
++
++	return true;
++}
++
++static bool clone3_args_valid(struct kernel_clone_args *kargs)
+ {
+ 	/*
+ 	 * All lower bits of the flag word are taken.
+@@ -2606,6 +2634,9 @@ static bool clone3_args_valid(const stru
+ 	    kargs->exit_signal)
+ 		return false;
+ 
++	if (!clone3_stack_valid(kargs))
++		return false;
++
+ 	return true;
+ }
+ 
 
 
