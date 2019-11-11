@@ -2,155 +2,146 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C15C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED714C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0862821D7F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6030206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BP7+Bkdj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZBx0shAX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKKO4E (ORCPT
+        id S1726962AbfKKO4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:56:04 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33825 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfKKO4D (ORCPT
+        Mon, 11 Nov 2019 09:56:52 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30423 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726889AbfKKO4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:56:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id t4so11489052otr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:56:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lFd9QgXHtlAAGLyAHn/OxQGBQG3M9vesrmYO8xOMHoM=;
-        b=BP7+BkdjiK2/+DzxZLMF4OWcq+cRxwzGeFcLF7It+OsxMVvOjdL9wZmktEWUCYdChM
-         FKtqwwh4KJYzY8pihfF6DNgymNipK813O4fvTgJe4wIoHcpokv1yQ4x+3fx5ehmb6SUT
-         2z8kM+HvyOlJSOUauByBIDmATfcJvoJyqsVPSeR7GfNEcKgvqSNhS05wsmU942cgN5HC
-         1Hwgm0atXLwTzkALMNcMh3rFwaz1qiTlJyiVeIKnBWajTpVseCqxnJ1FHzHiBX0RXvdb
-         HIyPeavTnKiDH4+zz0WrHKvp/je+osxUryWha3EOHeUXzbdRia0UelWH7Gk62ZV+pbcD
-         dkDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lFd9QgXHtlAAGLyAHn/OxQGBQG3M9vesrmYO8xOMHoM=;
-        b=ubV3FIPoHBE48w/+yl5nw7tPwl01OqiPpmNBDN1op4FETZmAieMODLIY2pdN1rJ5m9
-         yrf8PC8cWq+AZd0RBOWGX+Tin6FmqlB1BO4nfeMULMSctYcH6Ha9SCsP30SVXDDW97pK
-         0xCacxfCzOgl7Qw07nHkJhi7RMOqem71KrsM5pEXFL7z0BeindjkUK7uyq50A9XZbuY3
-         8aR3qFuJ61eXcWKyZnLbU/Sl/uTKwJTSdelIstAsKCFBJCi1v0ZWx2K3Z388uQRBMe0R
-         xV1pI0kUkxB6q0PlkJV9uW36dQTjOhkYxDtka7s2hkC6tT5IPEajCHkn37kaHIcvT6jU
-         FUZA==
-X-Gm-Message-State: APjAAAV4wdzs6dJPOozP8dVTh1mE6li1gmu0u4B0c/G9S3/PCebaxQTe
-        ERJdGUKKd55QBmyoJtYxgyeKYPpfx+NWgtH880j8aA==
-X-Google-Smtp-Source: APXvYqyWH6HotinOqdFmaBjC5eneRB4r8cL58DmW2B908LWeWn/aSruzOt/1Wjp51sUtGHVs64LcswG5aeLsENuK5DU=
-X-Received: by 2002:a9d:7e8a:: with SMTP id m10mr2125174otp.180.1573484162476;
- Mon, 11 Nov 2019 06:56:02 -0800 (PST)
+        Mon, 11 Nov 2019 09:56:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573484211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=60Q7vS2CmK4AK0J+x4ZvzH3U+jveBIMJrpq1nfCbPwQ=;
+        b=ZBx0shAXRbN6UNyfZwLIphjceKvNoxxqDv4l9TWII5Vf9sBbaUuEmkjRObn6oTRMHlssKr
+        lRu93hzh+NcvSISF2Pwt99homsVliFY4roCVLI5nx7N6qHoDuuuKqupZJY4MMgLxYPUkqZ
+        /ttJtMgGFoFSAFn/xvrVwRFUQUL4nWI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-Ov9PzoJrP_udTUFq1cP-gQ-1; Mon, 11 Nov 2019 09:56:45 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8736D18B9FDA;
+        Mon, 11 Nov 2019 14:56:44 +0000 (UTC)
+Received: from krava (unknown [10.40.205.88])
+        by smtp.corp.redhat.com (Postfix) with SMTP id ED0EE60904;
+        Mon, 11 Nov 2019 14:56:40 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 15:56:40 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] perf session: Fix compression processing
+Message-ID: <20191111145640.GB26980@krava>
+References: <20191103222441.GE8251@krava>
+ <d57725e6-e62f-b37e-6cb4-28bf521faaea@linux.intel.com>
 MIME-Version: 1.0
-References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
- <20191107151941.dw4gtul5lrtax4se@wittgenstein> <2eb2ab4c-b177-29aa-cdc4-420b24cfd7b3@gmail.com>
-In-Reply-To: <2eb2ab4c-b177-29aa-cdc4-420b24cfd7b3@gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 11 Nov 2019 15:55:35 +0100
-Message-ID: <CAG48ez2of684J6suPZpko7JFV6hg5KQsrP0KAn8B8-C3PM9OfQ@mail.gmail.com>
-Subject: Re: For review: documentation of clone3() system call
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ingo Molnar <mingo@elte.hu>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d57725e6-e62f-b37e-6cb4-28bf521faaea@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: Ov9PzoJrP_udTUFq1cP-gQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 9, 2019 at 9:10 AM Michael Kerrisk (man-pages)
-<mtk.manpages@gmail.com> wrote:
-[...]
-> On 11/7/19 4:19 PM, Christian Brauner wrote:
-> > On Fri, Oct 25, 2019 at 06:59:31PM +0200, Michael Kerrisk (man-pages) w=
-rote:
-[...]
-> >>        The stack argument specifies the location of the stack used by =
-the
-> >>        child process.  Since the child and calling process may share m=
-em=E2=80=90
-> >>        ory,  it  is  not possible for the child process to execute in =
-the
-> >>        same stack as the  calling  process.   The  calling  process  m=
-ust
-> >>        therefore  set  up  memory  space  for  the child stack and pas=
-s a
-> >>        pointer to this space to clone().  Stacks  grow  downward  on  =
-all
-> >
-> > It might be a good idea to advise people to use mmap() to create a
-> > stack. The "canonical" way of doing this would usually be something lik=
-e
-> >
-> > #define DEFAULT_STACK_SIZE (4 * 1024 * 1024) /* 8 MB usually on Linux *=
-/
-> > void *stack =3D mmap(NULL, DEFAULT_STACK_SIZE, PROT_READ | PROT_WRITE, =
-MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
-> >
-> > (Yes, the MAP_STACK is usally a noop but people should always include i=
-t
-> >  in case some arch will have weird alignment requirement in which case
-> >  this flag can be changed to actually do something...)
->
-> So, I'm getting a little bit of an education here, and maybe you are
-> going to further educate me. Long ago, I added the documentation of
-> MAP_STACK to mmap(2), but I never quite connected the dots.
->
-> However, you say MAP_STACK is *usually* a noop. As far as I can see,
-> in current kernels it is *always* a noop. And AFAICS, since it was first
-> added in 2.6.27 (2008), it has always been a noop.
->
-> I wonder if it will always be a noop.
-[...]
-> So, my understanding from the above is that MAP_STACK was added to
-> allow a possible fix on some old architectures, should anyone decide it
-> was worth doing the work of implementing it. But so far, after 12 years,
-> no one did. It kind of looks like no one ever will (since those old
-> architectures become less and less relevant).
->
-> So, AFAICT, while it's not wrong to tell people to use mmap(MAP_STACKED),
-> it doesn't provide any benefit (and perhaps never will), and it is a
-> more clumsy than plain old malloc().
->
-> But, it could well be that there's something I still don't know here,
-> and I'd be interested to get further education.
+On Mon, Nov 11, 2019 at 05:38:49PM +0300, Alexey Budankov wrote:
+>=20
+> On 04.11.2019 1:24, Jiri Olsa wrote:
+> > hi,
+> <SNIP>
+> > ---
+> > The compressed data processing occasionally fails with:
+> >   $ perf report --stdio -vv
+> >   decomp (B): 44519 to 163000
+> >   decomp (B): 48119 to 174800
+> >   decomp (B): 65527 to 131072
+> >   fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mmap_si=
+ze=3D0x20000: fuzzed perf.data?
+> >   Error:
+> >   failed to process sample
+> >   ...
+> >=20
+> > It's caused by recent fuzzer fix that does not take into account
+> > that compressed data do not need to by fully present in the buffer,
+> > so it's ok to just return NULL and not to fail.
+> >=20
+> > Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing inv=
+alid header.size")
+> > Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.kernel.=
+org
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/session.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index f07b8ecb91bc..3589ed14a629 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_events(st=
+ruct perf_session *session)
+> > =20
+> >  static union perf_event *
+> >  fetch_mmaped_event(struct perf_session *session,
+> > -=09=09   u64 head, size_t mmap_size, char *buf)
+> > +=09=09   u64 head, size_t mmap_size, char *buf, bool decomp)
+>=20
+> bools in interface make code less transparent.
+>=20
+> >  {
+> >  =09union perf_event *event;
+> > =20
+> > @@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *session,
+> >  =09=09/* We're not fetching the event so swap back again */
+> >  =09=09if (session->header.needs_swap)
+> >  =09=09=09perf_event_header__bswap(&event->header);
+> > +=09=09if (decomp)
+> > +=09=09=09return NULL;
+> >  =09=09pr_debug("%s: head=3D%#" PRIx64 " event->header_size=3D%#x, mmap=
+_size=3D%#zx: fuzzed perf.data?\n",
+> >  =09=09=09 __func__, head, event->header.size, mmap_size);
+> >  =09=09return ERR_PTR(-EINVAL);
+> > @@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_events(=
+struct perf_session *session)
+> >  =09=09return 0;
+> > =20
+> >  =09while (decomp->head < decomp->size && !session_done()) {
+> > -=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp->=
+head, decomp->size, decomp->data);
+> > +=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp->=
+head, decomp->size, decomp->data, true);
+>=20
+> It looks like this call can be skipped, at all, in this case.
 
-Not on Linux, but on OpenBSD, they do use MAP_STACK now AFAIK; this
-was announced here:
-<http://openbsd-archive.7691.n7.nabble.com/stack-register-checking-td338238=
-.html>.
-Basically they periodically check whether the userspace stack pointer
-points into a MAP_STACK region, and if not, they kill the process. So
-even if it's a no-op on Linux, it might make sense to advise people to
-use the flag to improve portability? I'm not sure if that's something
-that belongs in Linux manpages.
+not sure what you mean, we are in decomp code no?
 
-Another reason against malloc() is that when setting up thread stacks
-in proper, reliable software, you'll probably want to place a guard
-page (in other words, a 4K PROT_NONE VMA) at the bottom of the stack
-to reliably catch stack overflows; and you probably don't want to do
-that with malloc, in particular with non-page-aligned allocations.
+jirka
+
