@@ -2,128 +2,151 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB9DC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819EFC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156BC20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:58:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezStHSGE"
+	by mail.kernel.org (Postfix) with ESMTP id 64258206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfKKR6F (ORCPT
+        id S1726989AbfKKSAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:58:05 -0500
-Received: from mail-wr1-f53.google.com ([209.85.221.53]:46467 "EHLO
-        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfKKR6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:58:05 -0500
-Received: by mail-wr1-f53.google.com with SMTP id b3so15602757wrs.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:58:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EpziU3n1BW5TLHQT8FQscf45CBaREelPg2coeu8/dVQ=;
-        b=ezStHSGEGwVEJrQ2BSZyBOA0qUcZhjbVVj5Hte4teiC3bJFyEKVYPUSqYfAmvOit3o
-         H10Yx+EBvcTFLI/I6dWQjNkRRL2ENKHmkZKKtbx76Jd1bbCESZ1zbdQD2rDKd5xuT8Xr
-         5wC36jcM9CT+skEFLwhQ4wIfnNXXpWWY4uKSh19OT5CltAqQDXqCc0dA/YLg6Tc+Ayd0
-         Ra91tYwjq/vMPjRJh73oq6Hseg3C0D0XJ+oREdGO7+oQ2wxiQGdKzeZAEdrUcuDIl+vs
-         xidMWt1xUfXXwU1fPF27DJYJ7OocSrxCWfbrhTwVO1wGUO3bJHweTq/as7v8twDhp2LR
-         r6mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EpziU3n1BW5TLHQT8FQscf45CBaREelPg2coeu8/dVQ=;
-        b=c0zKp+PRdwvfeH7nfyRqlZBF2uEpAPnkTrw+YrRBeSl+hKK8uvMzR8Rkb7LsBQQVDR
-         VfDa8McXCatRiPJ8iyvt+E6FUPO2wlwYBcb1HbZC35xKTPOLj2iVkysBPk30fphpeCDq
-         5CXEPeeYmJb6Vs18sLH4f5qUhe6mFMa0dJCGDvuuVvaNMqY2MICRGdL8KPgu7dcACIW3
-         ku/1lo+7dQMA8Ny4DQl2m4BmBaqG7kEMiw4QsHvTLoYQLJKDMvLruT6IbSxrrI5wjXRh
-         xyglAg6P7GS8NPp8nxfRY6gA9F5UVh0He9HQEnkpgGYUR9WcDWwkR2FsZ0/kmp7MPwSl
-         jOVA==
-X-Gm-Message-State: APjAAAX0q/nMYKKYd3k2BH7EtPk4YpYjMges/GZWTswvvLP22klSfocg
-        Z4e31sE5eu8ugWnF9WcnJviMxugh7J/i/SbcEOY=
-X-Google-Smtp-Source: APXvYqx3ye/RxIPpV3svQCJ4zX0dnZOKXMO8w79UOdtPMbx1hABpnBd3Hy5aphbwPtqSPIfRyTOPL8O8scVa13McSKk=
-X-Received: by 2002:a5d:4688:: with SMTP id u8mr21495307wrq.40.1573495082976;
- Mon, 11 Nov 2019 09:58:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20191109093725.42364-1-yuehaibing@huawei.com>
-In-Reply-To: <20191109093725.42364-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 11 Nov 2019 12:57:49 -0500
-Message-ID: <CADnq5_PcSdTm9yKdbv=QHFtGeO58a30wZ0KxjQUNqy3Aax9thg@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/display: remove set but not used variable 'ds_port'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 11 Nov 2019 13:00:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33684 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726741AbfKKSAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:00:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4F721B2E9;
+        Mon, 11 Nov 2019 18:00:21 +0000 (UTC)
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Subject: [PATCH 0/6] Add support for frequency invariance for (some) x86
+Date:   Mon, 11 Nov 2019 19:05:43 +0100
+Message-Id: <20191111180549.12166-1-ggherdovich@suse.cz>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+v2 at https://lore.kernel.org/lkml/20191002122926.385-1-ggherdovich@suse.cz/
 
-Alex
+Changes wrt v2:
 
-On Sun, Nov 10, 2019 at 9:29 PM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c: In function dp_wa_power_up_0010FA:
-> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c:2320:35: warning:
->  variable ds_port set but not used [-Wunused-but-set-variable]
->
-> It is never used, so can be removed.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> index 65de32f..b814b74 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> @@ -2910,7 +2910,6 @@ static void dp_wa_power_up_0010FA(struct dc_link *link, uint8_t *dpcd_data,
->                 int length)
->  {
->         int retry = 0;
-> -       union dp_downstream_port_present ds_port = { 0 };
->
->         if (!link->dpcd_caps.dpcd_rev.raw) {
->                 do {
-> @@ -2923,9 +2922,6 @@ static void dp_wa_power_up_0010FA(struct dc_link *link, uint8_t *dpcd_data,
->                 } while (retry++ < 4 && !link->dpcd_caps.dpcd_rev.raw);
->         }
->
-> -       ds_port.byte = dpcd_data[DP_DOWNSTREAMPORT_PRESENT -
-> -                                DP_DPCD_REV];
-> -
->         if (link->dpcd_caps.dongle_type == DISPLAY_DONGLE_DP_VGA_CONVERTER) {
->                 switch (link->dpcd_caps.branch_dev_id) {
->                 /* 0010FA active dongles (DP-VGA, DP-DLDVI converters) power down
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+- Removing the tick_disable mechanism. Frequency scale-invariance isn't
+  just about helping schedutil choose better frequencies, but also
+  providing the scheduler load balancer with better metrics. All users of
+  PELT signals benefit from this feature. The tick_disable patch disabled
+  frequency invariant calculation when a specific driver is in use
+  (intel_pstate in active mode).
+
+- static_branch_enable(&arch_scale_freq_key) is now called earlier, right
+  after we learn that X86_FEATURE_APERFMPERF is available. Previously Peter
+  Z. commented "if we can't tell the max_freq we don't want to use the
+  invariant stuff.". I've decided to do it differently: if we can't tell
+  the max_freq, then it's because the CPU encodes max_freq in MSRs in a way
+  this patch doesn't understand, and we assume max_p is the max_freq which
+  seems like a safe bet. As a reminder, max_freq=max_p is encoded by
+  setting arch_max_freq=1024 as default value. I'm open to feedback.
+
+- Refactoring the switch case statement in set_cpu_max_freq() as Rafael
+  W. Now the first patch doesn't hint at what the following patch will
+  bring along.
+
+- Handling the case were turbo is disabled at runtime and a _PPC ACPI
+  notification is issued, as requested by Rafael W. This happens eg. when
+  some laptop model is disconnected from AC. (Patch #6)
+
+- Handling all Intel x86_64 micro-arches.
+
+- A note for Srinivas P., who expressed concern for Atoms: on Atom CPUs the
+  max_freq is set to the highest turbo level, as a power-efficiency
+  oriented measure. In this way the ratio curr_freq/max_freq tends to be
+  lower, PELT signals are consequently lower, and schedutil doesn't push
+  too hard on speed. (Patches #4 and #5).
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cover Letter from v2:
+
+v1 at https://lore.kernel.org/lkml/20190909024216.5942-1-ggherdovich@suse.cz/
+
+Changes wrt v1:
+
+- add x86-specific implementation of arch_scale_freq_invariant() using a
+  static key that checks for the availability of APERF and MPERF
+- refer to GOLDMONT_D instead of GOLDMONT_X, according to recent rename
+- set arch_cpu_freq to 1024 from x86_arch_scale_freq_tick_disable() to prevent
+  PELT from being fed stale data
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cover Letter from v1:
+
+This is a resend with of Peter Zijlstra's patch to support frequency
+scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
+and included performance test results. If Peter doesn't mind, I'm slapping my
+name on it :)
+
+The changes from Peter's original implementation are:
+
+1) normalizing against the 4-cores turbo level instead or 1-core turbo
+2) removing the run-time search for when the above value isn't found in the
+   various Intel MSRs -- the base frequency value is taken in that case.
+
+The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
+the reason why this approach was dropped back in 2018, and explains that the
+performance gains outweight that issue.
+
+The second patch from Srinivas is taken verbatim from the May 2018 submission
+as it still applies.
+
+I apologies for the length of patch #1 commit message; I've made a table of
+contents with summaries of each section that should make easier to skim
+through the content.
+
+This submission incorporates the feedback and requests for additional tests
+received during the presentation made at OSPM 2019 in Pisa three months ago.
+
+[1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
+
+
+Giovanni Gherdovich (6):
+  x86,sched: Add support for frequency invariance
+  x86,sched: Add support for frequency invariance on SKYLAKE_X
+  x86,sched: Add support for frequency invariance on XEON_PHI_KNL/KNM
+  x86,sched: Add support for frequency invariance on ATOM_GOLDMONT*
+  x86,sched: Add support for frequency invariance on ATOM
+  x86: intel_pstate: handle runtime turbo disablement/enablement in
+    freq. invariance
+
+ arch/x86/include/asm/topology.h |  25 ++++
+ arch/x86/kernel/smpboot.c       | 324 +++++++++++++++++++++++++++++++++++++++-
+ drivers/cpufreq/intel_pstate.c  |   1 +
+ kernel/sched/core.c             |   1 +
+ kernel/sched/sched.h            |   7 +
+ 5 files changed, 357 insertions(+), 1 deletion(-)
+
+-- 
+2.16.4
+
