@@ -2,52 +2,52 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F016FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358ECC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C31F721783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0260120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497861;
-	bh=7Zx5WexqxXUn4t1M1GCJrjMg/F094LVBD2rkt4QOsNI=;
+	s=default; t=1573497866;
+	bh=5F3RXUfqErPauLi5jjwhKdWUACwF42uaQ3V/aKUi9d4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFnTpgyJCtV+jKqZk32FAsMRx7Dqu5RmthvR0BU6ebxlpTtwSI2DZmvkMOscCMJfm
-	 PJvV0Ytud6EuK1Pe/NGyDwSVQkDQgXfvFQkEUx4/fh4RoSS6HBN0cjHQTa2xZT9orj
-	 itItNrdggqR2VxtfqWLV30I6cOb8lR3O6eAEvLzE=
+	b=OJtUumakrAMaci0X82I+N9AcHwFjiWEXMgg12itBdusBFgi966cIBHF1j+C5JybaS
+	 t+KASfRgK3Oqd2vzGebWe/UglXggJ7xKYNExuimtice9sQjU/XjIbFWpfcumYhY2bF
+	 Yvvo1blpE+zTCL6MI9OZXd2VYUQumKAcZ1Ijtxig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfKKSoU (ORCPT
+        id S1728781AbfKKSoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:44:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35854 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:44:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729715AbfKKSoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:44:16 -0500
+        id S1729715AbfKKSoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:44:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99080204FD;
-        Mon, 11 Nov 2019 18:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E1620659;
+        Mon, 11 Nov 2019 18:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497855;
-        bh=7Zx5WexqxXUn4t1M1GCJrjMg/F094LVBD2rkt4QOsNI=;
+        s=default; t=1573497861;
+        bh=5F3RXUfqErPauLi5jjwhKdWUACwF42uaQ3V/aKUi9d4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2apHosSV3GEGeSLjiqzIALJ0aoujvSy+1OIsHzPEHd+N5rvVc+0iDhik4Cbazn/S1
-         GubWL/iViZdDzcegap8J9Osva+5NsXw69bxLqp8jhKzJ1DEshICcLnVyR/6OLMNKWz
-         Pa3Dpo9XyYuuGXVBvZ9x9iXY8IktLXdb2hFi/iqQ=
+        b=RwMkg173g4Rsodl0u9aOfoKMBkvq+TT0SEc7a4t8MItQ8Zmms0ZCuSId3l7bZFd2/
+         Ln9E9V+JWZrD0RhqhSq7NxKZMLEzkL5fSrDfbGpzKeF1TohWj+IZcW+kNhtfIi/6gz
+         nlA3GduoeJLM+jToljpbFHF5dSYm1iJ6K1wb93kM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/125] iw_cxgb4: fix ECN check on the passive accept
-Date:   Mon, 11 Nov 2019 19:28:34 +0100
-Message-Id: <20191111181450.129063326@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 040/125] intel_th: pci: Add Jasper Lake PCH support
+Date:   Mon, 11 Nov 2019 19:27:59 +0100
+Message-Id: <20191111181445.775402434@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,73 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit 612e0486ad0845c41ac10492e78144f99e326375 ]
+commit 9d55499d8da49e9261e95a490f3fda41d955f505 upstream.
 
-pass_accept_req() is using the same skb for handling accept request and
-sending accept reply to HW. Here req and rpl structures are pointing to
-same skb->data which is over written by INIT_TP_WR() and leads to
-accessing corrupt req fields in accept_cr() while checking for ECN flags.
-Reordered code in accept_cr() to fetch correct req fields.
+This adds support for Intel TH on Jasper Lake PCH.
 
-Fixes: 92e7ae7172 ("iw_cxgb4: Choose appropriate hw mtu index and ISS for iWARP connections")
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Link: https://lore.kernel.org/r/20191003104353.11590-1-bharat@chelsio.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191028070651.9770-8-alexander.shishkin@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index 3be6405d9855e..566bfcc6add0d 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -2380,20 +2380,6 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
- 	enum chip_type adapter_type = ep->com.dev->rdev.lldi.adapter_type;
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -190,6 +190,11 @@ static const struct pci_device_id intel_
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	},
++	{
++		/* Jasper Lake PCH */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4da6),
++		.driver_data = (kernel_ulong_t)&intel_th_2x,
++	},
+ 	{ 0 },
+ };
  
- 	pr_debug("ep %p tid %u\n", ep, ep->hwtid);
--
--	skb_get(skb);
--	rpl = cplhdr(skb);
--	if (!is_t4(adapter_type)) {
--		skb_trim(skb, roundup(sizeof(*rpl5), 16));
--		rpl5 = (void *)rpl;
--		INIT_TP_WR(rpl5, ep->hwtid);
--	} else {
--		skb_trim(skb, sizeof(*rpl));
--		INIT_TP_WR(rpl, ep->hwtid);
--	}
--	OPCODE_TID(rpl) = cpu_to_be32(MK_OPCODE_TID(CPL_PASS_ACCEPT_RPL,
--						    ep->hwtid));
--
- 	cxgb_best_mtu(ep->com.dev->rdev.lldi.mtus, ep->mtu, &mtu_idx,
- 		      enable_tcp_timestamps && req->tcpopt.tstamp,
- 		      (ep->com.remote_addr.ss_family == AF_INET) ? 0 : 1);
-@@ -2439,6 +2425,20 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
- 		if (tcph->ece && tcph->cwr)
- 			opt2 |= CCTRL_ECN_V(1);
- 	}
-+
-+	skb_get(skb);
-+	rpl = cplhdr(skb);
-+	if (!is_t4(adapter_type)) {
-+		skb_trim(skb, roundup(sizeof(*rpl5), 16));
-+		rpl5 = (void *)rpl;
-+		INIT_TP_WR(rpl5, ep->hwtid);
-+	} else {
-+		skb_trim(skb, sizeof(*rpl));
-+		INIT_TP_WR(rpl, ep->hwtid);
-+	}
-+	OPCODE_TID(rpl) = cpu_to_be32(MK_OPCODE_TID(CPL_PASS_ACCEPT_RPL,
-+						    ep->hwtid));
-+
- 	if (CHELSIO_CHIP_VERSION(adapter_type) > CHELSIO_T4) {
- 		u32 isn = (prandom_u32() & ~7UL) - 1;
- 		opt2 |= T5_OPT_2_VALID_F;
--- 
-2.20.1
-
 
 
