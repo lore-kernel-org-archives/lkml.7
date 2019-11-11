@@ -2,234 +2,271 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDE5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242E6C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567FD2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:20:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="idmSHDSD"
+	by mail.kernel.org (Postfix) with ESMTP id 0231E2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKKWUe (ORCPT
+        id S1727073AbfKKWZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:20:34 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58961 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726928AbfKKWUd (ORCPT
+        Mon, 11 Nov 2019 17:25:19 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34756 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfKKWZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:20:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573510832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=UIFl6RmKYvRvDaC9fCanWXjZvHHx2uDomG3MEDvY3qg=;
-        b=idmSHDSDHkyBbCT66Y1lnQNF36NATim8YPh41M/JRZOKIpIZCSesjosimZZ9qL76x7tlfn
-        nJKeKJZqNJ21Mycv8fYDW7PhTPis3VsF+BJ5Y+uUzCBuvkpjSR4eryxDApVf8z9cJji95C
-        mI1CoAi6gBfwBN37Rv8unQTtFnAySqE=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177-lP46nyTrNGazN40oUa4Wfg-1; Mon, 11 Nov 2019 17:20:30 -0500
-Received: by mail-wr1-f70.google.com with SMTP id j17so10812764wru.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 14:20:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ElUsUIBHVYFueoajxjC1Kl74zzWp1gWpLdEqumq8Hjw=;
-        b=lNlCx7XQg8i/Jj8eFji8zw3papXAkkz7gO+fxW9bg66AnPt0HjcieHgicYOfqprn8B
-         ogWlwBZD4uJaw+yD6EpUKlpdj8EQcX8OaC5xCz+w0cl/cLdd7PvVMMRQ/llkHqkbaF+l
-         CxuN9lny7wRThr5xzWwwc0gEeKn1UxzCblUZTdRr+WwnEVew1TOuGU0JpuVTRrG8BJKj
-         5ANcPTnlhc6uoeLRHDkwL+TUChsAvXHc/8t0nMIkjKUiDbtKUajDZddNjH9K97wJFKx+
-         pNzZ5g35TtECkJD/gHCDX1+5Bba/fuZ9Dmm1t9+p1EotM3Asz++WtwzJqfwW1uXTfW/X
-         kF4w==
-X-Gm-Message-State: APjAAAXqvVR2dwqgAXWCDTUT4CbC26DDvaGQH/57SI6JFfiRcDosPmqz
-        aUg6f0yYlPXblEWsyshAJTKT7Fw06018ynCLOPBie1rMXNkevIzeE+SJe8hD46+OQjIQU7Jal2Y
-        vw0b4UFI9LLlNsI0EpcuICWMH
-X-Received: by 2002:adf:f9c4:: with SMTP id w4mr13729955wrr.88.1573510829300;
-        Mon, 11 Nov 2019 14:20:29 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzFPwqxhXxeAs0oL0Dbs5sot6UdqdoMZ4qtgoJqKMBpzKaZcxnJ8IkS9GT/UFBY0Amj9EWzQg==
-X-Received: by 2002:adf:f9c4:: with SMTP id w4mr13729930wrr.88.1573510828911;
-        Mon, 11 Nov 2019 14:20:28 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
-        by smtp.gmail.com with ESMTPSA id 4sm1494255wmd.33.2019.11.11.14.20.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 14:20:28 -0800 (PST)
-Subject: Re: [PATCH v2 1/3] KVM: MMU: Do not treat ZONE_DEVICE pages as being
- reserved
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20191111221229.24732-1-sean.j.christopherson@intel.com>
- <20191111221229.24732-2-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <85ab4f91-973f-f12d-5361-6125ac524bb4@redhat.com>
-Date:   Mon, 11 Nov 2019 23:20:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 11 Nov 2019 17:25:19 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id DF82A3C04C0;
+        Mon, 11 Nov 2019 23:25:14 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 92To2pyJWXZ8; Mon, 11 Nov 2019 23:25:06 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 4FEB73C009C;
+        Mon, 11 Nov 2019 23:25:06 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 11 Nov
+ 2019 23:25:06 +0100
+Date:   Mon, 11 Nov 2019 23:25:02 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add
+ 'fixed-emmc-driver-type-hs{200,400}'
+Message-ID: <20191111222502.GA717@vmlxhi-102.adit-jv.com>
+References: <20191105055015.23656-1-erosca@de.adit-jv.com>
+ <CACRpkdbO6df3OKn4wnz9LMjf4i94jQPs9n_Cdzv7boWMZDCovA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111221229.24732-2-sean.j.christopherson@intel.com>
-Content-Language: en-US
-X-MC-Unique: lP46nyTrNGazN40oUa4Wfg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbO6df3OKn4wnz9LMjf4i94jQPs9n_Cdzv7boWMZDCovA@mail.gmail.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 23:12, Sean Christopherson wrote:
-> Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
-> instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
-> like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
-> pages, e.g. put pages grabbed via gup().  But for flows such as setting
-> A/D bits or shifting refcounts for transparent huge pages, KVM needs to
-> to avoid processing ZONE_DEVICE pages as the flows in question lack the
-> underlying machinery for proper handling of ZONE_DEVICE pages.
->=20
-> This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
-> when running a KVM guest backed with /dev/dax memory, as KVM straight up
-> doesn't put any references to ZONE_DEVICE pages acquired by gup().
->=20
-> Note, Dan Williams proposed an alternative solution of doing put_page()
-> on ZONE_DEVICE pages immediately after gup() in order to simplify the
-> auditing needed to ensure is_zone_device_page() is called if and only if
-> the backing device is pinned (via gup()).  But that approach would break
-> kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
-> unmap() when accessing guest memory, unlike KVM's secondary MMU, which
-> coordinates with mmu_notifier invalidations to avoid creating stale
-> page references, i.e. doesn't rely on pages being pinned.
->=20
-> [*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
->=20
-> Reported-by: Adam Borowski <kilobyte@angband.pl>
-> Debugged-by: David Hildenbrand <david@redhat.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/mmu.c       |  8 ++++----
->  include/linux/kvm_host.h |  1 +
->  virt/kvm/kvm_main.c      | 26 +++++++++++++++++++++++---
->  3 files changed, 28 insertions(+), 7 deletions(-)
->=20
-> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-> index 24c23c66b226..bf82b1f2e834 100644
-> --- a/arch/x86/kvm/mmu.c
-> +++ b/arch/x86/kvm/mmu.c
-> @@ -3306,7 +3306,7 @@ static void transparent_hugepage_adjust(struct kvm_=
-vcpu *vcpu,
->  =09 * here.
->  =09 */
->  =09if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
-> -=09    level =3D=3D PT_PAGE_TABLE_LEVEL &&
-> +=09    !kvm_is_zone_device_pfn(pfn) && level =3D=3D PT_PAGE_TABLE_LEVEL =
-&&
->  =09    PageTransCompoundMap(pfn_to_page(pfn)) &&
->  =09    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
->  =09=09unsigned long mask;
-> @@ -5914,9 +5914,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm=
- *kvm,
->  =09=09 * the guest, and the guest page table is using 4K page size
->  =09=09 * mapping if the indirect sp has level =3D 1.
->  =09=09 */
-> -=09=09if (sp->role.direct &&
-> -=09=09=09!kvm_is_reserved_pfn(pfn) &&
-> -=09=09=09PageTransCompoundMap(pfn_to_page(pfn))) {
-> +=09=09if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
-> +=09=09    !kvm_is_zone_device_pfn(pfn) &&
-> +=09=09    PageTransCompoundMap(pfn_to_page(pfn))) {
->  =09=09=09pte_list_remove(rmap_head, sptep);
-> =20
->  =09=09=09if (kvm_available_flush_tlb_with_range())
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index a817e446c9aa..4ad1cd7d2d4d 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -966,6 +966,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
->  void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
-> =20
->  bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
-> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
-> =20
->  struct kvm_irq_ack_notifier {
->  =09struct hlist_node link;
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index b8534c6b8cf6..bc9d10a0a334 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -149,10 +149,30 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(s=
-truct kvm *kvm,
->  =09return 0;
->  }
-> =20
-> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
-> +{
-> +=09/*
-> +=09 * The metadata used by is_zone_device_page() to determine whether or
-> +=09 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
-> +=09 * the device has been pinned, e.g. by get_user_pages().  WARN if the
-> +=09 * page_count() is zero to help detect bad usage of this helper.
-> +=09 */
-> +=09if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
-> +=09=09return false;
-> +
-> +=09return is_zone_device_page(pfn_to_page(pfn));
-> +}
-> +
->  bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
->  {
-> +=09/*
-> +=09 * ZONE_DEVICE pages currently set PG_reserved, but from a refcountin=
-g
-> +=09 * perspective they are "normal" pages, albeit with slightly differen=
-t
-> +=09 * usage rules.
-> +=09 */
->  =09if (pfn_valid(pfn))
-> -=09=09return PageReserved(pfn_to_page(pfn));
-> +=09=09return PageReserved(pfn_to_page(pfn)) &&
-> +=09=09       !kvm_is_zone_device_pfn(pfn);
-> =20
->  =09return true;
->  }
-> @@ -1865,7 +1885,7 @@ EXPORT_SYMBOL_GPL(kvm_release_pfn_dirty);
-> =20
->  void kvm_set_pfn_dirty(kvm_pfn_t pfn)
->  {
-> -=09if (!kvm_is_reserved_pfn(pfn)) {
-> +=09if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
->  =09=09struct page *page =3D pfn_to_page(pfn);
-> =20
->  =09=09SetPageDirty(page);
-> @@ -1875,7 +1895,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
-> =20
->  void kvm_set_pfn_accessed(kvm_pfn_t pfn)
->  {
-> -=09if (!kvm_is_reserved_pfn(pfn))
-> +=09if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
->  =09=09mark_page_accessed(pfn_to_page(pfn));
->  }
->  EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
->=20
+Hi Linus,
 
-Queued, thanks -- the other two will wait for after the merge window to
-avoid pointless conflicts.
+On Wed, Nov 06, 2019 at 12:07:38PM +0100, Linus Walleij wrote:
+> Hi Eugeniu,
+> 
+> thanks for your patch!
 
-Paolo
+Thanks for your comments.
 
+> 
+> On Tue, Nov 5, 2019 at 6:50 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> 
+> > A certain eMMC manufacturer provided below requirement:
+> >  ---snip---
+> >  Use "drive strength" value of 4 or 1 for HS400 or 0 for HS200.
+> >  ---snip---
+> >
+> > The existing "fixed-emmc-driver-type" property [1] is the closest one
+> > to implement the above, but it falls short due to being unable to define
+> > two values to differentiate between HS200 and HS400 (both modes may be
+> > supported by the same non-removable MMC device).
+> >
+> > To allow users to set a preferred HS200/HS400 "drive strength", provide
+> > two more bindings inspired from [1]:
+> >  - fixed-emmc-driver-type-hs200
+> >  - fixed-emmc-driver-type-hs400
+> 
+> I am sorry that I do not quite understand but as pin control maintainer I
+> am of course triggered by the talk about selecting "drive strength".
+> 
+> In my book this means that the pad driver on the chip, driving the
+> line low/high with push-pull (totempole output, usually) is connecting
+> more driver stages, usually just shunting in more totempoles.
+> (Ref https://en.wikipedia.org/wiki/Push%E2%80%93pull_output)
+> 
+> If say one totempole gives 2mA drive strength then 4 totempoles
+> gives 8mA drive strength.
+> 
+> Are we on the same page here that this is what physically happens?
+
+This matches my view with below amendments:
+ - Your passage seems to describe a single-duplex communication (one end
+   is always a sender and the other one is always a receiver). Since the
+   CMD and DAT[0-7] eMMC lines are bidirectional (carrying half-duplex
+   data transfers), this is what seems to justify the
+   "drive(r) strength/type" feature/setting to be present on both host
+   controller and eMMC device ends (which does happen in real life).
+ - I am unsure whether to endorse the "totempole output" as being the
+   usual foundation for how "drive strength" is really implemented in
+   the modern CMOS ICs, based on the following:
+   - All eMMC Jedec specs mention "push-pull" for CMD/DAT[0-7]
+   - All eMMC device datasheets I could find reference "push pull"
+     and none mentions "totem pole" for CMD/DAT[0-7]
+   - The "totem pole" topology seems to originate from and be much more
+     popular in the TTL/BJT world, where it tries to harness the
+     symmetry of two NPN transistors, replacing the PNP-NPN pair used
+     in the bipolar "push-pull" configuration [1-2].
+   - Jedec calls totem-pole "a bipolar output" (i.e. TTL/BJT) [3]
+   - Jedec claims [3] that "vanilla" tottempole doesn't support
+     tristate/hi-Z outputs, making it impossible to connect several such
+     circuits in parallel, while we assume the latter to be a hard
+     prerequisite for sourcing programmable amounts of current.
+   - Some users say that "CMOS outputs are generally push-pull" [4]
+   - TI states [5] that the "MOSFET equivalent of the bipolar totempole
+     driver [..] is rarely implemented"
+
+Abstracting from the above, I agree that a programmable "drive strength"
+is likely achieved by connecting several tristate-capable output
+circuits in a "wired OR", as exemplified for Raspberry Pi in [6].
+
+> 
+> Usually selection of drive strength is done with the pin control
+> framework, so this would need to be backed by code (not in this
+> patch set) that select pin control states that reconfigure the
+> SoC pad drivers to use the requested strength.
+
+That's true. In the same context of overcoming HS400 issues, our SoC
+vendor suggested adjusting the "drive-strength" binding, added in:
+ - 7db9af4b6e41be ("pinctrl: add function to parse generic pinconfig
+   properties from a dt node")
+ - 3caa7d8c3f03ad ("pinctrl: sh-pfc: Add drive strength support")
+
+> Alternatively, the (e)MMC block would implement this control
+> directly, but I doubt it.
+
+There _is_ a "drive strength" specific to eMMC device and the
+justification for it to exist has been made above.
+
+According to JESD84-B50.1 spec, the host controller is able to find
+the "drive strength" values supported by a particular eMMC device by
+reading the DRIVER_STRENGTH field of the Extended CSD. The host then
+may (if needed), make use of this value to set the "Driver Strength"
+parameter in the HS_TIMING field of the Extended CSD register.
+
+Essentially, current series gives the host controller a chance to limit
+the drive strength value written to HS_TIMING, if eMMC vendor decides
+that some of the values advertised in DRIVER_STRENGTH are forbidden
+or should be avoided in a specific bus speed mode (HS200/HS400).
+
+> Please clarify which hardware is eventually going to provide the
+> drive strength alteration, because I just don't see it in the patch
+> set. Is the assumption that the (e)MMC hardware will do this
+> autonomously or something? That may be a pecularity to the hardware
+> you're using in that case.
+
+Hopefully clarified above.
+
+> I find the fixed-emmc-driver-type-* assignment a but puzzling
+> to be honest, isnt' the driver device tree already specifying
+> what the hardware can do with all of these:
+> 
+> mmc-ddr-1_2v
+> mmc-ddr-1_8v
+> mmc-ddr-3_3v
+
+JFTR, for these (<HS200) bus speed modes, the eMMC Jedec spec doesn't
+talk about changing eMMC's driver strength. That's probably because
+there are no signal integrity issues to be fixed in these low-speed
+modes.
+
+> mmc-hs200-1_2v
+> mmc-hs200-1_8v
+> mmc-hs400-1_2v
+> mmc-hs400-1_8v
+> mmc-hs400-enhanced-strobe
+
+Below is a quote from JESD84-B50.1 (10.5.4.1 Driver Types Definition):
+ -> NOTE: Drive strength definitions are same for 1.8 V signaling level
+ -> and for 1.2 V signaling level.
+
+I read the above as:
+ -> "the driver strength is independent/agnostic on signaling level"
+
+> If the host is already specifying mmc-hs200-* or
+> mmc-hs400-* then certainly it should be implied that the
+> host supports hs200 and hs400 and there is no need for
+> the fixed-emmc-driver-type-hs* properties.
+
+Not sure I see the linkage between the cause and effect here.
+The host cannot infer anything about the supported drive strength values
+on eMMC side purely based on the mmc-hs200-*/mmc-hs400-* DT properties.
+
+> 
+> The code detects when to use each mode and that is when
+> you can insert the code to switch drive strengths, whether using
+> the pin control framework or something else.
+
+As explained above, this series allows to customize the eMMC-specific
+drive strength. The eMMC vendor did not ask to make the SoC-side
+drive strength dependent on bus speed mode and that was not needed in
+the testing performed by the customer.
+
+> 
+> So to me it seems these DT properties are just introduced to
+> hammer down a certain usecase instead of letting the code with the
+> help of DT speed capabilities flags determine what speed is to be used
+> and select the appropriate drive strength.
+
+Does this mean that the "fixed-emmc-driver-type" binding which
+pre-exists my series falls under the same sentence? Or is this only
+when customizing Wolfram's binding to HS200/HS400 bus speed mode?
+
+Note that there is no other objective in this series but to allow Linux
+to run on hardware which doesn't strictly follow its specification [7].
+If you have any alternative ideas of how to follow the eMMC vendor's
+recommendation quoted in the description of this patch, I will happily
+review those.
+
+> 
+> Yours,
+> Linus Walleij
+
+[1] https://electronics.stackexchange.com/q/358151/235971
+[2] https://electronics.stackexchange.com/a/17819/235971
+   ---snip----
+   Due to the difference in N and P carrier mobilities, NPN and PNP
+   transistors are never truly symmetric, and there were advantages to
+   using NPN. [..] In CMOS logic, the N and P channel drivers are
+   symmetric and the driver designs are truly complementary.
+   ---snip----
+[3] https://www.jedec.org/standards-documents/dictionary/terms/totem-pole-output
+   ---snip----
+   The term "totem-pole output", as commonly used, does not include
+   three-state outputs.
+   ---snip----
+[4] http://piclist.com/techref/postbot.asp?by=thread&id=%5BEE%5D+Push-pull+vs+totem+pole&w=body&tgt=post
+   ---snip----
+   CMOS outputs are generally push-pull. They have a P-channel FET
+   above and an N-channel fet below. Both are in digital model
+   (on/off). 'Totem-pole' will never apply to a CMOS output.
+   ---snip----
+[5] http://www.ti.com/lit/ml/slua618a/slua618a.pdf
+   ("Fundamentals of MOSFET and IGBT Gate Driver Circuits")
+   ---snip----
+   The MOSFET equivalent of the bipolar totempole driver is pictured in
+   Figure 11. [..] Unfortunately, this circuit has several drawbacks
+   compared to the bipolar version that explain that it is very rarely
+   implemented discretely.
+   ---snip----
+[6] https://www.raspberrypi.org/documentation/hardware/raspberrypi/gpio/gpio_pads_control.md
+[7] linux (v5.4-rc7) git grep -i quirk | wc -l
+   12047
+
+-- 
+Best Regards,
+Eugeniu
