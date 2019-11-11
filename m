@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D798C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E317CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A15B20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA1A20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfKKURG (ORCPT
+        id S1727735AbfKKUR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:17:06 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:46059 "EHLO
+        Mon, 11 Nov 2019 15:17:27 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:53755 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbfKKURD (ORCPT
+        with ESMTP id S1727531AbfKKURF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:17:03 -0500
+        Mon, 11 Nov 2019 15:17:05 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MLi0U-1iCajy2JKi-00HggB; Mon, 11 Nov 2019 21:16:50 +0100
+ 1Mwwm5-1hfl1c2bHv-00yR5A; Mon, 11 Nov 2019 21:16:51 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -31,151 +31,82 @@ To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 13/19] nfsd: pass a 64-bit guardtime to nfsd_setattr()
-Date:   Mon, 11 Nov 2019 21:16:33 +0100
-Message-Id: <20191111201639.2240623-14-arnd@arndb.de>
+Subject: [PATCH 16/19] nfsd: fix jiffies/time_t mixup in LRU list
+Date:   Mon, 11 Nov 2019 21:16:36 +0100
+Message-Id: <20191111201639.2240623-17-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
 References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:kLySL1mN/IbrXNjESYmaI6C+j074UjXObT3NY8Zh8ekkuS+uGiG
- Kj8dvAktcB3tOiZo3og8i056LSHUdn0D7km2lUWgZIbBftxuoem47Z+BdkW/wHX2D6zpO98
- youZi5pEJlJpXniJjrlfuCqmhm4l9u20ZN3aKE6hpoF13SwsDvkB1/hsa6WrYAdWhmxFzeM
- 4f8NrugPR+cKJd/cvcVVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PceNcs0aF4Q=:xgF0+4N3RzcxQHQGv6CGQ+
- SPx11DLoRJ/NQ+jeEo68iyeTHz7RBI4rYODKJWvqJYXMKI2aMsBbbpht+jKiEnDXwV+o6kkSy
- eFwXUT5vSCJaxsWCZdrdW3+8B7y/KgZkGdl0LIXfuTLl1TnZgB6Ye9KOW730jDWPcM0KU3U6Z
- z0j9MdnrnGZCVtqEW0V6wHhazGRNjIvZ1h8pmoV3/+4Ip/wm0bBjFXGlU1tga1O+QCFmFRgJp
- xSHqNx1XrJ8zRvzDArnk+t1343QntBwxX6XTbHVgYtziom20hh6Co+mn/6QHp5q2xZxACI1XF
- QD2LYsL1Y9l+y01gWk7UaCCiqiXb+k9zDtRitcJXJ7gmD+unyCxXtT3YM5w/rvPC+JYBtJBpX
- zSgWYZ1OJa6TYwprQOLU5Qo6v33yYqJ6yPySYkEbuCPjHAI4Of92khqSmtkGIiVu9ePVjOKWZ
- 9iFBBtqFc8Y4X5Oh2/DV+V2DUQzLTrzNYWYTgOZ3YkV0er8UcoBNs5g6u7gnzHpBDdJDBddw1
- UyM471VCUdTtrScbJ/H+sOjXYCQ7Z3+tnzkGcWDNZK7GhrBy1pWhxO9gC5JzlYOQ9oLB1/hjS
- Mqa4YYTXfEsUhwxE+Ls+D+ZD0ArkQhPLeACjqaiBrTXqVWgtASu6ix5Z52OG71g01HDmoEsLW
- 46tsLMM8sTxFcdaIh6PIX8kvNAniNhdW/ks3UVgjrzB3pa1DUsCVZJbapgEk2h3sL28CfqYNF
- tZMPFLF2gF3yDOthI5wg29rruQy6lDRnNh6YO6rgSvcmb/+ud/4fat4v0efS1DmHaJts+gN9F
- 37aPm0iR4wwkH74mfZOkcZzSq9bM+jQ9KERB2DRbEUPjtRENqLCvwWbCC0jBERFxqdbiN3S0R
- b3gF5nLUJcQ5Yu2vDLqQ==
+X-Provags-ID: V03:K1:AH8i1QyjBnmOgX+Hph5q/HZDFvvmSil4F4O+Bsp1GBARUSPR52L
+ oJj8k7tJxTPm8H3PYTDBGT5Kf6ImwYCV/Mbg0OPMDkv9pdGxcDg/0bjWFERI6HLp8xzSX9J
+ ixTYcoCBHyaZoFmRJMdqLFk79jkYGlaOW0hPkIPun8C++agV/XpkFXdIHMbwNrryvm4P3ix
+ d2L6RsC6qjcI08EKf5UEw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Sh4EoJu1FJ0=:q2VPo+fnLWnNCS+UeuYzw1
+ qXUBzU4zX7fHNjgxQ0AyM0uzAWi4xzEdFhvP0TmDK5iNplav4fmxRGBgqZVrSDvIpwut0QFHt
+ 5JLrWLuUfdwoikzjVFQfEZupDo0PZjEzaPn5rEmNuvuwK0IJAONBwAqll6mbnkE3Y+QQcRcwP
+ XzdggbnvtlViky0kxRMLr0QeofeNoyMivV9W8HGY5ajhutREIDm/KohHoJCIUc4V59uOv7MSU
+ Ly3oyeM1PIzngbIgbIJGGc26x2JYmUuL7YhlVh8dKGoowAODJyDcIimuo7ltqhH9eTcuI75Ud
+ FhGMdFIA1vQvxKkBaf5SkhAYr+PEIbwylF6aI38HWbEnyFMNrwG9/nWtxQs26Iqfdz3TJfgx5
+ DOhO9Bq66P8xC3kiQKg7HkwLp1lepCiDYs1vcBbtpI/yZ/nyOkU3JrvDANePniQk1fKIpuwUs
+ 768DD/FuK5uhEBtZNTvq624Ec2PccKq/vXXtLT7gMUJ7FM+F1iS/CU3qtJl5KS+q9c9nn5Yu9
+ 5ZV4p2SXsYb1pAlRWxaURIGOT5JvU2kf378Lzz8EvyEJf+Q/WJa4pgLx/ih9p9xn8NDx/LHN6
+ c5DPqSRfybLg9JIU3r52w5+5cM8BeqwCtSF5IK9/VmPk9xpovGNnhuW75FwtKzn+aNarlHCyu
+ y9kPmuCagplHhxHTjEVuZJDGj8U+wHmATkc8zLts5Y0GUoWdrsdSWocjUHTioMw3g0cE3aEek
+ rYFB4pPXY5VHDixHp5l6f/PLq0AXg2Dq207bhzKvncw7dfWVU1SLTcS+7vyonPUgRYRuqRU4L
+ GGBNA4pAOtllJNOZts6xRfnLhSfhNVmLBOEi9/4AHDjj4F5wIHbYMB4s8QOv75LYW+lu3MuqV
+ Qo5nh3wRaSrLPB2SDs6w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guardtime handling in nfs3 differs between 32-bit and 64-bit
-architectures, and uses the deprecated time_t type.
+The nfsd4_blocked_lock->nbl_time timestamp is recorded in jiffies,
+but then compared to a CLOCK_REALTIME timestamp later on, which makes
+no sense.
 
-Change it to using time64_t, which behaves the same way on
-64-bit and 32-bit architectures, treating the number as an
-unsigned 32-bit entity with a range of year 1970 to 2106
-consistently, and avoiding the y2038 overflow.
+For consistency with the other timestamps, change this to use a time_t.
 
+This is a change in behavior, which may cause regressions, but the
+current code is not sensible. On a system with CONFIG_HZ=1000,
+the 'time_after((unsigned long)nbl->nbl_time, (unsigned long)cutoff))'
+check is false for roughly the first 18 days of uptime and then true
+for the next 49 days.
+
+Fixes: 7919d0a27f1e ("nfsd: add a LRU list for blocked locks")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfs4proc.c  | 2 +-
  fs/nfsd/nfs4state.c | 2 +-
- fs/nfsd/nfsproc.c   | 4 ++--
- fs/nfsd/vfs.c       | 4 ++--
- fs/nfsd/vfs.h       | 2 +-
- fs/nfsd/xdr3.h      | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
+ fs/nfsd/state.h     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 4e3e77b76411..b595f6d6d0d9 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -975,7 +975,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	if (status)
- 		goto out;
- 	status = nfsd_setattr(rqstp, &cstate->current_fh, &setattr->sa_iattr,
--				0, (time_t)0);
-+				0, (time64_t)0);
- out:
- 	fh_drop_write(&cstate->current_fh);
- 	return status;
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 70a953b03be4..1ea7a40f8d4e 100644
+index 1ea7a40f8d4e..551068f4b836 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -4666,7 +4666,7 @@ nfsd4_truncate(struct svc_rqst *rqstp, struct svc_fh *fh,
- 		return 0;
- 	if (!(open->op_share_access & NFS4_SHARE_ACCESS_WRITE))
- 		return nfserr_inval;
--	return nfsd_setattr(rqstp, fh, &iattr, 0, (time_t)0);
-+	return nfsd_setattr(rqstp, fh, &iattr, 0, (time64_t)0);
- }
- 
- static __be32 nfs4_get_vfs_file(struct svc_rqst *rqstp, struct nfs4_file *fp,
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index c83ddac22f38..aa013b736073 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -113,7 +113,7 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
- 		}
+@@ -6544,7 +6544,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
  	}
  
--	nfserr = nfsd_setattr(rqstp, fhp, iap, 0, (time_t)0);
-+	nfserr = nfsd_setattr(rqstp, fhp, iap, 0, (time64_t)0);
- done:
- 	return nfsd_return_attrs(nfserr, resp);
- }
-@@ -380,7 +380,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
- 		 */
- 		attr->ia_valid &= ATTR_SIZE;
- 		if (attr->ia_valid)
--			nfserr = nfsd_setattr(rqstp, newfhp, attr, 0, (time_t)0);
-+			nfserr = nfsd_setattr(rqstp, newfhp, attr, 0, (time64_t)0);
- 	}
- 
- out_unlock:
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index bd0a385df3fc..c0d8fdfd3b90 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -358,7 +358,7 @@ nfsd_get_write_access(struct svc_rqst *rqstp, struct svc_fh *fhp,
-  */
- __be32
- nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp, struct iattr *iap,
--	     int check_guard, time_t guardtime)
-+	     int check_guard, time64_t guardtime)
- {
- 	struct dentry	*dentry;
- 	struct inode	*inode;
-@@ -1117,7 +1117,7 @@ nfsd_create_setattr(struct svc_rqst *rqstp, struct svc_fh *resfhp,
- 	if (!uid_eq(current_fsuid(), GLOBAL_ROOT_UID))
- 		iap->ia_valid &= ~(ATTR_UID|ATTR_GID);
- 	if (iap->ia_valid)
--		return nfsd_setattr(rqstp, resfhp, iap, 0, (time_t)0);
-+		return nfsd_setattr(rqstp, resfhp, iap, 0, (time64_t)0);
- 	/* Callers expect file metadata to be committed here */
- 	return nfserrno(commit_metadata(resfhp));
- }
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index a13fd9d7e1f5..07e612b90757 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -48,7 +48,7 @@ __be32		 nfsd_lookup_dentry(struct svc_rqst *, struct svc_fh *,
- 				const char *, unsigned int,
- 				struct svc_export **, struct dentry **);
- __be32		nfsd_setattr(struct svc_rqst *, struct svc_fh *,
--				struct iattr *, int, time_t);
-+				struct iattr *, int, time64_t);
- int nfsd_mountpoint(struct dentry *, struct svc_export *);
- #ifdef CONFIG_NFSD_V4
- __be32          nfsd4_set_nfs4_label(struct svc_rqst *, struct svc_fh *,
-diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-index 99ff9f403ff1..0fa12988fb6a 100644
---- a/fs/nfsd/xdr3.h
-+++ b/fs/nfsd/xdr3.h
-@@ -14,7 +14,7 @@ struct nfsd3_sattrargs {
- 	struct svc_fh		fh;
- 	struct iattr		attrs;
- 	int			check_guard;
--	time_t			guardtime;
-+	time64_t		guardtime;
- };
- 
- struct nfsd3_diropargs {
+ 	if (fl_flags & FL_SLEEP) {
+-		nbl->nbl_time = jiffies;
++		nbl->nbl_time = get_seconds();
+ 		spin_lock(&nn->blocked_locks_lock);
+ 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
+ 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index ce32ba445343..c1bb6a5ecf57 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -605,7 +605,7 @@ static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_t *b)
+ struct nfsd4_blocked_lock {
+ 	struct list_head	nbl_list;
+ 	struct list_head	nbl_lru;
+-	unsigned long		nbl_time;
++	time_t			nbl_time;
+ 	struct file_lock	nbl_lock;
+ 	struct knfsd_fh		nbl_fh;
+ 	struct nfsd4_callback	nbl_cb;
 -- 
 2.20.0
 
