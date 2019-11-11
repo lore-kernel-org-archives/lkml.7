@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2B1C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943ABC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0209214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6572D222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497613;
-	bh=Bgj+vTIHeYXBAec2NYwGiMFpMeuXE8kZEl3wAglFYrc=;
+	s=default; t=1573497618;
+	bh=cHqpv/pza6dFpwESlSPOwmQg0ZS8Ih8SpkRVgGsgrB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mx3Tl/jf2OyPwxS/nBkVIDcegnqUU2CS/405cKakDtfEB0I3pirgVDGX46XhUzmMN
-	 7bVyU+u/GphZ+FMwSPiJBd3GKD5lKwO0idLXm7frunyukq3SDEC6ZlgwfmwPi9n1Mo
-	 ShCx3n9G8wArFPK4yU2UYj+P5tEnKMS1xgJGjx9g=
+	b=A7xlyBRGy72S74p7XmT9Wytm0wcjXLV79V4C1TcRS07DMpJ2OYEX/tP9oMoftVsKs
+	 QNazip7QWuJtIUomhJup+x9JY19LHkEffq5DOBcluIBY+sk3lf8CbQrpO02kp6jTpX
+	 aZ6dJeIPq9nT6NTgz0jB4ne/kR+wWQGgx8SzI4ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfKKSkM (ORCPT
+        id S1729237AbfKKSkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:40:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59296 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:40:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbfKKSkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:40:08 -0500
+        id S1727296AbfKKSkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:40:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9248220659;
-        Mon, 11 Nov 2019 18:40:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A2920659;
+        Mon, 11 Nov 2019 18:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497607;
-        bh=Bgj+vTIHeYXBAec2NYwGiMFpMeuXE8kZEl3wAglFYrc=;
+        s=default; t=1573497613;
+        bh=cHqpv/pza6dFpwESlSPOwmQg0ZS8Ih8SpkRVgGsgrB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=neJ8elc4LhhFiWWGirS2kT9QtaIbAHhtYW/D6p7+nyfzRLmKR7zRWVsgrbsYnEZ18
-         yANgKn8ef7sya0CPUkFKVCTNyt0g2Iaabq7EwoVCniT4qCsOzzua2Z+bV0KATlHCyW
-         pd54B5YsJgaS3jPwFlYUIPEmQjCX5Ai0c2ofUV7E=
+        b=Mns/01Yv8/O6f9Y3+P+nVxw1UO8WdLeB2kgRVah+phIf0hGvMCauESb39cUXHaSQW
+         QyCJsgVNy4F50ZWPSWSlP5DUooOkCd8ngnofGCnJQwTvypjWoaR3ELNMxFB9xbV9NP
+         VoueZiFtN0SAoJ9xS5I8/kblNfU7eomYHAbkwX98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Dakshaja Uppalapati <dakshaja@chelsio.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 090/105] USB: ldusb: use unsigned size format specifiers
-Date:   Mon, 11 Nov 2019 19:29:00 +0100
-Message-Id: <20191111181447.904369742@linuxfoundation.org>
+Subject: [PATCH 4.14 091/105] RDMA/iw_cxgb4: Avoid freeing skb twice in arp failure case
+Date:   Mon, 11 Nov 2019 19:29:01 +0100
+Message-Id: <20191111181448.000765053@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,53 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Potnuri Bharat Teja <bharat@chelsio.com>
 
-[ Upstream commit 88f6bf3846ee90bf33aa1ce848cd3bfb3229f4a4 ]
+[ Upstream commit d4934f45693651ea15357dd6c7c36be28b6da884 ]
 
-A recent info-leak bug manifested itself along with warning about a
-negative buffer overflow:
+_put_ep_safe() and _put_pass_ep_safe() free the skb before it is freed by
+process_work(). fix double free by freeing the skb only in process_work().
 
-	ldusb 1-1:0.28: Read buffer overflow, -131383859965943 bytes dropped
-
-when it was really a rather large positive one.
-
-A sanity check that prevents this has now been put in place, but let's
-fix up the size format specifiers, which should all be unsigned.
-
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191022143203.5260-3-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1dad0ebeea1c ("iw_cxgb4: Avoid touch after free error in ARP failure handlers")
+Link: https://lore.kernel.org/r/1572006880-5800-1-git-send-email-bharat@chelsio.com
+Signed-off-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
+Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/ldusb.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/cxgb4/cm.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
-index 6387545b17ea0..e16af177d4670 100644
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -490,7 +490,7 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
- 	}
- 	bytes_to_read = min(count, *actual_buffer);
- 	if (bytes_to_read < *actual_buffer)
--		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
-+		dev_warn(&dev->intf->dev, "Read buffer overflow, %zu bytes dropped\n",
- 			 *actual_buffer-bytes_to_read);
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index d87f08cd78ad4..bb36cdf82a8d6 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -491,7 +491,6 @@ static int _put_ep_safe(struct c4iw_dev *dev, struct sk_buff *skb)
  
- 	/* copy one interrupt_in_buffer from ring_buffer into userspace */
-@@ -565,8 +565,9 @@ static ssize_t ld_usb_write(struct file *file, const char __user *buffer,
- 	/* write the data into interrupt_out_buffer from userspace */
- 	bytes_to_write = min(count, write_buffer_size*dev->interrupt_out_endpoint_size);
- 	if (bytes_to_write < count)
--		dev_warn(&dev->intf->dev, "Write buffer overflow, %zd bytes dropped\n", count-bytes_to_write);
--	dev_dbg(&dev->intf->dev, "%s: count = %zd, bytes_to_write = %zd\n",
-+		dev_warn(&dev->intf->dev, "Write buffer overflow, %zu bytes dropped\n",
-+			count - bytes_to_write);
-+	dev_dbg(&dev->intf->dev, "%s: count = %zu, bytes_to_write = %zu\n",
- 		__func__, count, bytes_to_write);
+ 	ep = *((struct c4iw_ep **)(skb->cb + 2 * sizeof(void *)));
+ 	release_ep_resources(ep);
+-	kfree_skb(skb);
+ 	return 0;
+ }
  
- 	if (copy_from_user(dev->interrupt_out_buffer, buffer, bytes_to_write)) {
+@@ -502,7 +501,6 @@ static int _put_pass_ep_safe(struct c4iw_dev *dev, struct sk_buff *skb)
+ 	ep = *((struct c4iw_ep **)(skb->cb + 2 * sizeof(void *)));
+ 	c4iw_put_ep(&ep->parent_ep->com);
+ 	release_ep_resources(ep);
+-	kfree_skb(skb);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
