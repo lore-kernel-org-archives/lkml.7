@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB04EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940FBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED9320659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572E420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497843;
-	bh=8oNkIOiv5Va1epVVjrY/bljrdj9DIi333mUax+51ZZU=;
+	s=default; t=1573497850;
+	bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGTOtZZIKRL72K2UBIVwdqc6J2HRoyZ/v2ZPTitsBKeavvgpojFRa2sP8tgwEC+ym
-	 c79Q0zeGYUPfINpHUtHywYPbEfueFEVngfKHlA7nGfsEiLODE1Ss6XNdVHNrhysIpu
-	 D5Mn9VsOn/t+rXFDbJwV7Ww8J157J6w4PT67YLJg=
+	b=CdIfOD/qL3BzdwpnN/qXJZCCgmVxIffvywTEKbEuotOHq+ayaAJ7FRQmYflOCfb5H
+	 R8rLvWQvoLUzeMxalXwNOPJ+QKiqowXX/8/y1Z1oFPMnkTXT6DeNzEVqO6qPBJDeVj
+	 /c7Wv1Y61ZVbXFkiTvyE71B26bGDZMoMQk1rL21k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbfKKSoC (ORCPT
+        id S1729299AbfKKSoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35504 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:44:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbfKKSn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:43:59 -0500
+        id S1729286AbfKKSoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:44:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DA7204FD;
-        Mon, 11 Nov 2019 18:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A1320659;
+        Mon, 11 Nov 2019 18:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497838;
-        bh=8oNkIOiv5Va1epVVjrY/bljrdj9DIi333mUax+51ZZU=;
+        s=default; t=1573497845;
+        bh=YUrDBmEZdgID93bbtuJb1eaRIraFqaGkPIKly41YPBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zo8Er6ZVfyjf8A1j1nHxSK0Lq//k4DjfhE6Aejxbka7NIry0AqeZ70+cxLiaglXSq
-         aOZUTDfbyKHbDa4n68a7CRs9hd7H8RpiGuh7s2QFJiTYU7W36m798lSxHGZBDqluM6
-         mgJSwB6i//C2q3r2nihCI2R6paMvst8lk++Ipd0Y=
+        b=jS5CXNYeDMqTPSOslGPfvDNLwM6QvO1dd96IUCclbOtuhC6MkiTqkR2ZTqK09IwlV
+         JFG5ckKz0ckeJ6JTXQ3mewg53IFABpFEnyqEeAiCXfQZbrCUQSXXZfLmXoHaCfh1Ok
+         q8lFU454orDu70DXp8LfWYNXhtYV8PNvmcBG2Ldk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/125] dmaengine: xilinx_dma: Fix control reg update in vdma_channel_set_config
-Date:   Mon, 11 Nov 2019 19:28:30 +0100
-Message-Id: <20191111181449.613331688@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Lixu <lixu.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 073/125] HID: intel-ish-hid: fix wrong error handling in ishtp_cl_alloc_tx_ring()
+Date:   Mon, 11 Nov 2019 19:28:32 +0100
+Message-Id: <20191111181449.856573265@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -62,63 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+From: Zhang Lixu <lixu.zhang@intel.com>
 
-[ Upstream commit 6c6de1ddb1be3840f2ed5cc9d009a622720940c9 ]
+[ Upstream commit 16ff7bf6dbcc6f77d2eec1ac9120edf44213c2f1 ]
 
-In vdma_channel_set_config clear the delay, frame count and master mask
-before updating their new values. It avoids programming incorrect state
-when input parameters are different from default.
+When allocating tx ring buffers failed, should free tx buffers, not rx buffers.
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Acked-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Link: https://lore.kernel.org/r/1569495060-18117-3-git-send-email-radhey.shyam.pandey@xilinx.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hid/intel-ish-hid/ishtp/client-buffers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index c124423125951..8aec137b4fcaa 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -72,6 +72,9 @@
- #define XILINX_DMA_DMACR_CIRC_EN		BIT(1)
- #define XILINX_DMA_DMACR_RUNSTOP		BIT(0)
- #define XILINX_DMA_DMACR_FSYNCSRC_MASK		GENMASK(6, 5)
-+#define XILINX_DMA_DMACR_DELAY_MASK		GENMASK(31, 24)
-+#define XILINX_DMA_DMACR_FRAME_COUNT_MASK	GENMASK(23, 16)
-+#define XILINX_DMA_DMACR_MASTER_MASK		GENMASK(11, 8)
+diff --git a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
+index b9b917d2d50db..c41dbb167c91b 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
++++ b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
+@@ -90,7 +90,7 @@ int ishtp_cl_alloc_tx_ring(struct ishtp_cl *cl)
+ 	return	0;
+ out:
+ 	dev_err(&cl->device->dev, "error in allocating Tx pool\n");
+-	ishtp_cl_free_rx_ring(cl);
++	ishtp_cl_free_tx_ring(cl);
+ 	return	-ENOMEM;
+ }
  
- #define XILINX_DMA_REG_DMASR			0x0004
- #define XILINX_DMA_DMASR_EOL_LATE_ERR		BIT(15)
-@@ -2112,8 +2115,10 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.gen_lock = cfg->gen_lock;
- 	chan->config.master = cfg->master;
- 
-+	dmacr &= ~XILINX_DMA_DMACR_GENLOCK_EN;
- 	if (cfg->gen_lock && chan->genlock) {
- 		dmacr |= XILINX_DMA_DMACR_GENLOCK_EN;
-+		dmacr &= ~XILINX_DMA_DMACR_MASTER_MASK;
- 		dmacr |= cfg->master << XILINX_DMA_DMACR_MASTER_SHIFT;
- 	}
- 
-@@ -2129,11 +2134,13 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.delay = cfg->delay;
- 
- 	if (cfg->coalesc <= XILINX_DMA_DMACR_FRAME_COUNT_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_FRAME_COUNT_MASK;
- 		dmacr |= cfg->coalesc << XILINX_DMA_DMACR_FRAME_COUNT_SHIFT;
- 		chan->config.coalesc = cfg->coalesc;
- 	}
- 
- 	if (cfg->delay <= XILINX_DMA_DMACR_DELAY_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_DELAY_MASK;
- 		dmacr |= cfg->delay << XILINX_DMA_DMACR_DELAY_SHIFT;
- 		chan->config.delay = cfg->delay;
- 	}
 -- 
 2.20.1
 
