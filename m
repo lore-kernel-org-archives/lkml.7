@@ -2,160 +2,234 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44ACC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51FAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7018B2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABBD2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guk/cB4S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVcvMlC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfKKXT4 (ORCPT
+        id S1727012AbfKKXV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:19:56 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45255 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKXTz (ORCPT
+        Mon, 11 Nov 2019 18:21:26 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37289 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKXV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:19:55 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z10so11172049wrs.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:19:52 -0800 (PST)
+        Mon, 11 Nov 2019 18:21:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p24so11845881pfn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:21:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S8S5DPbkJUeuS0msuewZK6ytnsqOwMF+XHe7JKmZJ8Q=;
-        b=guk/cB4SALjmTWo06lOmPQCfirOWm5hC8o53ccneMsCRkFC9QHiI/xB15Zyz7SC3nk
-         aGyIYavYYaSeEMzuWn02kb1tCSZGZqG3Z3Tb3ASsKg6LKlbt1He/tCyKidF/mn14JaTL
-         FhySs/SeSryiYFdkbhPU1KAtWLAxKwAIJRqW08MKt0nK8cyCRKDstHISEzYgN7FMFNU+
-         PYS/gKX8IPjKx9i4TNNs14fvkcNfVneHr5rR4F1CGEnxs2se7NtsA3fhVRRmE2FlPv84
-         M1eoWBwEoxGzcvroxQhiE9H2+F6Tkn1s5duXbFdkfdnxlvFeXzJHaZjrqSCtTC7Vc8eE
-         hKuQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xFbcrfryJboon4EFsR1gKhk/54JkFinZpTdb3doF/Cg=;
+        b=hVcvMlC1KXZYOjT42j036j8kHAgl8HjrYsx0jKMzPOdsRPuQXRqSoL50FWJ51jMLIi
+         kr6+Fj+nhqent001BacK0jaoZhFin/CpCJO0TRcqRWSx0cLTp3/UioP6LiNpiTXkigPR
+         TqdFPJGRiUQ3ZwTvY0qGyu0kDIYBbFMOYQYiYsb1DU+MN7URLYtgUMx5pnh8O8Ztf4BF
+         cN+YwFPAbrGc/UwOQBNSS6FHkyJCTzfRr36nKERhC2usdGEx4VaPczcnrXOE8PsO1Xvq
+         yqfNZZCODoYDwNCd1bSdV/tvsI+9+1SHkSq6Gxvkk1dnvQ4zJQnhvjlNrDBmKDTQndy5
+         HiHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S8S5DPbkJUeuS0msuewZK6ytnsqOwMF+XHe7JKmZJ8Q=;
-        b=Z4fg5nX4/VLdPFTUzStTM2G2/rm5AyMWuQwbsy7F3qEtAIs+s4BMo0RrUZM4jpPxdB
-         uy8eJ258aFbQ5/JUz9gryNMDxlGSR+wXHgKeOFWiux008LNgV3xKpf10Dn2SkSWneshT
-         uqJvTa2+baNRUBjae9sksabLjlgHGI/rNTel3oM4hfprDsM8RoITDScg/NY5rYu9giM+
-         VGs3bSuR9gZSGHs6dw4ktjj9aeeirTr0zSosGu4iaMoZjTXE3EGK5UphuIx7lzCWM4V5
-         BBlumDc6SNWswfT3zhU6De/+tMXg1Nl6R/TwifdQyHEs0VaSgMQgChhdUN4JWCGT6U9D
-         uahQ==
-X-Gm-Message-State: APjAAAXZV709D0BaxhYu7FikRpeEuihGaQDblR/T/S6b6vr/vfo4h3lO
-        cQSF1Sg7mKd/kZ27ygPlyUo=
-X-Google-Smtp-Source: APXvYqw72aIe/celjP64cfcn7BsbhSwJGpB7wvaG0aGHvTDm9lDToXMurYqYpCb3UrV1PSywUttkMA==
-X-Received: by 2002:adf:dc0e:: with SMTP id t14mr23102815wri.170.1573514392256;
-        Mon, 11 Nov 2019 15:19:52 -0800 (PST)
-Received: from [192.168.1.221] ([195.245.39.207])
-        by smtp.gmail.com with ESMTPSA id q124sm779492wme.13.2019.11.11.15.19.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 15:19:51 -0800 (PST)
-Subject: Re: [PATCH] ARM: ep93xx: Avoid soc_device_to_device()
-To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Hartley Sweeten <hsweeten@visionengravers.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>
-References: <20191111223722.2364-1-afaerber@suse.de>
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Message-ID: <ef0dcc43-1b5d-0617-4d1e-4d6eb366e39d@gmail.com>
-Date:   Tue, 12 Nov 2019 00:17:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xFbcrfryJboon4EFsR1gKhk/54JkFinZpTdb3doF/Cg=;
+        b=Uch8NLeF0aNZXQk3C9h+qqs8Wxxsje++qskW41VghKbqE5JusHPQJQl4K+Uw+mTU6b
+         ohyhEEhX1ALIMLoSanKk23a6wr4j/y23mx7Hns2I/QTc+7YFPe6nL23yR9da0vmBsmfJ
+         tvVcJ/yp5qActyQ0Mou6Ml0NgoHUmv1XXFXE4gp6V/bLBrZDqkmy/6JawaHAJhsQx+5V
+         MjcrxJ1GAiY+dk2zjPDinfG6VHcBoFJeUwttvQu2B9GddVkNWCHRxTC0k6IYk65DTdqm
+         auug8BjZkdoBxJ9r4YcJRt0793ZGANberM1RkhyXi+polWU/GnOpPQxVsuX6mnMK7aW9
+         wflw==
+X-Gm-Message-State: APjAAAWp+E5XtSHVtHhuX/jUlHfjgZ1sK8e70Wew38657kiS+0pxIuV7
+        jSpViqQZRZuotCNiDp7q6l/Biw==
+X-Google-Smtp-Source: APXvYqwBvTGHRUIPuHyNr1uRChFqzthcXpiT9GIIQMLYAoVRmsJM4oerOsHL9xiffTrk3o0luLlUQw==
+X-Received: by 2002:a63:c804:: with SMTP id z4mr14611551pgg.440.1573514484890;
+        Mon, 11 Nov 2019 15:21:24 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d23sm16121748pfo.140.2019.11.11.15.21.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 15:21:24 -0800 (PST)
+Date:   Mon, 11 Nov 2019 15:21:22 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        s-anna@ti.com
+Subject: Re: [PATCH 05/17] remoteproc/omap: Add support to parse internal
+ memories from DT
+Message-ID: <20191111232122.GG3108315@builder>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-6-t-kristo@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111223722.2364-1-afaerber@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028124238.19224-6-t-kristo@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
 
-On 11/11/2019 23:37, Andreas Färber wrote:
-> ep93xx_init_soc() uses soc_device_to_device() to return a device
-> to ep93xx_init_devices(), where it is passed on to its callers,
-> who all ignore the return value. As this helper is deprecated,
-> change the return type of ep93xx_init_devices() to void and
-> have ep93xx_init_soc() return the soc_device instead.
+> From: Suman Anna <s-anna@ti.com>
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-
-Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-
+> The OMAP remoteproc driver has been enhanced to parse and store
+> the kernel mappings for different internal RAM memories that may
+> be present within each remote processor IP subsystem. Different
+> devices have varying memories present on current SoCs. The current
+> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+> L2 RAM memories.
+> 
+> IPUs are expected to have the L2RAM at a fixed device address of
+> 0x20000000, based on the current limitations on Attribute MMU
+> configurations.
+> 
+> NOTE:
+> The current logic doesn't handle the parsing of memories for DRA7
+> remoteproc devices, and will be added alongside the DRA7 support.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
->  arch/arm/mach-ep93xx/core.c     | 12 ++++--------
->  arch/arm/mach-ep93xx/platform.h |  2 +-
->  2 files changed, 5 insertions(+), 9 deletions(-)
+>  drivers/remoteproc/omap_remoteproc.c | 69 ++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
 > 
-> diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
-> index 6fb19a393fd2..7a0c82b30564 100644
-> --- a/arch/arm/mach-ep93xx/core.c
-> +++ b/arch/arm/mach-ep93xx/core.c
-> @@ -937,7 +937,7 @@ static const char __init *ep93xx_get_machine_name(void)
->  	return kasprintf(GFP_KERNEL,"%s", machine_desc->name);
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index a10377547533..bbd6ff360e10 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -29,6 +29,8 @@
+>  #include "omap_remoteproc.h"
+>  #include "remoteproc_internal.h"
+>  
+> +#define OMAP_RPROC_IPU_L2RAM_DEV_ADDR		(0x20000000)
+> +
+>  /**
+>   * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+>   * @syscon: regmap handle for the system control configuration module
+> @@ -39,11 +41,27 @@ struct omap_rproc_boot_data {
+>  	unsigned int boot_reg;
+>  };
+>  
+> +/*
+> + * struct omap_rproc_mem - internal memory structure
+> + * @cpu_addr: MPU virtual address of the memory region
+> + * @bus_addr: bus address used to access the memory region
+> + * @dev_addr: device address of the memory region from DSP view
+> + * @size: size of the memory region
+> + */
+> +struct omap_rproc_mem {
+> +	void __iomem *cpu_addr;
+> +	phys_addr_t bus_addr;
+> +	u32 dev_addr;
+> +	size_t size;
+> +};
+> +
+>  /**
+>   * struct omap_rproc - omap remote processor state
+>   * @mbox: mailbox channel handle
+>   * @client: mailbox client to request the mailbox channel
+>   * @boot_data: boot data structure for setting processor boot address
+> + * @mem: internal memory regions data
+> + * @num_mems: number of internal memory regions
+>   * @rproc: rproc handle
+>   * @reset: reset handle
+>   */
+> @@ -51,6 +69,8 @@ struct omap_rproc {
+>  	struct mbox_chan *mbox;
+>  	struct mbox_client client;
+>  	struct omap_rproc_boot_data *boot_data;
+> +	struct omap_rproc_mem *mem;
+> +	int num_mems;
+>  	struct rproc *rproc;
+>  	struct reset_control *reset;
+>  };
+> @@ -307,6 +327,51 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>  	return 0;
 >  }
 >  
-> -static struct device __init *ep93xx_init_soc(void)
-> +static struct soc_device __init *ep93xx_init_soc(void)
+> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+> +					       struct rproc *rproc)
+> +{
+> +	static const char * const mem_names[] = {"l2ram"};
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct omap_rproc *oproc = rproc->priv;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	int num_mems;
+> +	int i;
+> +
+> +	/* OMAP4 and OMAP5 DSPs do not have support for flat SRAM */
+> +	if (of_device_is_compatible(np, "ti,omap4-dsp") ||
+> +	    of_device_is_compatible(np, "ti,omap5-dsp"))
+> +		return 0;
+> +
+> +	num_mems = ARRAY_SIZE(mem_names);
+> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+> +				  GFP_KERNEL);
+> +	if (!oproc->mem)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_mems; i++) {
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   mem_names[i]);
+> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+> +			dev_err(dev, "failed to parse and map %s memory\n",
+> +				mem_names[i]);
+> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+> +		}
+> +		oproc->mem[i].bus_addr = res->start;
+> +		oproc->mem[i].dev_addr = OMAP_RPROC_IPU_L2RAM_DEV_ADDR;
+
+Presumably this means that mem_names[] will only ever be {"l2ram"} ?
+
+This would imply that you can either remove the loop or you should
+generalize this for dev_addr as well.
+
+
+Apart from that, this looks good.
+
+Regards,
+Bjorn
+
+> +		oproc->mem[i].size = resource_size(res);
+> +
+> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
+> +			mem_names[i], &oproc->mem[i].bus_addr,
+> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+> +			oproc->mem[i].dev_addr);
+> +	}
+> +	oproc->num_mems = num_mems;
+> +
+> +	return 0;
+> +}
+> +
+>  static int omap_rproc_probe(struct platform_device *pdev)
 >  {
->  	struct soc_device_attribute *soc_dev_attr;
->  	struct soc_device *soc_dev;
-> @@ -958,13 +958,11 @@ static struct device __init *ep93xx_init_soc(void)
->  		return NULL;
->  	}
+>  	struct device_node *np = pdev->dev.of_node;
+> @@ -346,6 +411,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  	/* All existing OMAP IPU and DSP processors have an MMU */
+>  	rproc->has_iommu = true;
 >  
-> -	return soc_device_to_device(soc_dev);
-> +	return soc_dev;
->  }
->  
-> -struct device __init *ep93xx_init_devices(void)
-> +void __init ep93xx_init_devices(void)
->  {
-> -	struct device *parent;
-> -
->  	/* Disallow access to MaverickCrunch initially */
->  	ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_CPENA);
->  
-> @@ -975,7 +973,7 @@ struct device __init *ep93xx_init_devices(void)
->  			       EP93XX_SYSCON_DEVCFG_GONIDE |
->  			       EP93XX_SYSCON_DEVCFG_HONIDE);
->  
-> -	parent = ep93xx_init_soc();
-> +	ep93xx_init_soc();
->  
->  	/* Get the GPIO working early, other devices need it */
->  	platform_device_register(&ep93xx_gpio_device);
-> @@ -989,8 +987,6 @@ struct device __init *ep93xx_init_devices(void)
->  	platform_device_register(&ep93xx_wdt_device);
->  
->  	gpio_led_register_device(-1, &ep93xx_led_data);
-> -
-> -	return parent;
->  }
->  
->  void ep93xx_restart(enum reboot_mode mode, const char *cmd)
-> diff --git a/arch/arm/mach-ep93xx/platform.h b/arch/arm/mach-ep93xx/platform.h
-> index b4045a186239..8a3a2be50f11 100644
-> --- a/arch/arm/mach-ep93xx/platform.h
-> +++ b/arch/arm/mach-ep93xx/platform.h
-> @@ -34,7 +34,7 @@ void ep93xx_register_ac97(void);
->  void ep93xx_register_ide(void);
->  void ep93xx_register_adc(void);
->  
-> -struct device *ep93xx_init_devices(void);
-> +void ep93xx_init_devices(void);
->  extern void ep93xx_timer_init(void);
->  
->  void ep93xx_restart(enum reboot_mode, const char *);
+> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+> +	if (ret)
+> +		goto free_rproc;
+> +
+>  	ret = omap_rproc_get_boot_data(pdev, rproc);
+>  	if (ret)
+>  		goto free_rproc;
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
