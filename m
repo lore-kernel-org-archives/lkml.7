@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D631BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96998C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD16521655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6391A21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498454;
-	bh=Q/XKueGCDyekB63HVaQt7ZV4jBHWEAxlBh37GeUqtNc=;
+	s=default; t=1573498459;
+	bh=Ln5zO4FxwulI4Hbkne+2MsgfrPDmSUU850xuwaaYEEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWTk8mOVyj2DmUsvOh8pP1v7Bd1CPshMkbczhgzz/dcRE1VLsKinXZu3bJi5WvBZC
-	 6iwZ3/1jcCA1wK5X3Q7mkTCpxUIHzYF2BUiewh3o8XI7ySW2Q2y4ZCMYfaEMny9Jtu
-	 oNIlqj75O79wXDtgPJPbmvQPLrRYnh3RKzOyHIMI=
+	b=l3/m4tehh7SqhqRlFKmI6QUFMGiZzowgItPCQFVnwITb2LE7xMQnLVZ5FB3JMl2V0
+	 4Vu3WfjwieG/RaWOdEaUUkjYL8yZ38wJaVXmF8cPQjMtzqsUyNeG5GKLLH+T5AsxFx
+	 Ip31wGX5+JPRLZJrc/31VPngzknXT82JcoXcyIqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbfKKSyN (ORCPT
+        id S1728838AbfKKSyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:54:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:54:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730459AbfKKSyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:54:11 -0500
+        id S1729062AbfKKSyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:54:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04CEE21655;
-        Mon, 11 Nov 2019 18:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1756C2173B;
+        Mon, 11 Nov 2019 18:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498450;
-        bh=Q/XKueGCDyekB63HVaQt7ZV4jBHWEAxlBh37GeUqtNc=;
+        s=default; t=1573498453;
+        bh=Ln5zO4FxwulI4Hbkne+2MsgfrPDmSUU850xuwaaYEEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9tnhjay80qPJwv69E9Q+EKBJf7KRR9Uh1EUIwjjfTzG5X+ofFrhLuVVKbPlphVdc
-         mwFuW/cxAF2NYKbLL5VeZqk5Y9aDkt2pIEC1pKk6xtH2+BR+4J3O47EGv2V9wKKzz0
-         KiTX6Uz99Qyh/lag4ruFR7Ag9DCo4/wragEJwv9k=
+        b=rEZRVgoojPv+l8ZKjn+NUQNMXUGS/3N4mdDoxZIRgCZeGBB7ySqUXG8GNu+Tw4yBP
+         uDjkZWoDrhC8JbmZiS7zuTSyy0MR9M1M7q71QOUJLHSiVPOc4zJfY1yZ72uQlpwedt
+         gtstTE26jGbOY2fU5oW3ImDDnLW94bsX3aFhb4fA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Eric Anholt <eric@anholt.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 124/193] netfilter: nf_flow_table: set timeout before insertion into hashes
-Date:   Mon, 11 Nov 2019 19:28:26 +0100
-Message-Id: <20191111181510.332120018@linuxfoundation.org>
+Subject: [PATCH 5.3 125/193] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
+Date:   Mon, 11 Nov 2019 19:28:27 +0100
+Message-Id: <20191111181510.407326103@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,61 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit daf61b026f4686250e6afa619e6d7b49edc61df7 ]
+[ Upstream commit 29cd13cfd7624726d9e6becbae9aa419ef35af7f ]
 
-Other garbage collector might remove an entry not fully set up yet.
+In the impelementation of v3d_submit_cl_ioctl() there are two memory
+leaks. One is when allocation for bin fails, and the other is when bin
+initialization fails. If kcalloc fails to allocate memory for bin then
+render->base should be put. Also, if v3d_job_init() fails to initialize
+bin->base then allocated memory for bin should be released.
 
-[570953.958293] RIP: 0010:memcmp+0x9/0x50
-[...]
-[570953.958567]  flow_offload_hash_cmp+0x1e/0x30 [nf_flow_table]
-[570953.958585]  flow_offload_lookup+0x8c/0x110 [nf_flow_table]
-[570953.958606]  nf_flow_offload_ip_hook+0x135/0xb30 [nf_flow_table]
-[570953.958624]  nf_flow_offload_inet_hook+0x35/0x37 [nf_flow_table_inet]
-[570953.958646]  nf_hook_slow+0x3c/0xb0
-[570953.958664]  __netif_receive_skb_core+0x90f/0xb10
-[570953.958678]  ? ip_rcv_finish+0x82/0xa0
-[570953.958692]  __netif_receive_skb_one_core+0x3b/0x80
-[570953.958711]  __netif_receive_skb+0x18/0x60
-[570953.958727]  netif_receive_skb_internal+0x45/0xf0
-[570953.958741]  napi_gro_receive+0xcd/0xf0
-[570953.958764]  ixgbe_clean_rx_irq+0x432/0xe00 [ixgbe]
-[570953.958782]  ixgbe_poll+0x27b/0x700 [ixgbe]
-[570953.958796]  net_rx_action+0x284/0x3c0
-[570953.958817]  __do_softirq+0xcc/0x27c
-[570953.959464]  irq_exit+0xe8/0x100
-[570953.960097]  do_IRQ+0x59/0xe0
-[570953.960734]  common_interrupt+0xf/0xf
-
-Fixes: 43c8f131184f ("netfilter: nf_flow_table: fix missing error check for rhashtable_insert_fast")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191021185250.26130-1-navid.emamdoost@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index a0b4bf654de2d..4c2f8959de587 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -201,6 +201,8 @@ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
- {
- 	int err;
+diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
+index 27e0f87075d96..4dc7e38c99c7c 100644
+--- a/drivers/gpu/drm/v3d/v3d_gem.c
++++ b/drivers/gpu/drm/v3d/v3d_gem.c
+@@ -555,13 +555,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
  
-+	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
-+
- 	err = rhashtable_insert_fast(&flow_table->rhashtable,
- 				     &flow->tuplehash[0].node,
- 				     nf_flow_offload_rhash_params);
-@@ -217,7 +219,6 @@ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
- 		return err;
- 	}
+ 	if (args->bcl_start != args->bcl_end) {
+ 		bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
+-		if (!bin)
++		if (!bin) {
++			v3d_job_put(&render->base);
+ 			return -ENOMEM;
++		}
  
--	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(flow_offload_add);
+ 		ret = v3d_job_init(v3d, file_priv, &bin->base,
+ 				   v3d_job_free, args->in_sync_bcl);
+ 		if (ret) {
+ 			v3d_job_put(&render->base);
++			kfree(bin);
+ 			return ret;
+ 		}
+ 
 -- 
 2.20.1
 
