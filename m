@@ -2,53 +2,53 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A369DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9771CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAF02184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4BD2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498706;
-	bh=AIcKu1zm1e7HCB/VWcOY2XgkDYMuE8UBrJYgVcfDeKo=;
+	s=default; t=1573498709;
+	bh=htiOC1uVGR+O9cmER5N2/CdEIVGN+j7kvh9EzVsIIPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b/kPxcHOfnIyXRQfg1y/OHhZY6law0nnW1YaONYHqOuG+ya+QBeBGF6VrtjHtGeFN
-	 YiQ/GKW/2FcYZK2Yx4U2COPMmZP1G2g5UOx8PWhael+nbgzbRSm1k4j+67TUD9+j3M
-	 IJ8j7D/oiSC5dOoGIN0X4yBW0RBQqTIGrECyro1o=
+	b=PJMpLSWb7Xz2VZemVKXRbEuee4UIr/hXyADRfnlGJBEJApXJ6NvP+G5zTXn4mEDtn
+	 DsfVuQZZJ+9Him1XO9ZfmWGeVKNPGoOPhHkF0UtwdTO3DxUku6DN22sssGs/MIi/hV
+	 d3rJWL5heOcsTtXgifUIcYaKp8c+86UcgiLOCemQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbfKKS6Z (ORCPT
+        id S1730957AbfKKS62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:58:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58900 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:58:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728527AbfKKS6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:58:21 -0500
+        id S1730952AbfKKS6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:58:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79EC220659;
-        Mon, 11 Nov 2019 18:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B59621655;
+        Mon, 11 Nov 2019 18:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498701;
-        bh=AIcKu1zm1e7HCB/VWcOY2XgkDYMuE8UBrJYgVcfDeKo=;
+        s=default; t=1573498705;
+        bh=htiOC1uVGR+O9cmER5N2/CdEIVGN+j7kvh9EzVsIIPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFQtsXeYXziVGBgFJ/aJTCWK6kA1ltj5rJ6Ejzrxk2c41E6oA/3i6fLdhrR1wz3+7
-         bcQ1QbI6nOpQrpLD4kfyzwuV4fNZ8cW8Vi3ZuCBxeg5lGiz5PtSIJcEj0D9pdqh490
-         izkM9IX2FtbU4ChDetMslRyOU5tJXorv7VcWOrx8=
+        b=1hzb8tIxSGq/EujvfR5LNA6bltbbrZTDXXUrLvjT89URdw2U2fNKgt0RUiC/7ZzW/
+         ZrgQDV9O7/Ft6hlZBbVw91CNXkuSZ2TitC1eFX1a/gDaEvKoJve2RPK3tPO4JnjkeH
+         NqsU3Px2qsf1pAYKnVLtayoK7sLbfAKxB28NT+5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.3 193/193] cgroup,writeback: dont switch wbs immediately on dead wbs if the memcg is dead
-Date:   Mon, 11 Nov 2019 19:29:35 +0100
-Message-Id: <20191111181515.323092459@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Anton Eidelman <anton@lightbitslabs.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 156/193] nvme-multipath: fix possible io hang after ctrl reconnect
+Date:   Mon, 11 Nov 2019 19:28:58 +0100
+Message-Id: <20191111181512.649678505@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -61,62 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Anton Eidelman <anton@lightbitslabs.com>
 
-commit 65de03e251382306a4575b1779c57c87889eee49 upstream.
+[ Upstream commit af8fd0424713a2adb812d10d55e86718152cf656 ]
 
-cgroup writeback tries to refresh the associated wb immediately if the
-current wb is dead.  This is to avoid keeping issuing IOs on the stale
-wb after memcg - blkcg association has changed (ie. when blkcg got
-disabled / enabled higher up in the hierarchy).
+The following scenario results in an IO hang:
+1) ctrl completes a request with NVME_SC_ANA_TRANSITION.
+   NVME_NS_ANA_PENDING bit in ns->flags is set and ana_work is triggered.
+2) ana_work: nvme_read_ana_log() tries to get the ANA log page from the ctrl.
+   This fails because ctrl disconnects.
+   Therefore nvme_update_ns_ana_state() is not called
+   and NVME_NS_ANA_PENDING bit in ns->flags is not cleared.
+3) ctrl reconnects: nvme_mpath_init(ctrl,...) calls
+   nvme_read_ana_log(ctrl, groups_only=true).
+   However, nvme_update_ana_state() does not update namespaces
+   because nr_nsids = 0 (due to groups_only mode).
+4) scan_work calls nvme_validate_ns() finds the ns and re-validates OK.
 
-Unfortunately, the logic gets triggered spuriously on inodes which are
-associated with dead cgroups.  When the logic is triggered on dead
-cgroups, the attempt fails only after doing quite a bit of work
-allocating and initializing a new wb.
+Result:
+The ctrl is now live but NVME_NS_ANA_PENDING bit in ns->flags is still set.
+Consequently ctrl will never be considered a viable path by __nvme_find_path().
+IO will hang if ctrl is the only or the last path to the namespace.
 
-While c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping
-has no dirty pages") alleviated the issue significantly as it now only
-triggers when the inode has dirty pages.  However, the condition can
-still be triggered before the inode is switched to a different cgroup
-and the logic simply doesn't make sense.
+More generally, while ctrl is reconnecting, its ANA state may change.
+And because nvme_mpath_init() requests ANA log in groups_only mode,
+these changes are not propagated to the existing ctrl namespaces.
+This may result in a mal-function or an IO hang.
 
-Skip the immediate switching if the associated memcg is dying.
+Solution:
+nvme_mpath_init() will nvme_read_ana_log() with groups_only set to false.
+This will not harm the new ctrl case (no namespaces present),
+and will make sure the ANA state of namespaces gets updated after reconnect.
 
-This is a simplified version of the following two patches:
+Note: Another option would be for nvme_mpath_init() to invoke
+nvme_parse_ana_log(..., nvme_set_ns_ana_state) for each existing namespace.
 
- * https://lore.kernel.org/linux-mm/20190513183053.GA73423@dennisz-mbp/
- * http://lkml.kernel.org/r/156355839560.2063.5265687291430814589.stgit@buzz
-
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Fixes: e8a7abf5a5bd ("writeback: disassociate inodes from dying bdi_writebacks")
-Acked-by: Dennis Zhou <dennis@kernel.org>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs-writeback.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/nvme/host/multipath.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -577,10 +577,13 @@ void wbc_attach_and_unlock_inode(struct
- 	spin_unlock(&inode->i_lock);
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 30de7efef0035..d320684d25b20 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -715,7 +715,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 		goto out;
+ 	}
  
- 	/*
--	 * A dying wb indicates that the memcg-blkcg mapping has changed
--	 * and a new wb is already serving the memcg.  Switch immediately.
-+	 * A dying wb indicates that either the blkcg associated with the
-+	 * memcg changed or the associated memcg is dying.  In the first
-+	 * case, a replacement wb should already be available and we should
-+	 * refresh the wb immediately.  In the second case, trying to
-+	 * refresh will keep failing.
- 	 */
--	if (unlikely(wb_dying(wbc->wb)))
-+	if (unlikely(wb_dying(wbc->wb) && !css_is_dying(wbc->wb->memcg_css)))
- 		inode_switch_wbs(inode, wbc->wb_id);
- }
- EXPORT_SYMBOL_GPL(wbc_attach_and_unlock_inode);
+-	error = nvme_read_ana_log(ctrl, true);
++	error = nvme_read_ana_log(ctrl, false);
+ 	if (error)
+ 		goto out_free_ana_log_buf;
+ 	return 0;
+-- 
+2.20.1
+
 
 
