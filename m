@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAC7C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42E8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FEA222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9967621783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bll7G+6L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ynn+amnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfKKOrb (ORCPT
+        id S1727450AbfKKOrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:47:31 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40986 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727419AbfKKOr3 (ORCPT
+        Mon, 11 Nov 2019 09:47:35 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48764 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbfKKOra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:47:29 -0500
+        Mon, 11 Nov 2019 09:47:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DFKdPyhJnDAB1ICeNojEvcBVcUAQ1GMXfSfLrHdShnM=; b=bll7G+6LGNw+FPX+JAbovQUUOk
-        f5IADnY0PPxqX6PgtHZiJSsmBvckX3+A+AehNk5MdPmpqMjXUSqTvSsuXBjIICYlUzN1BtOshin1b
-        Ghc5Nrwm70u3EPC7h6uIDZNFuAVT94KpjH3fC7YmIrLuwG/I/ocTx67LhoLDrqUT4N76kj1CBqLIG
-        1RT1n9J/Pf2ylalx+HQtHg088qJgpVK9y0UyhiQJEwGZrIaam7xTJtjR7JMae38R3ku6njEVPfEvv
-        cQBkWTA9mAFZeSFxDLTiKGjTocRrlx3e9IMpLD/G9K/XlmYn0wlqGhs2J6LcNb+kG3eXk2F9c685n
-        Q7MgLk6w==;
+        bh=8DVkfpEw5rYdUnaM+NBpjQJ6vzHDL9N060qKRsLkW1I=; b=Ynn+amnfvu7rb/E8VBd/DTVkZi
+        fsE258nwyG81zRKpZ6lT61wFSyvYVNGbksoQBBcG3eCva8X/NYkUCm5p6U5ZJS8hM1pB3RqIF29Ht
+        GMukPiU1qsjLfVCy0G6Kzo/TzJnxb3ryDkjXEnp4x/Cg6NGHBi9apDurCvBhFdqPCwlg5ZO/SltWE
+        gOcptC14fuKzDdbJdAdLzMm+VX8loSdHClBMrvujfKyq+UAJSH42dUIYQkcU4xWPRLWQbQcU6xXOG
+        WAREPkfyb/hYQQZbWaNprb8uMtbiuwb/5nCwZ5tRYRq4yamMjhkXeI3yjqjQ2cB2u2EPl4LsptXSF
+        Uih+qBtA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUAy9-0003sz-DY; Mon, 11 Nov 2019 14:47:05 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUAyD-0006aX-22; Mon, 11 Nov 2019 14:47:09 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C6E48306CDB;
-        Mon, 11 Nov 2019 15:45:57 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 366FB307383;
+        Mon, 11 Nov 2019 15:45:58 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 81FD929980EFD; Mon, 11 Nov 2019 15:47:03 +0100 (CET)
-Message-Id: <20191111132457.819095320@infradead.org>
+        id A38DE29A37A91; Mon, 11 Nov 2019 15:47:03 +0100 (CET)
+Message-Id: <20191111132458.220458362@infradead.org>
 User-Agent: quilt/0.65
-Date:   Mon, 11 Nov 2019 14:12:58 +0100
+Date:   Mon, 11 Nov 2019 14:13:05 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -54,8 +54,10 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         jbaron@akamai.com, torvalds@linux-foundation.org,
         tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
-        jpoimboe@redhat.com, jeyu@kernel.org, alexei.starovoitov@gmail.com
-Subject: [PATCH -v5 06/17] x86/mm: Remove set_kernel_text_r[ow]()
+        jpoimboe@redhat.com, jeyu@kernel.org, alexei.starovoitov@gmail.com,
+        rabin@rab.in, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, james.morse@arm.com
+Subject: [PATCH -v5 13/17] arm/ftrace: Use __patch_text_real()
 References: <20191111131252.921588318@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,108 +66,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the last and only user of these functions gone (ftrace) remove
-them as well to avoid ever growing new users.
+Instead of flipping text protection, use the patch_text infrastructure
+that uses a fixmap alias where required.
+
+This removes the last user of set_all_modules_text_*().
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: ard.biesheuvel@linaro.org
+Cc: rabin@rab.in
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: james.morse@arm.com
 ---
- arch/x86/include/asm/set_memory.h |    2 --
- arch/x86/mm/init_32.c             |   28 ----------------------------
- arch/x86/mm/init_64.c             |   36 ------------------------------------
- 3 files changed, 66 deletions(-)
+ arch/arm/kernel/ftrace.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -81,8 +81,6 @@ int set_direct_map_invalid_noflush(struc
- int set_direct_map_default_noflush(struct page *page);
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -22,6 +22,7 @@
+ #include <asm/ftrace.h>
+ #include <asm/insn.h>
+ #include <asm/set_memory.h>
++#include <asm/patch.h>
  
- extern int kernel_set_to_readonly;
--void set_kernel_text_rw(void);
--void set_kernel_text_ro(void);
+ #ifdef CONFIG_THUMB2_KERNEL
+ #define	NOP		0xf85deb04	/* pop.w {lr} */
+@@ -31,13 +32,15 @@
  
- #ifdef CONFIG_X86_64
- static inline int set_mce_nospec(unsigned long pfn)
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -874,34 +874,6 @@ void arch_remove_memory(int nid, u64 sta
+ #ifdef CONFIG_DYNAMIC_FTRACE
  
- int kernel_set_to_readonly __read_mostly;
- 
--void set_kernel_text_rw(void)
--{
--	unsigned long start = PFN_ALIGN(_text);
--	unsigned long size = PFN_ALIGN(_etext) - start;
--
--	if (!kernel_set_to_readonly)
--		return;
--
--	pr_debug("Set kernel text: %lx - %lx for read write\n",
--		 start, start+size);
--
--	set_pages_rw(virt_to_page(start), size >> PAGE_SHIFT);
--}
--
--void set_kernel_text_ro(void)
--{
--	unsigned long start = PFN_ALIGN(_text);
--	unsigned long size = PFN_ALIGN(_etext) - start;
--
--	if (!kernel_set_to_readonly)
--		return;
--
--	pr_debug("Set kernel text: %lx - %lx for read only\n",
--		 start, start+size);
--
--	set_pages_ro(virt_to_page(start), size >> PAGE_SHIFT);
--}
--
- static void mark_nxdata_nx(void)
++static int patch_text_remap = 0;
++
+ static int __ftrace_modify_code(void *data)
  {
- 	/*
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1260,42 +1260,6 @@ void __init mem_init(void)
+ 	int *command = data;
  
- int kernel_set_to_readonly;
+-	set_kernel_text_rw();
++	patch_text_remap++;
+ 	ftrace_modify_all_code(*command);
+-	set_kernel_text_ro();
++	patch_text_remap--;
  
--void set_kernel_text_rw(void)
--{
--	unsigned long start = PFN_ALIGN(_text);
--	unsigned long end = PFN_ALIGN(__stop___ex_table);
--
--	if (!kernel_set_to_readonly)
--		return;
--
--	pr_debug("Set kernel text: %lx - %lx for read write\n",
--		 start, end);
--
--	/*
--	 * Make the kernel identity mapping for text RW. Kernel text
--	 * mapping will always be RO. Refer to the comment in
--	 * static_protections() in pageattr.c
--	 */
--	set_memory_rw(start, (end - start) >> PAGE_SHIFT);
--}
--
--void set_kernel_text_ro(void)
--{
--	unsigned long start = PFN_ALIGN(_text);
--	unsigned long end = PFN_ALIGN(__stop___ex_table);
--
--	if (!kernel_set_to_readonly)
--		return;
--
--	pr_debug("Set kernel text: %lx - %lx for read only\n",
--		 start, end);
--
--	/*
--	 * Set the kernel identity mapping for text RO.
--	 */
--	set_memory_ro(start, (end - start) >> PAGE_SHIFT);
--}
--
- void mark_rodata_ro(void)
+ 	return 0;
+ }
+@@ -59,13 +62,13 @@ static unsigned long adjust_address(stru
+ 
+ int ftrace_arch_code_modify_prepare(void)
  {
- 	unsigned long start = PFN_ALIGN(_text);
+-	set_all_modules_text_rw();
++	patch_text_remap++;
+ 	return 0;
+ }
+ 
+ int ftrace_arch_code_modify_post_process(void)
+ {
+-	set_all_modules_text_ro();
++	patch_text_remap--;
+ 	/* Make sure any TLB misses during machine stop are cleared. */
+ 	flush_tlb_all();
+ 	return 0;
+@@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
+ 			return -EINVAL;
+ 	}
+ 
+-	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
+-		return -EPERM;
+-
+-	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
++	__patch_text_real((void *)pc, new, patch_text_remap);
+ 
+ 	return 0;
+ }
 
 
