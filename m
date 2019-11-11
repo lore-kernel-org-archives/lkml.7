@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2218C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DCAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE4C2196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9035A222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498511;
-	bh=2FsLtqLhiS99k5pYtrl0YkqcXm3pKpNcJ8wumBrs2j0=;
+	s=default; t=1573498517;
+	bh=VbvCCvsiDambmPOvycY7w01iL2qd8YiBgIkPa7Jm3Zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YhBevFdaTOC++CVjcHi+XH1RiuQwVFYwXihEcBQfplSgw/QRaUtYDponZfCoBg0A4
-	 N4wukqVBRhavFtQbc4MHeGGjfEboj9kYqWxd6SugH7ZgkptM9pTC1ddIyBrdf51o8t
-	 Xj3ZZY3MUQbeeJH3rGYGWCAHYngAYOh96SaN5a7Q=
+	b=2lEWKpLWW0xni1Bk+MsUMiQgqXIsSk+Lb+MK2YDzfRCYGJjZoAx102UJKlHUZsXUM
+	 Ya1Oyxq3H1ERy+Y7bobO0vgAzAUUOq3QGoyPMXTfIihC+nHhQBz/catv5p1gFb/krY
+	 DIMy5WzutM90jyTgto7u4PePlsDSToflo2MsevkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfKKSzJ (ORCPT
+        id S1729860AbfKKSzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:55:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:55:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729901AbfKKSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:55:04 -0500
+        id S1730606AbfKKSzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:55:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68BA12173B;
-        Mon, 11 Nov 2019 18:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDD0A2173B;
+        Mon, 11 Nov 2019 18:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498504;
-        bh=2FsLtqLhiS99k5pYtrl0YkqcXm3pKpNcJ8wumBrs2j0=;
+        s=default; t=1573498507;
+        bh=VbvCCvsiDambmPOvycY7w01iL2qd8YiBgIkPa7Jm3Zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gw/CTandKyeVLC8vLmoVnsNqf1HhHuCfxEv8kIbcPfMlffQkxSFKoSwibDry0+IrT
-         ARVt0fTiKXpVsRtW7sC9WeJW2i3xx5MB96mpAZb4c4zh1w7CK2QAu9k/Czvc9p13TB
-         SE58YwdE6oZlaReOWjPE2M8AkpWrqM4NCzlLZXHk=
+        b=CM952O+R/DFsHT7RXmMXpSSy5dbiN8pww4KQe/wQhf7bC66b599+XrXU9aUh1ivii
+         YfjcjAERqVzBtQVzW5I5TnIGYDmFUrASdbEVhPrG2MzzS7zCK1z+aFa6AJaRcpA65K
+         HTEbXK82SEZsFLUhMEkoIZ0IZbg6hK+WuR48Ji5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Nikhil Badola <nikhil.badola@freescale.com>,
+        Ran Wang <ran.wang_1@nxp.com>, Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 111/193] scsi: lpfc: Check queue pointer before use
-Date:   Mon, 11 Nov 2019 19:28:13 +0100
-Message-Id: <20191111181509.301623127@linuxfoundation.org>
+Subject: [PATCH 5.3 138/193] usb: fsl: Check memory resource before releasing it
+Date:   Mon, 11 Nov 2019 19:28:40 +0100
+Message-Id: <20191111181511.353956200@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -62,38 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Wagner <dwagner@suse.de>
+From: Nikhil Badola <nikhil.badola@freescale.com>
 
-[ Upstream commit 535fb49e730a6fe1e9f11af4ae67ef4228ff4287 ]
+[ Upstream commit bc1e3a2dd0c9954fd956ac43ca2876bbea018c01 ]
 
-The queue pointer might not be valid. The rest of the code checks the
-pointer before accessing it. lpfc_sli4_process_missed_mbox_completions is
-the only place where the check is missing.
+Check memory resource existence before releasing it to avoid NULL
+pointer dereference
 
-Fixes: 657add4e5e15 ("scsi: lpfc: Fix poor use of hardware queues if fewer irq vectors")
-Cc: James Smart <jsmart2021@gmail.com>
-Link: https://lore.kernel.org/r/20191018162111.8798-1-dwagner@suse.de
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
+Reviewed-by: Ran Wang <ran.wang_1@nxp.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 2 +-
+ drivers/usb/gadget/udc/fsl_udc_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index f9e6a135d6565..c7027ecd4d19e 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -7898,7 +7898,7 @@ lpfc_sli4_process_missed_mbox_completions(struct lpfc_hba *phba)
- 	if (sli4_hba->hdwq) {
- 		for (eqidx = 0; eqidx < phba->cfg_irq_chann; eqidx++) {
- 			eq = phba->sli4_hba.hba_eq_hdl[eqidx].eq;
--			if (eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
-+			if (eq && eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
- 				fpeq = eq;
- 				break;
- 			}
+diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/udc/fsl_udc_core.c
+index 20141c3096f68..9a05863b28768 100644
+--- a/drivers/usb/gadget/udc/fsl_udc_core.c
++++ b/drivers/usb/gadget/udc/fsl_udc_core.c
+@@ -2576,7 +2576,7 @@ static int fsl_udc_remove(struct platform_device *pdev)
+ 	dma_pool_destroy(udc_controller->td_pool);
+ 	free_irq(udc_controller->irq, udc_controller);
+ 	iounmap(dr_regs);
+-	if (pdata->operating_mode == FSL_USB2_DR_DEVICE)
++	if (res && (pdata->operating_mode == FSL_USB2_DR_DEVICE))
+ 		release_mem_region(res->start, resource_size(res));
+ 
+ 	/* free udc --wait for the release() finished */
 -- 
 2.20.1
 
