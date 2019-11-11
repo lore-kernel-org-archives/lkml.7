@@ -2,118 +2,199 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1EAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8D8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE495214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F015214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:05:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4/Nt/1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfKKXEB (ORCPT
+        id S1727216AbfKKXFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:04:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60199 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfKKXEA (ORCPT
+        Mon, 11 Nov 2019 18:05:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44863 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726845AbfKKXFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:04:00 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iUIiw-0001Jb-94; Tue, 12 Nov 2019 00:03:54 +0100
-Date:   Tue, 12 Nov 2019 00:03:53 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch V2 14/16] x86/iopl: Restrict iopl() permission scope
-In-Reply-To: <20191111223052.881699933@linutronix.de>
-Message-ID: <alpine.DEB.2.21.1911120000560.1833@nanos.tec.linutronix.de>
-References: <20191111220314.519933535@linutronix.de> <20191111223052.881699933@linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 11 Nov 2019 18:05:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573513548;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=q3bU1y6/w3lsCZ4mK2/2iMcVIQyk5otgwImYycb24yA=;
+        b=H4/Nt/1U6wdfKBje+zpcFTX0V7tMDzfDXWWrjdQxDZ47EDx+9K0T4i6XltA+t6tKdC2JWC
+        30DpZ90w2e86AolI1RxdcWZWWpmuyOPPS3dXhhgpnrCkxq7wUA7qdoXaxi8QBR8nK2xDjC
+        OWLxus9xEepKN31umm9m7MNq1sNBcF4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-431-9NMID6rzOD-jo7tCS2Pn6w-1; Mon, 11 Nov 2019 18:05:46 -0500
+Received: by mail-wr1-f72.google.com with SMTP id h7so10653679wrb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:05:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s1xtP0FWH3mk9taRWJxAZqcAwLn3T+udkKG0yP0FnPk=;
+        b=ZLueLgYTW8PovtkOj4jvM+6k190lnyLOOHQqVZ7vtOqgsfo49Yhje9zKrEe96CMYMd
+         T9UtYl11YpQlO9rY8IuadfXkiJaQ2T1DOoyuCyZFU1BUzMlvttifQJiEOCqIxA5suimS
+         KzhQSzqLiKxZH6IX+BQuxE0KCHB0STJXxM2FklVIdOJlM7CSayz/OP3NNgh+ZvT7dINi
+         BnoQeQx2oexerRS6I3hekiyCv313udp3W+qGPeMT5Lgx1g9hccenzAU6LVg3wI7OF/zH
+         edQMUtBDsaMC4h+8Zy5xB4kr6yOoY1KuUv4Bxj+ss1u2P5goqKDpgd4tq8+82bTmgF63
+         MPhQ==
+X-Gm-Message-State: APjAAAXzlpb+ggYH5cCw2sUnDy0+ygq5OFzyyhxS1fvAs6iE4AD9k4ls
+        /YRVrDi/XykwmDpEJU+yIQ9shLZHNVKVjegqi4D/6Sx51mTNuR6E/HZHLxOuST+I1kEFQj9dWNk
+        NB5p/lY1jDaVd1cTGacbqeqST
+X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr21859097wrw.290.1573513544875;
+        Mon, 11 Nov 2019 15:05:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwP0hMQwUe3Rb9JqlVvtLWb4ETL344DFvxUp8KFGJe7FlLiSWTMYnjYvoLgjbyZvFWyxgbB3w==
+X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr21859084wrw.290.1573513544562;
+        Mon, 11 Nov 2019 15:05:44 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
+        by smtp.gmail.com with ESMTPSA id i71sm36679380wri.68.2019.11.11.15.05.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Nov 2019 15:05:44 -0800 (PST)
+Subject: Re: [PATCH 4.19 STABLE] KVM: x86: introduce is_pae_paging
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20191111225423.29309-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <aecfcc9e-dcab-2b52-ebdb-373a416a4951@redhat.com>
+Date:   Tue, 12 Nov 2019 00:05:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191111225423.29309-1-sean.j.christopherson@intel.com>
+Content-Language: en-US
+X-MC-Unique: 9NMID6rzOD-jo7tCS2Pn6w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019, Thomas Gleixner wrote:
-> --- a/arch/x86/kernel/ioport.c
-> +++ b/arch/x86/kernel/ioport.c
-> @@ -27,15 +27,28 @@ void io_bitmap_share(struct task_struct
->  	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+On 11/11/19 23:54, Sean Christopherson wrote:
+> From: Paolo Bonzini <pbonzini@redhat.com>
+>=20
+> Upstream commit bf03d4f9334728bf7c8ffc7de787df48abd6340e.
+>=20
+> Checking for 32-bit PAE is quite common around code that fiddles with
+> the PDPTRs.  Add a function to compress all checks into a single
+> invocation.
+>=20
+> Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
+> where it fails to check is_long_mode() and results in KVM incorrectly
+> attempting to load PDPTRs for a 64-bit guest.
+>=20
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> [sean: backport to 4.x; handle vmx.c split in 5.x, call out the bugfix]
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx.c | 7 +++----
+>  arch/x86/kvm/x86.c | 8 ++++----
+>  arch/x86/kvm/x86.h | 5 +++++
+>  3 files changed, 12 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> index 6f7b3acdab26..83acaed244ba 100644
+> --- a/arch/x86/kvm/vmx.c
+> +++ b/arch/x86/kvm/vmx.c
+> @@ -5181,7 +5181,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
+>  =09=09      (unsigned long *)&vcpu->arch.regs_dirty))
+>  =09=09return;
+> =20
+> -=09if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
+> +=09if (is_pae_paging(vcpu)) {
+>  =09=09vmcs_write64(GUEST_PDPTR0, mmu->pdptrs[0]);
+>  =09=09vmcs_write64(GUEST_PDPTR1, mmu->pdptrs[1]);
+>  =09=09vmcs_write64(GUEST_PDPTR2, mmu->pdptrs[2]);
+> @@ -5193,7 +5193,7 @@ static void ept_save_pdptrs(struct kvm_vcpu *vcpu)
+>  {
+>  =09struct kvm_mmu *mmu =3D vcpu->arch.walk_mmu;
+> =20
+> -=09if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
+> +=09if (is_pae_paging(vcpu)) {
+>  =09=09mmu->pdptrs[0] =3D vmcs_read64(GUEST_PDPTR0);
+>  =09=09mmu->pdptrs[1] =3D vmcs_read64(GUEST_PDPTR1);
+>  =09=09mmu->pdptrs[2] =3D vmcs_read64(GUEST_PDPTR2);
+> @@ -12021,8 +12021,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *v=
+cpu, unsigned long cr3, bool ne
+>  =09=09 * If PAE paging and EPT are both on, CR3 is not used by the CPU a=
+nd
+>  =09=09 * must not be dereferenced.
+>  =09=09 */
+> -=09=09if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu) &&
+> -=09=09    !nested_ept) {
+> +=09=09if (is_pae_paging(vcpu) && !nested_ept) {
+>  =09=09=09if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3)) {
+>  =09=09=09=09*entry_failure_code =3D ENTRY_FAIL_PDPTE;
+>  =09=09=09=09return 1;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 6ae8a013af31..b9b87fb75ac0 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -633,7 +633,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
+>  =09gfn_t gfn;
+>  =09int r;
+> =20
+> -=09if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
+> +=09if (!is_pae_paging(vcpu))
+>  =09=09return false;
+> =20
+>  =09if (!test_bit(VCPU_EXREG_PDPTR,
+> @@ -884,8 +884,8 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long =
+cr3)
+>  =09if (is_long_mode(vcpu) &&
+>  =09    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
+>  =09=09return 1;
+> -=09else if (is_pae(vcpu) && is_paging(vcpu) &&
+> -=09=09   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+> +=09else if (is_pae_paging(vcpu) &&
+> +=09=09 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+>  =09=09return 1;
+> =20
+>  =09kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
+> @@ -8312,7 +8312,7 @@ static int __set_sregs(struct kvm_vcpu *vcpu, struc=
+t kvm_sregs *sregs)
+>  =09=09kvm_update_cpuid(vcpu);
+> =20
+>  =09idx =3D srcu_read_lock(&vcpu->kvm->srcu);
+> -=09if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
+> +=09if (is_pae_paging(vcpu)) {
+>  =09=09load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
+>  =09=09mmu_reset_needed =3D 1;
+>  =09}
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 3a91ea760f07..608e5f8c5d0a 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -139,6 +139,11 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
+>  =09return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
 >  }
->  
-> +static void task_update_io_bitmap(void)
+> =20
+> +static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
 > +{
-> +	struct thread_struct *t = &current->thread;
-> +
-> +	preempt_disable();
-> +	if (t->iopl_emul == 3 || t->io_bitmap) {
-> +		/* TSS update is handled on exit to user space */
-> +		set_thread_flag(TIF_IO_BITMAP);
-> +	} else {
-> +		clear_thread_flag(TIF_IO_BITMAP);
-> +		/* Invalidate TSS */
-> +		tss_update_io_bitmap();
-> +	}
-> +	preempt_enable();
+> +=09return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
 > +}
 > +
->  void io_bitmap_exit(void)
+>  static inline u32 bit(int bitno)
 >  {
->  	struct io_bitmap *iobm = current->thread.io_bitmap;
->  
-> -	preempt_disable();
->  	current->thread.io_bitmap = NULL;
-> -	clear_thread_flag(TIF_IO_BITMAP);
-> -	tss_update_io_bitmap();
-> -	preempt_enable();
-> +	task_update_io_bitmap();
->  	if (iobm && refcount_dec_and_test(&iobm->refcnt))
->  		kfree(iobm);
+>  =09return 1 << (bitno & 31);
+>=20
 
-This obviously needs the following delta to be folded in. Noticed too late
-after fiddling with the test case some more. git tree is updated
-accordingly.
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Thanks,
-
-	tglx
----
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -18,12 +18,15 @@ static atomic64_t io_bitmap_sequence;
- 
- void io_bitmap_share(struct task_struct *tsk)
-  {
--	/*
--	 * Take a refcount on current's bitmap. It can be used by
--	 * both tasks as long as none of them changes the bitmap.
--	 */
--	refcount_inc(&current->thread.io_bitmap->refcnt);
--	tsk->thread.io_bitmap = current->thread.io_bitmap;
-+	 /* Can be NULL when current->thread.iopl_emul == 3 */
-+	 if (current->thread.io_bitmap) {
-+		 /*
-+		  * Take a refcount on current's bitmap. It can be used by
-+		  * both tasks as long as none of them changes the bitmap.
-+		  */
-+		 refcount_inc(&current->thread.io_bitmap->refcnt);
-+		 tsk->thread.io_bitmap = current->thread.io_bitmap;
-+	 }
- 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- }
- 
