@@ -2,866 +2,155 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7B8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEE8C17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2607C2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4C82075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:06:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S/UMbi/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfKKJEE (ORCPT
+        id S1726878AbfKKJGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:04:04 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:40306 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726924AbfKKJED (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:04:03 -0500
-Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAB93Gol061221
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 11 Nov 2019 17:03:17 +0800 (CST)
-        (envelope-from Chunyan.Zhang@unisoc.com)
-Received: from localhost (10.0.74.88) by BJMBX01.spreadtrum.com (10.0.64.7)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Mon, 11 Nov 2019 17:03:34
- +0800
-From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v2 5/5] arm64: dts: Add Unisoc's SC9863A SoC support
-Date:   Mon, 11 Nov 2019 17:02:30 +0800
-Message-ID: <20191111090230.3402-6-chunyan.zhang@unisoc.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+        Mon, 11 Nov 2019 04:06:12 -0500
+Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:62017
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726768AbfKKJGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:06:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ADTfuy7yYb3Z7BvLnYWqg7eyFOVLTsKnHd44Ix5xyJqXA6ZwDCIDjdbgsRGe4Duq5GYYzHF0kgZAKISMCOwuemXSKkavxePNV8zUuk6B4IA3QOQKjUnJr/+iZw3fgnukeBoBoIYueWQdMRZFEUh7lYlXLJ+X9cXHvtxNctOOyoXuIVEMYkXB161Y5mWqnbTbD/EdC7WrNZYAsLcRC4p9/esywYIhiN9vrSQdlDAcU7Ds2ER0D8aYRY/w5ikzv3IUJq8MymIsHuHfY7qauAbXGFeIPExlGLN7fFwqhYJy/1ekBNaGKFbFKWi+dBGFZk7QNg1y2w96rpP+9IbkrSdyvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jqfhLy15q3DKXp1ZpKfv6q73du1gcBDOB0dOCiIhhPk=;
+ b=ken2ReQtxJvnk/sqZlxUZE0quTdFsYbG8V6BdktBG2K01sG7hH5qQslVdCHrcFITvEiT5Q8M81Vn1ja8wsIK3h6lkec4F4wHFsik531Fh1A76D0AyJg/alJBmP+ElWWuifBeMG2+8rTNhGkRpICPvVs9IQxCngnCm/aBLrSMsae7lTX1fVTx0RP8kaLJ+sbGUhoNQ9qSI8c1dGDeotymMMjqD5wfziAyOyOdckC77RRI7Ra5+qe+6abOsFZZpXFi/qLh1HKb+6c2gULUu3V+B4Tag7+X3bx84lTEM2lwQJnA2/D9mVyN+QY1WjtSQk/FBFRm1wzWZUBGYwUM0AxdTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jqfhLy15q3DKXp1ZpKfv6q73du1gcBDOB0dOCiIhhPk=;
+ b=S/UMbi/8wpmqGX0e8l8iRdvYB4Va5xSo0BAjQoww/v8L0GaVbRHVpi1BVdKXP89aQvkI3B6X89B5EFYN031nxAEpjVHDAY9VWqemes/tkijN6+AK0y41vJ42YKq1XUer8wql5lOJem3S7RFJj8429kVmWvrcwfeUyx+JUhUStlY=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.232.225) by
+ VE1PR04MB6350.eurprd04.prod.outlook.com (20.179.234.91) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Mon, 11 Nov 2019 09:06:07 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::9c38:e113:f0b4:f9]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::9c38:e113:f0b4:f9%7]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
+ 09:06:07 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Rob Herring <robh@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [alsa-devel] [PATCH V2 1/2] ASoC: dt-bindings: fsl_asrc: add
+ compatible string for imx8qm
+Thread-Topic: [alsa-devel] [PATCH V2 1/2] ASoC: dt-bindings: fsl_asrc: add
+ compatible string for imx8qm
+Thread-Index: AdWYbsgh8IXPoWIwTOytoNQoYAeMEw==
+Date:   Mon, 11 Nov 2019 09:06:07 +0000
+Message-ID: <VE1PR04MB6479812133EDC588EE5768BAE3740@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 432c21f6-3686-4758-eb6a-08d7668663a2
+x-ms-traffictypediagnostic: VE1PR04MB6350:
+x-microsoft-antispam-prvs: <VE1PR04MB6350F8CF6EC6451E9DB6CB95E3740@VE1PR04MB6350.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0218A015FA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(189003)(186003)(54906003)(6436002)(86362001)(305945005)(55016002)(66446008)(6116002)(66066001)(66946007)(66476007)(66556008)(76116006)(102836004)(256004)(14444005)(316002)(74316002)(64756008)(6246003)(71200400001)(71190400001)(229853002)(110136005)(478600001)(25786009)(81156014)(7736002)(6506007)(2501003)(7696005)(81166006)(9686003)(26005)(14454004)(33656002)(99286004)(7416002)(2906002)(4326008)(476003)(8936002)(5660300002)(8676002)(52536014)(486006)(3846002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6350;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BMjPrC9cSAkLC4vh8ygCcYEwlGhUbDiqnwOVMVgkjkGIXfnjaJLYLt8I4byQVqypxZ7a8wNhNGCD1x50bVnO0vP0bbv3to3jwgdylNed1xpLJ1l1xuP20Dq8xDZA2Hv/BpmZ1Kv+Eq4wCeJPFq4W3H3bgpfa0J576SYvRGmYcNOnUrJQmV6ZS3+t4hFSfZpNgiwZS44lhWdFCcL9E0eQxmDGHCFipQaLXAU+id5NWtcGXh7H0azL/U/fIsbhng9Nl/HLx+OMDhzCb1uebGRxTxMjsHdQVsZIsqAjXaCwWyKb8iVCQ3VQQlK8Nl6V2ObFmpXtBVYkilJJskLI+Bb/8SIhx874Ehefo/OfNnBlvX03NHIKpEGjDUOpNK5p5MbUtyokvizJaYfkPKa9UWy9PRp7Q6b52RLAYTQLzUiUa8eJjkso73VP6miTRQJ7c5h0
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.0.74.88]
-X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL: SHSQR01.spreadtrum.com xAB93Gol061221
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 432c21f6-3686-4758-eb6a-08d7668663a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 09:06:07.7967
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: h1eigLkZycDyuWu2wlZigzxo89NFLzDid4DGzCpsE5reZ8qaEyJp+XdRB/+vq9tVgn7QdxUc3VCBHXvEPzuU4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6350
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rob, Nicolin
 
-Add basic DT to support Unisoc's SC9863A, with this patch,
-the board sp9863a-1h10 can run into console.
+>=20
+> Hi Rob
+> >
+> > On Wed, Oct 30, 2019 at 07:41:26PM +0800, Shengjiu Wang wrote:
+> > > In order to support the two asrc modules in imx8qm, we need to add
+> > > compatible string "fsl,imx8qm-asrc0" and "fsl,imx8qm-asrc1"
+> >
+> > Are the blocks different in some way?
+> >
+> > If not, why do you need to distinguish them?
+> >
+> The internal clock mapping is different for each module.
+>=20
+> Or we can use one compatible string, but need add another property
+> "fsl,asrc-clk-map" to distinguish the different clock map.
+>=20
+> The change is in below.
+>=20
+> Which one do you think is better?
+>=20
+> Required properties:
+>=20
+> -  - compatible         : Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
+> +  - compatible         : Contains "fsl,imx35-asrc", "fsl,imx53-asrc",
+> +                         "fsl,imx8qm-asrc".
+>=20
+>    - reg                        : Offset and length of the register set f=
+or the device.
+>=20
+> @@ -35,6 +36,11 @@ Required properties:
+>=20
+>     - fsl,asrc-width    : Defines a mutual sample width used by DPCM Back
+> Ends.
+>=20
+> +   - fsl,asrc-clk-map   : Defines clock map used in driver. which is req=
+uired
+> +                         by imx8qm
+> +                         <0> - select the map for asrc0
+> +                         <1> - select the map for asrc1
+> +
+>  Optional properties:
+>=20
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- arch/arm64/boot/dts/sprd/Makefile         |   3 +-
- arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 536 ++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl3.dtsi     | 188 ++++++++
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  40 ++
- 4 files changed, 766 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+I will do a update for this change in v3.
 
-diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
-index 2bdc23804f40..f4f1f5148cc2 100644
---- a/arch/arm64/boot/dts/sprd/Makefile
-+++ b/arch/arm64/boot/dts/sprd/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
--			sp9860g-1h10.dtb
-+			sp9860g-1h10.dtb	\
-+			sp9863a-1h10.dtb
-diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-new file mode 100644
-index 000000000000..578d71a932d9
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-@@ -0,0 +1,536 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SC9863A SoC DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "sharkl3.dtsi"
-+
-+/ {
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&CPU0>;
-+				};
-+				core1 {
-+					cpu = <&CPU1>;
-+				};
-+				core2 {
-+					cpu = <&CPU2>;
-+				};
-+				core3 {
-+					cpu = <&CPU3>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&CPU4>;
-+				};
-+				core1 {
-+					cpu = <&CPU5>;
-+				};
-+				core2 {
-+					cpu = <&CPU6>;
-+				};
-+				core3 {
-+					cpu = <&CPU7>;
-+				};
-+			};
-+		};
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x200>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x300>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU4: cpu@400 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x400>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU5: cpu@500 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x500>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU6: cpu@600 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x600>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU7: cpu@700 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x700>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+	};
-+
-+	idle-states {
-+		entry-method = "arm,psci";
-+		CORE_PD: core_pd {
-+			compatible = "arm,idle-state";
-+			entry-latency-us = <4000>;
-+			exit-latency-us = <4000>;
-+			min-residency-us = <10000>;
-+			local-timer-stop;
-+			arm,psci-suspend-param = <0x00010000>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@14000000 {
-+		compatible = "arm,gic-v3";
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		redistributor-stride = <0x0 0x20000>;	/* 128KB stride */
-+		#redistributor-regions = <1>;
-+		interrupt-controller;
-+		reg = <0x0 0x14000000 0 0x20000>,	/* GICD */
-+		      <0x0 0x14040000 0 0x100000>;	/* GICR */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		v2m_0: v2m@0 {
-+			compatible = "arm,gic-v2m-frame";
-+			msi-controller;
-+			reg = <0 0 0 0x1000>;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>, /* Physical Secure PPI */
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>, /* Physical Non-Secure PPI */
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>, /* Virtual PPI */
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>; /* Hipervisor PPI */
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	soc {
-+		funnel@10001000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x10001000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_soc_out_port: endpoint {
-+						remote-endpoint = <&etb_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_soc_in_port: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etb@10003000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x10003000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			in-ports {
-+				port {
-+					etb_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_soc_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12001000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12001000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_little_out_port: endpoint {
-+						remote-endpoint =
-+						<&etf_little_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_little_in_port0: endpoint {
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_little_in_port1: endpoint {
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel_little_in_port2: endpoint {
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					funnel_little_in_port3: endpoint {
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@12002000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x12002000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_little_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_in_port0>;
-+					};
-+				};
-+			};
-+
-+			in-port {
-+				port {
-+					etf_little_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@12003000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x12003000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_big_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_in_port1>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					etf_big_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12004000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12004000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_ca55_out_port: endpoint {
-+						remote-endpoint =
-+						<&funnel_soc_in_port>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_ca55_in_port0: endpoint {
-+						remote-endpoint =
-+						<&etf_little_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_ca55_in_port1: endpoint {
-+						remote-endpoint =
-+						<&etf_big_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12005000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12005000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_big_out_port: endpoint {
-+						remote-endpoint =
-+						<&etf_big_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_big_in_port0: endpoint {
-+						remote-endpoint = <&etm4_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_big_in_port1: endpoint {
-+						remote-endpoint = <&etm5_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel_big_in_port2: endpoint {
-+						remote-endpoint = <&etm6_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					funnel_big_in_port3: endpoint {
-+						remote-endpoint = <&etm7_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13040000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13040000 0 0x1000>;
-+			cpu = <&CPU0>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm0_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13140000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13140000 0 0x1000>;
-+			cpu = <&CPU1>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm1_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13240000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13240000 0 0x1000>;
-+			cpu = <&CPU2>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm2_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13340000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13340000 0 0x1000>;
-+			cpu = <&CPU3>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm3_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port3>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13440000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13440000 0 0x1000>;
-+			cpu = <&CPU4>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm4_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13540000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13540000 0 0x1000>;
-+			cpu = <&CPU5>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm5_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13640000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13640000 0 0x1000>;
-+			cpu = <&CPU6>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm6_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13740000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13740000 0 0x1000>;
-+			cpu = <&CPU7>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm7_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port3>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sharkl3.dtsi b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-new file mode 100644
-index 000000000000..3ef233f70dc4
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc Sharkl3 platform DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ap_ahb_regs: syscon@20e00000 {
-+			compatible = "syscon";
-+			reg = <0 0x20e00000 0 0x10000>;
-+		};
-+
-+		pub_apb_regs: syscon@300e0000 {
-+			compatible = "syscon";
-+			reg = <0 0x300e0000 0 0x10000>;
-+		};
-+
-+		pub_ahb_regs: syscon@300f0000 {
-+			compatible = "syscon";
-+			reg = <0 0x300f0000 0 0x10000>;
-+		};
-+
-+		aon_intc_regs: syscon@40200000 {
-+			compatible = "syscon";
-+			reg = <0 0x40200000 0 0x10000>;
-+		};
-+
-+		pmu_regs: syscon@402b0000 {
-+			compatible = "syscon";
-+			reg = <0 0x402b0000 0 0x10000>;
-+		};
-+
-+		aon_apb_regs: syscon@402e0000 {
-+			compatible = "syscon";
-+			reg = <0 0x402e0000 0 0x10000>;
-+		};
-+
-+		anlg_phy_g1_regs: syscon@40350000 {
-+			compatible = "syscon";
-+			reg = <0 0x40350000 0 0x3000>;
-+		};
-+
-+		anlg_phy_g2_regs: syscon@40353000 {
-+			compatible = "syscon";
-+			reg = <0 0x40353000 0 0x6000>;
-+		};
-+
-+		anlg_phy_g4_regs: syscon@40359000 {
-+			compatible = "syscon";
-+			reg = <0 0x40359000 0 0x3000>;
-+		};
-+
-+		anlg_phy_g5_regs: syscon@4035c000 {
-+			compatible = "syscon";
-+			reg = <0 0x4035c000 0 0x3000>;
-+		};
-+
-+		anlg_phy_g7_regs: syscon@40363000 {
-+			compatible = "syscon";
-+			reg = <0 0x40363000 0 0x3000>;
-+		};
-+
-+		anlg_wrap_wcn_regs: syscon@40366000 {
-+			compatible = "syscon";
-+			reg = <0 0x40366000 0 0x3000>;
-+		};
-+
-+		wcn_regs: syscon@403a0000 {
-+			compatible = "syscon";
-+			reg = <0 0x403a0000 0 0x10000>;
-+		};
-+
-+		ap_intc0_regs: syscon@40500000 {
-+			compatible = "syscon";
-+			reg = <0 0x40500000 0 0x10000>;
-+		};
-+
-+		ap_intc1_regs: syscon@40510000 {
-+			compatible = "syscon";
-+			reg = <0 0x40510000 0 0x10000>;
-+		};
-+
-+		ap_intc2_regs: syscon@40520000 {
-+			compatible = "syscon";
-+			reg = <0 0x40520000 0 0x10000>;
-+		};
-+
-+		ap_intc3_regs: syscon@40530000 {
-+			compatible = "syscon";
-+			reg = <0 0x40530000 0 0x10000>;
-+		};
-+
-+		ap_intc4_regs: syscon@40540000 {
-+			compatible = "syscon";
-+			reg = <0 0x40540000 0 0x10000>;
-+		};
-+
-+		ap_intc5_regs: syscon@40550000 {
-+			compatible = "syscon";
-+			reg = <0 0x40550000 0 0x10000>;
-+		};
-+
-+		mm_ahb_regs: syscon@60800000 {
-+			compatible = "syscon";
-+			reg = <0 0x60800000 0 0x10000>;
-+		};
-+
-+		mm_vsp_ahb_regs: syscon@62000000 {
-+			compatible = "syscon";
-+			reg = <0 0x62000000 0 0x10000>;
-+		};
-+
-+		ap_apb_regs: syscon@71300000 {
-+			compatible = "syscon";
-+			reg = <0 0x71300000 0 0x40000>;
-+		};
-+
-+		ap-apb {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x0 0x70000000 0x10000000>;
-+
-+			uart0: serial@0 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x0 0x100>;
-+				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart1: serial@100000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x100000 0x100>;
-+				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart2: serial@200000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x200000 0x100>;
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart3: serial@300000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x300000 0x100>;
-+				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart4: serial@400000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x400000 0x100>;
-+				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+		};
-+	};
-+
-+	ext_26m: ext-26m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <26000000>;
-+		clock-output-names = "ext-26m";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-new file mode 100644
-index 000000000000..b6fbb5ca37e1
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SP9863A-1h10 boards DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sc9863a.dtsi"
-+
-+/ {
-+	model = "Spreadtrum SP9863A-1H10 Board";
-+
-+	compatible = "sprd,sp9863a-1h10", "sprd,sc9863a";
-+
-+	sprd,sc-id = <9863 1 0x20000>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x80000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
--- 
-2.20.1
-
+Best regards
+Wang shengjiu
 
