@@ -2,145 +2,240 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8BFC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41854C17444
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53442075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="kXmJXhCC"
+	by mail.kernel.org (Postfix) with ESMTP id 0FB1E2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573464753;
+	bh=6kZnh4xohKvnhS11RTmA8D1b23bqzOH5KKHIMcAgi4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kdS/0lrnudxmHfIbRScSm0E4G4w9wD691FTm9I7CNNm4/0WMdgAzjr4xVm24IvXIm
+	 wHHi+kTufx4q99ZMZTGWFRb6/Uk0/1D7VUoZ0tv41tTYtm6U9Gn6Z4xfDtilOTf0/g
+	 02SESmn1p0ZOWAEqrg8FF5oc9JaoeNLAJhoUv0VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfKKJbg (ORCPT
+        id S1727059AbfKKJcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:31:36 -0500
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:4244 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726770AbfKKJbf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:31:35 -0500
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAB9Rnkv015948;
-        Mon, 11 Nov 2019 04:31:16 -0500
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2055.outbound.protection.outlook.com [104.47.46.55])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2w6v7aa73x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Nov 2019 04:31:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gQFiZSXNLpEgFdph2WD2H2yTWrsNGOCCtvCOecpt3ZBauK38ZmN6//jEd6exP8bDIjlcGTjgOKLWPkBCQCEgxrYNjntq+++0sWG72BUG5VXc1cwp+khBOHE4HAuPy9LTEFc3h4s2wUBHr9UQwlfTYvx4uh9bbO4ZjzwUrPIoWu5A9AeF+HkWUkIA1QyRAmtokTUDHRx268Jpu+QbHvUhGAISVE0MTbKQ1gFVet1hJPNfgLYU3RDy9HwjTOgWsXfUUebhRHs4LjMEEpGRbsFAX+ROggN93pTGMD7nJLueer/Vb1PROr0i1WQRi/bfSNMY5tuX41+Uq0H9+ekG9Eq17w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/B2rZDkhne6UGl/pnWPBTWb/l0O96FjaR3scAu9+z4E=;
- b=Dte7q5Ui9AQpw4KXt3COqedLF63MEDX2eEJEnlpL/hkursloiTBEE6Z6s7zYIwt0Y7lNjVacTGc3UDgXdrJW4WX7VAoAZ7R7GkZ8bhO+ykXFQIsaMSFZLW+8zWTPjAaDeEuOk7YPklObPOjfvS4EVMCl7LA0X8jj3uxq385OcIT5w3DlRxagxIkoTj8n6ch6t/R8QVNoAQ6wbHFU8mpXiwhDosbPqibZGw8jee+iEonq2c6fGDCxjFSbZGWD0wAhHnk6BbJXyF5k61mfuvXgmM4rk7nWRkmozN7HLjsU1Mcqhrj535rbL5lrE9IHcJOpTSke7iXhBTpl+pg/Lzx7TA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/B2rZDkhne6UGl/pnWPBTWb/l0O96FjaR3scAu9+z4E=;
- b=kXmJXhCCXxl69f0bQx+bvNWY6sHWLWvHLns1foN1IvlTdPInYmm0fWXoHG2kVoPQ7ejnY+esywD1Dov9QUrsDI3f8A2nSihMS5dNaL84d2r3jD2N46/u6qJq1NXNTuLUYr6wdHxZpWaEqNFlPcRZVKmr+GViaODw5KBaLU8CcMc=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5254.namprd03.prod.outlook.com (20.180.4.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Mon, 11 Nov 2019 09:31:15 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::99:71f2:a588:977c]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::99:71f2:a588:977c%3]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
- 09:31:15 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-CC:     "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "jsarha@ti.com" <jsarha@ti.com>,
-        "horms@verge.net.au" <horms@verge.net.au>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-        "ce3a@gmx.de" <ce3a@gmx.de>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>
-Subject: Re: [PATCH v3] clk: clk-gpio: propagate rate change to parent
-Thread-Topic: [PATCH v3] clk: clk-gpio: propagate rate change to parent
-Thread-Index: AQHVlgR4WDw8avjBmkqVept8rTPe66eBxWqAgAP0TgA=
-Date:   Mon, 11 Nov 2019 09:31:15 +0000
-Message-ID: <f219739b465f32d0f1b8fe75c137581a44257744.camel@analog.com>
-References: <20191106113551.5557-1-alexandru.ardelean@analog.com>
-         <20191108071718.17985-1-alexandru.ardelean@analog.com>
-         <20191108210854.95C8C20869@mail.kernel.org>
-In-Reply-To: <20191108210854.95C8C20869@mail.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4e72ce60-95cd-47de-8148-08d76689e649
-x-ms-traffictypediagnostic: CH2PR03MB5254:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR03MB5254082E4DED19A942E78FB6F9740@CH2PR03MB5254.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0218A015FA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(396003)(376002)(136003)(199004)(189003)(229853002)(186003)(8676002)(5660300002)(8936002)(11346002)(2616005)(99286004)(446003)(81156014)(81166006)(305945005)(7736002)(2906002)(6506007)(66066001)(102836004)(76176011)(26005)(71190400001)(71200400001)(2501003)(476003)(25786009)(36756003)(256004)(66476007)(4326008)(3846002)(6116002)(118296001)(6246003)(6512007)(66556008)(478600001)(6486002)(54906003)(486006)(66946007)(76116006)(66446008)(64756008)(6436002)(14454004)(86362001)(7416002)(316002)(2201001)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5254;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gKTmfvEu63ZeiRJFymRz03iVw+n0Vh/Sn4EQ0vTSgvAHvw62CpjTld2jV8mL3/OwCLaImweokK1loZhcmVDIW+h+paYmnJNwvJhh6h+UFoGeKknNj30AmND2811WDnDIhNFKY+8UhVMQJ+Uy58srhI2faeclnGa8rDGWqv9rqNdq9k5hU2SzSyjJkWoxSsm+Ma1YAtlqs0y3xYhV4fCuQksBhSCzPynKAkDSN0WlUUvzs2n0fC5IokkbsGXa/2ca+3HTh96hOOSkJ+jFd5DbFEVB/1zHT/pUmSD1SHSzOZ01MxDMxNZljqxr3bVzho3tVGSFwwd+U+HTsclaIVgNddmD+M/RuDgYU9/Kdl0VEr2V9T/vy6rSjGhRJxHY6uEsLVB1QRqnsfWsV2IOTifeJNEH2Dtis5FJhFz0jSYsqSy4n59x1gmb2QWDGQVeQ/+p
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0C4D07FF9DA1804F84BE7DC3B13B638F@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 11 Nov 2019 04:32:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35362 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726768AbfKKJcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:32:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DC194B5ED;
+        Mon, 11 Nov 2019 09:32:27 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 10:32:26 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     david@fromorbit.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        martin@urbackup.org, Damien.LeMoal@wdc.com,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH] Add prctl support for controlling mem reclaim V3
+Message-ID: <20191111093226.GC1396@dhcp22.suse.cz>
+References: <20191108185319.9326-1-mchristi@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e72ce60-95cd-47de-8148-08d76689e649
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 09:31:15.4910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dqCWkNxTT9zAjMRIjIWBWleu/cqfrOcWGe8tIiPP37VaHHlmiKB+Mp43NkKa143cLYGAsk8IEzMJ4uPCoHpkiDhW/ZEPbqaOAis5errgpAE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5254
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-11_02:2019-11-08,2019-11-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- spamscore=0 clxscore=1015 impostorscore=0 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 phishscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911110094
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108185319.9326-1-mchristi@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTExLTA4IGF0IDEzOjA4IC0wODAwLCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+
-IFF1b3RpbmcgQWxleGFuZHJ1IEFyZGVsZWFuICgyMDE5LTExLTA3IDIzOjE3OjE4KQ0KPiA+IEZy
-b206IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5lcmljaEBhbmFsb2cuY29tPg0KPiA+
-IA0KPiA+IEZvciBhbiBleHRlcm5hbCBjbG9jayBzb3VyY2UsIHdoaWNoIGlzIGdhdGVkIHZpYSBh
-IEdQSU8sIHRoZQ0KPiA+IHJhdGUgY2hhbmdlIHNob3VsZCB0eXBpY2FsbHkgYmUgcHJvcGFnYXRl
-ZCB0byB0aGUgcGFyZW50IGNsb2NrLg0KPiA+IA0KPiA+IFRoZSBzaXR1YXRpb24gd2hlcmUgd2Ug
-YXJlIHJlcXVpcmluZyB0aGlzIHByb3BhZ2F0aW9uLCBpcyB3aGVuIGFuDQo+ID4gZXh0ZXJuYWwg
-Y2xvY2sgaXMgY29ubmVjdGVkIHRvIG92ZXJyaWRlIGFuIGludGVybmFsIGNsb2NrICh3aGljaA0K
-PiA+IHR5cGljYWxseQ0KPiA+IGhhcyBhIGZpeGVkIHJhdGUpLiBUaGUgZXh0ZXJuYWwgY2xvY2sg
-Y2FuIGhhdmUgYSBkaWZmZXJlbnQgcmF0ZSB0aGFuDQo+ID4gdGhlDQo+ID4gaW50ZXJuYWwgb25l
-LCBhbmQgbWF5IGFsc28gYmUgdmFyaWFibGUsIHRodXMgcmVxdWlyaW5nIHRoZSByYXRlDQo+ID4g
-cHJvcGFnYXRpb24uDQo+ID4gDQo+ID4gVGhpcyByYXRlIGNoYW5nZSB3YXNuJ3QgcHJvcGFnYXRl
-ZCB1bnRpbCBub3csIGFuZCBpdCdzIHVuY2xlYXIgYWJvdXQNCj4gPiBjYXNlcw0KPiA+IHdoZXJl
-IHRoaXMgc2hvdWxkbid0IGJlIHByb3BhZ2F0ZWQuIFRodXMsIGl0J3MgdW5jbGVhciB3aGV0aGVy
-IHRoaXMgaXMNCj4gPiBmaXhpbmcgYSBidWcsIG9yIGV4dGVuZGluZyB0aGUgY3VycmVudCBkcml2
-ZXIgYmVoYXZpb3IuIEFsc28sIGl0J3MNCj4gPiB1bnN1cmUNCj4gPiBhYm91dCB3aGV0aGVyIHRo
-aXMgbWF5IGJyZWFrIGFueSBleGlzdGluZyBzZXR1cHM7IGluIHRoZSBjYXNlIHRoYXQgaXQNCj4g
-PiBkb2VzLA0KPiA+IGEgZGV2aWNlLXRyZWUgcHJvcGVydHkgbWF5IGJlIGFkZGVkIHRvIGRpc2Fi
-bGUgdGhpcyBmbGFnLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1pY2hhZWwgSGVubmVyaWNo
-IDxtaWNoYWVsLmhlbm5lcmljaEBhbmFsb2cuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXhh
-bmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gLS0tDQo+
-IA0KPiBBcHBsaWVkIHRvIGNsay1uZXh0DQo+IA0KPiBOZXh0IHRpbWUgcGxlYXNlIHNlbmQgYXMg
-YSBuZXcgdG9waWMgaW5zdGVhZCBvZiBhIHJlcGx5IHRvIHRoZSBvcmlnaW5hbA0KPiBwYXRjaC4g
-TWFrZXMgaXQgZWFzaWVyIGZvciBtZSB0byBhcHBseSB0aGUgcGF0Y2guDQo+IA0KDQpBY2suDQpX
-aWxsIGRvIHRoYXQuDQoNClRoYW5rcw0KQWxleA0K
+[Cc linux-api]
+
+On Fri 08-11-19 12:53:19, Mike Christie wrote:
+> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+> amd nbd that have userspace components that can run in the IO path. For
+> example, iscsi and nbd's userspace deamons may need to recreate a socket
+> and/or send IO on it, and dm-multipath's daemon multipathd may need to
+> send SG IO or read/write IO to figure out the state of paths and re-set
+> them up.
+> 
+> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+> memalloc_*_save/restore functions to control the allocation behavior,
+> but for userspace we would end up hitting an allocation that ended up
+> writing data back to the same device we are trying to allocate for.
+> The device is then in a state of deadlock, because to execute IO the
+> device needs to allocate memory, but to allocate memory the memory
+> layers want execute IO to the device.
+> 
+> Here is an example with nbd using a local userspace daemon that performs
+> network IO to a remote server. We are using XFS on top of the nbd device,
+> but it can happen with any FS or other modules layered on top of the nbd
+> device that can write out data to free memory.  Here a nbd daemon helper
+> thread, msgr-worker-1, is performing a write/sendmsg on a socket to execute
+> a request. This kicks off a reclaim operation which results in a WRITE to
+> the nbd device and the nbd thread calling back into the mm layer.
+> 
+> [ 1626.609191] msgr-worker-1   D    0  1026      1 0x00004000
+> [ 1626.609193] Call Trace:
+> [ 1626.609195]  ? __schedule+0x29b/0x630
+> [ 1626.609197]  ? wait_for_completion+0xe0/0x170
+> [ 1626.609198]  schedule+0x30/0xb0
+> [ 1626.609200]  schedule_timeout+0x1f6/0x2f0
+> [ 1626.609202]  ? blk_finish_plug+0x21/0x2e
+> [ 1626.609204]  ? _xfs_buf_ioapply+0x2e6/0x410
+> [ 1626.609206]  ? wait_for_completion+0xe0/0x170
+> [ 1626.609208]  wait_for_completion+0x108/0x170
+> [ 1626.609210]  ? wake_up_q+0x70/0x70
+> [ 1626.609212]  ? __xfs_buf_submit+0x12e/0x250
+> [ 1626.609214]  ? xfs_bwrite+0x25/0x60
+> [ 1626.609215]  xfs_buf_iowait+0x22/0xf0
+> [ 1626.609218]  __xfs_buf_submit+0x12e/0x250
+> [ 1626.609220]  xfs_bwrite+0x25/0x60
+> [ 1626.609222]  xfs_reclaim_inode+0x2e8/0x310
+> [ 1626.609224]  xfs_reclaim_inodes_ag+0x1b6/0x300
+> [ 1626.609227]  xfs_reclaim_inodes_nr+0x31/0x40
+> [ 1626.609228]  super_cache_scan+0x152/0x1a0
+> [ 1626.609231]  do_shrink_slab+0x12c/0x2d0
+> [ 1626.609233]  shrink_slab+0x9c/0x2a0
+> [ 1626.609235]  shrink_node+0xd7/0x470
+> [ 1626.609237]  do_try_to_free_pages+0xbf/0x380
+> [ 1626.609240]  try_to_free_pages+0xd9/0x1f0
+> [ 1626.609245]  __alloc_pages_slowpath+0x3a4/0xd30
+> [ 1626.609251]  ? ___slab_alloc+0x238/0x560
+> [ 1626.609254]  __alloc_pages_nodemask+0x30c/0x350
+> [ 1626.609259]  skb_page_frag_refill+0x97/0xd0
+> [ 1626.609274]  sk_page_frag_refill+0x1d/0x80
+> [ 1626.609279]  tcp_sendmsg_locked+0x2bb/0xdd0
+> [ 1626.609304]  tcp_sendmsg+0x27/0x40
+> [ 1626.609307]  sock_sendmsg+0x54/0x60
+> [ 1626.609308]  ___sys_sendmsg+0x29f/0x320
+> [ 1626.609313]  ? sock_poll+0x66/0xb0
+> [ 1626.609318]  ? ep_item_poll.isra.15+0x40/0xc0
+> [ 1626.609320]  ? ep_send_events_proc+0xe6/0x230
+> [ 1626.609322]  ? hrtimer_try_to_cancel+0x54/0xf0
+> [ 1626.609324]  ? ep_read_events_proc+0xc0/0xc0
+> [ 1626.609326]  ? _raw_write_unlock_irq+0xa/0x20
+> [ 1626.609327]  ? ep_scan_ready_list.constprop.19+0x218/0x230
+> [ 1626.609329]  ? __hrtimer_init+0xb0/0xb0
+> [ 1626.609331]  ? _raw_spin_unlock_irq+0xa/0x20
+> [ 1626.609334]  ? ep_poll+0x26c/0x4a0
+> [ 1626.609337]  ? tcp_tsq_write.part.54+0xa0/0xa0
+> [ 1626.609339]  ? release_sock+0x43/0x90
+> [ 1626.609341]  ? _raw_spin_unlock_bh+0xa/0x20
+> [ 1626.609342]  __sys_sendmsg+0x47/0x80
+> [ 1626.609347]  do_syscall_64+0x5f/0x1c0
+> [ 1626.609349]  ? prepare_exit_to_usermode+0x75/0xa0
+> [ 1626.609351]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> This patch adds a new prctl command that daemons can use after they have
+> done their initial setup, and before they start to do allocations that
+> are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
+> flags so both userspace block and FS threads can use it to avoid the
+> allocation recursion and try to prevent from being throttled while
+> writing out data to free up memory.
+> 
+> Signed-off-by: Mike Christie <mchristi@redhat.com>
+
+OK, this looks much better then explicitly exposing NOIO/NOFS to the
+userspace. Restricting to CAP_SYS_RESOURCE makes sense as well but I am
+not really an expert in that direction.
+
+So for the proposed semantic this makes sense
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+Please do not forget to add a man page update.
+
+Keeping the rest of the email for the new CC
+
+> ---
+> V3 
+> - Drop NOFS, set PF_LESS_THROTTLE and rename prctl flag to reflect it
+> is more general and can support both FS and block devices. Both fuse
+> and block device daemons, nbd and tcmu-runner, have been tested to
+> confirm the more restrictive PF_MEMALLOC_NOIO also works for fuse.
+> 
+> - Use CAP_SYS_RESOURCE instead of admin.
+> 
+> V2:
+> - Use prctl instead of procfs.
+> - Add support for NOFS for fuse.
+> - Check permissions.
+> 
+> 
+>  include/uapi/linux/capability.h |  1 +
+>  include/uapi/linux/prctl.h      |  4 ++++
+>  kernel/sys.c                    | 26 ++++++++++++++++++++++++++
+>  3 files changed, 31 insertions(+)
+> 
+> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+> index 240fdb9a60f6..272dc69fa080 100644
+> --- a/include/uapi/linux/capability.h
+> +++ b/include/uapi/linux/capability.h
+> @@ -301,6 +301,7 @@ struct vfs_ns_cap_data {
+>  /* Allow more than 64hz interrupts from the real-time clock */
+>  /* Override max number of consoles on console allocation */
+>  /* Override max number of keymaps */
+> +/* Control memory reclaim behavior */
+>  
+>  #define CAP_SYS_RESOURCE     24
+>  
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 7da1b37b27aa..07b4f8131e36 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -234,4 +234,8 @@ struct prctl_mm_map {
+>  #define PR_GET_TAGGED_ADDR_CTRL		56
+>  # define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
+>  
+> +/* Control reclaim behavior when allocating memory */
+> +#define PR_SET_IO_FLUSHER		57
+> +#define PR_GET_IO_FLUSHER		58
+> +
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index a611d1d58c7d..08c6b682fa99 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2486,6 +2486,32 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>  			return -EINVAL;
+>  		error = GET_TAGGED_ADDR_CTRL();
+>  		break;
+> +	case PR_SET_IO_FLUSHER:
+> +		if (!capable(CAP_SYS_RESOURCE))
+> +			return -EPERM;
+> +
+> +		if (arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +
+> +		if (arg2 == 1)
+> +			current->flags |= PF_MEMALLOC_NOIO | PF_LESS_THROTTLE;
+> +		else if (!arg2)
+> +			current->flags &= ~(PF_MEMALLOC_NOIO | PF_LESS_THROTTLE);
+> +		else
+> +			return -EINVAL;
+> +		break;
+> +	case PR_GET_IO_FLUSHER:
+> +		if (!capable(CAP_SYS_RESOURCE))
+> +			return -EPERM;
+> +
+> +		if (arg2 || arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +
+> +		if (current->flags & (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE))
+> +			error = 1;
+> +		else
+> +			error = 0;
+> +		break;
+>  	default:
+>  		error = -EINVAL;
+>  		break;
+> -- 
+> 2.20.1
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
