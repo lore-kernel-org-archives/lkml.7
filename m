@@ -2,53 +2,53 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC03C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD5CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF9720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7697921655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497886;
-	bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
+	s=default; t=1573497888;
+	bh=VkUJ9Gsze1TFv8GHo1eZ9XvY5w9VauaoEJVkzxwl9SM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oy0r3yUee+8Xu9K8GeE9INZzP0v5b/6a7BwFnkLSnLufp5IVw9rx8vNdg40m/vBwQ
-	 uJzu/OSdx8hcZh15EwPQxuDEMSDLrAwf0MmvgtlWM98YVbwuOK+uiZk9XBUd6bj/F9
-	 4TqD+45s25ijuFxUgkWQ36rU9f2/vO7Lz/EUaH/Y=
+	b=Rh9jBGXe0mKmR7umJh8lyZCeGExyeuah8ao5IxKE5r4TLVu9NGbxFN5DhPA4Of50P
+	 WFaFYiMX5K3JlcG6mPdPDcbDJQykRVEMSdcU+3RaTezU+tMgnwtIsTk4RcTlmBYJL1
+	 THo46zzp4Jnwamw8HcU6ZVywEaijgihbCj3WabKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbfKKSop (ORCPT
+        id S1727658AbfKKSor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:44:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36230 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:44:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729736AbfKKSoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:44:32 -0500
+        id S1729749AbfKKSom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:44:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30BE204FD;
-        Mon, 11 Nov 2019 18:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46898204FD;
+        Mon, 11 Nov 2019 18:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497871;
-        bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
+        s=default; t=1573497881;
+        bh=VkUJ9Gsze1TFv8GHo1eZ9XvY5w9VauaoEJVkzxwl9SM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKX7KsFIh6qs4ahYEebghBX8cwc13hwdJdjAE4F6YOxuB2cGwugOTrQrHRTXXPxMl
-         AZKIApcFbqtND/YM5/VKn0MSLsw/faApzcVsqc1hIxTFSWJxnVd2LMZYAItVbkSHAl
-         rFWdc3eRh/NC2QijILlUlK8qyx7ZdSI/yTJtty7c=
+        b=EMZ0eugVoycAUodNdNECkQILMI0J+aXhIMSZyfhThzQJFHmPyvmhkGtHxleJ1q9Zq
+         4I2EdAFbYh8P45uK+nMZg05JeuNrIk9z/dSqFRTwaa/FGidnWOQ8nTn4lyLw3xpeyD
+         kayFXtXyTtsRB7mYyJBgGyiqKq6L27epSk2/Vcy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bernd Krumboeck <b.krumboeck@gmail.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Johan Hovold <johan@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 043/125] can: usb_8dev: fix use-after-free on disconnect
-Date:   Mon, 11 Nov 2019 19:28:02 +0100
-Message-Id: <20191111181446.092317032@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 078/125] net/mlx5: prevent memory leak in mlx5_fpga_conn_create_cq
+Date:   Mon, 11 Nov 2019 19:28:37 +0100
+Message-Id: <20191111181450.548753263@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -61,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 3759739426186a924675651b388d1c3963c5710e upstream.
+[ Upstream commit c8c2a057fdc7de1cd16f4baa51425b932a42eb39 ]
 
-The driver was accessing its driver data after having freed it.
+In mlx5_fpga_conn_create_cq if mlx5_vector2eqn fails the allocated
+memory should be released.
 
-Fixes: 0024d8ad1639 ("can: usb_8dev: Add support for USB2CAN interface from 8 devices")
-Cc: stable <stable@vger.kernel.org>     # 3.9
-Cc: Bernd Krumboeck <b.krumboeck@gmail.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 537a50574175 ("net/mlx5: FPGA, Add high-speed connection routines")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/usb/usb_8dev.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/can/usb/usb_8dev.c
-+++ b/drivers/net/can/usb/usb_8dev.c
-@@ -1007,9 +1007,8 @@ static void usb_8dev_disconnect(struct u
- 		netdev_info(priv->netdev, "device disconnected\n");
- 
- 		unregister_netdev(priv->netdev);
--		free_candev(priv->netdev);
--
- 		unlink_all_urbs(priv);
-+		free_candev(priv->netdev);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+index 8ca1d1949d930..d8d0b6bd5c5ae 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+@@ -462,8 +462,10 @@ static int mlx5_fpga_conn_create_cq(struct mlx5_fpga_conn *conn, int cq_size)
  	}
  
- }
+ 	err = mlx5_vector2eqn(mdev, smp_processor_id(), &eqn, &irqn);
+-	if (err)
++	if (err) {
++		kvfree(in);
+ 		goto err_cqwq;
++	}
+ 
+ 	cqc = MLX5_ADDR_OF(create_cq_in, in, cq_context);
+ 	MLX5_SET(cqc, cqc, log_cq_size, ilog2(cq_size));
+-- 
+2.20.1
+
 
 
