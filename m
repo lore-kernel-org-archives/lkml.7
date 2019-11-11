@@ -2,166 +2,278 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192B9C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF09C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CBF20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C3F20818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Up+hoPUA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="THKFvyK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKKIL2 (ORCPT
+        id S1726878AbfKKIMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:11:28 -0500
-Received: from mout.web.de ([212.227.15.14]:52665 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbfKKIL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:11:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573459874;
-        bh=yLeMLMfEOOmRdYGLi72Oh+GomTas8U7P2yb54eV5zIE=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Up+hoPUAJDhsVkdhiTrnfBwMcgFNBzZfhRImfJl7jeI3cyRVHxoPJa7uRMxE+vwlE
-         AA0Jn+iOcibvwfLJFzImykZX3+LeMocRtqcarUOZSZMh52TyUBnYcntCV/5WW4A1I5
-         oDPuRt4g0gzN7u2a1Y3gMgOqKpnLceNfD30eu/Kc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.123.26]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LpwMZ-1i0lWP1Jkl-00fjpe; Mon, 11
- Nov 2019 09:11:14 +0100
-Subject: Re: [v3] s390/pkey: Use memdup_user() rather than duplicating its
- implementation
-To:     =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Joe Perches <joe@perches.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
- <deb7893f-3cfe-18fc-3feb-b26b290bf3c6@web.de>
- <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
- <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
- <733b29df-207e-a165-ee80-46be8720c0c4@de.ibm.com>
- <8f98f9fc-57df-5993-44b5-5ea4c0de7ef9@web.de>
- <c0df9cc8-c41a-1e5d-811c-1ff045c13fcc@de.ibm.com>
- <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
- <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c701adc9-dab2-46af-003f-d8a2c47bc0af@web.de>
-Date:   Mon, 11 Nov 2019 09:11:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 11 Nov 2019 03:12:25 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:30796 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfKKIMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 03:12:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573459939;
+        s=strato-dkim-0002; d=xenosoft.de;
+        h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3/MqObd2KBYhkLHMy8MLFEFld3owrwS9kDyklpFMgIE=;
+        b=THKFvyK+BA2J7h+Us/oJFGZdjASlGSrN9LU1gCtEjpy6bbugIvGMK9eso0XW8pLE0T
+        ukwCMw5Yq4ii8C1l71nnXsV6CPT1omxfNpqyBSWQlwpUiU23JA6P3+9dmHym0FBQ/eE8
+        thv/DASfyOqkUxg2X7jL/Ar+mIhcnvgq1ys3JJT6V6jjFesBT8yu/uH7+bobiFkSvAJB
+        rtjWq4GNEPUPWtas/w9hO0DsCbPv240sf/lQUFU5LSFnfFak4wMbClpUL5F596Yq4OKL
+        r3sh0483H1rL1YCot9U/4cNMmyu9kr6ZmosH5SJxXa00Jp/utaxg3G7cGzUnm/do/4zc
+        MdeQ==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhUdStcud4ztdvxL67fR7ahIrEKaw=="
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2a02:8109:89c0:ebfc:7cd8:48a4:7aa4:e860]
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id q007c8vAB8CCS3t
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 11 Nov 2019 09:12:12 +0100 (CET)
+Subject: Re: Bug 205201 - overflow of DMA mask and bus mask
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        paulus@samba.org, darren@stevens-zone.net,
+        "contact@a-eon.com" <contact@a-eon.com>, rtd2@xtra.co.nz,
+        mad skateman <madskateman@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20181213112511.GA4574@lst.de>
+ <e109de27-f4af-147d-dc0e-067c8bafb29b@xenosoft.de>
+ <ad5a5a8a-d232-d523-a6f7-e9377fc3857b@xenosoft.de>
+ <e60d6ca3-860c-f01d-8860-c5e022ec7179@xenosoft.de>
+ <008c981e-bdd2-21a7-f5f7-c57e4850ae9a@xenosoft.de>
+ <20190103073622.GA24323@lst.de>
+ <71A251A5-FA06-4019-B324-7AED32F7B714@xenosoft.de>
+ <1b0c5c21-2761-d3a3-651b-3687bb6ae694@xenosoft.de>
+ <3504ee70-02de-049e-6402-2d530bf55a84@xenosoft.de>
+ <46025f1b-db20-ac23-7dcd-10bc43bbb6ee@xenosoft.de>
+ <20191105162856.GA15402@lst.de>
+ <2f3c81bd-d498-066a-12c0-0a7715cda18f@xenosoft.de>
+ <d2c614ec-c56e-3ec2-12d0-7561cd30c643@xenosoft.de>
+Message-ID: <af32bfcc-5559-578d-e1f4-75e454c965bf@xenosoft.de>
+Date:   Mon, 11 Nov 2019 09:12:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vH4aX6LXNvdHTc+K1DuZ8FwCr07s13jof9BYG9/BhG4eGujVsPH
- raoUQMGWsBCFkYFCgYpLWsrzBzBp7huXdzbh/cdjmmS5P/fyhdEoV45lXQmLJafTzT2o7xl
- zLnltSntqBno1bPrJvpCSPtvYCUHPGER7lqc+s65pvmcP6wZs2Vb2TTMwEjDu+xhu1qzcdW
- 4jYZY4edz4tzu34nhPPqA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yFkd6y7QlR4=:deNoql56lhMJcReKqwH7Ev
- MDdMYHuVQyhpuiCsl+BskCGf1kIig9PqikmP1jG2gRfURd3vedaM/A0c1bMPZB6iOLaoUNtKc
- i5+T/an9E/RsnxBH9E0t1ik9gHmIhUyvpnvi7pN8n1AAh1iSCiVNUWEs+enOfmhloqXYdtogd
- x2hZSHa4Lvi8ks6umwZN2UEbwSw1aodcMo14eWCRtS2nsweMdGjX2UQMJd5WNCQEhkrANR/IS
- KtXCIuOfsVLifNS0lJCd5pMhdmjrCBQ+bJh57E4Us3OwzzHcdyYtMjabvmwv+x4tYohU6+n1o
- kdro6gQPdtXA7GCJazaOZNKO/sVSkpOAdgHy1uf/xVzS1qEQh7Cn1QEP3ynMRBZpT0VK8JNPU
- Hl7WBQTikZR+YSKUl7ytakE/D4YZkX8PFwY1sG/mvGsWamgEhtOxvAFd84q2Oje3BYEJ7Ee28
- JwMumYKMpfrxblI6r5Xe7mZoRhvXxrX4TVGZqVwS6yzA9AyhsS7pvj5HIqouhBrupbwy0kQ7y
- VwwsgFSEoqhZZDJk62cUO6SgzA81ISoxatUcY8FRrM0EuxFdyLcNCRX2639isKZFAYvTK5krj
- +k1yYSNMfM+oqsLpspEVA4l5IUcJdRUpjpzcz4q8/F0qfDtBk3tTDdWadvExjJ75ajRyps31i
- zrxnDjIRveIsFxDpPHRSduWcO19Gfg+I6emZmjl12uQQznMBO6UJ9gd67E/ottCH8vsneDEn0
- aIPD+S2b/shNHLk766eMD5dy7rD8TRXMiflUznIYV7NoTNCM5FVRsPwbO2EST4b1z2VLqCKVL
- IFuw2cXIqqovho0CcvgRMAhgIfpJRxXlD8aSNetGoaMflDoYWLxikrfE808r5AkFs8oIQyIVz
- rROUCbcZ8dQWA3qHTcwl0ceWC7oxFWre3eJ/2ZGS2JKcqDUPCsvJPh+XWB01fhbvbXmClbUBz
- 2RCLuALUG+nwSPYBG5H7uSKO96GOmTyM82DpFW3IsYhUGq1+oGF1xfDM3ZhLY3xtyOssZc5O4
- CMOLSGdE+g2Uev/WiNi/eozBso61bIMUk3l/JM9TWYw2XD1F90h5N0Suw0fcDNcFuZdsgCIKe
- Rc3f7Kh4P+j+jzvGa+kKToWkDLZqe8/DWOnf/UtTMS5bNCo7kioX/e9Os5K7Zj8a5wfDmdUJG
- eislFRa5Z6ntiyI6AcK7x7lxtPz5nSEaExoSBF67V9lHGIYLv4W12+frxw2K/O/QFeFuHRXqI
- dWdAaZ56whX4t6K/AKFEcCWILeajOf8OTJkwoCxdQ+3cDVfzmG0AFI8C6xRc=
+In-Reply-To: <d2c614ec-c56e-3ec2-12d0-7561cd30c643@xenosoft.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> From: Markus Elfring <elfring@users.sourceforge.net>
->> Date: Fri, 8 Nov 2019 17:50:22 +0100
-=E2=80=A6
->> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AE=
-S cipher key support")
->> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+On 10 November 2019 at 08:27 am, Christian Zigotzky wrote:
+> On 07 November 2019 at 10:53 am, Christian Zigotzky wrote:
+>> On 05 November 2019 at 05:28 pm, Christoph Hellwig wrote:
+>>> On Tue, Nov 05, 2019 at 08:56:27AM +0100, Christian Zigotzky wrote:
+>>>> Hi All,
+>>>>
+>>>> We still have DMA problems with some PCI devices. Since the PowerPC 
+>>>> updates
+>>>> 4.21-1 [1] we need to decrease the RAM to 3500MB (mem=3500M) if we 
+>>>> want to
+>>>> work with our PCI devices. The FSL P5020 and P5040 have these problems
+>>>> currently.
+>>>>
+>>>> Error message:
+>>>>
+>>>> [   25.654852] bttv 1000:04:05.0: overflow 0x00000000fe077000+4096 
+>>>> of DMA
+>>>> mask ffffffff bus mask df000000
+>>>>
+>>>> All 5.x Linux kernels can't initialize a SCSI PCI card anymore so 
+>>>> booting
+>>>> of a Linux userland isn't possible.
+>>>>
+>>>> PLEASE check the DMA changes in the PowerPC updates 4.21-1 [1]. The 
+>>>> kernel
+>>>> 4.20 works with all PCI devices without limitation of RAM.
+>>> Can you send me the .config and a dmesg?  And in the meantime try the
+>>> patch below?
+>>>
+>>> ---
+>>> >From 4d659b7311bd4141fdd3eeeb80fa2d7602ea01d4 Mon Sep 17 00:00:00 2001
+>>> From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>> Date: Fri, 18 Oct 2019 13:00:43 +0200
+>>> Subject: dma-direct: check for overflows on 32 bit DMA addresses
+>>>
+>>> As seen on the new Raspberry Pi 4 and sta2x11's DMA implementation 
+>>> it is
+>>> possible for a device configured with 32 bit DMA addresses and a 
+>>> partial
+>>> DMA mapping located at the end of the address space to overflow. It
+>>> happens when a higher physical address, not DMAable, is translated to
+>>> it's DMA counterpart.
+>>>
+>>> For example the Raspberry Pi 4, configurable up to 4 GB of memory, has
+>>> an interconnect capable of addressing the lower 1 GB of physical memory
+>>> with a DMA offset of 0xc0000000. It transpires that, any attempt to
+>>> translate physical addresses higher than the first GB will result in an
+>>> overflow which dma_capable() can't detect as it only checks for
+>>> addresses bigger then the maximum allowed DMA address.
+>>>
+>>> Fix this by verifying in dma_capable() if the DMA address range 
+>>> provided
+>>> is at any point lower than the minimum possible DMA address on the bus.
+>>>
+>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>> ---
+>>>   include/linux/dma-direct.h | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+>>> index adf993a3bd58..6ad9e9ea7564 100644
+>>> --- a/include/linux/dma-direct.h
+>>> +++ b/include/linux/dma-direct.h
+>>> @@ -3,6 +3,7 @@
+>>>   #define _LINUX_DMA_DIRECT_H 1
+>>>     #include <linux/dma-mapping.h>
+>>> +#include <linux/memblock.h> /* for min_low_pfn */
+>>>   #include <linux/mem_encrypt.h>
+>>>     #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+>>> @@ -27,6 +28,13 @@ static inline bool dma_capable(struct device 
+>>> *dev, dma_addr_t addr, size_t size)
+>>>       if (!dev->dma_mask)
+>>>           return false;
+>>>   +#ifndef CONFIG_ARCH_DMA_ADDR_T_64BIT
+>>> +    /* Check if DMA address overflowed */
+>>> +    if (min(addr, addr + size - 1) <
+>>> +        __phys_to_dma(dev, (phys_addr_t)(min_low_pfn << PAGE_SHIFT)))
+>>> +        return false;
+>>> +#endif
+>>> +
+>>>       return addr + size - 1 <=
+>>>           min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
+>>>   }
+>> Hello Christoph,
+>>
+>> Thanks a lot for your patch! Unfortunately this patch doesn't solve 
+>> the issue.
+>>
+>> Error messages:
+>>
+>> [    6.041163] bttv: driver version 0.9.19 loaded
+>> [    6.041167] bttv: using 8 buffers with 2080k (520 pages) each for 
+>> capture
+>> [    6.041559] bttv: Bt8xx card found (0)
+>> [    6.041609] bttv: 0: Bt878 (rev 17) at 1000:04:05.0, irq: 19, 
+>> latency: 128, mmio: 0xc20001000
+>> [    6.041622] bttv: 0: using: Typhoon TView RDS + FM Stereo / KNC1 
+>> TV Station RDS [card=53,insmod option]
+>> [    6.042216] bttv: 0: tuner type=5
+>> [    6.111994] bttv: 0: audio absent, no audio device found!
+>> [    6.176425] bttv: 0: Setting PLL: 28636363 => 35468950 (needs up 
+>> to 100ms)
+>> [    6.200005] bttv: PLL set ok
+>> [    6.209351] bttv: 0: registered device video0
+>> [    6.211576] bttv: 0: registered device vbi0
+>> [    6.214897] bttv: 0: registered device radio0
+>> [  114.218806] bttv 1000:04:05.0: overflow 0x00000000ff507000+4096 of 
+>> DMA mask ffffffff bus mask df000000
+>> [  114.218848] Modules linked in: rfcomm bnep tuner_simple 
+>> tuner_types tea5767 tuner tda7432 tvaudio msp3400 bttv tea575x 
+>> tveeprom videobuf_dma_sg videobuf_core rc_core videodev mc btusb 
+>> btrtl btbcm btintel bluetooth uio_pdrv_genirq uio ecdh_generic ecc
+>> [  114.219012] [c0000001ecddf720] [80000000008ff6e8] 
+>> .buffer_prepare+0x150/0x268 [bttv]
+>> [  114.219029] [c0000001ecddf860] [80000000008fff6c] 
+>> .bttv_qbuf+0x50/0x64 [bttv]
+>>
+>> -----
+>>
+>> Trace:
+>>
+>> [  462.783184] Call Trace:
+>> [  462.783187] [c0000001c6c67420] [c0000000000b3358] 
+>> .report_addr+0xb8/0xc0 (unreliable)
+>> [  462.783192] [c0000001c6c67490] [c0000000000b351c] 
+>> .dma_direct_map_page+0xf0/0x128
+>> [  462.783195] [c0000001c6c67530] [c0000000000b35b0] 
+>> .dma_direct_map_sg+0x5c/0xac
+>> [  462.783205] [c0000001c6c675e0] [8000000000862e88] 
+>> .__videobuf_iolock+0x660/0x6d8 [videobuf_dma_sg]
+>> [  462.783220] [c0000001c6c676b0] [8000000000854274] 
+>> .videobuf_iolock+0x98/0xb4 [videobuf_core]
+>> [  462.783271] [c0000001c6c67720] [80000000008686e8] 
+>> .buffer_prepare+0x150/0x268 [bttv]
+>> [  462.783276] [c0000001c6c677c0] [8000000000854afc] 
+>> .videobuf_qbuf+0x2b8/0x428 [videobuf_core]
+>> [  462.783288] [c0000001c6c67860] [8000000000868f6c] 
+>> .bttv_qbuf+0x50/0x64 [bttv]
+>> [  462.783383] [c0000001c6c678e0] [80000000007bf208] 
+>> .v4l_qbuf+0x54/0x60 [videodev]
+>> [  462.783402] [c0000001c6c67970] [80000000007c1eac] 
+>> .__video_do_ioctl+0x30c/0x3f8 [videodev]
+>> [  462.783421] [c0000001c6c67a80] [80000000007c3c08] 
+>> .video_usercopy+0x18c/0x3dc [videodev]
+>> [  462.783440] [c0000001c6c67c00] [80000000007bb14c] 
+>> .v4l2_ioctl+0x60/0x78 [videodev]
+>> [  462.783460] [c0000001c6c67c90] [80000000007d3c48] 
+>> .v4l2_compat_ioctl32+0x9b4/0x1850 [videodev]
+>> [  462.783468] [c0000001c6c67d70] [c0000000001ad9cc] 
+>> .__se_compat_sys_ioctl+0x284/0x127c
+>> [  462.783473] [c0000001c6c67e20] [c00000000000067c] 
+>> system_call+0x60/0x6c
+>> [  462.783475] Instruction dump:
+>> [  462.783477] 40fe0044 60000000 892255d0 2f890000 40fe0020 3c82ffc5 
+>> 39200001 60000000
+>> [  462.783483] 38842029 992255d0 485ad0d9 60000000 <0fe00000> 
+>> 38210070 e8010010 7c0803a6
+>> [  462.783490] ---[ end trace b677d4a00458e277 ]---
+>>
+>> -----
+>>
+>> dmesg fsl p5040: https://bugzilla.kernel.org/attachment.cgi?id=285813
+>>
+>> Kernel 5.4-rc6 config for the Cyrus+ board and for the QEMU ppce500 
+>> board (CPU: P5040 and P5020): 
+>> https://bugzilla.kernel.org/attachment.cgi?id=285815
+>>
+>> Bug report: https://bugzilla.kernel.org/show_bug.cgi?id=205201
+>>
+>> Thanks for your help,
+>>
+>> Christian
 >
-> You were sending this from a different email address.
-
-Yes.
-
-
-> Can you use the same for the sender and the signoff?
-
-I would prefer to use the other email address (for a while).
-
-
-> Can you also change the subject to indicate the "fix". e.g. something li=
-ke
+> Christoph,
 >
-> s390/pkey: fix memory leak in error case by using memdup_user() rather t=
-han open coding
+> Do you have another patch for testing or shall I bisect?
+>
+> Thanks,
+> Christian
 
-Does this change request indicate also a need to split the software update
-between the discussed two function implementations?
+Hi Christoph,
 
-Regards,
-Markus
+I have seen that I have activated the kernel config option 
+CONFIG_ARCH_DMA_ADDR_T_64BIT. That means your code in your patch won't 
+work if this kernel option is enabled.
+
++#ifndef CONFIG_ARCH_DMA_ADDR_T_64BIT
++    /* Check if DMA address overflowed */
++    if (min(addr, addr + size - 1) <
++        __phys_to_dma(dev, (phys_addr_t)(min_low_pfn << PAGE_SHIFT)))
++        return false;
++#endif
+
+I will delete the lines with ifndef and endif and will try it again.
+
+Cheers,
+Christian
