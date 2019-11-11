@@ -2,169 +2,124 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6386BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75515C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FFB206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48800206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573503731;
+	bh=Wqbn+tidqU83D7t30PIQyhJur335s0cWd98DIQZWxbg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=0c985fjSNYKgHBn54BGjTfUiW1Hg3rBnLa3Lp6TRjSFO3rm4EBSeT7u4ApaVmKAsv
+	 vA7UkJjG52dti1glLkR2pLg4ixHjaOrN/GxvHjdv8r5KxhCAQJxdNTAWsza+k3SEiZ
+	 c/+jga1C0fGe2rGFJ6HA7faSt1FlYdUZwFwNoMl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfKKUWH (ORCPT
+        id S1727533AbfKKUWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:22:07 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:35595 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfKKUWC (ORCPT
+        Mon, 11 Nov 2019 15:22:10 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40954 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfKKUWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:22:02 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MhUHt-1hzcGS466d-00eYkO; Mon, 11 Nov 2019 21:16:48 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-nfs@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>
-Subject: [PATCH 05/19] nfs: fscache: use timespec64 in inode auxdata
-Date:   Mon, 11 Nov 2019 21:16:25 +0100
-Message-Id: <20191111201639.2240623-6-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
-References: <20191111201639.2240623-1-arnd@arndb.de>
+        Mon, 11 Nov 2019 15:22:07 -0500
+Received: by mail-qt1-f194.google.com with SMTP id o49so17057268qta.7;
+        Mon, 11 Nov 2019 12:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Xeq2lcRUVceDqmGyTHaj5d+0Pjk/GmEvYbMYOaMNQzg=;
+        b=I+isjLS5f/apV9ftRVQ09plliCCSpaqV3/UG7fSAdpU4mXCS9TaslJ2OzYYcJa+j4n
+         QSq2fKk559J9ZwzNBSmRcRWOqDKtJFMut2l4D4AysPeV4nNRjuINtm0bSDdbt9IW5WqH
+         fk7DBoj1Gfk75bFq/L1incchih0DAFe4toGXAMySezDb4h0C8qnQ85GO/CZmhr7Xmn2Z
+         YmkIWBnZ5XrTRzEhwYSUSYhKq4/mrelNXQJIAWahBjVhyaHz09RNaDbErBL8JsSE/2Fm
+         nF7x3JxoNiQc4F8UFz+deld6cUww6o5u4xPk2EwGcjDPCXrN1kQZ4MIem70TJeY2ZEmj
+         Rchg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=Xeq2lcRUVceDqmGyTHaj5d+0Pjk/GmEvYbMYOaMNQzg=;
+        b=WDtNaI/JGyYRTR04uW+IxzxoiRZdJG01GReahRFuLYF7j6gvUDhNkkY7KrHZUw4PWn
+         mVy7htEpiQKIpCCuFxg1TRsoTmTyAuzDah3t4HKfyv9KoQkNCIswL/m0ZRPBWRl+4sR9
+         eBoDnlLV39VzxYxx/0mNgdpLUPYfNgTMbdZ/NqxQV1go4S1ABmk4P8uR4r3HATQIR7nd
+         2t/w/3CfGg5lt577XD7OUr3KKr58RkUsPMcd9MxA15kpVA51KEU6C6MgR2zNEoeTLsdP
+         Cam51SKpY6R3VEY+h7m5MEBiMBdTyvJm2nfRPRIjKHhW3q9rpKUU0i5DcZ9qIMprBSUd
+         x2qQ==
+X-Gm-Message-State: APjAAAVsje4oQLs74AzCHqmQiJUi97udJQ0yGmpO9lKH/z2vMk9t9EYb
+        mo5411ZF8JwkSqM/TH49mIjHRaAG
+X-Google-Smtp-Source: APXvYqwa00JjUN0TOeR6m2QaHZ1qxjWiq2WnqYCIB/Dud8d6Y2hjnVEpkXsiVWMbx5a69qCX7z3+Ng==
+X-Received: by 2002:ac8:1084:: with SMTP id a4mr28347343qtj.114.1573503726517;
+        Mon, 11 Nov 2019 12:22:06 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:d6e0])
+        by smtp.gmail.com with ESMTPSA id n49sm9587576qtk.94.2019.11.11.12.22.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Nov 2019 12:22:05 -0800 (PST)
+Date:   Mon, 11 Nov 2019 12:22:03 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Subject: [GIT PULL] cgroup fixes for v5.4-rc7
+Message-ID: <20191111202203.GC4163745@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:R85AnppbPpRbASBN+qeQQkooI5x2H4Dl4b39qnIy/84P06Psutx
- 1UgpJewoA+26kC3RGAFzMl4tr537CnsdCYpMzZpqaquzBmda48YFiq1sp4JBpKVAm/6hG6B
- T+xjyEzQBA78TjjLjPu3UkZokiY0Cf7wC2JTPJNzmWhI28vtCMwD+TomKV1+kSoNGHlQIcf
- llNfgK00g8glajmY6FJtQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2/4Mf+qV6d4=:n2dwiOweaOHyBIYwZrNd0B
- lW+2gm7GVpKURbp6YNWNUA8VTknHJ7ALNzPgpoTOVu3r7Wg9S4I2Px9rDC0QfF/SE6EldpIbo
- CJvNUVX4ltU9rErfId/9EY8HKSvEbnHWwVCcgoYgoy7DdMtkFEdFWxilBJ/c+l8gONahbmerQ
- NPrmWqfZaBHWY2ycepLz/G1MTFalmgp6VtSk1amgbw6cfSazCx8AcUTgP7clC8QxDpivYDRM6
- 5hDAlsr95+SXafhF3L+ZtPOYHciUXr/wd0TtVLLoueMzlW8J40VLmIei6wh9vIRFeoG7PTSyx
- om8Pt1ty7SX7kPnFDeyYDCSaRvtp2Th7OpO+M3/NWeY5XIsb5QhIn+o3dN3chTD+MVn0hRc+8
- ycsqCJ4xnF2NqOZveetUawN2/rU++A8EOC9F/533Pg8Ir1E9mnjdEPRdibWtZZ2al+62ZeYZ1
- t4Zg5Qkf1sanO5G9h5hs50/zPeEBQNTMPwULx+ZP1G2rXdGnxjwWbt9cFvsoopQCWC3OwGnhA
- n8PG53tvIf4XHMKpR3afjThw8ETdOcVTfvrvT5j2cUpHh8naebWzhaHxG0gcx5EL4ywuefUk1
- w1oLs1mq+UMkGKyosBlEm42IR6lrxD892zI02mL7Z11qJv3WlVglJmFBQUUWnwxNeQKB9+tu7
- mDYTgpW6KIE2/+MiHdC2zc8mp+57bcTONSgqdwte/taLeXcMtMUJBeyG/5adgslOhg20m+WA6
- +UVgE5D+RV6VMrgvrNiK6Va91JEr2RFCCzUHq3c0GSD0davk251oOKxp+LbLeFau6k25cOiy1
- QqkTYcHcnHIPNrWY3eF8pxvBR7bOs+mw7UrSQfKwSxMsGHsq6vSw+/t5Sg8i8YDO7R4S3fSr4
- +mKI+XhmaPHChuLJPLhg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nfs currently behaves differently on 32-bit and 64-bit kernels regarding
-the on-disk format of nfs_fscache_inode_auxdata.
+Hello, Linus.
 
-That format should really be the same on any kernel, and we should avoid
-the 'timespec' type in order to remove that from the kernel later on.
+Sorry, I sat on this for too long.
 
-Using plain 'timespec64' would not be good here, since that includes
-implied padding and would possibly leak kernel stack data to the on-disk
-format on 32-bit architectures.
+There's an inadvertent preemption point in ptrace_stop() which was
+reliably triggering for a test scenario significantly slowing it down.
+This pull request contains Oleg's fix to remove the unwanted
+preemption point.
 
-struct __kernel_timespec would work as a replacement, but open-coding
-the two struct members in nfs_fscache_inode_auxdata makes it more
-obvious what's going on here, and keeps the current format for 64-bit
-architectures.
+Thanks.
 
-Cc: David Howells <dhowells@redhat.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/nfs/fscache-index.c |  6 ++++--
- fs/nfs/fscache.c       | 18 ++++++++++++------
- fs/nfs/fscache.h       |  8 +++++---
- 3 files changed, 21 insertions(+), 11 deletions(-)
+The following changes since commit 9e208aa06c2109b45eec6be049a8e47034748c20:
 
-diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
-index 15f271401dcc..573b1da9342c 100644
---- a/fs/nfs/fscache-index.c
-+++ b/fs/nfs/fscache-index.c
-@@ -84,8 +84,10 @@ enum fscache_checkaux nfs_fscache_inode_check_aux(void *cookie_netfs_data,
- 		return FSCACHE_CHECKAUX_OBSOLETE;
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 
- 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
- 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 3800ab6f08fa..7def925d3af5 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -238,8 +238,10 @@ void nfs_fscache_init_inode(struct inode *inode)
- 		return;
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 
- 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
- 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-@@ -263,8 +265,10 @@ void nfs_fscache_clear_inode(struct inode *inode)
- 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 	fscache_relinquish_cookie(cookie, &auxdata, false);
- 	nfsi->fscache = NULL;
- }
-@@ -305,8 +309,10 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
- 		return;
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 
- 	if (inode_is_open_for_write(inode)) {
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index ad041cfbf9ec..6754c8607230 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -62,9 +62,11 @@ struct nfs_fscache_key {
-  * cache object.
-  */
- struct nfs_fscache_inode_auxdata {
--	struct timespec	mtime;
--	struct timespec	ctime;
--	u64		change_attr;
-+	s64	mtime_sec;
-+	s64	mtime_nsec;
-+	s64	ctime_sec;
-+	s64	ctime_nsec;
-+	u64	change_attr;
- };
- 
- /*
+  Merge tag 'xfs-5.4-fixes-3' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux (2019-10-10 11:47:16 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.4-fixes
+
+for you to fetch changes up to 937c6b27c73e02cd4114f95f5c37ba2c29fadba1:
+
+  cgroup: freezer: call cgroup_enter_frozen() with preemption disabled in ptrace_stop() (2019-10-11 08:39:57 -0700)
+
+----------------------------------------------------------------
+Oleg Nesterov (1):
+      cgroup: freezer: call cgroup_enter_frozen() with preemption disabled in ptrace_stop()
+
+ kernel/signal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index c4da1ef56fdf..bcd46f547db3 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2205,8 +2205,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+ 		 */
+ 		preempt_disable();
+ 		read_unlock(&tasklist_lock);
+-		preempt_enable_no_resched();
+ 		cgroup_enter_frozen();
++		preempt_enable_no_resched();
+ 		freezable_schedule();
+ 		cgroup_leave_frozen(true);
+ 	} else {
+
 -- 
-2.20.0
-
+tejun
