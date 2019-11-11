@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3164C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D9C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8F7204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29197204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498238;
-	bh=IXQvvTCPAxqp4Jk6jbh0oE46whydmr1vi31H9PbYkYk=;
+	s=default; t=1573498242;
+	bh=54s9gAZ/w4ffu2vVpETxtuTNjxXcA3yNC4esabz2sHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rt1edw8TYBOe0BUbuA+LYZ73Y8iqLlAhPmn2GIzA+7YH0neCxsRLbuHbxq1znTFwM
-	 hA2KXcgRReBxnH1RxkT9umNDL1IQpciYJMCdE/529KCTnLeosFfEz/zO2t93/V/Gfj
-	 J5W8zjDP609FL5K6YnBfNWNUdVIAdxZXQnbD89ps=
+	b=eT7RJ0xgSw7hCi163WGus5pUIym9ffKRyMEJQ+e9sS+OpjBjhYYHfoaN91WzWd59A
+	 grZrmoz0qdISg130D11RYDJiOr30JMSRp7FVqMJZt6JvbmjrKBDZzRHKfDBWfEdiW2
+	 nJ+IqsjV//ULYacdBobpMzJBUFbrEBcDIDY4CJZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfKKSuh (ORCPT
+        id S1730173AbfKKSuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44318 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729736AbfKKSue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:34 -0500
+        id S1730370AbfKKSuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A62E20674;
-        Mon, 11 Nov 2019 18:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CFE204FD;
+        Mon, 11 Nov 2019 18:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498233;
-        bh=IXQvvTCPAxqp4Jk6jbh0oE46whydmr1vi31H9PbYkYk=;
+        s=default; t=1573498236;
+        bh=54s9gAZ/w4ffu2vVpETxtuTNjxXcA3yNC4esabz2sHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zmPiRj9y23XOs7RHWs2G1QW6kA8UlKDveOyVnWqb4qCwa67HXi4Dk/5UFgJX98EFn
-         /CvO5lkdPl1s+Iiq+kyDDG/7oY85tTkWAOD1tCgvwWympBLjYIpY8j87jOjJSe8/zR
-         kPzUSC42eIrPWP+6iWMLcYVuD4xLyzCw85Tksrl0=
+        b=nPFiShkVpUwC1oRoUFk5wZ6HJAeXzt29U43QLv9b3NEZmkTPV3/aVylBGKmnhgRFc
+         gUISPLQQtrk+eq/l4d1Doh3xBDgz3L/P/9hnfou4ND6jVmIxAMIBXYDQ58M/jxLyr9
+         Dp0kQ7SYIppSnzmwtFJ1dTqSZxQKWNCBRMtEMVy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH 5.3 060/193] ARM: sunxi: Fix CPU powerdown on A83T
-Date:   Mon, 11 Nov 2019 19:27:22 +0100
-Message-Id: <20191111181505.422619195@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.3 061/193] ARM: dts: imx6-logicpd: Re-enable SNVS power key
+Date:   Mon, 11 Nov 2019 19:27:23 +0100
+Message-Id: <20191111181505.507072829@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,46 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Adam Ford <aford173@gmail.com>
 
-commit e690053e97e7a9c968df9a97cef9089dfa8e6a44 upstream.
+commit cabe5f85e63626c00f3b879a670ec27325056a2d upstream.
 
-PRCM_PWROFF_GATING_REG has CPU0 at bit 4 on A83T. So without this
-patch, instead of gating the CPU0, the whole cluster was power gated,
-when shutting down first CPU in the cluster.
+The baseboard of the Logic PD i.MX6 development kit has a power
+button routed which can both power down and power up the board.
+It can also wake the board from sleep.  This functionality was
+marked as disabled by default in imx6qdl.dtsi, so it needs to
+be explicitly enabled for each board.
 
-Fixes: 6961275e72a8c1 ("ARM: sun8i: smp: Add support for A83T")
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+This patch enables the snvs power key again.
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
+Cc: stable <stable@vger.kernel.org> #5.3+
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-sunxi/mc_smp.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm/mach-sunxi/mc_smp.c
-+++ b/arch/arm/mach-sunxi/mc_smp.c
-@@ -481,14 +481,18 @@ static void sunxi_mc_smp_cpu_die(unsigne
- static int sunxi_cpu_powerdown(unsigned int cpu, unsigned int cluster)
- {
- 	u32 reg;
-+	int gating_bit = cpu;
+--- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
++++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+@@ -328,6 +328,10 @@
+ 	pinctrl-0 = <&pinctrl_pwm3>;
+ };
  
- 	pr_debug("%s: cluster %u cpu %u\n", __func__, cluster, cpu);
- 	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
- 		return -EINVAL;
- 
-+	if (is_a83t && cpu == 0)
-+		gating_bit = 4;
++&snvs_pwrkey {
++	status = "okay";
++};
 +
- 	/* gate processor power */
- 	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
--	reg |= PRCM_PWROFF_GATING_REG_CORE(cpu);
-+	reg |= PRCM_PWROFF_GATING_REG_CORE(gating_bit);
- 	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
- 	udelay(20);
- 
+ &ssi2 {
+ 	status = "okay";
+ };
 
 
