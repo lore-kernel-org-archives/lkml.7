@@ -2,183 +2,190 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA7FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BFEC17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3620D206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bk8oXaTf"
+	by mail.kernel.org (Postfix) with ESMTP id E936A2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573452098;
+	bh=r2/46Oo7bzlP9QELn0pm6e6LdiAFm+dgs0+pcUxGDOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q8NikzusUpCwt/Dr5druLNS6jVEKP8V1RDPAj0Q2Ms4FIr9Xn5/2PxhXxKbtGVpfw
+	 OER6EahKAvj8XrjHAg97L03bXRZ//91g9fgu4xIDnNv2txNvLBYrcsiEykq4locxe6
+	 6rJC6oO0atruSAwz+MG42c9F4V3VejY1kOCr1DTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKKGAZ (ORCPT
+        id S1726994AbfKKGBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:00:25 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:35915 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfKKGAY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 01:00:24 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191111060022epoutp029167a3dfc786bdacb6de2d541aa981b2~WBkcWGNzz0691806918epoutp02c
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:00:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191111060022epoutp029167a3dfc786bdacb6de2d541aa981b2~WBkcWGNzz0691806918epoutp02c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573452022;
-        bh=ZHmtJwzZPCJJj1Yw3R6N0QRExV0RN+KRydhi5ot94GM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bk8oXaTfsiIJMjoHYWHvtvzcnjNC0GKZmhxl7gQd/EfhAgvrfZQpcvgScmVHEGzhl
-         UReOOBZgcDS2pW1CHuRs1lzrgag2WbuZnkd/zndqUWP5XBq+FmjfQIChPzfigXsrTm
-         79JALZOiFXOG5bAZVmBuOhNu590b9wtGwnLSXffo=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191111060020epcas1p4c921ab5b85780714865dc23a2d8cbf55~WBkbMqGZl0767907679epcas1p4R;
-        Mon, 11 Nov 2019 06:00:20 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47BKwd6CVkzMqYlm; Mon, 11 Nov
-        2019 06:00:17 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7F.37.04224.1F8F8CD5; Mon, 11 Nov 2019 15:00:17 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191111060017epcas1p37c624e81f5421842a5a31136b4cba678~WBkXxeQtG0355803558epcas1p3a;
-        Mon, 11 Nov 2019 06:00:17 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191111060017epsmtrp2d85c01a94bfe0ccb9a36df6668aca5be~WBkXwwuFV3261032610epsmtrp2A;
-        Mon, 11 Nov 2019 06:00:17 +0000 (GMT)
-X-AuditID: b6c32a38-d43ff70000001080-3f-5dc8f8f17596
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        26.F3.24756.1F8F8CD5; Mon, 11 Nov 2019 15:00:17 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191111060017epsmtip2d361588ef8e0bde92397ce4fdeb16f63~WBkXiuppH3118631186epsmtip2Z;
-        Mon, 11 Nov 2019 06:00:17 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     arnd@arndb.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        krzk@kernel.org, kgene@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        chanwoo@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v2] PM / devfreq: events: Fix excessive stack usage
-Date:   Mon, 11 Nov 2019 15:05:57 +0900
-Message-Id: <20191111060557.15650-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191022142703.1789898-1-arnd@arndb.de>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHeXZ3767V5DZXnfxQdsUPCuquc3mt2ZsRo4SM6Esk66YXJ+6t
-        3a20AnsjzXSlidiLEWlZRjTWGBq+K6aWGpkWmBRaWVZGLXsv27xGffufw+///A/nOSSm+I2H
-        kllmO28zc0aamCP1tkeqoj987UpT1U/Fsb9KO2VsyeOHUvbRp3GcPTn2BmP7+10ytvfwWxnr
-        HhvC2YHb5wnWV9yB2Ir+Jgk7fOgqsWau7sf3UqRz1x4ndLeq83ROTy3S+dxLUvHt2VoDz2Xw
-        tjDenG7JyDJnJtGbtuqT9ZrlKiaaSWQT6DAzZ+KT6PUpqdEbsoz+yeiwPZzR4W+lcoJAx67S
-        2iwOOx9msAj2JJq3ZhitidYYgTMJDnNmTLrFtIJRqeI0fnBntqGnowS3nlPk1LsmsINoMrgQ
-        BZFAxUPrdBFWiOaQCqoOwa3O31Kx+IigvduLi8VnBE7vIPprcXZ3zVKNCEaLvsrE4hOCoc8n
-        pAGKoKKg+dVjohCRpJLKhkvOlQEGo1oRXBhwSQJMCJUM499e4gEtpSLgXWWFLKDl1AqYGK/F
-        xLSlcN3VMqODKA3UFI+hwENAtRDgbi/HRWg9lL8umx0vBCbueGSiDgXfZCMh6v1wrbuDEM0F
-        CDzN92fNami+fFoSmBSjIuHm7VixvQzqf1TOvIlRwTA5VYQHEKDkUHBMISLhMPBsRCLqxVCV
-        f3w2Sgd3XVeQuBR/VLGnVXIKLTn7L+EiQrVoIW8VTJm8wFjj//8zN5q5vSi2DjX0pbQhikT0
-        PHlqbFeaAuf2CLmmNgQkRivldTn+ljyDy93H2yx6m8PIC21I419lCRa6IN3iv2SzXc9o4tRq
-        NRvPLNcwDL1IvrbmcpqCyuTsfDbPW3nbX5+EDAo9iNYUHanpb9oMPYN1wfGJ97y9ecqC6p/b
-        sJ6EB+/zhgdvLHNeudaXWKpvjZTvRTE7Rp+f6rsq7T4asbLB7auZHvlYNl+b3zRaJg0/ULLa
-        e8bDa54eTTH4dk9tUbrX+ZLHuK6qjdoTX3Y5prfefKTWjn843fRERuerlC++zUsw7js2REsF
-        A8dEYTaB+wPx1Wy4kQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSvO7HHydiDZbv4bL4O+kYu8XEG1dY
-        LK5/ec5q0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XtxhVsDtwev39N
-        YvTYtKqTzWPzknqPvi2rGD0+b5ILYI3isklJzcksSy3St0vgyjh1ZCJrwWyhip0bXjE3ML7j
-        62Lk5JAQMJHoO3mCpYuRi0NIYDejRNfhJYwQCUmJaRePMncxcgDZwhKHDxdD1HxilOg9eIIV
-        pIZNQEti/4sbbCC2iEChxLtP25lAipgFjjNKvP92gRkkISzgLPH85zOwBhYBVYm3c2ewg9i8
-        AlYSr56vYoZYJi+xesMBMJtTwFRiee9jsCOEgK7rWfeJcQIj3wJGhlWMkqkFxbnpucWGBYZ5
-        qeV6xYm5xaV56XrJ+bmbGMHBqaW5g/HykvhDjAIcjEo8vD90TsQKsSaWFVfmHmKU4GBWEuHd
-        UQEU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzvs071ikkEB6YklqdmpqQWoRTJaJg1OqgbE05FiR
-        UO7GzyVP1A2OXK5Y4r/ng/bNAk8h9a1hv2a3n7YPeLfo05vOl51iT7WLJ9o11h6xs2iR33Vu
-        tnhwSxObVvFpXjUOuZzLIizSD4zSjiYI3/Bjl17t9OZmkE54/DUX/kPPor7MNF7CK/l086/d
-        Vuk2T1JrF+5SM7kmxqv+NunDgb2fFyixFGckGmoxFxUnAgCftVZuSgIAAA==
-X-CMS-MailID: 20191111060017epcas1p37c624e81f5421842a5a31136b4cba678
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191111060017epcas1p37c624e81f5421842a5a31136b4cba678
-References: <20191022142703.1789898-1-arnd@arndb.de>
-        <CGME20191111060017epcas1p37c624e81f5421842a5a31136b4cba678@epcas1p3.samsung.com>
+        Mon, 11 Nov 2019 01:01:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfKKGBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 01:01:36 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D88320656;
+        Mon, 11 Nov 2019 06:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573452094;
+        bh=r2/46Oo7bzlP9QELn0pm6e6LdiAFm+dgs0+pcUxGDOQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WlVHQzIJM20xcbXlcK1Ol8oaCuqcHpKxgfD4GWSGZ890mzTBiDyJocMWMK/aajIoH
+         zFEHtHcOpa+qWbMSIWCY1uyqCuFSyrpbnu15vhkyvsKgfLDNJC3dtC1zA6XlkMTyNi
+         wFW4EpAhLRmhgJW/gN20IziDGpQejHQXTUTHFvMI=
+Date:   Mon, 11 Nov 2019 07:01:29 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andres Freund <andres@anarazel.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        John Keeping <john@metanate.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.3 111/344] perf unwind: Fix libunwind when tid != pid
+Message-ID: <20191111060129.GA3197363@kroah.com>
+References: <20191003154540.062170222@linuxfoundation.org>
+ <20191003154551.163214533@linuxfoundation.org>
+ <20191110014621.n5yfednqfl7g3atr@alap3.anarazel.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191110014621.n5yfednqfl7g3atr@alap3.anarazel.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Sat, Nov 09, 2019 at 05:46:21PM -0800, Andres Freund wrote:
+> Hi,
+> 
+> On 2019-10-03 17:51:16 +0200, Greg Kroah-Hartman wrote:
+> > From: John Keeping <john@metanate.com>
+> >
+> > [ Upstream commit e8ba2906f6b9054102ad035ac9cafad9d4168589 ]
+> >
+> > Commit e5adfc3e7e77 ("perf map: Synthesize maps only for thread group
+> > leader") changed the recording side so that we no longer get mmap events
+> > for threads other than the thread group leader (when synthesising these
+> > events for threads which exist before perf is started).
+> >
+> > When a file recorded after this change is loaded, the lack of mmap
+> > records mean that unwinding is not set up for any other threads.
+> >
+> > This can be seen in a simple record/report scenario:
+> >
+> > 	perf record --call-graph=dwarf -t $TID
+> > 	perf report
+> >
+> > If $TID is a process ID then the report will show call graphs, but if
+> > $TID is a secondary thread the output is as if --call-graph=none was
+> > specified.
+> >
+> > Following the rationale in that commit, move the libunwind fields into
+> > struct map_groups and update the libunwind functions to take this
+> > instead of the struct thread.  This is only required for
+> > unwind__finish_access which must now be called from map_groups__delete
+> > and the others are changed for symmetry.
+> >
+> > Note that unwind__get_entries keeps the thread argument since it is
+> > required for symbol lookup and the libdw unwind provider uses the thread
+> > ID.
+> >
+> > Signed-off-by: John Keeping <john@metanate.com>
+> > Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Fixes: e5adfc3e7e77 ("perf map: Synthesize maps only for thread group leader")
+> > Link: http://lkml.kernel.org/r/20190815100146.28842-2-john@metanate.com
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> This unfortunately broke --call-graph dwarf on 5.3 (and presumably older
+> branches), because while this commit has been included in stable, the
+> prerequisite
+> 
+> commit ab6cd0e5276e24403751e0b3b8ed807738a8571f
+> Author:     John Keeping <john@metanate.com>
+> AuthorDate: 2019-08-15 11:01:44 +0100
+> Commit:     Arnaldo Carvalho de Melo <acme@redhat.com>
+> CommitDate: 2019-08-16 12:25:23 -0300
+> 
+>     perf map: Use zalloc for map_groups
+> 
+>     In the next commit we will add new fields to map_groups and we need
+>     these to be null if no value is assigned.  The simplest way to achieve
+>     this is to request zeroed memory from the allocator.
+> 
+>     Signed-off-by: John Keeping <john@metanate.com>
+>     Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>     Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Peter Zijlstra <peterz@infradead.org>
+>     Cc: john keeping <john@metanate.com>
+>     Link: http://lkml.kernel.org/r/20190815100146.28842-1-john@metanate.com
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> has not.
+> 
+> 
+> The crash I get is:
+> 
+> Thread 1 "perf" received signal SIGSEGV, Segmentation fault.
+> 0x0000555555872238 in unwind__flush_access (mg=0x555555c53b50) at util/unwind-libunwind.c:76
+> 76			mg->unwind_libunwind_ops->flush_access(mg);
+> (gdb) bt
+> #0  0x0000555555872238 in unwind__flush_access (mg=0x555555c53b50) at util/unwind-libunwind.c:76
+> #1  0x0000555555800ac4 in ____thread__set_comm (exec=true, timestamp=325096707055731, str=0x7ffff7f96ed8 "sleep", thread=0x555555c53bc0) at util/thread.c:254
+> #2  __thread__set_comm (thread=thread@entry=0x555555c53bc0, str=str@entry=0x7ffff7f96ed8 "sleep", timestamp=325096707055731, exec=exec@entry=true)
+>     at util/thread.c:268
+> #3  0x00005555557f132a in machine__process_comm_event (machine=0x555555c4bc68, event=0x7ffff7f96ec8, sample=0x7fffffff8f70) at util/machine.c:600
+> #4  0x00005555557fa93b in perf_session__deliver_event (session=0x555555c4baf0, event=0x7ffff7f96ec8, tool=0x555555acb9a0 <record>, file_offset=73416)
+>     at util/session.c:1473
+> #5  0x00005555557feae8 in do_flush (show_progress=true, oe=0x555555c52610) at util/ordered-events.c:243
+> #6  __ordered_events__flush (oe=oe@entry=0x555555c52610, how=how@entry=OE_FLUSH__FINAL, timestamp=timestamp@entry=0) at util/ordered-events.c:322
+> #7  0x00005555557fef45 in __ordered_events__flush (timestamp=<optimized out>, how=<optimized out>, oe=<optimized out>) at util/ordered-events.c:338
+> #8  ordered_events__flush (how=OE_FLUSH__FINAL, oe=0x555555c52610) at util/ordered-events.c:340
+> #9  ordered_events__flush (oe=oe@entry=0x555555c52610, how=how@entry=OE_FLUSH__FINAL) at util/ordered-events.c:338
+> #10 0x00005555557fd17c in __perf_session__process_events (session=0x555555c4baf0) at util/session.c:2152
+> #11 perf_session__process_events (session=session@entry=0x555555c4baf0) at util/session.c:2181
+> #12 0x0000555555729379 in process_buildids (rec=0x555555acb9a0 <record>) at builtin-record.c:829
+> #13 record__finish_output (rec=0x555555acb9a0 <record>) at builtin-record.c:1037
+> #14 0x000055555572c000 in __cmd_record (rec=0x555555acb9a0 <record>, argv=<optimized out>, argc=2) at builtin-record.c:1661
+> #15 cmd_record (argc=2, argv=<optimized out>) at builtin-record.c:2450
+> #16 0x000055555579cd9d in run_builtin (p=0x555555ad4958 <commands+216>, argc=5, argv=0x7fffffffdcc0) at perf.c:304
+> #17 0x0000555555714baa in handle_internal_command (argv=0x7fffffffdcc0, argc=5) at perf.c:356
+> #18 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:400
+> #19 main (argc=5, argv=0x7fffffffdcc0) at perf.c:525
+> 
+> (gdb) p *mg
+> $7 = {maps = {entries = {rb_node = 0x0}, names = {rb_node = 0x0}, lock = {lock = pthread_rwlock_t = {Status = Not acquired, Shared = No,
+>         Prefers = Readers}}}, machine = 0x555555c4bc68, refcnt = {refs = {counter = 1}}, addr_space = 0x693f6967632e6775,
+>   unwind_libunwind_ops = 0xa32313438313d64}
+> 
+> (gdb) p mg->unwind_libunwind_ops
+> $8 = (struct unwind_libunwind_ops *) 0xa32313438313d64
+> 
+> (gdb) p *mg->unwind_libunwind_ops
+> Cannot access memory at address 0xa32313438313d64
+> 
+> which makes sense, because map_groups__new() allocates the group with
+> malloc, and map_groups__init() only initializes map_groups->{maps,machine,refcnt}
+> 
+> 
+> A bit surprised that nobody complained about this so far...
 
-Putting a 'struct devfreq_event_dev' object on the stack is generally
-a bad idea and here it leads to a warnig about potential stack overflow:
+Thanks, I've queued up the other patch for 5.3.y now.
 
-drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
-
-There is no real need for the device structure, only the string inside
-it, so add an internal helper function that simply takes the string
-as its argument and remove the device structure.
-
-Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[cw00.choi: Fix the issue from 'desc->name' to 'desc[j].name']
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes from v1:
-- Fix the issue from 'desc->name' to 'desc[j].name'
-
- drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-index 85c7a77bf3f0..055deea42c37 100644
---- a/drivers/devfreq/event/exynos-ppmu.c
-+++ b/drivers/devfreq/event/exynos-ppmu.c
-@@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
- 	PPMU_EVENT(dmc1_1),
- };
- 
--static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-+static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
- {
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
--		if (!strcmp(edev->desc->name, ppmu_events[i].name))
-+		if (!strcmp(edev_name, ppmu_events[i].name))
- 			return ppmu_events[i].id;
- 
- 	return -EINVAL;
- }
- 
-+static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-+{
-+	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
-+}
-+
- /*
-  * The devfreq-event ops structure for PPMU v1.1
-  */
-@@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
- 			 * use default if not.
- 			 */
- 			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
--				struct devfreq_event_dev edev;
- 				int id;
- 				/* Not all registers take the same value for
- 				 * read+write data count.
- 				 */
--				edev.desc = &desc[j];
--				id = exynos_ppmu_find_ppmu_id(&edev);
-+				id = __exynos_ppmu_find_ppmu_id(desc[j].name);
- 
- 				switch (id) {
- 				case PPMU_PMNCNT0:
--- 
-2.17.1
-
+greg k-h
