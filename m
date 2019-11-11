@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B243C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5A6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA5721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C42921655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499405;
-	bh=foS21jyDG7+AiNiYalDNGoY+ubZ8bYGRS1cP3+yOoZU=;
+	s=default; t=1573499409;
+	bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GS+ywGuNvQe+WX43f44k/U9jHS9DCUy0BkHoInL3K0k9f4mSSxj6ixXpZK2/BRhZI
-	 ZZ6GfWze4T5D/ktmMrtO/X0Uyrh9BHTnBVUbnxZBCRm/w3A8mgzw+MwG9h8PvRK7pH
-	 4vUDCatSRtZO256c0BtIB7HJhg5S/n2oQfKFkxB0=
+	b=Y6fc2JbKAHZW+HTDbB+CONBBTe8nUFvRNGysDVf+vulbEQxhhhRH02oMC8S3f3Ft3
+	 VtId0Fi2U8uPinoeY0cpvgGKJMxPM4J0ztDt0of7nLlSVW3mNn8PkWzedFTwmyFIqD
+	 4IO9zKYVh96GlDljprIXNQvk339RjhdkaYBPiVmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfKKSc7 (ORCPT
+        id S1728002AbfKKScl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:32:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:32:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfKKScx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:32:53 -0500
+        id S1727975AbfKKScf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:32:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CAAB20674;
-        Mon, 11 Nov 2019 18:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E7C214E0;
+        Mon, 11 Nov 2019 18:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497172;
-        bh=foS21jyDG7+AiNiYalDNGoY+ubZ8bYGRS1cP3+yOoZU=;
+        s=default; t=1573497155;
+        bh=Wr+QOl9fx70tvSuUnMOSAVArjRVbhH+B/hgCt7RzL2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XbcIsA1VAfQR+ycg9PQQfpgBUZEGbh34YVJgHaHHpFbY2JtGchbCRuvgDEYBDMbqD
-         OETS6pblHM2WRC4Xjtmv7WRn4+uMkju/fmdMHh55UVJLJoPW3oHuNDaQPzw3qk6kHH
-         WvDK4yKFbUSwSsC+CMOax72IWVHVFraXsi8kxxZY=
+        b=fZcR5idYUcZ/FziZt66TbLA80eSmJ39O7Yxh4GUUgO/l98PZW9qkJBHT56u+5xdfa
+         QtAd4gE1rNX8n2YxS8OYu8FN47572VMf4fySgcf/jBISLPFpkP5FR1yQy86YRNidU4
+         +noJ78HRmbGhL/e165mznBgVFAjMM+e5bvetsMMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Meyer <thomas@m3y3r.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.9 27/65] configfs: Fix bool initialization/comparison
-Date:   Mon, 11 Nov 2019 19:28:27 +0100
-Message-Id: <20191111181346.107117626@linuxfoundation.org>
+        stable@vger.kernel.org, Bernd Krumboeck <b.krumboeck@gmail.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Johan Hovold <johan@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.9 22/65] can: usb_8dev: fix use-after-free on disconnect
+Date:   Mon, 11 Nov 2019 19:28:22 +0100
+Message-Id: <20191111181345.056368548@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -59,64 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Meyer <thomas@m3y3r.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit 3f6928c347707a65cee10a9f54b85ad5fb078b3f upstream.
+commit 3759739426186a924675651b388d1c3963c5710e upstream.
 
-Bool initializations should use true and false. Bool tests don't need
-comparisons.
+The driver was accessing its driver data after having freed it.
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 0024d8ad1639 ("can: usb_8dev: Add support for USB2CAN interface from 8 devices")
+Cc: stable <stable@vger.kernel.org>     # 3.9
+Cc: Bernd Krumboeck <b.krumboeck@gmail.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/configfs/file.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/can/usb/usb_8dev.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/configfs/file.c
-+++ b/fs/configfs/file.c
-@@ -166,7 +166,7 @@ configfs_read_bin_file(struct file *file
- 		retval = -ETXTBSY;
- 		goto out;
+--- a/drivers/net/can/usb/usb_8dev.c
++++ b/drivers/net/can/usb/usb_8dev.c
+@@ -1007,9 +1007,8 @@ static void usb_8dev_disconnect(struct u
+ 		netdev_info(priv->netdev, "device disconnected\n");
+ 
+ 		unregister_netdev(priv->netdev);
+-		free_candev(priv->netdev);
+-
+ 		unlink_all_urbs(priv);
++		free_candev(priv->netdev);
  	}
--	buffer->read_in_progress = 1;
-+	buffer->read_in_progress = true;
  
- 	if (buffer->needs_read_fill) {
- 		/* perform first read with buf == NULL to get extent */
-@@ -325,7 +325,7 @@ configfs_write_bin_file(struct file *fil
- 		len = -ETXTBSY;
- 		goto out;
- 	}
--	buffer->write_in_progress = 1;
-+	buffer->write_in_progress = true;
- 
- 	/* buffer grows? */
- 	if (*ppos + count > buffer->bin_buffer_size) {
-@@ -429,8 +429,8 @@ static int check_perm(struct inode * ino
- 	}
- 	mutex_init(&buffer->mutex);
- 	buffer->needs_read_fill = 1;
--	buffer->read_in_progress = 0;
--	buffer->write_in_progress = 0;
-+	buffer->read_in_progress = false;
-+	buffer->write_in_progress = false;
- 	buffer->ops = ops;
- 	file->private_data = buffer;
- 	goto Done;
-@@ -488,10 +488,10 @@ static int configfs_release_bin_file(str
- 	ssize_t len = 0;
- 	int ret;
- 
--	buffer->read_in_progress = 0;
-+	buffer->read_in_progress = false;
- 
- 	if (buffer->write_in_progress) {
--		buffer->write_in_progress = 0;
-+		buffer->write_in_progress = false;
- 
- 		len = bin_attr->write(item, buffer->bin_buffer,
- 				buffer->bin_buffer_size);
+ }
 
 
