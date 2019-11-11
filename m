@@ -2,372 +2,160 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA5EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDE121783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0626214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:06:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P9noWHIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKKLBH (ORCPT
+        id S1726897AbfKKLGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:01:07 -0500
-Received: from relay.sw.ru ([185.231.240.75]:35558 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfKKLBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:01:07 -0500
-Received: from dhcp-172-16-24-163.sw.ru ([172.16.24.163] helo=snorch.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ptikhomirov@virtuozzo.com>)
-        id 1iU7Qu-00028X-SV; Mon, 11 Nov 2019 14:00:33 +0300
-From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Paul Moore <paul@paul-moore.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Andrei Vagin <avagin@gmail.com>, <devel@openvz.org>
-Subject: [PATCH] fs: add new O_MNT flag for opening mount root from mountpoint fd
-Date:   Mon, 11 Nov 2019 14:00:29 +0300
-Message-Id: <20191111110029.16483-1-ptikhomirov@virtuozzo.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 11 Nov 2019 06:06:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43690 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726829AbfKKLGT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:06:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573470378;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SJ9a4hS5SZw0uqJ8hrO8u9Z/doxxcwiFg6DzJii+W74=;
+        b=P9noWHIP5xRe6jcURi4YfumRBfaI7CCO4XUOb2wr8IU/Xj2vKhL/ZAqmyCDbWoWwNtNsct
+        415sEelgjsZKs2ZjKEvPhaF7LQPIcfHcGYLhQzloraGeFSy3E/lyHd6MEFjSpUDW7DJ3OJ
+        AXr4tDhQsejEK1mnjb5N7IZaf9SZjqo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-qNDW6cQkMj-lQ7uofsDItg-1; Mon, 11 Nov 2019 06:06:15 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD01E1005509;
+        Mon, 11 Nov 2019 11:06:13 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-29.pek2.redhat.com [10.72.8.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F0C3F608F8;
+        Mon, 11 Nov 2019 11:06:03 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 19:05:58 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191111110558.GA22228@ming.t460p>
+References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
+ <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
+ <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
+ <20191109222828.GA30568@ming.t460p>
+ <928d17b00c66caeef30410cf5a472056ae3722d4.camel@unipv.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <928d17b00c66caeef30410cf5a472056ae3722d4.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: qNDW6cQkMj-lQ7uofsDItg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Imagine that we have an open fd on the directory (or file) - dfd, and a
-new mount - mnt is created with these directory as a mountpoint. Before
-this patch we had no way to access the contents of mnt through these
-dfd.
+On Mon, Nov 11, 2019 at 11:50:49AM +0100, Andrea Vai wrote:
+> Il giorno dom, 10/11/2019 alle 06.28 +0800, Ming Lei ha scritto:
+> > On Thu, Nov 07, 2019 at 07:59:44PM +0100, Andrea Vai wrote:
+> > > [Sorry for the duplicate message, it didn't reach the lists due to
+> > > html formatting]
+> > > Il giorno gio 7 nov 2019 alle ore 08:54 Damien Le Moal
+> > > <Damien.LeMoal@wdc.com> ha scritto:
+> > > >
+> > > > On 2019/11/07 16:04, Andrea Vai wrote:
+> > > > > Il giorno mer, 06/11/2019 alle 22.13 +0000, Damien Le Moal ha
+> > scritto:
+> > > > >>
+> > > > >>
+> > > > >> Please simply try your write tests after doing this:
+> > > > >>
+> > > > >> echo mq-deadline > /sys/block/<name of your USB
+> > > > >> disk>/queue/scheduler
+> > > > >>
+> > > > >> And confirm that mq-deadline is selected with:
+> > > > >>
+> > > > >> cat /sys/block/<name of your USB disk>/queue/scheduler
+> > > > >> [mq-deadline] kyber bfq none
+> > > > >
+> > > > > ok, which kernel should I test with this: the fresh git
+> > cloned, or the
+> > > > > one just patched with Alan's patch, or doesn't matter which
+> > one?
+> > > >
+> > > > Probably all of them to see if there are any differences.
+> > >=20
+> > > with both kernels, the output of
+> > > cat /sys/block/sdh/queue/schedule
+> > >=20
+> > > already contains [mq-deadline]: is it correct to assume that the
+> > echo
+> > > command and the subsequent testing is useless? What to do now?
+> >=20
+> > Another thing we could try is to use 'none' via the following
+> > command:
+> >=20
+> >  echo none > /sys/block/sdh/queue/scheduler  #suppose 'sdh' points
+> > to the usb storage disk
+> >=20
+> > Because USB storage HBA is single hw queue, which depth is 1. This
+> > way
+> > should change to dispatch IO in the order of bio submission.
+> >=20
+> > Andrea, could you switch io scheduler to none and update us if
+> > difference
+> > can be made?
+>=20
+> Of course I would to it, but I see that with the "good" kernel the
+> output of "cat /sys/block/sdf/queue/scheduler" (yes, now it's sdf) is
+>=20
+> noop deadline [cfq]
 
-You would say - who cares, we can just open it by path. But actually it
-is not always possible: one can make a (I call it) "propagation trap"
-when mnt's propagation overmounts mnt and makes it unresolvable with
-simple open just after creation.
+Not sure if cfq makes a difference, and I guess you may get same result
+with noop or deadline. However, if you only see good write performance with
+cfq, you may try 'bfq' and see if it works as cfq.
 
-You can say - just pre-open the dfd's parent directory - pdfd like you
-did with dfd, and you will have access to mnt, but what is not generic,
-e.g. if mount point is '/', it can't have pdfd. And also this pdfd
-pre-open does not work in case you want to create a mount under some
-other mount (these can happen through propagation) there is no way to
-access the root of such a mount currently after it was created. (*)
+>=20
+> , i.e. it doesn't show "none". Does it matter? (sorry if it's a silly
+> question)
 
-To be extra safe here, add a check that the new path which will be
-opened with O_MNT is not getting under MNT_LOCKED mount and can be
-accessed. Currently I see no way to get such an fd under locked mount
-but better have a precaution here.
+We are talking about new kernel in which there can't be 'noop deadline [cfq=
+]'
+any more. And you should see the following output from '/sys/block/sdf/queu=
+e/scheduler'
+in the new kernel:
 
-But why I actually need these:
+=09[mq-deadline] kyber bfq none
 
-When we recreate mount tree in CRIU, we do it by recreating one mount at
-a time (we don't have mount-save / mount-restore like with iptables) and
-it is quiet hard to determine the right order in which mounts should be
-restored: if we mount mnt it can hide directories under it's mountpoint,
-so either we need to first create all mounts under mnt's mountpoint and
-only after these  mount mnt, or all mounts under mnt can be propagated
-and we can safely mount mnt now? Moreover if mnt is not mounted, it can
-also block other mounts with other "dependencies" (something like mnt's
-child can be in a propagation group with some of mnt's undermounts and
-they need to be mounted as one), and we can have circular dependency if
-we have wrong order chosen and will fail.
 
-So it would be easier for us if we can create mounts in the file tree
-even if the mountpoint is invisible from root. And one way how it could
-be done is: First, to have open fd to mountpoint under each mount,
-second, to have open fd to each mount root.
-
-More precisely the algorithm is:
-a) openat mpfd to a new mountpoint through parent mount's root -
-p_rootfd (which we already have) or mountpoint fd under a sibling mount
-- s_mpfd if our mountpoint is already overmounted.
-b) create a new mount on mpfd via /proc/<pid>/fd/<N> interface
-c) openat it's rootfd via O_MNT from mpfd
-
-If we have mpfd and rootfd for each mount through /proc/<pid>/fd/<N>
-interface we will be able to bindmount any part of each of already
-created mounts to restore other mounts  and we will be able to configure
-mounts, e.g. change sharing or other options even if mounts are
-invisible from fs-root.
-
-Here is an example of how O_MNT works:
-
-  #term1
-	  #term2
-
-  mkdir /test-mounts
-  mount -t tmpfs tmpfs-test-mounts /test-mounts
-  mount --make-private /test-mounts
-  cd /test-mounts/
-  mkdir sh1 sh2
-  mount -t tmpfs tmpfs_sh sh1
-  mount --make-shared sh1
-  mkdir sh1/mp
-  touch sh1/mp/1
-
-	  ./test_o_mnt /test-mounts/sh1/mp
-
-  mount -t tmpfs tmpfs_mp sh1/mp
-  touch sh1/mp/2
-
-	  input
-
-  mount --bind sh1 sh2
-  mount -t tmpfs tmpfs_prop sh2/mp
-  touch sh2/mp/3
-
-	  input
-
-And now through fds we have an access to all three files:
-
-  ls /proc/3799/fd/*
-  /proc/3799/fd/0  /proc/3799/fd/1  /proc/3799/fd/2
-
-  /proc/3799/fd/3:
-  1
-
-  /proc/3799/fd/4:
-  2
-
-  /proc/3799/fd/5:
-  1
-
-  /proc/3799/fd/6:
-  3
-
-  /proc/3799/fd/7:
-  1
-
-Code of test_o_mnt.c:
-
-  #include <stdio.h>
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-
-  #define O_MNT 040000000
-
-  int main(int argc, char **argv)
-  {
-  	int dfd, fd, fd2;
-
-  	if (argc != 2) {
-  		printf("usage: %s <path/under/mountpoint>\n", argv[0]);
-  		return 1;
-  	}
-
-  	dfd = open(argv[1], O_DIRECTORY);
-  	if (dfd < 0) {
-  		perror("open");
-  		return 1;
-  	}
-
-  	scanf("%*s");
-
-  	fd = openat(dfd, ".", O_DIRECTORY | O_MNT);
-  	if (fd < 0) {
-  		perror("open");
-  		return 1;
-  	}
-
-  	fd2 = openat(dfd, ".", O_DIRECTORY);
-  	if (fd2 < 0) {
-  		perror("open");
-  		return 1;
-  	}
-
-  	scanf("%*s");
-
-  	fd = openat(dfd, ".", O_DIRECTORY | O_MNT);
-  	if (fd < 0) {
-  		perror("open");
-  		return 1;
-  	}
-
-  	fd2 = openat(dfd, ".", O_DIRECTORY);
-  	if (fd2 < 0) {
-  		perror("open");
-  		return 1;
-  	}
-
-  	while (1) {}
-
-  	return 0;
-  }
-
-Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
----
- fs/fcntl.c                       |  2 +-
- fs/namei.c                       | 66 ++++++++++++++++++++++++++++++++
- fs/open.c                        |  2 +
- include/linux/fcntl.h            |  2 +-
- include/linux/namei.h            |  1 +
- include/uapi/asm-generic/fcntl.h |  4 ++
- 6 files changed, 75 insertions(+), 2 deletions(-)
-
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 3d40771e8e7c..4cf05a2fd162 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -1031,7 +1031,7 @@ static int __init fcntl_init(void)
- 	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
- 	 * is defined as O_NONBLOCK on some platforms and not on others.
- 	 */
--	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=
-+	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=
- 		HWEIGHT32(
- 			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
- 			__FMODE_EXEC | __FMODE_NONOTIFY));
-diff --git a/fs/namei.c b/fs/namei.c
-index 671c3c1a3425..7b4c733fc5ef 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2158,10 +2158,71 @@ static int link_path_walk(const char *name, struct nameidata *nd)
- 	}
- }
- 
-+static int handle_mnt(struct nameidata *nd, unsigned int flags)
-+{
-+	if (!(flags & LOOKUP_MNT) || !d_mountpoint(nd->path.dentry))
-+		return 0;
-+
-+	if (flags & LOOKUP_RCU) {
-+		struct mount *mounted;
-+
-+		mounted = __lookup_mnt(nd->path.mnt, nd->path.dentry);
-+		if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
-+			return -ECHILD;
-+		if (!mounted)
-+			return 0;
-+
-+		if (d_mountpoint(mounted->mnt.mnt_root)) {
-+			struct mount *omounted;
-+
-+			omounted = __lookup_mnt(&mounted->mnt,
-+						mounted->mnt.mnt_root);
-+			if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
-+				return -ECHILD;
-+			if (omounted && omounted->mnt.mnt_flags & MNT_LOCKED)
-+				return -EINVAL;
-+		}
-+
-+		nd->path.mnt = &mounted->mnt;
-+		nd->path.dentry = mounted->mnt.mnt_root;
-+		nd->inode = nd->path.dentry->d_inode;
-+		nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
-+	} else {
-+		struct vfsmount *mounted;
-+		struct path path;
-+
-+		mounted = lookup_mnt(&nd->path);
-+		if (!mounted)
-+			return 0;
-+
-+		path.mnt = mounted;
-+		path.dentry = dget(mounted->mnt_root);
-+
-+		if (d_mountpoint(mounted->mnt_root)) {
-+			struct vfsmount *omounted;
-+
-+			omounted = lookup_mnt(&path);
-+			if (omounted && omounted->mnt_flags & MNT_LOCKED) {
-+				mntput(omounted);
-+				path_put(&path);
-+				return -EINVAL;
-+			}
-+		}
-+
-+		dput(nd->path.dentry);
-+		mntput(nd->path.mnt);
-+		nd->path = path;
-+		nd->inode = nd->path.dentry->d_inode;
-+	}
-+
-+	return 0;
-+}
-+
- /* must be paired with terminate_walk() */
- static const char *path_init(struct nameidata *nd, unsigned flags)
- {
- 	const char *s = nd->name->name;
-+	int ret;
- 
- 	if (!*s)
- 		flags &= ~LOOKUP_RCU;
-@@ -2238,6 +2299,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
- 			nd->inode = nd->path.dentry->d_inode;
- 		}
- 		fdput(f);
-+
-+		ret = handle_mnt(nd, flags);
-+		if (ret)
-+			return ERR_PTR(ret);
-+
- 		return s;
- 	}
- }
-diff --git a/fs/open.c b/fs/open.c
-index b62f5c0923a8..5bebd98c2154 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1022,6 +1022,8 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
- 		lookup_flags |= LOOKUP_DIRECTORY;
- 	if (!(flags & O_NOFOLLOW))
- 		lookup_flags |= LOOKUP_FOLLOW;
-+	if (flags & O_MNT)
-+		lookup_flags |= LOOKUP_MNT;
- 	op->lookup_flags = lookup_flags;
- 	return 0;
- }
-diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-index d019df946cb2..06bdc2b70554 100644
---- a/include/linux/fcntl.h
-+++ b/include/linux/fcntl.h
-@@ -9,7 +9,7 @@
- 	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
- 	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
- 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
--	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
-+	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_MNT)
- 
- #ifndef force_o_largefile
- #define force_o_largefile() (!IS_ENABLED(CONFIG_ARCH_32BIT_OFF_T))
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 397a08ade6a2..63414f065927 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -22,6 +22,7 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
- #define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
- #define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
- #define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
-+#define LOOKUP_MNT		0x10000 /* switch mountpoint fd to mount root */
- 
- #define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
- #define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
-diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-index 9dc0bf0c5a6e..dcd5844b955e 100644
---- a/include/uapi/asm-generic/fcntl.h
-+++ b/include/uapi/asm-generic/fcntl.h
-@@ -89,6 +89,10 @@
- #define __O_TMPFILE	020000000
- #endif
- 
-+#ifndef O_MNT
-+#define O_MNT		040000000
-+#endif
-+
- /* a horrid kludge trying to make sure that this will fail on old kernels */
- #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
- #define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)      
--- 
-2.21.0
+thanks,
+Ming
 
