@@ -2,276 +2,144 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918ABC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4DBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613662173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3ACF2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573496996;
-	bh=N5GmlVgNi5jqYXq3ZDUKcqcYA7xQw0pizdMAwF1ezps=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LJrbs8s9RdwiHDD4WagaA1KkuqtD7PSYlPaPA+/fSODJKKRK8Z94yQzvsPhcZbx1U
-	 s6aZrEqz3BvfGIhx4gyLHRAoT9NhMme4ReCHHl4tLRHhIn2MWuAdOMsGQYaSGSImuv
-	 Q/4X7sLK3AI9fm7dvfQI9AYarLWxcN7lSBvXdmNw=
+	s=default; t=1573496999;
+	bh=7HmGHMThrnYMwsBOF6NbCWuvJbMJdCj/JXWysiyCjVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NSYUrFQgbReCASHVzzVAjLOs/jzFYonHUSjZN02yDGgiW1YhxjjP+LQ+TxWVqg6L/
+	 OOqMRmuaJommWmFxFgj7IE8aE+Z/1DPG/11F6IGGdd6wCHQSGnnBLUyy4eUqv6YH2M
+	 Akn9uw344QYCXf2ySMZdboQ1IapyD9mo4QvnJLK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfKKS3z (ORCPT
+        id S1727080AbfKKS36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:29:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45942 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:29:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbfKKS3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:29:55 -0500
+        id S1726955AbfKKS34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:29:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAB35214E0;
-        Mon, 11 Nov 2019 18:29:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69B9321655;
+        Mon, 11 Nov 2019 18:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573496992;
-        bh=N5GmlVgNi5jqYXq3ZDUKcqcYA7xQw0pizdMAwF1ezps=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ebAlt6hLJsVMwgT120fHlLmaRewlDos59C4/rlF6O9DInmET9tyT8LEq4SvS5ngzq
-         m0gVbMi5YBXM4tAVy9tr70eLNLn7lhBCe9/8hZ+EfdzIR/B7zbEMzEtn91q8zc6EPE
-         hAH+BOxWjyfWthHvVGGE8SDvF6vFvtrz/o6tlgis=
+        s=default; t=1573496994;
+        bh=7HmGHMThrnYMwsBOF6NbCWuvJbMJdCj/JXWysiyCjVM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2W0d/TQTwLSfukNdhQN14DkATpFnwvr+AMhM7o+KW4O1RsUrHyb6dFCSw4OBjyyuF
+         YOfXvoZRGbVUpJiXDi5/u2vVwHAhgg+Knq+Z0F2aUpxrLYePoipUSoW3zBk+mu+O1z
+         8ZeU5QBuWGwzhakAtiKKQwDc7jb1/wRFm4FaTKbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 00/43] 4.4.201-stable review
-Date:   Mon, 11 Nov 2019 19:28:14 +0100
-Message-Id: <20191111181246.772983347@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 02/43] net: fix data-race in neigh_event_send()
+Date:   Mon, 11 Nov 2019 19:28:16 +0100
+Message-Id: <20191111181250.392472184@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
+References: <20191111181246.772983347@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.201-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.201-rc1
-X-KernelTest-Deadline: 2019-11-13T18:13+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.4.201 release.
-There are 43 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Eric Dumazet <edumazet@google.com>
 
-Responses should be made by Wed, 13 Nov 2019 18:08:44 +0000.
-Anything received after that time might be too late.
+[ Upstream commit 1b53d64435d56902fc234ff2507142d971a09687 ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.201-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-and the diffstat can be found below.
+KCSAN reported the following data-race [1]
 
-thanks,
+The fix will also prevent the compiler from optimizing out
+the condition.
 
-greg k-h
+[1]
 
--------------
-Pseudo-Shortlog of commits:
+BUG: KCSAN: data-race in neigh_resolve_output / neigh_resolve_output
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.4.201-rc1
+write to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 1:
+ neigh_event_send include/net/neighbour.h:443 [inline]
+ neigh_resolve_output+0x78/0x480 net/core/neighbour.c:1474
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
+ __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+ __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
+ ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
+ __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:237
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+ tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
+ __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
+ tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
+ tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:618
 
-Tejun Heo <tj@kernel.org>
-    cgroup,writeback: don't switch wbs immediately on dead wbs if the memcg is dead
+read to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 0:
+ neigh_event_send include/net/neighbour.h:442 [inline]
+ neigh_resolve_output+0x57/0x480 net/core/neighbour.c:1474
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
+ __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+ __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
+ ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
+ __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:237
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+ tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
+ __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
+ tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
+ tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
 
-Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-    mm/filemap.c: don't initiate writeback if mapping has no dirty pages
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 
-Joakim Zhang <qiangqing.zhang@nxp.com>
-    can: flexcan: disable completely the ECC mechanism
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/neighbour.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Wenwen Wang <wenwen@cs.uga.edu>
-    e1000: fix memory leaks
-
-Manfred Rudigier <manfred.rudigier@omicronenergy.com>
-    igb: Fix constant media auto sense switching when no cable is connected
-
-Trond Myklebust <trondmy@gmail.com>
-    NFSv4: Don't allow a cached open with a revoked delegation
-
-Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-    net: hisilicon: Fix "Trying to free already-free IRQ"
-
-Nicholas Piggin <npiggin@gmail.com>
-    scsi: qla2xxx: stop timer in shutdown path
-
-Alan Stern <stern@rowland.harvard.edu>
-    USB: Skip endpoints with 0 maxpacket length
-
-Kim Phillips <kim.phillips@amd.com>
-    perf/x86/amd/ibs: Fix reading of the IBS OpData register and thus precise RIP validity
-
-Peter Chen <peter.chen@nxp.com>
-    usb: gadget: configfs: fix concurrent issue between composite APIs
-
-Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-    usb: gadget: composite: Fix possible double free memory bug
-
-Cristian Birsan <cristian.birsan@microchip.com>
-    usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
-
-Nikhil Badola <nikhil.badola@freescale.com>
-    usb: fsl: Check memory resource before releasing it
-
-Taehee Yoo <ap420073@gmail.com>
-    bonding: fix unexpected IFF_BONDING bit unset
-
-Eric Dumazet <edumazet@google.com>
-    ipvs: move old_secure_tcp into struct netns_ipvs
-
-Daniel Wagner <dwagner@suse.de>
-    scsi: lpfc: Honor module parameter lpfc_use_adisc
-
-Hannes Reinecke <hare@suse.com>
-    scsi: qla2xxx: fixup incorrect usage of host_byte
-
-Vidya Sagar <vidyas@nvidia.com>
-    PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
-
-Al Viro <viro@zeniv.linux.org.uk>
-    configfs: fix a deadlock in configfs_symlink()
-
-Gustavo A. R. Silva <garsilva@embeddedor.com>
-    drivers: usb: usbip: Add missing break statement to switch
-
-Johan Hovold <johan@kernel.org>
-    can: peak_usb: fix slab info leak
-
-Navid Emamdoost <navid.emamdoost@gmail.com>
-    can: gs_usb: gs_can_open(): prevent memory leak
-
-Stephane Grosjean <s.grosjean@peak-system.com>
-    can: peak_usb: fix a potential out-of-sync while decoding packets
-
-Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-    can: c_can: c_can_poll(): only read status register after status IRQ
-
-Johan Hovold <johan@kernel.org>
-    can: usb_8dev: fix use-after-free on disconnect
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    netfilter: ipset: Fix an error code in ip_set_sockfn_get()
-
-Lukas Wunner <lukas@wunner.de>
-    netfilter: nf_tables: Align nft_expr private data to 64-bit
-
-Alexandru Ardelean <alexandru.ardelean@analog.com>
-    iio: imu: adis16480: make sure provided frequency is positive
-
-Luis Henriques <lhenriques@suse.com>
-    ceph: fix use-after-free in __ceph_remove_cap()
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/radeon: fix si_enable_smc_cac() failed issue
-
-Jiri Olsa <jolsa@kernel.org>
-    perf tools: Fix time sorting
-
-Kevin Hao <haokexin@gmail.com>
-    dump_stack: avoid the livelock of the dump_lock
-
-Michal Hocko <mhocko@suse.com>
-    mm, vmstat: hide /proc/pagetypeinfo from normal users
-
-Mel Gorman <mgorman@techsingularity.net>
-    mm, meminit: recalculate pcpu batch and high limits after init completes
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda/ca0132 - Fix possible workqueue stall
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA: bebob: fix to detect configured source of sampling clock for Focusrite Saffire Pro i/o series
-
-Pan Bian <bianpan2016@163.com>
-    nfc: netlink: fix double device reference drop
-
-Manish Chopra <manishc@marvell.com>
-    qede: fix NULL pointer deref in __qede_remove()
-
-Pan Bian <bianpan2016@163.com>
-    NFC: st21nfca: fix double free
-
-Pan Bian <bianpan2016@163.com>
-    NFC: fdp: fix incorrect free object
-
-Eric Dumazet <edumazet@google.com>
-    net: fix data-race in neigh_event_send()
-
-Oliver Neukum <oneukum@suse.com>
-    CDC-NCM: handle incomplete transfer of MTU
-
-
--------------
-
-Diffstat:
-
- Makefile                                         |   4 +-
- arch/x86/kernel/cpu/perf_event_amd_ibs.c         |   2 +-
- drivers/gpu/drm/radeon/si_dpm.c                  |   1 +
- drivers/iio/imu/adis16480.c                      |   5 +-
- drivers/net/bonding/bond_main.c                  |   6 +-
- drivers/net/can/c_can/c_can.c                    |  25 ++++--
- drivers/net/can/c_can/c_can.h                    |   1 +
- drivers/net/can/flexcan.c                        |   1 +
- drivers/net/can/usb/gs_usb.c                     |   1 +
- drivers/net/can/usb/peak_usb/pcan_usb.c          |  17 ++--
- drivers/net/can/usb/peak_usb/pcan_usb_core.c     |   2 +-
- drivers/net/can/usb/usb_8dev.c                   |   3 +-
- drivers/net/ethernet/hisilicon/hip04_eth.c       |   1 -
- drivers/net/ethernet/intel/e1000/e1000_ethtool.c |   7 +-
- drivers/net/ethernet/intel/igb/igb_main.c        |   3 +-
- drivers/net/ethernet/qlogic/qede/qede_main.c     |  12 ++-
- drivers/net/usb/cdc_ncm.c                        |   6 +-
- drivers/nfc/fdp/i2c.c                            |   2 +-
- drivers/nfc/st21nfca/core.c                      |   1 +
- drivers/pci/host/pci-tegra.c                     |   7 +-
- drivers/scsi/lpfc/lpfc_nportdisc.c               |   4 +-
- drivers/scsi/qla2xxx/qla_bsg.c                   |   6 +-
- drivers/scsi/qla2xxx/qla_os.c                    |   4 +
- drivers/usb/core/config.c                        |   5 ++
- drivers/usb/gadget/composite.c                   |   4 +
- drivers/usb/gadget/configfs.c                    | 110 +++++++++++++++++++++--
- drivers/usb/gadget/udc/atmel_usba_udc.c          |   6 +-
- drivers/usb/gadget/udc/fsl_udc_core.c            |   2 +-
- drivers/usb/usbip/vhci_hcd.c                     |   1 +
- fs/ceph/caps.c                                   |  10 +--
- fs/configfs/symlink.c                            |  33 ++++++-
- fs/fs-writeback.c                                |   9 +-
- fs/nfs/delegation.c                              |  10 +++
- fs/nfs/delegation.h                              |   1 +
- fs/nfs/nfs4proc.c                                |   7 +-
- include/net/ip_vs.h                              |   1 +
- include/net/neighbour.h                          |   4 +-
- include/net/netfilter/nf_tables.h                |   3 +-
- lib/dump_stack.c                                 |   7 +-
- mm/filemap.c                                     |   3 +-
- mm/page_alloc.c                                  |  10 ++-
- mm/vmstat.c                                      |   2 +-
- net/netfilter/ipset/ip_set_core.c                |   8 +-
- net/netfilter/ipvs/ip_vs_ctl.c                   |  15 ++--
- net/nfc/netlink.c                                |   2 -
- sound/firewire/bebob/bebob_focusrite.c           |   3 +
- sound/pci/hda/patch_ca0132.c                     |   2 +-
- tools/perf/util/hist.c                           |   2 +-
- 48 files changed, 298 insertions(+), 83 deletions(-)
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -425,8 +425,8 @@ static inline int neigh_event_send(struc
+ {
+ 	unsigned long now = jiffies;
+ 	
+-	if (neigh->used != now)
+-		neigh->used = now;
++	if (READ_ONCE(neigh->used) != now)
++		WRITE_ONCE(neigh->used, now);
+ 	if (!(neigh->nud_state&(NUD_CONNECTED|NUD_DELAY|NUD_PROBE)))
+ 		return __neigh_event_send(neigh, skb);
+ 	return 0;
 
 
