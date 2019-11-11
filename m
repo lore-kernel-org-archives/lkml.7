@@ -2,84 +2,112 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B76EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E06C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB2D2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F32C20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:07:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZ0jIngn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfKKUCr (ORCPT
+        id S1727178AbfKKUHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:02:47 -0500
-Received: from sauhun.de ([88.99.104.3]:49930 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbfKKUCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:02:46 -0500
-Received: from localhost (x4db75ae4.dyn.telefonica.de [77.183.90.228])
-        by pokefinder.org (Postfix) with ESMTPSA id A92F32C0428;
-        Mon, 11 Nov 2019 21:02:44 +0100 (CET)
-Date:   Mon, 11 Nov 2019 21:02:44 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     cychiang@chromium.org, rrangel@chromium.org,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: i2c-cros-ec-tunnel: Make the device acpi compatible
-Message-ID: <20191111200244.GH1608@kunai>
-References: <20191111161431.26293-1-akshu.agrawal@amd.com>
+        Mon, 11 Nov 2019 15:07:01 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36531 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726845AbfKKUHB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 15:07:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573502819;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vh0lOxBTIyStTtSHCcKqLlpPPA7dotESbLsNyxBw55Y=;
+        b=WZ0jIngnDrUnKMZNj5Do1au1v/XIanEXtSee0Il9OwopRJccRdZvtAj9kVZHshD3IDd8FB
+        HYmrPlU1aQ99WQoMHZawFIbZj4TnjsMG88nP4wa3l1yLTkU43lafkDpMgrlgI63ZPjobnu
+        Ladp0wqTmDPZY5KQovTnNKGrn7eHrDQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-ylkYT010O8eIPpjcxLndVg-1; Mon, 11 Nov 2019 15:06:58 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 754BA18B9F80;
+        Mon, 11 Nov 2019 20:06:57 +0000 (UTC)
+Received: from krava (ovpn-204-89.brq.redhat.com [10.40.204.89])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4328846;
+        Mon, 11 Nov 2019 20:06:56 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 21:06:55 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
+        acme@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 13/13] perf stat: Use affinity for enabling/disabling
+ events
+Message-ID: <20191111200655.GB31193@krava>
+References: <20191107181646.506734-1-andi@firstfloor.org>
+ <20191107181646.506734-14-andi@firstfloor.org>
+ <20191111140415.GA26980@krava>
+ <20191111165028.GC573472@tassilo.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/zg8ciPNcraoWb6"
+In-Reply-To: <20191111165028.GC573472@tassilo.jf.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: ylkYT010O8eIPpjcxLndVg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191111161431.26293-1-akshu.agrawal@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---J/zg8ciPNcraoWb6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 11, 2019 at 09:44:28PM +0530, Akshu Agrawal wrote:
-> Add ACPI entry and use device_property_read to get fw value
-> which is common to both dtsi and acpi.
+On Mon, Nov 11, 2019 at 08:50:28AM -0800, Andi Kleen wrote:
+> On Mon, Nov 11, 2019 at 03:04:15PM +0100, Jiri Olsa wrote:
+> > On Thu, Nov 07, 2019 at 10:16:46AM -0800, Andi Kleen wrote:
+> >=20
+> > SNIP
+> >=20
+> > > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > > index 33080f79b977..571bb102b432 100644
+> > > --- a/tools/perf/util/evlist.c
+> > > +++ b/tools/perf/util/evlist.c
+> > > @@ -378,11 +378,28 @@ bool evsel__cpu_iter_skip(struct evsel *ev, int=
+ cpu)
+> > >  void evlist__disable(struct evlist *evlist)
+> > >  {
+> > >  =09struct evsel *pos;
+> > > +=09struct affinity affinity;
+> > > +=09int cpu, i;
+> >=20
+> > should we have the fallback to current code in here (and below) as well=
+?
+> > also for reading/openning?
 >=20
-> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+> The return only happens when you're out of memory, when nothing
+> will work anyways.
 
-Applied to for-next, thanks!
+then let's have some assert or BUG_ON on !all_cpus
+and remove the fallback code from close path
 
+jirka
 
---J/zg8ciPNcraoWb6
-Content-Type: application/pgp-signature; name="signature.asc"
+>=20
+> -Andi
+>=20
+> >=20
+> > jirka
+> >=20
+> > > +
+> > > +=09if (affinity__setup(&affinity) < 0)
+> > > +=09=09return;
+>=20
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3JvmQACgkQFA3kzBSg
-KbZdERAAo0SddYxmjJW7ale0dJNw/yGCy4O5bzkVkSGDSOzmYXblYoXqtnUI9Bnz
-1LTDk4al4y8ewW6k1tvw83mld1VaYTryHSlt3/bjmKNNQ7F7SwclNdPNOYbbtwJz
-/SaZwuZMFLmCzlXgs6D8xEVH1wxVymqOTxieTtnde2sfKOZjIFFGZGSlbiRME3ah
-I4OM8x4o2SOwHOflZn4E9TDDg5CkRgBtjJDH9nRtvEScL+wi4HnngBqmtDObsQVS
-/2namTb723w6HeSlR6mZMRnLbLGoyY4uy6NKawC1xC5aFf07ALam9GiVeO+jHUOD
-mo7MTfA1W6tRpnR5kj57clf1ypcdxj0jWapfgEHxnNukDtlkx9UjObXBccqQxaRr
-hDcVghwDvx/jdZicArOozFn1Ks4N59wpSdqgpqQr/UCoJhYrUGkKvyinwV0ePCcT
-A1p9K0trXf3+4PPxQEnKoDiFzyt9DscjtTuAnXrELc1vC3hgjOLSpdJfdwonNbLJ
-+GnCPIq1ZaFPmQ6QfDhkmhCvnjDxztoCZz9HSPg7IyE26kF8nyExBUW97dMdMnuV
-Rk4ZnZcQWOGQTlDruH/ykM19wekg93U12TvTs+HaImGETXvEccXjV4VyvH5uY7dA
-DG9eKYKKf+PYoM0kJOY3SLu6p1MXx3vR7kd65hElDjzzBVxpcCA=
-=XnrD
------END PGP SIGNATURE-----
-
---J/zg8ciPNcraoWb6--
