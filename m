@@ -2,86 +2,141 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572C7C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602B7C17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380D12086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304B420818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 04:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573446088;
+	bh=lvxCU40m4tZyyey/7nhqGzV+Zd9LeGdHgIAioJyXq2I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oGyaZ91qzCl3wQDchPldCoOusUOpSlB2B9GHAvZGnRzcDvk/iMOyxDaJPlkVuHf38
+	 2Vzldx17gb5T0SFzh2APyEZhYxsuD7LotnFwWh3oEt39XhzVYFkX5mOWJNLVCI7syQ
+	 sC/ninwsC/QFutnEB/WZ5+WhR9D3kPikLvtBsbFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfKKESn (ORCPT
+        id S1726906AbfKKEV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 23:18:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41768 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726754AbfKKESm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 23:18:42 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3DE98B32D;
-        Mon, 11 Nov 2019 04:18:41 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] Initial RTD1619 SoC and Realtek Mjolnir EVB
- support
-To:     James Tai <james.tai@realtek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        'DTML' <devicetree@vger.kernel.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <43B123F21A8CFE44A9641C099E4196FFCF91F9CB@RTITMBSVM04.realtek.com.tw>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <f2ce8745-e056-06a5-3d55-b00ab4d82414@suse.de>
-Date:   Mon, 11 Nov 2019 05:18:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sun, 10 Nov 2019 23:21:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbfKKEV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 23:21:26 -0500
+Received: from localhost (unknown [106.201.42.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA4420818;
+        Mon, 11 Nov 2019 04:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573446085;
+        bh=lvxCU40m4tZyyey/7nhqGzV+Zd9LeGdHgIAioJyXq2I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z3vmezjKdj2sbvDJNTw0HUI9laGnq4+Tt43Dnhm5C6P/g/yXezcOiATItMnJ/H0g6
+         McJ/yhL9YCEXIkhNs8Ff6YXYYhL6wTOZK8c1fStEN8JMBlQRq2I+pAuVkSpnDn62Yp
+         h3yq1qn2ppcqDfdrM77guOFNj0SkH3zxHzpQN5gA=
+Date:   Mon, 11 Nov 2019 09:51:19 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+Subject: Re: [PATCH v4 02/15] soc: ti: k3: add navss ringacc driver
+Message-ID: <20191111042119.GK952516@vkoul-mobl>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-3-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <43B123F21A8CFE44A9641C099E4196FFCF91F9CB@RTITMBSVM04.realtek.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101084135.14811-3-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Am 08.11.19 um 10:42 schrieb James Tai:
-> This series adds Device Trees for the Realtek RTD1619 SoC and Realtek's
-> Mjolnir EVB.
-> 
-> v1 -> v2:
-> * Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
-> * Add uart1 and uart2 device node into rtd16xx.dtsi
-> * move cpus node and the interrupt-affinity into rtd16xx.dtsi
-> * Specify the r-bus ranges
+> +config TI_K3_RINGACC
+> +	tristate "K3 Ring accelerator Sub System"
+> +	depends on ARCH_K3 || COMPILE_TEST
+> +	depends on TI_SCI_INTA_IRQCHIP
+> +	default y
 
-With the exception of r-bus this is getting pretty good already.
-Two formal improvements:
+You want to get an earful from Linus? We dont do default y on new stuff,
+never :)
 
-1) The patches 1/2 and 2/2 are expected to be threaded to 0/2 (but not
-2/2 to 1/2). Please check your git [sendemail] config or use --thread
---no-chain-reply-to. That helps keep the series together when people
-start replying to individual patches. If your Git config seems correct,
-it might also be an issue with your SMTP server.
+> +struct k3_ring_rt_regs {
+> +	u32	resv_16[4];
+> +	u32	db;		/* RT Ring N Doorbell Register */
+> +	u32	resv_4[1];
+> +	u32	occ;		/* RT Ring N Occupancy Register */
+> +	u32	indx;		/* RT Ring N Current Index Register */
+> +	u32	hwocc;		/* RT Ring N Hardware Occupancy Register */
+> +	u32	hwindx;		/* RT Ring N Current Index Register */
 
-2) Please also include a per-patch changelog like I do. I privately
-shared a script how I do that in a reproducible way. This benefits
-reviewers not getting CC'ed on the cover letter as well as users of the
-Patchwork web interface.
+nice comments, how about moving them up into kernel-doc style? (here and
+other places as well)
 
-Thanks,
-Andreas
+
+> +struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
+> +					int id, u32 flags)
+> +{
+> +	int proxy_id = K3_RINGACC_PROXY_NOT_USED;
+> +
+> +	mutex_lock(&ringacc->req_lock);
+> +
+> +	if (id == K3_RINGACC_RING_ID_ANY) {
+> +		/* Request for any general purpose ring */
+> +		struct ti_sci_resource_desc *gp_rings =
+> +						&ringacc->rm_gp_range->desc[0];
+> +		unsigned long size;
+> +
+> +		size = gp_rings->start + gp_rings->num;
+> +		id = find_next_zero_bit(ringacc->rings_inuse, size,
+> +					gp_rings->start);
+> +		if (id == size)
+> +			goto error;
+> +	} else if (id < 0) {
+> +		goto error;
+> +	}
+> +
+> +	if (test_bit(id, ringacc->rings_inuse) &&
+> +	    !(ringacc->rings[id].flags & K3_RING_FLAG_SHARED))
+> +		goto error;
+> +	else if (ringacc->rings[id].flags & K3_RING_FLAG_SHARED)
+> +		goto out;
+> +
+> +	if (flags & K3_RINGACC_RING_USE_PROXY) {
+> +		proxy_id = find_next_zero_bit(ringacc->proxy_inuse,
+> +					      ringacc->num_proxies, 0);
+> +		if (proxy_id == ringacc->num_proxies)
+> +			goto error;
+> +	}
+> +
+> +	if (!try_module_get(ringacc->dev->driver->owner))
+> +		goto error;
+
+should this not be one of the first things to do?
+
+> +
+> +	if (proxy_id != K3_RINGACC_PROXY_NOT_USED) {
+> +		set_bit(proxy_id, ringacc->proxy_inuse);
+> +		ringacc->rings[id].proxy_id = proxy_id;
+> +		dev_dbg(ringacc->dev, "Giving ring#%d proxy#%d\n", id,
+> +			proxy_id);
+> +	} else {
+> +		dev_dbg(ringacc->dev, "Giving ring#%d\n", id);
+> +	}
+
+how bout removing else and doing common print?
 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+~Vinod
