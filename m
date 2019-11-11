@@ -2,61 +2,57 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0
+X-Spam-Status: No, score=-3.4 required=3.0
 	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B16C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713B6C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E6520856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466A720856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573469216;
-	bh=i/HZzZjddIiajbLWZkUzXT9kC0bb4HAtE+u7N7Gry8E=;
+	s=default; t=1573469341;
+	bh=6qF9lfGqcAEtaITcpF6AnIe4UGdU10sDt/eR/ySEBFE=;
 	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=SJ/8m3HOJAx+ZTyHDB6RsB/8x6mCdXcTGcJK/4oNZWFuvjv7KJEgeDPJ5PgGIjDKc
-	 7YIXjnCO0qZDXhKmOjGJz/oBuaYn946v5u0pnBdcB5tLZE5u1rT3WdzbpP350wey1j
-	 nnuIWnia+qL17dsKWsuTIjp6iYkRUjghw+RSiDJo=
+	b=2qsxxDGkPuNWMHkVL7sDfcy6IuRM8YdbMscTazrAQ0YaiQvlMomhCbm2qof7AjGA4
+	 Hkz14JHTCnEz7nU8ZzLVSb5RBWowpC8frFB5rCuRmNY9V1qqfIUCd6zGD5UXSBaZ/a
+	 WVU7d90yCo4nUa0nDdC8uwQiODjrr16o4Kk4bTo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfKKKqz (ORCPT
+        id S1726955AbfKKKtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:46:55 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:52051 "EHLO
+        Mon, 11 Nov 2019 05:49:00 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44170 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726829AbfKKKqy (ORCPT
+        by vger.kernel.org with ESMTP id S1726888AbfKKKs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:46:54 -0500
+        Mon, 11 Nov 2019 05:48:59 -0500
 Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iU7Df-0008K6-Aj; Mon, 11 Nov 2019 11:46:51 +0100
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 06/13] drivers: irqchip: qcom-pdc: Move to an SoC  independent compatible
+        id 1iU7Fg-0008M4-IU; Mon, 11 Nov 2019 11:48:56 +0100
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Subject: Re: [PATCH 1/5 v6] irqchip: ingenic: Drop redundant  =?UTF-8?Q?irq=5Fsuspend=20/=20irq=5Fresume=20functions?=
 X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 11 Nov 2019 11:56:12 +0109
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 Nov 2019 11:58:17 +0109
 From:   Marc Zyngier <maz@kernel.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, <agross@kernel.org>,
-        <robh+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mka@chromium.org>, <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>
-In-Reply-To: <20191111071030.GB3797@yoga>
-References: <20191108092824.9773-1-rnayak@codeaurora.org>
- <20191108092824.9773-7-rnayak@codeaurora.org>
- <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
- <9c2b33f2-02bb-e516-4cb5-b466757cd67a@codeaurora.org>
- <20191111071030.GB3797@yoga>
-Message-ID: <d622482d92059533f03b65af26c69b9b@www.loen.fr>
+Cc:     <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jason@lakedaemon.net>, <paul.burton@mips.com>,
+        <allison@lohutok.net>, <syq@debian.org>, <rfontana@redhat.com>,
+        <tglx@linutronix.de>, <paul@crapouillou.net>
+In-Reply-To: <1570859630-50942-2-git-send-email-zhouyanjie@zoho.com>
+References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
+ <1570859630-50942-1-git-send-email-zhouyanjie@zoho.com>
+ <1570859630-50942-2-git-send-email-zhouyanjie@zoho.com>
+Message-ID: <3b0cfb0e2cc41d8c7aeaa5d732ffc600@www.loen.fr>
 X-Sender: maz@kernel.org
 User-Agent: Roundcube Webmail/0.7.2
 X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: bjorn.andersson@linaro.org, rnayak@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org, swboyd@chromium.org, ilina@codeaurora.org
+X-SA-Exim-Rcpt-To: zhouyanjie@zoho.com, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, jason@lakedaemon.net, paul.burton@mips.com, allison@lohutok.net, syq@debian.org, rfontana@redhat.com, tglx@linutronix.de, paul@crapouillou.net
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,56 +60,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-11 08:19, Bjorn Andersson wrote:
-> On Fri 08 Nov 01:55 PST 2019, Rajendra Nayak wrote:
+On 2019-10-12 07:03, Zhou Yanjie wrote:
+> From: Paul Cercueil <paul@crapouillou.net>
 >
->>
->> On 11/8/2019 3:10 PM, Marc Zyngier wrote:
->> > On 2019-11-08 10:37, Rajendra Nayak wrote:
->> > > Remove the sdm845 SoC specific compatible to make the driver
->> > > easily reusable across other SoC's with the same IP block.
->> > > This will reduce further churn adding any SoC specific
->> > > compatibles unless really needed.
->> > >
->> > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> > > Reviewed-by: Lina Iyer <ilina@codeaurora.org>
->> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->> > > Cc: Marc Zyngier <maz@kernel.org>
->> > > ---
->> > >  drivers/irqchip/qcom-pdc.c | 2 +-
->> > >  1 file changed, 1 insertion(+), 1 deletion(-)
->> > >
->> > > diff --git a/drivers/irqchip/qcom-pdc.c 
->> b/drivers/irqchip/qcom-pdc.c
->> > > index faa7d61b9d6c..c175333bb646 100644
->> > > --- a/drivers/irqchip/qcom-pdc.c
->> > > +++ b/drivers/irqchip/qcom-pdc.c
->> > > @@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node
->> > > *node, struct device_node *parent)
->> > >      return ret;
->> > >  }
->> > >
->> > > -IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
->> > > +IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
->> >
->> > Acked-by: Marc Zyngier <marc.zyngier@arm.com>
->> >
->> > How do you want me get this (and the DT change) merged? I can 
->> either take
->> > these two patches in the irqchip tree, or you arrange them to be 
->> taken
->> > by the platform maintainers. Your call.
->>
->> I think it makes sense for you to take these two via your tree (The 
->> driver
->> and binding doc updates) and the DT node addition for pdc to go via 
->> Andy/Bjorn.
->> Andy/Bjorn, does that sound fine?
->>
+> The same behaviour can be obtained by using the 
+> IRQCHIP_MASK_ON_SUSPEND
+> flag on the IRQ chip.
 >
-> Yes, that sounds good.
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 
-Applied to irqchip/next
+Series applied to irqchip-next.
 
          M.
 -- 
