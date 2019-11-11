@@ -4,50 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79D2C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583E5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D5521655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3217621783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497596;
-	bh=3NBsUnB2jvtB3ZFBdUQ15Z1mIQDFnP6GAfPPNfWIal0=;
+	s=default; t=1573497602;
+	bh=YQs+1EPKoIJNVEYToKN9gg81eX8jHycoxZJUZvxjTNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=heeWa0i9RtIgIUlpLYBcFMqlqKTekvLV1EZu8x3IfJM5LYKLorEDYNoO2Ohr+L7/t
-	 83vwyKa/Q9TBrAIU7vLp6HikjD0v7nqDBWveMFljs/mqRe6d3PkUsM/awmT0GcHUCS
-	 mEebrCiLm8kYZCM97o+LQumEAGkn5h0lwCsxzbGI=
+	b=rWDuJPPe0+GR+5qzfJILzjo32eiOEy0T1pOeNEqP0bEXhd0o2N3MYN+qsuOUMf0K0
+	 ohQC2GF+Ykj2PPNdyF5mbAi7JV3hdNJoZuqDDZ6LQuSzbzC8yrLE/fH7IlMdNFweT7
+	 otm1BlzCOUZJQ4B/UqrTQKTp9+CZ1H+egOFZtpBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbfKKSjz (ORCPT
+        id S1729219AbfKKSkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:40:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbfKKSjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:52 -0500
+        id S1729201AbfKKSj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5BA221655;
-        Mon, 11 Nov 2019 18:39:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ED8121925;
+        Mon, 11 Nov 2019 18:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497591;
-        bh=3NBsUnB2jvtB3ZFBdUQ15Z1mIQDFnP6GAfPPNfWIal0=;
+        s=default; t=1573497597;
+        bh=YQs+1EPKoIJNVEYToKN9gg81eX8jHycoxZJUZvxjTNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tFoIqR9/ybsxV08AGJiml/SD6JjQly0Ob2Roce1gIRir+bN+ntVoSclwgKlG7IgLP
-         H1/JAADdCKvNXr0IyLCjRJ+w6YfQJplt4+YWzu6bvnmk99rgRg4NA/ZYtCjUYSGljS
-         c6DGeXqqabPtyjpRRn98O1Q8NViSBVXC4/JN6gYk=
+        b=h9nm4a72YOJ5yecxeaudEWLVRFWVBBOg6z3OvU+Bd2uxpRU+Nz9lZLYqnvWke62+h
+         z5ZdUor8jM8KAr2E5dRkQYuM4T+r+R7Rx7+IV8AIUXGIkRhCw4cShhcCvvxLbv+Y6Z
+         b0tZE3iQScT/+ASt4W4VdZ+/TMUX5pxhJSPLdwwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 086/105] usb: dwc3: remove the call trace of USBx_GFLADJ
-Date:   Mon, 11 Nov 2019 19:28:56 +0100
-Message-Id: <20191111181447.430945033@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 088/105] perf/x86/amd/ibs: Handle erratum #420 only on the affected CPU family (10h)
+Date:   Mon, 11 Nov 2019 19:28:58 +0100
+Message-Id: <20191111181447.616944222@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,42 +71,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-[ Upstream commit a7d9874c6f3fbc8d25cd9ceba35b6822612c4ebf ]
+[ Upstream commit e431e79b60603079d269e0c2a5177943b95fa4b6 ]
 
-layerscape board sometimes reported some usb call trace, that is due to
-kernel sent LPM tokerns automatically when it has no pending transfers
-and think that the link is idle enough to enter L1, which procedure will
-ask usb register has a recovery,then kernel will compare USBx_GFLADJ and
-set GFLADJ_30MHZ, GFLADJ_30MHZ_REG until GFLADJ_30MHZ is equal 0x20, if
-the conditions were met then issue occur, but whatever the conditions
-whether were met that usb is all need keep GFLADJ_30MHZ of value is 0x20
-(xhci spec ask use GFLADJ_30MHZ to adjust any offset from clock source
-that generates the clock that drives the SOF counter, 0x20 is default
-value of it)That is normal logic, so need remove the call trace.
+This saves us writing the IBS control MSR twice when disabling the
+event.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+I searched revision guides for all families since 10h, and did not
+find occurrence of erratum #420, nor anything remotely similar:
+so we isolate the secondary MSR write to family 10h only.
+
+Also unconditionally update the count mask for IBS Op implementations
+that have read & writeable current count (CurCnt) fields in addition
+to the MaxCnt field.  These bits were reserved on prior
+implementations, and therefore shouldn't have negative impact.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: c9574fe0bdb9 ("perf/x86-ibs: Implement workaround for IBS erratum #420")
+Link: https://lkml.kernel.org/r/20191023150955.30292-2-kim.phillips@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/events/amd/ibs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 9b093978bd24d..48755c501201d 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -282,8 +282,7 @@ static void dwc3_frame_length_adjustment(struct dwc3 *dwc)
- 
- 	reg = dwc3_readl(dwc->regs, DWC3_GFLADJ);
- 	dft = reg & DWC3_GFLADJ_30MHZ_MASK;
--	if (!dev_WARN_ONCE(dwc->dev, dft == dwc->fladj,
--	    "request value same as default, ignoring\n")) {
-+	if (dft != dwc->fladj) {
- 		reg &= ~DWC3_GFLADJ_30MHZ_MASK;
- 		reg |= DWC3_GFLADJ_30MHZ_SDBND_SEL | dwc->fladj;
- 		dwc3_writel(dwc->regs, DWC3_GFLADJ, reg);
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 4deecdb26ab30..f24e9adaa3167 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -389,7 +389,8 @@ static inline void perf_ibs_disable_event(struct perf_ibs *perf_ibs,
+ 					  struct hw_perf_event *hwc, u64 config)
+ {
+ 	config &= ~perf_ibs->cnt_mask;
+-	wrmsrl(hwc->config_base, config);
++	if (boot_cpu_data.x86 == 0x10)
++		wrmsrl(hwc->config_base, config);
+ 	config &= ~perf_ibs->enable_mask;
+ 	wrmsrl(hwc->config_base, config);
+ }
+@@ -564,7 +565,8 @@ static struct perf_ibs perf_ibs_op = {
+ 	},
+ 	.msr			= MSR_AMD64_IBSOPCTL,
+ 	.config_mask		= IBS_OP_CONFIG_MASK,
+-	.cnt_mask		= IBS_OP_MAX_CNT,
++	.cnt_mask		= IBS_OP_MAX_CNT | IBS_OP_CUR_CNT |
++				  IBS_OP_CUR_CNT_RAND,
+ 	.enable_mask		= IBS_OP_ENABLE,
+ 	.valid_mask		= IBS_OP_VAL,
+ 	.max_period		= IBS_OP_MAX_CNT << 4,
 -- 
 2.20.1
 
