@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3168C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36DCC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCCFC2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A8A21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497086;
-	bh=tF8qDHsPVZtXQvwRNh4NG+WoEz3m+Rq0sHb3zs48rVc=;
+	s=default; t=1573497088;
+	bh=LlBFQcgukcH07D0j5oVhm+Y8lUYSM7b8k8pUkeQrGuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=frFtdY+fHSP4wIrrUY5/hS7nAdDTCh1mL5VYdNT1mXODrIffffDFetBjftKt+8uBO
-	 zNWjq3Zu3wbsUyGoPzrxtyNQXbG1azfmPR6hCTgDFT7DcqiEJLIxFVVlrmP0KKG2PI
-	 ps33nCY7qcfqGZC0H9O209JhxxAFeJUDDsRoWVPs=
+	b=Zkvn/rU3tyT5WkMSSh6swuNIYb6/IxE52+TZLydWcLS6wFehG96FgQURD350lFEcK
+	 LiDCyrbfXM6DjUT+jGM092hNWPhVZ88DMLuSVcVHm9CIxVZXPj65d/DARleZCB3+Fc
+	 RlAKk2SQwy0gov0l/tA8WfgbyBIzez5jDeSLseKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfKKSbZ (ORCPT
+        id S1727664AbfKKSb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbfKKSbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:23 -0500
+        id S1727654AbfKKSbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64B3F21655;
-        Mon, 11 Nov 2019 18:31:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 921D021655;
+        Mon, 11 Nov 2019 18:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497081;
-        bh=tF8qDHsPVZtXQvwRNh4NG+WoEz3m+Rq0sHb3zs48rVc=;
+        s=default; t=1573497085;
+        bh=LlBFQcgukcH07D0j5oVhm+Y8lUYSM7b8k8pUkeQrGuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwoxbM/B0FvvgmjEw+t+vM/wu8JPMxn3OkTQjj4RI06fsctyxvS352ukt5ZHMoBjm
-         YhCavbNBiNPBfn4XUAIP92MNdOQo/MalqlFr3eKG+1GIRJfyKpWLOm1RsFplKlpK8E
-         kJPgUce9d7YgT1XDg8ht4KDNCU5bkZ37PenTx7nY=
+        b=LfY1UYxjerNQgeM/Dr+OBNpoNms/+r9ERuHxSg39EL8O/Esw4uUP6YkdhXXulrPWy
+         pIibiWG7iSpvak5DBjgXbsSY7wVsH2+ftv6SrKT4Cfou8zHU9XFUeFt6ccGFslcFb7
+         Vzxz4uI+ELMo5jkLlk6nyZsAgFM4oEKi6GiRA+mQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 38/43] NFSv4: Dont allow a cached open with a revoked delegation
-Date:   Mon, 11 Nov 2019 19:28:52 +0100
-Message-Id: <20191111181327.473748962@linuxfoundation.org>
+Subject: [PATCH 4.4 39/43] igb: Fix constant media auto sense switching when no cable is connected
+Date:   Mon, 11 Nov 2019 19:28:53 +0100
+Message-Id: <20191111181327.603797230@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -61,95 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
 
-[ Upstream commit be3df3dd4c70ee020587a943a31b98a0fb4b6424 ]
+[ Upstream commit 8d5cfd7f76a2414e23c74bb8858af7540365d985 ]
 
-If the delegation is marked as being revoked, we must not use it
-for cached opens.
+At least on the i350 there is an annoying behavior that is maybe also
+present on 82580 devices, but was probably not noticed yet as MAS is not
+widely used.
 
-Fixes: 869f9dfa4d6d ("NFSv4: Fix races between nfs_remove_bad_delegation() and delegation return")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+If no cable is connected on both fiber/copper ports the media auto sense
+code will constantly swap between them as part of the watchdog task and
+produce many unnecessary kernel log messages.
+
+The swap code responsible for this behavior (switching to fiber) should
+not be executed if the current media type is copper and there is no signal
+detected on the fiber port. In this case we can safely wait until the
+AUTOSENSE_EN bit is cleared.
+
+Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 10 ++++++++++
- fs/nfs/delegation.h |  1 +
- fs/nfs/nfs4proc.c   |  7 ++-----
- 3 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 7af5eeabc80e1..5dac3382405ce 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -52,6 +52,16 @@ nfs4_is_valid_delegation(const struct nfs_delegation *delegation,
- 	return false;
- }
- 
-+struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode)
-+{
-+	struct nfs_delegation *delegation;
-+
-+	delegation = rcu_dereference(NFS_I(inode)->delegation);
-+	if (nfs4_is_valid_delegation(delegation, 0))
-+		return delegation;
-+	return NULL;
-+}
-+
- static int
- nfs4_do_check_delegation(struct inode *inode, fmode_t flags, bool mark)
- {
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index 333063e032f01..26a8af7bdca36 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -58,6 +58,7 @@ int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state
- int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state, const nfs4_stateid *stateid);
- bool nfs4_copy_delegation_stateid(nfs4_stateid *dst, struct inode *inode, fmode_t flags);
- 
-+struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode);
- void nfs_mark_delegation_referenced(struct nfs_delegation *delegation);
- int nfs4_have_delegation(struct inode *inode, fmode_t flags);
- int nfs4_check_delegation(struct inode *inode, fmode_t flags);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 900a62a9ad4e5..08207001d4753 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1243,8 +1243,6 @@ static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
- 		return 0;
- 	if ((delegation->type & fmode) != fmode)
- 		return 0;
--	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
--		return 0;
- 	switch (claim) {
- 	case NFS4_OPEN_CLAIM_NULL:
- 	case NFS4_OPEN_CLAIM_FH:
-@@ -1473,7 +1471,6 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
- static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- {
- 	struct nfs4_state *state = opendata->state;
--	struct nfs_inode *nfsi = NFS_I(state->inode);
- 	struct nfs_delegation *delegation;
- 	int open_mode = opendata->o_arg.open_flags;
- 	fmode_t fmode = opendata->o_arg.fmode;
-@@ -1490,7 +1487,7 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- 		}
- 		spin_unlock(&state->owner->so_lock);
- 		rcu_read_lock();
--		delegation = rcu_dereference(nfsi->delegation);
-+		delegation = nfs4_get_valid_delegation(state->inode);
- 		if (!can_open_delegated(delegation, fmode, claim)) {
- 			rcu_read_unlock();
- 			break;
-@@ -1981,7 +1978,7 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
- 		if (can_open_cached(data->state, data->o_arg.fmode, data->o_arg.open_flags))
- 			goto out_no_action;
- 		rcu_read_lock();
--		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
-+		delegation = nfs4_get_valid_delegation(data->state->inode);
- 		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
- 			goto unlock_no_action;
- 		rcu_read_unlock();
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 70ed5e5c35147..9404f38d9d0d0 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -1673,7 +1673,8 @@ static void igb_check_swap_media(struct igb_adapter *adapter)
+ 	if ((hw->phy.media_type == e1000_media_type_copper) &&
+ 	    (!(connsw & E1000_CONNSW_AUTOSENSE_EN))) {
+ 		swap_now = true;
+-	} else if (!(connsw & E1000_CONNSW_SERDESD)) {
++	} else if ((hw->phy.media_type != e1000_media_type_copper) &&
++		   !(connsw & E1000_CONNSW_SERDESD)) {
+ 		/* copper signal takes time to appear */
+ 		if (adapter->copper_tries < 4) {
+ 			adapter->copper_tries++;
 -- 
 2.20.1
 
