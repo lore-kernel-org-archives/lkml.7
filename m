@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C495C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB2EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D532621925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1226222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498369;
-	bh=X0UsWCc8knCwIbpLLX0WtWSJ5qAx6dFoPruE5QMt/z8=;
+	s=default; t=1573498374;
+	bh=ayfuX91gx37T++DZ/DF4dGO8PJP51xbQu+nZsKOaIl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oOea4Jdwn+UHLx4cVwcooOY4BY59dW8s+V0KxAwhvgcOYh/X+LX4+lOosdHKwrFWR
-	 YLkR1suX0wuzfAQr/ROUddOcpIRkt7nEN+c0AGRw5lXNO5Kqn0kHGj48XmYxejtIgT
-	 zOyPZkUY/JiK6ohA//+Qf1lD4Dh/TxirMHg/hbFg=
+	b=DdXggMIHo7yHDZu2cY6w3ZMOph31uf1a+PQ/J+heHyee6NpIPC/eKaqIVgth0rcSs
+	 ajw57Cqy6SSNYYH2Ad5qKofDapCIfiVP4AbHCZelhQXr05Yo8xvNa7xo1DJ4z4X7Xv
+	 Yh1MEO5Ma6/ImVfY3MVfLusaUxgfwUpQbHmEXPEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbfKKSws (ORCPT
+        id S1730076AbfKKSww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:52:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:52:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730493AbfKKSwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:52:37 -0500
+        id S1729325AbfKKSwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:52:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0405F214E0;
-        Mon, 11 Nov 2019 18:52:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70F0420818;
+        Mon, 11 Nov 2019 18:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498356;
-        bh=X0UsWCc8knCwIbpLLX0WtWSJ5qAx6dFoPruE5QMt/z8=;
+        s=default; t=1573498367;
+        bh=ayfuX91gx37T++DZ/DF4dGO8PJP51xbQu+nZsKOaIl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hI4gQ/qGsX6qNSRiwlrDPZxccLNkt+dwrCvZYPYwE6T6DJMSwbZFwjGzBl8C8M52P
-         jwmY6jaL9oClVsP04b+h8KZiu4wU13rUVEp843RubRs1CpGs8ujgvAoamVBAQor+rh
-         uBY6nzqrsLh+mFMdNcBWHEhbUobf9oxMAAk2hThk=
+        b=HHktI2Z7svSzL5+WRUKaw4VuNdoMF7K7CQl49uphUZETla7Svjb+AbM783ylnILxP
+         o/F+0QBkD23BUo/AJ03YLtahlAJGFrsX4uuNtpP+WyG0h/ofpjcKFPGpvbNXn6b7UJ
+         cD0zfQIQyTBnZB1nWAsnPOk+8wcFEWtoBNpqRqjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 095/193] dmaengine: xilinx_dma: Fix control reg update in vdma_channel_set_config
-Date:   Mon, 11 Nov 2019 19:27:57 +0100
-Message-Id: <20191111181508.158970974@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 098/193] powerpc/32s: fix allow/prevent_user_access() when crossing segment boundaries.
+Date:   Mon, 11 Nov 2019 19:28:00 +0100
+Message-Id: <20191111181508.368745009@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -62,63 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 6c6de1ddb1be3840f2ed5cc9d009a622720940c9 ]
+[ Upstream commit d10f60ae27d26d811e2a1bb39ded47df96d7499f ]
 
-In vdma_channel_set_config clear the delay, frame count and master mask
-before updating their new values. It avoids programming incorrect state
-when input parameters are different from default.
+Make sure starting addr is aligned to segment boundary so that when
+incrementing the segment, the starting address of the new segment is
+below the end address. Otherwise the last segment might get  missed.
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Acked-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Link: https://lore.kernel.org/r/1569495060-18117-3-git-send-email-radhey.shyam.pandey@xilinx.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/067a1b09f15f421d40797c2d04c22d4049a1cee8.1571071875.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/powerpc/include/asm/book3s/32/kup.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 1fbe0258578b0..5d56f1e4d332c 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -68,6 +68,9 @@
- #define XILINX_DMA_DMACR_CIRC_EN		BIT(1)
- #define XILINX_DMA_DMACR_RUNSTOP		BIT(0)
- #define XILINX_DMA_DMACR_FSYNCSRC_MASK		GENMASK(6, 5)
-+#define XILINX_DMA_DMACR_DELAY_MASK		GENMASK(31, 24)
-+#define XILINX_DMA_DMACR_FRAME_COUNT_MASK	GENMASK(23, 16)
-+#define XILINX_DMA_DMACR_MASTER_MASK		GENMASK(11, 8)
+diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
+index 677e9babef801..f9dc597b0b868 100644
+--- a/arch/powerpc/include/asm/book3s/32/kup.h
++++ b/arch/powerpc/include/asm/book3s/32/kup.h
+@@ -91,6 +91,7 @@
  
- #define XILINX_DMA_REG_DMASR			0x0004
- #define XILINX_DMA_DMASR_EOL_LATE_ERR		BIT(15)
-@@ -2118,8 +2121,10 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.gen_lock = cfg->gen_lock;
- 	chan->config.master = cfg->master;
- 
-+	dmacr &= ~XILINX_DMA_DMACR_GENLOCK_EN;
- 	if (cfg->gen_lock && chan->genlock) {
- 		dmacr |= XILINX_DMA_DMACR_GENLOCK_EN;
-+		dmacr &= ~XILINX_DMA_DMACR_MASTER_MASK;
- 		dmacr |= cfg->master << XILINX_DMA_DMACR_MASTER_SHIFT;
- 	}
- 
-@@ -2135,11 +2140,13 @@ int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
- 	chan->config.delay = cfg->delay;
- 
- 	if (cfg->coalesc <= XILINX_DMA_DMACR_FRAME_COUNT_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_FRAME_COUNT_MASK;
- 		dmacr |= cfg->coalesc << XILINX_DMA_DMACR_FRAME_COUNT_SHIFT;
- 		chan->config.coalesc = cfg->coalesc;
- 	}
- 
- 	if (cfg->delay <= XILINX_DMA_DMACR_DELAY_MAX) {
-+		dmacr &= ~XILINX_DMA_DMACR_DELAY_MASK;
- 		dmacr |= cfg->delay << XILINX_DMA_DMACR_DELAY_SHIFT;
- 		chan->config.delay = cfg->delay;
- 	}
+ static inline void kuap_update_sr(u32 sr, u32 addr, u32 end)
+ {
++	addr &= 0xf0000000;	/* align addr to start of segment */
+ 	barrier();	/* make sure thread.kuap is updated before playing with SRs */
+ 	while (addr < end) {
+ 		mtsrin(sr, addr);
 -- 
 2.20.1
 
