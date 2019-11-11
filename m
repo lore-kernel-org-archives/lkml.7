@@ -2,55 +2,52 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A558C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D11C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD81214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F0A214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498092;
-	bh=cfOwdWDLTKNCONnjilnmJE7mx2diQahMlXAy85Yx6X8=;
+	s=default; t=1573498095;
+	bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tw9YoeRs7+uKL+0nZ6M5uByTrtIiU/ey2PWMavpE/P3fG/KWOeHYlxBk5qFhJqzqO
-	 V2oPDtKiJ1wtJEbkm1dim2SH17D9LQh7Tg2lizcZgoCRvs6pdY8nNDVRzudkhrJN7G
-	 oGk07XWU1jgu8OHGXvqHxH1++ty98Vx5AttywIE8=
+	b=DeVwYVHU+PXTGOaMMAGiemX9X4VjSQvq8I0clxfYvi87s1Ong1OkNGarVH5tbad1a
+	 fV/4+PvxYHnO1caWuEQ8blzO9v1ZQzmevtDrQ/xi3TsdSUHJresqx1ZANBNnjFuUm2
+	 IATDpunlzyXR0jC3aqRkZ9ZgTN2tNo07/YLvodAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbfKKSsK (ORCPT
+        id S1730231AbfKKSsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:48:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:48:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbfKKSsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:48:08 -0500
+        id S1729395AbfKKSsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:48:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9831620674;
-        Mon, 11 Nov 2019 18:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E629E204FD;
+        Mon, 11 Nov 2019 18:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498087;
-        bh=cfOwdWDLTKNCONnjilnmJE7mx2diQahMlXAy85Yx6X8=;
+        s=default; t=1573498091;
+        bh=C5xQkwwGDricWqdA8SR940TB54ZWtqNg32onbdI9kCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WnrA3DB26vmSQ8kOPwJEcRhUwHr5PQ04iXxUeZ745FnVxeVpIKc969QPiLNE1/XeV
-         e4sjCloQI7ZfHsfjjcvPCe2Lz1RJljRgYZ5d+3QWrbX5KfEvUz2gdbrHlaBAp1CfkQ
-         gUa8E8/j4LVtZRMT+tpR8apJhYUe6eE+b+0Spnzg=
+        b=ex//t93xkwKthTmpEkv+JvxhG09PpIoTWSYiEpjWwcELaxK+qTQ9VI0ktJot5Fgxf
+         U2O8VG9z2WqozrC8trm41oRKe1FTONTPJfhosoavA5UQJ5LfPnRZNyB/mhMa7cD103
+         xAX8Hecpkv6FGtOtl6/t/jQD7ODSoaG0YAQ1O7wc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, lipeng <lipeng321@huawei.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Salil Mehta <salil.mehta@huawei.com>
-Subject: [PATCH 5.3 019/193] net: hns: Fix the stray netpoll locks causing deadlock in NAPI path
-Date:   Mon, 11 Nov 2019 19:26:41 +0100
-Message-Id: <20191111181501.582573002@linuxfoundation.org>
+        syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 002/193] CDC-NCM: handle incomplete transfer of MTU
+Date:   Mon, 11 Nov 2019 19:26:24 +0100
+Message-Id: <20191111181500.032491031@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -63,142 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Salil Mehta <salil.mehta@huawei.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit bf5a6b4c474c589244dc25ee1af2c3c829228ef8 ]
+[ Upstream commit 332f989a3b0041b810836c5c3747e59aad7e9d0b ]
 
-This patch fixes the problem of the spin locks, originally
-meant for the netpoll path of hns driver, causing deadlock in
-the normal NAPI poll path. The issue happened due to the presence
-of the stray leftover spin lock code related to the netpoll,
-whose support was earlier removed from the HNS[1], got activated
-due to enabling of NET_POLL_CONTROLLER switch.
+A malicious device may give half an answer when asked
+for its MTU. The driver will proceed after this with
+a garbage MTU. Anything but a complete answer must be treated
+as an error.
 
-Earlier background:
-The netpoll handling code originally had this bug(as identified
-by Marc Zyngier[2]) of wrong spin lock API being used which did
-not disable the interrupts and hence could cause locking issues.
-i.e. if the lock were first acquired in context to thread like
-'ip' util and this lock if ever got later acquired again in
-context to the interrupt context like TX/RX (Interrupts could
-always pre-empt the lock holding task and acquire the lock again)
-and hence could cause deadlock.
+V2: used sizeof as request by Alexander
 
-Proposed Solution:
-1. If the netpoll was enabled in the HNS driver, which is not
-   right now, we could have simply used spin_[un]lock_irqsave()
-2. But as netpoll is disabled, therefore, it is best to get rid
-   of the existing locks and stray code for now. This should
-   solve the problem reported by Marc.
-
-[1] https://git.kernel.org/torvalds/c/4bd2c03be7
-[2] https://patchwork.ozlabs.org/patch/1189139/
-
-Fixes: 4bd2c03be707 ("net: hns: remove ndo_poll_controller")
-Cc: lipeng <lipeng321@huawei.com>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: David S. Miller <davem@davemloft.net>
-Reported-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Reported-and-tested-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hnae.c     |    1 -
- drivers/net/ethernet/hisilicon/hns/hnae.h     |    3 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c |   22 +---------------------
- 3 files changed, 1 insertion(+), 25 deletions(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/hisilicon/hns/hnae.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
-@@ -199,7 +199,6 @@ hnae_init_ring(struct hnae_queue *q, str
- 
- 	ring->q = q;
- 	ring->flags = flags;
--	spin_lock_init(&ring->lock);
- 	ring->coal_param = q->handle->coal_param;
- 	assert(!ring->desc && !ring->desc_cb && !ring->desc_dma_addr);
- 
---- a/drivers/net/ethernet/hisilicon/hns/hnae.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
-@@ -274,9 +274,6 @@ struct hnae_ring {
- 	/* statistic */
- 	struct ring_stats stats;
- 
--	/* ring lock for poll one */
--	spinlock_t lock;
--
- 	dma_addr_t desc_dma_addr;
- 	u32 buf_size;       /* size for hnae_desc->addr, preset by AE */
- 	u16 desc_num;       /* total number of desc */
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -943,15 +943,6 @@ static int is_valid_clean_head(struct hn
- 	return u > c ? (h > c && h <= u) : (h > c || h <= u);
- }
- 
--/* netif_tx_lock will turn down the performance, set only when necessary */
--#ifdef CONFIG_NET_POLL_CONTROLLER
--#define NETIF_TX_LOCK(ring) spin_lock(&(ring)->lock)
--#define NETIF_TX_UNLOCK(ring) spin_unlock(&(ring)->lock)
--#else
--#define NETIF_TX_LOCK(ring)
--#define NETIF_TX_UNLOCK(ring)
--#endif
--
- /* reclaim all desc in one budget
-  * return error or number of desc left
-  */
-@@ -965,21 +956,16 @@ static int hns_nic_tx_poll_one(struct hn
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = readl_relaxed(ring->io_base + RCB_REG_HEAD);
- 	rmb(); /* make sure head is ready before touch any data */
- 
--	if (is_ring_empty(ring) || head == ring->next_to_clean) {
--		NETIF_TX_UNLOCK(ring);
-+	if (is_ring_empty(ring) || head == ring->next_to_clean)
- 		return 0; /* no data to poll */
--	}
- 
- 	if (!is_valid_clean_head(ring, head)) {
- 		netdev_err(ndev, "wrong head (%d, %d-%d)\n", head,
- 			   ring->next_to_use, ring->next_to_clean);
- 		ring->stats.io_err_cnt++;
--		NETIF_TX_UNLOCK(ring);
- 		return -EIO;
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -578,8 +578,8 @@ static void cdc_ncm_set_dgram_size(struc
+ 	/* read current mtu value from device */
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+-			      0, iface_no, &max_datagram_size, 2);
+-	if (err < 0) {
++			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
++	if (err < sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
  	}
+@@ -590,7 +590,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	max_datagram_size = cpu_to_le16(ctx->max_datagram_size);
+ 	err = usbnet_write_cmd(dev, USB_CDC_SET_MAX_DATAGRAM_SIZE,
+ 			       USB_TYPE_CLASS | USB_DIR_OUT | USB_RECIP_INTERFACE,
+-			       0, iface_no, &max_datagram_size, 2);
++			       0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+ 	if (err < 0)
+ 		dev_dbg(&dev->intf->dev, "SET_MAX_DATAGRAM_SIZE failed\n");
  
-@@ -994,8 +980,6 @@ static int hns_nic_tx_poll_one(struct hn
- 	ring->stats.tx_pkts += pkts;
- 	ring->stats.tx_bytes += bytes;
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
- 
-@@ -1055,16 +1039,12 @@ static void hns_nic_tx_clr_all_bufs(stru
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = ring->next_to_use; /* ntu :soft setted ring position*/
- 	bytes = 0;
- 	pkts = 0;
- 	while (head != ring->next_to_clean)
- 		hns_nic_reclaim_one_desc(ring, &bytes, &pkts);
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_reset_queue(dev_queue);
- }
 
 
