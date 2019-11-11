@@ -2,77 +2,129 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79EBC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A227C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FC42067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573452784;
-	bh=NthoupRoaY5yarrl2arVlGsOeFSOOPS5cv6/FC6a8fo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NLZzf0iBQ0IMLvk/tUsAhGvWAGW/myttluzELSuj0DOEK85AvxcEYF+WUbY1I4jrc
-	 YQJNfBu70MMF/eq+jM5fEWfKTjBhfTWCtPQhOZp2O2KvaUsLu5wlhg1Y7HRaqoopgH
-	 c08aImUn9/TG2oE6o1hZ/1eyoh0FzyEBNL/hLFHY=
+	by mail.kernel.org (Postfix) with ESMTP id 2E59A2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 06:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LDSRVX8r";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WFpcJ/4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfKKGND (ORCPT
+        id S1726889AbfKKGOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:13:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfKKGND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 01:13:03 -0500
-Received: from localhost (unknown [106.201.42.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F12F72067B;
-        Mon, 11 Nov 2019 06:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573452782;
-        bh=NthoupRoaY5yarrl2arVlGsOeFSOOPS5cv6/FC6a8fo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FALGwTePjsC0UkM2Pa/mIRJPHz0f+YjhRPz7DPMOR5l1LVU1xgcB5Ytvx4BLj8Pfo
-         hftYoBXw4EKbE81flNNCRus1AGaRYIhuqtzuXvOKSH2OkSDn635soJYFcMSR3l4/vt
-         wfCVGCenhiXc5K9pv4td8f7gdywcg3hg75vmZHOg=
-Date:   Mon, 11 Nov 2019 11:42:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com
-Subject: Re: [PATCH v4 15/15] dmaengine: ti: k3-udma: Add glue layer for non
- DMAengine users
-Message-ID: <20191111061258.GS952516@vkoul-mobl>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-16-peter.ujfalusi@ti.com>
+        Mon, 11 Nov 2019 01:14:08 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:46524 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfKKGOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 01:14:07 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 50BE8609EF; Mon, 11 Nov 2019 06:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573452846;
+        bh=I8UqTvymT7Y0417tUmtAztkA40mQvmH3geek+CovnWc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LDSRVX8rsXLgxV+lNF+YeDY4+WZDxAboQO9bxsy9FlxAl/4b0+NJAq7Ayshns01Eh
+         LN7C5AMDO3nbOWwCtv0Mte6ezb9eb0BiwAouUQshunEEsAkRfm06EkJBZXehGcq59h
+         4/9wt4qRrzkDhlpH1m7ylS7heebtv2sS/UDhHbyw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 994ED60913;
+        Mon, 11 Nov 2019 06:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573452845;
+        bh=I8UqTvymT7Y0417tUmtAztkA40mQvmH3geek+CovnWc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WFpcJ/4m05Gm9BrpEhAzwq6qEEXYBwsD/5NDWSaAqiG5xAj6FgMwlTxpPY2uzMz2r
+         30i68EoDIEdfAzK7xoNsWUouagGf4zKOyAEFzoVLZ/yomgjBXSWBgI2QCOnQIllYwT
+         ffnE7Kg2bbN9smKILV9irpK3/jQ3vuaUWIGD3Ezo=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101084135.14811-16-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 Nov 2019 11:44:04 +0530
+From:   kgunda@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
+ pm6150l
+In-Reply-To: <5dc2f6fb.1c69fb81.195ac.9fff@mx.google.com>
+References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+ <5dc2f6fb.1c69fb81.195ac.9fff@mx.google.com>
+Message-ID: <bd06260d75cae2044b99751561e3df84@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-11-19, 10:41, Peter Ujfalusi wrote:
-> From: Grygorii Strashko <grygorii.strashko@ti.com>
+On 2019-11-06 22:08, Stephen Boyd wrote:
+> Quoting Kiran Gunda (2019-11-04 21:21:49)
+>> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt 
+>> b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+>> index 1437062..b5fc64e 100644
+>> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+>> @@ -32,6 +32,8 @@ Required properties:
+>>                     "qcom,pm8998",
+>>                     "qcom,pmi8998",
+>>                     "qcom,pm8005",
+>> +                  "qcom,pm6150",
+>> +                  "qcom,pm6150l",
 > 
-> Certain users can not use right now the DMAengine API due to missing
-> features in the core. Prime example is Networking.
+> This seems to match the compatible list in the driver. Can you convert
+> this binding to YAML and then sort this compatible string list
+> alpha-numberically? Two patches, one to convert to YAML and sort and
+> another patch to add these new compatible strings.
 > 
-> These users can use the glue layer interface to avoid misuse of DMAengine
-> API and when the core gains the needed features they can be converted to
-> use generic API.
-
-Can you add some notes on what all features does this layer implement..
-
--- 
-~Vinod
+Sure. Will do it.
+>>                     or generalized "qcom,spmi-pmic".
+>>  - reg:             Specifies the SPMI USID slave address for this 
+>> device.
+>>                     For more information see:
+>> diff --git a/drivers/mfd/qcom-spmi-pmic.c 
+>> b/drivers/mfd/qcom-spmi-pmic.c
+>> index e8fe705..74b7980 100644
+>> --- a/drivers/mfd/qcom-spmi-pmic.c
+>> +++ b/drivers/mfd/qcom-spmi-pmic.c
+>> @@ -34,6 +34,8 @@
+>>  #define PM8998_SUBTYPE         0x14
+>>  #define PMI8998_SUBTYPE                0x15
+>>  #define PM8005_SUBTYPE         0x18
+>> +#define PM6150_SUBTYPE         0x28
+>> +#define PM6150L_SUBTYPE                0x27
+> 
+> This list looks to be sorted based on id number, so just swap the two
+> here.
+> 
+Ok. Will do it in next post.
+>> 
+>>  static const struct of_device_id pmic_spmi_id_table[] = {
+>>         { .compatible = "qcom,spmi-pmic", .data = (void 
+>> *)COMMON_SUBTYPE },
+>> @@ -53,6 +55,8 @@
+>>         { .compatible = "qcom,pm8998",    .data = (void 
+>> *)PM8998_SUBTYPE },
+>>         { .compatible = "qcom,pmi8998",   .data = (void 
+>> *)PMI8998_SUBTYPE },
+>>         { .compatible = "qcom,pm8005",    .data = (void 
+>> *)PM8005_SUBTYPE },
+>> +       { .compatible = "qcom,pm6150",    .data = (void 
+>> *)PM6150_SUBTYPE },
+>> +       { .compatible = "qcom,pm6150l",   .data = (void 
+>> *)PM6150L_SUBTYPE },
+> 
+> This is also sorted based on .data value, so swap the two here too.
+> 
+Ok. Will do it in next post.
+>>         { }
