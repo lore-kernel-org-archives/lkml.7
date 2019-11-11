@@ -2,52 +2,54 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB9CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D80C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EAC214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430A8204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498823;
-	bh=XN8XpFTH7MqUoifrn6MJFPwO8c9PSLWI4Rcpkj2i8O8=;
+	s=default; t=1573498840;
+	bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sn20FhHE/uOzmJylwPN76xB/iPWlRlqP/qUCLh7O7ifqCRn9atPwctOqAgpWupCht
-	 gymFNzsCJtROaM0BPhiCgObidi3NWfPU3qvmLUlKWa0rwHDyDIbanMLUuMdlmXCcfW
-	 ujtzLwNynq51jfrYL6Y8uxR3m3myjBY4u84foVcQ=
+	b=J4SNqQXT8Bt0kNtthrz12ZZYP9hwTzryobUlGLY/PCNUGiWwfFS3QnH/8Hx+SMyLc
+	 yn9JeQpQJXybgfJYJSuMbwu4OLfFUFreOALaibea+suUa6Iu/Vm/fkeFG2TOsXOBsV
+	 g6jrDs5aP4SikRhvD5K7U4NFM1VLiINHx77xUBEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfKKTAW (ORCPT
+        id S1728301AbfKKTAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:00:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50704 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:00:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730203AbfKKSyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:54:35 -0500
+        id S1727543AbfKKSxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:53:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0525321783;
-        Mon, 11 Nov 2019 18:54:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0FC4214E0;
+        Mon, 11 Nov 2019 18:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498474;
-        bh=XN8XpFTH7MqUoifrn6MJFPwO8c9PSLWI4Rcpkj2i8O8=;
+        s=default; t=1573498419;
+        bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEXR96IECiaXC7RYxql1UvV8uq3GulFDV5xkG7GvzeshHziKBWmL1xq/P3M+EiSOt
-         FBaQMurya9BboTUBU5YzrovML/fpKab76ffDV74EUezbJBZFJSeRzUhLJBUcZWWxyJ
-         FYrj5EdYopo3rJrponRzF0oMazndaFq1nZEkIP3A=
+        b=hmJAva2jpEk3pfQ65FmNbBSdiw7RcIjdaF7hjDvvMnXHrUmnN1QSBl39wusAvt5gY
+         p4zn2qQQP5Ig6FRqfPOhApS3R4tO0BXJadLYui/tWUCnPPvqVMJTF9xb1zWw0LgHJs
+         rL7T3hRwxnO35faN/vCIIboShZVcAxrdFS90Jbnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 130/193] netfilter: nft_payload: fix missing check for matching length in offloads
-Date:   Mon, 11 Nov 2019 19:28:32 +0100
-Message-Id: <20191111181510.765400368@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Joe Burmeister <joe.burmeister@devtank.co.uk>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.3 074/193] can: c_can: c_can_poll(): only read status register after status IRQ
+Date:   Mon, 11 Nov 2019 19:27:36 +0100
+Message-Id: <20191111181506.582132325@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,139 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wenxu <wenxu@ucloud.cn>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
 
-[ Upstream commit a69a85da458f79088c38a38db034a4d64d9c32c3 ]
+commit 3cb3eaac52c0f145d895f4b6c22834d5f02b8569 upstream.
 
-Payload offload rule should also check the length of the match.
-Moreover, check for unsupported link-layer fields:
+When the status register is read without the status IRQ pending, the
+chip may not raise the interrupt line for an upcoming status interrupt
+and the driver may miss a status interrupt.
 
- nft --debug=netlink add rule firewall zones vlan id 100
- ...
- [ payload load 2b @ link header + 0 => reg 1 ]
+It is critical that the BUSOFF status interrupt is forwarded to the
+higher layers, since no more interrupts will follow without
+intervention.
 
-this loads 2byte base on ll header and offset 0.
+Thanks to Wolfgang and Joe for bringing up the first idea.
 
-This also fixes unsupported raw payload match.
+Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Joe Burmeister <joe.burmeister@devtank.co.uk>
+Fixes: fa39b54ccf28 ("can: c_can: Get rid of pointless interrupts")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 92ad6325cb89 ("netfilter: nf_tables: add hardware offload support")
-Signed-off-by: wenxu <wenxu@ucloud.cn>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_payload.c | 38 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/net/can/c_can/c_can.c |   25 ++++++++++++++++++++-----
+ drivers/net/can/c_can/c_can.h |    1 +
+ 2 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
-index 22a80eb60222e..5cb2d8908d2a5 100644
---- a/net/netfilter/nft_payload.c
-+++ b/net/netfilter/nft_payload.c
-@@ -161,13 +161,21 @@ static int nft_payload_offload_ll(struct nft_offload_ctx *ctx,
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -97,6 +97,9 @@
+ #define BTR_TSEG2_SHIFT		12
+ #define BTR_TSEG2_MASK		(0x7 << BTR_TSEG2_SHIFT)
  
- 	switch (priv->offset) {
- 	case offsetof(struct ethhdr, h_source):
-+		if (priv->len != ETH_ALEN)
-+			return -EOPNOTSUPP;
++/* interrupt register */
++#define INT_STS_PENDING		0x8000
 +
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_ETH_ADDRS, eth_addrs,
- 				  src, ETH_ALEN, reg);
- 		break;
- 	case offsetof(struct ethhdr, h_dest):
-+		if (priv->len != ETH_ALEN)
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_ETH_ADDRS, eth_addrs,
- 				  dst, ETH_ALEN, reg);
- 		break;
-+	default:
-+		return -EOPNOTSUPP;
- 	}
+ /* brp extension register */
+ #define BRP_EXT_BRPE_MASK	0x0f
+ #define BRP_EXT_BRPE_SHIFT	0
+@@ -1029,10 +1032,16 @@ static int c_can_poll(struct napi_struct
+ 	u16 curr, last = priv->last_status;
+ 	int work_done = 0;
  
- 	return 0;
-@@ -181,14 +189,23 @@ static int nft_payload_offload_ip(struct nft_offload_ctx *ctx,
+-	priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
+-	/* Ack status on C_CAN. D_CAN is self clearing */
+-	if (priv->type != BOSCH_D_CAN)
+-		priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
++	/* Only read the status register if a status interrupt was pending */
++	if (atomic_xchg(&priv->sie_pending, 0)) {
++		priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
++		/* Ack status on C_CAN. D_CAN is self clearing */
++		if (priv->type != BOSCH_D_CAN)
++			priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
++	} else {
++		/* no change detected ... */
++		curr = last;
++	}
  
- 	switch (priv->offset) {
- 	case offsetof(struct iphdr, saddr):
-+		if (priv->len != sizeof(struct in_addr))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_IPV4_ADDRS, ipv4, src,
- 				  sizeof(struct in_addr), reg);
- 		break;
- 	case offsetof(struct iphdr, daddr):
-+		if (priv->len != sizeof(struct in_addr))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_IPV4_ADDRS, ipv4, dst,
- 				  sizeof(struct in_addr), reg);
- 		break;
- 	case offsetof(struct iphdr, protocol):
-+		if (priv->len != sizeof(__u8))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_BASIC, basic, ip_proto,
- 				  sizeof(__u8), reg);
- 		nft_offload_set_dependency(ctx, NFT_OFFLOAD_DEP_TRANSPORT);
-@@ -208,14 +225,23 @@ static int nft_payload_offload_ip6(struct nft_offload_ctx *ctx,
+ 	/* handle state changes */
+ 	if ((curr & STATUS_EWARN) && (!(last & STATUS_EWARN))) {
+@@ -1083,10 +1092,16 @@ static irqreturn_t c_can_isr(int irq, vo
+ {
+ 	struct net_device *dev = (struct net_device *)dev_id;
+ 	struct c_can_priv *priv = netdev_priv(dev);
++	int reg_int;
  
- 	switch (priv->offset) {
- 	case offsetof(struct ipv6hdr, saddr):
-+		if (priv->len != sizeof(struct in6_addr))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_IPV6_ADDRS, ipv6, src,
- 				  sizeof(struct in6_addr), reg);
- 		break;
- 	case offsetof(struct ipv6hdr, daddr):
-+		if (priv->len != sizeof(struct in6_addr))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_IPV6_ADDRS, ipv6, dst,
- 				  sizeof(struct in6_addr), reg);
- 		break;
- 	case offsetof(struct ipv6hdr, nexthdr):
-+		if (priv->len != sizeof(__u8))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_BASIC, basic, ip_proto,
- 				  sizeof(__u8), reg);
- 		nft_offload_set_dependency(ctx, NFT_OFFLOAD_DEP_TRANSPORT);
-@@ -255,10 +281,16 @@ static int nft_payload_offload_tcp(struct nft_offload_ctx *ctx,
+-	if (!priv->read_reg(priv, C_CAN_INT_REG))
++	reg_int = priv->read_reg(priv, C_CAN_INT_REG);
++	if (!reg_int)
+ 		return IRQ_NONE;
  
- 	switch (priv->offset) {
- 	case offsetof(struct tcphdr, source):
-+		if (priv->len != sizeof(__be16))
-+			return -EOPNOTSUPP;
++	/* save for later use */
++	if (reg_int & INT_STS_PENDING)
++		atomic_set(&priv->sie_pending, 1);
 +
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_PORTS, tp, src,
- 				  sizeof(__be16), reg);
- 		break;
- 	case offsetof(struct tcphdr, dest):
-+		if (priv->len != sizeof(__be16))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_PORTS, tp, dst,
- 				  sizeof(__be16), reg);
- 		break;
-@@ -277,10 +309,16 @@ static int nft_payload_offload_udp(struct nft_offload_ctx *ctx,
- 
- 	switch (priv->offset) {
- 	case offsetof(struct udphdr, source):
-+		if (priv->len != sizeof(__be16))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_PORTS, tp, src,
- 				  sizeof(__be16), reg);
- 		break;
- 	case offsetof(struct udphdr, dest):
-+		if (priv->len != sizeof(__be16))
-+			return -EOPNOTSUPP;
-+
- 		NFT_OFFLOAD_MATCH(FLOW_DISSECTOR_KEY_PORTS, tp, dst,
- 				  sizeof(__be16), reg);
- 		break;
--- 
-2.20.1
-
+ 	/* disable all interrupts and schedule the NAPI */
+ 	c_can_irq_control(priv, false);
+ 	napi_schedule(&priv->napi);
+--- a/drivers/net/can/c_can/c_can.h
++++ b/drivers/net/can/c_can/c_can.h
+@@ -198,6 +198,7 @@ struct c_can_priv {
+ 	struct net_device *dev;
+ 	struct device *device;
+ 	atomic_t tx_active;
++	atomic_t sie_pending;
+ 	unsigned long tx_dir;
+ 	int last_status;
+ 	u16 (*read_reg) (const struct c_can_priv *priv, enum reg index);
 
 
