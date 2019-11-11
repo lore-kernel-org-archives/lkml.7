@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A70C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3451AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173CD21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2B421655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498432;
-	bh=4f1PiMzwr1X9jaxUxe9/HavsPY+6mPRKQx+bo1iSaS4=;
+	s=default; t=1573498436;
+	bh=DyHNh29WxcCuMiw+gvIpL/rZMMcJtcfc0weCwbCruMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IChamR36ZjK4RrmTSpZlW8/sTIcHpivuLhLlAgA+vsqKYdpiFWPZXGYmlXzBj+P2I
-	 0lr17ZaMAcnvCRPAhOEK3QaoGFGw4ybIG/wb4dt0TmM+M3LroNUYrROKIYjKM+jIyV
-	 rQrYafZ4yMHq+44ghqntpL/Nq6wmT29FKj4mMDhk=
+	b=L+s2OTYNnAhfs+lCGStqfft8pTRElOwWXdzzxeizNiZ1t7NLD9zG672pJHCHKLJBS
+	 K76q5a2c2aR8zkRxUGpPjlXFjcT1k43+hv6S/jOlVZLFz6oUEqsVt0K7D7fpVqjukV
+	 zns8WH2oTfxjtUpPsV8XqnTDa32p51Jt6P8lIM/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfKKSxu (ORCPT
+        id S1729694AbfKKSxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:53:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48820 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730135AbfKKSxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:53:47 -0500
+        id S1728895AbfKKSxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:53:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB2420818;
-        Mon, 11 Nov 2019 18:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53729214E0;
+        Mon, 11 Nov 2019 18:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498426;
-        bh=4f1PiMzwr1X9jaxUxe9/HavsPY+6mPRKQx+bo1iSaS4=;
+        s=default; t=1573498430;
+        bh=DyHNh29WxcCuMiw+gvIpL/rZMMcJtcfc0weCwbCruMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LfzIi3PyACfw4l57ZZ78BJBsvBf7x0/11C+H79l/8+m6BGs+UyvmiVZZYkPG7qRjV
-         psuUcFQOb02oTVe1M+kMIdn0ZV0xAiJWcGIZLToEGBouliaaYNlmmGaJlagDNI8KH7
-         YcN05TIcFhrYCNxL6Vte9v2MaULLKuZA/ib/XLpo=
+        b=uPWI965M/4LRv1UGqLXB3SYgr/BxyGec0GLEbHWWMaNs1hUK9dh/WMtvss9iMlPsa
+         c9CdihlkdJ8ESEdoOh7rKIbM6y9N99sug8xdij8XAlUVtu7JLMKzQYAe60ZAyzuMAo
+         j+N3Xalflnq8098xV/0DLMIxEvwTM1qY0oFJTnU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Peter Oskolkov <posk@google.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 109/193] selftests/bpf: More compatible nc options in test_tc_edt
-Date:   Mon, 11 Nov 2019 19:28:11 +0100
-Message-Id: <20191111181509.164214150@linuxfoundation.org>
+Subject: [PATCH 5.3 118/193] scsi: lpfc: Honor module parameter lpfc_use_adisc
+Date:   Mon, 11 Nov 2019 19:28:20 +0100
+Message-Id: <20191111181509.867755448@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -61,37 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Daniel Wagner <dwagner@suse.de>
 
-[ Upstream commit 11875ba7f251c52effb2b924e04c2ddefa9856ef ]
+[ Upstream commit 0fd103ccfe6a06e40e2d9d8c91d96332cc9e1239 ]
 
-Out of the three nc implementations widely in use, at least two (BSD netcat
-and nmap-ncat) do not support -l combined with -s. Modify the nc invocation
-to be accepted by all of them.
+The initial lpfc_desc_set_adisc implementation in commit
+dea3101e0a5c ("lpfc: add Emulex FC driver version 8.0.28") enabled ADISC if
 
-Fixes: 7df5e3db8f63 ("selftests: bpf: tc-bpf flow shaping with EDT")
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Peter Oskolkov <posk@google.com>
-Link: https://lore.kernel.org/bpf/f5bf07dccd8b552a76c84d49e80b86c5aa071122.1571400024.git.jbenc@redhat.com
+	cfg_use_adisc && RSCN_MODE && FCP_2_DEVICE
+
+In commit 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of
+SLI-3") this changed to
+
+	(cfg_use_adisc && RSC_MODE) || FCP_2_DEVICE
+
+and later in commit ffc954936b13 ("[SCSI] lpfc 8.3.13: FC Discovery Fixes
+and enhancements.") to
+
+	(cfg_use_adisc && RSC_MODE) || (FCP_2_DEVICE && FCP_TARGET)
+
+A customer reports that after a devloss, an ADISC failure is logged. It
+turns out the ADISC flag is set even the user explicitly set lpfc_use_adisc
+= 0.
+
+[Sat Dec 22 22:55:58 2018] lpfc 0000:82:00.0: 2:(0):0203 Devloss timeout on WWPN 50:01:43:80:12:8e:40:20 NPort x05df00 Data: x82000000 x8 xa
+[Sat Dec 22 23:08:20 2018] lpfc 0000:82:00.0: 2:(0):2755 ADISC failure DID:05DF00 Status:x9/x70000
+
+[mkp: fixed Hannes' email]
+
+Fixes: 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of SLI-3")
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+Cc: James Smart <james.smart@broadcom.com>
+Link: https://lore.kernel.org/r/20191022072112.132268-1-dwagner@suse.de
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_tc_edt.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_tc_edt.sh b/tools/testing/selftests/bpf/test_tc_edt.sh
-index f38567ef694b6..daa7d1b8d3092 100755
---- a/tools/testing/selftests/bpf/test_tc_edt.sh
-+++ b/tools/testing/selftests/bpf/test_tc_edt.sh
-@@ -59,7 +59,7 @@ ip netns exec ${NS_SRC} tc filter add dev veth_src egress \
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index 59252bfca14e2..41309ac656934 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -845,9 +845,9 @@ lpfc_disc_set_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
  
- # start the listener
- ip netns exec ${NS_DST} bash -c \
--	"nc -4 -l -s ${IP_DST} -p 9000 >/dev/null &"
-+	"nc -4 -l -p 9000 >/dev/null &"
- declare -i NC_PID=$!
- sleep 1
- 
+ 	if (!(vport->fc_flag & FC_PT2PT)) {
+ 		/* Check config parameter use-adisc or FCP-2 */
+-		if ((vport->cfg_use_adisc && (vport->fc_flag & FC_RSCN_MODE)) ||
++		if (vport->cfg_use_adisc && ((vport->fc_flag & FC_RSCN_MODE) ||
+ 		    ((ndlp->nlp_fcp_info & NLP_FCP_2_DEVICE) &&
+-		     (ndlp->nlp_type & NLP_FCP_TARGET))) {
++		     (ndlp->nlp_type & NLP_FCP_TARGET)))) {
+ 			spin_lock_irq(shost->host_lock);
+ 			ndlp->nlp_flag |= NLP_NPR_ADISC;
+ 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
