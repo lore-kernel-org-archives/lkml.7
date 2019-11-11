@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F29C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF15C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515E82196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FF320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497165;
-	bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
+	s=default; t=1573497168;
+	bh=h84yVnebq0dEJoUvnyfxDfIpXymOAbgZO0hAwffhZOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z8vAO5xP3lKrbrXbD/uPzcZFs82ETW5W24+QP+Zi2q6lGzNCp0GCwkvC3X3AeVPZO
-	 pFIIVY+UrXp5OjcCGudFIHQHN7Vr3vKRhUZiBbbjcWNROd20YMla/MNYhb8mHnHhFR
-	 FXHD5zVa8/0HcS64Z/gTPZ+VFkjSxCH+cydxCs34=
+	b=B6YRVlvmc4zJ99cmi9yfifSkSjJ4K4Rc1GTXtITS8/G3g5oTT/IWnhNUrhi2gR0Iw
+	 sh98SNzTempL12iL1igRcaA9fJywDQStgy6dPIfGGYak9xEtvhdNzAOrUO/2O9DFHI
+	 kn1gTTLAxhtUloxQBXoabb7wqkF9qLEA1oYHkgPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfKKSco (ORCPT
+        id S1728033AbfKKScq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:32:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49984 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:32:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbfKKSck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:32:40 -0500
+        id S1728017AbfKKSco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:32:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D7AB2184C;
-        Mon, 11 Nov 2019 18:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A97214E0;
+        Mon, 11 Nov 2019 18:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497158;
-        bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
+        s=default; t=1573497163;
+        bh=h84yVnebq0dEJoUvnyfxDfIpXymOAbgZO0hAwffhZOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIwuBhJl/YYNKciyAUbIXyS/SZCJgd7SljKtgTDdvHIDzy1uP2I7cFBzgx2b4lQQK
-         A+6N0+7DVp0JsD0H2Mu1WTekieYDHtuV5Wy4BQ6hnM1hsRAetyB3zf4qrwjBsRAYHX
-         vGYbhxtTwW6I10K78/ZhUofm8Ionbks6mJVBuZos=
+        b=gthHs7DQNK3HDQ6lNNJCucsUmmqrTNrstt8CfyzjvZK4AK/kFtuIw37IdMoZelid4
+         Bo/4GD9LXH+J2r6A0XqfWzrPedRakTWEAn5Cc1O7aWHer+64qyrIGBRwp2EDvshC60
+         mDXHIObi/dWV33Q8evvz1NzTYrwlDq9Y5216Ixt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Joe Burmeister <joe.burmeister@devtank.co.uk>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.9 23/65] can: c_can: c_can_poll(): only read status register after status IRQ
-Date:   Mon, 11 Nov 2019 19:28:23 +0100
-Message-Id: <20191111181345.360061776@linuxfoundation.org>
+Subject: [PATCH 4.9 25/65] can: gs_usb: gs_can_open(): prevent memory leak
+Date:   Mon, 11 Nov 2019 19:28:25 +0100
+Message-Id: <20191111181345.723945789@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -62,93 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 3cb3eaac52c0f145d895f4b6c22834d5f02b8569 upstream.
+commit fb5be6a7b4863ecc44963bb80ca614584b6c7817 upstream.
 
-When the status register is read without the status IRQ pending, the
-chip may not raise the interrupt line for an upcoming status interrupt
-and the driver may miss a status interrupt.
+In gs_can_open() if usb_submit_urb() fails the allocated urb should be
+released.
 
-It is critical that the BUSOFF status interrupt is forwarded to the
-higher layers, since no more interrupts will follow without
-intervention.
-
-Thanks to Wolfgang and Joe for bringing up the first idea.
-
-Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Joe Burmeister <joe.burmeister@devtank.co.uk>
-Fixes: fa39b54ccf28 ("can: c_can: Get rid of pointless interrupts")
+Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
 Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/c_can/c_can.c |   25 ++++++++++++++++++++-----
- drivers/net/can/c_can/c_can.h |    1 +
- 2 files changed, 21 insertions(+), 5 deletions(-)
+ drivers/net/can/usb/gs_usb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/can/c_can/c_can.c
-+++ b/drivers/net/can/c_can/c_can.c
-@@ -97,6 +97,9 @@
- #define BTR_TSEG2_SHIFT		12
- #define BTR_TSEG2_MASK		(0x7 << BTR_TSEG2_SHIFT)
+--- a/drivers/net/can/usb/gs_usb.c
++++ b/drivers/net/can/usb/gs_usb.c
+@@ -632,6 +632,7 @@ static int gs_can_open(struct net_device
+ 					   rc);
  
-+/* interrupt register */
-+#define INT_STS_PENDING		0x8000
-+
- /* brp extension register */
- #define BRP_EXT_BRPE_MASK	0x0f
- #define BRP_EXT_BRPE_SHIFT	0
-@@ -1029,10 +1032,16 @@ static int c_can_poll(struct napi_struct
- 	u16 curr, last = priv->last_status;
- 	int work_done = 0;
+ 				usb_unanchor_urb(urb);
++				usb_free_urb(urb);
+ 				break;
+ 			}
  
--	priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
--	/* Ack status on C_CAN. D_CAN is self clearing */
--	if (priv->type != BOSCH_D_CAN)
--		priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
-+	/* Only read the status register if a status interrupt was pending */
-+	if (atomic_xchg(&priv->sie_pending, 0)) {
-+		priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
-+		/* Ack status on C_CAN. D_CAN is self clearing */
-+		if (priv->type != BOSCH_D_CAN)
-+			priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
-+	} else {
-+		/* no change detected ... */
-+		curr = last;
-+	}
- 
- 	/* handle state changes */
- 	if ((curr & STATUS_EWARN) && (!(last & STATUS_EWARN))) {
-@@ -1083,10 +1092,16 @@ static irqreturn_t c_can_isr(int irq, vo
- {
- 	struct net_device *dev = (struct net_device *)dev_id;
- 	struct c_can_priv *priv = netdev_priv(dev);
-+	int reg_int;
- 
--	if (!priv->read_reg(priv, C_CAN_INT_REG))
-+	reg_int = priv->read_reg(priv, C_CAN_INT_REG);
-+	if (!reg_int)
- 		return IRQ_NONE;
- 
-+	/* save for later use */
-+	if (reg_int & INT_STS_PENDING)
-+		atomic_set(&priv->sie_pending, 1);
-+
- 	/* disable all interrupts and schedule the NAPI */
- 	c_can_irq_control(priv, false);
- 	napi_schedule(&priv->napi);
---- a/drivers/net/can/c_can/c_can.h
-+++ b/drivers/net/can/c_can/c_can.h
-@@ -198,6 +198,7 @@ struct c_can_priv {
- 	struct net_device *dev;
- 	struct device *device;
- 	atomic_t tx_active;
-+	atomic_t sie_pending;
- 	unsigned long tx_dir;
- 	int last_status;
- 	u16 (*read_reg) (const struct c_can_priv *priv, enum reg index);
 
 
