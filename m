@@ -2,141 +2,191 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2368C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7088C17442
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5279204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EE0204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:45:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuiFYHhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfKKBoB (ORCPT
+        id S1726970AbfKKBpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 20:44:01 -0500
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:58292 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfKKBoB (ORCPT
+        Sun, 10 Nov 2019 20:45:04 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41963 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbfKKBpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 20:44:01 -0500
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 11 Nov 2019 09:43:58 +0800
-Received: from csbcas.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
-        by mse.ite.com.tw with ESMTP id xAB1hsUl095256;
-        Mon, 11 Nov 2019 09:43:54 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from CSBMAIL1.internal.ite.com.tw (192.168.65.58) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 11 Nov 2019 09:43:52 +0800
-Received: from CSBMAIL1.internal.ite.com.tw ([fe80::2cba:f37c:ac09:f33f]) by
- CSBMAIL1.internal.ite.com.tw ([fe80::2cba:f37c:ac09:f33f%22]) with mapi id
- 15.01.1713.004; Mon, 11 Nov 2019 09:43:52 +0800
-From:   <allen.chen@ite.com.tw>
-To:     <ville.syrjala@linux.intel.com>
-CC:     <Jau-Chih.Tseng@ite.com.tw>, <maxime.ripard@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <airlied@linux.ie>, <pihsun@chromium.org>, <sean@poorly.run>
-Subject: RE: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking
- timings logic
-Thread-Topic: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking
- timings logic
-Thread-Index: AQHVlYH318RIQ5a4V0OrztvUfQdNe6eA1+2g
-Date:   Mon, 11 Nov 2019 01:43:52 +0000
-Message-ID: <d942db3a0b3242c6910c3ec3a524d04a@ite.com.tw>
-References: <1572856969-12115-1-git-send-email-allen.chen@ite.com.tw>
- <20191107154209.GC1208@intel.com>
-In-Reply-To: <20191107154209.GC1208@intel.com>
-Accept-Language: en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.70.14]
-x-tm-snts-smtp: 99ECDDDB5A6AA97F90B09849EFB514D590E85C5AABC2DE8F2A51738D463C48932000:8
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 10 Nov 2019 20:45:04 -0500
+Received: by mail-pg1-f196.google.com with SMTP id h4so8379791pgv.8;
+        Sun, 10 Nov 2019 17:45:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=80X0XSD0z9TSGmjUVgRibRN8mNevgQEBc1olihW2u6g=;
+        b=OuiFYHhbZ9Jlgoq/7aQ7D0VlRd9aa0SuAm/xmePlv1T/040HatzWfRj/hJcLZa3cWl
+         KnM2nXGTg6LmyIIGYQF9iRWBXC8f5Y+uaL9ac9d4kaA6dk8Sx9lQyJntnXIWifO/yr1z
+         0RT3gkcUNJO/RKdqlK0wRudZuTiAuCm2xuz3G9XYqecXQmi+IrzL3F/brfVbv6VlQx56
+         CTD+nRI7PIushCJ085u4FrzZDmofIReN95+TQJyODH4UJQTIFrxJN4FojhuDt/5VkvwA
+         RQe3t6wyBTfocf10L13HjL7lmRKy52BbCrjzCO9P+9dvLlFRmgZ3XcA22pOIc8cq6tCZ
+         ChLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=80X0XSD0z9TSGmjUVgRibRN8mNevgQEBc1olihW2u6g=;
+        b=HTMYy+4E3YIDhftuVcFsCkK+5VM5L/2eFBy9S1fqO/q+bT4y7um+YPEbBxnCKIZDQr
+         Q27Lk5B8SeHBBTJEjZ+f3Y40wbiAcRpS7CcpYiWwJsZaX7izVTVib0IW8V9TbRtVh2M/
+         cRoSuHoFg/D6xaGY9p8QrHq+msa90XYYkfra/4niLRukf6VtdYTDP4zU3hBa9O9qrVkU
+         r1RgT5+hXlHaDC2MxySFaK/rTu3xLAu8aXD1A6+svViV0Hqv7ABOBMeNAUW8F9h1OAlf
+         gWWDSoxobdqvLTNP68mr0yrp4z91ANWx3t87aGh5TPi6h9kifR0qJKlRd6BIM4OlR4SN
+         /ewg==
+X-Gm-Message-State: APjAAAWY0CjS9lnXdzK1HweQEzyd+DOAsCJNhlt0yno7+AwtLS966ng8
+        rYw7yHzwakrUwTOmzzzAxdM=
+X-Google-Smtp-Source: APXvYqzq3k1xgi5K27cvzCuxPJRBEviwJSeyWLqUc78Sumo9fyb0YLWuKtwUi8vNz/jJ3hJ8eT158A==
+X-Received: by 2002:a62:1953:: with SMTP id 80mr27049192pfz.72.1573436702889;
+        Sun, 10 Nov 2019 17:45:02 -0800 (PST)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id y3sm11526006pgl.78.2019.11.10.17.45.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 10 Nov 2019 17:45:02 -0800 (PST)
+Subject: Re: linux-next: build warning after merge of the net-next tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+References: <20191111123922.540319a2@canb.auug.org.au>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <e71126d6-6c15-297d-0138-4c76d6720186@gmail.com>
+Date:   Sun, 10 Nov 2019 17:45:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MAIL: mse.ite.com.tw xAB1hsUl095256
+In-Reply-To: <20191111123922.540319a2@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVmlsbGUgU3lyasOkbMOkDQoNClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uIGFuZCBJIGhh
-dmUgcmVwbGllZCB0d28gY29tbWVudHMgYmVsb3cuDQoNCkZyb206IFZpbGxlIFN5cmrDpGzDpCBb
-bWFpbHRvOnZpbGxlLnN5cmphbGFAbGludXguaW50ZWwuY29tXSANClNlbnQ6IFRodXJzZGF5LCBO
-b3ZlbWJlciAwNywgMjAxOSAxMTo0MiBQTQ0KVG86IEFsbGVuIENoZW4gKOmZs+afj+WuhykNCkNj
-OiBKYXUtQ2hpaCBUc2VuZyAo5pu+5pit5pm6KTsgTWF4aW1lIFJpcGFyZDsgb3BlbiBsaXN0OyBv
-cGVuIGxpc3Q6RFJNIERSSVZFUlM7IERhdmlkIEFpcmxpZTsgUGktSHN1biBTaGloOyBTZWFuIFBh
-dWwNClN1YmplY3Q6IFJlOiBbUEFUQ0hdIGRybS9lZGlkOiBmaXh1cCBFRElEIDEuMyBhbmQgMS40
-IGp1ZGdlIHJlZHVjZWQtYmxhbmtpbmcgdGltaW5ncyBsb2dpYw0KDQpPbiBNb24sIE5vdiAwNCwg
-MjAxOSBhdCAwNDo0Mjo0OVBNICswODAwLCBhbGxlbiB3cm90ZToNCj4gQWNjb3JkaW5nIHRvIFZF
-U0EgRU5IQU5DRUQgRVhURU5ERUQgRElTUExBWSBJREVOVElGSUNBVElPTiBEQVRBIFNUQU5EQVJE
-DQo+IChEZWZpbmVzIEVESUQgU3RydWN0dXJlIFZlcnNpb24gMSwgUmV2aXNpb24gNCkgcGFnZTog
-MzkNCj4gSG93IHRvIGRldGVybWluZSB3aGV0aGVyIHRoZSBtb25pdG9yIHN1cHBvcnQgUkIgdGlt
-aW5nIG9yIG5vdD8NCj4gRURJRCAxLjQNCj4gRmlyc3Q6ICByZWFkIGRldGFpbGVkIHRpbWluZyBk
-ZXNjcmlwdG9yIGFuZCBtYWtlIHN1cmUgYnl0ZTAgPSAwLA0KPiAJYnl0ZTEgPSAwLCBieXRlMiA9
-IDAgYW5kIGJ5dGUzID0gMHhGRA0KDQpUaGF0IHNob3VsZCBwcm9iYWJseSBiZSBzb21lIG5ldyBm
-dW5jdGlvbjoNCmJvb2wgaXNfZGlzcGxheV9kZXNjcmlwdG9yKGNvbnN0IHU4ICpkZXNjLCB1OCB0
-YWcpOw0KaXNfZGlzcGxheV9kZXNjcmlwdG9yKEVESURfREVUQUlMX01PTklUT1JfUkFOR0UpDQpv
-ciBzb21ldGhpbmcgYWxvbmcgdGhvc2UgbGluZXMNCg0KV2UgZG9uJ3Qgc2VlbSB0byBjaGVjayB0
-aGF0IGluIG1vc3QgcGxhY2VzIHNvIHNob3VsZCBiZSByb2xsZWQgb3V0IGFsbA0Kb3Zlci4gVGhl
-IHVzYWdlIG9mIHN0cnVjdCBkZXRhaWxlZF90aW1pbmcgYWxsIG92ZXIgYWxzbyBtYWtlcyBldmVy
-eXRoaW5nDQpyYXRoZXIgY29uZnVzaW5nLg0KDQo+IFNlY29uZDogcmVhZCBkZXRhaWxlZCB0aW1p
-bmcgZGVzY3JpcHRvciBieXRlMTAgPSAweDA0IGFuZA0KPiAJRURJRCBieXRlMThoIGJpdDAgPSAx
-DQoNCkluZGljYXRlcyBDVlQgc3VwcG9ydC4gU2hvdWxkIGdpdmUgdGhlc2UgdGhpbmdzIHJlYWwg
-bmFtZXMgc28NCm9uZSB3b3VsZG4ndCBoYXZlIHRvIGRlY29kZSBieSBoYW5kLg0KDQo+IFRoaXJk
-OiAgaWYgRURJRCBieXRlMThoIGJpdDAgPT0gMSAmJiBieXRlMTAgPT0gMHgwNCwNCj4gCXRoZW4g
-d2UgY2FuIGNoZWNrIGJ5dGUxNSwgaWYgYnl0ZTE1IGJpdDQgPTEgaXMgc3VwcG9ydCBSQg0KPiAg
-ICAgICAgIGlmIEVESUQgYnl0ZTE4aCBiaXQwICE9IDEgfHwgYnl0ZTEwICE9IDB4MDQsDQo+IAl0
-aGVuIGJ5dGUxNSBjYW4gbm90IGJlIHVzZWQNCj4gDQo+IFRoZSBsaW51eCBjb2RlIGlzX3JiIGZ1
-bmN0aW9uIG5vdCBmb2xsb3cgdGhlIFZFU0EncyBydWxlDQo+IA0KPiBFRElEIDEuMw0KPiBMQ0Ti
-gIJmbGF04oCCcGFuZWxzIGRv4oCCbm904oCCcmVxdWlyZeKAgmxvbmfigIJibGFua2luZ+KAgmlu
-dGVydmFsc+KAgmFz4oCCYeKAgnJldHJhY2UNCj4gcGVyaW9kIHNvIGRlZmF1bHQgc3VwcG9ydCBy
-ZWR1Y2VkLWJsYW5raW5nIHRpbWluZ3MuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbGxlbiBDaGVu
-IDxhbGxlbi5jaGVuQGl0ZS5jb20udHc+DQo+IFJlcG9ydGVkLWJ5OiBrYnVpbGQgdGVzdCByb2Jv
-dCA8bGtwQGludGVsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX2VkaWQuYyB8
-IDI4ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMSBp
-bnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9kcm1fZWRpZC5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9lZGlkLmMNCj4gaW5kZXgg
-ZTVlN2U2NS4uOWI2N2I4MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9lZGlk
-LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9lZGlkLmMNCj4gQEAgLTkzLDYgKzkzLDEx
-IEBAIHN0cnVjdCBkZXRhaWxlZF9tb2RlX2Nsb3N1cmUgew0KPiAgCWludCBtb2RlczsNCj4gIH07
-DQo+ICANCj4gK3N0cnVjdCBlZGlkX3N1cHBvcnRfcmJfY2xvc3VyZSB7DQo+ICsJc3RydWN0IGVk
-aWQgKmVkaWQ7DQo+ICsJczggc3VwcG9ydF9yYjsNCg0KYm9vbA0KDQo9PT4gSVRFOiAgSWYgdXNl
-IGJvb2wsIHdlIGNvdWxkIG5vdCByZXR1cm4gRURJRDEuMyB3aGVuIEVESUQxLjQgbG9naWMgY2Fu
-IG5vdCBiZSBhcHBsaWVkDQo+ICt9Ow0KPiArDQo+ICAjZGVmaW5lIExFVkVMX0RNVAkwDQo+ICAj
-ZGVmaW5lIExFVkVMX0dURgkxDQo+ICAjZGVmaW5lIExFVkVMX0dURjIJMg0KPiBAQCAtMjAxOCwy
-MiArMjAyMywzMSBAQCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqZHJtX21vZGVfZmluZF9kbXQo
-c3RydWN0IGRybV9kZXZpY2UgKmRldiwNCj4gIGlzX3JiKHN0cnVjdCBkZXRhaWxlZF90aW1pbmcg
-KnQsIHZvaWQgKmRhdGEpDQo+ICB7DQo+ICAJdTggKnIgPSAodTggKil0Ow0KPiAtCWlmIChyWzNd
-ID09IEVESURfREVUQUlMX01PTklUT1JfUkFOR0UpDQo+IC0JCWlmIChyWzE1XSAmIDB4MTApDQo+
-IC0JCQkqKGJvb2wgKilkYXRhID0gdHJ1ZTsNCj4gKwlzdHJ1Y3QgZWRpZF9zdXBwb3J0X3JiX2Ns
-b3N1cmUgKmNsb3N1cmUgPSBkYXRhOw0KPiArCXN0cnVjdCBlZGlkICplZGlkID0gY2xvc3VyZS0+
-ZWRpZDsNCj4gKw0KPiArCWlmICghclswXSAmJiAhclsxXSAmJiAhclsyXSAmJiByWzNdID09IEVE
-SURfREVUQUlMX01PTklUT1JfUkFOR0UpIHsNCj4gKwkJaWYgKGVkaWQtPmZlYXR1cmVzICYgQklU
-KDApICYmIHJbMTBdID09IEJJVCgyKSkNCj4gKwkJCWNsb3N1cmUtPnN1cHBvcnRfcmIgPSAoclsx
-NV0gJiAweDEwKSA/IDEgOiAwOw0KDQpXaXRoIHRoZSBib29sIHRoZSB0ZXJuYXJ5IG9wZXJhdG9y
-IGlzIG5vdCBuZWVkZWQuIEFsc28gc2hvdWxkIG1heWJlIA0KYmUgfD0gaW4gY2FzZSB3ZSBoYXZl
-IG11bHRpcGxlIHJhbmdlIGRlc2NyaXB0b3JzPyBOb3Qgc3VyZSB0aGF0IGlzDQpsZWdhbC4NCg0K
-PiArCX0NCj4gIH0NCj4gIA0KPiAgLyogRURJRCAxLjQgZGVmaW5lcyB0aGlzIGV4cGxpY2l0bHku
-ICBGb3IgRURJRCAxLjMsIHdlIGd1ZXNzLCBiYWRseS4gKi8NCj4gIHN0YXRpYyBib29sDQo+ICBk
-cm1fbW9uaXRvcl9zdXBwb3J0c19yYihzdHJ1Y3QgZWRpZCAqZWRpZCkNCj4gIHsNCj4gKwlzdHJ1
-Y3QgZWRpZF9zdXBwb3J0X3JiX2Nsb3N1cmUgY2xvc3VyZSA9IHsNCj4gKwkJLmVkaWQgPSBlZGlk
-LA0KPiArCQkuc3VwcG9ydF9yYiA9IC0xLA0KPiArCX07DQo+ICsNCj4gIAlpZiAoZWRpZC0+cmV2
-aXNpb24gPj0gNCkgew0KPiAtCQlib29sIHJldCA9IGZhbHNlOw0KPiAtCQlkcm1fZm9yX2VhY2hf
-ZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNfcmIsICZyZXQpOw0KPiAtCQlyZXR1cm4gcmV0
-Ow0KPiArCQlkcm1fZm9yX2VhY2hfZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNfcmIsICZj
-bG9zdXJlKTsNCj4gKwkJaWYgKGNsb3N1cmUuc3VwcG9ydF9yYiA+PSAwKQ0KPiArCQkJcmV0dXJu
-IGNsb3N1cmUuc3VwcG9ydF9yYjsNCj4gIAl9DQo+ICANCj4gLQlyZXR1cm4gKChlZGlkLT5pbnB1
-dCAmIERSTV9FRElEX0lOUFVUX0RJR0lUQUwpICE9IDApOw0KPiArCXJldHVybiB0cnVlOw0KDQpX
-aHkgYXJlIHdlIG5vdyBhc3N1bWluZyByYiBmb3IgYWxsIHByZSAxLjQgRURJRHM/DQoNCj09PiBJ
-VEU6IFRvZGF5LCBtb3N0IG9mIHRoZSBtb25pdG9yIGFyZSBMQ0QgYW5kIExDRCBtb25pdG9yIGRv
-IG5vdCByZXF1aXJlIGxvbmcgYmxhbmtpbmcgaW50ZXJ2YWxzIGFzIGEgcmV0cmFjZSBwZXJpb2Qg
-c28gZGVmYXVsdCBzdXBwb3J0IHJlZHVjZWQtYmxhbmtpbmcgdGltaW5ncy4NCg0KPiAgfQ0KPiAg
-DQo+ICBzdGF0aWMgdm9pZA0KPiAtLSANCj4gMS45LjENCj4gDQo+IF9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QN
-Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiBodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA0KDQotLSANClZpbGxlIFN5cmrD
-pGzDpA0KSW50ZWwNCg==
+
+
+On 11/10/19 5:39 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the net-next tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
+> 
+> In file included from ./arch/powerpc/include/generated/asm/local64.h:1,
+>                  from include/linux/u64_stats_sync.h:72,
+>                  from include/linux/cgroup-defs.h:20,
+>                  from include/linux/cgroup.h:28,
+>                  from include/linux/memcontrol.h:13,
+>                  from include/linux/swap.h:9,
+>                  from include/linux/suspend.h:5,
+>                  from arch/powerpc/kernel/asm-offsets.c:23:
+> include/linux/u64_stats_sync.h: In function 'u64_stats_read':
+> include/asm-generic/local64.h:30:37: warning: passing argument 1 of 'local_read' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>    30 | #define local64_read(l)  local_read(&(l)->a)
+>       |                                     ^~~~~~~
+> include/linux/u64_stats_sync.h:80:9: note: in expansion of macro 'local64_read'
+>    80 |  return local64_read(&p->v);
+>       |         ^~~~~~~~~~~~
+> In file included from include/asm-generic/local64.h:22,
+>                  from ./arch/powerpc/include/generated/asm/local64.h:1,
+>                  from include/linux/u64_stats_sync.h:72,
+>                  from include/linux/cgroup-defs.h:20,
+>                  from include/linux/cgroup.h:28,
+>                  from include/linux/memcontrol.h:13,
+>                  from include/linux/swap.h:9,
+>                  from include/linux/suspend.h:5,
+>                  from arch/powerpc/kernel/asm-offsets.c:23:
+> arch/powerpc/include/asm/local.h:20:44: note: expected 'local_t *' {aka 'struct <anonymous> *'} but argument is of type 'const local_t *' {aka 'const struct <anonymous> *'}
+>    20 | static __inline__ long local_read(local_t *l)
+>       |                                   ~~~~~~~~~^
+> 
+> Introduced by commit
+> 
+>   316580b69d0a ("u64_stats: provide u64_stats_t type")
+> 
+> Powerpc folks: is there some reason that local_read() cannot take a
+> const argument?
+> 
+> I have added this patch (which builds fine) for today:
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 11 Nov 2019 12:32:24 +1100
+> Subject: [PATCH] powerpc: local_read() should take a const local_t argument
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  arch/powerpc/include/asm/local.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/include/asm/local.h b/arch/powerpc/include/asm/local.h
+> index fdd00939270b..bc4bd19b7fc2 100644
+> --- a/arch/powerpc/include/asm/local.h
+> +++ b/arch/powerpc/include/asm/local.h
+> @@ -17,7 +17,7 @@ typedef struct
+>  
+>  #define LOCAL_INIT(i)	{ (i) }
+>  
+> -static __inline__ long local_read(local_t *l)
+> +static __inline__ long local_read(const local_t *l)
+>  {
+>  	return READ_ONCE(l->v);
+>  }
+> 
+
+I have sent this patch two days ago, I do not believe I had any answer from ppc maintainers.
+
+From 47c47befdcf31fb8498c9e630bb8e0dc3ef88079 Mon Sep 17 00:00:00 2001
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 8 Nov 2019 06:04:35 -0800
+Subject: [PATCH] powerpc: add const qual to local_read() parameter
+
+A patch in net-next triggered a compile error on powerpc.
+
+This seems reasonable to relax powerpc local_read() requirements.
+
+Fixes: 316580b69d0a ("u64_stats: provide u64_stats_t type")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:	Paul Mackerras <paulus@samba.org>
+Cc:	Michael Ellerman <mpe@ellerman.id.au>
+Cc:	linuxppc-dev@lists.ozlabs.org
+---
+ arch/powerpc/include/asm/local.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/include/asm/local.h b/arch/powerpc/include/asm/local.h
+index fdd00939270bf08113b537a090d6a6e34a048361..bc4bd19b7fc235b80ec1132f44409b6fe1057975 100644
+--- a/arch/powerpc/include/asm/local.h
++++ b/arch/powerpc/include/asm/local.h
+@@ -17,7 +17,7 @@ typedef struct
+ 
+ #define LOCAL_INIT(i)	{ (i) }
+ 
+-static __inline__ long local_read(local_t *l)
++static __inline__ long local_read(const local_t *l)
+ {
+ 	return READ_ONCE(l->v);
+ }
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
