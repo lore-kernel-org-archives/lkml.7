@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943ABC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B615AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6572D222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BEA222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497618;
-	bh=cHqpv/pza6dFpwESlSPOwmQg0ZS8Ih8SpkRVgGsgrB0=;
+	s=default; t=1573497621;
+	bh=H6V87+rGGbmXBhNnZctbvfyuGfxIShbUzx2vWyqDkqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A7xlyBRGy72S74p7XmT9Wytm0wcjXLV79V4C1TcRS07DMpJ2OYEX/tP9oMoftVsKs
-	 QNazip7QWuJtIUomhJup+x9JY19LHkEffq5DOBcluIBY+sk3lf8CbQrpO02kp6jTpX
-	 aZ6dJeIPq9nT6NTgz0jB4ne/kR+wWQGgx8SzI4ms=
+	b=FY2f0tfmekGI4jjoxhzeAvFnS7+jpSJMOWnf1VLa6kSaqBE/6nNmy3y0hQxcQM3mQ
+	 QGqtXH8zptpBIxXcB67gDzBfq+aL+KCyitA1QKQIQ3sItI5NfJbeGY7JkPXR9Qg79H
+	 X08dFWHH4To/to/QkYCeQPsV9QRHvVJlA9oVk7hk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfKKSkQ (ORCPT
+        id S1729242AbfKKSkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:40:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59390 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:40:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfKKSkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:40:14 -0500
+        id S1728388AbfKKSkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:40:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19A2920659;
-        Mon, 11 Nov 2019 18:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD245214E0;
+        Mon, 11 Nov 2019 18:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497613;
-        bh=cHqpv/pza6dFpwESlSPOwmQg0ZS8Ih8SpkRVgGsgrB0=;
+        s=default; t=1573497617;
+        bh=H6V87+rGGbmXBhNnZctbvfyuGfxIShbUzx2vWyqDkqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mns/01Yv8/O6f9Y3+P+nVxw1UO8WdLeB2kgRVah+phIf0hGvMCauESb39cUXHaSQW
-         QyCJsgVNy4F50ZWPSWSlP5DUooOkCd8ngnofGCnJQwTvypjWoaR3ELNMxFB9xbV9NP
-         VoueZiFtN0SAoJ9xS5I8/kblNfU7eomYHAbkwX98=
+        b=e7SSlCTq40kS+YcgTr5pR+SGgSS54219zOdNBvQITS0OlIAi8XIYylRNdgXeQZSuo
+         NOtn6tAx2HuNThMsd1Q6XF/rZ5OYa3amE72/3KoLDJra9wngE/ds/T5BXzCfFV1shr
+         66aA2GVJTCwvnfbct4DT9KObq8awOxqdgMz52wCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Nikhil Badola <nikhil.badola@freescale.com>,
+        Ran Wang <ran.wang_1@nxp.com>, Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 091/105] RDMA/iw_cxgb4: Avoid freeing skb twice in arp failure case
-Date:   Mon, 11 Nov 2019 19:29:01 +0100
-Message-Id: <20191111181448.000765053@linuxfoundation.org>
+Subject: [PATCH 4.14 082/105] usb: fsl: Check memory resource before releasing it
+Date:   Mon, 11 Nov 2019 19:28:52 +0100
+Message-Id: <20191111181447.033495169@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,44 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Nikhil Badola <nikhil.badola@freescale.com>
 
-[ Upstream commit d4934f45693651ea15357dd6c7c36be28b6da884 ]
+[ Upstream commit bc1e3a2dd0c9954fd956ac43ca2876bbea018c01 ]
 
-_put_ep_safe() and _put_pass_ep_safe() free the skb before it is freed by
-process_work(). fix double free by freeing the skb only in process_work().
+Check memory resource existence before releasing it to avoid NULL
+pointer dereference
 
-Fixes: 1dad0ebeea1c ("iw_cxgb4: Avoid touch after free error in ARP failure handlers")
-Link: https://lore.kernel.org/r/1572006880-5800-1-git-send-email-bharat@chelsio.com
-Signed-off-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
+Reviewed-by: Ran Wang <ran.wang_1@nxp.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/usb/gadget/udc/fsl_udc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index d87f08cd78ad4..bb36cdf82a8d6 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -491,7 +491,6 @@ static int _put_ep_safe(struct c4iw_dev *dev, struct sk_buff *skb)
+diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/udc/fsl_udc_core.c
+index 7874c112f3fd8..ee48c7938d619 100644
+--- a/drivers/usb/gadget/udc/fsl_udc_core.c
++++ b/drivers/usb/gadget/udc/fsl_udc_core.c
+@@ -2569,7 +2569,7 @@ static int fsl_udc_remove(struct platform_device *pdev)
+ 	dma_pool_destroy(udc_controller->td_pool);
+ 	free_irq(udc_controller->irq, udc_controller);
+ 	iounmap(dr_regs);
+-	if (pdata->operating_mode == FSL_USB2_DR_DEVICE)
++	if (res && (pdata->operating_mode == FSL_USB2_DR_DEVICE))
+ 		release_mem_region(res->start, resource_size(res));
  
- 	ep = *((struct c4iw_ep **)(skb->cb + 2 * sizeof(void *)));
- 	release_ep_resources(ep);
--	kfree_skb(skb);
- 	return 0;
- }
- 
-@@ -502,7 +501,6 @@ static int _put_pass_ep_safe(struct c4iw_dev *dev, struct sk_buff *skb)
- 	ep = *((struct c4iw_ep **)(skb->cb + 2 * sizeof(void *)));
- 	c4iw_put_ep(&ep->parent_ep->com);
- 	release_ep_resources(ep);
--	kfree_skb(skb);
- 	return 0;
- }
- 
+ 	/* free udc --wait for the release() finished */
 -- 
 2.20.1
 
