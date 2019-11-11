@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844FFC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456E6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E20C20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC3220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497726;
-	bh=aLm2FQjWYpVfY++zTL+4IoRhYtP2eFTwLfae6oERYEc=;
+	s=default; t=1573497728;
+	bh=PCHv+hTaj3m1wUuArJIxDlgvcAW8NtTUAcScLjKtTZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpAicQmLyGmz8DUPqjCXuUisp1OS1o0xyUYeBIcoiaSiKwI5+1xqmQw88l+Ft5tDy
-	 AaIfUWs0LkrlKYYCala/F7gf29/D0wEtFQ6bx5uhcH49W9GzTFYbM3/JEZZtRtfcdb
-	 YuV9NjatZyy6IR/4c8ztSqzRZd0aVCJ64Z3L+Fho=
+	b=A8f5wzKiRbXbsK4A78R4d72Yqnjz6jg4mmPpxdPeSr8+OKOA7B+nZa2lb7L6NYIMV
+	 81h6aywjDNfc0qBvuS58LUNfRZRm/AAUx+vAt3WdmWJkrp3n7ywPqU5Cvf4x73atFk
+	 HM8s7nr73Cj7f8GncFGGUNAbZzRbDQVOl1VLBjog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfKKSmF (ORCPT
+        id S1729483AbfKKSmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:42:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33140 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:42:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728404AbfKKSmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:42:00 -0500
+        id S1729468AbfKKSmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:42:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D66102067B;
-        Mon, 11 Nov 2019 18:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 074BA20674;
+        Mon, 11 Nov 2019 18:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497719;
-        bh=aLm2FQjWYpVfY++zTL+4IoRhYtP2eFTwLfae6oERYEc=;
+        s=default; t=1573497723;
+        bh=PCHv+hTaj3m1wUuArJIxDlgvcAW8NtTUAcScLjKtTZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYdV86m5/K71BIoHiuydLO3q8VUECCi/3qFkcviy2TNEhlCajJeM3JpYNjNxtWopo
-         yDfXFhiJgmCI+pKS1hq+ANGEc4a4yjdtke34KQRN92q5DxzJ+yv6Kuf3TCf+5qaVve
-         tLqpB2Lc0nNOuZb+SX4Ynl47AB5MtTK3T1dNtDmg=
+        b=LVc8kxlJvH9bK9wTVDRw2CO/XypRNv3zpIu07uA1YBJZknkBBVdbwgl1uV4QSNSdK
+         h3qyI2V2VX4ZmpjSqdMuGlMA5kQlxp+BEWSIGegAZw+FrIf8AD9fAwhtbWVz/uy2g4
+         MEh8OZeb7ana4b3qb+Ur2NpfxD1fAdPsZf3kzsvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 005/125] net: fix data-race in neigh_event_send()
-Date:   Mon, 11 Nov 2019 19:27:24 +0100
-Message-Id: <20191111181440.049305471@linuxfoundation.org>
+Subject: [PATCH 4.19 006/125] net: qualcomm: rmnet: Fix potential UAF when unregistering
+Date:   Mon, 11 Nov 2019 19:27:25 +0100
+Message-Id: <20191111181440.205329891@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,86 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Sean Tranchetti <stranche@codeaurora.org>
 
-[ Upstream commit 1b53d64435d56902fc234ff2507142d971a09687 ]
+[ Upstream commit e7a86c687e64ab24f88330ad24ecc9442ce40c5a ]
 
-KCSAN reported the following data-race [1]
+During the exit/unregistration process of the RmNet driver, the function
+rmnet_unregister_real_device() is called to handle freeing the driver's
+internal state and removing the RX handler on the underlying physical
+device. However, the order of operations this function performs is wrong
+and can lead to a use after free of the rmnet_port structure.
 
-The fix will also prevent the compiler from optimizing out
-the condition.
+Before calling netdev_rx_handler_unregister(), this port structure is
+freed with kfree(). If packets are received on any RmNet devices before
+synchronize_net() completes, they will attempt to use this already-freed
+port structure when processing the packet. As such, before cleaning up any
+other internal state, the RX handler must be unregistered in order to
+guarantee that no further packets will arrive on the device.
 
-[1]
-
-BUG: KCSAN: data-race in neigh_resolve_output / neigh_resolve_output
-
-write to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 1:
- neigh_event_send include/net/neighbour.h:443 [inline]
- neigh_resolve_output+0x78/0x480 net/core/neighbour.c:1474
- neigh_output include/net/neighbour.h:511 [inline]
- ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
- ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
- __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
- ip_queue_xmit+0x45/0x60 include/net/ip.h:237
- __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
- tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
- __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
- tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
- tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
- tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:618
-
-read to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 0:
- neigh_event_send include/net/neighbour.h:442 [inline]
- neigh_resolve_output+0x57/0x480 net/core/neighbour.c:1474
- neigh_output include/net/neighbour.h:511 [inline]
- ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
- ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
- __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
- ip_queue_xmit+0x45/0x60 include/net/ip.h:237
- __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
- tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
- __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
- tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
- tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: ceed73a2cf4a ("drivers: net: ethernet: qualcomm: rmnet: Initial implementation")
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/neighbour.h |    4 ++--
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/net/neighbour.h
-+++ b/include/net/neighbour.h
-@@ -430,8 +430,8 @@ static inline int neigh_event_send(struc
- {
- 	unsigned long now = jiffies;
- 	
--	if (neigh->used != now)
--		neigh->used = now;
-+	if (READ_ONCE(neigh->used) != now)
-+		WRITE_ONCE(neigh->used, now);
- 	if (!(neigh->nud_state&(NUD_CONNECTED|NUD_DELAY|NUD_PROBE)))
- 		return __neigh_event_send(neigh, skb);
- 	return 0;
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
+@@ -66,10 +66,10 @@ static int rmnet_unregister_real_device(
+ 	if (port->nr_rmnet_devs)
+ 		return -EINVAL;
+ 
+-	kfree(port);
+-
+ 	netdev_rx_handler_unregister(real_dev);
+ 
++	kfree(port);
++
+ 	/* release reference on real_dev */
+ 	dev_put(real_dev);
+ 
 
 
