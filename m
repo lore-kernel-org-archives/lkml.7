@@ -2,52 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5BFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5ECBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B3620659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0BD20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497838;
-	bh=I8bJFqYfWHTylaZR6JZ1uKWs8R4yf0qldaNLb9L6BAg=;
+	s=default; t=1573497840;
+	bh=hbb7MuaPZaqdvEjSeViM3WM9/Zb0UaWiSQzu5+zwwjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f/lZ6AZGQf9oJ9eyptQSFVWjeHVFWtjvGm1uAUl3ko+AE3d54KVPZARTi9QRXswic
-	 qM259w1kIOJ+ljQp07fzgp42EtiwmtvS2oXwlVSNBpd2UzEm3nXse210P3y1CAtk4m
-	 31l7xY2l7dzQw9zbgG3e5vbBampnIuCwz3JwqXac=
+	b=11KbI7CiGxCFwgF/fTyseTkFiNUTiKl6bdH7LxE6P2I+5HLG1AyLndnojkS6oDmiy
+	 ahkHmu7yPaqxUlEfuU0+V4MdsRt2VGxDOqYeF8JIlHsy3kXnpjJR1Sz+oP4+jhVYs8
+	 82O/C+REsCSqn4R46mOyCZjM7dgosl3icQehR5Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfKKSn4 (ORCPT
+        id S1729695AbfKKSn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:43:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35376 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:43:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729666AbfKKSnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:43:52 -0500
+        id S1729682AbfKKSn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:43:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F6FF204FD;
-        Mon, 11 Nov 2019 18:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2ED920674;
+        Mon, 11 Nov 2019 18:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497832;
-        bh=I8bJFqYfWHTylaZR6JZ1uKWs8R4yf0qldaNLb9L6BAg=;
+        s=default; t=1573497835;
+        bh=hbb7MuaPZaqdvEjSeViM3WM9/Zb0UaWiSQzu5+zwwjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMSgpoH5S90WKZ05fCZfLTsZhewJskwoGaojLqpbZuDNsJOBqJNjYffUhqb0BnR1P
-         58M2kdqzp4cMYcSw7RaJiY5UOVp8S2kqdJKolQKUaX+5Z6Jac0+K2fgHZFZLMbJHn7
-         J4W8nJ1VqvLXBe8rEZD+xFlXqSTaOnGf7KgdUuQA=
+        b=FJCkj0Fq/QMZxTZbvmuLAqFTQtwYiPjUkbM5LinKQAbaasOm3WJg2bjNFsVE+V7gH
+         VgSWDI/CcYgqZv2ht2YobRtHhnQ97q0408mRSm7PxnjHifYCJ0TDM+thWPGbiy3D8w
+         VsQl7SfBjG9hcGLa4KK3zwXql1FdP4+OUDEfr5fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 4.19 069/125] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
-Date:   Mon, 11 Nov 2019 19:28:28 +0100
-Message-Id: <20191111181449.360572855@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 070/125] HID: google: add magnemite/masterball USB ids
+Date:   Mon, 11 Nov 2019 19:28:29 +0100
+Message-Id: <20191111181449.479293828@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,66 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-commit 7be142caabc4780b13a522c485abc806de5c4114 upstream.
+[ Upstream commit 9e4dbc4646a84b2562ea7c64a542740687ff7daf ]
 
-The PCI Tegra controller conversion to a device tree configurable
-driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
-to drivers/pci/host") implied that code for the driver can be
-compiled in for a kernel supporting multiple platforms.
+Add 2 additional hammer-like devices.
 
-Unfortunately, a blind move of the code did not check that some of the
-quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
-all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
-for both Vendor-ID and Device-ID) are now applied in all kernels that
-compile the PCI Tegra controlled driver, DT and ACPI alike.
-
-This is completely wrong, in that enablement of Relaxed Ordering is only
-required by default in Tegra20 platforms as described in the Tegra20
-Technical Reference Manual (available at
-https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
-Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
-be enabled in its root ports to avoid deadlock in hardware) and in the
-Tegra30 platforms for the same reasons (unfortunately not documented
-in the TRM).
-
-There is no other strict requirement on PCI devices Relaxed Ordering
-enablement on any other Tegra platforms or PCI host bridge driver.
-
-Fix this quite upsetting situation by limiting the vendor and device IDs
-to which the Relaxed Ordering quirk applies to the root ports in
-question, reported above.
-
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-tegra.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hid/hid-google-hammer.c | 4 ++++
+ drivers/hid/hid-ids.h           | 2 ++
+ 2 files changed, 6 insertions(+)
 
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -545,12 +545,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NV
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+index 6bf4da7ad63a5..8cb63ea9977d6 100644
+--- a/drivers/hid/hid-google-hammer.c
++++ b/drivers/hid/hid-google-hammer.c
+@@ -120,6 +120,10 @@ static int hammer_input_configured(struct hid_device *hdev,
+ static const struct hid_device_id hammer_devices[] = {
+ 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+ 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_HAMMER) },
++	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
++		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MAGNEMITE) },
++	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
++		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MASTERBALL) },
+ 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+ 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_STAFF) },
+ 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 6b33117ca60e5..02c263a4c0836 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -466,6 +466,8 @@
+ #define USB_DEVICE_ID_GOOGLE_STAFF	0x502b
+ #define USB_DEVICE_ID_GOOGLE_WAND	0x502d
+ #define USB_DEVICE_ID_GOOGLE_WHISKERS	0x5030
++#define USB_DEVICE_ID_GOOGLE_MASTERBALL	0x503c
++#define USB_DEVICE_ID_GOOGLE_MAGNEMITE	0x503d
  
--/* Tegra PCIE requires relaxed ordering */
-+/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
- static void tegra_pcie_relax_enable(struct pci_dev *dev)
- {
- 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
- }
--DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
- 
- static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
- {
+ #define USB_VENDOR_ID_GOTOP		0x08f2
+ #define USB_DEVICE_ID_SUPER_Q2		0x007f
+-- 
+2.20.1
+
 
 
