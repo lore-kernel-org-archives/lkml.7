@@ -2,103 +2,122 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DF8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E3FC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96185214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8052D214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKKLrf (ORCPT
+        id S1726915AbfKKLuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:47:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43837 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfKKLrf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:47:35 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1iU8AI-0000vA-On; Mon, 11 Nov 2019 12:47:26 +0100
-Received: from mgr by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1iU8AH-0006hF-DX; Mon, 11 Nov 2019 12:47:25 +0100
-From:   Michael Grzeschik <m.grzeschik@pengutronix.de>
-To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        kernel@pengutronix.de, festevam@gmail.com
-Cc:     linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: imx25: fix usbhost1 node
-Date:   Mon, 11 Nov 2019 12:46:56 +0100
-Message-Id: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
-X-Mailer: git-send-email 2.24.0.rc1
+        Mon, 11 Nov 2019 06:50:15 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:32900 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726810AbfKKLuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:50:15 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CE4F7436E77B1BC29BE4;
+        Mon, 11 Nov 2019 19:50:11 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 11 Nov 2019
+ 19:50:06 +0800
+Date:   Mon, 11 Nov 2019 11:49:55 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        <gwendal@chromium.org>, <egranata@chromium.org>,
+        <kernel@collabora.com>, Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        "Enric Balletbo i Serra" <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        <linux-iio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] counter: cros_ec: Add synchronization sensor
+Message-ID: <20191111114955.00001031@huawei.com>
+In-Reply-To: <20191110151408.GB3984@icarus>
+References: <cover.1566563833.git.fabien.lahoudere@collabora.com>
+        <d985a8a811996148e8cda78b9fe47bb87b884b56.1566563833.git.fabien.lahoudere@collabora.com>
+        <20190826095612.7455cb05@archlinux>
+        <8abbe9360938ab851d16c2c1494ba56034775823.camel@collabora.com>
+        <6b50bdff184e6af664b7a61e0a8a2cddc5718f0a.camel@collabora.com>
+        <20191110151408.GB3984@icarus>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: mgr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usb port represented by &usbhost1 uses an USB phy internal to the
-SoC. We add the phy_type to the base dtsi so the board dts only have to
-overwrite it if they use a different configuration. While at it we also
-pin the usbhost port to host mode.
+On Sun, 10 Nov 2019 10:14:08 -0500
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
----
- arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts | 2 --
- arch/arm/boot/dts/imx25-pdk.dts                        | 2 --
- arch/arm/boot/dts/imx25.dtsi                           | 2 ++
- 3 files changed, 2 insertions(+), 4 deletions(-)
+> On Tue, Sep 24, 2019 at 04:20:51PM +0200, Fabien Lahoudere wrote:
+> > Hi all,
+> > 
+> > After some discussions and investigation, the timestamp is very
+> > important for that sync driver.
+> > Google team uses that timestamp to compare with gyroscope timestamp.
+> > 
+> > So the important data is timestamp and counter value is useless.
+> > Just the event of counter increment is important to get a timestamp.
+> > 
+> > In that case, my idea was to just use an IIO driver with a single
+> > channel with IIO_TIMESTAMP. We discuss this here and it seems
+> > controversial.
+> > 
+> > So my question to Jonathan is if we have a timestamp coming from the EC
+> > itself, can we consider this timestamp as a good IIO driver?
+> > 
+> > Any other idea is welcome, however Google team would like to manage
+> > only IIO drivers if possible.
+> > 
+> > Thanks  
+> 
+> Jonathan,
+> 
+> Should the the timestamp from the EC be introduced as an IIO driver
+> using IIO_TIMESTAMP?
 
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-index 0fde90df2b546..3f38c2e60a745 100644
---- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-@@ -165,8 +165,6 @@
- };
- 
- &usbhost1 {
--	phy_type = "serial";
--	dr_mode = "host";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx25-pdk.dts b/arch/arm/boot/dts/imx25-pdk.dts
-index 05cccd12624cb..fb66884d8a2fa 100644
---- a/arch/arm/boot/dts/imx25-pdk.dts
-+++ b/arch/arm/boot/dts/imx25-pdk.dts
-@@ -304,8 +304,6 @@
- };
- 
- &usbhost1 {
--	phy_type = "serial";
--	dr_mode = "host";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-index 9a097ef014af5..7c7795b40ee0c 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -570,6 +570,8 @@
- 				clock-names = "ipg", "ahb", "per";
- 				fsl,usbmisc = <&usbmisc 1>;
- 				fsl,usbphy = <&usbphy1>;
-+				phy_type = "serial";
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
--- 
-2.24.0.rc1
+It is is a rather odd driver but I suppose it would be fine with lots
+of clear docs on why it is how it is...
+
+> 
+> Since there is no corresponding EC Counter driver in the baseline right
+> now we don't have a conflict yet. If the EC timestamp is introduced as
+> an IIO driver then we should make any future EC Counter driver mutually
+> exclusive with the IIO driver in order to prevent any memory space
+> conflict. At that point we may deprecate the IIO driver and move the
+> timestamp functionality to the corresponding Counter driver.
+
+That route does become somewhat of a mess so I suspect we'd have to have
+a single driver supporting both userspace interfaces.  If you are happy
+that we'd be adding a bit of legacy to support for ever then we can go
+that way.
+
+> 
+> That's assuming someone is interested in the Count component enough to
+> implement an EC Counter driver; otherwise, the IIO driver will serve
+> just fine if timestamp is the only data desired from this device.
+> 
+> William Breathitt Gray
+
 
