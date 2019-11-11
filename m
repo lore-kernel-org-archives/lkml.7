@@ -2,80 +2,85 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF731C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A5FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C402D20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nWiO84Sa"
+	by mail.kernel.org (Postfix) with ESMTP id 85C562184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKKW35 (ORCPT
+        id S1727032AbfKKWfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:29:57 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:50332 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKW35 (ORCPT
+        Mon, 11 Nov 2019 17:35:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60004 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbfKKWfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:29:57 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 903CE20B7192;
-        Mon, 11 Nov 2019 14:29:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 903CE20B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573511396;
-        bh=Lx7iits91CkNuBqZLd20zMr4uyVVjAzL/Xch/h41f5Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=nWiO84SaocrRuLAxT31uph/FEZblHnCD1LrQAYf0Tp8VnZJqcP2IoqCFkHPAdKThU
-         PcbK2c9WbUxPfU+KRBQvDod7ake+pF2Aa43G0HOMQX7FhJgWfjNmiq+IymA9/gj+Rz
-         bn+ePz+A16Hl+1yd1mENR6WKby+RQmdceiaZ6DnM=
-Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
-To:     Patrick Callaghan <patrickc@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>
-References: <20191111192348.30535-1-patrickc@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
-Date:   Mon, 11 Nov 2019 14:29:52 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 17:35:44 -0500
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iUIHe-0000tg-IR; Mon, 11 Nov 2019 23:35:42 +0100
+Message-Id: <20191111223051.976000327@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Mon, 11 Nov 2019 23:03:19 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [patch V2 05/16] x86/iopl: Cleanup include maze
+References: <20191111220314.519933535@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191111192348.30535-1-patrickc@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 11:23 AM, Patrick Callaghan wrote:
+Get rid of superfluous includes.
 
-> -		if (rbuf_len == 0)
-> +		if (rbuf_len == 0) {	/* unexpected EOF */
-> +			rc = -EINVAL;
->   			break;
-> +		}
->   		offset += rbuf_len;
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+V2: New patch
+---
+ arch/x86/kernel/ioport.c |   16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-Should there be an additional check to validate that (offset + rbuf_len) 
-is less than i_size before calling cypto_shash_update (since rbuf_len is 
-one of the parameters for this call)?
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -3,22 +3,14 @@
+  * This contains the io-permission bitmap code - written by obz, with changes
+  * by Linus. 32/64 bits code unification by Miguel Botón.
+  */
+-
+-#include <linux/sched.h>
+-#include <linux/sched/task_stack.h>
+-#include <linux/kernel.h>
+ #include <linux/capability.h>
+-#include <linux/errno.h>
+-#include <linux/types.h>
+-#include <linux/ioport.h>
+ #include <linux/security.h>
+-#include <linux/smp.h>
+-#include <linux/stddef.h>
+-#include <linux/slab.h>
+-#include <linux/thread_info.h>
+ #include <linux/syscalls.h>
+ #include <linux/bitmap.h>
+-#include <asm/syscalls.h>
++#include <linux/ioport.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++
+ #include <asm/desc.h>
+ 
+ /*
 
-                if ((rbuf_len == 0) || (offset + rbuf_len >= i_size)) {
-                         rc = -EINVAL;
-                         break;
-                }
-                offset += rbuf_len;
-
->   	       rc = crypto_shash_update(shash, rbuf, rbuf_len);
-
-  -lakshmi
 
