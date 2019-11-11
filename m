@@ -2,163 +2,187 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285ACC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C905AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0388320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E5821783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfKKPvN (ORCPT
+        id S1726988AbfKKPwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:51:13 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:41255 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726857AbfKKPvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:51:12 -0500
-Received: (qmail 14399 invoked by uid 500); 11 Nov 2019 10:51:11 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 11 Nov 2019 10:51:11 -0500
-Date:   Mon, 11 Nov 2019 10:51:11 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Marco Elver <elver@google.com>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-In-Reply-To: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
+        Mon, 11 Nov 2019 10:52:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:47350 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbfKKPwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:52:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5936331B;
+        Mon, 11 Nov 2019 07:52:11 -0800 (PST)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1434B3F534;
+        Mon, 11 Nov 2019 07:52:11 -0800 (PST)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id C954D682AC2; Mon, 11 Nov 2019 15:52:09 +0000 (GMT)
+Date:   Mon, 11 Nov 2019 15:52:09 +0000
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] drm/komeda: Add debugfs node to control error
+ verbosity
+Message-ID: <20191111155209.zxkgqj4m4x6mphd7@e110455-lin.cambridge.arm.com>
+References: <20191107114155.54307-1-mihail.atanassov@arm.com>
+ <20191107114155.54307-2-mihail.atanassov@arm.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191107114155.54307-2-mihail.atanassov@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 Nov 2019, Marco Elver wrote:
-
-> On Sun, 10 Nov 2019 at 17:09, Alan Stern <stern@rowland.harvard.edu> wrote:
-...
-
-> > For those used to thinking in terms of litmus tests, consider this one:
-> >
-> > C equivalent-writes
-> >
-> > {}
-> >
-> > P0(int *x)
-> > {
-> >         *x = 1;
-> > }
-> >
-> > P1(int *x)
-> > {
-> >         *x = 1;
-> > }
-> >
-> > exists (~x=1)
-> >
-> > Should the LKMM say that this litmus test contains a race?
-> >
-> > This suggests that we might also want to relax the notion of a write
-> > racing with a read, although in that case I'm not at all sure what the
-> > appropriate change to the memory model would be.  Something along the
-> > lines of: If a write W races with a read R, but W stores the same value
-> > that R would have read if W were not present, then it's not really a
-> > race.  But of course this is far too vague to be useful.
+On Thu, Nov 07, 2019 at 11:42:28AM +0000, Mihail Atanassov wrote:
+> Named 'err_verbosity', currently with only 1 active bit in that
+> replicates the existing level - print error events once per flip.
 > 
-> What if you introduce to the above litmus test:
+> Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
+> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+
+Best regards,
+Liviu
+
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.c   |  4 ++++
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.h   | 14 ++++++++++++--
+>  drivers/gpu/drm/arm/display/komeda/komeda_event.c |  9 +++++++--
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.c   |  2 +-
+>  4 files changed, 24 insertions(+), 5 deletions(-)
 > 
-> P2(int *x) { *x = 2; }
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> index 14d5c5da9e3b..4e46f650fddf 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> @@ -58,6 +58,8 @@ static void komeda_debugfs_init(struct komeda_dev *mdev)
+>  	mdev->debugfs_root = debugfs_create_dir("komeda", NULL);
+>  	debugfs_create_file("register", 0444, mdev->debugfs_root,
+>  			    mdev, &komeda_register_fops);
+> +	debugfs_create_x16("err_verbosity", 0664, mdev->debugfs_root,
+> +			   &mdev->err_verbosity);
+>  }
+>  #endif
+>  
+> @@ -273,6 +275,8 @@ struct komeda_dev *komeda_dev_create(struct device *dev)
+>  		goto err_cleanup;
+>  	}
+>  
+> +	mdev->err_verbosity = KOMEDA_DEV_PRINT_ERR_EVENTS;
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  	komeda_debugfs_init(mdev);
+>  #endif
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> index 414200233b64..b5bd3d5898ee 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> @@ -202,6 +202,14 @@ struct komeda_dev {
+>  
+>  	/** @debugfs_root: root directory of komeda debugfs */
+>  	struct dentry *debugfs_root;
+> +	/**
+> +	 * @err_verbosity: bitmask for how much extra info to print on error
+> +	 *
+> +	 * See KOMEDA_DEV_* macros for details.
+> +	 */
+> +	u16 err_verbosity;
+> +	/* Print a single line per error per frame with error events. */
+> +#define KOMEDA_DEV_PRINT_ERR_EVENTS BIT(0)
+>  };
+>  
+>  static inline bool
+> @@ -219,9 +227,11 @@ void komeda_dev_destroy(struct komeda_dev *mdev);
+>  struct komeda_dev *dev_to_mdev(struct device *dev);
+>  
+>  #ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+> -void komeda_print_events(struct komeda_events *evts);
+> +void komeda_print_events(struct komeda_events *evts, struct drm_device *dev);
+>  #else
+> -static inline void komeda_print_events(struct komeda_events *evts) {}
+> +static inline void komeda_print_events(struct komeda_events *evts,
+> +				       struct drm_device *dev)
+> +{}
+>  #endif
+>  
+>  int komeda_dev_resume(struct komeda_dev *mdev);
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> index a36fb86cc054..575ed4df74ed 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> @@ -107,10 +107,12 @@ static bool is_new_frame(struct komeda_events *a)
+>  	       (KOMEDA_EVENT_FLIP | KOMEDA_EVENT_EOW);
+>  }
+>  
+> -void komeda_print_events(struct komeda_events *evts)
+> +void komeda_print_events(struct komeda_events *evts, struct drm_device *dev)
+>  {
+> -	u64 print_evts = KOMEDA_ERR_EVENTS;
+> +	u64 print_evts = 0;
+>  	static bool en_print = true;
+> +	struct komeda_dev *mdev = dev->dev_private;
+> +	u16 const err_verbosity = mdev->err_verbosity;
+>  
+>  	/* reduce the same msg print, only print the first evt for one frame */
+>  	if (evts->global || is_new_frame(evts))
+> @@ -118,6 +120,9 @@ void komeda_print_events(struct komeda_events *evts)
+>  	if (!en_print)
+>  		return;
+>  
+> +	if (err_verbosity & KOMEDA_DEV_PRINT_ERR_EVENTS)
+> +		print_evts |= KOMEDA_ERR_EVENTS;
+> +
+>  	if ((evts->global | evts->pipes[0] | evts->pipes[1]) & print_evts) {
+>  		char msg[256];
+>  		struct komeda_str str;
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> index d49772de93e0..e30a5b43caa9 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> @@ -48,7 +48,7 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+>  	memset(&evts, 0, sizeof(evts));
+>  	status = mdev->funcs->irq_handler(mdev, &evts);
+>  
+> -	komeda_print_events(&evts);
+> +	komeda_print_events(&evts, drm);
+>  
+>  	/* Notify the crtc to handle the events */
+>  	for (i = 0; i < kms->n_crtcs; i++)
+> -- 
+> 2.23.0
+> 
 
-Then clearly the test _would_ contain a data race.
-
-> How can a developer, using the LKMM as a reference, hope to prove
-> their code is free from data races without having to enumerate all
-> possible values a variable could contain (in addition to all possible
-> interleavings)?
-
-Well, for one thing the new rule doesn't say anything about all
-possible values a variable could contain; it only talks about the
-values of a pair of concurrent writes.  Of course, this would still
-require you to be aware of (if not to fully enumerate) all possible
-values a write could store, so perhaps it's not much of an improvement.
-
-On the other hand, one way to prove your code is data-race-free under
-the revised LKMM would be to show that it is data-race-free under the
-original (i.e., current) LKMM.  Then you wouldn't have to enumerate any
-lists of possible values.
-
-> I view introducing data value dependencies, for the sake of allowing
-> more programs, to a language memory model as a slippery slope, and am
-> not aware of any precedent where this worked out. The additional
-> complexity in the memory model would put a burden on developers and
-> the compiler that is unlikely to be a real benefit (as you pointed
-> out, the compiler may even need to disable some transformations).
-
-This may be so.  But if the resulting model is a better match to the
-way kernel developers think about their code, wouldn't it be
-appropriate?
-
->  From
-> a practical point of view, if the LKMM departs further and further
-> from C11's memory model, how do we ensure all compilers do the right
-> thing?
-
-Linus has already committed to doing this.  To quote the latest example
-(from a message he posted shortly after yours):
-
-	I don't care one whit about C11. Made-up stores to shared data
-	are not acceptable. Ever. We will turn that off with a compiler
-	switch if the compiler thinks it can do them, the same way we
-	turn off other incorrect optimizations like the type-based
-	aliasing or the insane "signed integer arithmetic can have
-	undefined behavior" stupidity that the standards people
-	allowed.
-
-Given that the kernel _requires_ compilers to behave this way, 
-shouldn't the LKMM reflect this requirement?
-
-> My vote would go to explicit annotation, not only because it reduces
-> hidden complexity, but also because it makes the code more
-> understandable, for developers and tooling. As an additional point, I
-> find the original suggestion to add WRITE_ONCE to be the least bad (or
-> some other better named WRITE_). Consider somebody changing the code,
-> changing the semantics and the values written to "non_rcu". With a
-> WRITE_ONCE, the developer would be clear about the fact that the write
-> can happen concurrently, and ensure new code is written with the
-> assumption that concurrent writes can happen.
-
-I dislike the explicit annotation approach, because it shifts the
-burden of proving correctness from the automatic verifier to the
-programmer.  Let's take the litmus test above as example.  I could
-annotate it to read:
-
-P0(int *x) { WRITE_IDEMPOTENT(*x, 1); }
-P1(int *x) { WRITE_IDEMPOTENT(*x, 1); }
-
-and then KCSAN would take my word for it that the two writes don't race
-with each other (or if they do race, it doesn't matter).  But now if
-the code was changed by adding:
-
-P2(int *x) { WRITE_IDEMPOTENT(*x, 2); }
-
-then KCSAN would still believe there was no race, meaning it would be
-up to me to audit all possible writes to x to make sure they store the
-same value.  That is not how automated tooling should work.
-
-Alan Stern
-
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
