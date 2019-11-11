@@ -2,133 +2,126 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D96C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6BCC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D83204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9B2222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498863;
-	bh=dguNy2Uy53wWhZ5XJNoj++7yvyxtrq34d78ej4hQFm4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNC9uwYJwxDXQi/X/lla6lZK5igILkykRjj71mSgkjT6fYofg6fdGLWN88P4niqbD
-	 Fq1ux///7Asy04vElt95DiJRaI2ihU+9ERy5SCP7O2uOtXHMU/mYE+mG5ih9h4mlUA
-	 +epH+zaNf7oWN0i/xUILLY1wosYMmqx76WD8MbYQ=
+	s=default; t=1573498874;
+	bh=6Y9SkLWC5ucVzdD21aXq6P4PZcHCyuYthaOO95QTRSM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wcUcawM5WoCV3eJfEcMgebtxXJrzZBDBHrpjVoCUxur2Q8FW5HNAfQvUX2nhJ6Sxb
+	 6gGMPoY6uBVs9uslQJ2GlAgqD6U8n/N6P33GRQ/h+yLXkXpGR6HsMs9p5p+NfM1hb+
+	 zo9snVqW3rJeIr/vWUwV+8AIvkW4qrf5B/AoLuw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbfKKSwc (ORCPT
+        id S1730517AbfKKTBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:52:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730274AbfKKSwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:52:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 490A0204EC;
-        Mon, 11 Nov 2019 18:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498343;
-        bh=dguNy2Uy53wWhZ5XJNoj++7yvyxtrq34d78ej4hQFm4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QlRWc6Rfrn37VHAmJriUoDWnze0/JpXPGIugJTOairpq9Xq3HWVFi6mdZgMxjqHBM
-         6oHirgjhV+s1lhani/QcUCkEKBFM8GHFObH8mrmjXqBcnY/0W5uwhefSNQ8Rbh25aG
-         VlIX655NjpVkOF8XMt6/ZsTxkvK5hu1p9flsZ/KM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenfang Wang <zhenfang.wang@unisoc.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 092/193] dmaengine: sprd: Fix the link-list pointer register configuration issue
-Date:   Mon, 11 Nov 2019 19:27:54 +0100
-Message-Id: <20191111181507.930056795@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
-References: <20191111181459.850623879@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 11 Nov 2019 14:01:13 -0500
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:39176 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729957AbfKKTBK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 14:01:10 -0500
+Received: by mail-lf1-f49.google.com with SMTP id j14so2123877lfk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 11:01:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7X+i/K/e1sfyo/sSNSz4o3Zk6I09VNaSQEUuToduhok=;
+        b=IfGf7e0vnSjr5D5/DFnDtseZozwEmG+KD34J8cRx2xf34AIG9uoiU23s5fCGgXqEK5
+         pSM5R4LyfWGXW4tT+suDhlW+bfiQEQkNQpZTYlGHKMQ/MYDHAI4BuxjcbA3OnkuY9PoG
+         2YgxBEu1RUtZ1BQ8hGZGSjXauXMoa4FK+6ZBk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7X+i/K/e1sfyo/sSNSz4o3Zk6I09VNaSQEUuToduhok=;
+        b=Xlash8t0tAlW7htMkLHvGuV8Hx4GUhMP/l5M7dhu5G0B6LKZPGWzYTg/s33Ups/oGW
+         4sKKo/nD8Q1n547Xnh3xBnlAazOBKsmJIuXbcXqTE9GpfPdrCZlCx5arR1jZNrEES/Lv
+         NFTxy3gHY1cSRAcjrsdEvsncGTfIrW7PFhEyzNWlTCcn8BFa6kCo6g8tI+A/qka9n1DC
+         r3n5gdTGXrl+AN2Bs8uiyPyMtqtwzTAi0+BUdTp9Wt5WhGfQFSy2olDwlv3LeiSCj84W
+         uA9amZsBIcSPUn1NUm1Cr4/hkGLX1V7MmUfe4OsBKIzoLm3oiStp6pSXulrKm6TMXSgw
+         u29w==
+X-Gm-Message-State: APjAAAXyjUlTU3qfrlqABupC7mXEFqZz9Gd3eYCx17iPRi6Uhs/j0fcu
+        w12gcGWJhvtDTtsWKG3beWkaNF9QLNg=
+X-Google-Smtp-Source: APXvYqy+8VnCA4UWuBAiHaZ4qgzIN5JAD6WFQassCDFe3HCdc3YdlT/K5VJAWmlmriRawyAFVLA7KA==
+X-Received: by 2002:a05:6512:25d:: with SMTP id b29mr5805888lfo.171.1573498866586;
+        Mon, 11 Nov 2019 11:01:06 -0800 (PST)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id d5sm1539822lfl.2.2019.11.11.11.01.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Nov 2019 11:01:05 -0800 (PST)
+Received: by mail-lj1-f175.google.com with SMTP id e9so14945090ljp.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 11:01:04 -0800 (PST)
+X-Received: by 2002:a2e:982:: with SMTP id 124mr8876387ljj.48.1573498864524;
+ Mon, 11 Nov 2019 11:01:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
+ <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com>
+ <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
+ <CAHk-=wg6Zaf09i0XNgCmOzKKWnoAPMfA7WX9OY1Ow1YtF0ZP3A@mail.gmail.com>
+ <CANn89i+hRhweL2N=r1chMpWKU2ue8fiQO=dLxGs9sgLFbgHEWQ@mail.gmail.com> <CANn89iJiuOkKc2AVmccM8z9e_d4zbV61K-3z49ao1UwRDdFiHw@mail.gmail.com>
+In-Reply-To: <CANn89iJiuOkKc2AVmccM8z9e_d4zbV61K-3z49ao1UwRDdFiHw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 11 Nov 2019 11:00:48 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgkwBjQWyDQi8mu06DXr_v_4zui+33fk3eK89rPof5b+A@mail.gmail.com>
+Message-ID: <CAHk-=wgkwBjQWyDQi8mu06DXr_v_4zui+33fk3eK89rPof5b+A@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Marco Elver <elver@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenfang Wang <zhenfang.wang@unisoc.com>
+On Mon, Nov 11, 2019 at 10:44 AM Eric Dumazet <edumazet@google.com> wrote:
+>
+> An interesting case is the race in ksys_write()
 
-[ Upstream commit 8b6bc5fd71e677864d1a3b896b3069a6e0c5e214 ]
+Not really.
 
-We will set the link-list pointer register point to next link-list
-configuration's physical address, which can load DMA configuration
-from the link-list node automatically.
+> if (ppos) {
+>      pos = *ppos; // data-race
 
-But the link-list node's physical address can be larger than 32bits,
-and now Spreadtrum DMA driver only supports 32bits physical address,
-which may cause loading a incorrect DMA configuration when starting
-the link-list transfer mode. According to the DMA datasheet, we can
-use SRC_BLK_STEP register (bit28 - bit31) to save the high bits of the
-link-list node's physical address to fix this issue.
+That code uses "fdget_pos().
 
-Fixes: 4ac695464763 ("dmaengine: sprd: Support DMA link-list mode")
-Signed-off-by: Zhenfang Wang <zhenfang.wang@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lore.kernel.org/r/eadfe9295499efa003e1c344e67e2890f9d1d780.1568267061.git.baolin.wang@linaro.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/sprd-dma.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Which does mutual exclusion _if_ the file is something we care about
+pos for, and if it has more than one process using it.
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 525dc7338fe3b..a4a91f233121a 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -134,6 +134,10 @@
- #define SPRD_DMA_SRC_TRSF_STEP_OFFSET	0
- #define SPRD_DMA_TRSF_STEP_MASK		GENMASK(15, 0)
- 
-+/* SPRD DMA_SRC_BLK_STEP register definition */
-+#define SPRD_DMA_LLIST_HIGH_MASK	GENMASK(31, 28)
-+#define SPRD_DMA_LLIST_HIGH_SHIFT	28
-+
- /* define DMA channel mode & trigger mode mask */
- #define SPRD_DMA_CHN_MODE_MASK		GENMASK(7, 0)
- #define SPRD_DMA_TRG_MODE_MASK		GENMASK(7, 0)
-@@ -717,6 +721,7 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 	u32 int_mode = flags & SPRD_DMA_INT_MASK;
- 	int src_datawidth, dst_datawidth, src_step, dst_step;
- 	u32 temp, fix_mode = 0, fix_en = 0;
-+	phys_addr_t llist_ptr;
- 
- 	if (dir == DMA_MEM_TO_DEV) {
- 		src_step = sprd_dma_get_step(slave_cfg->src_addr_width);
-@@ -814,13 +819,16 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 		 * Set the link-list pointer point to next link-list
- 		 * configuration's physical address.
- 		 */
--		hw->llist_ptr = schan->linklist.phy_addr + temp;
-+		llist_ptr = schan->linklist.phy_addr + temp;
-+		hw->llist_ptr = lower_32_bits(llist_ptr);
-+		hw->src_blk_step = (upper_32_bits(llist_ptr) << SPRD_DMA_LLIST_HIGH_SHIFT) &
-+			SPRD_DMA_LLIST_HIGH_MASK;
- 	} else {
- 		hw->llist_ptr = 0;
-+		hw->src_blk_step = 0;
- 	}
- 
- 	hw->frg_step = 0;
--	hw->src_blk_step = 0;
- 	hw->des_blk_step = 0;
- 	return 0;
- }
--- 
-2.20.1
+Basically the rule there is that we don't care about the data race in
+certain circumstances. We don't care about non-regular files, for
+example, because those are what POSIX gives guarantees for.
 
+(We have since moved towards FMODE_STREAM handling instead of the
+older FMODE_ATOMIC_POS which does this better, and it's possible we
+should get rid of the FMODE_ATOMIC_POS behavior in favor of
+FMODE_STREAM entirely)
 
+Again, that's pretty hard to tell something like KCSAN.
 
+Of course, it's then questionable whether our rules for not caring are
+necessarily the _right_ rules for not caring. For example, if you have
+threads, the "more than one process opening it" doesn't trigger. It's
+literally just atomicity across processes that we guarantee. That's
+certainly a bit questionable. But that's a higher-level decision.
+
+               Linus
