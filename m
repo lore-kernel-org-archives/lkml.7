@@ -2,294 +2,95 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19019C17446
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80E2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA47C21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497805;
-	bh=QiTlitfYGxD2rq2OwiN44AMkLuoCVAPxbQZCfxigeZQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iYK657Fwkw2yNEiljS7VkJINY24DtUhuiU4RtXv4tFbPU1eYd6IZnXppd5f+KGBON
-	 FxhUhZPGyQiNZqEqSILRDCQAl/NY7047/qAYB7arXtuV83Js5CZE2dTdc62LeVri5Z
-	 49wxAWaA+EJjfZekoTqfpteZmFmlJGPAPnYrBjIw=
+	by mail.kernel.org (Postfix) with ESMTP id 90BB021783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=golovin.in header.i=@golovin.in header.b="0AgvEJRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfKKSnX (ORCPT
+        id S1728936AbfKKSn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:43:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbfKKSnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:43:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A50721783;
-        Mon, 11 Nov 2019 18:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497797;
-        bh=QiTlitfYGxD2rq2OwiN44AMkLuoCVAPxbQZCfxigeZQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ORQeLjbrKPbC45kdqtskSQERFm27ITPu8qKc3W59JoY1yAy2XNrQMHq+ygFZJc3qt
-         i2fOtnXnjmGdgL1zXTegzHN9u7EHVwJYDm0/+THA+LWciejlygVI3PrKsbJnKFt4Fj
-         3Y7LRMar2wS20YMtWCZVQKBL0Te1Pe4aPcwtqzB0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 060/125] ALSA: usb-audio: Remove superfluous bLength checks
-Date:   Mon, 11 Nov 2019 19:28:19 +0100
-Message-Id: <20191111181448.330781223@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
-References: <20191111181438.945353076@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 11 Nov 2019 13:43:26 -0500
+Received: from forward106p.mail.yandex.net ([77.88.28.109]:55623 "EHLO
+        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728301AbfKKSnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:43:21 -0500
+X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 13:43:19 EST
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward106p.mail.yandex.net (Yandex) with ESMTP id B98701C806FA;
+        Mon, 11 Nov 2019 21:37:26 +0300 (MSK)
+Received: from mxback8q.mail.yandex.net (mxback8q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:b38f:32ec])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id B41CC7080002;
+        Mon, 11 Nov 2019 21:37:26 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback8q.mail.yandex.net (mxback/Yandex) with ESMTP id Fm9TxESHgv-bPd8t6v3;
+        Mon, 11 Nov 2019 21:37:25 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=golovin.in; s=mail; t=1573497445;
+        bh=Kr8Q2CYrVzqyFN3+KQChl/ZmdG+3/pTsRbqPDvZ9Fks=;
+        h=Message-Id:Date:Cc:Subject:To:From;
+        b=0AgvEJRsURO6sGtecisNH6I2lDJ54V2JAceWcUvHyXAnXtKKbeLunJnwPU6TWGnii
+         Bn9j0Ykvy8GTF7jCTOnbtINI/X+br9PLuzJg60pEkOMQevn5g2R3JkHsiGZxWY//07
+         f0SY09SjPC/o6lMy23G899p+Zw3q5mZA2qLZAqdQ=
+Authentication-Results: mxback8q.mail.yandex.net; dkim=pass header.i=@golovin.in
+Received: by vla1-b2d94eaf2344.qloud-c.yandex.net with HTTP;
+        Mon, 11 Nov 2019 21:37:25 +0300
+From:   Dmitry Golovin <dima@golovin.in>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Ethan Sommer <e5ten.arch@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Mon, 11 Nov 2019 20:37:25 +0200
+Message-Id: <17102241573497445@vla1-b2d94eaf2344.qloud-c.yandex.net>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+> Hmm, this is unfortunate since there is no common way to
+> specify the header path directly.
+> 
+> I am not sure how much effort we should invent
+> to support non-GNU implementation
+> since we already rely on various GNU tools.
+> 
+> If we decide to support byacc,
+> we must carry the restriction
+> that bans GNU-extension.
 
-commit b8e4f1fdfa422398c2d6c47bfb7d1feb3046d70a upstream.
+In fact Linux now can be built without using GNU
+binutils and using LLVM tools instead. It's just
+one architecture and a specific config now, but
+eventually the others will be built too. You can
+follow the progress here:
+https://github.com/ClangBuiltLinux/continuous-integration/issues/73
 
-Now that we got the more comprehensive validation code for USB-audio
-descriptors, the check of overflow in each descriptor unit parser
-became superfluous.  Drop some of the obvious cases.
+I believe that compatibility with different
+alternative tools is a good thing as long as it
+doesn't add unwanted complexity. And as this patch
+is just changing command-line flags to their
+portable variants and explicitly adds a couple of
+definitions that are presumed by GNU bison, I
+can't see a problem with it.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/usb/clock.c |   14 +++------
- sound/usb/mixer.c |   84 ------------------------------------------------------
- 2 files changed, 6 insertions(+), 92 deletions(-)
-
---- a/sound/usb/clock.c
-+++ b/sound/usb/clock.c
-@@ -52,39 +52,37 @@ static void *find_uac_clock_desc(struct
- static bool validate_clock_source_v2(void *p, int id)
- {
- 	struct uac_clock_source_descriptor *cs = p;
--	return cs->bLength == sizeof(*cs) && cs->bClockID == id;
-+	return cs->bClockID == id;
- }
- 
- static bool validate_clock_source_v3(void *p, int id)
- {
- 	struct uac3_clock_source_descriptor *cs = p;
--	return cs->bLength == sizeof(*cs) && cs->bClockID == id;
-+	return cs->bClockID == id;
- }
- 
- static bool validate_clock_selector_v2(void *p, int id)
- {
- 	struct uac_clock_selector_descriptor *cs = p;
--	return cs->bLength >= sizeof(*cs) && cs->bClockID == id &&
--		cs->bLength == 7 + cs->bNrInPins;
-+	return cs->bClockID == id;
- }
- 
- static bool validate_clock_selector_v3(void *p, int id)
- {
- 	struct uac3_clock_selector_descriptor *cs = p;
--	return cs->bLength >= sizeof(*cs) && cs->bClockID == id &&
--		cs->bLength == 11 + cs->bNrInPins;
-+	return cs->bClockID == id;
- }
- 
- static bool validate_clock_multiplier_v2(void *p, int id)
- {
- 	struct uac_clock_multiplier_descriptor *cs = p;
--	return cs->bLength == sizeof(*cs) && cs->bClockID == id;
-+	return cs->bClockID == id;
- }
- 
- static bool validate_clock_multiplier_v3(void *p, int id)
- {
- 	struct uac3_clock_multiplier_descriptor *cs = p;
--	return cs->bLength == sizeof(*cs) && cs->bClockID == id;
-+	return cs->bClockID == id;
- }
- 
- #define DEFINE_FIND_HELPER(name, obj, validator, type)		\
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -755,13 +755,6 @@ static int uac_mixer_unit_get_channels(s
- {
- 	int mu_channels;
- 
--	if (desc->bLength < sizeof(*desc))
--		return -EINVAL;
--	if (!desc->bNrInPins)
--		return -EINVAL;
--	if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
--		return -EINVAL;
--
- 	switch (state->mixer->protocol) {
- 	case UAC_VERSION_1:
- 	case UAC_VERSION_2:
-@@ -1796,13 +1789,6 @@ static int parse_clock_source_unit(struc
- 	if (state->mixer->protocol != UAC_VERSION_2)
- 		return -EINVAL;
- 
--	if (hdr->bLength != sizeof(*hdr)) {
--		usb_audio_dbg(state->chip,
--			      "Bogus clock source descriptor length of %d, ignoring.\n",
--			      hdr->bLength);
--		return 0;
--	}
--
- 	/*
- 	 * The only property of this unit we are interested in is the
- 	 * clock source validity. If that isn't readable, just bail out.
-@@ -1861,62 +1847,20 @@ static int parse_audio_feature_unit(stru
- 	__u8 *bmaControls;
- 
- 	if (state->mixer->protocol == UAC_VERSION_1) {
--		if (hdr->bLength < 7) {
--			usb_audio_err(state->chip,
--				      "unit %u: invalid UAC_FEATURE_UNIT descriptor\n",
--				      unitid);
--			return -EINVAL;
--		}
- 		csize = hdr->bControlSize;
--		if (!csize) {
--			usb_audio_dbg(state->chip,
--				      "unit %u: invalid bControlSize == 0\n",
--				      unitid);
--			return -EINVAL;
--		}
- 		channels = (hdr->bLength - 7) / csize - 1;
- 		bmaControls = hdr->bmaControls;
--		if (hdr->bLength < 7 + csize) {
--			usb_audio_err(state->chip,
--				      "unit %u: invalid UAC_FEATURE_UNIT descriptor\n",
--				      unitid);
--			return -EINVAL;
--		}
- 	} else if (state->mixer->protocol == UAC_VERSION_2) {
- 		struct uac2_feature_unit_descriptor *ftr = _ftr;
--		if (hdr->bLength < 6) {
--			usb_audio_err(state->chip,
--				      "unit %u: invalid UAC_FEATURE_UNIT descriptor\n",
--				      unitid);
--			return -EINVAL;
--		}
- 		csize = 4;
- 		channels = (hdr->bLength - 6) / 4 - 1;
- 		bmaControls = ftr->bmaControls;
--		if (hdr->bLength < 6 + csize) {
--			usb_audio_err(state->chip,
--				      "unit %u: invalid UAC_FEATURE_UNIT descriptor\n",
--				      unitid);
--			return -EINVAL;
--		}
- 	} else { /* UAC_VERSION_3 */
- 		struct uac3_feature_unit_descriptor *ftr = _ftr;
- 
--		if (hdr->bLength < 7) {
--			usb_audio_err(state->chip,
--				      "unit %u: invalid UAC3_FEATURE_UNIT descriptor\n",
--				      unitid);
--			return -EINVAL;
--		}
- 		csize = 4;
- 		channels = (ftr->bLength - 7) / 4 - 1;
- 		bmaControls = ftr->bmaControls;
--		if (hdr->bLength < 7 + csize) {
--			usb_audio_err(state->chip,
--				      "unit %u: invalid UAC3_FEATURE_UNIT descriptor\n",
--				      unitid);
--			return -EINVAL;
--		}
- 	}
- 
- 	/* parse the source unit */
-@@ -2120,15 +2064,11 @@ static int parse_audio_input_terminal(st
- 
- 	if (state->mixer->protocol == UAC_VERSION_2) {
- 		struct uac2_input_terminal_descriptor *d_v2 = raw_desc;
--		if (d_v2->bLength < sizeof(*d_v2))
--			return -EINVAL;
- 		control = UAC2_TE_CONNECTOR;
- 		term_id = d_v2->bTerminalID;
- 		bmctls = le16_to_cpu(d_v2->bmControls);
- 	} else if (state->mixer->protocol == UAC_VERSION_3) {
- 		struct uac3_input_terminal_descriptor *d_v3 = raw_desc;
--		if (d_v3->bLength < sizeof(*d_v3))
--			return -EINVAL;
- 		control = UAC3_TE_INSERTION;
- 		term_id = d_v3->bTerminalID;
- 		bmctls = le32_to_cpu(d_v3->bmControls);
-@@ -2390,18 +2330,7 @@ static int build_audio_procunit(struct m
- 	const char *name = extension_unit ?
- 		"Extension Unit" : "Processing Unit";
- 
--	if (desc->bLength < 13) {
--		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
--		return -EINVAL;
--	}
--
- 	num_ins = desc->bNrInPins;
--	if (desc->bLength < 13 + num_ins ||
--	    desc->bLength < num_ins + uac_processing_unit_bControlSize(desc, state->mixer->protocol)) {
--		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
--		return -EINVAL;
--	}
--
- 	for (i = 0; i < num_ins; i++) {
- 		err = parse_audio_unit(state, desc->baSourceID[i]);
- 		if (err < 0)
-@@ -2656,13 +2585,6 @@ static int parse_audio_selector_unit(str
- 	const struct usbmix_name_map *map;
- 	char **namelist;
- 
--	if (desc->bLength < 5 || !desc->bNrInPins ||
--	    desc->bLength < 5 + desc->bNrInPins) {
--		usb_audio_err(state->chip,
--			"invalid SELECTOR UNIT descriptor %d\n", unitid);
--		return -EINVAL;
--	}
--
- 	for (i = 0; i < desc->bNrInPins; i++) {
- 		err = parse_audio_unit(state, desc->baSourceID[i]);
- 		if (err < 0)
-@@ -3168,8 +3090,6 @@ static int snd_usb_mixer_controls(struct
- 		if (mixer->protocol == UAC_VERSION_1) {
- 			struct uac1_output_terminal_descriptor *desc = p;
- 
--			if (desc->bLength < sizeof(*desc))
--				continue; /* invalid descriptor? */
- 			/* mark terminal ID as visited */
- 			set_bit(desc->bTerminalID, state.unitbitmap);
- 			state.oterm.id = desc->bTerminalID;
-@@ -3181,8 +3101,6 @@ static int snd_usb_mixer_controls(struct
- 		} else if (mixer->protocol == UAC_VERSION_2) {
- 			struct uac2_output_terminal_descriptor *desc = p;
- 
--			if (desc->bLength < sizeof(*desc))
--				continue; /* invalid descriptor? */
- 			/* mark terminal ID as visited */
- 			set_bit(desc->bTerminalID, state.unitbitmap);
- 			state.oterm.id = desc->bTerminalID;
-@@ -3208,8 +3126,6 @@ static int snd_usb_mixer_controls(struct
- 		} else {  /* UAC_VERSION_3 */
- 			struct uac3_output_terminal_descriptor *desc = p;
- 
--			if (desc->bLength < sizeof(*desc))
--				continue; /* invalid descriptor? */
- 			/* mark terminal ID as visited */
- 			set_bit(desc->bTerminalID, state.unitbitmap);
- 			state.oterm.id = desc->bTerminalID;
-
-
+Regards,
+Dmitry
