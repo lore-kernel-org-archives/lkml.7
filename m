@@ -2,140 +2,193 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67C2C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D4AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26AC2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:36:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="qUqQrkGz"
+	by mail.kernel.org (Postfix) with ESMTP id 83F1720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfKKQg2 (ORCPT
+        id S1726955AbfKKQiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:36:28 -0500
-Received: from mail-eopbgr730070.outbound.protection.outlook.com ([40.107.73.70]:45793
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726877AbfKKQg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:36:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tk2d27cw/WeaRrf4IJ9DvPSdhvqbcffjwfFJQjAln88uRKiBNEEWEz/6r3SFYDJTgXBlE/HiFNdnZ03bTqa3rRkPm4rt4tkydPQXTZHDI2b9PvXTButYzKu5RMXv1vhfG8Dloe0nVv5B11+QndBdrzBctEXs3MB7Ny4FyJ2AfS4OCXXiOVM1lZ5Mo1u/9rtqiJGodlwKCJ6RJibcH9JGUjx2QiFil6UGHssrLZitpGSH37sZlTepK00d/4bMXOTuPP5/KHRYH36LCnLWL9Al+iktPlMIQSLsVFiZxXPgq6qQMiEqn280NTOcj7aCpphsLTvc6c6+bvYAbTivoLlKvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HhECcW+STZ6+97zS4fFba30Zd0+2lh5Tvswncz34eyQ=;
- b=bkzUTsvKuVHDhIN6vHk0LgdXuuUV9sW+2adhkygTDuExJSmKlb96TXo3K9BvrqsauYEenNGUHYLIxT1Qpl7YgXkvE3hXJrgrFIl1UrAz2wi9o03BgXsWZEipbzmdPtulz0smKopsZ21gvg/uSitpxpRuki9/VeO1sHwvjx/xicwJKPMZxaglBDY147JtXWhkbaHWyd5MdpbrRexzgEjEMRmC9tS7I4ajM+KBSzPqd0hIFhdLAtMsHTfD+9p0QvM4RXuHNnLfvMQ2rSpGU6JLpa6B2kEsP9LlRk2YOg2e+BkgjvS/AS7M15801R4P9Csw3hJeVf5qS22uxpqxmAevSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HhECcW+STZ6+97zS4fFba30Zd0+2lh5Tvswncz34eyQ=;
- b=qUqQrkGzBPKN5HxEWi0NfR9usFiw1T3HrsaKhkd2Rbcq3yPlfPOoaT6Oj6RCPdXF1kvAgf1xf6TbFTez6GpiYQTExsUZwJpTOapJ6C5u4+a7Yvc1XfD+n75vbp5hcb2Nh/nh0OayL5fh//wu/kA0FaBaRijJhPbG0/JZrSav2Cg=
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
- MWHPR05MB2925.namprd05.prod.outlook.com (10.168.246.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.17; Mon, 11 Nov 2019 16:36:23 +0000
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2451.018; Mon, 11 Nov 2019
- 16:36:23 +0000
-From:   Jorgen Hansen <jhansen@vmware.com>
-To:     'Stefano Garzarella' <sgarzare@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: RE: [PATCH net-next 13/14] vsock: prevent transport modules unloading
-Thread-Topic: [PATCH net-next 13/14] vsock: prevent transport modules
- unloading
-Thread-Index: AQHViYhrCrVR34m96EWV4ga8NEWQKaeGSMwQ
-Date:   Mon, 11 Nov 2019 16:36:23 +0000
-Message-ID: <MWHPR05MB337664DF4523C75B44982048DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-14-sgarzare@redhat.com>
-In-Reply-To: <20191023095554.11340-14-sgarzare@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhansen@vmware.com; 
-x-originating-ip: [208.91.2.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3ee2f900-6355-42ab-931e-08d766c54a39
-x-ms-traffictypediagnostic: MWHPR05MB2925:
-x-microsoft-antispam-prvs: <MWHPR05MB2925AB366AEE3F58191B0668DA740@MWHPR05MB2925.namprd05.prod.outlook.com>
-x-vmwhitelist: True
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 0218A015FA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(54906003)(186003)(8936002)(110136005)(81166006)(81156014)(8676002)(4744005)(6116002)(3846002)(2906002)(7736002)(33656002)(478600001)(2501003)(52536014)(316002)(71200400001)(71190400001)(86362001)(305945005)(6436002)(14454004)(74316002)(25786009)(486006)(7416002)(66946007)(5660300002)(7696005)(76116006)(26005)(76176011)(4326008)(476003)(229853002)(66066001)(102836004)(6506007)(66556008)(446003)(9686003)(64756008)(14444005)(99286004)(256004)(6246003)(66446008)(11346002)(66476007)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB2925;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xJtJkxVDW9mRhJtj1by2ha0VJ5jOpV4ypwBZvMJUMRM3gIC2tbMLM3JTGzShdzZE+MnT1sQmTmS51Wt7pc+w69lvN8V+JfD0ZwkBydt57zuD5qu0UgqwxcZlxCEu2vh64pnHPdCSuzKuqQD0EF1Is0pPpYO5nQgiLTblldc/zgzVjDEuhYUnAMOGXnU4AzIogCyydX/jkr41z5J2QoHEvRVf/eCgaDeRzVk5o2nrk1LXNKlsDuabtKEn9INGCJo5fH0e1E/bRjF9l6BF4f/2oyvD3zl+FMuyxAxt7idsuA5v3orxb2cx3mRSX1BgO+r8nOQKDbZ3eCJKYH9psN0ClgQVLLKXlWhyVWHu0SpoDGgZdV+E2LdnXUw4wO9gKxoqIArCJzG0h4w2feYaCRPnXq588QColvwhiuy/5h9F8txZeBa40m6/pQoantYrL+FY
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Nov 2019 11:38:10 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:39099 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbfKKQiK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:38:10 -0500
+Received: by mail-io1-f70.google.com with SMTP id e17so12647755ioc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 08:38:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6xGIatM585+y9way6GTbuYnN+gi1LVULfVZFLKPdCMk=;
+        b=qDoiSRCx+Tsyf83WbD0hRAHBCZkRq1YgtRBUaV+xl72XkKoGcT7N4CwfTxRbqB1+ZX
+         DwJcUF3hyiWqiWeoriHCUrAbt8dt0aNb0HRtNs6L4dR5pOeV9QnrtIl7T+rzy1cMXYo7
+         yEuuZukcgjQ5PVO/ag+Sw+co2TVJtvHPuW3/ldmU/3w3TiLMUvNGMOGl4aS/FBQ84EJa
+         GJgxeo3g4tSbe9c5MxkkXE7mKS+Z+D/aXeRoZpgDlmLRvpRrQ2DAEr4NpsKGyCXrU8HH
+         YM3oZmjuFOHM3L2BtE449+z1t+uGEY5q2h7Lnrff6AU7VMiCyGg4MtvRkM2HF/pCILBT
+         QARQ==
+X-Gm-Message-State: APjAAAX18zXvf+u+CP3o4Wz0IKluZe3nOK7XLD0zUu7xkTrRJODHV+Tp
+        I8oWDvk0Gnf1r/drxoTOB/e0LnDVsFSf7tKeemeaCMyWK0YM
+X-Google-Smtp-Source: APXvYqwj3RfA6oWKkf3zkjMvjEH+2ejXtOS+uLLggxzGC3VSsnFcY4rnii9jzCwFxO17UiKd1S24dzl31MJTxNjjX2PoUtK3lsPx
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ee2f900-6355-42ab-931e-08d766c54a39
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 16:36:23.4653
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3Whm2uLdV7QJh+Mo6uyPUVP314BE4Mkm4Ygh4g7fTnPUJ0xkZQpgqKsQT0a87nPsuIpjWq8clN/qSoTZbvaMjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB2925
+X-Received: by 2002:a5e:a501:: with SMTP id 1mr10332198iog.211.1573490289053;
+ Mon, 11 Nov 2019 08:38:09 -0800 (PST)
+Date:   Mon, 11 Nov 2019 08:38:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bc9d78059714c1ac@google.com>
+Subject: KASAN: use-after-free Read in snd_timer_close_locked
+From:   syzbot <syzbot+4a89123a06517944d4c1@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, alsa-devel@alsa-project.org,
+        enric.balletbo@collabora.com, gregkh@linuxfoundation.org,
+        kirr@nexedi.com, linux-kernel@vger.kernel.org, lkundrak@v3.sk,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> Sent: Wednesday, October 23, 2019 11:56 AM
+Hello,
 
-> This patch adds 'module' member in the 'struct vsock_transport'
-> in order to get/put the transport module. This prevents the
-> module unloading while sockets are assigned to it.
->=20
-> We increase the module refcnt when a socket is assigned to a
-> transport, and we decrease the module refcnt when the socket
-> is destructed.
->=20
-> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> RFC -> v1:
-> - fixed typo 's/tranport/transport/' in a comment (Stefan)
-> ---
->  drivers/vhost/vsock.c            |  2 ++
->  include/net/af_vsock.h           |  2 ++
->  net/vmw_vsock/af_vsock.c         | 20 ++++++++++++++++----
->  net/vmw_vsock/hyperv_transport.c |  2 ++
->  net/vmw_vsock/virtio_transport.c |  2 ++
->  net/vmw_vsock/vmci_transport.c   |  1 +
->  6 files changed, 25 insertions(+), 4 deletions(-)
+syzbot found the following crash on:
 
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+HEAD commit:    6980b7f6 Add linux-next specific files for 20191111
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16a82b9ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2af7db1972ec750e
+dashboard link: https://syzkaller.appspot.com/bug?extid=4a89123a06517944d4c1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4a89123a06517944d4c1@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in snd_timer_close_locked+0xb5f/0xbd0  
+sound/core/timer.c:380
+Read of size 8 at addr ffff8880a906be78 by task syz-executor.4/9580
+
+CPU: 1 PID: 9580 Comm: syz-executor.4 Not tainted 5.4.0-rc6-next-20191111 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  snd_timer_close_locked+0xb5f/0xbd0 sound/core/timer.c:380
+  snd_timer_close+0x88/0xf0 sound/core/timer.c:418
+  snd_seq_timer_close+0x91/0xe0 sound/core/seq/seq_timer.c:318
+  queue_delete+0x52/0xb0 sound/core/seq/seq_queue.c:134
+  snd_seq_queue_delete+0x4e/0x70 sound/core/seq/seq_queue.c:196
+  snd_seq_ioctl_delete_queue+0x6a/0x90 sound/core/seq/seq_clientmgr.c:1570
+  snd_seq_kernel_client_ctl+0xf8/0x140 sound/core/seq/seq_clientmgr.c:2353
+  delete_seq_queue.part.0+0xb6/0x120 sound/core/seq/oss/seq_oss_init.c:376
+  delete_seq_queue sound/core/seq/oss/seq_oss_init.c:372 [inline]
+  snd_seq_oss_release+0x116/0x150 sound/core/seq/oss/seq_oss_init.c:421
+  odev_release+0x54/0x80 sound/core/seq/oss/seq_oss.c:140
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x413db1
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007fffcff8b860 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000413db1
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 0000000000000001 R08: 00000000ca6eb3e2 R09: 00000000ca6eb3e6
+R10: 00007fffcff8b940 R11: 0000000000000293 R12: 000000000075bf20
+R13: 00000000000361f0 R14: 00000000007607e0 R15: 000000000075bf2c
+
+Allocated by task 9581:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:670 [inline]
+  snd_timer_instance_new+0x4a/0x300 sound/core/timer.c:96
+  snd_timer_user_tselect sound/core/timer.c:1725 [inline]
+  __snd_timer_user_ioctl.isra.0+0x665/0x2070 sound/core/timer.c:2008
+  snd_timer_user_ioctl+0x7a/0xa7 sound/core/timer.c:2038
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9581:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  snd_timer_instance_free sound/core/timer.c:120 [inline]
+  snd_timer_instance_free+0x7c/0xa0 sound/core/timer.c:114
+  snd_timer_user_tselect sound/core/timer.c:1740 [inline]
+  __snd_timer_user_ioctl.isra.0+0x160d/0x2070 sound/core/timer.c:2008
+  snd_timer_user_ioctl+0x7a/0xa7 sound/core/timer.c:2038
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a906be00
+  which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 120 bytes inside of
+  256-byte region [ffff8880a906be00, ffff8880a906bf00)
+The buggy address belongs to the page:
+page:ffffea0002a41ac0 refcount:1 mapcount:0 mapping:ffff8880aa4008c0  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00025db908 ffff8880aa401648 ffff8880aa4008c0
+raw: 0000000000000000 ffff8880a906b000 0000000100000008 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a906bd00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a906bd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a906be00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                                 ^
+  ffff8880a906be80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a906bf00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
