@@ -2,122 +2,87 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A061FC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64D4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B4C206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 01:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E981206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODWQhV8M"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="afjkmONg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfKKB6u (ORCPT
+        id S1726915AbfKKCAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 20:58:50 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39859 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfKKB6u (ORCPT
+        Sun, 10 Nov 2019 21:00:06 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35615 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfKKCAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 20:58:50 -0500
-Received: by mail-vs1-f66.google.com with SMTP id v77so1180972vsv.6;
-        Sun, 10 Nov 2019 17:58:49 -0800 (PST)
+        Sun, 10 Nov 2019 21:00:06 -0500
+Received: by mail-qk1-f196.google.com with SMTP id i19so9967257qki.2
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 18:00:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=prm6F9A7udBbbazHidVJSyKNJBPGpqmhX/YTquSVgcw=;
-        b=ODWQhV8MgF9c7o2guJEdbXplM5OnBK3aAKfrW4wQcPGsMEl4Z1wvYslIzvIUcEgeeS
-         JJpHxAGdzB+eevhMgOAa01uxY9/0JXlx7cRn4sKtalwS/zGLHsKZUOjyhpRCgkA12YZv
-         nYluLOPOTobquw72QvmHrEj94j5bE0JE73BWUXfvdYNl5l9LJlvyTiRwc5ZxcW2fDzLm
-         9S+yDvimVKg1gHiaOblPU0k64pP3JOs7TXIp/T16hfAMpaSpGCsKD8YOIKnuaAhmWCkR
-         9AweewCfBrOrsfcO6qvDiMQI8D8S7bnwOY64Wj7h90XUPeP1qSwpRX0vszGgc/PhxY5K
-         NeXA==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=3uxECVPJsGWw8xFiN9zTP40MfjZW/r53fJQviv7WuHo=;
+        b=afjkmONguFYTWI/8Q1shfBRC8uIfpMD2pwpJS7Zm9HAT1ZxZh7NUGZyfajm1URqy+v
+         mJy7E3biJzqTzt5Bj9xrMG9u8mqwH6Q9SFoZcroI7YD6C4Nrqqb0UQWFGEd4zp4QgLdX
+         c+/yDy5/pJ5sQoTQtONn3cIBXj0HFoAS6CucZWLsFMRkFVGmx7GeCeEQ9s8Ak5LZVjgz
+         XH3zhh8P1WNdnLFIIgbcf5s5kfXXYE6cOl8jengVkduqYUdbG8rsByq9KlQkN4Dp+zso
+         7+vVme86K8u0NMceTbjo6w0h2XhqOP4rLV/quW1sT0EZUoCCQTwAXnOk05wc8uQkHTG1
+         dxIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=prm6F9A7udBbbazHidVJSyKNJBPGpqmhX/YTquSVgcw=;
-        b=PcSgfif5goasXy7PvJG2Tf8h84/HWm1qbvvbktmayQSGw5vVw0uoUPbHMEcRKP4UrG
-         Hs6QMXSLnzAAdtbXPECai939kRfXCHr7qMf7dBEdyWD8kh1Zc38lL7GCJAZakE96qYeT
-         oTWvU2Cd+7L+vrniTluIpBt9Gia7Mr+NbWBNKA5AlFXMXUOAYXfYj9YKNK9ZAnkypc3l
-         YCR2rVwcY5Q5b9jNWXqWhnpd1hKSP0igrYbaro5CgYGvQqfX2Nc0LU5YF+X+rrYm9qBn
-         3TDYqNhe7pq+bPvekTE7RrnnUe7lmrG57bGOJqTEGDs0PeQw/u/tawKEnrly50rypF0K
-         vEKQ==
-X-Gm-Message-State: APjAAAXT6e1u2DbTmf510a1AonFN/06FkuXzHo/4huG6t61oCX8ZFeJH
-        NrrnTHBiis5bj/9JIuPMC5QVE7GCZKVBLgWrdDE=
-X-Google-Smtp-Source: APXvYqyQNbwOgzWwHpNa70qjjCceQD8KL2Ro68PHn1EFxoYrLUZtoN9TvfX6fwO+a8rioZNWR4k1ii/lh3Pjou1tRf0=
-X-Received: by 2002:a67:f44b:: with SMTP id r11mr2704022vsn.23.1573437528995;
- Sun, 10 Nov 2019 17:58:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20191014141718.22603-1-narmstrong@baylibre.com>
- <20191014141718.22603-2-narmstrong@baylibre.com> <20191023201141.GA21235@bogus>
- <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
-In-Reply-To: <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
-From:   Jun Li <lijun.kernel@gmail.com>
-Date:   Mon, 11 Nov 2019 09:58:37 +0800
-Message-ID: <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
- disabling SS instances in park mode
-To:     Tim <elatllat@gmail.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Felipe Balbi <balbi@kernel.org>, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=3uxECVPJsGWw8xFiN9zTP40MfjZW/r53fJQviv7WuHo=;
+        b=Y7ct0vRf/LZ/2fvkd1i+VZRcxYGFKypWV6pP/okKRgKwzdCzGfvp/HGmOko7vJsS1j
+         7PYcZ4Yq/GWS9SrYscsHw/7pDCD34f205p3/1R7w6kLK5UCD8icVBUl8l7yy1CKsu0L6
+         EzrEfJ+bYX9J0w/rv1AZ2zR95h2hChq4GCux1CErzTxDl4J3OLcJ5HJDsHXeBJ/jYffL
+         /p2hFkf3y4BHV0d3jVvHcpHjghKXCM42ZIXOjj2/s51NwMYQA15fCQuYQiCKTU3UHpuR
+         bO0pSEiSSI/vmBdUjGWFlsEeoFuwN+efrT+iCQ56Dx/kNs2vWrxHAY0qJZWuyNrwqr5M
+         bhSQ==
+X-Gm-Message-State: APjAAAXiXa85WxLcx8pykhU4w8x5BP+q8vXMD5J2qjqZoW3xgDS8W4lQ
+        pV42ki+CjrHHpXGZdu8l5yG6ltgVs5HgLg==
+X-Google-Smtp-Source: APXvYqxjxVPXgw/cW0Vh/oWGFQsLytTM4uqXSs6b+YAMHhBa5jLbNwvmxyjhmQupxKqnESvsxUX4aA==
+X-Received: by 2002:a05:620a:704:: with SMTP id 4mr8682583qkc.177.1573437604905;
+        Sun, 10 Nov 2019 18:00:04 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y27sm8214773qtj.49.2019.11.10.18.00.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 10 Nov 2019 18:00:04 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 1/1] iommu/vt-d: Add Kconfig option to enable/disable scalable mode
+Date:   Sun, 10 Nov 2019 21:00:03 -0500
+Message-Id: <2BBFF955-5533-43CD-849A-2BA6B2CC1AF2@lca.pw>
+References: <519c1126-ab91-1308-bdd0-c8d1be7a1c63@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, kevin.tian@intel.com,
+        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com
+In-Reply-To: <519c1126-ab91-1308-bdd0-c8d1be7a1c63@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil
 
-As I got the information from Synopsys, this bug exists on current IP versi=
-ons,
-and per my tests with external USB3 hub + 2 Super speed udisks on data
-read by dd, I can reproduce this issue with different kernel versions, also=
- I
-didn't see obvious performance drop by dd tests after disable park mode for
-super speed, so should we just disable it by default so no need a quirk?
 
-Li Jun
+> On Nov 10, 2019, at 8:30 PM, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>=20
+> How about "pasid based multiple stages DMA translation"?
 
-Tim <elatllat@gmail.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8811=E6=97=A5=E5=91=
-=A8=E4=B8=80 =E4=B8=8A=E5=8D=888:42=E5=86=99=E9=81=93=EF=BC=9A
->
-> Thanks for working on this Neil,
-> Is there something that needs doing for this patch to make it into 5.3 or=
- 5.4?
-> As previously mentioned the patch set fixes the issue on affected hardwar=
-e;
->     https://patchwork.kernel.org/patch/11164515/
->
->
->
-> On Wed, Oct 23, 2019 at 4:11 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Oct 14, 2019 at 04:17:16PM +0200, Neil Armstrong wrote:
-> > > This patch updates the documentation with the information related
-> > > to the quirks that needs to be added for disabling all SuperSpeed XHC=
-i
-> > > instances in park mode.
-> > >
-> > > CC: Dongjin Kim <tobetter@gmail.com>
-> > > Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-> > > Reported-by: Tim <elatllat@gmail.com>
-> > > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> >
-> > Sigh, what's one more to the never ending list of quirks...
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
+It is better but I am still not sure how developers should select it or not w=
+hen asking. Ideally, should it mention pros and cons of this? At minimal, th=
+ere should be a line said =E2=80=9Cif not sure what this is, select N=E2=80=9D=
+?=
