@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9154AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7BAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4782184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D57520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497032;
-	bh=Sqbampuhig29iZISFyfb6C1PpY/BmZ/PIh7jhn3D0hI=;
+	s=default; t=1573497036;
+	bh=SqRmjZhn94quOQXuKvLtH6KunMbWuCA4q/EJ86b0H+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O96N2uahaOg3Qpkta/D4liZE41IuPu5iYida4w4uBuApAnz47B5jfxOaoXIGMI6Eb
-	 CgwFiHJyvz204DLX0QViTxMYXpMvlamdjipo2PCOpKLnJ9D64pQt1kN5tKtea9oCZ3
-	 TsXn5orq/DmyDKT15gYjHw1If/PytWOaexXE4HFE=
+	b=bqKpjq6q9FG4tdK7nqnWGaC6SG5B1CMTQKsnkXl0d4hOWnEpDPy7CAK7AiG3QPkJd
+	 OSHRPwStl3Gqtsj2Wd+MuoPR1uuowz2LrLahTuB/y+/pf+w+9/zP8PYihxMyKdN/h2
+	 un4Agyz/3Qtca86rZKorqzPS6Ppaw0X78l0235H4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfKKSab (ORCPT
+        id S1727368AbfKKSaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:30:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46804 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:30:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727325AbfKKSa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:29 -0500
+        id S1727325AbfKKSad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:30:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0FE7214E0;
-        Mon, 11 Nov 2019 18:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3522214E0;
+        Mon, 11 Nov 2019 18:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497029;
-        bh=Sqbampuhig29iZISFyfb6C1PpY/BmZ/PIh7jhn3D0hI=;
+        s=default; t=1573497032;
+        bh=SqRmjZhn94quOQXuKvLtH6KunMbWuCA4q/EJ86b0H+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQO0l0ggQ/iVzZyqK3OoCkPxu/WbjVf41IsjCxCnEFoc06sIuHsriiTfcgzynpqdk
-         E51+fy18esga0xHoI9AWZrETrU2ycTEcZQbgDi8iAz2eZ2dX94QtqEHOupasagHwmM
-         Ni2Q4Z/LwFGByDNzxHtZqHewdETv3LtNrgwnTqH8=
+        b=WvMJPIXLF/nKqXpzDP3leQPrMdrmImaayDFsmH+2RPot/UyScJke0kXZmyzmwhI7x
+         cPvkX5hQZih0yvif2pIeXze9Spy2t/LUMXoVrI76Wc9qzM4WTOVCcCsPdf4sw6w+63
+         CxVz2JFZSfhkxzKJdowkj+IQDDRn8ZBpdFGbAXeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        syzbot+863724e7128e14b26732@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.4 21/43] can: gs_usb: gs_can_open(): prevent memory leak
-Date:   Mon, 11 Nov 2019 19:28:35 +0100
-Message-Id: <20191111181312.879687111@linuxfoundation.org>
+Subject: [PATCH 4.4 22/43] can: peak_usb: fix slab info leak
+Date:   Mon, 11 Nov 2019 19:28:36 +0100
+Message-Id: <20191111181312.978024075@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -60,32 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit fb5be6a7b4863ecc44963bb80ca614584b6c7817 upstream.
+commit f7a1337f0d29b98733c8824e165fca3371d7d4fd upstream.
 
-In gs_can_open() if usb_submit_urb() fails the allocated urb should be
-released.
+Fix a small slab info leak due to a failure to clear the command buffer
+at allocation.
 
-Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+The first 16 bytes of the command buffer are always sent to the device
+in pcan_usb_send_cmd() even though only the first two may have been
+initialised in case no argument payload is provided (e.g. when waiting
+for a response).
+
+Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
+Cc: stable <stable@vger.kernel.org>     # 3.4
+Reported-by: syzbot+863724e7128e14b26732@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/gs_usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/can/usb/gs_usb.c
-+++ b/drivers/net/can/usb/gs_usb.c
-@@ -617,6 +617,7 @@ static int gs_can_open(struct net_device
- 					   rc);
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -776,7 +776,7 @@ static int peak_usb_create_dev(const str
+ 	dev = netdev_priv(netdev);
  
- 				usb_unanchor_urb(urb);
-+				usb_free_urb(urb);
- 				break;
- 			}
- 
+ 	/* allocate a buffer large enough to send commands */
+-	dev->cmd_buf = kmalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
++	dev->cmd_buf = kzalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
+ 	if (!dev->cmd_buf) {
+ 		err = -ENOMEM;
+ 		goto lbl_free_candev;
 
 
