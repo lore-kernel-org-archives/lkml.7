@@ -2,309 +2,231 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34583C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AACDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FA121925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC72C2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="SE9tYWth"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v/6XRVI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfKKNxq (ORCPT
+        id S1727220AbfKKNxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:53:46 -0500
-Received: from mail-eopbgr700084.outbound.protection.outlook.com ([40.107.70.84]:16352
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727466AbfKKNxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:53:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BzbshyI2eJRLfinOx5oHDPIjmvqwYEuJS68DupfsqFW1V5/DA3vKhJs5whlmhHl1Be2PlwZ8wTJdu3WDZUbKFw28XvVQwBFfWPrvZZpl3lSHBKig0RM0vmvFd82imVrmTKTDBMu2Ss+mhHGG8HrxVnG/2XAPUbK36+6t51W8vhS73vWu/XoWyUL3nHcpkOnEQAj51uTbDV3+fXcd9/QW7QBwRVYy76HcpsbaUCoCoxotPXx7ckbyf/VehDAYALG+FXknKT+xDFy6uDGtqB1UWIkUTW/glsrCG+nv4nh7wnYTAcBzoEDGdyzksnkQlKXX8IdFVm75C3E+G0o6sVza1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uyCueV73ssuYrOL2KOR092G62eXmGC+F1KvMfilPD18=;
- b=A1gsFjYM8Bg6oJ8C+q3k3GqClFKkJFWRd/aLHDimGaHn5j3aUcdqRCNtzcsL4Nt0PPSf9kbWLZfwD7TNJrGwoxdD0IjhqCephkwkn5mjevLPolby9A8e8QA9KtzAKWggqDmG3yp03lkpz2caR5ztipLYs7FBo9BT2eavMYmmDCs9CZ87d1d8A1GhNBcXsJTwBM3M/6NCgJvlkbQHgn4wJMYfbifXA1fUjGNePjDwZLU8xeXB4o26TnmihqpJY+QRz6ugiizxRr5XHOl7fVUM9XA25MliOyx+nVvSMqFABzNf9aGnc9lsbutjd30h6xvS7RTs/V1Km5Ngi2F+8j45ZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uyCueV73ssuYrOL2KOR092G62eXmGC+F1KvMfilPD18=;
- b=SE9tYWthcUekQDUSLfIoc3RK+HDEL4NYN2rLcfsmoV6h1WnJ0C+AbUwTCXCGaRUobG63viaw0zF1P3Npw9OIQE5JKWe/J2u9ZpjCDSRvwqfRmmpjJQvg7ksQXKV9SrcWGQAo2pDpLpNTqH9dHXdidnJwV457SIwgtbg/Lb/uAyA=
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
- MWHPR05MB3407.namprd05.prod.outlook.com (10.174.175.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.19; Mon, 11 Nov 2019 13:53:39 +0000
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2451.018; Mon, 11 Nov 2019
- 13:53:39 +0000
-From:   Jorgen Hansen <jhansen@vmware.com>
-To:     'Stefano Garzarella' <sgarzare@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: RE: [PATCH net-next 11/14] vsock: add multi-transports support
-Thread-Topic: [PATCH net-next 11/14] vsock: add multi-transports support
-Thread-Index: AQHViYhm3+s3qIN1EEmJgzgCfyvFAqeGCo7Q
-Date:   Mon, 11 Nov 2019 13:53:39 +0000
-Message-ID: <MWHPR05MB33761FE4DA27130C72FC5048DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-12-sgarzare@redhat.com>
-In-Reply-To: <20191023095554.11340-12-sgarzare@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhansen@vmware.com; 
-x-originating-ip: [208.91.2.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a6a45ce2-9b09-4398-d5cc-08d766ae8e4b
-x-ms-traffictypediagnostic: MWHPR05MB3407:
-x-microsoft-antispam-prvs: <MWHPR05MB340797E6760B34904E25A4F4DA740@MWHPR05MB3407.namprd05.prod.outlook.com>
-x-vmwhitelist: True
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0218A015FA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(199004)(189003)(8936002)(81156014)(8676002)(81166006)(2501003)(2906002)(66946007)(25786009)(110136005)(54906003)(66476007)(76116006)(316002)(66556008)(64756008)(66446008)(3846002)(6116002)(86362001)(99286004)(5660300002)(71200400001)(7416002)(14444005)(446003)(6506007)(11346002)(52536014)(76176011)(256004)(478600001)(55016002)(6246003)(7696005)(486006)(26005)(33656002)(476003)(186003)(71190400001)(66066001)(74316002)(7736002)(102836004)(14454004)(4326008)(6436002)(305945005)(229853002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB3407;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1oOHCT0+3DRBsaAil9pJHUaI8tg0YNDArr6c7xCxM83Ez9Yz7YcoG2/zUrTevao1dsCzPEVi8KHiCpjFOUqblyFjgy1XLX8KKbV3oOPbq5sNg3MKIGcSEZb4CZGaions2uN3z6+6WnYppNHBcdULAofACPfC01CQIbZiDx+wfcJMjpkH/mr9Sv5co/zFbjwCIeJFmKjwmrGD6yRsdKk9B1J7OV6mTkOcm+lK4QYMqVAwOmPf7Ze4T1cCaYrzGPA2K7w1IIon4dKbo8wTnIpEGOzKViU8GQtpn2w5pmMY6hFZ+zqxDfx7BjDpAKxSM2O9SdMbg4TXakdzsMDIAd1URHFmHpPhG0XpYAjsAhrA2P6ZwHScI2r4AtHiHM8t4FS7ufNIVhH6RUPLd52Swe5Y1ONXcxV/SWoaTU6hjb7YoujPA4EI61f2fFMCUnPSFTsK
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Nov 2019 08:53:00 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52062 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfKKNw5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 08:52:57 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABDqULr010446;
+        Mon, 11 Nov 2019 07:52:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573480350;
+        bh=uSViP+QvJDzIv6c8dhx5jMKNUxJQ+VwAKiFTRE1e4co=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=v/6XRVI80Ry1WPxwcUMcx9u+u467KI8tzpc+m8yFipmN+ynHn8V1UHqslX9s1AWDs
+         MNsR+F7ZSnboEWtW6Fy5OEB2302/+ajmk96hmHRaJ70LpunEgrkQzw0HjHdUQy8T1E
+         qpI7X9vJrQVFW7RrrLWfdID6vkmCKuDMqgxyTP1E=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABDqU0l111142
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Nov 2019 07:52:30 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
+ Nov 2019 07:52:12 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 11 Nov 2019 07:52:12 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABDqE8o097668;
+        Mon, 11 Nov 2019 07:52:26 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v5 03/15] dmaengine: doc: Add sections for per descriptor metadata support
+Date:   Mon, 11 Nov 2019 15:53:18 +0200
+Message-ID: <20191111135330.8235-4-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191111135330.8235-1-peter.ujfalusi@ti.com>
+References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6a45ce2-9b09-4398-d5cc-08d766ae8e4b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 13:53:39.2222
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qq6X0HBh3xwheDUiN6iz/33VrmnxS1Yqlw4p6veudJF+DeL2HvIYu07KHuZYSG8mLCF+KJcD9x7jPVYWBgYXlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB3407
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> Sent: Wednesday, October 23, 2019 11:56 AM
+Update the provider and client documentation with details about the
+metadata support.
 
-Thanks a lot for working on this!
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
+---
+ Documentation/driver-api/dmaengine/client.rst | 75 +++++++++++++++++++
+ .../driver-api/dmaengine/provider.rst         | 46 ++++++++++++
+ 2 files changed, 121 insertions(+)
 
-> With the multi-transports support, we can use vsock with nested VMs (usin=
-g
-> also different hypervisors) loading both guest->host and
-> host->guest transports at the same time.
->=20
-> Major changes:
-> - vsock core module can be loaded regardless of the transports
-> - vsock_core_init() and vsock_core_exit() are renamed to
->   vsock_core_register() and vsock_core_unregister()
-> - vsock_core_register() has a feature parameter (H2G, G2H, DGRAM)
->   to identify which directions the transport can handle and if it's
->   support DGRAM (only vmci)
-> - each stream socket is assigned to a transport when the remote CID
->   is set (during the connect() or when we receive a connection request
->   on a listener socket).
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index 45953f171500..41309c176df4 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,6 +151,81 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
++  Optional: per descriptor metadata
++  ---------------------------------
++  DMAengine provides two ways for metadata support.
++
++  DESC_METADATA_CLIENT
++
++    The metadata buffer is allocated/provided by the client driver and it is
++    attached to the descriptor.
++
++  .. code-block:: c
++
++     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len);
++
++  DESC_METADATA_ENGINE
++
++    The metadata buffer is allocated/managed by the DMA driver. The client
++    driver can ask for the pointer, maximum size and the currently used size of
++    the metadata and can directly update or read it.
++
++  .. code-block:: c
++
++     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++		size_t *payload_len, size_t *max_len);
++
++     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++		size_t payload_len);
++
++  Client drivers can query if a given mode is supported with:
++
++  .. code-block:: c
++
++     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
++		enum dma_desc_metadata_mode mode);
++
++  Depending on the used mode client drivers must follow different flow.
++
++  DESC_METADATA_CLIENT
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++         construct the metadata in the client's buffer
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++      4. when the transfer is completed, the metadata should be available in the
++         attached buffer
++
++  DESC_METADATA_ENGINE
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
++         engine's metadata area
++      3. update the metadata at the pointer
++      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
++         amount of data the client has placed into the metadata buffer
++      5. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. submit the transfer
++      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
++         pointer to the engine's metadata area
++      4. Read out the metadata from the pointer
++
++  .. note::
++
++     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
++     client drivers must use either of the modes per descriptor.
++
+ 4. Submit the transaction
+ 
+    Once the descriptor has been prepared and the callback information
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index dfc4486b5743..da557c21c619 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -247,6 +247,52 @@ after each transfer. In case of a ring buffer, they may loop
+ (DMA_CYCLIC). Addresses pointing to a device's register (e.g. a FIFO)
+ are typically fixed.
+ 
++Per descriptor metadata support
++-------------------------------
++Some data movement architecture (DMA controller and peripherals) uses metadata
++associated with a transaction. The DMA controller role is to transfer the
++payload and the metadata alongside.
++The metadata itself is not used by the DMA engine itself, but it contains
++parameters, keys, vectors, etc for peripheral or from the peripheral.
++
++The DMAengine framework provides a generic ways to facilitate the metadata for
++descriptors. Depending on the architecture the DMA driver can implement either
++or both of the methods and it is up to the client driver to choose which one
++to use.
++
++- DESC_METADATA_CLIENT
++
++  The metadata buffer is allocated/provided by the client driver and it is
++  attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
++
++  From the DMA driver the following is expected for this mode:
++  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
++    The data from the provided metadata buffer should be prepared for the DMA
++    controller to be sent alongside of the payload data. Either by copying to a
++    hardware descriptor, or highly coupled packet.
++  - DMA_DEV_TO_MEM
++    On transfer completion the DMA driver must copy the metadata to the client
++    provided metadata buffer.
++
++- DESC_METADATA_ENGINE
++
++  The metadata buffer is allocated/managed by the DMA driver. The client driver
++  can ask for the pointer, maximum size and the currently used size of the
++  metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
++  and dmaengine_desc_set_metadata_len() is provided as helper functions.
++
++  From the DMA driver the following is expected for this mode:
++  - get_metadata_ptr
++    Should return a pointer for the metadata buffer, the maximum size of the
++    metadata buffer and the currently used / valid (if any) bytes in the buffer.
++  - set_metadata_len
++    It is called by the clients after it have placed the metadata to the buffer
++    to let the DMA driver know the number of valid bytes provided.
++
++  Note: since the client will ask for the metadata pointer in the completion
++  callback (in DMA_DEV_TO_MEM case) the DMA driver must ensure that the
++  descriptor is not freed up prior the callback is called.
++
+ Device operations
+ -----------------
+ 
+-- 
+Peter
 
-How about allowing the transport to be set during bind as well? That
-would allow an application to ensure that it is using a specific transport,
-i.e., if it binds to the host CID, it will use H2G, and if it binds to some=
-thing
-else it will use G2H? You can still use VMADDR_CID_ANY if you want to
-initially listen to both transports.
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-
->   The remote CID is used to decide which transport to use:
->   - remote CID > VMADDR_CID_HOST will use host->guest transport
->   - remote CID <=3D VMADDR_CID_HOST will use guest->host transport
-> - listener sockets are not bound to any transports since no transport
->   operations are done on it. In this way we can create a listener
->   socket, also if the transports are not loaded or with VMADDR_CID_ANY
->   to listen on all transports.
-> - DGRAM sockets are handled as before, since only the vmci_transport
->   provides this feature.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> RFC -> v1:
-> - documented VSOCK_TRANSPORT_F_* flags
-> - fixed vsock_assign_transport() when the socket is already assigned
->   (e.g connection failed)
-> - moved features outside of struct vsock_transport, and used as
->   parameter of vsock_core_register()
-> ---
->  drivers/vhost/vsock.c                   |   5 +-
->  include/net/af_vsock.h                  |  17 +-
->  net/vmw_vsock/af_vsock.c                | 237 ++++++++++++++++++------
->  net/vmw_vsock/hyperv_transport.c        |  26 ++-
->  net/vmw_vsock/virtio_transport.c        |   7 +-
->  net/vmw_vsock/virtio_transport_common.c |  28 ++-
->  net/vmw_vsock/vmci_transport.c          |  31 +++-
->  7 files changed, 270 insertions(+), 81 deletions(-)
->=20
-
-
-> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c index
-> d89381166028..dddd85d9a147 100644
-> --- a/net/vmw_vsock/af_vsock.c
-> +++ b/net/vmw_vsock/af_vsock.c
-> @@ -130,7 +130,12 @@ static struct proto vsock_proto =3D {  #define
-> VSOCK_DEFAULT_BUFFER_MAX_SIZE (1024 * 256)  #define
-> VSOCK_DEFAULT_BUFFER_MIN_SIZE 128
->=20
-> -static const struct vsock_transport *transport_single;
-> +/* Transport used for host->guest communication */ static const struct
-> +vsock_transport *transport_h2g;
-> +/* Transport used for guest->host communication */ static const struct
-> +vsock_transport *transport_g2h;
-> +/* Transport used for DGRAM communication */ static const struct
-> +vsock_transport *transport_dgram;
->  static DEFINE_MUTEX(vsock_register_mutex);
->=20
->  /**** UTILS ****/
-> @@ -182,7 +187,7 @@ static int vsock_auto_bind(struct vsock_sock *vsk)
->  	return __vsock_bind(sk, &local_addr);
->  }
->=20
-> -static int __init vsock_init_tables(void)
-> +static void vsock_init_tables(void)
->  {
->  	int i;
->=20
-> @@ -191,7 +196,6 @@ static int __init vsock_init_tables(void)
->=20
->  	for (i =3D 0; i < ARRAY_SIZE(vsock_connected_table); i++)
->  		INIT_LIST_HEAD(&vsock_connected_table[i]);
-> -	return 0;
->  }
->=20
->  static void __vsock_insert_bound(struct list_head *list, @@ -376,6 +380,=
-62
-> @@ void vsock_enqueue_accept(struct sock *listener, struct sock
-> *connected)  }  EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
->=20
-> +/* Assign a transport to a socket and call the .init transport callback.
-> + *
-> + * Note: for stream socket this must be called when vsk->remote_addr is
-> +set
-> + * (e.g. during the connect() or when a connection request on a
-> +listener
-> + * socket is received).
-> + * The vsk->remote_addr is used to decide which transport to use:
-> + *  - remote CID > VMADDR_CID_HOST will use host->guest transport
-> + *  - remote CID <=3D VMADDR_CID_HOST will use guest->host transport  */
-> +int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock
-> +*psk) {
-> +	const struct vsock_transport *new_transport;
-> +	struct sock *sk =3D sk_vsock(vsk);
-> +
-> +	switch (sk->sk_type) {
-> +	case SOCK_DGRAM:
-> +		new_transport =3D transport_dgram;
-> +		break;
-> +	case SOCK_STREAM:
-> +		if (vsk->remote_addr.svm_cid > VMADDR_CID_HOST)
-> +			new_transport =3D transport_h2g;
-> +		else
-> +			new_transport =3D transport_g2h;
-> +		break;
-
-You already mentioned that you are working on a fix for loopback
-here for the guest, but presumably a host could also do loopback.
-If we select transport during bind to a specific CID, this comment
-Isn't relevant, but otherwise, we should look at the local addr as
-well, since a socket with local addr of host CID shouldn't use
-the guest to host transport, and a socket with local addr > host CID
-shouldn't use host to guest.
-
-
-> +	default:
-> +		return -ESOCKTNOSUPPORT;
-> +	}
-> +
-> +	if (vsk->transport) {
-> +		if (vsk->transport =3D=3D new_transport)
-> +			return 0;
-> +
-> +		vsk->transport->release(vsk);
-> +		vsk->transport->destruct(vsk);
-> +	}
-> +
-> +	if (!new_transport)
-> +		return -ENODEV;
-> +
-> +	vsk->transport =3D new_transport;
-> +
-> +	return vsk->transport->init(vsk, psk); }
-> +EXPORT_SYMBOL_GPL(vsock_assign_transport);
-> +
-> +static bool vsock_find_cid(unsigned int cid) {
-> +	if (transport_g2h && cid =3D=3D transport_g2h->get_local_cid())
-> +		return true;
-> +
-> +	if (transport_h2g && cid =3D=3D VMADDR_CID_HOST)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static struct sock *vsock_dequeue_accept(struct sock *listener)  {
->  	struct vsock_sock *vlistener;
-
-
-> diff --git a/net/vmw_vsock/vmci_transport.c
-> b/net/vmw_vsock/vmci_transport.c index 5955238ffc13..2eb3f16d53e7
-> 100644
-> --- a/net/vmw_vsock/vmci_transport.c
-> +++ b/net/vmw_vsock/vmci_transport.c
-
-> @@ -1017,6 +1018,15 @@ static int vmci_transport_recv_listen(struct sock
-> *sk,
->  	vsock_addr_init(&vpending->remote_addr, pkt->dg.src.context,
->  			pkt->src_port);
->=20
-> +	err =3D vsock_assign_transport(vpending, vsock_sk(sk));
-> +	/* Transport assigned (looking at remote_addr) must be the same
-> +	 * where we received the request.
-> +	 */
-> +	if (err || !vmci_check_transport(vpending)) {
-
-We need to send a reset on error, i.e.,
-  vmci_transport_send_reset(sk, pkt);
-
-> +		sock_put(pending);
-> +		return err;
-> +	}
-> +
->  	/* If the proposed size fits within our min/max, accept it. Otherwise
->  	 * propose our own size.
->  	 */
-
-Thanks,
-Jorgen
