@@ -2,68 +2,136 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8635EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C136BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FD8206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910C2206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:36:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eRv4wHEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKKDfl (ORCPT
+        id S1726965AbfKKDg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 22:35:41 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6183 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726764AbfKKDfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 22:35:40 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EBA2BD9CB650CF18F603;
-        Mon, 11 Nov 2019 11:35:37 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 11 Nov 2019 11:35:28 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH] rtw88: remove duplicated include from ps.c
-Date:   Mon, 11 Nov 2019 03:34:27 +0000
-Message-ID: <20191111033427.122443-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 10 Nov 2019 22:36:58 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54222 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbfKKDg6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 22:36:58 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB3abTv129761;
+        Sun, 10 Nov 2019 21:36:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573443397;
+        bh=NGl+cjCsJiM7+yT+llqpQfLL+t0dbhH4tKRXyQlZxFw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eRv4wHEjc1UMBodvQhvEME/+xNSPrDEWxqUQk+Bx3eHbzo5anuwt9WKRN1TQ8ibgN
+         dzR9rhp5ePYMHT1zSfPrAE0RY10ZAsCps22mcIlPlkOptnQY7Y1FYnCPz3io3PVV83
+         B6XEc7zL0ArYYiQU0v6CuqNPPIEKMoXCIj7rXx6U=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB3aaYP114012
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 10 Nov 2019 21:36:36 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 10
+ Nov 2019 21:36:19 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 10 Nov 2019 21:36:19 -0600
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB3aXhA043092;
+        Sun, 10 Nov 2019 21:36:33 -0600
+Subject: Re: [PATCH] irqchip/ti-sci-inta: Use ERR_CAST inlined function
+ instead of ERR_PTR(PTR_ERR(...))
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <670cd9a2-2083-bb5e-7bfc-58d5c90ec756@ti.com>
+Date:   Mon, 11 Nov 2019 09:05:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicated include.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/realtek/rtw88/ps.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/wireless/realtek/rtw88/ps.c b/drivers/net/wireless/realtek/rtw88/ps.c
-index 820e0a3a141c..2226e3e7d7f8 100644
---- a/drivers/net/wireless/realtek/rtw88/ps.c
-+++ b/drivers/net/wireless/realtek/rtw88/ps.c
-@@ -9,7 +9,6 @@
- #include "mac.h"
- #include "coex.h"
- #include "debug.h"
--#include "reg.h"
- 
- static int rtw_ips_pwr_up(struct rtw_dev *rtwdev)
- {
 
 
+On 05/11/19 5:00 PM, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 5 Nov 2019 12:19:39 +0100
+> 
+> A coccicheck run provided information like the following.
+> 
+> drivers/irqchip/irq-ti-sci-inta.c:250:9-16: WARNING: ERR_CAST can be used
+> with vint_desc.
+> 
+> Generated by: scripts/coccinelle/api/err_cast.cocci
+> 
+> Thus adjust the exception handling in one if branch.
+> 
+> Fixes: 9f1463b86c13277d0bd88d5ee359577ef40f4da7 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
 
+Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator
+driver")
+
+With this:
+
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Thanks and regards,
+Lokesh
+
+
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/irqchip/irq-ti-sci-inta.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+> index ef4d625d2d80..8f6e6b08eadf 100644
+> --- a/drivers/irqchip/irq-ti-sci-inta.c
+> +++ b/drivers/irqchip/irq-ti-sci-inta.c
+> @@ -246,8 +246,8 @@ static struct ti_sci_inta_event_desc *ti_sci_inta_alloc_irq(struct irq_domain *d
+>  	/* No free bits available. Allocate a new vint */
+>  	vint_desc = ti_sci_inta_alloc_parent_irq(domain);
+>  	if (IS_ERR(vint_desc)) {
+> -		mutex_unlock(&inta->vint_mutex);
+> -		return ERR_PTR(PTR_ERR(vint_desc));
+> +		event_desc = ERR_CAST(vint_desc);
+> +		goto unlock;
+>  	}
+> 
+>  	free_bit = find_first_zero_bit(vint_desc->event_map,
+> @@ -259,6 +259,7 @@ static struct ti_sci_inta_event_desc *ti_sci_inta_alloc_irq(struct irq_domain *d
+>  	if (IS_ERR(event_desc))
+>  		clear_bit(free_bit, vint_desc->event_map);
+> 
+> +unlock:
+>  	mutex_unlock(&inta->vint_mutex);
+>  	return event_desc;
+>  }
+> --
+> 2.23.0
+> 
