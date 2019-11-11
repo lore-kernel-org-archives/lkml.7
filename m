@@ -2,66 +2,121 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EFAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34F9C17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653732067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43E720818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfKKTyj (ORCPT
+        id S1727405AbfKKTyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:54:39 -0500
-Received: from muru.com ([72.249.23.125]:41634 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfKKTyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:54:39 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D77878119;
-        Mon, 11 Nov 2019 19:55:14 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 11:54:35 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Luhua Xu <luhua.xu@mediatek.com>, wsd_upstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: Applied "spi: add power control when set_cs" to the spi tree
-Message-ID: <20191111195435.GW5610@atomide.com>
-References: <1572426234-30019-1-git-send-email-luhua.xu@mediatek.com>
- <20191031132342.100F1D020AA@fitzroy.sirena.org.uk>
+        Mon, 11 Nov 2019 14:54:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48236 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727097AbfKKTys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 14:54:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 91087AD2C;
+        Mon, 11 Nov 2019 19:54:46 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 20:54:45 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] i2c: remove helpers for ref-counting clients
+Message-ID: <20191111205445.5b89a30a@endymion>
+In-Reply-To: <20191109212615.9254-1-wsa+renesas@sang-engineering.com>
+References: <20191109212615.9254-1-wsa+renesas@sang-engineering.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031132342.100F1D020AA@fitzroy.sirena.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-* Mark Brown <broonie@kernel.org> [191031 13:24]:
-> The patch
+On Sat,  9 Nov 2019 22:26:15 +0100, Wolfram Sang wrote:
+> There are no in-tree users of these helpers anymore, and there
+> shouldn't. Most use cases went away once the driver model started to
+> refcount for us. There have been users like the media subsystem, but
+> they all switched to better refcounting methods meanwhile. Media did
+> this in 2008. Last user (IPMI) left 2018. Remove this cruft.
 > 
->    spi: add power control when set_cs
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 32 --------------------------------
+>  include/linux/i2c.h         |  3 ---
+>  2 files changed, 35 deletions(-)
 > 
-> has been applied to the spi tree at
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 9c55d24c7a30..5a44a92ed1fb 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -1743,38 +1743,6 @@ EXPORT_SYMBOL(i2c_del_driver);
+>  
+>  /* ------------------------------------------------------------------------- */
+>  
+> -/**
+> - * i2c_use_client - increments the reference count of the i2c client structure
+> - * @client: the client being referenced
+> - *
+> - * Each live reference to a client should be refcounted. The driver model does
+> - * that automatically as part of driver binding, so that most drivers don't
+> - * need to do this explicitly: they hold a reference until they're unbound
+> - * from the device.
+> - *
+> - * A pointer to the client with the incremented reference counter is returned.
+> - */
+> -struct i2c_client *i2c_use_client(struct i2c_client *client)
+> -{
+> -	if (client && get_device(&client->dev))
+> -		return client;
+> -	return NULL;
+> -}
+> -EXPORT_SYMBOL(i2c_use_client);
+> -
+> -/**
+> - * i2c_release_client - release a use of the i2c client structure
+> - * @client: the client being no longer referenced
+> - *
+> - * Must be called when a user of a client is finished with it.
+> - */
+> -void i2c_release_client(struct i2c_client *client)
+> -{
+> -	if (client)
+> -		put_device(&client->dev);
+> -}
+> -EXPORT_SYMBOL(i2c_release_client);
+> -
+>  struct i2c_cmd_arg {
+>  	unsigned	cmd;
+>  	void		*arg;
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 8f512b992acd..23583f76c6dc 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -861,9 +861,6 @@ static inline bool i2c_client_has_driver(struct i2c_client *client)
+>  	return !IS_ERR_OR_NULL(client) && client->dev.driver;
+>  }
+>  
+> -extern struct i2c_client *i2c_use_client(struct i2c_client *client);
+> -extern void i2c_release_client(struct i2c_client *client);
+> -
+>  /* call the i2c_client->command() of all attached clients with
+>   * the given arguments */
+>  extern void i2c_clients_command(struct i2c_adapter *adap,
 
-This patch causes a regression for many SPI devices as they
-assume spi_setup() return 0 on success and not a positive value.
+Sweet!
 
-I've sent a fix for this as:
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
-spi: Fix regression to return zero on success instead of positive value
-
-Regards,
-
-Tony
+-- 
+Jean Delvare
+SUSE L3 Support
