@@ -2,227 +2,129 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD3FC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273F1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CD920818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA8D206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:52:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VS9STizx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qn6WJ4jP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKKRwe (ORCPT
+        id S1727047AbfKKRwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:52:34 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41144 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfKKRwd (ORCPT
+        Mon, 11 Nov 2019 12:52:55 -0500
+Received: from mail-il1-f170.google.com ([209.85.166.170]:35160 "EHLO
+        mail-il1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfKKRwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:52:33 -0500
-Received: by mail-ed1-f65.google.com with SMTP id a21so12614300edj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:52:31 -0800 (PST)
+        Mon, 11 Nov 2019 12:52:55 -0500
+Received: by mail-il1-f170.google.com with SMTP id z12so12892540ilp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 09:52:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4Z1hM417lFwAqZ6tPuUeJLMHQyA6CpiEKFqvGXrz6gk=;
-        b=VS9STizxueUZRgMzpSMXJ6IJbDWeHx4ZduySM1LCp7eW9BxEzbtzbAA5bci1JH95fB
-         qIQ+OoWfKq96uEvaKyqRSrkX72uqDihPVON0krTbK+iZmLSIsFZDtP6Md2k2wIER9+AX
-         PzDNK08rvlew5uUUnGSB+f+4gsha8qUtALx/o1dv49g8+rnqEWO45M6grdufmgxczYnA
-         3CmMDI8eVIzsy6F8UqSomFyJRJSbswMU037z9SM7naNuUC5g8HsLS+4Kr8fBKg4Bz9jH
-         pmscL8x9ibM+XtojxwpQrmoxjk9mrsklzOgqVDh7NrrbQzlcF2zQ2OYCbBfMks/Chh/V
-         lhKg==
+        bh=xxpQr+dia9IqKsQkLC2r2q0hxYEWq0JKYn0HyGqco2A=;
+        b=Qn6WJ4jP6os+r/cocp+3Nn/6ERvGDTCL2cYO2coyzwnsqVszKRHYejKFAGmAONNudS
+         UX/f/QXWhV9H5NNrMbP9IJJ27BAw03fQjE7nzELH/zFzpDiD7MIvjlQPYF5mvOiliSRf
+         N68/rNZ3zUOwf4QIPQcl5SuWLe2/3/AJdtBQIA5ltKxAHdTXTWudwHsO6B50PMEslWTG
+         z4UgMtSNJQ8SI3Ae3aA6TuwKgvDhfRhG2HHpdZn+YUkig33GV+USvCGQnLEuelgRXSSR
+         CDUt3P36Iwu7ztcsMl+fodD5Gy97y+H6C8XgCQSe9/8BuozNct3mu3tdlyMr+oa/cUks
+         TYuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4Z1hM417lFwAqZ6tPuUeJLMHQyA6CpiEKFqvGXrz6gk=;
-        b=j4B3Obig0LoXOkBTcE4SIGTha5Ir/5LTv8FG3aYpP5nJ9QJkzEdzCns1t1w6mOIZqz
-         kuMAbCDawOqyAqF+u2D07RwozzwI0MuLvxuKGdASpkZLUIPxa0B2uUfBxI2OwMbCVFjx
-         RFNTXctfEpgwnbO6OHZBfpLVClRc0e15o4TjTng4GQCc7VKFHlSTBXHcfULGa69/CNp+
-         zctGPNAvHF70dSM9w1N6FxWqCQF/ybYXUzzx3QzrIT4Q7xLIBMFgwLFd25TxILFmyYn+
-         tqwkEDmOkQ37xsQITGHrZNS9D3A584U+XfLd7oEtTMN0mZwpHgHXpxoZHs+QpNOOgo2U
-         5NTQ==
-X-Gm-Message-State: APjAAAVJB956Hg0MjPIPhbCyNjVzPZqP+3/B1FdRCKYpvES9R0QX7jJ6
-        Po+noHq5nxAeZnnr83sylu6q3MamYQ3FKt5EnKR2WQ==
-X-Google-Smtp-Source: APXvYqxnqO7lyEwx8ALYTzElu0UZ+HWIfQ70kcm9wFLx/nn/sS5zyvoeEqCVU07M5lG3VBZkNtdv1o78TbhAxaRLcR8=
-X-Received: by 2002:a17:906:e0d5:: with SMTP id gl21mr23419971ejb.292.1573494749900;
- Mon, 11 Nov 2019 09:52:29 -0800 (PST)
+        bh=xxpQr+dia9IqKsQkLC2r2q0hxYEWq0JKYn0HyGqco2A=;
+        b=JMI561XCdk/ZkjOJZxQHiUp6djYFW/eWNl9b5xcWA3B4VIso/7kycv+yksNyvGzuhs
+         OaOVK5vZyHeLaFbT1/LQxUR1fcshp3T7RHghQGN2SXt0TQyjvGPX8B2WTZrWBiJgWJAS
+         qfb49oatxL3cfFmY8QkDcPquEGzqQF7kC7D1BJSO+QvWFgKiQGe1MrLXWhJOJYuli0RN
+         JkRuODrVHIhGja8Egn+zoypGSHdJavawq6RA8O+bey+qH1k3mX8/09SAyrKMW8ecuy+d
+         U9/NAKHyF8wIkzw/5CofOYH06X3jlyV7cFyS21utAxE07ml7UHkf8LMjqsH0h824Pzaf
+         GyoQ==
+X-Gm-Message-State: APjAAAXxbBVMyJQK21RNunbfLVbkyOCj8cQiQumXNXwI6wzhcUiGxlEX
+        fc9vIj30Bpi8ELRRs0HobwdMCLTkKPZPQ1vv2zetlw==
+X-Google-Smtp-Source: APXvYqy+kA2+IPweRX537l0eE3LzjXhIh4uaecrJhFmEYQk1GjPm4ev6+X67C7JTy6D4l8U2slZIa2mBm/ByZpvgLjE=
+X-Received: by 2002:a92:ca8d:: with SMTP id t13mr30027628ilo.58.1573494773987;
+ Mon, 11 Nov 2019 09:52:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20191015061349.141448-1-wvw@google.com> <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
- <CAHLCerN0CWOox-_=ywVO40R9LCahBRoU6Myg3Ca3p_TkZyJAMw@mail.gmail.com>
- <CAGXk5yp4uSCESvve5j_LbCr7b_55DqBagjNr_Dsdi=HppSpBPg@mail.gmail.com> <CAHLCerN4ymf7LOGQPRLuAwirwCUaQGynrnUMfgU6+frDswey5A@mail.gmail.com>
-In-Reply-To: <CAHLCerN4ymf7LOGQPRLuAwirwCUaQGynrnUMfgU6+frDswey5A@mail.gmail.com>
-From:   Wei Wang <wvw@google.com>
-Date:   Mon, 11 Nov 2019 09:52:18 -0800
-Message-ID: <CAGXk5ypP0qSm-GMbHJy+hQtYN1hw6Ow6XgeO9JDni0bD1bFSVg@mail.gmail.com>
-Subject: Re: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org> <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com>
+In-Reply-To: <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Mon, 11 Nov 2019 09:52:41 -0800
+Message-ID: <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Marco Elver <elver@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 9:26 PM Amit Kucheria
-<amit.kucheria@verdurent.com> wrote:
+On Mon, Nov 11, 2019 at 8:51 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> On Thu, Oct 17, 2019 at 3:04 AM Wei Wang <wvw@google.com> wrote:
+> On Mon, Nov 11, 2019 at 7:51 AM Alan Stern <stern@rowland.harvard.edu> wrote:
 > >
-> > On Wed, Oct 16, 2019 at 10:16 AM Amit Kucheria
-> > <amit.kucheria@verdurent.com> wrote:
-> > >
-> > > On Wed, Oct 16, 2019 at 10:20 PM Amit Kucheria
-> > > <amit.kucheria@verdurent.com> wrote:
-> > > >
-> > > > On Tue, Oct 15, 2019 at 11:43 AM Wei Wang <wvw@google.com> wrote:
-> > > > >
-> > > > > The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> > > > > numbers are subject to change due to device tree change. This usually
-> > > > > leads to tree traversal in userspace code.
-> > > > > The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> > > > > cooling_device respectively.
-> > > >
-> > > > I like this.
-> > > >
-> > > > > Signed-off-by: Wei Wang <wvw@google.com>
-> > > > > ---
-> > > > >  drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
-> > > > >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> > > > > index d4481cc8958f..0ff8fb1d7b0a 100644
-> > > > > --- a/drivers/thermal/thermal_core.c
-> > > > > +++ b/drivers/thermal/thermal_core.c
-> > > > > @@ -22,6 +22,7 @@
-> > > > >  #include <net/netlink.h>
-> > > > >  #include <net/genetlink.h>
-> > > > >  #include <linux/suspend.h>
-> > > > > +#include <linux/kobject.h>
-> > > > >
-> > > > >  #define CREATE_TRACE_POINTS
-> > > > >  #include <trace/events/thermal.h>
-> > > > > @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
-> > > > >
-> > > > >  static atomic_t in_suspend;
-> > > > >  static bool power_off_triggered;
-> > > > > +static struct kobject *cdev_link_kobj;
-> > > > > +static struct kobject *tz_link_kobj;
-> > > > >
-> > > > >  static struct thermal_governor *def_governor;
-> > > > >
-> > > > > @@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > > >         struct thermal_zone_device *pos = NULL;
-> > > > >         int result;
-> > > > >
-> > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > > +       if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > >                 return ERR_PTR(-EINVAL);
-> > > >
-> > > > This should be a separate fix, if needed.
-> > Agree, but the link now requires that "" as invalid _type_.
+> > I dislike the explicit annotation approach, because it shifts the
+> > burden of proving correctness from the automatic verifier to the
+> > programmer.
 >
-> I'm not sure I understand. What does this change have to do with
-> adding symlinks below?
+> Yes.
 >
-
-cdev->type will be used later in sysfs_create_link and adding "" as
-symlink is kind of bad practise AIUI.
-
-thanks
-
-
-> > > >
-> > > > >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-> > > > > @@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > > >                 return ERR_PTR(result);
-> > > > >         }
-> > > > >
-> > > > > -       /* Add 'this' new cdev to the global cdev list */
-> > > > > +       /* Add 'this' new cdev to the global cdev list and create link*/
-> > > > >         mutex_lock(&thermal_list_lock);
-> > > > >         list_add(&cdev->node, &thermal_cdev_list);
-> > > > > +       if (!cdev_link_kobj)
-> > > > > +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > > > > +                                               cdev->device.kobj.parent);
-> > > > > +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-> > > > > +                                               &cdev->device.kobj, cdev->type))
-> > > > > +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
-> > > >
-> > > > Any reason not to use the following form instead? It seems easier to read.
-> > > >
-> > > > if (!cdev_link_kobj) {
-> > > >                cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > > >                                                cdev->device.kobj.parent);
-> > > >               ret = sysfs_create_link(cdev_link_kobj,
-> > > >                                               &cdev->device.kobj, cdev->type))
-> > > >               if (ret)
-> > > >                        dev_err(&cdev->device, "Failed to create
-> > > > cdev-by-name link\n");
-> > > > }
-> > >
-> > > I can now see why you had to do that - none of the other links would
-> > > get created after the first one.
-> > >
-> > > Perhaps create the directories in the __init functions and only create
-> > > the links here?
-> > >
-> > AFAICT, this is no such API except the private get_device_parent()
-> > under driver/base/. Also the lazy initialization makes sense in such
-> > case when there is no thermal device attached. Looks like the class
-> > dir is also lazy-initialized when first device registered
-> > https://elixir.bootlin.com/linux/v5.3.5/source/drivers/base/core.c#L1790.
+> However, sometimes explicit annotations are very useful as
+> documentation and as showing of intent even if they might not change
+> behavior or code generation.
 >
-> OK.
+> But they generally should never _replace_ checking - in fact, the
+> annotations themselves should hopefully be checked for correctness
+> too.
 >
-> > >
-> > > > >         mutex_unlock(&thermal_list_lock);
-> > > > >
-> > > > >         /* Update binding information for 'this' new cdev */
-> > > > > @@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
-> > > > >                         }
-> > > > >                 }
-> > > > >         }
-> > > > > +       if (cdev_link_kobj)
-> > > > > +               sysfs_remove_link(cdev_link_kobj, cdev->type);
-> > > > >
-> > > > >         mutex_unlock(&thermal_list_lock);
-> > > > >
-> > > > > @@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
-> > > > >
-> > > > >         mutex_lock(&thermal_list_lock);
-> > > > >         list_add_tail(&tz->node, &thermal_tz_list);
-> > > > > +       if (!tz_link_kobj)
-> > > > > +               tz_link_kobj = kobject_create_and_add("tz-by-name",
-> > > > > +                                               tz->device.kobj.parent);
-> > > > > +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-> > > > > +                                               &tz->device.kobj, tz->type))
-> > > > > +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
-> > > >
-> > > > Same as above.
-> > > >
-> > > > >         mutex_unlock(&thermal_list_lock);
-> > > > >
-> > > > >         /* Bind cooling devices for this zone */
-> > > > > @@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
-> > > > >                         }
-> > > > >                 }
-> > > > >         }
-> > > > > +       if (tz_link_kobj)
-> > > > > +               sysfs_remove_link(tz_link_kobj, tz->type);
-> > > > >
-> > > > >         mutex_unlock(&thermal_list_lock);
-> > > > >
-> > > > > --
-> > > > > 2.23.0.700.g56cf767bdb-goog
-> > > > >
+> So a good annotation would implicitly document intent, but it should
+> also be something that we can check being true, so that we also have
+> the check that reality actually _matches_ the intent too. Because
+> misleading and wrong documentation is worse than no documentation at
+> all.
+>
+> Side note: an example of a dangerous annotation is the one that Eric
+> pointed out, where a 64-bit read in percpu_counter_read_positive()
+> could be changed to READ_ONCE(), and we would compile it cleanly, but
+> on 32-bit it wouldn't actually be atomic.
+>
+> We at one time tried to actually verify that READ/WRITE_ONCE() was
+> done only on types that could actually be accessed atomically (always
+> ignoring alpha because the pain is not worth it), but it showed too
+> many problems.
+>
+> So now we silently accept things that aren't actually atomic. We do
+> access them "once" in the sense that we don't allow the compiler to
+> reload it, but it's not "once" in the LKMM sense of one single value.
+>
+> That's ok for some cases. But it's actually a horrid horrid thing from
+> a documentation standpoint, and I hate it, and it's dangerous.
+>
+>                 Linus
+
+I was hoping to cleanup the 'easy cases'  before looking at more serious issues.
+
+But it looks like even the ' easy cases'  are not that easy.
+
+Now I wonder what to do with the ~400 KCSAN reports sitting in
+pre-moderation queue.
