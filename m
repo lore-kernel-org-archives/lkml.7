@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474E9C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A5DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2242F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC232075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfKKJcs (ORCPT
+        id S1727223AbfKKJc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:32:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55769 "EHLO
+        Mon, 11 Nov 2019 04:32:57 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55815 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbfKKJcr (ORCPT
+        with ESMTP id S1726845AbfKKJc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:32:47 -0500
+        Mon, 11 Nov 2019 04:32:56 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iU63m-00037x-7n; Mon, 11 Nov 2019 10:32:34 +0100
+        id 1iU63q-00039c-2k; Mon, 11 Nov 2019 10:32:38 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DB3A51C03AB;
-        Mon, 11 Nov 2019 10:32:33 +0100 (CET)
-Date:   Mon, 11 Nov 2019 09:32:33 -0000
-From:   "tip-bot2 for Zheng Yongjun" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 843B01C03AB;
+        Mon, 11 Nov 2019 10:32:36 +0100 (CET)
+Date:   Mon, 11 Nov 2019 09:32:36 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/amd: Remove set but not used variable 'active'
-Cc:     Hulk Robot <hulkci@huawei.com>,
-        Zheng Yongjun <zhengyongjun3@huawei.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <mark.rutland@arm.com>,
-        <peterz@infradead.org>,
+Subject: [tip: sched/core] sched/fair: Better document newidle_balance()
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, bsegall@google.com,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        ktkhai@virtuozzo.com, mgorman@suse.de, qais.yousef@arm.com,
+        qperret@google.com, rostedt@goodmis.org,
+        valentin.schneider@arm.com, vincent.guittot@linaro.org,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191110094453.113001-1-zhengyongjun3@huawei.com>
-References: <20191110094453.113001-1-zhengyongjun3@huawei.com>
+In-Reply-To: <20191108131909.488364308@infradead.org>
+References: <20191108131909.488364308@infradead.org>
 MIME-Version: 1.0
-Message-ID: <157346475356.29376.17366628370555604591.tip-bot2@tip-bot2>
+Message-ID: <157346475624.29376.10025173920245642380.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,73 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     8f05c1ff8bfb8cbae0898e5dc6791927d1e5c503
-Gitweb:        https://git.kernel.org/tip/8f05c1ff8bfb8cbae0898e5dc6791927d1e5c503
-Author:        Zheng Yongjun <zhengyongjun3@huawei.com>
-AuthorDate:    Sun, 10 Nov 2019 17:44:53 +08:00
+Commit-ID:     7277a34c6be0b2972bdd1fea88c7cef409bed5b4
+Gitweb:        https://git.kernel.org/tip/7277a34c6be0b2972bdd1fea88c7cef409bed5b4
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 08 Nov 2019 14:15:55 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 11 Nov 2019 08:31:55 +01:00
+CommitterDate: Mon, 11 Nov 2019 08:35:18 +01:00
 
-perf/x86/amd: Remove set but not used variable 'active'
+sched/fair: Better document newidle_balance()
 
-'-Wunused-but-set-variable' triggers this warning:
+Whilst chasing the pick_next_task() race, there was some confusion
+about the newidle_balance() return values. Document them.
 
-  arch/x86/events/amd/core.c: In function amd_pmu_handle_irq:
-  arch/x86/events/amd/core.c:656:6: warning: variable active set but not used [-Wunused-but-set-variable]
+[ mingo: Minor edits. ]
 
-GCC is right, 'active' is not used anymore.
-
-This variable was introduced earlier this year and then removed in:
-
-  df4d29732fdad perf/x86/amd: Change/fix NMI latency mitigation to use a timestamp
-
-[ mingo: Improved the changelog, fixed build warning caused by this fix, improved surrounding code. ]
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
-Cc: <acme@kernel.org>
-Cc: <alexander.shishkin@linux.intel.com>
-Cc: <mark.rutland@arm.com>
-Cc: <peterz@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191110094453.113001-1-zhengyongjun3@huawei.com
+Cc: bsegall@google.com
+Cc: dietmar.eggemann@arm.com
+Cc: juri.lelli@redhat.com
+Cc: ktkhai@virtuozzo.com
+Cc: mgorman@suse.de
+Cc: qais.yousef@arm.com
+Cc: qperret@google.com
+Cc: rostedt@goodmis.org
+Cc: valentin.schneider@arm.com
+Cc: vincent.guittot@linaro.org
+Link: https://lkml.kernel.org/r/20191108131909.488364308@infradead.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/amd/core.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ kernel/sched/fair.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 64c3e70..a7752cd 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -652,15 +652,7 @@ static void amd_pmu_disable_event(struct perf_event *event)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 6e622f4..c48a695 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9941,6 +9941,11 @@ static inline void nohz_newidle_balance(struct rq *this_rq) { }
+ /*
+  * idle_balance is called by schedule() if this_cpu is about to become
+  * idle. Attempts to pull tasks from other CPUs.
++ *
++ * Returns:
++ *   < 0 - we released the lock and there are !fair tasks present
++ *     0 - failed, no new tasks
++ *   > 0 - success, new (fair) tasks present
   */
- static int amd_pmu_handle_irq(struct pt_regs *regs)
+ int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
  {
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	int active, handled;
--
--	/*
--	 * Obtain the active count before calling x86_pmu_handle_irq() since
--	 * it is possible that x86_pmu_handle_irq() may make a counter
--	 * inactive (through x86_pmu_stop).
--	 */
--	active = __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
-+	int handled;
- 
- 	/* Process any counter overflows */
- 	handled = x86_pmu_handle_irq(regs);
-@@ -670,8 +662,7 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
- 	 * NMIs will be claimed if arriving within that window.
- 	 */
- 	if (handled) {
--		this_cpu_write(perf_nmi_tstamp,
--			       jiffies + perf_nmi_window);
-+		this_cpu_write(perf_nmi_tstamp, jiffies + perf_nmi_window);
- 
- 		return handled;
- 	}
