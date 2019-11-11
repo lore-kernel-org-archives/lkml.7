@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CBEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EA7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108FB2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A000120659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497411;
-	bh=Y5D9GcuV9dNx+iJHuMsVUXhTTDTAUNdLvvepNGOsPLU=;
+	s=default; t=1573497413;
+	bh=b0+wHfdxK6blSJTOX65f88M9L+pTzgIeBUoYaIac8RU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MAmVIaYexlN/P040H9Qd5qK6LwIlLKsibFtPUM7WtrwH2NAHZSMY3C0B0yiNUfhH8
-	 jxQMcASkMcpjJ3XADm8JciL2t8PJ2sJhkk1yAPxPJaEgL+zvJbbHlgpIEE7fMXW66f
-	 /ryV7AovHMPThjSATBYweyWbT+EAURIkMMmPuenw=
+	b=tgqyUWQePfzze08ULcVepbylJXEfWhO/AKKyUM7AsMEDaMffJhUleYekM8yxDQvQC
+	 6hyj/h95dY4Z4QDf8zcZp9cs+Z01OZeP4+t90H+PaCRDouTbfxlFfZilbBX/0mS/iL
+	 /5+fka+rEEgDft7YgL9ANFiDBs7KRVP9sQ5z39Dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbfKKSgt (ORCPT
+        id S1728791AbfKKSgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbfKKSgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:47 -0500
+        id S1728129AbfKKSgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA36204FD;
-        Mon, 11 Nov 2019 18:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 373F3204FD;
+        Mon, 11 Nov 2019 18:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497407;
-        bh=Y5D9GcuV9dNx+iJHuMsVUXhTTDTAUNdLvvepNGOsPLU=;
+        s=default; t=1573497409;
+        bh=b0+wHfdxK6blSJTOX65f88M9L+pTzgIeBUoYaIac8RU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBRcT3YRg83VH7ywElzfZEcSqVRawcvbvMeeT/3o9iA8ICFNK3omRVt0iCLDtN4ca
-         wh8bOukUuvaPZdzKRMftBj0F2yI85V6PAmLzSMMPIYQJD5alfzCerd8MiMaXCVFfxb
-         bs4kfm513YDhhqgEy7vkXSM4WdyLzTWMA+13df50=
+        b=Bf7Em//kQiMv6H02C/GNd64GUIVMJ5cbrHwGe/ulqIqHaIuSg1A9wrPeVsbRMKXon
+         EInLT5UeuYj8YXfJMr8oF+ML0gWg43WKA5teMLceJJTCSNScMo1kcJ7DT0evRq2J9y
+         rBPQid7w7Vd0nbeO2yEKWWV9Hd3hcLA5p/tY4mYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksander Morgado <aleksander@aleksander.es>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 007/105] net: usb: qmi_wwan: add support for DW5821e with eSIM support
-Date:   Mon, 11 Nov 2019 19:27:37 +0100
-Message-Id: <20191111181424.758584182@linuxfoundation.org>
+Subject: [PATCH 4.14 008/105] NFC: fdp: fix incorrect free object
+Date:   Mon, 11 Nov 2019 19:27:38 +0100
+Message-Id: <20191111181425.450178863@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,43 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit e497df686e8fed8c1dd69179010656362858edb3 ]
+[ Upstream commit 517ce4e93368938b204451285e53014549804868 ]
 
-Exactly same layout as the default DW5821e module, just a different
-vid/pid.
+The address of fw_vsc_cfg is on stack. Releasing it with devm_kfree() is
+incorrect, which may result in a system crash or other security impacts.
+The expected object to free is *fw_vsc_cfg.
 
-The QMI interface is exposed in USB configuration #1:
-
-P:  Vendor=413c ProdID=81e0 Rev=03.18
-S:  Manufacturer=Dell Inc.
-S:  Product=DW5821e-eSIM Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/nfc/fdp/i2c.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1286,6 +1286,7 @@ static const struct usb_device_id produc
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
-+	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
- 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
- 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
- 	{QMI_FIXED_INTF(0x22de, 0x9061, 3)},	/* WeTelecom WPD-600N */
+--- a/drivers/nfc/fdp/i2c.c
++++ b/drivers/nfc/fdp/i2c.c
+@@ -267,7 +267,7 @@ static void fdp_nci_i2c_read_device_prop
+ 						  *fw_vsc_cfg, len);
+ 
+ 		if (r) {
+-			devm_kfree(dev, fw_vsc_cfg);
++			devm_kfree(dev, *fw_vsc_cfg);
+ 			goto vsc_read_err;
+ 		}
+ 	} else {
 
 
