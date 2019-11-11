@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB5C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B3AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09BE62196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A4B2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497548;
-	bh=EUqYUynVvxUCW80m8A1QyQAuyVCbPM3PYh9k7+enP3M=;
+	s=default; t=1573497553;
+	bh=tz9uFoefhrKH621KyE+P/p8W+zKZJg99OToA1UNMPLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pglthbzeNsFs83jeKb0C2NmUaAn28I1Y9h/YemO+8yUINZgpsh9dHTQEnYcFM3c8y
-	 gh8YbaJ5GNO61uoRwsRU/RvLOjpisSefDB6kt4HbgOTArhAJblMmnvzUnCV9QrASzb
-	 G8kdedxARPUS0rVPySy2dSOrdGF5BXvL7ZhzSuC8=
+	b=pXYqU4gQ3VoyyhlH7IEukJh3B9iiv+Xjv6+7UZfRrLwaTNRq4jKF8oDmvUXGqtzf2
+	 pnz7v3srPerL0IhP1T4PEv4ht1SiFaD0qyNZ1mcb5ewdN73vcvG0TT4Fuy0d/Et2rc
+	 6vcb+mtu3RRV6j00Yik49sdHB/YwjWc9yzElDvVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbfKKSjG (ORCPT
+        id S1729147AbfKKSjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58064 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728565AbfKKSjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:02 -0500
+        id S1729119AbfKKSjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2D3222BD;
-        Mon, 11 Nov 2019 18:39:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4BE214E0;
+        Mon, 11 Nov 2019 18:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497541;
-        bh=EUqYUynVvxUCW80m8A1QyQAuyVCbPM3PYh9k7+enP3M=;
+        s=default; t=1573497544;
+        bh=tz9uFoefhrKH621KyE+P/p8W+zKZJg99OToA1UNMPLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDAJ55MnSNg+UZrtNroYk4YnZbocAklmfP0AFlPt5xbASo1qRWzT6E4CMrWEsx5mM
-         fzf4mDOmVTf1HHNFk8q3EriME3unv/a+vPaSbqW/5NUHekbVAJ0Tx+8k6HSU9EofN2
-         Nxi0cUb0vmYaZQng6biAKciK7eQ3/lHsWm+vwOSY=
+        b=GV5P0a01R3iVf0R6mQWyCzQjm4b8bqkV13g5bvmprVt0Y+vJnbj3pjAvD3rhejcCH
+         2HTTuMc6RHTA/rx9Q10tyR2nfrBH8rTIKEx++8suPm76bczylUaEjdLU95sFZuy0k+
+         jaYERvGe84ToWXAXN2NxOrLELk7/X+NZs9JPsdEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 083/105] usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
-Date:   Mon, 11 Nov 2019 19:28:53 +0100
-Message-Id: <20191111181447.129059299@linuxfoundation.org>
+Subject: [PATCH 4.14 092/105] scsi: qla2xxx: stop timer in shutdown path
+Date:   Mon, 11 Nov 2019 19:29:02 +0100
+Message-Id: <20191111181448.078837994@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit ba3a1a915c49cc3023e4ddfc88f21e7514e82aa4 ]
+[ Upstream commit d3566abb1a1e7772116e4d50fb6a58d19c9802e5 ]
 
-Fix interrupt storm generated by endpoints when working in FIFO mode.
-The TX_COMPLETE interrupt is used only by control endpoints processing.
-Do not enable it for other types of endpoints.
+In shutdown/reboot paths, the timer is not stopped:
 
-Fixes: 914a3f3b3754 ("USB: add atmel_usba_udc driver")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+  qla2x00_shutdown
+  pci_device_shutdown
+  device_shutdown
+  kernel_restart_prepare
+  kernel_restart
+  sys_reboot
+
+This causes lockups (on powerpc) when firmware config space access calls
+are interrupted by smp_send_stop later in reboot.
+
+Fixes: e30d1756480dc ("[SCSI] qla2xxx: Addition of shutdown callback handler.")
+Link: https://lore.kernel.org/r/20191024063804.14538-1-npiggin@gmail.com
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index cb66f982c313b..39676824a2c6f 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -488,9 +488,11 @@ static void submit_request(struct usba_ep *ep, struct usba_request *req)
- 		next_fifo_transaction(ep, req);
- 		if (req->last_transaction) {
- 			usba_ep_writel(ep, CTL_DIS, USBA_TX_PK_RDY);
--			usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
-+			if (ep_is_control(ep))
-+				usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
- 		} else {
--			usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
-+			if (ep_is_control(ep))
-+				usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
- 			usba_ep_writel(ep, CTL_ENB, USBA_TX_PK_RDY);
- 		}
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 7d7fb5bbb6007..343fbaa6d2a2d 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3437,6 +3437,10 @@ qla2x00_shutdown(struct pci_dev *pdev)
+ 	/* Stop currently executing firmware. */
+ 	qla2x00_try_to_stop_firmware(vha);
+ 
++	/* Disable timer */
++	if (vha->timer_active)
++		qla2x00_stop_timer(vha);
++
+ 	/* Turn adapter off line */
+ 	vha->flags.online = 0;
+ 
 -- 
 2.20.1
 
