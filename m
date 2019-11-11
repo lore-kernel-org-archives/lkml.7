@@ -2,69 +2,144 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EFCC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BBAC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4AE20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573494608;
-	bh=6Btq0cANTE9NZDddbWN8HJIM2SdQnv3rmPVHoIJKJzA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tKAu8mY0sGyJk9b2/TcbRl6+SQvSsLfFPt9hWhqHmwjaEeabLV/oh6N2iZGuLbNqy
-	 01MMWI2D1Pn7g5VNFPRro7GhMhX4c1bFV/r+aZWNAuVVCvua+PnCkrex6VloU3qbm+
-	 Zz5d05cKG+CcgR31LN3/PxIlsx47Q9OMUnA2e+Sg=
+	by mail.kernel.org (Postfix) with ESMTP id 1680D20818
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKKRuH (ORCPT
+        id S1727040AbfKKRuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:50:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 12:50:21 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:42502 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfKKRuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:50:06 -0500
-Subject: Re: [GIT PULL] SCSI fixes for 5.4-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573494606;
-        bh=6Btq0cANTE9NZDddbWN8HJIM2SdQnv3rmPVHoIJKJzA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yfwA+7HxVPLWjvW3lrHzmCqcDCDMiydhiQjd7Q86Ft3GrQI/d0BXq5WmUey9ZqbnD
-         JzeWyBODmtd0RO6SRBd/lM7cTXGNh3yDTeCvPiVyjr1wMEqOrDA1otFgiwa+NtSqKg
-         ZSNyoYdWxBg6rlj+v85q77u1tzy9Atn0zvVN2RLE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1573492117.6865.5.camel@HansenPartnership.com>
-References: <1573492117.6865.5.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1573492117.6865.5.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: 9393c8de628cf0968d81a17cc11841e42191e041
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 72d5ac679e246c15d94a00d53a6289e142cfcf86
-Message-Id: <157349460633.15424.9562738626187318416.pr-tracker-bot@kernel.org>
-Date:   Mon, 11 Nov 2019 17:50:06 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        id S1726871AbfKKRuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:50:20 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1iUDpR-0000Z8-Ls; Mon, 11 Nov 2019 10:50:19 -0700
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-4-logang@deltatee.com>
+ <20191109173510.GG952516@vkoul-mobl>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <ff43b1f9-c620-17eb-fc6c-4c7d7577250b@deltatee.com>
+Date:   Mon, 11 Nov 2019 10:50:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191109173510.GG952516@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 3/5] dmaengine: plx-dma: Introduce PLX DMA engine PCI
+ driver skeleton
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 11 Nov 2019 09:08:37 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/72d5ac679e246c15d94a00d53a6289e142cfcf86
+On 2019-11-09 10:35 a.m., Vinod Koul wrote:
+> On 22-10-19, 15:46, Logan Gunthorpe wrote:
+>> +static irqreturn_t plx_dma_isr(int irq, void *devid)
+>> +{
+>> +	return IRQ_HANDLED;
+> 
+> ??
 
-Thank you!
+Yes, sorry this is more of an artifact of how I chose to split the
+patches up. The ISR is filled-in in patch 4.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
+>> +	 */
+>> +	schedule_work(&plxdev->release_work);
+>> +}
+>> +
+>> +static void plx_dma_put(struct plx_dma_dev *plxdev)
+>> +{
+>> +	kref_put(&plxdev->ref, plx_dma_release);
+>> +}
+>> +
+>> +static int plx_dma_alloc_chan_resources(struct dma_chan *chan)
+>> +{
+>> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
+>> +
+>> +	kref_get(&plxdev->ref);
+> 
+> why do you need to do this?
+
+This has to do with being able to probably unbind while a channel is in
+use. If we don't hold a reference to the struct plx_dma_dev between
+alloc_chan_resources() and free_chan_resources() then it will panic if a
+call back is called after plx_dma_remove(). The way I've done it, once a
+device is removed, subsequent calls to dma_prep_memcpy() will fail (see
+ring_active).
+
+struct plx_dma_dev needs to be alive between plx_dma_probe() and
+plx_dma_remove(), and between calls to alloc_chan_resources() and
+free_chan_resources(). So we use a reference count to ensure this.
+
+>> +}
+>> +
+>> +static void plx_dma_release_work(struct work_struct *work)
+>> +{
+>> +	struct plx_dma_dev *plxdev = container_of(work, struct plx_dma_dev,
+>> +						  release_work);
+>> +
+>> +	dma_async_device_unregister(&plxdev->dma_dev);
+>> +	put_device(plxdev->dma_dev.dev);
+>> +	kfree(plxdev);
+>> +}
+>> +
+>> +static void plx_dma_release(struct kref *ref)
+>> +{
+>> +	struct plx_dma_dev *plxdev = container_of(ref, struct plx_dma_dev, ref);
+>> +
+>> +	/*
+>> +	 * The dmaengine reference counting and locking is a bit of a
+>> +	 * mess so we have to work around it a bit here. We might put
+>> +	 * the reference while the dmaengine holds the dma_list_mutex
+>> +	 * which means we can't call dma_async_device_unregister() directly
+>> +	 * here and it must be delayed.
+>
+> why is that, i have not heard any complaints about locking, can you
+> elaborate on why you need to do this?
+
+Per the above explanation, we need to call plx_dma_put() in
+plx_dma_free_chan_resources(); and plx_dma_release() is when we can call
+dma_async_device_unregister() (seeing that's when we know there are no
+longer any active channels).
+
+However, dma_chan_put() (which calls device_free_chan_resources()) holds
+the dma_list_mutex and dma_async_device_unregister() tries to take the
+dma_list_mutex so, if we call unregister inside free_chan_resources we
+would deadlock.
+
+I suspect that most dmaengine drivers will WARN[1] and then panic if
+they are unbound while in use. The locking, reference counting and
+structure of the API didn't seem to consider it and required extra
+reference counts and workarounds to make it work correctly at all.
+
+This is the mess I'm referring to and would require some significant
+restructuring to fix generally.
+
+Logan
+
+[1]
+https://elixir.bootlin.com/linux/latest/source/drivers/dma/dmaengine.c#L1119
+
+
