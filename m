@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3929C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8524AC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BAF20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653DF20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfKKURb (ORCPT
+        id S1727450AbfKKURD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:17:31 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:40119 "EHLO
+        Mon, 11 Nov 2019 15:17:03 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:33919 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727521AbfKKURF (ORCPT
+        with ESMTP id S1726924AbfKKURC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:17:05 -0500
+        Mon, 11 Nov 2019 15:17:02 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M3lkT-1iUXEP10T5-000qDU; Mon, 11 Nov 2019 21:16:50 +0100
+ 1N6svJ-1hphAy14rX-018NFQ; Mon, 11 Nov 2019 21:16:51 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -31,164 +31,67 @@ To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 12/19] nfsd: make 'boot_time' 64-bit wide
-Date:   Mon, 11 Nov 2019 21:16:32 +0100
-Message-Id: <20191111201639.2240623-13-arnd@arndb.de>
+Subject: [PATCH 15/19] nfsd: fix delay timer on 32-bit architectures
+Date:   Mon, 11 Nov 2019 21:16:35 +0100
+Message-Id: <20191111201639.2240623-16-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
 References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:PNkdbjcRtbrbVMRUiZLzF1eXOvEElAym2CbUzxCHUKM+UeD/ENv
- tZVtNhCjbb2R4CVQ+tuX82riybqvHgcczH+XNNeLunytNXK/EbG2xqn3kK0fUKr8EeW5kpF
- dy1F8JS4y9BaNphHp0AymV3uTXSjvQj9jeAyN/k7nF71NOFb9DUUCkD16P6ZDapfzJ23GDB
- 7HqaAcq95pfqVAiyM1bQw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/yjMXGGT/RU=:VwPh1w9NN0xV/iIK32b7vP
- YC1VtjUpL+gsfAzSWXfi3kOOL3eJkV98x3H8KJ8xA+kY70mP1UxFewtvs2K1Y9G2nqjVpzwlV
- sRUxWMYkJiHylw0/DXcGJ44sffRgVCwNk5Zfh7+MR4e5y2TSfqpM1UfeSo2kP9UbvJRJbFr75
- jOxglXbZhAKAQcm9W4E31RtjYRNSUuU3AUKb6XKaVR28FPUmxClGTeFcLxdTkSAXFUY9Xom8D
- ja8hBN9eVxwxdH/db4oZMLvc/j9wNNxy03Yq1jX7gJOFux2RZgxV5Nhj22jQ9xvz2gIobB3di
- k2sxZkc7iMHoLeDb8t+nMbfX1ZEYgAgxFAZ56BTFPwC9KF9O5MoYCOaNcSKfprqTMVZD3Mil8
- TFe2GPPdtrCPUdMtcKGkujS9HjMDBrxKf1Kq/6J9lH9Sm8Q5FcZJIFYbOGn5lPiMsyLTh9MnH
- RnoUOVHy68exfFtErzN35HEFWjipQqOlSlIy/fOQqKxLi6xuXTphG67dmS50BEEaMh8jeFgss
- h5xYWQJNcYlqXxwYr7MOKPqoyVqCbvTy5zYJJ2+gp/sIPhAkMTXpHMec3wzJC7I/6Jbxc4tf2
- rT9+NbY3QAvPGgyHCHFeLrKT7SkM5xbSs6MxYeFenzk46GmpCWK+BOQDWsst/YFpGzdk2oM0l
- 6qZWf10BRKsbNw1DbwrFkIYFiA5ebcFfreeuJih9KRWmoPMKaKuQm1CzExVyrJq5apwD2piix
- ktLmIHFJGEgnZtzdPbz7R77YHMWLz9NcQWxFuEli6y0abS31jteaU43ZdzepPzuUAWOIlVKG4
- Ao5oFJSexKHAQyf5WXtov7Scq8usGfR/L2QU3KJZkoPl/JRoK+D6iIoGGsdnj1pB4ThpOmm7N
- Hbln6rq6npnm1K29b5pw==
+X-Provags-ID: V03:K1:gmiJexBFvqElF3mq4b9b+BZDQ8d72Q7kCeZTPOCjS6AhS6bzlDu
+ NXJLMSB2hdsvgNmtvpikLv8CkbAUuuLITgyvau37mTIqgnGMh2E9z2Kqjdm+HVfcFTkEsgE
+ 9/kcOOnOXlfAtr/6WB+MFLMVjWxlTuUuJmcpK3g5R/UWsE22dELI9rGE5eFOqYyEefJsgrh
+ 5uj7yStbDDRkV90oaUamg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OuSNcZeVEos=:x5ZXKdsBl17wIelyNU21r3
+ 8HywO3EQnZh63jP5CdexIy9kbzHofX+dQ9vWCbGyNW6gxNBDmMoQdYNIOkN7oiQqhOxKT5miN
+ LMLI3zCfLbaVnWqKzXHzkh4SXd60raLsDj6FZ9cqxRnLegxn+ujtQhmJ8O1qrAJ9uGHdZLEyo
+ YYrIHvXt9yrS3dOKUH6D9er6OY6AE3pYEn6niAs26nWvtg31Oh8kIrebSr00Jfwq4uyVMUtMa
+ LovWvlMjgjNNVvy2GM4CZgAc8qjB3IpKNM3Dk2tAM5WyUQRDj1rXtPNk0llxXBskdSmHWOGmM
+ O01Z0XOSo8gBiTaL6JKDtCZPN7/mOK/La4BlGKGPel9nlWIqQdYIRC1lAQSz5LxrOdJNHNCQo
+ c4Yeb6MDh1XYxzXp7hEifvWn65XWZ7EmeYVA8nlUZXm4F9K9Pl6WhGZjrqe15yqHsbxDtEyso
+ zFCbNi+U+ezxW5uyTCO1WGPAhb5r84NSFv0BtGGH2jHcyiYKlhpDoxFXmco9e4u1oP9gxaqpV
+ Coh9Kb8379K2/S45ksuq0DhJCSXfK2+/mVQS5ONJ/KKkCZeqe0VdQvVBVyEdyVL2cQZ6s2Eg4
+ 2SWHkhksSI61c9TmpFxbCv5LIguBAC0j6yaj8sesQwBzjdB8Mqo51GEzubeCjZR2t4nnupwMF
+ oATxST3QYVtUyEn+jyRsq1kCOMrKwM/LWp90kFyffh6rm3nE6VkM+HxbBRHOnuszqT5w59STU
+ lpDJzUcRO0AazmApNe0Emg7YfFD1DDH1qopZZnpp6IhPj6fwpCXEvyn0ltAA5wp4hbWOfP4sh
+ qgUW/h5GeiZ266/UeL//8fY8p9NQIQ9M6LE7YJzHNOR12p1iBWrbBBawW5Lv3hC4nCTp2Nh2e
+ 47wyLsKwTNhlghaiTKhQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The local boot time variable gets truncated to time_t at the moment,
-which can lead to slightly odd behavior on 32-bit architectures.
+The nfsd4_cb_layout_done() function takes a 'time_t' value,
+multiplied by NSEC_PER_SEC*2 to get a nanosecond value.
 
-Use ktime_get_real_seconds() instead of get_seconds() to always
-get a 64-bit result, and keep it that way wherever possible.
+This works fine on 64-bit architectures, but on 32-bit, any
+value over 1 second results in a signed integer overflow
+with unexpected results.
 
-It still gets truncated in a few places:
+Cast one input to a 64-bit type in order to produce the
+same result that we have on 64-bit architectures, regarless
+of the type of nfsd4_lease.
 
-- When assigning to cl_clientid.cl_boot, this is already documented
-  and is only used as a unique identifier.
-
-- In clients_still_reclaiming(), the truncation is to 'unsigned long'
-  in order to use the 'time_before() helper.
-
+Fixes: 6b9b21073d3b ("nfsd: give up on CB_LAYOUTRECALLs after two lease periods")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/netns.h       |  2 +-
- fs/nfsd/nfs4recover.c |  8 ++++----
- fs/nfsd/nfs4state.c   | 14 +++++++-------
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ fs/nfsd/nfs4layouts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 9a4ef815fb8c..29bbe28eda53 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -40,7 +40,7 @@ struct nfsd_net {
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index 2681c70283ce..e12409eca7cc 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -675,7 +675,7 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
  
- 	struct lock_manager nfsd4_manager;
- 	bool grace_ended;
--	time_t boot_time;
-+	time64_t boot_time;
+ 		/* Client gets 2 lease periods to return it */
+ 		cutoff = ktime_add_ns(task->tk_start,
+-					 nn->nfsd4_lease * NSEC_PER_SEC * 2);
++					 (u64)nn->nfsd4_lease * NSEC_PER_SEC * 2);
  
- 	/* internal mount of the "nfsd" pseudofilesystem: */
- 	struct vfsmount *nfsd_mnt;
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index cdc75ad4438b..d51334f38e3b 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -1445,7 +1445,7 @@ nfsd4_cld_grace_done_v0(struct nfsd_net *nn)
- 	}
- 
- 	cup->cu_u.cu_msg.cm_cmd = Cld_GraceDone;
--	cup->cu_u.cu_msg.cm_u.cm_gracetime = (int64_t)nn->boot_time;
-+	cup->cu_u.cu_msg.cm_u.cm_gracetime = nn->boot_time;
- 	ret = cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
- 	if (!ret)
- 		ret = cup->cu_u.cu_msg.cm_status;
-@@ -1780,7 +1780,7 @@ nfsd4_cltrack_client_has_session(struct nfs4_client *clp)
- }
- 
- static char *
--nfsd4_cltrack_grace_start(time_t grace_start)
-+nfsd4_cltrack_grace_start(time64_t grace_start)
- {
- 	int copied;
- 	size_t len;
-@@ -1793,7 +1793,7 @@ nfsd4_cltrack_grace_start(time_t grace_start)
- 	if (!result)
- 		return result;
- 
--	copied = snprintf(result, len, GRACE_START_ENV_PREFIX "%ld",
-+	copied = snprintf(result, len, GRACE_START_ENV_PREFIX "%lld",
- 				grace_start);
- 	if (copied >= len) {
- 		/* just return nothing if output was truncated */
-@@ -2007,7 +2007,7 @@ nfsd4_umh_cltrack_grace_done(struct nfsd_net *nn)
- 	char *legacy;
- 	char timestr[22]; /* FIXME: better way to determine max size? */
- 
--	sprintf(timestr, "%ld", nn->boot_time);
-+	sprintf(timestr, "%lld", nn->boot_time);
- 	legacy = nfsd4_cltrack_legacy_topdir();
- 	nfsd4_umh_cltrack_upcall("gracedone", timestr, legacy, NULL);
- 	kfree(legacy);
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 2333924d7c6b..70a953b03be4 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -753,7 +753,7 @@ int nfs4_init_cp_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
- 	if (new_id < 0)
- 		return 0;
- 	copy->cp_stateid.si_opaque.so_id = new_id;
--	copy->cp_stateid.si_opaque.so_clid.cl_boot = nn->boot_time;
-+	copy->cp_stateid.si_opaque.so_clid.cl_boot = (u32)nn->boot_time;
- 	copy->cp_stateid.si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
- 	return 1;
- }
-@@ -1862,7 +1862,7 @@ STALE_CLIENTID(clientid_t *clid, struct nfsd_net *nn)
- 	 */
- 	if (clid->cl_boot == (u32)nn->boot_time)
- 		return 0;
--	dprintk("NFSD stale clientid (%08x/%08x) boot_time %08lx\n",
-+	dprintk("NFSD stale clientid (%08x/%08x) boot_time %08llx\n",
- 		clid->cl_boot, clid->cl_id, nn->boot_time);
- 	return 1;
- }
-@@ -2222,7 +2222,7 @@ static void gen_confirm(struct nfs4_client *clp, struct nfsd_net *nn)
- 
- static void gen_clid(struct nfs4_client *clp, struct nfsd_net *nn)
- {
--	clp->cl_clientid.cl_boot = nn->boot_time;
-+	clp->cl_clientid.cl_boot = (u32)nn->boot_time;
- 	clp->cl_clientid.cl_id = nn->clientid_counter++;
- 	gen_confirm(clp, nn);
- }
-@@ -5178,9 +5178,9 @@ nfsd4_end_grace(struct nfsd_net *nn)
-  */
- static bool clients_still_reclaiming(struct nfsd_net *nn)
- {
--	unsigned long now = get_seconds();
--	unsigned long double_grace_period_end = nn->boot_time +
--						2 * nn->nfsd4_lease;
-+	unsigned long now = (unsigned long) ktime_get_real_seconds();
-+	unsigned long double_grace_period_end = (unsigned long)nn->boot_time +
-+					   2 * (unsigned long)nn->nfsd4_lease;
- 
- 	if (nn->track_reclaim_completes &&
- 			atomic_read(&nn->nr_reclaim_complete) ==
-@@ -7635,7 +7635,7 @@ static int nfs4_state_create_net(struct net *net)
- 		INIT_LIST_HEAD(&nn->sessionid_hashtbl[i]);
- 	nn->conf_name_tree = RB_ROOT;
- 	nn->unconf_name_tree = RB_ROOT;
--	nn->boot_time = get_seconds();
-+	nn->boot_time = ktime_get_real_seconds();
- 	nn->grace_ended = false;
- 	nn->nfsd4_manager.block_opens = true;
- 	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
+ 		if (ktime_before(now, cutoff)) {
+ 			rpc_delay(task, HZ/100); /* 10 mili-seconds */
 -- 
 2.20.0
 
