@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81720C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A60CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D7B214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A7121655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498210;
-	bh=bBKoEvnOK/hSzQAhfsYEOcnPvPdetAAXiI9F+EJstDk=;
+	s=default; t=1573498216;
+	bh=hVmqAbFOrX+ZvSt3WWN9P4O58xdleihIUgCcUvKx3yY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPoy4ZDK4S5OZF4Gk8r5oLoba5ufEwCls+9GzkqEygEeCrjQ97Bx7q8+1/d8dTfel
-	 JnGaBi6GFofO4CP/pg7QYiGPAnXahENmkd6JCcFXCMhANGART5oB9eDWPk1FJahRB1
-	 P/gykDjRylbYmw9uxjUki/WILHeR0RWAstKwp7fs=
+	b=YvVkwKArl6TH4f6l504GiqET2Jh6hYA2V0RuEUSe41gTXhzMfAM1DqFjpNLWKUlRT
+	 oDDw+CM4aRX1wV2pA+QMLfQ9Af6B0R6IN/KkWO9Dkv00yDX8VUHNE+exYYifu4T4v4
+	 wqwNZKuUMcWjtXDXjfkBRl9SgFaBu+aoPMeNz4is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfKKSuJ (ORCPT
+        id S1730354AbfKKSuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfKKSuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:06 -0500
+        id S1730342AbfKKSuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF867204FD;
-        Mon, 11 Nov 2019 18:50:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06B9204FD;
+        Mon, 11 Nov 2019 18:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498206;
-        bh=bBKoEvnOK/hSzQAhfsYEOcnPvPdetAAXiI9F+EJstDk=;
+        s=default; t=1573498213;
+        bh=hVmqAbFOrX+ZvSt3WWN9P4O58xdleihIUgCcUvKx3yY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKo/06GBQxRFJUy5ijGNpHuH/tybTJWHOBiIzOyimbh4/tZ9tSj4C9S54hSXQSnd7
-         79eGyVXJYC7e3fwlZmWL+Bmd4SRfmRCh6FV2wHgb2f+LcIFBA35sToY52BF2/ukmER
-         MpeX8nmHzNl4J6V/GeQZqXGGaAdokhenVf4SzlgY=
+        b=d6Xahj/fiTYv1ldhV7KMz32cnaN+zoPMIAG+v/4uI1NKkvIhRzHMxlY1ZijQpY5GS
+         O1MCTA+Ul8u7yNTGnu6Q6RidqtQcMZieYdJrl2rG4YWLdsXppOdNvmAx59ER8CbZiq
+         xyLChTkmrWj/9h0SxwDlXuVXyHtRbyXKbMJHkgBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Jeff Layton <jlayton@kernel.org>,
         Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.3 052/193] ceph: fix RCU case handling in ceph_d_revalidate()
-Date:   Mon, 11 Nov 2019 19:27:14 +0100
-Message-Id: <20191111181504.816035684@linuxfoundation.org>
+Subject: [PATCH 5.3 054/193] ceph: dont try to handle hashed dentries in non-O_CREAT atomic_open
+Date:   Mon, 11 Nov 2019 19:27:16 +0100
+Message-Id: <20191111181504.975184904@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,73 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit aa8dd816732b2bab28c54bc4d2ccf3fc8a6e0892 upstream.
+commit 5bb5e6ee6f5c557dcd19822eccd7bcced1e1a410 upstream.
 
-For RCU case ->d_revalidate() is called with rcu_read_lock() and
-without pinning the dentry passed to it.  Which means that it
-can't rely upon ->d_inode remaining stable; that's the reason
-for d_inode_rcu(), actually.
+If ceph_atomic_open is handed a !d_in_lookup dentry, then that means
+that it already passed d_revalidate so we *know* that it's negative (or
+at least was very recently). Just return -ENOENT in that case.
 
-Make sure we don't reload ->d_inode there.
+This also addresses a subtle bug in dentry handling. Non-O_CREAT opens
+call atomic_open with the parent's i_rwsem shared, but calling
+d_splice_alias on a hashed dentry requires the exclusive lock.
+
+If ceph_atomic_open receives a hashed, negative dentry on a non-O_CREAT
+open, and another client were to race in and create the file before we
+issue our OPEN, ceph_fill_trace could end up calling d_splice_alias on
+the dentry with the new inode with insufficient locks.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/dir.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ fs/ceph/file.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -1553,36 +1553,37 @@ static int ceph_d_revalidate(struct dent
- {
- 	int valid = 0;
- 	struct dentry *parent;
--	struct inode *dir;
-+	struct inode *dir, *inode;
- 
- 	if (flags & LOOKUP_RCU) {
- 		parent = READ_ONCE(dentry->d_parent);
- 		dir = d_inode_rcu(parent);
- 		if (!dir)
- 			return -ECHILD;
-+		inode = d_inode_rcu(dentry);
- 	} else {
- 		parent = dget_parent(dentry);
- 		dir = d_inode(parent);
-+		inode = d_inode(dentry);
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -458,6 +458,9 @@ int ceph_atomic_open(struct inode *dir,
+ 		err = ceph_security_init_secctx(dentry, mode, &as_ctx);
+ 		if (err < 0)
+ 			goto out_ctx;
++	} else if (!d_in_lookup(dentry)) {
++		/* If it's not being looked up, it's negative */
++		return -ENOENT;
  	}
  
- 	dout("d_revalidate %p '%pd' inode %p offset %lld\n", dentry,
--	     dentry, d_inode(dentry), ceph_dentry(dentry)->offset);
-+	     dentry, inode, ceph_dentry(dentry)->offset);
- 
- 	/* always trust cached snapped dentries, snapdir dentry */
- 	if (ceph_snap(dir) != CEPH_NOSNAP) {
- 		dout("d_revalidate %p '%pd' inode %p is SNAPPED\n", dentry,
--		     dentry, d_inode(dentry));
-+		     dentry, inode);
- 		valid = 1;
--	} else if (d_really_is_positive(dentry) &&
--		   ceph_snap(d_inode(dentry)) == CEPH_SNAPDIR) {
-+	} else if (inode && ceph_snap(inode) == CEPH_SNAPDIR) {
- 		valid = 1;
- 	} else {
- 		valid = dentry_lease_is_valid(dentry, flags);
- 		if (valid == -ECHILD)
- 			return valid;
- 		if (valid || dir_lease_is_valid(dir, dentry)) {
--			if (d_really_is_positive(dentry))
--				valid = ceph_is_any_caps(d_inode(dentry));
-+			if (inode)
-+				valid = ceph_is_any_caps(inode);
- 			else
- 				valid = 1;
- 		}
+ 	/* do the open */
 
 
