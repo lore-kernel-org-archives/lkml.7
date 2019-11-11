@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFBBC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249EBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C806A21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14EC21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499165;
-	bh=n3O4Tors5pVG7Gt53AwRqz+3OL4J8FXG/CeUhrsDvZ8=;
+	s=default; t=1573499175;
+	bh=Jb15zjS7o1tcaYAB4YaLaRXkZpiyf8Spy2TNxzvDHJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f5CbGCXWI92eTax1Vij2X7RqYZdUTEfLk689i7VlYciIyaCs689g42lHueWyNSrHo
-	 j2/1Y82xu64UE1ac9RGz84YYsTc0ypZJ2rTBakxvT14tDd8if24SrPOooRy3pF20c0
-	 BizxwxeOBdqyKmgutHdYpvLFJH64GpRLkJG+7Zms=
+	b=iqJCfQynMqIey4/mbbKjAcJxsTXY8mDZdO04fiTzeS0QQlY/QfIcBqe3PscnhZae2
+	 j0T2ZZwMmLDb0L43+8WTe3F7qhCJjbddzrHYZZi8XPXZmF3RqT9kPH/J99eC1igXvZ
+	 zqLAh8+lTzm1S1i6kUI+Pke+/FoTzpYlD9F20Ez4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfKKSjT (ORCPT
+        id S1729143AbfKKSjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:39:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58312 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728593AbfKKSjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:17 -0500
+        id S1728413AbfKKSjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A5821783;
-        Mon, 11 Nov 2019 18:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DF6420659;
+        Mon, 11 Nov 2019 18:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497556;
-        bh=n3O4Tors5pVG7Gt53AwRqz+3OL4J8FXG/CeUhrsDvZ8=;
+        s=default; t=1573497547;
+        bh=Jb15zjS7o1tcaYAB4YaLaRXkZpiyf8Spy2TNxzvDHJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Chwm8v9uci7PqwDtgnQ8teWz++sIIGenxW3UYkLb+CDN7tsRg05wy02Dha+OiII2d
-         qetlMOQvpiCR4QF+hOsj2AT/Rdc7aQ2KYMBq/IKmeGSgAXFOs3NpDOqcI500XXUCT9
-         g+mD6ZQK38wK1O6zBHA1zMKVMKD34/DOss5suSpY=
+        b=zgYw6DuOQtx5kP2iRxwukBRDqkyqzbrYi4a5dQo33AGpjz4DrVFP+0EmH4e+72pRn
+         kbSxahO5tS5nlbWtx4Ko8V1FIVCRYtmrq9Bqt+GngR+ARdodLBUoxRiLeWscV+Zbrj
+         A2uhOjiLwDE6f25mWANKqIeKaAH8aFH5FugxFdaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/105] NFSv4: Dont allow a cached open with a revoked delegation
-Date:   Mon, 11 Nov 2019 19:29:06 +0100
-Message-Id: <20191111181448.708159397@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Nicolas Waisman <nico@semmle.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 093/105] fjes: Handle workqueue allocation failure
+Date:   Mon, 11 Nov 2019 19:29:03 +0100
+Message-Id: <20191111181448.312613411@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,95 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit be3df3dd4c70ee020587a943a31b98a0fb4b6424 ]
+[ Upstream commit 85ac30fa2e24f628e9f4f9344460f4015d33fd7d ]
 
-If the delegation is marked as being revoked, we must not use it
-for cached opens.
+In the highly unlikely event that we fail to allocate either of the
+"/txrx" or "/control" workqueues, we should bail cleanly rather than
+blindly march on with NULL queue pointer(s) installed in the
+'fjes_adapter' instance.
 
-Fixes: 869f9dfa4d6d ("NFSv4: Fix races between nfs_remove_bad_delegation() and delegation return")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Link: https://lore.kernel.org/lkml/CADJ_3a8WFrs5NouXNqS5WYe7rebFP+_A5CheeqAyD_p7DFJJcg@mail.gmail.com/
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 10 ++++++++++
- fs/nfs/delegation.h |  1 +
- fs/nfs/nfs4proc.c   |  7 ++-----
- 3 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/net/fjes/fjes_main.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 606dd3871f66b..61bc0a6ba08b1 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -52,6 +52,16 @@ nfs4_is_valid_delegation(const struct nfs_delegation *delegation,
- 	return false;
- }
+diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
+index 750954be5a740..14d6579b292a8 100644
+--- a/drivers/net/fjes/fjes_main.c
++++ b/drivers/net/fjes/fjes_main.c
+@@ -1252,8 +1252,17 @@ static int fjes_probe(struct platform_device *plat_dev)
+ 	adapter->open_guard = false;
  
-+struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode)
-+{
-+	struct nfs_delegation *delegation;
+ 	adapter->txrx_wq = alloc_workqueue(DRV_NAME "/txrx", WQ_MEM_RECLAIM, 0);
++	if (unlikely(!adapter->txrx_wq)) {
++		err = -ENOMEM;
++		goto err_free_netdev;
++	}
 +
-+	delegation = rcu_dereference(NFS_I(inode)->delegation);
-+	if (nfs4_is_valid_delegation(delegation, 0))
-+		return delegation;
-+	return NULL;
-+}
-+
- static int
- nfs4_do_check_delegation(struct inode *inode, fmode_t flags, bool mark)
- {
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index ddaf2644cf13a..df41d16dc6ab4 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -63,6 +63,7 @@ int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state
- int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state, const nfs4_stateid *stateid);
- bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_stateid *dst, struct rpc_cred **cred);
+ 	adapter->control_wq = alloc_workqueue(DRV_NAME "/control",
+ 					      WQ_MEM_RECLAIM, 0);
++	if (unlikely(!adapter->control_wq)) {
++		err = -ENOMEM;
++		goto err_free_txrx_wq;
++	}
  
-+struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode);
- void nfs_mark_delegation_referenced(struct nfs_delegation *delegation);
- int nfs4_have_delegation(struct inode *inode, fmode_t flags);
- int nfs4_check_delegation(struct inode *inode, fmode_t flags);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index af062e9f45803..f1526f65cc580 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1355,8 +1355,6 @@ static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
- 		return 0;
- 	if ((delegation->type & fmode) != fmode)
- 		return 0;
--	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
--		return 0;
- 	switch (claim) {
- 	case NFS4_OPEN_CLAIM_NULL:
- 	case NFS4_OPEN_CLAIM_FH:
-@@ -1615,7 +1613,6 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
- static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- {
- 	struct nfs4_state *state = opendata->state;
--	struct nfs_inode *nfsi = NFS_I(state->inode);
- 	struct nfs_delegation *delegation;
- 	int open_mode = opendata->o_arg.open_flags;
- 	fmode_t fmode = opendata->o_arg.fmode;
-@@ -1632,7 +1629,7 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- 		}
- 		spin_unlock(&state->owner->so_lock);
- 		rcu_read_lock();
--		delegation = rcu_dereference(nfsi->delegation);
-+		delegation = nfs4_get_valid_delegation(state->inode);
- 		if (!can_open_delegated(delegation, fmode, claim)) {
- 			rcu_read_unlock();
- 			break;
-@@ -2153,7 +2150,7 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
- 					data->o_arg.open_flags, claim))
- 			goto out_no_action;
- 		rcu_read_lock();
--		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
-+		delegation = nfs4_get_valid_delegation(data->state->inode);
- 		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
- 			goto unlock_no_action;
- 		rcu_read_unlock();
+ 	INIT_WORK(&adapter->tx_stall_task, fjes_tx_stall_task);
+ 	INIT_WORK(&adapter->raise_intr_rxdata_task,
+@@ -1270,7 +1279,7 @@ static int fjes_probe(struct platform_device *plat_dev)
+ 	hw->hw_res.irq = platform_get_irq(plat_dev, 0);
+ 	err = fjes_hw_init(&adapter->hw);
+ 	if (err)
+-		goto err_free_netdev;
++		goto err_free_control_wq;
+ 
+ 	/* setup MAC address (02:00:00:00:00:[epid])*/
+ 	netdev->dev_addr[0] = 2;
+@@ -1292,6 +1301,10 @@ static int fjes_probe(struct platform_device *plat_dev)
+ 
+ err_hw_exit:
+ 	fjes_hw_exit(&adapter->hw);
++err_free_control_wq:
++	destroy_workqueue(adapter->control_wq);
++err_free_txrx_wq:
++	destroy_workqueue(adapter->txrx_wq);
+ err_free_netdev:
+ 	free_netdev(netdev);
+ err_out:
 -- 
 2.20.1
 
