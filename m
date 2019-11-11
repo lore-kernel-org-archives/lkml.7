@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1899BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE9FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FF821783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C5021655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497446;
-	bh=JrqC55S5QczD954ew1qGZH7eAhMLRs+5mE/0I5VsuTc=;
+	s=default; t=1573497449;
+	bh=9ntRym/XPjnt7NSV2YOCgVwNheFmPcqUCuomFL+qEp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mJ96+g1oicRqIIDhC64Y3WV/VfZjJoOiYBGgBo3Eb8wfQN9x9GK4qg1id9q0v6qCL
-	 K6gST55hVBXZ2UI1bPNNnHpllKXCXZ9Ic862K0aqgv9FptKR93zQ+eOOjPhOZTyRYW
-	 5mkzO9ezleYO+7qdXMlZ0xCZD0npzM6yePutv1UU=
+	b=2uOLM9t/+HTFk5jAtLs/66T1GUJQKLa540P7O+KXNcBRTKBKyOChdvQbJ/oHFt+B8
+	 wGC7Elxlzycezk8JPJFEmnef62ohCEOM9ENAWZJN+BJCQm+0I7+Ro4qrxOdCUdtgF9
+	 0LzUFB0b+Nhe2WgmxXwgNUjopIKHIEGceatLHRKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfKKShY (ORCPT
+        id S1728863AbfKKSh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55978 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:37:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbfKKShT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:19 -0500
+        id S1728840AbfKKShZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8778620659;
-        Mon, 11 Nov 2019 18:37:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 552D4204FD;
+        Mon, 11 Nov 2019 18:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497439;
-        bh=JrqC55S5QczD954ew1qGZH7eAhMLRs+5mE/0I5VsuTc=;
+        s=default; t=1573497444;
+        bh=9ntRym/XPjnt7NSV2YOCgVwNheFmPcqUCuomFL+qEp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VqxuzbFzAdLL/Nd2Dm7R8jQ8HfqnOJKR7LGdB4va5bpC8piUubKSsGBFhqjtqG9rP
-         /ORneEPl/z+139IGDLVtjXnf00PR0+3e3g0SoWdgwmY/qwrJpCuxD2NXZNF64B0uM5
-         +eDsoZVhXay2XEI1SRSyKAB/mu950+G7yn4/jmbM=
+        b=y0yr0Hmp77X5GgeTL8T3/0Y9ckwRzFUq7O0PRMbYbKuKTS9hoD/QpFNbdRW5yK/Aa
+         +WoChTWkr7F0Bxoq8km2OO3xM5gfFC/PB0qr5d3xqiiEucOuCfbVnr8HiL+BbFzYGM
+         u8Jp/n1by1Vd8+vGyn4Kw+F7kWfJmCV9tmWOeD+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <garsilva@embeddedor.com>,
-        Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 055/105] ASoC: tlv320dac31xx: mark expected switch fall-through
-Date:   Mon, 11 Nov 2019 19:28:25 +0100
-Message-Id: <20191111181443.787487517@linuxfoundation.org>
+Subject: [PATCH 4.14 057/105] ASoC: davinci: Kill BUG_ON() usage
+Date:   Mon, 11 Nov 2019 19:28:27 +0100
+Message-Id: <20191111181444.296252852@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,32 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <garsilva@embeddedor.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 09fc38c1af4cb888255e9ecf267bf9757c12885d upstream
+commit befff4fbc27e19b14b343eb4a65d8f75d38b6230 upstream
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
+Don't use BUG_ON() for a non-critical sanity check on production
+systems.  This patch replaces with a softer WARN_ON() and an error
+path.
 
-Addresses-Coverity-ID: 1195220
-Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/codecs/tlv320aic31xx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/davinci/davinci-mcasp.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -941,7 +941,7 @@ static int aic31xx_set_dai_fmt(struct sn
- 	case SND_SOC_DAIFMT_I2S:
- 		break;
- 	case SND_SOC_DAIFMT_DSP_A:
--		dsp_a_val = 0x1;
-+		dsp_a_val = 0x1; /* fall through */
- 	case SND_SOC_DAIFMT_DSP_B:
- 		/*
- 		 * NOTE: This CODEC samples on the falling edge of BCLK in
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1748,7 +1748,8 @@ static int davinci_mcasp_get_dma_type(st
+ 				PTR_ERR(chan));
+ 		return PTR_ERR(chan);
+ 	}
+-	BUG_ON(!chan->device || !chan->device->dev);
++	if (WARN_ON(!chan->device || !chan->device->dev))
++		return -EINVAL;
+ 
+ 	if (chan->device->dev->of_node)
+ 		ret = of_property_read_string(chan->device->dev->of_node,
 
 
