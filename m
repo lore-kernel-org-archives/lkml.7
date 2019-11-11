@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3EBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3EAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44EB20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6EC20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 22:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfKKWf6 (ORCPT
+        id S1727484AbfKKWgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:35:58 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60110 "EHLO
+        Mon, 11 Nov 2019 17:36:04 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60086 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfKKWfw (ORCPT
+        with ESMTP id S1727295AbfKKWfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:35:52 -0500
+        Mon, 11 Nov 2019 17:35:50 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iUIHm-0000vs-1v; Mon, 11 Nov 2019 23:35:50 +0100
-Message-Id: <20191111223053.099163798@linutronix.de>
+        id 1iUIHk-0000vO-7v; Mon, 11 Nov 2019 23:35:48 +0100
+Message-Id: <20191111223052.790754100@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 11 Nov 2019 23:03:30 +0100
+Date:   Mon, 11 Nov 2019 23:03:27 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
@@ -35,8 +35,7 @@ Cc:     x86@kernel.org, Linus Torvalds <torvalds@linuxfoundation.org>,
         Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>
-Subject: [patch V2 16/16] selftests/x86/iopl: Extend test to cover IOPL
- emulation
+Subject: [patch V2 13/16] x86/iopl: Fixup misleading comment
 References: <20191111220314.519933535@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -47,190 +46,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Add tests that the now emulated iopl() functionality:
-
-    - does not longer allow user space to disable interrupts.
-
-    - does restore a I/O bitmap when IOPL is dropped
+The comment for the sys_iopl() implementation is outdated and actively
+misleading in some parts. Fix it up.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- tools/testing/selftests/x86/iopl.c |  129 +++++++++++++++++++++++++++++++++----
- 1 file changed, 118 insertions(+), 11 deletions(-)
+ arch/x86/kernel/ioport.c |   35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
---- a/tools/testing/selftests/x86/iopl.c
-+++ b/tools/testing/selftests/x86/iopl.c
-@@ -35,6 +35,16 @@ static void sethandler(int sig, void (*h
- 
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -41,7 +41,7 @@ void io_bitmap_exit(void)
  }
  
-+static void clearhandler(int sig)
-+{
-+	struct sigaction sa;
-+	memset(&sa, 0, sizeof(sa));
-+	sa.sa_handler = SIG_DFL;
-+	sigemptyset(&sa.sa_mask);
-+	if (sigaction(sig, &sa, 0))
-+		err(1, "sigaction");
-+}
-+
- static jmp_buf jmpbuf;
- 
- static void sigsegv(int sig, siginfo_t *si, void *ctx_void)
-@@ -42,25 +52,128 @@ static void sigsegv(int sig, siginfo_t *
- 	siglongjmp(jmpbuf, 1);
- }
- 
-+static bool try_outb(unsigned short port)
-+{
-+	sethandler(SIGSEGV, sigsegv, SA_RESETHAND);
-+	if (sigsetjmp(jmpbuf, 1) != 0) {
-+		return false;
-+	} else {
-+		asm volatile ("outb %%al, %w[port]"
-+			      : : [port] "Nd" (port), "a" (0));
-+		return true;
-+	}
-+	clearhandler(SIGSEGV);
-+}
-+
-+static void expect_ok_outb(unsigned short port)
-+{
-+	if (!try_outb(port)) {
-+		printf("[FAIL]\toutb to 0x%02hx failed\n", port);
-+		exit(1);
-+	}
-+
-+	printf("[OK]\toutb to 0x%02hx worked\n", port);
-+}
-+
-+static void expect_gp_outb(unsigned short port)
-+{
-+	if (try_outb(port)) {
-+		printf("[FAIL]\toutb to 0x%02hx worked\n", port);
-+		nerrs++;
-+	}
-+
-+	printf("[OK]\toutb to 0x%02hx failed\n", port);
-+}
-+
-+static bool try_cli(void)
-+{
-+	sethandler(SIGSEGV, sigsegv, SA_RESETHAND);
-+	if (sigsetjmp(jmpbuf, 1) != 0) {
-+		return false;
-+	} else {
-+		asm volatile ("cli");
-+		return true;
-+	}
-+	clearhandler(SIGSEGV);
-+}
-+
-+static bool try_sti(void)
-+{
-+	sethandler(SIGSEGV, sigsegv, SA_RESETHAND);
-+	if (sigsetjmp(jmpbuf, 1) != 0) {
-+		return false;
-+	} else {
-+		asm volatile ("sti");
-+		return true;
-+	}
-+	clearhandler(SIGSEGV);
-+}
-+
-+static void expect_gp_sti(void)
-+{
-+	if (try_sti()) {
-+		printf("[FAIL]\tSTI worked\n");
-+		nerrs++;
-+	} else {
-+		printf("[OK]\tSTI faulted\n");
-+	}
-+}
-+
-+static void expect_gp_cli(void)
-+{
-+	if (try_cli()) {
-+		printf("[FAIL]\tCLI worked\n");
-+		nerrs++;
-+	} else {
-+		printf("[OK]\tCLI faulted\n");
-+	}
-+}
-+
- int main(void)
+ /*
+- * this changes the io permissions bitmap in the current task.
++ * This changes the io permissions bitmap in the current task.
+  */
+ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
  {
- 	cpu_set_t cpuset;
-+
- 	CPU_ZERO(&cpuset);
- 	CPU_SET(0, &cpuset);
- 	if (sched_setaffinity(0, sizeof(cpuset), &cpuset) != 0)
- 		err(1, "sched_setaffinity to CPU 0");
- 
- 	/* Probe for iopl support.  Note that iopl(0) works even as nonroot. */
--	if (iopl(3) != 0) {
-+	switch(iopl(3)) {
-+	case 0:
-+		break;
-+	case -ENOSYS:
-+		printf("[OK]\tiopl() nor supported\n");
-+		return 0;
-+	default:
- 		printf("[OK]\tiopl(3) failed (%d) -- try running as root\n",
- 		       errno);
- 		return 0;
- 	}
- 
--	/* Restore our original state prior to starting the test. */
-+	/* Make sure that CLI/STI are blocked even with IOPL level 3 */
-+	expect_gp_cli();
-+	expect_gp_sti();
-+	expect_ok_outb(0x80);
-+
-+	/* Establish an I/O bitmap to test the restore */
-+	if (ioperm(0x80, 1, 1) != 0)
-+		err(1, "ioperm(0x80, 1, 1) failed\n");
-+
-+	/* Restore our original state prior to starting the fork test. */
- 	if (iopl(0) != 0)
- 		err(1, "iopl(0)");
- 
-+	/*
-+	 * Verify that IOPL emulation is disabled and the I/O bitmap still
-+	 * works.
-+	 */
-+	expect_ok_outb(0x80);
-+	expect_gp_outb(0xed);
-+	/* Drop the I/O bitmap */
-+	if (ioperm(0x80, 1, 0) != 0)
-+		err(1, "ioperm(0x80, 1, 0) failed\n");
-+
- 	pid_t child = fork();
- 	if (child == -1)
- 		err(1, "fork");
-@@ -90,14 +203,9 @@ int main(void)
- 
- 	printf("[RUN]\tparent: write to 0x80 (should fail)\n");
- 
--	sethandler(SIGSEGV, sigsegv, 0);
--	if (sigsetjmp(jmpbuf, 1) != 0) {
--		printf("[OK]\twrite was denied\n");
--	} else {
--		asm volatile ("outb %%al, $0x80" : : "a" (0));
--		printf("[FAIL]\twrite was allowed\n");
--		nerrs++;
--	}
-+	expect_gp_outb(0x80);
-+	expect_gp_cli();
-+	expect_gp_sti();
- 
- 	/* Test the capability checks. */
- 	printf("\tiopl(3)\n");
-@@ -133,4 +241,3 @@ int main(void)
- done:
- 	return nerrs ? 1 : 0;
+@@ -130,14 +130,24 @@ SYSCALL_DEFINE3(ioperm, unsigned long, f
  }
--
+ 
+ /*
+- * sys_iopl has to be used when you want to access the IO ports
+- * beyond the 0x3ff range: to get the full 65536 ports bitmapped
+- * you'd need 8kB of bitmaps/process, which is a bit excessive.
++ * The sys_iopl functionality depends on the level argument, which if
++ * granted for the task is used by the CPU to check I/O instruction and
++ * CLI/STI against the current priviledge level (CPL). If CPL is less than
++ * or equal the tasks IOPL level the instructions take effect. If not a #GP
++ * is raised. The default IOPL is 0, i.e. no permissions.
+  *
+- * Here we just change the flags value on the stack: we allow
+- * only the super-user to do it. This depends on the stack-layout
+- * on system-call entry - see also fork() and the signal handling
+- * code.
++ * Setting IOPL to level 0-2 is disabling the userspace access. Only level
++ * 3 enables it. If set it allows the user space thread:
++ *
++ * - Unrestricted access to all 65535 I/O ports
++ * - The usage of CLI/STI instructions
++ *
++ * The advantage over ioperm is that the context switch does not require to
++ * update the I/O bitmap which is especially true when a large number of
++ * ports is accessed. But the allowance of CLI/STI in userspace is
++ * considered a major problem.
++ *
++ * IOPL is strictly per thread and inherited on fork.
+  */
+ SYSCALL_DEFINE1(iopl, unsigned int, level)
+ {
+@@ -158,9 +168,18 @@ SYSCALL_DEFINE1(iopl, unsigned int, leve
+ 		    security_locked_down(LOCKDOWN_IOPORT))
+ 			return -EPERM;
+ 	}
++	/*
++	 * Change the flags value on the return stack, which has been set
++	 * up on system-call entry. See also the fork and signal handling
++	 * code how this is handled.
++	 */
+ 	regs->flags = (regs->flags & ~X86_EFLAGS_IOPL) |
+ 		(level << X86_EFLAGS_IOPL_BIT);
++	/* Store the new level in the thread struct */
+ 	t->iopl = level << X86_EFLAGS_IOPL_BIT;
++	/*
++	 * X86_32 switches immediately and XEN handles it via emulation.
++	 */
+ 	set_iopl_mask(t->iopl);
+ 
+ 	return 0;
 
 
