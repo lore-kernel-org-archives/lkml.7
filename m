@@ -2,107 +2,111 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DAEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263ABC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813052173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B3B21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="k4eOYsri"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nK1MPR3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKKVdd (ORCPT
+        id S1727170AbfKKVe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:33:33 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40425 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKKVdd (ORCPT
+        Mon, 11 Nov 2019 16:34:57 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46074 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKKVe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 16:33:33 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q2so15414861ljg.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:33:31 -0800 (PST)
+        Mon, 11 Nov 2019 16:34:56 -0500
+Received: by mail-qk1-f195.google.com with SMTP id q70so12517012qke.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:34:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EkuJdAUqLhO37Xog7hFtb+aT8vazqfXgcjtA7SyhWEM=;
-        b=k4eOYsri0w6XOlZCdf7P084yo6O7L1TJstF6Pu+hSlk7vW3lwXpd2MzO0Ilq2GKM9G
-         875XCJMh8bIDrXJyWLgAyisOk8QUDFGc+8VNRGP2WbGsPZ1JMy4JohvrVaFO02oAn+cG
-         GT84K4jMd2C/Toq2BlvzMC3eGYdlzGljIb8UTxWPVbTtMANq/Re6Rd43fxVq5JnuhBX4
-         1GKpNuxprveZ+p5cNgvazNJl9pJawzxbeMl5ugX7ZTx+ZI7h5/1jJHNumbzTKcln1oGV
-         0dzztyfuHQHOlrRrPQqvUBcZw3rljLp4z4V2sHehPmt670i8GGWzYnYjVVmwqbF9k7MN
-         nnUQ==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqRT2zB36D0UiTUydvSwzR+TVY4Rzn1+x2E/5+jgQiw=;
+        b=nK1MPR3Iz6j591oHVOXiWzJo6ZzwCbx31o98EFFM9IT+yrR4FYE6FD1RO96lpaZ0iE
+         UCkFePRMCESnisYT2yHDpDc9e+lS8FNn9OdpKkuSJGvueqxNxpInm1na+j4PHVDPZoO6
+         5BkxPnsVFoAq6M66D9rYSck9Lo3fY8MqrVWl3xdX1fd656BUyc9XxTwR9hhzBKvMXIWz
+         sPgrhqEvujBQUrFfWLEwQc9tEsmMqc1/ZTTW2sFkgscO/XTOW5qhavpMePuy8aRAEeqV
+         f14+F9SvK3IdnZNkvXMAMjEbhK+e3BLmHpaqNvsZ7uYYfR9wS1qIucK6m9oh3MVDuu2a
+         yNNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EkuJdAUqLhO37Xog7hFtb+aT8vazqfXgcjtA7SyhWEM=;
-        b=Ae/frqJnfFRS8/ggKIUkCwFSZraps/C+dkukIAPk8Md16RtagXBdv5TjQq1F1Fh70l
-         yKQWi1AhKFgEjOlEUiBGa7B+py+2BevBxulM/Um7XmURNCZEWoj/Of9IhWYCjI5wxKYh
-         B5pHsJ8ymHMNRMW6s3+8k/9JAAkDpMYVofQMtNZQHoMGQSl+56frZEDC6bkAa+C1YxFK
-         Zan10s3aDhgBomA/K9UO8c1kR1nhiAGPMoMxQxNrtbOYwWKo5xE450kP8ZRuACDyfVYh
-         LmGzeJbB3uaXcnD3SCijYXYvj9Fp9PuKseSfzHNErvvfY/YQBcyp5QbteNUgNgfDX7xb
-         dw/A==
-X-Gm-Message-State: APjAAAVCKsAVsCe/o9Rv3M/ki7TLnIzE8rJLKkTiEpGWjIyxEfUxqEIt
-        MWH7W+zr8xzFeGRGImzTJZAa1AtEPfehW8Z/N4+Uqg==
-X-Google-Smtp-Source: APXvYqzatbulSOotOeb73f+mEEd8AbnaVu+WC83YXOlDUc5Ps3ZfCa7y58nNWXYjZgHlfIqIWwGHKGsT3XLrSqRGFdw=
-X-Received: by 2002:a05:651c:20a:: with SMTP id y10mr17533980ljn.76.1573508011119;
- Mon, 11 Nov 2019 13:33:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqRT2zB36D0UiTUydvSwzR+TVY4Rzn1+x2E/5+jgQiw=;
+        b=slhTWy5Xgw1pxHgQzglO7pVu23aMBXTHpZs/ayDArB3B9d2WdLbM1oOX93gO1NMZ4b
+         G13JS8LyzsKwlmrkzsn+8Yfk/VXxfaritaDUecvn0XRWTDSKdOK2bsPMKPWF3DSHAh+n
+         e7gMJF+8ncHpuV/+F9vwflSebN6ozjqTq8xWNFUAz7aJ/D0GbP0A1aJNoI1C3MSXqXY/
+         my5koAyw15wV47wLETP2rL85JEV5xTL2CKfBpr/BVz0l9OpWxDsd8/BaNU4YNBu2jeEc
+         TnNlpByXYrtS42HlJpQ3unshLyNb4WS7uGqvIvW151Pdhdbzg1NJrLMn9v7Ehrnrj8Wr
+         LjJg==
+X-Gm-Message-State: APjAAAVD76QU0Uv8V85NLR7yAlmKt74XE22oGyr44oo2vb0OxCYYTXAH
+        lAe0ZU/pdl4w8rRjJqz0uruOD1/h7fmUaQ==
+X-Google-Smtp-Source: APXvYqwIfu1MgLTlK3zKMx8UKbqGzIiafEmoONOSvESOXY8xd7dqXxNCpHABuOil+jQM9Wx2Tl8JjQ==
+X-Received: by 2002:a05:620a:128e:: with SMTP id w14mr12885169qki.246.1573508095584;
+        Mon, 11 Nov 2019 13:34:55 -0800 (PST)
+Received: from ovpn-125-1.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 32sm8908757qth.16.2019.11.11.13.34.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Nov 2019 13:34:54 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     rafael.j.wysocki@intel.com
+Cc:     dave.hansen@linux.intel.com, dan.j.williams@intel.com,
+        tglx@linutronix.de, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] acpi/numa/hmat: fix a section mismatch
+Date:   Mon, 11 Nov 2019 16:34:26 -0500
+Message-Id: <20191111213426.1415-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-References: <1573493889-22336-1-git-send-email-alan.mikhak@sifive.com>
- <20191111203743.GA25876@lst.de> <CABEDWGyMrDnuR+AzazHqpiHC9NrHFoVcW5iFREOey04Hv7xLqw@mail.gmail.com>
- <20191111211503.GA26588@lst.de>
-In-Reply-To: <20191111211503.GA26588@lst.de>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Mon, 11 Nov 2019 13:33:20 -0800
-Message-ID: <CABEDWGzmagoEsCHQkDVEVG=myxNhX97Hm8A0BKdEkLc_7zrZWw@mail.gmail.com>
-Subject: Re: [PATCH RFC] PCI: endpoint: Add NVMe endpoint function driver
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-nvme@lists.infradead.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 1:15 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Mon, Nov 11, 2019 at 01:09:17PM -0800, Alan Mikhak wrote:
-> > Thanks Christoph. Let me repeat what I think your comment is saying to me.
-> > You prefer all parsing for nvme command received from host over PCIe
-> > to be removed from nvme function driver and added to existing fabrics
-> > command parsing in nvme target code with new flags introduced to
-> > indicate fabrics vs. PCIe.
->
-> At least for all the common commands, yes.  For Create / Delete SQ/CQ
-> I am not entirely sure how to best implement them yet as there are
-> valid arguments for keeping it entirely in the PCIe frontend or for
-> having them in common code, and we'll need to figure out which weight
-> more heavily.
+The commit cf8741ac57ed ("ACPI: NUMA: HMAT: Register "soft reserved"
+memory as an "hmem" device") introduced a linker warning,
 
-I will look into moving all common commands to nvme target code.
-It might take a bit of time and review for me to figure it out. In the meantime,
-please look at the rest of the code even though its structure may not be
-desirable for upstream acceptance. These are the type of comments that
-I seek.
+WARNING: vmlinux.o(.text+0x64ec3c): Section mismatch in reference from
+the function hmat_register_target() to the function
+.init.text:hmat_register_target_devices()
+The function hmat_register_target() references
+the function __init hmat_register_target_devices().
+This is often because hmat_register_target lacks a __init
+annotation or the annotation of hmat_register_target_devices is wrong.
 
->
-> > Any more thoughts?
->
-> I'd love to eventually find time to play with this code.  Do you run
-> it on unrelease SiFive hard cores, or is there a bitstream for a common
-> FPGA platform available?-
+Since hmat_register_target() is also called from hmat_callback(), and
+then register_hotmemory_notifier() where it should not be freed when
+hmat_init() is done, it indicates the annotation of
+hmat_register_target_devices() is incorrect.
 
-I run it on an internal platform meant for verifying our PCIe endpoint
-hardware. I use that platform to develop new functionality to enable,
-simplify, and promote the integration of our PCIe endpoints into larger
-systems. As far as I know, there is no public bitstream available since
-the platform is for internal use.
+Fixes: cf8741ac57ed ("ACPI: NUMA: HMAT: Register "soft reserved" memory as an "hmem" device")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/acpi/numa/hmat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 42cafeaac336..600ae3babd15 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -694,7 +694,7 @@ static void hmat_register_target_device(struct memory_target *target,
+ 	memregion_free(id);
+ }
+ 
+-static __init void hmat_register_target_devices(struct memory_target *target)
++static void hmat_register_target_devices(struct memory_target *target)
+ {
+ 	struct resource *res;
+ 
+-- 
+2.21.0 (Apple Git-122.2)
+
