@@ -2,94 +2,73 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78F7C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43089C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5802084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:03:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtnDIhai"
+	by mail.kernel.org (Postfix) with ESMTP id 1481F2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKKPDY (ORCPT
+        id S1726982AbfKKPGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:03:24 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60054 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726888AbfKKPDY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:03:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573484603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/lyJlehl3SHL3cILoyZTYkZm+/0A3k7QAa57z5CMFPs=;
-        b=UtnDIhaiYGW6Xq1ftX1xYrogHdC375XfeuoTshI0iXSGa58BuwLCuA+roGY39APpjtc6Mj
-        xyT63N7dIkraMhk/Kfm32+zqLiPcuz4Lbzh3aqRkWG+bgV5c9iSmSQJuLAsr21cIPtKT+d
-        CTHBT4Pt09l9AncLBS4yKd7L2WSJFDE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-oVSFwkg6M_O6eCXYgu36-g-1; Mon, 11 Nov 2019 10:03:20 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65813800C61;
-        Mon, 11 Nov 2019 15:03:18 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 493CB52F3;
-        Mon, 11 Nov 2019 15:03:13 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Jann Horn <jannh@google.com>
-Subject: Re: For review: documentation of clone3() system call
-References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
-Date:   Mon, 11 Nov 2019 16:03:11 +0100
-In-Reply-To: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
-        (Michael Kerrisk's message of "Fri, 25 Oct 2019 18:59:31 +0200")
-Message-ID: <87tv7awj4g.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 11 Nov 2019 10:06:39 -0500
+Received: from 8bytes.org ([81.169.241.247]:51336 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726843AbfKKPGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:06:38 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 872C61E6; Mon, 11 Nov 2019 16:06:32 +0100 (CET)
+Date:   Mon, 11 Nov 2019 16:06:31 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Yian Chen <yian.chen@intel.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Ravi Shankar <ravi.v.shankar@intel.com>
+Subject: Re: [PATCH v2] iommu/vt-d: Check VT-d RMRR region in BIOS is
+ reported as reserved
+Message-ID: <20191111150630.GF18333@8bytes.org>
+References: <20191017113919.25424-1-yian.chen@intel.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: oVSFwkg6M_O6eCXYgu36-g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017113919.25424-1-yian.chen@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michael Kerrisk:
+On Thu, Oct 17, 2019 at 04:39:19AM -0700, Yian Chen wrote:
+> VT-d RMRR (Reserved Memory Region Reporting) regions are reserved
+> for device use only and should not be part of allocable memory pool of OS.
+> 
+> BIOS e820_table reports complete memory map to OS, including OS usable
+> memory ranges and BIOS reserved memory ranges etc.
+> 
+> x86 BIOS may not be trusted to include RMRR regions as reserved type
+> of memory in its e820 memory map, hence validate every RMRR entry
+> with the e820 memory map to make sure the RMRR regions will not be
+> used by OS for any other purposes.
+> 
+> ia64 EFI is working fine so implement RMRR validation as a dummy function
+> 
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+> Signed-off-by: Yian Chen <yian.chen@intel.com>
+> ---
+> v2:
+> - return -EINVAL instead of -EFAULT when there is an error
+> ---
+>  arch/ia64/include/asm/iommu.h |  5 +++++
+>  arch/x86/include/asm/iommu.h  | 18 ++++++++++++++++++
+>  drivers/iommu/intel-iommu.c   |  8 +++++++-
+>  3 files changed, 30 insertions(+), 1 deletion(-)
 
->        Another  difference  for  the  raw clone() system call is that the
->        stack argument may be NULL, in which case the child uses a  dupli=
-=E2=80=90
->        cate  of the parent's stack.  (Copy-on-write semantics ensure that
->        the child gets separate copies of stack pages when either  process
->        modifies  the  stack.)   In  this case, for correct operation, the
->        CLONE_VM option should not be specified.  (If the child shares the
->        parent's  memory  because of the use of the CLONE_VM flag, then no
->        copy-on-write duplication occurs and chaos is likely to result.)
-
-I think sharing the stack also works with CLONE_VFORK with CLONE_VM, as
-long as measures are taken to preserve the return address in a register.
-
-Thanks,
-Florian
-
+Applied, thanks.
