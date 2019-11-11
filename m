@@ -2,51 +2,53 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2693BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E467C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89A621925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A62A222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497064;
-	bh=n6AUb7a03zjKnkOPbOJkQb6cpxFO6lzi0Y90HfhWmtw=;
+	s=default; t=1573497068;
+	bh=z0kh6wEtbxmTfNGCm05dNWvsllBrnuDXWHWaq8zPnDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pnlp3M4Y+1RfNc2sqm97L1naHaTEw6LDx8iu4rgFJF+tkA5x4XJwHwgRDRV3YuSc9
-	 0CTdrdpGSkwxHSvLsPVJ+TVzMA1gFXTVytBRVq1S/k/ClBAF24OP8iot7U1hwwCmX1
-	 xg4bzx0XMNGUoxTkhPPz1pRv819t5eXwt3ofG+io=
+	b=1eRAgDwHyxl+fwW3oK4v9/OAnTEXRJtNGE+jOD2ouIgNLIiamxUh9t445RTMKWYvg
+	 a3bnw8euFIL1J6d33LNEmHpbfPz6z9m4jA0GPEoan3eFtR8uxjStjG4D0zoZD4romO
+	 kymYLGXonnWhV3Ueo5lv0HukCcUpYV+yVRXlEls4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfKKSbC (ORCPT
+        id S1727548AbfKKSbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47414 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727516AbfKKSa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:30:59 -0500
+        id S1727526AbfKKSbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19FA2222C9;
-        Mon, 11 Nov 2019 18:30:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CCBA21872;
+        Mon, 11 Nov 2019 18:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497058;
-        bh=n6AUb7a03zjKnkOPbOJkQb6cpxFO6lzi0Y90HfhWmtw=;
+        s=default; t=1573497061;
+        bh=z0kh6wEtbxmTfNGCm05dNWvsllBrnuDXWHWaq8zPnDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9Wc6TTRZ6at+8zjVXS+DsJo73/2IzTc1NJCyhIdQz+//10u4vbuSHwbq17da/iwI
-         aA/pCAIRdEk8vtuLfQryi6C/NsCAAA/+Zljequkw8i1bPN98Tnq0/sfK7yGd571g7W
-         2EuH01n9A6aIQ6T2fL2xPqc9n/c0APfJWtAz+eaE=
+        b=nLBJIjPPLSLJXMMyzXVBTwuWWriEhKPMeQnFn+Gupki6iJ2llb70YWzUkNiGX608w
+         BezSpxvlYI53EIsOzO+9TqwcKSrWK2OkyxZX3m+onNN5iE/QyI6SPUFvAQb44IYpT4
+         VktmijevP2MXa0jF+UkSMS9iEQvadsTrpCQDIQWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 04/43] NFC: st21nfca: fix double free
-Date:   Mon, 11 Nov 2019 19:28:18 +0100
-Message-Id: <20191111181252.645265024@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 31/43] usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
+Date:   Mon, 11 Nov 2019 19:28:45 +0100
+Message-Id: <20191111181322.410094543@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -59,31 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-[ Upstream commit 99a8efbb6e30b72ac98cecf81103f847abffb1e5 ]
+[ Upstream commit ba3a1a915c49cc3023e4ddfc88f21e7514e82aa4 ]
 
-The variable nfcid_skb is not changed in the callee nfc_hci_get_param()
-if error occurs. Consequently, the freed variable nfcid_skb will be
-freed again, resulting in a double free bug. Set nfcid_skb to NULL after
-releasing it to fix the bug.
+Fix interrupt storm generated by endpoints when working in FIFO mode.
+The TX_COMPLETE interrupt is used only by control endpoints processing.
+Do not enable it for other types of endpoints.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 914a3f3b3754 ("USB: add atmel_usba_udc driver")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -726,6 +726,7 @@ static int st21nfca_hci_complete_target_
- 							NFC_PROTO_FELICA_MASK;
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+index 585cb8734f509..668ac5e8681b5 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.c
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+@@ -403,9 +403,11 @@ static void submit_request(struct usba_ep *ep, struct usba_request *req)
+ 		next_fifo_transaction(ep, req);
+ 		if (req->last_transaction) {
+ 			usba_ep_writel(ep, CTL_DIS, USBA_TX_PK_RDY);
+-			usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
  		} else {
- 			kfree_skb(nfcid_skb);
-+			nfcid_skb = NULL;
- 			/* P2P in type A */
- 			r = nfc_hci_get_param(hdev, ST21NFCA_RF_READER_F_GATE,
- 					ST21NFCA_RF_READER_F_NFCID1,
+-			usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
+ 			usba_ep_writel(ep, CTL_ENB, USBA_TX_PK_RDY);
+ 		}
+ 	}
+-- 
+2.20.1
+
 
 
