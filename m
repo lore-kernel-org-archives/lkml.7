@@ -2,143 +2,110 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1970C17447
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E25C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D6C21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F6320659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAD7MzK8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FURjo+S6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfKKVQ3 (ORCPT
+        id S1727063AbfKKV00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:16:29 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37894 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfKKVQ2 (ORCPT
+        Mon, 11 Nov 2019 16:26:26 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38473 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKKV0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 16:16:28 -0500
-Received: by mail-lj1-f193.google.com with SMTP id v8so15363391ljh.5;
-        Mon, 11 Nov 2019 13:16:26 -0800 (PST)
+        Mon, 11 Nov 2019 16:26:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c13so11593268pfp.5;
+        Mon, 11 Nov 2019 13:26:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AJsM8Od2cQbwnjMd2WWbJxd1SHRmM5N6fXuOeZ21tBs=;
-        b=PAD7MzK8qKyr/5DC1SX/bWu/6WPrOGRzHIzAHpN07byU/XavHfOH4nsVQk/6vuiF+e
-         On28owfl73Vqmo4QMyuZYf+GjDk9D4HAeh81+nAWNxHgEqyjWB9l/XI/Kv0dYjnr1QGp
-         KLUhuzvn0iPFZGhha2t/ausahpwtuWpnb+yIy5iHdc1CqGd3DANRu3bgHNZ1vdzYOHSB
-         Kv/S3RZxnTAPmQKufQMNY7uokJ8Yh0g90t6s5Nu434MQYjDE49vmULjjLB9m2G6HoNoH
-         d3ETC488CIixKb2WmX/1RLoqVfMuGba8rOnsIlkoaEt1QmZTYT5ifLZ88RGrTvg3+PxJ
-         NJTw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S/dDooYdItgV3dLbLJwFFfSuew2iW89I9IXIwYwXJT8=;
+        b=FURjo+S6eX+GpCTzL+4WYgJP0xbKD4mutUow02AJzUr3Mu/xqTmgWrCKIS4yHwbu2o
+         TlaAO0kWY7FJpI7Kn4i92tOm5dVfzZiqwuwbRCu756b0G2rRPYNmK0Hp/uC9ehkzaA3i
+         7MxMZljKrBSMHAcgTyo4qny8IKF7VCCDkgoQr+PUSeF2m2+itMy1iKrJJT6thyRvcmUw
+         UdLSG99ni3iv3TrSPmcjypFrNwpLMCrBnOoQZQlvmjgZKa69e+SFPEK8YsG66duPyUJz
+         FIzYtlRScjTVXBX7lIRpvOph9gozt8btjKQQe9/kFbZ+0k1wIeSvXcDVbfjykyQAtdEY
+         eCMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AJsM8Od2cQbwnjMd2WWbJxd1SHRmM5N6fXuOeZ21tBs=;
-        b=ZHtmQtXCTS93yEwLgSdh6WOTPjHbzN5LP3QEgWSJserZpzzuGxUk/P9NHR+XmsJtAA
-         +Bp3L7bdm+3PB/WFX/cald+Zq7AyyJu7pctOWUbavE3KChvWNw959O/iz/pCqtzYlAGj
-         inWoJzYZluBKIISi1OimNFFSHSnihBJ3rZeWACSy5h2r2FmKxpeLzfZRDyR09t8GRj5r
-         +8g0uz3gg9wSY3+dvSqfYJriO42FMaUBLB3JZPwnjN/xR5acKEinpuP4cFkZWHayMeYj
-         r4e5fHH2Vpe9m4peYOcky+xE8A2bZemHE9dfxbbyzYnDAJF1th54J42dc0O+t9z4qK+5
-         SOZA==
-X-Gm-Message-State: APjAAAW0W3ui8PElSB/YjikFWA41IqhYO+T+m5mXmS1at6XqfAM5U/ed
-        9G28PzoqnlgEnxEhRhzqFcY=
-X-Google-Smtp-Source: APXvYqxHIMp2EWsXJvYmtynLMilk1ROjHzfYLjWofW1N6f5khsq4Mo5Y//7UjiyFJz3JUngdHp90EQ==
-X-Received: by 2002:a2e:b5c4:: with SMTP id g4mr11731518ljn.169.1573506985570;
-        Mon, 11 Nov 2019 13:16:25 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id n19sm7913150lfl.85.2019.11.11.13.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 13:16:25 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 01/17] ARM: tegra: Compile sleep-tegra20/30.S unconditionally
-Date:   Tue, 12 Nov 2019 00:15:40 +0300
-Message-Id: <20191111211556.20723-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191111211556.20723-1-digetx@gmail.com>
-References: <20191111211556.20723-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S/dDooYdItgV3dLbLJwFFfSuew2iW89I9IXIwYwXJT8=;
+        b=S70XIyHNvIJa6kpNZcIRcV87VOLgUZu/uS7ARuoSTMgpv97s+deEn++AMc8Wr5G5eK
+         oiQaauRE1yjAy4i3iFt/5ioUzpjogXpzIDQma/bqCVCDmt3e8NOsDcdQz/t0qqPmGNLc
+         YxBWWJJbhGxs0Cu+dJHdUDb2nzq4z4e9+qgnIK290Gd303stRGkvPbFr5wnm/KQJAgZ6
+         TF9baKxANdG5Mw4i0+POidWoQcMnW6hE367BO9EJ8W/cetlohPd5JwwmxGMUX7Zwl9bf
+         qkccVQC1KHhkD+YF5780A8Zxk2LI66ddbxHxocrcwTSHI8dXmW4w0oXeSq0lXti+Cpmi
+         yqSg==
+X-Gm-Message-State: APjAAAXpfllMZ7XGFCsqgE9yVNwm4A8EZvwD9eWhcuPEzFag/kBdg462
+        8NReA//RYysYVYRSQsGjOkRffHnz1BWY6fob4Hg=
+X-Google-Smtp-Source: APXvYqzDtAPHhWESSr2uQPA5m1h2JhmEZlv/3xnWGoainOX2XoYPVefT+ORyUyE9fpcnPs4M+jW8Efqn5Pe1+ThDgwA=
+X-Received: by 2002:a17:90a:326b:: with SMTP id k98mr1569237pjb.50.1573507584464;
+ Mon, 11 Nov 2019 13:26:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191111140502.17541-1-tonylu@linux.alibaba.com>
+In-Reply-To: <20191111140502.17541-1-tonylu@linux.alibaba.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 11 Nov 2019 13:26:13 -0800
+Message-ID: <CAM_iQpUaPsFHrDmd7fLjWZLbbo8j1uD6opuT+zKqPTVuQPKniA@mail.gmail.com>
+Subject: Re: [PATCH] net: remove static inline from dev_put/dev_hold
+To:     Tony Lu <tonylu@linux.alibaba.com>
+Cc:     David Miller <davem@davemloft.net>, shemminger@osdl.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sleep-tegra*.S provides functionality required for suspend/resume
-and CPU hotplugging. The new unified CPUIDLE driver will support multiple
-hardware generations starting from Terga20 and ending with Tegra124, the
-driver will utilize functions that are provided by the assembly and thus
-it is cleaner to compile that code without any build-dependencies in order
-to avoid churning with #ifdef's.
+On Mon, Nov 11, 2019 at 6:12 AM Tony Lu <tonylu@linux.alibaba.com> wrote:
+>
+> This patch removes static inline from dev_put/dev_hold in order to help
+> trace the pcpu_refcnt leak of net_device.
+>
+> We have sufferred this kind of issue for several times during
+> manipulating NIC between different net namespaces. It prints this
+> log in dmesg:
+>
+>   unregister_netdevice: waiting for eth0 to become free. Usage count = 1
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/mach-tegra/Makefile | 6 ++----
- arch/arm/mach-tegra/sleep.h  | 2 --
- 2 files changed, 2 insertions(+), 6 deletions(-)
+I debugged a nasty dst refcnt leak in TCP a long time ago, so I can
+feel your pain.
 
-diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
-index 6c1dff2eccc2..965862608ff6 100644
---- a/arch/arm/mach-tegra/Makefile
-+++ b/arch/arm/mach-tegra/Makefile
-@@ -8,13 +8,13 @@ obj-y					+= reset.o
- obj-y					+= reset-handler.o
- obj-y					+= sleep.o
- obj-y					+= tegra.o
-+obj-y					+= sleep-tegra20.o
-+obj-y					+= sleep-tegra30.o
- obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
--obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= sleep-tegra20.o
- obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= pm-tegra20.o
- ifeq ($(CONFIG_CPU_IDLE),y)
- obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= cpuidle-tegra20.o
- endif
--obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= sleep-tegra30.o
- obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= pm-tegra30.o
- ifeq ($(CONFIG_CPU_IDLE),y)
- obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= cpuidle-tegra30.o
-@@ -22,12 +22,10 @@ endif
- obj-$(CONFIG_SMP)			+= platsmp.o
- obj-$(CONFIG_HOTPLUG_CPU)               += hotplug.o
- 
--obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= sleep-tegra30.o
- obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= pm-tegra30.o
- ifeq ($(CONFIG_CPU_IDLE),y)
- obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= cpuidle-tegra114.o
- endif
--obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= sleep-tegra30.o
- obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= pm-tegra30.o
- ifeq ($(CONFIG_CPU_IDLE),y)
- obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= cpuidle-tegra114.o
-diff --git a/arch/arm/mach-tegra/sleep.h b/arch/arm/mach-tegra/sleep.h
-index 78ef32a907c8..63e2205cbc82 100644
---- a/arch/arm/mach-tegra/sleep.h
-+++ b/arch/arm/mach-tegra/sleep.h
-@@ -120,10 +120,8 @@ void tegra_resume(void);
- int tegra_sleep_cpu_finish(unsigned long);
- void tegra_disable_clean_inv_dcache(u32 flag);
- 
--#ifdef CONFIG_HOTPLUG_CPU
- void tegra20_hotplug_shutdown(void);
- void tegra30_hotplug_shutdown(void);
--#endif
- 
- void tegra20_cpu_shutdown(int cpu);
- int tegra20_cpu_is_resettable_soon(void);
--- 
-2.23.0
 
+>
+> However, it is hard to find out who called and leaked refcnt in time. It
+> only left the crime scene but few evidence. Once leaked, it is not
+> safe to fix it up on the running host. We can't trace dev_put/dev_hold
+> directly, for the functions are inlined and used wildly amoung modules.
+> And this issue is common, there are tens of patches fix net_device
+> refcnt leak for various causes.
+>
+> To trace the refcnt manipulating, this patch removes static inline from
+> dev_put/dev_hold. We can use handy tools, such as eBPF with kprobe, to
+> find out who holds but forgets to put refcnt. This will not be called
+> frequently, so the overhead is limited.
+
+I think tracepoint serves the purpose of tracking function call history,
+you can add tracepoint for each of dev_put()/dev_hold(), which could
+also inherit the trace filter and trigger too.
+
+The netdev refcnt itself is not changed very frequently, but it is
+refcnt'ed by other things like dst too which is changed frequently.
+This is why usually when you see the netdev refcnt leak warning,
+the problem is probably somewhere else, like dst refcnt leak.
+
+Hope this helps.
+
+Thanks.
