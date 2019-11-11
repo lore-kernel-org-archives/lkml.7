@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0415C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4779CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6582204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2084E20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498278;
-	bh=AHfXVkVCpGPYGXW9k61ljlmPgoAsVdfzI+bzjky1T/Q=;
+	s=default; t=1573498281;
+	bh=6lgpsgg7uVgYl5DWn9S8ulDSED75HDu61aSomNLuS7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tot0rPNqjYIh8CEKRgrrMF6O+PCyzmBzLIP4zcZU2x1eakz2QVef4Oq5LyigkRXnR
-	 MF2+uoqyqAPk43YiAEC4oemCHiKuLYi5HUJPgapvHRgYrJUyXe4KJZfmw7S22LntMw
-	 +rGEnov+Ur37PXK9rT4MfPMjztLneo90220GvG+w=
+	b=dXK6uFPW8wqzkV/rYdDOJ+N1glo5z8XUUMdvxByzPf11LfZKS+wV9+eEPTdTsYF4E
+	 FHk+lRI8FpBSFxgYdpKLagpXZYcHBxTqPQI0Hotmza3rMODw/0tlF/yGRM91+EBjlt
+	 GMGWt7y9zI/FVR+JKnGTafOrgKG2HoxivzQ+cxnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbfKKSvR (ORCPT
+        id S1730422AbfKKSvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:51:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:51:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730263AbfKKSvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:51:14 -0500
+        id S1730263AbfKKSvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:51:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765E52196E;
-        Mon, 11 Nov 2019 18:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FA8D222C1;
+        Mon, 11 Nov 2019 18:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498274;
-        bh=AHfXVkVCpGPYGXW9k61ljlmPgoAsVdfzI+bzjky1T/Q=;
+        s=default; t=1573498277;
+        bh=6lgpsgg7uVgYl5DWn9S8ulDSED75HDu61aSomNLuS7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDn5g6cVL8og+SohxyOzz6q/D2zdmLT7wUa+QQobUAKaGYNHsHynUgBb4Rtiguc7C
-         m7SU9PAgMEx7nvQaKoAuIVzKNyiM9C9AGCdTaM432VklFqS+q2EUGZgAMF9+f1K/ja
-         J+O8JHZih5hH+ajps66fh+iaDcMgj+iYyNvAx89U=
+        b=octoxiIHkIdGxSlqejmULtG6fgFQSdo1AJ0aZoBGwd+F+Erc4iorripbFbZEGWh19
+         WHo2LQfQi7qdONeLrkAJEG+76/Bs8xHh/Oja1KnpAZnrX5XjYDXXy0+gVCdnKwcERT
+         EBqnhoV27zg56BLTZGvWmIyvcbJvamYrF4gBHL+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.3 066/193] intel_th: gth: Fix the window switching sequence
-Date:   Mon, 11 Nov 2019 19:27:28 +0100
-Message-Id: <20191111181505.959486019@linuxfoundation.org>
+        Stephane Grosjean <s.grosjean@peak-system.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.3 075/193] can: peak_usb: fix a potential out-of-sync while decoding packets
+Date:   Mon, 11 Nov 2019 19:27:37 +0100
+Message-Id: <20191111181506.659173609@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,39 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Stephane Grosjean <s.grosjean@peak-system.com>
 
-commit 87c0b9c79ec136ea76a14a88d675a746bc6a87f9 upstream.
+commit de280f403f2996679e2607384980703710576fed upstream.
 
-Commit 8116db57cf16 ("intel_th: Add switch triggering support") added
-a trigger assertion of the CTS, but forgot to de-assert it at the end
-of the sequence. This results in window switches randomly not happening.
+When decoding a buffer received from PCAN-USB, the first timestamp read in
+a packet is a 16-bit coded time base, and the next ones are an 8-bit
+offset to this base, regardless of the type of packet read.
 
-Fix that by de-asserting the trigger at the end of the window switch
-sequence.
+This patch corrects a potential loss of synchronization by using a
+timestamp index read from the buffer, rather than an index of received
+data packets, to determine on the sizeof the timestamp to be read from the
+packet being decoded.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: 8116db57cf16 ("intel_th: Add switch triggering support")
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191028070651.9770-2-alexander.shishkin@linux.intel.com
+Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
+Fixes: 46be265d3388 ("can: usb: PEAK-System Technik PCAN-USB specific part")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/gth.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/can/usb/peak_usb/pcan_usb.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/hwtracing/intel_th/gth.c
-+++ b/drivers/hwtracing/intel_th/gth.c
-@@ -626,6 +626,9 @@ static void intel_th_gth_switch(struct i
- 	if (!count)
- 		dev_dbg(&thdev->dev, "timeout waiting for CTS Trigger\n");
+--- a/drivers/net/can/usb/peak_usb/pcan_usb.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
+@@ -100,7 +100,7 @@ struct pcan_usb_msg_context {
+ 	u8 *end;
+ 	u8 rec_cnt;
+ 	u8 rec_idx;
+-	u8 rec_data_idx;
++	u8 rec_ts_idx;
+ 	struct net_device *netdev;
+ 	struct pcan_usb *pdev;
+ };
+@@ -547,10 +547,15 @@ static int pcan_usb_decode_status(struct
+ 	mc->ptr += PCAN_USB_CMD_ARGS;
  
-+	/* De-assert the trigger */
-+	iowrite32(0, gth->base + REG_CTS_CTL);
+ 	if (status_len & PCAN_USB_STATUSLEN_TIMESTAMP) {
+-		int err = pcan_usb_decode_ts(mc, !mc->rec_idx);
++		int err = pcan_usb_decode_ts(mc, !mc->rec_ts_idx);
+ 
+ 		if (err)
+ 			return err;
 +
- 	intel_th_gth_stop(gth, output, false);
- 	intel_th_gth_start(gth, output);
- }
++		/* Next packet in the buffer will have a timestamp on a single
++		 * byte
++		 */
++		mc->rec_ts_idx++;
+ 	}
+ 
+ 	switch (f) {
+@@ -632,10 +637,13 @@ static int pcan_usb_decode_data(struct p
+ 
+ 	cf->can_dlc = get_can_dlc(rec_len);
+ 
+-	/* first data packet timestamp is a word */
+-	if (pcan_usb_decode_ts(mc, !mc->rec_data_idx))
++	/* Only first packet timestamp is a word */
++	if (pcan_usb_decode_ts(mc, !mc->rec_ts_idx))
+ 		goto decode_failed;
+ 
++	/* Next packet in the buffer will have a timestamp on a single byte */
++	mc->rec_ts_idx++;
++
+ 	/* read data */
+ 	memset(cf->data, 0x0, sizeof(cf->data));
+ 	if (status_len & PCAN_USB_STATUSLEN_RTR) {
+@@ -688,7 +696,6 @@ static int pcan_usb_decode_msg(struct pe
+ 		/* handle normal can frames here */
+ 		} else {
+ 			err = pcan_usb_decode_data(&mc, sl);
+-			mc.rec_data_idx++;
+ 		}
+ 	}
+ 
 
 
