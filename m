@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9DFC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07BCC17446
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B2621925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62CA2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SoIm6noN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hnq85HW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfKKNxG (ORCPT
+        id S1727256AbfKKNxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:53:06 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54262 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbfKKNxD (ORCPT
+        Mon, 11 Nov 2019 08:53:02 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56638 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfKKNw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:53:03 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABDqmhb059710;
-        Mon, 11 Nov 2019 07:52:48 -0600
+        Mon, 11 Nov 2019 08:52:56 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABDqb9T090509;
+        Mon, 11 Nov 2019 07:52:37 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573480368;
-        bh=g+Bs8AcPiZkKkiuy1LdtDXfdFl5qi/DFw6rzLivui2Y=;
+        s=ti-com-17Q1; t=1573480357;
+        bh=1ejU+vd2T9/FB/A9l3rJiiNfVEy7pyhWG9mzxXGvrc8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SoIm6noNi9HhBa/aVBdFqh9kTSzbDPwQiUIEYptKmF2LocpiEHM0RQ+7fwTx+jtIh
-         7oPrMkmseUDFhvm1XR1x4vOeJbES4+oEohgH8BoMRq3XRwlabkICzns8SLC1v0M8GQ
-         D4xK2R1ayxq6a0/8KKNn0NqApaBk7VetviaBsuEo=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABDqmVV111569
+        b=hnq85HW3l4Dpf5ZtpTMz7HnD2F0nuQyoB5bD+lMZRcIrRCCR4W2ViUWkt18ZVViW6
+         FdGjIxcvoZnUU0a0WLWE3SdzFIhsYsN/3WYBtyLqjx8DiOfgGIBpidnQrKRhZdE6+i
+         LAvIULA3O4cz77jyq899/u7nrqFHplIctwC1ycvw=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABDqbg6001492
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 07:52:48 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 11 Nov 2019 07:52:37 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 07:52:31 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 07:52:19 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 07:52:31 -0600
+ Frontend Transport; Mon, 11 Nov 2019 07:52:20 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABDqE8t097668;
-        Mon, 11 Nov 2019 07:52:44 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABDqE8q097668;
+        Mon, 11 Nov 2019 07:52:33 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,231 +56,78 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v5 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
-Date:   Mon, 11 Nov 2019 15:53:23 +0200
-Message-ID: <20191111135330.8235-9-peter.ujfalusi@ti.com>
+Subject: [PATCH v5 05/15] dmaengine: Add support for reporting DMA cached data amount
+Date:   Mon, 11 Nov 2019 15:53:20 +0200
+Message-ID: <20191111135330.8235-6-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111135330.8235-1-peter.ujfalusi@ti.com>
 References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New binding document for
-Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
+A DMA hardware can have big cache or FIFO and the amount of data sitting in
+the DMA fabric can be an interest for the clients.
 
-UDMA-P is introduced as part of the K3 architecture and can be found in
-AM654 and j721e.
+For example in audio we want to know the delay in the data flow and in case
+the DMA have significantly large FIFO/cache, it can affect the latenc/delay
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 ---
- .../devicetree/bindings/dma/ti/k3-udma.yaml   | 192 ++++++++++++++++++
- 1 file changed, 192 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+ drivers/dma/dmaengine.h   | 8 ++++++++
+ include/linux/dmaengine.h | 2 ++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-new file mode 100644
-index 000000000000..5a60c3fc6f5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-@@ -0,0 +1,192 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/ti/k3-udma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
+index 501c0b063f85..b0b97475707a 100644
+--- a/drivers/dma/dmaengine.h
++++ b/drivers/dma/dmaengine.h
+@@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
+ 		state->last = complete;
+ 		state->used = used;
+ 		state->residue = 0;
++		state->in_flight_bytes = 0;
+ 	}
+ 	return dma_async_is_complete(cookie, complete, used);
+ }
+@@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
+ 		state->residue = residue;
+ }
+ 
++static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
++					   u32 in_flight_bytes)
++{
++	if (state)
++		state->in_flight_bytes = in_flight_bytes;
++}
 +
-+title: Texas Instruments K3 NAVSS Unified DMA Device Tree Bindings
-+
-+maintainers:
-+  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-+
-+description: |
-+  The UDMA-P is intended to perform similar (but significantly upgraded)
-+  functions as the packet-oriented DMA used on previous SoC devices. The UDMA-P
-+  module supports the transmission and reception of various packet types.
-+  The UDMA-P is architected to facilitate the segmentation and reassembly of
-+  SoC DMA data structure compliant packets to/from smaller data blocks that are
-+  natively compatible with the specific requirements of each connected
-+  peripheral.
-+  Multiple Tx and Rx channels are provided within the DMA which allow multiple
-+  segmentation or reassembly operations to be ongoing. The DMA controller
-+  maintains state information for each of the channels which allows packet
-+  segmentation and reassembly operations to be time division multiplexed between
-+  channels in order to share the underlying DMA hardware. An external DMA
-+  scheduler is used to control the ordering and rate at which this multiplexing
-+  occurs for Transmit operations. The ordering and rate of Receive operations
-+  is indirectly controlled by the order in which blocks are pushed into the DMA
-+  on the Rx PSI-L interface.
-+
-+  The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-+  channels. Channels in the UDMA-P can be configured to be either Packet-Based
-+  or Third-Party channels on a channel by channel basis.
-+
-+  All transfers within NAVSS is done between PSI-L source and destination
-+  threads.
-+  The peripherals serviced by UDMA can be PSI-L native (sa2ul, cpsw, etc) or
-+  legacy, non PSI-L native peripherals. In the later case a special, small PDMA
-+  is tasked to act as a bridge between the PSI-L fabric and the legacy
-+  peripheral.
-+
-+  PDMAs can be configured via UDMAP peer registers to match with the
-+  configuration of the legacy peripheral.
-+
-+allOf:
-+  - $ref: "../dma-controller.yaml#"
-+
-+properties:
-+  "#dma-cells":
-+    const: 1
-+    description: |
-+      The cell is the PSI-L  thread ID of the remote (to UDMAP) end.
-+      Valid ranges for thread ID depends on the data movement direction:
-+      for source thread IDs (rx): 0 - 0x7fff
-+      for destination thread IDs (tx): 0x8000 - 0xffff
-+
-+      PLease refer to the device documentation for the PSI-L thread map and also
-+      the PSI-L peripheral chapter for the correct thread ID.
-+
-+  compatible:
-+    oneOf:
-+      - description: for AM654
-+        items:
-+          - enum:
-+              - ti,am654-navss-main-udmap
-+              - ti,am654-navss-mcu-udmap
-+
-+      - description: for J721E
-+        items:
-+          - enum:
-+              - ti,j721e-navss-main-udmap
-+              - ti,j721e-navss-mcu-udmap
-+
-+  reg:
-+    maxItems: 3
-+
-+  reg-names:
-+   items:
-+     - const: gcfg
-+     - const: rchanrt
-+     - const: tchanrt
-+
-+  msi-parent: true
-+
-+  ti,sci:
-+    description: phandle to TI-SCI compatible System controller node
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ti,sci-dev-id:
-+    description: TI-SCI device id of UDMAP
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  ti,ringacc:
-+    description: phandle to the ring accelerator node
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ti,sci-rm-range-tchan:
-+    description: |
-+      Array of UDMA tchan resource subtypes for resource allocation for this
-+      host
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 1
-+    # Should be enough
-+    maxItems: 255
-+
-+  ti,sci-rm-range-rchan:
-+    description: |
-+      Array of UDMA rchan resource subtypes for resource allocation for this
-+      host
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 1
-+    # Should be enough
-+    maxItems: 255
-+
-+  ti,sci-rm-range-rflow:
-+    description: |
-+      Array of UDMA rflow resource subtypes for resource allocation for this
-+      host
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 1
-+    # Should be enough
-+    maxItems: 255
-+
-+required:
-+  - compatible
-+  - "#dma-cells"
-+  - reg
-+  - reg-names
-+  - msi-parent
-+  - ti,sci
-+  - ti,sci-dev-id
-+  - ti,ringacc
-+  - ti,sci-rm-range-tchan
-+  - ti,sci-rm-range-rchan
-+  - ti,sci-rm-range-rflow
-+
-+examples:
-+  - |+
-+    cbass_main {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        cbass_main_navss: navss@30800000 {
-+            compatible = "simple-mfd";
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            dma-coherent;
-+            dma-ranges;
-+            ranges = <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>;
-+
-+            ti,sci-dev-id = <118>;
-+
-+            main_udmap: dma-controller@31150000 {
-+                compatible = "ti,am654-navss-main-udmap";
-+                reg = <0x0 0x31150000 0x0 0x100>,
-+                      <0x0 0x34000000 0x0 0x100000>,
-+                      <0x0 0x35000000 0x0 0x100000>;
-+                reg-names = "gcfg", "rchanrt", "tchanrt";
-+                #dma-cells = <1>;
-+
-+                ti,ringacc = <&ringacc>;
-+
-+                msi-parent = <&inta_main_udmass>;
-+
-+                ti,sci = <&dmsc>;
-+                ti,sci-dev-id = <188>;
-+
-+                ti,sci-rm-range-tchan = <0x1>, /* TX_HCHAN */
-+                                        <0x2>; /* TX_CHAN */
-+                ti,sci-rm-range-rchan = <0x4>, /* RX_HCHAN */
-+                                        <0x5>; /* RX_CHAN */
-+                ti,sci-rm-range-rflow = <0x6>; /* GP RFLOW */
-+            };
-+        };
-+
-+        mcasp0: mcasp@02B00000 {
-+            dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
-+            dma-names = "tx", "rx";
-+        };
-+
-+        crypto: crypto@4E00000 {
-+            compatible = "ti,sa2ul-crypto";
-+
-+            dmas = <&main_udmap 0xc000>, <&main_udmap 0x4000>, <&main_udmap 0x4001>;
-+            dma-names = "tx", "rx1", "rx2";
-+        };
-+    };
+ struct dmaengine_desc_callback {
+ 	dma_async_tx_callback callback;
+ 	dma_async_tx_callback_result callback_result;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 0e8b426bbde9..c4c5219030a6 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
+  * @residue: the remaining number of bytes left to transmit
+  *	on the selected transfer for states DMA_IN_PROGRESS and
+  *	DMA_PAUSED if this is implemented in the driver, else 0
++ * @in_flight_bytes: amount of data in bytes cached by the DMA.
+  */
+ struct dma_tx_state {
+ 	dma_cookie_t last;
+ 	dma_cookie_t used;
+ 	u32 residue;
++	u32 in_flight_bytes;
+ };
+ 
+ /**
 -- 
 Peter
 
