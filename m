@@ -2,61 +2,51 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097CBC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E969C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D7821783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50DB21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498253;
-	bh=1HGeQd+i51xc2/LbpOvoli3yDDNk5PN3cNjdO+/G3zA=;
+	s=default; t=1573498260;
+	bh=AxjSEsBuqLMR7CGO0L2PJe8Z58LIy3vQxJ+3lq10mw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uazf8br070tdxwFZrzYB095+jarga6/dMItToyJ2baE0LgFhM/v45zbnQHw2TG6aC
-	 GVu7lp484fX5rjtb78qYSTryOc0tMIcqY+UQcQCbOOWLMsaMy0sbe3x1B59Stdau2a
-	 0ymNPTl1rwfU7fE8NHj6S3KTUJY1vbOybnISayqo=
+	b=13W0Pxlv7m+jmj7KxLDmh/7Tdj6hrQnbHflyhZmAc56gCVoMH+qbdLhblFOKVib+0
+	 8CliMenLQWBZbAKj+i+TU+ZTrznKDFQZqeCdcnf0o7aFsQLsHTOIL+DB2vlxmLXbwH
+	 EyP+dayjUgBUiuhFzjUjPSOQd7MmlGb/KRJdxKV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbfKKSuw (ORCPT
+        id S1730373AbfKKSu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728938AbfKKSut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:49 -0500
+        id S1730372AbfKKSuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11199222C1;
-        Mon, 11 Nov 2019 18:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 534A7214E0;
+        Mon, 11 Nov 2019 18:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498247;
-        bh=1HGeQd+i51xc2/LbpOvoli3yDDNk5PN3cNjdO+/G3zA=;
+        s=default; t=1573498250;
+        bh=AxjSEsBuqLMR7CGO0L2PJe8Z58LIy3vQxJ+3lq10mw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HaFLHoFnlHlZ7JjhKfaMLP/iK/D45hwY2yzYCOclLu/x7jfSEnIBmax9BITdQhUve
-         k/t1DJnhCOP2S2qhbImm+Ent2lAOaXbHCt6xSORB/TULdPdVfc7UcFWml83ftGYGnQ
-         mOVODQNWf/S9uG4EnSB8tgRZxWEyrVE3hW+oTN68=
+        b=QM+S8LUO0es9TxyGUoIlElFHgCPi52BMHJO5aQqyAZ8X6OSNw+UYAGtbayo+ypkel
+         CQ3agWQeSFTd9Lvr516LNaIm0HpZk/iGx6hGqsY3cesCVzs31KKvQHMFZ0/ZWxSy8/
+         FbUcGmOJfVYw3IQWwL1i+QIRS/kSDpm/sWpCfynY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Arnd Bergmann <arnd@arndb.de>, Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH 5.3 063/193] clone3: validate stack arguments
-Date:   Mon, 11 Nov 2019 19:27:25 +0100
-Message-Id: <20191111181505.649555239@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.3 064/193] netfilter: nf_tables: Align nft_expr private data to 64-bit
+Date:   Mon, 11 Nov 2019 19:27:26 +0100
+Message-Id: <20191111181505.729127861@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -69,143 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit fa729c4df558936b4a1a7b3e2234011f44ede28b upstream.
+commit 250367c59e6ba0d79d702a059712d66edacd4a1a upstream.
 
-Validate the stack arguments and setup the stack depening on whether or not
-it is growing down or up.
+Invoking the following commands on a 32-bit architecture with strict
+alignment requirements (such as an ARMv7-based Raspberry Pi) results
+in an alignment exception:
 
-Legacy clone() required userspace to know in which direction the stack is
-growing and pass down the stack pointer appropriately. To make things more
-confusing microblaze uses a variant of the clone() syscall selected by
-CONFIG_CLONE_BACKWARDS3 that takes an additional stack_size argument.
-IA64 has a separate clone2() syscall which also takes an additional
-stack_size argument. Finally, parisc has a stack that is growing upwards.
-Userspace therefore has a lot nasty code like the following:
+ # nft add table ip test-ip4
+ # nft add chain ip test-ip4 output { type filter hook output priority 0; }
+ # nft add rule  ip test-ip4 output quota 1025 bytes
 
- #define __STACK_SIZE (8 * 1024 * 1024)
- pid_t sys_clone(int (*fn)(void *), void *arg, int flags, int *pidfd)
- {
-         pid_t ret;
-         void *stack;
+Alignment trap: not handling instruction e1b26f9f at [<7f4473f8>]
+Unhandled fault: alignment exception (0x001) at 0xb832e824
+Internal error: : 1 [#1] PREEMPT SMP ARM
+Hardware name: BCM2835
+[<7f4473fc>] (nft_quota_do_init [nft_quota])
+[<7f447448>] (nft_quota_init [nft_quota])
+[<7f4260d0>] (nf_tables_newrule [nf_tables])
+[<7f4168dc>] (nfnetlink_rcv_batch [nfnetlink])
+[<7f416bd0>] (nfnetlink_rcv [nfnetlink])
+[<8078b334>] (netlink_unicast)
+[<8078b664>] (netlink_sendmsg)
+[<8071b47c>] (sock_sendmsg)
+[<8071bd18>] (___sys_sendmsg)
+[<8071ce3c>] (__sys_sendmsg)
+[<8071ce94>] (sys_sendmsg)
 
-         stack = malloc(__STACK_SIZE);
-         if (!stack)
-                 return -ENOMEM;
+The reason is that nft_quota_do_init() calls atomic64_set() on an
+atomic64_t which is only aligned to 32-bit, not 64-bit, because it
+succeeds struct nft_expr in memory which only contains a 32-bit pointer.
+Fix by aligning the nft_expr private data to 64-bit.
 
- #ifdef __ia64__
-         ret = __clone2(fn, stack, __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
- #elif defined(__parisc__) /* stack grows up */
-         ret = clone(fn, stack, flags | SIGCHLD, arg, pidfd);
- #else
-         ret = clone(fn, stack + __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
- #endif
-         return ret;
- }
-
-or even crazier variants such as [3].
-
-With clone3() we have the ability to validate the stack. We can check that
-when stack_size is passed, the stack pointer is valid and the other way
-around. We can also check that the memory area userspace gave us is fine to
-use via access_ok(). Furthermore, we probably should not require
-userspace to know in which direction the stack is growing. It is easy
-for us to do this in the kernel and I couldn't find the original
-reasoning behind exposing this detail to userspace.
-
-/* Intentional user visible API change */
-clone3() was released with 5.3. Currently, it is not documented and very
-unclear to userspace how the stack and stack_size argument have to be
-passed. After talking to glibc folks we concluded that trying to change
-clone3() to setup the stack instead of requiring userspace to do this is
-the right course of action.
-Note, that this is an explicit change in user visible behavior we introduce
-with this patch. If it breaks someone's use-case we will revert! (And then
-e.g. place the new behavior under an appropriate flag.)
-Breaking someone's use-case is very unlikely though. First, neither glibc
-nor musl currently expose a wrapper for clone3(). Second, there is no real
-motivation for anyone to use clone3() directly since it does not provide
-features that legacy clone doesn't. New features for clone3() will first
-happen in v5.5 which is why v5.4 is still a good time to try and make that
-change now and backport it to v5.3. Searches on [4] did not reveal any
-packages calling clone3().
-
-[1]: https://lore.kernel.org/r/CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com
-[2]: https://lore.kernel.org/r/20191028172143.4vnnjpdljfnexaq5@wittgenstein
-[3]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2ff9effa3b338/src/basic/raw-clone.h#L31
-[4]: https://codesearch.debian.net
-Fixes: 7f192e3cd316 ("fork: add clone3")
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-api@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # 5.3
-Cc: GNU C Library <libc-alpha@sourceware.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Aleksa Sarai <cyphar@cyphar.com>
-Link: https://lore.kernel.org/r/20191031113608.20713-1-christian.brauner@ubuntu.com
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.13+
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/fork.c |   33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ include/net/netfilter/nf_tables.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2586,7 +2586,35 @@ noinline static int copy_clone_args_from
- 	return 0;
- }
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -801,7 +801,8 @@ struct nft_expr_ops {
+  */
+ struct nft_expr {
+ 	const struct nft_expr_ops	*ops;
+-	unsigned char			data[];
++	unsigned char			data[]
++		__attribute__((aligned(__alignof__(u64))));
+ };
  
--static bool clone3_args_valid(const struct kernel_clone_args *kargs)
-+/**
-+ * clone3_stack_valid - check and prepare stack
-+ * @kargs: kernel clone args
-+ *
-+ * Verify that the stack arguments userspace gave us are sane.
-+ * In addition, set the stack direction for userspace since it's easy for us to
-+ * determine.
-+ */
-+static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
-+{
-+	if (kargs->stack == 0) {
-+		if (kargs->stack_size > 0)
-+			return false;
-+	} else {
-+		if (kargs->stack_size == 0)
-+			return false;
-+
-+		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
-+			return false;
-+
-+#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
-+		kargs->stack += kargs->stack_size;
-+#endif
-+	}
-+
-+	return true;
-+}
-+
-+static bool clone3_args_valid(struct kernel_clone_args *kargs)
- {
- 	/*
- 	 * All lower bits of the flag word are taken.
-@@ -2606,6 +2634,9 @@ static bool clone3_args_valid(const stru
- 	    kargs->exit_signal)
- 		return false;
- 
-+	if (!clone3_stack_valid(kargs))
-+		return false;
-+
- 	return true;
- }
- 
+ static inline void *nft_expr_priv(const struct nft_expr *expr)
 
 
