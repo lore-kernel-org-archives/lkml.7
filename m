@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0EEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA001C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0DC222C5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934B9222C5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498939;
-	bh=m2SnlxfeqDDA/C/rowAZC/hT+5u1gHbiPnQRT5redXA=;
+	s=default; t=1573498943;
+	bh=orNErqbrr4tO6yUqJftFB1DtVa5WXG7SJAGvXxVIO44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Srwb0VweHeIgiOJFwpbGgYh4bgifAU2f2Jip0EIiMcLRV1HkLuuhtc3lm75hbMFZB
-	 6N3EQdozBEA9NS0ZVwgP0Jn0NnUJkkbUoFv3Ueilm3dPrsSsvMkUR5qP/LozLMPV8f
-	 1HtLX5U5gw+RMD9jKR2tXVNKcePhygPKb6QTrpA4=
+	b=c2ANvm1/Yaa1lhRiWApfhuoELG1Wqe4fOzZgLjUq2wAU6z2ynrmELZfeYY8yC6SaS
+	 dtB0l9x6tr5ldRXUh+z/cGFZIhv3zMUL/vH+W09v/wPMiN329PIAQSh6FB4fiahSAV
+	 3Ryssi2qAy4jhtvT1uiE0mowFj/ViZP4Mi3rTlvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfKKStW (ORCPT
+        id S1728828AbfKKStK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:49:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42606 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:49:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730283AbfKKStS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:49:18 -0500
+        id S1726834AbfKKStF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:49:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1EFC214E0;
-        Mon, 11 Nov 2019 18:49:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A9552184C;
+        Mon, 11 Nov 2019 18:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498158;
-        bh=m2SnlxfeqDDA/C/rowAZC/hT+5u1gHbiPnQRT5redXA=;
+        s=default; t=1573498144;
+        bh=orNErqbrr4tO6yUqJftFB1DtVa5WXG7SJAGvXxVIO44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e4spZwTDwAxMX+uMomNMxY70efy09gduDMlJ92Cqmjvj8xLzBvK3fnK0R8y3AkK5B
-         50jUwfGBqxnniTgmUiaYINvN4eX8qai0weo7yjwVa1aeNFDv+gTLndQYVWKOp1dlJ0
-         adVKryGMXbTd/ZjsMYdr8PjzLYXYJ3oWLvPl6nRI=
+        b=A1SvfjRPlprz5Ryj8QeUA/hbjBER5+EpOIPB00hCAlHCBA2Z/qC0EkDWTaAInS3w8
+         cXW7VSZrWm7zWV5cCNMfXoXljVOMAqO1S2+vwZ6gxWbMdf5bSPbPbPxnIrgueQYKFr
+         XrTXEsMTcV41aqOL6tJ9BpdrJOnE6Z+xuAcT6Gj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.3 040/193] perf tools: Fix time sorting
-Date:   Mon, 11 Nov 2019 19:27:02 +0100
-Message-Id: <20191111181503.922866109@linuxfoundation.org>
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.3 036/193] btrfs: tree-checker: Fix wrong check on max devid
+Date:   Mon, 11 Nov 2019 19:26:58 +0100
+Message-Id: <20191111181503.665875209@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -64,46 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 722ddfde366fd46205456a9c5ff9b3359dc9a75e upstream.
+commit 8bb177d18f114358a57d8ae7e206861b48b8b4de upstream.
 
-The final sort might get confused when the comparison is done over
-bigger numbers than int like for -s time.
+[BUG]
+The following script will cause false alert on devid check.
+  #!/bin/bash
 
-Check the following report for longer workloads:
+  dev1=/dev/test/test
+  dev2=/dev/test/scratch1
+  mnt=/mnt/btrfs
 
-  $ perf report -s time -F time,overhead --stdio
+  umount $dev1 &> /dev/null
+  umount $dev2 &> /dev/null
+  umount $mnt &> /dev/null
 
-Fix hist_entry__sort() to properly return int64_t and not possible cut
-int.
+  mkfs.btrfs -f $dev1
 
-Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
-Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  mount $dev1 $mnt
+
+  _fail()
+  {
+          echo "!!! FAILED !!!"
+          exit 1
+  }
+
+  for ((i = 0; i < 4096; i++)); do
+          btrfs dev add -f $dev2 $mnt || _fail
+          btrfs dev del $dev1 $mnt || _fail
+          dev_tmp=$dev1
+          dev1=$dev2
+          dev2=$dev_tmp
+  done
+
+[CAUSE]
+Tree-checker uses BTRFS_MAX_DEVS() and BTRFS_MAX_DEVS_SYS_CHUNK() as
+upper limit for devid.  But we can have devid holes just like above
+script.
+
+So the check for devid is incorrect and could cause false alert.
+
+[FIX]
+Just remove the whole devid check.  We don't have any hard requirement
+for devid assignment.
+
+Furthermore, even devid could get corrupted by a bitflip, we still have
+dev extents verification at mount time, so corrupted data won't sneak
+in.
+
+This fixes fstests btrfs/194.
+
+Reported-by: Anand Jain <anand.jain@oracle.com>
+Fixes: ab4ba2e13346 ("btrfs: tree-checker: Verify dev item")
+CC: stable@vger.kernel.org # 5.2+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/hist.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/tree-checker.c |    8 --------
+ 1 file changed, 8 deletions(-)
 
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1618,7 +1618,7 @@ int hists__collapse_resort(struct hists
- 	return 0;
- }
- 
--static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-+static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -686,9 +686,7 @@ static void dev_item_err(const struct ex
+ static int check_dev_item(struct extent_buffer *leaf,
+ 			  struct btrfs_key *key, int slot)
  {
- 	struct hists *hists = a->hists;
- 	struct perf_hpp_fmt *fmt;
+-	struct btrfs_fs_info *fs_info = leaf->fs_info;
+ 	struct btrfs_dev_item *ditem;
+-	u64 max_devid = max(BTRFS_MAX_DEVS(fs_info), BTRFS_MAX_DEVS_SYS_CHUNK);
+ 
+ 	if (key->objectid != BTRFS_DEV_ITEMS_OBJECTID) {
+ 		dev_item_err(leaf, slot,
+@@ -696,12 +694,6 @@ static int check_dev_item(struct extent_
+ 			     key->objectid, BTRFS_DEV_ITEMS_OBJECTID);
+ 		return -EUCLEAN;
+ 	}
+-	if (key->offset > max_devid) {
+-		dev_item_err(leaf, slot,
+-			     "invalid devid: has=%llu expect=[0, %llu]",
+-			     key->offset, max_devid);
+-		return -EUCLEAN;
+-	}
+ 	ditem = btrfs_item_ptr(leaf, slot, struct btrfs_dev_item);
+ 	if (btrfs_device_id(leaf, ditem) != key->offset) {
+ 		dev_item_err(leaf, slot,
 
 
