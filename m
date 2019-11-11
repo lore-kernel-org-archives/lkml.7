@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37877C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37991C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01851204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA0021925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498287;
-	bh=ZX6R4GWSqAZPNA1XwDrGuydIQia0Bwzb5xuyTh9Pim4=;
+	s=default; t=1573498292;
+	bh=/w3qt/4z/Y8u4tMEywdWIGPjBe1ch71m2xOh7Fl9yQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQ+Hg+pUHk9Btfb5DZGijUhCUfCF/cECO58HZuCK5/txBFixLaOSZiYx4F760PiZF
-	 WlmD4u1Wo9m7vHCWQaYL4DYBKwr7Iul4KS7QucnqQleBbikDo851P8Ne3Wq33wtAkZ
-	 M7zaxD/9MyHPtv+wcy8//QLlsj4MDWrK4ogqHDwM=
+	b=TpekS0TOKQ714/jlBJf6gPOTqVdilUNHMYRFFGoYakD/1JwSPa/fBAJzhwh6hR3Fm
+	 d8sstW5gLLzhvuqR0I6ZMho5/nxNHK88w4oYspcwFd1Xxy2zJ7/lQSBBSbrOUAFzhx
+	 25jowawhCaa4DwIlJsFyLuRcIlQXvSMAzyadYTwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbfKKSvZ (ORCPT
+        id S1728755AbfKKSva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:51:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:51:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfKKSvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:51:21 -0500
+        id S1730418AbfKKSvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:51:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B367204FD;
-        Mon, 11 Nov 2019 18:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217FA204FD;
+        Mon, 11 Nov 2019 18:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498280;
-        bh=ZX6R4GWSqAZPNA1XwDrGuydIQia0Bwzb5xuyTh9Pim4=;
+        s=default; t=1573498284;
+        bh=/w3qt/4z/Y8u4tMEywdWIGPjBe1ch71m2xOh7Fl9yQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GdyocKtUnwTKG0I2Bd7TR5uWywdA8NcN2Gv//9EDMY4KiHv905tZMxWs0FYv4Q29K
-         rUi7fbNWuZVr+6gZMOG9hVZsMgJClOXTKKDWkPp1go78QTbmBZeJ8WLsiPaBkbGf28
-         BKYg4VUBWalMWIJbnh6lfkMUpGn6d31IHiR3jpdI=
+        b=wpkeaAd5HjjrkBwRiCStCAOVR+BD/76YglOC02B+3YnwNuZvq3z60iaF90dIbm9rD
+         xlbbWpX2ZZyduq/1j6Wv54GRt8xyPfvvC4XVeVMh9BwIEk9y6NH7AUg9rYfdr3dSPq
+         VbZ2+dvpJQ9CQBO5yVerPKQePaKF5oFEBjqH/s2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.3 076/193] can: rx-offload: can_rx_offload_queue_sorted(): fix error handling, avoid skb mem leak
-Date:   Mon, 11 Nov 2019 19:27:38 +0100
-Message-Id: <20191111181506.732874177@linuxfoundation.org>
+Subject: [PATCH 5.3 077/193] can: gs_usb: gs_can_open(): prevent memory leak
+Date:   Mon, 11 Nov 2019 19:27:39 +0100
+Message-Id: <20191111181506.810284582@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,48 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit ca913f1ac024559ebc17f0b599af262f0ad997c9 upstream.
+commit fb5be6a7b4863ecc44963bb80ca614584b6c7817 upstream.
 
-If the rx-offload skb_queue is full can_rx_offload_queue_sorted() will
-not queue the skb and return with an error.
+In gs_can_open() if usb_submit_urb() fails the allocated urb should be
+released.
 
-None of the callers of this function, issue a kfree_skb() to free the
-not queued skb. This results in a memory leak.
-
-This patch fixes the problem by freeing the skb in case of a full queue.
-The return value is adjusted to -ENOBUFS to better reflect the actual
-problem.
-
-The device stats handling is left to the callers, as this function might
-be used in both the rx and tx path.
-
-Fixes: 55059f2b7f86 ("can: rx-offload: introduce can_rx_offload_get_echo_skb() and can_rx_offload_queue_sorted() functions")
+Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
 Cc: linux-stable <stable@vger.kernel.org>
-Cc: Martin Hundebøll <martin@geanix.com>
-Reported-by: Martin Hundebøll <martin@geanix.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/rx-offload.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/can/usb/gs_usb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/can/rx-offload.c
-+++ b/drivers/net/can/rx-offload.c
-@@ -207,8 +207,10 @@ int can_rx_offload_queue_sorted(struct c
- 	unsigned long flags;
+--- a/drivers/net/can/usb/gs_usb.c
++++ b/drivers/net/can/usb/gs_usb.c
+@@ -623,6 +623,7 @@ static int gs_can_open(struct net_device
+ 					   rc);
  
- 	if (skb_queue_len(&offload->skb_queue) >
--	    offload->skb_queue_len_max)
--		return -ENOMEM;
-+	    offload->skb_queue_len_max) {
-+		kfree_skb(skb);
-+		return -ENOBUFS;
-+	}
+ 				usb_unanchor_urb(urb);
++				usb_free_urb(urb);
+ 				break;
+ 			}
  
- 	cb = can_rx_offload_get_cb(skb);
- 	cb->timestamp = timestamp;
 
 
