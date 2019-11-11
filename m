@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C15C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEC2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5352173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AE621783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498493;
-	bh=jSKxf7RCpTSWkKvjcXzpxBPA8OR53DXQcNcN28NHpSE=;
+	s=default; t=1573498497;
+	bh=O41LwHklMQi00bcu3oEIE90jeboup3lfQjnvEm+zojQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jhc6kdvtnK9GdtS/ATT2WZgFidQrv8LMninsojGaFFlC+bM4FWwL0OTsjmjAF5pwz
-	 Uluu9lb3D4hG/skzKtPEFA9+NEnGUGGZNlJjOvzIffrAAWZ9DPF0XRwSGvgHFaN5hG
-	 KJ+dws8YGXJ8r5iyiQbswtJzKf67ehYtpo5/X/o0=
+	b=JTuNLvm+pp8xa5fgmfBSdyyf8mbwwL96+KF5nRk+0QO1mQtBq+cWI8q9K3H2A7Irg
+	 r9QhuaBSA1Wo0wCdqmmj7OQQVcV6/jb0uP4PrCc+fkem9RWf56AZ3BQR7zBH2kbD2y
+	 oFuEO1Y1MX+emdEYJ2B5futxkzEOYXZPHDCrZge0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730362AbfKKSyw (ORCPT
+        id S1729767AbfKKSy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:54:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51128 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:54:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730587AbfKKSys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:54:48 -0500
+        id S1730590AbfKKSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:54:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A638C204EC;
-        Mon, 11 Nov 2019 18:54:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8AD6204EC;
+        Mon, 11 Nov 2019 18:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498487;
-        bh=jSKxf7RCpTSWkKvjcXzpxBPA8OR53DXQcNcN28NHpSE=;
+        s=default; t=1573498490;
+        bh=O41LwHklMQi00bcu3oEIE90jeboup3lfQjnvEm+zojQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3VR0mTDwUwT/zxiYqR8U9Ss0UEO3HRKcJa44TtyjnU0fLnCxher6Sez8bH2ydYs7
-         Lu+W6gaImAy5YgQwV+nG1aJhds6p0KV8MChiKMnFYPm1CrCOadgwMdJk66NXXm6GYY
-         F2J8yvsKu9rmRW+7LxP0cwDMXfcBy85x/F8uFx9U=
+        b=jvqqH/e3sTcuVfPDw97RTMDFVFHTV3ReFmljIWw7BclTxQg6dXuYU1P4HV273Yidj
+         RpwuEx0SlaFIzvWl2vgYCEHxYr3aO5+8oXram8CFOzDMiGrXhc7V2Fve+6qSszpioo
+         Jz8Sxvdg+avTSN6ITnh+JJBzfJzGoGmvdJkhrsHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 133/193] bonding: use dynamic lockdep key instead of subclass
-Date:   Mon, 11 Nov 2019 19:28:35 +0100
-Message-Id: <20191111181510.984303579@linuxfoundation.org>
+Subject: [PATCH 5.3 134/193] macsec: fix refcnt leak in module exit routine
+Date:   Mon, 11 Nov 2019 19:28:36 +0100
+Message-Id: <20191111181511.052784136@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -62,136 +62,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 089bca2caed0d0dea7da235ce1fe245808f5ec02 ]
+[ Upstream commit 2bce1ebed17da54c65042ec2b962e3234bad5b47 ]
 
-All bonding device has same lockdep key and subclass is initialized with
-nest_level.
-But actual nest_level value can be changed when a lower device is attached.
-And at this moment, the subclass should be updated but it seems to be
-unsafe.
-So this patch makes bonding use dynamic lockdep key instead of the
-subclass.
+When a macsec interface is created, it increases a refcnt to a lower
+device(real device). when macsec interface is deleted, the refcnt is
+decreased in macsec_free_netdev(), which is ->priv_destructor() of
+macsec interface.
+
+The problem scenario is this.
+When nested macsec interfaces are exiting, the exit routine of the
+macsec module makes refcnt leaks.
 
 Test commands:
-    ip link add bond0 type bond
+    ip link add dummy0 type dummy
+    ip link add macsec0 link dummy0 type macsec
+    ip link add macsec1 link macsec0 type macsec
+    modprobe -rv macsec
 
-    for i in {1..5}
-    do
-	    let A=$i-1
-	    ip link add bond$i type bond
-	    ip link set bond$i master bond$A
-    done
-    ip link set bond5 master bond0
+[  208.629433] unregister_netdevice: waiting for macsec0 to become free. Usage count = 1
 
-Splat looks like:
-[  307.992912] WARNING: possible recursive locking detected
-[  307.993656] 5.4.0-rc3+ #96 Tainted: G        W
-[  307.994367] --------------------------------------------
-[  307.995092] ip/761 is trying to acquire lock:
-[  307.995710] ffff8880513aac60 (&(&bond->stats_lock)->rlock#2/2){+.+.}, at: bond_get_stats+0xb8/0x500 [bonding]
-[  307.997045]
-	       but task is already holding lock:
-[  307.997923] ffff88805fcbac60 (&(&bond->stats_lock)->rlock#2/2){+.+.}, at: bond_get_stats+0xb8/0x500 [bonding]
-[  307.999215]
-	       other info that might help us debug this:
-[  308.000251]  Possible unsafe locking scenario:
+Steps of exit routine of macsec module are below.
+1. Calls ->dellink() in __rtnl_link_unregister().
+2. Checks refcnt and wait refcnt to be 0 if refcnt is not 0 in
+netdev_run_todo().
+3. Calls ->priv_destruvtor() in netdev_run_todo().
 
-[  308.001137]        CPU0
-[  308.001533]        ----
-[  308.001915]   lock(&(&bond->stats_lock)->rlock#2/2);
-[  308.002609]   lock(&(&bond->stats_lock)->rlock#2/2);
-[  308.003302]
-		*** DEADLOCK ***
+Step2 checks refcnt, but step3 decreases refcnt.
+So, step2 waits forever.
 
-[  308.004310]  May be due to missing lock nesting notation
+This patch makes the macsec module do not hold a refcnt of the lower
+device because it already holds a refcnt of the lower device with
+netdev_upper_dev_link().
 
-[  308.005319] 3 locks held by ip/761:
-[  308.005830]  #0: ffffffff9fcc42b0 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x466/0x8a0
-[  308.006894]  #1: ffff88805fcbac60 (&(&bond->stats_lock)->rlock#2/2){+.+.}, at: bond_get_stats+0xb8/0x500 [bonding]
-[  308.008243]  #2: ffffffff9f9219c0 (rcu_read_lock){....}, at: bond_get_stats+0x9f/0x500 [bonding]
-[  308.009422]
-	       stack backtrace:
-[  308.010124] CPU: 0 PID: 761 Comm: ip Tainted: G        W         5.4.0-rc3+ #96
-[  308.011097] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  308.012179] Call Trace:
-[  308.012601]  dump_stack+0x7c/0xbb
-[  308.013089]  __lock_acquire+0x269d/0x3de0
-[  308.013669]  ? register_lock_class+0x14d0/0x14d0
-[  308.014318]  lock_acquire+0x164/0x3b0
-[  308.014858]  ? bond_get_stats+0xb8/0x500 [bonding]
-[  308.015520]  _raw_spin_lock_nested+0x2e/0x60
-[  308.016129]  ? bond_get_stats+0xb8/0x500 [bonding]
-[  308.017215]  bond_get_stats+0xb8/0x500 [bonding]
-[  308.018454]  ? bond_arp_rcv+0xf10/0xf10 [bonding]
-[  308.019710]  ? rcu_read_lock_held+0x90/0xa0
-[  308.020605]  ? rcu_read_lock_sched_held+0xc0/0xc0
-[  308.021286]  ? bond_get_stats+0x9f/0x500 [bonding]
-[  308.021953]  dev_get_stats+0x1ec/0x270
-[  308.022508]  bond_get_stats+0x1d1/0x500 [bonding]
-
-Fixes: d3fff6c443fe ("net: add netdev_lockdep_set_classes() helper")
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 10 +++++++---
- include/net/bonding.h           |  1 +
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/net/macsec.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 142c5126da759..c3df99f8c3835 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3459,7 +3459,7 @@ static void bond_get_stats(struct net_device *bond_dev,
- 	struct list_head *iter;
- 	struct slave *slave;
- 
--	spin_lock_nested(&bond->stats_lock, bond_get_nest_level(bond_dev));
-+	spin_lock(&bond->stats_lock);
- 	memcpy(stats, &bond->bond_stats, sizeof(*stats));
- 
- 	rcu_read_lock();
-@@ -4297,8 +4297,6 @@ void bond_setup(struct net_device *bond_dev)
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index cb7637364b40d..1bd113b142ea7 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -3001,12 +3001,10 @@ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
+ static void macsec_free_netdev(struct net_device *dev)
  {
- 	struct bonding *bond = netdev_priv(bond_dev);
+ 	struct macsec_dev *macsec = macsec_priv(dev);
+-	struct net_device *real_dev = macsec->real_dev;
  
--	spin_lock_init(&bond->mode_lock);
--	spin_lock_init(&bond->stats_lock);
- 	bond->params = bonding_defaults;
+ 	free_percpu(macsec->stats);
+ 	free_percpu(macsec->secy.tx_sc.stats);
  
- 	/* Initialize pointers */
-@@ -4367,6 +4365,7 @@ static void bond_uninit(struct net_device *bond_dev)
- 
- 	list_del(&bond->bond_list);
- 
-+	lockdep_unregister_key(&bond->stats_lock_key);
- 	bond_debug_unregister(bond);
+-	dev_put(real_dev);
  }
  
-@@ -4773,6 +4772,11 @@ static int bond_init(struct net_device *bond_dev)
- 	bond->nest_level = SINGLE_DEPTH_NESTING;
- 	netdev_lockdep_set_classes(bond_dev);
+ static void macsec_setup(struct net_device *dev)
+@@ -3261,8 +3259,6 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 	if (err < 0)
+ 		return err;
  
-+	spin_lock_init(&bond->mode_lock);
-+	spin_lock_init(&bond->stats_lock);
-+	lockdep_register_key(&bond->stats_lock_key);
-+	lockdep_set_class(&bond->stats_lock, &bond->stats_lock_key);
-+
- 	list_add_tail(&bond->bond_list, &bn->dev_list);
- 
- 	bond_prepare_sysfs_group(bond);
-diff --git a/include/net/bonding.h b/include/net/bonding.h
-index d416af72404b5..be404b272d6b1 100644
---- a/include/net/bonding.h
-+++ b/include/net/bonding.h
-@@ -238,6 +238,7 @@ struct bonding {
- 	struct	 dentry *debug_dir;
- #endif /* CONFIG_DEBUG_FS */
- 	struct rtnl_link_stats64 bond_stats;
-+	struct lock_class_key stats_lock_key;
- };
- 
- #define bond_slave_get_rcu(dev) \
+-	dev_hold(real_dev);
+-
+ 	macsec->nest_level = dev_get_nest_level(real_dev) + 1;
+ 	netdev_lockdep_set_classes(dev);
+ 	lockdep_set_class_and_subclass(&dev->addr_list_lock,
 -- 
 2.20.1
 
