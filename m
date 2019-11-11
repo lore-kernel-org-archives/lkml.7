@@ -2,107 +2,96 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D44C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62098C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AA1222C5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF8A222C5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:44:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koUS8N61"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="NlZMZ6JN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKKPoh (ORCPT
+        id S1727077AbfKKPoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:44:37 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44290 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbfKKPog (ORCPT
+        Mon, 11 Nov 2019 10:44:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45183 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfKKPop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:44:36 -0500
-Received: by mail-oi1-f193.google.com with SMTP id s71so11846653oih.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 07:44:36 -0800 (PST)
+        Mon, 11 Nov 2019 10:44:45 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z10so9850478wrs.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 07:44:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OiLblMDqbLY1U4Bw7/7i/UGPkUsRgy9FGPSsY6DaoiY=;
-        b=koUS8N61d+pMyaRWxBX6khAZh4nn16pc82MIgcsyt8zstMqXfRdgunWrP/pCSdGHo4
-         +ZItylzVCbiCTGJ5uBeZQRADK32ndBhqBUso0MnIXQLCsA5nYXr8Brt2JRsR4wUvMCQW
-         feXAncwHNrpSmoxrS9dVBV1OeXQOtPKkwfQEab7ppRq3vkBkRfs/C91MEqcPhw6uQas4
-         RTjK3LiZQyr0xUQKxH0bmhRnXkAaZTiYZaBoNuSZ44Kb6vGdL/qXyKvWh3DaSFiPs/TK
-         Sf41OiJgvZuvLue2rbeyTtPHJUk9uKq/lEjyS0xmPwk9trRkWizQAHOr0QuiuPL0Rsu5
-         zbZw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OTPVxnQFejq+AoNfEY9ziHLlBKyMve0E2Eb7D8CDsvM=;
+        b=NlZMZ6JNKrmFbgq1d+v60CJLMAEcPitVUMyH8CO8Oabh4/hijRW+hFrF4gOCzJHOSH
+         nxTuVd/pZ5G2nGvcoz9DfIDhIxLVdINocZqhHVdo766p2D7td1MnJtojV7OGdcVkD0Zg
+         o6gsI8Ecqq+51r8pD6bdlhAtsRA36E0K/CmYpbsNummwK2MAhlBD//uK5to/HKA6c/1y
+         vDmURgwu+WNn0Po0spr5qYSGS2L/DMsyHZUPFiv/Xbr2nCLx1ppqHzMnoW3YnZCR4v+Q
+         Ut0KV6/S/Tm2jTteNJyUvoF3IlBskkIaHXGfSS+8sqZZJDc09ZROpg852P6tvqYs2dgD
+         UxMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OiLblMDqbLY1U4Bw7/7i/UGPkUsRgy9FGPSsY6DaoiY=;
-        b=UK+F7yRQm+Z/n7tYBjKbDGnk1mws5Ni3ivc4sTehjLtoWF3zH1eI81l9QniHmJW88p
-         lnd9FzzHTaBM0GBop5pt3wz+1IOhRYHC07h9sJVoYk9z+hvblLQCQP3eBLglC+iGHSuM
-         4W1DoWl+0swPUO/Nse2wtLA8kc1vUYJqC0B+MOBTMTAxLnMjfNYEnQ7xTZqH9ldwP8Z9
-         wJ9xnxfzcDLehow1KiLniCQ56ol1I+Y3oSBPjboQW2CZM+fCbj9RHiVmS5dpOLIKmPci
-         Zl5NUaXPfeN/uDKakr4HeMDp0R/S4Wh5ecmZvZFqqoTvELn6vpH66UjcLXzkhaGJvh/c
-         sB6w==
-X-Gm-Message-State: APjAAAVm7HiFR1xa+LW6Z+4+79srzvZishl3od5L02Nf6B8fXGmJIbya
-        JpsphpIS9Mii/7NrZTGMF2MZ6uwEW9+6Yu5oRlk=
-X-Google-Smtp-Source: APXvYqzGpgpXek0/OVESAc/xjACPjWco9/B5v7WHt3WaFIE2i1H6olGrnrme+gjTmXuy8Sp5qQtPqzabXoz7PPaUdRQ=
-X-Received: by 2002:aca:2803:: with SMTP id 3mr1129329oix.113.1573487075885;
- Mon, 11 Nov 2019 07:44:35 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OTPVxnQFejq+AoNfEY9ziHLlBKyMve0E2Eb7D8CDsvM=;
+        b=J/Xrub+LcuYjB6+YiVoE1xBAH4QPj8RPCGMYv21b2OAPWcuz1/imsBZeQrgEqSzajj
+         OCpPhtsyztAfj83SW8cGs/nWkhNhmTBD8ywolW1mH0obxXHZO9fl/n6Er7KhtwUBAfyW
+         eZnG2uzdvxNntax+Md7Yf14Jtfh2gOmI3hcve+2MuEvrqem5XqAUBAsi8/7MmkFWXxor
+         mjU5HTe9/pL/JynLhHi0hslyPo8cghT4nhuI5tAZD4zwjw+XW6iHwpYq9T6+39G7tTyz
+         hcaW81zJ+vDJYODQdn5SXj7Ude4rq8zYWoWxBoScg6VyrXKhmvndpH7OCzIpSjWByJ5k
+         /tdA==
+X-Gm-Message-State: APjAAAVPi/3uBJIjYo8T6N9NyhMGadbgyjk57fJvjoLyfOndLcZYqhRa
+        qAuWOdEZLRuQbfR44A+9MsBv9Q==
+X-Google-Smtp-Source: APXvYqxb5lV2vP+fMkclWvxE7Ml+3jil7wNaTNQRgPvSM5vEA13rUp7frW173OTD/hcCik/EbCb1FA==
+X-Received: by 2002:a5d:6706:: with SMTP id o6mr727306wru.54.1573487083488;
+        Mon, 11 Nov 2019 07:44:43 -0800 (PST)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id p10sm18000080wmi.44.2019.11.11.07.44.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 07:44:43 -0800 (PST)
+Date:   Mon, 11 Nov 2019 16:44:40 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: bnxt_en: Fix array overrun in
+ bnxt_fill_l2_rewrite_fields()
+Message-ID: <20191111154440.GA29052@netronome.com>
+References: <20191111020855.20775-1-olof@lixom.net>
 MIME-Version: 1.0
-References: <20191016144540.18810-1-sudipm.mukherjee@gmail.com>
- <20191016144540.18810-4-sudipm.mukherjee@gmail.com> <20191017211022.4247d821@gandalf.local.home>
-In-Reply-To: <20191017211022.4247d821@gandalf.local.home>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Mon, 11 Nov 2019 15:43:59 +0000
-Message-ID: <CADVatmMJgb1b5foOZeFres5ubk53H8Amy0_Mggo9obO0CTV0SA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] parport: daisy: use new parport device model
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111020855.20775-1-olof@lixom.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Sun, Nov 10, 2019 at 06:08:55PM -0800, Olof Johansson wrote:
+> This is caused by what seems to be a fragile typing approach by
+> the Broadcom firmware/driver:
+> 
+> /* FW expects smac to be in u16 array format */
+> 
+> So the driver uses eth_addr and eth_addr_mask as u16[6] instead of u8[12],
+> so the math in bnxt_fill_l2_rewrite_fields does a [6] deref of the u16
+> pointer, it goes out of bounds on the array.
+> 
+> Just a few lines below, they use ETH_ALEN/2, so this must have been
+> overlooked. I'm surprised original developers didn't notice the compiler
+> warnings?!
+> 
+> Fixes: 90f906243bf6 ("bnxt_en: Add support for L2 rewrite")
+> Signed-off-by: Olof Johansson <olof@lixom.net>
 
-On Fri, Oct 18, 2019 at 2:10 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 16 Oct 2019 15:45:40 +0100
-> Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
->
-> > Modify parport daisy driver to use the new parallel port device model.
-> >
-> > Last attempt was '1aec4211204d ("parport: daisy: use new parport device
-> > model")' which failed as daisy was also trying to load the low level
-> > driver and that resulted in a deadlock.
-> >
-> > Cc: Michal Kubecek <mkubecek@suse.cz>
-> > Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> > ---
-> >
-> > Steven, Michal,
-> > Can you please test this series in your test environment and verify that
-> > I am not breaking anything this time.
-> >
-> >
->
-> I checked out 1aec4211204d~1 (just before the broken commit), and
-> applied these four patches. It booted with the config that wouldn't
-> boot with the broken commit.
->
-> Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 
-A gentle ping on this series.
-
-
--- 
-Regards
-Sudip
