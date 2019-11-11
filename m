@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A60CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B468CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A7121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D934204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498216;
-	bh=hVmqAbFOrX+ZvSt3WWN9P4O58xdleihIUgCcUvKx3yY=;
+	s=default; t=1573498219;
+	bh=cOcAE6qqwB7bGykBj2+xfk0pwpLQQFmZczApTOhfZ4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YvVkwKArl6TH4f6l504GiqET2Jh6hYA2V0RuEUSe41gTXhzMfAM1DqFjpNLWKUlRT
-	 oDDw+CM4aRX1wV2pA+QMLfQ9Af6B0R6IN/KkWO9Dkv00yDX8VUHNE+exYYifu4T4v4
-	 wqwNZKuUMcWjtXDXjfkBRl9SgFaBu+aoPMeNz4is=
+	b=xZg/vFG2656443jADnr+jTU2O4ZFipOkXell0cOY/iAfwn9Qw5rezCf9qvY4cWc2b
+	 zp7HVvkdjpri9ez+zk2hkQ+Q/gcGeD6DB8lt+uTvHlY8nG/cJkEzz4DRgfzGdNBN73
+	 3BRhhBJSYw1uA2TbuOUX5gFzxAB7wC8Lb+CrD+xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfKKSuP (ORCPT
+        id S1729956AbfKKSuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:50:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:50:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbfKKSuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:50:14 -0500
+        id S1728461AbfKKSuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:50:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A06B9204FD;
-        Mon, 11 Nov 2019 18:50:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2EBC20818;
+        Mon, 11 Nov 2019 18:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498213;
-        bh=hVmqAbFOrX+ZvSt3WWN9P4O58xdleihIUgCcUvKx3yY=;
+        s=default; t=1573498216;
+        bh=cOcAE6qqwB7bGykBj2+xfk0pwpLQQFmZczApTOhfZ4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6Xahj/fiTYv1ldhV7KMz32cnaN+zoPMIAG+v/4uI1NKkvIhRzHMxlY1ZijQpY5GS
-         O1MCTA+Ul8u7yNTGnu6Q6RidqtQcMZieYdJrl2rG4YWLdsXppOdNvmAx59ER8CbZiq
-         xyLChTkmrWj/9h0SxwDlXuVXyHtRbyXKbMJHkgBQ=
+        b=A/L1UEq/e4rVh4iIU7zCzYXWpf6uvNtzRJ0d9yXV9+Jx1AweBsNpoSOSKpn63a+83
+         ekMKFtpFH8G8Nlg5nZ4I7foTop0XjEr+iAPN/3U0/7MnS6das0hOqpdT3DpZA6NnLc
+         IgjAz5zRt4bfiAnkaarX/hRtiToJpasg6jDIkthE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
         Jeff Layton <jlayton@kernel.org>,
         Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.3 054/193] ceph: dont try to handle hashed dentries in non-O_CREAT atomic_open
-Date:   Mon, 11 Nov 2019 19:27:16 +0100
-Message-Id: <20191111181504.975184904@linuxfoundation.org>
+Subject: [PATCH 5.3 055/193] ceph: dont allow copy_file_range when stripe_count != 1
+Date:   Mon, 11 Nov 2019 19:27:17 +0100
+Message-Id: <20191111181505.054376085@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,44 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Luis Henriques <lhenriques@suse.com>
 
-commit 5bb5e6ee6f5c557dcd19822eccd7bcced1e1a410 upstream.
+commit a3a0819388b2bf15e7eafe38ff6aacfc27b12df0 upstream.
 
-If ceph_atomic_open is handed a !d_in_lookup dentry, then that means
-that it already passed d_revalidate so we *know* that it's negative (or
-at least was very recently). Just return -ENOENT in that case.
+copy_file_range tries to use the OSD 'copy-from' operation, which simply
+performs a full object copy.  Unfortunately, the implementation of this
+system call assumes that stripe_count is always set to 1 and doesn't take
+into account that the data may be striped across an object set.  If the
+file layout has stripe_count different from 1, then the destination file
+data will be corrupted.
 
-This also addresses a subtle bug in dentry handling. Non-O_CREAT opens
-call atomic_open with the parent's i_rwsem shared, but calling
-d_splice_alias on a hashed dentry requires the exclusive lock.
+For example:
 
-If ceph_atomic_open receives a hashed, negative dentry on a non-O_CREAT
-open, and another client were to race in and create the file before we
-issue our OPEN, ceph_fill_trace could end up calling d_splice_alias on
-the dentry with the new inode with insufficient locks.
+Consider a 8 MiB file with 4 MiB object size, stripe_count of 2 and
+stripe_size of 2 MiB; the first half of the file will be filled with 'A's
+and the second half will be filled with 'B's:
+
+               0      4M     8M       Obj1     Obj2
+               +------+------+       +----+   +----+
+        file:  | AAAA | BBBB |       | AA |   | AA |
+               +------+------+       |----|   |----|
+                                     | BB |   | BB |
+                                     +----+   +----+
+
+If we copy_file_range this file into a new file (which needs to have the
+same file layout!), then it will start by copying the object starting at
+file offset 0 (Obj1).  And then it will copy the object starting at file
+offset 4M -- which is Obj1 again.
+
+Unfortunately, the solution for this is to not allow remote object copies
+to be performed when the file layout stripe_count is not 1 and simply
+fallback to the default (VFS) copy_file_range implementation.
 
 Cc: stable@vger.kernel.org
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/file.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/ceph/file.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 --- a/fs/ceph/file.c
 +++ b/fs/ceph/file.c
-@@ -458,6 +458,9 @@ int ceph_atomic_open(struct inode *dir,
- 		err = ceph_security_init_secctx(dentry, mode, &as_ctx);
- 		if (err < 0)
- 			goto out_ctx;
-+	} else if (!d_in_lookup(dentry)) {
-+		/* If it's not being looked up, it's negative */
-+		return -ENOENT;
- 	}
+@@ -1934,10 +1934,18 @@ static ssize_t __ceph_copy_file_range(st
+ 	if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
+ 		return -EOPNOTSUPP;
  
- 	/* do the open */
++	/*
++	 * Striped file layouts require that we copy partial objects, but the
++	 * OSD copy-from operation only supports full-object copies.  Limit
++	 * this to non-striped file layouts for now.
++	 */
+ 	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
+-	    (src_ci->i_layout.stripe_count != dst_ci->i_layout.stripe_count) ||
+-	    (src_ci->i_layout.object_size != dst_ci->i_layout.object_size))
++	    (src_ci->i_layout.stripe_count != 1) ||
++	    (dst_ci->i_layout.stripe_count != 1) ||
++	    (src_ci->i_layout.object_size != dst_ci->i_layout.object_size)) {
++		dout("Invalid src/dst files layout\n");
+ 		return -EOPNOTSUPP;
++	}
+ 
+ 	if (len < src_ci->i_layout.object_size)
+ 		return -EOPNOTSUPP; /* no remote copy will be done */
 
 
