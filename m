@@ -2,102 +2,128 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B17BC17447
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52623C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0EB206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B55C20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="YgTT2nnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfKKUZL (ORCPT
+        id S1728078AbfKKTHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:25:11 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:47769 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKUZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:25:11 -0500
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MYNW6-1iQONL2Pbe-00VQFV; Mon, 11 Nov 2019 21:25:09 +0100
-Received: by mail-qt1-f181.google.com with SMTP id y10so17088264qto.3;
-        Mon, 11 Nov 2019 12:25:09 -0800 (PST)
-X-Gm-Message-State: APjAAAV+2PBGLq+67cID09YvSZq+exVi39pbXUyxlF+SDNPVPKakEAJg
-        /81+mKjsn2nJqKINk8cb7OSTp/3sGTdDZedjVLY=
-X-Google-Smtp-Source: APXvYqxYKwc9AQItiNIOwZ2+wxDyN2mshA68mKukz40flGha4d3PjHaLU7oc+tzqqumjcL7RS5kXZzgs7n2BU3mg3Y4=
-X-Received: by 2002:ac8:67d9:: with SMTP id r25mr27768950qtp.7.1573503908430;
- Mon, 11 Nov 2019 12:25:08 -0800 (PST)
+        Mon, 11 Nov 2019 14:07:54 -0500
+Received: from mx1.cock.li ([185.10.68.5]:51747 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728773AbfKKSg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:58 -0500
 MIME-Version: 1.0
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-4-arnd@arndb.de>
-In-Reply-To: <20191108211323.1806194-4-arnd@arndb.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 21:24:51 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2k-ZHAiCMBHWHvtwRfYqnz7aFGfqSYT8sLSyOf7Dm8Aw@mail.gmail.com>
-Message-ID: <CAK8P3a2k-ZHAiCMBHWHvtwRfYqnz7aFGfqSYT8sLSyOf7Dm8Aw@mail.gmail.com>
-Subject: Re: [PATCH 13/23] y2038: socket: remove timespec reference in timestamping
-To:     y2038 Mailman List <y2038@lists.linaro.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Networking <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:mRBSh5cgFckhT9zUEAiAAIs6/5cxzy7bsSmB45MHXVbF7cTR5oG
- d7z3+vKE+Qe207ONHjMT1yhf1ifvJOvcJItomItB6pPBlNFdbGoNk6WU5k3adlr61gM9M6Z
- E2d54s5sTnK8cHUI1J4oCEoifT/xSWlcP6xLCsFosvoe7KI2o7w9twpbFoyfsCazEDz9HXT
- j/x7so+S6Wub4J8QhiNYA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zY3+0hYuvcE=:Q+KyCStI0dTtUZUMMAG01+
- xa47pkOOOVSBOrKs3IvYlPMpJFmt25hstitgqyY7wYrxLZTfYXylrxKGNv7KAETeu44b1Kbnz
- 25OBPQpNfDSVcrUEdW4MwQnKqpWO8YajjKZrXKAHLnVSDTARP6jRQMV983uUbURkmcy2ImZMD
- nkKP9FpLcXT86/EGtRKAyisk0NVqTVaTV3hdBIphCcYBbNrLYA9bgAnDD8CiXdpiXxcuK8rzs
- iBFCk51YYbjewZKRJoMcSwnL3KQCcA9/JFp672uqp0uRTmz7oeOU1BnaysRSc22mRkNWRH/M2
- BfJwgxj3ab3EVenLPyttOzfOucOCmJjKuTW+MaoS8jFyv71mo9w1UmQX/odkBZfXySleuFxMI
- PTvOpDwCtt89ldRaZS89PDcKhyevp/dKnq2OMLNkzp9Q0CRIWzfQMIpEQ2JmUEIF2C2Iuy80y
- vv6YaJmikkWcq1XpxWWhrrEJKKVv8YKqvjZQXvk9tJQfJYefmb/6rlmffddoai2JSiIv7av5a
- 36g+neO83AqdtG2xwBYB9SKquhtgja7iA7iHo9Y5+YPclfiRqGJ4CZfA7Uyi2+uL1HBOMa6Op
- JZhrHbt8lgGGyWUWFtZlYwHmtYFiv0yODjLnJYZ8HnLgL6r07+fG9Si1ANoCXiK5bBtKNp2HB
- gwm69TWRNbQqlpfFdl7c8tmaiwccWI0Sp7OCMHSv++qwJvqQ+crWK4P5DQPhamLCFb+7/CtqA
- 0qWWRcriyzqmQbFbHAkqfolJuDMaNOW4TBX8RAPbvMZ6D0nfZZ5rObVltR4UJ0TR9b12E2hD4
- gSdkaHxC+IRV9rO8/uEW5/ejsTdKHYqilpfKvR+3Ibax3mx71pU23DHgun/oqCT6Gr852LwGp
- sVahtqQryfXJ4EyT7Suw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
+        t=1573497414; bh=F6+fKuB9VlM/JzaEphjBNyziAWDmoBexPCn7fubbWsk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YgTT2nnEnb545IKXWp3i3ustVqq0i+9Ebu46B1tnuVeIktSVqSLqo7dO16Gj4gMxi
+         upC+iKhcXFKAON3CtRRjCFbWGWTy53Y0/wkAmXXR9L70TRF3nkebsunPYMdTekI5ok
+         FmvdE5aBVL15u7jVO7v0c8k03buDJlVLjNp29C29Df+TlKFQQx6yKMH4xMqyRFD1qq
+         4BSYqom1IW74NKpftBSloJnQH7n7fuiLWeRvPyNlVlHxkwGwfpGMReB+lzhKou+yo9
+         gWmjHY7BBLxy0F+P31/mAUGQsBlwNalPy61kY/MxxHagPgfS2XD81iH0VvtTGDfh/c
+         P55Tx3ZpWALmQ==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 11 Nov 2019 18:36:50 +0000
+From:   nipponmail@firemail.cc
+To:     rms@gnu.org
+Cc:     gnu-system-discuss@gnu.org, esr@thyrsus.com,
+        torvalds@linux-foundation.org, bugs@gnu.support, ams@gnu.org,
+        bruce@perens.com, licensing@fsf.org
+Subject: GrSecurity brags about it's GCC plugins (which violate the GPL for
+ the same reason it's kernel patch does) -- Is this not a threat to the gnu gpl
+ system?
+Message-ID: <cb3382d8f66c4cc9ef5c532c67edaa0e@firemail.cc>
+X-Sender: nipponmail@firemail.cc
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 10:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Is this not a threat to the whole GNU-GPL system?
+grsecurity.org
+grsecurity.net
+> Unlike the manual, ad-hoc approach to finding and fixing Spectre v1 
+> vulnerabilities employed elsewhere, our much higher coverage Respectre® 
+> compiler plugin discovers and automatically instruments the code with 
+> high-performance fixes.
 
-> diff --git a/include/uapi/linux/errqueue.h b/include/uapi/linux/errqueue.h
-> index 28491dac074b..0cca19670fd2 100644
-> --- a/include/uapi/linux/errqueue.h
-> +++ b/include/uapi/linux/errqueue.h
-> @@ -37,9 +37,16 @@ struct sock_extended_err {
->   *     The timestamping interfaces SO_TIMESTAMPING, MSG_TSTAMP_*
->   *     communicate network timestamps by passing this struct in a cmsg with
->   *     recvmsg(). See Documentation/networking/timestamping.txt for details.
-> + *     User space sees a timespec definition that matches either
-> + *     __kernel_timespec or __kernel_old_timespec, in the kernel we
-> + *     require two structure definitions to provide both.
->   */
->  struct scm_timestamping {
-> +#ifdef __KERNEL__
-> +       struct __kernel_old_timespec ts[3];
-> +#else
->         struct timespec ts[3];
-> +#endif
->  };
+Can you do something about this please? Does this not bother you?
 
-The kbuild bot pointed out that the way I sent this series, the use of
-__kernel_old_timespec
-causes a build failure, because I introduce this in a separate submission. I'm
-moving this patch over to the other series, and changing the subject to
+I for one, was convinced to join the free software movement and program 
+for it because of the promise of the GPL. But here, with their "access 
+agreement" they blatantly violate it (version 2, section 6 for the 
+kernel patch, I'm sure you know which section for GCC). They 
+infact-and-indeed do add an additional restrictive term.
 
-y2038: socket: use __kernel_old_timespec instead of timespec
+This is allowed to stand.
 
-With the expectation of merging it along with the other core patches.
+It is less likely that I myself would have contributed code if it were 
+not for the promise of the GPL that others could not close derivative 
+works to me. That promise is being shown to be a lie. I doubt I'm the 
+only one who was attracted by the GPL, but now that it is shown to be a 
+false promise: the spell likely is broken.
 
-      Arnd
+Can you please do something about this.
+Why all the silence? Why is no one angry about this?
+This is as blatant of a violation as they come: it cuts at the very root 
+of the whole point of Free Software:
+RMS you wanted the code to come back to you: you made it clear in your 
+EMACS license/notice. GrSecurity (OpenSourceSecurity) have completely 
+obliterated what you intended. And it is allowed to stand.
+
+Why? Please will nothing be done? Will nothing be discussed?
+
+GCC is your compiler: They're doing EXACTLY what you DID NOT WANT to 
+happen regarding plugins: they have effectively created PROPRIETARY 
+plugins. The lawyers told you it could not happen, so that you would 
+agree to allow plugins. Now apparently it has happened.
+
+Now you can only get GrSec, the patch, the compiler plugins, if you have 
+10k+, and you are not permitted to redistribute it (or else).
+
+Yes this is a violation of section 6 of version 2 of the GPL (I know 
+some programmers argue otherwise because programmers think they know 
+everything about every field)
+
+> "UHHHHHMMMMM we put it in a SEPARATE writing, thus we can impose 
+> additional restrictive terms!"
+
+> UHHH, Punishing a recipient for breaking our additional negative 
+> covenant is not violating the license :^), they didn't HAVE to violate 
+> our restrictions! It was their choice!
+
+> Ahem
+> Although previous to our additional restriction, under the GPL the 
+> recipient is free to distribute the source to anyone without 
+> repercussion or harm.
+> Once we chose to add our access agreement, the recipient after paying 
+> us 10k, agrees to never freely distribute the work except to his own 
+> customers on demand: under penalty of forfeiting the remainder of his 
+> balance and no further updates (which he already paid for)
+> This is clearly not an additional restriction not-present in the 
+> licensing terms
+> :^)
+> We also don't tell the linux kernel team about the fixes we silently 
+> fix in our GPL-Respecting additional-restrictive terms derivative work.
+> We'll tell you though, unless you distribute the Work: then you're cut 
+> off. Better not redistribute
+> :^)
+
+The federal copyright lawsuit would cost 600k to finance. 
+OpenSourceSecurity makes 120k a year, off of government contract(s/ors).
+
+GCC plugins have been part of GrSecurity for a very long time, I 
+remember them writing about them in the early/mid 2000s
+
