@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC9BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D889C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02815204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C84A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498308;
-	bh=AC7j0hTvdLJC4KtmliyQnPkC2qsF+C31855uvSXbV0I=;
+	s=default; t=1573498311;
+	bh=cV4ASttvrsQRUy7oNIRhY6d7FnOWA1nyPWs+2IdOglk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZsKS14qn/apwWEHcUXwE562Bd/qBuX9Y13yx9toM5MvrfWp7Z1Uk/qnK6RU6cBO+z
-	 azbVrqfk3NNLbt0Oum7fXP7FWGRn07ALtuM/yLj+1cRgypU4avjlmvUmT6OPUeaPNd
-	 FfHgxZdFIP0nt6rQrakwkiNjy5BJVpnMHe0cMjz4=
+	b=MfH8nee+vnOEFJAD6qo4pohXoR1hzUKrRmk+LfkYTfz1nm/+zvmmsDJdh9MEuoIiT
+	 Npz47ReyRrgclZozyN1lsGHXwpgZADau1A3aW3eC+5LVY65e21q392m3VDdFRiQAr3
+	 oO4ogmj+ACBh6DDwFj1heWpMci9HYTPun+WzEHAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfKKSvr (ORCPT
+        id S1728949AbfKKSvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:51:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45892 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729976AbfKKSvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:51:40 -0500
+        id S1730049AbfKKSvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:51:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EF14222BD;
-        Mon, 11 Nov 2019 18:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C800D21655;
+        Mon, 11 Nov 2019 18:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498298;
-        bh=AC7j0hTvdLJC4KtmliyQnPkC2qsF+C31855uvSXbV0I=;
+        s=default; t=1573498305;
+        bh=cV4ASttvrsQRUy7oNIRhY6d7FnOWA1nyPWs+2IdOglk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cb6CxVbNbRE1cie9Q7NWp6147GMEBZBdYodcIYOgfVqOcjMjQ1kaIT9xlkyD6H0VF
-         mpuaHmNxgJakuRipkgdCbmnmWXuroKL6NP48DRaj5dxf+bWfcrRhO3z8eEuQPRJwaP
-         HyDXmUhkjiz/fci/TOnNoqrCs5O0WXslVtzEavbE=
+        b=NhI7ZyJLw7891MLWy/6Kl8OCXbNlBjkJOZkOhmMCV0YtDBYEFkFqygAhr5Eg4CydA
+         hbH2W7IufFeKk5M+X0HvxgruP8BUugUEfCFtgU1LgF9Nu+7NpzNJx5aDuaVdW1Z3et
+         CMuZpj39sPQxzaasGyLDZSDl/jr2DZxSCO2GScaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.3 081/193] configfs: fix a deadlock in configfs_symlink()
-Date:   Mon, 11 Nov 2019 19:27:43 +0100
-Message-Id: <20191111181507.118324581@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 083/193] ALSA: usb-audio: Simplify parse_audio_unit()
+Date:   Mon, 11 Nov 2019 19:27:45 +0100
+Message-Id: <20191111181507.284332505@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,81 +58,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 351e5d869e5ac10cb40c78b5f2d7dfc816ad4587 upstream.
+commit 68e9fde245591d18200f8a9054cac22339437adb upstream.
 
-Configfs abuses symlink(2).  Unlike the normal filesystems, it
-wants the target resolved at symlink(2) time, like link(2) would've
-done.  The problem is that ->symlink() is called with the parent
-directory locked exclusive, so resolving the target inside the
-->symlink() is easily deadlocked.
+Minor code refactoring by combining the UAC version and the type in
+the switch-case flow, so that we reduce the indentation and
+redundancy.  One good bonus is that the duplicated definition of the
+same type value (e.g. UAC2_EFFECT_UNIT) can be handled more cleanly.
 
-Short of really ugly games in sys_symlink() itself, all we can
-do is to unlock the parent before resolving the target and
-relock it after.  However, that invalidates the checks done
-by the caller of ->symlink(), so we have to
-	* check that dentry is still where it used to be
-(it couldn't have been moved, but it could've been unhashed)
-	* recheck that it's still negative (somebody else
-might've successfully created a symlink with the same name
-while we were looking the target up)
-	* recheck the permissions on the parent directory.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/configfs/symlink.c |   33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ sound/usb/mixer.c |   95 ++++++++++++++++++++++--------------------------------
+ 1 file changed, 39 insertions(+), 56 deletions(-)
 
---- a/fs/configfs/symlink.c
-+++ b/fs/configfs/symlink.c
-@@ -143,11 +143,42 @@ int configfs_symlink(struct inode *dir,
- 	    !type->ct_item_ops->allow_link)
- 		goto out_put;
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2782,62 +2782,45 @@ static int parse_audio_unit(struct mixer
+ 		return 0; /* skip invalid unit */
+ 	}
  
-+	/*
-+	 * This is really sick.  What they wanted was a hybrid of
-+	 * link(2) and symlink(2) - they wanted the target resolved
-+	 * at syscall time (as link(2) would've done), be a directory
-+	 * (which link(2) would've refused to do) *AND* be a deep
-+	 * fucking magic, making the target busy from rmdir POV.
-+	 * symlink(2) is nothing of that sort, and the locking it
-+	 * gets matches the normal symlink(2) semantics.  Without
-+	 * attempts to resolve the target (which might very well
-+	 * not even exist yet) done prior to locking the parent
-+	 * directory.  This perversion, OTOH, needs to resolve
-+	 * the target, which would lead to obvious deadlocks if
-+	 * attempted with any directories locked.
-+	 *
-+	 * Unfortunately, that garbage is userland ABI and we should've
-+	 * said "no" back in 2005.  Too late now, so we get to
-+	 * play very ugly games with locking.
-+	 *
-+	 * Try *ANYTHING* of that sort in new code, and you will
-+	 * really regret it.  Just ask yourself - what could a BOFH
-+	 * do to me and do I want to find it out first-hand?
-+	 *
-+	 *  AV, a thoroughly annoyed bastard.
-+	 */
-+	inode_unlock(dir);
- 	ret = get_target(symname, &path, &target_item, dentry->d_sb);
-+	inode_lock(dir);
- 	if (ret)
- 		goto out_put;
+-	if (protocol == UAC_VERSION_1 || protocol == UAC_VERSION_2) {
+-		switch (p1[2]) {
+-		case UAC_INPUT_TERMINAL:
+-			return parse_audio_input_terminal(state, unitid, p1);
+-		case UAC_MIXER_UNIT:
+-			return parse_audio_mixer_unit(state, unitid, p1);
+-		case UAC2_CLOCK_SOURCE:
+-			return parse_clock_source_unit(state, unitid, p1);
+-		case UAC_SELECTOR_UNIT:
+-		case UAC2_CLOCK_SELECTOR:
+-			return parse_audio_selector_unit(state, unitid, p1);
+-		case UAC_FEATURE_UNIT:
+-			return parse_audio_feature_unit(state, unitid, p1);
+-		case UAC1_PROCESSING_UNIT:
+-		/*   UAC2_EFFECT_UNIT has the same value */
+-			if (protocol == UAC_VERSION_1)
+-				return parse_audio_processing_unit(state, unitid, p1);
+-			else
+-				return 0; /* FIXME - effect units not implemented yet */
+-		case UAC1_EXTENSION_UNIT:
+-		/*   UAC2_PROCESSING_UNIT_V2 has the same value */
+-			if (protocol == UAC_VERSION_1)
+-				return parse_audio_extension_unit(state, unitid, p1);
+-			else /* UAC_VERSION_2 */
+-				return parse_audio_processing_unit(state, unitid, p1);
+-		case UAC2_EXTENSION_UNIT_V2:
+-			return parse_audio_extension_unit(state, unitid, p1);
+-		default:
+-			usb_audio_err(state->chip,
+-				"unit %u: unexpected type 0x%02x\n", unitid, p1[2]);
+-			return -EINVAL;
+-		}
+-	} else { /* UAC_VERSION_3 */
+-		switch (p1[2]) {
+-		case UAC_INPUT_TERMINAL:
+-			return parse_audio_input_terminal(state, unitid, p1);
+-		case UAC3_MIXER_UNIT:
+-			return parse_audio_mixer_unit(state, unitid, p1);
+-		case UAC3_CLOCK_SOURCE:
+-			return parse_clock_source_unit(state, unitid, p1);
+-		case UAC3_SELECTOR_UNIT:
+-		case UAC3_CLOCK_SELECTOR:
+-			return parse_audio_selector_unit(state, unitid, p1);
+-		case UAC3_FEATURE_UNIT:
+-			return parse_audio_feature_unit(state, unitid, p1);
+-		case UAC3_EFFECT_UNIT:
+-			return 0; /* FIXME - effect units not implemented yet */
+-		case UAC3_PROCESSING_UNIT:
+-			return parse_audio_processing_unit(state, unitid, p1);
+-		case UAC3_EXTENSION_UNIT:
+-			return parse_audio_extension_unit(state, unitid, p1);
+-		default:
+-			usb_audio_err(state->chip,
+-				"unit %u: unexpected type 0x%02x\n", unitid, p1[2]);
+-			return -EINVAL;
+-		}
++#define PTYPE(a, b)	((a) << 8 | (b))
++	switch (PTYPE(protocol, p1[2])) {
++	case PTYPE(UAC_VERSION_1, UAC_INPUT_TERMINAL):
++	case PTYPE(UAC_VERSION_2, UAC_INPUT_TERMINAL):
++	case PTYPE(UAC_VERSION_3, UAC_INPUT_TERMINAL):
++		return parse_audio_input_terminal(state, unitid, p1);
++	case PTYPE(UAC_VERSION_1, UAC_MIXER_UNIT):
++	case PTYPE(UAC_VERSION_2, UAC_MIXER_UNIT):
++	case PTYPE(UAC_VERSION_3, UAC3_MIXER_UNIT):
++		return parse_audio_mixer_unit(state, unitid, p1);
++	case PTYPE(UAC_VERSION_2, UAC2_CLOCK_SOURCE):
++	case PTYPE(UAC_VERSION_3, UAC3_CLOCK_SOURCE):
++		return parse_clock_source_unit(state, unitid, p1);
++	case PTYPE(UAC_VERSION_1, UAC_SELECTOR_UNIT):
++	case PTYPE(UAC_VERSION_2, UAC_SELECTOR_UNIT):
++	case PTYPE(UAC_VERSION_3, UAC3_SELECTOR_UNIT):
++	case PTYPE(UAC_VERSION_2, UAC2_CLOCK_SELECTOR):
++	case PTYPE(UAC_VERSION_3, UAC3_CLOCK_SELECTOR):
++		return parse_audio_selector_unit(state, unitid, p1);
++	case PTYPE(UAC_VERSION_1, UAC_FEATURE_UNIT):
++	case PTYPE(UAC_VERSION_2, UAC_FEATURE_UNIT):
++	case PTYPE(UAC_VERSION_3, UAC3_FEATURE_UNIT):
++		return parse_audio_feature_unit(state, unitid, p1);
++	case PTYPE(UAC_VERSION_1, UAC1_PROCESSING_UNIT):
++	case PTYPE(UAC_VERSION_2, UAC2_PROCESSING_UNIT_V2):
++	case PTYPE(UAC_VERSION_3, UAC3_PROCESSING_UNIT):
++		return parse_audio_processing_unit(state, unitid, p1);
++	case PTYPE(UAC_VERSION_1, UAC1_EXTENSION_UNIT):
++	case PTYPE(UAC_VERSION_2, UAC2_EXTENSION_UNIT_V2):
++	case PTYPE(UAC_VERSION_3, UAC3_EXTENSION_UNIT):
++		return parse_audio_extension_unit(state, unitid, p1);
++	case PTYPE(UAC_VERSION_2, UAC2_EFFECT_UNIT):
++	case PTYPE(UAC_VERSION_3, UAC3_EFFECT_UNIT):
++		return 0; /* FIXME - effect units not implemented yet */
++	default:
++		usb_audio_err(state->chip,
++			      "unit %u: unexpected type 0x%02x\n",
++			      unitid, p1[2]);
++		return -EINVAL;
+ 	}
+ }
  
--	ret = type->ct_item_ops->allow_link(parent_item, target_item);
-+	if (dentry->d_inode || d_unhashed(dentry))
-+		ret = -EEXIST;
-+	else
-+		ret = inode_permission(dir, MAY_WRITE | MAY_EXEC);
-+	if (!ret)
-+		ret = type->ct_item_ops->allow_link(parent_item, target_item);
- 	if (!ret) {
- 		mutex_lock(&configfs_symlink_mutex);
- 		ret = create_link(parent_item, target_item, dentry);
 
 
