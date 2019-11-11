@@ -2,101 +2,98 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CEFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4308C17448
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2203214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5AC214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J0pC0vQN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfKKKaC (ORCPT
+        id S1727015AbfKKKao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:30:02 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:54497 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfKKKaB (ORCPT
+        Mon, 11 Nov 2019 05:30:44 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54336 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfKKKao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:30:01 -0500
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mbj7g-1huV1U45Ak-00dCLj; Mon, 11 Nov 2019 11:29:59 +0100
-Received: by mail-qv1-f46.google.com with SMTP id q19so4644495qvs.5;
-        Mon, 11 Nov 2019 02:29:57 -0800 (PST)
-X-Gm-Message-State: APjAAAXVlRKVBuB0v2UROjYwO1s3CSlJzruUafA8sebho1Z8+BzL9XRl
-        LUfh+JG7TXsaf/t9bNG5dda3OJjKps2Q81DSJDc=
-X-Google-Smtp-Source: APXvYqx3dRDA2rmaPEW4UpY0UEoKLtstJlcCKLowXnTab550quUX1o9OqysLm43EJTh/MA4389FmX1Acn21s2dCCBDI=
-X-Received: by 2002:a0c:d0e1:: with SMTP id b30mr23068710qvh.197.1573468197026;
- Mon, 11 Nov 2019 02:29:57 -0800 (PST)
+        Mon, 11 Nov 2019 05:30:44 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABAUaL6024709;
+        Mon, 11 Nov 2019 04:30:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573468236;
+        bh=J49vO9a5Q6nbdkFfwrMnpwhRrLhy3uz8gGzESzCD4oo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=J0pC0vQNOwWzcvvyyQL76SmlVuEzN0Z+CjL83wyC4lp4rBJiQ2R1WTU+ky0182CGU
+         FTXTm6Qn7grF70n77I6mtxC44f2VRRamde1Mg5BmLaZlzhLGa12VcCNxC08G61KIOA
+         d5uzuQB+yddSy3ouqSKbKhg+hMh59KTqSgK/uEBU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABAUZfl057030
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Nov 2019 04:30:35 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
+ Nov 2019 04:30:17 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 11 Nov 2019 04:30:17 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABAUVBd048429;
+        Mon, 11 Nov 2019 04:30:31 -0600
+Subject: Re: [PATCH v4 15/15] dmaengine: ti: k3-udma: Add glue layer for non
+ DMAengine users
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-16-peter.ujfalusi@ti.com>
+ <20191111061258.GS952516@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
+Date:   Mon, 11 Nov 2019 12:31:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-12-hch@lst.de>
-In-Reply-To: <20191029064834.23438-12-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Nov 2019 11:29:40 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a36-afn--XqG0ddj6VSPCzA_cfZqRxQXDuan7yk8CKg4w@mail.gmail.com>
-Message-ID: <CAK8P3a36-afn--XqG0ddj6VSPCzA_cfZqRxQXDuan7yk8CKg4w@mail.gmail.com>
-Subject: Re: [PATCH 11/21] asm-generic: don't provide ioremap for CONFIG_MMU
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:igOphroMEFpMnMkrn23J291od0DWjU1aaJH47OrINMfH2gQoQzj
- wswLmUODv8L5V0ZNS9C2vEmrWUVg+qfsgcjOowE/M+AMr3tjjJARCovdc3zW7eZSc52MaNn
- B8zIQScI6XPXtCZ/2AwugNF73ontdS4Nl5G9zwfcfOenNk2be0dlSUdQbpujpEDBcXtnfSa
- XEzpJADBTSkFvOEUrL4LQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cuSoAWXZmVg=:LRwo+EdjvwPeGuS9lQdNp8
- DnQAkXW0tf/bZkz+3Uuwxu9Pdj+SF9Suk6NUgZldkZU7NsN5A9Sp5kp8X1q+owzDlSnHBCnA2
- reicSGJClSm1yQDQTlvHBnaDGBt6i6cHu2ovNDWI9LDSbj8/yUSaYa9HI3qpunSQ2ZmPircNB
- a5ZbFbmP4KW5IcG8SmrbdtmX56a5ulik8/5ZK1SASqZ/z3UkOHjzu5IEfDAqHq+StbMqDRi1E
- uewNmboOTDnGVermO75HwWDlI9TUPcdKGsX8HwDtAmwVHZ8Yh2Chs+kfdGLfTTIjdeCFJDj6d
- E8JnwMt9MfGFletNBP7f/5RMgZv5AfBReuxfYMPEUUwCejHcNNWnVOyGVzGkOGEiJzRpWS+q7
- izgNe2yLHj7duCP/hDdsRct1hQaVaaHFEnYLoz4d8DX1BK2q+AnvvAqEg4wU54rLTY/1hDrRb
- r8VD8AfKhsOHK1xGwzLiZM/tmPXYkZNHhHQJKMZuKq/LLLA/wTfFIOw3Il3U0pSQEkkAhrMyD
- BMgyWqfDmkdcrPNN6UWuVqhQGHvUGXsFWWE44UrWvf5pIr3LqLO4fO9yIydWnjah2WYjDEl4f
- +VmOl6qTHDPm9mETIz/49fnCXo2TVyrxwPiu7zpoZVzXY2tb+Z+f5gHoanfOuPSozT2RRJpRI
- TjTUTjg5iBKiCdYi+hMLPvezFIyuBNLoTkoKXKaJiAUZJiSFBBBUOsvHnHuFQ0rTvl3JHCXVL
- JheC7k+G0pzN985/q+BE516gWETbGZNuV0wuTwh65OgYEBClWS0uUP4RFNmwwJh/fXDCD7tF1
- pnYja0kjlOQ8WTbMtC5/GjWUuSkoQKSXiu9hUp4J2WzCZYL4dExwgugU4O+DXUvx1FlI4pzUH
- +sMohm92opK8jaRnuUiA==
+In-Reply-To: <20191111061258.GS952516@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:49 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> All MMU-enabled ports have a non-trivial ioremap and should thus provide
-> the prototype for their implementation instead of providing a generic
-> one unless a different symbol is not defined.  Note that this only
-> affects sparc32 nds32 as all others do provide their own version.
->
-> Also update the kerneldoc comments in asm-generic/io.h to explain the
-> situation around the default ioremap* implementations correctly.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+
+On 11/11/2019 8.12, Vinod Koul wrote:
+> On 01-11-19, 10:41, Peter Ujfalusi wrote:
+>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>>
+>> Certain users can not use right now the DMAengine API due to missing
+>> features in the core. Prime example is Networking.
+>>
+>> These users can use the glue layer interface to avoid misuse of DMAengine
+>> API and when the core gains the needed features they can be converted to
+>> use generic API.
+> 
+> Can you add some notes on what all features does this layer implement..
+
+In the commit message or in the code?
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
