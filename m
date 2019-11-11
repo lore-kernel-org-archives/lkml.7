@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06EEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6B2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF972196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF83222C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497423;
-	bh=foS21jyDG7+AiNiYalDNGoY+ubZ8bYGRS1cP3+yOoZU=;
+	s=default; t=1573497427;
+	bh=9m7fxcMc2GNnUSTvql4YYI41iueAMpIprbSenMgn4rk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=upOnQpSu74yysBPknQym7XkqpGQ+CM0dEhRWt6h9ZCtUnIilV6oXrUBLrGc6GLQea
-	 3t+d5wO4xWE8FVhJe6Wf403GAfABFLhSfhx3aAwGyPMhpcgFOnYxJkdt02kiK+l405
-	 cNj9ndzzjQcwxpPw5aOQZHpwUfdeJlEHUDGXexs4=
+	b=JiGI6yc1Fmt8+t0CEh6Tr/d3/oVkXDRxY1VV27IVEMdliRZCnRW4GLuEPEgBl7NAU
+	 23CdjSt6RZ3i184p2pAbKhoMnV1BQNbfB8VVoqLfasuH1J0ftSd36LLNFim+DtKItE
+	 Md2N56596wm1anNVBHAjSMNrvclNrZbEZE22wZZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfKKShB (ORCPT
+        id S1728696AbfKKShG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55590 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:37:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbfKKSg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:59 -0500
+        id S1727531AbfKKShC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53E61204FD;
-        Mon, 11 Nov 2019 18:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A6821783;
+        Mon, 11 Nov 2019 18:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497418;
-        bh=foS21jyDG7+AiNiYalDNGoY+ubZ8bYGRS1cP3+yOoZU=;
+        s=default; t=1573497421;
+        bh=9m7fxcMc2GNnUSTvql4YYI41iueAMpIprbSenMgn4rk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yprp1LpjgkZXf8TpUJX1wUMChql5DAq0ea54pv+0Q2fZ5f76t3Hn+5Hpl1XeVes1q
-         +KqtoqhanYtMBaGmi+UV2wElBWtFMDidBUl+AgUOPazSTGndfGfmQAx4ph+g5IdyLN
-         OmXZrJy3QwW/VsltHjBKpCBoPQp4/XMym9ApUsBE=
+        b=MpUz4qaNlkcBaETi4G/KlMPzys5quC20FiYVSIuxW6RXc+PMkEJbQzG69vvayuATe
+         3r7IA43ptH1chagAGuFQoCYoV69+7v8L2ZvOvkujpUdgNUTU9xRTpLTTj989yagzki
+         GFo0mZQip12Vm2+KKk08GQW0auVTbbf7a4Fp6dDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Meyer <thomas@m3y3r.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.14 040/105] configfs: Fix bool initialization/comparison
-Date:   Mon, 11 Nov 2019 19:28:10 +0100
-Message-Id: <20191111181440.327081692@linuxfoundation.org>
+        Roman Yeryomin <roman@advem.lv>,
+        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 049/105] mtd: spi-nor: enable 4B opcodes for mx66l51235l
+Date:   Mon, 11 Nov 2019 19:28:19 +0100
+Message-Id: <20191111181441.992998033@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -59,64 +60,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Meyer <thomas@m3y3r.de>
+From: Roman Yeryomin <leroi.lists@gmail.com>
 
-commit 3f6928c347707a65cee10a9f54b85ad5fb078b3f upstream.
+commit d342b6a973af459f6104cad6effc8efc71a0558d upstream
 
-Bool initializations should use true and false. Bool tests don't need
-comparisons.
-
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Roman Yeryomin <roman@advem.lv>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/configfs/file.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/configfs/file.c
-+++ b/fs/configfs/file.c
-@@ -166,7 +166,7 @@ configfs_read_bin_file(struct file *file
- 		retval = -ETXTBSY;
- 		goto out;
- 	}
--	buffer->read_in_progress = 1;
-+	buffer->read_in_progress = true;
- 
- 	if (buffer->needs_read_fill) {
- 		/* perform first read with buf == NULL to get extent */
-@@ -325,7 +325,7 @@ configfs_write_bin_file(struct file *fil
- 		len = -ETXTBSY;
- 		goto out;
- 	}
--	buffer->write_in_progress = 1;
-+	buffer->write_in_progress = true;
- 
- 	/* buffer grows? */
- 	if (*ppos + count > buffer->bin_buffer_size) {
-@@ -429,8 +429,8 @@ static int check_perm(struct inode * ino
- 	}
- 	mutex_init(&buffer->mutex);
- 	buffer->needs_read_fill = 1;
--	buffer->read_in_progress = 0;
--	buffer->write_in_progress = 0;
-+	buffer->read_in_progress = false;
-+	buffer->write_in_progress = false;
- 	buffer->ops = ops;
- 	file->private_data = buffer;
- 	goto Done;
-@@ -488,10 +488,10 @@ static int configfs_release_bin_file(str
- 	ssize_t len = 0;
- 	int ret;
- 
--	buffer->read_in_progress = 0;
-+	buffer->read_in_progress = false;
- 
- 	if (buffer->write_in_progress) {
--		buffer->write_in_progress = 0;
-+		buffer->write_in_progress = false;
- 
- 		len = bin_attr->write(item, buffer->bin_buffer,
- 				buffer->bin_buffer_size);
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1030,7 +1030,7 @@ static const struct flash_info spi_nor_i
+ 	{ "mx25l25635e", INFO(0xc22019, 0, 64 * 1024, 512, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+ 	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_4B_OPCODES) },
+ 	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
+-	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
++	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+ 	{ "mx66u51235f", INFO(0xc2253a, 0, 64 * 1024, 1024, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+ 	{ "mx66l1g45g",  INFO(0xc2201b, 0, 64 * 1024, 2048, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+ 	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048, SPI_NOR_QUAD_READ) },
 
 
