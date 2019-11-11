@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E959C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CF3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9B5214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF1D21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498416;
-	bh=5b8/2op+ItCBvm/1g6xyyc4i0Q7+o/zfLH0FOPa8fHE=;
+	s=default; t=1573498420;
+	bh=lktJg6oZYRM1OuKK64MTCqPEC28QSDejLyJt+Z57NN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sViHpQp1LroK5ft98WGVIQ5l4S4jue6n35r4+U8StSVU/xMsdb7JRe+DZzYk7QUJX
-	 ydDHCXrdf/yzmW78+bmIcSgw8bR9WENvZGSc13l82jhL6MDZy3ho8x/7x9qOPSPy7n
-	 30WZLYx78CfDUqwq4iJV2xlCg8LvqmaPwp6Fb8GA=
+	b=zdpxXM3TOh5antafEqpdVW8fmCJlY9q43xKLqdKnuPs5BgTTDcl+4gDPN0vNdhooi
+	 bACoSYZk1aBaI9m5ab08MSSBeS0icD55ipAGAev23XXXJZQAPxfQLA3kPWaS/lCvi8
+	 cUYM487uOx5rivr4aKajFtIfk5YUN15OyvOPksi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbfKKSxe (ORCPT
+        id S1729541AbfKKSxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730389AbfKKSxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:53:30 -0500
+        id S1728555AbfKKSxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:53:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C067520818;
-        Mon, 11 Nov 2019 18:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18C12214E0;
+        Mon, 11 Nov 2019 18:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498409;
-        bh=5b8/2op+ItCBvm/1g6xyyc4i0Q7+o/zfLH0FOPa8fHE=;
+        s=default; t=1573498413;
+        bh=lktJg6oZYRM1OuKK64MTCqPEC28QSDejLyJt+Z57NN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15kwTQ0EGxeXsCO060QdvyRzbZ/gNQ+TNu0FSgJ/pHCgioR8k/vpTBqlNvNXBypUN
-         J2vDpb4u7vk+kUspvzhzUPP1qmAK9pUdjiYjsa44pBQb6a9GeOonRQ4IU81t+aafaU
-         aZoqRHdU8fswqA1+lOJNwGE3WoNWgrTB4YEssnVg=
+        b=vJizKnYpncqmxIRh3qXqIns0kS7bfK2wVCgkbBPPtwSJ3ahQbldoYk/qpBzalxGs+
+         Lm7TgosLKiUniNJFVBXJHjC/neIfiy7VJq9LFPEUtQOyeJI067aBCrwa2R8D7K6zqW
+         ktVFnK5EgIUbkMfsNOq1+WIDZ9mIjjns6Koai66o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.3 071/193] SMB3: Fix persistent handles reconnect
-Date:   Mon, 11 Nov 2019 19:27:33 +0100
-Message-Id: <20191111181506.350324816@linuxfoundation.org>
+        stable@vger.kernel.org, Bernd Krumboeck <b.krumboeck@gmail.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Johan Hovold <johan@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.3 072/193] can: usb_8dev: fix use-after-free on disconnect
+Date:   Mon, 11 Nov 2019 19:27:34 +0100
+Message-Id: <20191111181506.420910786@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,37 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit d243af7ab9feb49f11f2c0050d2077e2d9556f9b upstream.
+commit 3759739426186a924675651b388d1c3963c5710e upstream.
 
-When the client hits a network reconnect, it re-opens every open
-file with a create context to reconnect a persistent handle. All
-create context types should be 8-bytes aligned but the padding
-was missed for that one. As a result, some servers don't allow
-us to reconnect handles and return an error. The problem occurs
-when the problematic context is not at the end of the create
-request packet. Fix this by adding a proper padding at the end
-of the reconnect persistent handle context.
+The driver was accessing its driver data after having freed it.
 
-Cc: Stable <stable@vger.kernel.org> # 4.19.x
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 0024d8ad1639 ("can: usb_8dev: Add support for USB2CAN interface from 8 devices")
+Cc: stable <stable@vger.kernel.org>     # 3.9
+Cc: Bernd Krumboeck <b.krumboeck@gmail.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2pdu.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/can/usb/usb_8dev.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/cifs/smb2pdu.h
-+++ b/fs/cifs/smb2pdu.h
-@@ -836,6 +836,7 @@ struct create_durable_handle_reconnect_v
- 	struct create_context ccontext;
- 	__u8   Name[8];
- 	struct durable_reconnect_context_v2 dcontext;
-+	__u8   Pad[4];
- } __packed;
+--- a/drivers/net/can/usb/usb_8dev.c
++++ b/drivers/net/can/usb/usb_8dev.c
+@@ -996,9 +996,8 @@ static void usb_8dev_disconnect(struct u
+ 		netdev_info(priv->netdev, "device disconnected\n");
  
- /* See MS-SMB2 2.2.13.2.5 */
+ 		unregister_netdev(priv->netdev);
+-		free_candev(priv->netdev);
+-
+ 		unlink_all_urbs(priv);
++		free_candev(priv->netdev);
+ 	}
+ 
+ }
 
 
