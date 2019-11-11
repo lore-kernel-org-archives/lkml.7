@@ -2,118 +2,107 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADEEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69452C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00A820578
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FB820578
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfKKUJL (ORCPT
+        id S1727202AbfKKUKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:09:11 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41155 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKUJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:09:10 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUFzn-0005PY-Gm; Mon, 11 Nov 2019 21:09:07 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUFzn-000190-1b; Mon, 11 Nov 2019 21:09:07 +0100
-Date:   Mon, 11 Nov 2019 21:09:07 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Neil Brown <neilb@suse.de>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: put_device() after
- of_find_device_by_node()
-Message-ID: <20191111200907.vclloogaiu3mqxsn@pengutronix.de>
-References: <20191111071952.6pbswbboqreen6im@pengutronix.de>
- <20191111090357.13903-1-u.kleine-koenig@pengutronix.de>
- <20191111090357.13903-3-u.kleine-koenig@pengutronix.de>
- <812c95a0-7eb6-7ad6-16fa-c9e8339ff213@web.de>
+        Mon, 11 Nov 2019 15:10:24 -0500
+Received: from sauhun.de ([88.99.104.3]:50026 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbfKKUKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 15:10:23 -0500
+Received: from localhost (x4db75ae4.dyn.telefonica.de [77.183.90.228])
+        by pokefinder.org (Postfix) with ESMTPSA id 7993F2C0428;
+        Mon, 11 Nov 2019 21:10:21 +0100 (CET)
+Date:   Mon, 11 Nov 2019 21:10:21 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Patrick Williams <alpawi@amazon.com>
+Cc:     Patrick Williams <patrick@stwcx.xyz>,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Max Staudt <max@enpas.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Juergen Fitschen <jfi@ssv-embedded.de>,
+        Elie Morisse <syniurge@gmail.com>,
+        Ajay Gupta <ajayg@nvidia.com>, Stefan Roese <sr@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: pxa: migrate to new i2c_slave APIs
+Message-ID: <20191111201020.GI1608@kunai>
+References: <20191001160001.2388-1-alpawi@amazon.com>
+ <20191001160001.2388-2-alpawi@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0XMZdl/q8hSSmFeD"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <812c95a0-7eb6-7ad6-16fa-c9e8339ff213@web.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191001160001.2388-2-alpawi@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 02:41:58PM +0100, Markus Elfring wrote:
-> > This was found by coccicheck:
-> >
-> > 	drivers/pwm/pwm-omap-dmtimer.c:304:2-8: ERROR: missing put_device;
-> > 	call of_find_device_by_node on line 255, but without a corresponding
-> > 	object release within this function.
-> 
-> How do you think about to add a wording according to “imperative mood”
-> for your change description?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c#n151
 
-Are you a bot?
+--0XMZdl/q8hSSmFeD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +++ b/drivers/pwm/pwm-omap-dmtimer.c
-> …
-> > @@ -352,7 +352,14 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
-> …
-> >  	pdata->free(dm_timer);
-> > -put:
-> > +err_request_timer:
-> > +
-> > +err_timer_property:
-> > +err_platdata:
-> > +
-> > +	put_device(&timer_pdev->dev);
-> 
-> Would the use of the label “put_device” be more appropriate?
-> 
-> 
-> > +err_find_timer_pdev:
-> > +
-> >  	of_node_put(timer);
-> …
-> 
-> Would the use of the label “put_node” be better here?
-> 
-> 
-> > @@ -372,6 +379,8 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
-> >
-> >  	omap->pdata->free(omap->dm_timer);
-> >
-> > +	put_device(&omap->dm_timer_pdev->dev);
-> > +
-> >  	mutex_destroy(&omap->mutex);
-> >
-> >  	return 0;
-> 
-> I suggest to omit a few blank lines.
+On Tue, Oct 01, 2019 at 10:59:59AM -0500, Patrick Williams wrote:
+> The i2c subsystem was enhanced circa 2015 to support operating as
+> an i2c-slave device.  Prior to that, the i2c-pxa driver supported
+> an i2c-slave but had its own APIs.  There are no existing in-kernel
+> drivers or platforms that utilize the i2c-pxa APIs.
+>=20
+> Migrate the i2c-pxa driver to the general i2c-slave APIs so that
+> existing drivers, such as the i2c-slave-eeprom, can be used.
+>=20
+> This has been tested with a Marvell EspressoBin, using i2c-pxa and
+> i2c-slave-eeprom, acting as a slave, and a RaspeberryPi 3, using the
+> at24 driver, acting as a master.
+>=20
+> Signed-off-by: Patrick Williams <alpawi@amazon.com>
 
-And I like it the way it is.
+Awesome! This was so needed but I always wondered if PXA was still
+around...
 
-Best regards
-Uwe
+Applied to for-next, thanks!
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--0XMZdl/q8hSSmFeD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3JwCwACgkQFA3kzBSg
+KbbwFhAAnRbMIn70NdjtA9xRg78u7JLSD7YqapOMnxNsHCWg+sJnvpqhuRPh5Tp1
+fvYSyKabNafDl6U5B4waKj2BtAfGawdgO6D3C6Wd0ejruHAafmFiqC00CL6G0+7m
+HMDMcmXiYaUWWqWLqzBsm4ZIve6ZT219chFq+QIkEiDV6DGYWJqjS9zZ2ubQ7CBl
+Aa30uaAOk4kdieVY5iVrSVzKVYClOYIHpUPqFIzOIwJZI9Htzo5zmOe3Iqw1Uwy9
+onRbWVax2Rp5KwoYXa75TRyoanh7EemhY/JCdAHukEh/1zfRBV+eNPC5shf0vV21
+sI6rXRGfhKb50DMEdXPOYXmkrhKlzwU0DSZWTjZ4kiGWrwzy8dkeBvZxX0URvQpL
+Dth7F6T4LYgR9vPS3dqpajWukzCho1TD6JItcICetffs17AGDn22NEXYX8l5au8S
+bHdDbWNirgY9/ubuzHqu6EDNgWQFooEAwuFf4CqFGndCl7UXMRMZVzpcMa51+WsD
+mKTzLgA/0fedyJg7UYxkpNfJpJI7BfMhrtkwcepvWx8ZHvl3IElqSsOrBNz0VYWH
+OwQktNTyh954yGpLWLRszNMXrPL/zTZKkYoBh94wveKLGuZ21WgTxwimXFugTuHZ
+9O1E6BSXfNkSZ66mU3KBMtMrnrS/xa9MEBhvkO/E3XhgOB74NeU=
+=COit
+-----END PGP SIGNATURE-----
+
+--0XMZdl/q8hSSmFeD--
