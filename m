@@ -2,100 +2,130 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD4CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBC8C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0248920659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573501519;
-	bh=w2Rvj75LepKCR7yvJRU6eUm9bZCoooUrRGcsFZAdp44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j4yCQvhe1ssASltGc+FE2O8QE5PsPJmiobZUzJaidrIiBPvmqLtl73ocY3SF0rGY5
-	 jhnFhWU+ER3i6Dr6+m+/SQ3K80h4PoEpxL9oOWx3Cj1kKjMr1tKBydGeNvcuJuFLbp
-	 hctPU4UUda08fVtziazAVwVawCBIFRBbhuxbOK98=
+	by mail.kernel.org (Postfix) with ESMTP id C4CEE21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:47:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lr9u6dKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfKKTpS (ORCPT
+        id S1727432AbfKKTrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:45:18 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43904 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfKKTpR (ORCPT
+        Mon, 11 Nov 2019 14:47:33 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44554 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfKKTrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:45:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=w2Rvj75LepKCR7yvJRU6eUm9bZCoooUrRGcsFZAdp44=; b=r1eXBIHXW8wElBLNHdZkZCM3A
-        AzP12bMWZmuFGCNc3Bi6CGesg8gdD53umqic2PQVCUR3UIugiWiPa7ujoBTx3ybggJVIXeVYPR3jf
-        ZQXUwKDwu4PuUGdIZ6r3b9Kw/tEzDSaALuVUptZa1o6C4+Ev9GTjtCzihZ9TGxEc7pfpg=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iUFbw-0005Mj-Rw; Mon, 11 Nov 2019 19:44:28 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 1777D27429EB; Mon, 11 Nov 2019 19:44:28 +0000 (GMT)
-Date:   Mon, 11 Nov 2019 19:44:28 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jacob Rasmussen <jacobraz@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Jacob Rasmussen <jacobraz@google.com>,
-        Bard Liao <bardliao@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Ross Zwisler <zwisler@google.com>
-Subject: Re: [PATCH] ASoC: rt5645: Fixed buddy jack support.
-Message-ID: <20191111194427.GA29859@sirena.co.uk>
-References: <20191111185957.217244-1-jacobraz@google.com>
+        Mon, 11 Nov 2019 14:47:32 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q26so11353605pfn.11;
+        Mon, 11 Nov 2019 11:47:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+9p0geAPYzACJGr4kM2hyRnJuBulukbnnM2rKBijSkE=;
+        b=Lr9u6dKcMnxosBmDkOTOg/HV8B2blEwxnmgWJEQ2EzK/7M8d+TwKUi1LeMvLaCcIvH
+         045v2cS+xss3k7mIyOINO21skpydLlCsLjZOMyFZt9lqc0j8Kw+G/U/H5OHwuoVOLsbY
+         JH5OQc6ooy9GVhVlmvcMkmvYq6TRkF4nMwNv7Dclp8OPKYSgjnTYzV4KKhkkyMQhQnDw
+         1MdhLmr033d7wLIn09fqyh66HhHqE6IS40S+twJZCqFQUK9UO+SRbc3lb/VAk3v28ihn
+         9JyMgllUKc8iRUgf/wPPEilaHxllpAYuShMzivAI5MLAof85ZJaIvil4uAgMZnEuhxvR
+         QaOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+9p0geAPYzACJGr4kM2hyRnJuBulukbnnM2rKBijSkE=;
+        b=GUxs/5ZrSBSkbcz91RGwObBlUpLFoolFZgLhkrkRcQ60yhGyvBsm5OLD0PdBDDoSoY
+         /Su7muB4LgAiCxnS8fkNFD2QozmbjYOBOVl3bvNVWo1xGkawPMzMG3IpKsGot19pKOED
+         3rm1jwVzfoKNU8xX/h1If8tSE6/aKk5FW2YznMB90Rhq9jRILog328KYNMRShtHp0Zhl
+         r8AcmhTU9kh3ktEYXEkkKFoZnNc/MM7ttMzX+FhWlVCegjYEQTmSLOGYAiYHLVU8DHhO
+         kOXqDgsAAsoi1ORxWSAHM9sAxsWix3zTGVvelruWkx6wnJ3X/dJX3v8tYCCRebrmIuI1
+         4PxQ==
+X-Gm-Message-State: APjAAAWuH9VNnzQ/iY4k7haoWxl04P4vhAJqWUd+Mu3S1G1Fh4KQbTHb
+        Yti3GOFpVqB4ibRg/I2sejg=
+X-Google-Smtp-Source: APXvYqwcKjEdlZMRYppAqHUMbv7gQ99eeSBVdLpKqj2EkFkNJV09fdgaGoK6Idh+rD+cOgW29Fu9yA==
+X-Received: by 2002:aa7:9f86:: with SMTP id z6mr32086375pfr.102.1573501651618;
+        Mon, 11 Nov 2019 11:47:31 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::a925])
+        by smtp.gmail.com with ESMTPSA id s2sm4623877pgv.48.2019.11.11.11.47.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Nov 2019 11:47:30 -0800 (PST)
+Date:   Mon, 11 Nov 2019 11:47:28 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        kernel-team@fb.com
+Subject: Re: [PATCH -v5 00/17] Rewrite x86/ftrace to use text_poke (and more)
+Message-ID: <20191111194726.udayafzpqxeqjyrj@ast-mbp.dhcp.thefacebook.com>
+References: <20191111131252.921588318@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191111185957.217244-1-jacobraz@google.com>
-X-Cookie: Do not flush.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191111131252.921588318@infradead.org>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 11, 2019 at 02:12:52PM +0100, Peter Zijlstra wrote:
+> Ftrace is one of the last W^X violators (after this only KLP is left). These
+> patches move it over to the generic text_poke() interface and thereby get rid
+> of this oddity.
+> 
+> The first 14 patches are the same as in the -v4 posting. The last 3 patches are
+> new.
+> 
+> Will, patch 13, arm/ftrace, is unchanged. This is because this way it preserves
+> behaviour, but if you can provide me a tested-by for the simpler variant I can
+> drop that in.
+> 
+> Patch 15 reworks ftrace's event_create_dir(), which ran module code before the
+> module was finished loading (before we even applied jump_labels and all that).
+> 
+> Patch 16 and 17 address minor review feedback.
+> 
+> Ingo, Alexei wants patch #1 for some BPF stuff, can he get that in a topic branch?
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks Peter!
+Much appreciate it.
 
-On Mon, Nov 11, 2019 at 11:59:57AM -0700, Jacob Rasmussen wrote:
-> The headphone jack on buddy was broken with the following commit:
-> commit 6b5da66322c5 ("ASoC: rt5645: read jd1_1 status for jd
-> detection").
+I've re-tested the patch 1 alone (it seems to be exactly the same as you posted
+it originally back on Aug 27 and then on Oct 7). And now I tested my stuff with
+this whole set. No conflicts. Feel free to add to patch 1 alone or the whole set:
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+Some of the patches I think are split too fine. I would have combined them, but
+we try hard to limit our sets to less than fifteen in bpf/netdev land fwiw.
 
-This commit has been in mainline for a while but this doesn't apply
-against my fixes branch, I'll apply against -next but it'll need some
-work backporting to make it back as a fix.
+It was a poor judgment on my side to use text_poke() in my patch (to avoid
+explicit dependency on your patch) and not mention the obvious race in the
+commit log and intended fix when trees converge:
+        case BPF_MOD_CALL_TO_CALL:
+                if (memcmp(ip, old_insn, X86_CALL_SIZE))
+                        goto out;
+-               text_poke(ip, new_insn, X86_CALL_SIZE);
++               text_poke_bp(ip, new_insn, X86_CALL_SIZE, NULL);
+                break;
 
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature; name="signature.asc"
+To avoid the issue in the first place the best is to have your 1st patch in tip
+and bpf-next/net-next trees. We had "the same patch in multiple trees"
+situation in the past and git did the right thing during the merge window. So I
+don't anticipate any issues this time around.
 
------BEGIN PGP SIGNATURE-----
+One more question.
+What is the reason you stick to int3 style poking when 8 byte write is atomic?
+Can text_poke() patch nop5 by combining the call/jmp5 insn with extra 3 bytes
+after the nop and write 8 ?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3JuhsACgkQJNaLcl1U
-h9BNCwf/b+3c+eWRNxNuFVB11hWjuEPm4L52Y+EEJtvjLT46mZx+Z8jfIMRSG42T
-C6geE4W1VszoICq/jDP7ayx/PrzKtrLMw+7O2lIrHCELt3ZZvBs5JuVg4LUHrgmc
-mHiUESFuh37PreCB/b9Hb3YDpDr0Azw1RlMBPXTInl40CAwZUzKxFbMNb4fcuW1n
-cPgu+tH9CCzJPeFuB8xNZhtGIRlSeoXEwsM0VyNvrAhrVQSufPvhB0RTVUT+0/pb
-rYnW/4r0rT5qZPS018onIyqU7xuSxXnXrZaBfbsGv1rgXz68KZfnPzx/TMTHWxrp
-mKfqF7ylJs7SxL+RyWywD+q1i27aMw==
-=ue85
------END PGP SIGNATURE-----
-
---lrZ03NoBR/3+SXJZ--
