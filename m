@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F939C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E2221655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5AF21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497990;
-	bh=qoJBrkv55Yvx3fUS2dlYaAZ2YK1eLNgX8mG9LyfTzr8=;
+	s=default; t=1573497993;
+	bh=zpUcZ+oBkJmWgjCKBCcDcw/Qeg1OskxaYaBdQ+im6A8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YKQrBksOcRzMTmvTjrNKobVVuVbZ6evHRg27busbR4mgN3/F9aR1OJVjiXS8nzWrq
-	 rBFP+ZsDgm1iqsp+KXUNGO/JglOqyE2Zx+BRGrH85hMJDX/bzvD9eDJNsR2IcRJ5Zt
-	 K51GLaRcZtYIUmq0NceGGIPulPwyL2KeydG5GYQw=
+	b=kSp0A8NdvHKkGrWNojvTxnPnAW9+V3bcFxDIWgc7hiLgjTIOSC/t5L4oR85JjdVJD
+	 lGohUKENK3QlkZXQ4z/FO7D5BnaTTN+zXVHjceHNddpwGXtN0OlS7p6mNzIPYoANrU
+	 20eq9ls28r529+Jz0MBAcCLWmPczpvmyuVIZZVG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbfKKSq2 (ORCPT
+        id S1730013AbfKKSqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:46:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38896 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:46:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729996AbfKKSqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:46:25 -0500
+        id S1730006AbfKKSq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:46:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 170D021925;
-        Mon, 11 Nov 2019 18:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE9B721783;
+        Mon, 11 Nov 2019 18:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497984;
-        bh=qoJBrkv55Yvx3fUS2dlYaAZ2YK1eLNgX8mG9LyfTzr8=;
+        s=default; t=1573497988;
+        bh=zpUcZ+oBkJmWgjCKBCcDcw/Qeg1OskxaYaBdQ+im6A8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XJafm2i+4gq5Hvf3oxvQEM64ijF8+HI01m8aKxxMiS7HF7D3wqoYPbF4YfUL80cj9
-         MbW8QIOtM8crO0l0AWKOnpUzTOdqQwz/kZ9fWVgglpugWGvC/P0UwNHF3mbB+jjt0Q
-         IaJbXIWIGTLm34jDrOou9lXZxspN9FFaq7eKzBtU=
+        b=V+tzj/+GQZFBT2XI9O0BJqtcYwFtQP3SdyB5jPqTJFlEiZzu6lXfz/hen2+0cVa52
+         W+o/oTO4lN+p9+ndFp28A4mW1QvMop8furhBto1IrBINqJYggAnyqeMAIerKIflsnl
+         fkc6i3ChCbg7Nr/57ZAKGRPtSnsQiCtJQ3RjJ6y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/125] NFSv4: Dont allow a cached open with a revoked delegation
-Date:   Mon, 11 Nov 2019 19:29:13 +0100
-Message-Id: <20191111181455.122357586@linuxfoundation.org>
+Subject: [PATCH 4.19 115/125] net: ethernet: arc: add the missed clk_disable_unprepare
+Date:   Mon, 11 Nov 2019 19:29:14 +0100
+Message-Id: <20191111181455.255030663@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -61,95 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit be3df3dd4c70ee020587a943a31b98a0fb4b6424 ]
+[ Upstream commit 4202e219edd6cc164c042e16fa327525410705ae ]
 
-If the delegation is marked as being revoked, we must not use it
-for cached opens.
+The remove misses to disable and unprepare priv->macclk like what is done
+when probe fails.
+Add the missed call in remove.
 
-Fixes: 869f9dfa4d6d ("NFSv4: Fix races between nfs_remove_bad_delegation() and delegation return")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 10 ++++++++++
- fs/nfs/delegation.h |  1 +
- fs/nfs/nfs4proc.c   |  7 ++-----
- 3 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/arc/emac_rockchip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 825a8c52165a2..c5c3394148f72 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -54,6 +54,16 @@ nfs4_is_valid_delegation(const struct nfs_delegation *delegation,
- 	return false;
+diff --git a/drivers/net/ethernet/arc/emac_rockchip.c b/drivers/net/ethernet/arc/emac_rockchip.c
+index 0f65768026072..a1df2ebab07f0 100644
+--- a/drivers/net/ethernet/arc/emac_rockchip.c
++++ b/drivers/net/ethernet/arc/emac_rockchip.c
+@@ -265,6 +265,9 @@ static int emac_rockchip_remove(struct platform_device *pdev)
+ 	if (priv->regulator)
+ 		regulator_disable(priv->regulator);
+ 
++	if (priv->soc_data->need_div_macclk)
++		clk_disable_unprepare(priv->macclk);
++
+ 	free_netdev(ndev);
+ 	return err;
  }
- 
-+struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode)
-+{
-+	struct nfs_delegation *delegation;
-+
-+	delegation = rcu_dereference(NFS_I(inode)->delegation);
-+	if (nfs4_is_valid_delegation(delegation, 0))
-+		return delegation;
-+	return NULL;
-+}
-+
- static int
- nfs4_do_check_delegation(struct inode *inode, fmode_t flags, bool mark)
- {
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index c95477823fa6b..dd0f3eed3890d 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -66,6 +66,7 @@ int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state,
- bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_stateid *dst, struct rpc_cred **cred);
- bool nfs4_refresh_delegation_stateid(nfs4_stateid *dst, struct inode *inode);
- 
-+struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode);
- void nfs_mark_delegation_referenced(struct nfs_delegation *delegation);
- int nfs4_have_delegation(struct inode *inode, fmode_t flags);
- int nfs4_check_delegation(struct inode *inode, fmode_t flags);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 75faef7af22d3..792f8821b5d6b 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1393,8 +1393,6 @@ static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
- 		return 0;
- 	if ((delegation->type & fmode) != fmode)
- 		return 0;
--	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
--		return 0;
- 	switch (claim) {
- 	case NFS4_OPEN_CLAIM_NULL:
- 	case NFS4_OPEN_CLAIM_FH:
-@@ -1751,7 +1749,6 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
- static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- {
- 	struct nfs4_state *state = opendata->state;
--	struct nfs_inode *nfsi = NFS_I(state->inode);
- 	struct nfs_delegation *delegation;
- 	int open_mode = opendata->o_arg.open_flags;
- 	fmode_t fmode = opendata->o_arg.fmode;
-@@ -1768,7 +1765,7 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- 		}
- 		spin_unlock(&state->owner->so_lock);
- 		rcu_read_lock();
--		delegation = rcu_dereference(nfsi->delegation);
-+		delegation = nfs4_get_valid_delegation(state->inode);
- 		if (!can_open_delegated(delegation, fmode, claim)) {
- 			rcu_read_unlock();
- 			break;
-@@ -2293,7 +2290,7 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
- 					data->o_arg.open_flags, claim))
- 			goto out_no_action;
- 		rcu_read_lock();
--		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
-+		delegation = nfs4_get_valid_delegation(data->state->inode);
- 		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
- 			goto unlock_no_action;
- 		rcu_read_unlock();
 -- 
 2.20.1
 
