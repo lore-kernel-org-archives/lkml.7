@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B987C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09896C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550D3222BD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD3A214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497677;
-	bh=2Z0kF615/8pP7GAFhU4mwiF3q5g8Einkwiw0LYuwll8=;
+	s=default; t=1573497681;
+	bh=6VIKjkADuQVWzy7sSUCb36dA36xQEKAE3RYlBg5BnCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VuPC2HrKvPQNtM21I0w5uJaEYXCWdoWeLaWA2LNglHxBOL7crP0042Tub8l6xgrPS
-	 UdILaqOozO+m4aXDXuohRvItboIyjA+1ePi54x2Lh+Onl7DYx/e4fb0k/SD+EQCc82
-	 pxv+Nr5D/rSCjS5N60g1TXFrOM89lTf07z+TZRVM=
+	b=tgzlaUn+5dUfB81rvlwsJhyZMo8CMrrPzykh0lVXjYijnd7pObJVU+nn6QhYULCwv
+	 sU3j5A+rvXsnqQM++2Dx7wOw2iiuS6P4Bbfh92fhxpVej0kTZq4FWB8HXS2EJ4iZCb
+	 9Urngimni5ZGaexx2dOcPE7q4WpzROeWG5U/96oE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfKKSlQ (ORCPT
+        id S1729376AbfKKSlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:41:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60468 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbfKKSlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:41:13 -0500
+        id S1729292AbfKKSlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D24D21E6F;
-        Mon, 11 Nov 2019 18:41:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1296F21E6F;
+        Mon, 11 Nov 2019 18:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497672;
-        bh=2Z0kF615/8pP7GAFhU4mwiF3q5g8Einkwiw0LYuwll8=;
+        s=default; t=1573497676;
+        bh=6VIKjkADuQVWzy7sSUCb36dA36xQEKAE3RYlBg5BnCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rwF2SMVwLVCh2MC8e4Vljuam5D9rrjW2WFPfnttWoGmKaqFv3j6S5wZdpYXzVXRc1
-         rmWxFSY2TGg7ZCYaM9Qicb86wEbTv9yMWLbn8zv4Qry5pVK3GnK6EaBAWDdT+7NokE
-         Quv3Kf96TGFM6dQs1wy81FfTsPnzsXoRe4mjLe+c=
+        b=kt9oUWPAJJAjQeePrJJ3lOPXwT80z2v0OVJgKrexL9k+kmweT9JE4MNA36aCEF+QG
+         zR1vKDMIV/0Zg6r0aEESvLiVkIZ9AWYl6AEbM1InvHUGK4Yez6gNQ8tfdfYSlqe1h7
+         HHVppEF93HAGM5zdOmzKLU3xxRF0+PzItE2VALc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4.19 023/125] dump_stack: avoid the livelock of the dump_lock
-Date:   Mon, 11 Nov 2019 19:27:42 +0100
-Message-Id: <20191111181443.570829224@linuxfoundation.org>
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.19 024/125] tools: gpio: Use !building_out_of_srctree to determine srctree
+Date:   Mon, 11 Nov 2019 19:27:43 +0100
+Message-Id: <20191111181443.791947996@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -60,47 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-commit 5cbf2fff3bba8d3c6a4d47c1754de1cf57e2b01f upstream.
+commit 4a6a6f5c4aeedb72db871d60bfcca89835f317aa upstream.
 
-In the current code, we use the atomic_cmpxchg() to serialize the output
-of the dump_stack(), but this implementation suffers the thundering herd
-problem.  We have observed such kind of livelock on a Marvell cn96xx
-board(24 cpus) when heavily using the dump_stack() in a kprobe handler.
-Actually we can let the competitors to wait for the releasing of the
-lock before jumping to atomic_cmpxchg().  This will definitely mitigate
-the thundering herd problem.  Thanks Linus for the suggestion.
+make TARGETS=gpio kselftest fails with:
 
-[akpm@linux-foundation.org: fix comment]
-Link: http://lkml.kernel.org/r/20191030031637.6025-1-haokexin@gmail.com
-Fixes: b58d977432c8 ("dump_stack: serialize the output from dump_stack()")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Makefile:23: tools/build/Makefile.include: No such file or directory
+
+When the gpio tool make is invoked from tools Makefile, srctree is
+cleared and the current logic check for srctree equals to empty
+string to determine srctree location from CURDIR.
+
+When the build in invoked from selftests/gpio Makefile, the srctree
+is set to "." and the same logic used for srctree equals to empty is
+needed to determine srctree.
+
+Check building_out_of_srctree undefined as the condition for both
+cases to fix "make TARGETS=gpio kselftest" build failure.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/dump_stack.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/gpio/Makefile |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/lib/dump_stack.c
-+++ b/lib/dump_stack.c
-@@ -106,7 +106,12 @@ retry:
- 		was_locked = 1;
- 	} else {
- 		local_irq_restore(flags);
--		cpu_relax();
-+		/*
-+		 * Wait for the lock to release before jumping to
-+		 * atomic_cmpxchg() in order to mitigate the thundering herd
-+		 * problem.
-+		 */
-+		do { cpu_relax(); } while (atomic_read(&dump_lock) != -1);
- 		goto retry;
- 	}
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -3,7 +3,11 @@ include ../scripts/Makefile.include
  
+ bindir ?= /usr/bin
+ 
+-ifeq ($(srctree),)
++# This will work when gpio is built in tools env. where srctree
++# isn't set and when invoked from selftests build, where srctree
++# is set to ".". building_out_of_srctree is undefined for in srctree
++# builds
++ifndef building_out_of_srctree
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ endif
 
 
