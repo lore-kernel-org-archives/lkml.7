@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50669C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F63C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19FE8214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D3320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497402;
-	bh=hMRhwn6a2PNFdU9J61hyqIu9H40kpYXBCYyEwjl7EGM=;
+	s=default; t=1573497405;
+	bh=kqrre1d3W11yV89tV5DshjnaxHxpClQdBbtQMe9XbfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YNDOdAEZ0rtRonsRE7aqyq2US90tEkrvMCf3P7hu0FGIGh+PEkIdSjvcQJOb+YCPX
-	 5VvuGPAK2/YcGihWYoEj7DujcJ6o5RvFXfdkvdndTM5+EfAdgsNM8sWZk+axUqesA2
-	 eryfRUOj/qX0mWCcYgOjoPEUDlx7g/iLHi9QTX/M=
+	b=EwZSf1BzKNNG0d7lQoNcNgjuzWwOiFfKWtz84RpNASE8+R5IVMjAHt3iD3s23NkYF
+	 VZKJubep7UyinCnMDYRcPXgehw5NqocwobdTSZsWODqKFKMmSbBplA+wo3ekqIUvTw
+	 XW/6gDVdtUdTjOVKEQ3T0YU+FurJHhYUvDlyz18s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKKSgl (ORCPT
+        id S1728752AbfKKSgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55032 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727634AbfKKSgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:38 -0500
+        id S1727296AbfKKSgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85BC0214E0;
-        Mon, 11 Nov 2019 18:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A61B220659;
+        Mon, 11 Nov 2019 18:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497398;
-        bh=hMRhwn6a2PNFdU9J61hyqIu9H40kpYXBCYyEwjl7EGM=;
+        s=default; t=1573497401;
+        bh=kqrre1d3W11yV89tV5DshjnaxHxpClQdBbtQMe9XbfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mrJP7NtZez24e3y7OdntrhWfNapbA38kxf621AaQABOnYId3XLqH9/c08AaCJUozk
-         eKXkbwmhiIo6WaIT3RcIVLKLFQPsP++F1o0NSj7l5Ty26lzRGXqvHlSclb2l2alrIR
-         AaV6YHbBLHPl8PIq1eCg6T5a/gJzKrC29uMlZ0YQ=
+        b=ou2sRvZSbRgTSRjHlO6SEv1nHk3DfgQf8r4LM7K7TPrfnubNli3LXZhPDf41EsvrF
+         lDUJNq4Wu9SNFqwRwhILuU6m/XGDmOoncmnnxxJDqKw6W6wj/Y7xKL5Mh55jZ3g2+R
+         3oin9CBnP1kuSvEENoDehKdnehqUBCq5RsJsdLlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 004/105] net: ethernet: octeon_mgmt: Account for second possible VLAN header
-Date:   Mon, 11 Nov 2019 19:27:34 +0100
-Message-Id: <20191111181423.465740837@linuxfoundation.org>
+Subject: [PATCH 4.14 005/105] net: fix data-race in neigh_event_send()
+Date:   Mon, 11 Nov 2019 19:27:35 +0100
+Message-Id: <20191111181424.282111152@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,31 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e4dd5608033efe7b6030cde359bfdbaeb73bc22d ]
+[ Upstream commit 1b53d64435d56902fc234ff2507142d971a09687 ]
 
-Octeon's input ring-buffer entry has 14 bits-wide size field, so to account
-for second possible VLAN header max_mtu must be further reduced.
+KCSAN reported the following data-race [1]
 
-Fixes: 109cc16526c6d ("ethernet/cavium: use core min/max MTU checking")
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+The fix will also prevent the compiler from optimizing out
+the condition.
+
+[1]
+
+BUG: KCSAN: data-race in neigh_resolve_output / neigh_resolve_output
+
+write to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 1:
+ neigh_event_send include/net/neighbour.h:443 [inline]
+ neigh_resolve_output+0x78/0x480 net/core/neighbour.c:1474
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
+ __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+ __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
+ ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
+ __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:237
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+ tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
+ __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
+ tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
+ tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:618
+
+read to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 0:
+ neigh_event_send include/net/neighbour.h:442 [inline]
+ neigh_resolve_output+0x57/0x480 net/core/neighbour.c:1474
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
+ __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+ __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
+ ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
+ __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:237
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+ tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
+ __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
+ tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
+ tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/octeon/octeon_mgmt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/neighbour.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-+++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-@@ -1497,7 +1497,7 @@ static int octeon_mgmt_probe(struct plat
- 	netdev->ethtool_ops = &octeon_mgmt_ethtool_ops;
- 
- 	netdev->min_mtu = 64 - OCTEON_MGMT_RX_HEADROOM;
--	netdev->max_mtu = 16383 - OCTEON_MGMT_RX_HEADROOM;
-+	netdev->max_mtu = 16383 - OCTEON_MGMT_RX_HEADROOM - VLAN_HLEN;
- 
- 	mac = of_get_mac_address(pdev->dev.of_node);
- 
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -429,8 +429,8 @@ static inline int neigh_event_send(struc
+ {
+ 	unsigned long now = jiffies;
+ 	
+-	if (neigh->used != now)
+-		neigh->used = now;
++	if (READ_ONCE(neigh->used) != now)
++		WRITE_ONCE(neigh->used, now);
+ 	if (!(neigh->nud_state&(NUD_CONNECTED|NUD_DELAY|NUD_PROBE)))
+ 		return __neigh_event_send(neigh, skb);
+ 	return 0;
 
 
