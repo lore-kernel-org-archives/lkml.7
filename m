@@ -2,122 +2,196 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E3FC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F82FC17445
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8052D214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E82E21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfKKLuP (ORCPT
+        id S1726924AbfKKLxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:50:15 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:32900 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726810AbfKKLuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:50:15 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CE4F7436E77B1BC29BE4;
-        Mon, 11 Nov 2019 19:50:11 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 11 Nov 2019
- 19:50:06 +0800
-Date:   Mon, 11 Nov 2019 11:49:55 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        <gwendal@chromium.org>, <egranata@chromium.org>,
-        <kernel@collabora.com>, Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        "Enric Balletbo i Serra" <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        <linux-iio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] counter: cros_ec: Add synchronization sensor
-Message-ID: <20191111114955.00001031@huawei.com>
-In-Reply-To: <20191110151408.GB3984@icarus>
-References: <cover.1566563833.git.fabien.lahoudere@collabora.com>
-        <d985a8a811996148e8cda78b9fe47bb87b884b56.1566563833.git.fabien.lahoudere@collabora.com>
-        <20190826095612.7455cb05@archlinux>
-        <8abbe9360938ab851d16c2c1494ba56034775823.camel@collabora.com>
-        <6b50bdff184e6af664b7a61e0a8a2cddc5718f0a.camel@collabora.com>
-        <20191110151408.GB3984@icarus>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 Nov 2019 06:53:04 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:14190 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKLxE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:53:04 -0500
+Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 11 Nov
+ 2019 19:53:21 +0800
+Subject: Re: [PATCH v4 3/4] soc: amlogic: Add support for Secure power domains
+ controller
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
+ <1572868028-73076-4-git-send-email-jianxin.pan@amlogic.com>
+ <7hmud4stfo.fsf@baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <57b9c706-c341-c7cf-698a-66335b34442b@amlogic.com>
+Date:   Mon, 11 Nov 2019 19:53:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <7hmud4stfo.fsf@baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.18.29.227]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 Nov 2019 10:14:08 -0500
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+Hi Kevin,
 
-> On Tue, Sep 24, 2019 at 04:20:51PM +0200, Fabien Lahoudere wrote:
-> > Hi all,
-> > 
-> > After some discussions and investigation, the timestamp is very
-> > important for that sync driver.
-> > Google team uses that timestamp to compare with gyroscope timestamp.
-> > 
-> > So the important data is timestamp and counter value is useless.
-> > Just the event of counter increment is important to get a timestamp.
-> > 
-> > In that case, my idea was to just use an IIO driver with a single
-> > channel with IIO_TIMESTAMP. We discuss this here and it seems
-> > controversial.
-> > 
-> > So my question to Jonathan is if we have a timestamp coming from the EC
-> > itself, can we consider this timestamp as a good IIO driver?
-> > 
-> > Any other idea is welcome, however Google team would like to manage
-> > only IIO drivers if possible.
-> > 
-> > Thanks  
+Thanks for the review, please see the comments below:
+
+2019/11/10 4:09, Kevin Hilman wrote:
+> Hi Jianxin,
 > 
-> Jonathan,
+> Jianxin Pan <jianxin.pan@amlogic.com> writes:
 > 
-> Should the the timestamp from the EC be introduced as an IIO driver
-> using IIO_TIMESTAMP?
-
-It is is a rather odd driver but I suppose it would be fine with lots
-of clear docs on why it is how it is...
-
+>> Add support for the Amlogic Secure Power controller. In A1/C1 series, power
+>> control registers are in secure domain, and should be accessed by smc.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 > 
-> Since there is no corresponding EC Counter driver in the baseline right
-> now we don't have a conflict yet. If the EC timestamp is introduced as
-> an IIO driver then we should make any future EC Counter driver mutually
-> exclusive with the IIO driver in order to prevent any memory space
-> conflict. At that point we may deprecate the IIO driver and move the
-> timestamp functionality to the corresponding Counter driver.
-
-That route does become somewhat of a mess so I suspect we'd have to have
-a single driver supporting both userspace interfaces.  If you are happy
-that we'd be adding a bit of legacy to support for ever then we can go
-that way.
-
+> This driver is looking pretty good.  A few more minor comments below.
 > 
-> That's assuming someone is interested in the Count component enough to
-> implement an EC Counter driver; otherwise, the IIO driver will serve
-> just fine if timestamp is the only data desired from this device.
+> [...]
 > 
-> William Breathitt Gray
-
+>> +static bool pwrc_secure_is_off(struct meson_secure_pwrc_domain *pwrc_domain)
+>> +{
+>> +	int sts = 1;
+> 
+> What does 'sts' mean?  status?  or something else?  Please use a more
+> descriptive name.
+> 
+>> +	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_GET, &sts,
+>> +			  pwrc_domain->index, 0, 0, 0, 0) < 0)
+>> +		pr_err("failed to get power domain status\n");
+> 
+> Does any bit in this register mean the power domain is off?  I think it
+> would be better (and more future proof) if you checked the specific bit
+> (or mask)
+> 
+sts=1 means, the domain is powered off. I can rename it to is_off in the next version.
+now, only bit[0] is used in BL31, so I can use sts directly instead of !!sts.
+>> +	return !!sts;
+> 
+> and then:
+> 
+>     return sts & bitmask;
+>     
+>> +}
+>> +
+>> +static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
+>> +{
+>> +	int sts = 0;
+> 
+> Like above, what does sts mean?
+> 
+>> +	struct meson_secure_pwrc_domain *pwrc_domain =
+>> +		container_of(domain, struct meson_secure_pwrc_domain, base);
+>> +
+>> +	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_SET, NULL,
+>> +			  pwrc_domain->index, PWRC_OFF, 0, 0, 0) < 0) {
+>> +		pr_err("failed to set power domain off\n");
+>> +		sts = -EINVAL;
+>> +	}
+>> +
+>> +	return sts;
+> 
+> It looks to me like sts is only used as a return code, so maybe call it
+> ret for clarity?  or rename it to something more descriptive.
+> 
+sts here indicates if smc call is failed (such as due to inlvaid command id). I can rename it to ret in the next version.
+>> +}
+>> +
+>> +static int meson_secure_pwrc_on(struct generic_pm_domain *domain)
+>> +{
+>> +	int sts = 0;
+>> +	struct meson_secure_pwrc_domain *pwrc_domain =
+>> +		container_of(domain, struct meson_secure_pwrc_domain, base);
+>> +
+>> +	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_SET, NULL,
+>> +			  pwrc_domain->index, PWRC_ON, 0, 0, 0) < 0) {
+>> +		pr_err("failed to set power domain on\n");
+>> +		sts = -EINVAL;
+>> +	}
+>> +
+>> +	return sts;
+> 
+> same comment as above.
+> 
+OK, I will fix it.
+>> +}
+>> +
+>> +#define SEC_PD(__name, __flag)			\
+>> +[PWRC_##__name##_ID] =				\
+>> +{						\
+>> +	.name = #__name,			\
+>> +	.index = PWRC_##__name##_ID,		\
+>> +	.is_off = pwrc_secure_is_off,	\
+>> +	.flags = __flag,			\
+>> +}
+>> +
+>> +static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
+>> +	SEC_PD(DSPA,	0),
+>> +	SEC_PD(DSPB,	0),
+>> +	/* UART should keep working in ATF after suspend and before resume */
+>> +	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
+>> +	/* DMC is for DDR PHY ana/dig and DMC, and should be always on */
+>> +	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
+>> +	SEC_PD(I2C,	0),
+>> +	SEC_PD(PSRAM,	0),
+>> +	SEC_PD(ACODEC,	0),
+>> +	SEC_PD(AUDIO,	0),
+>> +	SEC_PD(OTP,	0),
+>> +	SEC_PD(DMA,	0),
+>> +	SEC_PD(SD_EMMC,	0),
+>> +	SEC_PD(RAMA,	0),
+>> +	/* SRAMB is used as AFT runtime memory, and should be always on */
+> 
+> AFT?  I assume you mean ATF?
+> 
+Yes, I will fix it, thank  you.
+>> +	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
+>> +	SEC_PD(IR,	0),
+>> +	SEC_PD(SPICC,	0),
+>> +	SEC_PD(SPIFC,	0),
+>> +	SEC_PD(USB,	0),
+>> +	/* NIC is for NIC400, and should be always on */
+> 
+> Why?
+> 
+NIC domain is for ARM CoreLink NIC-400 Network Interconnect, and should be always on since bootloader.
+>> +	SEC_PD(NIC,	GENPD_FLAG_ALWAYS_ON),
+>> +	SEC_PD(PDMIN,	0),
+>> +	SEC_PD(RSA,	0),
+>> +};
+> 
+> [...]
+> 
+> Kevin
+> 
+> .
+> 
 
