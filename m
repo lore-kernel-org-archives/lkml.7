@@ -2,96 +2,126 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2657C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EFFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B50206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:08:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJIYehn2"
+	by mail.kernel.org (Postfix) with ESMTP id 9EBC2206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfKKUH7 (ORCPT
+        id S1727428AbfKKUIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:07:59 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35492 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKUH7 (ORCPT
+        Mon, 11 Nov 2019 15:08:05 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44789 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKUIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:07:59 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n16so12648207oig.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 12:07:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nwqx7QWQGsC3I4CJNnbzWwRJdYPwJji/UODQxE0sPQU=;
-        b=tJIYehn2kw6unw0OwdiFgOkyUDNrINJx43lzHBVIhcCikfiewRFeH0wz19EHFmCPqi
-         iOq5Xm9cCQrN4riVXpzA2ONUrp4iIIuzmn1qxbj1rlSE9fP4rLhPkw1QXUDgfDlDP822
-         sS/DhORtaU51kFXKb/e2Bp3iMp3mhdxKiH6RxfXhvTrD9GYS8YVJ/Qf9+cxS1bJM8KNh
-         vM5ZdFjwBhduSApuEABZyV8IPIWZo2mzYp0dOTTjScZzGQ1Y8CasCIIf30c0MURDOl8b
-         1CEOlCMTgqRP5/L+QKc654nXmPyu5UDlgUOYuJmo4QpkwS8OjPb1rlkarO6Kz/YWW0JG
-         pFdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nwqx7QWQGsC3I4CJNnbzWwRJdYPwJji/UODQxE0sPQU=;
-        b=sOMxwVHpoqiag+YOtac3LX2FknryQ8aAOmYM5zEkGVrBVTSVgSmnwBfRTMiKvKE/ly
-         4CDpB9ExM6FGDmrG65/dh3a3G3gon1CeiQnZ4MfqtjRuowJ/OM8dsVnP/IW7xHQaOTCb
-         5s03Q2bxSviw46ciKaIWJuQf3EZYARXa9fnBCcb/sIeJaD8G+yaZQ2+cTkYWSFzjIGgj
-         o5rzvQ1AcfzibvQq1SS6N2AA0jEinGYBLLkh/t9v6bFtHVhQjNS3RbW8hhUqwxpTl+yE
-         3NPdDwc1w+q9VJpqGwDabFM7qB8PMzBcnvfW5EfFgH3sIOeAvfRUD8vrm19svMJKPXyj
-         sxcg==
-X-Gm-Message-State: APjAAAXczWv7RvAWboj0Jqboww+sSG4FDs2i5n917pMkgyVWSDQQLCxj
-        5Y001DgWtPyz28z2mD/79XY=
-X-Google-Smtp-Source: APXvYqxFp3PdUYMAB+G6kG11oigcGErslKKXE/y6y8IuzAxeYHF1sdk6mMMKXXdx4wFiItpFcnGCyw==
-X-Received: by 2002:aca:5145:: with SMTP id f66mr649745oib.0.1573502877903;
-        Mon, 11 Nov 2019 12:07:57 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id e193sm5295951oib.53.2019.11.11.12.07.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Nov 2019 12:07:57 -0800 (PST)
-Date:   Mon, 11 Nov 2019 13:07:55 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Dmitry Golovin <dima@golovin.in>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Matthias Maennich <maennich@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] ARM: kbuild: use correct nm executable
-Message-ID: <20191111200755.GA2881@ubuntu-m2-xlarge-x86>
-References: <20191110153043.111710-1-dima@golovin.in>
+        Mon, 11 Nov 2019 15:08:04 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iUFyi-0005JH-Jj; Mon, 11 Nov 2019 21:08:00 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iUFyi-00018m-3O; Mon, 11 Nov 2019 21:08:00 +0100
+Date:   Mon, 11 Nov 2019 21:08:00 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Neil Brown <neilb@suse.de>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH 2/4] pwm: omap-dmtimer: simplify error handling
+Message-ID: <20191111200800.7njfdz7w3offt6we@pengutronix.de>
+References: <20191111071952.6pbswbboqreen6im@pengutronix.de>
+ <20191111090357.13903-1-u.kleine-koenig@pengutronix.de>
+ <20191111090357.13903-2-u.kleine-koenig@pengutronix.de>
+ <a7a4656d-98b4-6bbb-e389-fe7028a38f97@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191110153043.111710-1-dima@golovin.in>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a7a4656d-98b4-6bbb-e389-fe7028a38f97@web.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 05:30:39PM +0200, Dmitry Golovin wrote:
-> Since $(NM) variable can be easily overridden for the whole build, it's
-> better to use it instead of $(CROSS_COMPILE)nm. The use of $(CROSS_COMPILE)
-> prefixed variables where their calculated equivalents can be used is
-> incorrect. This fixes issues with builds where $(NM) is set to llvm-nm.
+On Mon, Nov 11, 2019 at 02:32:30PM +0100, Markus Elfring wrote:
+> > Implementation note: The put: label was never reached without a goto and
+> > ret being unequal to 0, so the removed return statement is fine.
 > 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/766
-> Signed-off-by: Dmitry Golovin <dima@golovin.in>
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Matthias Maennich <maennich@google.com>
+> This can look fine (in principle) because the label was repositioned here.
+> Do you really want to call the function “of_node_put” at two places now?
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Yes, this is in my eyes more sensible. Either you have the expected path
+and the error path interwinded, or you have to duplicate some cleanup.
+IMHO the latter variant is the one that is easier to understand and the
+one where it's less likely to oversee a needed cleanup.
+
+> > +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> …
+> >  	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
+> >  	if (!omap) {
+> > -		pdata->free(dm_timer);
+> > -		return -ENOMEM;
+> > +		ret = -ENOMEM;
+> > +		goto err_alloc_omap;
+> >  	}
+> …
+> 
+> I suggest to reconsider your label name selection according to
+> the Linux coding style.
+
+Documentation/process/coding-style.rst states: "Choose label names which
+say what the goto does or why the goto exists." So I'd say my names are
+perfectly fine.
+
+> > @@ -339,13 +334,28 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+> …
+> > +err_pwmchip_add:
+> > +
+> > +	/*
+> > +	 * *omap is allocated using devm_kzalloc,
+> > +	 * so no free necessary here
+> > +	 */
+> > +err_alloc_omap:
+> > +
+> > +	pdata->free(dm_timer);
+> 
+> Would the use of the label “free_dm_timer” be more appropriate?
+
+Either you name your labels after what the code at the label does (then
+"free_dm_timer" is good) or you name it after why you are here (and then
+err_alloc_omap is fine). I prefer the latter style and then the label
+name always has to correspond to the action just above it (if any).
+That's why I grouped the "err_alloc_omap" label to a comment saying that
+*omap doesn't need to be freed.
+
+> > +put:
+> > +	of_node_put(timer);
+> …
+> 
+> Can the label “put_node” be nicer?
+
+I agree that the label name is bad. I kept the name here and after the
+3rd patch the label names are consistent. 
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
