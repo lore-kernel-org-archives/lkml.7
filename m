@@ -2,121 +2,153 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33987C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C98C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C3F2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D7020659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dUIzRZQP"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="rcaBkwKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfKKCEk (ORCPT
+        id S1726780AbfKKCJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 21:04:40 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54474 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfKKCEk (ORCPT
+        Sun, 10 Nov 2019 21:09:07 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45799 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKKCJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 21:04:40 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z26so11609660wmi.4
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 18:04:38 -0800 (PST)
+        Sun, 10 Nov 2019 21:09:06 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y24so7125124plr.12
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 18:09:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hoNRr8vMAuZwu+YxnjVHz8DQL1f8vFbQxE/Xx5h1Uag=;
-        b=dUIzRZQPn/lsKAoYuwHMdjBxwYwlKCfZbPdvnE4IpNnhKzkriar+VAq1Cc9xTIzWdt
-         HB2Sr4iA0F3xg9/qMg7xZlnfZSaBiAszS1bLOReMnGIFeKzbQdab+nDkP6yZFPgW4rEI
-         IIipkRJi3XMWnuDGFEV7tN8RD2wtZmehkqtmk=
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=mLqAkz70hewUh0ervFoHBTqLrYQB2WZOJWKpk5nNfrg=;
+        b=rcaBkwKYAToxzArAvww28gCqGZfidxO3QYt/jFAvGWn9MhImb4AYSzfp4Lir8kmOsV
+         BYduc0ZgPbJ3cKOHemco5N9ZqWrvgiQPNu0T/hT4Ya8e+EbGFGfiI2u0JSKmaS47Rz33
+         Dl8JSsg3Cv0Mys0jSJEWhqHzZ5aW3RN0AsN8HZTOdIr3hHN4xUBeQ3X+i4pIbrT7uu4N
+         NaZErLNWNhd7VqZBhpyS2KAf80A4i26UMsd4eEIOEE8Vk7PGhNVYJaFF7YgkF913Bvwe
+         ar+5Q71+2B2FDPvkhVp9O7kNw97mBRzQfVBPDV5/r4jJLdroZoOfXHbS2hYEoX7fNOgz
+         nqPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hoNRr8vMAuZwu+YxnjVHz8DQL1f8vFbQxE/Xx5h1Uag=;
-        b=ZBIT/bntAOsqu9IF21r+Z0HJo53voBxjQtqr7y+8GoxxUbTvhIEfH8kMWjPGAk7iHO
-         l+JaB7WpsReJRSUsGhrhtoelIIOu7ibcwvcB44kJQBki9MnnJEy7Hp0L7BRtMRkEOkVZ
-         dUJlIk8W+4xe1JGvQHfJouOK78sMwxnq/NRoeWV4Wiz8vngL0pA65Pfu5yA8kji7jisL
-         rZk4tOeof4ewwg2CIbs9XvNjXqmm21Z+U5AxiO9wO9+sutSjjoN2knVO10UvR4B4NlnE
-         9ZyLQ3IM1tQNRcP6QlzpxNs1xfL+kA/I0Lm6SyWienpDYe798UP/K9aktriRxCCMdA+d
-         5JGg==
-X-Gm-Message-State: APjAAAWTML5bXoYxaDV3HZ0w3SWyPEq1L6Ih7ByKkfgPLccYnt2BaozN
-        XY6WCD1PHHGOKy6ZDHkQT5fXzTMGyf+586wXLBVHDgEc
-X-Google-Smtp-Source: APXvYqz4nE5Jey3AtmxapRoFeQip25ILCpYY1Y44sryEjEoj5y9aOXdidpoAfaXB7e4B2t2fTyDBijMmi+ugy+XBkBg=
-X-Received: by 2002:a1c:e157:: with SMTP id y84mr17186005wmg.59.1573437877833;
- Sun, 10 Nov 2019 18:04:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20190923162940.199580-1-yuhsuan@chromium.org>
-In-Reply-To: <20190923162940.199580-1-yuhsuan@chromium.org>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Mon, 11 Nov 2019 10:04:26 +0800
-Message-ID: <CAGvk5PqdnJ61XZMw3e4ja8YZ5_LAwJP3n=fYyKHQRwv_A+Kdwg@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add dmic
- format constraint
-To:     linux-kernel@vger.kernel.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mLqAkz70hewUh0ervFoHBTqLrYQB2WZOJWKpk5nNfrg=;
+        b=inlo6kuBBtHRTGmUDiyT48nlIoZPJ0y/+mWsU3c6S0EYCx8Ux5PsMibMtOFQKTKoCF
+         AP2y/YDW+Btp8Ua/4lcSl6FIo3j6m3BOSuH2HRTlWtAbH2+OHmT36D3EYrbOcVLN5fin
+         ShXlDC1ydmj3/eFKZNATAF4aiG4RizCuv0y7WDsNpmntKSN+PokCi8tDRug/X/bTsyuQ
+         iWKavzw5dyB9Om7Qk3hTqKN02LVJyomRLWuk9/Se5Los5JPdAypZ7+9RDzBYI1x5XelM
+         /ECQpFPzJPgQGEk3MpPMjU63DkSTcS2gA1DgV5haLTpckmCxOxjhSc1voqnCgmRmiykE
+         iHxg==
+X-Gm-Message-State: APjAAAUM24vfypDppWGVdxXqrjpVPmDfBDt29zYcbKecFhIzbGrk7lJ0
+        YWcu0IircUBQbbuI1h4xe+arMw==
+X-Google-Smtp-Source: APXvYqy1Gbi2C9sE9lGCIgrduKYGTVAUAbVWlNnfR0ZEknVJKpcThAN3ZMmYQAyqjwKeTHEmlIzVBQ==
+X-Received: by 2002:a17:902:8345:: with SMTP id z5mr14689283pln.113.1573438145806;
+        Sun, 10 Nov 2019 18:09:05 -0800 (PST)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id 83sm12166618pgh.86.2019.11.10.18.09.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Nov 2019 18:09:04 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH] net: bnxt_en: Fix array overrun in bnxt_fill_l2_rewrite_fields()
+Date:   Sun, 10 Nov 2019 18:08:55 -0800
+Message-Id: <20191111020855.20775-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+This is caused by what seems to be a fragile typing approach by
+the Broadcom firmware/driver:
 
-Does anyone have time to review this patch? It should be easy to
-review because it just a format constraint.
+/* FW expects smac to be in u16 array format */
 
-Thanks,
-Yu-Hsuan
+So the driver uses eth_addr and eth_addr_mask as u16[6] instead of u8[12],
+so the math in bnxt_fill_l2_rewrite_fields does a [6] deref of the u16
+pointer, it goes out of bounds on the array.
 
-Yu-Hsuan Hsu <yuhsuan@chromium.org> =E6=96=BC 2019=E5=B9=B49=E6=9C=8824=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8812:29=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> On KBL platform, the microphone is attached to external codec(rt5514)
-> instead of PCH. However, TDM slot between PCH and codec is 16 bits only.
-> In order to avoid setting wrong format, we should add a constraint to
-> force to use 16 bits format forever.
->
-> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> ---
-> I have updated the commit message. Please see whether it is clear
-> enough. Thanks.
->  sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/=
-soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> index 74dda8784f1a01..67b276a65a8d2d 100644
-> --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> @@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct snd_pcm_subst=
-ream *substream)
->         snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNEL=
-S,
->                         dmic_constraints);
->
-> +       runtime->hw.formats =3D SNDRV_PCM_FMTBIT_S16_LE;
-> +       snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
-> +
->         return snd_pcm_hw_constraint_list(substream->runtime, 0,
->                         SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
->  }
-> --
-> 2.23.0.351.gc4317032e6-goog
->
+Just a few lines below, they use ETH_ALEN/2, so this must have been
+overlooked. I'm surprised original developers didn't notice the compiler
+warnings?!
+
+Fixes: 90f906243bf6 ("bnxt_en: Add support for L2 rewrite")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+index 174412a55e53c..cde2b81f6fe54 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+@@ -149,29 +149,32 @@ static void bnxt_set_l2_key_mask(u32 part_key, u32 part_mask,
+ 
+ static int
+ bnxt_fill_l2_rewrite_fields(struct bnxt_tc_actions *actions,
+-			    u16 *eth_addr, u16 *eth_addr_mask)
++			    u8 *eth_addr, u8 *eth_addr_mask)
+ {
+ 	u16 *p;
++	u8 *am;
+ 	int j;
+ 
+ 	if (unlikely(bnxt_eth_addr_key_mask_invalid(eth_addr, eth_addr_mask)))
+ 		return -EINVAL;
+ 
+-	if (!is_wildcard(&eth_addr_mask[0], ETH_ALEN)) {
+-		if (!is_exactmatch(&eth_addr_mask[0], ETH_ALEN))
++	am = eth_addr_mask;
++	if (!is_wildcard(am, ETH_ALEN)) {
++		if (!is_exactmatch(am, ETH_ALEN))
+ 			return -EINVAL;
+ 		/* FW expects dmac to be in u16 array format */
+-		p = eth_addr;
+-		for (j = 0; j < 3; j++)
++		p = (u16 *)am;
++		for (j = 0; j < ETH_ALEN / 2; j++)
+ 			actions->l2_rewrite_dmac[j] = cpu_to_be16(*(p + j));
+ 	}
+ 
+-	if (!is_wildcard(&eth_addr_mask[ETH_ALEN], ETH_ALEN)) {
+-		if (!is_exactmatch(&eth_addr_mask[ETH_ALEN], ETH_ALEN))
++	am = eth_addr_mask + ETH_ALEN;
++	if (!is_wildcard(am, ETH_ALEN)) {
++		if (!is_exactmatch(am, ETH_ALEN))
+ 			return -EINVAL;
+ 		/* FW expects smac to be in u16 array format */
+-		p = &eth_addr[ETH_ALEN / 2];
+-		for (j = 0; j < 3; j++)
++		p = (u16 *)am;
++		for (j = 0; j < ETH_ALEN / 2; j++)
+ 			actions->l2_rewrite_smac[j] = cpu_to_be16(*(p + j));
+ 	}
+ 
+@@ -285,12 +288,12 @@ static int bnxt_tc_parse_actions(struct bnxt *bp,
+ 	 * smac (6 bytes) if rewrite of both is specified, otherwise either
+ 	 * dmac or smac
+ 	 */
+-	u16 eth_addr_mask[ETH_ALEN] = { 0 };
++	u8 eth_addr_mask[ETH_ALEN * 2] = { 0 };
+ 	/* Used to store the L2 rewrite key for dmac (6 bytes) followed by
+ 	 * smac (6 bytes) if rewrite of both is specified, otherwise either
+ 	 * dmac or smac
+ 	 */
+-	u16 eth_addr[ETH_ALEN] = { 0 };
++	u8 eth_addr[ETH_ALEN * 2] = { 0 };
+ 	struct flow_action_entry *act;
+ 	int i, rc;
+ 
+-- 
+2.11.0
+
