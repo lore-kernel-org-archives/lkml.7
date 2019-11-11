@@ -2,57 +2,60 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87509C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC13C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6169121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6C72196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498053;
-	bh=pc99F0Jd2Vg9JY50ObVWgymOB0Sgeg2O/tcimhadOd8=;
+	s=default; t=1573498060;
+	bh=lcT+y6YLGSdRUPvEk33UfHvQZkeWTRlc2Ig5xmmjAdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Trx6lI8JDMLjKUxqZEW6jEw1k6yJ4m3t0Ng87smNHcoiyJjP6hqFvFfuJ+exKlX3s
-	 lgDT7RVB/LNw7WD6TFZkDzVvPjMlgrGI+r9ewHpBrx6bPQXGiADxLKxsKp60A3+eJX
-	 C6NexQkscmazIDSNXocDzjEERzj7xZTJgqU5aGcE=
+	b=ymDzb6zKvfFNXxj8RAGM4dItKIXUOIQvN7Xm9ts55mQN70anvZNcW/IuTomcvBmuK
+	 sAifDtAFDkl7Mmpg4Hebm5Wqg822bgKXuRZFtvzIGlNmhUXVYnuNrSbJD8/ggQ5XNY
+	 1803C7HLREMFsfa121lnoRz/F1rmc/B3T0v4dd5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfKKSrc (ORCPT
+        id S1729336AbfKKSri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:47:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40280 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:47:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730076AbfKKSr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:47:29 -0500
+        id S1730123AbfKKSrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:47:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 307A7204FD;
-        Mon, 11 Nov 2019 18:47:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41A0E20674;
+        Mon, 11 Nov 2019 18:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498048;
-        bh=pc99F0Jd2Vg9JY50ObVWgymOB0Sgeg2O/tcimhadOd8=;
+        s=default; t=1573498052;
+        bh=lcT+y6YLGSdRUPvEk33UfHvQZkeWTRlc2Ig5xmmjAdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1b7GdOUgt84Xm6IfUJ5/wrkKA1zlk2UL2GK4c5GYeyEsYv8EqK2EPqh3+iNHUIOL6
-         GThRALhfujlasq+eda6fyagEvXF+UH1OhVmCDNGZBSX405lTho306chIetr8dgwdtM
-         /Psi4y/v1Lj+PSBRYOKMrQntOvB3xQ3QvFJ6gAko=
+        b=je1r2+lGLsHZ3zekE2tLaCyxbbmIf1H3tz44QGHSAOVtPW8hH3EnNgBCOH9q3k0V3
+         oFT1BWZN24DWYg9KDAjZbuUGhcR7vKrGkJalpfJoTekvPsPpj3bCGDjo87fDut2EgZ
+         tROZ0AYDDwCWk9a+p7gtTXhRlD+VrskiYdXSTI0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/125] pinctrl: cherryview: Fix irq_valid_mask calculation
-Date:   Mon, 11 Nov 2019 19:29:19 +0100
-Message-Id: <20191111181455.764494754@linuxfoundation.org>
+        stable@vger.kernel.org, Aleksei Zakharov <zakharov.a.g@yandex.ru>,
+        Sha Zhang <zhangsha.zhang@huawei.com>,
+        Mahesh Bandewar <maheshb@google.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 001/193] bonding: fix state transition issue in link monitoring
+Date:   Mon, 11 Nov 2019 19:26:23 +0100
+Message-Id: <20191111181459.961740450@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
-References: <20191111181438.945353076@linuxfoundation.org>
+In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
+References: <20191111181459.850623879@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,57 +64,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jay Vosburgh <jay.vosburgh@canonical.com>
 
-[ Upstream commit 63bdef6cd6941917c823b9cc9aa0219d19fcb716 ]
+[ Upstream commit 1899bb325149e481de31a4f32b59ea6f24e176ea ]
 
-Commit 03c4749dd6c7 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux
-GPIO translation") has made the cherryview gpio numbers sparse, to get
-a 1:1 mapping between ACPI pin numbers and gpio numbers in Linux.
+Since de77ecd4ef02 ("bonding: improve link-status update in
+mii-monitoring"), the bonding driver has utilized two separate variables
+to indicate the next link state a particular slave should transition to.
+Each is used to communicate to a different portion of the link state
+change commit logic; one to the bond_miimon_commit function itself, and
+another to the state transition logic.
 
-This has greatly simplified things, but the code setting the
-irq_valid_mask was not updated for this, so the valid mask is still in
-the old "compressed" numbering with the gaps in the pin numbers skipped,
-which is wrong as irq_valid_mask needs to be expressed in gpio numbers.
+	Unfortunately, the two variables can become unsynchronized,
+resulting in incorrect link state transitions within bonding.  This can
+cause slaves to become stuck in an incorrect link state until a
+subsequent carrier state transition.
 
-This results in the following error on devices using pin 24 (0x0018) on
-the north GPIO controller as an ACPI event source:
+	The issue occurs when a special case in bond_slave_netdev_event
+sets slave->link directly to BOND_LINK_FAIL.  On the next pass through
+bond_miimon_inspect after the slave goes carrier up, the BOND_LINK_FAIL
+case will set the proposed next state (link_new_state) to BOND_LINK_UP,
+but the new_link to BOND_LINK_DOWN.  The setting of the final link state
+from new_link comes after that from link_new_state, and so the slave
+will end up incorrectly in _DOWN state.
 
-[    0.422452] cherryview-pinctrl INT33FF:01: Failed to translate GPIO to IRQ
+	Resolve this by combining the two variables into one.
 
-This has been reported (by email) to be happening on a Caterpillar CAT T20
-tablet and I've reproduced this myself on a Medion Akoya e2215t 2-in-1.
-
-This commit uses the pin number instead of the compressed index into
-community->pins to clear the correct bits in irq_valid_mask for GPIOs
-using GPEs for interrupts, fixing these errors and in case of the
-Medion Akoya e2215t also fixing the LID switch not working.
-
-Cc: stable@vger.kernel.org
-Fixes: 03c4749dd6c7 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO translation")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Aleksei Zakharov <zakharov.a.g@yandex.ru>
+Reported-by: Sha Zhang <zhangsha.zhang@huawei.com>
+Cc: Mahesh Bandewar <maheshb@google.com>
+Fixes: de77ecd4ef02 ("bonding: improve link-status update in mii-monitoring")
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pinctrl/intel/pinctrl-cherryview.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c |   44 ++++++++++++++++++++--------------------
+ include/net/bonding.h           |    3 --
+ 2 files changed, 23 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 227646eb817c8..9eab508395814 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1595,7 +1595,7 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
- 		intsel >>= CHV_PADCTRL0_INTSEL_SHIFT;
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2086,8 +2086,7 @@ static int bond_miimon_inspect(struct bo
+ 	ignore_updelay = !rcu_dereference(bond->curr_active_slave);
  
- 		if (need_valid_mask && intsel >= community->nirqs)
--			clear_bit(i, chip->irq.valid_mask);
-+			clear_bit(desc->number, chip->irq.valid_mask);
+ 	bond_for_each_slave_rcu(bond, slave, iter) {
+-		slave->new_link = BOND_LINK_NOCHANGE;
+-		slave->link_new_state = slave->link;
++		bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+ 
+ 		link_state = bond_check_dev_link(bond, slave->dev, 0);
+ 
+@@ -2121,7 +2120,7 @@ static int bond_miimon_inspect(struct bo
+ 			}
+ 
+ 			if (slave->delay <= 0) {
+-				slave->new_link = BOND_LINK_DOWN;
++				bond_propose_link_state(slave, BOND_LINK_DOWN);
+ 				commit++;
+ 				continue;
+ 			}
+@@ -2158,7 +2157,7 @@ static int bond_miimon_inspect(struct bo
+ 				slave->delay = 0;
+ 
+ 			if (slave->delay <= 0) {
+-				slave->new_link = BOND_LINK_UP;
++				bond_propose_link_state(slave, BOND_LINK_UP);
+ 				commit++;
+ 				ignore_updelay = false;
+ 				continue;
+@@ -2196,7 +2195,7 @@ static void bond_miimon_commit(struct bo
+ 	struct slave *slave, *primary;
+ 
+ 	bond_for_each_slave(bond, slave, iter) {
+-		switch (slave->new_link) {
++		switch (slave->link_new_state) {
+ 		case BOND_LINK_NOCHANGE:
+ 			/* For 802.3ad mode, check current slave speed and
+ 			 * duplex again in case its port was disabled after
+@@ -2268,8 +2267,8 @@ static void bond_miimon_commit(struct bo
+ 
+ 		default:
+ 			slave_err(bond->dev, slave->dev, "invalid new link %d on slave\n",
+-				  slave->new_link);
+-			slave->new_link = BOND_LINK_NOCHANGE;
++				  slave->link_new_state);
++			bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+ 
+ 			continue;
+ 		}
+@@ -2677,13 +2676,13 @@ static void bond_loadbalance_arp_mon(str
+ 	bond_for_each_slave_rcu(bond, slave, iter) {
+ 		unsigned long trans_start = dev_trans_start(slave->dev);
+ 
+-		slave->new_link = BOND_LINK_NOCHANGE;
++		bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+ 
+ 		if (slave->link != BOND_LINK_UP) {
+ 			if (bond_time_in_interval(bond, trans_start, 1) &&
+ 			    bond_time_in_interval(bond, slave->last_rx, 1)) {
+ 
+-				slave->new_link = BOND_LINK_UP;
++				bond_propose_link_state(slave, BOND_LINK_UP);
+ 				slave_state_changed = 1;
+ 
+ 				/* primary_slave has no meaning in round-robin
+@@ -2708,7 +2707,7 @@ static void bond_loadbalance_arp_mon(str
+ 			if (!bond_time_in_interval(bond, trans_start, 2) ||
+ 			    !bond_time_in_interval(bond, slave->last_rx, 2)) {
+ 
+-				slave->new_link = BOND_LINK_DOWN;
++				bond_propose_link_state(slave, BOND_LINK_DOWN);
+ 				slave_state_changed = 1;
+ 
+ 				if (slave->link_failure_count < UINT_MAX)
+@@ -2739,8 +2738,8 @@ static void bond_loadbalance_arp_mon(str
+ 			goto re_arm;
+ 
+ 		bond_for_each_slave(bond, slave, iter) {
+-			if (slave->new_link != BOND_LINK_NOCHANGE)
+-				slave->link = slave->new_link;
++			if (slave->link_new_state != BOND_LINK_NOCHANGE)
++				slave->link = slave->link_new_state;
+ 		}
+ 
+ 		if (slave_state_changed) {
+@@ -2763,9 +2762,9 @@ re_arm:
+ }
+ 
+ /* Called to inspect slaves for active-backup mode ARP monitor link state
+- * changes.  Sets new_link in slaves to specify what action should take
+- * place for the slave.  Returns 0 if no changes are found, >0 if changes
+- * to link states must be committed.
++ * changes.  Sets proposed link state in slaves to specify what action
++ * should take place for the slave.  Returns 0 if no changes are found, >0
++ * if changes to link states must be committed.
+  *
+  * Called with rcu_read_lock held.
+  */
+@@ -2777,12 +2776,12 @@ static int bond_ab_arp_inspect(struct bo
+ 	int commit = 0;
+ 
+ 	bond_for_each_slave_rcu(bond, slave, iter) {
+-		slave->new_link = BOND_LINK_NOCHANGE;
++		bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+ 		last_rx = slave_last_rx(bond, slave);
+ 
+ 		if (slave->link != BOND_LINK_UP) {
+ 			if (bond_time_in_interval(bond, last_rx, 1)) {
+-				slave->new_link = BOND_LINK_UP;
++				bond_propose_link_state(slave, BOND_LINK_UP);
+ 				commit++;
+ 			}
+ 			continue;
+@@ -2810,7 +2809,7 @@ static int bond_ab_arp_inspect(struct bo
+ 		if (!bond_is_active_slave(slave) &&
+ 		    !rcu_access_pointer(bond->current_arp_slave) &&
+ 		    !bond_time_in_interval(bond, last_rx, 3)) {
+-			slave->new_link = BOND_LINK_DOWN;
++			bond_propose_link_state(slave, BOND_LINK_DOWN);
+ 			commit++;
+ 		}
+ 
+@@ -2823,7 +2822,7 @@ static int bond_ab_arp_inspect(struct bo
+ 		if (bond_is_active_slave(slave) &&
+ 		    (!bond_time_in_interval(bond, trans_start, 2) ||
+ 		     !bond_time_in_interval(bond, last_rx, 2))) {
+-			slave->new_link = BOND_LINK_DOWN;
++			bond_propose_link_state(slave, BOND_LINK_DOWN);
+ 			commit++;
+ 		}
  	}
+@@ -2843,7 +2842,7 @@ static void bond_ab_arp_commit(struct bo
+ 	struct slave *slave;
  
- 	/*
--- 
-2.20.1
-
+ 	bond_for_each_slave(bond, slave, iter) {
+-		switch (slave->new_link) {
++		switch (slave->link_new_state) {
+ 		case BOND_LINK_NOCHANGE:
+ 			continue;
+ 
+@@ -2893,8 +2892,9 @@ static void bond_ab_arp_commit(struct bo
+ 			continue;
+ 
+ 		default:
+-			slave_err(bond->dev, slave->dev, "impossible: new_link %d on slave\n",
+-				  slave->new_link);
++			slave_err(bond->dev, slave->dev,
++				  "impossible: link_new_state %d on slave\n",
++				  slave->link_new_state);
+ 			continue;
+ 		}
+ 
+--- a/include/net/bonding.h
++++ b/include/net/bonding.h
+@@ -159,7 +159,6 @@ struct slave {
+ 	unsigned long target_last_arp_rx[BOND_MAX_ARP_TARGETS];
+ 	s8     link;		/* one of BOND_LINK_XXXX */
+ 	s8     link_new_state;	/* one of BOND_LINK_XXXX */
+-	s8     new_link;
+ 	u8     backup:1,   /* indicates backup slave. Value corresponds with
+ 			      BOND_STATE_ACTIVE and BOND_STATE_BACKUP */
+ 	       inactive:1, /* indicates inactive slave */
+@@ -549,7 +548,7 @@ static inline void bond_propose_link_sta
+ 
+ static inline void bond_commit_link_state(struct slave *slave, bool notify)
+ {
+-	if (slave->link == slave->link_new_state)
++	if (slave->link_new_state == BOND_LINK_NOCHANGE)
+ 		return;
+ 
+ 	slave->link = slave->link_new_state;
 
 
