@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A03C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2FDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48F221872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7796B21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497201;
-	bh=ffjaODsYTvbGyDYsiW9Bkd7LaAZfNiZXUzp88mmNdBc=;
+	s=default; t=1573497206;
+	bh=KW29bxFCR8ObVquCB47QdEOjTPiY0g2W7TMZB3dGVmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IQJfWbFYl6/7JVkc3FFpCaoen4hGV9f9zRkqADiO0BuEkIppn9jPGPJMoD7TAyOoS
-	 ACjkuNG9XzsrlWGNcukuP0yFPa5tnpe6GfBzlpKXO7lBGmXneIe4jHaIIYNfta4bjS
-	 YqVcYuoXhBw4LKTFIKzVCUGtD95jwff4jH0j+h+g=
+	b=c+wsUwY13bps68WVuDsQvM+Eo8HJvUcB41Owd3yn32IN6ROQkNb26Z7O9rMnifWzY
+	 5yPABkkkjkCJuwOrcCWpSLyLqUFWrZTou1D0Mg4f+ZNlo1Ur7JbV36HpKGEX8jWNj1
+	 EOhrnHCgXP+IxV8JyZgImbSLilUCYAMc8wMZMpoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfKKSdU (ORCPT
+        id S1728150AbfKKSdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:33:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50630 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:33:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbfKKSdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:33:17 -0500
+        id S1728128AbfKKSdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:33:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B736521655;
-        Mon, 11 Nov 2019 18:33:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6611221925;
+        Mon, 11 Nov 2019 18:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497196;
-        bh=ffjaODsYTvbGyDYsiW9Bkd7LaAZfNiZXUzp88mmNdBc=;
+        s=default; t=1573497198;
+        bh=KW29bxFCR8ObVquCB47QdEOjTPiY0g2W7TMZB3dGVmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZuOaGUDvDAD0hJEnvrpC6M5U1qL1gEoedQzQk5KKUxZIzhfKk1fi27TZDmgs4B5lN
-         XM5GO1+/ytYgOEPxtinCGCAfZEPFMgftoXy/yccaARu/yevCwFqfZjQ+V+m4QCADmb
-         +XNfLlQEgleWWTipw/kRoOJiassVUEs4YwAmMA/g=
+        b=uYCc+94PmQmpZERjFe43eAo5AsJmU4b3PREq8pI49dF5tOt7nTWkoQxVLrsTvgXII
+         DWiEpQxEC7JYiHSLzYNdbv8CGqlX6t2NFJgIi1SAk/B0ix2BGKQvDauMOwohWTWTIH
+         GtJ9BdiWIVfSlI/zK6MvcZuSx3Atjgwil4QQ7t64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nobuo Iwata <nobuo.iwata@fujixerox.co.jp>
-Subject: [PATCH 4.9 35/65] usbip: fix possibility of dereference by NULLL pointer in vhci_hcd.c
-Date:   Mon, 11 Nov 2019 19:28:35 +0100
-Message-Id: <20191111181346.989434977@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <garsilva@embeddedor.com>
+Subject: [PATCH 4.9 36/65] drivers: usb: usbip: Add missing break statement to switch
+Date:   Mon, 11 Nov 2019 19:28:36 +0100
+Message-Id: <20191111181347.075259756@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -58,44 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nobuo Iwata <nobuo.iwata@fujixerox.co.jp>
+From: Gustavo A. R. Silva <garsilva@embeddedor.com>
 
-commit d79cda045e3bacb7e754a5324cd3d4ce80708eb1 upstream.
+commit 7c92e5fbf4dac0dd4dd41a0383adc54f16f403e2 upstream.
 
-This patch fixes possibility of dereference by NULLL pointer in "[PATCH
-v5 1/3] usbip: vhci extension: modifications to vhci driver" which has
-been merged to 4.9-rc1. It occurs when a URB with pointer to invalid
-USB/IP device is enqueued in race condition against detach operation.
+Add missing break statement to prevent the code for case
+USB_PORT_FEAT_C_RESET falling through to the default case.
 
-A pointer was passed to vdev_to_vhci() before NULL check.
-In vdev_to_vhci(), there's a dereference by the pointer.
-
-This patch moves vdev_to_vhci() after NULL check of the pointer.
-
-Signed-off-by: Nobuo Iwata <nobuo.iwata@fujixerox.co.jp>
+Addresses-Coverity-ID: 143155
+Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/usbip/vhci_hcd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/usbip/vhci_hcd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/drivers/usb/usbip/vhci_hcd.c
 +++ b/drivers/usb/usbip/vhci_hcd.c
-@@ -465,13 +465,14 @@ static void vhci_tx_urb(struct urb *urb)
- {
- 	struct vhci_device *vdev = get_vdev(urb->dev);
- 	struct vhci_priv *priv;
--	struct vhci_hcd *vhci = vdev_to_vhci(vdev);
-+	struct vhci_hcd *vhci;
- 	unsigned long flags;
- 
- 	if (!vdev) {
- 		pr_err("could not get virtual device");
- 		return;
- 	}
-+	vhci = vdev_to_vhci(vdev);
- 
- 	priv = kzalloc(sizeof(struct vhci_priv), GFP_ATOMIC);
- 	if (!priv) {
+@@ -318,6 +318,7 @@ static int vhci_hub_control(struct usb_h
+ 			default:
+ 				break;
+ 			}
++			break;
+ 		default:
+ 			usbip_dbg_vhci_rh(" ClearPortFeature: default %x\n",
+ 					  wValue);
 
 
