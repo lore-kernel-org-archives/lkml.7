@@ -7,56 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F360C17446
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B987C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7923621E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550D3222BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497674;
-	bh=E3ZrgvdsC3nW0PDpF6buqLIMOJQtJ7cWTq+NUbZJrUM=;
+	s=default; t=1573497677;
+	bh=2Z0kF615/8pP7GAFhU4mwiF3q5g8Einkwiw0LYuwll8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+0xQ/KMRuwtzliyReCebfohz3w7bE6dpNCGGAD4hErAHOfIlQIbf/uIT6x98wi7N
-	 jWQgFi36S+hiA6PLM7NzK1o6YqVB6P9cCu6J4b+6ZiY7ZXKUEKGOQxwJSGrWVZtRFp
-	 n9vmHU7EbjbjrPdHtumjcCEcA8sCOyn+LxKS1K7I=
+	b=VuPC2HrKvPQNtM21I0w5uJaEYXCWdoWeLaWA2LNglHxBOL7crP0042Tub8l6xgrPS
+	 UdILaqOozO+m4aXDXuohRvItboIyjA+1ePi54x2Lh+Onl7DYx/e4fb0k/SD+EQCc82
+	 pxv+Nr5D/rSCjS5N60g1TXFrOM89lTf07z+TZRVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfKKSlN (ORCPT
+        id S1729367AbfKKSlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:41:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60386 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbfKKSlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:41:11 -0500
+        id S1729358AbfKKSlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FE6F2196E;
-        Mon, 11 Nov 2019 18:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D24D21E6F;
+        Mon, 11 Nov 2019 18:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497669;
-        bh=E3ZrgvdsC3nW0PDpF6buqLIMOJQtJ7cWTq+NUbZJrUM=;
+        s=default; t=1573497672;
+        bh=2Z0kF615/8pP7GAFhU4mwiF3q5g8Einkwiw0LYuwll8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZjGApSkiOGExElYQ+WFJ5J8p1fsN2RRapfY1nK1Kf8YZ5wAo7onrDHuwNDe+bkMBI
-         VVQcCqwlwCohCR9XYo1dab8w3WbSVA0HZ/T5bFxLmw8mUCBufIHeFQhKTTTJ4iiURx
-         Ug3y38heC3KSL/s4US+FBwjNa4SYYJMObGBjD1KU=
+        b=rwF2SMVwLVCh2MC8e4Vljuam5D9rrjW2WFPfnttWoGmKaqFv3j6S5wZdpYXzVXRc1
+         rmWxFSY2TGg7ZCYaM9Qicb86wEbTv9yMWLbn8zv4Qry5pVK3GnK6EaBAWDdT+7NokE
+         Quv3Kf96TGFM6dQs1wy81FfTsPnzsXoRe4mjLe+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Waiman Long <longman@redhat.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Rafael Aquini <aquini@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 022/125] mm, vmstat: hide /proc/pagetypeinfo from normal users
-Date:   Mon, 11 Nov 2019 19:27:41 +0100
-Message-Id: <20191111181443.484497094@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 4.19 023/125] dump_stack: avoid the livelock of the dump_lock
+Date:   Mon, 11 Nov 2019 19:27:42 +0100
+Message-Id: <20191111181443.570829224@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -69,57 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit abaed0112c1db08be15a784a2c5c8a8b3063cdd3 upstream.
+commit 5cbf2fff3bba8d3c6a4d47c1754de1cf57e2b01f upstream.
 
-/proc/pagetypeinfo is a debugging tool to examine internal page
-allocator state wrt to fragmentation.  It is not very useful for any
-other use so normal users really do not need to read this file.
+In the current code, we use the atomic_cmpxchg() to serialize the output
+of the dump_stack(), but this implementation suffers the thundering herd
+problem.  We have observed such kind of livelock on a Marvell cn96xx
+board(24 cpus) when heavily using the dump_stack() in a kprobe handler.
+Actually we can let the competitors to wait for the releasing of the
+lock before jumping to atomic_cmpxchg().  This will definitely mitigate
+the thundering herd problem.  Thanks Linus for the suggestion.
 
-Waiman Long has noticed that reading this file can have negative side
-effects because zone->lock is necessary for gathering data and that a)
-interferes with the page allocator and its users and b) can lead to hard
-lockups on large machines which have very long free_list.
-
-Reduce both issues by simply not exporting the file to regular users.
-
-Link: http://lkml.kernel.org/r/20191025072610.18526-2-mhocko@kernel.org
-Fixes: 467c996c1e19 ("Print out statistics in relation to fragmentation avoidance to /proc/pagetypeinfo")
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Waiman Long <longman@redhat.com>
-Acked-by: Mel Gorman <mgorman@suse.de>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Waiman Long <longman@redhat.com>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Jann Horn <jannh@google.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[akpm@linux-foundation.org: fix comment]
+Link: http://lkml.kernel.org/r/20191030031637.6025-1-haokexin@gmail.com
+Fixes: b58d977432c8 ("dump_stack: serialize the output from dump_stack()")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmstat.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/dump_stack.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1972,7 +1972,7 @@ void __init init_mm_internals(void)
- #endif
- #ifdef CONFIG_PROC_FS
- 	proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
--	proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
-+	proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
- 	proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
- 	proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
- #endif
+--- a/lib/dump_stack.c
++++ b/lib/dump_stack.c
+@@ -106,7 +106,12 @@ retry:
+ 		was_locked = 1;
+ 	} else {
+ 		local_irq_restore(flags);
+-		cpu_relax();
++		/*
++		 * Wait for the lock to release before jumping to
++		 * atomic_cmpxchg() in order to mitigate the thundering herd
++		 * problem.
++		 */
++		do { cpu_relax(); } while (atomic_read(&dump_lock) != -1);
+ 		goto retry;
+ 	}
+ 
 
 
