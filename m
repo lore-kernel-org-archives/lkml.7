@@ -2,180 +2,118 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214D8C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBB8C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72B82190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:19:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gdaw3O8j"
+	by mail.kernel.org (Postfix) with ESMTP id BAE2D20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 13:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfKKNTz (ORCPT
+        id S1726923AbfKKNXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:19:55 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46761 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKKNTy (ORCPT
+        Mon, 11 Nov 2019 08:23:05 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:48970 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfKKNXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:19:54 -0500
-Received: by mail-io1-f67.google.com with SMTP id c6so14487058ioo.13;
-        Mon, 11 Nov 2019 05:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iRKDx6Fejpor5pYdLn7G3kgNJ1vgpNwffUtYoE2a0oQ=;
-        b=Gdaw3O8jb/PC9I3quBaFNFdXhsLl5xBsKkgou1e+Bqj87wCCdnWo6RL621XW4/F6xm
-         o39SfkWAw0j4yM91e9xwJ8shnusIHbUbtSPUY+HxVINCpHWYVBdlED7E+iD2OX7e6GyO
-         pHaZ5LO1wYf77A+/Mg3jkjtHAESyJYWiIjL7owvM1VZ7poSVvGtKrVdPK+MwOIt05pmO
-         lETO3t6URRBV7XosrTBH9BMkauNKjpE9MVUp0Is/Q8PpnVlqEtlkqlx3fDRnk3ZK1NQg
-         em5v59MvK4BAT7na6dNq6gdGc7ZZGIPcLpJX6wQksVmfZruLZEyWSVrY9erTAEBr2EvI
-         4ipQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iRKDx6Fejpor5pYdLn7G3kgNJ1vgpNwffUtYoE2a0oQ=;
-        b=L+lo89CHD501ZEIx2WorKj5jIvcscekUqO/pjk0cYApzLQgxVeFioD/q0eNm1MZrZw
-         G9dtYmZvcpvjX96sIP7eL8fY0NMcfGP8ZBeQZfR3Cc2E0le+YNgVEONUhDvW+F97DkJO
-         eBjjeIB8A46lEsQYtd8x6+6FBJic4iycXhz2JF8qS1SIEMd5z4MYt0dn7AqIXefBiWiw
-         iqy3wrqbffrSQWm6JFxM4NoIvVff2lQQi4UnhWYfIG9awZzypQlIha/4VKuuBlWyRsuL
-         ih2Li3cTlmDdq6PyUbeJ56fFyKvpnwcwPhzk00fH4sHLTGjkHoYwHAkhmH/xAiPiQZ2O
-         Agog==
-X-Gm-Message-State: APjAAAXFKqC8g+oUbLqu+MgMP3kBGAyS5KukmWqWGGwmoTWSAzOK4T3v
-        wQODHS9loChMEtk43PVVcmOsDJqQZVEz1GCxq1Y=
-X-Google-Smtp-Source: APXvYqyGIUTyr+1o8xjw2JPHnMGy0W5HE7ZnIXmNr6qQj4tdycsdQYWpeb8DZtkEpJZuvKILmsvQOeGz0wT4GkeS+qw=
-X-Received: by 2002:a5e:8c0a:: with SMTP id n10mr25782091ioj.78.1573478391683;
- Mon, 11 Nov 2019 05:19:51 -0800 (PST)
+        Mon, 11 Nov 2019 08:23:04 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iU9ep-0004Og-2y; Mon, 11 Nov 2019 13:23:03 +0000
+Subject: Re: [PATCH][next] xen/gntdev: remove redundant non-zero check on ret
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191111122009.67789-1-colin.king@canonical.com>
+ <04efe197-2914-ab1d-918b-8899aa0354af@suse.com>
+ <ec4ffabf-9cfa-2db6-7e23-60f84947d0a9@canonical.com>
+ <767fe18a-c3d6-4200-9eb5-31e1665811a0@suse.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ffbba901-006c-4ecf-c5cd-fdd5bca91bc3@canonical.com>
+Date:   Mon, 11 Nov 2019 13:23:02 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191016135147.7743-1-aford173@gmail.com> <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
- <20191101075726.GB6209@pendragon.ideasonboard.com>
-In-Reply-To: <20191101075726.GB6209@pendragon.ideasonboard.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 11 Nov 2019 07:19:40 -0600
-Message-ID: <CAHCN7x+cCyQ=kp30Z9Vu6-feU2Yp6b=kui-h6G8t67abhYXpCw@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display support
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <767fe18a-c3d6-4200-9eb5-31e1665811a0@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 2:57 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Wed, Oct 30, 2019 at 09:44:20AM -0500, Adam Ford wrote:
-> > On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
-> > >
-> > > Previously, there was an omap panel-dpi driver that would
-> > > read generic timings from the device tree and set the display
-> > > timing accordingly.  This driver was removed so the screen
-> > > no longer functions.  This patch modifies the panel-simple
-> > > file to setup the timings to the same values previously used.
-> > >
-> > > Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-> >
-> > Will this be able to make it into linux-next for the 5.5 merge window?
-> > I believe Tony has picked up the device tree portion in his omap
-> > tree, but I haven't seen any notifications on this series on whether
-> > or not it's being applied.  I also don't know which tree I need to
-> > look if it's already been applied.
-> >
-> > This fixes a regression introduced a while ago where the driver I was
-> > using for the display was removed.
->
-> Sam, would you be able to pick this up ?
+On 11/11/2019 13:17, Jürgen Groß wrote:
+> On 11.11.19 13:31, Colin Ian King wrote:
+>> On 11/11/2019 12:25, Jürgen Groß wrote:
+>>> On 11.11.19 13:20, Colin King wrote:
+>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> The non-zero check on ret is always going to be false because
+>>>> ret was initialized as zero and the only place it is set to
+>>>> non-zero contains a return path before the non-zero check. Hence
+>>>> the check is redundant and can be removed.
+>>>
+>>> Which version did you patch against? In current master the above
+>>> statement is not true.
+>>
+>> against today's linux-next
+> 
+> Ah, okay, this is likely the result of the recent mm-notifier patch
+> series. I'll put this patch on hold until the recent patches have
+> hit master.
 
-Gentle nudge with the merge window approaching.
+Cool, thanks!
+> 
+> 
+> Juergen
 
-Thank you,
-
-adam
-
->
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > > ---
-> > > V5:  No Change
-> > > V4:  No Change
-> > > V3:  No Change
-> > > V2:  No Change
-> > >
-> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > > index 5d487686d25c..72f69709f349 100644
-> > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
-> > >         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> > >  };
-> > >
-> > > +static const struct drm_display_mode logicpd_type_28_mode = {
-> > > +       .clock = 9000,
-> > > +       .hdisplay = 480,
-> > > +       .hsync_start = 480 + 3,
-> > > +       .hsync_end = 480 + 3 + 42,
-> > > +       .htotal = 480 + 3 + 42 + 2,
-> > > +
-> > > +       .vdisplay = 272,
-> > > +       .vsync_start = 272 + 2,
-> > > +       .vsync_end = 272 + 2 + 11,
-> > > +       .vtotal = 272 + 2 + 11 + 3,
-> > > +       .vrefresh = 60,
-> > > +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-> > > +};
-> > > +
-> > > +static const struct panel_desc logicpd_type_28 = {
-> > > +       .modes = &logicpd_type_28_mode,
-> > > +       .num_modes = 1,
-> > > +       .bpc = 8,
-> > > +       .size = {
-> > > +               .width = 105,
-> > > +               .height = 67,
-> > > +       },
-> > > +       .delay = {
-> > > +               .prepare = 200,
-> > > +               .enable = 200,
-> > > +               .unprepare = 200,
-> > > +               .disable = 200,
-> > > +       },
-> > > +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> > > +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-> > > +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-> > > +};
-> > > +
-> > >  static const struct panel_desc mitsubishi_aa070mc01 = {
-> > >         .modes = &mitsubishi_aa070mc01_mode,
-> > >         .num_modes = 1,
-> > > @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
-> > >         }, {
-> > >                 .compatible = "lg,lp129qe",
-> > >                 .data = &lg_lp129qe,
-> > > +       }, {
-> > > +               .compatible = "logicpd,type28",
-> > > +               .data = &logicpd_type_28,
-> > >         }, {
-> > >                 .compatible = "mitsubishi,aa070mc01-ca1",
-> > >                 .data = &mitsubishi_aa070mc01,
->
-> --
-> Regards,
->
-> Laurent Pinchart
