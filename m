@@ -2,94 +2,117 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDB2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE97C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335AE20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AA821928
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:44:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JqdEErT9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lkyWCxmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKKJli (ORCPT
+        id S1726906AbfKKJoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:41:38 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48070 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726857AbfKKJlh (ORCPT
+        Mon, 11 Nov 2019 04:44:19 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55565 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfKKJoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:41:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573465296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xH9paoH84WAP3S/ATWHs4L3GR0FO8tvE2c1L9kietRg=;
-        b=JqdEErT9cwFYr3CMZgBawGC4ZWMKWqG7hNf49a4Zb4h2m5G30ymEJKS8cZVAX2uqGArDE0
-        of9xl9Q6q8mFhfMiC9Kga9uiOd3BhvPrXmH0c6PB2jW3VppZy8JjdqC77VjCUK6N05VwKv
-        JQmMQJ9YvqrXIaA6TRDQU9ng+ppFejs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-_hgx6tiHOsGX5hz3cbUKkA-1; Mon, 11 Nov 2019 04:41:35 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BA28477;
-        Mon, 11 Nov 2019 09:41:34 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 103AE5DA7D;
-        Mon, 11 Nov 2019 09:41:34 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id ED0854BB5C;
-        Mon, 11 Nov 2019 09:41:33 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 04:41:33 -0500 (EST)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, ltp@lists.linux.it,
-        viro@zeniv.linux.org.uk, kstewart@linuxfoundation.org,
-        gregkh@linuxfoundation.org, rfontana@redhat.com
-Message-ID: <475677126.11444968.1573465293662.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20191107125559.GI4131@hirez.programming.kicks-ass.net>
-References: <a87876829697e1b3c63601b1401a07af79eddae6.1572651216.git.jstancek@redhat.com> <20191107123224.GA6315@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1911071335320.4256@nanos.tec.linutronix.de> <20191107125559.GI4131@hirez.programming.kicks-ass.net>
-Subject: Re: [PATCH] kernel: use ktime_get_real_ts64() to calculate
- acct.ac_btime
+        Mon, 11 Nov 2019 04:44:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b11so12504996wmb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 01:44:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vyGmHFPAq5MfFWdVpHAlD4EbsOFVG2Efcfbi4EJCxA8=;
+        b=lkyWCxmvKBof7iItTmaB71uyz6oqJTFW2bQpJkvXn0WLVrdk8YZuLe53ZZTjEqgq5k
+         W1kwPabkfEkTtnIHzP0gE2Cxr3Vc8YribXNSLbcB4drD+v8g/8jGORCoxVmrhrcwmcE8
+         tYMG0SImcnIlqhl68380xL/ubgLmb80IJole32NOhZV67G5eM/CuvBIWajhFHhfeRYgH
+         tJKNjhSBQludY+eABLZp9qdgNM5PeStR2XGg9gMzKQublYnZufw8tqIyN5u2PpR5/5Dj
+         Y4RX5dAvqKga6OEvdIZM4bRFLccaElKZ0pqgvGwLDRqJJ+1VdF++h8nx5OCeitYE0KGq
+         6rtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vyGmHFPAq5MfFWdVpHAlD4EbsOFVG2Efcfbi4EJCxA8=;
+        b=oDBt2/4Ayz+3B2hwMzxbaVx+sfdFLHBwrP4AsDLujkyp8eng11ZLVUYykpWcQ0kCyS
+         48gJgn3W9QCoXLIBiEnhPfYANZmWutAfQTaahdU7FVGy++JTIXPGMkSiF0Ma5+gQNNKX
+         E8tm/ex1qO2xhOm/sl6OdBeN9denLBE4WBLtqBILKDD/NUiC8rKCx3ZXq0mQn4Ep68af
+         a9iD09LLRZu8IbhvRkL6+SrRqSGBJv6HZp5qGqIiczgbqghNDtqdnuJ2WFznxFJwP2YG
+         tuoajO/HZzUsYQqDBQruLiFOapD4T8s9f8F0FaxQCHXYVBSzrYbzyeopQsaGRGKfJcJy
+         fDbw==
+X-Gm-Message-State: APjAAAWGgVj8Yet7c1FEZBbrIGOBMAAPGB9Wm7u8b337ErWSSwfDzUte
+        8xfPeLcFf+m296tpmEOOt3NJ95HsPbW6yaNovtPFDg==
+X-Google-Smtp-Source: APXvYqxrlb7SP7eTmE5hQeLx53eyUjf5tTLurh+KzNkL06pAbGV4qk3tTWVeJmJ5824+3L3yDLMiJHa9NY31q7nWnww=
+X-Received: by 2002:a1c:64d6:: with SMTP id y205mr18115743wmb.136.1573465456652;
+ Mon, 11 Nov 2019 01:44:16 -0800 (PST)
 MIME-Version: 1.0
-X-Originating-IP: [10.43.17.163, 10.4.195.4]
-Thread-Topic: kernel: use ktime_get_real_ts64() to calculate acct.ac_btime
-Thread-Index: j00i/ne0YYWt2EQwNR0Jpc5QU9IvTg==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: _hgx6tiHOsGX5hz3cbUKkA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <1573449229-13918-1-git-send-email-anshuman.khandual@arm.com> <dcca9d9b-449a-1a97-c792-467966d8eec2@arm.com>
+In-Reply-To: <dcca9d9b-449a-1a97-c792-467966d8eec2@arm.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 11 Nov 2019 09:44:05 +0000
+Message-ID: <CAKv+Gu90hqAefaWyXVb7CMGv8JF4nniVKVNNtUg-KOFPdNcOXg@mail.gmail.com>
+Subject: Re: [PATCH] efi: Fix comment for efi_mem_type() wrt absent physical addresses
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 11 Nov 2019 at 05:27, Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+> On 11/11/2019 10:43 AM, Anshuman Khandual wrote:
+> > A previous commit f99afd08a45f ("efi: Update efi_mem_type() to return an
+> > error rather than 0") changed the return type from EFI_RESERVED_TYPE to
+> > -EINVAL when the searched physical address is not present in any memory
+> > descriptor. But the comment preceding the function never changed. Lets
+> > change the comment now to reflect the new return type -EINVAL.
+>
+> In the subject line, s/PATCH/PATCH V2/. Not sending yet another patch just
+> to fix this (in order to reduce spam). But please let me know in case that
+> will be essential.
+>
 
------ Original Message -----
-> It's wrecked in general. It also jumps around for any REALTIME
-> adjustment.
->=20
-> > So a CLOCK_REALTIME time stamp at fork would at least be correct
-> > vs. suspend resume.
->=20
-> But still wrecked vs REALTIME jumps, as in, when DST flips the clock
-> back an hour, your timestamp is in the future.
->=20
-> Any which way around the whole thing is buggered.  The only real fix is
-> not using REALTIME anything. Which is why I'm loath to add that REALTIME
-> timestamp at fork(), it just encourages more use.
+No worries, I can queue it like this.
 
-Thank you for feedback and listing all other problems.
-I'll adjust test expectations.
+Thanks,
 
-Regards,
-Jan
-
+> >
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: linux-efi@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> > ---
+> > Changes in V2:
+> >
+> > - Changed comment for efi_mem_type() instead of the return type per Ard
+> >
+> > V1: (https://lore.kernel.org/patchwork/patch/1149002/)
+> >
+> >  drivers/firmware/efi/efi.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index 77ca52d86e30..47b0bf7a2b7f 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -899,7 +899,7 @@ u64 efi_mem_attributes(unsigned long phys_addr)
+> >   *
+> >   * Search in the EFI memory map for the region covering @phys_addr.
+> >   * Returns the EFI memory type if the region was found in the memory
+> > - * map, EFI_RESERVED_TYPE (zero) otherwise.
+> > + * map, -EINVAL otherwise.
+> >   */
+> >  int efi_mem_type(unsigned long phys_addr)
+> >  {
+> >
