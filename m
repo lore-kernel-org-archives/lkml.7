@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE50CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC284C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CAF21925
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB2720659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498716;
-	bh=VjBJjGkhxd208KtGX8GJ99gXfwQ8SlxNZiSzPHhRfDU=;
+	s=default; t=1573498720;
+	bh=eZv+YpP5eYDz+Bio6+BQJrk0ecW2XPekj7nIgLLMGeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zz07e8Wy0UF70cQG8hkBqyATxTw7ftLn9iqCp/K/n9RPGv0L0tuuGNXIuKHCyMfCG
-	 46z/1g2PH3ITTBI8NULAqdWui+cetvEp5STU/CR0MRONEr0VQ/FIsEcHHyZfe8Ou8W
-	 KHKQxNHV97JElya8jBKLTTOouOBiZ0NlmN1Eqjec=
+	b=saeMHtv10Iy84WFcV4RNRVe7vMTjb4Fmqk8RHgCRRpJruoqw0AgEQT0CIVjE86Smq
+	 GiJDFQ+Wc+PotZUbOGpe/6k1KdphSyKSNoBxZWvniF8qYAsBZaUP7201nwbrwHA2Dv
+	 uq2Yw4MzlnyWKiwgbXRySJqwzeFOrHWKojIg3OKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbfKKS6f (ORCPT
+        id S1730895AbfKKS6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:58:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:58:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbfKKS6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:58:33 -0500
+        id S1730977AbfKKS6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:58:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A4B020659;
-        Mon, 11 Nov 2019 18:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7399721655;
+        Mon, 11 Nov 2019 18:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498712;
-        bh=VjBJjGkhxd208KtGX8GJ99gXfwQ8SlxNZiSzPHhRfDU=;
+        s=default; t=1573498716;
+        bh=eZv+YpP5eYDz+Bio6+BQJrk0ecW2XPekj7nIgLLMGeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d8+8j6OFtIeWiqgQ+chEvEGQMhegBSawNaqURyjnkcAb4sMNCGqEQVbU8VwLU3Bm3
-         KDKohEOQzj/4gvse3q931xK4ebjQ4lqJrgfkyexgnZnl7E2U55dbVZUxa8q712AtfI
-         5wrECL1WbORQnCtkjndD0GH9EutuRdIqLRikPmlo=
+        b=kzotdb+bpQ0BWU8qFlOiAtbzQdA8zpcMoRCGLTMR/Rpo1EykdX+gZOYsjsAFt5Mpo
+         jpwfYeQzjT+6uRYsTTvw6bOXjeiuUuYoUtK1m15B4CXYNzDHcG0kSI7iP35ifD/9xz
+         hg23uJB1dHf8omlXKKki/bjbCyv9VZKH2SnDMwKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 158/193] net: hisilicon: Fix "Trying to free already-free IRQ"
-Date:   Mon, 11 Nov 2019 19:29:00 +0100
-Message-Id: <20191111181512.788966600@linuxfoundation.org>
+Subject: [PATCH 5.3 159/193] wimax: i2400: Fix memory leak in i2400m_op_rfkill_sw_toggle
+Date:   Mon, 11 Nov 2019 19:29:01 +0100
+Message-Id: <20191111181512.857464569@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -60,57 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 63a41746827cb16dc6ad0d4d761ab4e7dda7a0c3 ]
+[ Upstream commit 6f3ef5c25cc762687a7341c18cbea5af54461407 ]
 
-When rmmod hip04_eth.ko, we can get the following warning:
+In the implementation of i2400m_op_rfkill_sw_toggle() the allocated
+buffer for cmd should be released before returning. The
+documentation for i2400m_msg_to_dev() says when it returns the buffer
+can be reused. Meaning cmd should be released in either case. Move
+kfree(cmd) before return to be reached by all execution paths.
 
-Task track: rmmod(1623)>bash(1591)>login(1581)>init(1)
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1623 at kernel/irq/manage.c:1557 __free_irq+0xa4/0x2ac()
-Trying to free already-free IRQ 200
-Modules linked in: ping(O) pramdisk(O) cpuinfo(O) rtos_snapshot(O) interrupt_ctrl(O) mtdblock mtd_blkdevrtfs nfs_acl nfs lockd grace sunrpc xt_tcpudp ipt_REJECT iptable_filter ip_tables x_tables nf_reject_ipv
-CPU: 0 PID: 1623 Comm: rmmod Tainted: G           O    4.4.193 #1
-Hardware name: Hisilicon A15
-[<c020b408>] (rtos_unwind_backtrace) from [<c0206624>] (show_stack+0x10/0x14)
-[<c0206624>] (show_stack) from [<c03f2be4>] (dump_stack+0xa0/0xd8)
-[<c03f2be4>] (dump_stack) from [<c021a780>] (warn_slowpath_common+0x84/0xb0)
-[<c021a780>] (warn_slowpath_common) from [<c021a7e8>] (warn_slowpath_fmt+0x3c/0x68)
-[<c021a7e8>] (warn_slowpath_fmt) from [<c026876c>] (__free_irq+0xa4/0x2ac)
-[<c026876c>] (__free_irq) from [<c0268a14>] (free_irq+0x60/0x7c)
-[<c0268a14>] (free_irq) from [<c0469e80>] (release_nodes+0x1c4/0x1ec)
-[<c0469e80>] (release_nodes) from [<c0466924>] (__device_release_driver+0xa8/0x104)
-[<c0466924>] (__device_release_driver) from [<c0466a80>] (driver_detach+0xd0/0xf8)
-[<c0466a80>] (driver_detach) from [<c0465e18>] (bus_remove_driver+0x64/0x8c)
-[<c0465e18>] (bus_remove_driver) from [<c02935b0>] (SyS_delete_module+0x198/0x1e0)
-[<c02935b0>] (SyS_delete_module) from [<c0202ed0>] (__sys_trace_return+0x0/0x10)
----[ end trace bb25d6123d849b44 ]---
-
-Currently "rmmod hip04_eth.ko" call free_irq more than once
-as devres_release_all and hip04_remove both call free_irq.
-This results in a 'Trying to free already-free IRQ' warning.
-To solve the problem free_irq has been moved out of hip04_remove.
-
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Fixes: 2507e6ab7a9a ("wimax: i2400: fix memory leak")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/wimax/i2400m/op-rfkill.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index f51bc0255556f..4606a7e4a6d19 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -1041,7 +1041,6 @@ static int hip04_remove(struct platform_device *pdev)
+diff --git a/drivers/net/wimax/i2400m/op-rfkill.c b/drivers/net/wimax/i2400m/op-rfkill.c
+index 8efb493ceec2f..5c79f052cad20 100644
+--- a/drivers/net/wimax/i2400m/op-rfkill.c
++++ b/drivers/net/wimax/i2400m/op-rfkill.c
+@@ -127,12 +127,12 @@ int i2400m_op_rfkill_sw_toggle(struct wimax_dev *wimax_dev,
+ 			"%d\n", result);
+ 	result = 0;
+ error_cmd:
+-	kfree(cmd);
+ 	kfree_skb(ack_skb);
+ error_msg_to_dev:
+ error_alloc:
+ 	d_fnend(4, dev, "(wimax_dev %p state %d) = %d\n",
+ 		wimax_dev, state, result);
++	kfree(cmd);
+ 	return result;
+ }
  
- 	hip04_free_ring(ndev, d);
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
- 	of_node_put(priv->phy_node);
- 	cancel_work_sync(&priv->tx_timeout_task);
- 	free_netdev(ndev);
 -- 
 2.20.1
 
