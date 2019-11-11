@@ -2,122 +2,84 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B914AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F62C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFAD21E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573486947;
-	bh=xWJusHKlqUpcCYqCdxZNGlxfR/CEgHC15PppEgpoPpQ=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=IfyPKzBh5Gk6lyNiZ/9X7iBlyAtlDVsZOI+3pSvO0/P9w31ev4DQwMcDMA0GDeF94
-	 abAr3gC0bZ/1+eptpTKWC7YhUMRDeN4d19imEkdTeDhaJfqU58WayboTkpLNf5UzQu
-	 ua8yO3DSf46GoTnqTsltNJ39dNII/Hvub6Zk0wGs=
+	by mail.kernel.org (Postfix) with ESMTP id D832721E6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 15:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKKPm0 (ORCPT
+        id S1726991AbfKKPn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:42:26 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37865 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726897AbfKKPm0 (ORCPT
+        Mon, 11 Nov 2019 10:43:28 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38855 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKKPn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:42:26 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iUBpc-0004LY-Pn; Mon, 11 Nov 2019 16:42:20 +0100
-To:     Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH 1/2] arm64: Rename =?UTF-8?Q?WORKAROUND=5F=31=31=36=35?=  =?UTF-8?Q?=35=32=32=20to=20SPECULATIVE=5FAT?=
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 11 Nov 2019 10:43:28 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a14so11863852oid.5;
+        Mon, 11 Nov 2019 07:43:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z6HV/05PdJu45/hjcLEgqCV/MZrUUiKc/hGTBlNfe2o=;
+        b=lS7wmM84K+nqv6P7kCkOCFHebPJJTnPUS0IqRB1NV0HqL9HzAa1FK9UAIySx4+DCCT
+         B4GKd9QqPIhorz4mxOGWMJ3FHuR+CRIoQ0/i5OA/LKJrAuUWjEo/TdOs9WViA44Zb8VY
+         S8KnaM0Dxi8tW8fcHtvJj0lI87b+2F2QoNpPgetL0dfhfpAoUZkewoP73VpK2MAuwyv3
+         GW+YEhV96Zl6kdrDSVHZsMnBm43WLhLt02sF81f+i8tZeai9smtu4srf4RSQKikajx9o
+         Y0aetk1p8lElkpe3lxFpFs2xLRvzE+KjprNWrc0n5PVh+FhvQuR8EIx5hl7uoFbEHb0p
+         DRzA==
+X-Gm-Message-State: APjAAAVpbKGcLJd4Ma7c1thaa+8n17mxl7zlH54vUZJ2GoihJs8oPzv+
+        PWvxTNf2QtekGYBuQ5bzHWgB+YZIIvR0zd23mUWzALqE
+X-Google-Smtp-Source: APXvYqw4gi4nZZm2xB7kPcwoljXBgj5176ujC7Yt4McOjXIfa4RgNiSfcPXRGbvEXmIiQzj40xZCa+zJEl1fnriA0cc=
+X-Received: by 2002:aca:882:: with SMTP id 124mr1163674oii.54.1573487006964;
+ Mon, 11 Nov 2019 07:43:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 Nov 2019 16:51:41 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20191111141157.55062-2-steven.price@arm.com>
-References: <20191111141157.55062-1-steven.price@arm.com>
- <20191111141157.55062-2-steven.price@arm.com>
-Message-ID: <160a852027f4481cc63aed72c4f4a409@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: steven.price@arm.com, catalin.marinas@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191111151344.7401-1-geert@linux-m68k.org>
+In-Reply-To: <20191111151344.7401-1-geert@linux-m68k.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Nov 2019 16:36:18 +0100
+Message-ID: <CAMuHMdXenPQJQn1qVL494cB89GZAcZqXMVhw4PW+ZgSqdgtAyQ@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.4-rc7
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     linux-s390 <linux-s390@vger.kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+On Mon, Nov 11, 2019 at 4:18 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> JFYI, when comparing v5.4-rc7[1] to v5.4-rc6[3], the summaries are:
+>   - build errors: +0/-2
+>   - build warnings: +48/-70
 
-On 2019-11-11 15:21, Steven Price wrote:
-> Cortex-A55 is affected by a similar erratum, so rename the existing
-> workaround for errarum 1165522 so it can be used for both errata.
+  + /kisskb/src/fs/ubifs/orphan.c: warning: format '%lu' expects
+argument of type 'long unsigned int', but argument 4 has type 'ino_t'
+[-Wformat]:  => 140:3, 132:3
 
-nit: erratum
+s390x/s390-all{mod,yes}config
 
->
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/arm64/Kconfig                |  4 ++++
->  arch/arm64/include/asm/cpucaps.h  |  2 +-
->  arch/arm64/include/asm/kvm_host.h |  2 +-
->  arch/arm64/include/asm/kvm_hyp.h  |  3 +--
->  arch/arm64/kernel/cpu_errata.c    | 17 +++++++++++++----
->  arch/arm64/kvm/hyp/switch.c       |  2 +-
->  arch/arm64/kvm/hyp/tlb.c          |  4 ++--
->  7 files changed, 23 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 3f047afb982c..6cb4eff602c6 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -510,9 +510,13 @@ config ARM64_ERRATUM_1418040
->
->  	  If unsure, say Y.
->
-> +config ARM64_WORKAROUND_SPECULATIVE_AT
-> +	bool
-> +
->  config ARM64_ERRATUM_1165522
->  	bool "Cortex-A76: Speculative AT instruction using out-of-context
-> translation regime could cause subsequent request to generate an
-> incorrect translation"
->  	default y
-> +	select ARM64_WORKAROUND_SPECULATIVE_AT
+Why is ino_t unsigned int on s390x and alpha, while it's unsigned long
+everywhere else?
 
-I'd object that ARM64_ERRATUM_1319367 (and its big brother 1319537)
-are also related to speculative AT execution, and yet are not covered
-by this configuration symbol.
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c/ (232 out of 242 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/a99d8080aaf358d5d23581244e5da23b35e340b9/ (232 out of 242 configs)
 
-I can see three solutions to this:
+Gr{oetje,eeting}s,
 
-- Either you call it SPECULATIVE_AT_VHE and introduce 
-SPECULATIVE_AT_NVHE
-   for symmetry
+                        Geert
 
-- Or you make SPECULATIVE_AT cover all the speculative AT errata, which
-   may or may not work...
-
-- Or even better, you just ammend the documentation to say that 1165522
-   also covers the newly found A55 one (just like we have for A57/A72)
-
-What do you think?
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
