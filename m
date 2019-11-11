@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9D5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78371C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C562173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C88214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497332;
-	bh=mDXh+p9DiujxpHwfkKkbukJW0A5v+GXZtUYBfV6HGOc=;
+	s=default; t=1573497337;
+	bh=g3lezv9ivSNQxWayz9OZ2GCeVKzhDQnCPwLJ9jDGNos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DDiaSbxwW6m+kxqnAX63FSr19zs7v1cS/w4i5nD2yJBDAP6OraBwNqaKHpf18Qbf/
-	 2x5sfHTK3jCnPdiuA532s7mBAh3tGWinPd3uYECor0cVWlOVi7gWX/5RDo/Q9rCWYS
-	 5rPHLT+8/EPRCugOScfcWtCp14nUc80mZMRObNc4=
+	b=p7TG7CsTbAigAqXnpG9ZuPcr+jWAUYibJEwJk4/edQZ7Zf6r1lyq9UQFQFp9HNAqk
+	 CfYibJbn3LP5omVRV0KNumNfINeJboVAcsrw/rK1ZTE54cEPuEVNC7DjiuH2+R2tL6
+	 9W1NOBlHGyxwcQIt1PKnRJdLpvpekNiJ2DHs3w+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfKKSfa (ORCPT
+        id S1728433AbfKKSfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:35:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53350 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:35:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbfKKSf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:35:28 -0500
+        id S1728542AbfKKSfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:35:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4756214E0;
-        Mon, 11 Nov 2019 18:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4B3214E0;
+        Mon, 11 Nov 2019 18:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497327;
-        bh=mDXh+p9DiujxpHwfkKkbukJW0A5v+GXZtUYBfV6HGOc=;
+        s=default; t=1573497332;
+        bh=g3lezv9ivSNQxWayz9OZ2GCeVKzhDQnCPwLJ9jDGNos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJnMS/coOF2i/OsxGKR4M14a9RSbp6mbIyo29A4/zsoB3Zl9mYOpkEb/Ko6QGTe+v
-         l2M9NSmHJjxQwN8ue/GSwTAcoDFIr12eB1Pokj3GO7E5CWVHd3hdLgfsZF4ELafxBG
-         16ByA0euDuQWgY9KCXJ7L5N+4bqP1WQzwsGzyfM0=
+        b=HqvzMRNSmlJ4+XFIeVGbXlATRHGez5V2chHrZmmgD2gQ/MFS5OwgNvz7KnpVuoMJa
+         pQCuvb+7WPvhX8J0v24ZK/b9HlXf9N3dM58SU6fXCWXeIakRz6DRXxJ5LycrcyqCfZ
+         4tIxNrTadYp0UEjl1hcQp8w1xIU5orLFBRUFsHT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Gang Deng <gavin.dg@linux.alibaba.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 016/105] mm: thp: handle page cache THP correctly in PageTransCompoundMap
-Date:   Mon, 11 Nov 2019 19:27:46 +0100
-Message-Id: <20191111181432.495574074@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 4.14 018/105] dump_stack: avoid the livelock of the dump_lock
+Date:   Mon, 11 Nov 2019 19:27:48 +0100
+Message-Id: <20191111181433.177415479@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -65,145 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit 169226f7e0d275c1879551f37484ef6683579a5c upstream.
+commit 5cbf2fff3bba8d3c6a4d47c1754de1cf57e2b01f upstream.
 
-We have a usecase to use tmpfs as QEMU memory backend and we would like
-to take the advantage of THP as well.  But, our test shows the EPT is
-not PMD mapped even though the underlying THP are PMD mapped on host.
-The number showed by /sys/kernel/debug/kvm/largepage is much less than
-the number of PMD mapped shmem pages as the below:
+In the current code, we use the atomic_cmpxchg() to serialize the output
+of the dump_stack(), but this implementation suffers the thundering herd
+problem.  We have observed such kind of livelock on a Marvell cn96xx
+board(24 cpus) when heavily using the dump_stack() in a kprobe handler.
+Actually we can let the competitors to wait for the releasing of the
+lock before jumping to atomic_cmpxchg().  This will definitely mitigate
+the thundering herd problem.  Thanks Linus for the suggestion.
 
-  7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
-  Size:            4194304 kB
-  [snip]
-  AnonHugePages:         0 kB
-  ShmemPmdMapped:   579584 kB
-  [snip]
-  Locked:                0 kB
-
-  cat /sys/kernel/debug/kvm/largepages
-  12
-
-And some benchmarks do worse than with anonymous THPs.
-
-By digging into the code we figured out that commit 127393fbe597 ("mm:
-thp: kvm: fix memory corruption in KVM with THP enabled") checks if
-there is a single PTE mapping on the page for anonymous THP when setting
-up EPT map.  But the _mapcount < 0 check doesn't work for page cache THP
-since every subpage of page cache THP would get _mapcount inc'ed once it
-is PMD mapped, so PageTransCompoundMap() always returns false for page
-cache THP.  This would prevent KVM from setting up PMD mapped EPT entry.
-
-So we need handle page cache THP correctly.  However, when page cache
-THP's PMD gets split, kernel just remove the map instead of setting up
-PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
-the subpages may get PTE mapped even though it is still a THP since the
-page cache THP may be mapped by other processes at the mean time.
-
-Checking its _mapcount and whether the THP has PTE mapped or not.
-Although this may report some false negative cases (PTE mapped by other
-processes), it looks not trivial to make this accurate.
-
-With this fix /sys/kernel/debug/kvm/largepage would show reasonable
-pages are PMD mapped by EPT as the below:
-
-  7fbeaee00000-7fbfaee00000 rw-s 00000000 00:14 275464 /dev/shm/qemu_back_mem.mem.SKUvat (deleted)
-  Size:            4194304 kB
-  [snip]
-  AnonHugePages:         0 kB
-  ShmemPmdMapped:   557056 kB
-  [snip]
-  Locked:                0 kB
-
-  cat /sys/kernel/debug/kvm/largepages
-  271
-
-And the benchmarks are as same as anonymous THPs.
-
-[yang.shi@linux.alibaba.com: v4]
-  Link: http://lkml.kernel.org/r/1571865575-42913-1-git-send-email-yang.shi@linux.alibaba.com
-Link: http://lkml.kernel.org/r/1571769577-89735-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: dd78fedde4b9 ("rmap: support file thp")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Reported-by: Gang Deng <gavin.dg@linux.alibaba.com>
-Tested-by: Gang Deng <gavin.dg@linux.alibaba.com>
-Suggested-by: Hugh Dickins <hughd@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: <stable@vger.kernel.org>	[4.8+]
+[akpm@linux-foundation.org: fix comment]
+Link: http://lkml.kernel.org/r/20191030031637.6025-1-haokexin@gmail.com
+Fixes: b58d977432c8 ("dump_stack: serialize the output from dump_stack()")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mm.h         |    5 -----
- include/linux/mm_types.h   |    5 +++++
- include/linux/page-flags.h |   20 ++++++++++++++++++--
- 3 files changed, 23 insertions(+), 7 deletions(-)
+ lib/dump_stack.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -549,11 +549,6 @@ static inline void *kvmalloc_array(size_
+--- a/lib/dump_stack.c
++++ b/lib/dump_stack.c
+@@ -46,7 +46,12 @@ retry:
+ 		was_locked = 1;
+ 	} else {
+ 		local_irq_restore(flags);
+-		cpu_relax();
++		/*
++		 * Wait for the lock to release before jumping to
++		 * atomic_cmpxchg() in order to mitigate the thundering herd
++		 * problem.
++		 */
++		do { cpu_relax(); } while (atomic_read(&dump_lock) != -1);
+ 		goto retry;
+ 	}
  
- extern void kvfree(const void *addr);
- 
--static inline atomic_t *compound_mapcount_ptr(struct page *page)
--{
--	return &page[1].compound_mapcount;
--}
--
- static inline int compound_mapcount(struct page *page)
- {
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -240,6 +240,11 @@ struct page_frag_cache {
- 
- typedef unsigned long vm_flags_t;
- 
-+static inline atomic_t *compound_mapcount_ptr(struct page *page)
-+{
-+	return &page[1].compound_mapcount;
-+}
-+
- /*
-  * A region containing a mapping of a non-memory backed file under NOMMU
-  * conditions.  These are held in a global tree and are pinned by the VMAs that
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -565,12 +565,28 @@ static inline int PageTransCompound(stru
-  *
-  * Unlike PageTransCompound, this is safe to be called only while
-  * split_huge_pmd() cannot run from under us, like if protected by the
-- * MMU notifier, otherwise it may result in page->_mapcount < 0 false
-+ * MMU notifier, otherwise it may result in page->_mapcount check false
-  * positives.
-+ *
-+ * We have to treat page cache THP differently since every subpage of it
-+ * would get _mapcount inc'ed once it is PMD mapped.  But, it may be PTE
-+ * mapped in the current process so comparing subpage's _mapcount to
-+ * compound_mapcount to filter out PTE mapped case.
-  */
- static inline int PageTransCompoundMap(struct page *page)
- {
--	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
-+	struct page *head;
-+
-+	if (!PageTransCompound(page))
-+		return 0;
-+
-+	if (PageAnon(page))
-+		return atomic_read(&page->_mapcount) < 0;
-+
-+	head = compound_head(page);
-+	/* File THP is PMD mapped and not PTE mapped */
-+	return atomic_read(&page->_mapcount) ==
-+	       atomic_read(compound_mapcount_ptr(head));
- }
- 
- /*
 
 
