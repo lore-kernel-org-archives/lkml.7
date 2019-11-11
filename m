@@ -2,108 +2,97 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41214C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2F9C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12350214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E049B20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OQc6TyHs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGcUwzWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfKKIi1 (ORCPT
+        id S1726916AbfKKIlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:38:27 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46014 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfKKIi1 (ORCPT
+        Mon, 11 Nov 2019 03:41:07 -0500
+Received: from mail-wm1-f50.google.com ([209.85.128.50]:37006 "EHLO
+        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfKKIlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:38:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hcAOVMZPSzZPhTPxN9VZMB0WgNghvQiZWyp0y9X3270=; b=OQc6TyHsOO3L0MFE2gFIEh/2u
-        TF2lL1nyj+yTZMLy5mmv5imhXqE+V+8CXMch6bDvBXSksYLErJMKs5UeQ299wYUd9B8nHIxHEVJto
-        oIAaICc3N5bh9KCeyuArOpH+2jkFiZs3my+rlzQoh446mRASerHynRsMEjNNr3jEEOmhUJm77cUgX
-        wk/FlQ4IjZqmfgKz4BAlXdBOaKD/Bw70ADeDWNlkwloksFnyzKrdKRUWu6hTiiyiq0/QgBnvofuRt
-        kUcVgQa3G0wvszDfsT+5HqIATdK3Fs68wZIq3NNrDx2qPcxNvMxtjzaP7pFw5NA9ZvA4lCmVMZHAN
-        a9vF33p3g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iU5DD-0007mS-4J; Mon, 11 Nov 2019 08:38:15 +0000
-Date:   Mon, 11 Nov 2019 00:38:15 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jan Stancek <jstancek@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        LTP List <ltp@lists.linux.it>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        lkft-triage@lists.linaro.org,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0: Success
-Message-ID: <20191111083815.GA29540@infradead.org>
-References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com>
- <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com>
- <20191111012614.GC6235@magnolia>
- <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
+        Mon, 11 Nov 2019 03:41:07 -0500
+Received: by mail-wm1-f50.google.com with SMTP id b17so4005780wmj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:41:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fHZyE8Y/b8/GHffAqrPVxeIUbjpAPExpWpCVapn1zRs=;
+        b=GGcUwzWMI30zR3zzL3Dd51RVCN7QhF9Gywr088MgsZeIMaVjBt+6rFT/fPdKegOdFA
+         xnmqWYvAo6PaUKE4zx5x38NJU+YHygWTsvPAL169sJbdpY8iWQJmaxt6wtPn9pEMtraj
+         JjLK34uYME6RrMLi6zvFUbIH3GYk7pMSb+qJxrRlIox+GN6vUq98YbUZH9VzKNuBUNep
+         w0qLcEvfADIx1995pAKdVIAE3v6Rz6TZ0NlVas/gWYwe/W55hMd/vzJrcftSNSyTCxO8
+         9IJtdT/F+7UB3KL2zfuDZb/VSWM7+RN5vWVRfm6ocjdXQW6Cs4jKYUQZi/i1/30GMea5
+         phpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fHZyE8Y/b8/GHffAqrPVxeIUbjpAPExpWpCVapn1zRs=;
+        b=kKIVpDIAfvhQSt9Ku8t51TGaf3Hhpeyy09nVNgfe4TSlD32isB5rGcDPj+Qi8ZXhB7
+         by6A0s9+6YPINuNGYFU/KzIMBxrF1ETaI0w79KTYUVXSUkaE+eP/BxiIU7DkAzw58PZf
+         M7OOiZChWfy7dBLg1p1RsQVCbCVaPicq9q4fFir2cLGrpNFPvowjhnavco7zsGKGkpc3
+         5iBEKpvYGLOaDzgGS5r88xPAoE8lACclI0liqanVFQC4KqYjL2k0CbOTsDYpYP3yqI6+
+         ZpCLrciqJuDSo5RFjPfLJLWMcgX9zOJkC3GViZto+2b2Dt+BozNGhdGWe2n1NraXwpLE
+         Pi0Q==
+X-Gm-Message-State: APjAAAUjvdALj3Nv7FtGyKlfVsJO8A8pSHEw+Hz0jofb2/OZBbwZ+Efz
+        QF+rCz3h6fW3uOLwO5wSfLGOBA==
+X-Google-Smtp-Source: APXvYqyYxXpSsfbYQwWrLdnLfBzUFE5L6oQoC05Z3sgSlHmWv96hgSucSAPFAT1/nVg0u6XrrV3kNg==
+X-Received: by 2002:a1c:f317:: with SMTP id q23mr18617215wmq.97.1573461664231;
+        Mon, 11 Nov 2019 00:41:04 -0800 (PST)
+Received: from dell ([95.147.198.88])
+        by smtp.gmail.com with ESMTPSA id l4sm13422936wme.4.2019.11.11.00.41.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 00:41:03 -0800 (PST)
+Date:   Mon, 11 Nov 2019 08:40:56 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tuowen Zhao <ztuowen@gmail.com>
+Cc:     sparclinux@vger.kernel.org,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        acelan.kao@canonical.com, mcgrof@kernel.org
+Subject: Re: Fwd: [PATCH v5 1/4] sparc64: implement ioremap_uc
+Message-ID: <20191111084056.GH18902@dell>
+References: <20191016210629.1005086-2-ztuowen@gmail.com>
+ <5c5b9dec7ea401fffa13446af2a528cbaf6e1046.camel@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c5b9dec7ea401fffa13446af2a528cbaf6e1046.camel@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 03:19:40AM -0500, Jan Stancek wrote:
-> > > loff_t length,
-> > >                 if (pad)
-> > >                         iomap_dio_zero(dio, iomap, pos, fs_block_size -
-> > >                         pad);
-> > >         }
-> > > -       return copied ? copied : ret;
-> > > +       return copied ? (loff_t) copied : ret;
-> > 
-> > I'm a little confused on this proposed fix -- why does casting size_t
-> > (aka unsigned long) to loff_t (long long) on a 32-bit system change the
-> > test outcome?
-> 
-> Ternary operator has a return type and an attempt is made to convert
-> each of operands to the type of the other. So, in this case "ret"
-> appears to be converted to type of "copied" first. Both have size of
-> 4 bytes on 32-bit x86:
+On Mon, 28 Oct 2019, Tuowen Zhao wrote:
 
-Sounds like we should use a good old if here to avoid that whole problem
-spacE:
-
-	if (copied)
-		return copied;
-	return ret;
-
-> size_t copied = 0;
-> int ret = -14;
-> long long actor_ret = copied ? copied : ret;
+> Adding sparc list. Sorry, first time missed the list.
 > 
-> On x86_64: actor_ret == -14;
-> On x86   : actor_ret == 4294967282
+> Looking for some reviews.
 > 
-> > Does this same diotest4 failure happen with XFS?  I ask
-> > because XFS has been using iomap for directio for ages.
-> 
-> Yes, it fails on XFS too.
+> Patch set: Fix MTRR bug for intel-lpss-pci
+> https://lkml.org/lkml/2019/10/16/1230
 
-Is this a new test?  If not why was this never reported?  Sounds like
-we should add this test case to xfstests.
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
