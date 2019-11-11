@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68A7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58035C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD57C2246A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FAD204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499196;
-	bh=r/zHST7sbQn4HJhL+bHCL92FufqTQL80sDjkQ7/HcAQ=;
+	s=default; t=1573499219;
+	bh=lWYXohEveQ9l45sEh9RSFjZwLmKDb85yvXYMavMpE8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0r3vB0Jw773xFf9/ibbQd51b2qi6v24Gi8fuxK3ZaoG9Fs/Ksh2tvg2kUAeRoEN7
-	 6RqLuAzOM6QgTd1qo9W5us4M8z0Gavyn+fIo36Ig7ghp9NM+ukF+KoKQ0u2Fj8/TTL
-	 MtTlJXFDR4ISZEvnoljeBnwfIhTvxv0Pe7A7OanU=
+	b=tYOaok64s/XxtqZCzC59JGivtMYBTSiFGmbXfAJAXyTDEUHaCQyavzpOJPbV+MF2A
+	 fhbn3IVrjDWb8uwbk6uItOXsaA7QWbSq3T2mEPGYo/rd48K2OXzdeNg4P32Kg3CMR0
+	 YZ9B9SZ0D9RCt3qEcLecddhj/YGrzP0viiFyPfK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfKKSiu (ORCPT
+        id S1728983AbfKKSiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:38:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:38:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729052AbfKKSim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:38:42 -0500
+        id S1728970AbfKKSiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:38:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 965B0204FD;
-        Mon, 11 Nov 2019 18:38:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 380DB204FD;
+        Mon, 11 Nov 2019 18:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497521;
-        bh=r/zHST7sbQn4HJhL+bHCL92FufqTQL80sDjkQ7/HcAQ=;
+        s=default; t=1573497497;
+        bh=lWYXohEveQ9l45sEh9RSFjZwLmKDb85yvXYMavMpE8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pN8Dn4KjZpM5QoE3H7thFbacOHmiPDmVcWUbGbx0EbMbkkMXDh96uEeIR3XVBeums
-         DdWZK4MgTPlkMVQg8BnP2ex0hWaLLP+DfppgAvmOLrzi/U65QZGim7h11laBV8dhk4
-         YDNzQbyOMW+Ue6TTP+1p5pVSgBMF+JD0ifqmNHkQ=
+        b=yNitIQTuNwWQlGr766FR2ftyArrZERQepCynuZFmnjP9paPs9tnyncHxis2qeJGpq
+         OT1Vkeck6HYyW7qg41VcCnxGw4aIyDDT5phkldzOz7qZxdk286ar87oxlgLd3PeP6m
+         fIT9W51izacVPzp7nMEkIbYrcidFVtNdbUoYW0Sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 081/105] macsec: fix refcnt leak in module exit routine
-Date:   Mon, 11 Nov 2019 19:28:51 +0100
-Message-Id: <20191111181446.909215798@linuxfoundation.org>
+Subject: [PATCH 4.14 074/105] RDMA/uverbs: Prevent potential underflow
+Date:   Mon, 11 Nov 2019 19:28:44 +0100
+Message-Id: <20191111181446.065683727@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -60,74 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2bce1ebed17da54c65042ec2b962e3234bad5b47 ]
+[ Upstream commit a9018adfde809d44e71189b984fa61cc89682b5e ]
 
-When a macsec interface is created, it increases a refcnt to a lower
-device(real device). when macsec interface is deleted, the refcnt is
-decreased in macsec_free_netdev(), which is ->priv_destructor() of
-macsec interface.
+The issue is in drivers/infiniband/core/uverbs_std_types_cq.c in the
+UVERBS_HANDLER(UVERBS_METHOD_CQ_CREATE) function.  We check that:
 
-The problem scenario is this.
-When nested macsec interfaces are exiting, the exit routine of the
-macsec module makes refcnt leaks.
+        if (attr.comp_vector >= attrs->ufile->device->num_comp_vectors) {
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add macsec0 link dummy0 type macsec
-    ip link add macsec1 link macsec0 type macsec
-    modprobe -rv macsec
+But we don't check if "attr.comp_vector" is negative.  It could
+potentially lead to an array underflow.  My concern would be where
+cq->vector is used in the create_cq() function from the cxgb4 driver.
 
-[  208.629433] unregister_netdevice: waiting for macsec0 to become free. Usage count = 1
+And really "attr.comp_vector" is appears as a u32 to user space so that's
+the right type to use.
 
-Steps of exit routine of macsec module are below.
-1. Calls ->dellink() in __rtnl_link_unregister().
-2. Checks refcnt and wait refcnt to be 0 if refcnt is not 0 in
-netdev_run_todo().
-3. Calls ->priv_destruvtor() in netdev_run_todo().
-
-Step2 checks refcnt, but step3 decreases refcnt.
-So, step2 waits forever.
-
-This patch makes the macsec module do not hold a refcnt of the lower
-device because it already holds a refcnt of the lower device with
-netdev_upper_dev_link().
-
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9ee79fce3642 ("IB/core: Add completion queue (cq) object actions")
+Link: https://lore.kernel.org/r/20191011133419.GA22905@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/infiniband/core/uverbs.h | 2 +-
+ include/rdma/ib_verbs.h          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index aa204c98af79c..9bcb7c3e879f3 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -2993,12 +2993,10 @@ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
- static void macsec_free_netdev(struct net_device *dev)
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
--	struct net_device *real_dev = macsec->real_dev;
+diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
+index 37c8903e7fd0c..8d79a48ccd388 100644
+--- a/drivers/infiniband/core/uverbs.h
++++ b/drivers/infiniband/core/uverbs.h
+@@ -87,7 +87,7 @@
  
- 	free_percpu(macsec->stats);
- 	free_percpu(macsec->secy.tx_sc.stats);
+ struct ib_uverbs_device {
+ 	atomic_t				refcount;
+-	int					num_comp_vectors;
++	u32					num_comp_vectors;
+ 	struct completion			comp;
+ 	struct device			       *dev;
+ 	struct ib_device	__rcu	       *ib_dev;
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index b8a5118b6a428..4a43193319894 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -306,7 +306,7 @@ enum ib_cq_creation_flags {
  
--	dev_put(real_dev);
- }
+ struct ib_cq_init_attr {
+ 	unsigned int	cqe;
+-	int		comp_vector;
++	u32		comp_vector;
+ 	u32		flags;
+ };
  
- static void macsec_setup(struct net_device *dev)
-@@ -3239,8 +3237,6 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 	if (err < 0)
- 		return err;
- 
--	dev_hold(real_dev);
--
- 	macsec->nest_level = dev_get_nest_level(real_dev) + 1;
- 	netdev_lockdep_set_classes(dev);
- 	lockdep_set_class_and_subclass(&dev->addr_list_lock,
 -- 
 2.20.1
 
