@@ -2,161 +2,108 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049C7C17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41214C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF082075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12350214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ouWb1i1V"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OQc6TyHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfKKIcM (ORCPT
+        id S1726853AbfKKIi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:32:12 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60434 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKIcM (ORCPT
+        Mon, 11 Nov 2019 03:38:27 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46014 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfKKIi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:32:12 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB8W0vn038121;
-        Mon, 11 Nov 2019 02:32:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573461121;
-        bh=g5x94847hYbqbl6t0oMnSzfcp96v+AbsaJu0rr/L1DM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ouWb1i1Vkbcel87sd/4VG/dtoaWeTvVpUlhz7pvAjcp5wjMWPKV5hE+idcWjDSOQm
-         bwYla2Xiga8gydxWAyB3T4aJh/brdqu1v91zXMY4MtZEZPmQS+n92P646Klikz5jOw
-         V8jhnlV5tJstUqjqEj7ikSg15W1RB8p7UiYURNok=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB8W0Dc076860
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 02:32:00 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 02:31:43 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 02:31:43 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB8VuS4099304;
-        Mon, 11 Nov 2019 02:31:57 -0600
-Subject: Re: [PATCH v4 09/15] dmaengine: ti: New driver for K3 UDMA - split#1:
- defines, structs, io func
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-10-peter.ujfalusi@ti.com>
- <20191111052828.GN952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <00777586-a3ac-2404-5226-e8c887936a32@ti.com>
-Date:   Mon, 11 Nov 2019 10:33:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 03:38:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hcAOVMZPSzZPhTPxN9VZMB0WgNghvQiZWyp0y9X3270=; b=OQc6TyHsOO3L0MFE2gFIEh/2u
+        TF2lL1nyj+yTZMLy5mmv5imhXqE+V+8CXMch6bDvBXSksYLErJMKs5UeQ299wYUd9B8nHIxHEVJto
+        oIAaICc3N5bh9KCeyuArOpH+2jkFiZs3my+rlzQoh446mRASerHynRsMEjNNr3jEEOmhUJm77cUgX
+        wk/FlQ4IjZqmfgKz4BAlXdBOaKD/Bw70ADeDWNlkwloksFnyzKrdKRUWu6hTiiyiq0/QgBnvofuRt
+        kUcVgQa3G0wvszDfsT+5HqIATdK3Fs68wZIq3NNrDx2qPcxNvMxtjzaP7pFw5NA9ZvA4lCmVMZHAN
+        a9vF33p3g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iU5DD-0007mS-4J; Mon, 11 Nov 2019 08:38:15 +0000
+Date:   Mon, 11 Nov 2019 00:38:15 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        LTP List <ltp@lists.linux.it>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        lkft-triage@lists.linaro.org,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0: Success
+Message-ID: <20191111083815.GA29540@infradead.org>
+References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com>
+ <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com>
+ <20191111012614.GC6235@magnolia>
+ <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111052828.GN952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1751469294.11431533.1573460380206.JavaMail.zimbra@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/11/2019 7.28, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
+On Mon, Nov 11, 2019 at 03:19:40AM -0500, Jan Stancek wrote:
+> > > loff_t length,
+> > >                 if (pad)
+> > >                         iomap_dio_zero(dio, iomap, pos, fs_block_size -
+> > >                         pad);
+> > >         }
+> > > -       return copied ? copied : ret;
+> > > +       return copied ? (loff_t) copied : ret;
+> > 
+> > I'm a little confused on this proposed fix -- why does casting size_t
+> > (aka unsigned long) to loff_t (long long) on a 32-bit system change the
+> > test outcome?
 > 
->> +struct udma_chan {
->> +	struct virt_dma_chan vc;
->> +	struct dma_slave_config	cfg;
->> +	struct udma_dev *ud;
->> +	struct udma_desc *desc;
->> +	struct udma_desc *terminated_desc;
+> Ternary operator has a return type and an attempt is made to convert
+> each of operands to the type of the other. So, in this case "ret"
+> appears to be converted to type of "copied" first. Both have size of
+> 4 bytes on 32-bit x86:
+
+Sounds like we should use a good old if here to avoid that whole problem
+spacE:
+
+	if (copied)
+		return copied;
+	return ret;
+
+> size_t copied = 0;
+> int ret = -14;
+> long long actor_ret = copied ? copied : ret;
 > 
-> descriptor and not a list?
-
-Yes, not a list. I have only one transfer (if any) submitted to
-hardware. This is mostly due to the packet mode RX operation: no
-prelinked support in UDMAP so I need to have as many descriptors queued
-up as the number of sg elements.
-
-I need to keep the terminated descriptor around to be able to free it up
-_after_ UDMAP returned it to avoid it modifying released memory.
-
->> +	struct udma_static_tr static_tr;
->> +	char *name;
->> +
->> +	struct udma_tchan *tchan;
->> +	struct udma_rchan *rchan;
->> +	struct udma_rflow *rflow;
->> +
->> +	bool psil_paired;
->> +
->> +	int irq_num_ring;
->> +	int irq_num_udma;
->> +
->> +	bool cyclic;
->> +	bool paused;
->> +
->> +	enum udma_chan_state state;
->> +	struct completion teardown_completed;
->> +
->> +	u32 bcnt; /* number of bytes completed since the start of the channel */
->> +	u32 in_ring_cnt; /* number of descriptors in flight */
->> +
->> +	bool pkt_mode; /* TR or packet */
->> +	bool needs_epib; /* EPIB is needed for the communication or not */
->> +	u32 psd_size; /* size of Protocol Specific Data */
->> +	u32 metadata_size; /* (needs_epib ? 16:0) + psd_size */
->> +	u32 hdesc_size; /* Size of a packet descriptor in packet mode */
->> +	bool notdpkt; /* Suppress sending TDC packet */
->> +	int remote_thread_id;
->> +	u32 src_thread;
->> +	u32 dst_thread;
->> +	enum psil_endpoint_type ep_type;
->> +	bool enable_acc32;
->> +	bool enable_burst;
->> +	enum udma_tp_level channel_tpl; /* Channel Throughput Level */
->> +
->> +	/* dmapool for packet mode descriptors */
->> +	bool use_dma_pool;
->> +	struct dma_pool *hdesc_pool;
->> +
->> +	u32 id;
->> +	enum dma_transfer_direction dir;
+> On x86_64: actor_ret == -14;
+> On x86   : actor_ret == 4294967282
 > 
-> why does channel have this, it already exists in descriptor
-
-The channel can not change role, it is set when it was requested. In the
-prep callbacks I do check if the direction matches with the channel's
-direction.
-
->> +static irqreturn_t udma_udma_irq_handler(int irq, void *data)
->> +{
->> +	struct udma_chan *uc = data;
->> +
->> +	udma_tr_event_callback(uc);
+> > Does this same diotest4 failure happen with XFS?  I ask
+> > because XFS has been using iomap for directio for ages.
 > 
-> any reason why we want to call a fn and not code here..?
+> Yes, it fails on XFS too.
 
-No particular reason, I'll move them.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Is this a new test?  If not why was this never reported?  Sounds like
+we should add this test case to xfstests.
