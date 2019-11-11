@@ -2,214 +2,249 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCC7C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB15C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89239214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="L1sMHmZI"
+	by mail.kernel.org (Postfix) with ESMTP id 5885E214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfKKLiI (ORCPT
+        id S1726943AbfKKLkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:38:08 -0500
-Received: from onstation.org ([52.200.56.107]:43642 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfKKLiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:38:08 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 1EFD83E953;
-        Mon, 11 Nov 2019 11:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1573472287;
-        bh=KUPhf57c22YEEkTMyytnzutNtQwBQ/fK8BK90QZ9r4M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L1sMHmZIG09BGELJHdOTFd2HjGajOSGj3fKCR8cLypcLy5Z4TYL3X06RJSEza3HWe
-         QFqIBfxAnbhrBzVRAvDSqczcm+4kVCHvls1NodYe1S7SX4p/91Rm9QlWD/XucpkJ/5
-         1TMWQzfe8K8ZzrB8YFZwlOq8v3AvzOEtJpBbJIYE=
-Date:   Mon, 11 Nov 2019 06:38:06 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async
- commit changes
-Message-ID: <20191111113806.GA1420@onstation.org>
-References: <CAF6AEGuEO1jg6KhOFWEMUjq4ZQy5w61dWJk6uLWRzHnMZYZv=g@mail.gmail.com>
- <CAOCk7NomH2MsZ+FvPFAMWeabOFpyOwODCb_Ro07v+2k2v_C4NA@mail.gmail.com>
- <CAF6AEGsZkJJTNZ8SzHsSioEnkpekr1Texu5_EeBW1hP-bsOyjQ@mail.gmail.com>
- <20191107111019.GA24028@onstation.org>
- <CAF6AEGtbP=X2+DELajQq9zMZYGgmhyUhe62ncvHvyFnyZexTXg@mail.gmail.com>
- <CAOCk7NrPdGqc4vo70NmTuyszkPaPe41-e89ym2vAYBY+GTt9BA@mail.gmail.com>
- <CAJs_Fx4UJYd-k3_3AAGJo-8udThhvf6t-J=OZi3jappWjTNnFQ@mail.gmail.com>
- <CAOCk7Nq7rPmraofy+o8vWTwSAd1+dTRsoZ4QN0mRAOOz7u7TUg@mail.gmail.com>
- <20191110135321.GA6728@onstation.org>
- <CAOCk7Nr3nkUWOynxVK_0SxWKUss803_fhkdVehRajtiA9vi8ng@mail.gmail.com>
+        Mon, 11 Nov 2019 06:40:36 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726819AbfKKLkg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:40:36 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xABBcDuB065502;
+        Mon, 11 Nov 2019 06:38:16 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w74myd7a3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 06:38:14 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xABBWEgS004575;
+        Mon, 11 Nov 2019 11:33:23 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma04dal.us.ibm.com with ESMTP id 2w5n361pw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 11:33:23 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xABBXMDY50725120
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 11:33:22 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76FC0B205F;
+        Mon, 11 Nov 2019 11:33:22 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D31DB2064;
+        Mon, 11 Nov 2019 11:33:17 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.199.36.163])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 11 Nov 2019 11:33:16 +0000 (GMT)
+X-Mailer: emacs 26.2 (via feedmail 11-beta-1 Q)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     Michal Hocko <mhocko@suse.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, peterz@infradead.org,
+        dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 13/16] acpi/mm: Up-level "map to online node" functionality
+In-Reply-To: <157309906694.1582359.4777838043061104635.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com> <157309906694.1582359.4777838043061104635.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Mon, 11 Nov 2019 17:00:38 +0530
+Message-ID: <87v9rq8xb5.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7Nr3nkUWOynxVK_0SxWKUss803_fhkdVehRajtiA9vi8ng@mail.gmail.com>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911110110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 10:37:33AM -0700, Jeffrey Hugo wrote:
-> On Sun, Nov 10, 2019 at 6:53 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > On Fri, Nov 08, 2019 at 07:56:25AM -0700, Jeffrey Hugo wrote:
-> > There's a REG_MDP5_PP_AUTOREFRESH_CONFIG() macro upstream here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/msm/disp/mdp5/mdp5.xml.h#n1383
-> >
-> > I'm not sure what to put in that register but I tried configuring it
-> > with a 1 this way and still have the same issue.
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > index eeef41fcd4e1..6b9acf68fd2c 100644
-> > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > @@ -80,6 +80,7 @@ static int pingpong_tearcheck_setup(struct drm_encoder *encoder,
-> >         mdp5_write(mdp5_kms, REG_MDP5_PP_SYNC_THRESH(pp_id),
-> >                         MDP5_PP_SYNC_THRESH_START(4) |
-> >                         MDP5_PP_SYNC_THRESH_CONTINUE(4));
-> > +       mdp5_write(mdp5_kms, REG_MDP5_PP_AUTOREFRESH_CONFIG(pp_id), 1);
-> >
-> >         return 0;
-> >  }
-> 
-> bit 31 is the enable bit (set that to 1), bits 15:0 are the
-> frame_count (how many te events before the MDP sends a frame, I'd
-> recommend set to 1).  Then after its programmed, you'll have to flush
-> the config, and probably use a _START to make sure the flush takes
-> effect.
+Dan Williams <dan.j.williams@intel.com> writes:
 
-I think that I initially get autorefresh enabled based on your
-description above since the ping pong IRQs occur much more frequently.
-However pretty quickly the error 'dsi_err_worker: status=c' is shown,
-the contents on the screen shift to the right, and the screen no longer
-updates after that. That error decodes to
-DSI_ERR_STATE_DLN0_PHY | DSI_ERR_STATE_FIFO according to dsi_host.c.
+> The acpi_map_pxm_to_online_node() helper is used to find the closest
+> online node to a given proximity domain. This is used to map devices in
+> a proximity domain with no online memory or cpus to the closest online
+> node and populate a device's 'numa_node' property. The numa_node
+> property allows applications to be migrated "close" to a resource.
+>
+> In preparation for providing a generic facility to optionally map an
+> address range to its closest online node, or the node the range would
+> represent were it to be onlined (target_node), up-level the core of
+> acpi_map_pxm_to_online_node() to a generic mm/numa helper.
+>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/acpi/numa.c  |   41 -----------------------------------------
+>  include/linux/acpi.h |   23 ++++++++++++++++++++++-
+>  include/linux/numa.h |    2 ++
+>  mm/mempolicy.c       |   30 ++++++++++++++++++++++++++++++
+>  4 files changed, 54 insertions(+), 42 deletions(-)
+>
+> diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
+> index eadbf90e65d1..47b4969d9b93 100644
+> --- a/drivers/acpi/numa.c
+> +++ b/drivers/acpi/numa.c
+> @@ -72,47 +72,6 @@ int acpi_map_pxm_to_node(int pxm)
+>  }
+>  EXPORT_SYMBOL(acpi_map_pxm_to_node);
+>  
+> -/**
+> - * acpi_map_pxm_to_online_node - Map proximity ID to online node
+> - * @pxm: ACPI proximity ID
+> - *
+> - * This is similar to acpi_map_pxm_to_node(), but always returns an online
+> - * node.  When the mapped node from a given proximity ID is offline, it
+> - * looks up the node distance table and returns the nearest online node.
+> - *
+> - * ACPI device drivers, which are called after the NUMA initialization has
+> - * completed in the kernel, can call this interface to obtain their device
+> - * NUMA topology from ACPI tables.  Such drivers do not have to deal with
+> - * offline nodes.  A node may be offline when a device proximity ID is
+> - * unique, SRAT memory entry does not exist, or NUMA is disabled, ex.
+> - * "numa=off" on x86.
+> - */
+> -int acpi_map_pxm_to_online_node(int pxm)
+> -{
+> -	int node, min_node;
+> -
+> -	node = acpi_map_pxm_to_node(pxm);
+> -
+> -	if (node == NUMA_NO_NODE)
+> -		node = 0;
+> -
+> -	min_node = node;
+> -	if (!node_online(node)) {
+> -		int min_dist = INT_MAX, dist, n;
+> -
+> -		for_each_online_node(n) {
+> -			dist = node_distance(node, n);
+> -			if (dist < min_dist) {
+> -				min_dist = dist;
+> -				min_node = n;
+> -			}
+> -		}
+> -	}
+> -
+> -	return min_node;
+> -}
+> -EXPORT_SYMBOL(acpi_map_pxm_to_online_node);
+> -
+>  static void __init
+>  acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+>  {
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 8b4e516bac00..aeedd09f2f71 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -401,9 +401,30 @@ extern void acpi_osi_setup(char *str);
+>  extern bool acpi_osi_is_win8(void);
+>  
+>  #ifdef CONFIG_ACPI_NUMA
+> -int acpi_map_pxm_to_online_node(int pxm);
+>  int acpi_map_pxm_to_node(int pxm);
+>  int acpi_get_node(acpi_handle handle);
+> +
+> +/**
+> + * acpi_map_pxm_to_online_node - Map proximity ID to online node
+> + * @pxm: ACPI proximity ID
+> + *
+> + * This is similar to acpi_map_pxm_to_node(), but always returns an online
+> + * node.  When the mapped node from a given proximity ID is offline, it
+> + * looks up the node distance table and returns the nearest online node.
+> + *
+> + * ACPI device drivers, which are called after the NUMA initialization has
+> + * completed in the kernel, can call this interface to obtain their device
+> + * NUMA topology from ACPI tables.  Such drivers do not have to deal with
+> + * offline nodes.  A node may be offline when a device proximity ID is
+> + * unique, SRAT memory entry does not exist, or NUMA is disabled, ex.
+> + * "numa=off" on x86.
+> + */
+> +static inline int acpi_map_pxm_to_online_node(int pxm)
+> +{
+> +	int node = acpi_map_pxm_to_node(pxm);
+> +
+> +	return numa_map_to_online_node(node);
+> +}
+>  #else
+>  static inline int acpi_map_pxm_to_online_node(int pxm)
+>  {
+> diff --git a/include/linux/numa.h b/include/linux/numa.h
+> index 110b0e5d0fb0..4fd80f42be43 100644
+> --- a/include/linux/numa.h
+> +++ b/include/linux/numa.h
+> @@ -13,4 +13,6 @@
+>  
+>  #define	NUMA_NO_NODE	(-1)
+>  
+> +int numa_map_to_online_node(int node);
+> +
+>  #endif /* _LINUX_NUMA_H */
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 4ae967bcf954..e2d8dd21ce9d 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -127,6 +127,36 @@ static struct mempolicy default_policy = {
+>  
+>  static struct mempolicy preferred_node_policy[MAX_NUMNODES];
+>  
+> +/**
+> + * numa_map_to_online_node - Find closest online node
+> + * @nid: Node id to start the search
+> + *
+> + * Lookup the next closest node by distance if @nid is not online.
+> + */
+> +int numa_map_to_online_node(int node)
+> +{
+> +	int min_node;
+> +
+> +	if (node == NUMA_NO_NODE)
+> +		node = 0;
 
-Here's the relevant code that I have so far:
+The ppc64 variant papr_scm_node return the NUMA_NO_NODE in this case.
+Most of the mm helpers can handle with that value . So instead of
+forcing node = 0, let the subsystem decide what to do with the
+NUMA_NO_NODE value.?
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-index eeef41fcd4e1..85a5cfe54ce8 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-@@ -157,6 +157,7 @@ void mdp5_cmd_encoder_enable(struct drm_encoder *encoder)
-        struct mdp5_ctl *ctl = mdp5_cmd_enc->ctl;
-        struct mdp5_interface *intf = mdp5_cmd_enc->intf;
-        struct mdp5_pipeline *pipeline = mdp5_crtc_get_pipeline(encoder->crtc);
-+       struct mdp5_kms *mdp5_kms = get_kms(encoder);;
- 
-        if (WARN_ON(mdp5_cmd_enc->enabled))
-                return;
-@@ -167,6 +168,14 @@ void mdp5_cmd_encoder_enable(struct drm_encoder *encoder)
- 
-        mdp5_ctl_commit(ctl, pipeline, mdp_ctl_flush_mask_encoder(intf), true);
- 
-+       if (intf->type == INTF_DSI &&
-+           intf->mode == MDP5_INTF_DSI_MODE_COMMAND) {
-+               mdp5_write(mdp5_kms,
-+                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
-+                          BIT(31) | BIT(0));
-+               mdp5_crtc_flush_all(encoder->crtc);
-+       }
-+
-        mdp5_ctl_set_encoder_state(ctl, pipeline, true);
- 
-        mdp5_cmd_enc->enabled = true;
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-index 05cc04f729d6..369746ebbc42 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-@@ -103,7 +104,7 @@ static u32 crtc_flush(struct drm_crtc *crtc, u32 flush_mask)
-  * so that we can safely queue unref to current fb (ie. next
-  * vblank we know hw is done w/ previous scanout_fb).
-  */
--static u32 crtc_flush_all(struct drm_crtc *crtc)
-+u32 mdp5_crtc_flush_all(struct drm_crtc *crtc)
- {
-        struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
-        struct mdp5_hw_mixer *mixer, *r_mixer;
-@@ -734,7 +735,7 @@ static void mdp5_crtc_atomic_flush(struct drm_crtc *crtc,
-        if (mdp5_cstate->cmd_mode)
-                request_pp_done_pending(crtc);
- 
--       mdp5_crtc->flushed_mask = crtc_flush_all(crtc);
-+       mdp5_crtc->flushed_mask = mdp5_crtc_flush_all(crtc);
- 
-        /* XXX are we leaking out state here? */
-        mdp5_crtc->vblank.irqmask = mdp5_cstate->vblank_irqmask;
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h
-index 128866742593..3490328ab63e 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.h
-@@ -278,6 +278,7 @@ enum mdp5_pipe mdp5_plane_right_pipe(struct drm_plane *plane);
- struct drm_plane *mdp5_plane_init(struct drm_device *dev,
-                                  enum drm_plane_type type);
- 
-+u32 mdp5_crtc_flush_all(struct drm_crtc *crtc);
- struct mdp5_ctl *mdp5_crtc_get_ctl(struct drm_crtc *crtc);
- uint32_t mdp5_crtc_vblank(struct drm_crtc *crtc);
- 
+> +
+> +	min_node = node;
+> +	if (!node_online(node)) {
+> +		int min_dist = INT_MAX, dist, n;
+> +
+> +		for_each_online_node(n) {
+> +			dist = node_distance(node, n);
+> +			if (dist < min_dist) {
+> +				min_dist = dist;
+> +				min_node = n;
+> +			}
+> +		}
+> +	}
+> +
+> +	return min_node;
+> +}
+> +EXPORT_SYMBOL_GPL(numa_map_to_online_node);
+> +
+>  struct mempolicy *get_task_policy(struct task_struct *p)
+>  {
+>  	struct mempolicy *pol = p->mempolicy;
 
-Note that mdp5_ctl_set_encoder_state() will call send_start_signal()
-for a command-mode panel.
 
-I put a HERE log statement in request_pp_done_pending() and
-mdp5_crtc_pp_done_irq() and here's the relevant part of dmesg:
+Can we also switch papr_scm_node to numa_map_to_online_node()?
 
-[   13.832596] msm fd900000.mdss: pp done time out, lm=0
-[   13.832690] request_pp_done_pending: HERE
-[   13.899890] mdp5_crtc_pp_done_irq: HERE
-[   13.899981] Console: switching to colour frame buffer device 135x120
-[   13.916662] mdp5_crtc_pp_done_irq: HERE
-[   13.916813] request_pp_done_pending: HERE
-[   13.933439] mdp5_crtc_pp_done_irq: HERE
-[   13.950217] mdp5_crtc_pp_done_irq: HERE
-[   13.950295] request_pp_done_pending: HERE
-[   13.959973] msm fd900000.mdss: fb0: msmdrmfb frame buffer device
-[   13.964469] i2c i2c-4: Added multiplexed i2c bus 5
-[   13.966998] mdp5_crtc_pp_done_irq: HERE
-[   13.983780] mdp5_crtc_pp_done_irq: HERE
-[   13.983932] request_pp_done_pending: HERE
-[   14.000617] mdp5_crtc_pp_done_irq: HERE
-[   14.017393] mdp5_crtc_pp_done_irq: HERE
-[   14.017539] request_pp_done_pending: HERE
-[   14.034173] mdp5_crtc_pp_done_irq: HERE
-[   14.050956] mdp5_crtc_pp_done_irq: HERE
-[   14.067738] mdp5_crtc_pp_done_irq: HERE
-[   14.084521] mdp5_crtc_pp_done_irq: HERE
-[   14.101305] mdp5_crtc_pp_done_irq: HERE
-[   14.118085] mdp5_crtc_pp_done_irq: HERE
-[   14.134866] mdp5_crtc_pp_done_irq: HERE
-[   14.151646] mdp5_crtc_pp_done_irq: HERE
-[   14.168425] mdp5_crtc_pp_done_irq: HERE
-[   14.185204] mdp5_crtc_pp_done_irq: HERE
-[   14.192790] request_pp_done_pending: HERE
-[   14.192967] dsi_err_worker: status=c
-[   14.241759] dsi_err_worker: status=c
-[   14.252650] msm fd900000.mdss: pp done time out, lm=0
-[   14.462645] msm fd900000.mdss: pp done time out, lm=0
-[   14.462704] request_pp_done_pending: HERE
-[   14.522644] msm fd900000.mdss: pp done time out, lm=0
-[   14.672643] msm fd900000.mdss: pp done time out, lm=0
-[   14.672702] request_pp_done_pending: HERE
-[   14.732643] msm fd900000.mdss: pp done time out, lm=0
-[   14.882644] msm fd900000.mdss: pp done time out, lm=0
-
-Brian
+-aneesh
