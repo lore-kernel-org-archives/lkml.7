@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0474C17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE749C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CC32173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3A721655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499247;
-	bh=5GN9Z8z2i4CPM2GG6ItL3lR2p202qoU9ErlKq3e+xgc=;
+	s=default; t=1573499260;
+	bh=bD4K1NaAFhMCwSJwgVe/D3+stuw+uSmAlZ6tLzZuNNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Th/6JRHshOtmhRcqsPyIYCgL0KlmZ4iqlMNABrHfex1tYY9wfNakE9vRfFwZublg
-	 76dGk9G8lFBDQgbZGF7VhkDRVtZQdOvuMi0BoNdoytYVfWp1psa9jnoZf8zVPzx4RB
-	 a31LhVmUrvLHgIMVhMmHELMvthVm2OhXXnAlF4Yg=
+	b=dWHMGwfK3466L0qKu7iVlCRHNwz/Y4GCMezaDhNQfwM1Cz1nkkr7rOhB/GwSrgrwA
+	 /PeMitg0xIXV8l9tvQWbM7R0W0BnVbr2QWkInNrd9daC9yHIY58MbDzNFTxOqX1udT
+	 Cuv048SW3NyWD4wPZWc9Om9mwSgfLfRNiykvLk6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfKKShu (ORCPT
+        id S1728911AbfKKTHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56514 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 14:07:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728895AbfKKShp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:37:45 -0500
+        id S1728849AbfKKShW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:37:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF8F921655;
-        Mon, 11 Nov 2019 18:37:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFF95204FD;
+        Mon, 11 Nov 2019 18:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497464;
-        bh=5GN9Z8z2i4CPM2GG6ItL3lR2p202qoU9ErlKq3e+xgc=;
+        s=default; t=1573497442;
+        bh=bD4K1NaAFhMCwSJwgVe/D3+stuw+uSmAlZ6tLzZuNNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CK+q8LAbJsB009bgt+P6d8dWYUGJrNX1j4OqlWtOpCIJ1e+GXZ1RGz7zsrHcPy0ai
-         ++me3RWpASW3WqR7jy8XSYmrjJZSKjSbuuAQ3279TAaUcCCCwiYmMXqaJPmmE/VR5r
-         1bj3ddVseF2nK9GUeH0gbzjOz76n4PhjyfPADKxY=
+        b=NnKX3o5xFH0+YCpnGA812F3Nw0/RJnt00aVgy49v4sA+Xn4ViV9a+9qdt/I33DzPU
+         cOXRIBtknrDV+xsPT+moTMVdfC1tWVBKdSgA4z1e/bSHjvQcyYvDBtZU5JtKfeh3MF
+         JKaA9cgAvtQfRcI0x9jfH71Lq9ZWnTeMo++4/QU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ben Segall <bsegall@google.com>,
-        Dave Chiluk <chiluk+linux@indeed.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, pauld@redhat.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 063/105] sched/fair: Fix -Wunused-but-set-variable warnings
-Date:   Mon, 11 Nov 2019 19:28:33 +0100
-Message-Id: <20191111181445.120295345@linuxfoundation.org>
+        Arvind Yadav <arvind.yadav.cs@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 056/105] ASoC: davinci-mcasp: Handle return value of devm_kasprintf
+Date:   Mon, 11 Nov 2019 19:28:26 +0100
+Message-Id: <20191111181444.051082593@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -64,69 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Arvind Yadav <arvind.yadav.cs@gmail.com>
 
-commit 763a9ec06c409dcde2a761aac4bb83ff3938e0b3 upstream.
+commit 0c8b794c4a10aaf7ac0d4a49be2b2638e2038adb upstream
 
-Commit:
+devm_kasprintf() can fail here and we must check its return value.
 
-   de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-
-introduced a few compilation warnings:
-
-  kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-  kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used [-Wunused-but-set-variable]
-  kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-  kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used [-Wunused-but-set-variable]
-
-Also, __refill_cfs_bandwidth_runtime() does no longer update the
-expiration time, so fix the comments accordingly.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: pauld@redhat.com
-Fixes: de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-Link: https://lkml.kernel.org/r/1566326455-8038-1-git-send-email-cai@lca.pw
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/sched/fair.c |   15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ sound/soc/davinci/davinci-mcasp.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4091,21 +4091,16 @@ static inline u64 sched_cfs_bandwidth_sl
- }
- 
- /*
-- * Replenish runtime according to assigned quota and update expiration time.
-- * We use sched_clock_cpu directly instead of rq->clock to avoid adding
-- * additional synchronization around rq->lock.
-+ * Replenish runtime according to assigned quota. We use sched_clock_cpu
-+ * directly instead of rq->clock to avoid adding additional synchronization
-+ * around rq->lock.
-  *
-  * requires cfs_b->lock
-  */
- void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
- {
--	u64 now;
--
--	if (cfs_b->quota == RUNTIME_INF)
--		return;
--
--	now = sched_clock_cpu(smp_processor_id());
--	cfs_b->runtime = cfs_b->quota;
-+	if (cfs_b->quota != RUNTIME_INF)
-+		cfs_b->runtime = cfs_b->quota;
- }
- 
- static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1894,6 +1894,10 @@ static int davinci_mcasp_probe(struct pl
+ 	if (irq >= 0) {
+ 		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s_common",
+ 					  dev_name(&pdev->dev));
++		if (!irq_name) {
++			ret = -ENOMEM;
++			goto err;
++		}
+ 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+ 						davinci_mcasp_common_irq_handler,
+ 						IRQF_ONESHOT | IRQF_SHARED,
+@@ -1911,6 +1915,10 @@ static int davinci_mcasp_probe(struct pl
+ 	if (irq >= 0) {
+ 		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s_rx",
+ 					  dev_name(&pdev->dev));
++		if (!irq_name) {
++			ret = -ENOMEM;
++			goto err;
++		}
+ 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+ 						davinci_mcasp_rx_irq_handler,
+ 						IRQF_ONESHOT, irq_name, mcasp);
+@@ -1926,6 +1934,10 @@ static int davinci_mcasp_probe(struct pl
+ 	if (irq >= 0) {
+ 		irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s_tx",
+ 					  dev_name(&pdev->dev));
++		if (!irq_name) {
++			ret = -ENOMEM;
++			goto err;
++		}
+ 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+ 						davinci_mcasp_tx_irq_handler,
+ 						IRQF_ONESHOT, irq_name, mcasp);
 
 
