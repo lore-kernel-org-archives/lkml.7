@@ -2,118 +2,72 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD4DC17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A72C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36497214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qu8oR+yS"
+	by mail.kernel.org (Postfix) with ESMTP id 9E1A4214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 10:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfKKK31 (ORCPT
+        id S1727143AbfKKK3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:29:27 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42783 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726912AbfKKK30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:29:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573468166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pcVRVS2wigfNxAtSVYLPPaPRSK4c2t19oDRB3orBUZ8=;
-        b=Qu8oR+yS+SqKnZKhq7MLdSGa7rTRFICVguQD0H8Odfe6wr9GUAVwXwMnBOJSX7jzKbEi5o
-        gzUH6SjKbp9xeBjhAjRy6mERaKnfY9eSs1cQBcUOMDvMOm6UcGlBD92+7O6wB8xKtXIHXA
-        ZrAYGJhK0OkDbK4QJiUdDjUt72GFF2s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-z809MnJvNym6fsK2ylp1rQ-1; Mon, 11 Nov 2019 05:29:23 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 531491005500;
-        Mon, 11 Nov 2019 10:29:21 +0000 (UTC)
-Received: from dustball.usersys.redhat.com (unknown [10.43.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 640765D6A3;
-        Mon, 11 Nov 2019 10:29:18 +0000 (UTC)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     darrick.wong@oracle.com, naresh.kamboju@linaro.org,
-        hch@infradead.org
-Cc:     ltp@lists.linux.it, linux-next@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, chrubis@suse.cz,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        broonie@kernel.org, arnd@arndb.de, lkft-triage@lists.linaro.org,
-        linux-ext4@vger.kernel.org, tytso@mit.edu, jstancek@redhat.com
-Subject: [PATCH] iomap: fix return value of iomap_dio_bio_actor on 32bit systems
-Date:   Mon, 11 Nov 2019 11:28:10 +0100
-Message-Id: <b757ff64ddf68519fc3d55b66fcd8a1d4b436395.1573467154.git.jstancek@redhat.com>
-In-Reply-To: <20191111083815.GA29540@infradead.org>
-References: <20191111083815.GA29540@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: z809MnJvNym6fsK2ylp1rQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Nov 2019 05:29:30 -0500
+Received: from verein.lst.de ([213.95.11.211]:48604 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbfKKK32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:29:28 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1A21068BE1; Mon, 11 Nov 2019 11:29:24 +0100 (CET)
+Date:   Mon, 11 Nov 2019 11:29:23 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        "moderated list:NIOS2 ARCHITECTURE" 
+        <nios2-dev@lists.rocketboards.org>, openrisc@lists.librecores.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 10/21] asm-generic: ioremap_uc should behave the same
+ with and without MMU
+Message-ID: <20191111102923.GA12974@lst.de>
+References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-11-hch@lst.de> <CAK8P3a2o4R+E2hTrHrmNy7K1ki3_98aWE5a-fjkQ_NWW=xd_gQ@mail.gmail.com> <20191111101531.GA12294@lst.de> <CAK8P3a0rTvfPP2LUMw8EC0xz5gfZP5+NUkoaZBJrtYYfr6YRig@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0rTvfPP2LUMw8EC0xz5gfZP5+NUkoaZBJrtYYfr6YRig@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naresh reported LTP diotest4 failing for 32bit x86 and arm -next
-kernels on ext4. Same problem exists in 5.4-rc7 on xfs.
+On Mon, Nov 11, 2019 at 11:27:27AM +0100, Arnd Bergmann wrote:
+> Ok, fair enough. Let's just go with your version for now, if only to not
+> hold your series up more. I'd still suggest we change atyfb to only
+> use ioremap_uc() on i386 and maybe ia64. I can send a patch for that.
 
-The failure comes down to:
-  openat(AT_FDCWD, "testdata-4.5918", O_RDWR|O_DIRECT) =3D 4
-  mmap2(NULL, 4096, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) =3D 0xb7f7=
-b000
-  read(4, 0xb7f7b000, 4096)              =3D 0 // expects -EFAULT
-
-Problem is conversion at iomap_dio_bio_actor() return. Ternary
-operator has a return type and an attempt is made to convert each
-of operands to the type of the other. In this case "ret" (int)
-is converted to type of "copied" (unsigned long). Both have size
-of 4 bytes:
-    size_t copied =3D 0;
-    int ret =3D -14;
-    long long actor_ret =3D copied ? copied : ret;
-
-    On x86_64: actor_ret =3D=3D -14;
-    On x86   : actor_ret =3D=3D 4294967282
-
-Replace ternary operator with 2 return statements to avoid this
-unwanted conversion.
-
-Fixes: 4721a6010990 ("iomap: dio data corruption and spurious errors when p=
-ipes fill")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
----
- fs/iomap/direct-io.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 1fc28c2da279..7c58f51d7da7 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -318,7 +318,9 @@ static void iomap_dio_bio_end_io(struct bio *bio)
- =09=09if (pad)
- =09=09=09iomap_dio_zero(dio, iomap, pos, fs_block_size - pad);
- =09}
--=09return copied ? copied : ret;
-+=09if (copied)
-+=09=09return copied;
-+=09return ret;
- }
-=20
- static loff_t
---=20
-1.8.3.1
-
+I don't think we even need it on ia64.  But lets kick off a dicussion
+with the atyfb, x86 and ia64 maintainers after this series is in.
+Which was kinda my plan anyway.
