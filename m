@@ -2,221 +2,435 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756A3C17447
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197FBC17447
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD50206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YK0y7OEX"
+	by mail.kernel.org (Postfix) with ESMTP id D48AC206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 21:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfKKVlw (ORCPT
+        id S1727519AbfKKVni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:41:52 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45884 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKKVlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 16:41:52 -0500
-Received: by mail-pf1-f193.google.com with SMTP id z4so11581662pfn.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 13:41:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3he+QtfifQ3bgJ/yyvcxgVo2dz6VZH6CuJDagxiiqO0=;
-        b=YK0y7OEXAYek4HKT2x2A9HNewczn8bgLVljRK6e4KmPjx4AqMZIvtBam+zJFOT2l+2
-         C2pjfCq8g4vfa4HJoCjQPQhHmsM/kllaeSAjPbCZ5uSdhRnwJtZW8XPxvh+yrj5Y2eVm
-         SDfw0p9t4EBgCGs9SaDPGasYcX77jUscvVv7C/u+vELVsmZccSYTOqf7E7nOuIf6kCeg
-         u+zr3b4JWLm5EhI/cH/UZhJTJn7MGeE3e+OoBui2rDS2XFhLFQL3aRb4drS+YfW4MAP/
-         y2PLKLByUnJK3/wROWHrKpDXCC15u8JV4ZT0+3NnJVYT/yezNGl+cUHhOlsD02L8Lkz5
-         grzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3he+QtfifQ3bgJ/yyvcxgVo2dz6VZH6CuJDagxiiqO0=;
-        b=tA4jqP0DHG1rnuAsfLkZeO6MGYc9h9xOb2FATGl+CCgLIXVN034dQ/99FW9tdiF6t7
-         RWiX2FKAjyKW9WDYnit6ZzjXtneG3BqSjLGpMdpjI9swrkVvCIl6iDHZgbY9k4W7mNdo
-         9cY6FLIb7P9kvrdAcQXIU8/v/Z0mgpTFb/9dsaUraJ+1qaFnmhl0993+HcpknuHLoGX3
-         aJ/eC1CnZNbsVCHR7k1h50bL/ZkUwtOri1i2Msv4/XygMDiRC2FPbryPJxvbYhzhMftp
-         voNaxeY9bULeZ1bUCCL9ODDezyLWsGTlaxtMxiGmAlu/9U6/S8n0eKZWE41UoJvc4hxY
-         wr+w==
-X-Gm-Message-State: APjAAAVBSlwFUm9ucDSWJgUqtMz3rx09CXjLZffOpZzSOW5Gx42NrZ8e
-        mXSeGfXVJDgwlNDIgfsKlam82hNPgum75TOuYXd9rg==
-X-Google-Smtp-Source: APXvYqzy/af2x31SqiZ0T4qLxwoFESxbRuTnuVa7dS8IFhRlfQ+werW7nPW6tbVH+2zxkAxDA/t/GlVa72LeUDHx9dI=
-X-Received: by 2002:a63:712:: with SMTP id 18mr20831195pgh.384.1573508510293;
- Mon, 11 Nov 2019 13:41:50 -0800 (PST)
-MIME-Version: 1.0
-References: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com>
- <1571335639-21675-6-git-send-email-alan.maguire@oracle.com>
- <CAFd5g46s4eY4qEB5UZPeOKNdZXm4+sA9N=4g8gDYAhyhMahZKw@mail.gmail.com> <alpine.LRH.2.20.1911081520550.24027@dhcp-10-175-178-67.vpn.oracle.com>
-In-Reply-To: <alpine.LRH.2.20.1911081520550.24027@dhcp-10-175-178-67.vpn.oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 11 Nov 2019 13:41:38 -0800
-Message-ID: <CAFd5g44vYUkLQmJFq_vQ5ruvBC_1vrkSd9DeW3oQ_vLzrNcpgQ@mail.gmail.com>
-Subject: Re: [PATCH v3 linux-kselftest-test 5/6] kunit: allow kunit to be
- loaded as a module
-To:     Alan Maguire <alan.maguire@oracle.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 11 Nov 2019 16:43:38 -0500
+Received: from mga07.intel.com ([134.134.136.100]:33174 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727001AbfKKVni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 16:43:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 13:43:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
+   d="scan'208";a="202186945"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Nov 2019 13:43:35 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     tony.luck@intel.com, bp@alien8.de, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, bberg@redhat.com
+Cc:     x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+        ckellner@redhat.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] x86, mce, therm_throt: Optimize notifications of thermal throttle
+Date:   Mon, 11 Nov 2019 13:43:12 -0800
+Message-Id: <20191111214312.81365-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Stephen Boyd - since he is more of an expert on the hung task timer than I am.
+Some modern systems have very tight thermal tolerances. Because of this
+they may cross thermal thresholds when running normal workloads (even
+during boot). The CPU hardware will react by limiting power/frequency
+and using duty cycles to bring the temperature back into normal range.
 
-On Fri, Nov 8, 2019 at 7:30 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> On Thu, 7 Nov 2019, Brendan Higgins wrote:
->
-> > On Thu, Oct 17, 2019 at 11:09 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> > >
-> > > Making kunit itself buildable as a module allows for "always-on"
-> > > kunit configuration; specifying CONFIG_KUNIT=m means the module
-> > > is built but only used when loaded.  Kunit test modules will load
-> > > kunit.ko as an implicit dependency, so simply running
-> > > "modprobe my-kunit-tests" will load the tests along with the kunit
-> > > module and run them.
-> > >
-> > > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> > > ---
-> > >  lib/kunit/Kconfig     | 2 +-
-> > >  lib/kunit/Makefile    | 4 +++-
-> > >  lib/kunit/test.c      | 2 ++
-> > >  lib/kunit/try-catch.c | 3 +++
-> > >  4 files changed, 9 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-> > > index 9ebd5e6..065aa16 100644
-> > > --- a/lib/kunit/Kconfig
-> > > +++ b/lib/kunit/Kconfig
-> > > @@ -3,7 +3,7 @@
-> > >  #
-> > >
-> > >  menuconfig KUNIT
-> > > -       bool "KUnit - Enable support for unit tests"
-> > > +       tristate "KUnit - Enable support for unit tests"
-> > >         help
-> > >           Enables support for kernel unit tests (KUnit), a lightweight unit
-> > >           testing and mocking framework for the Linux kernel. These tests are
-> > > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-> > > index 769d940..8e2635a 100644
-> > > --- a/lib/kunit/Makefile
-> > > +++ b/lib/kunit/Makefile
-> > > @@ -1,4 +1,6 @@
-> > > -obj-$(CONFIG_KUNIT) +=                 test.o \
-> > > +obj-$(CONFIG_KUNIT) +=                 kunit.o
-> > > +
-> > > +kunit-objs +=                          test.o \
-> > >                                         string-stream.o \
-> > >                                         assert.o \
-> > >                                         try-catch.o
-> > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > > index e8b2443..c0ace36 100644
-> > > --- a/lib/kunit/test.c
-> > > +++ b/lib/kunit/test.c
-> > > @@ -523,3 +523,5 @@ void *kunit_find_symbol(const char *sym)
-> > >         return ERR_PTR(-ENOENT);
-> > >  }
-> > >  EXPORT_SYMBOL(kunit_find_symbol);
-> > > +
-> > > +MODULE_LICENSE("GPL");
-> > > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> > > index 1c1e9af..72fc8ed 100644
-> > > --- a/lib/kunit/try-catch.c
-> > > +++ b/lib/kunit/try-catch.c
-> > > @@ -31,6 +31,8 @@ static int kunit_generic_run_threadfn_adapter(void *data)
-> > >         complete_and_exit(try_catch->try_completion, 0);
-> > >  }
-> > >
-> > > +KUNIT_VAR_SYMBOL(sysctl_hung_task_timeout_secs, unsigned long);
-> >
-> > Can you just export sysctl_hung_task_timeout_secs?
-> >
-> > I don't mean to make you redo all this work for one symbol twice, but
-> > I thought we agreed on just exposing this symbol, but in a namespace.
-> > It seemed like a good use case for that namespaced exporting thing
-> > that Luis was talking about. As I understood it, you would have to
-> > export it in the module that defines it, and then use the new
-> > MODULE_IMPORT_NS() macro here.
-> >
->
-> Sure, I can certainly look into that, though I wonder if we should
-> consider another possibility - should kunit have its own sysctl table for
-> things like configuring timeouts? I can look at adding a patch for that
+Thus users may see a "critical" message about the "temperature above
+threshold" which is soon followed by "temperature/speed normal". These
+messages are rate-limited, but still may repeat every few minutes.
 
-So on the one hand, yes, I would like to have configurable test
-timeouts for KUnit, but that is not what the parameter check is for
-here. This is to make sure KUnit times a test case out before the hung
-task timer does.
+This issue became worse starting with the Ivy Bridge generation of
+CPUs because they include a TCC activation offset in the MSR
+IA32_TEMPERATURE_TARGET. OEMs use this to provide alerts long before
+critical temperatures are reached.
 
-> prior to the module patch so the issues with exporting the hung task
-> timeout would go away. Now the reason I suggest this isn't as much a hack
-> to solve this specific problem, rather it seems to fit better with the
-> longer-term intent expressed by the comment around use of the field (at
-> least as I read it, I may be wrong).
+A test run on a laptop with Intel 8th Gen i5 core for two hours with a
+workload resulted in 20K+ thermal interrupts per CPU for core level and
+another 20K+ interrupts at package level. The kernel logs were full of
+throttling messages.
 
-Not really. Although I do agree that adding configurability here might
-be a good idea, I believe we would need to clamp such a value by
-sysctl_hung_task_timeout_secs regardless since we don't want to be
-killed by the hung task timer; thus, we still need access to
-sysctl_hung_task_timeout_secs either way, and so doing what you are
-proposing would be off topic.
+The real value of these threshold interrupts, is to debug problems with
+the external cooling solutions and performance issues due to excessive
+throttling.
 
-> Exporting the symbol does allow us to piggy-back on an existing value, but
-> maybe we should support out our own tunable "kunit_timeout_secs" here?
-> Doing so would also lay the groundwork for supporting other kunit
-> tunables in the future if needed. What do you think?
+So the solution here is the following:
+- In the current thermal_throttle folder, show the maximum time for one
+throttling event and total amount of time, the system was in throttling
+state.
+- Do not log short excursions.
+- Log only when, in spite of thermal throttling the temperature is rising.
+On the high threshold interrupt trigger a delayed workqueue, that
+monitors the threshold violation log bit (THERM_STATUS_PROCHOT_LOG). When
+the log bit is set, this workqueue callback calculates three point moving
+average and logs warning message when the temperature trend is rising.
+When this log bit is clear and temperature is below threshold temperature,
+then the workqueue callback logs "Normal" message". Once a high threshold
+event is logged, the logging is rate limited.
 
-The goal is not to piggy back on the value as I mentioned above.
-Stephen, do you have any thoughts on this? Do you see any other
-preferable solution to what Alan is trying to do?
+With this patch, on the same test laptop, no warnings are printed in logs
+as the max time the processor could bring the temperature under control is
+only 280 ms.
 
-> Many thanks for the review! I've got an updated patchset almost
-> ready with the symbol lookup stuff removed; the above is the last issue
-> outstanding from my side.
+This implementation is done with the inputs from Alan Cox and Tony Luck.
 
-Awesome! No thanks necessary, I appreciate the work you are doing!
-There were some other people who mentioned that they wanted this in
-the past, so it is a really big help having you do this. I feel bad
-that I couldn't get the review back to you faster. :-)
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
 
->
-> > > +
-> > >  static unsigned long kunit_test_timeout(void)
-> > >  {
-> > >         unsigned long timeout_msecs;
-> > > @@ -52,6 +54,7 @@ static unsigned long kunit_test_timeout(void)
-> > >          * For more background on this topic, see:
-> > >          * https://mike-bland.com/2011/11/01/small-medium-large.html
-> > >          */
-> > > +       KUNIT_INIT_VAR_SYMBOL(NULL, sysctl_hung_task_timeout_secs);
-> > >         if (sysctl_hung_task_timeout_secs) {
-> > >                 /*
-> > >                  * If sysctl_hung_task is active, just set the timeout to some
-> > > --
-> > > 1.8.3.1
-> > >
-> >
+Version History:
+v1:
+Changes compared to RFC PATCH:
+	Addressed comments from Boris
+	Rebased to tip/master
+	Added kenrel doc for struct
+	Edits to the commit description
+	Optimize storage for _thermal_state
+	Ignore invalid sample for threshold high
+
+ arch/x86/kernel/cpu/mce/therm_throt.c | 251 +++++++++++++++++++++++---
+ 1 file changed, 227 insertions(+), 24 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index bc441d68d060..c102fcff23f3 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -40,15 +40,58 @@
+ #define THERMAL_THROTTLING_EVENT	0
+ #define POWER_LIMIT_EVENT		1
+ 
+-/*
+- * Current thermal event state:
++/**
++ * struct _thermal_state - Represent the current thermal event state
++ * @next_check:			Stores the next timestamp, when it is allowed
++ *				to log the next warning message.
++ * @last_interrupt_time:	Stores the timestamp for the last threshold
++ *				high event.
++ * @therm_work:			Delayed workqueue structure
++ * @count:			Stores the current running count for thermal
++ *				or power threshold interrupts.
++ * @last_count:			Stores the previous running count for thermal
++ *				or power threshold interrupts.
++ * @max_time_ms:		This shows the maximum amount of time CPU was
++ *				in throttled state for a single thermal
++ *				threshold high to low state.
++ * @total_time_ms:		This is a cumulative time during which CPU was
++ *				in the throttled state.
++ * @rate_control_active:	Flag to set, when throttling message is logged.
++ *				This is used for the purpose of rate-control.
++ * @new_event:			Stores the last high/low status of the
++ *				THERM_STATUS_PROCHOT or
++ *				THERM_STATUS_POWER_LIMIT.
++ * @level:			Stores whether this _thermal_state instance is
++ *				for a CORE level or for PACKAGE level.
++ * @sample_index:		Index for storage for the next sample in the
++ *				buffer temp_samples[].
++ * @sample_count:		Total number of samples collected in the buffer
++ *				temp_samples[].
++ * @average:			The last moving average of temperature samples
++ * @baseline_temp:		Temperature at which thermal threshold high
++ *				interrupt was generated.
++ * @temp_samples:		Storage for temperature samples to calculate
++ *				moving average.
++ *
++ * This structure is used to represent data related to thermal state for a CPU.
++ * There is a separate storage for core and package level for each CPU.
+  */
+ struct _thermal_state {
+-	bool			new_event;
+-	int			event;
+ 	u64			next_check;
++	u64			last_interrupt_time;
++	struct delayed_work	therm_work;
+ 	unsigned long		count;
+ 	unsigned long		last_count;
++	unsigned long		max_time_ms;
++	unsigned long		total_time_ms;
++	bool			rate_control_active;
++	bool			new_event;
++	u8			level;
++	u8			sample_index;
++	u8			sample_count;
++	u8			average;
++	u8			baseline_temp;
++	u8			temp_samples[3];
+ };
+ 
+ struct thermal_state {
+@@ -121,8 +164,22 @@ define_therm_throt_device_one_ro(package_throttle_count);
+ define_therm_throt_device_show_func(package_power_limit, count);
+ define_therm_throt_device_one_ro(package_power_limit_count);
+ 
++define_therm_throt_device_show_func(core_throttle, max_time_ms);
++define_therm_throt_device_one_ro(core_throttle_max_time_ms);
++
++define_therm_throt_device_show_func(package_throttle, max_time_ms);
++define_therm_throt_device_one_ro(package_throttle_max_time_ms);
++
++define_therm_throt_device_show_func(core_throttle, total_time_ms);
++define_therm_throt_device_one_ro(core_throttle_total_time_ms);
++
++define_therm_throt_device_show_func(package_throttle, total_time_ms);
++define_therm_throt_device_one_ro(package_throttle_total_time_ms);
++
+ static struct attribute *thermal_throttle_attrs[] = {
+ 	&dev_attr_core_throttle_count.attr,
++	&dev_attr_core_throttle_max_time_ms.attr,
++	&dev_attr_core_throttle_total_time_ms.attr,
+ 	NULL
+ };
+ 
+@@ -135,6 +192,105 @@ static const struct attribute_group thermal_attr_group = {
+ #define CORE_LEVEL	0
+ #define PACKAGE_LEVEL	1
+ 
++#define THERM_THROT_POLL_INTERVAL	HZ
++#define THERM_STATUS_PROCHOT_LOG	BIT(1)
++
++static void clear_therm_status_log(int level)
++{
++	int msr;
++	u64 msr_val;
++
++	if (level == CORE_LEVEL)
++		msr = MSR_IA32_THERM_STATUS;
++	else
++		msr = MSR_IA32_PACKAGE_THERM_STATUS;
++
++	rdmsrl(msr, msr_val);
++	wrmsrl(msr, msr_val & ~THERM_STATUS_PROCHOT_LOG);
++}
++
++static void get_therm_status(int level, bool *proc_hot, u8 *temp)
++{
++	int msr;
++	u64 msr_val;
++
++	if (level == CORE_LEVEL)
++		msr = MSR_IA32_THERM_STATUS;
++	else
++		msr = MSR_IA32_PACKAGE_THERM_STATUS;
++
++	rdmsrl(msr, msr_val);
++	if (msr_val & THERM_STATUS_PROCHOT_LOG)
++		*proc_hot = true;
++	else
++		*proc_hot = false;
++
++	*temp = (msr_val >> 16) & 0x7F;
++}
++
++static void throttle_active_work(struct work_struct *work)
++{
++	struct _thermal_state *state = container_of(to_delayed_work(work),
++						struct _thermal_state, therm_work);
++	unsigned int i, avg, this_cpu = smp_processor_id();
++	u64 now = get_jiffies_64();
++	bool hot;
++	u8 temp;
++
++	get_therm_status(state->level, &hot, &temp);
++	/* temperature value is offset from the max so lesser means hotter */
++	if (!hot && temp > state->baseline_temp) {
++		if (state->rate_control_active)
++			pr_info("CPU%d: %s temperature/speed normal (total events = %lu)\n",
++				this_cpu,
++				state->level == CORE_LEVEL ? "Core" : "Package",
++				state->count);
++
++		state->rate_control_active = false;
++		return;
++	}
++
++	if (time_before64(now, state->next_check) &&
++			  state->rate_control_active)
++		goto re_arm;
++
++	state->next_check = now + CHECK_INTERVAL;
++
++	if (state->count != state->last_count) {
++		/* There was one new thermal interrupt */
++		state->last_count = state->count;
++		state->average = 0;
++		state->sample_count = 0;
++		state->sample_index = 0;
++	}
++
++	state->temp_samples[state->sample_index] = temp;
++	state->sample_count++;
++	state->sample_index = (state->sample_index + 1) % ARRAY_SIZE(state->temp_samples);
++	if (state->sample_count < ARRAY_SIZE(state->temp_samples))
++		goto re_arm;
++
++	avg = 0;
++	for (i = 0; i < ARRAY_SIZE(state->temp_samples); ++i)
++		avg += state->temp_samples[i];
++
++	avg /= ARRAY_SIZE(state->temp_samples);
++
++	if (state->average > avg) {
++		pr_warn("CPU%d: %s temperature is above threshold, cpu clock is throttled (total events = %lu)\n",
++			this_cpu,
++			state->level == CORE_LEVEL ? "Core" : "Package",
++			state->count);
++		state->rate_control_active = true;
++	}
++
++	state->average = avg;
++
++re_arm:
++	clear_therm_status_log(state->level);
++	schedule_delayed_work_on(this_cpu, &state->therm_work, THERM_THROT_POLL_INTERVAL);
++}
++
+ /***
+  * therm_throt_process - Process thermal throttling event from interrupt
+  * @curr: Whether the condition is current or not (boolean), since the
+@@ -178,27 +334,33 @@ static void therm_throt_process(bool new_event, int event, int level)
+ 	if (new_event)
+ 		state->count++;
+ 
+-	if (time_before64(now, state->next_check) &&
+-			state->count != state->last_count)
++	if (event != THERMAL_THROTTLING_EVENT)
+ 		return;
+ 
+-	state->next_check = now + CHECK_INTERVAL;
+-	state->last_count = state->count;
++	if (new_event && !state->last_interrupt_time) {
++		bool hot;
++		u8 temp;
++
++		get_therm_status(state->level, &hot, &temp);
++		/*
++		 * Ignore short temperature spike as the system is not close
++		 * to PROCHOT. 10C offset is large enough to ignore. It is
++		 * already dropped from the high threshold temperature.
++		 */
++		if (temp > 10)
++			return;
+ 
+-	/* if we just entered the thermal event */
+-	if (new_event) {
+-		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+-				this_cpu,
+-				level == CORE_LEVEL ? "Core" : "Package",
+-				state->count);
+-		return;
+-	}
+-	if (old_event) {
+-		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_info("CPU%d: %s temperature/speed normal\n", this_cpu,
+-				level == CORE_LEVEL ? "Core" : "Package");
+-		return;
++		state->baseline_temp = temp;
++		state->last_interrupt_time = now;
++		schedule_delayed_work_on(this_cpu, &state->therm_work, THERM_THROT_POLL_INTERVAL);
++	} else if (old_event && state->last_interrupt_time) {
++		unsigned long throttle_time;
++
++		throttle_time = jiffies_delta_to_msecs(now - state->last_interrupt_time);
++		if (throttle_time > state->max_time_ms)
++			state->max_time_ms = throttle_time;
++		state->total_time_ms += throttle_time;
++		state->last_interrupt_time = 0;
+ 	}
+ }
+ 
+@@ -244,20 +406,47 @@ static int thermal_throttle_add_dev(struct device *dev, unsigned int cpu)
+ 	if (err)
+ 		return err;
+ 
+-	if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable)
++	if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable) {
+ 		err = sysfs_add_file_to_group(&dev->kobj,
+ 					      &dev_attr_core_power_limit_count.attr,
+ 					      thermal_attr_group.name);
++		if (err)
++			goto del_group;
++	}
++
+ 	if (cpu_has(c, X86_FEATURE_PTS)) {
+ 		err = sysfs_add_file_to_group(&dev->kobj,
+ 					      &dev_attr_package_throttle_count.attr,
+ 					      thermal_attr_group.name);
+-		if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable)
++		if (err)
++			goto del_group;
++
++		err = sysfs_add_file_to_group(&dev->kobj,
++					      &dev_attr_package_throttle_max_time_ms.attr,
++					      thermal_attr_group.name);
++		if (err)
++			goto del_group;
++
++		err = sysfs_add_file_to_group(&dev->kobj,
++					      &dev_attr_package_throttle_total_time_ms.attr,
++					      thermal_attr_group.name);
++		if (err)
++			goto del_group;
++
++		if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable) {
+ 			err = sysfs_add_file_to_group(&dev->kobj,
+ 					&dev_attr_package_power_limit_count.attr,
+ 					thermal_attr_group.name);
++			if (err)
++				goto del_group;
++		}
+ 	}
+ 
++	return 0;
++
++del_group:
++	sysfs_remove_group(&dev->kobj, &thermal_attr_group);
++
+ 	return err;
+ }
+ 
+@@ -269,15 +458,29 @@ static void thermal_throttle_remove_dev(struct device *dev)
+ /* Get notified when a cpu comes on/off. Be hotplug friendly. */
+ static int thermal_throttle_online(unsigned int cpu)
+ {
++	struct thermal_state *state = &per_cpu(thermal_state, cpu);
+ 	struct device *dev = get_cpu_device(cpu);
+ 
++	state->package_throttle.level = PACKAGE_LEVEL;
++	state->core_throttle.level = CORE_LEVEL;
++
++	INIT_DELAYED_WORK(&state->package_throttle.therm_work, throttle_active_work);
++	INIT_DELAYED_WORK(&state->core_throttle.therm_work, throttle_active_work);
++
+ 	return thermal_throttle_add_dev(dev, cpu);
+ }
+ 
+ static int thermal_throttle_offline(unsigned int cpu)
+ {
++	struct thermal_state *state = &per_cpu(thermal_state, cpu);
+ 	struct device *dev = get_cpu_device(cpu);
+ 
++	cancel_delayed_work(&state->package_throttle.therm_work);
++	cancel_delayed_work(&state->core_throttle.therm_work);
++
++	state->package_throttle.rate_control_active = false;
++	state->core_throttle.rate_control_active = false;
++
+ 	thermal_throttle_remove_dev(dev);
+ 	return 0;
+ }
+-- 
+2.17.2
+
