@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF54FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFBBC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964B021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C806A21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499155;
-	bh=kiDTsuVHTMiEWSIL275Ny5D5Tpvc9FYAKfy5rRCxoQA=;
+	s=default; t=1573499165;
+	bh=n3O4Tors5pVG7Gt53AwRqz+3OL4J8FXG/CeUhrsDvZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6SWKlTYq0AIdo6n5uwWXOuWbTUIYan0eo1OYVGfxQAaibTYk83Ju+T8xAf8Kmuit
-	 1JF08V6hW1uxGWrMWJAq9Xcx36uuZS6d13/y7UeffvSkpu6Oi5i5VeQc/6XCF3sg9o
-	 iLIWR3c4oeVDA3DpIIEyViZT2s/Xvcbz+WLDu73Y=
+	b=f5CbGCXWI92eTax1Vij2X7RqYZdUTEfLk689i7VlYciIyaCs689g42lHueWyNSrHo
+	 j2/1Y82xu64UE1ac9RGz84YYsTc0ypZJ2rTBakxvT14tDd8if24SrPOooRy3pF20c0
+	 BizxwxeOBdqyKmgutHdYpvLFJH64GpRLkJG+7Zms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfKKTFx (ORCPT
+        id S1727529AbfKKSjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:05:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:39:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729151AbfKKSj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:39:28 -0500
+        id S1728593AbfKKSjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:39:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7670221655;
-        Mon, 11 Nov 2019 18:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96A5821783;
+        Mon, 11 Nov 2019 18:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497568;
-        bh=kiDTsuVHTMiEWSIL275Ny5D5Tpvc9FYAKfy5rRCxoQA=;
+        s=default; t=1573497556;
+        bh=n3O4Tors5pVG7Gt53AwRqz+3OL4J8FXG/CeUhrsDvZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2DMyFlwaeUoXxmI66sgHTqScDb2LuhhYUMgZPK2Gfu3on1SF4YQ5/pvOX8Ua+7S5
-         CAMfHpnHXOBcgqMzIAULgDCwv70ePKP6YcqpnpcxzxHzs2/4VUhoJPNqzA7JR8Me1O
-         SPairmXbncbTArfqTQZTGthfTquJBpxnwm+tPvAI=
+        b=Chwm8v9uci7PqwDtgnQ8teWz++sIIGenxW3UYkLb+CDN7tsRg05wy02Dha+OiII2d
+         qetlMOQvpiCR4QF+hOsj2AT/Rdc7aQ2KYMBq/IKmeGSgAXFOs3NpDOqcI500XXUCT9
+         g+mD6ZQK38wK1O6zBHA1zMKVMKD34/DOss5suSpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>, bhe@redhat.com,
-        ebiederm@xmission.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 100/105] x86/apic: Move pending interrupt check code into its own function
-Date:   Mon, 11 Nov 2019 19:29:10 +0100
-Message-Id: <20191111181449.206849538@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 096/105] NFSv4: Dont allow a cached open with a revoked delegation
+Date:   Mon, 11 Nov 2019 19:29:06 +0100
+Message-Id: <20191111181448.708159397@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -61,153 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dou Liyang <douly.fnst@cn.fujitsu.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 9b217f33017715903d0956dfc58f82d2a2d00e63 ]
+[ Upstream commit be3df3dd4c70ee020587a943a31b98a0fb4b6424 ]
 
-The pending interrupt check code is mixed with the local APIC setup code,
-that looks messy.
+If the delegation is marked as being revoked, we must not use it
+for cached opens.
 
-Extract the related code, move it into a new function named
-apic_pending_intr_clear().
-
-Signed-off-by: Dou Liyang <douly.fnst@cn.fujitsu.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: bhe@redhat.com
-Cc: ebiederm@xmission.com
-Link: https://lkml.kernel.org/r/20180301055930.2396-2-douly.fnst@cn.fujitsu.com
+Fixes: 869f9dfa4d6d ("NFSv4: Fix races between nfs_remove_bad_delegation() and delegation return")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 100 ++++++++++++++++++++----------------
- 1 file changed, 55 insertions(+), 45 deletions(-)
+ fs/nfs/delegation.c | 10 ++++++++++
+ fs/nfs/delegation.h |  1 +
+ fs/nfs/nfs4proc.c   |  7 ++-----
+ 3 files changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index ea2de324ab021..98fecdbec6402 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1362,6 +1362,56 @@ static void lapic_setup_esr(void)
- 			oldvalue, value);
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 606dd3871f66b..61bc0a6ba08b1 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -52,6 +52,16 @@ nfs4_is_valid_delegation(const struct nfs_delegation *delegation,
+ 	return false;
  }
  
-+static void apic_pending_intr_clear(void)
++struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode)
 +{
-+	long long max_loops = cpu_khz ? cpu_khz : 1000000;
-+	unsigned long long tsc = 0, ntsc;
-+	unsigned int value, queued;
-+	int i, j, acked = 0;
++	struct nfs_delegation *delegation;
 +
-+	if (boot_cpu_has(X86_FEATURE_TSC))
-+		tsc = rdtsc();
-+	/*
-+	 * After a crash, we no longer service the interrupts and a pending
-+	 * interrupt from previous kernel might still have ISR bit set.
-+	 *
-+	 * Most probably by now CPU has serviced that pending interrupt and
-+	 * it might not have done the ack_APIC_irq() because it thought,
-+	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
-+	 * does not clear the ISR bit and cpu thinks it has already serivced
-+	 * the interrupt. Hence a vector might get locked. It was noticed
-+	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
-+	 */
-+	do {
-+		queued = 0;
-+		for (i = APIC_ISR_NR - 1; i >= 0; i--)
-+			queued |= apic_read(APIC_IRR + i*0x10);
-+
-+		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
-+			value = apic_read(APIC_ISR + i*0x10);
-+			for (j = 31; j >= 0; j--) {
-+				if (value & (1<<j)) {
-+					ack_APIC_irq();
-+					acked++;
-+				}
-+			}
-+		}
-+		if (acked > 256) {
-+			printk(KERN_ERR "LAPIC pending interrupts after %d EOI\n",
-+			       acked);
-+			break;
-+		}
-+		if (queued) {
-+			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
-+				ntsc = rdtsc();
-+				max_loops = (cpu_khz << 10) - (ntsc - tsc);
-+			} else
-+				max_loops--;
-+		}
-+	} while (queued && max_loops > 0);
-+	WARN_ON(max_loops <= 0);
++	delegation = rcu_dereference(NFS_I(inode)->delegation);
++	if (nfs4_is_valid_delegation(delegation, 0))
++		return delegation;
++	return NULL;
 +}
 +
- /**
-  * setup_local_APIC - setup the local APIC
-  *
-@@ -1371,13 +1421,11 @@ static void lapic_setup_esr(void)
- void setup_local_APIC(void)
+ static int
+ nfs4_do_check_delegation(struct inode *inode, fmode_t flags, bool mark)
  {
- 	int cpu = smp_processor_id();
--	unsigned int value, queued;
--	int i, j, acked = 0;
--	unsigned long long tsc = 0, ntsc;
--	long long max_loops = cpu_khz ? cpu_khz : 1000000;
-+	unsigned int value;
-+#ifdef CONFIG_X86_32
-+	int i;
-+#endif
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index ddaf2644cf13a..df41d16dc6ab4 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -63,6 +63,7 @@ int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state
+ int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state, const nfs4_stateid *stateid);
+ bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_stateid *dst, struct rpc_cred **cred);
  
--	if (boot_cpu_has(X86_FEATURE_TSC))
--		tsc = rdtsc();
- 
- 	if (disable_apic) {
- 		disable_ioapic_support();
-@@ -1437,45 +1485,7 @@ void setup_local_APIC(void)
- 	value &= ~APIC_TPRI_MASK;
- 	apic_write(APIC_TASKPRI, value);
- 
--	/*
--	 * After a crash, we no longer service the interrupts and a pending
--	 * interrupt from previous kernel might still have ISR bit set.
--	 *
--	 * Most probably by now CPU has serviced that pending interrupt and
--	 * it might not have done the ack_APIC_irq() because it thought,
--	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
--	 * does not clear the ISR bit and cpu thinks it has already serivced
--	 * the interrupt. Hence a vector might get locked. It was noticed
--	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
--	 */
--	do {
--		queued = 0;
--		for (i = APIC_ISR_NR - 1; i >= 0; i--)
--			queued |= apic_read(APIC_IRR + i*0x10);
--
--		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
--			value = apic_read(APIC_ISR + i*0x10);
--			for (j = 31; j >= 0; j--) {
--				if (value & (1<<j)) {
--					ack_APIC_irq();
--					acked++;
--				}
--			}
--		}
--		if (acked > 256) {
--			printk(KERN_ERR "LAPIC pending interrupts after %d EOI\n",
--			       acked);
--			break;
--		}
--		if (queued) {
--			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
--				ntsc = rdtsc();
--				max_loops = (cpu_khz << 10) - (ntsc - tsc);
--			} else
--				max_loops--;
--		}
--	} while (queued && max_loops > 0);
--	WARN_ON(max_loops <= 0);
-+	apic_pending_intr_clear();
- 
- 	/*
- 	 * Now that we are all set up, enable the APIC
++struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode);
+ void nfs_mark_delegation_referenced(struct nfs_delegation *delegation);
+ int nfs4_have_delegation(struct inode *inode, fmode_t flags);
+ int nfs4_check_delegation(struct inode *inode, fmode_t flags);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index af062e9f45803..f1526f65cc580 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1355,8 +1355,6 @@ static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
+ 		return 0;
+ 	if ((delegation->type & fmode) != fmode)
+ 		return 0;
+-	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
+-		return 0;
+ 	switch (claim) {
+ 	case NFS4_OPEN_CLAIM_NULL:
+ 	case NFS4_OPEN_CLAIM_FH:
+@@ -1615,7 +1613,6 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
+ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
+ {
+ 	struct nfs4_state *state = opendata->state;
+-	struct nfs_inode *nfsi = NFS_I(state->inode);
+ 	struct nfs_delegation *delegation;
+ 	int open_mode = opendata->o_arg.open_flags;
+ 	fmode_t fmode = opendata->o_arg.fmode;
+@@ -1632,7 +1629,7 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
+ 		}
+ 		spin_unlock(&state->owner->so_lock);
+ 		rcu_read_lock();
+-		delegation = rcu_dereference(nfsi->delegation);
++		delegation = nfs4_get_valid_delegation(state->inode);
+ 		if (!can_open_delegated(delegation, fmode, claim)) {
+ 			rcu_read_unlock();
+ 			break;
+@@ -2153,7 +2150,7 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
+ 					data->o_arg.open_flags, claim))
+ 			goto out_no_action;
+ 		rcu_read_lock();
+-		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
++		delegation = nfs4_get_valid_delegation(data->state->inode);
+ 		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
+ 			goto unlock_no_action;
+ 		rcu_read_unlock();
 -- 
 2.20.1
 
