@@ -7,53 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3941C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F803C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA64520856
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054EC21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497108;
-	bh=l88qtRzh2s9eP0LIXX+kdrWUNXRyrI4+MbTuRZ3RbKI=;
+	s=default; t=1573497113;
+	bh=hRjSS52Bk2f/86Mm6L764w/hdN31rB/1Bp8maYVfs+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wNVeXkB+MiMAfrwMY8Lwi5MEnClQhO8U/Ww/Os3pDAoSAeUfMF94B4sZ8LiZ117ng
-	 NKCjXZ+42KFIdnQdoX+9i4iNbMZq40+6DzM3qBaGOkitkFU4Kh7SVKZT5wK+mZh6zs
-	 J75EdIfSZZw9fcZD0E/v9Mv6c40rBxhzWVRlOe5Y=
+	b=AGdP0TMZpeG/6Kh1aGqu2Uu+I8FmcIFEIh+AeeLka4xzrK8IzzBOX+/YIQKyUBh4k
+	 8/tVvUUoVVAkmchVyw+5futWdpdZHr9BwvIwab6Olbqag5PLxYxdCd8diOiOcNoePU
+	 ptfAFq0CkCk6wzkuu8AscB1cLKr76h8b8lS8hTeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfKKSbr (ORCPT
+        id S1727773AbfKKSbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:31:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:31:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727745AbfKKSbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:31:45 -0500
+        id S1727503AbfKKSbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:31:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73AAB2173B;
-        Mon, 11 Nov 2019 18:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80FEE20656;
+        Mon, 11 Nov 2019 18:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497105;
-        bh=l88qtRzh2s9eP0LIXX+kdrWUNXRyrI4+MbTuRZ3RbKI=;
+        s=default; t=1573497108;
+        bh=hRjSS52Bk2f/86Mm6L764w/hdN31rB/1Bp8maYVfs+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rP9ap3aUSdImARH0+9JVQ1cDCygFTg48ZaZJ7xXToDYQNfEJui3+TXkOhagdRTuYX
-         RzxTMH8q5hegxNgapJieRXgBykAZtOk1OOi1rSYaq1TPXQJpFDndYPJKt6jJ2Ah2yy
-         z520axQNLBRjeRu2adIavfXUHVBe2zrIFRpnjI14=
+        b=PEYXSb3+G/zCEl74tJvG8v5y3Qvc+J4242Q1Q+BTBuQf5HJdjs7PxBtSHKw6hoq95
+         dJNVL5NsMjS9Nuuh/wWXh6lW0Y7XVMqyQl/jqoNd20XjRC87Rsi3N1OP+gV7Kv+iDM
+         EeSnbxmHAoaSZSW3U4fBo1nAC16DA39ROVxLpw4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Waiman Long <longman@redhat.com>, Mel Gorman <mgorman@suse.de>,
         Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Qian Cai <cai@lca.pw>,
+        Rafael Aquini <aquini@redhat.com>,
+        David Rientjes <rientjes@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 09/43] mm, meminit: recalculate pcpu batch and high limits after init completes
-Date:   Mon, 11 Nov 2019 19:28:23 +0100
-Message-Id: <20191111181258.365514047@linuxfoundation.org>
+Subject: [PATCH 4.4 10/43] mm, vmstat: hide /proc/pagetypeinfo from normal users
+Date:   Mon, 11 Nov 2019 19:28:24 +0100
+Message-Id: <20191111181259.133933103@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
 References: <20191111181246.772983347@linuxfoundation.org>
@@ -66,120 +69,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
+From: Michal Hocko <mhocko@suse.com>
 
-commit 3e8fc0075e24338b1117cdff6a79477427b8dbed upstream.
+commit abaed0112c1db08be15a784a2c5c8a8b3063cdd3 upstream.
 
-Deferred memory initialisation updates zone->managed_pages during the
-initialisation phase but before that finishes, the per-cpu page
-allocator (pcpu) calculates the number of pages allocated/freed in
-batches as well as the maximum number of pages allowed on a per-cpu
-list.  As zone->managed_pages is not up to date yet, the pcpu
-initialisation calculates inappropriately low batch and high values.
+/proc/pagetypeinfo is a debugging tool to examine internal page
+allocator state wrt to fragmentation.  It is not very useful for any
+other use so normal users really do not need to read this file.
 
-This increases zone lock contention quite severely in some cases with
-the degree of severity depending on how many CPUs share a local zone and
-the size of the zone.  A private report indicated that kernel build
-times were excessive with extremely high system CPU usage.  A perf
-profile indicated that a large chunk of time was lost on zone->lock
-contention.
+Waiman Long has noticed that reading this file can have negative side
+effects because zone->lock is necessary for gathering data and that a)
+interferes with the page allocator and its users and b) can lead to hard
+lockups on large machines which have very long free_list.
 
-This patch recalculates the pcpu batch and high values after deferred
-initialisation completes for every populated zone in the system.  It was
-tested on a 2-socket AMD EPYC 2 machine using a kernel compilation
-workload -- allmodconfig and all available CPUs.
+Reduce both issues by simply not exporting the file to regular users.
 
-mmtests configuration: config-workload-kernbench-max Configuration was
-modified to build on a fresh XFS partition.
-
-kernbench
-                                5.4.0-rc3              5.4.0-rc3
-                                  vanilla           resetpcpu-v2
-Amean     user-256    13249.50 (   0.00%)    16401.31 * -23.79%*
-Amean     syst-256    14760.30 (   0.00%)     4448.39 *  69.86%*
-Amean     elsp-256      162.42 (   0.00%)      119.13 *  26.65%*
-Stddev    user-256       42.97 (   0.00%)       19.15 (  55.43%)
-Stddev    syst-256      336.87 (   0.00%)        6.71 (  98.01%)
-Stddev    elsp-256        2.46 (   0.00%)        0.39 (  84.03%)
-
-                   5.4.0-rc3    5.4.0-rc3
-                     vanilla resetpcpu-v2
-Duration User       39766.24     49221.79
-Duration System     44298.10     13361.67
-Duration Elapsed      519.11       388.87
-
-The patch reduces system CPU usage by 69.86% and total build time by
-26.65%.  The variance of system CPU usage is also much reduced.
-
-Before, this was the breakdown of batch and high values over all zones
-was:
-
-    256               batch: 1
-    256               batch: 63
-    512               batch: 7
-    256               high:  0
-    256               high:  378
-    512               high:  42
-
-512 pcpu pagesets had a batch limit of 7 and a high limit of 42.  After
-the patch:
-
-    256               batch: 1
-    768               batch: 63
-    256               high:  0
-    768               high:  378
-
-[mgorman@techsingularity.net: fix merge/linkage snafu]
-  Link: http://lkml.kernel.org/r/20191023084705.GD3016@techsingularity.netLink: http://lkml.kernel.org/r/20191021094808.28824-2-mgorman@techsingularity.net
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Acked-by: Michal Hocko <mhocko@suse.com>
+Link: http://lkml.kernel.org/r/20191025072610.18526-2-mhocko@kernel.org
+Fixes: 467c996c1e19 ("Print out statistics in relation to fragmentation avoidance to /proc/pagetypeinfo")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reported-by: Waiman Long <longman@redhat.com>
+Acked-by: Mel Gorman <mgorman@suse.de>
 Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Qian Cai <cai@lca.pw>
-Cc: <stable@vger.kernel.org>	[4.1+]
+Acked-by: Waiman Long <longman@redhat.com>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Jann Horn <jannh@google.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ mm/vmstat.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2010,6 +2010,14 @@ void drain_all_pages(struct zone *zone)
- 	int cpu;
- 
- 	/*
-+	 * The number of managed pages has changed due to the initialisation
-+	 * so the pcpu batch and high limits needs to be updated or the limits
-+	 * will be artificially small.
-+	 */
-+	for_each_populated_zone(zone)
-+		zone_pcp_update(zone);
-+
-+	/*
- 	 * Allocate in the BSS so we wont require allocation in
- 	 * direct reclaim path for CONFIG_CPUMASK_OFFSTACK=y
- 	 */
-@@ -6868,7 +6876,6 @@ void free_contig_range(unsigned long pfn
- }
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1589,7 +1589,7 @@ static int __init setup_vmstat(void)
  #endif
- 
--#ifdef CONFIG_MEMORY_HOTPLUG
- /*
-  * The zone indicated has a new number of managed_pages; batch sizes and percpu
-  * page high values need to be recalulated.
-@@ -6882,7 +6889,6 @@ void __meminit zone_pcp_update(struct zo
- 				per_cpu_ptr(zone->pageset, cpu));
- 	mutex_unlock(&pcp_batch_high_lock);
- }
--#endif
- 
- void zone_pcp_reset(struct zone *zone)
- {
+ #ifdef CONFIG_PROC_FS
+ 	proc_create("buddyinfo", S_IRUGO, NULL, &fragmentation_file_operations);
+-	proc_create("pagetypeinfo", S_IRUGO, NULL, &pagetypeinfo_file_ops);
++	proc_create("pagetypeinfo", 0400, NULL, &pagetypeinfo_file_ops);
+ 	proc_create("vmstat", S_IRUGO, NULL, &proc_vmstat_file_operations);
+ 	proc_create("zoneinfo", S_IRUGO, NULL, &proc_zoneinfo_file_operations);
+ #endif
 
 
