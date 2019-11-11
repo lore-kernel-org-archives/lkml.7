@@ -2,91 +2,87 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63294C17446
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D71C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3187421783
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:41:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N2Ewm1z5"
+	by mail.kernel.org (Postfix) with ESMTP id D15E220659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfKKTlX (ORCPT
+        id S1727506AbfKKTmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:41:23 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:47794 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfKKTlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:41:22 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2D8A020B7192;
-        Mon, 11 Nov 2019 11:41:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2D8A020B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573501282;
-        bh=yo/9FmZW0Y99bAu6iFa8LVJuZTCyAJDW2GqEslRJ+QQ=;
-        h=Subject:From:To:References:Date:In-Reply-To:From;
-        b=N2Ewm1z5bz02D6/2tZat1uKI5YJ406Flu+7c+jeChj9D8ThW6vkLp5W/mD56749Ty
-         rokrIFXAJvZNzZpBhh47F7UNJRJUmRYv1xL7JEBzXuo1EcrQ851MNXaIV/8ddAp7vH
-         cikiSBQ+XvskaHcFyMSN/RNW/oTO6hX1TIc1G1ts=
-Subject: Re: [PATCH v5 0/10] KEYS: Measure keys when they are created or
- updated
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191111193303.12781-1-nramas@linux.microsoft.com>
-Message-ID: <b135b1ac-add6-aea4-cab3-3e9c12796b6a@linux.microsoft.com>
-Date:   Mon, 11 Nov 2019 11:41:42 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 11 Nov 2019 14:42:05 -0500
+Received: from sauhun.de ([88.99.104.3]:49384 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727149AbfKKTmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 14:42:04 -0500
+Received: from localhost (x4db75ae4.dyn.telefonica.de [77.183.90.228])
+        by pokefinder.org (Postfix) with ESMTPSA id 985922C0428;
+        Mon, 11 Nov 2019 20:42:02 +0100 (CET)
+Date:   Mon, 11 Nov 2019 20:42:02 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     pierre-yves.mordret@st.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH] i2c: i2c-stm32f7: fix & reorder remove & probe error
+ handling
+Message-ID: <20191111194202.GD1608@kunai>
+References: <1572012264-31996-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111193303.12781-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VV4b6MQE+OnNyhkM"
+Content-Disposition: inline
+In-Reply-To: <1572012264-31996-1-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/2019 11:32 AM, Lakshmi Ramasubramanian wrote:
 
-Hi Mimi,
+--VV4b6MQE+OnNyhkM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Problem Statement:
-> 
-> Keys created or updated in the system are currently not being measured.
-> 
-> This change aims to address measuring keys created or updated
-> in the system:
-> 
->    => Patches #1 through #5 update IMA policy functions to handle
->       measurement of keys based on configured IMA policy.
-> 
->    => Patches #6 and #7 add IMA hook for measuring keys and the call
->       to the IMA hook from key_create_or_update function.
->       Keys are processed immediately - no support for
->       deferred processing.
-> 
->    => Patches #8 through #10 add support for queuing keys if
->       custom IMA policies have not been applied yet and process
->       the queued keys when custom IMA policies are applied.
+On Fri, Oct 25, 2019 at 04:04:24PM +0200, Alain Volmat wrote:
+> Add missing dma channels free calls in case of error during probe
+> and reorder the remove function so that dma channels are freed after
+> the i2c adapter is deleted.
+> Overall, reorder the remove function so that probe error handling order
+> and remove function order are same.
+>=20
+> Fixes: 7ecc8cfde553 ("i2c: i2c-stm32f7: Add DMA support")
+>=20
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 
-I was wondering if it'd be better to split this patch set into two sets:
+Applied to for-next, thanks!
 
-1st set including the patches for measuring keys without queuing support 
-(Patches #1 through #7)
 
-2nd set including the patches that add queuing support (Patches #8 
-through #10).
+--VV4b6MQE+OnNyhkM
+Content-Type: application/pgp-signature; name="signature.asc"
 
-thanks,
-  -lakshmi
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3JuYkACgkQFA3kzBSg
+KbYcnRAAq1jv0t+cBFdjV0cAyRRX0WL1Iv9MAU84u/vxXm3x5WV277AuXXWzofmd
+XqKJsLIq6lSoh20bC+LHePMkmQ+T8oX6C8c4wjmqzls5Uq2St0evOX39JoQa+yFu
+Q+/S1xdhPIjOzqJbwtEw/iVZ3KaHzEsTJEBpQEhH786eiv1vfkUiAKFrJ7KLSEMs
+BUsNPYE/b+EasW9rylAPjoVp6ALXxPU8ScXQq4H8mh7Ifvlp01kx8Vi4ukI0niXQ
+W+VtoiCxEjRTIx9EaeVZAzcbVouvePqp8hB7GP5+ys5s8bXaTnJcSc86Uu5tY9Ax
+0oZ1s1irGqpDz67hb5inyDvC0d0cvhaqNcqW5Ez6tCA4A0sKYETGfRWXMmFIbNTd
+8j8M2Ecq+twpTpwoMwtYMLwkFJvVhizOM7MSYctisgGkhZcLzNVq2CzJ1bEIVk3I
+qSQT4JfDWiVCpt/aUSrxdrzAarpbKIbfKmBtNlXKkOu2g4QTioty1LxntndndIpC
+HHgk7ZuoqnDk2IQdzv7MJiBDVEmAZICPCZ/dESjNnZuQ/W45Iuc28CZiYpDW+mmh
+64zfpSo/jAp9ZVoU0Imp+zKCtuqldEEAScptvP3e06kMuNsZRuShAl1DAudYfFIf
+Y8NeKiE3ex/XEW5c5jLlt7o9oc0ipoOd0CPALRJjXnjyl4DICFE=
+=exY/
+-----END PGP SIGNATURE-----
+
+--VV4b6MQE+OnNyhkM--
