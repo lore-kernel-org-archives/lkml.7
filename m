@@ -2,127 +2,67 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C80BC17441
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634EDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0110520818
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573465004;
-	bh=10fPEu9FZrhk6J1j7t879mqhJ3XB2/xSo4oLnUX/mUw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y71PKivV2Qi6D9Pv9JiOZtyxgE42FKO8WhHeqrZ1+TY4ImaVgracqbLYDz/5D316t
-	 pOAJPvD7uDL1G7ZpfbxwrE/mfTTgHHYmA6HVZ4Vlt/uZOV8AMl/9rd3rrv7S3oDszM
-	 2RekIF06xRH4ktxcDipXL0KBSsfdJGFrmAj22+0A=
+	by mail.kernel.org (Postfix) with ESMTP id 429402075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 09:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfKKJgn (ORCPT
+        id S1726946AbfKKJgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:36:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53602 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 04:36:47 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:33436 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbfKKJgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:36:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A8502075B;
-        Mon, 11 Nov 2019 09:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573465001;
-        bh=10fPEu9FZrhk6J1j7t879mqhJ3XB2/xSo4oLnUX/mUw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cIXR3fs4XsjhXq1ExFdK/YS942Ly/v7iv6y3lZoG2sCdymoknCYpZodIN9yBO8sct
-         n86fPGr6jHtPg5rt4BrMUoth0beZsKKi8leZs2pHOQi1NRoY29PB8hgv5jQ2DBBetL
-         UsGekVUimWIBOrYqHjF7nJjxcGDxvm7GoPxs0sJU=
-Date:   Mon, 11 Nov 2019 10:36:38 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Oliver Neukum <oneukum@suse.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 4.19 114/149] UAS: Revert commit 3ae62a42090f ("UAS: fix
- alignment of scatter/gather segments")
-Message-ID: <20191111093638.GD4139389@kroah.com>
-References: <1573396023.2662.4.camel@suse.com>
- <Pine.LNX.4.44L0.1911101028430.29192-100000@netrider.rowland.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1911101028430.29192-100000@netrider.rowland.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        id S1726908AbfKKJgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:36:45 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3BC3E2005A1;
+        Mon, 11 Nov 2019 10:36:44 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A454D2005C3;
+        Mon, 11 Nov 2019 10:36:41 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 11792402B7;
+        Mon, 11 Nov 2019 17:36:37 +0800 (SGT)
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     catalin.marinas@arm.com, will@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Zhao Qiang <qiang.zhao@nxp.com>
+Subject: [PATCH] arm64: defconfig: Enable the SBSA watchdog
+Date:   Mon, 11 Nov 2019 17:36:46 +0800
+Message-Id: <20191111093646.16041-1-qiang.zhao@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 10:34:02AM -0500, Alan Stern wrote:
-> On Sun, 10 Nov 2019, Oliver Neukum wrote:
-> 
-> > Am Freitag, den 08.11.2019, 10:35 -0500 schrieb Alan Stern:
-> > > On Fri, 8 Nov 2019, Greg Kroah-Hartman wrote:
-> > > 
-> > > > On Thu, Nov 07, 2019 at 12:32:45PM +0100, Oliver Neukum wrote:
-> > > > > Am Dienstag, den 05.11.2019, 17:38 +0100 schrieb Greg Kroah-Hartman:
-> > > > > > > > Given this information, perhaps you will decide that the revert is 
-> > > > > > > > worthwhile.
-> > > > > > > 
-> > > > > > > Damned if I do, damned if I do not.
-> > > > > > > Check for usbip and special case it?
-> > > > > > 
-> > > > > > We should be able to do that in the host controller driver for usbip,
-> > > > > > right?  What is the symptom if you use a UAS device with usbip and this
-> > > > > > commit?
-> > > > > 
-> > > > > Yes, that patch should then also be applied. Then it will work.
-> > > > > Without it, commands will fail, as transfers will end prematurely.
-> > > > 
-> > > > Ok, I'm confused now.  I just checked, and I really have no idea what
-> > > > needs to be backported anymore.  3ae62a42090f ("UAS: fix alignment of
-> > > > scatter/gather segments") was backported to all of the stable kernels,
-> > > > and now we reverted it.
-> > > > 
-> > > > So what else needs to be done here?
-> > > 
-> > > In one sense, nothing needs to be done.  3ae62a42090f was intended to
-> > > fix a long-standing problem with USBIP, but people reported a
-> > 
-> > OK, now I am a bit confused. AFAICT 3ae62a42090f actually did fix the
-> > issue. So if you simply revert it, the issue will reappear.
-> 
-> Correct.  I think.
-> 
-> > > regression in performance.  (Admittedly, the report was about the
-> > > correponding change to usb-storage, not the change to uas, but it's
-> > > reasonable to think the effect would be the same.)  So in line with the
-> > 
-> > Yes.
-> > 
-> > > no-regressions policy, we only need to revert the commit -- which you 
-> > > have already done.
-> > 
-> > But that breaks UAS over USBIP, doesn't it?
-> 
-> It was already broken to start with.  The attempted fix caused a
-> regression, so the fix must be reverted.
-> 
-> > > On the other hand, the long-standing problem in USBIP can be fixed by
-> > > back-porting commit ea44d190764b.  But since that commit isn't a
-> > > bug-fix (and since it's rather large), you may question whether it is
-> > > appropriate for the -stable kernel series.
-> > 
-> > It certainly is large. But without it UAS won't work over USBIP, will
-> > it? I think that is the central question we need to answer here.
-> 
-> You are right.  If Greg is okay with porting ea44d190764b to the stable 
-> kernels, I won't object.
+From: Zhao Qiang <qiang.zhao@nxp.com>
 
-Ok, I've backported this to 4.14.y, 4.19.y, and 5.3.y.  As superspeed
-support was not added to vhci until the 4.13 release, I don't think that
-UAS will be an issue on those older kernels.
+Enable the SBSA watchdog driver that is present on lx2160a.
 
-thanks,
+Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-greg k-h
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c9a867a..0bf0885 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -451,6 +451,7 @@ CONFIG_TEGRA_BPMP_THERMAL=m
+ CONFIG_QCOM_TSENS=y
+ CONFIG_UNIPHIER_THERMAL=y
+ CONFIG_WATCHDOG=y
++CONFIG_ARM_SBSA_WATCHDOG=y
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_S3C2410_WATCHDOG=y
+ CONFIG_DW_WATCHDOG=y
+-- 
+2.9.5
+
