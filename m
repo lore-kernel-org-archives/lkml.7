@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F4DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E59BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75ABF21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDC321655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 20:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfKKUWT (ORCPT
+        id S1727667AbfKKUWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 15:22:19 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:42475 "EHLO
+        Mon, 11 Nov 2019 15:22:01 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:37069 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727693AbfKKUWC (ORCPT
+        with ESMTP id S1727183AbfKKUV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:22:02 -0500
+        Mon, 11 Nov 2019 15:21:59 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N8XLj-1hqEL53gMD-014Vte; Mon, 11 Nov 2019 21:16:51 +0100
+ 1M3DFj-1iStbG1rY5-003bdi; Mon, 11 Nov 2019 21:16:47 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-nfs@vger.kernel.org,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -31,58 +31,108 @@ To:     linux-nfs@vger.kernel.org,
         Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 14/19] nfsd: use time64_t in nfsd_proc_setattr() check
-Date:   Mon, 11 Nov 2019 21:16:34 +0100
-Message-Id: <20191111201639.2240623-15-arnd@arndb.de>
+Subject: [PATCH 04/19] nfs: callback: use timespec64 in cb_getattrres
+Date:   Mon, 11 Nov 2019 21:16:24 +0100
+Message-Id: <20191111201639.2240623-5-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191111201639.2240623-1-arnd@arndb.de>
 References: <20191111201639.2240623-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bZJ6dABjb/h5bnFGHvp5XdGnpOQ48DZK/y9xvfcHGKpTQoH3/bT
- 1UeC7EXkGuZ29jsdi41tFt6HfOuEKjy2GfgdYIX/v+IXZR1U1EcEqzS/o8ilLDIy+b9S6kr
- GcfvrHS9+6QfIMVctOIbx3+o1NRJAZJYtvryMigWubxt8VxFp91emStVv1L6jsg8J2tG1am
- HXOJqCfyLJUodT6uk5vKw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dbRhCZ12aTc=:oN8DIUR5xf8YebZvljt4E8
- jPI/c8keSlfSxzvYD/z5yoA72BNX/qGRs04Ak8r5YoeQbEnFdEyxmsWWOFzmMbEhO/5xY+twG
- H/iQpwPjy9TOqbZ2SDar1vulM1B0gwjZ+E/endUeaCpK6XwffIbE2qOcgrGr/uCVWjtlHZutV
- xMlPe4j5UUk3iCbAbFRtBovVfpWc+7x75nnMEygcuZy+DlVpkfeOLcYGKhQW6kjZgGPVu8jag
- 9E5OXqI9x7LAzZwMSWnqAI/Exo3vycLihrEZ7wSLEAayyQf8EtnV9tY8w+NIszevrwD10RVOG
- 1InLkIUpLSYaVFy0tkT7sT/kIQ5mcdnmF23o+tlySVQEbfrKeJYcSqvtJAR0dfSpMZEDA3A04
- ZNgH01oG2db9GXQ7G3XIlyFZmiBh9Pw/XxlA3BVIthiktvBr7v3Pr5aFfmz9iKPtTZKR6paVW
- LWl+13SSBK37GAXxxt9UVwvGyE+eT0luaWfAHlwoJgf12+98EYTll+eBWZtKcxGouH6UsmArP
- mBFd4I7/fUqeaIr88b+aOTG00jWnVhw4XqksfWo3XoDSMnpqyfF2DSRikjv64nC6LlXllFOiB
- WFPKOzj6XOhVWerSKTVmbXc95MRtN/IyyaLF+2wG3TG57AFtj6b5ZGoJb2d79DY6yqQfQseJJ
- BZQeezjtsxE9vCZZmZbZy9rRjDqouKzKzquMSPfvyiNkoBGQ/BRAzHiixkArQ04qG7yCesSfP
- kqAS4UyDLfdekrxB+Zo61Gz+aoTQmpDLP1u9yqJQQYjCf00YRR39Ie+XNLuN9miN5KGcfqQ37
- Kr+Fm0MMLspmle0KiTpkVRRQe5pYtLPa981QTn50S/BCs5rI5G9hnugAQivEv6Uam6wIY9LKR
- Z/Zx6iJNL0/SMqiwPm3A==
+X-Provags-ID: V03:K1:KWYyInVBUVuj//LzWFbXW2jcS7+5FTXV3dKVlBIHKk1L18WZled
+ 7C3tZe/xX+O/9EMFYukOjVwOsPlCnHzCiYNH4glxd86c+Ov99enjaCjXGhJe+FG5h9878Jh
+ qoAKEUCaNqnuToo37uYLLqhhgga4HRmi/8gaidBeQFst7aaYFBdi8OiC+uidAOCuK1FEDC2
+ Zg8whbTLZiKS5Pv0t3A/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6JTjadtS4S4=:RpCZNcIkzsq0/oqcUn9z9o
+ BK7x0h11eGMyUUW2CZDKK4vMwxFNZeBbfStAzocF9OMM12o4NGObOWCZDhKxiPyUyHMQ9Y8jd
+ aMH7pJnBmLqxe39j6+OHfGKyjcCwkaNjMtFPB0fKF7o70u94XKK7JRrLtRaeLMSnRiZHulWMi
+ 1QjJCXvyYIL4Bs+4PtLRWJl64uLIsQKtzbaLO4OUIZ1psMRGsJObrjtAH5HzKF1P81s7e2I3D
+ nshvpjQS+5TrnUsNYzFEMF1ezf/NMeb3yVaA3h1SOvj/4Ffg1mJKcV8lwRSDa28ESk6V/rxSn
+ 9/dhiHSXH1k2ax7vwQgvZVUX38hIH4/vI0TPB3oO+0gFkXm3m82SprbcD2MWt3D9Jp62wycfP
+ NXt8rOuqXcSjeTh8RNxjZjFFGcCCA2oti4iG1r6MUEprMcb/0Hy4yVJLJZn+nqDV08wXn7VPS
+ W4v0NCHpFWFE9ThZ1PSYNI+h0EE/lzljpbFynfgBlVma8pGoYwTc9NWO+TPfQWr6n4Acl5KnQ
+ 9GUyKYRTOnZj6YLNpUkW6KihWbe6Gp1f9N8vP5SXKHuKoVJYRNxwehWZLS+HcIY0CaL9Iq8Pe
+ 1hqQpAvkNgkPhdTfUGjT8XTcAZOfbOc1x0KPCF2E+GbrrM8b4rfd3tDSwu/qtzrIIE90h4zk1
+ E2gCZc+IVbnVjvXGq961uoffpBe6148zvpb4RPrMDx2RatWufLIRiYthhEZO3y9FPXwFV3A7E
+ LUaYjOAkQV51mq6of1Q7JC5HNJ22wiQ+rvDHfaRFOVGCmOtktJpqrCrUyKk3iBScPQe9+9Y+8
+ zIg1clgKST1iUaFvj/2ewDGl1sdlmSOQ37bRqUQ1wdYXBOKfhmuRnIl6zDejzPbnPCtuwkbmX
+ H4DHvRimHDUkukdJskiQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change to time64_t and ktime_get_real_seconds() to make the
-logic work correctly on 32-bit architectures beyond 2038.
+Make this use 64-bit timestamps to not lose information on 32-bit
+architectures. As both the input and the ouput are 64-bit wide,
+this is the obvious step.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfsproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/callback.h      | 4 ++--
+ fs/nfs/callback_proc.c | 4 ++--
+ fs/nfs/callback_xdr.c  | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index aa013b736073..b25c90be29fb 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -94,7 +94,7 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
- 		 * Solaris, at least, doesn't seem to care what the time
- 		 * request is.  We require it be within 30 minutes of now.
- 		 */
--		time_t delta = iap->ia_atime.tv_sec - get_seconds();
-+		time64_t delta = iap->ia_atime.tv_sec - ktime_get_real_seconds();
+diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
+index 8f34daf85f70..549350259840 100644
+--- a/fs/nfs/callback.h
++++ b/fs/nfs/callback.h
+@@ -72,8 +72,8 @@ struct cb_getattrres {
+ 	uint32_t bitmap[2];
+ 	uint64_t size;
+ 	uint64_t change_attr;
+-	struct timespec ctime;
+-	struct timespec mtime;
++	struct timespec64 ctime;
++	struct timespec64 mtime;
+ };
  
- 		nfserr = fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP);
- 		if (nfserr)
+ struct cb_recallargs {
+diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+index f39924ba050b..db3e7771e597 100644
+--- a/fs/nfs/callback_proc.c
++++ b/fs/nfs/callback_proc.c
+@@ -56,8 +56,8 @@ __be32 nfs4_callback_getattr(void *argp, void *resp,
+ 	res->change_attr = delegation->change_attr;
+ 	if (nfs_have_writebacks(inode))
+ 		res->change_attr++;
+-	res->ctime = timespec64_to_timespec(inode->i_ctime);
+-	res->mtime = timespec64_to_timespec(inode->i_mtime);
++	res->ctime = inode->i_ctime;
++	res->mtime = inode->i_mtime;
+ 	res->bitmap[0] = (FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE) &
+ 		args->bitmap[0];
+ 	res->bitmap[1] = (FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY) &
+diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
+index 73a5a5ea2976..03a20f5716c7 100644
+--- a/fs/nfs/callback_xdr.c
++++ b/fs/nfs/callback_xdr.c
+@@ -627,7 +627,7 @@ static __be32 encode_attr_size(struct xdr_stream *xdr, const uint32_t *bitmap, u
+ 	return 0;
+ }
+ 
+-static __be32 encode_attr_time(struct xdr_stream *xdr, const struct timespec *time)
++static __be32 encode_attr_time(struct xdr_stream *xdr, const struct timespec64 *time)
+ {
+ 	__be32 *p;
+ 
+@@ -639,14 +639,14 @@ static __be32 encode_attr_time(struct xdr_stream *xdr, const struct timespec *ti
+ 	return 0;
+ }
+ 
+-static __be32 encode_attr_ctime(struct xdr_stream *xdr, const uint32_t *bitmap, const struct timespec *time)
++static __be32 encode_attr_ctime(struct xdr_stream *xdr, const uint32_t *bitmap, const struct timespec64 *time)
+ {
+ 	if (!(bitmap[1] & FATTR4_WORD1_TIME_METADATA))
+ 		return 0;
+ 	return encode_attr_time(xdr,time);
+ }
+ 
+-static __be32 encode_attr_mtime(struct xdr_stream *xdr, const uint32_t *bitmap, const struct timespec *time)
++static __be32 encode_attr_mtime(struct xdr_stream *xdr, const uint32_t *bitmap, const struct timespec64 *time)
+ {
+ 	if (!(bitmap[1] & FATTR4_WORD1_TIME_MODIFY))
+ 		return 0;
 -- 
 2.20.0
 
