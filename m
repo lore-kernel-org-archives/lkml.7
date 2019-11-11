@@ -2,145 +2,146 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D1DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849AEC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F4521655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534E421655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 14:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FfrYydfF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CjGArxSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfKKOq6 (ORCPT
+        id S1727220AbfKKOrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 09:46:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32413 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726950AbfKKOq6 (ORCPT
+        Mon, 11 Nov 2019 09:47:07 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40854 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbfKKOrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 09:46:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573483617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=TTG00YjKWUOsl5rhCzwn1XMhrGVfmW5FmkbQYzSqxw0=;
-        b=FfrYydfFHoExK37VSKx8D3B+Jck58qhyc3zy8NUjcb4wmfpv+Qok7ui4tLEPGw+yV7ycPx
-        MfBoLELLQOt9BSOfpPYBetofsnqWAaQmSJobotKIhqqtVeVnJtqwZOs1lZ/2WuVQJGIuQ5
-        7qRym6rxR6smz9UuhgP36+R3bHAy8ac=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-LFO5OSYsM2CoTk2uPiWi_A-1; Mon, 11 Nov 2019 09:46:56 -0500
-Received: by mail-wr1-f70.google.com with SMTP id p6so10058742wrs.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 06:46:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jRkkSKwLtbw789qcSoLZDfx7wzSdmL3oq2GXGl90y/M=;
-        b=BnGg6oR85wSRrDoUO+8GuTCmcjQj+/8On4blEsbP5wheoJ7ex3OmpWhpa98pybtUhv
-         oRLr7H2rlVaWlK7sjyKPLzdUSpRLVM9xFkMgXr75C/bZbj1r9ZQtTUM9wQ+fOOk1Rd7l
-         z6O82M/ioxi8hH5Qz3mjnuytgLIGRvKDgeoYVCCSfsWs1tpQMtstQXDvmX08xVdQusl2
-         dcLUAPFHWLae5gFhZCtfR1wdlkTwg1vnGha0hA+g+o/uEWzjeyjlOjuMDKhwhJFslBHd
-         +mMd/fdvvwGWalT93Z70ApHbjo36XJ9j18xjPL4dZVmjmBax/jgQDdRlF9IUiUCI5arq
-         rCvQ==
-X-Gm-Message-State: APjAAAVbzue3FKVgmkIX1VC/sNg1BxofDAuRkP5nJrnSm8h7iF61TSMZ
-        Fq9RbCQ6okcpXloL9qwsXNTUrHl268lA57OG+10dt+eRV2yCWrLJWDu49RcoMugOh+UHABewcDl
-        GnmXCZBkiJM65aANDexemBgca
-X-Received: by 2002:adf:9185:: with SMTP id 5mr22369375wri.389.1573483614933;
-        Mon, 11 Nov 2019 06:46:54 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyjqc/t6JzGynXh2pZeszWWrEVTnuQ1w9EknjY1/ptxdfimEElgI3QDGqXkPhfkULlRqq2r1Q==
-X-Received: by 2002:adf:9185:: with SMTP id 5mr22369347wri.389.1573483614614;
-        Mon, 11 Nov 2019 06:46:54 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:a0f7:472a:1e7:7ef? ([2001:b07:6468:f312:a0f7:472a:1e7:7ef])
-        by smtp.gmail.com with ESMTPSA id c144sm18931831wmd.1.2019.11.11.06.46.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 06:46:54 -0800 (PST)
-Subject: Re: [PATCH v1 1/3] KVM: VMX: Consider PID.PIR to determine if vCPU
- has pending interrupts
-To:     Joao Martins <joao.m.martins@oracle.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Jag Raman <jag.raman@oracle.com>
-References: <20191106175602.4515-1-joao.m.martins@oracle.com>
- <20191106175602.4515-2-joao.m.martins@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <67bca655-fea3-4b57-be3c-7dc58026b5d9@redhat.com>
-Date:   Mon, 11 Nov 2019 15:46:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 11 Nov 2019 09:47:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KacwoM/PURyvxk09Q1LWi5n4/p0zOHyHZBnPkZyRKqk=; b=CjGArxSgB2NHoy6hOoUjWIeIr
+        6Gquvm5IpmPSJo4vNAhZ2Ns7La5TzCzqKPISOZUj8ZO1KbRpG3q4SEQ/eJbk7MhIoHppHCu5wsVDJ
+        Psh9WjRvwJaZrIw7fP8GM0RTzHTwy6Hui8481Hei6QOOEglBdDJltqpzKQHgv+DAi+JyFsAfddm0s
+        j4rmj36cL8qHgFaHVBgWK7tSEP0qkoTwjXw6uKxfRFQx6P2idyxwfoJLQuQM4J5ASQZX0JA8NkXIr
+        EHOugtYKHm4ovdNMXHX3gO3JwWmaYh4GbRARC0u7XaRrMAjMrDMGwjFVx2fKblzzS4iljpJ/+k0/z
+        /0+IWqySw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUAxo-0003sO-LR; Mon, 11 Nov 2019 14:46:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9CFA305ED5;
+        Mon, 11 Nov 2019 15:45:35 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 11E9C201CB728; Mon, 11 Nov 2019 15:46:42 +0100 (CET)
+Date:   Mon, 11 Nov 2019 15:46:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
+Message-ID: <20191111144642.GM4114@hirez.programming.kicks-ass.net>
+References: <20191025130000.13032-1-adrian.hunter@intel.com>
+ <20191025130000.13032-2-adrian.hunter@intel.com>
+ <20191030104747.GA21153@leoy-ThinkPad-X240s>
+ <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
+ <20191030141950.GB21153@leoy-ThinkPad-X240s>
+ <20191030162325.GT4114@hirez.programming.kicks-ass.net>
+ <20191031073136.GC21153@leoy-ThinkPad-X240s>
+ <20191101100440.GU4131@hirez.programming.kicks-ass.net>
+ <20191104022346.GC26019@leoy-ThinkPad-X240s>
+ <20191108150530.GA7721@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-In-Reply-To: <20191106175602.4515-2-joao.m.martins@oracle.com>
-Content-Language: en-US
-X-MC-Unique: LFO5OSYsM2CoTk2uPiWi_A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108150530.GA7721@leoy-ThinkPad-X240s>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/19 18:56, Joao Martins wrote:
-> Commit 17e433b54393 ("KVM: Fix leak vCPU's VMCS value into other pCPU")
-> introduced vmx_dy_apicv_has_pending_interrupt() in order to determine
-> if a vCPU have a pending posted interrupt. This routine is used by
-> kvm_vcpu_on_spin() when searching for a a new runnable vCPU to schedule
-> on pCPU instead of a vCPU doing busy loop.
->=20
-> vmx_dy_apicv_has_pending_interrupt() determines if a
-> vCPU has a pending posted interrupt solely based on PID.ON. However,
-> when a vCPU is preempted, vmx_vcpu_pi_put() sets PID.SN which cause
-> raised posted interrupts to only set bit in PID.PIR without setting
-> PID.ON (and without sending notification vector), as depicted in VT-d
-> manual section 5.2.3 "Interrupt-Posting Hardware Operation".
->=20
-> Therefore, checking PID.ON is insufficient to determine if a vCPU has
-> pending posted interrupts and instead we should also check if there is
-> some bit set on PID.PIR.
->=20
-> Fixes: 17e433b54393 ("KVM: Fix leak vCPU's VMCS value into other pCPU")
-> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
-> Signed-off-by: Liran Alon <liran.alon@oracle.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 31ce6bc2c371..18b0bee662a5 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6141,7 +6141,10 @@ static int vmx_sync_pir_to_irr(struct kvm_vcpu *vc=
-pu)
-> =20
->  static bool vmx_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
->  {
-> -=09return pi_test_on(vcpu_to_pi_desc(vcpu));
-> +=09struct pi_desc *pi_desc =3D vcpu_to_pi_desc(vcpu);
-> +
-> +=09return pi_test_on(pi_desc) ||
-> +=09=09!bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
->  }
-> =20
->  static void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, u64 *eoi_exit_bi=
-tmap)
+On Fri, Nov 08, 2019 at 11:05:30PM +0800, Leo Yan wrote:
 
-Should we check the bitmap only if SN is false?  We have a precondition
-that if SN is clear then non-empty PIR implies ON=3D1 (modulo the small
-window in vmx_vcpu_pi_load of course), so that'd be a bit faster.
+> I will update some status for prototype (the code has been uploaded into
+> git server [1]) and found some issues for text poke perf event on arm64.
+> These issues are mainly related with arch64 architecture.
+> 
+> - The first issue is for the nosync instruction emulation.  On arm64,
+>   some instructions need to be single stepped and some instructions
+>   is emulated.  Especially, after I read the code for kprobe
+>   implementation on Arm64.  So the main idea for prototyping is to use
+>   the almos same method with kprobe for nosync instruction.
 
-Paolo
+This makes no sense to me what so ever. What actual instructions are
+patched with _nosync() ? ftrace/jump_label only use 'NOP/JMP/CALL'
 
+For NOP you can advance regs->ip, for JMP you can adjust regs->ip, for
+CALL you adjust regs->ip and regs->r14 (IIUC you do something like:
+regs->r14 = regs->ip+4; regs->ip = func;)
+
+(FWIW emulating CALL on x86 is fun because we get to PUSH something on
+the stack, let me know if you want to see the patches that were required
+to make that happen :-)
+
+> - The second issue is race condition between the CPU alters
+>   instructions and other CPUs hit the altered instructions (and
+>   breakpointed).
+> 
+>   Peter's suggestion uses global variables 'nosync_insn' and
+>   'nosync_addr' to record the altered instruction.  But from the
+>   testing I found for single static key, usually it will change for
+>   multiple address at once.
+> 
+>   So this might cause the issue is: CPU(a) will loop to alter
+>   instructions for different address (sometimes the opcode also is
+>   different for different address), at the meantime, CPU(b) hits an
+>   altered instruction and handle exception for the breakpoint, if
+>   CPU(a) is continuing to alter instruction for the next address, thne
+>   CPU(a) might wrongly to use the value from 'nosync_insn' and
+>   'nosync_addr'.
+> 
+>   Simply to say, we cannot only support single nosync instruction but
+>   need to support multiple nosync instructions in the loop.
+
+On x86 all actual text poking is serialized by text_mutex.
+
+> - The third issue is might be nested issue.  E.g. for the injected
+>   break instruction, we have no method to pass perf event for this
+>   instruction; and if we connect with the first issue, if the
+>   instruction is single stepped with slot (the slot is allocated with
+>   get_insn_slot()), we cannot to allow the perf user space to know
+>   the instructions which are executed in the slots.
+> 
+>   I am not sure if I think too complex here.  But seems to me, we
+>   inject more instructions for poke text event, and if these injected
+>   instructions are executed but the userspace decoder has no way to
+>   pass the related info.
+
+That's a misunderstanding, the text_poke event is a side-band event and
+as such delivered to all events that expressed interest in it. You don't
+need any exception to event mapping yourself.
+
+> Just clarify, I am fine for merging this patch set, but we might
+> consider more what's the best way on Arm64.  Welcome any public
+> comments and suggestions; I will sync internally for how to follow up
+> this functionality.
+
+Thanks!
