@@ -2,242 +2,122 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE75DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0715DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DD7214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D1C214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:41:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pMSPpt+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfKKXkF (ORCPT
+        id S1727210AbfKKXli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:40:05 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35785 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfKKXkE (ORCPT
+        Mon, 11 Nov 2019 18:41:38 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15477 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKKXli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:40:04 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n16so13138168oig.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:40:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rYJ3hr5T5tZC4vSB8BbaPI2/bk6dIa1jNkM2nXBTPBI=;
-        b=nFtBj/M8KtA8lR3cHWblAuQgt+FtDp+9rUVSz7E+UUMqNn5QKowIMB0xjZ8LXm1B/g
-         eR4OsqMv27ZVmWI40oHtgntixm7dxXzqMRddS4ZwHVVQmszgtYO1uRU1ChYtRfKLjU1z
-         2knHOuQadur2EdCzEYoR1SMej1/nkTqXRdJYV29dd9MlDtXfmq3mUeeLUKZUs4RRyJ1+
-         gmzmd6MJHUAJBiBf50ogVZ4LHoS/nJVFLU3WXIESc1lAvCJi0KVSTaclGYkeiSkGwxKj
-         A+WktAwbzoQN+5ZVPMDm7itA6GGE2SSC8i08t0tl0i06lKGyFgD6DznuxZRPV/DYZf2D
-         OWIg==
-X-Gm-Message-State: APjAAAXjy95CUfE+hbRD3+bPFyBMz7kGZ3So8uwVcurUTscFTdjgnOnr
-        Pymf5E6F1Wq+LZfH2V2tlpL4E+th
-X-Google-Smtp-Source: APXvYqxqEqNGm6TqPYNZNA2tXJ2n5Xd/iAqOlXrb51AN8akSpX1jBfackQQsV3W9dmeZ6b11Kd5uFQ==
-X-Received: by 2002:aca:417:: with SMTP id 23mr1376067oie.125.1573515603170;
-        Mon, 11 Nov 2019 15:40:03 -0800 (PST)
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com. [209.85.167.177])
-        by smtp.gmail.com with ESMTPSA id h79sm5332530oib.3.2019.11.11.15.40.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 15:40:01 -0800 (PST)
-Received: by mail-oi1-f177.google.com with SMTP id v138so13104474oif.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:40:01 -0800 (PST)
-X-Received: by 2002:aca:1205:: with SMTP id 5mr1320355ois.51.1573515600853;
- Mon, 11 Nov 2019 15:40:00 -0800 (PST)
+        Mon, 11 Nov 2019 18:41:38 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc9f1730000>; Mon, 11 Nov 2019 15:40:35 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 11 Nov 2019 15:41:37 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 11 Nov 2019 15:41:37 -0800
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 Nov
+ 2019 23:41:37 +0000
+Subject: Re: [PATCH] mm/debug:
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <20191111224935.19464-1-rcampbell@nvidia.com>
+ <20191111150211.9f75292d8c057769603edfb7@linux-foundation.org>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <ccbaea6c-40a0-36a1-6dd9-9ab9d24dd904@nvidia.com>
+Date:   Mon, 11 Nov 2019 15:41:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Mon, 11 Nov 2019 17:39:49 -0600
-X-Gmail-Original-Message-ID: <CADRPPNSeEvFnVzGeZW6RPo_LP8mq14G2ZmmDAuwNdC3hT8Ekcg@mail.gmail.com>
-Message-ID: <CADRPPNSeEvFnVzGeZW6RPo_LP8mq14G2ZmmDAuwNdC3hT8Ekcg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/47] QUICC Engine support on ARM and ARM64
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        David Miller <davem@davemloft.net>,
-        Scott Wood <oss@buserror.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Timur Tabi <timur@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191111150211.9f75292d8c057769603edfb7@linux-foundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573515636; bh=AP5bb6JXF94EJBOxdtfuDPxdSO+VKT8Ph17UVgTs2Cs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=pMSPpt+ggPWMSr6gAynKK6fEgc1rRRnvopLh81yexMSlWwmGyxPDAyg9ZTvhVLK67
+         m06KzZx/Yzplyw6ya3WdMIXf25XPmiwwQGW4c+PVuuZa3kpeV9KBcbG2UMqQbPeS6q
+         mZFGT3JRzG3dMcNdMnGCoekY9t1mudlgrUi+oiSiamhyKS7NJ+tXrbjgnpr5AXLGyt
+         w8uRHKDHLJwE0YC4Ej8GoUG7d5r7wpYsXbsIQDM49DV55PKAQhO5d0ry1uBKtfrT9u
+         POYfX5n+G7hz2htD+7MFQLyeQbHfORkDypR9206yge3Da+keHc6pKLRpj1w/jOx8TH
+         7cEDFN2CF70hQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 7:05 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
 
-I'm generally ok with these enhencements and cleanups.  But as the
-whole patch series touched multiple subsystems, I would like to
-collect the Acked-by from Scott, Greg and David if we want the whole
-series to go through the fsl/soc tree.
+On 11/11/19 3:02 PM, Andrew Morton wrote:
+> On Mon, 11 Nov 2019 14:49:35 -0800 Ralph Campbell <rcampbell@nvidia.com> wrote:
+> 
+>> When dumping struct page information, __dump_page() prints the page type
+>> with a trailing blank followed by the page flags on a separate line:
+>>
+>> anon
+>> flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
+>>
+>> Fix this by using pr_cont() instead of pr_warn() to get a single line:
+>>
+>> anon flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> ---
+>>   mm/debug.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/debug.c b/mm/debug.c
+>> index 8345bb6e4769..752c78721ea0 100644
+>> --- a/mm/debug.c
+>> +++ b/mm/debug.c
+>> @@ -87,7 +87,7 @@ void __dump_page(struct page *page, const char *reason)
+>>   	}
+>>   	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) != __NR_PAGEFLAGS + 1);
+>>   
+>> -	pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+>> +	pr_cont("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+>>   
+>>   hex_only:
+>>   	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+> 
+> This is the case if PageAnon || PageKsm || mapping.  If it is, say,
+> PageSlab then we effectively do
+> 
+> 	pr_warn("stuff-with-no-newline");
+> 	pr_cont("\n");
+> 	pr_cont("flags: ...\n");
+> 
+> does this work OK?  what facility level will that "flags: " line get?
 
-Also Qiang, can you help to test the latest version and provide you
-Tested-by?  Thanks.
+I don't see a "\n" in the "mapping" case but the
+	if (mapping->host && mapping->host->i_dentry.first)
+		pr_warn("name:\"%pd\" ", dentry)
+would end up on a new line.
+Ugh. I guess the dentry name could be fairly long.
+I guess I will just convert to using "\n".
 
-> There have been several attempts in the past few years to allow
-> building the QUICC engine drivers for platforms other than PPC. This
-> is yet another attempt.
->
-> v3 can be found here: https://lore.kernel.org/lkml/20191101124210.14510-1-linux@rasmusvillemoes.dk/
->
-> v4 adds a some patches to fix (ab)use of IS_ERR_VALUE which fails when
-> sizeof(u32) != sizeof(long), i.e. on 64-bit platforms. Freescale
-> drivers are some of the last holdouts using that macro (outside of
-> arch/ and core mm code), so I decided trying to simply get rid of it
-> instead of papering over it by using a temporary long to store the
-> result in. Doing that I stumbled on some other things that should be
-> fixed. These are the new patches 34-45.
->
-> Patch 35 from v3 (which added a PPC32 dependency to FSL_UCC_HDLC) is
-> gone from this version, so that that driver can indeed now be built
-> for arm and arm64.
->
-> 1-5 are about replacing in_be32 etc. in the core QE code (drivers/soc/fsl/qe).
->
-> 6-8 handle miscellaneous other ppcisms.
->
-> 9-21 deal with qe_ic: Simplifying the driver significantly by removing
-> unused code, and removing the platform-specific initialization from
-> arch/powerpc/.
->
-> 22-25 deal with raw access to devicetree properties in native endianness.
->
-> 26-33 makes drivers/tty/serial/ucc_uart.c (CONFIG_SERIAL_QE) ready to build on arm.
->
-> 34-45 deal with IS_ERR_VALUE() and some other things found while
-> digging around that part of the code.
->
-> 46 adds a PPC32 dependency to UCC_GETH - it has some of the same
-> issues that have been fixed in the ucc_uart and ucc_hdlc cases. Nobody
-> has requested that I allow that driver to be built for arm{,64}, so
-> instead of growing this series even bigger, I kept that addition. It's
-> trivial to remove if somebody cares enough to fix the build
-> errors/warnings and actually has a platform to test the result on.
->
-> Finally patch 47 lifts the PPC32 restriction from QUICC_ENGINE. At the
-> request of Li Yang, it doesn't remove the PPC32 dependency but instead
-> changes it to PPC32 || ARM || ARM64 (or COMPILE_TEST), i.e. listing
-> the platforms that may have a QE.
->
-> The series has been built and booted on both an mpc8309-based platform
-> (ppc) as well as an ls1021a-based platform (arm). The core QE code is
-> exercised on both, while I could only test the ucc_uart on arm, since
-> the uarts are not wired up on our mpc8309 board. Qiang Zhao reports
-> that the ucc_hdlc driver does indeed work on a ls1043ardb (arm64)
-> board, I hope he'll formally add a Tested-by: to the relevant patches
-> since I don't have any arm64 board with QE.
->
-> Rasmus Villemoes (47):
->   soc: fsl: qe: remove space-before-tab
->   soc: fsl: qe: drop volatile qualifier of struct qe_ic::regs
->   soc: fsl: qe: rename qe_(clr/set/clrset)bit* helpers
->   soc: fsl: qe: introduce qe_io{read,write}* wrappers
->   soc: fsl: qe: avoid ppc-specific io accessors
->   soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
->   soc: fsl: qe: qe.c: guard use of pvr_version_is() with CONFIG_PPC32
->   soc: fsl: qe: drop unneeded #includes
->   soc: fsl: qe: drop assign-only high_active in qe_ic_init
->   soc: fsl: qe: remove pointless sysfs registration in qe_ic.c
->   soc: fsl: qe: use qe_ic_cascade_{low,high}_mpic also on 83xx
->   soc: fsl: qe: move calls of qe_ic_init out of arch/powerpc/
->   powerpc/83xx: remove mpc83xx_ipic_and_qe_init_IRQ
->   powerpc/85xx: remove mostly pointless mpc85xx_qe_init()
-
-Scott,
-What do you think about the PPC changes?
-
->   soc: fsl: qe: move qe_ic_cascade_* functions to qe_ic.c
->   soc: fsl: qe: rename qe_ic_cascade_low_mpic -> qe_ic_cascade_low
->   soc: fsl: qe: remove unused qe_ic_set_* functions
->   soc: fsl: qe: don't use NO_IRQ in qe_ic.c
->   soc: fsl: qe: make qe_ic_get_{low,high}_irq static
->   soc: fsl: qe: simplify qe_ic_init()
->   soc: fsl: qe: merge qe_ic.h headers into qe_ic.c
->   soc: fsl: qe: qe.c: use of_property_read_* helpers
->   soc: fsl: qe: qe_io.c: don't open-code of_parse_phandle()
->   soc: fsl: qe: qe_io.c: access device tree property using be32_to_cpu
->   soc: fsl: qe: qe_io.c: use of_property_read_u32() in par_io_init()
->   soc: fsl: move cpm.h from powerpc/include/asm to include/soc/fsl
->   soc/fsl/qe/qe.h: update include path for cpm.h
->   serial: ucc_uart: explicitly include soc/fsl/cpm.h
->   serial: ucc_uart: replace ppc-specific IO accessors
->   serial: ucc_uart: factor out soft_uart initialization
->   serial: ucc_uart: stub out soft_uart_init for !CONFIG_PPC32
->   serial: ucc_uart: use of_property_read_u32() in ucc_uart_probe()
->   serial: ucc_uart: access __be32 field using be32_to_cpu
-
-Greg and Timur,
-What do you think about these serial changes.
-
->   soc: fsl: qe: change return type of cpm_muram_alloc() to s32
->   soc: fsl: qe: make cpm_muram_free() return void
->   soc: fsl: qe: make cpm_muram_free() ignore a negative offset
->   soc: fsl: qe: drop broken lazy call of cpm_muram_init()
->   soc: fsl: qe: refactor cpm_muram_alloc_common to prevent BUG on error
->     path
->   soc: fsl: qe: avoid IS_ERR_VALUE in ucc_slow.c
->   soc: fsl: qe: drop use of IS_ERR_VALUE in qe_sdma_init()
->   soc: fsl: qe: drop pointless check in qe_sdma_init()
->   soc: fsl: qe: avoid IS_ERR_VALUE in ucc_fast.c
->   net/wan/fsl_ucc_hdlc: avoid use of IS_ERR_VALUE()
->   net/wan/fsl_ucc_hdlc: fix reading of __be16 registers
->   net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
->   net: ethernet: freescale: make UCC_GETH explicitly depend on PPC32
-
-David and Qiang,
-What do you think of the net changes?
-
->   soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
->
->  arch/powerpc/include/asm/cpm.h                | 172 +-------
->  arch/powerpc/platforms/83xx/km83xx.c          |   3 +-
->  arch/powerpc/platforms/83xx/misc.c            |  23 --
->  arch/powerpc/platforms/83xx/mpc832x_mds.c     |   3 +-
->  arch/powerpc/platforms/83xx/mpc832x_rdb.c     |   3 +-
->  arch/powerpc/platforms/83xx/mpc836x_mds.c     |   3 +-
->  arch/powerpc/platforms/83xx/mpc836x_rdk.c     |   3 +-
->  arch/powerpc/platforms/83xx/mpc83xx.h         |   7 -
->  arch/powerpc/platforms/85xx/common.c          |  23 --
->  arch/powerpc/platforms/85xx/corenet_generic.c |  12 -
->  arch/powerpc/platforms/85xx/mpc85xx.h         |   2 -
->  arch/powerpc/platforms/85xx/mpc85xx_mds.c     |  28 --
->  arch/powerpc/platforms/85xx/mpc85xx_rdb.c     |  18 -
->  arch/powerpc/platforms/85xx/twr_p102x.c       |  16 -
->  drivers/net/ethernet/freescale/Kconfig        |   2 +-
->  drivers/net/wan/fsl_ucc_hdlc.c                |  23 +-
->  drivers/net/wan/fsl_ucc_hdlc.h                |   2 +-
->  drivers/soc/fsl/qe/Kconfig                    |   3 +-
->  drivers/soc/fsl/qe/gpio.c                     |  34 +-
->  drivers/soc/fsl/qe/qe.c                       | 104 ++---
->  drivers/soc/fsl/qe/qe_common.c                |  50 +--
->  drivers/soc/fsl/qe/qe_ic.c                    | 285 ++++++-------
->  drivers/soc/fsl/qe/qe_ic.h                    |  99 -----
->  drivers/soc/fsl/qe/qe_io.c                    |  70 ++--
->  drivers/soc/fsl/qe/qe_tdm.c                   |   8 +-
->  drivers/soc/fsl/qe/ucc.c                      |  26 +-
->  drivers/soc/fsl/qe/ucc_fast.c                 |  86 ++--
->  drivers/soc/fsl/qe/ucc_slow.c                 |  60 ++-
->  drivers/soc/fsl/qe/usb.c                      |   2 +-
->  drivers/tty/serial/ucc_uart.c                 | 383 +++++++++---------
->  include/soc/fsl/cpm.h                         | 171 ++++++++
->  include/soc/fsl/qe/qe.h                       |  59 ++-
->  include/soc/fsl/qe/qe_ic.h                    | 135 ------
->  include/soc/fsl/qe/ucc_fast.h                 |   4 +-
->  include/soc/fsl/qe/ucc_slow.h                 |   6 +-
->  35 files changed, 770 insertions(+), 1158 deletions(-)
->  delete mode 100644 drivers/soc/fsl/qe/qe_ic.h
->  create mode 100644 include/soc/fsl/cpm.h
->  delete mode 100644 include/soc/fsl/qe/qe_ic.h
->
-> --
-> 2.23.0
->
+AFAIK, there is no locking between pr_warn() and pr_cont() so the latter
+could get appended to any facility level. But that isn't a problem I
+plan to fix.
