@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75AFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465C1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA26221E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F3DA2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497279;
-	bh=j1227qPE8Hj0hT9pr0IYy4IV8VS1IsyFc3vDGB7EdNg=;
+	s=default; t=1573497283;
+	bh=MnjhQlZwaODzj+JadDJkhh9j+AWvo5XL4w5QwgNBMyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/czJ5KRSsFgnWpzkE7ao5lVNEb/gjLSoUMecR2vLXD7s0vyta1f83upCyDA7hzGk
-	 mzdA7c2lrsO4X5kDWqrr3+xkSKbo0rbknev+JM8OEynansvRzzFpCqp8UAWnC5zR7Z
-	 SN1WpLl3YKB679lN29rgf726bOHPfs3Bcw0iSPgw=
+	b=vHHl35aCPYcI3XTStb6rXWIEdqTnGjqD6G+X4OpPF9BZZstcykh181o7k8xX5ReGA
+	 ENJcM6rWNIxcrGx2YY0hBlcz8436Yswvzwbii64niqf+FeFvRpZXbuqwWFmxOc2n+a
+	 xujXi0udtNJrMMz2zS0pjlEzuRZT0RFz930/9Lqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfKKSeh (ORCPT
+        id S1728396AbfKKSel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:34:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52302 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:34:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbfKKSef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:35 -0500
+        id S1727669AbfKKSej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9254222C5;
-        Mon, 11 Nov 2019 18:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF7A02173B;
+        Mon, 11 Nov 2019 18:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497275;
-        bh=j1227qPE8Hj0hT9pr0IYy4IV8VS1IsyFc3vDGB7EdNg=;
+        s=default; t=1573497278;
+        bh=MnjhQlZwaODzj+JadDJkhh9j+AWvo5XL4w5QwgNBMyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1h8pf4Z9g08yo0Xr5XW6FaFbMEqP+iKB73AlKr0tvsF+t0vVrTCdv7zdXEbrEFtrt
-         +s4wd0rxTFhgb3mD9jzgtKhHe0yMVEWNOiMQIdehzvXLxyegEtYC+GaTirD18TiTeT
-         lRrat3HGFx+6YyKbu2J0WphKuA9cZSAX2xs1iLI8=
+        b=C1TUjsMiHRmN54qOTWn3ChepzgpGW4sHzAwCPhUk4uAr1URLxwWsHmhVzsFH0odb8
+         UDNNfmunMAf0C+1y4rIuEppHyYfZLvcux3372P7uMrGN46k81cAvb0BrRJUdbZXaEd
+         DJyaKGXTAzrrHj9Leedjl39UB9d0lcY46sHXVtI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jan Kara <jack@suse.cz>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 64/65] mm/filemap.c: dont initiate writeback if mapping has no dirty pages
-Date:   Mon, 11 Nov 2019 19:29:04 +0100
-Message-Id: <20191111181356.611049234@linuxfoundation.org>
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.9 65/65] cgroup,writeback: dont switch wbs immediately on dead wbs if the memcg is dead
+Date:   Mon, 11 Nov 2019 19:29:05 +0100
+Message-Id: <20191111181356.971940684@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -64,49 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Tejun Heo <tj@kernel.org>
 
-commit c3aab9a0bd91b696a852169479b7db1ece6cbf8c upstream.
+commit 65de03e251382306a4575b1779c57c87889eee49 upstream.
 
-Functions like filemap_write_and_wait_range() should do nothing if inode
-has no dirty pages or pages currently under writeback.  But they anyway
-construct struct writeback_control and this does some atomic operations if
-CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
-updates state of writeback ownership, on slow path might be more work.
-Current this path is safely avoided only when inode mapping has no pages.
+cgroup writeback tries to refresh the associated wb immediately if the
+current wb is dead.  This is to avoid keeping issuing IOs on the stale
+wb after memcg - blkcg association has changed (ie. when blkcg got
+disabled / enabled higher up in the hierarchy).
 
-For example generic_file_read_iter() calls filemap_write_and_wait_range()
-at each O_DIRECT read - pretty hot path.
+Unfortunately, the logic gets triggered spuriously on inodes which are
+associated with dead cgroups.  When the logic is triggered on dead
+cgroups, the attempt fails only after doing quite a bit of work
+allocating and initializing a new wb.
 
-This patch skips starting new writeback if mapping has no dirty tags set.
-If writeback is already in progress filemap_write_and_wait_range() will
-wait for it.
+While c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping
+has no dirty pages") alleviated the issue significantly as it now only
+triggers when the inode has dirty pages.  However, the condition can
+still be triggered before the inode is switched to a different cgroup
+and the logic simply doesn't make sense.
 
-Link: http://lkml.kernel.org/r/156378816804.1087.8607636317907921438.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Skip the immediate switching if the associated memcg is dying.
+
+This is a simplified version of the following two patches:
+
+ * https://lore.kernel.org/linux-mm/20190513183053.GA73423@dennisz-mbp/
+ * http://lkml.kernel.org/r/156355839560.2063.5265687291430814589.stgit@buzz
+
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Fixes: e8a7abf5a5bd ("writeback: disassociate inodes from dying bdi_writebacks")
+Acked-by: Dennis Zhou <dennis@kernel.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/filemap.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/fs-writeback.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -383,7 +383,8 @@ int __filemap_fdatawrite_range(struct ad
- 		.range_end = end,
- 	};
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -582,10 +582,13 @@ void wbc_attach_and_unlock_inode(struct
+ 	spin_unlock(&inode->i_lock);
  
--	if (!mapping_cap_writeback_dirty(mapping))
-+	if (!mapping_cap_writeback_dirty(mapping) ||
-+	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
- 		return 0;
+ 	/*
+-	 * A dying wb indicates that the memcg-blkcg mapping has changed
+-	 * and a new wb is already serving the memcg.  Switch immediately.
++	 * A dying wb indicates that either the blkcg associated with the
++	 * memcg changed or the associated memcg is dying.  In the first
++	 * case, a replacement wb should already be available and we should
++	 * refresh the wb immediately.  In the second case, trying to
++	 * refresh will keep failing.
+ 	 */
+-	if (unlikely(wb_dying(wbc->wb)))
++	if (unlikely(wb_dying(wbc->wb) && !css_is_dying(wbc->wb->memcg_css)))
+ 		inode_switch_wbs(inode, wbc->wb_id);
+ }
  
- 	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
 
 
