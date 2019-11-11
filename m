@@ -2,94 +2,210 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF57C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DCAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9F7214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E37214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 11:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfKKLSG (ORCPT
+        id S1726946AbfKKLSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:18:06 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:20733 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKKLSG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:18:06 -0500
-IronPort-SDR: 8ul6lPwye0br03r2TOSidBFiJv5F9OKrE3WNxHbsTJC/DYlC5Wv06kU1fW6OGSY25G8EHy53mN
- /I+KgXagucklYKluJjjX/6E6N0NnEO1DxPwEDpye0kFGlhYWbEl4F7GPPQLMqabqnMVM7V+S0a
- OV+PigHwHngHh7eme3vOSazqDugPbyiu/1sNUmttuEyR5UrqbKriBBxt1ONNAJyk8Mizl6wIJw
- jRSiCgCWkjRRmAStRV3K2yLJhyQTSe0UxwdqOGqJfK/GVQVU5vhECH4a8daMqGRx9gnSGG/7w3
- XAs=
-X-IronPort-AV: E=Sophos;i="5.68,292,1569312000"; 
-   d="scan'208";a="43051262"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 11 Nov 2019 03:18:05 -0800
-IronPort-SDR: 6KRljqEPFy4kP0bWVsq1qphgjWHTuQ8NIN4S7farfvusPhHEuQyUWPOhLwjIFs03EOw/h1P0hz
- WFGidB+fDtPeMYLr7LGNVA8OpFGNtMQP8zwwgFBeBUKAvA6XQGOOBF9P0VLreiOf43Ai6r1rna
- J5TePq5zg0/INcedVPVbbvTWiCwAwAJdphsUUfEVF5jvL9wbmt5lVyjcr3J78tTVBUjPtw1TZ1
- V2cw/m0xddSEVoyT4NhiCv62dPNm0mT5uywNzZV5Pslcmm2lolHklqjUaGo6uGL4mRnWWWgWZm
- M54=
-From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
-To:     'Takashi Iwai' <tiwai@suse.de>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        'Jaroslav Kysela' <perex@perex.cz>,
-        'Takashi Iwai' <tiwai@suse.com>,
-        'Timo Wischer' <twischer@de.adit-jv.com>
-References: <20191105143218.5948-1-andrew_gabbasov@mentor.com>  <20191105143218.5948-2-andrew_gabbasov@mentor.com>      <20191105143218.5948-3-andrew_gabbasov@mentor.com>      <20191105143218.5948-4-andrew_gabbasov@mentor.com>      <20191105143218.5948-5-andrew_gabbasov@mentor.com>      <20191105143218.5948-6-andrew_gabbasov@mentor.com>      <20191105143218.5948-7-andrew_gabbasov@mentor.com>      <20191105143218.5948-8-andrew_gabbasov@mentor.com> <s5hlfss862t.wl-tiwai@suse.de> 
-In-Reply-To: 
-Subject: RE: [PATCH v2 7/8] ALSA: aloop: Support selection of snd_timer instead of jiffies
-Date:   Mon, 11 Nov 2019 14:17:03 +0300
-Organization: Mentor Graphics Corporation
-Message-ID: <000001d59881$96979fa0$c3c6dee0$@mentor.com>
+        Mon, 11 Nov 2019 06:18:13 -0500
+Received: from mga05.intel.com ([192.55.52.43]:9169 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfKKLSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 06:18:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 03:18:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
+   d="scan'208";a="207087344"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 11 Nov 2019 03:18:08 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iU7hw-00009m-6Z; Mon, 11 Nov 2019 13:18:08 +0200
+Date:   Mon, 11 Nov 2019 13:18:08 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v6 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191111111808.GO32742@smile.fi.intel.com>
+References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+ <d15b8cf13882902444e33c616d78c06c6b5fdc7b.1573455324.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQHVk+YmK3KlOO6PeUGxcY472O0ao6d/XF4AgAB4QPCABgZDwA==
-Content-Language: en-us
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d15b8cf13882902444e33c616d78c06c6b5fdc7b.1573455324.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The update (v3) of this patch set is sent to the mailing list:
-https://mailman.alsa-project.org/pipermail/alsa-devel/2019-November/158312.h
-tml
-
-Thanks.
-
-Best regards,
-Andrew
-
-> -----Original Message-----
-> From: Andrew Gabbasov [mailto:andrew_gabbasov@mentor.com]
-> Sent: Friday, November 08, 2019 9:09 PM
-> To: 'Takashi Iwai'
-> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
-> Kysela; Takashi Iwai; Timo Wischer
-> Subject: RE: [PATCH v2 7/8] ALSA: aloop: Support selection of snd_timer
-> instead of jiffies
+On Mon, Nov 11, 2019 at 06:11:29PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+> controls pin multiplexing & configuration including GPIO functions selection &
+> GPIO attributes configuration.
 > 
-> Hello Takashi,
+> This IP is not based on & does not have anything in common with Chassis
+> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
 > 
-> Thank you very much for your feedback.
-> 
+> Add a new GPIO & pin control framework based driver for this IP.
 
-[ skipped ]
+Looking again into this DT parsing and at other drivers, can't you utilize pin
+control framework better?
 
-> I'm preparing the next version of this patch set with the changes,
-> described above, and some more code cleanup. It will be submitted soon.
-> 
-> Thanks!
-> 
-> Best regards,
-> Andrew
+I see some drivers are using
+	pinctrl_utils_add_map_mux()
+among other calls.
+
+Some comments below as well.
+
+> +	writel(pmx, mem + (offset << 2));
+
+	offset * 4
+looks more naturally here. Applies to other similar cases if any.
+
+> +	val = readl(mem + REG_DRCC(idx));
+> +	val = PARSE_DRV_CURRENT(val, pin_offset);
+> +
+> +	return val;
+
+Can be
+	return PARSE_DRV_CURRENT(readl(mem + REG_DRCC(idx)), pin_offset);
+
+but it's up to you.
+
+> +static int eqbr_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+> +			    unsigned long *configs, unsigned int num_configs)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct eqbr_gpio_ctrl *gctrl;
+> +	enum pin_config_param param;
+> +	struct eqbr_pin_bank *bank;
+> +	unsigned int val, offset;
+> +	struct gpio_chip *gc;
+> +	unsigned long flags;
+> +	void __iomem *mem;
+> +	u32 regval, mask;
+> +	int i;
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		param = pinconf_to_config_param(configs[i]);
+> +		val = pinconf_to_config_argument(configs[i]);
+> +
+> +		bank = find_pinbank_via_pin(pctl, pin);
+> +		if (!bank) {
+> +			dev_err(pctl->dev,
+> +				"Couldn't find pin bank for pin %u\n", pin);
+> +			return -ENODEV;
+> +		}
+> +		mem = bank->membase;
+> +		offset = pin - bank->pin_base;
+> +
+> +		switch (param) {
+> +		case PIN_CONFIG_BIAS_PULL_UP:
+> +			mem += REG_PUEN;
+
+> +			val &= 0x1;
+
+Unneeded if use standard pattern (see below).
+
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_BIAS_PULL_DOWN:
+> +			mem += REG_PDEN;
+
+> +			val &= 0x1;
+
+Ditto.
+
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +			mem += REG_OD;
+
+> +			val &= 0x1;
+
+Ditto.
+
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_DRIVE_STRENGTH:
+> +			mem += REG_DRCC(offset / DRV_CUR_PINS);
+
+> +			offset = (offset % DRV_CUR_PINS) << 1;
+> +			val &= 0x3;
+
+Ditto.
+
+> +			mask = GENMASK(offset + 1, offset);
+
+GENMASK() badly works with non-constants. Better
+
+			mask = GENMASK(1, 0) << offset;
+
+> +			break;
+> +		case PIN_CONFIG_SLEW_RATE:
+> +			mem += REG_SRC;
+
+> +			val &= 0x1;
+
+Ditto.
+
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_OUTPUT_ENABLE:
+> +			gctrl = get_gpio_ctrls_via_bank(pctl, bank);
+> +			if (!gctrl) {
+> +				dev_err(pctl->dev, "Failed to find gpio via bank pinbase: %u, pin: %u\n",
+> +					bank->pin_base, pin);
+> +				return -ENODEV;
+> +			}
+> +			gc = &gctrl->chip;
+> +			gc->direction_output(gc, offset, 0);
+> +			continue;
+> +		default:
+> +			return -ENOTSUPP;
+> +		}
+> +
+> +		raw_spin_lock_irqsave(&pctl->lock, flags);
+> +		regval = readl(mem);
+
+> +		regval = (regval & ~mask) | (val << offset);
+
+Standard pattern is to apply mask here:
+		regval = (regval & ~mask) | ((val << offset) & mask);
+
+> +		writel(regval, mem);
+> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +			dev_dbg(dev, "Group %s: not function binded!\n",
+> +				(char *)prop->value);
+
+Do you need casting here?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
