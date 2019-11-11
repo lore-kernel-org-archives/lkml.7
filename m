@@ -6,72 +6,132 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B04C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00D3C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B9221655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FD721655
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 17:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573494488;
-	bh=6apzf/QJW6InjRsMKp2H1gCrorF/S5IqlNmELXJRJMg=;
+	s=default; t=1573494544;
+	bh=hy1iBSxWrAo+5K7ISprQZ72uYFIvTGnv3EGpLhFk9Gg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VMds6rwInTXevImhO/O9zoDDPneGB2SXH49lptZ9w338t4X81Wy5aOyof6y8JQEnu
-	 U/QcmDdQ4W5mkd4AYkdQdXyMxdkTrGXNuxduzyt0Vkuy8L6UdrR3PutTkEMc/ZNkUg
-	 xR0HoPaoYMeBD2dZRy71OX/c8F9Wp/8i7Jc9LeWo=
+	b=bsfJh4gNVUcUQ6i1odhUi5e7ulnL9MKL0FXGJ0RqdoHWf0Q4aO3blrAYtjAGUnnDQ
+	 nGAR8AVZruiPro3Y6rBZZQtERM7/eodCiMEoXJJZGHPffgnOosVW1IUKAowDU5NguM
+	 BkfSGpyefCbJzyCnK/z2i/W3ZcLPl1YS6O5l2kGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKKRsH (ORCPT
+        id S1726983AbfKKRtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:48:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 12:49:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfKKRsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:48:07 -0500
+        id S1726877AbfKKRtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:49:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C0C20818;
-        Mon, 11 Nov 2019 17:48:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B86FA20818;
+        Mon, 11 Nov 2019 17:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573494485;
-        bh=6apzf/QJW6InjRsMKp2H1gCrorF/S5IqlNmELXJRJMg=;
+        s=default; t=1573494542;
+        bh=hy1iBSxWrAo+5K7ISprQZ72uYFIvTGnv3EGpLhFk9Gg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ajW/hvNbKXLtoiys8q9LrhFm/MZBB4fpadxcyPzO5gPhOJrnYWIJllehnGYFCEdcr
-         fKQqocWmLenLfjlvFILyvXYatxhl3GoLfaqb4YRsDc1w+2KELLHtkg2Zi7f+TpsdaV
-         i4iRzQV+FmImINVaQH6S4g4F69WBe1tbu6W+E5SE=
-Date:   Mon, 11 Nov 2019 18:48:02 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     Jules Irenge <jbi.octave@gmail.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] staging: wfx: replace uintXX_t to uXX and intXX_t
- to sXX
-Message-ID: <20191111174802.GA1083018@kroah.com>
-References: <20191111133055.214410-1-jbi.octave@gmail.com>
- <22806545.kYr6eE9xQE@pc-42>
+        b=QoeQys2CPtN0gI+qqN2MaDHEdhmUL9H3+WbfYsyKHHpcgA6hrcHuQTpeF2kOOaXJa
+         wSYGC3Wp1mFkXggcsVwLLxrulUEULdQC9r0XpVcCPhHWkgJ7VZzoWAvSGLTN0zXfsm
+         RsxNOTcqsLXaJ9wR9TqKPo3vrj63NdfgOcAc0Nfc=
+Date:   Mon, 11 Nov 2019 18:48:59 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Lamprecht <t.lamprecht@proxmox.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 4.19 167/211] KVM: x86: Manually calculate reserved bits
+ when loading PDPTRS
+Message-ID: <20191111174859.GB1083018@kroah.com>
+References: <20191003154447.010950442@linuxfoundation.org>
+ <20191003154525.870373223@linuxfoundation.org>
+ <68d02406-b9cc-2fc1-848c-5d272d9a3350@proxmox.com>
+ <20191111173757.GB11805@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <22806545.kYr6eE9xQE@pc-42>
+In-Reply-To: <20191111173757.GB11805@linux.intel.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 05:04:49PM +0000, Jerome Pouiller wrote:
-> I know that uXX is prefered over uintXX_t. However, I dislike to change 
-> 650 lines of code only for this purpose in one batch. It will generate 
-> plenty of conflicts with branches currently in development. 
+On Mon, Nov 11, 2019 at 09:37:57AM -0800, Sean Christopherson wrote:
+> On Mon, Nov 11, 2019 at 10:32:05AM +0100, Thomas Lamprecht wrote:
+> > On 10/3/19 5:53 PM, Greg Kroah-Hartman wrote:
+> > > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > 
+> > > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
+> > > 
+> > > Manually generate the PDPTR reserved bit mask when explicitly loading
+> > > PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+> > It seems that a backport of this to stable and distro kernels tickled out
+> > some issue[0] for KVM Linux 64bit guests on older than about 8-10 year old
+> > Intel CPUs[1].
+> 
+> It manifests specifically when running with EPT disabled (no surprise
+> there).  Actually, it probably would reproduce simply with unrestricted
+> guest disabled, but that's beside the point.
+> 
+> The issue is a flawed PAE-paging check in kvm_set_cr3(), which causes KVM
+> to incorrectly load PDPTRs in 64-bit mode and inject a #GP.  It's a sneaky
+> little bugger because the "if (is_long_mode() ..." makes it appear to be
+> correct at first glance.
+> 
+> 	if (is_long_mode(vcpu) &&
+> 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
+> 		return 1;
+> 	else if (is_pae(vcpu) && is_paging(vcpu) &&  <--- needs !is_long_mode()
+> 		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+> 		return 1;
+> 
+> With unrestricted guest, KVM doesn't intercept writes to CR3 and so doesn't
+> trigger the buggy code.  This doesn't fail upstream because the offending
+> code was refactored to encapsulate the PAE checks in a single helper,
+> precisely to avoid this type of headache.
+> 
+>   commit bf03d4f9334728bf7c8ffc7de787df48abd6340e
+>   Author: Paolo Bonzini <pbonzini@redhat.com>
+>   Date:   Thu Jun 6 18:52:44 2019 +0200
+> 
+>     KVM: x86: introduce is_pae_paging
+> 
+>     Checking for 32-bit PAE is quite common around code that fiddles with
+>     the PDPTRs.  Add a function to compress all checks into a single
+>     invocation.
+> 
+> 
+> Commit bf03d4f93347 ("KVM: x86: introduce is_pae_paging") doesn't apply
+> cleanly to 4.19 or earlier because of the VMX file movement in 4.20.  But,
+> the revelant changes in x86.c do apply cleanly, and I've quadruple checked
+> that the PAE checks in vmx.c are correct, i.e. applying the patch and
+> ignoring the nested.c/vmx.c conflicts would be a viable lazy option.
+> 
+> > Basically, booting this kernel as host, then running an KVM guest distro
+> > or kernel fails it that guest kernel early in the boot phase without any
+> > error or other log to serial console, earlyprintk.
+> 
+> ...
+> 
+> > 
+> > [0]: https://bugzilla.kernel.org/show_bug.cgi?id=205441
+> > [1]: models tested as problematic are: intel core2duo E8500; Xeon E5420; so
+> >      westmere, conroe and that stuff. AFAICT anything from about pre-2010 which
+> >      has VMX support (i.e. is 64bit based)
+> 
+> Note, not Westmere, which has EPT and unrestricted guest.  Xeon E5420 is
+> Harpertown, a.k.a. Penryn, the shrink of Conroe.  
 
-Now that the code is in the kernel tree, any "branches currently in
-development" have to deal with what is merged upstream no matter if they
-are tiny or big patches.  That's just the joy of working with upstream,
-sorry.
 
-If you want to do out-of-tree development, that's fine, but you can't
-also want the code in-tree at the same time.
-
-thanks,
+Thanks for figuring this out, can you send us a patch that we can apply
+to fix this issue in the stable tree?
 
 greg k-h
