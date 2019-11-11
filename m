@@ -2,101 +2,136 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E311BC17443
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B42C43331
 	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86CC2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573456814;
-	bh=RHopYpI5I/OMsLLyX7IFXyJRkHB43Q6WGVEyWlb+uok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k0zdQDsV397iq8Xy5u3zUv4k2PyUqMzSBtlnxAfPcKJDN0OP/u5i/eZvqTynL7CI0
-	 93ayWVjjkMLG7rul0TeSTRwpANFiWGvqGZihGvu2D8DYcp8h7xSXGsNW0ssHY/MBoh
-	 qEz3fFB3GlVjdXdgMaCbDkJsm4kUDWBENoWj1hwE=
+	by mail.kernel.org (Postfix) with ESMTP id 97924206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 07:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfKKHUK (ORCPT
+        id S1726912AbfKKHUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:20:10 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40097 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfKKHUK (ORCPT
+        Mon, 11 Nov 2019 02:20:03 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58187 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfKKHUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:20:10 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f3so12056001wmc.5
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 23:20:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rolDzRNdmch+TJjOcq+3SrTl4ASUgxQj4KW8In9RS18=;
-        b=Olq79RDuRWkPl2xCzG3S1c3OoCBjaeMVgeZEdzN8RnE3oY4ZGi8+6lJ2dcgdGzT0AT
-         VueNBI4qcksxr3neqW/7s1MrYT/r6crRBJb4lgWx9F0nffQNnKpfDkoS025pTsTa/3aD
-         Pqhyf9zS0VUw9WZnnbS2bKCBUiya0nhIPd4oUpymJlfMARHn6AouTOIQJJ4k2xy9irbl
-         SgRSKtJNNcO+3Dr5yGJFzz0bTECki7qIl4IHowSUvm9EBB3rYKsJLqoG4AIoXZe/dbte
-         r4NdPd2w7tJhxEvESXA3wM9rHY58RTT5FtB6fmUbJQ4cmrW/z2wfIxavRT0yx5MzdWyj
-         m/Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rolDzRNdmch+TJjOcq+3SrTl4ASUgxQj4KW8In9RS18=;
-        b=Cl9CZAmBw/U2ZUoDwc50Qdts9eAyMTzwbozqpZPe77YWMYxbZ7IwBbFZhc0kYxzPvW
-         TyPnRYtgx8GMioUAPTbC8eEaJ5VlapE+rUYkhv9dvInyD8pfNQ6fPXwRax603xsxXSva
-         jhZCiuUHrnTbxWGEcDOgZMtAwE5hBn3vy98Ie5nma58WU1vyRN9IlIpZWxh4oloI9Exi
-         HvUnYue4MTWlMRLnNcunHVEDZ6NUud1ITQ+MUr6ThqiqNfbpiTgT+zwGya6viVqKYp+P
-         ZkR8ZMYdl4wshgPBM8BVRvbYlfmHW2PcVjO9Tzlf0MOjHKGb+k9k00FvFaLzJu6CjmIb
-         0Ucw==
-X-Gm-Message-State: APjAAAU3xKkUXUIK/DB/p4JrarHSn9kk5LABQGZjAy56RZyQXFIFWDJe
-        m1wHjnJAAHFNofdWfx6SKZk=
-X-Google-Smtp-Source: APXvYqzMptahC1XkkfgLb9z4WvaM8xGJKwBm88GFd7IIJaIZf8+qJQMwcsRrVdyOCtH7h3/L/wocNw==
-X-Received: by 2002:a1c:9c54:: with SMTP id f81mr8334636wme.89.1573456808198;
-        Sun, 10 Nov 2019 23:20:08 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id u16sm14843906wrr.65.2019.11.10.23.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Nov 2019 23:20:07 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:20:05 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mon, 11 Nov 2019 02:20:02 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iU3zQ-0005vi-5D; Mon, 11 Nov 2019 08:19:56 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iU3zM-0007yV-Kj; Mon, 11 Nov 2019 08:19:52 +0100
+Date:   Mon, 11 Nov 2019 08:19:52 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 2/4] irq_work: Fix irq_work_claim() ordering
-Message-ID: <20191111072005.GA112047@gmail.com>
-References: <20191108160858.31665-1-frederic@kernel.org>
- <20191108160858.31665-3-frederic@kernel.org>
+        kernel-janitors@vger.kernel.org,
+        Grant Erickson <marathon96@gmail.com>,
+        Joachim Eastwood <manabian@gmail.com>,
+        Neil Brown <neilb@suse.de>, Wen Yang <wen.yang99@zte.com.cn>
+Subject: Re: [PATCH] pwm: omap-dmtimer: Add missing put_device() call in
+ pwm_omap_dmtimer_probe()
+Message-ID: <20191111071952.6pbswbboqreen6im@pengutronix.de>
+References: <fd7a56e4-2a35-a6c4-e5bd-1e53a6c48687@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191108160858.31665-3-frederic@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fd7a56e4-2a35-a6c4-e5bd-1e53a6c48687@web.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Markus,
 
-* Frederic Weisbecker <frederic@kernel.org> wrote:
-
-> When irq_work_claim() finds IRQ_WORK_PENDING flag already set, we just
-> return and don't raise a new IPI. We expect the destination to see
-> and handle our latest updades thanks to the pairing atomic_xchg()
-> in irq_work_run_list().
+On Sat, Nov 09, 2019 at 01:26:50PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 9 Nov 2019 13:09:42 +0100
 > 
-> But cmpxchg() doesn't guarantee a full memory barrier upon failure. So
-> it's possible that the destination misses our latest updates.
+> A coccicheck run provided information like the following.
 > 
-> So use atomic_fetch_or() instead that is unconditionally fully ordered
-> and also performs exactly what we want here and simplify the code.
+> drivers/pwm/pwm-omap-dmtimer.c:304:2-8: ERROR: missing put_device;
+> call of_find_device_by_node on line 255, but without a corresponding
+> object release within this function.
+> 
+> Generated by: scripts/coccinelle/free/put_device.cocci
+> 
+> Thus add jump targets to fix the exception handling for this
+> function implementation.
+> 
+> Fixes: b7290cf6ff7869ec12070aa146c370728cab62c2 ("pwm: pwm-omap-dmtimer: Adapt driver to utilize dmtimer pdata ops")
+> Fixes: 6604c6556db9e41c85f2839f66bd9d617bcf9f87 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/pwm/pwm-omap-dmtimer.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+> index 00772fc53490..958854213786 100644
+> --- a/drivers/pwm/pwm-omap-dmtimer.c
+> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> @@ -301,12 +301,13 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+>  put:
+>  	of_node_put(timer);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto check_timer_pdev;
+> 
+>  	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
+>  	if (!omap) {
+>  		pdata->free(dm_timer);
+> -		return -ENOMEM;
+> +		ret = -ENOMEM;
+> +		goto put_device;
+>  	}
+> 
+>  	omap->pdata = pdata;
+> @@ -340,12 +341,19 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "failed to register PWM\n");
+>  		omap->pdata->free(omap->dm_timer);
+> -		return ret;
+> +		goto put_device;
+>  	}
+> 
+>  	platform_set_drvdata(pdev, omap);
+> 
+>  	return 0;
+> +
+> +check_timer_pdev:
+> +	if (timer_pdev)
+> +put_device:
+> +		put_device(&timer_pdev->dev);
 
-Just curious, how was this bug found - in the wild, or via code review?
+This is ugly but necessary with the driver as is because the error
+handling is interwinded within the normal path through this function.
 
-Thanks,
+I would prefer to clean this up first, then this fix gets a bit nicer.
+Will send a patch in reply to this mail.
 
-	Ingo
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
