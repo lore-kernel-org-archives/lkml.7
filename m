@@ -2,169 +2,298 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF697C17445
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E8FC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BFA222CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wu/WJSWi"
+	by mail.kernel.org (Postfix) with ESMTP id 795FE214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 16:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfKKQHr (ORCPT
+        id S1727041AbfKKQHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:07:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22961 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726845AbfKKQHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:07:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573488465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J8ErC4PVdVGwBCyt7dEhWq/0IJ1CoVRGTxaHLB8Usq8=;
-        b=Wu/WJSWib3Csf3EFxK36wJidLLasgG9eSg3mKt6EYDQSUkKFGwoDrFd+v/VPC6kaJG2MX4
-        iLm73jfSyKfIX4z/jAxBHL8RY6i0rA/fIS2KVeY77pYX55jN+rmt8GjWAroo1FLudBsBbT
-        8ovkpWLLJDJtataYNQnSZVOvS+xrasE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-yzbKBR5MO1a2Nt2c4kU-hQ-1; Mon, 11 Nov 2019 11:07:42 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 700A0100551C;
-        Mon, 11 Nov 2019 16:07:40 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D399210027A5;
-        Mon, 11 Nov 2019 16:07:38 +0000 (UTC)
-Date:   Mon, 11 Nov 2019 17:07:38 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] perf session: Fix compression processing
-Message-ID: <20191111160738.GD26980@krava>
-References: <20191103222441.GE8251@krava>
- <d57725e6-e62f-b37e-6cb4-28bf521faaea@linux.intel.com>
- <20191111145640.GB26980@krava>
- <69782f54-f5f5-f89f-9c8d-172d4de331d0@linux.intel.com>
- <20191111154612.GC26980@krava>
- <84f6c330-95bc-b615-4366-8a243d1f5c20@linux.intel.com>
+        Mon, 11 Nov 2019 11:07:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43252 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726845AbfKKQHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 11:07:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 13F64AE92;
+        Mon, 11 Nov 2019 16:07:49 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BA5631E47E5; Mon, 11 Nov 2019 17:07:48 +0100 (CET)
+Date:   Mon, 11 Nov 2019 17:07:48 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 5/5] fs/xfs: Allow toggle of physical DAX flag
+Message-ID: <20191111160748.GE13307@quack2.suse.cz>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <20191020155935.12297-6-ira.weiny@intel.com>
+ <20191021004536.GD8015@dread.disaster.area>
+ <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
+ <20191108131238.GK20863@quack2.suse.cz>
+ <20191108134606.GL20863@quack2.suse.cz>
+ <20191108193612.GA4800@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <84f6c330-95bc-b615-4366-8a243d1f5c20@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: yzbKBR5MO1a2Nt2c4kU-hQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191108193612.GA4800@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 06:53:35PM +0300, Alexey Budankov wrote:
-> On 11.11.2019 18:46, Jiri Olsa wrote:
-> > On Mon, Nov 11, 2019 at 06:41:47PM +0300, Alexey Budankov wrote:
-> >> On 11.11.2019 17:56, Jiri Olsa wrote:
-> >>> On Mon, Nov 11, 2019 at 05:38:49PM +0300, Alexey Budankov wrote:
-> >>>>
-> >>>> On 04.11.2019 1:24, Jiri Olsa wrote:
-> >>>>> hi,
-> >>>> <SNIP>
-> >>>>> ---
-> >>>>> The compressed data processing occasionally fails with:
-> >>>>>   $ perf report --stdio -vv
-> >>>>>   decomp (B): 44519 to 163000
-> >>>>>   decomp (B): 48119 to 174800
-> >>>>>   decomp (B): 65527 to 131072
-> >>>>>   fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mma=
-p_size=3D0x20000: fuzzed perf.data?
-> >>>>>   Error:
-> >>>>>   failed to process sample
-> >>>>>   ...
-> >>>>>
-> >>>>> It's caused by recent fuzzer fix that does not take into account
-> >>>>> that compressed data do not need to by fully present in the buffer,
-> >>>>> so it's ok to just return NULL and not to fail.
-> >>>>>
-> >>>>> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing=
- invalid header.size")
-> >>>>> Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.ker=
-nel.org
-> >>>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> >>>>> ---
-> >>>>>  tools/perf/util/session.c | 8 +++++---
-> >>>>>  1 file changed, 5 insertions(+), 3 deletions(-)
-> >>>>>
-> >>>>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> >>>>> index f07b8ecb91bc..3589ed14a629 100644
-> >>>>> --- a/tools/perf/util/session.c
-> >>>>> +++ b/tools/perf/util/session.c
-> >>>>> @@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_event=
-s(struct perf_session *session)
-> >>>>> =20
-> >>>>>  static union perf_event *
-> >>>>>  fetch_mmaped_event(struct perf_session *session,
-> >>>>> -=09=09   u64 head, size_t mmap_size, char *buf)
-> >>>>> +=09=09   u64 head, size_t mmap_size, char *buf, bool decomp)
-> >>>>
-> >>>> bools in interface make code less transparent.
-> >>>>
-> >>>>>  {
-> >>>>>  =09union perf_event *event;
-> >>>>> =20
-> >>>>> @@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *sessi=
-on,
-> >>>>>  =09=09/* We're not fetching the event so swap back again */
-> >>>>>  =09=09if (session->header.needs_swap)
-> >>>>>  =09=09=09perf_event_header__bswap(&event->header);
-> >>>>> +=09=09if (decomp)
-> >>>>> +=09=09=09return NULL;
-> >>>>>  =09=09pr_debug("%s: head=3D%#" PRIx64 " event->header_size=3D%#x, =
-mmap_size=3D%#zx: fuzzed perf.data?\n",
-> >>>>>  =09=09=09 __func__, head, event->header.size, mmap_size);
-> >>>>>  =09=09return ERR_PTR(-EINVAL);
-> >>>>> @@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_eve=
-nts(struct perf_session *session)
-> >>>>>  =09=09return 0;
-> >>>>> =20
-> >>>>>  =09while (decomp->head < decomp->size && !session_done()) {
-> >>>>> -=09=09union perf_event *event =3D fetch_mmaped_event(session, deco=
-mp->head, decomp->size, decomp->data);
-> >>>>> +=09=09union perf_event *event =3D fetch_mmaped_event(session, deco=
-mp->head, decomp->size, decomp->data, true);
-> >>>>
-> >>>> It looks like this call can be skipped, at all, in this case.
-> >>>
-> >>> not sure what you mean, we are in decomp code no?
-> >>
-> >> Ok, it is inside "not fetching" branch.=20
-> >> NULL return value means to proceed getting further over the trace.
-> >> Checking record type =3D=3D COMPRESSED at the higher level could=20
-> >> probably be cleaner fix and also work faster.
-> >=20
-> > any chance you could post the fix? the patch I did was a
-> > quick fix to get the feature working for presentation ;-)
-> > you're probably thinking of the proper approach
->=20
-> Please share the exact reproducing steps=20
-> so I could come up with something.
+On Fri 08-11-19 11:36:13, Ira Weiny wrote:
+> On Fri, Nov 08, 2019 at 02:46:06PM +0100, Jan Kara wrote:
+> > On Fri 08-11-19 14:12:38, Jan Kara wrote:
+> > > On Mon 21-10-19 15:49:31, Ira Weiny wrote:
+> > > > On Mon, Oct 21, 2019 at 11:45:36AM +1100, Dave Chinner wrote:
+> > > > > On Sun, Oct 20, 2019 at 08:59:35AM -0700, ira.weiny@intel.com wrote:
+> > > > > That, fundamentally, is the issue here - it's not setting/clearing
+> > > > > the DAX flag that is the issue, it's doing a swap of the
+> > > > > mapping->a_ops while there may be other code using that ops
+> > > > > structure.
+> > > > > 
+> > > > > IOWs, if there is any code anywhere in the kernel that
+> > > > > calls an address space op without holding one of the three locks we
+> > > > > hold here (i_rwsem, MMAPLOCK, ILOCK) then it can race with the swap
+> > > > > of the address space operations.
+> > > > > 
+> > > > > By limiting the address space swap to file sizes of zero, we rule
+> > > > > out the page fault path (mmap of a zero length file segv's with an
+> > > > > access beyond EOF on the first read/write page fault, right?).
+> > > > 
+> > > > Yes I checked that and thought we were safe here...
+> > > > 
+> > > > > However, other aops callers that might run unlocked and do the wrong
+> > > > > thing if the aops pointer is swapped between check of the aop method
+> > > > > existing and actually calling it even if the file size is zero?
+> > > > > 
+> > > > > A quick look shows that FIBMAP (ioctl_fibmap())) looks susceptible
+> > > > > to such a race condition with the current definitions of the XFS DAX
+> > > > > aops. I'm guessing there will be others, but I haven't looked
+> > > > > further than this...
+> > > > 
+> > > > I'll check for others and think on what to do about this.  ext4 will have the
+> > > > same problem I think.  :-(
+> > > 
+> > > Just as a datapoint, ext4 is bold and sets inode->i_mapping->a_ops on
+> > > existing inodes when switching journal data flag and so far it has not
+> > > blown up. What we did to deal with issues Dave describes is that we
+> > > introduced percpu rw-semaphore guarding switching of aops and then inside
+> > > problematic functions redirect callbacks in the right direction under this
+> > > semaphore. Somewhat ugly but it seems to work.
+> 
+> Ah I am glad you brought this up.  I had not seen this before.
+> 
+> Is that s_journal_flag_rwsem?
 
-'perf record -z' for longer workloads
+Yes.
 
-jirka
+> In the general case I don't think that correctly protects against:
+> 
+> 	if (a_ops->call)
+> 		a_ops->call();
+> 
+> Because not all operations are defined in both ext4_aops and
+> ext4_journalled_aops.  Specifically migratepage.
+> 
+> move_to_new_page() specifically follows the pattern above with migratepage.  So
+> is there a bug here?
 
+Looks like there could be.
+
+> > Thinking about this some more, perhaps this scheme could be actually
+> > transformed in something workable. We could have a global (or maybe per-sb
+> > but I'm not sure it's worth it) percpu rwsem and we could transform aops
+> > calls into:
+> > 
+> > percpu_down_read(aops_rwsem);
+> > do_call();
+> > percpu_up_read(aops_rwsem);
+> > 
+> > With some macro magic it needn't be even that ugly.
+> 
+> I think this is safer.  And what I have been investigating/coding up.
+> Because that also would protect against the above with:
+> 
+> percpu_down_read(aops_rwsem);
+> 	if (a_ops->call)
+> 		a_ops->call();
+> percpu_up_read(aops_rwsem);
+> 
+> However I have been looking at SRCU because we also have patterns like:
+> 
+> 
+> 	generic_file_buffered_read
+> 		if (a_ops->is_partially_uptodate)
+> 			a_ops->is_partially_uptodate()
+> 		page_cache_sync_readahead
+> 			force_page_cache_readahead
+> 				if (!a_ops->readpage && !a_ops->readpages)
+> 					return;
+> 				__do_page_cache_readahead
+> 					read_pages
+> 						if (a_ops->readpages)
+> 							a_ops->readpages()
+> 						a_ops->readpage
+> 
+> 
+> So we would have to pass the a_ops through to use a rwsem.  Where SRCU I
+> think would be fine to just take the SRCU read lock multiple times.  Am I
+> wrong?
+
+So the idea I had would not solve this issue because we'd release the rwsem
+once we return from ->is_partially_uptodate(). This example shows that we
+actually expect consistency among different aops as they are called in
+sequence and that's much more difficult to achieve than just a consistency
+within single aop call.
+
+> We also have a 3rd (2nd?) issue.  There are callers who check for the
+> presence of an operation to be used later.  For example do_dentry_open():
+> 
+> do_dentry_open()
+> {
+> ...
+> 	if (<flags> & O_DIRECT)
+> 		if (!<a_ops> || !<a_ops>->direct_IO)
+> 			return -EINVAL;
+> ...
+> }
+> 
+> After this open direct_IO better be there AFAICT so changing the a_ops
+> later would not be good.  For ext4 direct_IO is defined for all the
+> a_ops...  so I guess that is not a big deal.  However, is the user really
+> getting the behavior they expect in this case?
+
+In this particular case I don't think there's any practical harm for any
+filesystem but in general this is another instance where consistency of
+aops over time is assumed.
+
+> I'm afraid of requiring FSs to have to follow rules in defining their a_ops.
+> Because I'm afraid maintaining those rules would be hard and would eventually
+> lead to crashes when someone did it wrong.
+
+I guess this very much depends on the rules. But yes, anything non-obvious
+or hard to check would quickly lead to bugs, I agree. But IMHO fully
+general solution to above problems would clutter the generic code in rather
+ugly way as well because usage of aops is pretty widespread in mm and fs
+code. It isn't just a few places that call them...
+
+But I think we could significantly reduce the problem by looking at what's
+in aops. We have lots of operations there that operate on pages. If we
+mandate that before and during switching of aops, you must make sure
+there's nothing in page cache for the inode, you've already dealt with 90%
+of the problems.
+
+Beside these we have:
+* write_begin - that creates page in page cache so above rule should stop
+  it as well
+* bmap - honestly I'd be inclined to just move this to inode_operations
+  just like fiemap. There's nothing about address_space in its functionality.
+* swap_activate / swap_deactivate - Either I'd move these to
+  file_operations (what's there about address_space, right), or since all
+  instances of this only care about the inode, we can as well just pass
+  only inode to the function and move it to inode_operations.
+
+And then the really problematic ones:
+* direct_IO - Logically with how the IO path is structured, it belongs in
+  aops so I wouldn't move it. With the advance of iomap it is on its way to
+  being removed altogether but that will take a long time to happen
+  completely. So for now I'd mandate that direct_IO path must be locked out
+  while switching aops.
+* readpages - these should be locked out by the rule that page creation is
+  forbidden.
+* writepages - these need to be locked out when switching aops.
+
+And that should be it. So I don't think there's a need for reference-counting
+of aops in the generic code, especially since I don't think it can be done
+in an elegant way (but feel free to correct me). I think that just
+providing a way to lock-out above three calls would be enough.
+
+> So for this 3rd (2nd) case I think we should simply take a reference to the
+> a_ops and fail changing the mode.  For the DAX case that means the user is best
+> served by taking a write lease on the file to ensure there are no other opens
+> which could cause issues.
+> 
+> Would that work for changing the journaling mode?
+> 
+> And I _think_ this is the only issue we have with this right now. But if other
+> callers of a_ops needed the pattern of using the a_ops at a time across context
+> changes they would need to ensure this reference was taken.
+> 
+> What I have come up with thus far is an interface like:
+> 
+> /*
+>  * as_get_a_ops() -- safely get the a_ops from the address_space specified
+>  *
+>  * @as: address space to get a_ops from
+>  * @ref: used to indicate if a reference is required on this a_ops
+>  * @tok: srcu token to be returned in as_put_a_ops()
+>  *
+>  * The a_ops returned is protected from changing until as_put_a_ops().
+>  *
+>  * If ref is specified then ref must also be specified in as_put_a_ops() to
+>  * release this reference.  In this case a reference is taken on the a_ops
+>  * which will prevent it from changing until the reference is released.
+>  *
+>  * References should _ONLY_ be taken when the a_ops needs to be constant
+>  * across a user context switch because doing so will block changing the a_ops
+>  * until that reference is released.
+>  *
+>  * Examples of using a reference are checks for specific a_ops pointers which
+>  * are expected to support functionality at a later date (example direct_IO)
+>  */
+> static inline const struct address_space_operations *
+> as_get_a_ops(struct address_space *as, bool ref, int *tok)
+> {
+> 	...
+> }
+> 
+> static inline void
+> as_assign_a_ops(struct address_space *as,
+>                 const struct address_space_operations *a_ops)
+> {
+> 	...
+> }
+> 
+> static inline void as_put_a_ops(struct address_space *as, int tok, bool ref)
+> {
+> 	...
+> }
+> 
+> 
+> I'm still working out the details of using SRCU and a ref count.  I have made
+> at least 1 complete pass of all the a_ops users and I think this would cover
+> them all.
+
+Well, my concern with the use of interface like this is:
+
+a) The clutter in the generic code
+b) It's difficult to make this work with SRCU because presumably you want
+   to use synchronize_srcu() while switching aops. But then you have three
+   operations to do:
+   1) switch aops
+   2) set inode flag
+   3) synchronize_srcu
+
+   and depending on the order in which you do these either "old aops"
+   operations will see inode with a flag or "new aops" will see the inode
+   without a flag and either can confuse those functions...
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
