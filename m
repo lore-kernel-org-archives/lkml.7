@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9C7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94211C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F154320674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6759F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498331;
-	bh=73lA5gtCBnMbzfubTkEqfkVRumQ7E0fSm5ObyuTBBgc=;
+	s=default; t=1573498333;
+	bh=pYiD5XQ6xXwI0VHYyplrBPnfndUDuOw7iznLoigB0xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y2mhv3XFDLtOuklt88H6NkUm2OjoL3eO1Isd+ZZM1dp3q8m7k/dht5lh55zOzpLYa
-	 A3TgCTBvAs6WsJSQWoKY8C0HY4Z4wYrjAimiKlmJuOKd4o4GMqsDI6AleMuk7aem89
-	 VWkMlFmPmTJtcnO5fclWV15rAb/+Z8DiJvrxPaCw=
+	b=2XL/C89ljj3odiCNZRqsyraFBBxhSe4wOdGOtpkRWnTCGiEhu7C8u1obnp5almPuP
+	 j3zipxq3IQnDa7fb0ZrrBqVfxVgsZ4+OgFAZgOhfTr9Mf9EDVuHYUi+ZP7DerVRXPY
+	 0rIS72ge4uJHHoy8+t0nVQ6jEKe4/KJW7jYt//5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfKKSwJ (ORCPT
+        id S1730480AbfKKSwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:52:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:52:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729013AbfKKSwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:52:07 -0500
+        id S1729712AbfKKSwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:52:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5794721655;
-        Mon, 11 Nov 2019 18:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C490D21655;
+        Mon, 11 Nov 2019 18:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498326;
-        bh=73lA5gtCBnMbzfubTkEqfkVRumQ7E0fSm5ObyuTBBgc=;
+        s=default; t=1573498323;
+        bh=pYiD5XQ6xXwI0VHYyplrBPnfndUDuOw7iznLoigB0xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rcTOo7252KGlEpfPj8H2kZUzmpFLXPS/GVKEsNtY3rzJov5khsitkOKv8fwWsci6U
-         T+p6zMuPVvkETYF6j+/4ESHsTVPXCvPI9vY5qAtle3CnH4XuUJgAJFNMB9cAcjMvwf
-         FSDUScOztECKETgVCtBLLBDJwYf7MbSdkkmEPJOo=
+        b=QeMf0SEzhdUhXcoCyg8sIEHr2hEpXnbdxlYp+t3/G7yzTiWyEwsVIGHlqyQtHOkre
+         gUPbK0X7yglpuFylrJXOusphbEJO9TLjMfMcwb9B4gh+M8KvWTZf9hP+ICWz1LKXlQ
+         6MXY5HuoDNqocBgaIKjWkpALOrxnJ14bvECBBVRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 088/193] ALSA: usb-audio: remove some dead code
-Date:   Mon, 11 Nov 2019 19:27:50 +0100
-Message-Id: <20191111181507.642908795@linuxfoundation.org>
+Subject: [PATCH 5.3 087/193] ALSA: usb-audio: Fix possible NULL dereference at create_yamaha_midi_quirk()
+Date:   Mon, 11 Nov 2019 19:27:49 +0100
+Message-Id: <20191111181507.570042598@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -59,32 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit b39e077fcb283dd96dd251a3abeba585402c61fe upstream.
+commit 60849562a5db4a1eee2160167e4dce4590d3eafe upstream.
 
-We recently cleaned up the error handling in commit 52c3e317a857 ("ALSA:
-usb-audio: Unify the release of usb_mixer_elem_info objects") but
-accidentally left this stray return.
+The previous addition of descriptor validation may lead to a NULL
+dereference at create_yamaha_midi_quirk() when either injd or outjd is
+NULL.  Add proper non-NULL checks.
 
-Fixes: 52c3e317a857 ("ALSA: usb-audio: Unify the release of usb_mixer_elem_info objects")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 57f8770620e9 ("ALSA: usb-audio: More validations of descriptor units")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    1 -
- 1 file changed, 1 deletion(-)
+ sound/usb/quirks.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2651,7 +2651,6 @@ static int parse_audio_selector_unit(str
- 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
- 		err = -ENOMEM;
- 		goto error_name;
--		return -ENOMEM;
- 	}
- 	kctl->private_value = (unsigned long)namelist;
- 	kctl->private_free = usb_mixer_selector_elem_free;
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -248,8 +248,8 @@ static int create_yamaha_midi_quirk(stru
+ 					NULL, USB_MS_MIDI_OUT_JACK);
+ 	if (!injd && !outjd)
+ 		return -ENODEV;
+-	if (!snd_usb_validate_midi_desc(injd) ||
+-	    !snd_usb_validate_midi_desc(outjd))
++	if (!(injd && snd_usb_validate_midi_desc(injd)) ||
++	    !(outjd && snd_usb_validate_midi_desc(outjd)))
+ 		return -ENODEV;
+ 	if (injd && (injd->bLength < 5 ||
+ 		     (injd->bJackType != USB_MS_EMBEDDED &&
 
 
