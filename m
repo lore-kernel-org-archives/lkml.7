@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F7CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3437AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5A920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E53204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498085;
-	bh=magJWIIhJAta17rvJqjf/rR7U9jUmsF0pHTM+xeaEfk=;
+	s=default; t=1573498088;
+	bh=Ex4oHg5nWgxmc4RUKJq2fBVsydM59UKF3JY2twpNiB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOV5xkN8KaSHBL5ZJ9SQvuk1Y9kDTnUuhk3lUBmFa/N6SLiebTHnZSnJMrg9oRKPU
-	 HT0ELwYrltSbBjJi2eXvZ0ALgC7h1bQGSmcpN/nDAjbAx4ObiSd3BoucWygBKGrh4G
-	 x1IYFqK4/4FSsXa7Uu2UpcwQFlXPt77spbvr+0LA=
+	b=aWfB8L//P4K/vpyF7nsml2Hka1NCKJfSqjcPNHsFIlyjBXz6hw5DoHccZUUEeO+mw
+	 VTgneDqDPLreR+ftA9ahMaYDQqGsqkCctp+gCzpbmoXvHlPYpmUY5zoaXnNo/JqzhM
+	 YHqeyv503T9/wNXHJBXWhs7qeUSvNDL9JCbXWBys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730208AbfKKSsD (ORCPT
+        id S1730216AbfKKSsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:48:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41004 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:48:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728788AbfKKSsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:48:01 -0500
+        id S1730209AbfKKSsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:48:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3E73204FD;
-        Mon, 11 Nov 2019 18:47:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E2A204FD;
+        Mon, 11 Nov 2019 18:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498080;
-        bh=magJWIIhJAta17rvJqjf/rR7U9jUmsF0pHTM+xeaEfk=;
+        s=default; t=1573498083;
+        bh=Ex4oHg5nWgxmc4RUKJq2fBVsydM59UKF3JY2twpNiB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkFEEJHkBe/C2HFRdxX6VxD+rlGgJtR80RGkwIXD9M012Cuk6SdlFpUuCeku0ycPy
-         JdXlJUlIrulaG/1vcVJeIpr9J6XK31cz+IM2a0juXdiMWJe2+P0EXsPAcUGOhdsGfK
-         YESk58RHUNrPPzw0DZgqR+JXeTbnnRG/3O5KOdsw=
+        b=CLAcbrfLrnuOhvLFXAMWJOwx4kiKKeNjO0SJi6lOVjN3/YDTxtQj9G1pW3KlVV/Fo
+         TAvnng4hTJsTRPnxLE8VOLZjg0ypOmPwccTzsDXw6AXkkQ5pWGkIVmrqPF3vHReI45
+         uDJppqaPb9BFJHAvYfo9kDEw6DjLGXelKZZ/JuKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 017/193] selftests/tls: add test for concurrent recv and send
-Date:   Mon, 11 Nov 2019 19:26:39 +0100
-Message-Id: <20191111181501.432098820@linuxfoundation.org>
+Subject: [PATCH 5.3 018/193] ipv6: fixes rt6_probe() and fib6_nh->last_probe init
+Date:   Mon, 11 Nov 2019 19:26:40 +0100
+Message-Id: <20191111181501.498935425@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -61,137 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 41098af59d8d753aa8d3bb4310cc4ecb61fc82c7 ]
+[ Upstream commit 1bef4c223b8588cf50433bdc2c6953d82949b3b3 ]
 
-Add a test which spawns 16 threads and performs concurrent
-send and recv calls on the same socket.
+While looking at a syzbot KCSAN report [1], I found multiple
+issues in this code :
 
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+1) fib6_nh->last_probe has an initial value of 0.
+
+   While probably okay on 64bit kernels, this causes an issue
+   on 32bit kernels since the time_after(jiffies, 0 + interval)
+   might be false ~24 days after boot (for HZ=1000)
+
+2) The data-race found by KCSAN
+   I could use READ_ONCE() and WRITE_ONCE(), but we also can
+   take the opportunity of not piling-up too many rt6_probe_deferred()
+   works by using instead cmpxchg() so that only one cpu wins the race.
+
+[1]
+BUG: KCSAN: data-race in find_match / find_match
+
+write to 0xffff8880bb7aabe8 of 8 bytes by interrupt on cpu 1:
+ rt6_probe net/ipv6/route.c:663 [inline]
+ find_match net/ipv6/route.c:757 [inline]
+ find_match+0x5bd/0x790 net/ipv6/route.c:733
+ __find_rr_leaf+0xe3/0x780 net/ipv6/route.c:831
+ find_rr_leaf net/ipv6/route.c:852 [inline]
+ rt6_select net/ipv6/route.c:896 [inline]
+ fib6_table_lookup+0x383/0x650 net/ipv6/route.c:2164
+ ip6_pol_route+0xee/0x5c0 net/ipv6/route.c:2200
+ ip6_pol_route_output+0x48/0x60 net/ipv6/route.c:2452
+ fib6_rule_lookup+0x3d6/0x470 net/ipv6/fib6_rules.c:117
+ ip6_route_output_flags_noref+0x16b/0x230 net/ipv6/route.c:2484
+ ip6_route_output_flags+0x50/0x1a0 net/ipv6/route.c:2497
+ ip6_dst_lookup_tail+0x25d/0xc30 net/ipv6/ip6_output.c:1049
+ ip6_dst_lookup_flow+0x68/0x120 net/ipv6/ip6_output.c:1150
+ inet6_csk_route_socket+0x2f7/0x420 net/ipv6/inet6_connection_sock.c:106
+ inet6_csk_xmit+0x91/0x1f0 net/ipv6/inet6_connection_sock.c:121
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+ tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
+ tcp_xmit_probe_skb+0x19b/0x1d0 net/ipv4/tcp_output.c:3735
+
+read to 0xffff8880bb7aabe8 of 8 bytes by interrupt on cpu 0:
+ rt6_probe net/ipv6/route.c:657 [inline]
+ find_match net/ipv6/route.c:757 [inline]
+ find_match+0x521/0x790 net/ipv6/route.c:733
+ __find_rr_leaf+0xe3/0x780 net/ipv6/route.c:831
+ find_rr_leaf net/ipv6/route.c:852 [inline]
+ rt6_select net/ipv6/route.c:896 [inline]
+ fib6_table_lookup+0x383/0x650 net/ipv6/route.c:2164
+ ip6_pol_route+0xee/0x5c0 net/ipv6/route.c:2200
+ ip6_pol_route_output+0x48/0x60 net/ipv6/route.c:2452
+ fib6_rule_lookup+0x3d6/0x470 net/ipv6/fib6_rules.c:117
+ ip6_route_output_flags_noref+0x16b/0x230 net/ipv6/route.c:2484
+ ip6_route_output_flags+0x50/0x1a0 net/ipv6/route.c:2497
+ ip6_dst_lookup_tail+0x25d/0xc30 net/ipv6/ip6_output.c:1049
+ ip6_dst_lookup_flow+0x68/0x120 net/ipv6/ip6_output.c:1150
+ inet6_csk_route_socket+0x2f7/0x420 net/ipv6/inet6_connection_sock.c:106
+ inet6_csk_xmit+0x91/0x1f0 net/ipv6/inet6_connection_sock.c:121
+ __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 18894 Comm: udevd Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: cc3a86c802f0 ("ipv6: Change rt6_probe to take a fib6_nh")
+Fixes: f547fac624be ("ipv6: rate-limit probes for neighbourless routes")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/tls.c |  108 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
+ net/ipv6/route.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/tools/testing/selftests/net/tls.c
-+++ b/tools/testing/selftests/net/tls.c
-@@ -898,6 +898,114 @@ TEST_F(tls, nonblocking)
- 	}
- }
- 
-+static void
-+test_mutliproc(struct __test_metadata *_metadata, struct _test_data_tls *self,
-+	       bool sendpg, unsigned int n_readers, unsigned int n_writers)
-+{
-+	const unsigned int n_children = n_readers + n_writers;
-+	const size_t data = 6 * 1000 * 1000;
-+	const size_t file_sz = data / 100;
-+	size_t read_bias, write_bias;
-+	int i, fd, child_id;
-+	char buf[file_sz];
-+	pid_t pid;
-+
-+	/* Only allow multiples for simplicity */
-+	ASSERT_EQ(!(n_readers % n_writers) || !(n_writers % n_readers), true);
-+	read_bias = n_writers / n_readers ?: 1;
-+	write_bias = n_readers / n_writers ?: 1;
-+
-+	/* prep a file to send */
-+	fd = open("/tmp/", O_TMPFILE | O_RDWR, 0600);
-+	ASSERT_GE(fd, 0);
-+
-+	memset(buf, 0xac, file_sz);
-+	ASSERT_EQ(write(fd, buf, file_sz), file_sz);
-+
-+	/* spawn children */
-+	for (child_id = 0; child_id < n_children; child_id++) {
-+		pid = fork();
-+		ASSERT_NE(pid, -1);
-+		if (!pid)
-+			break;
-+	}
-+
-+	/* parent waits for all children */
-+	if (pid) {
-+		for (i = 0; i < n_children; i++) {
-+			int status;
-+
-+			wait(&status);
-+			EXPECT_EQ(status, 0);
-+		}
-+
-+		return;
-+	}
-+
-+	/* Split threads for reading and writing */
-+	if (child_id < n_readers) {
-+		size_t left = data * read_bias;
-+		char rb[8001];
-+
-+		while (left) {
-+			int res;
-+
-+			res = recv(self->cfd, rb,
-+				   left > sizeof(rb) ? sizeof(rb) : left, 0);
-+
-+			EXPECT_GE(res, 0);
-+			left -= res;
-+		}
-+	} else {
-+		size_t left = data * write_bias;
-+
-+		while (left) {
-+			int res;
-+
-+			ASSERT_EQ(lseek(fd, 0, SEEK_SET), 0);
-+			if (sendpg)
-+				res = sendfile(self->fd, fd, NULL,
-+					       left > file_sz ? file_sz : left);
-+			else
-+				res = send(self->fd, buf,
-+					   left > file_sz ? file_sz : left, 0);
-+
-+			EXPECT_GE(res, 0);
-+			left -= res;
-+		}
-+	}
-+}
-+
-+TEST_F(tls, mutliproc_even)
-+{
-+	test_mutliproc(_metadata, self, false, 6, 6);
-+}
-+
-+TEST_F(tls, mutliproc_readers)
-+{
-+	test_mutliproc(_metadata, self, false, 4, 12);
-+}
-+
-+TEST_F(tls, mutliproc_writers)
-+{
-+	test_mutliproc(_metadata, self, false, 10, 2);
-+}
-+
-+TEST_F(tls, mutliproc_sendpage_even)
-+{
-+	test_mutliproc(_metadata, self, true, 6, 6);
-+}
-+
-+TEST_F(tls, mutliproc_sendpage_readers)
-+{
-+	test_mutliproc(_metadata, self, true, 4, 12);
-+}
-+
-+TEST_F(tls, mutliproc_sendpage_writers)
-+{
-+	test_mutliproc(_metadata, self, true, 10, 2);
-+}
-+
- TEST_F(tls, control_msg)
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -621,6 +621,7 @@ static void rt6_probe(struct fib6_nh *fi
  {
- 	if (self->notls)
+ 	struct __rt6_probe_work *work = NULL;
+ 	const struct in6_addr *nh_gw;
++	unsigned long last_probe;
+ 	struct neighbour *neigh;
+ 	struct net_device *dev;
+ 	struct inet6_dev *idev;
+@@ -639,6 +640,7 @@ static void rt6_probe(struct fib6_nh *fi
+ 	nh_gw = &fib6_nh->fib_nh_gw6;
+ 	dev = fib6_nh->fib_nh_dev;
+ 	rcu_read_lock_bh();
++	last_probe = READ_ONCE(fib6_nh->last_probe);
+ 	idev = __in6_dev_get(dev);
+ 	neigh = __ipv6_neigh_lookup_noref(dev, nh_gw);
+ 	if (neigh) {
+@@ -654,13 +656,15 @@ static void rt6_probe(struct fib6_nh *fi
+ 				__neigh_set_probe_once(neigh);
+ 		}
+ 		write_unlock(&neigh->lock);
+-	} else if (time_after(jiffies, fib6_nh->last_probe +
++	} else if (time_after(jiffies, last_probe +
+ 				       idev->cnf.rtr_probe_interval)) {
+ 		work = kmalloc(sizeof(*work), GFP_ATOMIC);
+ 	}
+ 
+-	if (work) {
+-		fib6_nh->last_probe = jiffies;
++	if (!work || cmpxchg(&fib6_nh->last_probe,
++			     last_probe, jiffies) != last_probe) {
++		kfree(work);
++	} else {
+ 		INIT_WORK(&work->work, rt6_probe_deferred);
+ 		work->target = *nh_gw;
+ 		dev_hold(dev);
+@@ -3385,6 +3389,9 @@ int fib6_nh_init(struct net *net, struct
+ 	int err;
+ 
+ 	fib6_nh->fib_nh_family = AF_INET6;
++#ifdef CONFIG_IPV6_ROUTER_PREF
++	fib6_nh->last_probe = jiffies;
++#endif
+ 
+ 	err = -ENODEV;
+ 	if (cfg->fc_ifindex) {
 
 
