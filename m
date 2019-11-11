@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D021DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F6CC17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A247204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930E3204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573498849;
-	bh=H5SJbvDpEOwO7KBrhjXFUAzkdL5m+cNmgK1kxcmnaJI=;
+	s=default; t=1573498852;
+	bh=N1fXnElCxnJo7SUkIASvC5jDqYqX/TV4zRbeym2fMSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l7srw8d+5ljWIrjSb8MnDcLHRPRte//DFB7FSfNk2jox+bzqzHQIadgkmCSytRMni
-	 Aw7QT0TO1NjW5QznF9+IsJVSOvkZhtzFE4oJWdxEZz44pJwsDNP0r1FQuDXLlEGnVp
-	 0IdVF+7gg0RKiI+JD93TsiDAcqwEM9MOYTKa0d8s=
+	b=jlBMWI7EXqH3PGSkB9fy8vOlHy6Q0pTNPIV5/aVbrafoZ37XPAR7coT9TAFozKvlM
+	 9/lm2asdOJ3XWjaqHq0ZcS1K5rAFyhKC55l40FM1IXgvzoEf0rwwkqYx4qGKUMFCEA
+	 FS6aHhdj3kkg6+b0PmDzVPXNOAYwTZvgw4xdVINo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfKKTAs (ORCPT
+        id S1730534AbfKKSxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:00:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:53:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728765AbfKKSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:53:04 -0500
+        id S1728848AbfKKSwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:52:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB3320818;
-        Mon, 11 Nov 2019 18:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 060DC20818;
+        Mon, 11 Nov 2019 18:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573498383;
-        bh=H5SJbvDpEOwO7KBrhjXFUAzkdL5m+cNmgK1kxcmnaJI=;
+        s=default; t=1573498373;
+        bh=N1fXnElCxnJo7SUkIASvC5jDqYqX/TV4zRbeym2fMSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZvthkYCqkH29yvK8Gi78loS7xg53FxknFVkC6k5iC/8MqYKC8F9nhsFRxLwrQS6r
-         2uAOhcN0qXg2m22iqP5WxMQ62a3rrF+gKD01wHnpV2tYnYG5nKFc+6L/hlANr3ex7O
-         5q/3P3pzqovAmOiNKCaTCVYWWMPPCeKyNLsv0zxQ=
+        b=mr12KgQnkzwq5HrLuu+An/EHRsdzKxNvgnvD0qdCYK5jhv9whxCEnwdEThe9SJrC6
+         8N4GhLF6Gj4Vuws5p+khM0/jQpSDbqoI7gMIsbjbsC3POoPLlX5Jvv4WLnzKp7cj40
+         chGwC3OLtuvt/jZn1DZXSr1sCiXSZPDyStKEIBIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
         Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 103/193] IB/core: Use rdma_read_gid_l2_fields to compare GID L2 fields
-Date:   Mon, 11 Nov 2019 19:28:05 +0100
-Message-Id: <20191111181508.733193150@linuxfoundation.org>
+Subject: [PATCH 5.3 100/193] iw_cxgb4: fix ECN check on the passive accept
+Date:   Mon, 11 Nov 2019 19:28:02 +0100
+Message-Id: <20191111181508.514147291@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
 References: <20191111181459.850623879@linuxfoundation.org>
@@ -61,57 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Potnuri Bharat Teja <bharat@chelsio.com>
 
-[ Upstream commit 777a8b32bc0f9bb25848a025f72a9febc30d9033 ]
+[ Upstream commit 612e0486ad0845c41ac10492e78144f99e326375 ]
 
-Current code tries to derive VLAN ID and compares it with GID
-attribute for matching entry. This raw search fails on macvlan
-netdevice as its not a VLAN device, but its an upper device of a VLAN
-netdevice.
+pass_accept_req() is using the same skb for handling accept request and
+sending accept reply to HW. Here req and rpl structures are pointing to
+same skb->data which is over written by INIT_TP_WR() and leads to
+accessing corrupt req fields in accept_cr() while checking for ECN flags.
+Reordered code in accept_cr() to fetch correct req fields.
 
-Due to this limitation, incoming QP1 packets fail to match in the
-GID table. Such packets are dropped.
-
-Hence, to support it, use the existing rdma_read_gid_l2_fields()
-that takes care of diffferent device types.
-
-Fixes: dbf727de7440 ("IB/core: Use GID table in AH creation and dmac resolution")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191002121750.17313-1-leon@kernel.org
+Fixes: 92e7ae7172 ("iw_cxgb4: Choose appropriate hw mtu index and ISS for iWARP connections")
+Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Link: https://lore.kernel.org/r/20191003104353.11590-1-bharat@chelsio.com
 Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/verbs.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/cxgb4/cm.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
-index 92349bf37589f..5b1dc11a72838 100644
---- a/drivers/infiniband/core/verbs.c
-+++ b/drivers/infiniband/core/verbs.c
-@@ -662,16 +662,17 @@ static bool find_gid_index(const union ib_gid *gid,
- 			   void *context)
- {
- 	struct find_gid_index_context *ctx = context;
-+	u16 vlan_id = 0xffff;
-+	int ret;
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index e87fc04084704..9e8eca7b613c0 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2424,20 +2424,6 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
+ 	enum chip_type adapter_type = ep->com.dev->rdev.lldi.adapter_type;
  
- 	if (ctx->gid_type != gid_attr->gid_type)
- 		return false;
- 
--	if ((!!(ctx->vlan_id != 0xffff) == !is_vlan_dev(gid_attr->ndev)) ||
--	    (is_vlan_dev(gid_attr->ndev) &&
--	     vlan_dev_vlan_id(gid_attr->ndev) != ctx->vlan_id))
-+	ret = rdma_read_gid_l2_fields(gid_attr, &vlan_id, NULL);
-+	if (ret)
- 		return false;
- 
--	return true;
-+	return ctx->vlan_id == vlan_id;
- }
- 
- static const struct ib_gid_attr *
+ 	pr_debug("ep %p tid %u\n", ep, ep->hwtid);
+-
+-	skb_get(skb);
+-	rpl = cplhdr(skb);
+-	if (!is_t4(adapter_type)) {
+-		skb_trim(skb, roundup(sizeof(*rpl5), 16));
+-		rpl5 = (void *)rpl;
+-		INIT_TP_WR(rpl5, ep->hwtid);
+-	} else {
+-		skb_trim(skb, sizeof(*rpl));
+-		INIT_TP_WR(rpl, ep->hwtid);
+-	}
+-	OPCODE_TID(rpl) = cpu_to_be32(MK_OPCODE_TID(CPL_PASS_ACCEPT_RPL,
+-						    ep->hwtid));
+-
+ 	cxgb_best_mtu(ep->com.dev->rdev.lldi.mtus, ep->mtu, &mtu_idx,
+ 		      enable_tcp_timestamps && req->tcpopt.tstamp,
+ 		      (ep->com.remote_addr.ss_family == AF_INET) ? 0 : 1);
+@@ -2483,6 +2469,20 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
+ 		if (tcph->ece && tcph->cwr)
+ 			opt2 |= CCTRL_ECN_V(1);
+ 	}
++
++	skb_get(skb);
++	rpl = cplhdr(skb);
++	if (!is_t4(adapter_type)) {
++		skb_trim(skb, roundup(sizeof(*rpl5), 16));
++		rpl5 = (void *)rpl;
++		INIT_TP_WR(rpl5, ep->hwtid);
++	} else {
++		skb_trim(skb, sizeof(*rpl));
++		INIT_TP_WR(rpl, ep->hwtid);
++	}
++	OPCODE_TID(rpl) = cpu_to_be32(MK_OPCODE_TID(CPL_PASS_ACCEPT_RPL,
++						    ep->hwtid));
++
+ 	if (CHELSIO_CHIP_VERSION(adapter_type) > CHELSIO_T4) {
+ 		u32 isn = (prandom_u32() & ~7UL) - 1;
+ 		opt2 |= T5_OPT_2_VALID_F;
 -- 
 2.20.1
 
