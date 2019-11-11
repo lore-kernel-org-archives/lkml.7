@@ -2,51 +2,63 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C42EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2E1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2E721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72A6222C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497260;
-	bh=0iZaIIXbU/NqbmH15+RRrZpLj+GgN8NzNblxv7/I+gg=;
+	s=default; t=1573497263;
+	bh=E96gvs1NXjW1VnSLVyGghXIHAbH03uuVsaYwe+itlj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d+VrH3MHkLageqFPzEJTvvy+QqtYAG3SeJzRR2Rrjed30OrzOPDN1qdnqLPT0i58l
-	 9ySGVkYZnIRTSkVigShjUX0EYpdsDKQeoXsQ7qJ7DgGfp+b0k2rQTYBF4LUU1uwSG3
-	 OI8zwuD6nnYyCbzckkkq9DLeVUxTOrOVAQMtQzfA=
+	b=zZ6/y6I2usSmHir8WGJt9UjcQpudsmqqjVs2fOd5xDni2RcF3zwrOA5v6Z55LilEQ
+	 9bYcYmZy3JQCtiJ3Ljl48jRcigJsmxswvGUCpK+K5j76kPdZlPWrUOYXFJbYWHo/CS
+	 uACpsM2XqD6Qt+CiqnL3AVZM+98EIIn2xReqJ93c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbfKKSeT (ORCPT
+        id S1728314AbfKKSeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:34:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51888 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:34:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727965AbfKKSeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:34:17 -0500
+        id S1728095AbfKKSeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:34:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9C921925;
-        Mon, 11 Nov 2019 18:34:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C4E92190F;
+        Mon, 11 Nov 2019 18:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497256;
-        bh=0iZaIIXbU/NqbmH15+RRrZpLj+GgN8NzNblxv7/I+gg=;
+        s=default; t=1573497258;
+        bh=E96gvs1NXjW1VnSLVyGghXIHAbH03uuVsaYwe+itlj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SX1SKmYHj9T0h0mX7etQR0Gh4DxARPKm4u11GDm++HX//+AtPqTyZ75ucuaJeClDg
-         aYXoSIE7BhSzJTlo6BOr+IyboiYSAknLjdmT5C57SFHOZj843YwCD9fAV/Lcfim/CI
-         jV/zB9sI/aYOKMEk/Q4paU7aUlzo2C7W/DB4MY8c=
+        b=H7kXlswIrFR5NIHWTR8q9Eg7SqN6hUh3/doZ8SOqYWuS57OFSNdQe0F/1TKNPrki3
+         rPtRRcNZ+fsVzASOcJd5w9317wt7x4vqt7F4akdHvj2gKrpSZyiRh+gC6J1UMQC+dt
+         IIMFUElB6LNq1Xqdqpf5aKYE/gcdPp5mZ/gCb5P4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 07/65] NFC: st21nfca: fix double free
-Date:   Mon, 11 Nov 2019 19:28:07 +0100
-Message-Id: <20191111181336.300618727@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 50/65] perf/x86/amd/ibs: Handle erratum #420 only on the affected CPU family (10h)
+Date:   Mon, 11 Nov 2019 19:28:50 +0100
+Message-Id: <20191111181350.880646578@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -59,31 +71,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-[ Upstream commit 99a8efbb6e30b72ac98cecf81103f847abffb1e5 ]
+[ Upstream commit e431e79b60603079d269e0c2a5177943b95fa4b6 ]
 
-The variable nfcid_skb is not changed in the callee nfc_hci_get_param()
-if error occurs. Consequently, the freed variable nfcid_skb will be
-freed again, resulting in a double free bug. Set nfcid_skb to NULL after
-releasing it to fix the bug.
+This saves us writing the IBS control MSR twice when disabling the
+event.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I searched revision guides for all families since 10h, and did not
+find occurrence of erratum #420, nor anything remotely similar:
+so we isolate the secondary MSR write to family 10h only.
+
+Also unconditionally update the count mask for IBS Op implementations
+that have read & writeable current count (CurCnt) fields in addition
+to the MaxCnt field.  These bits were reserved on prior
+implementations, and therefore shouldn't have negative impact.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: c9574fe0bdb9 ("perf/x86-ibs: Implement workaround for IBS erratum #420")
+Link: https://lkml.kernel.org/r/20191023150955.30292-2-kim.phillips@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/events/amd/ibs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -719,6 +719,7 @@ static int st21nfca_hci_complete_target_
- 							NFC_PROTO_FELICA_MASK;
- 		} else {
- 			kfree_skb(nfcid_skb);
-+			nfcid_skb = NULL;
- 			/* P2P in type A */
- 			r = nfc_hci_get_param(hdev, ST21NFCA_RF_READER_F_GATE,
- 					ST21NFCA_RF_READER_F_NFCID1,
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index a8317d384773a..5f72b473f3ed3 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -388,7 +388,8 @@ static inline void perf_ibs_disable_event(struct perf_ibs *perf_ibs,
+ 					  struct hw_perf_event *hwc, u64 config)
+ {
+ 	config &= ~perf_ibs->cnt_mask;
+-	wrmsrl(hwc->config_base, config);
++	if (boot_cpu_data.x86 == 0x10)
++		wrmsrl(hwc->config_base, config);
+ 	config &= ~perf_ibs->enable_mask;
+ 	wrmsrl(hwc->config_base, config);
+ }
+@@ -563,7 +564,8 @@ static struct perf_ibs perf_ibs_op = {
+ 	},
+ 	.msr			= MSR_AMD64_IBSOPCTL,
+ 	.config_mask		= IBS_OP_CONFIG_MASK,
+-	.cnt_mask		= IBS_OP_MAX_CNT,
++	.cnt_mask		= IBS_OP_MAX_CNT | IBS_OP_CUR_CNT |
++				  IBS_OP_CUR_CNT_RAND,
+ 	.enable_mask		= IBS_OP_ENABLE,
+ 	.valid_mask		= IBS_OP_VAL,
+ 	.max_period		= IBS_OP_MAX_CNT << 4,
+-- 
+2.20.1
+
 
 
