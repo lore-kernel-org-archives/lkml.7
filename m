@@ -2,77 +2,98 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1540DC17443
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FA8C17443
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF177207FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 02:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92CD2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfKKC7C (ORCPT
+        id S1726824AbfKKDEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 21:59:02 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:45369 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfKKC7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 21:59:02 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAB2wPMa006243, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAB2wPMa006243
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 11 Nov 2019 10:58:26 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Mon, 11 Nov 2019 10:58:25 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 11 Nov 2019 10:58:24 +0800
-Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
- ([fe80::3d7d:f7db:e1fb:307b%12]) with mapi id 15.01.1779.005; Mon, 11 Nov
- 2019 10:58:24 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-CC:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rob Herring" <robh+dt@kernel.org>
-Subject: RE: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
-Thread-Topic: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
-Thread-Index: AdWTrwRiu8TDC5guRneVMItRk6mPLwAihi8AAIJriSD//6UUgP/7v8ZQ
-Date:   Mon, 11 Nov 2019 02:58:24 +0000
-Message-ID: <309cd67da48e4702ae3dcc4ca8ab4309@realtek.com>
-References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
- <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
- <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
- <7a05ac2c-00bc-b2ac-0a33-be0242d33188@suse.de>
-In-Reply-To: <7a05ac2c-00bc-b2ac-0a33-be0242d33188@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 10 Nov 2019 22:04:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54276 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726742AbfKKDEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 22:04:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 224DDAE55;
+        Mon, 11 Nov 2019 03:04:48 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        James Tai <james.tai@realtek.com>
+Subject: [PATCH 0/7] arm64: dts: Initial RTD1395 and BPi-M4 support
+Date:   Mon, 11 Nov 2019 04:04:27 +0100
+Message-Id: <20191111030434.29977-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KPiBIb3cgbXVjaD8gTW9yZSB0aGFuIDB4OTgwMDAwMDA/IFRoZSBSVEQx
-Mzk1IGRhdGFzaGVldCBzYXlzIHVwIHRvIDQgR0IgLQ0KPiBkb2VzIHRoYXQgbWVhbiBpdCBjb250
-aW51ZXMgaW4gYSBzZWNvbmQgcmVnaW9uIGJleW9uZCAweGZmZmZmZmZmPyBUaG9zZQ0KPiBsb2Nh
-dGlvbnMgc2hvdWxkIGJlIGV4Y2x1ZGVkIGluIHRoZSBzb2Mgbm9kZSByYW5nZXMgKHdoaWNoIHlv
-dSBzYWRseSBhcHBlYXIgdG8NCj4gaGF2ZSBkcm9wcGVkIGluIHYyKS4NCj4gDQoNClNvcnJ5IGZv
-ciBteSBtaXN1bmRlcnN0YW5kaW5nLiBUaGUgUkFNIHJlZ2lvbiBkb24ndCByZXF1aXJlIA0KdHdv
-IGNlbGxzIGZvciBtZW1vcnkgbm9kZXMsIHNvIEknbGwgZml4IGl0IGluIHYzIHBhdGNoLg0KDQpS
-ZWdhcmRzLA0KSmFtZXMNCg0KDQo=
+Hello,
+
+This patch series adds initial Device Trees for Realtek RTD1395 SoC and
+Banana Pi BPI-M4 SBC.
+
+It is based on my RTD1195 series and James' pending RTD1619 DT bindings patch.
+
+It starts with some refactorings to align the various SoCs and to demonstrate
+to James what I meant with the r-bus node and GIC mask in RTD1619 DT v1 review.
+
+RTD1395 family seems pretty similar to RTD1295 family, but allows for more RAM
+and therefore uses #address-cells of 2 vs. 1, and it uses a different reserved
+memory region for RPC. RTD1295 resets appear sufficiently compatible for now.
+
+More details at:
+https://en.opensuse.org/HCL:BananaPi_M4
+
+Latest experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: James Tai <james.tai@realtek.com>
+
+Andreas Färber (7):
+  arm64: dts: realtek: rtd129x: Fix GIC CPU masks for RTD1293
+  arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
+  arm64: dts: realtek: rtd129x: Introduce r-bus
+  ARM: dts: rtd1195: Fix GIC CPU mask
+  ARM: dts: rtd1195: Introduce r-bus
+  dt-bindings: arm: realtek: Add RTD1395 and Banana Pi BPI-M4
+  arm64: dts: realtek: Add RTD1395 and BPi-M4
+
+ Documentation/devicetree/bindings/arm/realtek.yaml |   6 +
+ arch/arm/boot/dts/rtd1195.dtsi                     |  60 ++++----
+ arch/arm64/boot/dts/realtek/Makefile               |   2 +
+ arch/arm64/boot/dts/realtek/rtd1293.dtsi           |  12 +-
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi           |  21 +--
+ arch/arm64/boot/dts/realtek/rtd1296.dtsi           |   8 +-
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi           | 159 ++++++++++++---------
+ arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts     |  30 ++++
+ arch/arm64/boot/dts/realtek/rtd1395.dtsi           |  65 +++++++++
+ arch/arm64/boot/dts/realtek/rtd139x.dtsi           | 141 ++++++++++++++++++
+ 10 files changed, 387 insertions(+), 117 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1395.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd139x.dtsi
+
+-- 
+2.16.4
+
