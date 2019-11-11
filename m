@@ -2,110 +2,116 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2694C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1F9C17441
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E94820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C6720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 08:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G/OViZ4L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D9lcEG+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKKInX (ORCPT
+        id S1727036AbfKKInY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:43:23 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:38664 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfKKInX (ORCPT
+        Mon, 11 Nov 2019 03:43:24 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35969 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfKKInY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:43:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JKUgKa4/tYZ5hy2UGhQDHfIOpvhouvpwaZLjFqGg0Ug=; b=G/OViZ4LiDH8h/OMfuFNvpw6/
-        cM7wQa4JEqZfAxwMx0nLTpP5x91UCwg1v1Op1usxRfS2VwGgwkZk9dxEXRnxsZeu6H4mvrOK/e955
-        QSIhJZx3PxptyoxokUS1u736WYO8Z5j/IGRaXD+rqzZaWL8nfrcXlw58jikMWET1mkzaAWiGf6oRI
-        /6oEY9BweCwUg+Hc9sA+G2NqPWkwp7IV4TnuFIJVtj5WLFKztzxQC1jX3FARyPCdq1xp7bWBMXxcs
-        sKoZuny2xYQG5plYtOuCPNSN+/NUmkaQZehyEBnQcp5YeEaot8I+EGdZCwkerY2h6Twmsxugwie9C
-        wpbKr/w9A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iU5I5-00036r-G7; Mon, 11 Nov 2019 08:43:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 72D733056BE;
-        Mon, 11 Nov 2019 09:42:07 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AD36529A83A76; Mon, 11 Nov 2019 09:43:13 +0100 (CET)
-Date:   Mon, 11 Nov 2019 09:43:13 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 4/4] irq_work: Weaken ordering in irq_work_run_list()
-Message-ID: <20191111084313.GN4131@hirez.programming.kicks-ass.net>
-References: <20191108160858.31665-1-frederic@kernel.org>
- <20191108160858.31665-5-frederic@kernel.org>
+        Mon, 11 Nov 2019 03:43:24 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r10so13639201wrx.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 00:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=yijfmtJwvjVfjSh/iMpqao7i4KpAQCiVixkHXW9ffmA=;
+        b=D9lcEG+UQ9cUtO25g1fWxz9Bnr/97aA3IPoeKSdb5rWz0xLMphURrMP1po553ga+Se
+         1WiFnvBHaw7P0Rt8SA7c7bUWZLSDrJgzNL5aVQo8mqpqVt1pQ93K0v/aG224hf+qztMK
+         h6bcnH9YKWm4ZYOjppwJTomcx5CwofQz+GqofrVdWPf6pk5a46OhasH8F4FORRWNvYm1
+         wqYciednr9xdAy8TiLHBObC3Kky9O8ZJkjxGSU44XFrqgn8h/+guLWdJDXuuBolNb0Jt
+         al9XIuSHpPnaMjgrAo615viz4q6uthbF6cpjMjN+eKZueUWdtgk9AnUIyTHJaru5BujZ
+         DFAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=yijfmtJwvjVfjSh/iMpqao7i4KpAQCiVixkHXW9ffmA=;
+        b=PuISRH3Nxm3d71daVqn4yV90HYI0aNXOVFxv/h/GBDmHfWskAL/c+4MPf8mqJIk/Gh
+         MHk/1fJZwdH1zOOhvnx+3guX+ge42XPQ1mUX8ezBAKUw0v3R7NDXv6Mt3rnIvbqrDbtv
+         G9UcSnnWiRXHJaqkGGjW2xGKC2uOrCdxUBzWWrXKSppBSMpZagXqYF2TGPyAqS0g1w6K
+         o7T02hk+n0FQmuU9fYPo4ixdd5xuXqxLI7pYAp5yQIMXfdFk4EtwVNH8+LNMOxcayZh/
+         siRj6u5b7jEDjsQM/hi4pgtHQtpK88Y/zFy9YayWaqHkwvtECfgVi/o6qP7LdRuY3bJy
+         qsWQ==
+X-Gm-Message-State: APjAAAV69LsfKJDjgCZ/OCuz2lMylE3tPGOTPWCvu9cHNSzM1tkF15XJ
+        4ldBp5qz7awn7JERMY/SpDZlsg==
+X-Google-Smtp-Source: APXvYqz/5sYO8j8IKMy2CtTBzfn9BeDThVlHrP/qTuKPoWIvo5MWoZnsC1e0J8BaOwggVY1/Kc8lHg==
+X-Received: by 2002:adf:e8ce:: with SMTP id k14mr19073835wrn.393.1573461801604;
+        Mon, 11 Nov 2019 00:43:21 -0800 (PST)
+Received: from dell ([95.147.198.88])
+        by smtp.gmail.com with ESMTPSA id 4sm16631352wmd.33.2019.11.11.00.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 00:43:21 -0800 (PST)
+Date:   Mon, 11 Nov 2019 08:43:13 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tuowen Zhao <ztuowen@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, acelan.kao@canonical.com,
+        mcgrof@kernel.org, davem@davemloft.net
+Subject: [GIT PULL] Immutable branch between MFD, Docs, Sparc and Lib Devres
+ due for the v5.5 merge window
+Message-ID: <20191111084313.GL18902@dell>
+References: <20191016210629.1005086-1-ztuowen@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191108160858.31665-5-frederic@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016210629.1005086-1-ztuowen@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 05:08:58PM +0100, Frederic Weisbecker wrote:
+Enjoy!
 
-> diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-> index 49c53f80a13a..b709ab05cbfd 100644
-> --- a/kernel/irq_work.c
-> +++ b/kernel/irq_work.c
-> @@ -34,8 +34,8 @@ static bool irq_work_claim(struct irq_work *work)
->  	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED, &work->flags);
->  	/*
->  	 * If the work is already pending, no need to raise the IPI.
-> +	 * The pairing atomic_andnot() followed by a barrier in irq_work_run()
-> +	 * makes sure everything we did before is visible.
->  	 */
->  	if (oflags & IRQ_WORK_PENDING)
->  		return false;
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-> @@ -151,14 +151,16 @@ static void irq_work_run_list(struct llist_head *list)
->  		 * to claim that work don't rely on us to handle their data
->  		 * while we are in the middle of the func.
->  		 */
-> -		flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
-> +		atomic_andnot(IRQ_WORK_PENDING, &work->flags);
-> +		smp_mb__after_atomic();
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-I think I'm prefering you use:
+are available in the Git repository at:
 
-		flags = atomic_fetch_andnot_acquire(IRQ_WORK_PENDING, &work->flags);
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-doc-sparc-libdevres-v5.5
 
-Also, I'm cursing at myself for the horrible comments here.
+for you to fetch changes up to 7b8c4d73d7fe68f371d11b38a353134e1ffe199f:
 
->  		work->func(work);
->  		/*
->  		 * Clear the BUSY bit and return to the free state if
->  		 * no-one else claimed it meanwhile.
->  		 */
-> -		(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
-> +		(void)atomic_cmpxchg(&work->flags, flags & ~IRQ_WORK_PENDING,
-> +				     flags & ~IRQ_WORK_CLAIMED);
->  	}
->  }
->  
-> -- 
-> 2.23.0
-> 
+  docs: driver-model: add devm_ioremap_uc (2019-11-11 08:40:27 +0000)
+
+----------------------------------------------------------------
+Immutable branch between MFD, Docs, Sparc and Lib Devres due for the v5.5 merge window
+
+----------------------------------------------------------------
+Tuowen Zhao (4):
+      sparc64: implement ioremap_uc
+      lib: devres: add a helper function for ioremap_uc
+      mfd: intel-lpss: Use devm_ioremap_uc for MMIO
+      docs: driver-model: add devm_ioremap_uc
+
+ Documentation/driver-api/driver-model/devres.rst |  1 +
+ arch/sparc/include/asm/io_64.h                   |  1 +
+ drivers/mfd/intel-lpss.c                         |  2 +-
+ include/linux/io.h                               |  2 ++
+ lib/devres.c                                     | 19 +++++++++++++++++++
+ 5 files changed, 24 insertions(+), 1 deletion(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
