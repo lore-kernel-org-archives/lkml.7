@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD821C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FC4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959662190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8229A21925
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497128;
-	bh=7HmGHMThrnYMwsBOF6NbCWuvJbMJdCj/JXWysiyCjVM=;
+	s=default; t=1573497130;
+	bh=9rwcGNJwXRz1TQF3iWxvI878p/j1SmxPATv1k3BaV3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WAalRubaV+b2gPklAHkkTBrxPAx1MMjQB7/Go73vteGzISg9qfmmk0NS4SCaQ/Bwn
-	 tmWBUSyyKTmjU+KIzu20wCYLP1X/42O+alcT1BQaetIWCJ8omyLQQUiQfHe5zBN7n+
-	 dijyG+QqQEorg9ISdAYjk49Ms4TmcbSCGeTOvpxU=
+	b=fDjZfLaHERQC3TnItcA/UURdhXxK+ghZdR+H54us5Hxiqu1lXV0hadkCB6VpfkEEN
+	 AXckQNmwdzY29agxCFr6w5ngvxwtC3fv241foYbRBIO6E66Lw6s9G1hnFRxx7ohQln
+	 HojeO0bWflSZumIBaaucE4lX12hx2oVSOycTXLvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfKKScH (ORCPT
+        id S1727890AbfKKScJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:32:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49052 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:32:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727855AbfKKScF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:32:05 -0500
+        id S1727875AbfKKScH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:32:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8403222C2;
-        Mon, 11 Nov 2019 18:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 618C12190F;
+        Mon, 11 Nov 2019 18:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497124;
-        bh=7HmGHMThrnYMwsBOF6NbCWuvJbMJdCj/JXWysiyCjVM=;
+        s=default; t=1573497126;
+        bh=9rwcGNJwXRz1TQF3iWxvI878p/j1SmxPATv1k3BaV3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZVc7rcv60usqXn1XB6Mu9ZT8u3QsMN4THUkbWV5cakwUeM4q/NabYk8Xh6SPPKfu
-         MxmUDfoeepXi9r8eYLev940Y9UfPjjfvJC03SjapFWscq9b6/HLS/XE3SMvdtu74bR
-         gij4vznSk3rVtnIiGlya+gs2p3YDZbQUHakS0zok=
+        b=fE4rpnbOtBhnZpMXC1lnhOi2jB8t81No2W+nuBNxGtdJRMz44hb6vRgkRuLqSfklh
+         qRSC7fLv0Pj5SgfW4vbH/b+kMDrUYw/139aWpKFqZmxqf+teL3X2+6OuV2qVFzrQN9
+         lStgbgxCSHWpAcbYwl9uOwrkYH+QQhfSgcbNYHg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        Aleksander Morgado <aleksander@aleksander.es>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 03/65] net: fix data-race in neigh_event_send()
-Date:   Mon, 11 Nov 2019 19:28:03 +0100
-Message-Id: <20191111181333.651143724@linuxfoundation.org>
+Subject: [PATCH 4.9 04/65] net: usb: qmi_wwan: add support for DW5821e with eSIM support
+Date:   Mon, 11 Nov 2019 19:28:04 +0100
+Message-Id: <20191111181334.277109220@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181331.917659011@linuxfoundation.org>
 References: <20191111181331.917659011@linuxfoundation.org>
@@ -60,86 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Aleksander Morgado <aleksander@aleksander.es>
 
-[ Upstream commit 1b53d64435d56902fc234ff2507142d971a09687 ]
+[ Upstream commit e497df686e8fed8c1dd69179010656362858edb3 ]
 
-KCSAN reported the following data-race [1]
+Exactly same layout as the default DW5821e module, just a different
+vid/pid.
 
-The fix will also prevent the compiler from optimizing out
-the condition.
+The QMI interface is exposed in USB configuration #1:
 
-[1]
+P:  Vendor=413c ProdID=81e0 Rev=03.18
+S:  Manufacturer=Dell Inc.
+S:  Product=DW5821e-eSIM Snapdragon X20 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
 
-BUG: KCSAN: data-race in neigh_resolve_output / neigh_resolve_output
-
-write to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 1:
- neigh_event_send include/net/neighbour.h:443 [inline]
- neigh_resolve_output+0x78/0x480 net/core/neighbour.c:1474
- neigh_output include/net/neighbour.h:511 [inline]
- ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
- ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
- __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
- ip_queue_xmit+0x45/0x60 include/net/ip.h:237
- __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
- tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
- __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
- tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
- tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
- tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:618
-
-read to 0xffff8880a41dba78 of 8 bytes by interrupt on cpu 0:
- neigh_event_send include/net/neighbour.h:442 [inline]
- neigh_resolve_output+0x57/0x480 net/core/neighbour.c:1474
- neigh_output include/net/neighbour.h:511 [inline]
- ip_finish_output2+0x4af/0xe40 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x23a/0x490 net/ipv4/ip_output.c:290
- ip_finish_output+0x41/0x160 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_output+0xdf/0x210 net/ipv4/ip_output.c:432
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0x74/0x90 net/ipv4/ip_output.c:125
- __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
- ip_queue_xmit+0x45/0x60 include/net/ip.h:237
- __tcp_transmit_skb+0xe81/0x1d60 net/ipv4/tcp_output.c:1169
- tcp_transmit_skb net/ipv4/tcp_output.c:1185 [inline]
- __tcp_retransmit_skb+0x4bd/0x15f0 net/ipv4/tcp_output.c:2976
- tcp_retransmit_skb+0x36/0x1a0 net/ipv4/tcp_output.c:2999
- tcp_retransmit_timer+0x719/0x16d0 net/ipv4/tcp_timer.c:515
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:598
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/neighbour.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/net/neighbour.h
-+++ b/include/net/neighbour.h
-@@ -425,8 +425,8 @@ static inline int neigh_event_send(struc
- {
- 	unsigned long now = jiffies;
- 	
--	if (neigh->used != now)
--		neigh->used = now;
-+	if (READ_ONCE(neigh->used) != now)
-+		WRITE_ONCE(neigh->used, now);
- 	if (!(neigh->nud_state&(NUD_CONNECTED|NUD_DELAY|NUD_PROBE)))
- 		return __neigh_event_send(neigh, skb);
- 	return 0;
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -951,6 +951,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
++	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
+ 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
+ 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
+ 	{QMI_FIXED_INTF(0x22de, 0x9061, 3)},	/* WeTelecom WPD-600N */
 
 
