@@ -2,127 +2,219 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DC8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA0FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E845E214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S8WtfFat"
+	by mail.kernel.org (Postfix) with ESMTP id C98ED214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 23:38:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573515483;
+	bh=N4LdVomlV5wfhw+NRmcdZPmiX3mmfeGZAuQC/B3EpoM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=TsmAFV1hL+GVI88XDKvl4tWvXNRaR2Fldos5GGS98jgs6wyfw10gCtQQumaPdcTnl
+	 QFgsmNvlBtk48RNKWsBBRx00Ixlz9fAcQVm0kGuMUomeqfb6QfYkx+B7KfULlcdeF4
+	 6TjjJLlfMTErOQKwUMclLh41j3YvZOnocckg03sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfKKXh7 (ORCPT
+        id S1727526AbfKKXiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 18:37:59 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40536 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfKKXh7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 18:37:59 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 15so10500036pgt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 15:37:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MsnyjGFe6RoiVQKxeXrC3wHfBh1UTFjBzfDKoYAlahU=;
-        b=S8WtfFatOtmT/GYrH3OBgXecciof/Mcr4gZQnwNxMA3666p1bhHqhvCndv8c2DlY7q
-         2kMoiBzCNzN7UR5v7AvHz2o0lho1jwLz6hjrUQ3PhN3zUqItyAmj5AisrDI9UqZMvlaX
-         FY/hy1nTwVBEsA9TA1k2BH7SXj/xO3sfDhvWf9gKS6brwkA3Vnpx5FiqUvyjbI/L1Lxj
-         JrwQFiq8BVR5X0ERDnWS5AaauyJwDlUeUmw8wS9pQeiNjHledSOilU4ymbnYkHELComI
-         GJ5XgaDM6LQpK/qqRoCqVtqaJ3sZzzgUQZ4GUiTe3PxfOgGClgRNc2TIzOsc6r+D5ctp
-         WYGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MsnyjGFe6RoiVQKxeXrC3wHfBh1UTFjBzfDKoYAlahU=;
-        b=QaTKA0mEXGaH8eG917daNtptMcaawkVdZuuC+ptDMKddSthKSihx2NNhOfu0ZfrSY8
-         SmAhihE65tYG06Oyi0nlMQNHJfnSL8Pi22Baa95+K4li8G9IzyKselPRN06AZbOXyI3Z
-         2YuVcmIFNox0CxhnYs3HNOOUc3aH62q68aXi9eJlRJegOaXp+7CNdHWPzWpqkvGxMtdA
-         UL1KrTLqKsr6DQFADLYnQFMznePfFPojbNobHDsizr0z3pbRvAE9OO6vIvKmjZEkCFdt
-         SJ5VCbZ49fr8aH7nQFXEP7dXRxWq397fRNbX9BwdxNKLNiXptAR8wXIkgAXLC4i093Q3
-         0GuA==
-X-Gm-Message-State: APjAAAWOPN+95/rOVKwNsZQR41wSJew+jibZ9u8MsNkRvQJOWoQhHOiJ
-        3fvZlSS4o0f4bAxoXf6IpgJghQ==
-X-Google-Smtp-Source: APXvYqwedNiuHkmNSgCLK8ShDTISGvxxcBN5EaxdEjPwwrqGPB5ZaDfrLAVVlA43jyjQsBOdHSpRUA==
-X-Received: by 2002:a62:e219:: with SMTP id a25mr32268779pfi.252.1573515478601;
-        Mon, 11 Nov 2019 15:37:58 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x2sm16623628pfn.167.2019.11.11.15.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 15:37:58 -0800 (PST)
-Date:   Mon, 11 Nov 2019 15:37:56 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        s-anna@ti.com
-Subject: Re: [PATCH 10/17] remoteproc/omap: Remove the omap_rproc_reserve_cma
- declaration
-Message-ID: <20191111233756.GL3108315@builder>
-References: <20191028124238.19224-1-t-kristo@ti.com>
- <20191028124238.19224-11-t-kristo@ti.com>
+        Mon, 11 Nov 2019 18:38:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbfKKXiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 18:38:01 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A1721872;
+        Mon, 11 Nov 2019 23:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573515480;
+        bh=N4LdVomlV5wfhw+NRmcdZPmiX3mmfeGZAuQC/B3EpoM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qM/zLk1/WrsCo5v0Nm0GKewIM1w3xpGfNmEJDKEpuuOzEjHtoVwnz3RzZOYz/jq/u
+         rbLk0gXQWzEDjvPBhwMh/9kwuuKRSmM7Nkq8ksfcqDlToD+OqEb6hDmUoG6JQjvUdI
+         8gPgLVI1JqoNXNU7tSQTvK5QSLio1Mday0jGnarM=
+Date:   Mon, 11 Nov 2019 17:37:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sundeep.lkml@gmail.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Subject: Re: [v2 PATCH] PCI: Do not use bus number zero from EA capability
+Message-ID: <20191111233756.GA65477@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028124238.19224-11-t-kristo@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
+On Mon, Nov 04, 2019 at 12:27:44PM +0530, sundeep.lkml@gmail.com wrote:
+> From: Subbaraya Sundeep <sbhatta@marvell.com>
+> 
+> As per the spec, "Enhanced Allocation (EA) for Memory
+> and I/O Resources" ECN, approved 23 October 2014,
+> sec 6.9.1.2, fixed bus numbers of a bridge must be zero
+> when no function that uses EA is located behind it.
+> Hence assign bus numbers normally instead of assigning
+> zeroes from EA capability. Failing to do this and using
+> zeroes from EA would make the bridges non-functional.
+> 
+> Fixes: '2dbce5901179 ("PCI: Assign bus numbers present in
+> EA capability for bridges")'
+> Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+> Cc: stable@vger.kernel.org	# v5.2+
 
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The omap_rproc_reserve_cma() function is not defined at the moment.
-> This prototype was to be used to define a function to declare a
-> remoteproc device-specific CMA pool.
-> 
-> The remoteproc devices will be defined through DT going forward. A
-> device specific CMA pool will be defined under the reserved-memory
-> node, and will be associated with the appropriate remoteproc device
-> node. This function prototype will no longer be needed and has
-> therefore been cleaned up.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Applied to pci/resource for v5.5, thanks!
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I tweaked it as below so the logic about how to interpret the EA Fixed
+Secondary Bus Number is more localized.  Let me know if that doesn't
+make sense.
 
 > ---
->  include/linux/platform_data/remoteproc-omap.h | 12 ------------
->  1 file changed, 12 deletions(-)
+>  drivers/pci/probe.c | 25 +++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
 > 
-> diff --git a/include/linux/platform_data/remoteproc-omap.h b/include/linux/platform_data/remoteproc-omap.h
-> index 6bea01e199fe..49c78805916f 100644
-> --- a/include/linux/platform_data/remoteproc-omap.h
-> +++ b/include/linux/platform_data/remoteproc-omap.h
-> @@ -21,16 +21,4 @@ struct omap_rproc_pdata {
->  	int (*device_shutdown)(struct platform_device *pdev);
->  };
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 3d5271a..116b276 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1090,27 +1090,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>   * @sub: updated with subordinate bus number from EA
+>   *
+>   * If @dev is a bridge with EA capability, update @sec and @sub with
+> - * fixed bus numbers from the capability and return true.  Otherwise,
+> - * return false.
+> + * fixed bus numbers from the capability. Otherwise @sec and @sub
+> + * will be zeroed.
+>   */
+> -static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+> +static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+>  {
+>  	int ea, offset;
+>  	u32 dw;
 >  
-> -#if defined(CONFIG_OMAP_REMOTEPROC) || defined(CONFIG_OMAP_REMOTEPROC_MODULE)
-> -
-> -void __init omap_rproc_reserve_cma(void);
-> -
-> -#else
-> -
-> -static inline void __init omap_rproc_reserve_cma(void)
-> -{
-> -}
-> -
-> -#endif
-> -
->  #endif /* _PLAT_REMOTEPROC_H */
+> +	*sec = *sub = 0;
+> +
+>  	if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+> -		return false;
+> +		return;
+>  
+>  	/* find PCI EA capability in list */
+>  	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+>  	if (!ea)
+> -		return false;
+> +		return;
+>  
+>  	offset = ea + PCI_EA_FIRST_ENT;
+>  	pci_read_config_dword(dev, offset, &dw);
+>  	*sec =  dw & PCI_EA_SEC_BUS_MASK;
+>  	*sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+> -	return true;
+>  }
+>  
+>  /*
+> @@ -1146,7 +1147,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>  	u16 bctl;
+>  	u8 primary, secondary, subordinate;
+>  	int broken = 0;
+> -	bool fixed_buses;
+>  	u8 fixed_sec, fixed_sub;
+>  	int next_busnr;
+>  
+> @@ -1249,11 +1249,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>  		pci_write_config_word(dev, PCI_STATUS, 0xffff);
+>  
+>  		/* Read bus numbers from EA Capability (if present) */
+> -		fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> -		if (fixed_buses)
+> +		pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> +
+> +		next_busnr = max + 1;
+> +		/* Use secondary bus number in EA */
+> +		if (fixed_sec)
+>  			next_busnr = fixed_sec;
+> -		else
+> -			next_busnr = max + 1;
+>  
+>  		/*
+>  		 * Prevent assigning a bus number that already exists.
+> @@ -1331,7 +1332,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>  		 * If fixed subordinate bus number exists from EA
+>  		 * capability then use it.
+>  		 */
+> -		if (fixed_buses)
+> +		if (fixed_sub)
+>  			max = fixed_sub;
+>  		pci_bus_update_busn_res_end(child, max);
+>  		pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
 > -- 
-> 2.17.1
+> 2.7.4
 > 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+commit 25328e0447de ("PCI: Do not use bus number zero from EA capability")
+Author: Subbaraya Sundeep <sbhatta@marvell.com>
+Date:   Mon Nov 4 12:27:44 2019 +0530
+
+    PCI: Do not use bus number zero from EA capability
+    
+    As per PCIe r5.0, sec 7.8.5.2, fixed bus numbers of a bridge must be zero
+    when no function that uses EA is located behind it.  Hence, if EA supplies
+    bus numbers of zero, assign bus numbers normally.  A secondary bus can
+    never have a bus number of zero, so setting a bridge's Secondary Bus Number
+    to zero makes downstream devices unreachable.
+    
+    [bhelgaas: retain bool return value so "zero is invalid" logic is local]
+    Fixes: 2dbce5901179 ("PCI: Assign bus numbers present in EA capability for bridges")
+    Link: https://lore.kernel.org/r/1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com
+    Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Cc: stable@vger.kernel.org	# v5.2+
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index bdbc8490f962..d3033873395d 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1090,14 +1090,15 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+  * @sec: updated with secondary bus number from EA
+  * @sub: updated with subordinate bus number from EA
+  *
+- * If @dev is a bridge with EA capability, update @sec and @sub with
+- * fixed bus numbers from the capability and return true.  Otherwise,
+- * return false.
++ * If @dev is a bridge with EA capability that specifies valid secondary
++ * and subordinate bus numbers, return true with the bus numbers in @sec
++ * and @sub.  Otherwise return false.
+  */
+ static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+ {
+ 	int ea, offset;
+ 	u32 dw;
++	u8 ea_sec, ea_sub;
+ 
+ 	if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+ 		return false;
+@@ -1109,8 +1110,13 @@ static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+ 
+ 	offset = ea + PCI_EA_FIRST_ENT;
+ 	pci_read_config_dword(dev, offset, &dw);
+-	*sec =  dw & PCI_EA_SEC_BUS_MASK;
+-	*sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
++	ea_sec =  dw & PCI_EA_SEC_BUS_MASK;
++	ea_sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
++	if (ea_sec  == 0 || ea_sub < ea_sec)
++		return false;
++
++	*sec = ea_sec;
++	*sub = ea_sub;
+ 	return true;
+ }
+ 
