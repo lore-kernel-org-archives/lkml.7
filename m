@@ -2,59 +2,74 @@ Return-Path: <SRS0=camR=ZD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C0EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B0AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A50214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3285214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfKKSXT (ORCPT
+        id S1726982AbfKKSY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:23:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:48968 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfKKSXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:23:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47AFD1FB;
-        Mon, 11 Nov 2019 10:23:18 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7828C3F534;
-        Mon, 11 Nov 2019 10:23:17 -0800 (PST)
-Date:   Mon, 11 Nov 2019 18:23:15 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     will@kernel.org, john.garry@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: Kconfig: make CMDLINE_FORCE depend on CMDLINE
-Message-ID: <20191111182314.GA60539@arrakis.emea.arm.com>
-References: <20191111085956.6158-1-anders.roxell@linaro.org>
+        Mon, 11 Nov 2019 13:24:28 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:55736 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726821AbfKKSY2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:24:28 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xABIOH6Y022708
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 13:24:18 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 16C0A4202FD; Mon, 11 Nov 2019 13:24:17 -0500 (EST)
+Date:   Mon, 11 Nov 2019 13:24:17 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     syzbot <syzbot+9567fda428fba259deba@syzkaller.appspotmail.com>,
+        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Jan Kara <jack@suse.cz>
+Subject: Re: general protection fault in ext4_writepages
+Message-ID: <20191111182417.GB5165@mit.edu>
+References: <00000000000073d3a70597069799@google.com>
+ <20191111051236.2717D11C05B@d06av25.portsmouth.uk.ibm.com>
+ <20191111053231.F129B11C04C@d06av25.portsmouth.uk.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191111085956.6158-1-anders.roxell@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191111053231.F129B11C04C@d06av25.portsmouth.uk.ibm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:59:56AM +0100, Anders Roxell wrote:
-> When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
-> CONFIG_CMDLINE_FORCE gets enabled. Which forces the user to pass the
-> full cmdline to CONFIG_CMDLINE="...".
+On Mon, Nov 11, 2019 at 11:02:31AM +0530, Ritesh Harjani wrote:
 > 
-> Rework so that CONFIG_CMDLINE_FORCE gets set only if CONFIG_CMDLINE is
-> set to something except an empty string.
+> Updating the link.
 > 
-> Suggested-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> On 11/11/19 10:42 AM, Ritesh Harjani wrote:
+> > Hello Ted,
+> > 
+> > This issue seems to be coming via fault injection failure in slab
+> > allocation. This should be fixed via below patch on your latest ext4
+> > branch.
+> > 
+> > https://marc.info/?l=linux-ext4&m=804&w=2
+> https://marc.info/?l=linux-ext4&m=157303310723804&w=2
 
-Queued for 5.5.
+Agreed, although unfortunately I wasn't able to make the reproducer
+cause a failure _without_ the patch.  Perhaps something other than
+enabling FAILSLAB and KASAN was needed?
 
--- 
-Catalin
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git test
+
+Let's see if the Syzbot can confirm that the patch addresses the problem.
+
+      	     	 	    	    	 - Ted
