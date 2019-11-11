@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81DEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC73DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2D520659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C0F20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 19:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573499292;
-	bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
+	s=default; t=1573499296;
+	bh=SNtsy/z4FWgC3bWyR7N0GujPzO3MgVzSeQ07JyZcL7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+8vHC/Ju19AYKuV+hW5FIY55nXlJj2iT883mv7i2o3bQ+7+aZCdzgeaTp6UIQCJM
-	 Yx9d7YkFan/dG+02fUTMIXSqFdSdlRwdQLFFB3RqCrk8hPjNGyv2iXLj8GLiBLIh58
-	 EBlLKG1WXNq09xK3myR+6b4HuysR3mGHYhOhPvLM=
+	b=XDxT00ZH/aKTOMsrhNq9YrF02w/7Y96geNcca7dazQDYyVCS5jCLzYkndZ5UXxUFL
+	 lOZxyKaRPOLKLoXCJQF/Ha5eiYh7wKRFQrYnK4kNqnsUukpFrj+WvBfYi8GhwjMe7j
+	 VxMCJUTG7fuVQ0QQ1qfWYtRhHHKYoH3UzWgI1nU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKKSg2 (ORCPT
+        id S1728686AbfKKSgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:36:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54684 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:36:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbfKKSgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:36:24 -0500
+        id S1727809AbfKKSgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:36:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50EAB214E0;
-        Mon, 11 Nov 2019 18:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D7CC21E6F;
+        Mon, 11 Nov 2019 18:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497383;
-        bh=MegO0AW1S5ijek+lrnxfYqx5M+fzH8XtDZcN2iYagM4=;
+        s=default; t=1573497371;
+        bh=SNtsy/z4FWgC3bWyR7N0GujPzO3MgVzSeQ07JyZcL7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=10DBC2dmzbAT9NT0FdCmiBIoimyxLPw7VB4c2Fq729e8AcAMIZgW9hOhJfHbLoCJk
-         68lhpjxH9n1pQfWPsxllvqxsC9+P3WJ6goQsCsZnYRW6UlLKFIq/xNsAWJf7CWhCKw
-         WebAK6Ktn5F0pgEglVBhMFEaOymT+eOvwGIttSk8=
+        b=EugWN5FPmRalJ1APhbj1LJRT2Ipt0p0C+VkkcueSQvIldDqATpD48kiLNktZXxovj
+         CMffE1tSZpRoLY3sBNocszajtBCoTkRYojKPRSMVSveYs0oAjGrTmoEyZhTgCL1LOS
+         wGozJ9Eq61xxfmkEVQGSaj+fwSLwAUS4Ta37KkNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Joe Burmeister <joe.burmeister@devtank.co.uk>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.14 034/105] can: c_can: c_can_poll(): only read status register after status IRQ
-Date:   Mon, 11 Nov 2019 19:28:04 +0100
-Message-Id: <20191111181438.900753764@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>
+Subject: [PATCH 4.14 030/105] netfilter: ipset: Fix an error code in ip_set_sockfn_get()
+Date:   Mon, 11 Nov 2019 19:28:00 +0100
+Message-Id: <20191111181438.153342258@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
 References: <20191111181421.390326245@linuxfoundation.org>
@@ -62,93 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 3cb3eaac52c0f145d895f4b6c22834d5f02b8569 upstream.
+commit 30b7244d79651460ff114ba8f7987ed94c86b99a upstream.
 
-When the status register is read without the status IRQ pending, the
-chip may not raise the interrupt line for an upcoming status interrupt
-and the driver may miss a status interrupt.
+The copy_to_user() function returns the number of bytes remaining to be
+copied.  In this code, that positive return is checked at the end of the
+function and we return zero/success.  What we should do instead is
+return -EFAULT.
 
-It is critical that the BUSOFF status interrupt is forwarded to the
-higher layers, since no more interrupts will follow without
-intervention.
-
-Thanks to Wolfgang and Joe for bringing up the first idea.
-
-Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Joe Burmeister <joe.burmeister@devtank.co.uk>
-Fixes: fa39b54ccf28 ("can: c_can: Get rid of pointless interrupts")
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: a7b4f989a629 ("netfilter: ipset: IP set core support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/c_can/c_can.c |   25 ++++++++++++++++++++-----
- drivers/net/can/c_can/c_can.h |    1 +
- 2 files changed, 21 insertions(+), 5 deletions(-)
+ net/netfilter/ipset/ip_set_core.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/net/can/c_can/c_can.c
-+++ b/drivers/net/can/c_can/c_can.c
-@@ -97,6 +97,9 @@
- #define BTR_TSEG2_SHIFT		12
- #define BTR_TSEG2_MASK		(0x7 << BTR_TSEG2_SHIFT)
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1950,8 +1950,9 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 		}
  
-+/* interrupt register */
-+#define INT_STS_PENDING		0x8000
-+
- /* brp extension register */
- #define BRP_EXT_BRPE_MASK	0x0f
- #define BRP_EXT_BRPE_SHIFT	0
-@@ -1029,10 +1032,16 @@ static int c_can_poll(struct napi_struct
- 	u16 curr, last = priv->last_status;
- 	int work_done = 0;
+ 		req_version->version = IPSET_PROTOCOL;
+-		ret = copy_to_user(user, req_version,
+-				   sizeof(struct ip_set_req_version));
++		if (copy_to_user(user, req_version,
++				 sizeof(struct ip_set_req_version)))
++			ret = -EFAULT;
+ 		goto done;
+ 	}
+ 	case IP_SET_OP_GET_BYNAME: {
+@@ -2008,7 +2009,8 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 	}	/* end of switch(op) */
  
--	priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
--	/* Ack status on C_CAN. D_CAN is self clearing */
--	if (priv->type != BOSCH_D_CAN)
--		priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
-+	/* Only read the status register if a status interrupt was pending */
-+	if (atomic_xchg(&priv->sie_pending, 0)) {
-+		priv->last_status = curr = priv->read_reg(priv, C_CAN_STS_REG);
-+		/* Ack status on C_CAN. D_CAN is self clearing */
-+		if (priv->type != BOSCH_D_CAN)
-+			priv->write_reg(priv, C_CAN_STS_REG, LEC_UNUSED);
-+	} else {
-+		/* no change detected ... */
-+		curr = last;
-+	}
+ copy:
+-	ret = copy_to_user(user, data, copylen);
++	if (copy_to_user(user, data, copylen))
++		ret = -EFAULT;
  
- 	/* handle state changes */
- 	if ((curr & STATUS_EWARN) && (!(last & STATUS_EWARN))) {
-@@ -1083,10 +1092,16 @@ static irqreturn_t c_can_isr(int irq, vo
- {
- 	struct net_device *dev = (struct net_device *)dev_id;
- 	struct c_can_priv *priv = netdev_priv(dev);
-+	int reg_int;
- 
--	if (!priv->read_reg(priv, C_CAN_INT_REG))
-+	reg_int = priv->read_reg(priv, C_CAN_INT_REG);
-+	if (!reg_int)
- 		return IRQ_NONE;
- 
-+	/* save for later use */
-+	if (reg_int & INT_STS_PENDING)
-+		atomic_set(&priv->sie_pending, 1);
-+
- 	/* disable all interrupts and schedule the NAPI */
- 	c_can_irq_control(priv, false);
- 	napi_schedule(&priv->napi);
---- a/drivers/net/can/c_can/c_can.h
-+++ b/drivers/net/can/c_can/c_can.h
-@@ -198,6 +198,7 @@ struct c_can_priv {
- 	struct net_device *dev;
- 	struct device *device;
- 	atomic_t tx_active;
-+	atomic_t sie_pending;
- 	unsigned long tx_dir;
- 	int last_status;
- 	u16 (*read_reg) (const struct c_can_priv *priv, enum reg index);
+ done:
+ 	vfree(data);
 
 
