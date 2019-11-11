@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBD4C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7443C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3045E20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7BC2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Nov 2019 18:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573497661;
-	bh=zTepxkX2P1xCUjXtiV1k2pw07QNHafJI06Bug3nuHbc=;
+	s=default; t=1573497667;
+	bh=h4meUJtgW9Qvh3BdcOTUDNpfUoTqjuLPmW0LtwqZvew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MnuawbC92sgqoIDhvfJ5CSxqJUgJBOlJfbquuvRl/ki/2ToXDGr+rImsF32MjXuKj
-	 bbbZvEwViWjWxe5lJyMBQ0fVUz3Nqb3L98zu8XGq24VdvY04PjWOenzsIdKTAHYUtG
-	 HRO8k6xjc/CrIo+o2PX1SfdoYsRLmTD8o54zWX4c=
+	b=iC4Jsi9YbsSOVi6FM1Tn+/LdGyACfTM5L4h8WerEcqtSrVMtxNOy77VJw3ivKvpIA
+	 V9yoexDL5B0PvvzhlGoxAlnW7WkqfdOWqFLdeheyj5XmiNLZeiBtPL6ddSpde9dOLV
+	 89Zevd9VUelCNHjC59iL4An3+l4emcY2pEfkBW3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfKKSk7 (ORCPT
+        id S1729342AbfKKSlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:40:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 13:41:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbfKKSk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:40:57 -0500
+        id S1727840AbfKKSlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:41:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6517621655;
-        Mon, 11 Nov 2019 18:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB7121655;
+        Mon, 11 Nov 2019 18:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573497656;
-        bh=zTepxkX2P1xCUjXtiV1k2pw07QNHafJI06Bug3nuHbc=;
+        s=default; t=1573497663;
+        bh=h4meUJtgW9Qvh3BdcOTUDNpfUoTqjuLPmW0LtwqZvew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q0PSfnBCzRBmXbKrO2TNtZRrZnhH8QnV0BeQgnei7N3joo3r9I/4MTbB+u0EvWzH4
-         5+LP7ad/V83ker9WNPo8kpkKNLY6U4i5ccRKbkRW7LDVQI4/fnoek73g2Z4Vzvi/pM
-         TpAd7+DncoubRVQ0HZ9BBMcbtHUfU2IOKWGWS2zM=
+        b=w1cjtGaIcX+claNJCW4CpSztgEp/HZKh1xqe8/L6L/jxb9PQe39RsiX0unEAPGHEh
+         OZpoelXWCc/xlKKLuMZ36fwjh3kisLCqfbSbVytA9eGXM/2+ovudcfpyDqE99FuuyC
+         zU/vWQ7LYNS2d5+XCn2tscCu9tK7xKhEmaUo4xWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Suleiman Souhlal <suleiman@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
+        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Qian Cai <cai@lca.pw>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 019/125] mm: memcontrol: fix network errors from failing __GFP_ATOMIC charges
-Date:   Mon, 11 Nov 2019 19:27:38 +0100
-Message-Id: <20191111181442.518063788@linuxfoundation.org>
+Subject: [PATCH 4.19 020/125] mm, meminit: recalculate pcpu batch and high limits after init completes
+Date:   Mon, 11 Nov 2019 19:27:39 +0100
+Message-Id: <20191111181442.752667017@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111181438.945353076@linuxfoundation.org>
 References: <20191111181438.945353076@linuxfoundation.org>
@@ -63,100 +66,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+From: Mel Gorman <mgorman@techsingularity.net>
 
-commit 869712fd3de5a90b7ba23ae1272278cddc66b37b upstream.
+commit 3e8fc0075e24338b1117cdff6a79477427b8dbed upstream.
 
-While upgrading from 4.16 to 5.2, we noticed these allocation errors in
-the log of the new kernel:
+Deferred memory initialisation updates zone->managed_pages during the
+initialisation phase but before that finishes, the per-cpu page
+allocator (pcpu) calculates the number of pages allocated/freed in
+batches as well as the maximum number of pages allowed on a per-cpu
+list.  As zone->managed_pages is not up to date yet, the pcpu
+initialisation calculates inappropriately low batch and high values.
 
-  SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-    cache: tw_sock_TCPv6(960:helper-logs), object size: 232, buffer size: 240, default order: 1, min order: 0
-    node 0: slabs: 5, objs: 170, free: 0
+This increases zone lock contention quite severely in some cases with
+the degree of severity depending on how many CPUs share a local zone and
+the size of the zone.  A private report indicated that kernel build
+times were excessive with extremely high system CPU usage.  A perf
+profile indicated that a large chunk of time was lost on zone->lock
+contention.
 
-        slab_out_of_memory+1
-        ___slab_alloc+969
-        __slab_alloc+14
-        kmem_cache_alloc+346
-        inet_twsk_alloc+60
-        tcp_time_wait+46
-        tcp_fin+206
-        tcp_data_queue+2034
-        tcp_rcv_state_process+784
-        tcp_v6_do_rcv+405
-        __release_sock+118
-        tcp_close+385
-        inet_release+46
-        __sock_release+55
-        sock_close+17
-        __fput+170
-        task_work_run+127
-        exit_to_usermode_loop+191
-        do_syscall_64+212
-        entry_SYSCALL_64_after_hwframe+68
+This patch recalculates the pcpu batch and high values after deferred
+initialisation completes for every populated zone in the system.  It was
+tested on a 2-socket AMD EPYC 2 machine using a kernel compilation
+workload -- allmodconfig and all available CPUs.
 
-accompanied by an increase in machines going completely radio silent
-under memory pressure.
+mmtests configuration: config-workload-kernbench-max Configuration was
+modified to build on a fresh XFS partition.
 
-One thing that changed since 4.16 is e699e2c6a654 ("net, mm: account
-sock objects to kmemcg"), which made these slab caches subject to cgroup
-memory accounting and control.
+kernbench
+                                5.4.0-rc3              5.4.0-rc3
+                                  vanilla           resetpcpu-v2
+Amean     user-256    13249.50 (   0.00%)    16401.31 * -23.79%*
+Amean     syst-256    14760.30 (   0.00%)     4448.39 *  69.86%*
+Amean     elsp-256      162.42 (   0.00%)      119.13 *  26.65%*
+Stddev    user-256       42.97 (   0.00%)       19.15 (  55.43%)
+Stddev    syst-256      336.87 (   0.00%)        6.71 (  98.01%)
+Stddev    elsp-256        2.46 (   0.00%)        0.39 (  84.03%)
 
-The problem with that is that cgroups, unlike the page allocator, do not
-maintain dedicated atomic reserves.  As a cgroup's usage hovers at its
-limit, atomic allocations - such as done during network rx - can fail
-consistently for extended periods of time.  The kernel is not able to
-operate under these conditions.
+                   5.4.0-rc3    5.4.0-rc3
+                     vanilla resetpcpu-v2
+Duration User       39766.24     49221.79
+Duration System     44298.10     13361.67
+Duration Elapsed      519.11       388.87
 
-We don't want to revert the culprit patch, because it indeed tracks a
-potentially substantial amount of memory used by a cgroup.
+The patch reduces system CPU usage by 69.86% and total build time by
+26.65%.  The variance of system CPU usage is also much reduced.
 
-We also don't want to implement dedicated atomic reserves for cgroups.
-There is no point in keeping a fixed margin of unused bytes in the
-cgroup's memory budget to accomodate a consumer that is impossible to
-predict - we'd be wasting memory and get into configuration headaches,
-not unlike what we have going with min_free_kbytes.  We do this for
-physical mem because we have to, but cgroups are an accounting game.
+Before, this was the breakdown of batch and high values over all zones
+was:
 
-Instead, account these privileged allocations to the cgroup, but let
-them bypass the configured limit if they have to.  This way, we get the
-benefits of accounting the consumed memory and have it exert pressure on
-the rest of the cgroup, but like with the page allocator, we shift the
-burden of reclaimining on behalf of atomic allocations onto the regular
-allocations that can block.
+    256               batch: 1
+    256               batch: 63
+    512               batch: 7
+    256               high:  0
+    256               high:  378
+    512               high:  42
 
-Link: http://lkml.kernel.org/r/20191022233708.365764-1-hannes@cmpxchg.org
-Fixes: e699e2c6a654 ("net, mm: account sock objects to kmemcg")
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Suleiman Souhlal <suleiman@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: <stable@vger.kernel.org>	[4.18+]
+512 pcpu pagesets had a batch limit of 7 and a high limit of 42.  After
+the patch:
+
+    256               batch: 1
+    768               batch: 63
+    256               high:  0
+    768               high:  378
+
+[mgorman@techsingularity.net: fix merge/linkage snafu]
+  Link: http://lkml.kernel.org/r/20191023084705.GD3016@techsingularity.netLink: http://lkml.kernel.org/r/20191021094808.28824-2-mgorman@techsingularity.net
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Qian Cai <cai@lca.pw>
+Cc: <stable@vger.kernel.org>	[4.1+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ mm/page_alloc.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2225,6 +2225,15 @@ retry:
- 	}
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1743,6 +1743,14 @@ void __init page_alloc_init_late(void)
+ 	wait_for_completion(&pgdat_init_all_done_comp);
  
  	/*
-+	 * Memcg doesn't have a dedicated reserve for atomic
-+	 * allocations. But like the global atomic pool, we need to
-+	 * put the burden of reclaim on regular allocation requests
-+	 * and let these go through as privileged allocations.
++	 * The number of managed pages has changed due to the initialisation
++	 * so the pcpu batch and high limits needs to be updated or the limits
++	 * will be artificially small.
 +	 */
-+	if (gfp_mask & __GFP_ATOMIC)
-+		goto force;
++	for_each_populated_zone(zone)
++		zone_pcp_update(zone);
 +
 +	/*
- 	 * Unlike in global OOM situations, memcg is not in a physical
- 	 * memory shortage.  Allow dying and OOM-killed tasks to
- 	 * bypass the last charges so that they can exit quickly and
+ 	 * We initialized the rest of the deferred pages.  Permanently disable
+ 	 * on-demand struct page initialization.
+ 	 */
+@@ -8011,7 +8019,6 @@ void free_contig_range(unsigned long pfn
+ }
+ #endif
+ 
+-#ifdef CONFIG_MEMORY_HOTPLUG
+ /*
+  * The zone indicated has a new number of managed_pages; batch sizes and percpu
+  * page high values need to be recalulated.
+@@ -8025,7 +8032,6 @@ void __meminit zone_pcp_update(struct zo
+ 				per_cpu_ptr(zone->pageset, cpu));
+ 	mutex_unlock(&pcp_batch_high_lock);
+ }
+-#endif
+ 
+ void zone_pcp_reset(struct zone *zone)
+ {
 
 
