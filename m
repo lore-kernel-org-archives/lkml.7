@@ -2,117 +2,110 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B025C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2C9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B322196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iGA4sXN2"
+	by mail.kernel.org (Postfix) with ESMTP id 792342196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfKLRM4 (ORCPT
+        id S1727555AbfKLROM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:12:56 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43307 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfKLRMz (ORCPT
+        Tue, 12 Nov 2019 12:14:12 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39692 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726645AbfKLROJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:12:55 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so19365033wra.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:12:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=ZxA7qLekk+N/Dav/LrYpCZKrEOoovHS5Dd7O1QxXvPg=;
-        b=iGA4sXN2p266Ip8URNSy7dqjA/Z0C+WYgUk+6xMsl8LgS8bQgxVyULQaD2vb0SR7j2
-         b0jhJlUwjYJvkMwRbwUwpaVWo7gx+SAZpqX1vVRK6QL489vU1ZEdKUra77E8EtGU9uhd
-         yZqI3JL4SvYL3q2fpJuUdqnj0+6CYdXOe3ZAUe8+8Y+ZAqwKXk1l4hbcJjN7ksDyiMkv
-         ishUSxPcrA6ABohA6CRqfS6BQLRS0usW5wBDdATWnpCMk+yVjagnw17hoxiwrVaKeaqt
-         NOvBrHvX8TmE6a0vkaYOk/ykSY4EPIB6Qoj6yTd8XczCrvFovihLLqBkLJjVpgJYkiP2
-         XfEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=ZxA7qLekk+N/Dav/LrYpCZKrEOoovHS5Dd7O1QxXvPg=;
-        b=moc7/oKUbaOEcfCsgar7FitoNgqBOt0FNpbpecI3l524s4NQiFj8PKkA8noJ0eSlov
-         vtQBoqXDcyZVQZ8fGSlO+lRJYUnBnAraeDGLRIKSFhG2i5072Gr6A+fhhofIg4zQmu7G
-         /aJjBgtwmNLFpx+jzZpoyScvh5jjVDRnRVjx7pOAv2Dc2jqpA3gQKrwghdrdepKR29K+
-         g4UJ3w8tv1vmiTbQSztIqm8dD2nnlixQTCHhFRG05BIAh5wT5aglI5zOeGAwxXfJA4AH
-         3N5FZAKEkvFug/40uH+DZF0J5J814tZhDKRNHAtNL/2yChwSCprkCdRhBjfYcwAJPfhE
-         WQIg==
-X-Gm-Message-State: APjAAAUgLuz6nHrk6Qq5fXIx+NeFIJU05z0M/JqdMTwQ5jbefhdoZWU9
-        bLDwkMp8+fM+MOJL1RN33vHMPw==
-X-Google-Smtp-Source: APXvYqxXk4QOi5t3c39JBIu/PqABL6KO249PbGRNZPb3VwQ97nfEmIS7gx53xgfuocXSPkN34AVp8Q==
-X-Received: by 2002:adf:d4d0:: with SMTP id w16mr2761615wrk.184.1573578772462;
-        Tue, 12 Nov 2019 09:12:52 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id r15sm42846928wrc.5.2019.11.12.09.12.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 09:12:51 -0800 (PST)
-References: <1572868495-84816-1-git-send-email-jianxin.pan@amlogic.com> <1ja79b4mje.fsf@starbuckisacylon.baylibre.com> <e80cb817-e58a-68ce-a3c6-d82636aaf7d3@amlogic.com> <1j8sou4u1g.fsf@starbuckisacylon.baylibre.com> <7ec2e682-cfec-395e-cf38-58f050440c40@amlogic.com> <1j7e4e4sab.fsf@starbuckisacylon.baylibre.com> <dee789ae-6825-3f4c-16e7-227e064562d6@amlogic.com> <1j5zjy4fif.fsf@starbuckisacylon.baylibre.com> <ec705819-9763-b0d2-9480-949e7ccd1cb9@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Nan Li <Nan.Li@amlogic.com>, Jianxin Pan <Jianxin.Pan@amlogic.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-amlogic\@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Victor Wan <victor.wan@amlogic.com>
-Subject: Re: [PATCH v2] mmc: meson-gx: fix mmc dma operation
-In-reply-to: <ec705819-9763-b0d2-9480-949e7ccd1cb9@amlogic.com>
-Date:   Tue, 12 Nov 2019 18:12:50 +0100
-Message-ID: <1jeeydf27h.fsf@starbuckisacylon.baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 12 Nov 2019 12:14:09 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACGw92Q188007
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:14:08 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7ycc4d38-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:14:08 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 12 Nov 2019 17:14:07 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Nov 2019 17:14:03 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACHE3bi61603880
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 17:14:03 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D26CA4040;
+        Tue, 12 Nov 2019 17:14:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52906A404D;
+        Tue, 12 Nov 2019 17:14:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.194.252])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 17:14:02 +0000 (GMT)
+Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Patrick Callaghan <patrickc@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+Date:   Tue, 12 Nov 2019 12:14:01 -0500
+In-Reply-To: <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
+References: <20191111192348.30535-1-patrickc@linux.ibm.com>
+         <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111217-0008-0000-0000-0000032E6E21
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111217-0009-0000-0000-00004A4D747C
+Message-Id: <1573578841.17949.48.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=757 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-11-11 at 14:29 -0800, Lakshmi Ramasubramanian wrote:
+> On 11/11/19 11:23 AM, Patrick Callaghan wrote:
+> 
+> > -		if (rbuf_len == 0)
+> > +		if (rbuf_len == 0) {	/* unexpected EOF */
+> > +			rc = -EINVAL;
+> >   			break;
+> > +		}
+> >   		offset += rbuf_len;
+> 
+> Should there be an additional check to validate that (offset + rbuf_len) 
+> is less than i_size before calling cypto_shash_update (since rbuf_len is 
+> one of the parameters for this call)?
 
-On Wed 06 Nov 2019 at 04:28, Nan Li <Nan.Li@amlogic.com> wrote:
+The "while" statement enforces that.
 
->
-> I see what you mean, pre/post_req already provides callbacks in meson_mmc_ops for the framework to decide whether to invoke the chain mode or not.
->
-> However, I searched the frame of MMC and found the use of mmc_pre_req() for this callback in the block layer mmc_blk_mq_issue_rw_rq().
->
-> Block layer mmc_blk_mq_issue_rw_rq() may be useful for emmc and SD card devices.
->
-> But it may not be useful for reading and writing operations of sdio wifi, and the sdio device communication may not use the chain mode.
->
->
-> Our chain-mode is a way to transfer data using dma.
->
-> This approach is very efficient for reading and writing large amounts of data.
->
-> If you don't do it that way, you'll do it the other way, the bounce buf way, which is limited by the size of the buf, so when you do big data reads and writes, it affects the transfer rate.
->
-> Therefore, our chain mode means that emmc, SD card or sdio device will use dma to transfer data when reading and writing operations, so our previous driver and the patch behind me all ensure this.
->
+Mimi
 
-I see.
-The problem is that you are providing the same function to pre/post_req
-callbacks and the request()
+> 
+>                 if ((rbuf_len == 0) || (offset + rbuf_len >= i_size)) {
+>                          rc = -EINVAL;
+>                          break;
+>                 }
+>                 offset += rbuf_len;
+> 
+> >   	       rc = crypto_shash_update(shash, rbuf, rbuf_len);
+> 
+>   -lakshmi
+> 
 
-IOW, things mapped in the pre_req() callback might be unmapped by
-request_done() instead post_req() which, I think, is not great.
-
-It's been like that so far, your patch is not making much worse, so I
-guess you can go ahead with it but we need to look a this before it
-blows again
-
-In the future, we should probably use the cookie to distinguish the 2
-cases ... or drop pre/post_req in the ops.
-
-Regards
-Jerome
