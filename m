@@ -2,150 +2,106 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9E9C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5BBC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3810322469
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B307D206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYkJbcXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfKLLYU (ORCPT
+        id S1726949AbfKLL2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:24:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:60540 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfKLLYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:24:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 088E831B;
-        Tue, 12 Nov 2019 03:24:19 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A44EA3F6C4;
-        Tue, 12 Nov 2019 03:24:17 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:24:14 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V10 2/2] mailbox: introduce ARM SMC based mailbox
-Message-ID: <20191112112414.10f3f88e@donnerap.cambridge.arm.com>
-In-Reply-To: <2c8fa412-33c2-57c7-20b7-37b3b70ce524@gmail.com>
-References: <1569824287-4263-1-git-send-email-peng.fan@nxp.com>
- <1569824287-4263-3-git-send-email-peng.fan@nxp.com>
- <2c8fa412-33c2-57c7-20b7-37b3b70ce524@gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Tue, 12 Nov 2019 06:28:50 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37215 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfKLL2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:28:50 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p24so13159778pfn.4;
+        Tue, 12 Nov 2019 03:28:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oT7NRAnyWQZcqS8AZQGXhNMhZCid5Elpr5j+vrnZHcU=;
+        b=lYkJbcXPDdsi7jkKZGkeVZiExzVguF/ZPSqgZSlTY+l9kqmuYUTbaQMEnFKbSfDQBt
+         CbOPc4nWtfOUsf5HymN5KnawVbboJh+p0h35SMpaotcIZPhH3skBMDtB8Nhwle2j5xv3
+         TyGPQZ2MgTFuNbDIUWKPQj3a613j6aqIrGPGeGXEZM3I22zqXnaho9cP0we8IwJiXoul
+         Myc9souDNDHVIN1I5XijI8OQuDjTodID4uq0Stnc3PLwV1r7lwN+wD+3t69aWJ+gawEp
+         pgt/jisP73JZIGB7SOMBP5hd9/qJUNCd4+aq/qwWnJ9+bgeHUqw72745mCVahb+Zp0hI
+         grnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oT7NRAnyWQZcqS8AZQGXhNMhZCid5Elpr5j+vrnZHcU=;
+        b=GhhNkCHzrfBGU2WTppdUk5BxUK0V180fdOMDuJfHNnYlW0eiq9GshbmEJR/h66NGXi
+         Hb5mzGYmes5JvvbRgpLQF5hu4sglQPH0JyzTzgfTdLLPUWX3m12GnEgsxlDfPy7Am0WH
+         ePwmA32hMXROypK5kXekxzcqH03kjnEWOs+Y5OOuhOWfFDmdsitzx5raZQdW3Vp8HYMW
+         NGlfS/nT4KYEa9OXul2cmH5UmCGuQJI5HouJCD0MAt96QbkthXfQSu7951j6rdkD+D+f
+         DVArZI6BLHe8x4NK8QZnE4Ta+jbGJDqjR5luZOGkHDJi9i6sCyWRFbWGdTnFrGEL6qoQ
+         fklQ==
+X-Gm-Message-State: APjAAAV8YwDl1oeZsNrJotuxFAj/DIx+ZH6zs1DNqM1kIRAy1kvLcxxL
+        ixHrRGEVP/JL2bXvz1GDlOw=
+X-Google-Smtp-Source: APXvYqymsjHT/w3t33EfC2KpLRIRSqzElbdl0GKlJ/vpN8hBO5y8qeRVeFRiRbK4P9p/QhS0tKMb5A==
+X-Received: by 2002:aa7:90d5:: with SMTP id k21mr24209947pfk.178.1573558129598;
+        Tue, 12 Nov 2019 03:28:49 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id c9sm29569778pfb.114.2019.11.12.03.28.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 03:28:48 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH net v2] net: fec: add a check for CONFIG_PM to avoid clock count mis-match
+Date:   Tue, 12 Nov 2019 19:28:30 +0800
+Message-Id: <20191112112830.27561-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019 09:32:43 -0800
-Florian Fainelli <f.fainelli@gmail.com> wrote:
+If CONFIG_PM is enabled, runtime pm will work and call runtime_suspend
+automatically to disable clks.
+Therefore, remove only needs to disable clks when CONFIG_PM is disabled.
+Add this check to avoid clock count mis-match caused by double-disable.
 
-Hi Florian,
+Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Add fixes tag.
 
-> On 9/29/19 11:20 PM, Peng Fan wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> > 
-> > This mailbox driver implements a mailbox which signals transmitted data
-> > via an ARM smc (secure monitor call) instruction. The mailbox receiver
-> > is implemented in firmware and can synchronously return data when it
-> > returns execution to the non-secure world again.
-> > An asynchronous receive path is not implemented.
-> > This allows the usage of a mailbox to trigger firmware actions on SoCs
-> > which either don't have a separate management processor or on which such
-> > a core is not available. A user of this mailbox could be the SCP
-> > interface.  
-> 
-> Sorry for not spotting this, or rather asking this earlier, but I do
-> have one question below.
-> 
-> [snip]
-> 
-> > +static int arm_smc_send_data(struct mbox_chan *link, void *data)
-> > +{
-> > +	struct arm_smc_chan_data *chan_data = link->con_priv;
-> > +	struct arm_smccc_mbox_cmd *cmd = data;
-> > +	unsigned long ret;
-> > +
-> > +	if (ARM_SMCCC_IS_64(chan_data->function_id)) {
-> > +		ret = chan_data->invoke_smc_mbox_fn(chan_data->function_id,
-> > +						    cmd->args_smccc64[0],
-> > +						    cmd->args_smccc64[1],
-> > +						    cmd->args_smccc64[2],
-> > +						    cmd->args_smccc64[3],
-> > +						    cmd->args_smccc64[4],
-> > +						    cmd->args_smccc64[5]);
-> > +	} else {
-> > +		ret = chan_data->invoke_smc_mbox_fn(chan_data->function_id,
-> > +						    cmd->args_smccc32[0],
-> > +						    cmd->args_smccc32[1],
-> > +						    cmd->args_smccc32[2],
-> > +						    cmd->args_smccc32[3],
-> > +						    cmd->args_smccc32[4],
-> > +						    cmd->args_smccc32[5]);
-> > +	}  
-> 
-> Why did not we use unsigned long for the args_smccc[] array to be bit
-> width independent, this is what the PSCI infrastructure does and it
-> looks a lot nicer IMHO. More question below.
+ drivers/net/ethernet/freescale/fec_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Huh, interestingly I think this comes from the combination of the two problems you point out, which evolved separately:
-Earlier we had no exported interface between the transport driver and the mailbox client, just a void pointer. So using "long" in the structure would not work, because it would behave differently between arm32 and arm64 kernels. But the firmware interface would always be fixed to one of the two calling conventions, regardless of the kernel "bitness", as advertised by the upper bits of the function ID.
-So we introduced explicit types that are used depending on the firmware-advertised calling convention. The idea was that any packed data any client would provide would always end up in consecutive registers in the firmware.
-Now we explicitly advertise the expected message structure in the new header file, so we could go back to unsigned long here, indeed. A 32-bit kernel could never use the 64-bit calling convention, so long would fit. In a 64-bit kernel the compiler would either downgrade the long argument to the 32-bit arguments the firmware expects, or keep it long.
-So it might be worth a short to go back to long.
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index a9c386b63581..696550f4972f 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3645,8 +3645,10 @@ fec_drv_remove(struct platform_device *pdev)
+ 		regulator_disable(fep->reg_phy);
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++#ifndef CONFIG_PM
+ 	clk_disable_unprepare(fep->clk_ahb);
+ 	clk_disable_unprepare(fep->clk_ipg);
++#endif
+ 	if (of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
+ 	of_node_put(fep->phy_node);
+-- 
+2.23.0
 
-> 
-> [snip]
-> 
-> > +
-> > +#ifndef _LINUX_ARM_SMCCC_MBOX_H_
-> > +#define _LINUX_ARM_SMCCC_MBOX_H_
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * struct arm_smccc_mbox_cmd - ARM SMCCC message structure
-> > + * @args_smccc32/64:	actual usage of registers is up to the protocol
-> > + *			(within the SMCCC limits)
-> > + */
-> > +struct arm_smccc_mbox_cmd {
-> > +	union {
-> > +		u32 args_smccc32[6];
-> > +		u64 args_smccc64[6];
-> > +	};
-> > +};  
-> 
-> Why is this being moved to a separate header file and not within the
-> driver's main file? It is not like we offer the ability for a driver to
-> embed this ARM SMC mailbox driver as a library, and customize the values
-> of the SMC arguments (maybe we should do that, as a later patch) except
-> for the function_id.
-
-I wouldn't call it a "library", but indeed we expose the transport protocol to the mailbox client. It seems that the mailbox framework is not really clear here, it just states that (at least in many cases) the mailbox client knows about the transport protocol, even though the separation between the two suggests otherwise. This probably stems back from the days, where mailboxes were directly used by their users, without providing any kind of abstraction.
-So going with this, the SMC mailbox transport driver enforces a specific transport protocol for the payload, namely the six SMCCC defined registers. So we make this available, so any mailbox client knows what to expect. At the end of the day on the other end there will be some firmware probably expecting specific data in specific registers - or no data at all, as in the simple doorbell case we intend to use for SCPI/SCMI.
-
-> If you have a "public" header, there is usually a
-> service or some configuration that your driver would offer, which is not
-> the case here.
-
-If you want to use the mailbox just as a doorbell (as in our case), it doesn't matter, so we can as well expose the underlying transport protocol.
-
-Cheers,
-Andre.
