@@ -2,182 +2,241 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28624C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0322C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A1721925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573546322;
-	bh=VcR8tv0wh9g8kZmHO/HgLm+Rr276wIHuSJyIyMSKDPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XPfBULjA2oANDJnfjInt58RfOiNOZm7RsTgKoDTv1sJAuE7GumScc8Pu752ANGSeg
-	 otOrTvb/LPmlYiuJhk5awX3F+iPio93Kl0aFXvD3OtLMy/L2MS2/YxsqfJGKHmmYzX
-	 BrwvFSp7gRr8Hfec56XzoimEKu56eJZgh49H9K7E=
+	by mail.kernel.org (Postfix) with ESMTP id 99BB221925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfKLIMA (ORCPT
+        id S1727192AbfKLIM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:12:00 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34950 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfKLIMA (ORCPT
+        Tue, 12 Nov 2019 03:12:28 -0500
+Received: from regular1.263xmail.com ([211.150.70.205]:53274 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfKLIM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:12:00 -0500
-Received: by mail-qt1-f193.google.com with SMTP id n4so14229376qte.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 00:11:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kt7J2laxHQ4pWQrrVLE48aAp/b3AC/hHVCv/0m4lmtk=;
-        b=Y0UsbTOCwHsVFcxd4N9UrjgdfCdcE7UdvpH4OGd+JivnepMeaVRq6Wato1ghR3IC0z
-         ODg7e4GSXwcKC4Ikt1P/Zcz46L/2xDC/IxcJRgU0FN7r0Xm76IvByMnmKFnGvNYDjSva
-         BXhKTET58532s4hFirnMRcd39XYwjAoUlytcYmx2xOHf8qYMqrbiNYYAqFoDiZvWFi7l
-         xrdXlFelpwOHOq5Lh5IxKIPeQFNsWcFBcEMDUYYCrHpzZPa4lpSaqI1WmiC9mrnvjgW7
-         wwJb4jkoJPJtSpuw0ocLe1Cj/6WqsgLyoUUFYxmUMoNI+N0u+txPHKW+/9ar+vLTcVV4
-         qXnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kt7J2laxHQ4pWQrrVLE48aAp/b3AC/hHVCv/0m4lmtk=;
-        b=bTxq8Em2gylFY3rd8l+MmUSmqSbWWAUUU/xXHrBRKybybMpMTCrQ2fY9LUN8EnjfKj
-         oLKt0OAXtFE8KrBo1KQ7SaofM+usSNx5jg11BidfRwzb+HasF4sV1/XtJzDsXUimUvJ2
-         dueEaq0K6QCgq/Ho7B/hPjSSKHqd8Cev3ND4UhSJSbWtUtD95QniTXP2IPW3P5TAS6V9
-         aiSFUTqVg/JKF/Ib1XL67sKrsSlXnZZBSuy+4+1NsCQL05CfHvaxv56NVOu7ZlTKKkyA
-         BzpKqdZkTbsJciVC12yc1DJqwsR2Y/NwYd1/BKtHXOowvqplpTkrhzaskK3AlIy+49uY
-         kAWQ==
-X-Gm-Message-State: APjAAAUIDAModd1MxgEXoVpfgHvPcRq6qdgIzg5nVX3w+NNoKbjJaCme
-        6cgzMvBOIBujtyUbR9l3Qcg=
-X-Google-Smtp-Source: APXvYqzY/DXYDodTnnEAQx0YLr5+650L5zPT7ndeHAWKf24VhLOUaIXKozEOi467IRLglpAOFAdxLA==
-X-Received: by 2002:ac8:682:: with SMTP id f2mr30812560qth.140.1573546317546;
-        Tue, 12 Nov 2019 00:11:57 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id 19sm9205090qkg.89.2019.11.12.00.11.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 00:11:57 -0800 (PST)
-Date:   Tue, 12 Nov 2019 09:11:53 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/iopl: Clear up the role of the two bitmap copying fields
-Message-ID: <20191112081153.GG100264@gmail.com>
-References: <20191111220314.519933535@linutronix.de>
- <20191112074052.GD100264@gmail.com>
+        Tue, 12 Nov 2019 03:12:28 -0500
+Received: from localhost (unknown [192.168.165.103])
+        by regular1.263xmail.com (Postfix) with ESMTP id 4ACCB3F3;
+        Tue, 12 Nov 2019 16:05:07 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [192.168.60.65] (unknown [103.29.142.67])
+        by smtp.263.net (postfix) whith ESMTP id P28956T140214521083648S1573545889847809_;
+        Tue, 12 Nov 2019 16:05:05 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <a1e7a1b6f9fa5cb3f53851fe515b3e1c>
+X-RL-SENDER: kever.yang@rock-chips.com
+X-SENDER: yk@rock-chips.com
+X-LOGIN-NAME: kever.yang@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 103.29.142.67
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
+To:     Soeren Moch <smoch@web.de>, heiko@sntech.de
+Cc:     linux-rockchip@lists.infradead.org,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Akash Gajjar <akash@openedev.com>,
+        Alexis Ballier <aballier@gentoo.org>,
+        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
+        Andy Yan <andyshrk@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Xie <nick@khadas.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20191111005158.25070-1-kever.yang@rock-chips.com>
+ <20191111005158.25070-3-kever.yang@rock-chips.com>
+ <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
+From:   Kever Yang <kever.yang@rock-chips.com>
+Message-ID: <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
+Date:   Tue, 12 Nov 2019 16:04:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112074052.GD100264@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Here's another one, which makes the pointer-caching logic a bit clearer 
-IMO:
+On 2019/11/11 下午4:42, Soeren Moch wrote:
+> On 11.11.19 01:51, Kever Yang wrote:
+>> Since there is no devfreq used for vdd_log, so the vdd_log(pwm regulator)
+>> will be 'enable' with the dts node at a default PWM state with high or low
+>> output. Both too high or too low for vdd_log is not good for the board,
+>> add init voltage for driver to make the regulator get into a know output.
+>>
+>> Note that this will be used by U-Boot for init voltage output, and this
+>> is very important for it may get system hang somewhere during system
+>> boot up with regulator enable and without this init value.
+> I think it's a good idea to include this setting in the main dts for the
+> boards (not in u-boot specific additions as is done now). But there is
+> (for some reason?) no documented binding for regulator-init-microvolt in
+> linux.
 
-Firstly, it lines up the two related fields in the namespace:
 
-   x86_io_bitmap.last_bitmap        =>   bitmap_copied_ptr
-   x86_io_bitmap.last_sequence      =>   bitmap_copied_seq
+Ohh, I forgot the kernel driver does not support this property.
 
-It also constifies the pointer to better signal that it should never 
-actually be used for anything but comparison
+@Heiko, can we add this 'regulator-init-microvolt' without driver 
+support but adding document for
 
-I think the 'bitmap_copied_' ptr/seq pairing makes it more obvious, and 
-removing the 'last' language makes it a tiny bit clearer that this bitmap 
-is special because we copied its contents into the TSS.
+it at dt-binding?
 
-This makes code like this a tiny bit easier to read IMHO:
-
-+                       if (tss->io_bitmap.bitmap_copied_ptr != iobm ||
-+                           tss->io_bitmap.bitmap_copied_seq != iobm->sequence)
-
-I marked it RFC because you might not agree. :-)
-
-Only build tested.
 
 Thanks,
 
-	Ingo
+- Kever
 
----
- arch/x86/include/asm/processor.h | 10 +++++-----
- arch/x86/kernel/cpu/common.c     |  2 +-
- arch/x86/kernel/process.c        |  8 ++++----
- 3 files changed, 10 insertions(+), 10 deletions(-)
+>
+> Regards,
+> Soeren
+>> CC: Elaine Zhang <zhangqing@rock-chips.com>
+>> CC: Peter Robinson <pbrobinson@gmail.com>
+>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+>> ---
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3399-evb.dts          | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-firefly.dts      | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts   | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts    | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts     | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts       | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts    | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi    | 1 +
+>>   9 files changed, 9 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> index 77008dca45bc..fa241aeb11b0 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> @@ -65,6 +65,7 @@
+>>   		regulator-name = "vdd_center";
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		regulator-always-on;
+>>   		regulator-boot-on;
+>>   		status = "okay";
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+>> index 92de83dd4dbc..4e45269fcdff 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+>> @@ -208,6 +208,7 @@
+>>   		regulator-boot-on;
+>>   		regulator-min-microvolt = <430000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		vin-supply = <&vcc_sys>;
+>>   	};
+>>   };
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+>> index c133e8d64b2a..692f3154edc3 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+>> @@ -100,6 +100,7 @@
+>>   		regulator-name = "vdd_log";
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		regulator-always-on;
+>>   		regulator-boot-on;
+>>   	};
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+>> index 4944d78a0a1c..c2ac80d99301 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+>> @@ -79,6 +79,7 @@
+>>   		regulator-boot-on;
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		vin-supply = <&vsys_3v3>;
+>>   	};
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+>> index 73be38a53796..c32abcc4ddc1 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+>> @@ -101,6 +101,7 @@
+>>   		regulator-boot-on;
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		vin-supply = <&vcc5v0_sys>;
+>>   	};
+>>   };
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+>> index 0541dfce924d..9d674c51f025 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+>> @@ -164,6 +164,7 @@
+>>   		regulator-boot-on;
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		vin-supply = <&vcc_sys>;
+>>   	};
+>>   };
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+>> index 19f7732d728c..7d856ce1d156 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+>> @@ -129,6 +129,7 @@
+>>   		regulator-boot-on;
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		vin-supply = <&vcc3v3_sys>;
+>>   	};
+>>   };
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> index e544deb61d28..8fbccbc8bf47 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>> @@ -174,6 +174,7 @@
+>>   		regulator-boot-on;
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1700000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		vin-supply = <&vcc5v0_sys>;
+>>   	};
+>>   };
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+>> index 1bc1579674e5..f8e2cb8c0624 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+>> @@ -133,6 +133,7 @@
+>>   		regulator-boot-on;
+>>   		regulator-min-microvolt = <800000>;
+>>   		regulator-max-microvolt = <1400000>;
+>> +		regulator-init-microvolt = <950000>;
+>>   		vin-supply = <&vcc_sys>;
+>>   	};
+>>   };
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index d1f2c1eb14e9..b45ff7c1419f 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -367,12 +367,12 @@ struct entry_stack_page {
- struct x86_io_bitmap
- {
- 	/*
--	 * The bitmap pointer and the sequence number of the last active
--	 * bitmap. last_bitmap cannot be dereferenced. It's solely for
--	 * comparison.
-+	 * The bitmap pointer and the sequence number of the last copied
-+	 * bitmap. bitmap_copied_ptr must not be dereferenced, it's solely
-+	 * for comparison.
- 	 */
--	struct io_bitmap	*last_bitmap;
--	u64			last_sequence;
-+	const struct io_bitmap	*bitmap_copied_ptr;
-+	u64			bitmap_copied_seq;
- 
- 	/*
- 	 * Store the dirty size of the last io bitmap offender. The next
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index a35a557429e7..5a74c5b11b1c 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1861,7 +1861,7 @@ void cpu_init(void)
- 	/* Initialize the TSS. */
- 	tss_setup_ist(tss);
- 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
--	tss->io_bitmap.last_bitmap = NULL;
-+	tss->io_bitmap.bitmap_copied_ptr = NULL;
- 	tss->io_bitmap.bytes_max = 0;
- 	memset(tss->io_bitmap.map_bytes, 0xff, sizeof(tss->io_bitmap.map_bytes));
- 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index c4e76a540b51..ecf97855ed68 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -358,8 +358,8 @@ static void tss_copy_io_bitmap(struct tss_struct *tss, struct io_bitmap *iobm)
- 	 * and a pointer to the bitmap itself.
- 	 */
- 	tss->io_bitmap.bytes_max = iobm->bytes_max;
--	tss->io_bitmap.last_sequence = iobm->sequence;
--	tss->io_bitmap.last_bitmap = iobm;
-+	tss->io_bitmap.bitmap_copied_seq = iobm->sequence;
-+	tss->io_bitmap.bitmap_copied_ptr = iobm;
- }
- 
- /**
-@@ -388,8 +388,8 @@ void tss_update_io_bitmap(void)
- 			 * sequence number differs. The update time is
- 			 * accounted to the incoming task.
- 			 */
--			if (tss->io_bitmap.last_bitmap != iobm ||
--			    tss->io_bitmap.last_sequence != iobm->sequence)
-+			if (tss->io_bitmap.bitmap_copied_ptr != iobm ||
-+			    tss->io_bitmap.bitmap_copied_seq != iobm->sequence)
- 				tss_copy_io_bitmap(tss, iobm);
- 
- 			/* Enable the bitmap */
+
