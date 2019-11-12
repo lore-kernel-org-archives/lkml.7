@@ -2,233 +2,105 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DF0C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E8C17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8382221783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3870721925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m16JaE0t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtXGnuhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKLTWs (ORCPT
+        id S1727181AbfKLTWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:22:48 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37135 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfKLTWs (ORCPT
+        Tue, 12 Nov 2019 14:22:55 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35790 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfKLTWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:22:48 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p24so14057543pfn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:22:47 -0800 (PST)
+        Tue, 12 Nov 2019 14:22:54 -0500
+Received: by mail-wr1-f65.google.com with SMTP id s5so8736804wrw.2;
+        Tue, 12 Nov 2019 11:22:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=luJmse4qyPM7h1duRVVj4w9vtvYZ5N4OxnAMNKQuEwE=;
-        b=m16JaE0tMOWtKv1tqF+/ZWdvaOBM4HlTIkpMmeFucRm5m959uTSk/fcL/apBRI3BFt
-         h8GgmusICQJZhhiTgshtPUUlSnORNdufj5yL0fmAN/If3aSA/nKvgqeyY0YHCiRWM09u
-         2odKLe6PykEV5dVoLFdJHIY827tkpLhe9n2arNALTus4Bxjdbj/d8lljWkt881mrtvOx
-         3qHv1rerAHnw00bm0MJLYhf6ZsvevbRzfEauwdw9n3XdouFliMpMysHVbKvg6zc7wfoN
-         WTOkwdTnjGXLKFimj3/T2/+3VsDKEE8n5+O/VANZFd/zadb/u+7PuYV2hKjBlofehj8B
-         K4BA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ZpEDoN5a5h6fV7ZiE3D69/PGx599J+5pvS1M8/D7rEU=;
+        b=PtXGnuhiB8iHD5lBqu+iKKNrAFCGvcM3PwOHEFNhjSf3PtFG6aVLSF3vtNYolZmc7j
+         /w8g/CtrAsWvzTkfRzrDBQZqy8ygryYeR5Q5QB+9tEV+6QWCBV/P5qk/l0r4gJ1eE87e
+         MYo17lJWztQ7xFIDb3VwIcERrLN34nd1Kwred7wsuxx7kaDLsde2rgiMpRsJzPJ8hJ0y
+         X1/Qy6TLwLFNVGggF7HgAyplqcGH/Lt8PQbUvQE+pBS75cqS7yHvxxepFwGbAcNJk24S
+         xjHsuNXIQRG7q0GeYX3m680kox5udElJlpHx7icuIxVA1dzuwllg34oisSpAhLaBkBDU
+         +4Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=luJmse4qyPM7h1duRVVj4w9vtvYZ5N4OxnAMNKQuEwE=;
-        b=QvBwC39+JY2jACHyA9yqgMqQRbQtQZBYeTMOPEfxW5e+p1g194HCFsfl+Hu/JWEiyT
-         rsNWo5vMxwx0mFoZEBgsgLWOMAoav1bp/30TmjLWP6mHxPR5z4y+M919WEdW/q+pUW7d
-         HAKuyBVtYm2s0VyVdj1snHSuaYEbWQMAmdsQAoo7//te30m9UyHRLtxSmedl0SuqlNlU
-         upWoSNITRsxbb4LjfU7aGQRGKHeF9XK0akxi5A8mVhnt1LUUIC0U90zb+xg1eENbsn0N
-         5LwcGlM1rW0lo3C8pfKCRNfDUqtSsjuWulCUZRmopH/TmBL2ETfqXaLwsHZhrCugxX/2
-         UCXQ==
-X-Gm-Message-State: APjAAAUq8VlPCqBG0N0qTEJjlSD7z86kiiZggFX01FziYRHwMBYRn/dM
-        HWFTbjFhjiLrEFKS4uLnnj8qtQ==
-X-Google-Smtp-Source: APXvYqysD+TiqAUSvdUCYG2LXpASlGJtt1tzc0lSVX4vWFlJ3Z5O7G8bMlEUHEuFLgsKBKbcpTg2Ww==
-X-Received: by 2002:a63:586:: with SMTP id 128mr27395209pgf.198.1573586567270;
-        Tue, 12 Nov 2019 11:22:47 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i22sm3220287pjx.1.2019.11.12.11.22.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:22:46 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:22:44 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        edubezval@gmail.com, swboyd@chromium.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/3] drivers: thermal: tsens: Add watchdog support
-Message-ID: <20191112192244.GB3140946@builder>
-References: <cover.1573499020.git.amit.kucheria@linaro.org>
- <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ZpEDoN5a5h6fV7ZiE3D69/PGx599J+5pvS1M8/D7rEU=;
+        b=HMzzD1Eqkr/y3B0JAC9FaPI/20ZrinXVduT32BNK7HFQuvcLkPg4rFV8fRQ0NKhK/x
+         TYfkvATo/X1+4ys4VFfoD1gz0JfX1OcvqOS4eUYPKq2mMfH5KoOQoP3A9Qj39tE2JIIZ
+         mddQN7XPjzNoOjZQQx58PHB+oluS1lMaG7zG9PhCT/iLd1Fm3uOqBZZJX3e8hDPrDXMV
+         loIj6MA+lI+SuBVmrqOGu5pOqeu5cBMq1XetP0yvnBfV7/oIHQ7+fwMgCkj5ET1VsxhZ
+         KqVaQwlu6Yp4d8fpgLBi7+ScUaxxpyy/SDkcqc+Hni3xVQL2/1mytGDAWE4li82EVW56
+         ba0w==
+X-Gm-Message-State: APjAAAVVY4Eyvh1AfeBatwWueXn6492BdzhR/RiPEY5+bAsVqA0UTv+3
+        1huzcyB0yvf7laB7+FFrBck=
+X-Google-Smtp-Source: APXvYqxmgR0LNDT2aA2VphXtdJJyNweCg4ramG2+PSK6zKdwAeK/GjCrCGV/ESC/K96/pVllEvHutQ==
+X-Received: by 2002:a05:6000:1621:: with SMTP id v1mr28728212wrb.62.1573586572256;
+        Tue, 12 Nov 2019 11:22:52 -0800 (PST)
+Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
+        by smtp.gmail.com with ESMTPSA id y6sm14894974wrn.21.2019.11.12.11.22.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 11:22:51 -0800 (PST)
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     shawnguo@kernel.org
+Cc:     oliver.graute@gmail.com, m.felsch@pengutronix.de,
+        narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 3/3] dt-bindings: arm64: fsl: Add Variscite i.MX6UL compatibles
+Date:   Tue, 12 Nov 2019 20:22:03 +0100
+Message-Id: <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
+References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
+X-Patchwork-Bot: notify
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
+Add the compatibles for Variscite i.MX6UL compatibles
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> TSENS IP v2.3 onwards adds support for a watchdog to detect if the TSENS
-> HW FSM is frozen. Add support to detect and restart the FSM in the
-> driver. The watchdog is configured by the bootloader, we just enable the
-> feature in the kernel.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/thermal/qcom/tsens-common.c | 41 +++++++++++++++++++++++++++++
->  drivers/thermal/qcom/tsens-v2.c     | 10 +++++++
->  drivers/thermal/qcom/tsens.h        | 12 +++++++++
->  3 files changed, 63 insertions(+)
-> 
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> index 2989cb952cdb..9432518502a7 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -378,6 +378,28 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data)
->  	bool enable = true, disable = false;
->  	unsigned long flags;
->  	int temp, ret, i;
-> +	u32 wdog_status, wdog_count, ver_minor;
-> +
-> +	ret = regmap_field_read(priv->rf[VER_MINOR], &ver_minor);
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index f79683a..d0c7e60 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -182,6 +182,7 @@ properties:
+               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+               - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+               - kontron,imx6ul-n6311-som  # Kontron N6311 SOM
++              - variscite,6ulcustomboard" # i.MX UltraLite Carrier-board
+           - const: fsl,imx6ul
+ 
+       - description: Kontron N6310 S Board
+-- 
+2.7.4
 
-The version is unlikely to change from one interrupt to the next, so I
-suggest that you add a boolean "has_watchdog" to your context that you
-populate in init_common.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (tsens_version(priv) > VER_1_X &&  ver_minor > 2) {
-> +		/* Watchdog is present only on v2.3+ */
-> +		ret = regmap_field_read(priv->rf[WDOG_BARK_STATUS], &wdog_status);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Clear WDOG interrupt */
-> +		regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 1);
-> +		regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 0);
-> +
-> +		ret = regmap_field_read(priv->rf[WDOG_BARK_COUNT], &wdog_count);
-> +		if (ret)
-> +			return ret;
-> +		if (wdog_count)
-> +			dev_err(priv->dev, "%s: watchdog count: %d\n", __func__, wdog_count);
-
-What's the benefit of reading wdog_count and who's the audience for this
-print? What do I do when this goes to 11?
-
-Regards,
-Bjorn
-
-> +	}
->  
->  	for (i = 0; i < priv->num_sensors; i++) {
->  		struct tsens_sensor *s = &priv->sensor[i];
-> @@ -685,6 +707,7 @@ int __init init_common(struct tsens_priv *priv)
->  {
->  	void __iomem *tm_base, *srot_base;
->  	struct device *dev = priv->dev;
-> +	u32 ver_minor;
->  	struct resource *res;
->  	u32 enabled;
->  	int ret, i, j;
-> @@ -734,6 +757,9 @@ int __init init_common(struct tsens_priv *priv)
->  			if (IS_ERR(priv->rf[i]))
->  				return PTR_ERR(priv->rf[i]);
->  		}
-> +		ret = regmap_field_read(priv->rf[VER_MINOR], &ver_minor);
-> +		if (ret)
-> +			goto err_put_device;
->  	}
->  
->  	priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
-> @@ -794,6 +820,21 @@ int __init init_common(struct tsens_priv *priv)
->  		}
->  	}
->  
-> +	if (tsens_version(priv) > VER_1_X &&  ver_minor > 2) {
-> +		/* Watchdog is present only on v2.3+ */
-> +		for (i = 0, j = WDOG_BARK_STATUS; j <= CC_MON_MASK; i++, j++) {
-> +			priv->rf[j] = devm_regmap_field_alloc(dev, priv->tm_map,
-> +							      priv->fields[j]);
-> +			if (IS_ERR(priv->rf[j])) {
-> +				ret = PTR_ERR(priv->rf[j]);
-> +				goto err_put_device;
-> +			}
-> +		}
-> +		/* Enable WDOG and disable cycle completion monitoring */
-> +		regmap_field_write(priv->rf[WDOG_BARK_MASK], 0);
-> +		regmap_field_write(priv->rf[CC_MON_MASK], 1);
-> +	}
-> +
->  	spin_lock_init(&priv->ul_lock);
->  	tsens_enable_irq(priv);
->  	tsens_debug_init(op);
-> diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
-> index 47d831df0803..4184850d1e42 100644
-> --- a/drivers/thermal/qcom/tsens-v2.c
-> +++ b/drivers/thermal/qcom/tsens-v2.c
-> @@ -24,6 +24,7 @@
->  #define TM_Sn_CRITICAL_THRESHOLD_OFF	0x0060
->  #define TM_Sn_STATUS_OFF		0x00a0
->  #define TM_TRDY_OFF			0x00e4
-> +#define TM_WDOG_LOG_OFF		0x013c
->  
->  /* v2.x: 8996, 8998, sdm845 */
->  
-> @@ -66,6 +67,15 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
->  	REG_FIELD_SPLIT_BITS_0_15(CRIT_INT_CLEAR,  TM_CRITICAL_INT_CLEAR_OFF),
->  	REG_FIELD_SPLIT_BITS_0_15(CRIT_INT_MASK,   TM_CRITICAL_INT_MASK_OFF),
->  
-> +	/* WATCHDOG on v2.3 or later */
-> +	[WDOG_BARK_STATUS] = REG_FIELD(TM_CRITICAL_INT_STATUS_OFF, 31, 31),
-> +	[WDOG_BARK_CLEAR]  = REG_FIELD(TM_CRITICAL_INT_CLEAR_OFF,  31, 31),
-> +	[WDOG_BARK_MASK]   = REG_FIELD(TM_CRITICAL_INT_MASK_OFF,   31, 31),
-> +	[CC_MON_STATUS]    = REG_FIELD(TM_CRITICAL_INT_STATUS_OFF, 30, 30),
-> +	[CC_MON_CLEAR]     = REG_FIELD(TM_CRITICAL_INT_CLEAR_OFF,  30, 30),
-> +	[CC_MON_MASK]      = REG_FIELD(TM_CRITICAL_INT_MASK_OFF,   30, 30),
-> +	[WDOG_BARK_COUNT]  = REG_FIELD(TM_WDOG_LOG_OFF,             0,  7),
-> +
->  	/* Sn_STATUS */
->  	REG_FIELD_FOR_EACH_SENSOR16(LAST_TEMP,       TM_Sn_STATUS_OFF,  0,  11),
->  	REG_FIELD_FOR_EACH_SENSOR16(VALID,           TM_Sn_STATUS_OFF, 21,  21),
-> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-> index 9b5a30533c52..7608e7877a7b 100644
-> --- a/drivers/thermal/qcom/tsens.h
-> +++ b/drivers/thermal/qcom/tsens.h
-> @@ -440,6 +440,18 @@ enum regfield_ids {
->  	CRIT_THRESH_13,
->  	CRIT_THRESH_14,
->  	CRIT_THRESH_15,
-> +
-> +	/* WATCHDOG */
-> +	WDOG_BARK_STATUS,
-> +	WDOG_BARK_CLEAR,
-> +	WDOG_BARK_MASK,
-> +	WDOG_BARK_COUNT,
-> +
-> +	/* CYCLE COMPLETION MONITOR */
-> +	CC_MON_STATUS,
-> +	CC_MON_CLEAR,
-> +	CC_MON_MASK,
-> +
->  	MIN_STATUS_0,		/* MIN threshold violated */
->  	MIN_STATUS_1,
->  	MIN_STATUS_2,
-> -- 
-> 2.17.1
-> 
