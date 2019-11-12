@@ -2,220 +2,761 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FA7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91A7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A150921A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5E7214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GdafzKPp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="IIM5tTOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfKLXLa (ORCPT
+        id S1727044AbfKLXMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:11:30 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40712 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKLXL3 (ORCPT
+        Tue, 12 Nov 2019 18:12:46 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:12337 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfKLXMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:11:29 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACN4VIh085733;
-        Tue, 12 Nov 2019 23:11:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=FyCT2WC098LLp1SKE0SMEzo1iZbKjezjYTbv92kCGNg=;
- b=GdafzKPpn/YIYBUORoYcX1L0moEjwH3HGfJqiG21wpJLk1hUSuXJ1kofDjrpgqipELJC
- S4Ei5gUm9Xnh5TZyOgxvnlVhrlVJle4Mwpvq5lQehpnMqey4NPfl0XDvOB3Olva/jmNo
- CpB/xd2Z74trpHGAPrXvnfxgP7ccd5rTFS9TkXUHMDybk6FrWBfprzWUloXjQCzIzNZZ
- tdwjfdG+Mo7+IOIUPcBqB1xH+iBadWGqGHigrMYENF9d9mR0zxiOhYa/M35/tKdQWJNx
- Oyows3ev8pRdO3nBTKVICYAULGVZmy0ubU+QgDXm20t6mPuDx9lcbjR0zGQTZwVqr0HC OA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2w5p3qr3ug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 23:11:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACN4lek004368;
-        Tue, 12 Nov 2019 23:11:09 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2w7vpn79t0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 23:11:09 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xACNB7G2026351;
-        Tue, 12 Nov 2019 23:11:07 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 15:11:07 -0800
-Subject: Re: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
-To:     Waiman Long <longman@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-References: <20191107190628.22667-1-longman@redhat.com>
- <20191107195441.GF11823@bombadil.infradead.org>
- <ed46ef09-7766-eb80-a4ad-4c72d8dba188@oracle.com>
- <20191108020456.sulyjskhq3s5zcaa@linux-p48b>
- <ea057d15-5205-9992-af95-b2727df577c4@oracle.com>
- <5059733e-95aa-2c9e-6f5d-4f45f6a130b3@oracle.com>
- <fd29a337-c067-ebf6-4be2-3b6e2f703ac4@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <33d1fcc8-ebec-bd37-2969-daa0125479df@oracle.com>
-Date:   Tue, 12 Nov 2019 15:11:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 12 Nov 2019 18:12:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573600359;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=7/Izb0+kY+ZrbNhag2Y6mpCIehor6yhMM2A0/AJZwNg=;
+        b=IIM5tTOLU98RfZlGFmt5taKKMqBEGbx2UVh+jjvnmefiNK4kvBct5CirKLLY/z1x7T
+        EE98F1ZfrwvRaNU4U6GA+OtXII+z87NUCxyIlTtjOOxidTDvpcKRSPfV2VV/6ekfKBjV
+        rbLLXCS5YoDfnDoJeb9D0UtvGm4RRFTvL/wcJy9gdtscHZ2udrr1x0y5lepSwbY58awI
+        TW/8pABMCIx9ILkR3pTGbzFSHRDYCgisPMTRw4x/hUxLISgazkIXv/v42u85jBopb3BG
+        ev7LsDi9uIAZGXEL72YRIhcvw2QLhD2sohbZdSqsyTli7OzCR+/rqMrknL/ra9fmyAIB
+        oQQA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
+        with ESMTPSA id N09a57vACNBLA3D
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 13 Nov 2019 00:11:21 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     "Alexander E. Patrakov" <patrakov@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v24 11/12] LRNG - add SP800-90B compliant health tests
+Date:   Wed, 13 Nov 2019 00:11:19 +0100
+Message-ID: <27134768.kErlRdRglt@positron.chronox.de>
+In-Reply-To: <556c89ae-4272-970d-1644-cb77dc3c7946@gmail.com>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <3385183.Cb3iLDTLdO@positron.chronox.de> <556c89ae-4272-970d-1644-cb77dc3c7946@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <fd29a337-c067-ebf6-4be2-3b6e2f703ac4@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911120199
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911120199
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 9:27 AM, Waiman Long wrote:
-> On 11/8/19 8:47 PM, Mike Kravetz wrote:
->> On 11/8/19 11:10 AM, Mike Kravetz wrote:
->>> On 11/7/19 6:04 PM, Davidlohr Bueso wrote:
->>>> On Thu, 07 Nov 2019, Mike Kravetz wrote:
->>>>
->>>>> Note that huge_pmd_share now increments the page count with the semaphore
->>>>> held just in read mode.  It is OK to do increments in parallel without
->>>>> synchronization.  However, we don't want anyone else changing the count
->>>>> while that check in huge_pmd_unshare is happening.  Hence, the need for
->>>>> taking the semaphore in write mode.
->>>> This would be a nice addition to the changelog methinks.
->>> Last night I remembered there is one place where we currently take
->>> i_mmap_rwsem in read mode and potentially call huge_pmd_unshare.  That
->>> is in try_to_unmap_one.  Yes, there is a potential race here today.
->> Actually there is no race there today.  Callers to huge_pmd_unshare
->> hold the page table lock.  So, this synchronizes those unshare calls
->> from  page migration and page poisoning.
->>
->>> But that race is somewhat contained as you need two threads doing some
->>> combination of page migration and page poisoning to race.  This change
->>> now allows migration or poisoning to race with page fault.  I would
->>> really prefer if we do not open up the race window in this manner.
->> But, we do open a race window by changing huge_pmd_share to take the
->> i_mmap_rwsem in read mode as in the original patch.  
->>
->> Here is the additional code needed to take the semaphore in write mode
->> for the huge_pmd_unshare calls via try_to_unmap_one.  We would need to
->> combine this with Longman's patch.  Please take a look and provide feedback.
->> Some of the changes are subtle, especially the exception for MAP_PRIVATE
->> mappings, but I tried to add sufficient comments.
->>
->> From 21735818a520705c8573b8d543b8f91aa187bd5d Mon Sep 17 00:00:00 2001
->> From: Mike Kravetz <mike.kravetz@oracle.com>
->> Date: Fri, 8 Nov 2019 17:25:37 -0800
->> Subject: [PATCH] Changes needed for taking i_mmap_rwsem in write mode before
->>  call to huge_pmd_unshare in try_to_unmap_one.
->>
->> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
->> ---
->>  mm/hugetlb.c        |  9 ++++++++-
->>  mm/memory-failure.c | 28 +++++++++++++++++++++++++++-
->>  mm/migrate.c        | 27 +++++++++++++++++++++++++--
->>  3 files changed, 60 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index f78891f92765..73d9136549a5 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -4883,7 +4883,14 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
->>   * indicated by page_count > 1, unmap is achieved by clearing pud and
->>   * decrementing the ref count. If count == 1, the pte page is not shared.
->>   *
->> - * called with page table lock held.
->> + * Must be called while holding page table lock.
->> + * In general, the caller should also hold the i_mmap_rwsem in write mode.
->> + * This is to prevent races with page faults calling huge_pmd_share which
->> + * will not be holding the page table lock, but will be holding i_mmap_rwsem
->> + * in read mode.  It is possible to call without holding i_mmap_rwsem in
->> + * write mode if the caller KNOWS the page table is associated with a private
->> + * mapping.  This is because private mappings can not share PMDs and can
->> + * not race with huge_pmd_share calls during page faults.
-> 
-> So the page table lock here is the huge_pte_lock(). Right? In
-> huge_pmd_share(), the pte lock has to be taken before one can share it.
-> So would you mind explaining where exactly is the race?
+Am Dienstag, 12. November 2019, 20:58:32 CET schrieb Alexander E. Patrakov:
 
-My concern was that this code in huge_pmd_share:
+Hi Alexander,
 
-		saddr = page_table_shareable(svma, vma, addr, idx);
-		if (saddr) {
-			spte = huge_pte_offset(svma->vm_mm, saddr,
-					       vma_mmu_pagesize(svma));
-			if (spte) {
-				get_page(virt_to_page(spte));
-				break;
-			}
-		}
+> 11.11.2019 23:26, Stephan M=C3=BCller =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > Implement health tests for LRNG's slow noise sources as mandated by
+> > SP-800-90B The file contains the following health tests:
+> >=20
+> > - stuck test: The stuck test calculates the first, second and third
+> >=20
+> >    discrete derivative of the time stamp to be processed by the LFSR.
+> >    Only if all three values are zero, the received time delta is
+> >    considered to be non-stuck.
+>=20
+> The other way round?
 
-and this code in huge_pmd_unshare:
+Opps, yes, of course. If all three a non-zero...
 
-        BUG_ON(page_count(virt_to_page(ptep)) == 0);
-        if (page_count(virt_to_page(ptep)) == 1)
-                return 0;
+=46ixed.
+>=20
+> > - SP800-90B Repetition Count Test (RCT): The LRNG uses an enhanced
+> >=20
+> >    version of the RCT specified in SP800-90B section 4.4.1. Instead of
+> >    counting identical back-to-back values, the input to the RCT is the
+> >    counting of the stuck values during the processing of received
+> >    interrupt events. The RCT is applied with alpha=3D2^-30 compliant to
+> >    the recommendation of FIPS 140-2 IG 9.8. During the counting operati=
+on,
+> >    the LRNG always calculates the RCT cut-off value of C. If that value
+> >    exceeds the allowed cut-off value, the LRNG will trigger the health
+> >    test failure discussed below. An error is logged to the kernel log
+> >    that such RCT failure occurred. This test is only applied and
+> >    enforced in FIPS mode, i.e. when the kernel compiled with
+> >    CONFIG_CONFIG_FIPS is started with fips=3D1.
+> >=20
+> > - SP800-90B Adaptive Proportion Test (APT): The LRNG implements the
+> >=20
+> >    APT as defined in SP800-90B section 4.4.2. The assumed
+>=20
+> The sentence ends in the middle.
 
-could run concurrently.  Note that return code for huge_pmd_unshare is
-specified as,
+=46ixed:
 
- * returns: 1 successfully unmapped a shared pte page
- *          0 the underlying pte page is not shared, or it is the last user
+"""
+SP800-90B Adaptive Proportion Test (APT): The LRNG implements the
+  APT as defined in SP800-90B section 4.4.2. The applied significance
+  level again is alpha=3D2^-30 compliant to the recommendation of FIPS=20
+  140-2 IG 9.8.
+"""
 
-And, callers take different action depending on the return value.
+>=20
+> > The aforementioned health tests are applied to the first 1,024 time sta=
+mps
+> > obtained from interrupt events. In case one error is identified for eit=
+her
+> > the RCT, or the APT, the collected entropy is invalidated and the
+> > SP800-90B startup health test is restarted.
+> >=20
+> > As long as the SP800-90B startup health test is not completed, all LRNG
+> > random number output interfaces that may block will block and not gener=
+ate
+> > any data. This implies that only those potentially blocking interfaces =
+are
+> > defined to provide random numbers that are seeded with the interrupt no=
+ise
+> > source being SP800-90B compliant. All other output interfaces will not =
+be
+> > affected by the SP800-90B startup test and thus are not considered
+> > SP800-90B compliant.
+> >=20
+> > At runtime, the SP800-90B APT and RCT are applied to each time stamp
+> > generated for a received interrupt. When either the APT and RCT indicat=
+es
+> > a noise source failure, the LRNG is reset to a state it has immediately
+> > after boot:
+> >=20
+> > - all entropy counters are set to zero
+> >=20
+> > - the SP800-90B startup tests are re-performed which implies that
+> > getrandom(2) would block again until new entropy was collected
+> >=20
+> > To summarize, the following rules apply:
+> >=20
+> > =E2=80=A2 SP800-90B compliant output interfaces
+> >=20
+> >    - /dev/random
+> >   =20
+> >    - getrandom(2) system call
+> >   =20
+> >    -  get_random_bytes kernel-internal interface when being triggered by
+> >   =20
+> >       the callback registered with add_random_ready_callback
+> >=20
+> > =E2=80=A2 SP800-90B non-compliant output interfaces
+> >=20
+> >    - /dev/urandom
+> >   =20
+> >    - get_random_bytes kernel-internal interface called directly
+> >   =20
+> >    - randomize_page kernel-internal interface
+> >   =20
+> >    - get_random_u32 and get_random_u64 kernel-internal interfaces
+> >   =20
+> >    - get_random_u32_wait, get_random_u64_wait, get_random_int_wait, and
+> >   =20
+> >      get_random_long_wait kernel-internal interfaces
+> >=20
+> > If either the RCT, or the APT health test fails irrespective whether
+> >=20
+> > during initialization or runtime, the following actions occur:
+> >    1. The entropy of the entire entropy pool is invalidated.
+> >   =20
+> >    2. The primary and all secondary DRNGs are reset which imply that th=
+ey
+> >   =20
+> >       are treated as being not seeded and require a reseed during next
+> >       invocation.
+> >   =20
+> >    3. The SP800-90B startup health test are initiated with all
+> >   =20
+> >       implications of the startup tests. That implies that from that po=
+int
+> >       on, new events must be observed and its entropy must be inserted
+> >       into
+> >       the entropy pool before random numbers are calculated from the
+> >       entropy pool.
+> >=20
+> > Further details on the SP800-90B compliance and the availability of all
+> > test tools required to perform all tests mandated by SP800-90B are
+> > provided at [1].
+> >=20
+> > The entire health testing code is compile-time configurable.
+> >=20
+> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
+> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+> > CC: Willy Tarreau <w@1wt.eu>
+> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
+> > CC: Vito Caputo <vcaputo@pengaru.com>
+> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
+> > CC: Jan Kara <jack@suse.cz>
+> > CC: Ray Strode <rstrode@redhat.com>
+> > CC: William Jon McCann <mccann@jhu.edu>
+> > CC: zhangjs <zachary@baishancloud.com>
+> > CC: Andy Lutomirski <luto@kernel.org>
+> > CC: Florian Weimer <fweimer@redhat.com>
+> > CC: Lennart Poettering <mzxreary@0pointer.de>
+> > CC: Nicolai Stange <nstange@suse.de>
+> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+> > Tested-by: Roman Drahtm=C3=BCller <draht@schaltsekun.de>
+> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+> > Tested-by: Neil Horman <nhorman@redhat.com>
+> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
+> > ---
+> >=20
+> >   drivers/char/lrng/Kconfig       |  13 +
+> >   drivers/char/lrng/Makefile      |   1 +
+> >   drivers/char/lrng/lrng_health.c | 424 ++++++++++++++++++++++++++++++++
+> >   3 files changed, 438 insertions(+)
+> >   create mode 100644 drivers/char/lrng/lrng_health.c
+> >=20
+> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+> > index efc5f9aaa2a3..4373a1a19538 100644
+> > --- a/drivers/char/lrng/Kconfig
+> > +++ b/drivers/char/lrng/Kconfig
+> > @@ -113,4 +113,17 @@ config LRNG_TRNG_SUPPORT
+> >=20
+> >   	  With the TRNG support the /dev/random device will block
+> >   	  if insufficient entropy is available.
+> >=20
+> > +config LRNG_HEALTH_TESTS
+> > +	bool "Enable noise source online health tests"
+> > +	help
+> > +	  The online health tests validate the noise source at
+> > +	  runtime for fatal errors. These tests include SP800-90B
+> > +	  compliant tests which are invoked if the system is booted
+> > +	  with fips=3D1. In case of fatal errors during active
+> > +	  SP800-90B tests, the issue is logged and the noise
+> > +	  data is discarded. These tests are required for full
+> > +	  compliance with SP800-90B.
+>=20
+> How have you tested that these tests work at runtime? Maybe add some
+> code under a new CONFIG item that depends on CONFIG_BROKEN that
+> deliberately botches the RNG and triggers failures?
 
-Now, since the code blocks above can run concurrently it is possible that:
-- huge_pmd_unshare sees page_count == 1
-- huge_pmd_share increments page_count in anticipation of sharing
-- huge_pmd_unshare returns 0 indicating there is no pmd sharing
-- huge_pmd_share waits for page table lock to insert pmd page before it
-  sharts sharing
+I manually broke it for testing as follows: I set the LRNG_APT_CUTOFF to 1 =
+to=20
+trigger the APT failure and I changed the line=20
 
-My concern was with what might happen if a huge_pmd_unshare caller received
-a 0 return code and thought there were no other users of the pmd.  In the
-specific case mentioned here (try_to_unmap_one) I now do not believe there
-are any issues.  The caller is simply going to clear one entry on the pmd
-page.  I can not think of a way this could impact the other thread waiting
-to share the pmd.  It will simply start sharing the pmd after it gets the
-page table lock and the entry has been removed.
+if (rct_count >=3D 30) {
 
-As the result of your question, I went back and took a really close look
-at the code in question.  While that huge_pmd_share/huge_pmd_unshare code
-running concurrently does make me a bit nervous, I can not find any specific
-problem.  In addition, I ran a test causes this race for several hours
-without issue.
+to=20
 
-Sorry for the churn/second thoughts.  This code is subtle, and sometimes hard
-to understand.  IMO, Longman's patch (V2) can go forward, but please delete
-the following blob in the commit message from me:
+if (rct_count >=3D 1) {
 
-"Note that huge_pmd_share now increments the page count with the
- semaphore held just in read mode.  It is OK to do increments in
- parallel without synchronization.  However, we don't want anyone else
- changing the count while that check in huge_pmd_unshare is happening. 
- Hence, the need for taking the semaphore in write mode."
+which effectively sets the RCT cutoff value to 1.
 
--- 
-Mike Kravetz
+Allow me to check how CONFIG_BROKEN really works to see how I can roll this=
+=20
+test into CONFIG_BROKEN.
+
+Thank you very much for your review.
+
+
+>=20
+> > +
+> > +	  If unsure, say Y.
+> > +
+> >=20
+> >   endif # LRNG
+> >=20
+> > diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
+> > index 1c72bc060bce..0713e9c0aa6e 100644
+> > --- a/drivers/char/lrng/Makefile
+> > +++ b/drivers/char/lrng/Makefile
+> > @@ -15,3 +15,4 @@ obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
+> >=20
+> >   obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
+> >   obj-$(CONFIG_LRNG_JENT)		+=3D lrng_jent.o
+> >   obj-$(CONFIG_LRNG_TRNG_SUPPORT)	+=3D lrng_trng.o
+> >=20
+> > +obj-$(CONFIG_LRNG_HEALTH_TESTS)	+=3D lrng_health.o
+> > diff --git a/drivers/char/lrng/lrng_health.c
+> > b/drivers/char/lrng/lrng_health.c new file mode 100644
+> > index 000000000000..b8d96cec1f71
+> > --- /dev/null
+> > +++ b/drivers/char/lrng/lrng_health.c
+> > @@ -0,0 +1,424 @@
+> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > +/*
+> > + * Linux Random Number Generator (LRNG) Health Testing
+> > + *
+> > + * Copyright (C) 2019, Stephan Mueller <smueller@chronox.de>
+> > + *
+> > + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> > + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+> > + * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ALL OF
+> > + * WHICH ARE HEREBY DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE
+> > + * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+> > + * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+> > + * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+> > + * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+> > + * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> > + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+> > + * USE OF THIS SOFTWARE, EVEN IF NOT ADVISED OF THE POSSIBILITY OF SUCH
+> > + * DAMAGE.
+> > + */
+> > +
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/fips.h>
+> > +#include <linux/module.h>
+> > +
+> > +#include "lrng_internal.h"
+> > +
+> > +/* Stuck Test */
+> > +struct lrng_stuck_test {
+> > +	u32 last_time;		/* Stuck test: time of previous IRQ */
+> > +	u32 last_delta;		/* Stuck test: delta of previous IRQ */
+> > +	u32 last_delta2;	/* Stuck test: 2. time derivation of prev IRQ */
+> > +};
+> > +
+> > +/* Repetition Count Test */
+> > +struct lrng_rct {
+> > +	atomic_t rct_count;	/* Number of stuck values */
+> > +};
+> > +
+> > +/* Adaptive Proportion Test */
+> > +struct lrng_apt {
+> > +	/* Taken from SP800-90B sec 4.4.2 - significance level 2^-30 */
+> > +#define LRNG_APT_CUTOFF		325
+> > +	/* Data window size */
+> > +#define LRNG_APT_WINDOW_SIZE	512
+> > +	/* LSB of time stamp to process */
+> > +#define LRNG_APT_LSB		16
+> > +#define LRNG_APT_WORD_MASK	(LRNG_APT_LSB - 1)
+> > +	atomic_t apt_count;		/* APT counter */
+> > +	atomic_t apt_base;		/* APT base reference */
+> > +
+> > +	atomic_t apt_trigger;
+> > +	bool apt_base_set;	/* Is APT base set? */
+> > +};
+> > +
+> > +/* The health test code must operate lock-less */
+> > +struct lrng_health {
+> > +	struct lrng_rct rct;
+> > +	struct lrng_apt apt;
+> > +
+> > +	bool health_test_enabled;
+> > +
+> > +	/* SP800-90B startup health tests */
+> > +#define LRNG_SP80090B_STARTUP_SAMPLES  1024
+> > +#define LRNG_SP80090B_STARTUP_BLOCKS   ((LRNG_SP80090B_STARTUP_SAMPLES=
+ +
+> > \
+> > +					 LRNG_APT_WINDOW_SIZE - 1) /    \
+> > +					LRNG_APT_WINDOW_SIZE)
+> > +	bool sp80090b_startup_done;
+> > +	atomic_t sp80090b_startup_blocks;
+> > +};
+> > +
+> > +static struct lrng_health lrng_health =3D {
+> > +	.rct.rct_count =3D ATOMIC_INIT(0),
+> > +
+> > +	.apt.apt_count =3D ATOMIC_INIT(0),
+> > +	.apt.apt_base =3D ATOMIC_INIT(-1),
+> > +	.apt.apt_trigger =3D ATOMIC_INIT(LRNG_APT_WINDOW_SIZE),
+> > +	.apt.apt_base_set =3D false,
+> > +
+> > +	.health_test_enabled =3D true,
+> > +
+> > +	.sp80090b_startup_blocks =3D ATOMIC_INIT(LRNG_SP80090B_STARTUP_BLOCKS=
+),
+> > +	.sp80090b_startup_done =3D false,
+> > +};
+> > +
+> > +static DEFINE_PER_CPU(struct lrng_stuck_test, lrng_stuck_test);
+> > +
+> > +static inline bool lrng_sp80090b_health_requested(void)
+> > +{
+> > +	/* Health tests are only requested in FIPS mode */
+> > +	return fips_enabled;
+> > +}
+> > +
+> > +static inline bool lrng_sp80090b_health_enabled(void)
+> > +{
+> > +	struct lrng_health *health =3D &lrng_health;
+> > +
+> > +	return lrng_sp80090b_health_requested() && health->health_test_enable=
+d;
+> > +}
+> > +
+> > +/*********************************************************************=
+***
+> > *** + * SP800-90B Compliance
+> > + *
+> > + * If the Linux-RNG is booted into FIPS mode, the following interfaces
+> > + * provide an SP800-90B compliant noise source:
+> > + *
+> > + * * /dev/random
+> > + * * getrandom(2)
+> > + * * get_random_bytes when using it in conjunction with
+> > + *   add_random_ready_callback
+> > + *
+> > + * All other interfaces, including /dev/urandom or get_random_bytes
+> > without + * the add_random_ready_callback cannot claim to use an
+> > SP800-90B compliant + * noise source.
+> > +
+> > ***********************************************************************=
+**
+> > **/ +
+> > +/**
+> > + * Perform SP800-90B startup testing
+> > + */
+> > +static inline void lrng_sp80090b_startup(struct lrng_health *health)
+> > +{
+> > +	if (!health->sp80090b_startup_done &&
+> > +	    atomic_dec_and_test(&health->sp80090b_startup_blocks)) {
+> > +		health->sp80090b_startup_done =3D true;
+> > +		pr_info("SP800-90B startup health tests completed\n");
+> > +		lrng_init_ops(0);
+> > +
+> > +		/*
+> > +		 * Force a reseed of secondary DRNGs to ensure they are
+> > +		 * seeded with entropy that passed the SP800-90B health tests.
+> > +		 * As the primary DRNG always will reseed before generating
+> > +		 * random numbers, it does not need a reseed trigger.
+> > +		 */
+> > +		lrng_sdrng_force_reseed();
+> > +	}
+> > +}
+> > +
+> > +/**
+> > + * Handle failure of SP800-90B startup testing
+> > + */
+> > +static inline void lrng_sp80090b_startup_failure(struct lrng_health
+> > *health) +{
+> > +	/* Reset of LRNG and its entropy - NOTE: we are in atomic context */
+> > +	lrng_reset();
+> > +
+> > +	/*
+> > +	 * Reset the SP800-90B startup test.
+> > +	 *
+> > +	 * NOTE SP800-90B section 4.3 bullet 4 does not specify what
+> > +	 * exactly is to be done in case of failure! Thus, we do what
+> > +	 * makes sense, i.e. restarting the health test and thus gating
+> > +	 * the output function of /dev/random and getrandom(2).
+> > +	 */
+> > +	atomic_set(&health->sp80090b_startup_blocks,
+> > +		   LRNG_SP80090B_STARTUP_BLOCKS);
+> > +}
+> > +
+> > +/**
+> > + * Handle failure of SP800-90B runtime testing
+> > + */
+> > +static inline void lrng_sp80090b_runtime_failure(struct lrng_health
+> > *health) +{
+> > +	lrng_sp80090b_startup_failure(health);
+> > +	health->sp80090b_startup_done =3D false;
+> > +}
+> > +
+> > +static inline void lrng_sp80090b_failure(struct lrng_health *health)
+> > +{
+> > +	if (health->sp80090b_startup_done) {
+> > +		pr_err("SP800-90B runtime health test failure - invalidating "
+> > +		       "all existing entropy and initiate SP800-90B startup\n");
+> > +		lrng_sp80090b_runtime_failure(health);
+> > +	} else {
+> > +		pr_err("SP800-90B startup test failure - resetting\n");
+> > +		lrng_sp80090b_startup_failure(health);
+> > +	}
+> > +}
+> > +
+> > +/**
+> > + * Is the SP800-90B startup testing complete?
+> > + *
+> > + * This function is called by the LRNG to determine whether to unblock
+> > + * a certain user interface. Therefore, only the potentially blocking
+> > + * user interfaces are considered SP800-90B compliant.
+> > + */
+> > +bool lrng_sp80090b_startup_complete(void)
+> > +{
+> > +	struct lrng_health *health =3D &lrng_health;
+> > +
+> > +	return (lrng_sp80090b_health_enabled()) ? health->sp80090b_startup_do=
+ne:
+> > +						  true;
+> > +}
+> > +
+> > +bool lrng_sp80090b_compliant(void)
+> > +{
+> > +	struct lrng_health *health =3D &lrng_health;
+> > +
+> > +	return lrng_sp80090b_health_enabled() && health->sp80090b_startup_don=
+e;
+> > +}
+> > +
+> > +/*********************************************************************=
+***
+> > *** + * Adaptive Proportion Test
+> > + *
+> > + * This test complies with SP800-90B section 4.4.2.
+> > +
+> > ***********************************************************************=
+**
+> > **/ +
+> > +/**
+> > + * Reset the APT counter
+> > + *
+> > + * @health [in] Reference to health state
+> > + */
+> > +static inline void lrng_apt_reset(struct lrng_health *health,
+> > +				  unsigned int time_masked)
+> > +{
+> > +	struct lrng_apt *apt =3D &health->apt;
+> > +
+> > +	pr_debug("APT value %d for base %d\n",
+> > +		 atomic_read(&apt->apt_count), atomic_read(&apt->apt_base));
+> > +
+> > +	/* Reset APT */
+> > +	atomic_set(&apt->apt_count, 0);
+> > +	atomic_set(&apt->apt_base, time_masked);
+> > +}
+> > +
+> > +static inline void lrng_apt_restart(struct lrng_health *health)
+> > +{
+> > +	struct lrng_apt *apt =3D &health->apt;
+> > +
+> > +	atomic_set(&apt->apt_trigger, LRNG_APT_WINDOW_SIZE);
+> > +}
+> > +
+> > +/**
+> > + * Insert a new entropy event into APT
+> > + *
+> > + * This function does is void as it does not decide about the fate of a
+> > time + * stamp. An APT failure can only happen at the same time of a
+> > stuck test + * failure. Thus, the stuck failure will already decide how
+> > the time stamp + * is handled.
+> > + *
+> > + * @health [in] Reference to health state
+> > + * @now_time [in] Time stamp to process
+> > + */
+> > +static inline void lrng_apt_insert(struct lrng_health *health,
+> > +				   unsigned int now_time)
+> > +{
+> > +	struct lrng_apt *apt =3D &health->apt;
+> > +
+> > +	if (!lrng_sp80090b_health_requested())
+> > +		return;
+> > +
+> > +	now_time &=3D LRNG_APT_WORD_MASK;
+> > +
+> > +	/* Initialization of APT */
+> > +	if (!apt->apt_base_set) {
+> > +		atomic_set(&apt->apt_base, now_time);
+> > +		apt->apt_base_set =3D true;
+> > +		return;
+> > +	}
+> > +
+> > +	if (now_time =3D=3D (unsigned int)atomic_read(&apt->apt_base)) {
+> > +		u32 apt_val =3D (u32)atomic_inc_return_relaxed(&apt->apt_count);
+> > +
+> > +		if (apt_val >=3D LRNG_APT_CUTOFF)
+> > +			lrng_sp80090b_failure(health);
+> > +	}
+> > +
+> > +	if (atomic_dec_and_test(&apt->apt_trigger)) {
+> > +		lrng_apt_restart(health);
+> > +		lrng_apt_reset(health, now_time);
+> > +		lrng_sp80090b_startup(health);
+> > +	}
+> > +}
+> > +
+> > +/*********************************************************************=
+***
+> > *** + * Repetition Count Test
+> > + *
+> > + * The LRNG uses an enhanced version of the Repetition Count Test
+> > + * (RCT) specified in SP800-90B section 4.4.1. Instead of counting
+> > identical + * back-to-back values, the input to the RCT is the counting
+> > of the stuck + * values while filling the entropy pool.
+> > + *
+> > + * The RCT is applied with an alpha of 2^-30 compliant to FIPS 140-2 IG
+> > 9.8. + *
+> > + * During the counting operation, the LRNG always calculates the RCT
+> > + * cut-off value of C. If that value exceeds the allowed cut-off value,
+> > + * the LRNG will invalidate all entropy for the entropy pool which
+> > implies
+> > + * that no data can be extracted from the entropy pool unless new entr=
+opy
+> > + * is received.
+> > +
+> > ***********************************************************************=
+**
+> > **/ +
+> > +/**
+> > + * Hot code path - Insert data for Repetition Count Test
+> > + *
+> > + * @health: Reference to health information
+> > + * @stuck: Decision of stuck test
+> > + */
+> > +static inline void lrng_rct(struct lrng_health *health, int stuck)
+> > +{
+> > +	struct lrng_rct *rct =3D &health->rct;
+> > +
+> > +	if (!lrng_sp80090b_health_requested())
+> > +		return;
+> > +
+> > +	if (stuck) {
+> > +		u32 rct_count =3D atomic_add_return_relaxed(1, &rct->rct_count);
+> > +
+> > +		pr_debug("RCT count: %u\n", rct_count);
+> > +
+> > +		/*
+> > +		 * The cutoff value is based on the following consideration:
+> > +		 * alpha =3D 2^-30 as recommended in FIPS 140-2 IG 9.8.
+> > +		 * In addition, we imply an entropy value H of 1 bit as this
+> > +		 * is the minimum entropy required to provide full entropy.
+> > +		 *
+> > +		 * Note, rct_count (which equals to value B in the
+> > +		 * pseudo code of SP800-90B section 4.4.1) starts with zero.
+> > +		 * Hence we need to subtract one from the cutoff value as
+> > +		 * calculated following SP800-90B.
+> > +		 */
+> > +		if (rct_count >=3D 30) {
+> > +			atomic_set(&rct->rct_count, 0);
+> > +
+> > +			/*
+> > +			 * APT must start anew as we consider all previously
+> > +			 * recorded data to contain no entropy.
+> > +			 */
+> > +			lrng_apt_restart(health);
+> > +
+> > +			lrng_sp80090b_failure(health);
+> > +		}
+> > +	} else {
+> > +		atomic_set(&rct->rct_count, 0);
+> > +	}
+> > +}
+> > +
+> > +/*********************************************************************=
+***
+> > *** + * Stuck Test
+> > + *
+> > + * Checking the:
+> > + *      1st derivative of the event occurrence (time delta)
+> > + *      2nd derivative of the event occurrence (delta of time deltas)
+> > + *      3rd derivative of the event occurrence (delta of delta of time
+> > deltas) + *
+> > + * All values must always be non-zero. The stuck test is only valid
+> > disabled if + * high-resolution time stamps are identified after
+> > initialization. +
+> > ***********************************************************************=
+**
+> > **/ +
+> > +static inline u32 lrng_delta(u32 prev, u32 next)
+> > +{
+> > +	/*
+> > +	 * Note that this (unsigned) subtraction does yield the correct value
+> > +	 * in the wraparound-case, i.e. when next < prev.
+> > +	 */
+> > +	return (next - prev);
+> > +}
+> > +
+> > +/**
+> > + * Hot code path
+> > + *
+> > + * @health: Reference to health information
+> > + * @now: Event time
+> > + * @return: 0 event occurrence not stuck (good time stamp)
+> > + *	    !=3D 0 event occurrence stuck (reject time stamp)
+> > + */
+> > +static inline int lrng_irq_stuck(struct lrng_stuck_test *stuck, u32
+> > now_time) +{
+> > +	u32 delta =3D lrng_delta(stuck->last_time, now_time);
+> > +	u32 delta2 =3D lrng_delta(stuck->last_delta, delta);
+> > +	u32 delta3 =3D lrng_delta(stuck->last_delta2, delta2);
+> > +
+> > +	stuck->last_time =3D now_time;
+> > +	stuck->last_delta =3D delta;
+> > +	stuck->last_delta2 =3D delta2;
+> > +
+> > +	if (!delta || !delta2 || !delta3)
+> > +		return 1;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/*********************************************************************=
+***
+> > *** + * Health test interfaces
+> > +
+> > ***********************************************************************=
+**
+> > **/ +
+> > +/**
+> > + * Disable all health tests
+> > + */
+> > +void lrng_health_disable(void)
+> > +{
+> > +	struct lrng_health *health =3D &lrng_health;
+> > +
+> > +	health->health_test_enabled =3D false;
+> > +
+> > +	if (lrng_sp80090b_health_requested())
+> > +		pr_warn("SP800-90B compliance requested but the Linux RNG is "
+> > +			"NOT SP800-90B compliant\n");
+> > +}
+> > +
+> > +/**
+> > + * Hot code path - Perform health test on time stamp received from an
+> > event + *
+> > + * @now_time Time stap
+> > + */
+> > +enum lrng_health_res lrng_health_test(u32 now_time)
+> > +{
+> > +	struct lrng_health *health =3D &lrng_health;
+> > +	struct lrng_stuck_test *stuck_test =3D this_cpu_ptr(&lrng_stuck_test);
+> > +	int stuck;
+> > +
+> > +	if (!health->health_test_enabled)
+> > +		return lrng_health_pass;
+> > +
+> > +	lrng_apt_insert(health, now_time);
+> > +
+> > +	stuck =3D lrng_irq_stuck(stuck_test, now_time);
+> > +	lrng_rct(health, stuck);
+> > +	if (stuck) {
+> > +		/* SP800-90B disallows using a failing health test time stamp */
+> > +		return lrng_sp80090b_health_requested() ?
+> > +			lrng_health_fail_drop : lrng_health_fail_use;
+> > +	}
+> > +
+> > +	return lrng_health_pass;
+> > +}
+
+
+Ciao
+Stephan
+
+
