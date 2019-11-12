@@ -2,145 +2,130 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF96C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05E6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817ED2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:53:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQ4Ak+XU"
+	by mail.kernel.org (Postfix) with ESMTP id A27DB2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfKLNxx (ORCPT
+        id S1727412AbfKLNyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:53:53 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42017 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfKLNxx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:53:53 -0500
-Received: by mail-ed1-f67.google.com with SMTP id m13so14941196edv.9;
-        Tue, 12 Nov 2019 05:53:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pQcGXYOeHlLTHcZ1lo51qxyI9wQahbjQK0BQrlXS5rU=;
-        b=ZQ4Ak+XUWpy6tCuJD8hjc5ZamO4lhS0gHReMpryPLOnorvowq4WXgrXPFvbyx/CCVg
-         5Mv96LC4nLigaGD0ucmXb9/TCE/P7SzkMve/9RNYrcKx+ZtjQygIWfkCCb46IoiVLYaJ
-         YheIG1ASMlRffDXyNQKIBFT6nGxc6PoIEVGO+WUr+cERECFDJsWbahMbIdJdttyw4pm7
-         unBgDhkYDia6QBzqucjF6cX1FTf4kL6T/PjTZ37/cF/5dyscjmLUEG9xkYgIYGeOlT05
-         bH6dCQVafBowD49kPxUUU1l5R/PZ10fYU75NLP+JwO1BUUV/FoOoSn/METjMmfDeQ3cA
-         L+bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pQcGXYOeHlLTHcZ1lo51qxyI9wQahbjQK0BQrlXS5rU=;
-        b=p72NZFABvlQikJaorIcQdIjsu4u0VYo2/7SpZFhuSORUkChkIC+aOjhhjwmTemDhuC
-         YxiJpS+9rpyY5s57s+wRPWWWgNRSty0fUvOv3XeIWGLU6CVgCLAqgp7DtfUuATmYJoc1
-         IQV0PD2r+WXid5A4p7e0Uyr2FiGhG1OrGLGQ8yEhK/UhGgrbrCnN+g7r2wLEXJsvpidh
-         6YNWYJ3+fvL5MQu9PYaRtw3k/sfBUmMFv3e8LK2frKMpp66vO9omjRPuYdFuGoYXQfbK
-         /HJbdEMaoy0w2z4MfYqRDqo/IMEwnC5Sf7z/GyGVpugtjEjkF2xfiT/yo4iifgBHcj+2
-         ZwHw==
-X-Gm-Message-State: APjAAAXI637A7iAScItnoH5t9mSLD5tbpkyHwWkXTEh8JGC1yC4g1gbz
-        pKRPtqpcIo8Bg03J2UTf0aQOEZp8/dKS6TqnXPw=
-X-Google-Smtp-Source: APXvYqxO+WXiBJcbRCoMLP1h3kWtN5lV2SPbs9qh6z3L3L/q4O6fs+gNTF9PRsVm3lEi6KFhnXmie4NP8OeBlrchtgQ=
-X-Received: by 2002:a50:c408:: with SMTP id v8mr32855306edf.140.1573566831102;
- Tue, 12 Nov 2019 05:53:51 -0800 (PST)
+        Tue, 12 Nov 2019 08:54:47 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2087 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726995AbfKLNyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 08:54:47 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A72B5DAB565C0B5EEC3C;
+        Tue, 12 Nov 2019 13:54:45 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 12 Nov 2019 13:54:45 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 12 Nov
+ 2019 13:54:45 +0000
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 6/6] scsi: hisi_sas: Expose multiple hw queues for v3 as
+ experimental
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <hare@suse.com>,
+        chenxiang <chenxiang66@hisilicon.com>
+References: <1571926881-75524-1-git-send-email-john.garry@huawei.com>
+ <1571926881-75524-7-git-send-email-john.garry@huawei.com>
+ <20191027081910.GB16704@ming.t460p>
+ <bd3b09f7-4a51-7cec-49c4-8e2eab3bdfd0@huawei.com>
+ <20191112111053.GA31697@ming.t460p>
+Message-ID: <a8a83145-9498-9ed6-0510-5d51eda22f54@huawei.com>
+Date:   Tue, 12 Nov 2019 13:54:44 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
- <20191112132010.18274-3-linux@rasmusvillemoes.dk> <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
- <6d4292fcb0cf290837306388bdfe9b0f@www.loen.fr>
-In-Reply-To: <6d4292fcb0cf290837306388bdfe9b0f@www.loen.fr>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 12 Nov 2019 15:53:40 +0200
-Message-ID: <CA+h21hpE-Nu_Sh1fRizUoEs082ev=9nzuumSXDrk-QTXdnEbzg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191112111053.GA31697@ming.t460p>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 15:49, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2019-11-12 14:53, Vladimir Oltean wrote:
-> > On Tue, 12 Nov 2019 at 15:20, Rasmus Villemoes
-> > <linux@rasmusvillemoes.dk> wrote:
-> >>
-> >> From: Vladimir Oltean <olteanv@gmail.com>
-> >>
-> >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and
-> >> eth1
-> >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
-> >>
-> >> Switching to interrupts offloads the PHY library from the task of
-> >> polling the MDIO status and AN registers (1, 4, 5) every second.
-> >>
-> >> Unfortunately, the BCM5464R quad PHY connected to the switch does
-> >> not
-> >> appear to have an interrupt line routed to the SoC.
-> >>
-> >> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> >> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> >> ---
-> >>  arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
-> >>  1 file changed, 4 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> b/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> index 5b7689094b70..135d36461af4 100644
-> >> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> @@ -203,11 +203,15 @@
-> >>         /* AR8031 */
-> >>         sgmii_phy1: ethernet-phy@1 {
-> >>                 reg = <0x1>;
-> >> +               /* SGMII1_PHY_INT_B: connected to IRQ2, active low
-> >> */
-> >> +               interrupts-extended = <&extirq 2
-> >> IRQ_TYPE_EDGE_FALLING>;
-> >>         };
-> >>
-> >>         /* AR8031 */
-> >>         sgmii_phy2: ethernet-phy@2 {
-> >>                 reg = <0x2>;
-> >> +               /* SGMII2_PHY_INT_B: connected to IRQ2, active low
-> >> */
-> >> +               interrupts-extended = <&extirq 2
-> >> IRQ_TYPE_EDGE_FALLING>;
-> >>         };
-> >>
-> >>         /* BCM5464 quad PHY */
-> >> --
-> >> 2.23.0
-> >>
-> >
-> > +netdev and Andrew for this patch, since the interrupt polarity
-> > caught
-> > his attention in v1.
->
-> Certainly, the comments and the interrupt specifier do not match.
-> Which one is true?
->
->          M.
-> --
-> Jazz is not dead. It just smells funny...
+>>
+>> I mentioned in the thread "blk-mq: improvement on handling IO during CPU
+>> hotplug" that I was using this series to test that patchset.
+>>
+>> So just with this patchset (and without yours), I get what looks like some
+>> IO errors in the LLDD. The error is an underflow error. I can't figure out
+>> what is the cause.
+> 
 
-The interrupt specifier certainly works. So that points to an issue
-with the description. What do you mean, exactly? Does "active low"
-mean "level-triggered"? How would you have described this?
+Hi Ming,
+
+> Can you post the error log? Or interpret the 'underflow error' from hisi
+> sas or scsi viewpoint?
+
+The check here fails:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/libsas/sas_scsi_host.c?h=v5.4-rc7#n57
+
+Indeed, no data is received.
+
+> 
+>>
+>> I'm wondering if the SCSI command is getting corrupted someway.
+> 
+> Why do you think the command is corrupted?
+
+I considered that the underflow may occur if we were to clobber a SCSI 
+command/request from another hctx and zero some fields, which is 
+detected as an underflow. But that's just guessing.
+
+However do I find if I set shost->can_queue = HISI_SAS_MAX_COMMANDS / 
+#queues, then no issue. But maybe that's a coincidence. For this, total 
+queue depth = HISI_SAS_MAX_COMMANDS. I don't see the impact of that.
+
+I need to test that more.
+
+> 
+>>
+>>>> +	if (expose_mq_experimental) {
+>>>> +		shost->can_queue = HISI_SAS_MAX_COMMANDS;
+>>>> +		shost->cmd_per_lun = HISI_SAS_MAX_COMMANDS;
+>>> The above is contradictory with current 'nr_hw_queues''s meaning,
+>>> see commit on Scsi_Host.nr_hw_queues.
+>>>
+>>
+>> Right, so I am generating the hostwide tag in the LLDD. And the Scsi
+>> host-wide host_busy counter should ensure that we don't pump too much IO to
+>> the HBA.
+> 
+> Even without the host-wide host_busy, your approach should work if you
+> build the hisi sas tag correctly(uniquely), just not efficiently.
+
+Yes, I do that.
+
+  I'd
+> suggest you to collect trace and observe if request with expected hisi sas
+> tag is sent to hardware.
+> 
+
+I can add some debug for that. What trace do you mean?
+
+> BTW, the patch of 'scsi: core: avoid host-wide host_busy counter for scsi_mq'
+> will be merged to v5.5 if everything is fine.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=5.5/scsi-queue&id=6eb045e092efefafc6687409a6fa6d1dabf0fb69
+
+Yeah, it seems a good change.
+
+Thanks,
+John
