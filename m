@@ -2,146 +2,142 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5BDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E91C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A625A21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:00:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ZQNd+lcn"
+	by mail.kernel.org (Postfix) with ESMTP id 0120721A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573581643;
+	bh=e9/F3/UN1c96zIp1MBv7wevLhUbEOyNc7RWCS22mtPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2NgvMghRYvL5qleK2ie9agXhLpsO0u4LqGv/7C76+05n5tBMxKgRY33TbfJ216YTD
+	 Tb4nSrkcxWv+ICCGvnRj/BHmYFTUcETuZdCeo0ZCIECP6yxy7ZKvU8w2n8wAkGoB9X
+	 GZVHv5a2AVxlOGq5lmraADljrlPJ1DroxL7FAsJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfKLSAX (ORCPT
+        id S1727296AbfKLSAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:00:23 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46679 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727216AbfKLSAW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:00:22 -0500
-Received: by mail-qk1-f196.google.com with SMTP id h15so15223453qka.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:00:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=06+tOajz4B6gePUoYXEIPar3gvZ/gJqmbgnyOgTIPAU=;
-        b=ZQNd+lcnkEIXb4CIVCUUvF0shtw2ailj89aCGb0NVz9uUKnnUYfYju6n2m5EPh9upa
-         xxaH1JcRBZS05oi4qgAdE9Vtn1wbsYAsKC91Sa6KV3uU4jVyzCQ3msh6LHd8K20oyOX0
-         b17taRXMabKP1dKvpzPw8zj8rrahWqzoza8Hhs5SxQ9/qffyLciJXEv3mXIZGv7LIsyy
-         4ZR8FFIzTj7jW98nE7yYeYihDbvKD1xx5IxxVB2F/h2kqtc+KomQ916B3tFlQqQWbqF6
-         4k2QurV0KK7G4oJIbvG/LBxRoivl/07+p7Hc0GGnYJ5zip5Xet/r7DWNRmncK6lJF+MA
-         WGOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=06+tOajz4B6gePUoYXEIPar3gvZ/gJqmbgnyOgTIPAU=;
-        b=pxzu1M6qh0ko/1EGEavFvJ+u+W/yGI/VqcWr0pyKQbkNkPjZk+4gF9Vjv4tGj2ZOBE
-         5VPOg4HXdQizsrPDuQCQkKC+7KfEIQlLbT3HCdzIiMjGm06ro6WhNGFsjRGiY8C4B+kh
-         pITZM4YPeBXAFKzfZFhKScmbxeSYTG3sB9mbeI6UkKMBL/XILYCXY94qhT/yDfx0NpEK
-         JfmenX9cUm+t7wrfXFRI52mEYbTAUCi4+M4LvOp20NDS7LylBDJ5jqUdg7YZdzdn8uFK
-         Yq4vMXjv3w59z+dHR9s4f66YFJzKm5uESl47Y10gsopdoHqT6GBb94qKL0CEfxcrd+Mh
-         5IDQ==
-X-Gm-Message-State: APjAAAXklDjdlm4HQcNhpvXKviXhXcM8gf/ohpqn4t986+GETycYR8oN
-        Knu6jzTIOn585DXRoiGpOml0Ew==
-X-Google-Smtp-Source: APXvYqxiYDIXtP651b4dXQUD1iQi7esDhbrkhOiZeP1WHRH8UaDSfzUtY9f7q2nHOmwq7dnCKDPp9Q==
-X-Received: by 2002:a37:a54c:: with SMTP id o73mr17251660qke.164.1573581621282;
-        Tue, 12 Nov 2019 10:00:21 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::aa8c])
-        by smtp.gmail.com with ESMTPSA id u22sm9769196qtb.59.2019.11.12.10.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 10:00:20 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:00:19 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
-        cgroups mailinglist <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Subject: Re: [PATCH 3/3] mm: vmscan: enforce inactive:active ratio at the
- reclaim root
-Message-ID: <20191112180019.GB178331@cmpxchg.org>
-References: <20191107205334.158354-1-hannes@cmpxchg.org>
- <20191107205334.158354-4-hannes@cmpxchg.org>
- <CAJuCfpHSTr8Vt+Tj-Hj4OBYHq1ucw7_B1VoVWKEHQVPHaMhUdA@mail.gmail.com>
+        Tue, 12 Nov 2019 13:00:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbfKLSAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:00:41 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0BD921925;
+        Tue, 12 Nov 2019 18:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573581640;
+        bh=e9/F3/UN1c96zIp1MBv7wevLhUbEOyNc7RWCS22mtPo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TyaJxT8EsksNIcJUeuG02hv5kg8mgIJYYse0Ik99HuSqsRv1YuuTPbF1c5VJ0bK//
+         nhIzIgrTk+bvIQS8OxCLjuaHq3Xdk7mm4ugKGfUcHF5kFpYHoQAo/S/UYWYC/UiWXt
+         xWEiAvRUOAZuUSY/hpD1kFJfwotpUj96CJthUd0w=
+Date:   Tue, 12 Nov 2019 18:00:35 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        torvalds@linux-foundation.org, axboe@kernel.dk,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vincent Whitchurch <rabinv@axis.com>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>
+Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
+ hazard
+Message-ID: <20191112180034.GB19889@willie-the-truck>
+References: <20191112130244.16630-1-vincent.whitchurch@axis.com>
+ <20191112160855.GA22025@arrakis.emea.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJuCfpHSTr8Vt+Tj-Hj4OBYHq1ucw7_B1VoVWKEHQVPHaMhUdA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191112160855.GA22025@arrakis.emea.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 06:15:50PM -0800, Suren Baghdasaryan wrote:
-> On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > @@ -2758,7 +2775,17 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-> >                         total_high_wmark += high_wmark_pages(zone);
-> >                 }
-> >
-> > -               sc->file_is_tiny = file + free <= total_high_wmark;
-> > +               /*
-> > +                * Consider anon: if that's low too, this isn't a
-> > +                * runaway file reclaim problem, but rather just
-> > +                * extreme pressure. Reclaim as per usual then.
-> > +                */
-> > +               anon = node_page_state(pgdat, NR_INACTIVE_ANON);
-> > +
-> > +               sc->file_is_tiny =
-> > +                       file + free <= total_high_wmark &&
-> > +                       !(sc->may_deactivate & DEACTIVATE_ANON) &&
-> > +                       anon >> sc->priority;
+On Tue, Nov 12, 2019 at 04:08:57PM +0000, Catalin Marinas wrote:
+> On Tue, Nov 12, 2019 at 02:02:44PM +0100, Vincent Whitchurch wrote:
+> > On my dual-core ARM Cortex-A9, reading from squashfs (over
+> > dm-verity/ubi/mtd) in a loop for hundreds of hours invariably results in
+> > a read failure in squashfs_read_data().  The errors occur because the
+> > buffer_uptodate() check fails after wait_on_buffer().  Further debugging
+> > shows that the bh was in fact uptodate and that there is no actual I/O
+> > error in the lower layers.
+> > 
+> > The problem is caused by the read-after-read hazards in the ARM
+> > Cortex-A9 MPCore (erratum #761319, see [1]).  The code generated by the
+> > compiler for the combination of the wait_on_buffer() and
+> > buffer_uptodate() calls reads the flags value twice from memory (see the
+> > excerpt of the assembly below).  The new value of the BH_Lock flag is
+> > seen but the new value of BH_Uptodate is not even though both the bits
+> > are read from the same memory location.
+> > 
+> >  27c:	9d08      	ldr	r5, [sp, #32]
+> >  27e:	2400      	movs	r4, #0
+> >  280:	e006      	b.n	290 <squashfs_read_data+0x290>
+> >  282:	6803      	ldr	r3, [r0, #0]
+> >  284:	07da      	lsls	r2, r3, #31
+> >  286:	f140 810d 	bpl.w	4a4 <squashfs_read_data+0x4a4>
+> >  28a:	3401      	adds	r4, #1
+> >  28c:	42bc      	cmp	r4, r7
+> >  28e:	da08      	bge.n	2a2 <squashfs_read_data+0x2a2>
+> >  290:	f855 0f04 	ldr.w	r0, [r5, #4]!
+> >  294:	6803      	ldr	r3, [r0, #0]
+> >  296:	0759      	lsls	r1, r3, #29
+> >  298:	d5f3      	bpl.n	282 <squashfs_read_data+0x282>
+> >  29a:	f7ff fffe 	bl	0 <__wait_on_buffer>
+> > 
+> > Work around this problem by adding a DMB between the two reads of
+> > bh->flags, as recommended in the ARM document.  With this barrier, no
+> > failures have been seen in more than 5000 hours of the same test.
+> > 
+> > [1] http://infocenter.arm.com/help/topic/com.arm.doc.uan0004a/UAN0004A_a9_read_read.pdf
 > 
-> The name of file_is_tiny flag seems to not correspond with its actual
-> semantics anymore. Maybe rename it into "skip_file"?
+> I thought we were going to fix the compiler. I found an old thread here:
+> 
+> https://gcc.gnu.org/ml/gcc-patches/2014-06/msg00714.html
+> 
+> Also cc'ing Richard Earnshaw as he may been involved in the gcc
+> discussion at the time.
+> 
+> While you can add some barrier here, there may be other cases where this
+> can go wrong.
 
-I'm not a fan of file_is_tiny, but I also don't like skip_file. IMO
-it's better to have it describe a situation instead of an action, in
-case we later want to take additional action for that situation.
+Hmm, and afaict, even if the compiler was modified to emit LDREX instructions
+for volatile loads, it wouldn't help in this case because test_bit() isn't
+using READ_ONCE().
 
-Any other ideas? ;)
+It's also slightly odd that the proposed patch makes the code look like:
 
-> I'm confused about why !(sc->may_deactivate & DEACTIVATE_ANON) should
-> be a prerequisite for skipping file LRU reclaim. IIUC this means we
-> will skip reclaiming from file LRU only when anonymous page
-> deactivation is not allowed. Could you please add a comment explaining
-> this?
+	for (i = 0; i < b; i++) {
+		if (buffer_locked(bh)) {
+			__wait_on_buffer(bh);
+			smp_rmb();
+		}
+		if (!buffer_uptodate(bh[i]))
+			goto block_release;
+	}
 
-The comment above this check tries to explain it: the definition of
-file being "tiny" is dependent on the availability of anon. It's a
-relative comparison.
+whereas there are other potential RAR orderings between buffer_locked()
+and __wait_on_buffer() and also probably between successive iterations
+of the loop.
 
-If file only has a few pages, and anon is easily reclaimable (does not
-require deactivation to reclaim pages), then file is "tiny" and we
-should go after the more plentiful anon pages.
+So, really, the only way I see to solve this is for us to use READ_ONCE
+consistently for all relaxed atomic loads (KCSAN is starting to tread on
+this), and then to patch READ_ONCE to emit a DMB at runtime for arch/arm/
+(maybe a static key would work if you can avoid the recursion).
 
-If anon is under duress, too, this preference doesn't make sense and
-we should just reclaim both lists equally, as per usual.
+I've already got patches at [1] to allow architectures to override
+READ_ONCE, because Alpha needs to do something similar.
 
-Note that I'm not introducing this constraint, I'm just changing how
-it's implemented. From the patch:
+Will
 
-> >         /*
-> >          * If the system is almost out of file pages, force-scan anon.
-> > -        * But only if there are enough inactive anonymous pages on
-> > -        * the LRU. Otherwise, the small LRU gets thrashed.
-> >          */
-> > -       if (sc->file_is_tiny &&
-> > -           !inactive_list_is_low(lruvec, false, sc, false) &&
-> > -           lruvec_lru_size(lruvec, LRU_INACTIVE_ANON,
-> > -                           sc->reclaim_idx) >> sc->priority) {
-> > +       if (sc->file_is_tiny) {
-> >                 scan_balance = SCAN_ANON;
-> >                 goto out;
-> >         }
-
-So it's always been checking whether reclaim would deactivate anon,
-and whether inactive_anon has sufficient pages for this priority.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=lto
