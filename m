@@ -2,69 +2,122 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80265C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89FDC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6309A222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA49222C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N/2bLdDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfKLOYI (ORCPT
+        id S1727519AbfKLOYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 12 Nov 2019 09:24:09 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38508 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727476AbfKLOYI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 09:24:08 -0500
-Received: from mga12.intel.com ([192.55.52.136]:55938 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKLOYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:24:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 06:24:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,296,1569308400"; 
-   d="scan'208";a="214091908"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 12 Nov 2019 06:24:03 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 12 Nov 2019 16:24:03 +0200
-Date:   Tue, 12 Nov 2019 16:24:02 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Message-ID: <20191112142402.GA34425@lahna.fi.intel.com>
-References: <PS2P216MB07554FF63C34AFBCE04BD55D80780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
- <20191112093953.GD2644@lahna.fi.intel.com>
- <PS2P216MB0755753A471700A4418008C880770@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEO3qh097838;
+        Tue, 12 Nov 2019 08:24:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573568643;
+        bh=tPqdhNixIKdQvbkA4FXOFaYElMurFZuh15DBk3awDgM=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=N/2bLdDUVGZPiJaNp65GX3W/6JnhNmB1w+ET6MJvSjVNWVxcr65dZc9+q6Fr+lecx
+         LaoWY/JHp+KzpbgqCbHT9u8dP6dl5fcxorOzJ0zcUS2eOWyk/ENTF8XNZdPdTRBYN1
+         l7AmeCmFjEHpINE/WUoyf49GjFKxSnCqT8UGK1dY=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEO3Sa018760
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 08:24:03 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 08:24:03 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 08:24:03 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACENwTk099408;
+        Tue, 12 Nov 2019 08:24:03 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 3/3] ARM: dts: dra7: Add ti-sysc node for VPE
+Date:   Tue, 12 Nov 2019 08:26:57 -0600
+Message-ID: <20191112142657.22898-4-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191112142657.22898-1-bparrot@ti.com>
+References: <20191112142657.22898-1-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PS2P216MB0755753A471700A4418008C880770@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 02:17:35PM +0000, Nicholas Johnson wrote:
-> > >  	if (!b_res)
-> > >  		return;
-> > 
-> > I think it may be good to comment here that skip the resources that are
-> > assigned (->parent != NULL).
-> 
-> Something like
-> 
-> /* If resource is already assigned, nothing more to do. */
+Add VPE node as a child of l4 interconnect in order for it to probe
+using ti-sysc.
 
-This one looks good to me.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ arch/arm/boot/dts/dra7-l4.dtsi | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index ea0e7c19eb4e..0917231a20e2 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -4158,12 +4158,34 @@
+ 			ranges = <0x0 0x1b0000 0x10000>;
+ 		};
+ 
+-		target-module@1d0000 {			/* 0x489d0000, ap 27 30.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++		target-module@1d0010 {			/* 0x489d0000, ap 27 30.0 */
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x1d0010 0x4>;
++			reg-names = "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&vpe_clkctrl DRA7_VPE_VPE_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x1d0000 0x10000>;
++
++			vpe: vpe@0 {
++				compatible = "ti,dra7-vpe";
++				reg = <0x0000 0x120>,
++				      <0x0700 0x80>,
++				      <0x5700 0x18>,
++				      <0xd000 0x400>;
++				reg-names = "vpe_top",
++					    "sc",
++					    "csc",
++					    "vpdma";
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 	};
+ };
+-- 
+2.17.1
+
