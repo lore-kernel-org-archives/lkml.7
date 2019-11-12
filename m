@@ -2,163 +2,143 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE76C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7818C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 023E521925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85216214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hq2cMG+U"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lCM49Wal";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RldbeMtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKLUm3 (ORCPT
+        id S1727119AbfKLUnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:42:29 -0500
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:46317 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfKLUm2 (ORCPT
+        Tue, 12 Nov 2019 15:43:20 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:39742 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfKLUnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:42:28 -0500
-Received: by mail-qk1-f201.google.com with SMTP id x186so11079222qke.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:42:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
-        bh=YXQx/W19DjRT45sudkGcownKnjElC/pkN1OhsIzM96I=;
-        b=hq2cMG+Uz05dfP/Fx2OKks757/JeqdQlDjyT1GANKrtXZxgcX/dwHrLtCbo2nf091s
-         vp72Z4yUGit3E53HyROAw7oK6rMU3b+NBm9EN24bTXOzxZlh/hj9Wobe800a6fwDKzvV
-         5+4SB0qmTSV2l0HoWmFfV28iRcuofohr3vLp9YGcdUf3Xf0T+YwwuoizwIVHYzDcT9v/
-         Lfxv+eaysYiuh+CUM1eAC9f9SO2h3C07FwAWlFwJU/bKj9KKJF7O5wtwt+z8WovnqXwI
-         ZgGNYc9Ny2NsXIgZcVjAVpMO5CCZH65ufzWAI2CZS7aKLSKSE3VeNGJwbPQX1N1CK5kn
-         xnlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:cc;
-        bh=YXQx/W19DjRT45sudkGcownKnjElC/pkN1OhsIzM96I=;
-        b=Ou8DrmQj+ddsprwGimxjfZt7hUCnELQguMdxofY2QO7SlTHOdpakL2cjc1PwzaAjTz
-         5Uruc1e0rhRs9yhtSnwJi15zVeuWLv6NS4jGZSBcxR33H7o6KT97CstBfap0DSwE/1Qt
-         FKRN0fPH1egYpNBThcOCBpJggLtYvwAS/B2EvoSV1zs1KllxZ8uakEZaInwsIiv4UF4e
-         J5kQmn2mJYJU4yMuvksJLT9ttbqD3k4YFkBK1uwLWe9i62tMjWjEgRo7tdNwmzu12Z92
-         jjnrq/1Hesecove7cGO4Ev+PpY01rtbb1r/aWe+3cr55FrB6LcBvQ+y/x5He4rixzea2
-         91Rg==
-X-Gm-Message-State: APjAAAUZSmgjPjHi6M8HFyP5Z++h60VnveFYhWcKVO7bA1ODZH5tbJD/
-        hyyEfATwtaz3AQukKiHbzWHeiRI=
-X-Google-Smtp-Source: APXvYqwbZFKbD9LE+MkSwEN0QEJOryx6wcn25B8ceR9SeAtG1HgyyDCK9nldmGXqK7jhtDw54pM/qqs=
-X-Received: by 2002:a05:6214:1052:: with SMTP id l18mr29832087qvr.204.1573591347257;
- Tue, 12 Nov 2019 12:42:27 -0800 (PST)
-Date:   Tue, 12 Nov 2019 12:42:23 -0800
-In-Reply-To: <20191112203154.101534-1-wvw@google.com>
-Message-Id: <20191112204223.115589-1-wvw@google.com>
-Mime-Version: 1.0
-References: <20191112203154.101534-1-wvw@google.com>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v2] thermal: Fix deadlock in thermal thermal_zone_device_check
-From:   Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 12 Nov 2019 15:43:20 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 719CC6092C; Tue, 12 Nov 2019 20:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591399;
+        bh=W8LCXX57vG9WGQ6bDmEyJFhHu8q8ivzYhV4CXru2Ff8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lCM49WalkgRykWmctjZITvt/ub+uXQLOrF8iZy+K8dCYQaoPcBLVC99xVnr/DMNkw
+         qoq8WTAb6ta+DJsK6Gdt6z6IJ6b252DwikfLMBrSdByeehXqPE8vVOslH2B4DToI8m
+         26zQ4scS9tp5PxIkQhUS2nGlMSx241FQRvJt5idY=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5284160134;
+        Tue, 12 Nov 2019 20:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591398;
+        bh=W8LCXX57vG9WGQ6bDmEyJFhHu8q8ivzYhV4CXru2Ff8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RldbeMtrN4AsYsH9oOYJ3YkJAMTu2dtai1Cfa2CqvUFz0N1Q7QN+oivhf47hyDVLv
+         iYXHvw7MRcF96GN5qG246tl5QGt3YQiXxKNJk8SK4QLYfBkPfo4gIskgnI7V62yzmM
+         Dred48scDO5h4m/ZXF2hEhjQfils9jg07ppKpRBo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5284160134
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v9 0/4] MSM8998 Multimedia Clock Controller
+Date:   Tue, 12 Nov 2019 13:43:02 -0700
+Message-Id: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit [2] changed cancel_delayed_work to cancel_delayed_work_sync to
-avoid a use-after-free issue. However, cancel_delayed_work_sync could be
-called insides the WQ causing deadlock [1].
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-[1]
-[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
-[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.642447] c0   1162 Call trace:
-[54109.642456] c0   1162  __switch_to+0x138/0x158
-[54109.642467] c0   1162  __schedule+0xba4/0x1434
-[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
-[54109.642511] c0   1162  flush_work+0x348/0x40c
-[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
-[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
-[54109.642593] c0   1162  kthread+0x17c/0x1b0
-[54109.642602] c0   1162  ret_from_fork+0x10/0x18
-[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
-[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.643077] c0   1162 Call trace:
-[54109.643085] c0   1162  __switch_to+0x138/0x158
-[54109.643095] c0   1162  __schedule+0xba4/0x1434
-[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
-[54109.643122] c0   1162  flush_work+0x348/0x40c
-[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
-[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
-[54109.643186] c0   1162  kthread+0x17c/0x1b0
-[54109.643195] c0   1162  ret_from_fork+0x10/0x18
-[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
-[54109.644515] c0   1162 Call trace:
-[54109.644524] c0   1162  __switch_to+0x138/0x158
-[54109.644536] c0   1162  __schedule+0xba4/0x1434
-[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
-[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
-[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
-[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
-[54109.644586] c0   1162  temp_show+0x30/0x78
-[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
-[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
-[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
-[54109.644656] c0   1162  seq_read+0x1f4/0x73c
-[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
-[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
-[54109.644692] c0   1162  vfs_read+0xa4/0x140
-[54109.644701] c0   1162  SyS_read+0xbc/0x144
-[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
-[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
+v9:
+-expand the commit text for the DT changes a bit more to explain some of the
+extra changes
 
-Fixes commit 1851799e1d29 ("thermal: Fix use-after-free when
-unregistering thermal zone device") [2]
+v8:
+-drop dts changes from series per Stephen's request
+-fix the mislabeled mmcc example
+-drop Stephen as maintainer of the mmcc binding
 
-Signed-off-by: Wei Wang <wvw@google.com>
----
- drivers/thermal/thermal_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v7:
+-port to gcc.yaml.  Drop reviewed-by for DT changes as they got completely
+rewritten
+-drop "clk: qcom: smd: Add XO clock for MSM8998".  Will need to find another
+solution and this is not blocking right now
+-convert mmcc to yaml
+-drop errant clk.h include
+-use blank entries in the DT when no clock is available
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index d4481cc8958f..c28271817e43 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -304,7 +304,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
- 				 &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work_sync(&tz->poll_queue);
-+		cancel_delayed_work(&tz->poll_queue);
- }
- 
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
-@@ -1414,7 +1414,7 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
- 
- 	mutex_unlock(&thermal_list_lock);
- 
--	thermal_zone_device_set_polling(tz, 0);
-+	cancel_delayed_work_sync(&tz->poll_queue);
- 
- 	thermal_set_governor(tz, NULL);
- 
+v6:
+-drop clk_get from mmcc clock provider
+
+v5:
+-handle the case where gcc uses rpmcc for xo, but the link is not specified in dt
+-have gcc select rpmcc
+
+v4:
+-fix makefile to use correct config item
+-pick up tags
+-fix ordering of clocks and clock-names in dt
+-drop MODULE_ALIAS
+-wait for xo in mmcc since that was found to be useful in some debug configs
+
+v3:
+-Rebase onto linux-next to get the final version of the clk parent rewrite
+series
+-Moved the bindings header to the bindings patch per Rob
+-Made xo manditory for GCC to work around the lack of clk orphan probe defer
+to avoid the uart console glitch
+
+v2:
+-Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+mechanisms introduced there.
+-Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+"incorrectly" during late init
+-Corrected the name of the XO clock to "xo"
+-Dropped the fake XO clock in GCC to prevent a namespace conflict
+-Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+-Cleaned up the weird newlines in the added DT node
+-Added DT header file to msm8998 DT for future clients
+
+Jeffrey Hugo (4):
+  dt-bindings: clock: Document external clocks for MSM8998 gcc
+  dt-bindings: clock: Convert qcom,mmcc to DT schema
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |   47 +-
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |   28 -
+ .../devicetree/bindings/clock/qcom,mmcc.yaml       |   95 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/mmcc-msm8998.c                    | 2913 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h      |  210 ++
+ 7 files changed, 3261 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+
 -- 
-2.24.0.432.g9d3f5f5b63-goog
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 
