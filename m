@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4B4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE94C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE5C2245C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC602247C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfKLLSP (ORCPT
+        id S1727448AbfKLLSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:18:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33521 "EHLO
+        Tue, 12 Nov 2019 06:18:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33730 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfKLLSI (ORCPT
+        with ESMTP id S1727398AbfKLLSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:18:08 -0500
+        Tue, 12 Nov 2019 06:18:17 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBB-0000Ci-8d; Tue, 12 Nov 2019 12:17:49 +0100
+        id 1iUUBZ-0000ao-Kl; Tue, 12 Nov 2019 12:18:13 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DBEE71C0084;
-        Tue, 12 Nov 2019 12:17:48 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:17:48 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 475281C04C9;
+        Tue, 12 Nov 2019 12:18:09 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:08 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf report: Sort by sampled cycles percent per
- block for tui
-Cc:     Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf probe: Fix to show inlined function callsite
+ without entry_pc
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191107074719.26139-8-yao.jin@linux.intel.com>
-References: <20191107074719.26139-8-yao.jin@linux.intel.com>
+In-Reply-To: <157199322107.8075.12659099000567865708.stgit@devnote2>
+References: <157199322107.8075.12659099000567865708.stgit@devnote2>
 MIME-Version: 1.0
-Message-ID: <157355746849.29376.12920683387800941807.tip-bot2@tip-bot2>
+Message-ID: <157355748875.29376.11117050115980321569.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,293 +60,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     7fa46cbf20d327d78114b1c8c7e69fabe7c57794
-Gitweb:        https://git.kernel.org/tip/7fa46cbf20d327d78114b1c8c7e69fabe7c57794
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Thu, 07 Nov 2019 15:47:19 +08:00
+Commit-ID:     18e21eb671dc87a4f0546ba505a89ea93598a634
+Gitweb:        https://git.kernel.org/tip/18e21eb671dc87a4f0546ba505a89ea93598a634
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Fri, 25 Oct 2019 17:47:01 +09:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 07 Nov 2019 10:14:48 -03:00
+CommitterDate: Wed, 06 Nov 2019 15:43:06 -03:00
 
-perf report: Sort by sampled cycles percent per block for tui
+perf probe: Fix to show inlined function callsite without entry_pc
 
-Previous patch has implemented a new option "--total-cycles".  But only
-stdio mode is supported.
+Fix 'perf probe --line' option to show inlined function callsite lines
+even if the function DIE has only ranges.
 
-This patch supports the tui mode and support '--percent-limit'.
+Without this:
 
-For example,
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                        __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
- perf record -b ./div
- perf report --total-cycles --percent-limit 1
+With this patch:
 
- # Samples: 2753248 of event 'cycles'
- Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
-          26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
-          15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
-           5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
-           4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
-           4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
-           3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
-           3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
-           3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
-           2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
-           2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
-           2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
-           2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-           2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-           2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
-           1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
-           1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
-           1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+      4                 __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
---------------------------------------------------
+Committer testing:
 
- v7:
- ---
- 1. Since we have used use_browser in report__browse_block_hists
-    to support stdio mode, now we also add supporting for tui.
+Before:
 
- 2. Move block tui browser code from ui/browsers/hists.c
-    to block-info.c.
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                          __amd_put_nb_event_constraints(cpuc, event);
+        5  }
 
- v6:
- ---
- Create report__tui_browse_block_hists in block-info.c
- (codes are moved from builtin-report.c).
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
 
- v5:
- ---
- Fix a crash issue when running perf report without
- '--total-cycles'. The issue is because the internal flag
- is renamed from 'total_cycles' to 'total_cycles_mode' in
- previous patch but this patch still uses 'total_cycles'
- to check if the '--total-cycles' option is enabled, which
- causes the code to be inconsistent.
+  [root@quaco ~]#
 
- v4:
- ---
- Since the block collection is moved out of printing in
- previous patch, this patch is updated accordingly for
- tui supporting.
+After:
 
- v3:
- ---
- Minor change since the function name is changed:
- block_total_cycles_percent -> block_info__total_cycles_percent
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+        4                 __amd_put_nb_event_constraints(cpuc, event);
+        5  }
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]# perf probe amd_put_event_constraints:4
+  Added new event:
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:amd_put_event_constraints -aR sleep 1
+
+  [root@quaco ~]#
+
+  [root@quaco ~]# perf probe -l
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
+
+Using it:
+
+  [root@quaco ~]# perf trace -e probe:*
+  ^C[root@quaco ~]#
+
+Ok, Intel system here... :-)
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191107074719.26139-8-yao.jin@linux.intel.com
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c    | 27 +++++++++---
- tools/perf/ui/browsers/hists.c |  7 ++-
- tools/perf/ui/browsers/hists.h |  2 +-
- tools/perf/util/block-info.c   | 74 ++++++++++++++++++++++++++++++++-
- 4 files changed, 103 insertions(+), 7 deletions(-)
+ tools/perf/util/dwarf-aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index ca41187..1e81985 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -485,6 +485,22 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
- 	return ret + fprintf(fp, "\n#\n");
- }
- 
-+static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
-+					       struct report *rep)
-+{
-+	struct evsel *pos;
-+	int i = 0, ret;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
-+						 rep->min_percent, pos);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int perf_evlist__tty_browse_hists(struct evlist *evlist,
- 					 struct report *rep,
- 					 const char *help)
-@@ -595,6 +611,11 @@ static int report__browse_hists(struct report *rep)
- 
- 	switch (use_browser) {
- 	case 1:
-+		if (rep->total_cycles_mode) {
-+			ret = perf_evlist__tui_block_hists_browse(evlist, rep);
-+			break;
-+		}
-+
- 		ret = perf_evlist__tui_browse_hists(evlist, help, NULL,
- 						    rep->min_percent,
- 						    &session->header.env,
-@@ -1396,12 +1417,8 @@ repeat:
- 	if (report.total_cycles_mode) {
- 		if (sort__mode != SORT_MODE__BRANCH)
- 			report.total_cycles_mode = false;
--		else if (!report.use_stdio) {
--			pr_err("Error: --total-cycles can be only used together with --stdio\n");
--			goto error;
--		} else {
-+		else
- 			sort_order = "sym";
--		}
- 	}
- 
- 	if (strcmp(input_name, "-") != 0)
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 7a7187e..334afc2 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -26,6 +26,7 @@
- #include "../../util/sort.h"
- #include "../../util/top.h"
- #include "../../util/thread.h"
-+#include "../../util/block-info.h"
- #include "../../arch/common.h"
- #include "../../perf.h"
- 
-@@ -1783,7 +1784,11 @@ static unsigned int hist_browser__refresh(struct ui_browser *browser)
- 			continue;
- 		}
- 
--		percent = hist_entry__get_percent_limit(h);
-+		if (symbol_conf.report_individual_block)
-+			percent = block_info__total_cycles_percent(h);
-+		else
-+			percent = hist_entry__get_percent_limit(h);
-+
- 		if (percent < hb->min_pcnt)
- 			continue;
- 
-diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
-index 91d3e18..078f2f2 100644
---- a/tools/perf/ui/browsers/hists.h
-+++ b/tools/perf/ui/browsers/hists.h
-@@ -5,6 +5,7 @@
- #include "ui/browser.h"
- 
- struct annotation_options;
-+struct evsel;
- 
- struct hist_browser {
- 	struct ui_browser   b;
-@@ -15,6 +16,7 @@ struct hist_browser {
- 	struct pstack	    *pstack;
- 	struct perf_env	    *env;
- 	struct annotation_options *annotation_opts;
-+	struct evsel	    *block_evsel;
- 	int		     print_seq;
- 	bool		     show_dso;
- 	bool		     show_headers;
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 597d120..9abc201 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -10,6 +10,7 @@
- #include "map.h"
- #include "srcline.h"
- #include "evlist.h"
-+#include "ui/browsers/hists.h"
- 
- static struct block_header_column {
- 	const char *name;
-@@ -438,9 +439,75 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- 	return block_reports;
- }
- 
-+#ifdef HAVE_SLANG_SUPPORT
-+static int block_hists_browser__title(struct hist_browser *browser, char *bf,
-+				      size_t size)
-+{
-+	struct hists *hists = evsel__hists(browser->block_evsel);
-+	const char *evname = perf_evsel__name(browser->block_evsel);
-+	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
-+	int ret;
-+
-+	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
-+	if (evname)
-+		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
-+
-+	return 0;
-+}
-+
-+static int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
-+				  float min_percent)
-+{
-+	struct hists *hists = &bh->block_hists;
-+	struct hist_browser *browser;
-+	int key = -1;
-+	static const char help[] =
-+	" q             Quit \n";
-+
-+	browser = hist_browser__new(hists);
-+	if (!browser)
-+		return -1;
-+
-+	browser->block_evsel = evsel;
-+	browser->title = block_hists_browser__title;
-+	browser->min_pcnt = min_percent;
-+
-+	/* reset abort key so that it can get Ctrl-C as a key */
-+	SLang_reset_tty();
-+	SLang_init_tty(0, 0, 0);
-+
-+	while (1) {
-+		key = hist_browser__run(browser, "? - help", true);
-+
-+		switch (key) {
-+		case 'q':
-+			goto out;
-+		case '?':
-+			ui_browser__help_window(&browser->b, help);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+out:
-+	hist_browser__delete(browser);
-+	return 0;
-+}
-+#else
-+static int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
-+				  struct evsel *evsel __maybe_unused,
-+				  float min_percent __maybe_unused)
-+{
-+	return 0;
-+}
-+#endif
-+
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
--			       struct evsel *evsel __maybe_unused)
-+			       struct evsel *evsel)
- {
-+	int ret;
-+
- 	switch (use_browser) {
- 	case 0:
- 		symbol_conf.report_individual_block = true;
-@@ -448,6 +515,11 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 			       stdout, true);
- 		hists__delete_entries(&bh->block_hists);
- 		return 0;
-+	case 1:
-+		symbol_conf.report_individual_block = true;
-+		ret = block_hists_tui_browse(bh, evsel, min_percent);
-+		hists__delete_entries(&bh->block_hists);
-+		return ret;
- 	default:
- 		return -1;
- 	}
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 063f71d..e0c507d 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -695,7 +695,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
+ 		fname = die_get_call_file(in_die);
+ 		lineno = die_get_call_lineno(in_die);
+-		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
++		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
+ 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
