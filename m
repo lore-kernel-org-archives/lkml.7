@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31016C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CADC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0982121872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9940E214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573583945;
-	bh=uFc1QOcfcC5upocJ+L5CTB117u3aYYC/uWiThFDlE78=;
+	s=default; t=1573583950;
+	bh=SX0sscmtqcirWY9smAnEU8p8skfruOWEftotFi7hEDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JfiqQ/wlazP0f3cGHcrl3HEzocJLRDg3ZEisK9+5IxHviwKlcCaPvo+ozQXegwsCU
-	 gT9ZwwUHDbNkTcixM0kSlSVpe/h3B4zC/EUEPAh5c9/WX/Z/QefFCIFWPSSaDI6VyU
-	 lGEfDdzrO+FDt51QgTLNdua7iDtIaLPWoAo+1/jo=
+	b=qmmLE5fKN60ePNuYqrsIxJz7Qz5oYEWHLFrts9+bvhLtvnjDDq2J5Vd+A5IX4G734
+	 HOEzoXFCd/MHE0zgnj/IsF7v1ZpZCvg0yOAMTGkNlx9Uc3cPFIb6khTZqkWVpFrq2Y
+	 97JHvLFpCEiUujkIthj/EQbiwsSng7aS5ZunvRf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfKLSjE (ORCPT
+        id S1727529AbfKLSjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:39:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 13:39:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfKLSjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:39:03 -0500
+        id S1726959AbfKLSjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:39:08 -0500
 Received: from quaco.ghostprotocols.net (unknown [177.195.211.83])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF4B214E0;
-        Tue, 12 Nov 2019 18:38:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAE6C20818;
+        Tue, 12 Nov 2019 18:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573583942;
-        bh=uFc1QOcfcC5upocJ+L5CTB117u3aYYC/uWiThFDlE78=;
+        s=default; t=1573583947;
+        bh=SX0sscmtqcirWY9smAnEU8p8skfruOWEftotFi7hEDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b0Mpsg6MRzW6cgVDFwpsdn142XXQthvgj6vatZSclLvRFwvkbX1CEHNEroTL7vRJ4
-         u32OIWs/YWbZ2IIDbMX7R2WQ1gyres/w16prUHz+H0lKhR4WLtqL+3DEiXa2U0hzA/
-         aFu9RgP89oZAi06pLhM+JCorrrBj6lGopgMzha3Y=
+        b=b2sB7lUiXzYH9+aircYu8Y/I4sHIh/Fx5tlOab1RaLt77CNAUz1MwxmbAGxRIPGbi
+         Z2h36gonMxCjYUAZkarCjjv5gJ9jlBvftZY8YArkYVqtvLCsfDsbeBNOeNOtkt07pc
+         iiYRBThBZput9cz+uGliWcJb++ZfvLEk7pjKcXeo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 12/15] perf map: Combine maps__fixup_overlappings with its only use
-Date:   Tue, 12 Nov 2019 15:37:54 -0300
-Message-Id: <20191112183757.28660-13-acme@kernel.org>
+Subject: [PATCH 13/15] perf map: Remove ->groups from 'struct map'
+Date:   Tue, 12 Nov 2019 15:37:55 -0300
+Message-Id: <20191112183757.28660-14-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191112183757.28660-1-acme@kernel.org>
 References: <20191112183757.28660-1-acme@kernel.org>
@@ -63,66 +63,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-In the process we can kill some of the struct map->groups usage, trying
-to get rid of this per-full struct map fields getting in the way of
-sharing a map across father/parent processes.
+With this 'struct map' uses a bit over 3 cachelines:
+
+  $ pahole -C map ~/bin/perf
+  <SNIP>
+  	/* --- cacheline 2 boundary (128 bytes) --- */
+  	u64                        (*unmap_ip)(struct map *, u64); /*   128     8 */
+  	struct dso *               dso;                            /*   136     8 */
+  	refcount_t                 refcnt;                         /*   144     4 */
+
+  	/* size: 152, cachelines: 3, members: 18 */
+  	/* sum members: 145, holes: 1, sum holes: 3 */
+  	/* padding: 4 */
+  	/* forced alignments: 2 */
+  	/* last cacheline: 24 bytes */
+  } __attribute__((__aligned__(8)));
+  $
+
+We probably can move map->map/unmap_ip() moved to 'struct map_groups',
+that will shave more 16 bytes, getting this almost to two cachelines.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-e50eqtqw3za24vmbjnqmmcs6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ymlv3nzpofv2fugnjnizkrwy@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ tools/perf/util/map.c | 4 ----
+ tools/perf/util/map.h | 1 -
+ 2 files changed, 5 deletions(-)
 
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 6c59f55026c1..27d8508f8a44 100644
+index 27d8508f8a44..359846833a00 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -752,8 +752,9 @@ static void __map_groups__insert(struct map_groups *mg, struct map *map)
- 	map->groups = mg;
+@@ -140,7 +140,6 @@ void map__init(struct map *map, u64 start, u64 end, u64 pgoff, struct dso *dso)
+ 	map->map_ip   = map__map_ip;
+ 	map->unmap_ip = map__unmap_ip;
+ 	RB_CLEAR_NODE(&map->rb_node);
+-	map->groups   = NULL;
+ 	map->erange_warned = false;
+ 	refcount_set(&map->refcnt, 1);
  }
+@@ -388,7 +387,6 @@ struct map *map__clone(struct map *from)
+ 		refcount_set(&map->refcnt, 1);
+ 		RB_CLEAR_NODE(&map->rb_node);
+ 		dso__get(map->dso);
+-		map->groups = NULL;
+ 	}
  
--static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
-+int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp)
+ 	return map;
+@@ -582,7 +580,6 @@ void map_groups__init(struct map_groups *mg, struct machine *machine)
+ void map_groups__insert(struct map_groups *mg, struct map *map)
  {
-+	struct maps *maps = &mg->maps;
- 	struct rb_root *root;
- 	struct rb_node *next, *first;
- 	int err = 0;
-@@ -818,7 +819,7 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
- 			}
- 
- 			before->end = map->start;
--			__map_groups__insert(pos->groups, before);
-+			__map_groups__insert(mg, before);
- 			if (verbose >= 2 && !use_browser)
- 				map__fprintf(before, fp);
- 			map__put(before);
-@@ -835,7 +836,7 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
- 			after->start = map->end;
- 			after->pgoff += map->end - pos->start;
- 			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
--			__map_groups__insert(pos->groups, after);
-+			__map_groups__insert(mg, after);
- 			if (verbose >= 2 && !use_browser)
- 				map__fprintf(after, fp);
- 			map__put(after);
-@@ -853,12 +854,6 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
- 	return err;
+ 	maps__insert(&mg->maps, map);
+-	map->groups = mg;
  }
  
--int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map,
--				   FILE *fp)
--{
--	return maps__fixup_overlappings(&mg->maps, map, fp);
--}
--
- /*
-  * XXX This should not really _copy_ te maps, but refcount them.
-  */
+ static void __maps__purge(struct maps *maps)
+@@ -749,7 +746,6 @@ static void __map_groups__insert(struct map_groups *mg, struct map *map)
+ {
+ 	__maps__insert(&mg->maps, map);
+ 	__maps__insert_name(&mg->maps, map);
+-	map->groups = mg;
+ }
+ 
+ int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp)
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index c3614195ddc7..365deb6375ab 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -42,7 +42,6 @@ struct map {
+ 	u64			(*unmap_ip)(struct map *, u64);
+ 
+ 	struct dso		*dso;
+-	struct map_groups	*groups;
+ 	refcount_t		refcnt;
+ };
+ 
 -- 
 2.21.0
 
