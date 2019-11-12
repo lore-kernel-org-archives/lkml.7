@@ -2,149 +2,149 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3768C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4668E21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB59321925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="f1qmCoUR"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p3qYKNzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKLXQc (ORCPT
+        id S1727221AbfKLXRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:16:32 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.102]:28157 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKLXQc (ORCPT
+        Tue, 12 Nov 2019 18:17:32 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8581 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKLXRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:16:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573600589;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=7kNs8lG7ZeENLZX3h1otTzpdSsihM3PdKDO/39lmNXI=;
-        b=f1qmCoURneJmYHeF8L2ad+5BQ1HHkhwG50xx3Y2uZ9EO6VDdUaUNZMzs9Ro8m9lhzc
-        CF2KJQqjF+Ubor/pvB09HDyo+vViEV7XGvKX+PE+/a3Z4v6cG9IGwjEiLJcf+Y0ZO7Li
-        dUlKO8MPFC+mVL0dH5CppFq5JfHpYGPskM0E6faBYOZCPu46QGoYdR1i/XDkRzr4vsRO
-        2pKRvYrmOWo3G164IyPzbWNG/8NoBioKIYFvBjaFFJz92/C8CN075cN0g1vdbIP0S7f1
-        1Pxpq6LVEpDF5XZraXqUw1XIvPSNd5LSqM52aw6BraZl+z7oZbtlVjWl0BqlRh5kN/EO
-        g/sA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id N09a57vACNFKA48
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 13 Nov 2019 00:15:20 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v24 01/12] Linux Random Number Generator
-Date:   Wed, 13 Nov 2019 00:15:18 +0100
-Message-ID: <2207651.LDDDoSycXZ@positron.chronox.de>
-In-Reply-To: <201911130648.YIqEERFA%lkp@intel.com>
-References: <2369119.jSEA3qhmGI@positron.chronox.de> <201911130648.YIqEERFA%lkp@intel.com>
+        Tue, 12 Nov 2019 18:17:31 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcb3d4b0000>; Tue, 12 Nov 2019 15:16:27 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 15:17:23 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 15:17:23 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 23:17:22 +0000
+Subject: Re: [PATCH v3 08/23] vfio, mm: fix get_user_pages_remote() and
+ FOLL_LONGTERM
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191112000700.3455038-1-jhubbard@nvidia.com>
+ <20191112000700.3455038-9-jhubbard@nvidia.com>
+ <20191112204338.GE5584@ziepe.ca>
+ <0db36e86-b779-01af-77e7-469af2a2e19c@nvidia.com>
+ <CAPcyv4hAEgw6ySNS+EFRS4yNRVGz9A3Fu1vOk=XtpjYC64kQJw@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <85987617-9f6b-6bd3-fea2-9f2910d942bd@nvidia.com>
+Date:   Tue, 12 Nov 2019 15:17:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAPcyv4hAEgw6ySNS+EFRS4yNRVGz9A3Fu1vOk=XtpjYC64kQJw@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573600587; bh=MjC1bPxvrMSKZyR0vfIkph3DH21vc9F8lPoYeam7DCg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=p3qYKNzVf+yoWXVxXvdWjvLLch3+eBgZBZPzM5iL19+w8RiUo7ZDiZ6gW1HFxWncA
+         +kkprqimeUO8SSqHdah/r3BwJo4tDay3qaFNXlfKQCKgL2mn5vpeQtNa9DXVDSKAs9
+         R4vcNKCywQ8SHP3DUh8n5njcCPN6pw3P07lAmh8mqH74Fvgl1XHO+C/rjd/05WqSfr
+         CbI8v19uMzgduDq6l5KCW1YAmvvVqDA87KUBJVym8vf0Kv0kKAaenl3Op2+6yladeP
+         PH6kHbkLvI9QcVfTqnjU+9eG71rPYcWHuFxhGzrL4Y4JAkS0eHU4rmGDiCKR0r+10R
+         ZzG6cdcgSU6Ww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 12. November 2019, 23:30:29 CET schrieb kbuild test robot:
+On 11/12/19 2:45 PM, Dan Williams wrote:
+> On Tue, Nov 12, 2019 at 2:43 PM John Hubbard <jhubbard@nvidia.com> wrote:
+>>
+>> On 11/12/19 12:43 PM, Jason Gunthorpe wrote:
+>> ...
+>>>> -            }
+>>>> +    ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
+>>>> +                                page, vmas, NULL);
+>>>> +    /*
+>>>> +     * The lifetime of a vaddr_get_pfn() page pin is
+>>>> +     * userspace-controlled. In the fs-dax case this could
+>>>> +     * lead to indefinite stalls in filesystem operations.
+>>>> +     * Disallow attempts to pin fs-dax pages via this
+>>>> +     * interface.
+>>>> +     */
+>>>> +    if (ret > 0 && vma_is_fsdax(vmas[0])) {
+>>>> +            ret = -EOPNOTSUPP;
+>>>> +            put_page(page[0]);
+>>>>      }
+>>>
+>>> AFAIK this chunk is redundant now as it is some hack to emulate
+>>> FOLL_LONGTERM? So vmas can be deleted too.
+>>
+>> Let me first make sure I understand what Dan has in mind for the vma
+>> checking, in the other thread...
+> 
+> It's not redundant relative to upstream which does not do anything the
+> FOLL_LONGTERM in the gup-slow path... but I have not looked at patches
+> 1-7 to see if something there made it redundant.
+> 
 
-Hi kbuild,
+There is nothing in patches 1-7 that would make it redundant. 
 
-> Hi "Stephan,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on char-misc/char-misc-testing]
-> [also build test ERROR on v5.4-rc7 next-20191112]
-> [if your patch is applied to the wrong git tree, please drop us a note to
-> help improve the system. BTW, we also suggest to use '--base' option to
-> specify the base tree in git format-patch, please see
-> https://stackoverflow.com/a/37406982]
-> 
-> url:   
-> https://github.com/0day-ci/linux/commits/Stephan-M-ller/dev-random-a-new-ap
-> proach-with-full-SP800-90B-compliance/20191113-040847 base:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
-> 01b59c763fe2de845b65900485b141fdd7bbf93e config:
-> i386-randconfig-f003-201945 (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from <command-line>:0:0:
-> 
->    include/linux/lrng.h: In function 'lrng_set_drng_cb':
-> >> include/linux/lrng.h:80:61: error: 'EOPNOTSUPP' undeclared (first use in
-> >> this function)
-
-I need to include errno.h in lrng.h.
-
-Thank you, it will be fixed in the next installment.
-
->     lrng_set_drng_cb(const struct lrng_crypto_cb *cb) { return -EOPNOTSUPP;
-> } ^~~~~~~~~~ include/linux/lrng.h:80:61: note: each undeclared identifier
-> is reported only once for each function it appears in
-> 
-> vim +/EOPNOTSUPP +80 include/linux/lrng.h
-> 
->     74
->     75	/* Register cryptographic backend */
->     76	#ifdef CONFIG_LRNG_DRNG_SWITCH
->     77	int lrng_set_drng_cb(const struct lrng_crypto_cb *cb);
->     78	#else	/* CONFIG_LRNG_DRNG_SWITCH */
->     79	static inline int
-> 
->   > 80	lrng_set_drng_cb(const struct lrng_crypto_cb *cb) { return
->   > -EOPNOTSUPP; }
->     81	#endif	/* CONFIG_LRNG_DRNG_SWITCH */
->     82
-> 
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology
-> Center https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel
-> Corporation
+About the only thing that you might find interesting in that subset is
+patch 4 ("mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages"),
+for devmap and ZONE_DEVICE interest. But it doesn't affect this
+discussion directly.
 
 
-Ciao
-Stephan
-
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
