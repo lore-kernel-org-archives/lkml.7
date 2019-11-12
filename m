@@ -2,127 +2,154 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA48C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF7CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C64206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A292084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nqdyOp8B"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PvG8uwgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfKLMG5 (ORCPT
+        id S1727049AbfKLMH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:06:57 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57356 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725865AbfKLMG5 (ORCPT
+        Tue, 12 Nov 2019 07:07:27 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:27009 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfKLMH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:06:57 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACBqFLb028925;
-        Tue, 12 Nov 2019 13:06:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=VcswSaQgjwVPJKQoYkqU+reFn99J6VbQH4Gn2WoEbg4=;
- b=nqdyOp8BwecEtygM50ctVa1kTGngR4LZh7LrEz4aLiILpLe82NxD1OXJOpocbyh+xuXO
- 2Uy3JcfEh+f2BSEMEopjFfCegb0AGdWjp2c3Xz3WOO9DvFenzU6cv5JztYZRelOKKfXp
- 24/Xr+5DX8kkionSrIx1nOIviQastISvp00rbqaZ563Twvc2HJBfbMOnsKvzTvuAYxug
- v10DGjupCRFOnVE/auKzG6+/ptMKtldjgMu9z9xyQy7zClOSqcu70hXrplC6iH1uAiwb
- w/EVOdAF20b/v95IcnJZgTuNMyf5NZNhjCbFHjO9dWsLsre99zrrmCUGwTIj5ZIC95w9 mg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w7pstsurk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 13:06:28 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 81D09100034;
-        Tue, 12 Nov 2019 13:06:27 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6199B2BA7DF;
-        Tue, 12 Nov 2019 13:06:27 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 12 Nov 2019 13:06:26
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linux@armlinux.org.uk>, <tglx@linutronix.de>,
-        <gregkh@linuxfoundation.org>, <rmk+kernel@armlinux.org.uk>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] arm: kernel: initialize broadcast hrtimer based clock event device
-Date:   Tue, 12 Nov 2019 13:06:25 +0100
-Message-ID: <20191112120625.20173-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 12 Nov 2019 07:07:27 -0500
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id xACC6vMN010836;
+        Tue, 12 Nov 2019 21:06:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xACC6vMN010836
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573560418;
+        bh=Sgqs5/I3zJLWaBRJGnQJMZjSMC0UNfDF+eV/0rJAwU0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PvG8uwgP2kQTVuBQk2kzxi2TDqds7N52zFu4NUW55dePkn2U3DyJ3dnvwZP28NF9r
+         6Fd+bid9vMKeORqvP6B/kyQh4ulOJKbukGUzqqkEzWvWj1hTgRYvp0x1ymem1MyP6W
+         JC0npXimCoWWnF8/lEyOjtXtaGb0zP5FwJYoxgB+On9JAV0ClkTul7usUJPAAUHmDM
+         J6wEOrS2AOPZLPxEIXcQ5rzLG3fdrsTSeLlyNXPA4+ce/8aLhLb7BNMOjcxgzOxItD
+         a+Shc2VBRwvBsN77DaASxY/A+/XKKWOpbi3P13W7PeVMVD3K7pBdqc+PDuHcx33htI
+         4NlsdRuSB/P1A==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id u99so4619719uau.5;
+        Tue, 12 Nov 2019 04:06:57 -0800 (PST)
+X-Gm-Message-State: APjAAAXVqpRFic+pHvzjUJh6K040QUy80Ge4lM0A3ZmyqLzXOyAuEiLP
+        TLz9mgHBMuELKNvNssLqpUoy6NgOy0nUOmMLzCg=
+X-Google-Smtp-Source: APXvYqxvFq5FgSgnUVNLyeoqfHZziPLTY9nkt64faSHe5hVF5nFrk880h1LTgcUSxKS6qI4PoU80uumy9ITmkIObu5k=
+X-Received: by 2002:a9f:3e81:: with SMTP id x1mr3415007uai.121.1573560416440;
+ Tue, 12 Nov 2019 04:06:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-12_03:2019-11-11,2019-11-12 signatures=0
+References: <20191111011106.18427-1-linux@roeck-us.net> <20191110.173203.1243596361382467520.davem@davemloft.net>
+ <CAK7LNAQTCyEVKkJQfoTpd5USk5tibmcro6EeoonjXKm-OAFJ_g@mail.gmail.com> <591a9e5e-1347-8883-c080-38940fffd535@roeck-us.net>
+In-Reply-To: <591a9e5e-1347-8883-c080-38940fffd535@roeck-us.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 12 Nov 2019 21:06:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASY209k5g61=+cbRgjNp8=1QGcP6c2RcCBad7NnfUhHHQ@mail.gmail.com>
+Message-ID: <CAK7LNASY209k5g61=+cbRgjNp8=1QGcP6c2RcCBad7NnfUhHHQ@mail.gmail.com>
+Subject: Re: [PATCH] sparc: vdso: Fix build failure seen due to kbuild changes
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     David Miller <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On platforms implementing CPU power management, the CPUidle subsystem
-can allow CPUs to enter idle states where local timers logic is lost on power
-down. To keep the software timers functional the kernel relies on an
-always-on broadcast timer to be present in the platform to relay the
-interrupt signalling the timer expiries.
+On Mon, Nov 11, 2019 at 11:35 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 11/10/19 5:47 PM, Masahiro Yamada wrote:
+> > On Mon, Nov 11, 2019 at 10:32 AM David Miller <davem@davemloft.net> wrote:
+> >>
+> >> From: Guenter Roeck <linux@roeck-us.net>
+> >> Date: Sun, 10 Nov 2019 17:11:06 -0800
+> >>
+> >>> sparc64:allmodconfig fails to build with the following error.
+> >>>
+> >>> unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
+> >>> arch/sparc/vdso/vdso32/vclock_gettime.o: failed
+> >>> make[2]: *** [arch/sparc/vdso/vdso32/vclock_gettime.o] Error 1
+> >>> make[2]: *** Deleting file 'arch/sparc/vdso/vdso32/vclock_gettime.o'
+> >>> make[2]: *** Waiting for unfinished jobs....
+> >>>
+> >>> The problem bisects to commit a3de7a72c517 ("kbuild: change
+> >>> *FLAGS_<basetarget>.o to take the path relative to $(obj)").
+> >>> Duplicate the x86 specific defines from this commit to the sparc
+> >>> vdso Makefile to fix the problem.
+> >>>
+> >>> Fixes: a3de7a72c517 ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
+> >>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >>> Cc: Marc Zyngier <maz@kernel.org>
+> >>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> >>
+> >> Acked-by: David S. Miller <davem@davemloft.net>
+> >
+> >
+> > Yeah, I had submitted a fix a long time before.
+> >
+> > https://lore.kernel.org/patchwork/patch/1130469/
+> >
+> > I do not know why it was not picked up.
+> >
+>
+> Why don't you just push it upstream yourself ?
+>
+> >
+> > It is OK whether any patch is picked up
+> > as long as the build error is fixed.
+> >
+> Same here.
+>
+> >
+> > (I think  CFLAGS_REMOVE_vdso32/vdso-note.o
+> > should be added too, though)
+> >
+> Hard to decide for someone not involved in vdso development.
+> It wasn't added for x86, and it compiles without, so I rather
+> left it alone.
 
-For platforms implementing CPU core gating that do not implement an always-on
-HW timer or implement it in a broken way, this patch adds code to initialize
-the kernel hrtimer based clock event device upon boot (which can be chosen as
-tick broadcast device by the kernel).
-It relies on a dynamically chosen CPU to be always powered-up. This CPU then
-relays the timer interrupt to CPUs in deep-idle states through its HW local
-timer device.
 
-Having a CPU always-on has implications on power management platform
-capabilities and makes CPUidle suboptimal, since at least a CPU is kept
-always in a shallow idle state by the kernel to relay timer interrupts,
-but at least leaves the kernel with a functional system with some working
-power management capabilities.
+After looking at the code closer,
+I believe your code is more correct.
 
-The hrtimer based clock event device is unconditionally registered, but
-has the lowest possible rating such that any broadcast-capable HW clock
-event device present will be chosen in preference as the tick broadcast
-device.
+vdso-note is assembly instead of C.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-Note:
-- The same reasons lead to same patch than for arm64 so I have copy the
-  commit message from: 9358d755bd5c ("arm64: kernel: initialize broadcast
-  hrtimer based clock event device")
- arch/arm/kernel/time.c | 2 ++
- 1 file changed, 2 insertions(+)
+arch/sparc/vdso/vdso-note.S
+arch/sparc/vdso/vdso32/vdso-note.S
 
-diff --git a/arch/arm/kernel/time.c b/arch/arm/kernel/time.c
-index b996b2cf0703..dddc7ebf4db4 100644
---- a/arch/arm/kernel/time.c
-+++ b/arch/arm/kernel/time.c
-@@ -9,6 +9,7 @@
-  *  reading the RTC at bootup, etc...
-  */
- #include <linux/clk-provider.h>
-+#include <linux/clockchips.h>
- #include <linux/clocksource.h>
- #include <linux/errno.h>
- #include <linux/export.h>
-@@ -107,5 +108,6 @@ void __init time_init(void)
- 		of_clk_init(NULL);
- #endif
- 		timer_probe();
-+		tick_setup_hrtimer_broadcast();
- 	}
- }
+
+
+The -pg flag is added by the top Makefile,
+only for C files.
+
+
+CFLAGS_REMOVE_vdso-note.o = -pg
+was unneeded in the first place.
+
+
+
+BTW, I just thought this patch
+was supposed to be applied by Dave
+since it is touching a single file in arch/sparc/.
+
+If Dave plans to pick up this, please feel free to add:
+
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+If I should apply this to kbuild tree, please let me know.
+
+
+
 -- 
-2.15.0
-
+Best Regards
+Masahiro Yamada
