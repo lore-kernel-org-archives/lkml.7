@@ -2,127 +2,123 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46759C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD00C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197A520656
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:48:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lX2ZH4Sz"
+	by mail.kernel.org (Postfix) with ESMTP id 0E76E20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfKLJsx (ORCPT
+        id S1727385AbfKLJtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:48:53 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55500 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfKLJsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:48:52 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC9mbsX012018;
-        Tue, 12 Nov 2019 03:48:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573552117;
-        bh=l9yUkZ7R54513+Ec0cFoJuRTwXy3GJPKi0IXvjNeP0U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lX2ZH4Szb0vJwHUC1KaIfFxtKmZdWgX/MFjILfyJAzwKzIxntUSiwVZydwqubfTMq
-         aKFKNtwrpsde8aVFSvC/4oekylGQemjfhdGuvPtTLr+ZjRXE93P6IZwLGh6bi47HmQ
-         0jUpBC421zrVSgjlrK3uWsvRshKSZ29Gi6UKSrhk=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAC9mb8U113120
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 03:48:37 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 03:48:37 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 03:48:19 -0600
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC9mXT0016926;
-        Tue, 12 Nov 2019 03:48:33 -0600
-Subject: Re: [PATCH v5 net-next 00/12] net: ethernet: ti: introduce new cpsw
- switchdev based driver
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Sekhar Nori <nsekhar@ti.com>, <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024160549.GY5610@atomide.com>
- <dc621a9d-eb92-5df9-81d7-ad2b037ac3c7@ti.com>
- <20191111170826.GT5610@atomide.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <3c24b4c0-7ef2-71d3-b537-90def7c15fec@ti.com>
-Date:   Tue, 12 Nov 2019 11:48:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 04:49:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57866 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727352AbfKLJtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:49:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2D48DB039;
+        Tue, 12 Nov 2019 09:49:18 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 10:49:17 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     linux-xtensa@linux-xtensa.org, Chris Zankel <chris@zankel.net>,
+        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2] xtensa: improve stack dumping
+Message-ID: <20191112094917.fl57dhtennwo2tlz@pathway.suse.cz>
+References: <20191108004448.5386-1-jcmvbkbc@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111170826.GT5610@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108004448.5386-1-jcmvbkbc@gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 2019-11-07 16:44:48, Max Filippov wrote:
+> Calculate printable stack size and use print_hex_dump instead of
+> opencoding it.
+> Make size of stack dump configurable.
+> Drop extra newline output in show_trace as its output format does not
+> depend on CONFIG_KALLSYMS.
 
+> diff --git a/arch/xtensa/Kconfig.debug b/arch/xtensa/Kconfig.debug
+> index 39de98e20018..83cc8d12fa0e 100644
+> --- a/arch/xtensa/Kconfig.debug
+> +++ b/arch/xtensa/Kconfig.debug
+> @@ -31,3 +31,10 @@ config S32C1I_SELFTEST
+>  	  It is easy to make wrong hardware configuration, this test should catch it early.
+>  
+>  	  Say 'N' on stable hardware.
+> +
+> +config PRINT_STACK_DEPTH
+> +	int "Stack depth to print" if DEBUG_KERNEL
+> +	default 64
+> +	help
+> +	  This option allows you to set the stack depth that the kernel
+> +	  prints in stack traces.
 
-On 11/11/2019 19:08, Tony Lindgren wrote:
-> * Grygorii Strashko <grygorii.strashko@ti.com> [191109 15:16]:
->> Hi Tony,
->>
->> On 24/10/2019 19:05, Tony Lindgren wrote:
->>> Hi,
->>>
->>> * Grygorii Strashko <grygorii.strashko@ti.com> [191024 10:10]:
->>>> This the RFC v5 which introduces new CPSW switchdev based driver which is
->>>> operating in dual-emac mode by default, thus working as 2 individual
->>>> network interfaces. The Switch mode can be enabled by configuring devlink driver
->>>> parameter "switch_mode" to 1/true:
->>>> 	devlink dev param set platform/48484000.ethernet_switch \
->>>> 	name switch_mode value 1 cmode runtime
->>>
->>> Just wondering about the migration plan.. Is this a replacement
->>> driver or used in addition to the old driver?
->>>
->>
->> Sry, I've missed you mail.
->>
->> As it's pretty big change the idea is to keep both drivers at least for sometime.
->> Step 1: add new driver and enable it on one platform. Do announcement.
->> Step 2: switch all one-port and dual mac drivers to the new driver
->> Step 3: switch all other platform to cpsw switchdev and deprecate old driver.
-> 
-> OK sounds good to me. So for the dts changes, we keep the old binding
-> and just add a new module there?
+I would split this into separate patch.
 
-yes, in general.
-As you can see Patch 11 I've rearranged cpsw nodes between boards so cpsw_new is enabled
-only on one board. But, Am5/dr7 board are good candidates to enable cpsw_new in batch as
-the have only dual_mac default cfg.
+> diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
+> index 4a6c495ce9b6..fe090ab1cab8 100644
+> --- a/arch/xtensa/kernel/traps.c
+> +++ b/arch/xtensa/kernel/traps.c
+> @@ -491,32 +491,24 @@ void show_trace(struct task_struct *task, unsigned long *sp)
+>  
+>  	pr_info("Call Trace:\n");
+>  	walk_stackframe(sp, show_trace_cb, NULL);
+> -#ifndef CONFIG_KALLSYMS
+> -	pr_cont("\n");
+> -#endif
+>  }
+>  
+> -static int kstack_depth_to_print = 24;
+> +static int kstack_depth_to_print = CONFIG_PRINT_STACK_DEPTH;
+>  
+>  void show_stack(struct task_struct *task, unsigned long *sp)
+>  {
+> -	int i = 0;
+> -	unsigned long *stack;
+> +	size_t len;
+>  
+>  	if (!sp)
+>  		sp = stack_pointer(task);
+> -	stack = sp;
+>  
+> -	pr_info("Stack:\n");
+> +	len = min((-(unsigned long)sp) & (THREAD_SIZE - 4),
+> +		  kstack_depth_to_print * 4ul);
 
-> 
-> Or do you also have to disable some parts of the old dts?
+I would replace the hardcoded 4 with sizeof(void *).
 
-it will be the case for am3/am5 most probably.
+>  
+> -	for (i = 0; i < kstack_depth_to_print; i++) {
+> -		if (kstack_end(sp))
+> -			break;
+> -		pr_cont(" %08lx", *sp++);
+> -		if (i % 8 == 7)
+> -			pr_cont("\n");
+> -	}
+> -	show_trace(task, stack);
+> +	pr_info("Stack:\n");
+> +	print_hex_dump(KERN_INFO, " ", DUMP_PREFIX_NONE, 32, 4,
+> +		       sp, len, false);
+> +	show_trace(task, sp);
+>  }
 
--- 
-Best regards,
-grygorii
+The conversion looks fine to me. It is up to you (as a maintainer)
+what you do with the above proposal for two cosmetic changes ;-)
+Either way, feel free to use:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
