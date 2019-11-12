@@ -2,83 +2,106 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68FFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99931C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1A22067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7012067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jbcsYfuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfKLHSY (ORCPT
+        id S1727140AbfKLHSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:18:24 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35407 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725283AbfKLHSY (ORCPT
+        Tue, 12 Nov 2019 02:18:36 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1792 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfKLHSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:18:24 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Thsv3KG_1573543100;
-Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0Thsv3KG_1573543100)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Nov 2019 15:18:20 +0800
-Date:   Tue, 12 Nov 2019 15:18:19 +0800
-From:   Tony Lu <tonylu@linux.alibaba.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     davem@davemloft.net, shemminger@osdl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: remove static inline from dev_put/dev_hold
-Message-ID: <20191112071819.GB67139@TonyMac-Alibaba>
-Reply-To: Tony Lu <tonylu@linux.alibaba.com>
-References: <20191111140502.17541-1-tonylu@linux.alibaba.com>
- <20191111085632.24d88706@hermes.lan>
+        Tue, 12 Nov 2019 02:18:35 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dca5ccb0000>; Mon, 11 Nov 2019 23:18:35 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 11 Nov 2019 23:18:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 11 Nov 2019 23:18:35 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 07:18:35 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 12 Nov 2019 07:18:35 +0000
+Received: from henryl-tu10x.nvidia.com (Not Verified[10.19.109.97]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dca5cca0001>; Mon, 11 Nov 2019 23:18:35 -0800
+From:   Henry Lin <henryl@nvidia.com>
+CC:     Henry Lin <henryl@nvidia.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: xhci: only set D3hot for pci device
+Date:   Tue, 12 Nov 2019 15:18:30 +0800
+Message-ID: <20191112071831.1043-1-henryl@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111085632.24d88706@hermes.lan>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573543115; bh=4YFauzFeS28mrBW+m+MC3Yqh22yBwd8ppo8M7Jb0IoM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=jbcsYfuI3mMwc+sOkFX07SgWsd0RiP5BkXjVdQenq4401f7/TKGL3Vjb+7n/kiv0O
+         whU2dAwalTi3JTsOdvJrV4GP2WHhKSQuXfbwzoonpMLEbz9dx7HA4u4aqDHiECIaw1
+         5O/MVJJKrFcYgozq2NT6gXaoZ5yEmyVUj03BKbnq/h/fl74zseNyls5XbDjbQ3y7Cj
+         BzrOA1BZ3n276CNg2++p81ZkPP/PF8ERPUsgqtEThE3JgRgAh2TYV9JC4GblFVVIK3
+         1e/h4fi3wH5HXVMW4ToxQ//bp1juyKNvK5Nsry8pQgsI0Ur8Jfr7rVeXkNonX8Tc9J
+         svbPg00+zdsWQ==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 08:56:32AM -0800, Stephen Hemminger wrote:
-> On Mon, 11 Nov 2019 22:05:03 +0800
-> Tony Lu <tonylu@linux.alibaba.com> wrote:
-> 
-> > This patch removes static inline from dev_put/dev_hold in order to help
-> > trace the pcpu_refcnt leak of net_device.
-> > 
-> > We have sufferred this kind of issue for several times during
-> > manipulating NIC between different net namespaces. It prints this
-> > log in dmesg:
-> > 
-> >   unregister_netdevice: waiting for eth0 to become free. Usage count = 1
-> > 
-> > However, it is hard to find out who called and leaked refcnt in time. It
-> > only left the crime scene but few evidence. Once leaked, it is not
-> > safe to fix it up on the running host. We can't trace dev_put/dev_hold
-> > directly, for the functions are inlined and used wildly amoung modules.
-> > And this issue is common, there are tens of patches fix net_device
-> > refcnt leak for various causes.
-> > 
-> > To trace the refcnt manipulating, this patch removes static inline from
-> > dev_put/dev_hold. We can use handy tools, such as eBPF with kprobe, to
-> > find out who holds but forgets to put refcnt. This will not be called
-> > frequently, so the overhead is limited.
-> > 
-> > Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
-> 
-> In the past dev_hold/dev_put was in the hot path for several
-> operations. What is the performance implication of doing this?
+xhci driver cannot call pci_set_power_state() on non-pci xhci host
+controllers.
 
-From code analysis, there should be a little performance backwards.
-I don't have the benchmark data for now. I will make a kernel module to
-take a series of benchmarks for dev_put/dev_hold. Actually there is a plan
-to take a whole solution for this issue. The benchmarks will be done
-after this.
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+---
+ drivers/usb/host/xhci.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Cheers
-Tony Lu
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 6c17e3fe181a..1fc16763dcda 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -761,6 +761,8 @@ static void xhci_stop(struct usb_hcd *hcd)
+ 	mutex_unlock(&xhci->mutex);
+ }
+ 
++extern struct device_type pci_dev_type;
++
+ /*
+  * Shutdown HC (not bus-specific)
+  *
+@@ -791,8 +793,12 @@ static void xhci_shutdown(struct usb_hcd *hcd)
+ 			readl(&xhci->op_regs->status));
+ 
+ 	/* Yet another workaround for spurious wakeups at shutdown with HSW */
+-	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+-		pci_set_power_state(to_pci_dev(hcd->self.sysdev), PCI_D3hot);
++	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP) {
++		struct device *dev = hcd->self.sysdev;
++
++		if (dev->type == &pci_dev_type)
++			pci_set_power_state(to_pci_dev(dev), PCI_D3hot);
++	}
+ }
+ 
+ #ifdef CONFIG_PM
+-- 
+2.17.1
+
