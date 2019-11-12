@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFD7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8362C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5710C214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870B2214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfKLXux (ORCPT
+        id S1727295AbfKLXuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:50:53 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57444 "EHLO
+        Tue, 12 Nov 2019 18:50:55 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57416 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727109AbfKLXug (ORCPT
+        by vger.kernel.org with ESMTP id S1727074AbfKLXug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 18:50:36 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfve-0008Il-R6; Tue, 12 Nov 2019 23:50:35 +0000
+        id 1iUfvd-0008II-WE; Tue, 12 Nov 2019 23:50:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-000581-B7; Tue, 12 Nov 2019 23:50:33 +0000
+        id 1iUfvc-00057X-Rj; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ori Nimron" <orinimron123@gmail.com>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 12 Nov 2019 23:48:18 +0000
-Message-ID: <lsq.1573602477.355052883@decadent.org.uk>
+        "kbuild test robot" <lkp@intel.com>,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        "Simon Horman" <simon.horman@netronome.com>
+Date:   Tue, 12 Nov 2019 23:48:12 +0000
+Message-ID: <lsq.1573602477.584421056@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 21/25] appletalk: enforce CAP_NET_RAW for raw sockets
+Subject: [PATCH 3.16 15/25] net: netem: fix error path for corrupted GSO
+ frames
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,33 +59,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-commit 6cc03e8aa36c51f3b26a0d21a3c4ce2809c842ac upstream.
+commit a7fa12d15855904aff1716e1fc723c03ba38c5cc upstream.
 
-When creating a raw AF_APPLETALK socket, CAP_NET_RAW needs to be checked
-first.
+To corrupt a GSO frame we first perform segmentation.  We then
+proceed using the first segment instead of the full GSO skb and
+requeue the rest of the segments as separate packets.
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If there are any issues with processing the first segment we
+still want to process the rest, therefore we jump to the
+finish_segs label.
+
+Commit 177b8007463c ("net: netem: fix backlog accounting for
+corrupted GSO frames") started using the pointer to the first
+segment in the "rest of segments processing", but as mentioned
+above the first segment may had already been freed at this point.
+
+Backlog corrections for parent qdiscs have to be adjusted.
+
+Fixes: 177b8007463c ("net: netem: fix backlog accounting for corrupted GSO frames")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reported-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/appletalk/ddp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/sched/sch_netem.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1029,6 +1029,11 @@ static int atalk_create(struct net *net,
- 	 */
- 	if (sock->type != SOCK_RAW && sock->type != SOCK_DGRAM)
- 		goto out;
-+
-+	rc = -EPERM;
-+	if (sock->type == SOCK_RAW && !kern && !capable(CAP_NET_RAW))
-+		goto out;
-+
- 	rc = -ENOMEM;
- 	sk = sk_alloc(net, PF_APPLETALK, GFP_KERNEL, &ddp_proto);
- 	if (!sk)
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -506,6 +506,7 @@ static int netem_enqueue(struct sk_buff
+ 		    (skb->ip_summed == CHECKSUM_PARTIAL &&
+ 		     skb_checksum_help(skb))) {
+ 			rc = qdisc_drop(skb, sch);
++			skb = NULL;
+ 			goto finish_segs;
+ 		}
+ 
+@@ -576,9 +577,10 @@ static int netem_enqueue(struct sk_buff
+ finish_segs:
+ 	if (segs) {
+ 		unsigned int len, last_len;
+-		int nb = 0;
++		int nb;
+ 
+-		len = skb->len;
++		len = skb ? skb->len : 0;
++		nb = skb ? 1 : 0;
+ 
+ 		while (segs) {
+ 			skb2 = segs->next;
+@@ -595,7 +597,8 @@ finish_segs:
+ 			}
+ 			segs = skb2;
+ 		}
+-		qdisc_tree_reduce_backlog(sch, -nb, prev_len - len);
++		/* Parent qdiscs accounted for 1 skb of size @prev_len */
++		qdisc_tree_reduce_backlog(sch, -(nb - 1), -(len - prev_len));
+ 	}
+ 	return NET_XMIT_SUCCESS;
+ }
 
