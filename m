@@ -2,114 +2,73 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27747C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6DCC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B67F20818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE0E21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfKLJZh (ORCPT
+        id S1726986AbfKLJaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:25:37 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:32931 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfKLJZg (ORCPT
+        Tue, 12 Nov 2019 04:30:30 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:45856 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfKLJaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:25:36 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUSQQ-0006xt-PU; Tue, 12 Nov 2019 10:25:26 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5ADC41C0084;
-        Tue, 12 Nov 2019 10:25:26 +0100 (CET)
-Date:   Tue, 12 Nov 2019 09:25:26 -0000
-From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] m68k: Convert missed RODATA to RO_DATA
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-m68k@lists.linux-m68k.org, Sam Creasey <sammy@sammy.net>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <201911110920.5840E9AF1@keescook>
-References: <201911110920.5840E9AF1@keescook>
+        Tue, 12 Nov 2019 04:30:30 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iUSVG-0007kW-2d; Tue, 12 Nov 2019 09:30:26 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] backlight: qcom-wled: fix spelling mistake "trigged" -> "triggered"
+Date:   Tue, 12 Nov 2019 09:30:25 +0000
+Message-Id: <20191112093025.98638-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Message-ID: <157355072603.29376.646015580479750741.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/build branch of tip:
+From: Colin Ian King <colin.king@canonical.com>
 
-Commit-ID:     de7156689d69e9861d9ddc54a9dea623c25020c5
-Gitweb:        https://git.kernel.org/tip/de7156689d69e9861d9ddc54a9dea623c25020c5
-Author:        Kees Cook <keescook@chromium.org>
-AuthorDate:    Mon, 11 Nov 2019 09:22:00 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 12 Nov 2019 09:56:51 +01:00
+There is a spelling mistake in a dev_err error message. Fix it.
 
-m68k: Convert missed RODATA to RO_DATA
-
-I missed two instances of the old RODATA macro (seems I was searching
-for vmlinux.lds* not vmlinux*lds*). Fix both instances and double-check
-the entire tree for other "RODATA" instances in linker scripts.
-
-Fixes: c82318254d15 ("vmlinux.lds.h: Replace RODATA with RO_DATA")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: linux-m68k@lists.linux-m68k.org
-Cc: Sam Creasey <sammy@sammy.net>
-Link: https://lkml.kernel.org/r/201911110920.5840E9AF1@keescook
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- arch/m68k/kernel/vmlinux-std.lds  | 2 +-
- arch/m68k/kernel/vmlinux-sun3.lds | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/backlight/qcom-wled.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/kernel/vmlinux-std.lds b/arch/m68k/kernel/vmlinux-std.lds
-index 6e7eb49..4d33da4 100644
---- a/arch/m68k/kernel/vmlinux-std.lds
-+++ b/arch/m68k/kernel/vmlinux-std.lds
-@@ -31,7 +31,7 @@ SECTIONS
+diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+index 33b6007c5e55..d46052d8ff41 100644
+--- a/drivers/video/backlight/qcom-wled.c
++++ b/drivers/video/backlight/qcom-wled.c
+@@ -322,7 +322,7 @@ static irqreturn_t wled_short_irq_handler(int irq, void *_wled)
+ 		wled->short_count = 1;
  
-   _sdata = .;			/* Start of data section */
- 
--  RODATA
-+  RO_DATA(4096)
- 
-   RW_DATA(16, PAGE_SIZE, THREAD_SIZE)
- 
-diff --git a/arch/m68k/kernel/vmlinux-sun3.lds b/arch/m68k/kernel/vmlinux-sun3.lds
-index 1a0ad6b..87d9f4d 100644
---- a/arch/m68k/kernel/vmlinux-sun3.lds
-+++ b/arch/m68k/kernel/vmlinux-sun3.lds
-@@ -24,7 +24,7 @@ SECTIONS
- 	*(.fixup)
- 	*(.gnu.warning)
- 	} :text = 0x4e75
--	RODATA
-+	RO_DATA(4096)
- 
-   _etext = .;			/* End of text section */
- 
+ 	if (wled->short_count > WLED_SHORT_CNT_MAX) {
+-		dev_err(wled->dev, "Short trigged %d times, disabling WLED forever!\n",
++		dev_err(wled->dev, "Short triggered %d times, disabling WLED forever!\n",
+ 			wled->short_count);
+ 		wled->disabled_by_short = true;
+ 		goto unlock_mutex;
+-- 
+2.20.1
+
