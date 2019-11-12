@@ -1,236 +1,129 @@
-Return-Path: <SRS0=rg8s=ZE=linuxdriverproject.org=driverdev-devel-bounces@kernel.org>
+Return-Path: <SRS0=Rs50=ZE=vger.kernel.org=linux-m68k-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80129C17440
-	for <driverdev-devel@archiver.kernel.org>; Tue, 12 Nov 2019 22:54:42 +0000 (UTC)
-Received: from whitealder.osuosl.org (smtp1.osuosl.org [140.211.166.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 5274C21925
-	for <driverdev-devel@archiver.kernel.org>; Tue, 12 Nov 2019 22:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14CAC43331
+	for <linux-m68k@archiver.kernel.org>; Tue, 12 Nov 2019 23:01:30 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 7593E20674
+	for <linux-m68k@archiver.kernel.org>; Tue, 12 Nov 2019 23:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZ3b0wvE"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 5274C21925
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=driverdev-devel-bounces@linuxdriverproject.org
-Received: from localhost (localhost [127.0.0.1])
-	by whitealder.osuosl.org (Postfix) with ESMTP id 0C69885F96;
-	Tue, 12 Nov 2019 22:54:42 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at osuosl.org
-Received: from whitealder.osuosl.org ([127.0.0.1])
-	by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id wuYvnoZRB22R; Tue, 12 Nov 2019 22:54:39 +0000 (UTC)
-Received: from ash.osuosl.org (ash.osuosl.org [140.211.166.34])
-	by whitealder.osuosl.org (Postfix) with ESMTP id CA2E585317;
-	Tue, 12 Nov 2019 22:54:39 +0000 (UTC)
-Received: from fraxinus.osuosl.org (smtp4.osuosl.org [140.211.166.137])
- by ash.osuosl.org (Postfix) with ESMTP id DD7761BF2B7
- for <devel@linuxdriverproject.org>; Tue, 12 Nov 2019 22:54:38 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
- by fraxinus.osuosl.org (Postfix) with ESMTP id DA56B83500
- for <devel@linuxdriverproject.org>; Tue, 12 Nov 2019 22:54:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at osuosl.org
-Received: from fraxinus.osuosl.org ([127.0.0.1])
- by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id DpW3z1NanP6I for <devel@linuxdriverproject.org>;
- Tue, 12 Nov 2019 22:54:38 +0000 (UTC)
-X-Greylist: from auto-whitelisted by SQLgrey-1.7.6
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- by fraxinus.osuosl.org (Postfix) with ESMTPS id 3890C834EE
- for <devel@linuxdriverproject.org>; Tue, 12 Nov 2019 22:54:38 +0000 (UTC)
-Received: from localhost (unknown [8.46.76.96])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mail.kernel.org (Postfix) with ESMTPSA id EF66F21925;
- Tue, 12 Nov 2019 22:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=default; t=1573599278;
- bh=6JP0GOFxXqz7uPi1zfAbz6zNkUOAnyg5Tm8bHnXJUNQ=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=jZ3b0wvEkm+nOC8NXFdRzToZmE2dq9r0zUsUI6Jei7b8C/0acFa9LkaFNn8F8sidU
- Y2JcsEHYazghknsDDPWlpUE89PhqGBTIDyqg6+FZht7Daz7X7EkXgTuwQ8QGpB1KcB
- GBzucF3QA4pqmlV2+MC2tnvICriZfOgCuJMKzMXI=
-Date: Tue, 12 Nov 2019 23:54:27 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH] vboxsf: move out of staging to fs/
-Message-ID: <20191112225427.GA1873491@kroah.com>
-References: <20191110154303.GA2867499@kroah.com>
- <20191112063440.GA15951@infradead.org>
- <20191112065629.GA1242198@kroah.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4HijsXE"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727178AbfKLXBa (ORCPT <rfc822;linux-m68k@archiver.kernel.org>);
+        Tue, 12 Nov 2019 18:01:30 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44076 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfKLXB3 (ORCPT
+        <rfc822;linux-m68k@lists.linux-m68k.org>);
+        Tue, 12 Nov 2019 18:01:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id az9so152870plb.11
+        for <linux-m68k@lists.linux-m68k.org>; Tue, 12 Nov 2019 15:01:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nExhpa8NtyhyvUyh20F6httON+9jpHubOC8X4R1/1QI=;
+        b=c4HijsXEjZGJqE7HF/OLTdBXGVnY9qLmNBULMzMpbSwMDUdlWMyYkBAj7Jv9KvJQq9
+         uQ/fhhX6CbwBVqkc6vhI0J9bVR6S+eypweTAwvYsABomRnDDk1wGcU2hJ/fV4/K6uu+1
+         c9+G8zkVxO8gfkNV8xNJ/wUCIdP5veO1BJPEs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nExhpa8NtyhyvUyh20F6httON+9jpHubOC8X4R1/1QI=;
+        b=RaQDUCo9Z3syPSPJVCm1cY0eFCo0kq49hh2MHakWJ13hOXSdvrQCj7WWRtazT/bexX
+         /GVgMr4Okm5ngEOA9hmCS9UAhJGybXYj7qTRlebS3gcGHBH4T4OkytHEjFagVKprRKTr
+         5SQUnqbv0hqagQUzAxuaR3iwCmmX0Hcs5l3CCw+KSGNI/Rc8/+hp7Sd35AW9/EN5ZMf6
+         G1GKUVZynVbt1M6PhI7FpscwRdlp3yoc8fKjftkuviyf+KRv6lkbbig9NHr2598wbLSh
+         Pw+E8dSFoi30UHDmdxg533VBg/th0uT6cgDQB47OEAV3wQqh09XQ6tQnlqwmF+n5Tu2t
+         XQMQ==
+X-Gm-Message-State: APjAAAUtLq3i8ieVzPXKJ0Rkbec2zkmRoYffIZnPYoH5FTmC5A7pU4qY
+        oD+n6ri5/z8nO8+y5PRLZ4HfJg==
+X-Google-Smtp-Source: APXvYqy/dNw+1S0sgv4o54+xgQ9m/sDAbXJguDm6De1m1sF3Ucjez84Z50LDqlIQCV97XGMiY2eUjw==
+X-Received: by 2002:a17:902:b282:: with SMTP id u2mr266015plr.301.1573599688858;
+        Tue, 12 Nov 2019 15:01:28 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id em16sm159840pjb.21.2019.11.12.15.01.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 15:01:27 -0800 (PST)
+Date:   Tue, 12 Nov 2019 15:01:26 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 0/9] open: introduce openat2(2) syscall
+Message-ID: <201911121457.7D02692@keescook>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112065629.GA1242198@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-BeenThere: driverdev-devel@linuxdriverproject.org
-X-Mailman-Version: 2.1.29
-Precedence: list
-List-Id: Linux Driver Project Developer List
- <driverdev-devel.linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>, 
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>, 
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
- devel@linuxdriverproject.org
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-Message-ID: <20191112225427.TyFiqc9AFdbEZQOsyud_bKGYJic2L0U5TMqPZuvHw-Y@z>
+In-Reply-To: <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
+Sender: linux-m68k-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-m68k.vger.kernel.org>
+X-Mailing-List: linux-m68k@vger.kernel.org
+Message-ID: <20191112230126.fB6tgZWuPfytE2mByhRZoPC7CCs14ObIOeCrnAjR5yo@z>
 
-When Christoph said this code was "good enough to go in now" I thought
-he ment to put it in drivers/staging/ for now, when in fact he ment to
-put it into the "real" part of the kernel instead.
+On Tue, Nov 12, 2019 at 12:24:04AM +1100, Aleksa Sarai wrote:
+> On 2019-11-05, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > This patchset is being developed here:
+> >   <https://github.com/cyphar/linux/tree/openat2/master>
+> > 
+> > Patch changelog:
+> >  v15:
+> >   * Fix code style for LOOKUP_IN_ROOT handling in path_init(). [Linus Torvalds]
+> >   * Split out patches for each individual LOOKUP flag.
+> >   * Reword commit messages to give more background information about the
+> >     series, as well as mention the semantics of each flag in more detail.
+> > [...]
+> 
+> Ping -- this patch hasn't been touched for a week. Thanks.
 
-So move the code to the "real" part of the kernel as it's good enough.
+If I've been following correctly, everyone is happy with this series.
+(i.e. Linus's comment appear to have been addressed.)
 
-Reported-by: Christoph Hellwig <hch@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
+Perhaps the next question is should this go via a pull request by you to
+Linus directly during the v5.5 merge window, via akpm, via akpm, via
+Christian, or some other path? Besides Linus, it's not been clear who
+should "claim" this series. :)
 
-Christoph, this is what you mean, right?  If so, I'll send this to Linus
-later this week, or he can grab it right from this patch :)
-
-thanks,
-
-greg k-h
-
- MAINTAINERS                                      | 2 +-
- drivers/staging/Kconfig                          | 2 --
- drivers/staging/Makefile                         | 1 -
- fs/Kconfig                                       | 1 +
- fs/Makefile                                      | 1 +
- {drivers/staging => fs}/vboxsf/Kconfig           | 0
- {drivers/staging => fs}/vboxsf/Makefile          | 0
- {drivers/staging => fs}/vboxsf/TODO              | 0
- {drivers/staging => fs}/vboxsf/dir.c             | 0
- {drivers/staging => fs}/vboxsf/file.c            | 0
- {drivers/staging => fs}/vboxsf/shfl_hostintf.h   | 0
- {drivers/staging => fs}/vboxsf/super.c           | 0
- {drivers/staging => fs}/vboxsf/utils.c           | 0
- {drivers/staging => fs}/vboxsf/vboxsf_wrappers.c | 0
- {drivers/staging => fs}/vboxsf/vfsmod.h          | 0
- 15 files changed, 3 insertions(+), 4 deletions(-)
- rename {drivers/staging => fs}/vboxsf/Kconfig (100%)
- rename {drivers/staging => fs}/vboxsf/Makefile (100%)
- rename {drivers/staging => fs}/vboxsf/TODO (100%)
- rename {drivers/staging => fs}/vboxsf/dir.c (100%)
- rename {drivers/staging => fs}/vboxsf/file.c (100%)
- rename {drivers/staging => fs}/vboxsf/shfl_hostintf.h (100%)
- rename {drivers/staging => fs}/vboxsf/super.c (100%)
- rename {drivers/staging => fs}/vboxsf/utils.c (100%)
- rename {drivers/staging => fs}/vboxsf/vboxsf_wrappers.c (100%)
- rename {drivers/staging => fs}/vboxsf/vfsmod.h (100%)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eb19fad370d7..069dc018073d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17342,7 +17342,7 @@ VIRTUAL BOX SHARED FOLDER VFS DRIVER:
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	linux-fsdevel@vger.kernel.org
- S:	Maintained
--F:	drivers/staging/vboxsf/*
-+F:	fs/vboxsf/*
- 
- VIRTUAL SERIO DEVICE DRIVER
- M:	Stephen Chandler Paul <thatslyude@gmail.com>
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index 927d29eb92c6..6f1fa4c849a1 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -125,6 +125,4 @@ source "drivers/staging/exfat/Kconfig"
- 
- source "drivers/staging/qlge/Kconfig"
- 
--source "drivers/staging/vboxsf/Kconfig"
--
- endif # STAGING
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index f01f04199073..a90f9b308c8d 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -53,4 +53,3 @@ obj-$(CONFIG_UWB)		+= uwb/
- obj-$(CONFIG_USB_WUSB)		+= wusbcore/
- obj-$(CONFIG_EXFAT_FS)		+= exfat/
- obj-$(CONFIG_QLGE)		+= qlge/
--obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 2501e6f1f965..a6b57d790100 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -321,5 +321,6 @@ endif # NETWORK_FILESYSTEMS
- source "fs/nls/Kconfig"
- source "fs/dlm/Kconfig"
- source "fs/unicode/Kconfig"
-+source "fs/vboxsf/Kconfig"
- 
- endmenu
-diff --git a/fs/Makefile b/fs/Makefile
-index 14231b4cf383..aecbb088be47 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -132,3 +132,4 @@ obj-$(CONFIG_CEPH_FS)		+= ceph/
- obj-$(CONFIG_PSTORE)		+= pstore/
- obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
- obj-$(CONFIG_EROFS_FS)		+= erofs/
-+obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
-diff --git a/drivers/staging/vboxsf/Kconfig b/fs/vboxsf/Kconfig
-similarity index 100%
-rename from drivers/staging/vboxsf/Kconfig
-rename to fs/vboxsf/Kconfig
-diff --git a/drivers/staging/vboxsf/Makefile b/fs/vboxsf/Makefile
-similarity index 100%
-rename from drivers/staging/vboxsf/Makefile
-rename to fs/vboxsf/Makefile
-diff --git a/drivers/staging/vboxsf/TODO b/fs/vboxsf/TODO
-similarity index 100%
-rename from drivers/staging/vboxsf/TODO
-rename to fs/vboxsf/TODO
-diff --git a/drivers/staging/vboxsf/dir.c b/fs/vboxsf/dir.c
-similarity index 100%
-rename from drivers/staging/vboxsf/dir.c
-rename to fs/vboxsf/dir.c
-diff --git a/drivers/staging/vboxsf/file.c b/fs/vboxsf/file.c
-similarity index 100%
-rename from drivers/staging/vboxsf/file.c
-rename to fs/vboxsf/file.c
-diff --git a/drivers/staging/vboxsf/shfl_hostintf.h b/fs/vboxsf/shfl_hostintf.h
-similarity index 100%
-rename from drivers/staging/vboxsf/shfl_hostintf.h
-rename to fs/vboxsf/shfl_hostintf.h
-diff --git a/drivers/staging/vboxsf/super.c b/fs/vboxsf/super.c
-similarity index 100%
-rename from drivers/staging/vboxsf/super.c
-rename to fs/vboxsf/super.c
-diff --git a/drivers/staging/vboxsf/utils.c b/fs/vboxsf/utils.c
-similarity index 100%
-rename from drivers/staging/vboxsf/utils.c
-rename to fs/vboxsf/utils.c
-diff --git a/drivers/staging/vboxsf/vboxsf_wrappers.c b/fs/vboxsf/vboxsf_wrappers.c
-similarity index 100%
-rename from drivers/staging/vboxsf/vboxsf_wrappers.c
-rename to fs/vboxsf/vboxsf_wrappers.c
-diff --git a/drivers/staging/vboxsf/vfsmod.h b/fs/vboxsf/vfsmod.h
-similarity index 100%
-rename from drivers/staging/vboxsf/vfsmod.h
-rename to fs/vboxsf/vfsmod.h
 -- 
-2.24.0
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+Kees Cook
