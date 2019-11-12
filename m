@@ -2,138 +2,84 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D360C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A0BC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBC220578
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwQfrM41"
+	by mail.kernel.org (Postfix) with ESMTP id 1FEC820578
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfKLXwn (ORCPT
+        id S1727576AbfKLXwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 12 Nov 2019 18:52:43 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33688 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfKLXwn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:52:43 -0500
-Received: by mail-pl1-f193.google.com with SMTP id ay6so232140plb.0;
-        Tue, 12 Nov 2019 15:52:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tw91lst0dNde7dimiqIf8EtBl/EXAQ1HLGmuLyxMvds=;
-        b=TwQfrM41lZiZHLZb/qu7NsuUBShPPqwMoTbrjeRet1KfqGkoxSJ7nrrp2y5GTT5qi1
-         NPUJ7+KFPGhFJoviLKCtyVsE5Q4+A1rvqmHXO9foeBHnHkCRqOm+CzSwh2lVMPLlmyuz
-         yUvbDgNljUXlGAtYOLYosFdOTJsUlKPQKYCv8uoc7q7UWV/+AynJpbx13ZZ/cHtNlhip
-         scXCSUm6YZsGsaX2uJDZfNXmP/OmNki5/rQq8wAMCO8KxVMbbiM9oWCOgTloyMh8U+1p
-         hbRwiJ3CygN3XauzLUEdl5qh2niHtJLM67ABFRrERNmn1lQXekSPhagF6DUbbS9wu6XH
-         uQvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tw91lst0dNde7dimiqIf8EtBl/EXAQ1HLGmuLyxMvds=;
-        b=rMWVLo7sXInoaEc8F0L/ST3QZHWVFmFlv32lR34RKADYmLfVMWQXEuNstJiE6u9zUe
-         Chf5hVvp3FdOSco4eSb0ktpWRWNk4wNDKFuQQwtv2oP2A8p70yjdaBIDBFeVB6GKADwQ
-         8a6RKB57vVOUKDZg2o6EE/RRLC8a2N0ndANJoEme37EkO56d4wpt4w2az8HVmM7HVwWe
-         KhcxuWL9tZWiLUMg1jF2LMZLoeZRUUgXKjtx+ejAicZ0/IakhbEyPFxBblQm/4o30hwY
-         cKshhXMUxnEaawnMTt+83Lw/bIaVoaBh8jdSz/58lQ0uj879z62nIn0d3E6dtw0MsWga
-         41sg==
-X-Gm-Message-State: APjAAAVVs0I46rDUywH4HkfUfBo4UUx2d5DTy2e4cRc8e68RuP4rDz3u
-        cjEQj7+SdeE3tScbuYvGDSY=
-X-Google-Smtp-Source: APXvYqzTyHk7x9efOOdmCLESQZEO9lqisWDr1jViWTdzFHuFT5qZpaYOLEwdN+vqqmSTc/Km2iAsmg==
-X-Received: by 2002:a17:902:1:: with SMTP id 1mr490950pla.338.1573602761713;
-        Tue, 12 Nov 2019 15:52:41 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v3sm98110pfi.26.2019.11.12.15.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 15:52:40 -0800 (PST)
-Date:   Tue, 12 Nov 2019 15:52:38 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Input: ili210x - add resolution to chip
- operations structure
-Message-ID: <20191112235238.GE13374@dtor-ws>
-References: <20191112210148.3535-1-TheSven73@gmail.com>
+Received: from mga14.intel.com ([192.55.52.115]:1529 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726936AbfKLXwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 18:52:42 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 15:52:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
+   d="scan'208";a="235064254"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Nov 2019 15:52:41 -0800
+Date:   Tue, 12 Nov 2019 15:52:41 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
+Message-ID: <20191112235240.GB5792@iweiny-DESK2.sc.intel.com>
+References: <20191112003452.4756-1-ira.weiny@intel.com>
+ <20191112003452.4756-3-ira.weiny@intel.com>
+ <20191112012017.GT6219@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112210148.3535-1-TheSven73@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191112012017.GT6219@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:01:47PM -0500, Sven Van Asbroeck wrote:
-> Optionally allow the touch screen resolution to be set by adding
-> it to the chip operations structure. If it is omitted (left zero),
-> the resolution defaults to 64K. Which is the previously hard-coded
-> value.
+On Mon, Nov 11, 2019 at 05:20:17PM -0800, Darrick J. Wong wrote:
+> On Mon, Nov 11, 2019 at 04:34:52PM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> >  };
+> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > index 865543e41fb4..3d2e89ac72ed 100644
+> > --- a/fs/xfs/xfs_file.c
+> > +++ b/fs/xfs/xfs_file.c
+> > @@ -1294,6 +1294,17 @@ xfs_file_mmap(
+> >  	return 0;
+> >  }
+> >  
+> > +static int
+> > +xfs_iomap_swapfile_activate(
 > 
-> Set the ili2117 resolution to 2048, as indicated in its datasheet.
-> 
-> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
-> Cc: Marek Vasut <marex@denx.de>
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: <linux-kernel@vger.kernel.org>
-> Cc: linux-input@vger.kernel.org
-> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->  drivers/input/touchscreen/ili210x.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-> index a6feae5ce887..3b8e24815a1f 100644
-> --- a/drivers/input/touchscreen/ili210x.c
-> +++ b/drivers/input/touchscreen/ili210x.c
-> @@ -31,6 +31,7 @@ struct ili2xxx_chip {
->  				 unsigned int *x, unsigned int *y);
->  	bool (*continue_polling)(const u8 *data, bool touch);
->  	unsigned int max_touches;
-> +	unsigned int resolution;
->  };
->  
->  struct ili210x {
-> @@ -160,6 +161,7 @@ static const struct ili2xxx_chip ili211x_chip = {
->  	.parse_touch_data	= ili211x_touchdata_to_coords,
->  	.continue_polling	= ili211x_decline_polling,
->  	.max_touches		= 10,
-> +	.resolution		= 2048,
->  };
->  
->  static int ili251x_read_reg(struct i2c_client *client,
-> @@ -336,6 +338,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
->  	struct gpio_desc *reset_gpio;
->  	struct input_dev *input;
->  	int error;
-> +	unsigned int max_xy;
->  
->  	dev_dbg(dev, "Probing for ILI210X I2C Touschreen driver");
->  
-> @@ -386,8 +389,9 @@ static int ili210x_i2c_probe(struct i2c_client *client,
->  	input->id.bustype = BUS_I2C;
->  
->  	/* Multi touch */
-> -	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 0xffff, 0, 0);
-> -	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 0xffff, 0, 0);
-> +	max_xy = (chip->resolution ?: SZ_64K) - 1;
+> Might as well rename this xfs_file_swap_activate().
 
-I had to add linux/sizes.h for this.
+Done.
 
-Applied, thank you.
+V1 with fixed btrfs, to be out shortly.
 
--- 
-Dmitry
+Ira
+
