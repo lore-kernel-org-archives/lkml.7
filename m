@@ -2,63 +2,61 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814CCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C380C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0BC222C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D4B222BD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IrN79z7+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E8IvR/Wu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfKLOZn (ORCPT
+        id S1727452AbfKLO0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:25:43 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49456 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfKLOZD (ORCPT
+        Tue, 12 Nov 2019 09:26:35 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38850 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfKLO0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:25:03 -0500
+        Tue, 12 Nov 2019 09:26:35 -0500
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEOwPq090447;
-        Tue, 12 Nov 2019 08:24:58 -0600
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEQV8S098659;
+        Tue, 12 Nov 2019 08:26:31 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573568698;
-        bh=22YioS899q9Ll42QHlfNQAPOlj+BD8xYT6U/0yMCex8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=IrN79z7+ILqHN7QpSIhflcCinilYdMoaryxHTBD99c80ReyLi+kEGU4waaIzp04fN
-         rZka47b0OWJIYckmNbTmvuL53DlRRk5HkyhrQo5q/De1x1mbR1+TMcQCcVaLbfo9Yt
-         X5ikkcqD17QegtoCmHjvh1yCvsNhOpVomMwHVFkg=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEOwMc030516;
-        Tue, 12 Nov 2019 08:24:58 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1573568791;
+        bh=anO7SNWwiXlY2/qwTzzyhWcIR7ms5orGxlRME2mhQ+g=;
+        h=From:To:CC:Subject:Date;
+        b=E8IvR/WugdeprIvqxpg1Bhx+BJXkJCZL3Qx9SNZxfGmpKfdVr2wAN4aA8uFZszM1Q
+         ZuU4/BL76BjcUIvwiIwK8/Kv99Cz4JAZ4nkZfe6xMJktdsOq8oliA2QnDBQR1EgGGk
+         C7t91jOAg2GCZBJhi89IhPPXEMMhMGG5sICH0skE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEQVsK033636;
+        Tue, 12 Nov 2019 08:26:31 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:24:40 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:26:12 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:24:40 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:26:30 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEOrBh036029;
-        Tue, 12 Nov 2019 08:24:57 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEQUtt040290;
+        Tue, 12 Nov 2019 08:26:30 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
 CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 02/10] ARM: dts: dra7: add cam clkctrl node
-Date:   Tue, 12 Nov 2019 08:27:45 -0600
-Message-ID: <20191112142753.22976-3-bparrot@ti.com>
+Subject: [Patch v2 0/3] ARM: dts: am43x-vpfe/ov2659.patch
+Date:   Tue, 12 Nov 2019 08:29:26 -0600
+Message-ID: <20191112142929.23058-1-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191112142753.22976-1-bparrot@ti.com>
-References: <20191112142753.22976-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -67,43 +65,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clkctrl nodes for CAM domain.
+This patch series adds the missing camera endpoint (ov2659) as well as
+the required source clocks nodes for the sensor.
 
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "cam-clkctrl@" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
+On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
+clock nodes/tree was removed as it was unsed at the time, we are
+re-adding the needed clock nodes here.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes since v1:
+- Fix clock name to make it generic
+- Add non-standard clock node naming to commit message as per Tony's
+  comment
+- Rename all clock nodes to use '-' instead of '_'
 
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index d1c2406ec71c..199f8d483f75 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -1734,6 +1734,20 @@
- 		};
- 	};
- 
-+	cam_cm: cam-cm@1000 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1000 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1000 0x100>;
-+
-+		cam_clkctrl: cam-clkctrl@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x2c>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
- 	dss_cm: dss-cm@1100 {
- 		compatible = "ti,omap4-cm";
- 		reg = <0x1100 0x100>;
+Benoit Parrot (2):
+  ARM: dts: am437x-sk-evm: Add VPFE and OV2659 entries
+  ARM: dts: am43x-epos-evm: Add VPFE and OV2659 entries
+
+Tero Kristo (1):
+  ARM: dts: am43xx: add support for clkout1 clock
+
+ arch/arm/boot/dts/am437x-sk-evm.dts  | 27 +++++++++++++-
+ arch/arm/boot/dts/am43x-epos-evm.dts | 23 +++++++++++-
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
+ 3 files changed, 102 insertions(+), 2 deletions(-)
+
 -- 
 2.17.1
 
