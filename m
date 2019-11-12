@@ -2,144 +2,247 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481B3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A13EC17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19798206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08733206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lih8wHUS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olrYlMOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfKLMxM (ORCPT
+        id S1727134AbfKLM57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:53:12 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38248 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfKLMxL (ORCPT
+        Tue, 12 Nov 2019 07:57:59 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:33146 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLM57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:53:11 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so11487391wro.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 04:53:09 -0800 (PST)
+        Tue, 12 Nov 2019 07:57:59 -0500
+Received: by mail-qv1-f68.google.com with SMTP id x14so6305546qvu.0;
+        Tue, 12 Nov 2019 04:57:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6PdLF3CON3lp+JHyPTH8iGB32KYNSuh1vXTDxtTcv+s=;
-        b=lih8wHUSa7JBlyBDdzv3ehKrIStkykUffs0LjwQlGIX1DCqltL0ZDvNUwSrS9mHScW
-         z/Kh91aAul5A5bSP7D70WhHFwNHwYfNUEJ3U7Y+WxI49gKH2fvkMyyOVToU6H/XUDxz+
-         EakToBLTINmWE0ISpPUfi4qlc6iBtBBKVP5Saa5fLObEBjBDJKn7wbE46mBp0Ov3wXiu
-         rhncLWw+b5KjNyRsv3bptwjPhvDE5fOZogP33ulTOyds9WERqwneFyNuYzOK6TqJlDgE
-         DlXDWD7IZAFffIkzSYYUchBVxuz2XCAVz8G5KFELxH2O+5HdnkcVhkLALU0G3r7Bc9/P
-         ZjaA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NjWk4TEYN8vBI+EZudhtgsQBzRXhxKSR/VvC8eztl2Q=;
+        b=olrYlMOfGyc8ZLOn40CL3KqyOmUV5bZadSmnuHPqjQFMImWWYKDgqbTdEr5PxK/MqC
+         +0rwCrarnoYYmYxEDZV/6IFf5rD7m5/R8hvdGIAlHlFoTr0KQfnY67oty8TtVjdZUgFl
+         uERzayd/tyCjT9fWkXf1HI1j/b018Vse3bEL/QQL/2CmlJAEzPETM24ZzrcQrC3603Ta
+         T2A+w8lFrlR8STUrgnVLoMvoU420KIWlGfhnCBAkkIlWkimnXoJlAz6UTUNYiCp8tY76
+         TuRpRQCwyJFgzsqIYgWt5jHwpI6T2bXUh4i3i4AvLqWDLiiJTlxGblWGcQq8oxZ9HD41
+         MV6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6PdLF3CON3lp+JHyPTH8iGB32KYNSuh1vXTDxtTcv+s=;
-        b=cAfUoc0u+WGgzJXsuMpoiEgWlPb+7vKVWq7vwiiefM1bVJVemiNknm73Goy+3sHnso
-         mWynH9gM5E3lyVrOspKbf69gvu6LNG9TSmeTBv42Z5icWLKi9kSeRKUSlORvo8XbQ0Cr
-         nHMn0G07aaoFyDX2rzVfJfXY8gR1XZdBgXe/dM0u3jJ9lRAa1V/5GBCrowxZd1CSbQja
-         q9CZDdAr/VQgVGHgONj4ccRCxOhkXcA3G85MoUp6AAiKpjP3y46S5yzk8xIVdSZOCPzE
-         Nn8uq7FIzfSByG3Jn37bE+zv7UgWBb+iUDCDCf8ejCjOiMSAYOTloDJM/1yUhb6UtOe/
-         40SA==
-X-Gm-Message-State: APjAAAVbVCoSp//dttE7Zl4g0rUXOdPwzRRwmUlAca7qDgTXeHU9rZgJ
-        urCgi+RA/vOUrhQoh07gNa9RJwcmdwaINQ==
-X-Google-Smtp-Source: APXvYqwyh6aG2sQ7lJc1UUG8l6HtLNK7oWi0ME1YR2Fm3vqBO9eHCcpDkoRXlWg6DiqsP1+DywQS8w==
-X-Received: by 2002:adf:e701:: with SMTP id c1mr17609377wrm.166.1573563188372;
-        Tue, 12 Nov 2019 04:53:08 -0800 (PST)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id b8sm17748271wrt.39.2019.11.12.04.53.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NjWk4TEYN8vBI+EZudhtgsQBzRXhxKSR/VvC8eztl2Q=;
+        b=Su3K0E5cDBtn9/JFzTtmUU5ebpqpjJ7+Uwnhw/6qfxqx+B+1HM7TsbCUW/FhNrpK0p
+         Obvaj0f0KU7JFO/Nld5/k0WzbS1WrRUaRtqnC2wTN+sN7QgG4WIRcqpPdjYUDEFMLbXB
+         UfCkHIv/szPD7zHW9H4fpTFNbWv3gfN1ePiY5wSyPqPIYTH64IAfBe7fz5hxi5evU7ru
+         8WK17OnOrZOY0CyDFKdaIAA1uCzNn4DtZhLXjesI9yuNRDn++JvhOlpHD1xoOFA7tFZn
+         I5loZ27Fzlg/Z60vIQi+w6UvUALRBNQgoiFXn7NnLUV0OTYoVv1gn+WUX3iEoFtKZmTK
+         kNLQ==
+X-Gm-Message-State: APjAAAUJk6sw6lICbXKrkPXYnMvVI5Wh87L804KQqffPzrCKASZ4EDM3
+        C14Zun18iciwZNZo+1ZbQ0E=
+X-Google-Smtp-Source: APXvYqzO55gCJ/uVMy0KkNfkBLsXnKAsyVWjq7p7P4ENoa5s6jvlMQs8jfmzBt5uc6UVFCv/QU24Qg==
+X-Received: by 2002:ad4:50c6:: with SMTP id e6mr1963882qvq.220.1573563478120;
+        Tue, 12 Nov 2019 04:57:58 -0800 (PST)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id q17sm12081804qtq.58.2019.11.12.04.57.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 04:53:07 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:53:05 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 2/2] ARM64: dts: allwinner: add pineh64 model B
-Message-ID: <20191112125305.GD18647@Red>
-References: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
- <1573316433-40669-3-git-send-email-clabbe@baylibre.com>
- <20191112120455.GY4345@gilmour.lan>
+        Tue, 12 Nov 2019 04:57:57 -0800 (PST)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        rfontana@redhat.com, kstewart@linuxfoundation.org,
+        tglx@linutronix.de
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] media: dvb_dummy_fe: Fix ERROR: POINTER_LOCATION
+Date:   Tue, 12 Nov 2019 09:50:14 -0300
+Message-Id: <20191112125014.5604-1-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112120455.GY4345@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 01:04:55PM +0100, Maxime Ripard wrote:
-> On Sat, Nov 09, 2019 at 04:20:33PM +0000, Corentin Labbe wrote:
-> > This patch adds the model B of the PineH64.
-> > The model B is smaller than the pine64 model A and has no PCIE slot.
-> >
-> > The only devicetree difference with the pineH64 model A, is the PHY
-> > regulator and the HDMI connector node.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  .../devicetree/bindings/arm/sunxi.yaml        |  5 +++++
-> >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
-> >  .../allwinner/sun50i-h6-pine-h64-modelB.dts   | 21 +++++++++++++++++++
-> >  3 files changed, 27 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > index b8ec616c2538..227217bf28df 100644
-> > --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > @@ -604,6 +604,11 @@ properties:
-> >            - const: pine64,pine-h64-modelA
-> >            - const: allwinner,sun50i-h6
-> >
-> > +      - description: Pine64 PineH64 model B
-> > +        items:
-> > +          - const: pine64,pine-h64-modelB
-> > +          - const: allwinner,sun50i-h6
-> > +
-> >        - description: Pine64 LTS
-> >          items:
-> >            - const: pine64,pine64-lts
-> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> > index d2418021768b..bda89b9ccb4a 100644
-> > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > @@ -26,4 +26,5 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
-> > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelB.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-tanix-tx6.dtb
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-> > new file mode 100644
-> > index 000000000000..063a85223faa
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-> > @@ -0,0 +1,21 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > +/*
-> > + * Copyright (C) 2019 Corentin LABBE <clabbe@baylibre.com>
-> > + */
-> > +
-> > +#include "sun50i-h6-pine-h64.dts"
-> > +
-> > +/ {
-> > +	model = "Pine H64 model B";
-> > +	compatible = "pine64,pine-h64-modelB", "allwinner,sun50i-h6";
-> 
-> compatibles are usually lowercase, what about pine64,pine-h64-model-b?
-> 
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Perfect, I will use it.
+Change foo* bar to foo *bar to avoid ERROR: POINTER_LOCATION in checkpatch.pl
 
-Regards
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
+
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
+
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_read_snr(struct dvb_frontend* fe, u16* snr)
+
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_read_snr(struct dvb_frontend* fe, u16* snr)
+
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend* fe, u32* ucblocks)
+
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend* fe, u32* ucblocks)
+
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
+
+ERROR: "foo* bar" should be "foo *bar"
++static int dvb_dummy_fe_init(struct dvb_frontend* fe)
+
+ERROR: "foo* bar" should be "foo *bar"
++static void dvb_dummy_fe_release(struct dvb_frontend* fe)
+
+ERROR: "foo* bar" should be "foo *bar"
++	struct dvb_dummy_fe_state* state = fe->demodulator_priv;
+
+ERROR: "foo* bar" should be "foo *bar"
++struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
+
+ERROR: "foo* bar" should be "foo *bar"
++	struct dvb_dummy_fe_state* state = NULL;
+
+ERROR: "foo* bar" should be "foo *bar"
++	struct dvb_dummy_fe_state* state = NULL;
+
+ERROR: "foo* bar" should be "foo *bar"
++	struct dvb_dummy_fe_state* state = NULL;
+
+Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+
+------------------------------------------------------------
+Changes in v2:
+
+-Added checkpatch.pl previous output so it's more clear what
+is being fixed by this patch.
+
+---
+ drivers/media/dvb-frontends/dvb_dummy_fe.c | 24 +++++++++++-----------
+ drivers/media/dvb-frontends/dvb_dummy_fe.h |  6 +++---
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+index 4db679cb70ad..8413038aa30b 100644
+--- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
++++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+@@ -31,25 +31,25 @@ static int dvb_dummy_fe_read_status(struct dvb_frontend *fe,
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_ber(struct dvb_frontend* fe, u32* ber)
++static int dvb_dummy_fe_read_ber(struct dvb_frontend *fe, u32 *ber)
+ {
+ 	*ber = 0;
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
++static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
+ {
+ 	*strength = 0;
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_snr(struct dvb_frontend* fe, u16* snr)
++static int dvb_dummy_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
+ {
+ 	*snr = 0;
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend* fe, u32* ucblocks)
++static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
+ {
+ 	*ucblocks = 0;
+ 	return 0;
+@@ -77,12 +77,12 @@ static int dvb_dummy_fe_set_frontend(struct dvb_frontend *fe)
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
++static int dvb_dummy_fe_sleep(struct dvb_frontend *fe)
+ {
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_init(struct dvb_frontend* fe)
++static int dvb_dummy_fe_init(struct dvb_frontend *fe)
+ {
+ 	return 0;
+ }
+@@ -99,17 +99,17 @@ static int dvb_dummy_fe_set_voltage(struct dvb_frontend *fe,
+ 	return 0;
+ }
+ 
+-static void dvb_dummy_fe_release(struct dvb_frontend* fe)
++static void dvb_dummy_fe_release(struct dvb_frontend *fe)
+ {
+-	struct dvb_dummy_fe_state* state = fe->demodulator_priv;
++	struct dvb_dummy_fe_state *state = fe->demodulator_priv;
+ 	kfree(state);
+ }
+ 
+ static const struct dvb_frontend_ops dvb_dummy_fe_ofdm_ops;
+ 
+-struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
++struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void)
+ {
+-	struct dvb_dummy_fe_state* state = NULL;
++	struct dvb_dummy_fe_state *state = NULL;
+ 
+ 	/* allocate memory for the internal state */
+ 	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+@@ -126,7 +126,7 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qpsk_ops;
+ 
+ struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
+ {
+-	struct dvb_dummy_fe_state* state = NULL;
++	struct dvb_dummy_fe_state *state = NULL;
+ 
+ 	/* allocate memory for the internal state */
+ 	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+@@ -143,7 +143,7 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qam_ops;
+ 
+ struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
+ {
+-	struct dvb_dummy_fe_state* state = NULL;
++	struct dvb_dummy_fe_state *state = NULL;
+ 
+ 	/* allocate memory for the internal state */
+ 	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.h b/drivers/media/dvb-frontends/dvb_dummy_fe.h
+index 526fabd7751f..35efe2ce1a88 100644
+--- a/drivers/media/dvb-frontends/dvb_dummy_fe.h
++++ b/drivers/media/dvb-frontends/dvb_dummy_fe.h
+@@ -12,9 +12,9 @@
+ #include <media/dvb_frontend.h>
+ 
+ #if IS_REACHABLE(CONFIG_DVB_DUMMY_FE)
+-extern struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void);
+-extern struct dvb_frontend* dvb_dummy_fe_qpsk_attach(void);
+-extern struct dvb_frontend* dvb_dummy_fe_qam_attach(void);
++extern struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void);
++extern struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void);
++extern struct dvb_frontend *dvb_dummy_fe_qam_attach(void);
+ #else
+ static inline struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void)
+ {
+-- 
+2.24.0
+
