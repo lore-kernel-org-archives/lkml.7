@@ -2,197 +2,700 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A47FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897E4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD8A214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUNUmyID"
+	by mail.kernel.org (Postfix) with ESMTP id 4DA84214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbfKLQyh (ORCPT
+        id S1727699AbfKLQx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:54:37 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44596 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfKLQyg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:54:36 -0500
-Received: by mail-qt1-f193.google.com with SMTP id o11so20435298qtr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:54:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uRDDtR+g6T7cAS8dOvWZ7lRag0SQ32/105UUcuFUgRM=;
-        b=cUNUmyID1o3qDKWEHs0cHvbYKAtTw8mUvrIS96y3gScQeRnNKqbRBmxMN5QIkISvMr
-         2BkKyMv3ROjWyx7NwaGKhqMGclN2QmjQLw0SI8R4EHvvJrluQ5GhbaL6GFZ1DmMEasDW
-         sszIqlk55au2BZ67KtfPO++ZjNjRMhlNXncTWtHcFRvcHfsb2MzyWmotrpVqhBsaM1QI
-         z4oLaGGo1qiTbE1shBQ6YR1YsQhwJ0d1pMEuwtlJdfwE37IdY6pIo+EWrqG+wkqJmdRQ
-         Uat+ctVZTn1o7xxUgR7DbMRWzw3NTyo1ydixeAA7dooDwuEul9TI4JDQkBYGk+pgvMaJ
-         VxpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=uRDDtR+g6T7cAS8dOvWZ7lRag0SQ32/105UUcuFUgRM=;
-        b=pInWYm6qizOXYuoMosLeWEBDiZLv3S45md35kJW1OON7GXmzfIBg0PETfB2R9KCIRA
-         OTVAn8Km9+seQt0afJoj1Q2U+5fPGddyVdwN+V7yclBa1SU3riVu+uxFQFWQQe8liDhF
-         WB+CBfkWS/HoARb+L6evFiFWYaet8Fjvnd5yB3kwJdt1F7GpQXl4P2Bh8r765xyqX86X
-         LLyI+HzgcLFPisjTeg3VFZgy58fgA7hmfeSGu01eU4x/l3TL5IBXPIhQwhbpY515B3QR
-         U/D0T01EiJmA6di3Ls6oJpRU4vMMuhytBh2VYNndByP8P6dDg3sleD+dvZFnf5aImeCb
-         U2Iw==
-X-Gm-Message-State: APjAAAV6h5IGJRZTVhLc3CLzhhRx0lY+7S/xW8GMGVnAd/SOTZcv5dIU
-        MzKcpCLt4WwkUadSJ7Oi3bM=
-X-Google-Smtp-Source: APXvYqzpF0K2QgWiKLVfp3joUweRj9OqdPCMsRNClBWdw9JOdMXCa+rKCXhn2Vx6+SgM57fUIKA61g==
-X-Received: by 2002:ac8:4688:: with SMTP id g8mr32103887qto.361.1573577675467;
-        Tue, 12 Nov 2019 08:54:35 -0800 (PST)
-Received: from gmail.com (dynamic-186-154-98-65.dynamic.etb.net.co. [186.154.98.65])
-        by smtp.gmail.com with ESMTPSA id l14sm9628968qkj.61.2019.11.12.08.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 08:54:34 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:54:32 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-Subject: [PATCH 5/9] staging: rtl8723bs: Add necessary braces
-Message-ID: <9653d1c5ea7ebd7b4137edea4f5eef74ea65703b.1573577309.git.jarias.linux@gmail.com>
-Mail-Followup-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-References: <cover.1573577309.git.jarias.linux@gmail.com>
+        Tue, 12 Nov 2019 11:53:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34320 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727516AbfKLQxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D491EB39E;
+        Tue, 12 Nov 2019 16:53:42 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Breno Leitao <leitao@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 19/33] powerpc/64s/exception: add more comments for interrupt handlers
+Date:   Tue, 12 Nov 2019 17:52:17 +0100
+Message-Id: <8553a076b57e8888422962b8be0dc01c1e5f38f2.1573576649.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
+References: <cover.1573576649.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1573577309.git.jarias.linux@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds braces when they should be used on all arms of
-the statement.
-Issue found by Checkpatch.
+From: Nicholas Piggin <npiggin@gmail.com>
 
-Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
+A few of the non-standard handlers are left uncommented. Some more
+description could be added to some.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 31 +++++++++++++++--------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 391 ++++++++++++++++++++++++---
+ 1 file changed, 353 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index fdb585ff5925..42bd5d8362fa 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -370,8 +370,9 @@ static void update_attrib_vcs_info(struct adapter *padapter, struct xmit_frame *
- 	/* 		Other fragments are protected by previous fragment. */
- 	/* 		So we only need to check the length of first fragment. */
- 	if (pmlmeext->cur_wireless_mode < WIRELESS_11_24N  || padapter->registrypriv.wifi_spec) {
--		if (sz > padapter->registrypriv.rts_thresh)
-+		if (sz > padapter->registrypriv.rts_thresh) {
- 			pattrib->vcs_mode = RTS_CTS;
-+		}
- 		else {
- 			if (pattrib->rtsen)
- 				pattrib->vcs_mode = RTS_CTS;
-@@ -679,8 +680,9 @@ static s32 update_attrib(struct adapter *padapter, _pkt *pkt, struct pkt_attrib
- 		memcpy(pattrib->ra, pattrib->dst, ETH_ALEN);
- 		memcpy(pattrib->ta, get_bssid(pmlmepriv), ETH_ALEN);
- 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_ap);
--	} else
-+	} else {
- 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_unknown);
-+	}
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index ef37d0ab6594..2f50587392aa 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -121,26 +121,26 @@ name:
+ /*
+  * Interrupt code generation macros
+  */
+-#define IVEC		.L_IVEC_\name\()
+-#define IHSRR		.L_IHSRR_\name\()
+-#define IHSRR_IF_HVMODE	.L_IHSRR_IF_HVMODE_\name\()
+-#define IAREA		.L_IAREA_\name\()
+-#define IVIRT		.L_IVIRT_\name\()
+-#define IISIDE		.L_IISIDE_\name\()
+-#define IDAR		.L_IDAR_\name\()
+-#define IDSISR		.L_IDSISR_\name\()
+-#define ISET_RI		.L_ISET_RI_\name\()
+-#define IBRANCH_TO_COMMON	.L_IBRANCH_TO_COMMON_\name\()
+-#define IREALMODE_COMMON	.L_IREALMODE_COMMON_\name\()
+-#define IMASK		.L_IMASK_\name\()
+-#define IKVM_SKIP	.L_IKVM_SKIP_\name\()
+-#define IKVM_REAL	.L_IKVM_REAL_\name\()
++#define IVEC		.L_IVEC_\name\()	/* Interrupt vector address */
++#define IHSRR		.L_IHSRR_\name\()	/* Sets SRR or HSRR registers */
++#define IHSRR_IF_HVMODE	.L_IHSRR_IF_HVMODE_\name\() /* HSRR if HV else SRR */
++#define IAREA		.L_IAREA_\name\()	/* PACA save area */
++#define IVIRT		.L_IVIRT_\name\()	/* Has virt mode entry point */
++#define IISIDE		.L_IISIDE_\name\()	/* Uses SRR0/1 not DAR/DSISR */
++#define IDAR		.L_IDAR_\name\()	/* Uses DAR (or SRR0) */
++#define IDSISR		.L_IDSISR_\name\()	/* Uses DSISR (or SRR1) */
++#define ISET_RI		.L_ISET_RI_\name\()	/* Run common code w/ MSR[RI]=1 */
++#define IBRANCH_TO_COMMON	.L_IBRANCH_TO_COMMON_\name\() /* ENTRY branch to common */
++#define IREALMODE_COMMON	.L_IREALMODE_COMMON_\name\() /* Common runs in realmode */
++#define IMASK		.L_IMASK_\name\()	/* IRQ soft-mask bit */
++#define IKVM_SKIP	.L_IKVM_SKIP_\name\()	/* Generate KVM skip handler */
++#define IKVM_REAL	.L_IKVM_REAL_\name\()	/* Real entry tests KVM */
+ #define __IKVM_REAL(name)	.L_IKVM_REAL_ ## name
+-#define IKVM_VIRT	.L_IKVM_VIRT_\name\()
+-#define ISTACK		.L_ISTACK_\name\()
++#define IKVM_VIRT	.L_IKVM_VIRT_\name\()	/* Virt entry tests KVM */
++#define ISTACK		.L_ISTACK_\name\()	/* Set regular kernel stack */
+ #define __ISTACK(name)	.L_ISTACK_ ## name
+-#define IRECONCILE	.L_IRECONCILE_\name\()
+-#define IKUAP		.L_IKUAP_\name\()
++#define IRECONCILE	.L_IRECONCILE_\name\()	/* Do RECONCILE_IRQ_STATE */
++#define IKUAP		.L_IKUAP_\name\()	/* Do KUAP lock */
  
- 	pattrib->pktlen = pktfile.pkt_len;
+ #define INT_DEFINE_BEGIN(n)						\
+ .macro int_define_ ## n name
+@@ -759,6 +759,39 @@ __start_interrupts:
+ EXC_VIRT_NONE(0x4000, 0x100)
  
-@@ -724,8 +726,9 @@ static s32 update_attrib(struct adapter *padapter, _pkt *pkt, struct pkt_attrib
- 		rtw_set_scan_deny(padapter, 3000);
  
- 	/*  If EAPOL , ARP , OR DHCP packet, driver must be in active mode. */
--	if (pattrib->icmp_pkt == 1)
-+	if (pattrib->icmp_pkt == 1) {
- 		rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_LEAVE, 1);
-+	}
- 	else if (pattrib->dhcp_pkt == 1) {
- 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_active);
- 		rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_SPECIAL_PACKET, 1);
-@@ -926,8 +929,9 @@ static s32 xmitframe_swencrypt(struct adapter *padapter, struct xmit_frame *pxmi
- 		default:
- 				break;
- 		}
--	} else
-+	} else {
- 		RT_TRACE(_module_rtl871x_xmit_c_, _drv_notice_, ("### xmitframe_hwencrypt\n"));
-+	}
++/**
++ * Interrupt 0x100 - System Reset Interrupt (SRESET aka NMI).
++ * This is a non-maskable, asynchronous interrupt always taken in real-mode.
++ * It is caused by:
++ * - Wake from power-saving state, on powernv.
++ * - An NMI from another CPU, triggered by firmware or hypercall.
++ * - As crash/debug signal injected from BMC, firmware or hypervisor.
++ *
++ * Handling:
++ * Power-save wakeup is the only performance critical path, so this is
++ * determined quickly as possible first. In this case volatile registers
++ * can be discarded and SPRs like CFAR don't need to be read.
++ *
++ * If not a powersave wakeup, then it's run as a regular interrupt, however
++ * it uses its own stack and PACA save area to preserve the regular kernel
++ * environment for debugging.
++ *
++ * This interrupt is not maskable, so triggering it when MSR[RI] is clear,
++ * or SCRATCH0 is in use, etc. may cause a crash. It's also not entirely
++ * correct to switch to virtual mode to run the regular interrupt handler
++ * because it might be interrupted when the MMU is in a bad state (e.g., SLB
++ * is clear).
++ *
++ * FWNMI:
++ * PAPR specifies a "fwnmi" facility which sends the sreset to a different
++ * entry point with a different register set up. Some hypervisors will
++ * send the sreset to 0x100 in the guest if it is not fwnmi capable.
++ *
++ * KVM:
++ * Unlike most SRR interrupts, this may be taken by the host while executing
++ * in a guest, so a KVM test is required. KVM will pull the CPU out of guest
++ * mode and then raise the sreset.
++ */
+ INT_DEFINE_BEGIN(system_reset)
+ 	IVEC=0x100
+ 	IAREA=PACA_EXNMI
+@@ -834,6 +867,7 @@ TRAMP_REAL_BEGIN(system_reset_idle_wake)
+  * Vectors for the FWNMI option.  Share common code.
+  */
+ TRAMP_REAL_BEGIN(system_reset_fwnmi)
++	/* XXX: fwnmi guest could run a nested/PR guest, so why no test?  */
+ 	__IKVM_REAL(system_reset)=0
+ 	GEN_INT_ENTRY system_reset, virt=0
  
- 	return _SUCCESS;
- }
-@@ -1204,8 +1208,9 @@ s32 rtw_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit_fram
- 			ClearMFrag(mem_start);
+@@ -900,6 +934,44 @@ EXC_COMMON_BEGIN(system_reset_common)
+ 	GEN_KVM system_reset
  
- 			break;
--		} else
-+		} else {
- 			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("%s: There're still something in packet!\n", __func__));
-+		}
  
- 		addr = (SIZE_PTR)(pframe);
++/**
++ * Interrupt 0x200 - Machine Check Interrupt (MCE).
++ * This is a non-maskable interrupt always taken in real-mode. It can be
++ * synchronous or asynchronous, caused by hardware or software, and it may be
++ * taken in a power-saving state.
++ *
++ * Handling:
++ * Similarly to system reset, this uses its own stack and PACA save area,
++ * the difference is re-entrancy is allowed on the machine check stack.
++ *
++ * machine_check_early is run in real mode, and carefully decodes the
++ * machine check and tries to handle it (e.g., flush the SLB if there was an
++ * error detected there), determines if it was recoverable and logs the
++ * event.
++ *
++ * Then, depending on the execution context when the interrupt is taken, there
++ * are 3 main actions:
++ * - Executing in kernel mode. The event is queued with irq_work, which means
++ *   it is handled when it is next safe to do so (i.e., the kernel has enabled
++ *   interrupts), which could be immediately when the interrupt returns. This
++ *   avoids nasty issues like switching to virtual mode when the MMU is in a
++ *   bad state, or when executing OPAL code. (SRESET is exposed to such issues,
++ *   but it has different priorities). Check to see if the CPU was in power
++ *   save, and return via the wake up code if it was.
++ *
++ * - Executing in user mode. machine_check_exception is run like a normal
++ *   interrupt handler, which processes the data generated by the early handler.
++ *
++ * - Executing in guest mode. The interrupt is run with its KVM test, and
++ *   branches to KVM to deal with. KVM may queue the event for the host
++ *   to report later.
++ *
++ * This interrupt is not maskable, so if it triggers when MSR[RI] is clear,
++ * or SCRATCH0 is in use, it may cause a crash.
++ *
++ * KVM:
++ * See SRESET.
++ */
+ INT_DEFINE_BEGIN(machine_check_early)
+ 	IVEC=0x200
+ 	IAREA=PACA_EXMC
+@@ -1159,19 +1231,28 @@ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
  
-@@ -1446,8 +1451,9 @@ void rtw_update_protection(struct adapter *padapter, u8 *ie, uint ie_len)
- 	case AUTO_VCS:
- 	default:
- 		perp = rtw_get_ie(ie, _ERPINFO_IE_, &erp_len, ie_len);
--		if (!perp)
-+		if (!perp) {
- 			pxmitpriv->vcs = NONE_VCS;
-+		}
- 		else {
- 			protection = (*(perp + 2)) & BIT(1);
- 			if (protection) {
-@@ -1455,8 +1461,9 @@ void rtw_update_protection(struct adapter *padapter, u8 *ie, uint ie_len)
- 					pxmitpriv->vcs = RTS_CTS;
- 				else
- 					pxmitpriv->vcs = CTS_TO_SELF;
--			} else
-+			} else {
- 				pxmitpriv->vcs = NONE_VCS;
-+			}
- 		}
  
- 		break;
-@@ -1509,8 +1516,9 @@ static struct xmit_buf *__rtw_alloc_cmd_xmitbuf(struct xmit_priv *pxmitpriv,
- 			DBG_871X("%s pxmitbuf->sctx is not NULL\n", __func__);
- 			rtw_sctx_done_err(&pxmitbuf->sctx, RTW_SCTX_DONE_BUF_ALLOC);
- 		}
--	} else
-+	} else {
- 		DBG_871X("%s fail, no xmitbuf available !!!\n", __func__);
-+	}
+ /**
+- * 0x300 - Data Storage Interrupt (DSI)
+- * This interrupt is generated due to a data access which does not have a valid
+- * page table entry with permissions to allow the data access to be performed.
+- * DAWR matches also fault here, as do RC updates, and minor misc errors e.g.,
+- * copy/paste, AMO, certain invalid CI accesses, etc.
++ * Interrupt 0x300 - Data Storage Interrupt (DSI).
++ * This is a synchronous interrupt generated due to a data access exception,
++ * e.g., a load orstore which does not have a valid page table entry with
++ * permissions. DAWR matches also fault here, as do RC updates, and minor misc
++ * errors e.g., copy/paste, AMO, certain invalid CI accesses, etc.
++ *
++ * Handling:
++ * - Hash MMU
++ *   Go to do_hash_page first to see if the HPT can be filled from an entry in
++ *   the Linux page table. Hash faults can hit in kernel mode in a fairly
++ *   arbitrary state (e.g., interrupts disabled, locks held) when accessing
++ *   "non-bolted" regions, e.g., vmalloc space. However these should always be
++ *   backed by Linux page tables.
+  *
+- * This interrupt is delivered to the guest (HV bit unchanged).
++ *   If none is found, do a Linux page fault. Linux page faults can happen in
++ *   kernel mode due to user copy operations of course.
+  *
+- * Linux HPT responds by first attempting to refill the hash table from the
+- * Linux page table, then going to a full page fault if the Linux page table
+- * entry was insufficient. RPT goes straight to full page fault.
++ * - Radix MMU
++ *   The hardware loads from the Linux page table directly, so a fault goes
++ *   immediately to Linux page fault.
+  *
+- * PR KVM ...?
++ * Conditions like DAWR match are handled on the way in to Linux page fault.
+  */
+ INT_DEFINE_BEGIN(data_access)
+ 	IVEC=0x300
+@@ -1202,6 +1283,24 @@ ALT_MMU_FTR_SECTION_END_IFCLR(MMU_FTR_TYPE_RADIX)
+ 	GEN_KVM data_access
  
- 	return pxmitbuf;
- }
-@@ -2177,11 +2185,12 @@ inline bool xmitframe_hiq_filter(struct xmit_frame *xmitframe)
- 				, attrib->ether_type, attrib->dhcp_pkt?" DHCP":"");
- 			allow = true;
- 		}
--	} else if (registry->hiq_filter == RTW_HIQ_FILTER_ALLOW_ALL)
-+	} else if (registry->hiq_filter == RTW_HIQ_FILTER_ALLOW_ALL) {
- 		allow = true;
--	else if (registry->hiq_filter == RTW_HIQ_FILTER_DENY_ALL) {
--	} else
-+	} else if (registry->hiq_filter == RTW_HIQ_FILTER_DENY_ALL) {
-+	} else {
- 		rtw_warn_on(1);
-+	}
  
- 	return allow;
- }
++/**
++ * Interrupt 0x380 - Data Segment Interrupt (DSLB).
++ * This is a synchronous interrupt in response to an MMU fault missing SLB
++ * entry for HPT, or an address outside RPT translation range.
++ *
++ * Handling:
++ * - HPT:
++ *   This refills the SLB, or reports an access fault similarly to a bad page
++ *   fault. When coming from user-mode, the SLB handler may access any kernel
++ *   data, though it may itself take a DSLB. When coming from kernel mode,
++ *   recursive faults must be avoided so access is restricted to the kernel
++ *   image text/data, kernel stack, and any data allocated below
++ *   ppc64_bolted_size (first segment). The kernel handler must avoid stomping
++ *   on user-handler data structures.
++ *
++ * A dedicated save area EXSLB is used (XXX: but it actually need not be
++ * these days, we could use EXGEN).
++ */
+ INT_DEFINE_BEGIN(data_access_slb)
+ 	IVEC=0x380
+ 	IAREA=PACA_EXSLB
+@@ -1244,6 +1343,15 @@ ALT_MMU_FTR_SECTION_END_IFCLR(MMU_FTR_TYPE_RADIX)
+ 	GEN_KVM data_access_slb
+ 
+ 
++/**
++ * Interrupt 0x400 - Instruction Storage Interrupt (ISI).
++ * This is a synchronous interrupt in response to an MMU fault due to an
++ * instruction fetch.
++ *
++ * Handling:
++ * Similar to DSI, though in response to fetch. The faulting address is found
++ * in SRR0 (rather than DAR), and status in SRR1 (rather than DSISR).
++ */
+ INT_DEFINE_BEGIN(instruction_access)
+ 	IVEC=0x400
+ 	IISIDE=1
+@@ -1273,6 +1381,15 @@ ALT_MMU_FTR_SECTION_END_IFCLR(MMU_FTR_TYPE_RADIX)
+ 	GEN_KVM instruction_access
+ 
+ 
++/**
++ * Interrupt 0x480 - Instruction Segment Interrupt (ISLB).
++ * This is a synchronous interrupt in response to an MMU fault due to an
++ * instruction fetch.
++ *
++ * Handling:
++ * Similar to DSLB, though in response to fetch. The faulting address is found
++ * in SRR0 (rather than DAR).
++ */
+ INT_DEFINE_BEGIN(instruction_access_slb)
+ 	IVEC=0x480
+ 	IAREA=PACA_EXSLB
+@@ -1315,6 +1432,29 @@ ALT_MMU_FTR_SECTION_END_IFCLR(MMU_FTR_TYPE_RADIX)
+ 	GEN_KVM instruction_access_slb
+ 
+ 
++/**
++ * Interrupt 0x500 - External Interrupt.
++ * This is an asynchronous maskable interrupt in response to an "external
++ * exception" from the interrupt controller or hypervisor (e.g., device
++ * interrupt). It is maskable in hardware by clearing MSR[EE], and
++ * soft-maskable with IRQS_DISABLED mask (i.e., local_irq_disable()).
++ *
++ * When running in HV mode, Linux sets up the LPCR[LPES] bit such that
++ * interrupts are delivered with HSRR registers, guests use SRRs, which
++ * reqiures IHSRR_IF_HVMODE.
++ *
++ * On bare metal POWER9 and later, Linux sets the LPCR[HVICE] bit such that
++ * external interrupts are delivered as Hypervisor Virtualization Interrupts
++ * rather than External Interrupts.
++ *
++ * Handling:
++ * This calls into Linux IRQ handler. NVGPRs are not saved to reduce overhead,
++ * because registers at the time of the interrupt are not so important as it is
++ * asynchronous.
++ *
++ * If soft masked, the masked handler will note the pending interrupt for
++ * replay, and clear MSR[EE] in the interrupted context.
++ */
+ INT_DEFINE_BEGIN(hardware_interrupt)
+ 	IVEC=0x500
+ 	IHSRR_IF_HVMODE=1
+@@ -1340,6 +1480,10 @@ EXC_COMMON_BEGIN(hardware_interrupt_common)
+ 	GEN_KVM hardware_interrupt
+ 
+ 
++/**
++ * Interrupt 0x600 - Alignment Interrupt
++ * This is a synchronous interrupt in response to data alignment fault.
++ */
+ INT_DEFINE_BEGIN(alignment)
+ 	IVEC=0x600
+ 	IDAR=1
+@@ -1363,6 +1507,15 @@ EXC_COMMON_BEGIN(alignment_common)
+ 	GEN_KVM alignment
+ 
+ 
++/**
++ * Interrupt 0x700 - Program Interrupt (program check).
++ * This is a synchronous interrupt in response to various instruction faults:
++ * traps, privilege errors, TM errors, floating point exceptions.
++ *
++ * Handling:
++ * This interrupt may use the "emergency stack" in some cases when being taken
++ * from kernel context, which complicates handling.
++ */
+ INT_DEFINE_BEGIN(program_check)
+ 	IVEC=0x700
+ 	IKVM_REAL=1
+@@ -1416,6 +1569,15 @@ EXC_COMMON_BEGIN(program_check_common)
+ 	GEN_KVM program_check
+ 
+ 
++/*
++ * Interrupt 0x800 - Floating-Point Unavailable Interrupt.
++ * This is a synchronous interrupt in response to executing an fp instruction
++ * with MSR[FP]=0.
++ *
++ * Handling:
++ * This will load FP registers and enable the FP bit if coming from userspace,
++ * otherwise report a bad kernel use of FP.
++ */
+ INT_DEFINE_BEGIN(fp_unavailable)
+ 	IVEC=0x800
+ 	IRECONCILE=0
+@@ -1461,6 +1623,23 @@ END_FTR_SECTION_IFSET(CPU_FTR_TM)
+ 	GEN_KVM fp_unavailable
+ 
+ 
++/**
++ * Interrupt 0x900 - Decrementer Interrupt.
++ * This is an asynchronous interrupt in response to a decrementer exception
++ * (e.g., DEC has wrapped below zero). It is maskable in hardware by clearing
++ * MSR[EE], and soft-maskable with IRQS_DISABLED mask (i.e.,
++ * local_irq_disable()).
++ *
++ * Handling:
++ * This calls into Linux timer handler. NVGPRs are not saved (see 0x500).
++ *
++ * If soft masked, the masked handler will note the pending interrupt for
++ * replay, and bump the decrementer to a high value, leaving MSR[EE] enabled
++ * in the interrupted context.
++ * If PPC_WATCHDOG is configured, the soft masked handler will actually set
++ * things back up to run soft_nmi_interrupt as a regular interrupt handler
++ * on the emergency stack.
++ */
+ INT_DEFINE_BEGIN(decrementer)
+ 	IVEC=0x900
+ 	IMASK=IRQS_DISABLED
+@@ -1484,6 +1663,16 @@ EXC_COMMON_BEGIN(decrementer_common)
+ 	GEN_KVM decrementer
+ 
+ 
++/**
++ * Interrupt 0x980 - Hypervisor Decrementer Interrupt.
++ * This is an asynchronous interrupt, similar to 0x900 but for the HDEC
++ * register.
++ *
++ * Handling:
++ * Linux does not use this outside KVM where it's used to keep a host timer
++ * while the guest is given control of DEC. It should normally be caught by
++ * the KVM test and routed there.
++ */
+ INT_DEFINE_BEGIN(hdecrementer)
+ 	IVEC=0x980
+ 	IHSRR=1
+@@ -1522,6 +1711,20 @@ EXC_COMMON_BEGIN(hdecrementer_common)
+ 	GEN_KVM hdecrementer
+ 
+ 
++/**
++ * Interrupt 0xa00 - Directed Privileged Doorbell Interrupt.
++ * This is an asynchronous interrupt in response to a msgsndp doorbell.
++ * It is maskable in hardware by clearing MSR[EE], and soft-maskable with
++ * IRQS_DISABLED mask (i.e., local_irq_disable()).
++ *
++ * Handling:
++ * Guests may use this for IPIs between threads in a core if the
++ * hypervisor supports it. NVGPRS are not saved (see 0x500).
++ *
++ * If soft masked, the masked handler will note the pending interrupt for
++ * replay, leaving MSR[EE] enabled in the interrupted context because the
++ * doorbells are edge triggered.
++ */
+ INT_DEFINE_BEGIN(doorbell_super)
+ 	IVEC=0xa00
+ 	IMASK=IRQS_DISABLED
+@@ -1552,16 +1755,20 @@ EXC_COMMON_BEGIN(doorbell_super_common)
+ EXC_REAL_NONE(0xb00, 0x100)
+ EXC_VIRT_NONE(0x4b00, 0x100)
+ 
+-/*
+- * system call / hypercall (0xc00, 0x4c00)
+- *
+- * The system call exception is invoked with "sc 0" and does not alter HV bit.
+- *
+- * The hypercall is invoked with "sc 1" and sets HV=1.
++/**
++ * Interrupt 0xc00 - System Call Interrupt (syscall, hcall).
++ * This is a synchronous interrupt invoked with the "sc" instruction. The
++ * system call is invoked with "sc 0" and does not alter the HV bit, so it
++ * is directed to the currently running OS. The hypercall is invoked with
++ * "sc 1" and it sets HV=1, so it elevates to hypervisor.
+  *
+  * In HPT, sc 1 always goes to 0xc00 real mode. In RADIX, sc 1 can go to
+  * 0x4c00 virtual mode.
+  *
++ * Handling:
++ * If the KVM test fires then it was due to a hypercall and is accordingly
++ * routed to KVM. Otherwise this executes a normal Linux system call.
++ *
+  * Call convention:
+  *
+  * syscall register convention is in Documentation/powerpc/syscall64-abi.rst
+@@ -1705,6 +1912,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ #endif
+ 
+ 
++/**
++ * Interrupt 0xd00 - Trace Interrupt.
++ * This is a synchronous interrupt in response to instruction step or
++ * breakpoint faults.
++ */
+ INT_DEFINE_BEGIN(single_step)
+ 	IVEC=0xd00
+ 	IKVM_REAL=1
+@@ -1726,6 +1938,18 @@ EXC_COMMON_BEGIN(single_step_common)
+ 	GEN_KVM single_step
+ 
+ 
++/**
++ * Interrupt 0xe00 - Hypervisor Data Storage Interrupt (HDSI).
++ * This is a synchronous interrupt in response to an MMU fault caused by a
++ * guest data access.
++ *
++ * Handling:
++ * This should always get routed to KVM. In radix MMU mode, this is caused
++ * by a guest nested radix access that can't be performed due to the
++ * partition scope page table. In hash mode, this can be caused by guests
++ * running with translation disabled (virtual real mode) or with VPM enabled.
++ * KVM will update the page table structures or disallow the access.
++ */
+ INT_DEFINE_BEGIN(h_data_storage)
+ 	IVEC=0xe00
+ 	IHSRR=1
+@@ -1758,6 +1982,11 @@ ALT_MMU_FTR_SECTION_END_IFSET(MMU_FTR_TYPE_RADIX)
+ 	GEN_KVM h_data_storage
+ 
+ 
++/**
++ * Interrupt 0xe20 - Hypervisor Instruction Storage Interrupt (HISI).
++ * This is a synchronous interrupt in response to an MMU fault caused by a
++ * guest instruction fetch, similar to HDSI.
++ */
+ INT_DEFINE_BEGIN(h_instr_storage)
+ 	IVEC=0xe20
+ 	IHSRR=1
+@@ -1781,6 +2010,9 @@ EXC_COMMON_BEGIN(h_instr_storage_common)
+ 	GEN_KVM h_instr_storage
+ 
+ 
++/**
++ * Interrupt 0xe40 - Hypervisor Emulation Assistance Interrupt.
++ */
+ INT_DEFINE_BEGIN(emulation_assist)
+ 	IVEC=0xe40
+ 	IHSRR=1
+@@ -1804,10 +2036,29 @@ EXC_COMMON_BEGIN(emulation_assist_common)
+ 	GEN_KVM emulation_assist
+ 
+ 
+-/*
+- * hmi_exception trampoline is a special case. It jumps to hmi_exception_early
+- * first, and then eventaully from there to the trampoline to get into virtual
+- * mode.
++/**
++ * Interrupt 0xe60 - Hypervisor Maintenance Interrupt (HMI).
++ * This is an asynchronous interrupt caused by a Hypervisor Maintenance
++ * Exception. It is always taken in real mode but uses HSRR registers
++ * unlike SRESET and MCE.
++ *
++ * It is maskable in hardware by clearing MSR[EE], and partially soft-maskable
++ * with IRQS_DISABLED mask (i.e., local_irq_disable()).
++ *
++ * Handling:
++ * This is a special case, this is handled similarly to machine checks, with an
++ * initial real mode handler that is not soft-masked, which attempts to fix the
++ * problem. Then a regular handler which is soft-maskable and reports the
++ * problem.
++ *
++ * The emergency stack is used for the early real mode handler.
++ *
++ * XXX: unclear why MCE and HMI schemes could not be made common, e.g.,
++ * either use soft-masking for the MCE, or use irq_work for the HMI.
++ *
++ * KVM:
++ * Unlike MCE, this calls into KVM without calling the real mode handler
++ * first.
+  */
+ INT_DEFINE_BEGIN(hmi_exception_early)
+ 	IVEC=0xe60
+@@ -1868,6 +2119,11 @@ EXC_COMMON_BEGIN(hmi_exception_common)
+ 	GEN_KVM hmi_exception
+ 
+ 
++/**
++ * Interrupt 0xe80 - Directed Hypervisor Doorbell Interrupt.
++ * This is an asynchronous interrupt in response to a msgsnd doorbell.
++ * Similar to the 0xa00 doorbell but for host rather than guest.
++ */
+ INT_DEFINE_BEGIN(h_doorbell)
+ 	IVEC=0xe80
+ 	IHSRR=1
+@@ -1897,6 +2153,11 @@ EXC_COMMON_BEGIN(h_doorbell_common)
+ 	GEN_KVM h_doorbell
+ 
+ 
++/**
++ * Interrupt 0xea0 - Hypervisor Virtualization Interrupt.
++ * This is an asynchronous interrupt in response to an "external exception".
++ * Similar to 0x500 but for host only.
++ */
+ INT_DEFINE_BEGIN(h_virt_irq)
+ 	IVEC=0xea0
+ 	IHSRR=1
+@@ -1928,6 +2189,22 @@ EXC_REAL_NONE(0xee0, 0x20)
+ EXC_VIRT_NONE(0x4ee0, 0x20)
+ 
+ 
++/*
++ * Interrupt 0xf00 - Performance Monitor Interrupt (PMI, PMU).
++ * This is an asynchronous interrupt in response to a PMU exception.
++ * It is maskable in hardware by clearing MSR[EE], and soft-maskable with
++ * IRQS_PMI_DISABLED mask (NOTE: NOT local_irq_disable()).
++ *
++ * Handling:
++ * This calls into the perf subsystem.
++ *
++ * Like the watchdog soft-nmi, it appears an NMI interrupt to Linux, in that it
++ * runs under local_irq_disable. However it may be soft-masked in
++ * powerpc-specific code.
++ *
++ * If soft masked, the masked handler will note the pending interrupt for
++ * replay, and clear MSR[EE] in the interrupted context.
++ */
+ INT_DEFINE_BEGIN(performance_monitor)
+ 	IVEC=0xf00
+ 	IMASK=IRQS_PMI_DISABLED
+@@ -1951,6 +2228,12 @@ EXC_COMMON_BEGIN(performance_monitor_common)
+ 	GEN_KVM performance_monitor
+ 
+ 
++/**
++ * Interrupt 0xf20 - Vector Unavailable Interrupt.
++ * This is a synchronous interrupt in response to
++ * executing a vector (or altivec) instruction with MSR[VEC]=0.
++ * Similar to FP unavailable.
++ */
+ INT_DEFINE_BEGIN(altivec_unavailable)
+ 	IVEC=0xf20
+ 	IRECONCILE=0
+@@ -1999,6 +2282,12 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	GEN_KVM altivec_unavailable
+ 
+ 
++/**
++ * Interrupt 0xf40 - VSX Unavailable Interrupt.
++ * This is a synchronous interrupt in response to
++ * executing a VSX instruction with MSR[VSX]=0.
++ * Similar to FP unavailable.
++ */
+ INT_DEFINE_BEGIN(vsx_unavailable)
+ 	IVEC=0xf40
+ 	IRECONCILE=0
+@@ -2046,6 +2335,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX)
+ 	GEN_KVM vsx_unavailable
+ 
+ 
++/**
++ * Interrupt 0xf60 - Facility Unavailable Interrupt.
++ * This is a synchronous interrupt in response to
++ * executing an instruction without access to the facility that can be
++ * resolved by the OS (e.g., FSCR, MSR).
++ * Similar to FP unavailable.
++ */
+ INT_DEFINE_BEGIN(facility_unavailable)
+ 	IVEC=0xf60
+ 	IKVM_REAL=1
+@@ -2067,6 +2363,13 @@ EXC_COMMON_BEGIN(facility_unavailable_common)
+ 	GEN_KVM facility_unavailable
+ 
+ 
++/**
++ * Interrupt 0xf60 - Hypervisor Facility Unavailable Interrupt.
++ * This is a synchronous interrupt in response to
++ * executing an instruction without access to the facility that can only
++ * be resolved in HV mode (e.g., HFSCR).
++ * Similar to FP unavailable.
++ */
+ INT_DEFINE_BEGIN(h_facility_unavailable)
+ 	IVEC=0xf80
+ 	IHSRR=1
+@@ -2154,6 +2457,18 @@ EXC_COMMON_BEGIN(instruction_breakpoint_common)
+ EXC_REAL_NONE(0x1400, 0x100)
+ EXC_VIRT_NONE(0x5400, 0x100)
+ 
++/**
++ * Interrupt 0x1500 - Soft Patch Interrupt
++ *
++ * Handling:
++ * This is an implementation specific interrupt which can be used for a
++ * range of exceptions.
++ *
++ * This interrupt handler is unique in that it runs the denormal assist
++ * code even for guests (and even in guest context) without going to KVM,
++ * for speed. POWER9 does not raise denorm exceptions, so this special case
++ * could be phased out in future to reduce special cases.
++ */
+ INT_DEFINE_BEGIN(denorm_exception)
+ 	IVEC=0x1500
+ 	IHSRR=1
 -- 
-2.20.1
+2.23.0
 
