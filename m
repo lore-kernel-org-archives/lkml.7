@@ -2,125 +2,148 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8C3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70F8C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C995222C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iGmZdbQY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aiEuMyLF"
+	by mail.kernel.org (Postfix) with ESMTP id 9A188214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbfKLQzz (ORCPT
+        id S1727384AbfKLQxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:55:55 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:50874 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfKLQzx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:55:53 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DA0FA60F33; Tue, 12 Nov 2019 16:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573577753;
-        bh=2qpw0n4O5/VIIorasibWq8jjTR8oYNzI+JNmPHLt2pY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iGmZdbQY66/bgutJyGZVBGTaKUuS8gepGQsU64940awZpY2+X1sD5qNEOW+V0ZAoH
-         vxhd/0kI4Ht1oDTdl1EULXWaN3AIvSf0EjKZ+3SFn0y8nsHK/+IMc18lS9zE+HZM80
-         4BGB687GMhlzpInsbZe4bgMJw1IFmc5306zA4P+0=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FE5960A1D;
-        Tue, 12 Nov 2019 16:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573577751;
-        bh=2qpw0n4O5/VIIorasibWq8jjTR8oYNzI+JNmPHLt2pY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aiEuMyLFE2BX5DhMR98stwoqCmSOxUKjan2nekilbOoz+9b5qK92E9833VzN9ojXj
-         KMdgeU+3XtXJHGLB2w9+waQSniDtc1F2JUjdFxUFw+XJDdUhJVyoCqE+JVmkAGmOjp
-         iEWRPErsxAAyWyAmlqe1R3DNZ0weD+LIl63yueoo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9FE5960A1D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 12 Nov 2019 09:55:48 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Joe Perches <joe@perches.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        "Kristian H. Kristensen" <hoegsberg@gmail.com>,
+        Tue, 12 Nov 2019 11:53:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33160 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727133AbfKLQxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 419B8B2B9;
+        Tue, 12 Nov 2019 16:53:17 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH 14/16] drm/msm: avoid using 'timespec'
-Message-ID: <20191112165548.GB14014@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Joe Perches <joe@perches.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        "Kristian H. Kristensen" <hoegsberg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-References: <20191108213257.3097633-1-arnd@arndb.de>
- <20191108213257.3097633-15-arnd@arndb.de>
+        Breno Leitao <leitao@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 02/33] powerpc/64s/exception: Add GEN_COMMON macro that uses INT_DEFINE parameters
+Date:   Tue, 12 Nov 2019 17:52:00 +0100
+Message-Id: <d285be98e19cfb224b8c0477ed7851469c01059a.1573576649.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
+References: <cover.1573576649.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108213257.3097633-15-arnd@arndb.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:32:52PM +0100, Arnd Bergmann wrote:
-> The timespec structure and associated interfaces are deprecated and will
-> be removed in the future because of the y2038 overflow.
-> 
-> The use of ktime_to_timespec() in timeout_to_jiffies() does not
-> suffer from that overflow, but is easy to avoid by just converting
-> the ktime_t into jiffies directly.
+From: Nicholas Piggin <npiggin@gmail.com>
 
-This seems good to me. y2038 changes are the best changes.
+No generated code change.
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/powerpc/kernel/exceptions-64s.S | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/msm/msm_drv.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-> index 71547e756e29..740bf7c70d8f 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.h
-> +++ b/drivers/gpu/drm/msm/msm_drv.h
-> @@ -454,8 +454,7 @@ static inline unsigned long timeout_to_jiffies(const ktime_t *timeout)
->  		remaining_jiffies = 0;
->  	} else {
->  		ktime_t rem = ktime_sub(*timeout, now);
-> -		struct timespec ts = ktime_to_timespec(rem);
-> -		remaining_jiffies = timespec_to_jiffies(&ts);
-> +		remaining_jiffies = ktime_divns(rem, NSEC_PER_SEC / HZ);
->  	}
->  
->  	return remaining_jiffies;
-> -- 
-> 2.20.0
-> 
-
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index e6ad6e6cf65e..591ae2a73e18 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -206,6 +206,9 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
+ #define IMASK		.L_IMASK_\name\()
+ #define IKVM_REAL	.L_IKVM_REAL_\name\()
+ #define IKVM_VIRT	.L_IKVM_VIRT_\name\()
++#define ISTACK		.L_ISTACK_\name\()
++#define IRECONCILE	.L_IRECONCILE_\name\()
++#define IKUAP		.L_IKUAP_\name\()
+ 
+ #define INT_DEFINE_BEGIN(n)						\
+ .macro int_define_ ## n name
+@@ -246,6 +249,15 @@ do_define_int n
+ 	.ifndef IKVM_VIRT
+ 		IKVM_VIRT=0
+ 	.endif
++	.ifndef ISTACK
++		ISTACK=1
++	.endif
++	.ifndef IRECONCILE
++		IRECONCILE=1
++	.endif
++	.ifndef IKUAP
++		IKUAP=1
++	.endif
+ .endm
+ 
+ .macro INT_KVM_HANDLER name, vec, hsrr, area, skip
+@@ -670,6 +682,10 @@ END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
+ 	.endif
+ .endm
+ 
++.macro GEN_COMMON name
++	INT_COMMON IVEC, IAREA, ISTACK, IKUAP, IRECONCILE, IDAR, IDSISR
++.endm
++
+ /*
+  * Restore all registers including H/SRR0/1 saved in a stack frame of a
+  * standard exception.
+@@ -1221,13 +1237,7 @@ EXC_VIRT_BEGIN(data_access, 0x4300, 0x80)
+ EXC_VIRT_END(data_access, 0x4300, 0x80)
+ INT_KVM_HANDLER data_access, 0x300, EXC_STD, PACA_EXGEN, 1
+ EXC_COMMON_BEGIN(data_access_common)
+-	/*
+-	 * Here r13 points to the paca, r9 contains the saved CR,
+-	 * SRR0 and SRR1 are saved in r11 and r12,
+-	 * r9 - r13 are saved in paca->exgen.
+-	 * EX_DAR and EX_DSISR have saved DAR/DSISR
+-	 */
+-	INT_COMMON 0x300, PACA_EXGEN, 1, 1, 1, 1, 1
++	GEN_COMMON data_access
+ 	ld	r4,_DAR(r1)
+ 	ld	r5,_DSISR(r1)
+ BEGIN_MMU_FTR_SECTION
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.23.0
+
