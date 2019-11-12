@@ -2,155 +2,104 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA62C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A269DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8569206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573538967;
-	bh=fu5hEizNEobs5LXt2r9VbXZsUMilNe/J5wbVvjjQtFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dicVyIcrt72fAYVz65prOxTFacIdzm151gMHnytn0/xeINzoPRjKOSYj6bm+Z6kvS
-	 NQXQ0d3Wm4IHdG0eSTcM9hE+ILESfEfM/Ig6T+UAfPwaNvf86gzQu58gE/wPFFRm2B
-	 a+UwmItnsoklVNTeKNyIYopalQMiUvXRyh8NJKmg=
+	by mail.kernel.org (Postfix) with ESMTP id 701D821872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sqe3U+OI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKLGJ1 (ORCPT
+        id S1725919AbfKLGPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 01:09:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfKLGJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 01:09:26 -0500
-Received: from localhost (unknown [122.167.70.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 516B2206BB;
-        Tue, 12 Nov 2019 06:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573538965;
-        bh=fu5hEizNEobs5LXt2r9VbXZsUMilNe/J5wbVvjjQtFA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/dofCIcG0ERk2LfUUHDVCvJ9bSHyUW+/GyvLQ1tRE30353KjsfVBErQwTd0KrkRl
-         OpGRu8y130HzX6mKcTauvcSCq6++oyx8nfvqgDCbP4Tqg0Nx7zsM1QSptQsn7Ny5+p
-         hmXxCPaOKRKn9g0/Wd52eKVVT92e943QFQVpokw8=
-Date:   Tue, 12 Nov 2019 11:39:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 3/5] dmaengine: plx-dma: Introduce PLX DMA engine PCI
- driver skeleton
-Message-ID: <20191112060919.GZ952516@vkoul-mobl>
-References: <20191022214616.7943-1-logang@deltatee.com>
- <20191022214616.7943-4-logang@deltatee.com>
- <20191109173510.GG952516@vkoul-mobl>
- <ff43b1f9-c620-17eb-fc6c-4c7d7577250b@deltatee.com>
+        Tue, 12 Nov 2019 01:15:42 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39911 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfKLGPm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 01:15:42 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 29so11139398pgm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 22:15:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rRZ0BJA4db3dS/zIFjnsF9DDaNs4fUNGpbTkNxgU/oY=;
+        b=Sqe3U+OI365237Ez4qw9i8BXSixdFMZDIkIXMueMovlj/9LaVsZzg7bJKpZuiNvifO
+         itI9orDHmxJhQb+AkqEDVwrGGgFYLoyMQMrU6MfYjRGaU3gLvPk2LZEMF/Bpg3i1fw4A
+         EVWhs2MFSpL3zDdGOVvUvjcaZltQUaBwE39vmfCoWv9hK4sI5TCtO99RFDvo2RcCBRd4
+         4CWo3vnyvkfPXm04f334UvO+mMZYj/98IWoFPTq8kK66Fr9U+L63coxyCjq5WaKQ++0q
+         pD1FA6YOy2qhIAh/SO419nIwFFhc/x8YV4BuKRUfu9xeYO6Lr4wmw2wWAhAomQ9kuVUy
+         OJFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rRZ0BJA4db3dS/zIFjnsF9DDaNs4fUNGpbTkNxgU/oY=;
+        b=pHFG+5gCpsBSfA/iYZw1Z0BC38Ss3lmI2FgrLxQb+MdtXHBOGOE8kDE2NrLF236TB5
+         10Z+XJsnWpd+jLY6+pXIc4OFA/6qPOBiow6sSo/uSa88+seAjcnlCR/iXsjEhesQd4kL
+         mhFtzqH2XiYkMNExdaz3yhMqXtnbglqyA2naeiH71xk2jz57mqB2n75iaIrjVnGn6nMZ
+         bYFDKk6iNvOWyNLX+k0HjNO/T6mrQrJpxmSHgTodq2Z9TSQu1lRf/FcxewadN5IL22XI
+         XoUzKROYHcFf4RBQx4uNHl93eODI3Zj5edHPKZ45XWE3ajgPfJgClCMlXQ1WKIIOKRX5
+         gcxQ==
+X-Gm-Message-State: APjAAAUMizc3RHqX8bTtRn1Gzm4y+a5yNPPD4u1i8nqdtBL2qfFKVVLf
+        Xohlt0MJN2579Lh1Rq3bF9LXFg==
+X-Google-Smtp-Source: APXvYqzHPxtYdORBo2xTI6Mtm8MV25+2WYGZWhuxsi/Es2clwrCLIRN1jFgfuGE7IrMqR2cV663fEw==
+X-Received: by 2002:a17:90a:5d04:: with SMTP id s4mr3991747pji.137.1573539339521;
+        Mon, 11 Nov 2019 22:15:39 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x203sm18749498pgx.61.2019.11.11.22.15.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 22:15:38 -0800 (PST)
+Date:   Mon, 11 Nov 2019 22:15:36 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        s-anna@ti.com
+Subject: Re: [PATCH 13/17] remoteproc/omap: add support for system
+ suspend/resume
+Message-ID: <20191112061536.GO3108315@builder>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-14-t-kristo@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff43b1f9-c620-17eb-fc6c-4c7d7577250b@deltatee.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191028124238.19224-14-t-kristo@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-11-19, 10:50, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-11-09 10:35 a.m., Vinod Koul wrote:
-> > On 22-10-19, 15:46, Logan Gunthorpe wrote:
-> >> +static irqreturn_t plx_dma_isr(int irq, void *devid)
-> >> +{
-> >> +	return IRQ_HANDLED;
-> > 
-> > ??
-> 
-> Yes, sorry this is more of an artifact of how I chose to split the
-> patches up. The ISR is filled-in in patch 4.
+On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+[..]
+> +static int _omap_rproc_suspend(struct rproc *rproc)
 
-lets move this code in all including isr registration in patch 4 then :)
+I think it would make sense to inline this and _omap_rproc_resume() in
+their single call sites.
 
-> >> +	 */
-> >> +	schedule_work(&plxdev->release_work);
-> >> +}
-> >> +
-> >> +static void plx_dma_put(struct plx_dma_dev *plxdev)
-> >> +{
-> >> +	kref_put(&plxdev->ref, plx_dma_release);
-> >> +}
-> >> +
-> >> +static int plx_dma_alloc_chan_resources(struct dma_chan *chan)
-> >> +{
-> >> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
-> >> +
-> >> +	kref_get(&plxdev->ref);
-> > 
-> > why do you need to do this?
-> 
-> This has to do with being able to probably unbind while a channel is in
-> use. If we don't hold a reference to the struct plx_dma_dev between
-> alloc_chan_resources() and free_chan_resources() then it will panic if a
-> call back is called after plx_dma_remove(). The way I've done it, once a
+[..]
+> +static int _omap_rproc_resume(struct rproc *rproc)
+> +{
+[..]
+> @@ -806,6 +972,14 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  			oproc->num_timers);
+>  	}
+>  
+> +	init_completion(&oproc->pm_comp);
+> +
+> +	oproc->fck = of_clk_get(np, 0);
 
-which callback?
+devm_clk_get() ? 
 
-> device is removed, subsequent calls to dma_prep_memcpy() will fail (see
-> ring_active).
-> 
-> struct plx_dma_dev needs to be alive between plx_dma_probe() and
-> plx_dma_remove(), and between calls to alloc_chan_resources() and
-> free_chan_resources(). So we use a reference count to ensure this.
+Otherwise I think you're lacking a clk_put() in omap_rproc_remove()
 
-and that is why we hold module reference so we don't go away without
-cleanup
-
-> >> +static void plx_dma_release_work(struct work_struct *work)
-> >> +{
-> >> +	struct plx_dma_dev *plxdev = container_of(work, struct plx_dma_dev,
-> >> +						  release_work);
-> >> +
-> >> +	dma_async_device_unregister(&plxdev->dma_dev);
-> >> +	put_device(plxdev->dma_dev.dev);
-> >> +	kfree(plxdev);
-> >> +}
-> >> +
-> >> +static void plx_dma_release(struct kref *ref)
-> >> +{
-> >> +	struct plx_dma_dev *plxdev = container_of(ref, struct plx_dma_dev, ref);
-> >> +
-> >> +	/*
-> >> +	 * The dmaengine reference counting and locking is a bit of a
-> >> +	 * mess so we have to work around it a bit here. We might put
-> >> +	 * the reference while the dmaengine holds the dma_list_mutex
-> >> +	 * which means we can't call dma_async_device_unregister() directly
-> >> +	 * here and it must be delayed.
-> >
-> > why is that, i have not heard any complaints about locking, can you
-> > elaborate on why you need to do this?
-> 
-> Per the above explanation, we need to call plx_dma_put() in
-> plx_dma_free_chan_resources(); and plx_dma_release() is when we can call
-> dma_async_device_unregister() (seeing that's when we know there are no
-> longer any active channels).
-> 
-> However, dma_chan_put() (which calls device_free_chan_resources()) holds
-> the dma_list_mutex and dma_async_device_unregister() tries to take the
-> dma_list_mutex so, if we call unregister inside free_chan_resources we
-> would deadlock.
-
-yes as we are not expecting someone to unregister in
-device_free_chan_resources(), that is for freeing up resources.
-
-You are expected to unregister in .remove!
-
-Can you explain me why unregister cant be done in remove? I think I am
-still missing some detail for this case.
-
--- 
-~Vinod
+Regards,
+Bjorn
