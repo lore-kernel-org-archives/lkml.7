@@ -2,44 +2,41 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3563C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F6FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A7B2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6111B21D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfKLA7n (ORCPT
+        id S1727533AbfKLBA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:59:43 -0500
-Received: from mga14.intel.com ([192.55.52.115]:61337 "EHLO mga14.intel.com"
+        Mon, 11 Nov 2019 20:00:27 -0500
+Received: from mga07.intel.com ([134.134.136.100]:47020 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfKLA7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:59:43 -0500
+        id S1727202AbfKLA7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:59:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 16:59:43 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 16:59:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,294,1569308400"; 
-   d="scan'208";a="229132612"
+   d="scan'208";a="213898293"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Nov 2019 16:59:43 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 11 Nov 2019 16:59:43 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 0A609301AF9; Mon, 11 Nov 2019 16:59:43 -0800 (PST)
+        id EEBE6301A7E; Mon, 11 Nov 2019 16:59:42 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     jolsa@kernel.org
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v6 03/12] perf cpumap: Maintain cpumaps ordered and without dups
-Date:   Mon, 11 Nov 2019 16:59:32 -0800
-Message-Id: <20191112005941.649137-4-andi@firstfloor.org>
+Cc:     acme@kernel.org, linux-kernel@vger.kernel.org
+Subject: Optimize perf stat for large number of events/cpus
+Date:   Mon, 11 Nov 2019 16:59:29 -0800
+Message-Id: <20191112005941.649137-1-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191112005941.649137-1-andi@firstfloor.org>
-References: <20191112005941.649137-1-andi@firstfloor.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,51 +44,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+[v6: Address review feedback. Merge one patch again to avoid broken
+immediate state.]
 
-Enforce this in _trim()
+This patch kit optimizes perf stat for a large number of events 
+on systems with many CPUs and PMUs.
 
-Needed for followon change.
+Some profiling shows that the most overhead is doing IPIs to
+all the target CPUs. We can optimize this by using sched_setaffinity
+to set the affinity to a target CPU once and then doing
+the perf operation for all events on that CPU. This requires
+some restructuring, but cuts the set up time quite a bit.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/lib/cpumap.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+In theory we could go further by parallelizing these setups
+too, but that would be much more complicated and for now just batching it
+per CPU seems to be sufficient. At some point with many more cores 
+parallelization or a better bulk perf setup API might be needed though.
 
-diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
-index 2ca1fafa620d..d81656b4635e 100644
---- a/tools/perf/lib/cpumap.c
-+++ b/tools/perf/lib/cpumap.c
-@@ -68,14 +68,28 @@ static struct perf_cpu_map *cpu_map__default_new(void)
- 	return cpus;
- }
- 
-+static int cmp_int(const void *a, const void *b)
-+{
-+	return *(const int *)a - *(const int*)b;
-+}
-+
- static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, int *tmp_cpus)
- {
- 	size_t payload_size = nr_cpus * sizeof(int);
- 	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + payload_size);
-+	int i, j;
- 
- 	if (cpus != NULL) {
--		cpus->nr = nr_cpus;
- 		memcpy(cpus->map, tmp_cpus, payload_size);
-+		qsort(cpus->map, nr_cpus, sizeof(int), cmp_int);
-+		/* Remove dups */
-+		j = 0;
-+		for (i = 0; i < nr_cpus; i++) {
-+			if (i == 0 || cpus->map[i] != cpus->map[i - 1])
-+				cpus->map[j++] = cpus->map[i];
-+		}
-+		cpus->nr = j;
-+		assert(j <= nr_cpus);
- 		refcount_set(&cpus->refcnt, 1);
- 	}
- 
--- 
-2.23.0
+In addition perf does a lot of redundant /sys accesses with
+many PMUs, which can be also expensve. This is also optimized.
+
+On a large test case (>700 events with many weak groups) on a 94 CPU
+system I go from
+
+real	0m8.607s
+user	0m0.550s
+sys	0m8.041s
+
+to 
+
+real	0m3.269s
+user	0m0.760s
+sys	0m1.694s
+
+so shaving ~6 seconds of system time, at slightly more cost
+in perf stat itself. On a 4 socket system with the savings
+are more dramatic:
+
+real	0m15.641s
+user	0m0.873s
+sys	0m14.729s
+
+to 
+
+real	0m4.493s
+user	0m1.578s
+sys	0m2.444s
+
+so 11s difference in the user visible set up time.
+
+Also available in 
+
+git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc perf/stat-scale-9
+
+v1: Initial post.
+v2: Rebase. Fix some minor issues.
+v3: Rebase. Address review feedback. Fix one minor issue
+v4: Modified based on review feedback. Now it maintains
+all_cpus per evlist. There is still a need for cpu_index iteration
+to get the correct index for indexing the file descriptors.
+Fix bug with unsorted cpu maps, now they are always sorted.
+Some cleanups and refactoring.
+v5: Split patches. Redo loop iteration again. Fix cpu map
+merging for uncore. Remove duplicates from cpumaps. Add unit
+tests.
+v6: Address review feedback. Fix some bugs. Add more comments.
+Merge one invalid patch split.
+
+-Andi
 
