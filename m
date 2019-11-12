@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D84CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B9C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED888214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F7021E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfKLQxz (ORCPT
+        id S1727688AbfKLQyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:53:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34320 "EHLO mx1.suse.de"
+        Tue, 12 Nov 2019 11:54:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34932 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727481AbfKLQxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:53:42 -0500
+        id S1727632AbfKLQxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:49 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5930AB383;
-        Tue, 12 Nov 2019 16:53:41 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 66187B286;
+        Tue, 12 Nov 2019 16:53:47 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 18/33] powerpc/64s/exception: Clean up SRR specifiers
-Date:   Tue, 12 Nov 2019 17:52:16 +0100
-Message-Id: <a3ce84e9187b80e9f79468fdba2f4bd4ddc41f4b.1573576649.git.msuchanek@suse.de>
+Subject: [PATCH 22/33] powerpc/64: system call remove non-volatile GPR save optimisation
+Date:   Tue, 12 Nov 2019 17:52:20 +0100
+Message-Id: <a8e573e20f48b6dff469866e875e2c441865285d.1573576649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
 References: <cover.1573576649.git.msuchanek@suse.de>
@@ -81,283 +81,217 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-Remove more magic numbers and replace with nicely named bools.
+powerpc has an optimisation where interrupts avoid saving the
+non-volatile (or callee saved) registers to the interrupt stack frame if
+they are not required.
+
+Two problems with this are that an interrupt does not always know
+whether it will need non-volatiles; and if it does need them, they can
+only be saved from the entry-scoped asm code (because we don't control
+what the C compiler does with these registers).
+
+system calls are the most difficult: some system calls always require
+all registers (e.g., fork, to copy regs into the child).  Sometimes
+registers are only required under certain conditions (e.g., tracing,
+signal delivery). These cases require ugly logic in the call chains
+(e.g., ppc_fork), and require a lot of logic to be implemented in asm.
+
+So remove the optimisation for system calls, and always save NVGPRs on
+entry. Modern high performance CPUs are not so sensitive, because the
+stores are dense in cache and can be hidden by other expensive work in
+the syscall path -- the null syscall selftests benchmark on POWER9 is
+not slowed (124.40ns before and 123.64ns after, i.e., within the noise).
+
+Other interrupts retain the NVGPR optimisation for now.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 68 +++++++++++++---------------
- 1 file changed, 32 insertions(+), 36 deletions(-)
+ arch/powerpc/kernel/entry_64.S           | 72 +++++-------------------
+ arch/powerpc/kernel/syscalls/syscall.tbl | 22 +++++---
+ 2 files changed, 28 insertions(+), 66 deletions(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 9494403b9586..ef37d0ab6594 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -105,11 +105,6 @@ name:
- 	ori	reg,reg,(ABS_ADDR(label))@l;				\
- 	addis	reg,reg,(ABS_ADDR(label))@h
- 
--/* Exception register prefixes */
--#define EXC_HV_OR_STD	2 /* depends on HVMODE */
--#define EXC_HV		1
--#define EXC_STD		0
--
- /*
-  * Branch to label using its 0xC000 address. This results in instruction
-  * address suitable for MSR[IR]=0 or 1, which allows relocation to be turned
-@@ -128,6 +123,7 @@ name:
-  */
- #define IVEC		.L_IVEC_\name\()
- #define IHSRR		.L_IHSRR_\name\()
-+#define IHSRR_IF_HVMODE	.L_IHSRR_IF_HVMODE_\name\()
- #define IAREA		.L_IAREA_\name\()
- #define IVIRT		.L_IVIRT_\name\()
- #define IISIDE		.L_IISIDE_\name\()
-@@ -159,7 +155,10 @@ do_define_int n
- 		.error "IVEC not defined"
- 	.endif
- 	.ifndef IHSRR
--		IHSRR=EXC_STD
-+		IHSRR=0
-+	.endif
-+	.ifndef IHSRR_IF_HVMODE
-+		IHSRR_IF_HVMODE=0
- 	.endif
- 	.ifndef IAREA
- 		IAREA=PACA_EXGEN
-@@ -257,7 +256,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	ld	r9,IAREA+EX_R9(r13)
- 	ld	r10,IAREA+EX_R10(r13)
- 	/* HSRR variants have the 0x2 bit added to their trap number */
--	.if IHSRR == EXC_HV_OR_STD
-+	.if IHSRR_IF_HVMODE
- 	BEGIN_FTR_SECTION
- 	ori	r12,r12,(IVEC + 0x2)
- 	FTR_SECTION_ELSE
-@@ -278,7 +277,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	ld	r10,IAREA+EX_R10(r13)
- 	ld	r11,IAREA+EX_R11(r13)
- 	ld	r12,IAREA+EX_R12(r13)
--	.if IHSRR == EXC_HV_OR_STD
-+	.if IHSRR_IF_HVMODE
- 	BEGIN_FTR_SECTION
- 	b	kvmppc_skip_Hinterrupt
- 	FTR_SECTION_ELSE
-@@ -403,7 +402,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	stw	r10,IAREA+EX_DSISR(r13)
- 	.endif
- 
--	.if IHSRR == EXC_HV_OR_STD
-+	.if IHSRR_IF_HVMODE
- 	BEGIN_FTR_SECTION
- 	mfspr	r11,SPRN_HSRR0		/* save HSRR0 */
- 	mfspr	r12,SPRN_HSRR1		/* and HSRR1 */
-@@ -485,7 +484,7 @@ DEFINE_FIXED_SYMBOL(\name\()_common_virt)
- 		.abort "Bad maskable vector"
- 		.endif
- 
--		.if IHSRR == EXC_HV_OR_STD
-+		.if IHSRR_IF_HVMODE
- 		BEGIN_FTR_SECTION
- 		bne	masked_Hinterrupt
- 		FTR_SECTION_ELSE
-@@ -618,12 +617,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
-  * Restore all registers including H/SRR0/1 saved in a stack frame of a
-  * standard exception.
-  */
--.macro EXCEPTION_RESTORE_REGS hsrr
-+.macro EXCEPTION_RESTORE_REGS hsrr=0
- 	/* Move original SRR0 and SRR1 into the respective regs */
- 	ld	r9,_MSR(r1)
--	.if \hsrr == EXC_HV_OR_STD
--	.error "EXC_HV_OR_STD Not implemented for EXCEPTION_RESTORE_REGS"
--	.endif
- 	.if \hsrr
- 	mtspr	SPRN_HSRR1,r9
- 	.else
-@@ -898,7 +894,7 @@ EXC_COMMON_BEGIN(system_reset_common)
- 	ld	r10,SOFTE(r1)
- 	stb	r10,PACAIRQSOFTMASK(r13)
- 
--	EXCEPTION_RESTORE_REGS EXC_STD
-+	EXCEPTION_RESTORE_REGS
- 	RFI_TO_USER_OR_KERNEL
- 
- 	GEN_KVM system_reset
-@@ -952,7 +948,7 @@ TRAMP_REAL_BEGIN(machine_check_fwnmi)
- 	lhz	r12,PACA_IN_MCE(r13);			\
- 	subi	r12,r12,1;				\
- 	sth	r12,PACA_IN_MCE(r13);			\
--	EXCEPTION_RESTORE_REGS EXC_STD
-+	EXCEPTION_RESTORE_REGS
- 
- EXC_COMMON_BEGIN(machine_check_early_common)
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 6467bdab8d40..5a3e0b5c9ad1 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -98,13 +98,14 @@ END_BTB_FLUSH_SECTION
+ 	std	r11,_XER(r1)
+ 	std	r11,_CTR(r1)
+ 	std	r9,GPR13(r1)
++	SAVE_NVGPRS(r1)
+ 	mflr	r10
  	/*
-@@ -1321,7 +1317,7 @@ ALT_MMU_FTR_SECTION_END_IFCLR(MMU_FTR_TYPE_RADIX)
- 
- INT_DEFINE_BEGIN(hardware_interrupt)
- 	IVEC=0x500
--	IHSRR=EXC_HV_OR_STD
-+	IHSRR_IF_HVMODE=1
- 	IMASK=IRQS_DISABLED
- 	IKVM_REAL=1
- 	IKVM_VIRT=1
-@@ -1490,7 +1486,7 @@ EXC_COMMON_BEGIN(decrementer_common)
- 
- INT_DEFINE_BEGIN(hdecrementer)
- 	IVEC=0x980
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	ISTACK=0
- 	IRECONCILE=0
- 	IKVM_REAL=1
-@@ -1732,7 +1728,7 @@ EXC_COMMON_BEGIN(single_step_common)
- 
- INT_DEFINE_BEGIN(h_data_storage)
- 	IVEC=0xe00
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IDAR=1
- 	IDSISR=1
- 	IKVM_SKIP=1
-@@ -1764,7 +1760,7 @@ ALT_MMU_FTR_SECTION_END_IFSET(MMU_FTR_TYPE_RADIX)
- 
- INT_DEFINE_BEGIN(h_instr_storage)
- 	IVEC=0xe20
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IKVM_REAL=1
- 	IKVM_VIRT=1
- INT_DEFINE_END(h_instr_storage)
-@@ -1787,7 +1783,7 @@ EXC_COMMON_BEGIN(h_instr_storage_common)
- 
- INT_DEFINE_BEGIN(emulation_assist)
- 	IVEC=0xe40
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IKVM_REAL=1
- 	IKVM_VIRT=1
- INT_DEFINE_END(emulation_assist)
-@@ -1815,7 +1811,7 @@ EXC_COMMON_BEGIN(emulation_assist_common)
-  */
- INT_DEFINE_BEGIN(hmi_exception_early)
- 	IVEC=0xe60
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IREALMODE_COMMON=1
- 	ISTACK=0
- 	IRECONCILE=0
-@@ -1825,7 +1821,7 @@ INT_DEFINE_END(hmi_exception_early)
- 
- INT_DEFINE_BEGIN(hmi_exception)
- 	IVEC=0xe60
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IMASK=IRQS_DISABLED
- 	IKVM_REAL=1
- INT_DEFINE_END(hmi_exception)
-@@ -1847,7 +1843,7 @@ EXC_COMMON_BEGIN(hmi_exception_early_common)
- 	cmpdi	cr0,r3,0
- 	bne	1f
- 
--	EXCEPTION_RESTORE_REGS EXC_HV
-+	EXCEPTION_RESTORE_REGS hsrr=1
- 	HRFI_TO_USER_OR_KERNEL
- 
- 1:
-@@ -1855,7 +1851,7 @@ EXC_COMMON_BEGIN(hmi_exception_early_common)
- 	 * Go to virtual mode and pull the HMI event information from
- 	 * firmware.
+ 	 * This clears CR0.SO (bit 28), which is the error indication on
+ 	 * return from this system call.
  	 */
--	EXCEPTION_RESTORE_REGS EXC_HV
-+	EXCEPTION_RESTORE_REGS hsrr=1
- 	GEN_INT_ENTRY hmi_exception, virt=0
+ 	rldimi	r2,r11,28,(63-28)
+-	li	r11,0xc01
++	li	r11,0xc00
+ 	std	r10,_LINK(r1)
+ 	std	r11,_TRAP(r1)
+ 	std	r3,ORIG_GPR3(r1)
+@@ -323,7 +324,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
  
- 	GEN_KVM hmi_exception_early
-@@ -1874,7 +1870,7 @@ EXC_COMMON_BEGIN(hmi_exception_common)
+ /* Traced system call support */
+ .Lsyscall_dotrace:
+-	bl	save_nvgprs
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	do_syscall_trace_enter
  
- INT_DEFINE_BEGIN(h_doorbell)
- 	IVEC=0xe80
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IMASK=IRQS_DISABLED
- 	IKVM_REAL=1
- 	IKVM_VIRT=1
-@@ -1903,7 +1899,7 @@ EXC_COMMON_BEGIN(h_doorbell_common)
+@@ -408,7 +408,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 	mtmsrd	r10,1
+ #endif /* CONFIG_PPC_BOOK3E */
  
- INT_DEFINE_BEGIN(h_virt_irq)
- 	IVEC=0xea0
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IMASK=IRQS_DISABLED
- 	IKVM_REAL=1
- 	IKVM_VIRT=1
-@@ -2073,7 +2069,7 @@ EXC_COMMON_BEGIN(facility_unavailable_common)
+-	bl	save_nvgprs
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	do_syscall_trace_leave
+ 	b	ret_from_except
+@@ -442,62 +441,6 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ _ASM_NOKPROBE_SYMBOL(system_call_common);
+ _ASM_NOKPROBE_SYMBOL(system_call_exit);
  
- INT_DEFINE_BEGIN(h_facility_unavailable)
- 	IVEC=0xf80
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IKVM_REAL=1
- 	IKVM_VIRT=1
- INT_DEFINE_END(h_facility_unavailable)
-@@ -2109,7 +2105,7 @@ EXC_VIRT_NONE(0x5100, 0x100)
- #ifdef CONFIG_CBE_RAS
- INT_DEFINE_BEGIN(cbe_system_error)
- 	IVEC=0x1200
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IKVM_SKIP=1
- 	IKVM_REAL=1
- INT_DEFINE_END(cbe_system_error)
-@@ -2160,8 +2156,8 @@ EXC_VIRT_NONE(0x5400, 0x100)
+-/* Save non-volatile GPRs, if not already saved. */
+-_GLOBAL(save_nvgprs)
+-	ld	r11,_TRAP(r1)
+-	andi.	r0,r11,1
+-	beqlr-
+-	SAVE_NVGPRS(r1)
+-	clrrdi	r0,r11,1
+-	std	r0,_TRAP(r1)
+-	blr
+-_ASM_NOKPROBE_SYMBOL(save_nvgprs);
+-
+-	
+-/*
+- * The sigsuspend and rt_sigsuspend system calls can call do_signal
+- * and thus put the process into the stopped state where we might
+- * want to examine its user state with ptrace.  Therefore we need
+- * to save all the nonvolatile registers (r14 - r31) before calling
+- * the C code.  Similarly, fork, vfork and clone need the full
+- * register state on the stack so that it can be copied to the child.
+- */
+-
+-_GLOBAL(ppc_fork)
+-	bl	save_nvgprs
+-	bl	sys_fork
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_vfork)
+-	bl	save_nvgprs
+-	bl	sys_vfork
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_clone)
+-	bl	save_nvgprs
+-	bl	sys_clone
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_clone3)
+-       bl      save_nvgprs
+-       bl      sys_clone3
+-       b       .Lsyscall_exit
+-
+-_GLOBAL(ppc32_swapcontext)
+-	bl	save_nvgprs
+-	bl	compat_sys_swapcontext
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc64_swapcontext)
+-	bl	save_nvgprs
+-	bl	sys_swapcontext
+-	b	.Lsyscall_exit
+-
+-_GLOBAL(ppc_switch_endian)
+-	bl	save_nvgprs
+-	bl	sys_switch_endian
+-	b	.Lsyscall_exit
+-
+ _GLOBAL(ret_from_fork)
+ 	bl	schedule_tail
+ 	REST_NVGPRS(r1)
+@@ -516,6 +459,17 @@ _GLOBAL(ret_from_kernel_thread)
+ 	li	r3,0
+ 	b	.Lsyscall_exit
  
- INT_DEFINE_BEGIN(denorm_exception)
- 	IVEC=0x1500
--	IHSRR=EXC_HV
--	IBRANCH_TO_COMMON=0
-+	IHSRR=1
-+	IBRANCH_COMMON=0
- 	IKVM_REAL=1
- INT_DEFINE_END(denorm_exception)
++/* Save non-volatile GPRs, if not already saved. */
++_GLOBAL(save_nvgprs)
++	ld	r11,_TRAP(r1)
++	andi.	r0,r11,1
++	beqlr-
++	SAVE_NVGPRS(r1)
++	clrrdi	r0,r11,1
++	std	r0,_TRAP(r1)
++	blr
++_ASM_NOKPROBE_SYMBOL(save_nvgprs);
++
+ #ifdef CONFIG_PPC_BOOK3S_64
  
-@@ -2269,7 +2265,7 @@ EXC_COMMON_BEGIN(denorm_exception_common)
- #ifdef CONFIG_CBE_RAS
- INT_DEFINE_BEGIN(cbe_maintenance)
- 	IVEC=0x1600
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IKVM_SKIP=1
- 	IKVM_REAL=1
- INT_DEFINE_END(cbe_maintenance)
-@@ -2321,7 +2317,7 @@ EXC_COMMON_BEGIN(altivec_assist_common)
- #ifdef CONFIG_CBE_RAS
- INT_DEFINE_BEGIN(cbe_thermal)
- 	IVEC=0x1800
--	IHSRR=EXC_HV
-+	IHSRR=1
- 	IKVM_SKIP=1
- 	IKVM_REAL=1
- INT_DEFINE_END(cbe_thermal)
-@@ -2384,7 +2380,7 @@ EXC_COMMON_BEGIN(soft_nmi_common)
-  * - Else it is one of PACA_IRQ_MUST_HARD_MASK, so hard disable and return.
-  * This is called with r10 containing the value to OR to the paca field.
-  */
--.macro MASKED_INTERRUPT hsrr
-+.macro MASKED_INTERRUPT hsrr=0
- 	.if \hsrr
- masked_Hinterrupt:
- 	.else
-@@ -2531,8 +2527,8 @@ TRAMP_REAL_BEGIN(hrfi_flush_fallback)
- 	hrfid
- 
- USE_TEXT_SECTION()
--	MASKED_INTERRUPT EXC_STD
--	MASKED_INTERRUPT EXC_HV
-+	MASKED_INTERRUPT
-+	MASKED_INTERRUPT hsrr=1
- 
- #ifdef CONFIG_KVM_BOOK3S_64_HANDLER
- kvmppc_skip_interrupt:
+ #define FLUSH_COUNT_CACHE	\
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index 43f736ed47f2..d899bcb5343e 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -9,7 +9,9 @@
+ #
+ 0	nospu	restart_syscall			sys_restart_syscall
+ 1	nospu	exit				sys_exit
+-2	nospu	fork				ppc_fork
++2	32	fork				ppc_fork			sys_fork
++2	64	fork				sys_fork
++2	spu	fork				sys_ni_syscall
+ 3	common	read				sys_read
+ 4	common	write				sys_write
+ 5	common	open				sys_open			compat_sys_open
+@@ -158,7 +160,9 @@
+ 119	32	sigreturn			sys_sigreturn			compat_sys_sigreturn
+ 119	64	sigreturn			sys_ni_syscall
+ 119	spu	sigreturn			sys_ni_syscall
+-120	nospu	clone				ppc_clone
++120	32	clone				ppc_clone			sys_clone
++120	64	clone				sys_clone
++120	spu	clone				sys_ni_syscall
+ 121	common	setdomainname			sys_setdomainname
+ 122	common	uname				sys_newuname
+ 123	common	modify_ldt			sys_ni_syscall
+@@ -240,7 +244,9 @@
+ 186	spu	sendfile			sys_sendfile64
+ 187	common	getpmsg				sys_ni_syscall
+ 188	common 	putpmsg				sys_ni_syscall
+-189	nospu	vfork				ppc_vfork
++189	32	vfork				ppc_vfork			sys_vfork
++189	64	vfork				sys_vfork
++189	spu	vfork				sys_ni_syscall
+ 190	common	ugetrlimit			sys_getrlimit			compat_sys_getrlimit
+ 191	common	readahead			sys_readahead			compat_sys_readahead
+ 192	32	mmap2				sys_mmap2			compat_sys_mmap2
+@@ -316,8 +322,8 @@
+ 248	32	clock_nanosleep			sys_clock_nanosleep_time32
+ 248	64	clock_nanosleep			sys_clock_nanosleep
+ 248	spu	clock_nanosleep			sys_clock_nanosleep
+-249	32	swapcontext			ppc_swapcontext			ppc32_swapcontext
+-249	64	swapcontext			ppc64_swapcontext
++249	32	swapcontext			ppc_swapcontext			compat_sys_swapcontext
++249	64	swapcontext			sys_swapcontext
+ 249	spu	swapcontext			sys_ni_syscall
+ 250	common	tgkill				sys_tgkill
+ 251	32	utimes				sys_utimes_time32
+@@ -456,7 +462,7 @@
+ 361	common	bpf				sys_bpf
+ 362	nospu	execveat			sys_execveat			compat_sys_execveat
+ 363	32	switch_endian			sys_ni_syscall
+-363	64	switch_endian			ppc_switch_endian
++363	64	switch_endian			sys_switch_endian
+ 363	spu	switch_endian			sys_ni_syscall
+ 364	common	userfaultfd			sys_userfaultfd
+ 365	common	membarrier			sys_membarrier
+@@ -516,4 +522,6 @@
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
+ 434	common	pidfd_open			sys_pidfd_open
+-435	nospu	clone3				ppc_clone3
++435	32	clone3				ppc_clone3			sys_clone3
++435	64	clone3				sys_clone3
++435	spu	clone3				sys_ni_syscall
 -- 
 2.23.0
 
