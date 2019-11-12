@@ -2,88 +2,102 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00675C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23C3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AFC20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573579159;
-	bh=85dgABjfLst0EJiLfQ6UppL83HD41+jlwGeYc+PJi5s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=OqIRqAx6cxmrF/64W2Pvo7zsacoUU605A+falD7eVXjdcsKgJ2khqPPTabP4J/i5i
-	 NRXZh1DgBf372DeNllxvVgpREVVdED4L23k8nEPuu9wXI5w5M7HnCMk4X3hQNkiE1c
-	 ynfPKo4Fk96SwjBltq7qyY9ueX6qZSpvt0l25jno=
+	by mail.kernel.org (Postfix) with ESMTP id B465A20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfKLRTS (ORCPT
+        id S1727069AbfKLRUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:19:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfKLRTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:19:18 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C2520659;
-        Tue, 12 Nov 2019 17:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573579158;
-        bh=85dgABjfLst0EJiLfQ6UppL83HD41+jlwGeYc+PJi5s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=xdL+G1zDFE46caLzbkDRg0br9X96M7qfTympBm/tlAae7Dosfy8oNmO241YvCY3ot
-         o/AK0tQcwpY1drq9ZXLTRTg83BCM/T44eZYlb5MREr/qYT9bAmbRggcZgaxXabvtMW
-         jK+xizZQdMqOiW5ALdmPKCHortPXcRVIeEtOVC2I=
-Date:   Tue, 12 Nov 2019 11:19:15 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-Subject: Re: [PATCH 1/2] drm: replace incorrect Compliance/Margin magic
- numbers with PCI_EXP_LNKCTL2 definitions
-Message-ID: <20191112171915.GA167243@google.com>
+        Tue, 12 Nov 2019 12:20:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35065 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLRUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:20:18 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iUZpu-0008Q4-Ut; Tue, 12 Nov 2019 18:20:15 +0100
+Date:   Tue, 12 Nov 2019 18:20:14 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch V2 09/16] x86/ioperm: Move TSS bitmap update to exit to
+ user work
+In-Reply-To: <CALCETrU1i4_N8M0o=8hxxPFYisLsxpmDqM-GTsymORp9UeZYSg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1911121811150.1833@nanos.tec.linutronix.de>
+References: <20191111220314.519933535@linutronix.de> <20191111223052.400498664@linutronix.de> <CALCETrU1i4_N8M0o=8hxxPFYisLsxpmDqM-GTsymORp9UeZYSg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6d86246e-504a-b762-aff8-0449dd6f3d31@daenzer.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 05:45:15PM +0100, Michel Dänzer wrote:
-> On 2019-11-11 8:29 p.m., Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Add definitions for these PCIe Link Control 2 register fields:
-> > 
-> >   Enter Compliance
-> >   Transmit Margin
-> > 
-> > and use them in amdgpu and radeon.
-> > 
-> > NOTE: This is a functional change because "7 << 9" was apparently a typo.
-> > That mask included the high order bit of Transmit Margin, the Enter
-> > Modified Compliance bit, and the Compliance SOS bit, but I think what
-> > was intended was the 3-bit Transmit Margin field at bits 9:7.
+On Tue, 12 Nov 2019, Andy Lutomirski wrote:
+> On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > There is no point to update the TSS bitmap for tasks which use I/O bitmaps
+> > on every context switch. It's enough to update it right before exiting to
+> > user space.
+> +
+> > +static inline void switch_to_bitmap(unsigned long tifp)
+> > +{
+> > +       /*
+> > +        * Invalidate I/O bitmap if the previous task used it. If the next
+> > +        * task has an I/O bitmap it will handle it on exit to user mode.
+> > +        */
+> > +       if (tifp & _TIF_IO_BITMAP)
+> > +               tss_invalidate_io_bitmap(this_cpu_ptr(&cpu_tss_rw));
+> > +}
 > 
-> Can you split out the functional change into a separate patch 1? That
-> could make things easier for anyone who bisects the functional change
-> for whatever reason.
+> Shouldn't you be invalidating the io bitmap if the *next* task doesn't
+> use?  Or is the rule that, when a non-io-bitmap-using task is running,
+> even in kernel mode, the io bitmap is always invalid.
 
-Great idea, thanks!  Wish I'd thought of that.
+Well it does not make much of a difference whether we do the above or
+!(tifn & _TIF_IO_BITMAP). We always end up in that code when one of the
+involved tasks has TIF_IO_BITMAP set. I decided to use the sched out check
+because that makes it clear that this is the end of the valid I/O
+bitmap. If the next task has TIF_IO_BITMAP set as well, then it will anyway
+end up in the exit to user mode update code. Clearing it here ensures that
+even if the exit to user mode malfunctions the bitmap cannot be leaked.
 
-While fixing that, I also noticed I missed one case in
-amdgpu/si.c.  I'll post a v3.
+> As it stands, you need exit_thread() to invalidate the bitmap.  I
+> assume it does, but I can't easily see it in the middle of the series
+> like this.
+
+It does.
+ 
+> IOW your code might be fine, but it could at least use some comments
+> in appropriate places (exit_to_usermode_loop()?) that we guarantee
+> that, if the bit is *clear*, then the TSS has the io bitmap marked
+> invalid.  And add an assertion under CONFIG_DEBUG_ENTRY.
+> 
+> Also, do you need to update EXIT_TO_USERMODE_LOOP_FLAGS?
+
+No, the TIF_IO_BITMAP check is done once after the loop has run and it
+would not make any sense in the loop as TIF_IO_BITMAP cannot be cleared
+there and we'd loop forever. The other usermode loop flags are transient.
+
+Thanks,
+
+	tglx
+
+
