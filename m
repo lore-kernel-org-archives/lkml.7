@@ -2,135 +2,188 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CADEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CF2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC5521872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1526F21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:23:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JTZwx1ve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKLSWy (ORCPT
+        id S1727176AbfKLSXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:22:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:38916 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKLSWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:22:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE60E30E;
-        Tue, 12 Nov 2019 10:22:52 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A41563F534;
-        Tue, 12 Nov 2019 10:22:51 -0800 (PST)
-Date:   Tue, 12 Nov 2019 18:22:49 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        torvalds@linux-foundation.org, axboe@kernel.dk,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vincent Whitchurch <rabinv@axis.com>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>
-Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
- hazard
-Message-ID: <20191112182249.GB22025@arrakis.emea.arm.com>
-References: <20191112130244.16630-1-vincent.whitchurch@axis.com>
- <20191112160855.GA22025@arrakis.emea.arm.com>
- <20191112180034.GB19889@willie-the-truck>
+        Tue, 12 Nov 2019 13:23:15 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:51926 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfKLSXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:23:14 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACIIn2T042133;
+        Tue, 12 Nov 2019 18:23:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=gNQDayv4/6vSaE3ZOq4DNXB6lT/PH93bkXGOaNWGu20=;
+ b=JTZwx1veX8A2Jl5RB6ahp+wnSC1suS3PcTN10DafY40jg/3ppS1tn4SQIt57upV+AzXK
+ IVfNxzlMs4vkoXFKfGr48Y7FcMwa16ZB9lGgpIMADmGaqtdm1OWTG1HcGSAiWuTYK0vv
+ FXNETtswG1oIQcWBXrKERB+czXc2VIksWqYcdPkvF5H3bRq4ZZTf+FWRCIZAIPhOGBVw
+ 6ssZo8b8iWa1nYK1QnbBgEe7jG0UrDtswZJwf9rWtfR8RU6teYi+pl9TskeSRrTW269Y
+ /Ap+6PbLIVzgPjhZjoFALfmUwcNxLrlAuA9BHtrPSVp2gxBvRaYyKdc6+sV7un4/hB6Z hQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w5p3qpnes-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 18:23:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACIN03o033380;
+        Tue, 12 Nov 2019 18:23:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2w7vpmqpp9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 18:23:00 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xACIMrt9002418;
+        Tue, 12 Nov 2019 18:22:56 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Nov 2019 10:22:53 -0800
+Subject: Re: [PATCH v2] hugetlbfs: add O_TMPFILE support
+To:     Piotr Sarna <p.sarna@tlen.pl>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, mhocko@kernel.org,
+        syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <bc9383eff6e1374d79f3a92257ae829ba1e6ae60.1573285189.git.p.sarna@tlen.pl>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <603fc4b5-92c9-1ccf-82d3-699e24af97d9@oracle.com>
+Date:   Tue, 12 Nov 2019 10:22:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112180034.GB19889@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bc9383eff6e1374d79f3a92257ae829ba1e6ae60.1573285189.git.p.sarna@tlen.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911120158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911120157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 06:00:35PM +0000, Will Deacon wrote:
-> On Tue, Nov 12, 2019 at 04:08:57PM +0000, Catalin Marinas wrote:
-> > On Tue, Nov 12, 2019 at 02:02:44PM +0100, Vincent Whitchurch wrote:
-> > > On my dual-core ARM Cortex-A9, reading from squashfs (over
-> > > dm-verity/ubi/mtd) in a loop for hundreds of hours invariably results in
-> > > a read failure in squashfs_read_data().  The errors occur because the
-> > > buffer_uptodate() check fails after wait_on_buffer().  Further debugging
-> > > shows that the bh was in fact uptodate and that there is no actual I/O
-> > > error in the lower layers.
-> > > 
-> > > The problem is caused by the read-after-read hazards in the ARM
-> > > Cortex-A9 MPCore (erratum #761319, see [1]).  The code generated by the
-> > > compiler for the combination of the wait_on_buffer() and
-> > > buffer_uptodate() calls reads the flags value twice from memory (see the
-> > > excerpt of the assembly below).  The new value of the BH_Lock flag is
-> > > seen but the new value of BH_Uptodate is not even though both the bits
-> > > are read from the same memory location.
-> > > 
-> > >  27c:	9d08      	ldr	r5, [sp, #32]
-> > >  27e:	2400      	movs	r4, #0
-> > >  280:	e006      	b.n	290 <squashfs_read_data+0x290>
-> > >  282:	6803      	ldr	r3, [r0, #0]
-> > >  284:	07da      	lsls	r2, r3, #31
-> > >  286:	f140 810d 	bpl.w	4a4 <squashfs_read_data+0x4a4>
-> > >  28a:	3401      	adds	r4, #1
-> > >  28c:	42bc      	cmp	r4, r7
-> > >  28e:	da08      	bge.n	2a2 <squashfs_read_data+0x2a2>
-> > >  290:	f855 0f04 	ldr.w	r0, [r5, #4]!
-> > >  294:	6803      	ldr	r3, [r0, #0]
-> > >  296:	0759      	lsls	r1, r3, #29
-> > >  298:	d5f3      	bpl.n	282 <squashfs_read_data+0x282>
-> > >  29a:	f7ff fffe 	bl	0 <__wait_on_buffer>
-> > > 
-> > > Work around this problem by adding a DMB between the two reads of
-> > > bh->flags, as recommended in the ARM document.  With this barrier, no
-> > > failures have been seen in more than 5000 hours of the same test.
-> > > 
-> > > [1] http://infocenter.arm.com/help/topic/com.arm.doc.uan0004a/UAN0004A_a9_read_read.pdf
-> > 
-> > I thought we were going to fix the compiler. I found an old thread here:
-> > 
-> > https://gcc.gnu.org/ml/gcc-patches/2014-06/msg00714.html
-> > 
-> > Also cc'ing Richard Earnshaw as he may been involved in the gcc
-> > discussion at the time.
-> > 
-> > While you can add some barrier here, there may be other cases where this
-> > can go wrong.
+Cc: Andrew
+
+On 11/8/19 11:50 PM, Piotr Sarna wrote:
+> With hugetlbfs, a common pattern for mapping anonymous huge pages
+> is to create a temporary file first. Currently libraries like
+> libhugetlbfs and seastar create these with a standard mkstemp+unlink
+> trick, but it would be more robust to be able to simply pass
+> the O_TMPFILE flag to open(). O_TMPFILE is already supported by several
+> file systems like ext4 and xfs. The implementation simply uses the existing
+> d_tmpfile utility function to instantiate the dcache entry for the file.
 > 
-> Hmm, and afaict, even if the compiler was modified to emit LDREX instructions
-> for volatile loads, it wouldn't help in this case because test_bit() isn't
-> using READ_ONCE().
-
-I think changing volatile accesses to LDREX in gcc wasn't acceptable
-since they may read Device memory and not allowed on ARM.
-
-> It's also slightly odd that the proposed patch makes the code look like:
+> Tested manually by successfully creating a temporary file by opening
+> it with (O_TMPFILE|O_RDWR) on mounted hugetlbfs and successfully
+> mapping 2M huge pages with it. Without the patch, trying to open
+> a file with O_TMPFILE results in -ENOSUP.
 > 
-> 	for (i = 0; i < b; i++) {
-> 		if (buffer_locked(bh)) {
-> 			__wait_on_buffer(bh);
-> 			smp_rmb();
-> 		}
-
-The proposed patch actually keeps smp_rmb() outside the 'if' block but
-your point below still stands.
-
-> 		if (!buffer_uptodate(bh[i]))
-> 			goto block_release;
-> 	}
+> v2 changes:
+>  * syzkaller thankfully discovered a bug during unmount - tmpfile
+> erroneously called dget() on a dentry when creating a tmpfile,
+> and it was never countered by a dput(), because tmpfile is never
+> explicitly unlinked. In v2, dget() is simply not called for tmpfile.
+> Verified manually, and also with the reproducer provided by syzkaller.
+> Reported-by: syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com
 > 
-> whereas there are other potential RAR orderings between buffer_locked()
-> and __wait_on_buffer() and also probably between successive iterations
-> of the loop.
-> 
-> So, really, the only way I see to solve this is for us to use READ_ONCE
-> consistently for all relaxed atomic loads (KCSAN is starting to tread on
-> this), and then to patch READ_ONCE to emit a DMB at runtime for arch/arm/
-> (maybe a static key would work if you can avoid the recursion).
+> Signed-off-by: Piotr Sarna <p.sarna@tlen.pl>
 
-OK, so this includes changing test_bit() to perform a READ_ONCE.
+My apologies for not catching the extra dget().
 
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 -- 
-Catalin
+Mike Kravetz
+
+> ---
+>  fs/hugetlbfs/inode.c | 28 ++++++++++++++++++++++++----
+>  1 file changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+> index a478df035651..a39d7a0a158e 100644
+> --- a/fs/hugetlbfs/inode.c
+> +++ b/fs/hugetlbfs/inode.c
+> @@ -815,8 +815,11 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+>  /*
+>   * File creation. Allocate an inode, and we're done..
+>   */
+> -static int hugetlbfs_mknod(struct inode *dir,
+> -			struct dentry *dentry, umode_t mode, dev_t dev)
+> +static int do_hugetlbfs_mknod(struct inode *dir,
+> +			struct dentry *dentry,
+> +			umode_t mode,
+> +			dev_t dev,
+> +			bool tmpfile)
+>  {
+>  	struct inode *inode;
+>  	int error = -ENOSPC;
+> @@ -824,13 +827,23 @@ static int hugetlbfs_mknod(struct inode *dir,
+>  	inode = hugetlbfs_get_inode(dir->i_sb, dir, mode, dev);
+>  	if (inode) {
+>  		dir->i_ctime = dir->i_mtime = current_time(dir);
+> -		d_instantiate(dentry, inode);
+> -		dget(dentry);	/* Extra count - pin the dentry in core */
+> +		if (tmpfile) {
+> +			d_tmpfile(dentry, inode);
+> +		} else {
+> +			d_instantiate(dentry, inode);
+> +			dget(dentry);/* Extra count - pin the dentry in core */
+> +		}
+>  		error = 0;
+>  	}
+>  	return error;
+>  }
+>  
+> +static int hugetlbfs_mknod(struct inode *dir,
+> +			struct dentry *dentry, umode_t mode, dev_t dev)
+> +{
+> +	return do_hugetlbfs_mknod(dir, dentry, mode, dev, false);
+> +}
+> +
+>  static int hugetlbfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+>  {
+>  	int retval = hugetlbfs_mknod(dir, dentry, mode | S_IFDIR, 0);
+> @@ -844,6 +857,12 @@ static int hugetlbfs_create(struct inode *dir, struct dentry *dentry, umode_t mo
+>  	return hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0);
+>  }
+>  
+> +static int hugetlbfs_tmpfile(struct inode *dir,
+> +			struct dentry *dentry, umode_t mode)
+> +{
+> +	return do_hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0, true);
+> +}
+> +
+>  static int hugetlbfs_symlink(struct inode *dir,
+>  			struct dentry *dentry, const char *symname)
+>  {
+> @@ -1102,6 +1121,7 @@ static const struct inode_operations hugetlbfs_dir_inode_operations = {
+>  	.mknod		= hugetlbfs_mknod,
+>  	.rename		= simple_rename,
+>  	.setattr	= hugetlbfs_setattr,
+> +	.tmpfile	= hugetlbfs_tmpfile,
+>  };
+>  
+>  static const struct inode_operations hugetlbfs_inode_operations = {
+> 
