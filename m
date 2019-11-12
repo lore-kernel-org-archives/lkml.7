@@ -2,72 +2,92 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66804C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42078C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444D421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EC2206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0wRXvqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfKLFvJ (ORCPT
+        id S1725957AbfKLFyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 00:51:09 -0500
-Received: from mga04.intel.com ([192.55.52.120]:5504 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfKLFvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:51:08 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 21:51:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,295,1569308400"; 
-   d="scan'208";a="229230691"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Nov 2019 21:51:06 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, kevin.tian@intel.com,
-        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com
-Subject: Re: [PATCH v2 1/1] iommu/vt-d: Add Kconfig option to enable/disable
- scalable mode
-To:     Qian Cai <cai@lca.pw>
-References: <f5b8521e-d88d-5439-34e2-f7b54a77c9d3@linux.intel.com>
- <77EC0C76-22C1-4982-8E0A-9AD7223B3410@lca.pw>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <fefea7dd-8cde-889d-0883-7d94b8d85f20@linux.intel.com>
-Date:   Tue, 12 Nov 2019 13:48:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 00:54:17 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37268 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfKLFyQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:54:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z24so11114502pgu.4;
+        Mon, 11 Nov 2019 21:54:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pz2HkKIovaqqpPUupDoBtWK16lPk+o/FyQvbc6QLS5M=;
+        b=G0wRXvqOFdEV7bXg4ol9lkWT/y/vj0Xifu6AIvHVi1nknJRc82e9x1LkArp2SxQBtg
+         JqdFyXV9JdcTnOUV9Dem46mna+k9ExUpJsKO0ebhXRe/Y0nYkKgwJr0xyYf0FX9yoaSs
+         tlD2COgwRJ1DthwQY16mmCT8UrirA1LEePtUUZ3ZOfBeiuE7eXUH1ReY9OBHCXhkIpvg
+         izOA9PZVyMWiB3R5la3HTtxCUxBXQGJyDUYXYIXe/fTYiD4iyZN5shm3R5m9p0x8xJBT
+         Q6Nbsvnx4SKicAMz6MlgmP3+BVM0eoplSg+c90JBbq+v6DuKZNh3XttE+wQ0WdLHi8Je
+         RLRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pz2HkKIovaqqpPUupDoBtWK16lPk+o/FyQvbc6QLS5M=;
+        b=AekIi2vvPjZjUqRYAAAdiAlJMKYSKYaY4erXyBRziBZjxex8BAnNKsuUOtlz9CWaWe
+         eQbf1FS3oZTrpKU7Pb/nd56eut3b7gV4qLanim3tOog6awB2sZkEBOVhsMgGtKLZ/nJE
+         yNHiHruTwOXDv70qIrztv/PNoeGNricPzZCxrh5T+XKBDDDvHQ7OpSzMwV1Nqor+28N3
+         oayPhEK6FZXLs8TKq0ex2zlLciGKOaYSeafeGTcy3+xyYFkVHmrg2N5VXmccwRDPGNYG
+         wc724C4xW8rcNvDkk3N0cTnVDRQwmn6kOFK/F2V+crgQflm/xF6mxyhtIJ/tpAd9IuBl
+         BR6A==
+X-Gm-Message-State: APjAAAVtBhdqv9F7wG3NNLl2G9ZwXuXTNHqGyNYzhemFGoTu6zn7tHQO
+        CuwVdHCRmVdaPuR8yiaRPm0=
+X-Google-Smtp-Source: APXvYqwEOsiqa3kenFA+c8Tvhbta0wzdTNEwNzr33dcd1IrpfCj11Xj6mZ5UM98KVW07ldEn1JwkXA==
+X-Received: by 2002:a17:90a:ec02:: with SMTP id l2mr3999094pjy.31.1573538055416;
+        Mon, 11 Nov 2019 21:54:15 -0800 (PST)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id d139sm23160178pfd.162.2019.11.11.21.54.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 21:54:14 -0800 (PST)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 0/2] spi: add wakeup handling to SPI core
+Date:   Mon, 11 Nov 2019 21:54:09 -0800
+Message-Id: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-In-Reply-To: <77EC0C76-22C1-4982-8E0A-9AD7223B3410@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+These patches add wakeup handling for SPI devices to SPI core, mirroring
+I2C subsystem. Users can mark devices as "wakeup-source" in device tree
+(or using static device properties) and SPI core will mark the primary
+interrupt line as wakeirq and mark the device as wakeup enabled.
 
-On 11/11/19 10:05 PM, Qian Cai wrote:
-> 
-> 
->> On Nov 11, 2019, at 12:23 AM, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>
->> The scalable mode is defined in VT-d 3.0. The scalable mode capability
->> could be checked by reading /sys/devices/virtual/iommu/dmar*/intel-
->> iommu/ecap. It's currently not friendly for reading. You need to decode
->> it according to the spec.
-> 
-> This looks like some perfect information to put in the Kconfig description.
-> 
+There is also an option to define a dedicated wake irq.
 
-Okay. Will add it in the next version.
 
-Best regards,
-baolu
+Dmitry Torokhov (2):
+  spi: dt-bindings: spi-controller: add wakeup-source and interrupts
+  spi: wire up wakeup-source/wakeirq handling
+
+ .../bindings/spi/spi-controller.yaml          | 23 ++++++++++++++++
+ drivers/spi/spi.c                             | 27 ++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 1 deletion(-)
+
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
+
