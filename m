@@ -2,344 +2,233 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764D3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DF0C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4517B20818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8382221783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hh49R1v4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m16JaE0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKLTWb (ORCPT
+        id S1727142AbfKLTWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:22:31 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35573 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfKLTW3 (ORCPT
+        Tue, 12 Nov 2019 14:22:48 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37135 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfKLTWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:22:29 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 8so4232756wmo.0;
-        Tue, 12 Nov 2019 11:22:27 -0800 (PST)
+        Tue, 12 Nov 2019 14:22:48 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p24so14057543pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:22:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aH1KMPZgNfW13tjgH/Mjyuhb4HbQXqtVP7JK7qnKLUQ=;
-        b=Hh49R1v4qgT5G9zVSqGPkkoGwTdKbPT/8QEce3N2qRbucv+oBoqw8qBy7aX+HZDYfD
-         96KJYhKv9Fo3RpllxT/wuZwUiBGZUANO16SrrVeS7GqQ0qgAVbhr4vFSfM4f8EhjG55p
-         Rrxf7I4oeED5DGOm38aDbBqS/4P/+giRZ+e46/Ck7b81vHbKT9Y4nEpeUJxhgyZGU58T
-         wwQ/4rFV1AMnto66oTr6/Jc6MmIFwMKu4F3vyZ9o6yt5fMbAXnJ5UhK3l7V0tjnTJ4CS
-         GuiItArtU4CuCu06drabaOws7dRoavKQpA91B/wQuv2DCDCkNKnyBFM5Q0TAybQv8mEm
-         occw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=luJmse4qyPM7h1duRVVj4w9vtvYZ5N4OxnAMNKQuEwE=;
+        b=m16JaE0tMOWtKv1tqF+/ZWdvaOBM4HlTIkpMmeFucRm5m959uTSk/fcL/apBRI3BFt
+         h8GgmusICQJZhhiTgshtPUUlSnORNdufj5yL0fmAN/If3aSA/nKvgqeyY0YHCiRWM09u
+         2odKLe6PykEV5dVoLFdJHIY827tkpLhe9n2arNALTus4Bxjdbj/d8lljWkt881mrtvOx
+         3qHv1rerAHnw00bm0MJLYhf6ZsvevbRzfEauwdw9n3XdouFliMpMysHVbKvg6zc7wfoN
+         WTOkwdTnjGXLKFimj3/T2/+3VsDKEE8n5+O/VANZFd/zadb/u+7PuYV2hKjBlofehj8B
+         K4BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=aH1KMPZgNfW13tjgH/Mjyuhb4HbQXqtVP7JK7qnKLUQ=;
-        b=h68PeSE2VBrvS0Y40eAcAwu3RxjSkbpeIUyd3gi4P8vaYnw6EJ/jaP5Q9rv3AFQnf9
-         9MA1mYs1lH77HA4j2QkHEHP8zjUXurx4bIksb/7AbSueAg3h/AQOkZX/8EWnfuJCMa+4
-         E291qpmHRAYDrh3vOHWYpKgXWRzASg58TPR3mtbOfPQJfNFt1GhJzuap5IHjLvJMEz/a
-         RUbT1NaZrMJseo3guCZYD8tnJ+r2gdC2gDW+H+JkTlyPQKDwf9GK0TDi9/HbT+3ivFfA
-         C39sm7HSXRa+FegH31p71H3T2Wf4VM2XmzDjg0qHTDGGIjaMOxkxrS/s62JY14gA0YG5
-         Ptew==
-X-Gm-Message-State: APjAAAW/QmzDyun0avXhmV5odOopx3B4fTdXr8EL7Nn69BWm6Dk+hTa2
-        inRRWmXP8HBg0t+gAPHCm5E=
-X-Google-Smtp-Source: APXvYqx/bG7Sy2XPzjDpZ6ya2g/f84eSiTXKEfYg84M3FoSwUQSCYbJw3vjFHpMrSWlez3Fo2lsWbA==
-X-Received: by 2002:a1c:6146:: with SMTP id v67mr5618275wmb.102.1573586546945;
-        Tue, 12 Nov 2019 11:22:26 -0800 (PST)
-Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
-        by smtp.gmail.com with ESMTPSA id z9sm12525687wrv.35.2019.11.12.11.22.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 11:22:26 -0800 (PST)
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     oliver.graute@gmail.com, m.felsch@pengutronix.de,
-        narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCHv7 2/3] ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
-Date:   Tue, 12 Nov 2019 20:22:02 +0100
-Message-Id: <1573586526-15007-3-git-send-email-oliver.graute@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
-References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
-X-Patchwork-Bot: notify
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=luJmse4qyPM7h1duRVVj4w9vtvYZ5N4OxnAMNKQuEwE=;
+        b=QvBwC39+JY2jACHyA9yqgMqQRbQtQZBYeTMOPEfxW5e+p1g194HCFsfl+Hu/JWEiyT
+         rsNWo5vMxwx0mFoZEBgsgLWOMAoav1bp/30TmjLWP6mHxPR5z4y+M919WEdW/q+pUW7d
+         HAKuyBVtYm2s0VyVdj1snHSuaYEbWQMAmdsQAoo7//te30m9UyHRLtxSmedl0SuqlNlU
+         upWoSNITRsxbb4LjfU7aGQRGKHeF9XK0akxi5A8mVhnt1LUUIC0U90zb+xg1eENbsn0N
+         5LwcGlM1rW0lo3C8pfKCRNfDUqtSsjuWulCUZRmopH/TmBL2ETfqXaLwsHZhrCugxX/2
+         UCXQ==
+X-Gm-Message-State: APjAAAUq8VlPCqBG0N0qTEJjlSD7z86kiiZggFX01FziYRHwMBYRn/dM
+        HWFTbjFhjiLrEFKS4uLnnj8qtQ==
+X-Google-Smtp-Source: APXvYqysD+TiqAUSvdUCYG2LXpASlGJtt1tzc0lSVX4vWFlJ3Z5O7G8bMlEUHEuFLgsKBKbcpTg2Ww==
+X-Received: by 2002:a63:586:: with SMTP id 128mr27395209pgf.198.1573586567270;
+        Tue, 12 Nov 2019 11:22:47 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i22sm3220287pjx.1.2019.11.12.11.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 11:22:46 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:22:44 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        edubezval@gmail.com, swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 2/3] drivers: thermal: tsens: Add watchdog support
+Message-ID: <20191112192244.GB3140946@builder>
+References: <cover.1573499020.git.amit.kucheria@linaro.org>
+ <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
+On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
 
-Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Marco Felsch <m.felsch@pengutronix.de>
----
-Changelog:
+> TSENS IP v2.3 onwards adds support for a watchdog to detect if the TSENS
+> HW FSM is frozen. Add support to detect and restart the FSM in the
+> driver. The watchdog is configured by the bootloader, we just enable the
+> feature in the kernel.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 41 +++++++++++++++++++++++++++++
+>  drivers/thermal/qcom/tsens-v2.c     | 10 +++++++
+>  drivers/thermal/qcom/tsens.h        | 12 +++++++++
+>  3 files changed, 63 insertions(+)
+> 
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> index 2989cb952cdb..9432518502a7 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -378,6 +378,28 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+>  	bool enable = true, disable = false;
+>  	unsigned long flags;
+>  	int temp, ret, i;
+> +	u32 wdog_status, wdog_count, ver_minor;
+> +
+> +	ret = regmap_field_read(priv->rf[VER_MINOR], &ver_minor);
 
-v7
- - fixed wakeup-source
+The version is unlikely to change from one interrupt to the next, so I
+suggest that you add a boolean "has_watchdog" to your context that you
+populate in init_common.
 
-v6:
- - added some muxing
- - added codec in sound node
- - added adc1 node
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (tsens_version(priv) > VER_1_X &&  ver_minor > 2) {
+> +		/* Watchdog is present only on v2.3+ */
+> +		ret = regmap_field_read(priv->rf[WDOG_BARK_STATUS], &wdog_status);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Clear WDOG interrupt */
+> +		regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 1);
+> +		regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 0);
+> +
+> +		ret = regmap_field_read(priv->rf[WDOG_BARK_COUNT], &wdog_count);
+> +		if (ret)
+> +			return ret;
+> +		if (wdog_count)
+> +			dev_err(priv->dev, "%s: watchdog count: %d\n", __func__, wdog_count);
 
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 221 ++++++++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+What's the benefit of reading wdog_count and who's the audience for this
+print? What do I do when this goes to 11?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index df2e1f2..65fac53 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -583,6 +583,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-+	imx6ul-var-6ulcustomboard.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-eval-v3.dtb \
- 	imx6ull-colibri-wifi-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-new file mode 100644
-index 00000000..5b88aad
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Support for Variscite DART-6UL Module
-+ *
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-+ * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include "imx6ul-imx6ull-var-dart-common.dtsi"
-+
-+/ {
-+	model = "Variscite i.MX6 UltraLite Carrier-board";
-+	compatible = "variscite,6ulcustomboard", "fsl,imx6ul";
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 20000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
-+
-+		user {
-+			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BACK>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		d16-led {
-+			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "wm8731audio";
-+		simple-audio-card,widgets =
-+			"Headphone", "Headphone Jack",
-+			"Line", "Line Jack",
-+			"Microphone", "Mic Jack";
-+		simple-audio-card,routing =
-+			"Headphone Jack", "RHPOUT",
-+			"Headphone Jack", "LHPOUT",
-+			"LLINEIN", "Line Jack",
-+			"RLINEIN", "Line Jack",
-+			"MICIN", "Mic Bias",
-+			"Mic Bias", "Mic Jack";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,frame-master = <&codec_dai>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&sai2>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&wm8731>;
-+			system-clock-frequency = <12288000>;
-+		};
-+	};
-+};
-+
-+&adc1 {
-+	vref-supply = <&reg_touch_3v3>;
-+	status = "okay";
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "okay";
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	status = "okay";
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	wm8731: audio-codec@1a {
-+		compatible = "wlf,wm8731";
-+		reg = <0x1a>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&clks IMX6UL_CLK_SAI2>;
-+		clock-names = "mclk";
-+	};
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <4 IRQ_TYPE_NONE>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+		wakeup-source;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif>;
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display0 {
-+		bits-per-pixel = <16>;
-+		bus-width = <24>;
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency =<35000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hfront-porch = <40>;
-+				hback-porch = <40>;
-+				hsync-len = <48>;
-+				vback-porch = <29>;
-+				vfront-porch = <13>;
-+				vsync-len = <3>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	disable-over-current;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	disable-over-current;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_rtc: rtcgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+		>;
-+	};
-+};
--- 
-2.7.4
+Regards,
+Bjorn
 
+> +	}
+>  
+>  	for (i = 0; i < priv->num_sensors; i++) {
+>  		struct tsens_sensor *s = &priv->sensor[i];
+> @@ -685,6 +707,7 @@ int __init init_common(struct tsens_priv *priv)
+>  {
+>  	void __iomem *tm_base, *srot_base;
+>  	struct device *dev = priv->dev;
+> +	u32 ver_minor;
+>  	struct resource *res;
+>  	u32 enabled;
+>  	int ret, i, j;
+> @@ -734,6 +757,9 @@ int __init init_common(struct tsens_priv *priv)
+>  			if (IS_ERR(priv->rf[i]))
+>  				return PTR_ERR(priv->rf[i]);
+>  		}
+> +		ret = regmap_field_read(priv->rf[VER_MINOR], &ver_minor);
+> +		if (ret)
+> +			goto err_put_device;
+>  	}
+>  
+>  	priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
+> @@ -794,6 +820,21 @@ int __init init_common(struct tsens_priv *priv)
+>  		}
+>  	}
+>  
+> +	if (tsens_version(priv) > VER_1_X &&  ver_minor > 2) {
+> +		/* Watchdog is present only on v2.3+ */
+> +		for (i = 0, j = WDOG_BARK_STATUS; j <= CC_MON_MASK; i++, j++) {
+> +			priv->rf[j] = devm_regmap_field_alloc(dev, priv->tm_map,
+> +							      priv->fields[j]);
+> +			if (IS_ERR(priv->rf[j])) {
+> +				ret = PTR_ERR(priv->rf[j]);
+> +				goto err_put_device;
+> +			}
+> +		}
+> +		/* Enable WDOG and disable cycle completion monitoring */
+> +		regmap_field_write(priv->rf[WDOG_BARK_MASK], 0);
+> +		regmap_field_write(priv->rf[CC_MON_MASK], 1);
+> +	}
+> +
+>  	spin_lock_init(&priv->ul_lock);
+>  	tsens_enable_irq(priv);
+>  	tsens_debug_init(op);
+> diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+> index 47d831df0803..4184850d1e42 100644
+> --- a/drivers/thermal/qcom/tsens-v2.c
+> +++ b/drivers/thermal/qcom/tsens-v2.c
+> @@ -24,6 +24,7 @@
+>  #define TM_Sn_CRITICAL_THRESHOLD_OFF	0x0060
+>  #define TM_Sn_STATUS_OFF		0x00a0
+>  #define TM_TRDY_OFF			0x00e4
+> +#define TM_WDOG_LOG_OFF		0x013c
+>  
+>  /* v2.x: 8996, 8998, sdm845 */
+>  
+> @@ -66,6 +67,15 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+>  	REG_FIELD_SPLIT_BITS_0_15(CRIT_INT_CLEAR,  TM_CRITICAL_INT_CLEAR_OFF),
+>  	REG_FIELD_SPLIT_BITS_0_15(CRIT_INT_MASK,   TM_CRITICAL_INT_MASK_OFF),
+>  
+> +	/* WATCHDOG on v2.3 or later */
+> +	[WDOG_BARK_STATUS] = REG_FIELD(TM_CRITICAL_INT_STATUS_OFF, 31, 31),
+> +	[WDOG_BARK_CLEAR]  = REG_FIELD(TM_CRITICAL_INT_CLEAR_OFF,  31, 31),
+> +	[WDOG_BARK_MASK]   = REG_FIELD(TM_CRITICAL_INT_MASK_OFF,   31, 31),
+> +	[CC_MON_STATUS]    = REG_FIELD(TM_CRITICAL_INT_STATUS_OFF, 30, 30),
+> +	[CC_MON_CLEAR]     = REG_FIELD(TM_CRITICAL_INT_CLEAR_OFF,  30, 30),
+> +	[CC_MON_MASK]      = REG_FIELD(TM_CRITICAL_INT_MASK_OFF,   30, 30),
+> +	[WDOG_BARK_COUNT]  = REG_FIELD(TM_WDOG_LOG_OFF,             0,  7),
+> +
+>  	/* Sn_STATUS */
+>  	REG_FIELD_FOR_EACH_SENSOR16(LAST_TEMP,       TM_Sn_STATUS_OFF,  0,  11),
+>  	REG_FIELD_FOR_EACH_SENSOR16(VALID,           TM_Sn_STATUS_OFF, 21,  21),
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 9b5a30533c52..7608e7877a7b 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -440,6 +440,18 @@ enum regfield_ids {
+>  	CRIT_THRESH_13,
+>  	CRIT_THRESH_14,
+>  	CRIT_THRESH_15,
+> +
+> +	/* WATCHDOG */
+> +	WDOG_BARK_STATUS,
+> +	WDOG_BARK_CLEAR,
+> +	WDOG_BARK_MASK,
+> +	WDOG_BARK_COUNT,
+> +
+> +	/* CYCLE COMPLETION MONITOR */
+> +	CC_MON_STATUS,
+> +	CC_MON_CLEAR,
+> +	CC_MON_MASK,
+> +
+>  	MIN_STATUS_0,		/* MIN threshold violated */
+>  	MIN_STATUS_1,
+>  	MIN_STATUS_2,
+> -- 
+> 2.17.1
+> 
