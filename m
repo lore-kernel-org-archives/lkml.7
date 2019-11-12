@@ -2,130 +2,130 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022D0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9C0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C997F21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444E2206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jfAjV9pe"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="onavkD8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfKLPkf (ORCPT
+        id S1727192AbfKLPls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:40:35 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45010 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKLPkf (ORCPT
+        Tue, 12 Nov 2019 10:41:48 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35400 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfKLPlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:40:35 -0500
-Received: by mail-lj1-f196.google.com with SMTP id g3so18286648ljl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:40:32 -0800 (PST)
+        Tue, 12 Nov 2019 10:41:47 -0500
+Received: by mail-qt1-f194.google.com with SMTP id n4so15584066qte.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:41:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zu0KReonp/Dvh814/aR49/dIUTQPkHFLFvLTh9BjBJU=;
-        b=jfAjV9pe3qHgAPYXC5bDWCM6SehVsqSrXaCyvKhOT+teEhUMll9b1VNsEeMotXM2fI
-         RX85n4pFKuzyrnSnd9lylg3PQuLfzIM1r6Juo28sJGwTM4u3hKhaWC6F3qDkZztXqfmq
-         06fB86V3nYiLkZFWvIgH4qFOHKeFDtNQqgPSH8sOLUasj09jjdiwJZ7dsCOw8A9VStFD
-         0ajLXfrCKcnhq4V3PNOCwbIa+4vWgABN4Abv0YIElqpFZB+XAHzA3my6B25btWKS140X
-         eD2M+ibGqnB4XtWq7R0ZjyT6XB7ERFqjNkjtlE+VWCGWFMfx5BWHUNTwONHLaYgt0Sjd
-         z76g==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sffWfpS2QMNTM1duykbFQpzXK+3tOCKOX41PX9BWYJY=;
+        b=onavkD8gXnY+DU1QMK2HKA+4DpFvljAtoowojpZNSn+s0cLs/O18OrDv8iBAq4FvUi
+         KP1rQK3YeTpiD8U2k8ka7l4WIYaGpIXtkl1YuHLG0X7+/HdQwQQX9eMq4d4seNrJkVC4
+         v7BknGxXQXa0cmzcJ8t08SpTlNcAxqENnpVyozDraXVtjL6x3Tn3uUkMMPOgNCaufeSP
+         u1emdrAlE7gmBHpBDkZ9V8QtfG8cEx5wXeAkijgrB260ccDdVStO+rVW02zXe/5lAiVm
+         C+PkYYbm+M4nvk7s2NSQeMuIzl8efyk4T/tTf0RHvXIACA1c7U7Qb242q/sFqhmzUsHr
+         uEmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zu0KReonp/Dvh814/aR49/dIUTQPkHFLFvLTh9BjBJU=;
-        b=FDFytUtHOFSgBgSeuzMXEOxCXlx9YrEyBhoIo+2ZKNCucqPDcDSZwx/njib+kY1dxP
-         N9ThcidWD4+hBd9iZZ0dNUW+ItWTV1HtJnUsKkh3bF5+n1LjEFi0ivzgj0pebi10U+92
-         t/ugxu9yzJ3/yRizJ5XGe1GutTD8yotdytP0HZGLULLbIRlBZUxWCqSXWFjDrFCVrTzL
-         I3L+STWCAisxls26laPNrLttuGJClIYDa/yl1Pcy6GoPad1KIIwzZcVYhsY6ySwcDedi
-         1NSp2SnPU5+9k/JDYXHFrk4/IVChMR71l8XOREevgYOXvP4EBfmvZtR6kJ59O5+g2A4f
-         zkDA==
-X-Gm-Message-State: APjAAAVPQwTZN3uNZmIPA4ZpU3len0taplkFN52b+O6VSLFEOKlH7jYT
-        Eds5M2RWZH5hCRBuivF3Gf7oi5IaYIJxQ8RHqVgQ4A==
-X-Google-Smtp-Source: APXvYqwzurXFq2vYxkN+AxLmD0lXELsNpIBZBEVylzp+vmL5gLlTHMi3AZmeS0zcudig8jwrOU7gq49Oiu1uTq7CgpA=
-X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr6762612ljl.193.1573573231629;
- Tue, 12 Nov 2019 07:40:31 -0800 (PST)
-MIME-Version: 1.0
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <1571405198-27570-5-git-send-email-vincent.guittot@linaro.org>
- <20191030154534.GJ3016@techsingularity.net> <CAKfTPtB_6kBq69E=-YFuon6fg21CxHneMpncpbLcPGk6uoVcMQ@mail.gmail.com>
- <20191031101544.GP3016@techsingularity.net> <CAKfTPtByO7oLQZxF_+-FxZ9u1JhO24-rujW3j-QDqr+PFDOQ=Q@mail.gmail.com>
- <20191031114020.GQ3016@techsingularity.net> <20191108163501.GA26528@linaro.org>
- <20191108183730.GU3016@techsingularity.net> <20191112105830.GA8765@linaro.org>
- <20191112150636.GX3016@techsingularity.net>
-In-Reply-To: <20191112150636.GX3016@techsingularity.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 12 Nov 2019 16:40:20 +0100
-Message-ID: <CAKfTPtCVdG1zcd4kyU4d+K_+VdW7TZn+RSDKt4Hk28B366NPOQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sffWfpS2QMNTM1duykbFQpzXK+3tOCKOX41PX9BWYJY=;
+        b=lO/YrmpuAqGc39qRzis//wOY0qgM+FAyv//dPUVcOnJozGpwx1z7YWe26NNl7v1t8K
+         3xwEqv0zxmAqvB3qfRoTNnowRM3xBizRan0U7LBpBdkz1dD0i8A/S+qOCSFOD6K0ooGA
+         EvOjW8OnAypb9JhDbbwqNlxEovBFKAHSej3s2QpvU5x6I3usW1YS7mYHdXB3Xusp1bhK
+         7KCfCDK8rfCQ6EA6BSRS2Cuj8BKX0BgnIeH8OJYNFZxOOWse6c1Xdkspszv/Flr7RqgU
+         //KTbxybKDxjvdbXpNn6sJawRJAkNqHkW7OzvltFEVw452QmgQHVRBWK+TezYCnE1Tu8
+         GTww==
+X-Gm-Message-State: APjAAAU7Nt92JUD6MEjYN4S6YbzAuHhAzgX7cDplCWR74IsxSBBbr/67
+        qXApjLkprYHGCjud9HQpOFUZN6U195a/8Q==
+X-Google-Smtp-Source: APXvYqxOd4pPWa64qwH77p1Z7pN3tfY2KsLmQ10aVuK7/GUr2f1dg31kFQIynxDKY1d2JLm22kN6OA==
+X-Received: by 2002:ac8:4a93:: with SMTP id l19mr1888152qtq.121.1573573306337;
+        Tue, 12 Nov 2019 07:41:46 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::aa8c])
+        by smtp.gmail.com with ESMTPSA id n185sm8973944qkd.32.2019.11.12.07.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 07:41:45 -0800 (PST)
+Date:   Tue, 12 Nov 2019 10:41:44 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     tim <xiejingfeng@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH] psi:fix divide by zero in psi_update_stats
+Message-ID: <20191112154144.GC168812@cmpxchg.org>
+References: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 16:06, Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Tue, Nov 12, 2019 at 11:58:30AM +0100, Vincent Guittot wrote:
-> > > This roughly matches what I've seen. The interesting part to me for
-> > > netperf is the next section of the report that reports the locality of
-> > > numa hints. With netperf on a 2-socket machine, it's generally around
-> > > 50% as the client/server are pulled apart. Because netperf is not
-> > > heavily memory bound, it doesn't have much impact on the overall
-> > > performance but it's good at catching the cross-node migrations.
-> >
-> > Ok. I didn't want to make my reply too long. I have put them below for
-> > the netperf-tcp results:
-> >                                         5.3-rc2        5.3-rc2
-> >                                             tip      +rwk+fix
-> > Ops NUMA alloc hit                  60077762.00    60387907.00
-> > Ops NUMA alloc miss                        0.00           0.00
-> > Ops NUMA interleave hit                    0.00           0.00
-> > Ops NUMA alloc local                60077571.00    60387798.00
-> > Ops NUMA base-page range updates        5948.00       17223.00
-> > Ops NUMA PTE updates                    5948.00       17223.00
-> > Ops NUMA PMD updates                       0.00           0.00
-> > Ops NUMA hint faults                    4639.00       14050.00
-> > Ops NUMA hint local faults %            2073.00        6515.00
-> > Ops NUMA hint local percent               44.69          46.37
-> > Ops NUMA pages migrated                 1528.00        4306.00
-> > Ops AutoNUMA cost                         23.27          70.45
-> >
->
-> Thanks -- it was "NUMA hint local percent" I was interested in and the
-> 46.37% local hinting faults is likely indicative of the client/server
-> being load balanced across SD_NUMA domains without NUMA Balancing being
-> aggressive enough to fix it. At least I know I am not just seriously
-> unlucky or testing magical machines!
+On Fri, Nov 08, 2019 at 03:33:24PM +0800, tim wrote:
+> In psi_update_stats, it is possible that period has value like
+> 0xXXXXXXXX00000000 where the lower 32 bit is 0, then it calls div_u64 which
+> truncates u64 period to u32, results in zero divisor.
+> Use div64_u64() instead of div_u64()  if the divisor is u64 to avoid
+> truncation to 32-bit on 64-bit platforms.
+> 
+> Signed-off-by: xiejingfeng <xiejingfeng@linux.alibaba.com>
 
-I agree that the collaboration between load balanced across SD_NUMA
-level and NUMA balancing should be improved
+This is legit. When we stop the periodic averaging worker due to an
+idle CPU, the period after restart can be much longer than the ~4 sec
+in the lower 32 bits. See the missed_periods logic in update_averages.
 
-It's also interesting to notice that the patchset doesn't seem to do
-worse than the baseline: 46.37% vs 44.69%
+What is surprising is that you can hit this repeatedly, as the odds
+are 1 in 4,294,967,296. An extremely coarse clock source?
 
-Vincent
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
->
-> --
-> Mel Gorman
-> SUSE Labs
+There are several more instances of div_u64 in psi.c. They all look
+fine to me except for one in the psi poll() windowing code, where we
+divide by the window size, which can be up to 10s. CCing Suren.
+
+---
+From 009cece5f37a38f4baeb1bebdcb432ac9ae66ef8 Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Tue, 12 Nov 2019 10:35:26 -0500
+Subject: [PATCH] psi: fix a division error in psi poll()
+
+The psi window size is a u64 an can be up to 10 seconds right now,
+which exceeds the lower 32 bits of the variable. But div_u64 is meant
+only for 32-bit divisors. Use div64_u64 for the 64-bit divisor.
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ kernel/sched/psi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 517e3719027e..84af7aa158bf 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -481,7 +481,7 @@ static u64 window_update(struct psi_window *win, u64 now, u64 value)
+ 		u32 remaining;
+ 
+ 		remaining = win->size - elapsed;
+-		growth += div_u64(win->prev_growth * remaining, win->size);
++		growth += div64_u64(win->prev_growth * remaining, win->size);
+ 	}
+ 
+ 	return growth;
+-- 
+2.24.0
+
