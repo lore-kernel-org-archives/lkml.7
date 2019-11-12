@@ -2,95 +2,115 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1972AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F26C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E226121925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:15:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m+qPl9Dq"
+	by mail.kernel.org (Postfix) with ESMTP id 9887C21A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfKLJPq (ORCPT
+        id S1727291AbfKLJQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:15:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44806 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfKLJPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:15:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PLZnKnyjrvEEY3MNe1xQ1aX6JHwtmyTlZ7RAIiC0GHM=; b=m+qPl9DqhaFcbB555Gi1kONCV
-        qe/8BUWg94E5vHtORxVetXUG+E7fLoMk93K7eJAXQBooGJLKOq1x5P82jGvV1nk0LkB8U1KwRLq5g
-        p3eJJaIOKWhz46y7FIn7I3XIvoCkhOXMa4dkzBorxOMwbPySQckG/qhkX8WcL7AelvGorrjNzkMVM
-        7oKoQ8jqEKfTIRiCfQ9cjskIgzdB32vhAt4McGb3LelGQeOCj/o5PqLXVe0cHjJ2bJOJZje1Hq72f
-        dIdeVzncG6CGm1C9YcnHYggwU4Z4iTb0w1qk4tVIKp/OHy6XYBDoO4SNRMRob7hHqyvfoBbD9AEIz
-        E9MAcHIxg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUSGi-0005yb-JA; Tue, 12 Nov 2019 09:15:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E00C6305615;
-        Tue, 12 Nov 2019 10:14:14 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8946B29BC818D; Tue, 12 Nov 2019 10:15:21 +0100 (CET)
-Date:   Tue, 12 Nov 2019 10:15:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
-Message-ID: <20191112091521.GX4131@hirez.programming.kicks-ass.net>
-References: <20191111220314.519933535@linutronix.de>
- <20191111223052.603030685@linutronix.de>
+        Tue, 12 Nov 2019 04:16:23 -0500
+Received: from mga09.intel.com ([134.134.136.24]:60135 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727002AbfKLJQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:16:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 01:16:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,295,1569308400"; 
+   d="scan'208";a="254100723"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Nov 2019 01:16:18 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 74E9DEB; Tue, 12 Nov 2019 11:16:17 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] PCI: Add missing link delays
+Date:   Tue, 12 Nov 2019 12:16:15 +0300
+Message-Id: <20191112091617.70282-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111223052.603030685@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 11:03:25PM +0100, Thomas Gleixner wrote:
-> @@ -59,8 +71,26 @@ long ksys_ioperm(unsigned long from, uns
->  			return -ENOMEM;
->  
->  		memset(iobm->bits, 0xff, sizeof(iobm->bits));
-> +		refcount_set(&iobm->refcnt, 1);
-> +	}
-> +
-> +	/*
-> +	 * If the bitmap is not shared, then nothing can take a refcount as
-> +	 * current can obviously not fork at the same time. If it's shared
-> +	 * duplicate it and drop the refcount on the original one.
-> +	 */
-> +	if (refcount_read(&iobm->refcnt) > 1) {
-> +		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
-> +		if (!iobm)
-> +			return -ENOMEM;
-> +		io_bitmap_exit();
-		refcount_set(&iobm->refcnd, 1);
->  	}
->  
-> +	/* Set the tasks io_bitmap pointer (might be the same) */
-> +	t->io_bitmap = iobm;
-> +	/* Mark it active for context switching and exit to user mode */
-> +	set_thread_flag(TIF_IO_BITMAP);
-> +
+Hi,
+
+This is fourth version of the reworked PCIe link delay patch posted earlier
+here:
+
+  v3: https://www.spinics.net/lists/linux-pci/msg88760.html
+  v2: https://lore.kernel.org/linux-pci/20191004123947.11087-1-mika.westerberg@linux.intel.com/
+  v1: https://patchwork.kernel.org/patch/11106611/
+
+Changes from v3:
+
+  * Add tag from Rafael.
+  * Hold pci_bus_sem when accessing bus->devices list.
+
+Changes from v2:
+
+  * Rebased on top of pci.git/pci/pm.
+  * Update references to PCIe 5.0 spec.
+  * Take d3cold_delay if child devices into account. This allows ACPI _DSM
+    to lower the delay.
+  * Check for pci_dev->skip_bus_pm in pci_pm_resume_noirq().
+  * Drop comment that mentions pciehp where
+    pci_bridge_wait_for_secondary_bus() is called.
+  * Use pcie_downstream_port() in pci_bridge_wait_for_secondary_bus().
+
+Based on the discussion around v2 there is a potential issue when restoring
+PCI_EXP_LNKCTL2 (regardless these patches) that we may need to retrain the
+link. This series does not include fix for that since it is not yet clear
+how we solve it. I can do that as a separate patch once we agree on the
+solution.
+
+I'm submitting these two now in hopes that we can get them included for
+v5.5 because there are systems out there that need them in order to
+function properly.
+
+Changes from v1:
+
+  * Introduce pcie_wait_for_link_delay() in a separate patch
+  * Tidy up changelog, remove some debug output
+  * Rename pcie_wait_downstream_accessible() to
+    pci_bridge_wait_for_secondary_bus() and make it generic to all PCI
+    bridges.
+  * Handle Tpvrh + Trhfa for conventional PCI even though we don't do PM
+    for them right now.
+  * Use pci_dbg() instead of dev_dbg().
+  * Dropped check for pm_suspend_no_platform() and only check for D3cold.
+  * Drop pcie_get_downstream_delay(), same delay applies equally to all
+    devices (it is not entirely clear from the spec).
+
+Mika Westerberg (2):
+  PCI: Introduce pcie_wait_for_link_delay()
+  PCI: Add missing link delays required by the PCIe spec
+
+ drivers/pci/pci-driver.c |  11 ++-
+ drivers/pci/pci.c        | 148 ++++++++++++++++++++++++++++++++++++---
+ drivers/pci/pci.h        |   1 +
+ 3 files changed, 150 insertions(+), 10 deletions(-)
+
+-- 
+2.24.0
+
