@@ -2,142 +2,113 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522F2C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D590CC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354B320818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FB721A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKLJMX (ORCPT
+        id S1727171AbfKLJOI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:12:23 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51149 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfKLJMX (ORCPT
+        Tue, 12 Nov 2019 04:14:08 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38968 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLJOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:12:23 -0500
-Received: from 79.184.253.153.ipv4.supernova.orange.pl (79.184.253.153) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 669a6dc8760ddf50; Tue, 12 Nov 2019 10:12:19 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     rafael.j.wysocki@intel.com, lenb@kernel.org, keith.busch@intel.com,
-        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        dave.hansen@linux.intel.com, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jingqi Liu <Jingqi.liu@intel.com>
-Subject: Re: [PATCH] ACPI/HMAT: use %u instead of %d to print u32 variables
-Date:   Tue, 12 Nov 2019 10:12:19 +0100
-Message-ID: <1931451.zuokRdAxLL@kreacher>
-In-Reply-To: <20191030063403.20128-1-tao3.xu@intel.com>
-References: <20191030063403.20128-1-tao3.xu@intel.com>
+        Tue, 12 Nov 2019 04:14:08 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v138so14138244oif.6;
+        Tue, 12 Nov 2019 01:14:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CcFia2f8UjT7Hz7B3H/t2zQe97c4U387QE8r5XjOH8A=;
+        b=t/3EoTXZwO4A4ZgrzT+/BHLcbzStTaLy3bem4ZjRM7T30rdHPt34rcy5vJKRfzNk3d
+         ewOd1cHrQa14znwpmvwgFadYJHaua/0hxTn6xlYa1nJL1puH+2Hepea+z+vNUzMTBZEL
+         z5ErdNK97ZwftHn/8POHHy+TViSd4hkPSy+9vTn8pvCgtGmsB+ZH3Hs/vdOzodLJUPVL
+         oJoKaQfxvkPq5ad6p6XDJEsUTO369ZWWf117DcJ2U/xfvT4YH+64ZKKfMVSdkw94AoVa
+         tfks1wzNfv1IFmZw/BT0Vlazs413Y6sFVF/rGY2RIjAQsZuApnFeeJyySO8iq+3Ehic3
+         25Xw==
+X-Gm-Message-State: APjAAAUeA30wiBquYZS+QrX1HQ50wpB+OqUJNpErqBBmFw0rADj2wWCx
+        LuOj5Q4WY/qLCBdkinvJQYJBcTnBs6GvJ8pEfLs=
+X-Google-Smtp-Source: APXvYqxbSiMMCm9vOSRUI81fzjT2IZ3Fd4CYajnzFOk7q7brNKIrKnb1uqJhXwzzLHRJu12wVQ5KC28YV3eKlUAChCc=
+X-Received: by 2002:aca:3a86:: with SMTP id h128mr2951038oia.131.1573550045207;
+ Tue, 12 Nov 2019 01:14:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-12-keescook@chromium.org>
+ <CAMuHMdXfPyti1wFBb0hhf3CeDSQ=zVv7cV-taeYCmDswMQkXPQ@mail.gmail.com>
+ <201911110922.17A2112B0@keescook> <CAMuHMdUJ8QPvqf51nVmOg1Zm20SNT7pXR72z=qmco=ecwawZ7A@mail.gmail.com>
+ <20191112090736.GA32336@zn.tnic>
+In-Reply-To: <20191112090736.GA32336@zn.tnic>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 12 Nov 2019 10:13:53 +0100
+Message-ID: <CAMuHMdXayF+z4z+Ds-gm4+YFA=BCMo0_9Q3uXcbQQgQkLxZ4uw@mail.gmail.com>
+Subject: Re: [PATCH v2 11/29] vmlinux.lds.h: Replace RODATA with RO_DATA
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, October 30, 2019 7:34:03 AM CET Tao Xu wrote:
-> Use %u instead of %d to print u32 variables to expand the value range,
-> especially when latency or bandwidth value is bigger than INT_MAX.
-> Then HMAT latency can support up to 4.29s and bandwidth can support
-> up to 4PB/s.
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jingqi Liu <Jingqi.liu@intel.com>
-> Signed-off-by: Tao Xu <tao3.xu@intel.com>
-> ---
-> 
-> This patch is based on:
-> EFI Specific Purpose Memory Support,
-> https://lore.kernel.org/patchwork/cover/1139858/
-> ---
->  drivers/acpi/numa/hmat.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 1ce366a7bc55..f96e443990c1 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -293,7 +293,7 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
->  	u8 type, mem_hier;
->  
->  	if (hmat_loc->header.length < sizeof(*hmat_loc)) {
-> -		pr_notice("HMAT: Unexpected locality header length: %d\n",
-> +		pr_notice("HMAT: Unexpected locality header length: %u\n",
->  			 hmat_loc->header.length);
->  		return -EINVAL;
->  	}
-> @@ -305,12 +305,12 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
->  	total_size = sizeof(*hmat_loc) + sizeof(*entries) * ipds * tpds +
->  		     sizeof(*inits) * ipds + sizeof(*targs) * tpds;
->  	if (hmat_loc->header.length < total_size) {
-> -		pr_notice("HMAT: Unexpected locality header length:%d, minimum required:%d\n",
-> +		pr_notice("HMAT: Unexpected locality header length:%u, minimum required:%u\n",
->  			 hmat_loc->header.length, total_size);
->  		return -EINVAL;
->  	}
->  
-> -	pr_info("HMAT: Locality: Flags:%02x Type:%s Initiator Domains:%d Target Domains:%d Base:%lld\n",
-> +	pr_info("HMAT: Locality: Flags:%02x Type:%s Initiator Domains:%u Target Domains:%u Base:%lld\n",
->  		hmat_loc->flags, hmat_data_type(type), ipds, tpds,
->  		hmat_loc->entry_base_unit);
->  
-> @@ -323,7 +323,7 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
->  			value = hmat_normalize(entries[init * tpds + targ],
->  					       hmat_loc->entry_base_unit,
->  					       type);
-> -			pr_info("  Initiator-Target[%d-%d]:%d%s\n",
-> +			pr_info("  Initiator-Target[%u-%u]:%u%s\n",
->  				inits[init], targs[targ], value,
->  				hmat_data_type_suffix(type));
->  
-> @@ -350,13 +350,13 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
->  	u32 attrs;
->  
->  	if (cache->header.length < sizeof(*cache)) {
-> -		pr_notice("HMAT: Unexpected cache header length: %d\n",
-> +		pr_notice("HMAT: Unexpected cache header length: %u\n",
->  			 cache->header.length);
->  		return -EINVAL;
->  	}
->  
->  	attrs = cache->cache_attributes;
-> -	pr_info("HMAT: Cache: Domain:%d Size:%llu Attrs:%08x SMBIOS Handles:%d\n",
-> +	pr_info("HMAT: Cache: Domain:%u Size:%llu Attrs:%08x SMBIOS Handles:%d\n",
->  		cache->memory_PD, cache->cache_size, attrs,
->  		cache->number_of_SMBIOShandles);
->  
-> @@ -411,17 +411,17 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
->  	struct memory_target *target = NULL;
->  
->  	if (p->header.length != sizeof(*p)) {
-> -		pr_notice("HMAT: Unexpected address range header length: %d\n",
-> +		pr_notice("HMAT: Unexpected address range header length: %u\n",
->  			 p->header.length);
->  		return -EINVAL;
->  	}
->  
->  	if (hmat_revision == 1)
-> -		pr_info("HMAT: Memory (%#llx length %#llx) Flags:%04x Processor Domain:%d Memory Domain:%d\n",
-> +		pr_info("HMAT: Memory (%#llx length %#llx) Flags:%04x Processor Domain:%u Memory Domain:%u\n",
->  			p->reserved3, p->reserved4, p->flags, p->processor_PD,
->  			p->memory_PD);
->  	else
-> -		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
-> +		pr_info("HMAT: Memory Flags:%04x Processor Domain:%u Memory Domain:%u\n",
->  			p->flags, p->processor_PD, p->memory_PD);
->  
->  	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
-> 
+Hi Borislav,
 
-Applying as 5.5 material with minor modifications of the subject and
-changelog, thanks!
+On Tue, Nov 12, 2019 at 10:08 AM Borislav Petkov <bp@alien8.de> wrote:
+> On Mon, Nov 11, 2019 at 07:08:51PM +0100, Geert Uytterhoeven wrote:
+> > vmlinux-std.lds: All other classic 680x0 targets with an MMU, e.g. plain
+> >                  defconfig aka multi_defconfig.
+>
+> FWIW, the defconfig doesn't build with the cross compiler¹ here, even with Kees'
+> patch applied but for a different reason:
+>
+> $ make.cross ARCH=m68k defconfig
+> ...
+>
+> $make.cross ARCH=m68k 2>w.log
+> ...
+> drivers/video/fbdev/c2p_planar.o: In function `transp8':
+> c2p_planar.c:(.text+0x13a): undefined reference to `c2p_unsupported'
+> c2p_planar.c:(.text+0x1de): undefined reference to `c2p_unsupported'
+> drivers/video/fbdev/c2p_iplan2.o: In function `transp4x.constprop.0':
+> c2p_iplan2.c:(.text+0x98): undefined reference to `c2p_unsupported'
+> make: *** [Makefile:1094: vmlinux] Error 1
 
+The fix for that regression (finally) made it in rc7:
+b330f3972f4f2a82 ("fbdev: c2p: Fix link failure on non-inlining").
 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
