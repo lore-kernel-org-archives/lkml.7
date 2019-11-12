@@ -2,330 +2,114 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9B0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE514C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2F421872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:49:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmZ05pZV"
+	by mail.kernel.org (Postfix) with ESMTP id 9A6BC206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfKLFt5 (ORCPT
+        id S1727010AbfKLFuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 00:49:57 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39145 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfKLFt4 (ORCPT
+        Tue, 12 Nov 2019 00:50:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23544 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725775AbfKLFuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:49:56 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v138so13739787oif.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:49:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F7OGsdO2VbLEy7022hu/ffUq8d11VfcJnuAfwqP4bjw=;
-        b=GmZ05pZVFWQYw5Cc7rmmqJEXJiVOGEiN7mjBfcE+5JrwhMU4SZDuIDs5VyLHG4HsdC
-         ip5ONqRF27d43gnq0F/m375dkDOypulgy0ZD2AKWWFReOUdq4DUV2eAK5FFizL7J1zrr
-         M8dxD5p3Q/WZqv6VGhze98DyPKYLCC5SPdv+XFWuMKaqy7rd/OXmQX5+7cPpNqDzNS5A
-         zlCgd0P6WI+UjkaAXlI/0E3w7Adn0aczIZ/JqRzYeGlZOaTf7Tv5fvhfAZYBIYBY6X8Y
-         dMvLP3YXPrsjPJvfoSerAO/AE7Yd/9kK/DWFRWyNjENeX3g8jnbWVbuwt+TcUBWYQwoA
-         /mIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F7OGsdO2VbLEy7022hu/ffUq8d11VfcJnuAfwqP4bjw=;
-        b=hiIB0t9vs0r6ogZXQfhNyD2quD5O0cTpqmqSnCmLNPuCopDpKg0alREr9WN+ytksRd
-         t+UZnejwqFDP5sX/kqrFrjdYXadILX5Y9/BK3a7ywI+XmW2qL5DXI2FaRpKLvAXC6SR5
-         Bj7YqXzrdHt3E3AOSwnwfx7GSIxyGxPuMPz716clff6+f8EQthC+/tDIP3iFwPvezuee
-         NmAXTL+r2QlHnL+AXpTUNIP3eR01BsQyNDpipBuKGlqMvCVB+XsI4c3ZyRVebeVTmxrN
-         GZ91GNUJdIFBmNgY3vQRxCASruhqMDyCeEQvZtixEtjkYrrkmDOhUnoPjcaeBKVg4qNk
-         a8Ow==
-X-Gm-Message-State: APjAAAXcaxqF2jvMkmIr6Jm05RRNRsn5ODOoQ1fC7DPgUySyY15Mc8z9
-        O6MBDjGUixRmULLF2KVlmpzGvu7gRaATbdLEXk8=
-X-Google-Smtp-Source: APXvYqxv8NiTo1l3ovTjO2t2TROPS4E7UMnCTcFUmgnhxHjgD4s94Nba6pIpF6ISkkboTuZeV3xWFXuvTRL4XH8zy+s=
-X-Received: by 2002:aca:5e03:: with SMTP id s3mr2535116oib.88.1573537793880;
- Mon, 11 Nov 2019 21:49:53 -0800 (PST)
+        Tue, 12 Nov 2019 00:50:05 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAC5lwTb054045
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 00:50:04 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7jpankv8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 00:50:03 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 12 Nov 2019 05:50:02 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Nov 2019 05:49:59 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAC5nwII38535186
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 05:49:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B288111C04A;
+        Tue, 12 Nov 2019 05:49:58 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FF6D11C052;
+        Tue, 12 Nov 2019 05:49:57 +0000 (GMT)
+Received: from bangoria.in.ibm.com (unknown [9.124.31.152])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 05:49:57 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     jolsa@redhat.com, kan.liang@intel.com,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH] perf report: Fix segfault with '-F phys_daddr'
+Date:   Tue, 12 Nov 2019 11:19:46 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190907174833.19957-1-katsuhiro@katsuster.net>
- <CA+E=qVdvKxzFcU-09Ucn1Fr0FdkwSsPcLr8vPn2wsu6-DD1gqg@mail.gmail.com>
- <abc648cc-0b5d-b407-b74b-639833ba196b@katsuster.net> <CA+E=qVdy-wqmR+XOms5S2zMp+B0vM7Dj_fk9N=08-1WjfKDm0Q@mail.gmail.com>
- <CA+E=qVdLzHbNTemMSmhA=-0dsNumQZJhjE-EnXBDu+j7sXTnVw@mail.gmail.com>
- <81666aeb-f3d0-e653-6597-0711a05f9b8d@katsuster.net> <CA+E=qVcgs=2T_9axUCJwTKgmKhjsJJ9mUfvYJbyjg59rGGjcTg@mail.gmail.com>
-In-Reply-To: <CA+E=qVcgs=2T_9axUCJwTKgmKhjsJJ9mUfvYJbyjg59rGGjcTg@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 11 Nov 2019 21:49:28 -0800
-Message-ID: <CA+E=qVe5QmJ8-zSbKj23mb-GksjD+qN=aFaCT7OGUYPYc9Y_ow@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: add analog audio nodes on rk3399-rockpro64
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111205-0008-0000-0000-0000032E3969
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111205-0009-0000-0000-00004A4D3C1F
+Message-Id: <20191112054946.5869-1-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 9:43 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Mon, Nov 11, 2019 at 9:34 PM Katsuhiro Suzuki
-> <katsuhiro@katsuster.net> wrote:
-> >
-> > Hello Vasily,
-> >
-> > Thank you for valuable information.
-> >
-> > On 2019/11/12 4:25, Vasily Khoruzhick wrote:
-> > > On Sun, Nov 10, 2019 at 9:40 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> > >>
-> > >> On Sun, Nov 10, 2019 at 7:30 PM Katsuhiro Suzuki
-> > >> <katsuhiro@katsuster.net> wrote:
-> > >>>
-> > >>> Hello Vasily,
-> > >>
-> > >> Hi Katsuhiro,
-> > >>
-> > >> Thanks for response!
-> > >
-> > > Looks like on my board codec sits at address 0x10, and according to
-> > > schematics that's what its address is supposed to be.
-> > >
-> > > See http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
-> > >
-> > > Codec address is selected by pin CE of ES8316, and on rockpro64 it
-> > > goes to GND through R226. So address should be 0x10.
-> > >
-> >
-> > Yes, I agree. The schematics both v2.0 and v2.1 say that ES8316
-> > address is 0x10. Thank you for pointing.
-> >
-> > But I wonder that my RockPro64 behavior is strange, he is in address
-> > 0x11. (R226 on my board is broken...??)
-> >
-> > root@rockpro64:~# i2cdetect 1
-> > WARNING! This program can confuse your I2C bus, cause data loss and worse!
-> > I will probe file /dev/i2c-1.
-> > I will probe address range 0x03-0x77.
-> > Continue? [Y/n] y
-> >       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-> > 00:          -- -- -- -- -- -- -- -- -- -- -- -- --
-> > 10: -- UU -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> > 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> > 30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> > 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> > 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> > 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> > 70: -- -- -- -- -- -- -- --
-> >
-> > I plan to check R226 resistance value to judge R226 is broken or not
-> > after return to home. And share the result with you.
-> > Please give me a time.
->
-> Thanks for confirming that on your board it's on address 0x11. I
-> checked with some other rockpro64 owners and they have it on 0x10, but
-> looks like we have boards with codec on different address in the wild.
+If perf.data file is not recorded with mem-info, adding 'phys_daddr'
+to output field in perf report results in segfault. Fix that.
 
-Another datapoint is that my board is 2.0. If yours is 2.1 it can be a
-difference between 2.0 and 2.1.
+Before:
+  $ ./perf record ls
+  $ ./perf report -F +phys_daddr
+  Segmentation fault (core dumped)
 
-> > Best Regards,
-> > Katsuhiro Suzuki
-> >
-> >
-> > >>> Thank you for reporting.
-> > >>>
-> > >>> On 2019/11/11 9:17, Vasily Khoruzhick wrote:
-> > >>>> On Sat, Sep 7, 2019 at 10:48 AM Katsuhiro Suzuki
-> > >>>> <katsuhiro@katsuster.net> wrote:
-> > >>>>>
-> > >>>>> This patch adds audio codec (Everest ES8316) and I2S audio nodes for
-> > >>>>> RK3399 RockPro64.
-> > >>>>
-> > >>>> Hi Katsuhiro,
-> > >>>>
-> > >>>> I tested your patch with my rockpro64 on 5.4-rc6 which has your other
-> > >>>> patches to es8316 driver, but apparently it doesn't work.
-> > >>>>
-> > >>>> 'alsamixer' complains 'cannot load mixer controls: No such device or
-> > >>>> address' and if I try to play audio with mpg123 it pretends that it
-> > >>>> plays something but there's no sound.
-> > >>>>
-> > >>>> Any idea what can be wrong?
-> > >>>>
-> > >>>
-> > >>> Do you use defconfig? If so I guess we need turn on more configs:
-> > >>>
-> > >>> - simple-graph-card driver (CONFIG_SND_AUDIO_GRAPH_CARD)
-> > >>> - ES8316 (SND_SOC_ES8316)
-> > >>
-> > >> I have these enabled, card is present in /proc/asound/cards, but
-> > >> alsamixer doesn't work with it.
-> > >>
-> > >>> FYI) ASoC related status or logs in my environment as follows:
-> > >>>
-> > >>> root@rockpro64:~# uname -a
-> > >>> Linux rockpro64 5.4.0-rc6-next-20191108 #169 SMP PREEMPT Mon Nov 11 12:21:44 JST 2019 aarch64 GNU/Linux
-> > >>
-> > >> I'm running 5.4.0-rc6  (commit
-> > >> 00aff6836241ae5654895dcea10e6d4fc5878ca6) with your patch "arm64: dts:
-> > >> rockchip: add analog audio nodes on rk3399-rockpro64" on top of it.
-> > >>
-> > >>> root@rockpro64:~# dmesg | grep -i asoc
-> > >>> [   21.509903] asoc-simple-card hdmi-sound: i2s-hifi <-> ff8a0000.i2s mapping ok
-> > >>> [   21.510550] asoc-simple-card hdmi-sound: ASoC: no DMI vendor name!
-> > >>> [   21.567906] asoc-audio-graph-card sound: ES8316 HiFi <-> ff890000.i2s mapping ok
-> > >>> [   21.568565] asoc-audio-graph-card sound: ASoC: no DMI vendor name!
-> > >>
-> > >> Similar here:
-> > >>
-> > >> [vasilykh@rockpro64 ~]$ dmesg | grep -i asoc
-> > >> [   15.627685] asoc-audio-graph-card sound: ES8316 HiFi <->
-> > >> ff890000.i2s mapping ok
-> > >> [   16.250196] asoc-simple-card hdmi-sound: i2s-hifi <-> ff8a0000.i2s mapping ok
-> > >>
-> > >>> root@rockpro64:~# cat /proc/asound/pcm
-> > >>> 00-00: ff8a0000.i2s-i2s-hifi i2s-hifi-0 : ff8a0000.i2s-i2s-hifi i2s-hifi-0 : playback 1
-> > >>> 01-00: ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : playback 1 : capture 1
-> > >>
-> > >> Same here:
-> > >>
-> > >> [vasilykh@rockpro64 ~]$ cat /proc/asound/pcm
-> > >> 00-00: ff890000.i2s-ES8316 HiFi ES8316 HiFi-0 : ff890000.i2s-ES8316
-> > >> HiFi ES8316 HiFi-0 : playback 1 : capture 1
-> > >> 01-00: ff8a0000.i2s-i2s-hifi i2s-hifi-0 : ff8a0000.i2s-i2s-hifi
-> > >> i2s-hifi-0 : playback
-> > >>
-> > >>> root@rockpro64:~# cat /sys/kernel/debug/asoc/components
-> > >>> hdmi-audio-codec.3.auto
-> > >>> ff8a0000.i2s
-> > >>> ff8a0000.i2s
-> > >>> ff890000.i2s
-> > >>> ff890000.i2s
-> > >>> ff880000.i2s
-> > >>> ff880000.i2s
-> > >>> es8316.1-0011
-> > >>> snd-soc-dummy
-> > >>> snd-soc-dummy
-> > >>
-> > >> Same here.
-> > >>
-> > >>> root@rockpro64:~# cat /sys/kernel/debug/asoc/dais
-> > >>> i2s-hifi
-> > >>> ff8a0000.i2s
-> > >>> ff890000.i2s
-> > >>> ff880000.i2s
-> > >>> ES8316 HiFi
-> > >>> snd-soc-dummy-dai
-> > >>
-> > >> Same here.
-> > >>
-> > >> Yet alsamixer doesn't work for me. It terminates with 'cannot load
-> > >> mixer controls: No such device or address'. Strace shows that fails
-> > >> here:
-> > >>
-> > >> openat(AT_FDCWD, "/dev/snd/controlC0", O_RDWR|O_CLOEXEC) = 3
-> > >> fcntl(3, F_SETFD, FD_CLOEXEC)           = 0
-> > >> ioctl(3, SNDRV_CTL_IOCTL_PVERSION, 0xfffffd3ad04c) = 0
-> > >> fcntl(3, F_GETFL)                       = 0x20002 (flags O_RDWR|O_LARGEFILE)
-> > >> fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK|O_LARGEFILE) = 0
-> > >> ioctl(3, SNDRV_CTL_IOCTL_ELEM_LIST, 0xfffffd3ad228) = 0
-> > >> ioctl(3, SNDRV_CTL_IOCTL_ELEM_LIST, 0xfffffd3ad228) = 0
-> > >> ioctl(3, SNDRV_CTL_IOCTL_ELEM_INFO, 0xfffffd3ace38) = 0
-> > >> ioctl(3, SNDRV_CTL_IOCTL_ELEM_READ, 0xfffffd3ac160) = -1 ENXIO (No
-> > >> such device or address)
-> > >>
-> > >> Looks like it fails to talk to the codec?
-> > >>
-> > >> mpg123 thinks that it's playing audio, but my headphones connected to
-> > >> 3.5mm output are silent.
-> > >>
-> > >> Regards,
-> > >> Vasily
-> > >>
-> > >>
-> > >>> Best Regards,
-> > >>> Katsuhiro Suzuki
-> > >>>
-> > >>>
-> > >>>> Regards,
-> > >>>> Vasily
-> > >>>>
-> > >>>>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> > >>>>> ---
-> > >>>>>    .../boot/dts/rockchip/rk3399-rockpro64.dts    | 28 +++++++++++++++++++
-> > >>>>>    1 file changed, 28 insertions(+)
-> > >>>>>
-> > >>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> > >>>>> index 0401d4ec1f45..8b1e6382b140 100644
-> > >>>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> > >>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> > >>>>> @@ -81,6 +81,12 @@
-> > >>>>>                   reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
-> > >>>>>           };
-> > >>>>>
-> > >>>>> +       sound {
-> > >>>>> +               compatible = "audio-graph-card";
-> > >>>>> +               label = "rockchip,rk3399";
-> > >>>>> +               dais = <&i2s1_p0>;
-> > >>>>> +       };
-> > >>>>> +
-> > >>>>>           vcc12v_dcin: vcc12v-dcin {
-> > >>>>>                   compatible = "regulator-fixed";
-> > >>>>>                   regulator-name = "vcc12v_dcin";
-> > >>>>> @@ -470,6 +476,20 @@
-> > >>>>>           i2c-scl-rising-time-ns = <300>;
-> > >>>>>           i2c-scl-falling-time-ns = <15>;
-> > >>>>>           status = "okay";
-> > >>>>> +
-> > >>>>> +       es8316: codec@11 {
-> > >>>>> +               compatible = "everest,es8316";
-> > >>>>> +               reg = <0x11>;
-> > >>>>> +               clocks = <&cru SCLK_I2S_8CH_OUT>;
-> > >>>>> +               clock-names = "mclk";
-> > >>>>> +               #sound-dai-cells = <0>;
-> > >>>>> +
-> > >>>>> +               port {
-> > >>>>> +                       es8316_p0_0: endpoint {
-> > >>>>> +                               remote-endpoint = <&i2s1_p0_0>;
-> > >>>>> +                       };
-> > >>>>> +               };
-> > >>>>> +       };
-> > >>>>>    };
-> > >>>>>
-> > >>>>>    &i2c3 {
-> > >>>>> @@ -505,6 +525,14 @@
-> > >>>>>           rockchip,playback-channels = <2>;
-> > >>>>>           rockchip,capture-channels = <2>;
-> > >>>>>           status = "okay";
-> > >>>>> +
-> > >>>>> +       i2s1_p0: port {
-> > >>>>> +               i2s1_p0_0: endpoint {
-> > >>>>> +                       dai-format = "i2s";
-> > >>>>> +                       mclk-fs = <256>;
-> > >>>>> +                       remote-endpoint = <&es8316_p0_0>;
-> > >>>>> +               };
-> > >>>>> +       };
-> > >>>>>    };
-> > >>>>>
-> > >>>>>    &i2s2 {
-> > >>>>> --
-> > >>>>> 2.23.0.rc1
-> > >>>>>
-> > >>>>>
-> > >>>>> _______________________________________________
-> > >>>>> linux-arm-kernel mailing list
-> > >>>>> linux-arm-kernel@lists.infradead.org
-> > >>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > >>>>
-> > >>>
-> > >
-> >
+After:
+  $ ./perf report -F +phys_daddr
+  Samples: 11  of event 'cycles:u', Event count (approx.): 1485821
+  Overhead  Data Physical Address  Command  Shared Object  Symbol
+    22.57%  [.] 0000000000000000   ls       libc-2.29.so   [.] __strcoll_l
+    21.87%  [.] 0000000000000000   ls       ld-2.29.so     [.] _dl_relocate_object
+    ...
+
+Fixes: 8780fb25ab06 ("perf sort: Add sort option for physical address")
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ tools/perf/util/sort.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 43d1d410854a..c2430676e569 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -1413,7 +1413,7 @@ static int hist_entry__phys_daddr_snprintf(struct hist_entry *he, char *bf,
+ 	size_t ret = 0;
+ 	size_t len = BITS_PER_LONG / 4;
+ 
+-	addr = he->mem_info->daddr.phys_addr;
++	addr = he->mem_info ? he->mem_info->daddr.phys_addr : 0;
+ 
+ 	ret += repsep_snprintf(bf + ret, size - ret, "[%c] ", he->level);
+ 
+-- 
+2.21.0
+
