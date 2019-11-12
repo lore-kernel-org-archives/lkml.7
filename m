@@ -2,97 +2,74 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B45C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4CDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E5A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1211B206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfKLKmT (ORCPT
+        id S1726962AbfKLKpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:42:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47140 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725874AbfKLKmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:42:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2A272AD22;
-        Tue, 12 Nov 2019 10:42:17 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 10:42:16 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Sage Weil <sage@newdream.net>, Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <ukernel@gmail.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/2] ceph: safely use 'copy-from' Op on Octopus OSDs
-Message-ID: <20191112104216.GA2028@hermes.olymp>
-References: <20191108141555.31176-1-lhenriques@suse.com>
- <CAOi1vP-sVQKvpiPLoZ=9s7Hy=c2eQRocxSs1nPrXAUCbbZUZ-g@mail.gmail.com>
- <20191108164758.GA1760@hermes.olymp>
- <alpine.DEB.2.21.1911081656320.10553@piezo.novalocal>
- <20191108171616.GA2569@hermes.olymp>
- <alpine.DEB.2.21.1911081721120.28682@piezo.novalocal>
- <20191108173101.GA3300@hermes.olymp>
- <20191111163036.GA20513@hermes.olymp>
- <CAOi1vP-kFnu_mJaTERHbSjBxQRvfXhFWF=9_nCaaFbh7ACiVhg@mail.gmail.com>
+        Tue, 12 Nov 2019 05:45:10 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:46959 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfKLKpK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 05:45:10 -0500
+Received: from p54ac5726.dip0.t-ipconnect.de ([84.172.87.38] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iUTfX-0004q4-31; Tue, 12 Nov 2019 10:45:07 +0000
+Date:   Tue, 12 Nov 2019 11:45:06 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] selftests: add tests for clone3()
+Message-ID: <20191112104505.66653mgk2da7rwyh@wittgenstein>
+References: <20191112095851.811884-1-areber@redhat.com>
+ <20191112102814.xkml5etvogzsr7xq@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOi1vP-kFnu_mJaTERHbSjBxQRvfXhFWF=9_nCaaFbh7ACiVhg@mail.gmail.com>
+In-Reply-To: <20191112102814.xkml5etvogzsr7xq@wittgenstein>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:51:47PM +0100, Ilya Dryomov wrote:
-> On Mon, Nov 11, 2019 at 5:30 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >
-> > On Fri, Nov 08, 2019 at 05:31:01PM +0000, Luis Henriques wrote:
-> > <snip>
-> > > > - You'll need to add it for both OSDMap::Incremental and OSDMap
-> > > > - You'll need to make the encoding condition by updating the block like
-> > > > the one below from OSDMap::encode()
-> > > >
-> > > >     uint8_t v = 9;
-> > > >     if (!HAVE_FEATURE(features, SERVER_LUMINOUS)) {
-> > > >       v = 3;
-> > > >     } else if (!HAVE_FEATURE(features, SERVER_MIMIC)) {
-> > > >       v = 6;
-> > > >     } else if (!HAVE_FEATURE(features, SERVER_NAUTILUS)) {
-> > > >       v = 7;
-> > > >     }
-> > > >
-> > > > to include a SERVER_OCTOPUS case too.  Same goes for Incremental::encode()
-> > >
-> > > Awesome, thanks!  I'll give it a try, and test it with the appropriate
-> > > kernel client side changes to use this.
-> >
-> > Ok, I've got the patch bellow for the OSD code, which IIRC should do
-> > exactly what we want: duplicate the require_osd_release in the client
-> > side.
-> >
-> > Now, in order to quickly test this I've started adding flags to the
-> > CEPH_FEATURES_SUPPORTED_DEFAULT definition.  SERVER_MIMIC *seemed* to be
-> > Ok, but once I've added SERVER_NAUTILUS I've realized that we'll need to
-> > handle TYPE_MSGR2 address.  Which is a _big_ thing.  Is anyone already
-> > looking into adding support for msgr v2 to the kernel client?
+On Tue, Nov 12, 2019 at 11:28:14AM +0100, Christian Brauner wrote:
+> On Tue, Nov 12, 2019 at 10:58:51AM +0100, Adrian Reber wrote:
+> > This adds tests for clone3() with different values and sizes
+> > of struct clone_args.
+> > 
+> > This selftest was initially part of of the clone3() with PID selftest.
+> > After that patch was almost merged Eugene sent out a couple of patches
+> > to fix problems with these test.
+> > 
+> > This commit now only contains the clone3() selftest after the LPC
+> > decision to rework clone3() with PID to allow setting the PID in
+> > multiple PID namespaces including all of Eugene's patches.
+> > 
+> > Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> > Signed-off-by: Adrian Reber <areber@redhat.com>
 > 
-> It should be easy enough to hack around it for testing purposes.
->
-> I made some initial steps and hope to be able to dedicate the 5.6 cycle
-> to it.
+> Queuing up for 5.5.
+> Thanks, Adrian!
+> 
+> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Yeah, I'll give that a try; adding support for that new address type
-shouldn't be a big deal.  I was just wondering if that wasn't already
-being handling by any new msgrv2 code under development.  Thanks, Ilya.
+One thing, can you tell me what the base tree for your commit is,
+please? Given that this is just one commit it should be enough if you
+give me the "base-commit" line from the end of the patch created via:
+git format-patch --base=HEAD~1 HEAD~1
 
-Cheers,
---
-Luís
+Thanks!
+Christian
