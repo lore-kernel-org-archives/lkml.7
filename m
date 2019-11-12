@@ -2,184 +2,130 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755B5C17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F442084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B90E2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:38:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GywpLzr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfKLEhw (ORCPT
+        id S1727012AbfKLEi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 23:37:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:55494 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbfKLEhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 23:37:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B5C331B;
-        Mon, 11 Nov 2019 20:37:50 -0800 (PST)
-Received: from [10.163.1.187] (unknown [10.163.1.187])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA4643F52E;
-        Mon, 11 Nov 2019 20:37:24 -0800 (PST)
-Subject: Re: [PATCH V9] mm/debug: Add tests validating architecture page table
- helpers
-To:     linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Mon, 11 Nov 2019 23:38:56 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33062 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKLEi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 23:38:56 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a17so1370499wmb.0;
+        Mon, 11 Nov 2019 20:38:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nLLidl8EpyfCmholvzuJT3GpVTM10C9w3Aj4vlpHqn4=;
+        b=GywpLzr6omZN7FAOh3Nz5QrhXFDYtGTzjRZJKuL8RCDz0JXzd3fZZh1BPNNgz+O47D
+         QdhJvcUKL2M2uspcwGJQk0sdiwvfFcme3NAmp+nqUiwFd/1uhrtsZCneZMC+pLgmF+3f
+         +L7cmURcxX88rZfpmPeenSRJFPDBpEChNpvmeqXmBBfrXloCbi278iy1jcBcel82Ypbf
+         tlWCR9bunZc5H9lspXaYWfPfcoVFD0VGWYmxUhpSow31tjErj//UXIJZfZOGJlNZCY++
+         r1HmMaeGZt98z9FCEJ1EqL8I9/+M9ngda69aKZP/UpA+i/9sstb6sgAXLIXDXBqHUgdD
+         kr8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nLLidl8EpyfCmholvzuJT3GpVTM10C9w3Aj4vlpHqn4=;
+        b=e/Dx9MOJqykxd9jhooSfkJkZOFe5ivU42bjhlrqAyPnmLEhmSWzv6b+Ae7xPAijdba
+         nA7Ta+6du37npNQsWlzNBcbTr3K252D1bYk/w6gcTTFUO9WOxaBizkAq3Lqq7gVDkY1R
+         OAAkXOYigzTQCo3Ci7ygi3QHrjowAWeTsRFpGmXyTl3ZLmsT/Zq9zAUAMD0GOmAJW10X
+         /y0H3+Oyxu2V+gxx86fEIxGDqi5tKP6PmZ/TCzShmowP0QkL+pOWDvLu+S9ZxjsxMeCo
+         Dv/IwLlXON0HaqwuF6EQUx24ZHhu/1odWtM8glXL1qgkiWLZj3aX0zjb/6dEitEgXAH1
+         vWEg==
+X-Gm-Message-State: APjAAAUxl+4312omWr98cqSqlx0TM63yEo7R+dwITRixqEhFp3QJSOxn
+        8iXJrXCWsK5BA5fICrqr8XodyG96
+X-Google-Smtp-Source: APXvYqzsu94Y/7Mf2116uGBLzpWhNh3Dc5qaXb6ELXpZdOMIWwygsvtjGjuRxDwPfm4QZOq2e8IrMQ==
+X-Received: by 2002:a7b:ce12:: with SMTP id m18mr2158944wmc.130.1573533533525;
+        Mon, 11 Nov 2019 20:38:53 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id v9sm16387950wrs.95.2019.11.11.20.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 20:38:52 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1573532326-24084-1-git-send-email-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c74a4e23-3e7b-c091-7ff9-50c760b91ee9@arm.com>
-Date:   Tue, 12 Nov 2019 10:08:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <1573532326-24084-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v2] net: dsa: Prevent usage of NET_DSA_TAG_8021Q as tagging protocol
+Date:   Mon, 11 Nov 2019 20:38:46 -0800
+Message-Id: <20191112043846.3585-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It is possible for a switch driver to use NET_DSA_TAG_8021Q as a valid
+DSA tagging protocol since it registers itself as such, unfortunately
+since there are not xmit or rcv functions provided, the lack of a xmit()
+function will lead to a NPD in dsa_slave_xmit() to start with.
 
+net/dsa/tag_8021q.c is only comprised of a set of helper functions at
+the moment, but is not a fully autonomous or functional tagging "driver"
+(though it could become later on). We do not have any users of
+NET_DSA_TAG_8021Q so now is a good time to make sure there are not
+issues being encountered by making this file strictly a place holder for
+helper functions.
 
-On 11/12/2019 09:48 AM, Anshuman Khandual wrote:
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
-> 
-> This test covers basic page table entry transformations including but not
-> limited to old, young, dirty, clean, write, write protect etc at various
-> level along with populating intermediate entries with next page table page
-> and validating them.
-> 
-> Test page table pages are allocated from system memory with required size
-> and alignments. The mapped pfns at page table levels are derived from a
-> real pfn representing a valid kernel text symbol. This test gets called
-> right after page_alloc_init_late().
-> 
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
-> arm64. Going forward, other architectures too can enable this after fixing
-> build or runtime problems (if any) with their page table helpers.
-> 
-> Folks interested in making sure that a given platform's page table helpers
-> conform to expected generic MM semantics should enable the above config
-> which will just trigger this test during boot. Any non conformity here will
-> be reported as an warning which would need to be fixed. This test will help
-> catch any changes to the agreed upon semantics expected from generic MM and
-> enable platforms to accommodate it thereafter.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Steven Price <Steven.Price@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Sri Krishna chowdary <schowdary@nvidia.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This adds a test validation for architecture exported page table helpers.
-> Patch adds basic transformation tests at various levels of the page table.
-> 
-> This test was originally suggested by Catalin during arm64 THP migration
-> RFC discussion earlier. Going forward it can include more specific tests
-> with respect to various generic MM functions like THP, HugeTLB etc and
-> platform specific tests.
-> 
-> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
-> 
-> Needs to be applied on linux-next (next-20191025).
-> 
-> Changes in V9:
-> 
-> - Changed feature support enumeration for powerpc platforms per Christophe
-> - Changed config wrapper for basic_[pmd|pud]_tests() to enable ARC platform
-> - Enabled the test on ARC platform
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v2:
+- keep MODULE_LICENSE
+- added Vladimir's Rbt
 
-But this does not actually subscribe ARCH_HAS_DEBUG_VM_PGTABLE on ARC platform.
-Please ignore this one, will resend.
+ net/dsa/Kconfig     | 2 +-
+ net/dsa/tag_8021q.c | 9 ---------
+ 2 files changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
+index 29e2bd5cc5af..136612792c08 100644
+--- a/net/dsa/Kconfig
++++ b/net/dsa/Kconfig
+@@ -20,7 +20,7 @@ if NET_DSA
+ 
+ # tagging formats
+ config NET_DSA_TAG_8021Q
+-	tristate "Tag driver for switches using custom 802.1Q VLAN headers"
++	tristate
+ 	select VLAN_8021Q
+ 	help
+ 	  Unlike the other tagging protocols, the 802.1Q config option simply
+diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
+index 9c1cc2482b68..563501721287 100644
+--- a/net/dsa/tag_8021q.c
++++ b/net/dsa/tag_8021q.c
+@@ -342,13 +342,4 @@ struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
+ }
+ EXPORT_SYMBOL_GPL(dsa_8021q_remove_header);
+ 
+-static const struct dsa_device_ops dsa_8021q_netdev_ops = {
+-	.name		= "8021q",
+-	.proto		= DSA_TAG_PROTO_8021Q,
+-	.overhead	= VLAN_HLEN,
+-};
+-
+ MODULE_LICENSE("GPL v2");
+-MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_8021Q);
+-
+-module_dsa_tag_driver(dsa_8021q_netdev_ops);
+-- 
+2.17.1
+
