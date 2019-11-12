@@ -2,147 +2,126 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3405C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0E1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BCF2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B1321A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4ihNSx/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SabtPLLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfKLWf3 (ORCPT
+        id S1727185AbfKLWfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:35:29 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56158 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKLWf3 (ORCPT
+        Tue, 12 Nov 2019 17:35:46 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42211 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLWfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:35:29 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b11so4966660wmb.5;
-        Tue, 12 Nov 2019 14:35:27 -0800 (PST)
+        Tue, 12 Nov 2019 17:35:45 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s5so102675pfh.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 14:35:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LP3okD6bfEMVRR6gihLk+Rf09o9lY8LLHF8+yoRa1O8=;
-        b=X4ihNSx/iLguwoZNGX305tcSfuS4Iu0XmAHzKTz0Q2Dm48Y+UfeV5iPL2DNJv0Cnmm
-         LXSjNXEB8e/qFBsqiIp+pcpyibatJgaZr+KxcnOu2WKp6JthUYlnw6Slp7dAgPP7zqAe
-         dIqoh0p/4TVzuEutcH1gwQFnTrA7mExHXIGou3kgrFy+BBnbyzbczijuwvk3Nxb9qcQt
-         qP7SLAFWnJGspPwHUjgNevnOnq/9jmTpgq/aQUP0YBRscHEJUcwx0TnX0tpyG4EBBd2m
-         afFBPUjtXNJNcLOufLI9PeCnlDzvekMujPeBhDYFYikKMVyz2U0QKFNddtBpq7FjVtW4
-         bwEw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nOqv3GVC/sOv/psVpK3OUgRa5dRR0J6o4196+nUyO4E=;
+        b=SabtPLLvxVL9plXPPEfVE1Efsg2zBLJfYRr7wAEkHn55lx5jRAeqdMQJbdtO+3deLX
+         5NfmJmBWAkk++uIcY9vLg2ooc8/x6xvfjXxw7uaeoQkSxKTYBdIIooc9+7YLRCclFubM
+         xmEJ7LhzaR7uIXEsWi4NR7+CA+sZAuY6uAQX8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LP3okD6bfEMVRR6gihLk+Rf09o9lY8LLHF8+yoRa1O8=;
-        b=JTA2NWR+Iz7Bzo7KsVTaqY5yjO38A/6z62VlpXDyVLkX0Y5m/LuNUVNTSqFBISLtM+
-         XZIp+/C6/TcUCgPQjw+JFbcrWdEhTL+pzmn3yxme6Uf5zP338tcLz4A8RpquQ6+qWJ5+
-         UcCcFRixqdLTXgq7B6Y5PagN+eoFIx8uB9ethT87OyVGs9hnDBoViuz48rteTFpxAkxK
-         tl2W4ffEGjAgjBTVkIk5M+KavanGs/kU8jo0ZxPpq3EG9gt7PStKC2BdGnyD4Hr2FJaR
-         fW8Ty/tJirzCdE71ehRlKEjQh0+e8VSug6bXbNPjl5hkVlay7G8VfMItEu0NhLiL1UPX
-         dDUw==
-X-Gm-Message-State: APjAAAVNoBVjoXN9LgaqC4NHrLYPaeJWQrs/tJrOdLP1vcwkBB7FZW1I
-        wWBYBBphvADPa3SxMA8ZFDE=
-X-Google-Smtp-Source: APXvYqy54vbv0xDEBEnteg1TauUpY1p+iKOTXfCKfEPhupLTeSMhFMf74nXJtpGH8NIkUMz59GAOGA==
-X-Received: by 2002:a1c:984b:: with SMTP id a72mr6374780wme.78.1573598127171;
-        Tue, 12 Nov 2019 14:35:27 -0800 (PST)
-Received: from localhost.localdomain (ip5f5bfdef.dynamic.kabel-deutschland.de. [95.91.253.239])
-        by smtp.gmail.com with ESMTPSA id d20sm584356wra.4.2019.11.12.14.35.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nOqv3GVC/sOv/psVpK3OUgRa5dRR0J6o4196+nUyO4E=;
+        b=oUY/nj+y89Z2u9P0M0hgnD6YONrMr2quGXfTxx/Gdojn9AeCeU+bSR/AZO1ci3nsIp
+         KEnVhZ6TksSKplPSYJPc3/btPntbBVikn0L7GGA0rAKRJgsJ67q141jnMil63dYcz9nc
+         5KOIbrERPTdQApBQ6ykiW4GI/07rgquv/lOio36BjZGaRrdAZWxdJALzQReF2Uo+FL9C
+         fJPKrESZQmTyW+uenKnEe3B7XAsX9S5a4KJBLZmnPYxXvCJAltxN69F9MnjSWAq1F1i9
+         6lYoBwjsxFOHNSps8FWGGTmQQn0HyyCs/psQcjKI6TMht8fRSLaG4y7nXB338byzW58q
+         Na3Q==
+X-Gm-Message-State: APjAAAVhMh6d36fCMjlV0wM2pWrjcjxSPglYE+MscTqrS24So3SvITjc
+        PY06s5ofTfGqTLFsJ+QSzGhh4Nfq3+8=
+X-Google-Smtp-Source: APXvYqzSms2sequeDq1u4xwoS0zPQjGQZ/GqRMNLwcDTdxHXQyCuGIXshc0sMv6JwPzxK3rplp2NEw==
+X-Received: by 2002:a17:90a:1a41:: with SMTP id 1mr281490pjl.28.1573598145086;
+        Tue, 12 Nov 2019 14:35:45 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y36sm14678pgk.66.2019.11.12.14.35.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 14:35:26 -0800 (PST)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] scsi: ufs: fix potential bug which ends in system hang-up
-Date:   Tue, 12 Nov 2019 23:34:36 +0100
-Message-Id: <20191112223436.27449-3-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191112223436.27449-1-huobean@gmail.com>
-References: <20191112223436.27449-1-huobean@gmail.com>
+        Tue, 12 Nov 2019 14:35:44 -0800 (PST)
+Date:   Tue, 12 Nov 2019 14:35:43 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, tyhicks@canonical.com,
+        colin.king@canonical.com, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH] x86/mtrr: only administrator can read the configurations.
+Message-ID: <201911121434.FF26FF3FE@keescook>
+References: <20191105071714.27376-1-zhangxiaoxu5@huawei.com>
+ <201911081236.57A127A@keescook>
+ <20191108205031.GH4503@zn.tnic>
+ <201911081320.5D3CD1A4CD@keescook>
+ <20191108213307.GI4503@zn.tnic>
+ <201911110934.AC5BA313@keescook>
+ <20191112174956.GB32336@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112174956.GB32336@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Tue, Nov 12, 2019 at 06:49:56PM +0100, Borislav Petkov wrote:
+> On Mon, Nov 11, 2019 at 09:56:16AM -0800, Kees Cook wrote:
+> > Some recap from being accidentally offlist:
+> > 
+> > - this patch should check capabilities at open time (or retain the
+> >   checks on the opener's permissions for later checks).
+> > 
+> > - changing the DAC permissions might break something that expects to
+> >   read mtrr when not uid 0.
+> > 
+> > - if we leave the DAC permissions alone and just move the capable check
+> >   to the opener, we should get the intent of the original patch. (i.e.
+> >   check against CAP_SYS_ADMIN not just the wider uid 0.)
+> > 
+> > - *this may still break things* if userspace expects to be able to
+> >   read other parts of the file as non-uid-0 and non-CAP_SYS_ADMIN.
+> >   If *that* is the case, then we need to censor the contents using
+> >   the opener's permissions (as done in other /proc cases).
+> > 
+> > I think the most cautious way forward is something like
+> > 51d7b120418e ("/proc/iomem: only expose physical resource addresses to
+> > privileged users"). Untested (and should likely be expanded to know
+> > about read vs write for lockdown interaction):
+> 
+> I'm back'n'forth on this.
+> 
+> So tglx and I agree that it doesn't make a whole lotta sense for
+> non-privileged luserspace to be able to read /proc/mtrr because it is a
+> small leak and normal users shouldn't care about the caching attributes
+> of memory regions in the first place.
+> 
+> So maybe we should do the second variant.
+> 
+> But then we're not supposed to break luserspace.
+> 
+> But then we can revert it if we do...
+> 
+> Ugh.
 
-In function __ufshcd_query_descriptor(), in the event of an error
-happening, we directly goto out_unlock, and forget to invaliate
-hba->dev_cmd.query.descriptor pointer. Thus results in this pointer
-still validity in ufshcd_copy_query_response() for other query requests
-which go through ufshcd_exec_raw_upiu_cmd(). This will cuases __memcpy()
-crash and system hangs up, log shows as below:
+Shall I send a patch for just moving the capable() checks into open()
+and if someone yells we switch to the other option on the assumption
+that then we'll have a real-world case we can test the other solution
+against?
 
-Unable to handle kernel paging request at virtual address
-ffff000012233c40
-Mem abort info:
-   ESR = 0x96000047
-   Exception class = DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
-Data abort info:
-   ISV = 0, ISS = 0x00000047
-   CM = 0, WnR = 1
-swapper pgtable: 4k pages, 48-bit VAs, pgdp = 0000000028cc735c
-[ffff000012233c40] pgd=00000000bffff003, pud=00000000bfffe003,
-pmd=00000000ba8b8003, pte=0000000000000000
- Internal error: Oops: 96000047 [#2] PREEMPT SMP
- ...
- Call trace:
-  __memcpy+0x74/0x180
-  ufshcd_issue_devman_upiu_cmd+0x250/0x3c0
-  ufshcd_exec_raw_upiu_cmd+0xfc/0x1a8
-  ufs_bsg_request+0x178/0x3b0
-  bsg_queue_rq+0xc0/0x118
-  blk_mq_dispatch_rq_list+0xb0/0x538
-  blk_mq_sched_dispatch_requests+0x18c/0x1d8
-  __blk_mq_run_hw_queue+0xb4/0x118
-  blk_mq_run_work_fn+0x28/0x38
-  process_one_work+0x1ec/0x470
-  worker_thread+0x48/0x458
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x1c
- Code: 540000ab a8c12027 a88120c7 a8c12027 (a88120c7)
- ---[ end trace 793e1eb5dff69f2d ]---
- note: kworker/0:2H[2054] exited with preempt_count 1
-
-This patch is to move "descriptor = NULL" down to below
-the label "out_unlock".
-
-Fixes: d44a5f98bb49b2(ufs: query descriptor API)
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
----
- drivers/scsi/ufs/ufshcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 527bd3b4f834..977d0c6fef95 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2989,10 +2989,10 @@ static int __ufshcd_query_descriptor(struct ufs_hba *hba,
- 		goto out_unlock;
- 	}
- 
--	hba->dev_cmd.query.descriptor = NULL;
- 	*buf_len = be16_to_cpu(response->upiu_res.length);
- 
- out_unlock:
-+	hba->dev_cmd.query.descriptor = NULL;
- 	mutex_unlock(&hba->dev_cmd.lock);
- out:
- 	ufshcd_release(hba);
 -- 
-2.17.1
-
+Kees Cook
