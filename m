@@ -2,86 +2,136 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8314C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A02DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC47E20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A237F21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:38:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fzG3dTsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKLJgQ (ORCPT
+        id S1727128AbfKLJi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:36:16 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2084 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725834AbfKLJgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:36:16 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id DF8CDE109FAE75250132;
-        Tue, 12 Nov 2019 09:36:14 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 12 Nov 2019 09:36:14 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 12 Nov
- 2019 09:36:14 +0000
-Subject: Re: [PATCH 2/4] scsi: hisi_sas: Return directly if init hardware
- failed
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        Xiang Chen <chenxiang66@hisilicon.com>
-References: <1573551059-107873-1-git-send-email-john.garry@huawei.com>
- <1573551059-107873-3-git-send-email-john.garry@huawei.com>
-Message-ID: <fc7c92a8-fd18-ae61-2ec5-0ad79f4e4fac@huawei.com>
-Date:   Tue, 12 Nov 2019 09:36:13 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <1573551059-107873-3-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
+        Tue, 12 Nov 2019 04:38:57 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:28223 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfKLJi5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:38:57 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191112093854epoutp04071a3403c50c52a64e56a54d9ae934af~WYMiZ-d4d1393013930epoutp04f
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:38:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191112093854epoutp04071a3403c50c52a64e56a54d9ae934af~WYMiZ-d4d1393013930epoutp04f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573551534;
+        bh=X2O1h1TEexJVjYglTtzxC098ShK/7RIE4Px5ZPPv+Co=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=fzG3dTsUIjLU30Iyq0nWsMdXy4yU3SB/Wy1LwCVzhEIIb0NzEF5zyWSk7VXkhXP6u
+         R4zayxs9O8P/LrX9NR/Ly4moTYV1PPefBTHQQHMROQSEW3lrm9JfQUOrHAwCvco8gz
+         3xMceFge/wXsjZIG9hU3FgUlT6cnIFVYg6DQ212A=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191112093853epcas1p29d44f964c28671b1e9da7de087517809~WYMhuTSvk2042620426epcas1p2r;
+        Tue, 12 Nov 2019 09:38:53 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47C2kM11HQzMqYkn; Tue, 12 Nov
+        2019 09:38:51 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9E.AC.04085.BAD7ACD5; Tue, 12 Nov 2019 18:38:51 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305~WYMepxctd2404024040epcas1p3A;
+        Tue, 12 Nov 2019 09:38:50 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191112093850epsmtrp196297a1f82c99ac9eff0e0beee61edf8~WYMepKMeD1364713647epsmtrp1a;
+        Tue, 12 Nov 2019 09:38:50 +0000 (GMT)
+X-AuditID: b6c32a37-e19ff70000000ff5-32-5dca7dab957b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        70.3F.24756.AAD7ACD5; Tue, 12 Nov 2019 18:38:50 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.222]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191112093850epsmtip24423fef9bb06c287a4daa1804d30f153~WYMecECIc2176721767epsmtip23;
+        Tue, 12 Nov 2019 09:38:50 +0000 (GMT)
+From:   Seung-Woo Kim <sw0312.kim@samsung.com>
+To:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, gustavo@padovan.org
+Cc:     sw0312.kim@samsung.com
+Subject: [PATCH] dma-buf/sw-sync: Use unsigned type for value of
+ sync_timeline
+Date:   Tue, 12 Nov 2019 18:41:29 +0900
+Message-Id: <1573551689-23531-1-git-send-email-sw0312.kim@samsung.com>
+X-Mailer: git-send-email 1.7.4.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7bCmru7q2lOxBiua2C2ufH3PZrHzwS52
+        iy9XHjJZXN41h82iZ8NWVotTdz+zW8yY/JLNgd3jzrU9bB73u48zedz+95jZY+ekvUwefVtW
+        MXp83iQXwBaVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
+        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/18rQ
+        wMDIFKgwITtjUv8/poKlrBVTD0xiamBczNLFyMkhIWAi0X7lKpDNxSEksINR4sy6PewQzidG
+        iZnPHrBBON8YJdavXMnUxcgB1rLxgSVEfC+jxPLlt1ghnC+MEktvPGYHmcsmoCOxf8lvsISI
+        wAZGicYpzawgCWYBKYltS9ezgdjCAgES77ceYwaZyiKgKrFttilImFfATeLehkY2iPsUJBbc
+        ewt2hYTABDaJWW3bWCESLhIbmm9BPSEs8er4FnYIW0riZX8blF0tsX3CT3aI5g5GiZ72RqgG
+        Y4n9SyeDvcMsoCmxfpc+RFhRYufvuYwQd/JJvPvawwrxMa9ER5sQRImKxM6jk9ggwlISszYE
+        Q4Q9JN7uWcAEYgsJxEosbW5nn8AoOwth/gJGxlWMYqkFxbnpqcWGBcbIkbSJEZy8tMx3MG44
+        53OIUYCDUYmHlyHhZKwQa2JZcWXuIUYJDmYlEd4dFSdihXhTEiurUovy44tKc1KLDzGaAsNu
+        IrOUaHI+MLHmlcQbmhoZGxtbmBiamRoaKonzOi5fGiskkJ5YkpqdmlqQWgTTx8TBKdXAOHPR
+        tAexWbsuHVoz3df2hmBt9eQ3BnIxK/5M3br1y4xs3S+Hevltb9rdvBzkVvBH5fLrlsLWHb/m
+        vbp074q+6l7NFqeZbfrbEteqySfbSzqftrlRrxMx70fuvibV7/rBt4vU4pTeb3ivZBgtK3Wt
+        veV3voVCxB3W3vtKb9xKHhVJKG56HXdLW4mlOCPRUIu5qDgRAJ8BMqh0AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LZdlhJXndV7alYg96jEhZXvr5ns9j5YBe7
+        xZcrD5ksLu+aw2bRs2Erq8Wpu5/ZLWZMfsnmwO5x59oeNo/73ceZPG7/e8zssXPSXiaPvi2r
+        GD0+b5ILYIvisklJzcksSy3St0vgypjU/4+pYClrxdQDk5gaGBezdDFycEgImEhsfGDZxcjF
+        ISSwm1Fi3pnrrF2MnEBxKYm537YzQtQISxw+XAxR84lR4uv8iUwgNWwCOhL7l/xmBUmICGxj
+        lPgz/RwbSIIZqHnb0vVgtrCAn8SCFQtYQQaxCKhKbJttChLmFXCTuLehkQ1il4LEgntv2SYw
+        8ixgZFjFKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREcTFqaOxgvL4k/xCjAwajEw7si
+        9mSsEGtiWXFl7iFGCQ5mJRHeHRUnYoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5Y
+        kpqdmlqQWgSTZeLglGpgjLweOOlR89yWZvdD3q23HNWNn87dWc+2P7eQ9Z2u9S2ZSQ9M5K16
+        DuRU3Y7VYWre/zIx48Lk4v9PpHISnwTdUfmhNdnBpi2tY7JG9IVWCTeR1U9T+mdwvFg0/5PX
+        ydgl/G82qt6VM963+vabzWujJK6pfkmcl+jUPr/K2nOef0DgpljxBXI6SizFGYmGWsxFxYkA
+        zGURpCICAAA=
+X-CMS-MailID: 20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305
+References: <CGME20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 09:30, John Garry wrote:
-> From: Xiang Chen <chenxiang66@hisilicon.com>
-> 
-> Need to return directly if init hardware failed.
-> 
-> Fixes: 73a4925d154c ("scsi: hisi_sas: Update all the registers after suspend and resume")
-> Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+The value of sync_timeline is only incremented and all reference
+usage of it is unsigned. Use unsigned type for value of
+synctimeline.
 
-I missed my tag here:
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+---
+ drivers/dma-buf/sync_debug.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-> ---
->   drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-> index 2ae7070db41a..b7836406debe 100644
-> --- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-> +++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-> @@ -3432,6 +3432,7 @@ static int hisi_sas_v3_resume(struct pci_dev *pdev)
->   	if (rc) {
->   		scsi_remove_host(shost);
->   		pci_disable_device(pdev);
-> +		return rc;
->   	}
->   	hisi_hba->hw->phys_init(hisi_hba);
->   	sas_resume_ha(sha);
-> 
+diff --git a/drivers/dma-buf/sync_debug.h b/drivers/dma-buf/sync_debug.h
+index 6176e52..ff07f0b 100644
+--- a/drivers/dma-buf/sync_debug.h
++++ b/drivers/dma-buf/sync_debug.h
+@@ -36,7 +36,7 @@ struct sync_timeline {
+ 
+ 	/* protected by lock */
+ 	u64			context;
+-	int			value;
++	unsigned int		value;
+ 
+ 	struct rb_root		pt_tree;
+ 	struct list_head	pt_list;
+-- 
+1.7.4.1
 
