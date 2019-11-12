@@ -2,90 +2,107 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7008EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD43C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A934222CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9C120674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGWk/HOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfKLKcq (ORCPT
+        id S1726973AbfKLKeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:32:46 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33213 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfKLKcp (ORCPT
+        Tue, 12 Nov 2019 05:34:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59953 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725944AbfKLKeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:32:45 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUTTV-0007tr-DX; Tue, 12 Nov 2019 11:32:41 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 09F051C0084;
-        Tue, 12 Nov 2019 11:32:41 +0100 (CET)
-Date:   Tue, 12 Nov 2019 10:32:40 -0000
-From:   "tip-bot2 for Mukesh Ojha" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] time: Fix spelling mistake in comment
-Cc:     Mukesh Ojha <mojha@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <1571124819-9639-1-git-send-email-mojha@codeaurora.org>
-References: <1571124819-9639-1-git-send-email-mojha@codeaurora.org>
+        Tue, 12 Nov 2019 05:34:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573554840;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xuxahvL3kg1EGPXS8GSuqJmgg7QGAaS4yIWjCAFx7Cc=;
+        b=gGWk/HOLVrIG7mGhg531uECVr1GYBsiEj2eJCj9pmLcxynOx2GR5x4xIb+Q7muzxXJSOng
+        5z/OCfRuRgnSA6Edfec4yJvFPU7/aBVXmcqUuTuptjaKKtcpMFg3HJOk2PsKzwwnC3OiFV
+        Djiu2q6QIQgTw7qcEsFaPdequEsiqmg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-Y2ODGrCqMRC1KMNK5d05Fw-1; Tue, 12 Nov 2019 05:33:57 -0500
+X-MC-Unique: Y2ODGrCqMRC1KMNK5d05Fw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15D4F1005500;
+        Tue, 12 Nov 2019 10:33:56 +0000 (UTC)
+Received: from localhost (ovpn-116-203.ams2.redhat.com [10.36.116.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7512F171F9;
+        Tue, 12 Nov 2019 10:33:55 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 10:33:54 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     vgoyal@redhat.com, miklos@szeredi.hu, mszeredi@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] virtiofs: Fix old-style declaration
+Message-ID: <20191112103354.GF463128@stefanha-x1.localdomain>
+References: <20191111122359.43624-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Message-ID: <157355476063.29376.3227779653988744811.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191111122359.43624-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="eNMatiwYGLtwo1cJ"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+--eNMatiwYGLtwo1cJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Commit-ID:     1d6acc18fee71a0db6e4fbbfbdb247e0bd5b0655
-Gitweb:        https://git.kernel.org/tip/1d6acc18fee71a0db6e4fbbfbdb247e0bd5b0655
-Author:        Mukesh Ojha <mojha@codeaurora.org>
-AuthorDate:    Tue, 15 Oct 2019 13:03:39 +05:30
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 Nov 2019 11:30:46 +01:00
+On Mon, Nov 11, 2019 at 08:23:59PM +0800, YueHaibing wrote:
+> There expect the 'static' keyword to come first in a
+> declaration, and we get warnings like this with "make W=3D1":
+>=20
+> fs/fuse/virtio_fs.c:687:1: warning: 'static' is not at beginning of decla=
+ration [-Wold-style-declaration]
+> fs/fuse/virtio_fs.c:692:1: warning: 'static' is not at beginning of decla=
+ration [-Wold-style-declaration]
+> fs/fuse/virtio_fs.c:1029:1: warning: 'static' is not at beginning of decl=
+aration [-Wold-style-declaration]
+>=20
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  fs/fuse/virtio_fs.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-time: Fix spelling mistake in comment
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-witin => within
+--eNMatiwYGLtwo1cJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1571124819-9639-1-git-send-email-mojha@codeaurora.org
+-----BEGIN PGP SIGNATURE-----
 
----
- kernel/time/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3KipIACgkQnKSrs4Gr
+c8gdJwf+PUqmtiGDYcD4HiwZZWATLMxXmETqzmnRsTSpcZmilmmFYmNPT9MNuj7D
+oPRTSg2Buso6+GYt3HILA0QBHzltRPFpGHFKGFo87AMHUs8Hya8Kn/Ixtlzd2yzk
+uetQbToOHQ1BXjNmm8AVmXImi8hr6HVpNGfY08rcbiiw8f5pZeKEiXwLtWc/09Kl
+pkOLTnMrheeXEWt8eVMTUfGaUeEeylz3XRUdObm9Oq5hbN1DbERRV3WbNI55a96q
+n+X86cFuZP2dvI82+tS5bYl+DcGYkKWrM+kAKJWiwBO9vWTN/5M9UiJmdigSIFux
+i47j9PEBMtc87VtbuU9ytoi8EF51MA==
+=WtV3
+-----END PGP SIGNATURE-----
 
-diff --git a/kernel/time/time.c b/kernel/time/time.c
-index 45a3589..ea6e7e4 100644
---- a/kernel/time/time.c
-+++ b/kernel/time/time.c
-@@ -179,7 +179,7 @@ int do_sys_settimeofday64(const struct timespec64 *tv, const struct timezone *tz
- 		return error;
- 
- 	if (tz) {
--		/* Verify we're witin the +-15 hrs range */
-+		/* Verify we're within the +-15 hrs range */
- 		if (tz->tz_minuteswest > 15*60 || tz->tz_minuteswest < -15*60)
- 			return -EINVAL;
- 
+--eNMatiwYGLtwo1cJ--
+
