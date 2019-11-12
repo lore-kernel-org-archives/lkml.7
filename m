@@ -2,133 +2,122 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF86C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8439BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F6420818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552082196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573570201;
+	bh=4fqdvP6up2gG/YlhVpibyd2Zd4xfS9zZ2TTUfxfKFhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nWtX9PbTfq9CGAapE/7UmlNn0/Vj3P/8PWnfsnPFlj4ciiVcZaPPME1HF5FxBq3Mn
+	 uM7TKcAJdH2lLDFqg8BXEtt8ZRZ2A9fzbF08U+NIJNxXE15dYGbsGbEJ1K+Cn7xHZY
+	 xZvhouxeDTkt/39nJLYT7uOIAVKOO5iR41Dpy/b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfKLOtf (ORCPT
+        id S1727078AbfKLOuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:49:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34589 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfKLOte (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:49:34 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUXTs-0004jL-Vg; Tue, 12 Nov 2019 15:49:21 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 54BB21C0084;
-        Tue, 12 Nov 2019 15:49:20 +0100 (CET)
-Date:   Tue, 12 Nov 2019 14:49:19 -0000
-From:   "tip-bot2 for Rahul Tanwar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/init: Allow DT configured systems to disable RTC
- at boot time
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Tue, 12 Nov 2019 09:50:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727058AbfKLOt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 09:49:59 -0500
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167A82067B;
+        Tue, 12 Nov 2019 14:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573570198;
+        bh=4fqdvP6up2gG/YlhVpibyd2Zd4xfS9zZ2TTUfxfKFhE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1mAmBugc+9QMbKP4PBKpwLLbQle12+8kgtbznCY1VlcBQ+btM4tYhpCmnqgca95G1
+         KMNjvHpRxEYKmIME/13KN1egmLAaA2bj1lxOWxQxujxSVrVZ7URDXNrTMZEaMqRXj2
+         gixK760JdHFs/uIZ15HlaGTSzROwR6GIZmE3g3Eg=
+Date:   Tue, 12 Nov 2019 15:49:55 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cb84d9152ce0c1c09896ff4987e691a0715cb02df=2E15706?=
- =?utf-8?q?93058=2Egit=2Erahul=2Etanwar=40linux=2Eintel=2Ecom=3E?=
-References: =?utf-8?q?=3Cb84d9152ce0c1c09896ff4987e691a0715cb02df=2E157069?=
- =?utf-8?q?3058=2Egit=2Erahul=2Etanwar=40linux=2Eintel=2Ecom=3E?=
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org
+Subject: Re: [irq_work] feb4a51323: BUG:soft_lockup-CPU##stuck_for#s
+Message-ID: <20191112144954.GD27917@lenoir>
+References: <20191112090357.GB30590@shao2-debian>
 MIME-Version: 1.0
-Message-ID: <157357015991.29376.16358106600464439915.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112090357.GB30590@shao2-debian>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/boot branch of tip:
+On Tue, Nov 12, 2019 at 05:03:57PM +0800, kernel test robot wrote:
+> FYI, we noticed the following commit (built with gcc-7):
+> 
+> commit: feb4a51323babe13315c3b783ea7f1cf25368918 ("irq_work: Slightly simplify IRQ_WORK_PENDING clearing")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> 
+> in testcase: blktests
+> with following parameters:
+> 
+> 	disk: 1SSD
+> 	test: block-group1
+> 
+> 
+> 
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> 
+> 
+> +------------------------------------------------+------------+------------+
+> |                                                | 25269871db | feb4a51323 |
+> +------------------------------------------------+------------+------------+
+> | boot_successes                                 | 5          | 0          |
+> | boot_failures                                  | 0          | 10         |
+> | BUG:soft_lockup-CPU##stuck_for#s               | 0          | 10         |
+> | RIP:irq_work_sync                              | 0          | 10         |
+> | Kernel_panic-not_syncing:softlockup:hung_tasks | 0          | 10         |
+> +------------------------------------------------+------------+------------+
+> 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> 
+> 
+> [   81.049506] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [blktrace:4948]
 
-Commit-ID:     c311ed6183f4fd137bb8451ef77f4011c225ddaf
-Gitweb:        https://git.kernel.org/tip/c311ed6183f4fd137bb8451ef77f4011c225ddaf
-Author:        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-AuthorDate:    Thu, 10 Oct 2019 17:28:56 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 Nov 2019 15:46:53 +01:00
+Duh! Of course we are dealing with the value of flags before we cleared IRQ_WORK_PENDING
+so later clearing IRQ_WORK_BUZY can't work.
 
-x86/init: Allow DT configured systems to disable RTC at boot time
+That would be the fix (cooking one with proper changelog):
 
-Systems which do not support RTC run into boot problems as the kernel
-assumes the availability of the RTC by default.
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 49c53f80a13a..8ee907eb4d83 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -158,6 +158,7 @@ static void irq_work_run_list(struct llist_head *list)
+ 		 * Clear the BUSY bit and return to the free state if
+ 		 * no-one else claimed it meanwhile.
+ 		 */
++		flags ~= IRQ_WORK_PENDING;
+ 		(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
+ 	}
+ }
 
-On device tree configured systems the availability of the RTC can be
-detected by querying the corresponding device tree node.
 
-Implement a wallclock init function to query the device tree and disable
-RTC if the RTC is marked as not available in the corresponding node.
-
-[ tglx: Rewrote changelog and comments. Added proper __init(const)
-  	annotations. ]
-
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/b84d9152ce0c1c09896ff4987e691a0715cb02df.1570693058.git.rahul.tanwar@linux.intel.com
----
- arch/x86/kernel/x86_init.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index 18a799c..ce89430 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -31,6 +31,28 @@ static int __init iommu_init_noop(void) { return 0; }
- static void iommu_shutdown_noop(void) { }
- bool __init bool_x86_init_noop(void) { return false; }
- void x86_op_int_noop(int cpu) { }
-+static __init int set_rtc_noop(const struct timespec64 *now) { return -EINVAL; }
-+static __init void get_rtc_noop(struct timespec64 *now) { }
-+
-+static __initconst const struct of_device_id of_cmos_match[] = {
-+	{ .compatible = "motorola,mc146818" },
-+	{}
-+};
-+
-+/*
-+ * Allow devicetree configured systems to disable the RTC by setting the
-+ * corresponding DT node's status property to disabled. Code is optimized
-+ * out for CONFIG_OF=n builds.
-+ */
-+static __init void x86_wallclock_init(void)
-+{
-+	struct device_node *node = of_find_matching_node(NULL, of_cmos_match);
-+
-+	if (node && !of_device_is_available(node)) {
-+		x86_platform.get_wallclock = get_rtc_noop;
-+		x86_platform.set_wallclock = set_rtc_noop;
-+	}
-+}
- 
- /*
-  * The platform setup functions are preset with the default functions
-@@ -73,7 +95,7 @@ struct x86_init_ops x86_init __initdata = {
- 	.timers = {
- 		.setup_percpu_clockev	= setup_boot_APIC_clock,
- 		.timer_init		= hpet_time_init,
--		.wallclock_init		= x86_init_noop,
-+		.wallclock_init		= x86_wallclock_init,
- 	},
- 
- 	.iommu = {
+> [   81.055602] Modules linked in: scsi_debug loop intel_rapl_msr intel_rapl_common sr_mod cdrom crct10dif_pclmul crc32_pclmul bochs_drm crc32c_intel sd_mod sg ghash_clmulni_intel drm_vram_helper ata_generic pata_acpi ttm ppdev drm_kms_helper snd_pcm syscopyarea sysfillrect snd_timer aesni_intel snd sysimgblt fb_sys_fops ata_piix crypto_simd drm cryptd glue_helper libata soundcore pcspkr joydev serio_raw virtio_scsi i2c_piix4 parport_pc floppy parport ip_tables [last unloaded: scsi_debug]
+> [   81.071683] CPU: 0 PID: 4948 Comm: blktrace Not tainted 5.4.0-rc7-00003-gfeb4a51323bab #1
+> [   81.075435] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> [   81.079031] RIP: 0010:irq_work_sync+0x4/0x10
