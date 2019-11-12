@@ -2,178 +2,172 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA344C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C34AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24F421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A49420818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="S6RNhfQr"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="p6/wHYhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKLMT1 (ORCPT
+        id S1726799AbfKLMXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:19:27 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:52622 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfKLMT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:19:26 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: FmVGawcAA0XNel20hPKrxspqs2ebyVaSL+DNBA91GFkCDS9eTWO7VB3Xu6xrpALGoRE0146M70
- rQV/8ynQn/i61DEWwB7r24MaOz6p5vFM6mOLquk5ss4CjTHdvJLj81Z/SyQnehhvhScTHr0N4Q
- YUf2TTpAosW+eah0i9dDc3ci5v/Y02GXOVlO9rHt1NpV6YOVRJDhDvAvw75vMexlQZ1C+DgFI2
- Cs8BsFMrpRuZifI3NBlfhDM6cXBDNjT4OtJinhfm1m50EbFANWxuid1Nk0Uhnt0mRAhTI+Y+eK
- 1sg=
-X-IronPort-AV: E=Sophos;i="5.68,296,1569308400"; 
-   d="scan'208";a="56663512"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Nov 2019 05:19:24 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 12 Nov 2019 05:19:24 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 12 Nov 2019 05:19:24 -0700
+        Tue, 12 Nov 2019 07:23:03 -0500
+Received: from mail-bgr052101132080.outbound.protection.outlook.com ([52.101.132.80]:25918
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725874AbfKLMXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:23:02 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F3dxzQMyvpofqyArY2W0ai5RspRTwFKmReVTRkA+xGd/vW47q9TPqq42c9drFzuZlIDe1VCEWN8TKyQnbN7fMkOwNTenzBZlf3nOXLNXuXYwpXfeQPWS3Rxuf0UnM6EnQfrboeCgY5ADJ+3WpSGwFodGhJc4qmIOU9CxZ3RE6FZmYscQMYu4KEx1u7N9DQ85v0eIBVD3CdCTfjwNg6nWFQlAu+oJCbB/hWrBJVQ8nJy1A3bEVuZoTGo1MkM3khD3ahLb5fcZvP91r/IkBk5l8DCNCNkJNDjteX3HJ8YamWEYtXsPqtcqkVsVQdsuaYTqN3Ld/GG0teH1dOUltHmvBA==
+ b=Ky4TFqh3mdWupNjHBlsqzxcf2dy7PBYHlSOyLUngB+4XBVv//AnyMQXdVbzMNz0LDMDTgpUHWH31rm5vVZIMw0OJJs8i29FUoesIVUN9j5lSOa0wdqufzWUiMMN0rDBeGjR0KutMVQe3EJ+7T05P8q+UWUlpoPsb2sSCjHXjrQsae6pjIsPa+YDvtc3gzAMbel+tDsJLuvgaur8s1RpNpeMloubbojevUJFGRFiVCJ291ZUJaa3b8CbYRuUPNMZgC6FoI+npt0iSFUk7dbwgDdcs9Ll64CAoeFA3sRnxei78lWdXMCLi9gIBmAx+NVfxW9TBuMhKXag9UEebq5PzNg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U6IYTv1UZ8yzV5MdEvnBFSgw1qW/fzIwZXXWAdCbWfo=;
- b=kFzJitzPgGC3oEByqz7ksS8Ai+KakEWPWg/5kHcpDIEGEWF6Kxd8B4ctKFySHmP4ioBr1R5xoRzcXjq8odTwWBW20xdc6UhX5V1EAjZie6w3TVBSE37mryboNZsLk4qrh7DKKLeh8uiL7IFafQl9RVRPPu3QKax1LsSO2lXD5g6+2sDFyaZb6nb42p4AAbspfn2C8gaTowu3ExE8JaFQA9833VnYGnfdPmjFEyMhSTbF+9hgixLAik31qkfG4TdDws/P6GhaA+KX/CTYhwx69iiZ6JJu6+CmVghVYOZNqQUP4b8DdqPZzPJQ4xNh/nig1JxvqOI6DabVWPxEveev/g==
+ bh=fTVOBzMWmoUNany0Uh+PpnunPP4IA7hsmSLlNawgwwE=;
+ b=OGETXgEi8b/xOatjA1phFiLmZ2POSk3OUAESS7VWHmaCTFRcjy7v8kgvmW4UrB9l0eD/1ABxgf4x99VT7LLCgLN1yOi7BUg6DMDYcuyPNl4+dFPpBG055FYEcGoa2UhB0hAcW65Wb96lJus/9VtFNxDiJrHPkzbtMEH1JoE0Z4ZPuA8m7BzX+HSrsWMvOmpxGBtWjrQtHnKufnLq7GyS0TLxD6Oga2axV36EWZcbJw2bIR7VFnT0tRhpKs3zMXpUXIowNJgFEM/RBWlhl+yI8a6wqoMvW2mZV/4EsXYHHVb5lSWFHSbh5q4IMtcSFk8pvApGd9QFnlT5nX6N1vsAIw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U6IYTv1UZ8yzV5MdEvnBFSgw1qW/fzIwZXXWAdCbWfo=;
- b=S6RNhfQrNb3xpnHg+7QlS7JIYI3wFl/lct9FVNOobZj0esN8JsvEe/8ZDg9hhcb0ep/eYtnrPsNLLhPj6TZGe4fhK+SXSoBcyB7U8yUElvJjjVhF5aTwAuZhKQ4BM7seD4ahefT+ZjAL51XmLYWeO8Db2b6L2FldMdeVERlHsvg=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3790.namprd11.prod.outlook.com (20.178.253.154) with Microsoft SMTP
+ bh=fTVOBzMWmoUNany0Uh+PpnunPP4IA7hsmSLlNawgwwE=;
+ b=p6/wHYhqUW1ZLaRTIR55txo6zyadlhRwiC263rS8UMueoRH7/LmQLetSG6oavs0GMEwqLcsRK4fLTkaHa3bAbfVLhjHx03iJk1yXrW8kMbG+PGVGWXzPLXiDpneLofalmJQcJ1Ck//Gl0brhCufumCnZYm9C3BqR4EqmoP1yCNo=
+Received: from VI1PR08MB4608.eurprd08.prod.outlook.com (20.178.80.22) by
+ VI1PR08MB4014.eurprd08.prod.outlook.com (20.178.204.11) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Tue, 12 Nov 2019 12:19:23 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 12:19:23 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <yuehaibing@huawei.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <cyrille.pitchen@atmel.com>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 -next] crypto: atmel - Fix build error of
- CRYPTO_AUTHENC
-Thread-Topic: [PATCH v2 -next] crypto: atmel - Fix build error of
- CRYPTO_AUTHENC
-Thread-Index: AQHVmSqxwebvg2efp0OwclA6xCpycKeHdHUA
-Date:   Tue, 12 Nov 2019 12:19:23 +0000
-Message-ID: <810b0a9b-d749-b351-18a3-234b3d7ae464@microchip.com>
-References: <20191111133901.19164-1-yuehaibing@huawei.com>
- <20191112072405.40268-1-yuehaibing@huawei.com>
-In-Reply-To: <20191112072405.40268-1-yuehaibing@huawei.com>
-Accept-Language: en-US
+ 15.20.2451.23; Tue, 12 Nov 2019 12:22:50 +0000
+Received: from VI1PR08MB4608.eurprd08.prod.outlook.com
+ ([fe80::9465:ec66:befb:e8b5]) by VI1PR08MB4608.eurprd08.prod.outlook.com
+ ([fe80::9465:ec66:befb:e8b5%3]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 12:22:50 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+Subject: Re: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
+ in-kernel PIT re-injection mode.
+Thread-Topic: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
+ in-kernel PIT re-injection mode.
+Thread-Index: AQHVkQWIuGEgJ7JXrk6/VQ6c7w+tYad3peqAgAQEBACAAYodgIAJF2eAgAE6SgA=
+Date:   Tue, 12 Nov 2019 12:22:50 +0000
+Message-ID: <20191112122246.GC2397@rkaganb.sw.ru>
+References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1572648072-84536-14-git-send-email-suravee.suthikulpanit@amd.com>
+ <70fb2b49-2198-bde4-a38b-f37bc8bc9847@redhat.com>
+ <20191104231712.GD23545@rkaganb.lan>
+ <ac4313a6-df96-2223-bed3-33c3a8555c98@redhat.com>
+ <9361adbc-77e8-4964-c859-8956e1fbb182@amd.com>
+In-Reply-To: <9361adbc-77e8-4964-c859-8956e1fbb182@amd.com>
+Accept-Language: en-US, ru-RU
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0102CA0041.eurprd01.prod.exchangelabs.com
- (2603:10a6:208::18) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
+user-agent: Mutt/1.12.1 (2019-06-15)
+mail-followup-to: "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,        Suravee
+ Suthikulpanit <suravee.suthikulpanit@amd.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>,        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,      "joro@8bytes.org"
+ <joro@8bytes.org>,     "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "graf@amazon.com" <graf@amazon.com>,    "jschoenh@amazon.de"
+ <jschoenh@amazon.de>,  "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,    "Grimm, Jon" <Jon.Grimm@amd.com>
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1PR05CA0276.eurprd05.prod.outlook.com
+ (2603:10a6:3:fc::28) To VI1PR08MB4608.eurprd08.prod.outlook.com
+ (2603:10a6:803:c0::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rkagan@virtuozzo.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af26dcb4-9cb7-41ca-d003-08d7676a8d45
-x-ms-traffictypediagnostic: MN2PR11MB3790:
-x-microsoft-antispam-prvs: <MN2PR11MB379058FA000B4C337791A2D8F0770@MN2PR11MB3790.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:619;
+x-ms-office365-filtering-correlation-id: 63945da4-34e3-43b4-e80b-08d7676b08a1
+x-ms-traffictypediagnostic: VI1PR08MB4014:
+x-microsoft-antispam-prvs: <VI1PR08MB40148748A91088F118682B63C9770@VI1PR08MB4014.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(366004)(136003)(189003)(199004)(36756003)(53546011)(6506007)(386003)(81166006)(7736002)(305945005)(102836004)(81156014)(14454004)(8676002)(6116002)(3846002)(486006)(476003)(2616005)(25786009)(31686004)(478600001)(66066001)(11346002)(446003)(26005)(99286004)(8936002)(2501003)(76176011)(186003)(66556008)(66946007)(71190400001)(71200400001)(256004)(31696002)(6486002)(66446008)(64756008)(52116002)(2201001)(54906003)(86362001)(6246003)(110136005)(316002)(5660300002)(6436002)(2906002)(6512007)(229853002)(4326008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3790;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(376002)(39850400004)(136003)(366004)(396003)(346002)(199004)(189003)(102836004)(86362001)(305945005)(7736002)(6116002)(3846002)(486006)(81156014)(81166006)(1076003)(6916009)(476003)(8676002)(8936002)(66476007)(66946007)(66556008)(7416002)(64756008)(66446008)(52116002)(386003)(6506007)(5660300002)(2906002)(76176011)(53546011)(9686003)(26005)(99286004)(6512007)(6436002)(33656002)(6246003)(4326008)(14454004)(478600001)(229853002)(36756003)(6486002)(14444005)(256004)(58126008)(316002)(11346002)(66066001)(71200400001)(186003)(71190400001)(446003)(25786009)(54906003)(30126002);DIR:OUT;SFP:1501;SCL:5;SRVR:VI1PR08MB4014;H:VI1PR08MB4608.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
  permitted sender hosts)
+x-ms-exchange-transport-forked: True
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: o7xvSqaEfP8R23ckzH0SSxsY1eEu1A7tceRMRVYTUmsitZ51pklhnETj120P4xB3Qg48Yvwsnu5CxROz7L3FhkRW+bAfu+elbdCuKYIOhscxsnYHWDh2aH8CZf2ub0cg4ugahS7e5dEL49gLbAlpHbq/KWdENtdu0gqepTEHEExLUq04yLgOm15jo1IQFTmFWMk6OWryUbGDakQllmEho5GQ4BFk3wo8b0nfC7x+jAWotA3u0IErDMhtNjfyLAUwIJtnBIsfZH8WXld8AHnZDE/GfEPrIbgrD+qoDsDQVBWh4n36eNUX+Fl/lQyazQNqaUbYPaK82za7W8MHVZe5qdHhfE7v2X591nAwnSQdDYZSLXqDvwUtSIkB9CvBpsLfuA+MUSP+ECU7cc+EO+KCeJ13H9wzeFQZGdXR9DcYdIwr22sxYXHTu++YWX+neWj2
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <59477B525573B244B9D11D0137874ED7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: Jf8bmVWeTOh06FWOlfUR0rVf4yT30p8uhddbnfqULcPPDUqIVsz6TIP4RW0QKYk6IxEr5b/m5f5LE6RJmXTRN76Re9da+ZBM+c0wtt07Utali5MffaXBJSNOnNn88+UGtr0KFcGzVGrb73RsHVIciEIum6IGQskzfN3yOsBCjw44fpOd03NnixZAsoaCvX3N467VwECN0QaHfjNiN2vBLl6imd5azgZ3AtN9IJYA3Sws7F5dYbphzOJ6ben6xHnFwj+h/SiR4Wb5IDtJRY0WQATkgifIH5jjj4n2XiU9RF6OLkuM1LM8TcPd2UPLX74el27bT+2u8cgxe7OEoSeHXcIJVPY8WX6u7Dg34hGQlIwhVGsC3fDlkTdDdOX7avUI
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EAD6731BFB68364DB7E13FBC48BE210C@eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: af26dcb4-9cb7-41ca-d003-08d7676a8d45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 12:19:23.2470
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63945da4-34e3-43b4-e80b-08d7676b08a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 12:22:50.2872
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ULb/iRBeZAaPpEqT23kY38gZVXQJF3yECy/++cqXzq6mNdWrocYMft9XG7t22avL795UJJthq3RepnKIayv2HTdkRe6cY70aaOeICPRDi8o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3790
+X-MS-Exchange-CrossTenant-userprincipalname: d8f6+Y3ix68u+WhmiT56ZSTf4gS5ZwD7YM9ck+nzMqT0TLJv4rg3GqoKRFg1EYgUzJY5+mGOoaUscKUi5xF8MQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDExLzEyLzIwMTkgMDk6MjQgQU0sIFl1ZUhhaWJpbmcgd3JvdGU6DQo+IElmIENSWVBU
-T19ERVZfQVRNRUxfQVVUSEVOQyBpcyBtLCBDUllQVE9fREVWX0FUTUVMX1NIQSBpcyBtLA0KPiBi
-dXQgQ1JZUFRPX0RFVl9BVE1FTF9BRVMgaXMgeSwgYnVpbGRpbmcgd2lsbCBmYWlsczoNCg0Kcy9m
-YWlscy9mYWlsDQoNCj4gDQo+IGRyaXZlcnMvY3J5cHRvL2F0bWVsLWFlcy5vOiBJbiBmdW5jdGlv
-biBgYXRtZWxfYWVzX2F1dGhlbmNfaW5pdF90Zm0nOg0KPiBhdG1lbC1hZXMuYzooLnRleHQrMHg2
-NzApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBhdG1lbF9zaGFfYXV0aGVuY19nZXRfcmVxc2l6
-ZScNCj4gYXRtZWwtYWVzLmM6KC50ZXh0KzB4NjdhKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBg
-YXRtZWxfc2hhX2F1dGhlbmNfc3Bhd24nDQo+IGRyaXZlcnMvY3J5cHRvL2F0bWVsLWFlcy5vOiBJ
-biBmdW5jdGlvbiBgYXRtZWxfYWVzX2F1dGhlbmNfc2V0a2V5JzoNCj4gYXRtZWwtYWVzLmM6KC50
-ZXh0KzB4N2U1KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgYXRtZWxfc2hhX2F1dGhlbmNfc2V0
-a2V5Jw0KPiANCj4gTWFrZSBDUllQVE9fREVWX0FUTUVMX0FVVEhFTkMgZGVwZW5kcyBvbiBDUllQ
-VE9fREVWX0FUTUVMX0FFUywNCg0Kcy9kZXBlbmRzL2RlcGVuZA0KDQo+IGFuZCBzZWxlY3QgQ1JZ
-UFRPX0RFVl9BVE1FTF9TSEEgYW5kIENSWVBUT19BVVRIRU5DIGZvciBpdCB1bmRlciB0aGVyZS4N
-Cj4gDQo+IFJlcG9ydGVkLWJ5OiBIdWxrIFJvYm90IDxodWxrY2lAaHVhd2VpLmNvbT4NCj4gU3Vn
-Z2VzdGVkLWJ5OiBIZXJiZXJ0IFh1IDxoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU+DQo+IEZp
-eGVzOiA4OWE4MmVmODdlMDEgKCJjcnlwdG86IGF0bWVsLWF1dGhlbmMgLSBhZGQgc3VwcG9ydCB0
-by4uLiIpDQo+IFNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNv
-bT4NCg0KUmV2aWV3ZWQtYnk6IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlw
-LmNvbT4NCg0KPiAtLS0NCj4gdjI6IG1ha2UgQ1JZUFRPX0RFVl9BVE1FTF9BVVRIRU5DIGRlcGVu
-ZHMgb24gREVWX0FUTUVMX0FFUw0KPiAtLS0NCj4gIGRyaXZlcnMvY3J5cHRvL0tjb25maWcgfCA4
-ICsrKystLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
-cygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3J5cHRvL0tjb25maWcgYi9kcml2ZXJz
-L2NyeXB0by9LY29uZmlnDQo+IGluZGV4IGM1Y2MwNGQuLjI5NmU4MjkgMTAwNjQ0DQo+IC0tLSBh
-L2RyaXZlcnMvY3J5cHRvL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9jcnlwdG8vS2NvbmZpZw0K
-PiBAQCAtNDkyLDEwICs0OTIsOSBAQCBpZiBDUllQVE9fREVWX1VYNTAwDQo+ICBlbmRpZiAjIGlm
-IENSWVBUT19ERVZfVVg1MDANCj4gIA0KPiAgY29uZmlnIENSWVBUT19ERVZfQVRNRUxfQVVUSEVO
-Qw0KPiAtCXRyaXN0YXRlICJTdXBwb3J0IGZvciBBdG1lbCBJUFNFQy9TU0wgaHcgYWNjZWxlcmF0
-b3IiDQo+ICsJYm9vbCAiU3VwcG9ydCBmb3IgQXRtZWwgSVBTRUMvU1NMIGh3IGFjY2VsZXJhdG9y
-Ig0KPiAgCWRlcGVuZHMgb24gQVJDSF9BVDkxIHx8IENPTVBJTEVfVEVTVA0KPiAtCXNlbGVjdCBD
-UllQVE9fREVWX0FUTUVMX0FFUw0KPiAtCXNlbGVjdCBDUllQVE9fREVWX0FUTUVMX1NIQQ0KPiAr
-CWRlcGVuZHMgb24gQ1JZUFRPX0RFVl9BVE1FTF9BRVMNCj4gIAloZWxwDQo+ICAJICBTb21lIEF0
-bWVsIHByb2Nlc3NvcnMgY2FuIGNvbWJpbmUgdGhlIEFFUyBhbmQgU0hBIGh3IGFjY2VsZXJhdG9y
-cw0KPiAgCSAgdG8gZW5oYW5jZSBzdXBwb3J0IG9mIElQU0VDL1NTTC4NCj4gQEAgLTUwNyw4ICs1
-MDYsOSBAQCBjb25maWcgQ1JZUFRPX0RFVl9BVE1FTF9BRVMNCj4gIAlkZXBlbmRzIG9uIEFSQ0hf
-QVQ5MSB8fCBDT01QSUxFX1RFU1QNCj4gIAlzZWxlY3QgQ1JZUFRPX0FFUw0KPiAgCXNlbGVjdCBD
-UllQVE9fQUVBRA0KPiAtCXNlbGVjdCBDUllQVE9fQVVUSEVOQw0KPiAgCXNlbGVjdCBDUllQVE9f
-U0tDSVBIRVINCj4gKwlzZWxlY3QgQ1JZUFRPX0FVVEhFTkMgaWYgQ1JZUFRPX0RFVl9BVE1FTF9B
-VVRIRU5DDQo+ICsJc2VsZWN0IENSWVBUT19ERVZfQVRNRUxfU0hBIGlmIENSWVBUT19ERVZfQVRN
-RUxfQVVUSEVOQw0KPiAgCWhlbHANCj4gIAkgIFNvbWUgQXRtZWwgcHJvY2Vzc29ycyBoYXZlIEFF
-UyBodyBhY2NlbGVyYXRvci4NCj4gIAkgIFNlbGVjdCB0aGlzIGlmIHlvdSB3YW50IHRvIHVzZSB0
-aGUgQXRtZWwgbW9kdWxlIGZvcg0KPiANCg==
+On Mon, Nov 11, 2019 at 11:37:53AM -0600, Suravee Suthikulpanit wrote:
+> On 11/5/2019 4:47 PM, Paolo Bonzini wrote:
+> > On 05/11/19 00:17, Roman Kagan wrote:
+> > > > This is not too nice for Intel which does support (through the EOI exit
+> > > > mask) APICv even if PIT reinjection active.
+> > > Hmm, it's tempting to just make svm_load_eoi_exitmap() disable AVIC when
+> > > given a non-empty eoi_exit_bitmap, and enable it back on a clear
+> > > eoi_exit_bitmap.  This may remove the need to add special treatment to
+> > > PIT etc.
+> > 
+> > That is a very nice idea---we can make that a single disable reason,
+> > like APICV_DEACTIVATE_REASON_EOI, and Intel can simply never use it.
+> 
+> I took at look at the svm_load_eoi_exitmap() and it is called via:
+>     kvm_make_scan_ioapic_request() ->
+>         KVM_REQ_SCAN_IOAPIC -> vcpu_scan_ioapic() ->
+>             KVM_REQ_LOAD_EOI_EXITMAP -> vcpu_load_eoi_exitmap()
+> 
+> The kvm_make_scan_ioapic_request() is called from multiple places:
+> 
+> arch/x86/kvm/irq_comm.c:
+>     * kvm_arch_post_irq_routing_update() : Called from kvm_set_irq_routing()
+> 
+> arch/x86/kvm/ioapic.c:
+>     * kvm_arch_post_irq_ack_notifier_list_update() : (Un)registering irq ack notifier
+>     * kvm_set_ioapic() : Setting ioapic irqchip
+>     * ioapic_mmio_write() -> ioapic_write_indirect()
+> 
+> arch/x86/kvm/lapic.c:
+>     * recalculate_apic_map()
+> 
+> Most calls would be from ioapic_mmio_write()->ioapic_write_indirect().
+> 
+> In case of AMD AVIC, the svm_load_e::vsoi_exitmap() is called several times, and requesting
+> APICV (de)activate from here when the eoi_exit_bitmap is set/clear would introduce
+> large overhead especially with SMP machine.
+
+This doesn't look like a hot path, so I'm not sure it needs to be
+optimized for performance.  Especially so since
+kvm_make_scan_ioapic_request does kvm_make_all_cpus_request which isn't
+particularly fast by definition, and I guess the extra overhead there
+won't be noticable.
+
+OTOH introducing extra code paths has its maintenance costs, so sticking
+the simple logic in svm_load_eoi_exitmap looks attractive.
+
+Just my 2c,
+Roman.
