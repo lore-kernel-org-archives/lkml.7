@@ -2,117 +2,143 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE86C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923BFC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13363206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D50206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ub/z2usV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKLRpO (ORCPT
+        id S1727044AbfKLRpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:45:14 -0500
-Received: from outbound-smtp15.blacknight.com ([46.22.139.232]:35392 "EHLO
-        outbound-smtp15.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726718AbfKLRpO (ORCPT
+        Tue, 12 Nov 2019 12:45:36 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:39078 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfKLRpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:45:14 -0500
-Received: from mail.blacknight.com (unknown [81.17.255.152])
-        by outbound-smtp15.blacknight.com (Postfix) with ESMTPS id 519D11C23AC
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 17:45:11 +0000 (GMT)
-Received: (qmail 15920 invoked from network); 12 Nov 2019 17:45:11 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.23.195])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Nov 2019 17:45:11 -0000
-Date:   Tue, 12 Nov 2019 17:45:08 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
-Message-ID: <20191112174508.GY3016@techsingularity.net>
-References: <20191030154534.GJ3016@techsingularity.net>
- <CAKfTPtB_6kBq69E=-YFuon6fg21CxHneMpncpbLcPGk6uoVcMQ@mail.gmail.com>
- <20191031101544.GP3016@techsingularity.net>
- <CAKfTPtByO7oLQZxF_+-FxZ9u1JhO24-rujW3j-QDqr+PFDOQ=Q@mail.gmail.com>
- <20191031114020.GQ3016@techsingularity.net>
- <20191108163501.GA26528@linaro.org>
- <20191108183730.GU3016@techsingularity.net>
- <20191112105830.GA8765@linaro.org>
- <20191112150636.GX3016@techsingularity.net>
- <CAKfTPtCVdG1zcd4kyU4d+K_+VdW7TZn+RSDKt4Hk28B366NPOQ@mail.gmail.com>
+        Tue, 12 Nov 2019 12:45:35 -0500
+Received: by mail-qv1-f67.google.com with SMTP id v16so6724680qvq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:45:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SKH1z3odsh0dOqBa6+gRpBBgGUSs+RoaA3vn9y35Y60=;
+        b=ub/z2usVbtFPjwv5NwXjzZOGEt0DMd+Iqld9+xj+Yl6kgLI5sbPVNMFYOb8FphZv/b
+         BOH6/CImQShh5zf1106fe38oXqHRiOImx+m4x4mvAz4Qiv++Jict33McH/GHVy/Em7Cm
+         rxBENqSGDHcpOZgHBAKZTNDa9Kp7QPzrahLz2q2Siu7mCw4UbnAsPy6VJYwsQ8hizkIz
+         X2XmaOmYD5vh7g0N+ByQiR749Kio6CNFkkJXHceQLzfJNGFB3s3HYpC0QUXfvxl/yL//
+         kFFf8yaTa6YP9NebtFV7KnpIECtsJ3ZV+J0KSn7s/bPmFMlcMf3Zi99mkvW7tnZv2/Th
+         NXWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SKH1z3odsh0dOqBa6+gRpBBgGUSs+RoaA3vn9y35Y60=;
+        b=Qpv7FisQoMqB/2V3aeQXYj4yjRX5MOFaAqK/2IecI4Gd1quLsegNGtJQAqEnpxjfH7
+         UcfF5buze9apZ7MmEXGQJxIuMHrTd5sw2LFRc2eW8GUXIPOqgGGd+1ZZUeDgTCzV9Wjz
+         k1XczOJ8gaJXLIG0cT3+emUB24bUYhGQcKAfml+VTskzbSKlKhHMkTr5EGUP+jnAWNOw
+         jGIIzfIv3iC2QN/V7/0wOzLlr2sD1wI3baZcZ+6ES7Idfxb8Uk9s0AVPDCtcVP8CFji3
+         tk1L2FQ2oyfyhxW8oryf8vv401vMCGxIZnXUcfKGUQhMKsthPR5b77kmFYji93LWi7hh
+         UkeQ==
+X-Gm-Message-State: APjAAAWWBGb4yqHRsyoG4xa4Zipu6EXxCF0kNLJMFGRLe11rS+cVC5+Z
+        ypd25r/7wEadncuaYmobmewhfQ==
+X-Google-Smtp-Source: APXvYqx1IVJr4fbG3VE4xzwfF+4/eGG9CfF0SUyfwLgcuYPB9sFtW/qdTwELYrUt14O8oOUOEMMvHQ==
+X-Received: by 2002:ad4:5441:: with SMTP id h1mr17265157qvt.120.1573580734695;
+        Tue, 12 Nov 2019 09:45:34 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::aa8c])
+        by smtp.gmail.com with ESMTPSA id z5sm10649218qtm.9.2019.11.12.09.45.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 09:45:33 -0800 (PST)
+Date:   Tue, 12 Nov 2019 12:45:33 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
+        cgroups mailinglist <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
+Message-ID: <20191112174533.GA178331@cmpxchg.org>
+References: <20191107205334.158354-1-hannes@cmpxchg.org>
+ <20191107205334.158354-3-hannes@cmpxchg.org>
+ <CAJuCfpFtr9ODyOEJWt+=z=fnR0j8CJPSfhN+50N=d4SjLO-Z7A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtCVdG1zcd4kyU4d+K_+VdW7TZn+RSDKt4Hk28B366NPOQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJuCfpFtr9ODyOEJWt+=z=fnR0j8CJPSfhN+50N=d4SjLO-Z7A@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:40:20PM +0100, Vincent Guittot wrote:
-> On Tue, 12 Nov 2019 at 16:06, Mel Gorman <mgorman@techsingularity.net> wrote:
+On Sun, Nov 10, 2019 at 06:01:18PM -0800, Suren Baghdasaryan wrote:
+> On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
 > >
-> > On Tue, Nov 12, 2019 at 11:58:30AM +0100, Vincent Guittot wrote:
-> > > > This roughly matches what I've seen. The interesting part to me for
-> > > > netperf is the next section of the report that reports the locality of
-> > > > numa hints. With netperf on a 2-socket machine, it's generally around
-> > > > 50% as the client/server are pulled apart. Because netperf is not
-> > > > heavily memory bound, it doesn't have much impact on the overall
-> > > > performance but it's good at catching the cross-node migrations.
-> > >
-> > > Ok. I didn't want to make my reply too long. I have put them below for
-> > > the netperf-tcp results:
-> > >                                         5.3-rc2        5.3-rc2
-> > >                                             tip      +rwk+fix
-> > > Ops NUMA alloc hit                  60077762.00    60387907.00
-> > > Ops NUMA alloc miss                        0.00           0.00
-> > > Ops NUMA interleave hit                    0.00           0.00
-> > > Ops NUMA alloc local                60077571.00    60387798.00
-> > > Ops NUMA base-page range updates        5948.00       17223.00
-> > > Ops NUMA PTE updates                    5948.00       17223.00
-> > > Ops NUMA PMD updates                       0.00           0.00
-> > > Ops NUMA hint faults                    4639.00       14050.00
-> > > Ops NUMA hint local faults %            2073.00        6515.00
-> > > Ops NUMA hint local percent               44.69          46.37
-> > > Ops NUMA pages migrated                 1528.00        4306.00
-> > > Ops AutoNUMA cost                         23.27          70.45
-> > >
+> > We use refault information to determine whether the cache workingset
+> > is stable or transitioning, and dynamically adjust the inactive:active
+> > file LRU ratio so as to maximize protection from one-off cache during
+> > stable periods, and minimize IO during transitions.
 > >
-> > Thanks -- it was "NUMA hint local percent" I was interested in and the
-> > 46.37% local hinting faults is likely indicative of the client/server
-> > being load balanced across SD_NUMA domains without NUMA Balancing being
-> > aggressive enough to fix it. At least I know I am not just seriously
-> > unlucky or testing magical machines!
+> > With cgroups and their nested LRU lists, we currently don't do this
+> > correctly. While recursive cgroup reclaim establishes a relative LRU
+> > order among the pages of all involved cgroups, refaults only affect
+> > the local LRU order in the cgroup in which they are occuring. As a
+> > result, cache transitions can take longer in a cgrouped system as the
+> > active pages of sibling cgroups aren't challenged when they should be.
+> >
+> > [ Right now, this is somewhat theoretical, because the siblings, under
+> >   continued regular reclaim pressure, should eventually run out of
+> >   inactive pages - and since inactive:active *size* balancing is also
+> >   done on a cgroup-local level, we will challenge the active pages
+> >   eventually in most cases. But the next patch will move that relative
+> >   size enforcement to the reclaim root as well, and then this patch
+> >   here will be necessary to propagate refault pressure to siblings. ]
+> >
+> > This patch moves refault detection to the root of reclaim. Instead of
+> > remembering the cgroup owner of an evicted page, remember the cgroup
+> > that caused the reclaim to happen. When refaults later occur, they'll
+> > correctly influence the cross-cgroup LRU order that reclaim follows.
 > 
-> I agree that the collaboration between load balanced across SD_NUMA
-> level and NUMA balancing should be improved
-> 
-> It's also interesting to notice that the patchset doesn't seem to do
-> worse than the baseline: 46.37% vs 44.69%
-> 
+> I spent some time thinking about the idea of calculating refault
+> distance using target_memcg's inactive_age and then activating
+> refaulted page in (possibly) another memcg and I am still having
+> trouble convincing myself that this should work correctly. However I
+> also was unable to convince myself otherwise... We use refault
+> distance to calculate the deficit in inactive LRU space and then
+> activate the refaulted page if that distance is less that
+> active+inactive LRU size. However making that decision based on LRU
+> sizes of one memcg and then activating the page in another one seems
+> very counterintuitive to me. Maybe that's just me though...
 
-Yes, I should have highlighted that. The series appears to improve a
-number of areas while being performance neutral with respect to SD_NUMA.
-If this turns out to be wrong in some case, it should be semi-obvious even
-if the locality looks ok. It'll be a headline regression with increased
-NUMA pte scanning and increased frequency of migrations indicating that
-NUMA balancing is taken excessive corrective action. I'll know it when
-I see it :P
+It's not activating in a random, unrelated memcg - it's the parental
+relationship that makes it work.
 
--- 
-Mel Gorman
-SUSE Labs
+If you have a cgroup tree
+
+	root
+         |
+         A
+        / \
+       B1 B2
+
+and reclaim is driven by a limit in A, we are reclaiming the pages in
+B1 and B2 as if they were on a single LRU list A (it's approximated by
+the round-robin reclaim and has some caveats, but that's the idea).
+
+So when a page that belongs to B2 gets evicted, it gets evicted from
+virtual LRU list A. When it refaults later, we make the (in)active
+size and distance comparisons against virtual LRU list A as well.
+
+The pages on the physical LRU list B2 are not just ordered relative to
+its B2 peers, they are also ordered relative to the pages in B1. And
+that of course is necessary if we want fair competition between them
+under shared reclaim pressure from A.
