@@ -2,146 +2,123 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9924C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FD4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A9120679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BD12067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Kaa+jI1r"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="D0ZP3l/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKLOoh (ORCPT
+        id S1726973AbfKLOsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:44:37 -0500
-Received: from mail-eopbgr20044.outbound.protection.outlook.com ([40.107.2.44]:23809
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Tue, 12 Nov 2019 09:48:02 -0500
+Received: from mail-eopbgr1410113.outbound.protection.outlook.com ([40.107.141.113]:31567
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725997AbfKLOoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:44:37 -0500
+        id S1725997AbfKLOsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 09:48:01 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0PPZVOSMGyZwrz/7CVGjtFQeVPfyLcSqB/85XfVNz/QFz31yTwoGFcnfHDYhOdons26MEkUsenE5UxUxVB79da9gTwbZ2WGlPUKfUuEmws9olOqIXujo/6BYxUsU4KlBB2fgaQyV/IfCIZ00qwRpxkx+SBgcPBiYUT044Vzm6VPlMUl0XKK5UkgeWvf9kB9Sr3gwL1PFWKlZUP2mV+0zqwAHBpmI9XqKwoIZE7eE9+vr6+jXI5DeRnSsZ99RO67kms1GshZal8pzNjyIzuQqh/GqxGkmvrYN1DMZTBTCLCKZm4q+kn2pYaFcwYwtKEEiDSdxeUVRQA8Thev40y3ng==
+ b=bqztMA3WIlXyYO28QtirP+s7FvFXVCNiYN4sCNLvinSHNREiMLoSTihgmGHH+aZQw9mqjYWOWp2pKIWtmMnZSTeRepsT1a3zuNnlDDDRm165Ax93yKwDDJ+S1mAhi05NmwBiWmhr00gJvbrZncMjCnbywQT1hElURVve58scm0qQIC90fRWY39TtK5Cl9YaAzqqL2K/75AXxM5Pqblsf9bsWaNCOnrKYsSMih7GGZp/tJ4n5UQw0sBEkSsn0QmFnBTz1AX4U87BfHAUQqjrqvDE393VArv2dV7vV5008h40ENGB87aGygnkkTZJH4p9tPcEiRO7QQmPCS8IF7wqrfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qJBCRhGgD2SeQzGj6Xc8Qs8GSBb0ySVBmMtwAF7LFRA=;
- b=W137Kmd2Sww/c9s1AYk7Uh1h+GFLvHLXC+avibJXQMIEzyBzaK3TK9b4pvhuDZKMo5sesep9uuw91DeQq3oxvYhA2g/e5tDxQK6n/g/97A3y6HqxVPug5uba1vNtAKYNd2g8VkNYnjmQsEqHjifh6CDKshTh+kkraNXDymPClD3XxrGtcwCysfrHE1o0XrsdikX6zxbizFq/r0UWRuXvgTyerAZmjJKy+HSClgIpVqWJOunsFsNsRjmJje/o2UKcVc+Yq7tOl0BioATrkRIHHoq/MkzI1nUPBWoCLj/oSI+GUEfJdEp7vkcv/v8bmAfvGgm4bJFpZJ/F6u+jqbZhXw==
+ bh=tQShU9anbtQWAI+RIMuhwOejf4XK2OMReCRU7MZWAXc=;
+ b=YrPcajl1jdJv5d/xcTWFITI98/T5D3Txrd6z18hiJMqEvWzylr4o2wp0BIVH8qICO19lsyqmDbR3yyYgHpyPn3RJ9pvO6nemIywSfLqBQZt1/ypVm9hkrGk50D8DkTllR6EQPQPobb1LCBj0V33ZJpCKmB3cEw18+jqP7Rc0MpNhEMWMl8DwA6zfsdUV/ww3CY9NUM7veybkhbCxXdoFRCPfcLZl8QOYC71168h3ORozRZ8wd8kHVEQlWeM8XWMHyjVEI2kEJq9Amzr9Co7O758le6cFUVCo5JiIWMsPCPpzN6bbU/G/0M5RfApYTDzaEMtWlSlWjzcRWWHk8w6pKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qJBCRhGgD2SeQzGj6Xc8Qs8GSBb0ySVBmMtwAF7LFRA=;
- b=Kaa+jI1rDLhwGTGuH9/5Zpw1DKiup/eguTpsluZ32WHL+qAdz6byMiXCT5LXqjICAkD0h/M1kUx3x1GIDgVwGP5JxgC9OSsuthoKv5QKx4Pymk5D4TAWK5F8+olUcuOGvDjBCNGwW7TH6FLRwVVCoj6sYBr1s0HujBeg/reM/0c=
-Received: from AM6PR05MB5224.eurprd05.prod.outlook.com (20.177.196.210) by
- AM6PR05MB4231.eurprd05.prod.outlook.com (52.135.161.144) with Microsoft SMTP
+ bh=tQShU9anbtQWAI+RIMuhwOejf4XK2OMReCRU7MZWAXc=;
+ b=D0ZP3l/hOPh9TKcu1ewU+VdtZcGOyJjkMHtwhcvldxQfUnTde2MtgJcTK+w4TrqQ10QLNuN7qs+D9KA8gMieU178oQajrZePLgJwfzBhe7uUq5q9FXM8q+SvjzXZCSH+cGfGGfi2drswx8xf4KWcaINjYGSRPkMGhU+37ETsOnc=
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com (52.134.248.22) by
+ OSAPR01MB1681.jpnprd01.prod.outlook.com (52.134.230.149) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.24; Tue, 12 Nov 2019 14:44:32 +0000
-Received: from AM6PR05MB5224.eurprd05.prod.outlook.com
- ([fe80::59a9:b6c3:97d8:ff0f]) by AM6PR05MB5224.eurprd05.prod.outlook.com
- ([fe80::59a9:b6c3:97d8:ff0f%3]) with mapi id 15.20.2451.023; Tue, 12 Nov 2019
- 14:44:32 +0000
-From:   Vadim Pasternak <vadimp@mellanox.com>
-To:     Shravan Ramani <sramani@mellanox.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-CC:     Liming Sun <lsun@mellanox.com>,
-        Shravan Ramani <sramani@mellanox.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
+ 15.20.2430.20; Tue, 12 Nov 2019 14:47:58 +0000
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::fcbd:8130:e86:e239]) by OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::fcbd:8130:e86:e239%6]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 14:47:58 +0000
+From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1] platform/mellanox: Add Mellanox TRIO driver
-Thread-Topic: [PATCH v1] platform/mellanox: Add Mellanox TRIO driver
-Thread-Index: AQHVmJ1B8i6N8wQYJ0iG7pe+aDUVfKeHm2Xw
-Date:   Tue, 12 Nov 2019 14:44:32 +0000
-Message-ID: <AM6PR05MB522463C06CB3E7528F18281FA2770@AM6PR05MB5224.eurprd05.prod.outlook.com>
-References: <cover.1573460910.git.sramani@mellanox.com>
-In-Reply-To: <cover.1573460910.git.sramani@mellanox.com>
+Subject: Re: [PATCH net-next] ptp: ptp_clockmatrix: Fix build error
+Thread-Topic: [PATCH net-next] ptp: ptp_clockmatrix: Fix build error
+Thread-Index: AQHVmWZ7u9w+kLAzBki5N1dSdleCM6eHnX6A
+Date:   Tue, 12 Nov 2019 14:47:58 +0000
+Message-ID: <20191112144724.GA15686@renesas.com>
+References: <20191112143514.10784-1-yuehaibing@huawei.com>
+In-Reply-To: <20191112143514.10784-1-yuehaibing@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-originating-ip: [173.195.53.163]
+x-clientproxiedby: BYAPR02CA0018.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::31) To OSAPR01MB3025.jpnprd01.prod.outlook.com
+ (2603:1096:604:2::22)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vadimp@mellanox.com; 
-x-originating-ip: [193.47.165.251]
+ smtp.mailfrom=vincent.cheng.xh@renesas.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7d3bf689-86b2-4daa-b4e9-08d7677ed4ba
-x-ms-traffictypediagnostic: AM6PR05MB4231:|AM6PR05MB4231:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR05MB4231E6953C117CDD9E603317A2770@AM6PR05MB4231.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-office365-filtering-correlation-id: 6071d0a8-5207-4e86-8e97-08d7677f4f0c
+x-ms-traffictypediagnostic: OSAPR01MB1681:
+x-microsoft-antispam-prvs: <OSAPR01MB1681C57E0FC93E44537648A0D2770@OSAPR01MB1681.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
 x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(189003)(199004)(13464003)(6116002)(476003)(6436002)(11346002)(66476007)(66556008)(66946007)(64756008)(66446008)(71190400001)(446003)(229853002)(71200400001)(55016002)(256004)(478600001)(3846002)(4326008)(52536014)(76116006)(9686003)(86362001)(8936002)(186003)(74316002)(81166006)(76176011)(7736002)(486006)(14454004)(81156014)(5660300002)(33656002)(2906002)(8676002)(54906003)(99286004)(102836004)(53546011)(6506007)(316002)(110136005)(6246003)(66066001)(26005)(305945005)(25786009)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4231;H:AM6PR05MB5224.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(199004)(189003)(66066001)(2906002)(99286004)(446003)(2616005)(7736002)(33656002)(476003)(11346002)(256004)(6512007)(6436002)(6486002)(229853002)(54906003)(305945005)(14444005)(316002)(14454004)(6116002)(3846002)(486006)(86362001)(6916009)(71200400001)(71190400001)(1076003)(66446008)(6506007)(36756003)(386003)(5660300002)(186003)(81166006)(4326008)(66946007)(76176011)(26005)(4744005)(52116002)(81156014)(6246003)(102836004)(64756008)(8936002)(66556008)(25786009)(478600001)(66476007)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB1681;H:OSAPR01MB3025.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TOq/zN6wrK018YCYGq9OjuxUT06xk/f1ilYFzYrbjcbtDzIAQe+gs75TVzNWU0vuqaY7DenCSDFTVHDjs0Z2AFjOKQpWpW3EGBLIdiHJu3yZ01Na3Y93e4wAE0dqTUXlBO8S506Cob9um9sM8Bf34RljmfNczJTTbsgW+GIUkns48UFeG+tnpT6O00cBMLIW+6df8tdf1o2kh9XeljkdRFVaSS8CeqRlsJmz/40b/iISdHktKfS+yWjhcVyd5OC5nOM8GYMsxWCKf92iTFXnGIrs8adoKK9GPhcKym18fxRrlp6E3/3nw6dwbiA5kqGI1BClSEcbhLncIRaF2oteYsCfB1sgF1uesvaCZnvLnaYt8cneqPkoqlvkfcnpgb2yUksYe13yn8dK1JfKBPiHP8KjruyGpIQBjUm5Qh0ZJK9r6axRfwt3szQrcNgRNZgt
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: zBUt2zVooJFoVrU958BAfbkbGEuLiEBAwNwVxC2h6f8wwVMilgBxn60Gj7QMrXAktWDc/jCI/OecVtru77usShUmfOBssxYsznx/mTfjzuXR4qBN91kzGHkm7yAeCiSSjdl3xotkNQo4OwkmIBjH22R5x4l17r4U683jEmP32q6kNRHfBSiWSfu7J8nOCYsYf8m0t+LDRtLnRG6y7MW+yLIsvJ0GcF2UYY0X80Jo5R38e9EJgGYPKEeVzN04SJPWouTD3ddU28C61jHHDU5zh1HymnU1f2v/bMtWzSvRQoQNac50lSo5FhFUvUACFygPZbF8y5rj54ZB2JHMrQLWgPE1CmrljdxxJ6t1vwV8qC6VUiggPY8hhP4f558glgqlKiL8rqJADKoDQoFK1vSYxoLUzYRvk1QmOckUhFS+HtAx4invQG/1CSh3/CjtJTa5
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F03E41A38BC45C448CD71AD45263B081@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d3bf689-86b2-4daa-b4e9-08d7677ed4ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 14:44:32.7071
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6071d0a8-5207-4e86-8e97-08d7677f4f0c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 14:47:58.3343
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CWyL6WuJOB0Alu72Hzxz3BTktiKdsgxjts3CsMqaM1N/a45J5RIUC4/J1QEUnor2sSt5Qa92qnskN68wzBztSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4231
+X-MS-Exchange-CrossTenant-userprincipalname: B+/WfzYKcNzVopxcDeJw2e8nxTnrA8FjP6MOn6Q14fY6HTFbPVuJkHRJehygoOOx5Kk6k+7Gxv6rWWWcARu9LHqjZ/oudkAbpha5vO4OvG8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1681
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Shravan Kumar Ramani <sramani@mellanox.com>
-> Sent: Monday, November 11, 2019 4:35 PM
-> To: Andy Shevchenko <andy@infradead.org>; Darren Hart
-> <dvhart@infradead.org>; Vadim Pasternak <vadimp@mellanox.com>
-> Cc: Liming Sun <lsun@mellanox.com>; Shravan Ramani
-> <sramani@mellanox.com>; platform-driver-x86@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH v1] platform/mellanox: Add Mellanox TRIO driver
->=20
-> This patch adds support for Mellanox BlueField TRIO PCIe host controller.
-> The driver supports multiple TRIO instances and provides a sysfs interfac=
-e to
-> allow the user to read/set the L3 cache profile for transactions going th=
-rough
-> the TRIO. It also provides an interrupt handler for the TRIO blocks.
-
-Hi Shravan,
-
-Could you, please, explain what TRIO PCIe host controller?
-What is TRIO, is it some internal name or it's some standard terminology?
-If it's internal, please, explain for what it stands for.
-
-Same for TRIO instances. Are there some host side PCI instances?
-What are the purpose of them?
-
-Could you, please, also explain the system configuration?
-
-
->=20
-> Shravan Kumar Ramani (1):
->   platform/mellanox: Add Mellanox TRIO driver
->=20
->  MAINTAINERS                            |   5 +
->  drivers/platform/mellanox/Kconfig      |   8 +
->  drivers/platform/mellanox/Makefile     |   1 +
->  drivers/platform/mellanox/mlxbf-trio.c | 624
-> +++++++++++++++++++++++++++++++++
->  4 files changed, 638 insertions(+)
->  create mode 100644 drivers/platform/mellanox/mlxbf-trio.c
->=20
-> --
-> 2.1.2
-
+T24gVHVlLCBOb3YgMTIsIDIwMTkgYXQgMDk6MzU6MTRBTSBFU1QsIFl1ZUhhaWJpbmcgd3JvdGU6
+DQo+V2hlbiBkbyByYW5kYnVpbGRpbmcsIHdlIGdvdCB0aGlzIHdhcm5pbmc6DQo+DQo+V0FSTklO
+RzogdW5tZXQgZGlyZWN0IGRlcGVuZGVuY2llcyBkZXRlY3RlZCBmb3IgUFRQXzE1ODhfQ0xPQ0sN
+Cj4gIERlcGVuZHMgb24gW25dOiBORVQgWz15XSAmJiBQT1NJWF9USU1FUlMgWz1uXQ0KPiAgU2Vs
+ZWN0ZWQgYnkgW3ldOg0KPiAgLSBQVFBfMTU4OF9DTE9DS19JRFRDTSBbPXldDQo+DQo+TWFrZSBQ
+VFBfMTU4OF9DTE9DS19JRFRDTSBkZXBlbmRzIG9uIFBUUF8xNTg4X0NMT0NLIHRvIGZpeCB0aGlz
+Lg0KPg0KPkZpeGVzOiAzYTZiYTdkYzc3OTkgKCJwdHA6IEFkZCBhIHB0cCBjbG9jayBkcml2ZXIg
+Zm9yIElEVCBDbG9ja01hdHJpeC4iKQ0KPlNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhh
+aWJpbmdAaHVhd2VpLmNvbT4NCj4tLS0NCj4gZHJpdmVycy9wdHAvS2NvbmZpZyB8IDIgKy0NCj4g
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+DQo+ZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvcHRwL0tjb25maWcgYi9kcml2ZXJzL3B0cC9LY29uZmlnDQo+aW5kZXgg
+YzQ4YWQyMy4uYjQ1ZDJiOCAxMDA2NDQNCj4tLS0gYS9kcml2ZXJzL3B0cC9LY29uZmlnDQo+Kysr
+IGIvZHJpdmVycy9wdHAvS2NvbmZpZw0KPkBAIC0xMjEsNyArMTIxLDcgQEAgY29uZmlnIFBUUF8x
+NTg4X0NMT0NLX0tWTQ0KPiANCj4gY29uZmlnIFBUUF8xNTg4X0NMT0NLX0lEVENNDQo+IAl0cmlz
+dGF0ZSAiSURUIENMT0NLTUFUUklYIGFzIFBUUCBjbG9jayINCj4tCXNlbGVjdCBQVFBfMTU4OF9D
+TE9DSw0KPisJZGVwZW5kcyBvbiBQVFBfMTU4OF9DTE9DSw0KPiAJZGVmYXVsdCBuDQo+IAloZWxw
+DQo+IAkgIFRoaXMgZHJpdmVyIGFkZHMgc3VwcG9ydCBmb3IgdXNpbmcgSURUIENMT0NLTUFUUklY
+KFRNKSBhcyBhIFBUUA0KPi0tIA0KDQpPb3BzLiBUaGFuay15b3UgZm9yIHRoZSBmaXguDQoNClJl
+dmlld2VkLWJ5OiBWaW5jZW50IENoZW5nICA8dmluY2VudC5jaGVuZy54aEByZW5lc2FzLmNvbT4N
+Cg0K
