@@ -2,160 +2,184 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA54FC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F04C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72E3206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r7sVXLCu"
+	by mail.kernel.org (Postfix) with ESMTP id 51EB3206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfKLUgA (ORCPT
+        id S1726970AbfKLUhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:36:00 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42459 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKLUgA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:36:00 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a15so20010193wrf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:35:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=szdw8t9B42/4/cNhYqo19gfrxOuMxRXBv0qv4PANfYk=;
-        b=r7sVXLCumfB11AuMztsUR3o8f9V356UpMRPQ0PC8s9rtg/GkSoDvhc0mNnrc+If5dH
-         sECt/dps2b6HtAXTbbz6fLSRkLRNHMhi1U+PU+cB6xqm6cfaGjTvnHsjWssgRTIlsdRp
-         JzukyEmtUn+3YQV8wAH2Z/Lr81N7w7OFbanN1N6j+9py43dsR8Vlt+ATI4kduM12WXWD
-         RXj2/HzrUS/ZsgAN+ED+vjtDxeu2sTUlHemNDNe03AkIr+akv+MAMrTt9Zra+ukW4YAH
-         h17XqL1PjxDEZ1UybGc1DaXoo3QTWLKiDtLyHaUHLl0E+/G8Z3vkwrErZUOjnBgXR05O
-         xjeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=szdw8t9B42/4/cNhYqo19gfrxOuMxRXBv0qv4PANfYk=;
-        b=cRFLQxbwIODFkccfI5Ptmzn7sD+GneDZen/s1vIv7SEdFZwTiyKXAz/015AfyhdMIS
-         KskgE+kYDj4PW1D+hpXNfa2xkNTAVnkRZOxQ4XLBlFn8Imn10gycXnq34y5SSnPUIGd6
-         qtC02TGICVHzfjJSFVMxuEk0UYJ2xccxrEtA6ibCQyqGbp0DttYFeOw9WKtwvijuuVVr
-         16lh9mKaGjVGDdenGVeY5Alh+ua3dCHO5xznkRmLIWW7pQ2+O5W3G7AV5GwOKioRBwoa
-         PEc01N1tud0xHFPZzm985NYxDe4IOrfhwEIrKEUwMFU2CxPTMZpfU6AJn/fziYc096Ko
-         Mgkw==
-X-Gm-Message-State: APjAAAWf67AUjtKfwVBXY5rm2trlGnAvTrnTROY13Yhv0GK15y+CAl+F
-        0ySY9wbOq74X3Lc3Wd5QcEXiwEd1eXLlftGGN7Iy+g==
-X-Google-Smtp-Source: APXvYqwBJ/lGLB3LFtDuu5tjKJUezRtBWPF7Y0SJpgkkKWIy/E4IS8svvwXHrYCe993aZR2TLFe4IQQWQzXOH19MI70=
-X-Received: by 2002:adf:ffd0:: with SMTP id x16mr4035599wrs.86.1573590957195;
- Tue, 12 Nov 2019 12:35:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-3-hannes@cmpxchg.org>
- <CAJuCfpFtr9ODyOEJWt+=z=fnR0j8CJPSfhN+50N=d4SjLO-Z7A@mail.gmail.com>
- <20191112174533.GA178331@cmpxchg.org> <CAJuCfpHSMcXOZ4zF7X3FVbnyOL_HNgepNYCYsVdcs_gT3Gtm3Q@mail.gmail.com>
- <20191112185932.GC179587@cmpxchg.org>
-In-Reply-To: <20191112185932.GC179587@cmpxchg.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 12 Nov 2019 12:35:46 -0800
-Message-ID: <CAJuCfpH_9_S_pSku+BBe3-7sctmjQwCuBHNg_rp5wDr=fF6D0A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
-        cgroups mailinglist <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 12 Nov 2019 15:37:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41670 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726645AbfKLUhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 15:37:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 90C66AC23;
+        Tue, 12 Nov 2019 20:37:49 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 21:37:49 +0100
+Message-ID: <s5hk1847rvm.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang7@gmail.com>, <y2038@lists.linaro.org>,
+        <linux-kernel@vger.kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 0/8] Fix year 2038 issue for sound subsystem
+In-Reply-To: <20191112151642.680072-1-arnd@arndb.de>
+References: <20191112151642.680072-1-arnd@arndb.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:59 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Tue, Nov 12, 2019 at 10:45:44AM -0800, Suren Baghdasaryan wrote:
-> > On Tue, Nov 12, 2019 at 9:45 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > >
-> > > On Sun, Nov 10, 2019 at 06:01:18PM -0800, Suren Baghdasaryan wrote:
-> > > > On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > > > >
-> > > > > We use refault information to determine whether the cache workingset
-> > > > > is stable or transitioning, and dynamically adjust the inactive:active
-> > > > > file LRU ratio so as to maximize protection from one-off cache during
-> > > > > stable periods, and minimize IO during transitions.
-> > > > >
-> > > > > With cgroups and their nested LRU lists, we currently don't do this
-> > > > > correctly. While recursive cgroup reclaim establishes a relative LRU
-> > > > > order among the pages of all involved cgroups, refaults only affect
-> > > > > the local LRU order in the cgroup in which they are occuring. As a
-> > > > > result, cache transitions can take longer in a cgrouped system as the
-> > > > > active pages of sibling cgroups aren't challenged when they should be.
-> > > > >
-> > > > > [ Right now, this is somewhat theoretical, because the siblings, under
-> > > > >   continued regular reclaim pressure, should eventually run out of
-> > > > >   inactive pages - and since inactive:active *size* balancing is also
-> > > > >   done on a cgroup-local level, we will challenge the active pages
-> > > > >   eventually in most cases. But the next patch will move that relative
-> > > > >   size enforcement to the reclaim root as well, and then this patch
-> > > > >   here will be necessary to propagate refault pressure to siblings. ]
-> > > > >
-> > > > > This patch moves refault detection to the root of reclaim. Instead of
-> > > > > remembering the cgroup owner of an evicted page, remember the cgroup
-> > > > > that caused the reclaim to happen. When refaults later occur, they'll
-> > > > > correctly influence the cross-cgroup LRU order that reclaim follows.
-> > > >
-> > > > I spent some time thinking about the idea of calculating refault
-> > > > distance using target_memcg's inactive_age and then activating
-> > > > refaulted page in (possibly) another memcg and I am still having
-> > > > trouble convincing myself that this should work correctly. However I
-> > > > also was unable to convince myself otherwise... We use refault
-> > > > distance to calculate the deficit in inactive LRU space and then
-> > > > activate the refaulted page if that distance is less that
-> > > > active+inactive LRU size. However making that decision based on LRU
-> > > > sizes of one memcg and then activating the page in another one seems
-> > > > very counterintuitive to me. Maybe that's just me though...
-> > >
-> > > It's not activating in a random, unrelated memcg - it's the parental
-> > > relationship that makes it work.
-> > >
-> > > If you have a cgroup tree
-> > >
-> > >         root
-> > >          |
-> > >          A
-> > >         / \
-> > >        B1 B2
-> > >
-> > > and reclaim is driven by a limit in A, we are reclaiming the pages in
-> > > B1 and B2 as if they were on a single LRU list A (it's approximated by
-> > > the round-robin reclaim and has some caveats, but that's the idea).
-> > >
-> > > So when a page that belongs to B2 gets evicted, it gets evicted from
-> > > virtual LRU list A. When it refaults later, we make the (in)active
-> > > size and distance comparisons against virtual LRU list A as well.
-> > >
-> > > The pages on the physical LRU list B2 are not just ordered relative to
-> > > its B2 peers, they are also ordered relative to the pages in B1. And
-> > > that of course is necessary if we want fair competition between them
-> > > under shared reclaim pressure from A.
-> >
-> > Thanks for clarification. The testcase in your description when group
-> > B has a large inactive cache which does not get reclaimed while its
-> > sibling group A has to drop its active cache got me under the
-> > impression that sibling cgroups (in your reply above B1 and B2) can
-> > cause memory pressure in each other. Maybe that's not a legit case and
-> > B1 would not cause pressure in B2 without causing pressure in their
-> > shared parent A? It now makes more sense to me and I want to confirm
-> > that is the case.
->
-> Yes. I'm sorry if this was misleading. They should only cause pressure
-> onto each other by causing pressure on A; and then reclaim in A treats
-> them as one combined pool of pages.
+On Tue, 12 Nov 2019 16:16:34 +0100,
+Arnd Bergmann wrote:
+> 
+> This is a series I worked on with Baolin in 2017 and 2018, but we
+> never quite managed to finish up the last pieces. During the
+> ALSA developer meetup at ELC-E 2018 in Edinburgh, a decision was
+> made to go with this approach for keeping best compatibility
+> with existing source code, and then I failed to follow up by
+> resending the patches.
+> 
+> Now I have patches for all remaining time_t uses in the kernel,
+> so it's absolutely time to revisit them. I have done more
+> review of the patches myself and found a couple of minor issues
+> that I have fixed up, otherwise the series is still the same as
+> before.
+> 
+> Conceptually, the idea of these patches is:
+> 
+> - 64-bit applications should see no changes at all, neither
+>   compile-time nor run-time.
+> 
+> - 32-bit code compiled with a 64-bit time_t currently
+>   does not work with ALSA, and requires kernel changes and/or
+>   sound/asound.h changes
+> 
+> - Most 32-bit code using these interfaces will work correctly
+>   on a modified kernel, with or without the uapi header changes.
+> 
+> - 32-bit code using SNDRV_TIMER_IOCTL_TREAD requires the
+>   updated header file for 64-bit time_t support
+> 
+> - 32-bit i386 user space with 64-bit time_t is broken for
+>   SNDRV_PCM_IOCTL_STATUS, SNDRV_RAWMIDI_IOCTL_STATUS and
+>   SNDRV_PCM_IOCTL_SYNC_PTR because of i386 alignment. This is also
+>   addressed by the updated uapi header.
+> 
+> - PCM mmap is currently supported on native x86 kernels
+>   (both 32-bit and 64-bit) but not for compat mode. This series breaks
+>   the 32-bit native mmap support for 32-bit time_t, but instead allows
+>   it for 64-bit time_t on both native and compat kernels. This seems to
+>   be the best trade-off, as mmap support is optional already, and most
+>   32-bit code runs in compat mode anyway.
+> 
+> - I've tried to avoid breaking compilation of 32-bit code
+>   as much as possible. Anything that does break however is likely code
+>   that is already broken on 64-bit time_t and needs source changes to
+>   fix them.
+> 
+> I would like to propose merging this into the alsa tree after
+> the v5.5 merge window for inclusion into v5.6, to allow a good
+> amount of testing, in particular for the header changes that
+> may cause problems for user space applications.
+
+Agreed, it's still no urgent problem.
+
+> A git branch with the same contents is available for testing at [1].
+> 
+> Please review and test!
+> 
+>      Arnd
+
+So now taking a quick look through the series, I find this approach is
+the way to go.  Although one might get a bit more optimization after
+squeeze, it's already a good compromise between the readability and
+the efficiency.
+
+A slight uncertain implementation is the timer tread stuff, especially
+the conditional definition of SNDRV_TIMER_IOCTL_TREAD (IIRC, I already
+complained it in the past, too).  But I have no other idea as well, so
+unless someone else gives a better option, we can live with that.
 
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+Thanks!
+
+Takashi
+
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git y2038-alsa
+> [2] https://lore.kernel.org/lkml/CAK8P3a2Os66+iwQYf97qh05W2JP8rmWao8zmKoHiXqVHvyYAJA@mail.gmail.com/T/#m6519cb07cfda08adf1dedea6596bb98892b4d5dc
+> 
+> Changes since v5 (Arnd):
+>  - Rebased to linux-5.4-rc4
+>  - Updated to completely remove timespec and time_t references from alsa
+>  - found and fixed a few bugs
+> 
+> Changes since v4 (Baolin):
+>  - Add patch 5 to change trigger_tstamp member of struct snd_pcm_runtime.
+>  - Add patch 8 to change internal timespec.
+>  - Add more explanation in commit message.
+>  - Use ktime_get_real_ts64() in patch 6.
+>  - Split common code out into a separate function in patch 6.
+>  - Fix tu->tread bug in patch 6 and remove #if __BITS_PER_LONG == 64 macro.
+> 
+> Changes since v3:
+>  - Move struct snd_pcm_status32 to pcm.h file.
+>  - Modify comments and commit message.
+>  - Add new patch2 ~ patch6.
+> 
+> Changes since v2:
+>  - Renamed all structures to make clear.
+>  - Remove CONFIG_X86_X32 macro and introduced new compat_snd_pcm_status64_x86_32.
+> 
+> Changes since v1:
+>  - Add one macro for struct snd_pcm_status_32 which only active in 32bits kernel.
+>  - Convert pcm_compat.c to use struct snd_pcm_status_64.
+>  - Convert pcm_native.c to use struct snd_pcm_status_64.
+> 
+> ---
+> 
+> Arnd Bergmann (2):
+>   ALSA: move snd_pcm_ioctl_sync_ptr_compat into pcm_native.c
+>   ALSA: add new 32-bit layout for snd_pcm_mmap_status/control
+> 
+> Baolin Wang (6):
+>   ALSA: Replace timespec with timespec64
+>   ALSA: Avoid using timespec for struct snd_timer_status
+>   ALSA: Avoid using timespec for struct snd_ctl_elem_value
+>   ALSA: Avoid using timespec for struct snd_pcm_status
+>   ALSA: Avoid using timespec for struct snd_rawmidi_status
+>   ALSA: Avoid using timespec for struct snd_timer_tread
+> 
+>  include/sound/pcm.h               |  74 ++++++--
+>  include/sound/timer.h             |   4 +-
+>  include/uapi/sound/asound.h       | 132 ++++++++++++--
+>  sound/core/pcm.c                  |  12 +-
+>  sound/core/pcm_compat.c           | 282 ++++++++----------------------
+>  sound/core/pcm_lib.c              |  38 ++--
+>  sound/core/pcm_native.c           | 226 +++++++++++++++++++++---
+>  sound/core/rawmidi.c              | 132 +++++++++++---
+>  sound/core/rawmidi_compat.c       |  87 +++------
+>  sound/core/timer.c                | 229 ++++++++++++++++++------
+>  sound/core/timer_compat.c         |  62 +------
+>  sound/pci/hda/hda_controller.c    |  10 +-
+>  sound/soc/intel/skylake/skl-pcm.c |   4 +-
+>  13 files changed, 804 insertions(+), 488 deletions(-)
+> 
+> -- 
+> 2.20.0
+> 
