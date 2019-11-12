@@ -2,147 +2,131 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F71EC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C813C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801C620659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F29520659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNXrjKl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfKLVTx (ORCPT
+        id S1727064AbfKLVVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:19:53 -0500
-Received: from sauhun.de ([88.99.104.3]:37572 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfKLVTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:19:53 -0500
-Received: from localhost (x590c7292.dyn.telefonica.de [89.12.114.146])
-        by pokefinder.org (Postfix) with ESMTPSA id ECD472C015F;
-        Tue, 12 Nov 2019 22:19:50 +0100 (CET)
-Date:   Tue, 12 Nov 2019 22:19:50 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-mmc@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add
- 'fixed-emmc-driver-type-hs{200,400}'
-Message-ID: <20191112211950.GB3402@kunai>
-References: <20191105055015.23656-1-erosca@de.adit-jv.com>
- <20191105062223.GB1048@kunai>
- <20191105083213.GA24603@vmlxhi-102.adit-jv.com>
- <20191107003907.GA22634@bogus>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
-Content-Disposition: inline
-In-Reply-To: <20191107003907.GA22634@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 12 Nov 2019 16:21:42 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39793 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLVVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 16:21:42 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t26so4507908wmi.4;
+        Tue, 12 Nov 2019 13:21:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=dEhpPGqL2EnHvM+RMKgKzToY3FC78Q0MvKFrMXo/rVg=;
+        b=WNXrjKl+NzL/krxGUzhS16CUd+Jmzist2kq/sBXSoMZtW6q7/qk0LYsrJUjp6RaDSF
+         wU2j3rZDNhCBT5Hxma+ntzFVX9U/ojQsXSlFObe8jY2aANnAT7V30CUKIi9EC3x8StDO
+         Jx6TtutddTKB6mI81DjwmmdqECeKojN7giKo6++9/yUISdjlezNNnzxgviegpvJiCpec
+         WCrrFtrxJyoDbERz9Zmrl7kmOml5h30B+D+PDeXzbw2qa75qfKj0QwLMLduL8K4P129O
+         x5h+XEQTiV4+US7m+IE6OwiDruA9TGuxPIsVrJf8wqP3licqss6d3+EaR/W99bssTB+L
+         ggig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=dEhpPGqL2EnHvM+RMKgKzToY3FC78Q0MvKFrMXo/rVg=;
+        b=p+C/kwHDv4lTvlfbT7fhAuZJ2ZtwvclkLHugsuxAbp640Z6sxqO3DncFKxHXWobuab
+         1kQxSLhnLZqJV9mcMXBjVXrFkHf/PJ5MU1G9eOgpzc4riHEH6UalEcaAHETRhGhFjEJq
+         noycLOJbTRGeLMKkIFmVX2lJZ1WMnSQmRZwzjDJ4iaBzHpJtgORgRsdF9zu/4pDuxbQH
+         WiecM0k77ZF68tHBcxKh/cMEy84zRC38+bhp7gMExM5Gcj/rxdNEzntD99BjgPiPYEdJ
+         uR8lesy1BVITJde09HfHgi0je2yBA36hxFNVuAYpcY906w1SFCB+665ysoJFhFqcQQ+h
+         P+Dg==
+X-Gm-Message-State: APjAAAUEmaiP9CHWDBVO4OkFcKHGkfmMu2N39uEMX/LXF+4alm1o4Cdg
+        DZdVfJrUcgO5wwZHtq/7TOQwmoNt
+X-Google-Smtp-Source: APXvYqyfh0JsBntGXcUehgQXwZOjx5Mf9XThvqTdrcx0A/dP4zfs7gcKSkSjtoN8J+eidPue1VdIDQ==
+X-Received: by 2002:a7b:cf35:: with SMTP id m21mr4156466wmg.141.1573593699205;
+        Tue, 12 Nov 2019 13:21:39 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 13:21:38 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
+Date:   Tue, 12 Nov 2019 22:21:30 +0100
+Message-Id: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CVE-2018-12207 is a microarchitectural implementation issue
+that could allow an unprivileged local attacker to cause system wide
+denial-of-service condition.
 
---0eh6TmSyL6TZE2Uz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Privileged software may change the page size (ex. 4KB, 2MB, 1GB) in the
+paging structures, without following such paging structure changes with
+invalidation of the TLB entries corresponding to the changed pages. In
+this case, the attacker could invoke instruction fetch, which will result
+in the processor hitting multiple TLB entries, reporting a machine check
+error exception, and ultimately hanging the system.
 
-Hi everyone,
+The attached patches mitigate the vulnerability by making huge pages
+non-executable. The processor will not be able to execute an instruction
+residing in a large page (ie. 2MB, 1GB, etc.) without causing a trap into
+the host kernel/hypervisor; KVM will then break the large page into 4KB
+pages and gives executable permission to 4KB pages.
 
-> > The first question which pops up in my mind is related to the meaning
-> > of each item. The option which I envision based on your proposal is:
-> >=20
-> >   * minItems: 1
-> >   * maxItems: 2
-> >   * Item[0]: Presumably equivalent to the current
-> >     "fixed-emmc-driver-type", i.e. the strength value applied in both
-> >     HS200 and HS400 modes.
-> >   * Item[1] (optional): Presumably equivalent to
-> >     "fixed-emmc-driver-type-hs400" proposed in this series. If this
-> >     element is provided, the first one should likely change its role
-> >     and become an equivalent of "fixed-emmc-driver-type-hs200" from
-> >     this series.
-> >   + Pro: Full backward compatibility. No need to touch the existing
-> >     users of "fixed-emmc-driver-type".
-> >   - Con: Not sure we have such DT bindings which dynamically change
-> >     their semantics based on the usage pattern.
-> >   - Con: Can't easily achieve the same flexibility as accomplished in
-> >     this series. For example, current implementation allows users to
-> >     define each of the three parameters (i.e. HSx00-agnostic drive
-> >     strength, HS200 and HS400 specific drive strengths) individually,
-> >     as well as in all possible combinations. This might be needed if,
-> >     in certain HSx00 mode, users still need to rely on the
-> >     RAW/unmodified drive strength. I am unsure if/how this can be
-> >     achieved with an array OF property with a constant or variable
-> >     number of elements (I try to sketch one solution below).
-> >=20
-> > One option to achieve a similar degree of flexibility by using an array
-> > OF property (instead of several u32 properties) would be to agree on a
-> > convention based on magic values, i.e. below DT one-liner could be an
-> > example of providing solely the "fixed-emmc-driver-type-hs200" value
-> > (based on the agreement that 0xFF values are discarded by the driver):
-> >=20
-> >     fixed-emmc-driver-type =3D <0xFF 0x1 0xFF>;
->=20
-> I don't understand why you have 3 values instead of 2.
+Thanks to everyone that was involved in the development of these patches,
+especially Junaid Shahid, who provided the first version of the code,
+and Thomas Gleixner.
 
-Because he sketches maximum flexibility here. Have a non-HS (default)
-value, one for HS200, and one for HS400:
+Paolo
 
-	fixed-emmc-driver-type =3D <[default] [HS200] [HS400]>;
+Gomez Iglesias, Antonio (1):
+  Documentation: Add ITLB_MULTIHIT documentation
 
-> I would just use -1 if you want to ignore an entry. If that's the common=
-=20
+Junaid Shahid (2):
+  kvm: Add helper function for creating VM worker threads
+  kvm: x86: mmu: Recovery of shattered NX large pages
 
-'-1' sounds good to me, too.
+Paolo Bonzini (1):
+  kvm: mmu: ITLB_MULTIHIT mitigation
 
-> case, then I'd stick with what you originally proposed. If rare, then I=
-=20
-> think an array is the better route.
+Pawan Gupta (1):
+  x86/cpu: Add Tremont to the cpu vulnerability whitelist
 
-What I have seen so far: setting drive strength alone is more on the
-rare side. Setting specific values for default and HS200/400 seems even
-more rare to me. With this patchset, it is the first time I hear about
-it.
+Tyler Hicks (1):
+  cpu/speculation: Uninline and export CPU mitigations helpers
 
-Yet, my experience might be a bit limited, maybe others (Hi Ulf! ;)) can add
-their views, too?
+Vineela Tummalapalli (1):
+  x86/bugs: Add ITLB_MULTIHIT bug infrastructure
 
-Regards,
+ Documentation/ABI/testing/sysfs-devices-system-cpu |   1 +
+ Documentation/admin-guide/hw-vuln/index.rst        |   1 +
+ Documentation/admin-guide/hw-vuln/multihit.rst     | 163 +++++++++++++
+ Documentation/admin-guide/kernel-parameters.txt    |  25 ++
+ arch/x86/include/asm/cpufeatures.h                 |   1 +
+ arch/x86/include/asm/kvm_host.h                    |   6 +
+ arch/x86/include/asm/msr-index.h                   |   7 +
+ arch/x86/kernel/cpu/bugs.c                         |  24 ++
+ arch/x86/kernel/cpu/common.c                       |  67 ++---
+ arch/x86/kvm/mmu.c                                 | 270 ++++++++++++++++++++-
+ arch/x86/kvm/mmu.h                                 |   4 +
+ arch/x86/kvm/paging_tmpl.h                         |  29 ++-
+ arch/x86/kvm/x86.c                                 |  20 ++
+ drivers/base/cpu.c                                 |   8 +
+ include/linux/cpu.h                                |  27 +--
+ include/linux/kvm_host.h                           |   6 +
+ kernel/cpu.c                                       |  27 ++-
+ virt/kvm/kvm_main.c                                | 112 +++++++++
+ 18 files changed, 732 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/admin-guide/hw-vuln/multihit.rst
 
-   Wolfram
+-- 
+1.8.3.1
 
-
---0eh6TmSyL6TZE2Uz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3LIfYACgkQFA3kzBSg
-KbZ6AxAAogqz/CwHCOeNP4khZeJ7sC5Ygz+6eicsFbLHeuwpOH0ISXnttpqbFDmy
-FIJxvL634Pqx5Cd9PsQG3S1V6prgKnnCLDZBX3KV1kYRtsAgvjx3w/AYotdeyitC
-MT1fazgM4JKJV7MOdmEqBZ9KtIH1/wRqYAD/sftTcy/0sPDsq3+aCsGiQnTcUEtC
-d6YA1ANOrnFYTxHFv2ze+Zo4ewaRBzFSBPNwzNL4Ps3IBB8z38iYBnq6OOgMnfub
-B8pTntxQeWLank+apB7nZYxH3w3qs7t0qkuVwz/7qyhHcGxpfU41VxwhceFH0fFe
-s//pE2DI1n4CwtRtNPryIoAW2PYuzMBGhNQ67oQQCQsWKjEgaQLGm29VQgEj3zYx
-1dUoJIrom9MOA3t0JGURhBSXtdOw5K8RNVcspidoGobn52f1WQcxr/dwOoArDEqo
-4hFZosQnzqcGkKksE74Jj7XZQON9ZnSV5t3IU8SpNaYjswPu/rWaysPZcVDSPMPa
-EMFp7JwHYBoJEuUoaulsHIRZphCu1z8Zb8JsXBExs1zps0K3EwRiK6KKNoR11j1c
-rhD40N2NSMMXoOLfMFYqVG/Kp/iAvD7p3fqMoL31vLPjgab2xnVHMEuXPgKaUISy
-CZWEyhzRZhZ80HuDaDnaLyWjeLqBaEhxvazgd2/caBUmZSjsZZE=
-=UCNR
------END PGP SIGNATURE-----
-
---0eh6TmSyL6TZE2Uz--
