@@ -2,118 +2,133 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DBEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5CEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746A22067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F81621783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKLSNB (ORCPT
+        id S1727116AbfKLSNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:13:01 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725997AbfKLSNA (ORCPT
+        Tue, 12 Nov 2019 13:13:12 -0500
+Received: from audible.transient.net ([24.143.126.66]:39286 "HELO
+        audible.transient.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725997AbfKLSNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:13:00 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACICtkU047403
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:12:59 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w80fw350j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:12:59 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 12 Nov 2019 18:12:28 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Nov 2019 18:12:26 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACICPPE56492048
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 18:12:25 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 846FCA4051;
-        Tue, 12 Nov 2019 18:12:25 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0D14A4055;
-        Tue, 12 Nov 2019 18:12:24 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.194.252])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 18:12:24 +0000 (GMT)
-Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Patrick Callaghan <patrickc@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Date:   Tue, 12 Nov 2019 13:12:24 -0500
-In-Reply-To: <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
-References: <20191111192348.30535-1-patrickc@linux.ibm.com>
-         <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
-         <1573578841.17949.48.camel@linux.ibm.com>
-         <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111218-0016-0000-0000-000002C312CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111218-0017-0000-0000-00003324AA2F
-Message-Id: <1573582344.17949.67.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=707 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120155
+        Tue, 12 Nov 2019 13:13:11 -0500
+Received: (qmail 5869 invoked from network); 12 Nov 2019 18:13:10 -0000
+Received: from cucamonga.audible.transient.net (192.168.2.5)
+  by canarsie.audible.transient.net with QMQP; 12 Nov 2019 18:13:10 -0000
+Received: (nullmailer pid 2841 invoked by uid 1000);
+        Tue, 12 Nov 2019 18:13:09 -0000
+Date:   Tue, 12 Nov 2019 18:13:09 +0000
+From:   Jamie Heilman <jamie@audible.transient.net>
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: PROBLEM: NULL pointer dereference; nfsd4_remove_cld_pipe
+Message-ID: <20191112181309.GA2776@audible.transient.net>
+Mail-Followup-To: Scott Mayhew <smayhew@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191112101343.GA2806@audible.transient.net>
+ <20191112162047.GF4276@coeurl.usersys.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112162047.GF4276@coeurl.usersys.redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-12 at 09:33 -0800, Lakshmi Ramasubramanian wrote:
-> On 11/12/2019 9:14 AM, Mimi Zohar wrote:
+Scott Mayhew wrote:
+> Hi Jamie,
 > 
-> > On Mon, 2019-11-11 at 14:29 -0800, Lakshmi Ramasubramanian wrote:
-> >> On 11/11/19 11:23 AM, Patrick Callaghan wrote:
-> >>
-> >>> -		if (rbuf_len == 0)
-> >>> +		if (rbuf_len == 0) {	/* unexpected EOF */
-> >>> +			rc = -EINVAL;
-> >>>    			break;
-> >>> +		}
-> >>>    		offset += rbuf_len;
-> >>
-> >> Should there be an additional check to validate that (offset + rbuf_len)
-> >> is less than i_size before calling cypto_shash_update (since rbuf_len is
-> >> one of the parameters for this call)?
+> On Tue, 12 Nov 2019, Jamie Heilman wrote:
+> 
+> > Giving 5.4.0-rc7 a spin I hit a NULL pointer dereference and bisected
+> > it to:
 > > 
-> > The "while" statement enforces that.
+> > commit 6ee95d1c899186c0798cafd25998d436bcdb9618
+> > Author: Scott Mayhew <smayhew@redhat.com>
+> > Date:   Mon Sep 9 16:10:31 2019 -0400
 > > 
-> > Mimi
-> 
-> Yes - but that check happens after the call to crypto_shash_update().
-> 
-> Perhaps integrity_kernel_read() will never return (rbuf_len) that will
->   => violate the check in the "while" statement.
->   => number of bytes read that is greater than the memory allocated for 
-> rbuf even in error conditions.
-> 
-> Just making sure.
+> >     nfsd: add support for upcall version 2
+> > 
+> > 
+> > The splat against 5.3.0-rc2-00034-g6ee95d1c8991:
+> > 
+> > BUG: kernel NULL pointer dereference, address: 0000000000000036
+> > #PF: supervisor read access in kernel mode
+> > #PF: error_code(0x0000) - not-present page
+> > PGD 0 P4D 0 
+> > Oops: 0000 [#1] PREEMPT SMP PTI
+> > CPU: 0 PID: 2936 Comm: rpc.nfsd Not tainted 5.3.0-rc2-00034-g6ee95d1c8991 #1
+> > Hardware name: Dell Inc. Precision WorkStation T3400  /0TP412, BIOS A14 04/30/2012
+> > RIP: 0010:crypto_destroy_tfm+0x5/0x4d
+> > Code: 78 01 00 00 48 85 c0 74 05 e9 05 05 66 00 c3 55 48 8b af 80 01 00 00 e8 d5 ff ff ff 48 89 ef 5d e9 12 f9 ef ff 48 85 ff 74 47 <48> 83 7e 30 00 41 55 4c 8b 6e 38 41 54 49 89 fc 55 48 89 f5 75 14
+> > RSP: 0018:ffffc90000b7bd68 EFLAGS: 00010282
+> > RAX: ffffffffa0402841 RBX: ffff888230484400 RCX: 0000000000002cd0
+> > RDX: 0000000000002cce RSI: 0000000000000006 RDI: fffffffffffffffe
+> > RBP: ffffffff81e68440 R08: ffff888232801800 R09: ffffffffa0402841
+> > R10: 0000000000000200 R11: ffff88823048ae40 R12: ffff888231585100
+> > R13: ffff88823048ae40 R14: 000000000000000b R15: ffff888230484400
+> > FS:  00007f02102c3740(0000) GS:ffff888233a00000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000000000000036 CR3: 0000000230f94000 CR4: 00000000000406f0
+> > Call Trace:
+> >  nfsd4_remove_cld_pipe+0x6d/0x83 [nfsd]
+> >  nfsd4_cld_tracking_init+0x1cf/0x295 [nfsd]
+> >  nfsd4_client_tracking_init+0x72/0x13e [nfsd]
+> >  nfs4_state_start_net+0x22a/0x2cf [nfsd]
+> >  nfsd_svc+0x1c6/0x292 [nfsd]
+> >  write_threads+0x68/0xb0 [nfsd]
+> >  ? write_versions+0x333/0x333 [nfsd]
+> >  nfsctl_transaction_write+0x4a/0x62 [nfsd]
+> >  vfs_write+0xa0/0xdd
+> >  ksys_write+0x71/0xba
+> >  do_syscall_64+0x48/0x55
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > RIP: 0033:0x7f021056c904
+> > Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 48 8d 05 d9 3a 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 48 83 ec 28 48 89 54 24 18 48
+> > RSP: 002b:00007ffdc76ec618 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> > RAX: ffffffffffffffda RBX: 000055b534955560 RCX: 00007f021056c904
+> > RDX: 0000000000000002 RSI: 000055b534955560 RDI: 0000000000000003
+> > RBP: 0000000000000003 R08: 0000000000000000 R09: 00007ffdc76ec4b0
+> > R10: 00007ffdc76ec367 R11: 0000000000000246 R12: 0000000000000000
+> > R13: 0000000000000008 R14: 0000000000000000 R15: 000055b534b8a2a0
+> > Modules linked in: cpufreq_userspace cpufreq_powersave cpufreq_ondemand cpufreq_conservative autofs4 fan nfsd auth_rpcgss nfs lockd grace fscache sunrpc bridge stp llc nhpoly1305_sse2 nhpoly1305 aes_generic chacha_x86_64 chacha_generic adiantum poly1305_generic vhost_net tun vhost tap dm_crypt snd_hda_codec_analog snd_hda_codec_generic usb_storage snd_hda_intel kvm_intel snd_hda_codec kvm snd_hwdep snd_hda_core snd_pcm dcdbas snd_timer irqbypass snd soundcore sr_mod cdrom tg3 sg floppy evdev xfs dm_mod raid1 md_mod psmouse
+> > CR2: 0000000000000036
+> > ---[ end trace bc12bbe4cdd6319f ]---
+> > ...
+> > NFS: Registering the id_resolver key type
+> > Key type id_resolver registered
+> > Key type id_legacy registered
+> > 
+> > 
+> > My kernel config is at
+> > http://audible.transient.net/~jamie/k/upcallv2.config-5.3.0-rc2-00034-g6ee95d1c8991
+> > 
+> > I don't think there's anything terribly interesting about my nfs
+> > server setup, this happens reliably on boot up, idle network, no
+> > active clients; let me know what else you need, happy to debug.
+> > 
+> > -- 
+> > Jamie Heilman                     http://audible.transient.net/~jamie/
+> > 
+> Please try this patch (v2 because I messed up the first one).
 
-integrity_kernel_read() returns an error (< 0) or the number of bytes
-read.  The while statement ensures that there is more data to read, so
-returning 0 is always an error.
 
-Mimi
+Yep, that seems to solve it.  Is the implication that
+CONFIG_CRYPTO_SHA256 should be selected by nfsd?  (I tested with it
+unset, as per my config before.)
 
+
+-- 
+Jamie Heilman                     http://audible.transient.net/~jamie/
