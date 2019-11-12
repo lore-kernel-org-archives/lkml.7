@@ -2,124 +2,134 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7870DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551C8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C7C21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF6F21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573545161;
+	bh=u6gLfruMqKLOsUQoS20opa7nxM1dudDE2ea12xHBqFI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oyVSaEyqK90dl+j/PUC+7k1FOopjts82OTrqS8rU7fDzqC2ogl1k6D940b8kxAaiq
+	 rqfMkx+dIESHIQsI9v0CBFSLdseAFVyp443dlQS8lxPB3o281xin11dIoUJw9Xy/rf
+	 09R9iwDL2glntNFDXYbfkrOplPCF4ljfIz9mC9pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKLHvr (ORCPT
+        id S1727126AbfKLHwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:51:47 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6639 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725847AbfKLHvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:51:46 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1DA92BC29FDA6D619B61;
-        Tue, 12 Nov 2019 15:51:43 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 12 Nov 2019
- 15:51:38 +0800
-Subject: Re: [PATCH -next] drm/amd/display: Fix old-style declaration
-To:     Joe Perches <joe@perches.com>, <harry.wentland@amd.com>,
-        <sunpeng.li@amd.com>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <Bhawanpreet.Lakha@amd.com>,
-        <Jun.Lei@amd.com>, <David.Francis@amd.com>,
-        <Dmytro.Laktyushkin@amd.com>, <nicholas.kazlauskas@amd.com>,
-        <martin.leung@amd.com>, <Chris.Park@amd.com>
-References: <20191111122801.18584-1-yuehaibing@huawei.com>
- <01c630e6d4c58b3f6184603e158f53fb9aaeae7d.camel@perches.com>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <3361b760-fe4f-87e8-b0a4-ebda390aa492@huawei.com>
-Date:   Tue, 12 Nov 2019 15:51:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 12 Nov 2019 02:52:39 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36659 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLHwj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 02:52:39 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r10so17365757wrx.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 23:52:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2l1fIr2PA713/NXOsGQIe62lfwFG6H7YuOp1UqF8AKg=;
+        b=INhESf7eGo+xGfRbtWhEgLtmPIMFpPB1zTmECq85posfWatLYoiSy0/ZEEOah5vldT
+         VdIIgevWXBMu7SK9FgBSVSgirNoypofo2kPmxOR+lDSvryo86b1o7Cby5X4TFjBvsnXv
+         edshkWchbQbWWCaZa9HO+nUliwdeXVPWvg1R5PxYOptCYIL3P9ycywGFlgSqbXN/oLNf
+         0cdNakPDCQEI/t0/V/DORKbmwix6I6QVq+lohPt/2xAzc5gpdtYGcZlfvM2KZDlFqfEJ
+         SOgcKVFAteCWwxHj82lfafTH3by2pLAcNlvyoBx0LgB/LLwVr7kXOtGyo6Bg5So1xAJB
+         792g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2l1fIr2PA713/NXOsGQIe62lfwFG6H7YuOp1UqF8AKg=;
+        b=L0UTOhiFwoycQ7o3ljsHmLsGeW7XKkWGpZEt4qci4L7+LwkcHjqFn6fsSsUcAbpdEr
+         7wwKM7F0Dg60FbXqk1vhhmeFdwNx6znp+Tu/olsicT6EDxeJmZhwdGdvdkAdcoMOub2C
+         9ZCnmKdbEZ5cJiC1YrHyfT1kDwqmexqK0b4+TSJII6fRL/ToFb2BT64fA9CsQX4KyX0V
+         ByxayxfytNfvMXvOvxW7xC3aRtzVhca45uge/0RzqXotKWlH11Slmfdy6g+lY+cFvKai
+         DxHYTt3VN76n38wbRbQgIsUIQ9l8FvDVIGBDDqs0BNmdlhNvv2biic+WqHPvm9ZbdPyN
+         HlRQ==
+X-Gm-Message-State: APjAAAWGuL3LuA4rsCT0EqU7qdXFXM37wtpOvZ1KRE7Zp4OlVfib4MsV
+        6s3SMHLKvTTym2QZRwa0ZII=
+X-Google-Smtp-Source: APXvYqz1yCchfKKa1C4WjaPu/VDV4iJAKnxFx5DsKEkrdpDtxGz3uMojFv8spHS6N7Zz7X3haw4TjQ==
+X-Received: by 2002:adf:d091:: with SMTP id y17mr25466161wrh.182.1573545157751;
+        Mon, 11 Nov 2019 23:52:37 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id w11sm14339335wra.83.2019.11.11.23.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 23:52:37 -0800 (PST)
+Date:   Tue, 12 Nov 2019 08:52:35 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
+Message-ID: <20191112075235.GE100264@gmail.com>
+References: <20191111220314.519933535@linutronix.de>
+ <20191111223052.603030685@linutronix.de>
+ <20191112071406.GC100264@gmail.com>
+ <alpine.DEB.2.21.1911120816570.1833@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <01c630e6d4c58b3f6184603e158f53fb9aaeae7d.camel@perches.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1911120816570.1833@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/11/12 10:39, Joe Perches wrote:
-> On Mon, 2019-11-11 at 20:28 +0800, YueHaibing wrote:
->> Fix a build warning:
->>
->> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:75:1:
->>  warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
-> []
->> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> []
->> @@ -69,7 +69,7 @@
->>  #define DC_LOGGER \
->>  	dc->ctx->logger
->>  
->> -const static char DC_BUILD_ID[] = "production-build";
->> +static const char DC_BUILD_ID[] = "production-build";
-> 
-> DC_BUILD_ID is used exactly once.
-> Maybe just use it directly and remove DC_BUILD_ID instead?
 
-commit be61df574256ae8c0dbd45ac148ca7260a0483c0
-Author: Jun Lei <Jun.Lei@amd.com>
-Date:   Thu Sep 13 09:32:26 2018 -0400
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-    drm/amd/display: Add DC build_id to determine build type
+> On Tue, 12 Nov 2019, Ingo Molnar wrote:
+> > * Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > +void io_bitmap_share(struct task_struct *tsk)
+> > > + {
+> > > +	/*
+> > > +	 * Take a refcount on current's bitmap. It can be used by
+> > > +	 * both tasks as long as none of them changes the bitmap.
+> > > +	 */
+> > > +	refcount_inc(&current->thread.io_bitmap->refcnt);
+> > > +	tsk->thread.io_bitmap = current->thread.io_bitmap;
+> > > +	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+> > > +}
+> > 
+> > Ok, this is really neat. I suspect there might be some pathological cases 
+> > on ancient NUMA systems with a really high NUMA factor and bad caching 
+> > where this new sharing might regress performance, but I doubt this 
+> > matters, as both the hardware and this software functionality is legacy.
+> 
+> Definitely.
+> 
+> > > +	/*
+> > > +	 * If the bitmap is not shared, then nothing can take a refcount as
+> > > +	 * current can obviously not fork at the same time. If it's shared
+> > > +	 * duplicate it and drop the refcount on the original one.
+> > > +	 */
+> > > +	if (refcount_read(&iobm->refcnt) > 1) {
+> > > +		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
+> > > +		if (!iobm)
+> > > +			return -ENOMEM;
+> > > +		io_bitmap_exit();
+> > >  	}
+> > >  
+> > > +	/* Set the tasks io_bitmap pointer (might be the same) */
+> > 
+> > speling nit:
+> 
+> s/speling/spelling/ :)
 
-    [why]
-    Sometimes there are indications that the incorrect driver is being
-    loaded in automated tests. This change adds the ability for builds to
-    be tagged with a string, and picked up by the test infrastructure.
+Was a lame attempt at a self-depreciating joke ;-)
 
-    [how]
-    dc.c will allocate const for build id, which is init-ed with default
-    value, indicating production build. For test builds, build server will
-    find/replace this value. The test machine will then verify this value.
+Thanks,
 
-It seems DC_BUILD_ID is used by the build server, so maybe we should keep it.
-
-> 
-> ---
->  drivers/gpu/drm/amd/display/dc/core/dc.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> index 1fdba13..803dc14 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> @@ -69,8 +69,6 @@
->  #define DC_LOGGER \
->  	dc->ctx->logger
->  
-> -const static char DC_BUILD_ID[] = "production-build";
-> -
->  /**
->   * DOC: Overview
->   *
-> @@ -815,7 +813,7 @@ struct dc *dc_create(const struct dc_init_data *init_params)
->  	if (dc->res_pool->dmcu != NULL)
->  		dc->versions.dmcu_version = dc->res_pool->dmcu->dmcu_version;
->  
-> -	dc->build_id = DC_BUILD_ID;
-> +	dc->build_id = "production-build";
->  
->  	DC_LOG_DC("Display Core initialized\n");
->  
-> 
-> 
-> 
-> .
-> 
-
+	Ingo
