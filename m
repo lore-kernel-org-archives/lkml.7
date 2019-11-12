@@ -2,99 +2,137 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4869C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985A6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBFE206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692F721925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V8X9HHxH"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Z/Vffv5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfKLXop (ORCPT
+        id S1727104AbfKLXp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:44:45 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46716 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKLXop (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:44:45 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 193so210449pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EcHuuFp0uXLbkkRAA858XYtBunr2zA+LeQirH7UYVa4=;
-        b=V8X9HHxHiG0Is+chnq9hKdAdntFAww1rSfsLxVyiP7E6i67FTXBjLe2zS+ZMOC8b1k
-         Dx0K/KLvXeHKck7H32Glr39l0lktqFgwNo89bALI4mv0oKnxAMk8fH/ycmz15f5xUEiI
-         MHSQl1bOX0rd1bQotssKgZXS0uaqqO2dwUxpU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EcHuuFp0uXLbkkRAA858XYtBunr2zA+LeQirH7UYVa4=;
-        b=qGxQb7283D0oA01fJJJNCe8sylDsHVBhZ/hY2K0afcCi2crDzIRupCDX9uB2ZvyGym
-         DekDVqOjsfxkndjO09GYznW4blqf4oJoDFyTTHGwyoMAS9UZWJ9xWeDXy7p8iky42BIP
-         y8EEQOq3QG6RhVci52ICLZBwjIhOdiNjkaSLnWTwgBuGV3aXGjw2Evm+C0n8tnPFiIcR
-         3a98+FbqSjuTGbGYyqOCwj6txracOHCVmJgLqItZwhRmoWd4px6jwWuaFuX+SvVLq5lw
-         pKCV7X+k+waThvsBDEEEx+DCFoBcdccbYFLVEqgp8Dg9OpbqXJmcKr4AtbZNXnfr2yFf
-         6PvA==
-X-Gm-Message-State: APjAAAVtPWtzwN9E2WI5dRncd420ksEx1ZqyO740m8dE/1Uek+/Ou6fg
-        PBL0rdtQXol1cKjRgjp/lhx8Ig==
-X-Google-Smtp-Source: APXvYqy2qGlhbJhYD2XTlLrDucG7ETmNR5WevbQ8m/DZKdYkJBrkAiHNHZ0RU582wg1P7ojJiuH82g==
-X-Received: by 2002:a65:6149:: with SMTP id o9mr186489pgv.228.1573602284496;
-        Tue, 12 Nov 2019 15:44:44 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v10sm86650pfg.11.2019.11.12.15.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 15:44:43 -0800 (PST)
-Date:   Tue, 12 Nov 2019 15:44:42 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/14] add support for Clang's Shadow Call Stack
-Message-ID: <201911121530.FA3D7321F@keescook>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191105235608.107702-1-samitolvanen@google.com>
+        Tue, 12 Nov 2019 18:45:57 -0500
+Received: from mail-eopbgr00078.outbound.protection.outlook.com ([40.107.0.78]:10113
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726936AbfKLXp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 18:45:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SJiwN5YxrytMCzVdav2ElxEHLXuBfXkCwn+d9nRuW1AGk8lNBbBapQB8ddCsD9X7yDSlmJOP+CtFQdREunMVawuxTR9mwDLzvbi0xw+Ymf7v8k/hpd24WMgg6Xhu21g+YT4YmaQvUbCvwv15HtoA/IBcDM8GJBZu8eokX76zKDhRgf1DibfE4D9W56J/b+m7RJ2s++6pcrYAP7n+Wc9OwNN0p/xE1o37s1Si1b8LttMXAtYrByU72n/PqOBoPiID7RL9MLz2R9BjnNNLD97ios4WpPhob1SPvJFpc6WFxxTkntgHqy36UxpPK+m3oil+5ve5of3znXDeh/Bfwacw0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=skoDK31U0/7SDkc3ZpaX+MWHCrcSYVcNoz07elFWxKE=;
+ b=LW/KWRFGfWeb3vr/UCLnY3MkDQyPRnsvD4uf+r3sKVEGXKKVwysZsVgGz1xFt+owNthjBAkwo4yrDvOB5Q8iAQGC09V1fs1hQFwqm8ULvuMiJu3d7R+xmh214WvTca/jE3FISZJFRYZdS6MGp4G05x8AnU4sJpZ9tRhP5OPHEAFJ0t9GYvqcxgun4zTegJhzMJKgk+Y4JtR2tEfzzx1e7+TQo+GM+axoK0PB/tSpzoZu46jsbcDE8pGB7QXgJa44+y1PfVakfOyVfADe7nmuTTpDugAdmcId5aRnrZKyVA6n2UgcxZ527aSXLmo20eKqAlg8Q8xYm+EDwWHx/NO46A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=skoDK31U0/7SDkc3ZpaX+MWHCrcSYVcNoz07elFWxKE=;
+ b=Z/Vffv5huEvFCw4I22gKLJhWhCVToIU1sjt1ThVs0Zas3VjoVekVnHz42iVdNPU3EgszcPS39FUDAYz04WlPzQGIVidEUVIlGZ7xi4vtr3qHOe40r8szM2EyDF7SWAj2ny55GwEOXdLxMpnAwUkV9u3JmE7LSJ/7EjvcF6cwxOw=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4958.eurprd05.prod.outlook.com (20.177.50.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Tue, 12 Nov 2019 23:45:52 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 23:45:52 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
+Thread-Topic: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
+Thread-Index: AQHVk15BHkNBC+HAokukKxKzDG+3w6eHtA6AgABrzYCAACAHgA==
+Date:   Tue, 12 Nov 2019 23:45:52 +0000
+Message-ID: <20191112234549.GX21728@mellanox.com>
+References: <20191104222141.5173-1-rcampbell@nvidia.com>
+ <20191104222141.5173-3-rcampbell@nvidia.com> <20191112152521.GC12550@lst.de>
+ <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
+In-Reply-To: <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR20CA0010.namprd20.prod.outlook.com
+ (2603:10b6:208:e8::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dd714597-929c-406a-8a71-08d767ca73fd
+x-ms-traffictypediagnostic: VI1PR05MB4958:
+x-microsoft-antispam-prvs: <VI1PR05MB4958DC049DE912254177A423CF770@VI1PR05MB4958.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(366004)(396003)(39860400002)(189003)(199004)(6246003)(14454004)(2906002)(7416002)(14444005)(256004)(8676002)(8936002)(81156014)(81166006)(4744005)(5660300002)(4326008)(6486002)(6436002)(229853002)(3846002)(6512007)(6916009)(1076003)(71200400001)(25786009)(71190400001)(305945005)(7736002)(6116002)(386003)(6506007)(99286004)(76176011)(86362001)(102836004)(316002)(486006)(52116002)(26005)(54906003)(36756003)(33656002)(476003)(66446008)(64756008)(66556008)(66476007)(11346002)(478600001)(66946007)(66066001)(186003)(2616005)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4958;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IwrEwufdOhJnbn0VmgOE440YYxCz3gIlVfovu6drMVFTKTxpViYeNVcdpMMw5aGUA3skjtBd/dBIDBGdneVBmdQeaCdNvmdO0ZU0XSk8acFakrbLo8VRYgMMQzjSdsmb0Y41dDtoFuBQSlZZdGtWTuGmiBSUUiNZrRvJE6jlvTUsfOyIleF9KT+xa/i4nR4otnQyI/HXE3JX4VTlU8gZaw9m5p42E1Xl+Al+YH80dQ9isqdbNc1RuxBIiMxWzKw8Znyg4m9ZxCEhDNYS9EUwK4WT6ZO/QdcsQ4bWdcR1T5GkoNAy6A5nn5cOvX32Q2WAVO74a6y1V9GKW4WOpSOhmg2woeFRUAyD3p48Efxh7XPvgM/pv6fet0lOT8qBgu9/HxLvBrc5wFrm0Ifr4a15uwRCnuNLGP9nGtEjzinNvT2YcjhGRMyKVC8SNQJxJ2Tr
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9F4164E7B161C4499113C50B183C779A@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105235608.107702-1-samitolvanen@google.com>
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd714597-929c-406a-8a71-08d767ca73fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 23:45:52.4574
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ateme6P/6lZt75AAoy5NBSqzB+PRwXltwwp28YrIrRGsPPP8sgJQ74lRo2/1RZkHAkdmFXlf0/SuxNLIYZKYbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4958
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:55:54PM -0800, Sami Tolvanen wrote:
-> This patch series adds support for Clang's Shadow Call Stack
-> (SCS) mitigation, which uses a separately allocated shadow stack
-> to protect against return address overwrites. More information
+On Tue, Nov 12, 2019 at 01:51:11PM -0800, Ralph Campbell wrote:
 
-Will, Catalin, Mark,
+> > > +static int dmirror_invalidate_range_start(struct mmu_notifier *mn,
+> > > +				const struct mmu_notifier_range *update)
+> > > +{
+> > > +	struct dmirror *dmirror =3D container_of(mn, struct dmirror, notifi=
+er);
+> > > +
+> > > +	if (mmu_notifier_range_blockable(update))
+> > > +		mutex_lock(&dmirror->mutex);
+> > > +	else if (!mutex_trylock(&dmirror->mutex))
+> > > +		return -EAGAIN;
+> > > +
+> > > +	dmirror_do_update(dmirror, update->start, update->end);
+> > > +	mutex_unlock(&dmirror->mutex);
+> > > +	return 0;
+> > > +}
+> >=20
+> > Can we adopts this to Jasons new interval tree invalidate?
+>=20
+> Well, it would mean registering for the whole process address space.
+> I'll give it a try.
 
-What's the next step here? I *think* all the comments have been
-addressed. Is it possible to land this via the arm tree for v5.5?
+I'm not sure it makes much sense that this testing is essentially
+modeled after nouveau's usage which is very strange compared to the
+other drivers.
 
-Thanks!
-
--- 
-Kees Cook
+Jason
