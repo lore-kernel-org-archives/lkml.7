@@ -2,121 +2,128 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0130DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE83BC1744A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA24A2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A1B21E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:46:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fSEHMQ21"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="g+shynx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKLWpU (ORCPT
+        id S1727247AbfKLWqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:45:20 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46669 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727208AbfKLWpT (ORCPT
+        Tue, 12 Nov 2019 17:46:03 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45478 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfKLWqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:45:19 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so237819ljp.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 14:45:18 -0800 (PST)
+        Tue, 12 Nov 2019 17:46:02 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 14so10442318oir.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 14:46:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Dlzc9ZW2QK+Bf04vZsdeB35W1UEikvkDQZdvHiTdHiw=;
-        b=fSEHMQ2152EQPx9pY74DdNe3R/DLJhrZrzSt/FcS5QA0aJOwx5p1V2R4kQhGRZ7r+o
-         wru3mBbU5BmpXiTjx42QZ9jghV+5sNbfS8baupjOQZ6n25v64Xoo2M+tyzmIPFxZ1dcv
-         UGJNRwL+fDOYGUdcvBSiagvT9vYup23aTtnzkcy1uV6qlNrZKUah99IvMOSzx2JAnJWm
-         FLW27/ZAa4pjhlb/vIHR+jrqWUrBSTaXbdJUSf2BZK/hYOYf86gPFhVD2EBFVr1JX4nJ
-         wzhlzta7m/H0u6+hiZeqBUTnD3aBROdtxrhjL4+mEhpOOUzKvs53XjslZxR/Ns29QnHJ
-         QG1Q==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7VZux41I9l8WsaFw4dnSKoQ+DL1POYbdTwXxPgsqOD8=;
+        b=g+shynx9wA4O7/ZPSOmOhvhdFUBcChFyBb7EYzal20VNZRr14tSC8CEEu8RhYVOSKP
+         ujUV0PqIhIH36zKviPook+HnkIHuRG88nmkcJhEvO3dJXo36vkvTp3d/Rv5+wpQSmOnU
+         bQU0r/Fslk/8pH+0JUylPowC6D4ZnT5PrmHiZ30JXUbKpZ1rMZQ7kmT50jl8KfJoHp7m
+         VvEK+ooBIm3vYED6+FUL9oFvr5SRhfXOEafMoAbLZrqHGNUi1aW7WiDjR5Rr2M+YKo5Q
+         1bTGao6fq7ZjCHqOdYHjYnxFv2rb5XbPoQBWE0A1WALsbQq7HL4C3F5HipXsfgbDt8Vf
+         nWjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Dlzc9ZW2QK+Bf04vZsdeB35W1UEikvkDQZdvHiTdHiw=;
-        b=TNVM3+mbxD8oK/7mptQKlof3TlC0+rKQSXn/YyDxDfUSNz6qRw8dUwWMn0XHcQ4f0N
-         dZ7cLe7dQVy+Z/sW9YeCD3awBDrmx263M3RludLa2FJmIOffyrmTgSGmqrnfn2+sMTyR
-         gVvkY/yhWfijtg41gsVzfk19U7Wp71/eUFYT4JYyvo9BNLKXZMVsNQOO2C6LZ/Cyg9hM
-         Z++AkipwPDZCw+4A0eQZmm7O9YTUps4U4ikiOrIShC7Ckl+SacW8Mxr04j7z6UCakmKJ
-         dyWDjl+ZK4TEv3RphrB1j+5bH1shpzb8jKaPjbz58S+Taj3K4mmDzxHjxXTSaFNcUBXX
-         UKlw==
-X-Gm-Message-State: APjAAAXTPzqQzZtRh0tMywolvvgJJd//O9Px6e5e0T5V9W7JVGKWAAjy
-        bu4Y2Z0v7F0zqxgLsN2V/L4=
-X-Google-Smtp-Source: APXvYqyKR8f+A1blypWPTt6vPOpdDDjtrTZpb+CWB3Fb3V0DJ5Jo0xdGXqfKLevZ7X/JP0euhNYAuQ==
-X-Received: by 2002:a05:651c:1117:: with SMTP id d23mr139959ljo.90.1573598717383;
-        Tue, 12 Nov 2019 14:45:17 -0800 (PST)
-Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
-        by smtp.gmail.com with ESMTPSA id x16sm38677ljd.69.2019.11.12.14.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 14:45:16 -0800 (PST)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org
-Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Petr Mladek <pmladek@suse.com>, Joe Perches <joe@perches.com>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v3 2/2] xtensa: make stack dump size configurable
-Date:   Tue, 12 Nov 2019 14:44:43 -0800
-Message-Id: <20191112224443.12267-3-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191112224443.12267-1-jcmvbkbc@gmail.com>
-References: <20191112224443.12267-1-jcmvbkbc@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7VZux41I9l8WsaFw4dnSKoQ+DL1POYbdTwXxPgsqOD8=;
+        b=WR2qGqCsyW4V0kT8tdCm4iTRh38i5yQ3wQFyzeuYKD8E20BgREs0qM6U3rmj27BxgG
+         lXJvqQ92NSkK9wJfWPG+xZ0WF/zJuOM371OpMIlKmrGKcU+DsCQO2STyXFBUq7ZclEP1
+         VkKaiB2o0AHvxBioQEplP723rLzzJdUTOxievmjpoDAVMTvFQqNaIy1ZHwmWwycyBwbe
+         3mnenTp5Vy6nSOTu8j5Cd9Oz2x3LJeF1UalMUBIQhGLGp1Cvx1PUCv3khBFnk+UYMoC2
+         r0MrDBKF5bw29etqG9QhuqkXZi1AhEgWl7oe4P+ZtqDo0kVqE7LC2eBwoWR6kdtHSU63
+         0jJw==
+X-Gm-Message-State: APjAAAUIEpUXwD1eXT5ZeqBjEn/Y9unLntO7IZRq1gRpNFYJHy7CVYsq
+        pVLVodCff3cRJhdmNKanPqsOWsMzk0IPpz4674ukHw==
+X-Google-Smtp-Source: APXvYqwYMdEjXlo/ZXkQ25Q7OqLij5wE38qfmFx+c4Kh6ETnZQ80hOGe2SgdovvfY1Nwmo4LDa9vLeLDcR91Ofxlyck=
+X-Received: by 2002:aca:ea57:: with SMTP id i84mr83905oih.73.1573598761920;
+ Tue, 12 Nov 2019 14:46:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191112000700.3455038-1-jhubbard@nvidia.com> <20191112000700.3455038-9-jhubbard@nvidia.com>
+ <20191112204338.GE5584@ziepe.ca> <0db36e86-b779-01af-77e7-469af2a2e19c@nvidia.com>
+In-Reply-To: <0db36e86-b779-01af-77e7-469af2a2e19c@nvidia.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 12 Nov 2019 14:45:51 -0800
+Message-ID: <CAPcyv4hAEgw6ySNS+EFRS4yNRVGz9A3Fu1vOk=XtpjYC64kQJw@mail.gmail.com>
+Subject: Re: [PATCH v3 08/23] vfio, mm: fix get_user_pages_remote() and FOLL_LONGTERM
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce Kconfig symbol PRINT_STACK_DEPTH and use it to initialize
-kstack_depth_to_print.
+On Tue, Nov 12, 2019 at 2:43 PM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On 11/12/19 12:43 PM, Jason Gunthorpe wrote:
+> ...
+> >> -            }
+> >> +    ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
+> >> +                                page, vmas, NULL);
+> >> +    /*
+> >> +     * The lifetime of a vaddr_get_pfn() page pin is
+> >> +     * userspace-controlled. In the fs-dax case this could
+> >> +     * lead to indefinite stalls in filesystem operations.
+> >> +     * Disallow attempts to pin fs-dax pages via this
+> >> +     * interface.
+> >> +     */
+> >> +    if (ret > 0 && vma_is_fsdax(vmas[0])) {
+> >> +            ret = -EOPNOTSUPP;
+> >> +            put_page(page[0]);
+> >>      }
+> >
+> > AFAIK this chunk is redundant now as it is some hack to emulate
+> > FOLL_LONGTERM? So vmas can be deleted too.
+>
+> Let me first make sure I understand what Dan has in mind for the vma
+> checking, in the other thread...
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
-Changes v2->v3:
-- split Kconfig change into separate patch
-
- arch/xtensa/Kconfig.debug  | 7 +++++++
- arch/xtensa/kernel/traps.c | 2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/xtensa/Kconfig.debug b/arch/xtensa/Kconfig.debug
-index 39de98e20018..83cc8d12fa0e 100644
---- a/arch/xtensa/Kconfig.debug
-+++ b/arch/xtensa/Kconfig.debug
-@@ -31,3 +31,10 @@ config S32C1I_SELFTEST
- 	  It is easy to make wrong hardware configuration, this test should catch it early.
- 
- 	  Say 'N' on stable hardware.
-+
-+config PRINT_STACK_DEPTH
-+	int "Stack depth to print" if DEBUG_KERNEL
-+	default 64
-+	help
-+	  This option allows you to set the stack depth that the kernel
-+	  prints in stack traces.
-diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
-index be26ec6c0e0e..87bd68dd7687 100644
---- a/arch/xtensa/kernel/traps.c
-+++ b/arch/xtensa/kernel/traps.c
-@@ -495,7 +495,7 @@ void show_trace(struct task_struct *task, unsigned long *sp)
- 
- #define STACK_DUMP_ENTRY_SIZE 4
- #define STACK_DUMP_LINE_SIZE 32
--static size_t kstack_depth_to_print = 24;
-+static size_t kstack_depth_to_print = CONFIG_PRINT_STACK_DEPTH;
- 
- void show_stack(struct task_struct *task, unsigned long *sp)
- {
--- 
-2.20.1
-
+It's not redundant relative to upstream which does not do anything the
+FOLL_LONGTERM in the gup-slow path... but I have not looked at patches
+1-7 to see if something there made it redundant.
