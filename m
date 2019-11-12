@@ -2,92 +2,214 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7086C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2BBC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24B3222C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E71721E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WV+yjcnW"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="HaUYgNK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfKLSUm (ORCPT
+        id S1727152AbfKLSWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:20:42 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35693 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfKLSUm (ORCPT
+        Tue, 12 Nov 2019 13:22:17 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42490 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfKLSWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:20:42 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q13so1511869pff.2;
-        Tue, 12 Nov 2019 10:20:42 -0800 (PST)
+        Tue, 12 Nov 2019 13:22:16 -0500
+Received: by mail-oi1-f193.google.com with SMTP id i185so15700844oif.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:22:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hoIdYArAtXT1XAvEyhVfY/cTOR76azkKwUT965M4Uno=;
-        b=WV+yjcnWPkSnd5NrSR0LgfCIFpuPXqi3ex4HJhWT4maC8gSqlX9oVzJ7V5usBNeKfq
-         MOjQllK+u7tIdtC91lfoTAAtcJR8OLYlL6GwDvZfAcV7P4uDrcpcwugEU8ttu6ZkeZWi
-         2NOAu6/Zx4vKXg6j9/vVEu++va69UFzkEDBmIxAgW4Po+S1Y8TRAzAef5EWCJZIyT7Ss
-         K4/RHacXNI5Fs3ZbAWllZmEi0kSPTmJW+qAFpSd8esrmaUkDwIu/jtEKLEul+TPROtEs
-         pgz0kJ8kDfk5A1QL9pAHCxtJiBpKE90MwHaSKdsD8DNvdWOX9H+dLz/Rcwg6bMBS0hNp
-         8ogQ==
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1zuYDebMJ/okDBHwgQg9Ko+/yuHAItkCB5r+xtn/gVU=;
+        b=HaUYgNK5z9hM0u3S5tvMsLOyHp+WxD02EoIo6ZwYeUW263957WAxFCCsBoFlM9UhzK
+         +buTc7LtUro3bpc0TqG0u6Z6VeA/LlU1zEzpQukJQXqBNlaxMssvSwsGZW1czxmeFtIY
+         S0A/fo2QfFxG79cDQoAviXaOQt8kwPVegBvWo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hoIdYArAtXT1XAvEyhVfY/cTOR76azkKwUT965M4Uno=;
-        b=b6IOoL5kYa5e04JjvOzzp9eeP5PvyThDDLeks2D+GfbzZ7OAxPdir/aRJI3Bcx3K1t
-         PhgIaB3qkVnv+P+qjCv3IHsEx5TG99pIIPryr5sJlknHrdPDVHGhENoP8tiPOFXZ8yFB
-         ru69IuSxA0pm6JJfaa/k0LBFN3/hZNxyOQy/OIvyKqOW/L5nAEyuf4BUh/EkY6k+Pibr
-         HBSblJB8B38wThoNgHRTjP93ns4GJoctXrE5LL++W5rjeB3fUcpYH6ik5452ocJaJFiP
-         541MNkxExFm0Ayi7p00YIcmtmXfIQ4NZCs6lVRfL7+/UES7F7Lokk55J3dnovf7v9hyq
-         DrlA==
-X-Gm-Message-State: APjAAAVtgOebLskYdidtmY88CuN46dO/4xdcYqqRkB9vhBfVAN0jDt7Q
-        zSjcI9f++UY3cg7Et+5YfxU=
-X-Google-Smtp-Source: APXvYqy1jKdYp/BF6yFEBuL+fQeGh6JfwYmJ3uUzNktUZwwZSYPjoNL+LlKMeZ5HJoJVRXT58Vvcow==
-X-Received: by 2002:a17:90a:b30b:: with SMTP id d11mr8237723pjr.25.1573582841801;
-        Tue, 12 Nov 2019 10:20:41 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i71sm25622070pfe.103.2019.11.12.10.20.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 10:20:41 -0800 (PST)
-Date:   Tue, 12 Nov 2019 10:20:40 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 000/193] 5.3.11-stable review
-Message-ID: <20191112182040.GF30127@roeck-us.net>
-References: <20191111181459.850623879@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1zuYDebMJ/okDBHwgQg9Ko+/yuHAItkCB5r+xtn/gVU=;
+        b=kiiXnTL0Ch4DMXMfc4PXzmBn+ixNPSIRle4Ltg+l9ZN1Pbhi3XYiu3YK4VDY9y+TKd
+         BJignIY4zSaB5vUR6JSFvAxoXOk91dzbdHiGpcjzexepgJoZO8hQrPS/M4T22We8xETP
+         KFtVMuDyz3kMMWafYhSFoQsDtuUaDvt06OhSVQx6lhs1SdcC+id2rutr3cJ5UDKh4Umx
+         ARyguloaiUGJ09bN8d3Fy5i3EPLymyQXEnUkfLcqZFlY6ZzGr1XjGh6ZAmkddkdalejS
+         VNbtRo0mPeWIQPilaZtlIGy3czJnb2nkIulHG4+8VC7eY2LMsuFn+KWsjdyYuK04IFBf
+         61iA==
+X-Gm-Message-State: APjAAAUmXaJpFb//kgdi3piTGY2dlK6zUlewQ+7GsJV5BV9VH1U+iyhR
+        m1Qp0d6X9Wer6MW4U/g5k9Lh+mxMsKN0ngz7+WsD1Q==
+X-Google-Smtp-Source: APXvYqxWyFwnVlRZzJ+e7TO6RyGTp8L2UIQfJV/REpyHFM3+xax+tNjNNAtMmM4kjxFbc20wLGXUy8mwcfSl9sfs8Gs=
+X-Received: by 2002:aca:ead7:: with SMTP id i206mr292992oih.128.1573582935361;
+ Tue, 12 Nov 2019 10:22:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111181459.850623879@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191112175940.GA13539@lst.de>
+In-Reply-To: <20191112175940.GA13539@lst.de>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 12 Nov 2019 19:22:01 +0100
+Message-ID: <CAKMK7uGN4=b-aaymXhs8MaS6GeShy8KMuTYv2O2L0uZBatQJtA@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: fix anx6345 compilation for v5.5
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 07:26:22PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.11 release.
-> There are 193 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 13 Nov 2019 18:08:44 +0000.
-> Anything received after that time might be too late.
-> 
+On Tue, Nov 12, 2019 at 6:59 PM Torsten Duwe <duwe@lst.de> wrote:
+>
+>
+> The anx6345 driver originally was copied from anx78xx.c, which has meanwhile
+> seen a few changes. In particular, the removal of drm_dp_link helpers and the
+> discontinuation to include drm_bridge.h from drm_crtc.h breaks compilation
+> in linux-5.5. Apply equivalents of these changes to anx6345.c.
+>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 391 pass: 391 fail: 0
+Wait ... Maxime pushed this and it never compiled? What's going on here?
+-Daniel
 
-Guenter
+>
+> ---
+>
+> The commits in question are ff1e8fb68ea06 and ee68c743f8d07, but I guess the
+> next rebase will change these. next-20191112 plus the anx6345-v5a series plus
+> this patch compile cleanly on arm64.
+>
+> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/types.h>
+>
+>  #include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_crtc_helper.h>
+>  #include <drm/drm_dp_helper.h>
+> @@ -49,7 +50,6 @@ struct anx6345 {
+>         struct i2c_client *client;
+>         struct edid *edid;
+>         struct drm_connector connector;
+> -       struct drm_dp_link link;
+>         struct drm_panel *panel;
+>         struct regulator *dvdd12;
+>         struct regulator *dvdd25;
+> @@ -96,7 +96,7 @@ static ssize_t anx6345_aux_transfer(stru
+>  static int anx6345_dp_link_training(struct anx6345 *anx6345)
+>  {
+>         unsigned int value;
+> -       u8 dp_bw;
+> +       u8 dp_bw, dpcd[2];
+>         int err;
+>
+>         err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
+> @@ -144,18 +143,34 @@ static int anx6345_dp_link_training(stru
+>         if (err)
+>                 return err;
+>
+> -       /* Check link capabilities */
+> -       err = drm_dp_link_probe(&anx6345->aux, &anx6345->link);
+> -       if (err < 0) {
+> -               DRM_ERROR("Failed to probe link capabilities: %d\n", err);
+> -               return err;
+> -       }
+> +       /*
+> +        * Power up the sink (DP_SET_POWER register is only available on DPCD
+> +        * v1.1 and later).
+> +        */
+> +       if (anx6345->dpcd[DP_DPCD_REV] >= 0x11) {
+> +               err = drm_dp_dpcd_readb(&anx6345->aux, DP_SET_POWER, &dpcd[0]);
+> +               if (err < 0) {
+> +                       DRM_ERROR("Failed to read DP_SET_POWER register: %d\n",
+> +                                 err);
+> +                       return err;
+> +               }
+> +
+> +               dpcd[0] &= ~DP_SET_POWER_MASK;
+> +               dpcd[0] |= DP_SET_POWER_D0;
+> +
+> +               err = drm_dp_dpcd_writeb(&anx6345->aux, DP_SET_POWER, dpcd[0]);
+> +               if (err < 0) {
+> +                       DRM_ERROR("Failed to power up DisplayPort link: %d\n",
+> +                                 err);
+> +                       return err;
+> +               }
+>
+> -       /* Power up the sink */
+> -       err = drm_dp_link_power_up(&anx6345->aux, &anx6345->link);
+> -       if (err < 0) {
+> -               DRM_ERROR("Failed to power up DisplayPort link: %d\n", err);
+> -               return err;
+> +               /*
+> +                * According to the DP 1.1 specification, a "Sink Device must
+> +                * exit the power saving state within 1 ms" (Section 2.5.3.1,
+> +                * Table 5-52, "Sink Control Field" (register 0x600).
+> +                */
+> +               usleep_range(1000, 2000);
+>         }
+>
+>         /* Possibly enable downspread on the sink */
+> @@ -194,20 +209,28 @@ static int anx6345_dp_link_training(stru
+>         if (err)
+>                 return err;
+>
+> -       value = drm_dp_link_rate_to_bw_code(anx6345->link.rate);
+> +       dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
+> +       dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
+>         err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+> -                          SP_DP_MAIN_LINK_BW_SET_REG, value);
+> +                          SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
+>         if (err)
+>                 return err;
+>
+> +       dpcd[1] = drm_dp_max_lane_count(anx6345->dpcd);
+> +
+>         err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+> -                          SP_DP_LANE_COUNT_SET_REG, anx6345->link.num_lanes);
+> +                          SP_DP_LANE_COUNT_SET_REG, dpcd[1]);
+>         if (err)
+>                 return err;
+>
+> -       err = drm_dp_link_configure(&anx6345->aux, &anx6345->link);
+> +       if (drm_dp_enhanced_frame_cap(anx6345->dpcd))
+> +               dpcd[1] |= DP_LANE_COUNT_ENHANCED_FRAME_EN;
+> +
+> +       err = drm_dp_dpcd_write(&anx6345->aux, DP_LINK_BW_SET, dpcd,
+> +                               sizeof(dpcd));
+> +
+>         if (err < 0) {
+> -               DRM_ERROR("Failed to configure DisplayPort link: %d\n", err);
+> +               DRM_ERROR("Failed to configure link: %d\n", err);
+>                 return err;
+>         }
+>
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
