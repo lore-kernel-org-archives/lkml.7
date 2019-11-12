@@ -2,80 +2,159 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC2FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2F2C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC0A20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1D02196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKLRE7 (ORCPT
+        id S1727183AbfKLRFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:04:59 -0500
-Received: from ms.lwn.net ([45.79.88.28]:42024 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbfKLRE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:04:58 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id BFF415A0;
-        Tue, 12 Nov 2019 17:04:56 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 10:04:54 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jaskaran Singh <jaskaransingh7654321@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        christian@brauner.io, neilb@suse.com, willy@infradead.org,
-        tobin@kernel.org, stefanha@redhat.com, hofrat@osadl.org,
-        gregkh@linuxfoundation.org, jeffrey.t.kirsher@intel.com,
-        linux-doc@vger.kernel.org, skhan@linuxfoundation.org,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>
-Subject: Re: [PATCH][RESEND] docs: filesystems: sysfs: convert sysfs.txt to
- reST
-Message-ID: <20191112100454.3b41f3af@lwn.net>
-In-Reply-To: <cd9dbb3704d0a39a161c3e4df8fcd9f84bbc5b03.camel@gmail.com>
-References: <20191105071846.GA28727@localhost.localdomain>
-        <20191107120455.29a4c155@lwn.net>
-        <cd9dbb3704d0a39a161c3e4df8fcd9f84bbc5b03.camel@gmail.com>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 12 Nov 2019 12:05:07 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59562 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726960AbfKLRFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:05:07 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACGvgTs127462
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:05:04 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7xmrnn87-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:05:03 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 12 Nov 2019 17:05:01 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Nov 2019 17:04:58 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACH4wwf40960480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 17:04:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E9F5111C050;
+        Tue, 12 Nov 2019 17:04:57 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9898311C04A;
+        Tue, 12 Nov 2019 17:04:56 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.194.252])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 17:04:56 +0000 (GMT)
+Subject: Re: [PATCH v5 01/10] IMA: Added KEYRING_CHECK func in IMA policy to
+ measure keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 12 Nov 2019 12:04:56 -0500
+In-Reply-To: <20191111193303.12781-2-nramas@linux.microsoft.com>
+References: <20191111193303.12781-1-nramas@linux.microsoft.com>
+         <20191111193303.12781-2-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111217-0012-0000-0000-000003630ADF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111217-0013-0000-0000-0000219E7C21
+Message-Id: <1573578296.17949.41.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 09 Nov 2019 18:36:16 +0530
-Jaskaran Singh <jaskaransingh7654321@gmail.com> wrote:
-
-> > At a bare minimum, an effort like this needs to put a big flashing
-> > warning
-> > at the top of the file.  But it would be soooooo much better to
-> > actually
-> > update the content as well.
-> > 
-> > The best way to do that would be to annotate the source with proper
-> > kerneldoc comments, then pull them into the documentation rather than
-> > repeating the information here.  Is there any chance you might be up
-> > for
-> > taking on a task like this?
-> >   
+On Mon, 2019-11-11 at 11:32 -0800, Lakshmi Ramasubramanian wrote:
+> IMA policy needs to support a func to enable measurement of
+> asymmetric keys.
 > 
+> This patch defines a new IMA policy func namely KEYRING_CHECK to
+> measure asymmetric keys.
+
+This new feature measures "keys" based on policy, not "keyrings".
+ Please change the name to KEY_CHECK.
+
 > 
-> Sure! I'll send the documentation patch(es) followed by a v2 for this
-> patch.
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> ---
+>  Documentation/ABI/testing/ima_policy | 6 ++++++
+>  security/integrity/ima/ima.h         | 1 +
+>  security/integrity/ima/ima_policy.c  | 4 +++-
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+> index 29aaedf33246..341df49b5ad1 100644
+> --- a/Documentation/ABI/testing/ima_policy
+> +++ b/Documentation/ABI/testing/ima_policy
+> @@ -30,6 +30,7 @@ Description:
+>  				[FIRMWARE_CHECK]
+>  				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+>  				[KEXEC_CMDLINE]
+> +				[KEYRING_CHECK]
+>  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+>  			       [[^]MAY_EXEC]
+>  			fsmagic:= hex value
+> @@ -113,3 +114,8 @@ Description:
+>  		Example of appraise rule allowing modsig appended signatures:
+>  
+>  			appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig
+> +
+> +		Example of measure rule using KEYRING_CHECK to measure
+> +		all keys:
+> +
+> +			measure func=KEYRING_CHECK
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index df4ca482fb53..7f23405b2718 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -193,6 +193,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
+>  	hook(KEXEC_INITRAMFS_CHECK)	\
+>  	hook(POLICY_CHECK)		\
+>  	hook(KEXEC_CMDLINE)		\
+> +	hook(KEYRING_CHECK)		\
+>  	hook(MAX_CHECK)
+>  #define __ima_hook_enumify(ENUM)	ENUM,
+>  
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index f19a895ad7cd..9ca32ffaaa9d 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -373,7 +373,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>  {
+>  	int i;
+>  
+> -	if (func == KEXEC_CMDLINE) {
+> +	if ((func == KEXEC_CMDLINE) || (func == KEYRING_CHECK)) {
+>  		if ((rule->flags & IMA_FUNC) && (rule->func == func))
+>  			return true;
+>  		return false;
+> @@ -997,6 +997,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  				entry->func = POLICY_CHECK;
+>  			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
+>  				entry->func = KEXEC_CMDLINE;
+> +			else if (strcmp(args[0].from, "KEYRING_CHECK") == 0)
+> +				entry->func = KEYRING_CHECK;
+>  			else
+>  				result = -EINVAL;
+>  			if (!result)
 
-Great.  As an alternative, if you like, redo the current patch with the
-other suggested fixes and a "this is obsolete" warning at the top.  Then,
-after the subsequent improvements land, that warning can eventually be
-removed again.
 
-Thanks,
 
-jon
+
