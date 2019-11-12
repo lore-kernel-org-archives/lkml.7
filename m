@@ -2,122 +2,77 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5DFC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E4C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EF421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u7uD8Ksb"
+	by mail.kernel.org (Postfix) with ESMTP id A3BD82196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:33:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfKLNdR (ORCPT
+        id S1727315AbfKLNdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:33:17 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33358 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfKLNdR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:33:17 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACDWqEC028139;
-        Tue, 12 Nov 2019 07:32:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573565572;
-        bh=5Z4gxvkjzCKXoR2E/PLowayTQFLHdnvuiFx2gsQMpOw=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=u7uD8Ksb6+SkNTw/B+CguxskxxpzqJhuWCzD1BViIVLYjjyl6h5IkXu4sceepscOt
-         dw2KPu100PEy9jPMXyfIsQ6VvHaJpPwNv0UTysey8ik3vfarPd3g4OqL3XIEY0n6f/
-         63b+XNLUiCKXDHX+xGxKrLy+Mb9P7pwhuBDao1Q0=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACDWppt074078;
-        Tue, 12 Nov 2019 07:32:52 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 07:32:51 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 07:32:34 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id xACDWpgg005332;
-        Tue, 12 Nov 2019 07:32:51 -0600
-Date:   Tue, 12 Nov 2019 07:35:54 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v2 12/20] media: ti-vpe: cal: Add DRA76x support
-Message-ID: <20191112133554.u7mbv6h2bzecvakl@ti.com>
-References: <20191104193140.31145-1-bparrot@ti.com>
- <20191104193140.31145-13-bparrot@ti.com>
- <20191106085709.GB6253@valkosipuli.retiisi.org.uk>
- <20191106205839.3zxqdttlqmrzghla@ti.com>
- <20191112132811.p6xgmxp7co6ugkkn@ti.com>
+        Tue, 12 Nov 2019 08:33:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50364 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725865AbfKLNdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 08:33:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 64721B213;
+        Tue, 12 Nov 2019 13:33:49 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id AC6B71E4AD2; Tue, 12 Nov 2019 14:33:48 +0100 (CET)
+Date:   Tue, 12 Nov 2019 14:33:48 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     ira.weiny@intel.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
+Message-ID: <20191112133348.GJ1241@quack2.suse.cz>
+References: <20191112003452.4756-1-ira.weiny@intel.com>
+ <20191112003452.4756-3-ira.weiny@intel.com>
+ <20191111164320.80f814161469055b14f27045@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112132811.p6xgmxp7co6ugkkn@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191111164320.80f814161469055b14f27045@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Benoit Parrot <bparrot@ti.com> wrote on Tue [2019-Nov-12 07:28:11 -0600]:
-> Benoit Parrot <bparrot@ti.com> wrote on Wed [2019-Nov-06 14:58:39 -0600]:
-> > Sakari Ailus <sakari.ailus@iki.fi> wrote on Wed [2019-Nov-06 10:57:09 +0200]:
-> > > Hi Benoit,
-> > > 
-> > > On Mon, Nov 04, 2019 at 01:31:32PM -0600, Benoit Parrot wrote:
-> > > 
-> > > ...
-> > > 
-> > > > +static struct cal_data dra76x_cal_data = {
-> > > 
-> > > const?
-> > 
-> > Hmm, most likely.
+On Mon 11-11-19 16:43:20, Andrew Morton wrote:
+> On Mon, 11 Nov 2019 16:34:52 -0800 ira.weiny@intel.com wrote:
 > 
-> Well, it turns out they cannot be constified because we need to be able to
-> update the register offset fir the regmap used for the syscon object.
-> So I'll leave them as is.
-
-Oh I guess you meant just the "static struct cal_data" ones?
-I tried making the other one into const but obviously that didn't work.
-
-But just constifying "static struct cal_data" appears to compiled just
-fine.
-
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > swap_activate() and swap_deactivate() have nothing to do with
+> > address spaces.  We want to eventually make the address space operations
+> > dynamic to switch inode flags on the fly.
 > 
-> Benoit
-> 
-> > 
-> > > 
-> > > > +	.csi2_phy_core = dra76x_cal_csi_phy,
-> > > > +	.num_csi2_phy = ARRAY_SIZE(dra76x_cal_csi_phy),
-> > > > +
-> > > 
-> > > This newline seems extra.
-> > > 
-> > > > +	.flags = 0,
-> > > 
-> > > And flags will be zero in any case, as one more struct members are assigned
-> > > to.
-> > 
-> > Is this guaranteed or compiler version dependent?
-> > 
-> > > 
-> > > > +};
-> > > 
-> > > -- 
-> > > Regards,
-> > > 
-> > > Sakari Ailus
+> What does this mean?
+
+See my reply to Christoph [1]. Ira wants to make switching inodes between
+DAX and non-DAX mode work which means switching also
+address_space_operations pointer in the mapping. 
+
+								Honza
+
+[1] lore.kernel.org/r/20191112133055.GI1241@quack2.suse.cz
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
