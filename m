@@ -2,149 +2,243 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32093C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229D4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39792067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E860621925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FEEmTpeN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e34MTtlq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKLR1Y (ORCPT
+        id S1727229AbfKLR1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:27:24 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52413 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfKLR1X (ORCPT
+        Tue, 12 Nov 2019 12:27:49 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52901 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726738AbfKLR1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:27:23 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l1so4144350wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:27:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ezsIhe1GNm16S3puMGIvpD+Jx3sztUBZzOXQophYY/I=;
-        b=FEEmTpeN5ZrY/aT3U30uEYPNrZUpIU5QYesr9P9pwYf1kIjxFGwV0paE4lMJopATyv
-         GMqtHWLx/SEAyZ77ZTrXVAh+wQIRiGjWy6vBSD79bSsQR3JIexq2b47Xzr/40CgxOQf9
-         7OTTamegj8Trj3dx8oEco9asudnNA3GiCEQ0SPyGcrv/xIV0xj5CRr4S/oKusox7WASI
-         C6RwsPK/ecuBbJALdvH8KhYdryyYhoYl5Tf2iMRmZbQ893rKH1ujCeuzT9vDrGHAG7A9
-         N/MKSSTMbQT4eseL8Bu9/8Xsuti8BgR7rWRg0+Fcjt75/RqQilxjA9Te1XskUKMBxFwi
-         TJSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ezsIhe1GNm16S3puMGIvpD+Jx3sztUBZzOXQophYY/I=;
-        b=ga7/pNCLGSf2gT0VIDPlriuwk8dsUzHvUhNENznMl25cW8m8iq/mDoWcasx0GsekMe
-         iGzXmOB9lKRfjfzdNVDhKDMP2tzzgLelCZeSwAfj9YXHGImASjrwPkW/LcEbToViUIL4
-         4+h5oFZE8r48cjP1kxjmGgCK4RSZBws2Dr6DkD1M9SCnh9pysF5BVhY3lqXwJV9qa/9U
-         KjuJkSlktZ5IX/nZV9lPWIwa47m04xXKdzhfeEoNHbsKIzy/VaR4msvu20yRqJPowQ18
-         WMgnEcDBuONbfbICRQdNmLvBR1fZ8TUB2VMjjA1XtbDBd4CzlywTFwGQzUg68heEO2HQ
-         9Vsw==
-X-Gm-Message-State: APjAAAWH431VoPvNUMyQju7XcofC98oQqsudCfuYmQ5ufK6gU2M1H0vG
-        6Rs0zNuHtpv3EoBTd6w2UOYW568z2LS4Y7BSsPX2bw==
-X-Google-Smtp-Source: APXvYqx3GzimoXXoGTO0Xrn1zwJE2StYKvhT/datgS/GsVK/cWi04Z5uHyYhEKpC1lmJuO5/nl4Xkq4mRlU2JVMemIs=
-X-Received: by 2002:a1c:8055:: with SMTP id b82mr5217623wmd.176.1573579640763;
- Tue, 12 Nov 2019 09:27:20 -0800 (PST)
-MIME-Version: 1.0
-References: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
- <20191112154144.GC168812@cmpxchg.org> <20191112154844.GD168812@cmpxchg.org> <20191112160821.GE168812@cmpxchg.org>
-In-Reply-To: <20191112160821.GE168812@cmpxchg.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 12 Nov 2019 09:27:09 -0800
-Message-ID: <CAJuCfpGoJdv9JFh8WgQE0WmuwMx1P4GLLfn85N5_vuCzqvoOBw@mail.gmail.com>
-Subject: Re: [PATCH] psi:fix divide by zero in psi_update_stats
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     tim <xiejingfeng@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 12 Nov 2019 12:27:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573579667;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n3GFD3RmbDO5HoBdK1kzcUxkVYIC30uFtwy9Gv2par0=;
+        b=e34MTtlqWbufI2q0Qt0CCn7x6h2jcnwNern5rHXHAPRrfuOrzScd5aoExnXrv2e07UpuPG
+        iMZZZ8L+6ySW8fZjWpKIt7jDOqbF4zIe+unsuMwFLPhntm4Zc7EpHgzJtDHQSslyfcFDLC
+        8+qnkTVL5aJhvSqdaNuZ2nWMzSJv0W0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-__xu1CdDNUuR6B77fHh4Kw-1; Tue, 12 Nov 2019 12:27:43 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49E8410B889E;
+        Tue, 12 Nov 2019 17:27:42 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0462F60923;
+        Tue, 12 Nov 2019 17:27:40 +0000 (UTC)
+Subject: Re: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+References: <20191107190628.22667-1-longman@redhat.com>
+ <20191107195441.GF11823@bombadil.infradead.org>
+ <ed46ef09-7766-eb80-a4ad-4c72d8dba188@oracle.com>
+ <20191108020456.sulyjskhq3s5zcaa@linux-p48b>
+ <ea057d15-5205-9992-af95-b2727df577c4@oracle.com>
+ <5059733e-95aa-2c9e-6f5d-4f45f6a130b3@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <fd29a337-c067-ebf6-4be2-3b6e2f703ac4@redhat.com>
+Date:   Tue, 12 Nov 2019 12:27:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <5059733e-95aa-2c9e-6f5d-4f45f6a130b3@oracle.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: __xu1CdDNUuR6B77fHh4Kw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 8:08 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+On 11/8/19 8:47 PM, Mike Kravetz wrote:
+> On 11/8/19 11:10 AM, Mike Kravetz wrote:
+>> On 11/7/19 6:04 PM, Davidlohr Bueso wrote:
+>>> On Thu, 07 Nov 2019, Mike Kravetz wrote:
+>>>
+>>>> Note that huge_pmd_share now increments the page count with the semaph=
+ore
+>>>> held just in read mode.  It is OK to do increments in parallel without
+>>>> synchronization.  However, we don't want anyone else changing the coun=
+t
+>>>> while that check in huge_pmd_unshare is happening.  Hence, the need fo=
+r
+>>>> taking the semaphore in write mode.
+>>> This would be a nice addition to the changelog methinks.
+>> Last night I remembered there is one place where we currently take
+>> i_mmap_rwsem in read mode and potentially call huge_pmd_unshare.  That
+>> is in try_to_unmap_one.  Yes, there is a potential race here today.
+> Actually there is no race there today.  Callers to huge_pmd_unshare
+> hold the page table lock.  So, this synchronizes those unshare calls
+> from  page migration and page poisoning.
 >
-> On Tue, Nov 12, 2019 at 10:48:46AM -0500, Johannes Weiner wrote:
-> > On Tue, Nov 12, 2019 at 10:41:46AM -0500, Johannes Weiner wrote:
-> > > On Fri, Nov 08, 2019 at 03:33:24PM +0800, tim wrote:
-> > > > In psi_update_stats, it is possible that period has value like
-> > > > 0xXXXXXXXX00000000 where the lower 32 bit is 0, then it calls div_u64 which
-> > > > truncates u64 period to u32, results in zero divisor.
-> > > > Use div64_u64() instead of div_u64()  if the divisor is u64 to avoid
-> > > > truncation to 32-bit on 64-bit platforms.
-> > > >
-> > > > Signed-off-by: xiejingfeng <xiejingfeng@linux.alibaba.com>
-> > >
-> > > This is legit. When we stop the periodic averaging worker due to an
-> > > idle CPU, the period after restart can be much longer than the ~4 sec
-> > > in the lower 32 bits. See the missed_periods logic in update_averages.
-> >
-> > Argh, that's not right. Of course I notice right after hitting send.
-> >
-> > missed_periods are subtracted out of the difference between now and
-> > the last update, so period should be not much bigger than 2s.
-> >
-> > Something else is going on here.
+>> But that race is somewhat contained as you need two threads doing some
+>> combination of page migration and page poisoning to race.  This change
+>> now allows migration or poisoning to race with page fault.  I would
+>> really prefer if we do not open up the race window in this manner.
+> But, we do open a race window by changing huge_pmd_share to take the
+> i_mmap_rwsem in read mode as in the original patch. =20
 >
-> Tim, does this happen right after boot? I wonder if it's because we're
-> not initializing avg_last_update, and the initial delta between the
-> last update (0) and the first scheduled update (sched_clock() + 2s)
-> ends up bigger than 4 seconds somehow. Later on, the delta between the
-> last and the scheduled update should always be ~2s. But for that to
-> happen, it would require a pretty slow boot, or a sched_clock() that
-> does not start at 0.
+> Here is the additional code needed to take the semaphore in write mode
+> for the huge_pmd_unshare calls via try_to_unmap_one.  We would need to
+> combine this with Longman's patch.  Please take a look and provide feedba=
+ck.
+> Some of the changes are subtle, especially the exception for MAP_PRIVATE
+> mappings, but I tried to add sufficient comments.
 >
-> Tim, if you have a coredump, can you extract the value of the other
-> variables printed in the following patch?
+> From 21735818a520705c8573b8d543b8f91aa187bd5d Mon Sep 17 00:00:00 2001
+> From: Mike Kravetz <mike.kravetz@oracle.com>
+> Date: Fri, 8 Nov 2019 17:25:37 -0800
+> Subject: [PATCH] Changes needed for taking i_mmap_rwsem in write mode bef=
+ore
+>  call to huge_pmd_unshare in try_to_unmap_one.
 >
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 84af7aa158bf..1b6836d23091 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -374,6 +374,10 @@ static u64 update_averages(struct psi_group *group, u64 now)
->          */
->         avg_next_update = expires + ((1 + missed_periods) * psi_period);
->         period = now - (group->avg_last_update + (missed_periods * psi_period));
-> +
-> +       WARN(period >> 32, "period=%ld now=%ld expires=%ld last=%ld missed=%ld\n",
-> +            period, now, expires, group->avg_last_update, missed_periods);
-> +
->         group->avg_last_update = now;
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  mm/hugetlb.c        |  9 ++++++++-
+>  mm/memory-failure.c | 28 +++++++++++++++++++++++++++-
+>  mm/migrate.c        | 27 +++++++++++++++++++++++++--
+>  3 files changed, 60 insertions(+), 4 deletions(-)
 >
->         for (s = 0; s < NR_PSI_STATES - 1; s++) {
->
-> And we may need something like this to make the tick initialization
-> more robust regardless of the reported bug here:
->
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 84af7aa158bf..ce8f6748678a 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -185,7 +185,8 @@ static void group_init(struct psi_group *group)
->
->         for_each_possible_cpu(cpu)
->                 seqcount_init(&per_cpu_ptr(group->pcpu, cpu)->seq);
-> -       group->avg_next_update = sched_clock() + psi_period;
-> +       group->avg_last_update = sched_clock();
-> +       group->avg_next_update = group->avg_last_update + psi_period;
->         INIT_DELAYED_WORK(&group->avgs_work, psi_avgs_work);
->         mutex_init(&group->avgs_lock);
->         /* Init trigger-related members */
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index f78891f92765..73d9136549a5 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -4883,7 +4883,14 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsign=
+ed long addr, pud_t *pud)
+>   * indicated by page_count > 1, unmap is achieved by clearing pud and
+>   * decrementing the ref count. If count =3D=3D 1, the pte page is not sh=
+ared.
+>   *
+> - * called with page table lock held.
+> + * Must be called while holding page table lock.
+> + * In general, the caller should also hold the i_mmap_rwsem in write mod=
+e.
+> + * This is to prevent races with page faults calling huge_pmd_share whic=
+h
+> + * will not be holding the page table lock, but will be holding i_mmap_r=
+wsem
+> + * in read mode.  It is possible to call without holding i_mmap_rwsem in
+> + * write mode if the caller KNOWS the page table is associated with a pr=
+ivate
+> + * mapping.  This is because private mappings can not share PMDs and can
+> + * not race with huge_pmd_share calls during page faults.
 
-Both fixes for group_init() and window_update() make sense to me.
-window_update() division would be reproducible because win->size is
-set during trigger setup and does not change afterwards. Since
-userspace defines the window size in usecs this would require doing
-some math and finding a value that yields zeros in 32 LSBs after
-conversion into nsecs (see: t->win.size = window_us * NSEC_PER_USEC in
-psi_trigger_create()). Haven't seen this issue because all my test
-cases (1, 2, 10secs) had non-zero LSBs.
+So the page table lock here is the huge_pte_lock(). Right? In
+huge_pmd_share(), the pte lock has to be taken before one can share it.
+So would you mind explaining where exactly is the race?
+
+Thanks,
+Longman
+
+>   *
+>   * returns: 1 successfully unmapped a shared pte page
+>   *=09    0 the underlying pte page is not shared, or it is the last user
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 3151c87dff73..8f52b22cf71b 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -1030,7 +1030,33 @@ static bool hwpoison_user_mappings(struct page *p,=
+ unsigned long pfn,
+>  =09if (kill)
+>  =09=09collect_procs(hpage, &tokill, flags & MF_ACTION_REQUIRED);
+> =20
+> -=09unmap_success =3D try_to_unmap(hpage, ttu);
+> +=09if (!PageHuge(hpage)) {
+> +=09=09unmap_success =3D try_to_unmap(hpage, ttu);
+> +=09} else {
+> +=09=09mapping =3D page_mapping(hpage);
+> +=09=09if (mapping) {
+> +=09=09=09/*
+> +=09=09=09 * For hugetlb pages, try_to_unmap could potentially
+> +=09=09=09 * call huge_pmd_unshare.  Because of this, take
+> +=09=09=09 * semaphore in write mode here and set TTU_RMAP_LOCKED
+> +=09=09=09 * to indicate we have taken the lock at this higher
+> +=09=09=09 * level.
+> +=09=09=09 */
+> +=09=09=09i_mmap_lock_write(mapping);
+> +=09=09=09unmap_success =3D try_to_unmap(hpage,
+> +=09=09=09=09=09=09=09ttu|TTU_RMAP_LOCKED);
+> +=09=09=09i_mmap_unlock_write(mapping);
+> +=09=09} else {
+> +=09=09=09/*
+> +=09=09=09 * !mapping implies a MAP_PRIVATE huge page mapping.
+> +=09=09=09 * Since PMDs will never be shared in a private
+> +=09=09=09 * mapping, it is safe to let huge_pmd_unshare be
+> +=09=09=09 * called with the semaphore in read mode.
+> +=09=09=09 */
+> +=09=09=09unmap_success =3D try_to_unmap(hpage, ttu);
+> +=09=09}
+> +=09}
+> +
+>  =09if (!unmap_success)
+>  =09=09pr_err("Memory failure: %#lx: failed to unmap page (mapcount=3D%d)=
+\n",
+>  =09=09       pfn, page_mapcount(hpage));
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 4fe45d1428c8..9cae5a4f1e48 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1333,8 +1333,31 @@ static int unmap_and_move_huge_page(new_page_t get=
+_new_page,
+>  =09=09goto put_anon;
+> =20
+>  =09if (page_mapped(hpage)) {
+> -=09=09try_to_unmap(hpage,
+> -=09=09=09TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
+> +=09=09struct address_space *mapping =3D page_mapping(hpage);
+> +
+> +=09=09if (mapping) {
+> +=09=09=09/*
+> +=09=09=09 * try_to_unmap could potentially call huge_pmd_unshare.
+> +=09=09=09 * Because of this, take semaphore in write mode here
+> +=09=09=09 * and set TTU_RMAP_LOCKED to indicate we have taken
+> +=09=09=09 * the lock at this higher level.
+> +=09=09=09 */
+> +=09=09=09i_mmap_lock_write(mapping);
+> +=09=09=09try_to_unmap(hpage,
+> +=09=09=09=09TTU_MIGRATION|TTU_IGNORE_MLOCK|
+> +=09=09=09=09TTU_IGNORE_ACCESS|TTU_RMAP_LOCKED);
+> +=09=09=09i_mmap_unlock_write(mapping);
+> +=09=09} else {
+> +=09=09=09/*
+> +=09=09=09 * !mapping implies a MAP_PRIVATE huge page mapping.
+> +=09=09=09 * Since PMDs will never be shared in a private
+> +=09=09=09 * mapping, it is safe to let huge_pmd_unshare be
+> +=09=09=09 * called with the semaphore in read mode.
+> +=09=09=09 */
+> +=09=09=09try_to_unmap(hpage,
+> +=09=09=09=09TTU_MIGRATION|TTU_IGNORE_MLOCK|
+> +=09=09=09=09TTU_IGNORE_ACCESS);
+> +=09=09}
+>  =09=09page_was_mapped =3D 1;
+>  =09}
+> =20
+
+
