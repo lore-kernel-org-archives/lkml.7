@@ -2,247 +2,312 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B075FC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17C4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1AC2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:58:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nzvBKT4d"
+	by mail.kernel.org (Postfix) with ESMTP id AE5E5214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfKLK6g (ORCPT
+        id S1726983AbfKLK7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:58:36 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37815 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfKLK6f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:58:35 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b17so2453314wmj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 02:58:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=O+4xsItenBrGg3gmgsiOonk74WScwaRcW0EVJaUE4nM=;
-        b=nzvBKT4daXXNd0mSQaL3X0MixdV+M4+iJsvSG3tg6vwq1H7dEF5tQOX6zsseNYANjX
-         6kMaQcq7not6B6+yyYuQh6MR9OFTFyk6tDNVxwRK5gZUKswbs1kWqB2PRtavMcRdt04v
-         u8ye2X5Dc1gTSIjFNFJ1xHhsTU/MEAd4wF5Gx5Zk1QEDpEQfIEuSCDD4jOzFxnPiO47o
-         4BdNfqjD21LolE+wffWgPRIMOJWquRBLWUSwxsKbDO9/ZKmNQQKiXdVdWNrx7jKWjTz7
-         DWvzoxNVrrwc68hwsXqDYiBEjfFfMmrFwUCH8MU2OA3E1A4RPbGZEDK05aL6BhLgkoW1
-         m8zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=O+4xsItenBrGg3gmgsiOonk74WScwaRcW0EVJaUE4nM=;
-        b=JmRnY2mFumGnlmmMaTYLTzTEKkMwteG4282MP3MlPqmRm+6R3ZntyWY+LcFV2lxwjS
-         L4g1ncpXjt3F2kkn8Ii9FfigI4ZnqancUEF7i0oMspQiMBCRLxVs8hCz7FbJY+TL3a79
-         o2ZyIuuMum/4drgrGMXMJ5Kdmy12t1UDlgRndjYTjP5rAygDOaPYMZCZ26Ew3BOz6Pan
-         jRElMb0prqH4rfPdYPHjUY3xGcgktANvR54dr+Xhqy91G+KJN9JmjpX9+GuH7SxXtYXr
-         5QqMXHK+5d9yfkYEIJaJtrIsQCEGSYqg7lBBfGcs4amPG0gKwDmq4NjahX78E7hjpVmy
-         B3YA==
-X-Gm-Message-State: APjAAAV1co/o8w7LaDRrYzQ0rQ8Lqt2mTjnYAonm1lecz2U+U0eHO9VW
-        HoKhkKIQjJqTXuD+kCetug3Kig==
-X-Google-Smtp-Source: APXvYqzZpWVd6uL0HdF6ijognCcoddQ3ekSAK19YNrQ6ja6f3/tDTMUlaf6G9S5MSBinXxhn7gH89Q==
-X-Received: by 2002:a1c:a4c5:: with SMTP id n188mr3332074wme.30.1573556312811;
-        Tue, 12 Nov 2019 02:58:32 -0800 (PST)
-Received: from linaro.org ([2a01:e0a:f:6020:e45f:4180:5590:a312])
-        by smtp.gmail.com with ESMTPSA id t24sm44535148wra.55.2019.11.12.02.58.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 02:58:31 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:58:30 +0100
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
-Message-ID: <20191112105830.GA8765@linaro.org>
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <1571405198-27570-5-git-send-email-vincent.guittot@linaro.org>
- <20191030154534.GJ3016@techsingularity.net>
- <CAKfTPtB_6kBq69E=-YFuon6fg21CxHneMpncpbLcPGk6uoVcMQ@mail.gmail.com>
- <20191031101544.GP3016@techsingularity.net>
- <CAKfTPtByO7oLQZxF_+-FxZ9u1JhO24-rujW3j-QDqr+PFDOQ=Q@mail.gmail.com>
- <20191031114020.GQ3016@techsingularity.net>
- <20191108163501.GA26528@linaro.org>
- <20191108183730.GU3016@techsingularity.net>
+        Tue, 12 Nov 2019 05:59:43 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34170 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725887AbfKLK7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 05:59:43 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DE34055BB9C1E56D07BD;
+        Tue, 12 Nov 2019 18:59:39 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 12 Nov 2019
+ 18:59:37 +0800
+Date:   Tue, 12 Nov 2019 10:59:30 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     Wolfram Sang <wsa@the-dreams.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2] i2c: use void pointers for supplying data for reads
+ and writes
+Message-ID: <20191112105930.000059e3@huawei.com>
+In-Reply-To: <20191112005826.GA96746@dtor-ws>
+References: <20191112005826.GA96746@dtor-ws>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108183730.GU3016@techsingularity.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le Friday 08 Nov 2019 à 18:37:30 (+0000), Mel Gorman a écrit :
-> On Fri, Nov 08, 2019 at 05:35:01PM +0100, Vincent Guittot wrote:
-> > > Fair enough, netperf hits the corner case where it does not work but
-> > > that is also true without your series.
-> > 
-> > I run mmtest/netperf test on my setup. It's a mix of small positive or
-> > negative differences (see below)
-> > 
-> > <SNIP>
-> >
-> > netperf-tcp
-> >                                5.3-rc2                5.3-rc2
-> >                                    tip               +rwk+fix
-> > Hmean     64         871.30 (   0.00%)      860.90 *  -1.19%*
-> > Hmean     128       1689.39 (   0.00%)     1679.31 *  -0.60%*
-> > Hmean     256       3199.59 (   0.00%)     3241.98 *   1.32%*
-> > Hmean     1024      9390.47 (   0.00%)     9268.47 *  -1.30%*
-> > Hmean     2048     13373.95 (   0.00%)    13395.61 *   0.16%*
-> > Hmean     3312     16701.30 (   0.00%)    17165.96 *   2.78%*
-> > Hmean     4096     15831.03 (   0.00%)    15544.66 *  -1.81%*
-> > Hmean     8192     19720.01 (   0.00%)    20188.60 *   2.38%*
-> > Hmean     16384    23925.90 (   0.00%)    23914.50 *  -0.05%*
-> > Stddev    64           7.38 (   0.00%)        4.23 (  42.67%)
-> > Stddev    128         11.62 (   0.00%)       10.13 (  12.85%)
-> > Stddev    256         34.33 (   0.00%)        7.94 (  76.88%)
-> > Stddev    1024        35.61 (   0.00%)      116.34 (-226.66%)
-> > Stddev    2048       285.30 (   0.00%)       80.50 (  71.78%)
-> > Stddev    3312       304.74 (   0.00%)      449.08 ( -47.36%)
-> > Stddev    4096       668.11 (   0.00%)      569.30 (  14.79%)
-> > Stddev    8192       733.23 (   0.00%)      944.38 ( -28.80%)
-> > Stddev    16384      553.03 (   0.00%)      299.44 (  45.86%)
-> > 
-> >                      5.3-rc2     5.3-rc2
-> >                          tip    +rwk+fix
-> > Duration User         138.05      140.95
-> > Duration System      1210.60     1208.45
-> > Duration Elapsed     1352.86     1352.90
-> > 
-> 
-> This roughly matches what I've seen. The interesting part to me for
-> netperf is the next section of the report that reports the locality of
-> numa hints. With netperf on a 2-socket machine, it's generally around
-> 50% as the client/server are pulled apart. Because netperf is not
-> heavily memory bound, it doesn't have much impact on the overall
-> performance but it's good at catching the cross-node migrations.
+On Mon, 11 Nov 2019 16:58:26 -0800
+Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-Ok. I didn't want to make my reply too long. I have put them below for 
-the netperf-tcp results:
-                                        5.3-rc2        5.3-rc2
-                                            tip      +rwk+fix
-Ops NUMA alloc hit                  60077762.00    60387907.00
-Ops NUMA alloc miss                        0.00           0.00
-Ops NUMA interleave hit                    0.00           0.00
-Ops NUMA alloc local                60077571.00    60387798.00
-Ops NUMA base-page range updates        5948.00       17223.00
-Ops NUMA PTE updates                    5948.00       17223.00
-Ops NUMA PMD updates                       0.00           0.00
-Ops NUMA hint faults                    4639.00       14050.00
-Ops NUMA hint local faults %            2073.00        6515.00
-Ops NUMA hint local percent               44.69          46.37
-Ops NUMA pages migrated                 1528.00        4306.00
-Ops AutoNUMA cost                         23.27          70.45
+> There is no need to force users of i2c_master_send()/i2c_master_recv()
+> and other i2c read/write bulk data API to cast everything into u8
+> pointers.  While everything can be considered byte stream, the drivers
+> are usually work with more structured data.
+> 
+> Let's switch the APIs to accept [const] void pointers to cut amount of
+> casting needed.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+> 
+> Changes in v2:
+> 
+> - adjusted max1363 to the new i2c_master_send/recv signatures
+> 
+> I sent the previous version of this patch 04/01/17 and kbuild promptly
+> noticed that it broke max1363. And it took me only 2.5 years to get back
+> to it ;)
+> 
+> Given that it is only one IIO driver that is affected I hope it can go
+> through Wolfram's tree and we do not need to go through staged API
+> rollout.
+> 
+>  drivers/i2c/i2c-core-base.c  |  2 +-
+>  drivers/i2c/i2c-core-smbus.c | 16 ++++++++--------
+>  drivers/iio/adc/max1363.c    | 14 ++++++++------
+>  include/linux/i2c.h          | 28 +++++++++++++++-------------
+>  4 files changed, 32 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 6a5183cffdfc3..aeb4201ef55e4 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -2065,7 +2065,7 @@ EXPORT_SYMBOL(i2c_transfer);
+>   *
+>   * Returns negative errno, or else the number of bytes transferred.
+>   */
+> -int i2c_transfer_buffer_flags(const struct i2c_client *client, char *buf,
+> +int i2c_transfer_buffer_flags(const struct i2c_client *client, void *buf,
+>  			      int count, u16 flags)
+>  {
+>  	int ret;
+> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+> index 3ac426a8ab5ab..4172f8e647f81 100644
+> --- a/drivers/i2c/i2c-core-smbus.c
+> +++ b/drivers/i2c/i2c-core-smbus.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/i2c-smbus.h>
+>  #include <linux/slab.h>
+> +#include <asm/unaligned.h>
+>  
+>  #include "i2c-core.h"
+>  
+> @@ -213,7 +214,7 @@ EXPORT_SYMBOL(i2c_smbus_write_word_data);
+>   * mechanism (I2C_M_RECV_LEN) which may not be implemented.
+>   */
+>  s32 i2c_smbus_read_block_data(const struct i2c_client *client, u8 command,
+> -			      u8 *values)
+> +			      void *values)
+>  {
+>  	union i2c_smbus_data data;
+>  	int status;
+> @@ -240,7 +241,7 @@ EXPORT_SYMBOL(i2c_smbus_read_block_data);
+>   * else zero on success.
+>   */
+>  s32 i2c_smbus_write_block_data(const struct i2c_client *client, u8 command,
+> -			       u8 length, const u8 *values)
+> +			       u8 length, const void *values)
+>  {
+>  	union i2c_smbus_data data;
+>  
+> @@ -256,7 +257,7 @@ EXPORT_SYMBOL(i2c_smbus_write_block_data);
+>  
+>  /* Returns the number of read bytes */
+>  s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client, u8 command,
+> -				  u8 length, u8 *values)
+> +				  u8 length, void *values)
+>  {
+>  	union i2c_smbus_data data;
+>  	int status;
+> @@ -276,7 +277,7 @@ s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client, u8 command,
+>  EXPORT_SYMBOL(i2c_smbus_read_i2c_block_data);
+>  
+>  s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client, u8 command,
+> -				   u8 length, const u8 *values)
+> +				   u8 length, const void *values)
+>  {
+>  	union i2c_smbus_data data;
+>  
+> @@ -628,7 +629,7 @@ EXPORT_SYMBOL(__i2c_smbus_xfer);
+>   * transfer.
+>   */
+>  s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
+> -					      u8 command, u8 length, u8 *values)
+> +					      u8 command, u8 length, void *values)
+>  {
+>  	u8 i = 0;
+>  	int status;
+> @@ -647,8 +648,7 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
+>  			status = i2c_smbus_read_word_data(client, command + i);
+>  			if (status < 0)
+>  				return status;
+> -			values[i] = status & 0xff;
+> -			values[i + 1] = status >> 8;
+> +			put_unaligned_le16(status, values + i);
+>  			i += 2;
+>  		}
+>  	}
+> @@ -657,7 +657,7 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
+>  		status = i2c_smbus_read_byte_data(client, command + i);
+>  		if (status < 0)
+>  			return status;
+> -		values[i] = status;
+> +		*(u8 *)(values + i) = status;
+>  		i++;
+>  	}
+>  
+> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+> index 5c2cc61b666e7..48ed76a0e83d4 100644
+> --- a/drivers/iio/adc/max1363.c
+> +++ b/drivers/iio/adc/max1363.c
+> @@ -182,9 +182,9 @@ struct max1363_state {
+>  	struct regulator		*vref;
+>  	u32				vref_uv;
+>  	int				(*send)(const struct i2c_client *client,
+> -						const char *buf, int count);
+> +						const void *buf, int count);
+>  	int				(*recv)(const struct i2c_client *client,
+> -						char *buf, int count);
+> +						void *buf, int count);
+>  };
+>  
+>  #define MAX1363_MODE_SINGLE(_num, _mask) {				\
+> @@ -310,27 +310,29 @@ static const struct max1363_mode
+>  	return NULL;
+>  }
+>  
+> -static int max1363_smbus_send(const struct i2c_client *client, const char *buf,
+> +static int max1363_smbus_send(const struct i2c_client *client, const void *buf,
+>  		int count)
+>  {
+> +	const u8 *data = buf;
+>  	int i, err;
+>  
+>  	for (i = err = 0; err == 0 && i < count; ++i)
+> -		err = i2c_smbus_write_byte(client, buf[i]);
+> +		err = i2c_smbus_write_byte(client, data[i]);
+>  
+>  	return err ? err : count;
+>  }
+>  
+> -static int max1363_smbus_recv(const struct i2c_client *client, char *buf,
+> +static int max1363_smbus_recv(const struct i2c_client *client, void *buf,
+>  		int count)
+>  {
+> +	u8 *data = buf;
+>  	int i, ret;
+>  
+>  	for (i = 0; i < count; ++i) {
+>  		ret = i2c_smbus_read_byte(client);
+>  		if (ret < 0)
+>  			return ret;
+> -		buf[i] = ret;
+> +		data[i] = ret;
+>  	}
+>  
+>  	return count;
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index aaf57d9b41dbb..64cf92e191aa8 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -51,7 +51,7 @@ struct property_entry;
+>   * @count must be be less than 64k since msg.len is u16.
+>   */
+>  extern int i2c_transfer_buffer_flags(const struct i2c_client *client,
+> -				     char *buf, int count, u16 flags);
+> +				     void *buf, int count, u16 flags);
+>  
+>  /**
+>   * i2c_master_recv - issue a single I2C message in master receive mode
+> @@ -62,7 +62,7 @@ extern int i2c_transfer_buffer_flags(const struct i2c_client *client,
+>   * Returns negative errno, or else the number of bytes read.
+>   */
+>  static inline int i2c_master_recv(const struct i2c_client *client,
+> -				  char *buf, int count)
+> +				  void *buf, int count)
+>  {
+>  	return i2c_transfer_buffer_flags(client, buf, count, I2C_M_RD);
+>  };
+> @@ -77,7 +77,7 @@ static inline int i2c_master_recv(const struct i2c_client *client,
+>   * Returns negative errno, or else the number of bytes read.
+>   */
+>  static inline int i2c_master_recv_dmasafe(const struct i2c_client *client,
+> -					  char *buf, int count)
+> +					  void *buf, int count)
+>  {
+>  	return i2c_transfer_buffer_flags(client, buf, count,
+>  					 I2C_M_RD | I2C_M_DMA_SAFE);
+> @@ -92,9 +92,10 @@ static inline int i2c_master_recv_dmasafe(const struct i2c_client *client,
+>   * Returns negative errno, or else the number of bytes written.
+>   */
+>  static inline int i2c_master_send(const struct i2c_client *client,
+> -				  const char *buf, int count)
+> +				  const void *buf, int count)
+>  {
+> -	return i2c_transfer_buffer_flags(client, (char *)buf, count, 0);
+> +	return i2c_transfer_buffer_flags(client, (void *)buf /* const cast */,
+> +					 count, 0);
+>  };
+>  
+>  /**
+> @@ -107,10 +108,10 @@ static inline int i2c_master_send(const struct i2c_client *client,
+>   * Returns negative errno, or else the number of bytes written.
+>   */
+>  static inline int i2c_master_send_dmasafe(const struct i2c_client *client,
+> -					  const char *buf, int count)
+> +					  const void *buf, int count)
+>  {
+> -	return i2c_transfer_buffer_flags(client, (char *)buf, count,
+> -					 I2C_M_DMA_SAFE);
+> +	return i2c_transfer_buffer_flags(client, (void *)buf /* const cast */,
+> +					 count, I2C_M_DMA_SAFE);
+>  };
+>  
+>  /* Transfer num messages.
+> @@ -166,18 +167,19 @@ i2c_smbus_write_word_swapped(const struct i2c_client *client,
+>  
+>  /* Returns the number of read bytes */
+>  extern s32 i2c_smbus_read_block_data(const struct i2c_client *client,
+> -				     u8 command, u8 *values);
+> +				     u8 command, void *values);
+>  extern s32 i2c_smbus_write_block_data(const struct i2c_client *client,
+> -				      u8 command, u8 length, const u8 *values);
+> +				      u8 command, u8 length,
+> +				      const void *values);
+>  /* Returns the number of read bytes */
+>  extern s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client,
+> -					 u8 command, u8 length, u8 *values);
+> +					 u8 command, u8 length, void *values);
+>  extern s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client,
+>  					  u8 command, u8 length,
+> -					  const u8 *values);
+> +					  const void *values);
+>  extern s32
+>  i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
+> -					  u8 command, u8 length, u8 *values);
+> +					  u8 command, u8 length, void *values);
+>  int i2c_get_device_id(const struct i2c_client *client,
+>  		      struct i2c_device_identity *id);
+>  #endif /* I2C */
 
 
->
-> > > 
-> > > > I agree that additional patches are probably needed to improve load
-> > > > balance at NUMA level and I expect that this rework will make it
-> > > > simpler to add.
-> > > > I just wanted to get the output of some real use cases before defining
-> > > > more numa level specific conditions. Some want to spread on there numa
-> > > > nodes but other want to keep everything together. The preferred node
-> > > > and fbq_classify_group was the only sensible metrics to me when he
-> > > > wrote this patchset but changes can be added if they make sense.
-> > > > 
-> > > 
-> > > That's fair. While it was possible to address the case before your
-> > > series, it was a hatchet job. If the changelog simply notes that some
-> > > special casing may still be required for SD_NUMA but it's outside the
-> > > scope of the series, then I'd be happy. At least there is a good chance
-> > > then if there is follow-up work that it won't be interpreted as an
-> > > attempt to reintroduce hacky heuristics.
-> > >
-> > 
-> > Would the additional comment make sense for you about work to be done
-> > for SD_NUMA ?
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 0ad4b21..7e4cb65 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -6960,11 +6960,34 @@ enum fbq_type { regular, remote, all };
-> >   * group. see update_sd_pick_busiest().
-> >   */
-> >  enum group_type {
-> > +	/*
-> > +	 * The group has spare capacity that can be used to process more work.
-> > +	 */
-> >  	group_has_spare = 0,
-> > +	/*
-> > +	 * The group is fully used and the tasks don't compete for more CPU
-> > +	 * cycles. Nevetheless, some tasks might wait before running.
-> > +	 */
-> >  	group_fully_busy,
-> > +	/*
-> > +	 * One task doesn't fit with CPU's capacity and must be migrated on a
-> > +	 * more powerful CPU.
-> > +	 */
-> >  	group_misfit_task,
-> > +	/*
-> > +	 * One local CPU with higher capacity is available and task should be
-> > +	 * migrated on it instead on current CPU.
-> > +	 */
-> >  	group_asym_packing,
-> > +	/*
-> > +	 * The tasks affinity prevents the scheduler to balance the load across
-> > +	 * the system.
-> > +	 */
-> >  	group_imbalanced,
-> > +	/*
-> > +	 * The CPU is overloaded and can't provide expected CPU cycles to all
-> > +	 * tasks.
-> > +	 */
-> >  	group_overloaded
-> >  };
-> 
-> Looks good.
-> 
-> >  
-> > @@ -8563,7 +8586,11 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
-> >  
-> >  	/*
-> >  	 * Try to use spare capacity of local group without overloading it or
-> > -	 * emptying busiest
-> > +	 * emptying busiest.
-> > +	 * XXX Spreading tasks across numa nodes is not always the best policy
-> > +	 * and special cares should be taken for SD_NUMA domain level before
-> > +	 * spreading the tasks. For now, load_balance() fully relies on
-> > +	 * NUMA_BALANCING and fbq_classify_group/rq to overide the decision.
-> >  	 */
-> >  	if (local->group_type == group_has_spare) {
-> >  		if (busiest->group_type > group_fully_busy) {
-> 
-> Perfect. Any patch in that are can then update the comment and it
-> should be semi-obvious to the next reviewer that it's expected.
-> 
-> Thanks Vincent.
-> 
-> -- 
-> Mel Gorman
-> SUSE Labs
