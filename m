@@ -2,147 +2,130 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6BCC17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022D0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E3521925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C997F21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jfAjV9pe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfKLPj4 (ORCPT
+        id S1727262AbfKLPkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:39:56 -0500
-Received: from muru.com ([72.249.23.125]:41856 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfKLPj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:39:56 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 58E0B80F3;
-        Tue, 12 Nov 2019 15:40:31 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 07:39:51 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [Patch v2 1/3] ARM: dts: am43xx: add support for clkout1 clock
-Message-ID: <20191112153951.GJ5610@atomide.com>
-References: <20191112142929.23058-1-bparrot@ti.com>
- <20191112142929.23058-2-bparrot@ti.com>
+        Tue, 12 Nov 2019 10:40:35 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45010 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfKLPkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:40:35 -0500
+Received: by mail-lj1-f196.google.com with SMTP id g3so18286648ljl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:40:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zu0KReonp/Dvh814/aR49/dIUTQPkHFLFvLTh9BjBJU=;
+        b=jfAjV9pe3qHgAPYXC5bDWCM6SehVsqSrXaCyvKhOT+teEhUMll9b1VNsEeMotXM2fI
+         RX85n4pFKuzyrnSnd9lylg3PQuLfzIM1r6Juo28sJGwTM4u3hKhaWC6F3qDkZztXqfmq
+         06fB86V3nYiLkZFWvIgH4qFOHKeFDtNQqgPSH8sOLUasj09jjdiwJZ7dsCOw8A9VStFD
+         0ajLXfrCKcnhq4V3PNOCwbIa+4vWgABN4Abv0YIElqpFZB+XAHzA3my6B25btWKS140X
+         eD2M+ibGqnB4XtWq7R0ZjyT6XB7ERFqjNkjtlE+VWCGWFMfx5BWHUNTwONHLaYgt0Sjd
+         z76g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zu0KReonp/Dvh814/aR49/dIUTQPkHFLFvLTh9BjBJU=;
+        b=FDFytUtHOFSgBgSeuzMXEOxCXlx9YrEyBhoIo+2ZKNCucqPDcDSZwx/njib+kY1dxP
+         N9ThcidWD4+hBd9iZZ0dNUW+ItWTV1HtJnUsKkh3bF5+n1LjEFi0ivzgj0pebi10U+92
+         t/ugxu9yzJ3/yRizJ5XGe1GutTD8yotdytP0HZGLULLbIRlBZUxWCqSXWFjDrFCVrTzL
+         I3L+STWCAisxls26laPNrLttuGJClIYDa/yl1Pcy6GoPad1KIIwzZcVYhsY6ySwcDedi
+         1NSp2SnPU5+9k/JDYXHFrk4/IVChMR71l8XOREevgYOXvP4EBfmvZtR6kJ59O5+g2A4f
+         zkDA==
+X-Gm-Message-State: APjAAAVPQwTZN3uNZmIPA4ZpU3len0taplkFN52b+O6VSLFEOKlH7jYT
+        Eds5M2RWZH5hCRBuivF3Gf7oi5IaYIJxQ8RHqVgQ4A==
+X-Google-Smtp-Source: APXvYqwzurXFq2vYxkN+AxLmD0lXELsNpIBZBEVylzp+vmL5gLlTHMi3AZmeS0zcudig8jwrOU7gq49Oiu1uTq7CgpA=
+X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr6762612ljl.193.1573573231629;
+ Tue, 12 Nov 2019 07:40:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112142929.23058-2-bparrot@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-5-git-send-email-vincent.guittot@linaro.org>
+ <20191030154534.GJ3016@techsingularity.net> <CAKfTPtB_6kBq69E=-YFuon6fg21CxHneMpncpbLcPGk6uoVcMQ@mail.gmail.com>
+ <20191031101544.GP3016@techsingularity.net> <CAKfTPtByO7oLQZxF_+-FxZ9u1JhO24-rujW3j-QDqr+PFDOQ=Q@mail.gmail.com>
+ <20191031114020.GQ3016@techsingularity.net> <20191108163501.GA26528@linaro.org>
+ <20191108183730.GU3016@techsingularity.net> <20191112105830.GA8765@linaro.org>
+ <20191112150636.GX3016@techsingularity.net>
+In-Reply-To: <20191112150636.GX3016@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 12 Nov 2019 16:40:20 +0100
+Message-ID: <CAKfTPtCVdG1zcd4kyU4d+K_+VdW7TZn+RSDKt4Hk28B366NPOQ@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [191112 14:30]:
-> From: Tero Kristo <t-kristo@ti.com>
-> 
-> clkout1 clock node and its generation tree was missing. Add this based
-> on the data on TRM and PRCM functional spec.
-> 
-> commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
-> reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
-> clkout1 clock") which is needed for the ov2659 camera sensor clock
-> definition hence it is being re-applied here.
-> 
-> Note that because of the current dts node name dependency for mapping to
-> clock domain, we must still use "clkout1-*ck" naming instead of generic
-> "clock@" naming for the node. And because of this, it's probably best to
-> apply the dts node addition together along with the other clock changes.
-> 
-> Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Tested-by: Benoit Parrot <bparrot@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+On Tue, 12 Nov 2019 at 16:06, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Tue, Nov 12, 2019 at 11:58:30AM +0100, Vincent Guittot wrote:
+> > > This roughly matches what I've seen. The interesting part to me for
+> > > netperf is the next section of the report that reports the locality of
+> > > numa hints. With netperf on a 2-socket machine, it's generally around
+> > > 50% as the client/server are pulled apart. Because netperf is not
+> > > heavily memory bound, it doesn't have much impact on the overall
+> > > performance but it's good at catching the cross-node migrations.
+> >
+> > Ok. I didn't want to make my reply too long. I have put them below for
+> > the netperf-tcp results:
+> >                                         5.3-rc2        5.3-rc2
+> >                                             tip      +rwk+fix
+> > Ops NUMA alloc hit                  60077762.00    60387907.00
+> > Ops NUMA alloc miss                        0.00           0.00
+> > Ops NUMA interleave hit                    0.00           0.00
+> > Ops NUMA alloc local                60077571.00    60387798.00
+> > Ops NUMA base-page range updates        5948.00       17223.00
+> > Ops NUMA PTE updates                    5948.00       17223.00
+> > Ops NUMA PMD updates                       0.00           0.00
+> > Ops NUMA hint faults                    4639.00       14050.00
+> > Ops NUMA hint local faults %            2073.00        6515.00
+> > Ops NUMA hint local percent               44.69          46.37
+> > Ops NUMA pages migrated                 1528.00        4306.00
+> > Ops AutoNUMA cost                         23.27          70.45
+> >
+>
+> Thanks -- it was "NUMA hint local percent" I was interested in and the
+> 46.37% local hinting faults is likely indicative of the client/server
+> being load balanced across SD_NUMA domains without NUMA Balancing being
+> aggressive enough to fix it. At least I know I am not just seriously
+> unlucky or testing magical machines!
 
-Hmm I don't think I did any work on this, the above should be:
+I agree that the collaboration between load balanced across SD_NUMA
+level and NUMA balancing should be improved
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+It's also interesting to notice that the patchset doesn't seem to do
+worse than the baseline: 46.37% vs 44.69%
 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> index 091356f2a8c1..c726cd8dbdf1 100644
-> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> @@ -704,6 +704,60 @@
->  		ti,bit-shift = <8>;
->  		reg = <0x2a48>;
->  	};
-> +
-> +	clkout1_osc_div_ck: clkout1-osc-div-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,divider-clock";
-> +		clocks = <&sys_clkin_ck>;
-> +		ti,bit-shift = <20>;
-> +		ti,max-div = <4>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,mux-clock";
-> +		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-> +			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-> +			 <&dpll_mpu_m2_ck>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,divider-clock";
-> +		clocks = <&clkout1_src2_mux_ck>;
-> +		ti,bit-shift = <4>;
-> +		ti,max-div = <8>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,divider-clock";
-> +		clocks = <&clkout1_src2_pre_div_ck>;
-> +		ti,bit-shift = <8>;
-> +		ti,max-div = <32>;
-> +		ti,index-power-of-two;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_mux_ck: clkout1-mux-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,mux-clock";
-> +		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
-> +			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
-> +		ti,bit-shift = <16>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_ck: clkout1-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&clkout1_mux_ck>;
-> +		ti,bit-shift = <23>;
-> +		reg = <0x4100>;
-> +	};
->  };
->  
->  &prcm {
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Vincent
+
+>
+> --
+> Mel Gorman
+> SUSE Labs
