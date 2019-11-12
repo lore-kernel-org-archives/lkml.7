@@ -2,985 +2,189 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEA1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CC2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD3221872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB6521925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tz9g7F7R"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="j4QoyoAz";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="PQkRx3mX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKLUCd (ORCPT
+        id S1727132AbfKLUDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:02:33 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:35522 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfKLUCc (ORCPT
+        Tue, 12 Nov 2019 15:03:12 -0500
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:38388 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726008AbfKLUDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:02:32 -0500
-Received: by mail-qv1-f68.google.com with SMTP id y18so6938779qve.2;
-        Tue, 12 Nov 2019 12:02:31 -0800 (PST)
+        Tue, 12 Nov 2019 15:03:11 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1B479C03A5;
+        Tue, 12 Nov 2019 20:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1573588991; bh=zK9Q6HFL83ySXBTsD3GpXA1NE5l0MqCWkh5WT8iAP6o=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=j4QoyoAzcjou+RlQYLUWwG7FHnPxwOVsapAxKsDMTOUNepFAfLL0R2BTXxnHO+DlW
+         KYylu4CCMextZ7Rg4+HjOrrxmCKUT2yGeO9BD3+HeFe4bGY2+gJM9ZliUg9YbMORuQ
+         bWDyUiiPBJQ8Z8oYTWIMBxTSzpe5wvkky4WUD+G9vBS+e9amcxNUpFwiXs8atVQ+ma
+         oi3340goUwwvg/ubj6xO7vXdRU9L+PsFV0cy2a9NXBLwPYuMIcE63BNXjMKeNdlDH5
+         KD0zJwqbyK7tjammo896IpntsbhlYEUqOXuDudDFIzPTKJ4Duhzpg76C7jrH9fnjXj
+         devDLAnta2yTQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 2A7DFA0066;
+        Tue, 12 Nov 2019 20:03:08 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 12 Nov 2019 12:03:08 -0800
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 12 Nov 2019 12:03:08 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VEDGAgpM2xau8uNlQ0YGKWYwYmCFjVPSy5LMem3C3w38YuxFdhMijsghL1nvwOHYW+8LpgrdzR2U61eV2aPVB5SZnBpnz5XGoc47EDjZOUK9UpnFTI7mzTgdkRVsaxRvUHirgvT/h8qeDaTAbRTOlkyMkbeBFaIUAZNvA5EzqaXMd5DduOzUj3yR2lcE6fopco0sCKIlijShs/8vcbdnRqkU4RpmGt7p7yD8xCFSyNE+sffv2M9eIS9h+pxgQC3q33dTv3dyE8YrNHwcKrqSlXuwSC/YUyoH3i8n7YCxq0PGVLJOaq83e6C28ZOOGXe2RJt9/jKW5amwV4IQrOilkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zK9Q6HFL83ySXBTsD3GpXA1NE5l0MqCWkh5WT8iAP6o=;
+ b=l58tYD4pGG0/3NqztBRAsJJR8xuZyXtPA94BXFD7p9e78Z15gnUQoxOqUz+dR0xHLEJ/Fv4u4r1gm7lMXbFHd/e+7VppmDsxO087RiTFwg2vDn1HANZk4P5+Wi4SC9cKZxly4pVp33jnpGxpOW8KgNDl4TFa9MSm2bWFL3r5crkGg9FMfqbWSvz8AOgltiT/7YqWp5TvVI8YTrSpNR251H1bRunPLMn2BXQGRS11tULfR265icuPkkSXatUPw0ytlRTQvB5wdHEHOcavn8+KGBlBeVwEGxbmd7FWlkf/4cxnNaPi9AjoCo4O2xOwHYfyglPCSBE8nOitQnlFXUZjgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=egk/lZEiggqdaMVw9z9rRydBjA23p+M+ZjlETBQpQrk=;
-        b=tz9g7F7RqcND9vyX6EzyDR8WugOqdRrkF7AVhZb4HwbLwDnFLJfPDOF4UcMw+eDIZb
-         dUS51FO/n7D8FcnyBged0ERRayG+H8b2B9azzy1P+ctNMXVPFICVEQ/xpboWRtNfYe8m
-         f5FKdDhO18C97xMLrWtERqUkyUupQbzJJWnVoMNOj2ea7CNs6SwMb76ZE5y5SiCgapgE
-         Qk19BYtsIcGNmtnau2yrqftyWgKpm3EqDOf6Q9ldWHA4MOBM+hSgNs4tjqSEakEZ9lCW
-         yZfTvMnx/ej5SpqNQg8MJAmECEuYCGOBnckx8uST+7S8V5A5hOXEG1FtA1cNAkcTIrTy
-         HS8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=egk/lZEiggqdaMVw9z9rRydBjA23p+M+ZjlETBQpQrk=;
-        b=ErlqqozKvVkmmOBOIATh0/ykfv/knZY6dyKvnQQllw+mHP2yFN0By5V2nTmjei1roZ
-         SfscuMQdGqQQPKiWyyXefRRh7BeZcPLIaW7IOdntbgkZ3DaFFZLCBPwUsi1Jl7lyIipk
-         ZoRrs0eu5UArAQJvAcQKI9NH9nW3sAPyw+QjzUUQ3pAME//1i0k4BT5aFlznVU3VAZdN
-         sd/D66byOZfxJ3torxAy8eXm+WoG/R501HJ45hdKNV1uxhNwu7ewCyvsfJUbPbx2q+ka
-         vWAiPJx071J2DeT31GkL2Nom3/jRtQGXs1eOhy0h4fsgK6BpT7gzXUoeLu/06c7YJsat
-         FdHw==
-X-Gm-Message-State: APjAAAUTS0eXe6YS3O+Y4fLRkK8ZFrEHYA6Jy9rpUWNfSsQhBPflKxx+
-        lX6368yx2/sZK306S76QW6I=
-X-Google-Smtp-Source: APXvYqyrVK51DI9dxFfCpGG8F3pvrfh5PXiWnNHvylqefb0EIKgrbpDgR3garl1JMO+bA5rH1OFZqg==
-X-Received: by 2002:ad4:55ce:: with SMTP id bt14mr29737332qvb.131.1573588950357;
-        Tue, 12 Nov 2019 12:02:30 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id c21sm11295103qtg.61.2019.11.12.12.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 12:02:29 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     mchehab@kernel.org
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] media: bcm3510.c: Fix checkpatch.pl errors
-Date:   Tue, 12 Nov 2019 16:55:04 -0300
-Message-Id: <20191112195504.36952-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.0
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zK9Q6HFL83ySXBTsD3GpXA1NE5l0MqCWkh5WT8iAP6o=;
+ b=PQkRx3mXba1VUu07emqgr31+j0ZKEmj2GJRPsYM3cKEe+5om8eiEVCziBI/xlNg0+FjPzfAu2R8YBILlYVqbIuj6RfhpG/ftGZk9jdNCHNaZniEyZ8SSC/IN0QcYEf82KOWCWs8XK6KfR4Q8EG43USeyNA4uymdFHIPKTOmZW20=
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com (10.172.78.22) by
+ CY4PR1201MB0039.namprd12.prod.outlook.com (10.172.79.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Tue, 12 Nov 2019 20:03:06 +0000
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::cdbe:cf8c:dfb7:68d3]) by CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::cdbe:cf8c:dfb7:68d3%4]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 20:03:06 +0000
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Jun Li <lijun.kernel@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+CC:     Tim <elatllat@gmail.com>, Felipe Balbi <balbi@kernel.org>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dongjin Kim <tobetter@gmail.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling SS instances in park mode
+Thread-Topic: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling SS instances in park mode
+Thread-Index: AQHVgpo3wnUWK/PjlkCI40UJSqKuHadotvaAgByUcgCAABZzgIACCBMAgAAfDQCAAJo0gA==
+Date:   Tue, 12 Nov 2019 20:03:05 +0000
+Message-ID: <45212db9-e366-2669-5c0a-3c5bd06287f6@synopsys.com>
+References: <20191014141718.22603-1-narmstrong@baylibre.com>
+ <20191014141718.22603-2-narmstrong@baylibre.com>
+ <20191023201141.GA21235@bogus>
+ <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
+ <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com>
+ <c32007f5-88b9-45c5-b542-b1dc4dbc76ea@baylibre.com>
+ <CAKgpwJVHF6Ytdt9kq5SwiixFDLym_UPG51aXag1nVVay0pzofQ@mail.gmail.com>
+In-Reply-To: <CAKgpwJVHF6Ytdt9kq5SwiixFDLym_UPG51aXag1nVVay0pzofQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thinhn@synopsys.com; 
+x-originating-ip: [149.117.75.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: afcbffa1-8383-4206-e196-08d767ab5517
+x-ms-traffictypediagnostic: CY4PR1201MB0039:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB00399323EE8E606B071EB37EAA770@CY4PR1201MB0039.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(39860400002)(376002)(366004)(189003)(199004)(66946007)(66476007)(6246003)(8936002)(2906002)(81156014)(229853002)(6486002)(15650500001)(316002)(81166006)(99286004)(66446008)(64756008)(76116006)(91956017)(6116002)(6436002)(110136005)(54906003)(3846002)(66556008)(8676002)(5660300002)(66066001)(966005)(31686004)(6636002)(478600001)(14454004)(53546011)(4326008)(76176011)(71190400001)(6512007)(71200400001)(14444005)(256004)(25786009)(86362001)(11346002)(446003)(6306002)(36756003)(31696002)(476003)(486006)(186003)(7736002)(102836004)(26005)(2616005)(6506007)(305945005)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0039;H:CY4PR1201MB0037.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /TQJ/nyKj5OX+K3ZJ6mXNqadk/4w9oA7I8cpmOwTur95j0QJ8OLYouKnq1vL1drXFxW24fj7Hvn38qG5GSnOozhck8R+3hn4qpvu8yCOvElv75A2f3tUJhN3NO14xwMAO1qNm5iqbyOk+qSCbv619D5KNGunvlk0D5rGqM+VhCVaJQPjujyVwJn+DeMV8qNgFdSjUqUDc54fMfhay3z1bBhy2cYcW//ZMk3QyKx4odYuImngHY6EzNG/wXC6Eube/NO1qtHny4HCyBX8HFKNFIwgW3ehvEm0ZvuyPOfOnuaOj4LECJ1LcKox4HYItOerGDkSQdYWXLM7h2W5PXQDhq1OUm6Cf889qPgz9LANPc0RPerToQUZBl6zMzEl0SCP2bZynqMbTZ6zZfgVV+PDcQFeXAlFdsFG+UumM1UcgbfO9AOX3As17NyJ3XKTNewfGovG0rDMAxzXBtteyU0zZiE1mZnutRafF6iGlp+FR+I=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0AB26A2159416647A439552D6B4ADD6C@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: afcbffa1-8383-4206-e196-08d767ab5517
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 20:03:05.8772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gxiSWHRY+gh67gUL0CtW5EG7OCWOunjzU+ArqSgQVzJfgG83qmrwD2dafGRxmUhMNDOZeoLNtOlWrjXtBJ25tQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0039
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-
-This patch fixes errors reported by checkpatch.pl such as:
-
-ERROR: space required after that ',' (ctx:VxV)
-+	if ((ret = bcm3510_writeB(st,0xa6,hab)) < 0)
- 	                                 ^
-
-ERROR: do not use assignment in if condition
-+	if ((ret = bcm3510_writeB(st,0xa6,hab)) < 0)
-
-Most warnings were also taken care of.
-
-Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
----
- drivers/media/dvb-frontends/bcm3510.c | 448 ++++++++++++++++----------
- 1 file changed, 270 insertions(+), 178 deletions(-)
-
-diff --git a/drivers/media/dvb-frontends/bcm3510.c b/drivers/media/dvb-frontends/bcm3510.c
-index e92542b92d34..1b12d0e24edf 100644
---- a/drivers/media/dvb-frontends/bcm3510.c
-+++ b/drivers/media/dvb-frontends/bcm3510.c
-@@ -49,8 +49,8 @@
- 
- struct bcm3510_state {
- 
--	struct i2c_adapter* i2c;
--	const struct bcm3510_config* config;
-+	struct i2c_adapter *i2c;
-+	const struct bcm3510_config *config;
- 	struct dvb_frontend frontend;
- 
- 	/* demodulator private data */
-@@ -67,31 +67,37 @@ static int debug;
- module_param(debug, int, 0644);
- MODULE_PARM_DESC(debug, "set debugging level (1=info,2=i2c (|-able)).");
- 
--#define dprintk(level,x...) if (level & debug) printk(x)
--#define dbufout(b,l,m) {\
--	    int i; \
--	    for (i = 0; i < l; i++) \
--		m("%02x ",b[i]); \
-+#define dprintk(level, x...) if (level & debug) printk(KERN_DEBUG x)
-+#define dbufout(b, l, m) {\
-+	int i; \
-+	for (i = 0; i < l; i++) \
-+		m("%02x ", b[i]); \
- }
--#define deb_info(args...) dprintk(0x01,args)
--#define deb_i2c(args...)  dprintk(0x02,args)
--#define deb_hab(args...)  dprintk(0x04,args)
-+#define deb_info(args...) dprintk(0x01, args)
-+#define deb_i2c(args...)  dprintk(0x02, args)
-+#define deb_hab(args...)  dprintk(0x04, args)
- 
- /* transfer functions */
--static int bcm3510_writebytes (struct bcm3510_state *state, u8 reg, u8 *buf, u8 len)
-+static int bcm3510_writebytes(struct bcm3510_state *state,
-+						      u8 reg,
-+						      u8 *buf,
-+						      u8 len)
- {
- 	u8 b[256];
- 	int err;
--	struct i2c_msg msg = { .addr = state->config->demod_address, .flags = 0, .buf = b, .len = len + 1 };
-+	struct i2c_msg msg = { .addr = state->config->demod_address,
-+						   .flags = 0,
-+						   .buf = b,
-+						   .len = len + 1 };
- 
- 	b[0] = reg;
--	memcpy(&b[1],buf,len);
-+	memcpy(&b[1], buf, len);
- 
--	deb_i2c("i2c wr %02x: ",reg);
--	dbufout(buf,len,deb_i2c);
-+	deb_i2c("i2c wr %02x: ", reg);
-+	dbufout(buf, len, deb_i2c);
- 	deb_i2c("\n");
--
--	if ((err = i2c_transfer (state->i2c, &msg, 1)) != 1) {
-+	err = i2c_transfer(state->i2c, &msg, 1);
-+	if (err != 1) {
- 
- 		deb_info("%s: i2c write error (addr %02x, reg %02x, err == %i)\n",
- 			__func__, state->config->demod_address, reg,  err);
-@@ -101,7 +107,10 @@ static int bcm3510_writebytes (struct bcm3510_state *state, u8 reg, u8 *buf, u8
- 	return 0;
- }
- 
--static int bcm3510_readbytes (struct bcm3510_state *state, u8 reg, u8 *buf, u8 len)
-+static int bcm3510_readbytes(struct bcm3510_state *state,
-+							 u8 reg,
-+							 u8 *buf,
-+							 u8 len)
- {
- 	struct i2c_msg msg[] = {
- 		{ .addr = state->config->demod_address, .flags = 0,        .buf = &reg, .len = 1 },
-@@ -109,42 +118,51 @@ static int bcm3510_readbytes (struct bcm3510_state *state, u8 reg, u8 *buf, u8 l
- 	};
- 	int err;
- 
--	memset(buf,0,len);
-+	memset(buf, 0, len);
-+
-+	err = i2c_transfer(state->i2c, msg, 2);
- 
--	if ((err = i2c_transfer (state->i2c, msg, 2)) != 2) {
-+	if (err != 2) {
- 		deb_info("%s: i2c read error (addr %02x, reg %02x, err == %i)\n",
- 			__func__, state->config->demod_address, reg,  err);
- 		return -EREMOTEIO;
- 	}
--	deb_i2c("i2c rd %02x: ",reg);
--	dbufout(buf,len,deb_i2c);
-+
-+	deb_i2c("i2c rd %02x: ", reg);
-+	dbufout(buf, len, deb_i2c);
- 	deb_i2c("\n");
- 
- 	return 0;
- }
- 
--static int bcm3510_writeB(struct bcm3510_state *state, u8 reg, bcm3510_register_value v)
-+static int bcm3510_writeB(struct bcm3510_state *state,
-+						  u8 reg,
-+						  bcm3510_register_value v)
- {
--	return bcm3510_writebytes(state,reg,&v.raw,1);
-+	return bcm3510_writebytes(state, reg, &v.raw, 1);
- }
- 
--static int bcm3510_readB(struct bcm3510_state *state, u8 reg, bcm3510_register_value *v)
-+static int bcm3510_readB(struct bcm3510_state *state,
-+						 u8 reg,
-+						 bcm3510_register_value *v)
- {
--	return bcm3510_readbytes(state,reg,&v->raw,1);
-+	return bcm3510_readbytes(state, reg, &v->raw, 1);
- }
- 
- /* Host Access Buffer transfers */
- static int bcm3510_hab_get_response(struct bcm3510_state *st, u8 *buf, int len)
- {
- 	bcm3510_register_value v;
--	int ret,i;
-+	int ret, i;
- 
- 	v.HABADR_a6.HABADR = 0;
--	if ((ret = bcm3510_writeB(st,0xa6,v)) < 0)
-+	ret = bcm3510_writeB(st, 0xa6, v);
-+	if (ret < 0)
- 		return ret;
- 
- 	for (i = 0; i < len; i++) {
--		if ((ret = bcm3510_readB(st,0xa7,&v)) < 0)
-+		ret = bcm3510_readB(st, 0xa7, &v);
-+		if (ret < 0)
- 			return ret;
- 		buf[i] = v.HABDATA_a7;
- 	}
-@@ -153,37 +171,43 @@ static int bcm3510_hab_get_response(struct bcm3510_state *st, u8 *buf, int len)
- 
- static int bcm3510_hab_send_request(struct bcm3510_state *st, u8 *buf, int len)
- {
--	bcm3510_register_value v,hab;
--	int ret,i;
-+	bcm3510_register_value v, hab;
-+	int ret, i;
- 	unsigned long t;
--
- /* Check if any previous HAB request still needs to be serviced by the
-- * Acquisition Processor before sending new request */
--	if ((ret = bcm3510_readB(st,0xa8,&v)) < 0)
-+ * Acquisition Processor before sending new request
-+ */
-+	ret = bcm3510_readB(st, 0xa8, &v);
-+	if (ret < 0)
- 		return ret;
- 	if (v.HABSTAT_a8.HABR) {
- 		deb_info("HAB is running already - clearing it.\n");
- 		v.HABSTAT_a8.HABR = 0;
--		bcm3510_writeB(st,0xa8,v);
-+		bcm3510_writeB(st, 0xa8, v);
- //		return -EBUSY;
- 	}
- 
- /* Send the start HAB Address (automatically incremented after write of
-- * HABDATA) and write the HAB Data */
-+ * HABDATA) and write the HAB Data
-+ */
- 	hab.HABADR_a6.HABADR = 0;
--	if ((ret = bcm3510_writeB(st,0xa6,hab)) < 0)
-+	ret = bcm3510_writeB(st, 0xa6, hab);
-+	if (ret < 0)
- 		return ret;
- 
- 	for (i = 0; i < len; i++) {
- 		hab.HABDATA_a7 = buf[i];
--		if ((ret = bcm3510_writeB(st,0xa7,hab)) < 0)
-+		ret = bcm3510_writeB(st, 0xa7, hab);
-+		if (ret < 0)
- 			return ret;
- 	}
- 
- /* Set the HABR bit to indicate AP request in progress (LBHABR allows HABR to
-- * be written) */
-+ * be written)
-+ */
- 	v.raw = 0; v.HABSTAT_a8.HABR = 1; v.HABSTAT_a8.LDHABR = 1;
--	if ((ret = bcm3510_writeB(st,0xa8,v)) < 0)
-+	ret = bcm3510_writeB(st, 0xa8, v);
-+	if (ret < 0)
- 		return ret;
- 
- /* Polling method: Wait until the AP finishes processing the HAB request */
-@@ -191,7 +215,9 @@ static int bcm3510_hab_send_request(struct bcm3510_state *st, u8 *buf, int len)
- 	while (time_before(jiffies, t)) {
- 		deb_info("waiting for HAB to complete\n");
- 		msleep(10);
--		if ((ret = bcm3510_readB(st,0xa8,&v)) < 0)
-+
-+		ret = bcm3510_readB(st, 0xa8, &v);
-+		if (ret < 0)
- 			return ret;
- 
- 		if (!v.HABSTAT_a8.HABR)
-@@ -202,7 +228,9 @@ static int bcm3510_hab_send_request(struct bcm3510_state *st, u8 *buf, int len)
- 	return -ETIMEDOUT;
- }
- 
--static int bcm3510_do_hab_cmd(struct bcm3510_state *st, u8 cmd, u8 msgid, u8 *obuf, u8 olen, u8 *ibuf, u8 ilen)
-+static int bcm3510_do_hab_cmd(struct bcm3510_state *st,
-+			      u8 cmd, u8 msgid, u8 *obuf,
-+			      u8 olen, u8 *ibuf, u8 ilen)
- {
- 	u8 ob[MAX_XFER_SIZE], ib[MAX_XFER_SIZE];
- 	int ret = 0;
-@@ -219,10 +247,10 @@ static int bcm3510_do_hab_cmd(struct bcm3510_state *st, u8 cmd, u8 msgid, u8 *ob
- 
- 	ob[0] = cmd;
- 	ob[1] = msgid;
--	memcpy(&ob[2],obuf,olen);
-+	memcpy(&ob[2], obuf, olen);
- 
- 	deb_hab("hab snd: ");
--	dbufout(ob,olen+2,deb_hab);
-+	dbufout(ob, olen+2, deb_hab);
- 	deb_hab("\n");
- 
- 	if (mutex_lock_interruptible(&st->hab_mutex) < 0)
-@@ -233,47 +261,29 @@ static int bcm3510_do_hab_cmd(struct bcm3510_state *st, u8 cmd, u8 msgid, u8 *ob
- 		goto error;
- 
- 	deb_hab("hab get: ");
--	dbufout(ib,ilen+2,deb_hab);
-+	dbufout(ib, ilen+2, deb_hab);
- 	deb_hab("\n");
- 
--	memcpy(ibuf,&ib[2],ilen);
-+	memcpy(ibuf, &ib[2], ilen);
- error:
- 	mutex_unlock(&st->hab_mutex);
- 	return ret;
- }
- 
--#if 0
--/* not needed, we use a semaphore to prevent HAB races */
--static int bcm3510_is_ap_ready(struct bcm3510_state *st)
--{
--	bcm3510_register_value ap,hab;
--	int ret;
--
--	if ((ret = bcm3510_readB(st,0xa8,&hab)) < 0 ||
--		(ret = bcm3510_readB(st,0xa2,&ap) < 0))
--		return ret;
--
--	if (ap.APSTAT1_a2.RESET || ap.APSTAT1_a2.IDLE || ap.APSTAT1_a2.STOP || hab.HABSTAT_a8.HABR) {
--		deb_info("AP is busy\n");
--		return -EBUSY;
--	}
--
--	return 0;
--}
--#endif
--
- static int bcm3510_bert_reset(struct bcm3510_state *st)
- {
- 	bcm3510_register_value b;
- 	int ret;
- 
--	if ((ret = bcm3510_readB(st,0xfa,&b)) < 0)
-+	ret = bcm3510_readB(st, 0xfa, &b);
-+	if (ret < 0)
- 		return ret;
- 
--	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.RESYNC = 1; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1; bcm3510_writeB(st,0xfa,b);
-+	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st, 0xfa, b);
-+	b.BERCTL_fa.RESYNC = 1; bcm3510_writeB(st, 0xfa, b);
-+	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st, 0xfa, b);
-+	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1;
-+	bcm3510_writeB(st, 0xfa, b);
- 
- 	/* clear residual bit counter TODO  */
- 	return 0;
-@@ -281,17 +291,34 @@ static int bcm3510_bert_reset(struct bcm3510_state *st)
- 
- static int bcm3510_refresh_state(struct bcm3510_state *st)
- {
--	if (time_after(jiffies,st->next_status_check)) {
--		bcm3510_do_hab_cmd(st, CMD_STATUS, MSGID_STATUS1, NULL,0, (u8 *)&st->status1, sizeof(st->status1));
--		bcm3510_do_hab_cmd(st, CMD_STATUS, MSGID_STATUS2, NULL,0, (u8 *)&st->status2, sizeof(st->status2));
--		st->next_status_check = jiffies + (st->status_check_interval*HZ)/1000;
-+	if (time_after(jiffies, st->next_status_check)) {
-+
-+		bcm3510_do_hab_cmd(st,
-+				   CMD_STATUS,
-+				   MSGID_STATUS1,
-+				   NULL,
-+				   0,
-+				   (u8 *)&st->status1,
-+				   sizeof(st->status1));
-+
-+		bcm3510_do_hab_cmd(st,
-+				   CMD_STATUS,
-+				   MSGID_STATUS2,
-+				   NULL,
-+				   0,
-+				   (u8 *)&st->status2,
-+				   sizeof(st->status2));
-+
-+		st->next_status_check =
-+			jiffies + (st->status_check_interval*HZ)/1000;
- 	}
- 	return 0;
- }
- 
- static int bcm3510_read_status(struct dvb_frontend *fe, enum fe_status *status)
- {
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
-+
- 	bcm3510_refresh_state(st);
- 
- 	*status = 0;
-@@ -309,30 +336,36 @@ static int bcm3510_read_status(struct dvb_frontend *fe, enum fe_status *status)
- 	else /* more frequently checks if no lock has been achieved yet */
- 		st->status_check_interval = 500;
- 
--	deb_info("real_status: %02x\n",*status);
-+	deb_info("real_status: %02x\n", *status);
- 	return 0;
- }
- 
--static int bcm3510_read_ber(struct dvb_frontend* fe, u32* ber)
-+static int bcm3510_read_ber(struct dvb_frontend *fe, u32 *ber)
- {
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
-+
- 	bcm3510_refresh_state(st);
- 
--	*ber = (st->status2.LDBER0 << 16) | (st->status2.LDBER1 << 8) | st->status2.LDBER2;
-+	*ber = (st->status2.LDBER0 << 16) |
-+		   (st->status2.LDBER1 << 8) |
-+		   st->status2.LDBER2;
-+
- 	return 0;
- }
- 
--static int bcm3510_read_unc(struct dvb_frontend* fe, u32* unc)
-+static int bcm3510_read_unc(struct dvb_frontend *fe, u32 *unc)
- {
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
-+
- 	bcm3510_refresh_state(st);
- 	*unc = (st->status2.LDUERC0 << 8) | st->status2.LDUERC1;
-+
- 	return 0;
- }
- 
--static int bcm3510_read_signal_strength(struct dvb_frontend* fe, u16* strength)
-+static int bcm3510_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
- {
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
- 	s32 t;
- 
- 	bcm3510_refresh_state(st);
-@@ -350,9 +383,10 @@ static int bcm3510_read_signal_strength(struct dvb_frontend* fe, u16* strength)
- 	return 0;
- }
- 
--static int bcm3510_read_snr(struct dvb_frontend* fe, u16* snr)
-+static int bcm3510_read_snr(struct dvb_frontend *fe, u16 *snr)
- {
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
-+
- 	bcm3510_refresh_state(st);
- 
- 	*snr = st->status1.SNR_EST0*1000 + ((st->status1.SNR_EST1*1000) >> 8);
-@@ -360,21 +394,25 @@ static int bcm3510_read_snr(struct dvb_frontend* fe, u16* snr)
- }
- 
- /* tuner frontend programming */
--static int bcm3510_tuner_cmd(struct bcm3510_state* st,u8 bc, u16 n, u8 a)
-+static int bcm3510_tuner_cmd(struct bcm3510_state *st, u8 bc, u16 n, u8 a)
- {
- 	struct bcm3510_hab_cmd_tune c;
--	memset(&c,0,sizeof(struct bcm3510_hab_cmd_tune));
-+
-+	memset(&c, 0, sizeof(struct bcm3510_hab_cmd_tune));
- 
- /* I2C Mode disabled,  set 16 control / Data pairs */
- 	c.length = 0x10;
- 	c.clock_width = 0;
- /* CS1, CS0, DATA, CLK bits control the tuner RF_AGC_SEL pin is set to
-- * logic high (as Configuration) */
-+ * logic high (as Configuration)
-+ */
- 	c.misc = 0x10;
- /* Set duration of the initial state of TUNCTL = 3.34 micro Sec */
- 	c.TUNCTL_state = 0x40;
- 
--/* PRESCALER DIVIDE RATIO | BC1_2_3_4; (band switch), 1stosc REFERENCE COUNTER REF_S12 and REF_S11 */
-+/* PRESCALER DIVIDE RATIO | BC1_2_3_4; (band switch),
-+ * 1stosc REFERENCE COUNTER REF_S12 and REF_S11
-+ */
- 	c.ctl_dat[0].ctrl.size = BITS_8;
- 	c.ctl_dat[0].data      = 0x80 | bc;
- 
-@@ -446,18 +484,25 @@ static int bcm3510_tuner_cmd(struct bcm3510_state* st,u8 bc, u16 n, u8 a)
- 	c.ctl_dat[15].ctrl.cs1  = 1;
- 	c.ctl_dat[15].data      = 0x40;
- 
--	return bcm3510_do_hab_cmd(st,CMD_TUNE, MSGID_TUNE,(u8 *) &c,sizeof(c), NULL, 0);
-+	return bcm3510_do_hab_cmd(st,
-+				  CMD_TUNE,
-+				  MSGID_TUNE,
-+				  (u8 *) &c,
-+				  sizeof(c),
-+				  NULL,
-+				  0);
-+
- }
- 
--static int bcm3510_set_freq(struct bcm3510_state* st,u32 freq)
-+static int bcm3510_set_freq(struct bcm3510_state *st, u32 freq)
- {
--	u8 bc,a;
-+	u8 bc, a;
- 	u16 n;
--	s32 YIntercept,Tfvco1;
-+	s32 YIntercept, Tfvco1;
- 
- 	freq /= 1000;
- 
--	deb_info("%dkHz:",freq);
-+	deb_info("%dkHz:", freq);
- 	/* set Band Switch */
- 	if (freq <= 168000)
- 		bc = 0x1c;
-@@ -472,7 +517,7 @@ static int bcm3510_set_freq(struct bcm3510_state* st,u32 freq)
- 	} else if (freq >= 90000) {
- 		freq -= 90001;
- 		YIntercept = 15005;
--	} else if (freq >= 76000){
-+	} else if (freq >= 76000) {
- 		freq -= 76001;
- 		YIntercept = 14865;
- 	} else {
-@@ -487,7 +532,7 @@ static int bcm3510_set_freq(struct bcm3510_state* st,u32 freq)
- 
- 	deb_info(" BC1_2_3_4: %x, N: %x A: %x\n", bc, n, a);
- 	if (n >= 16 && n <= 2047)
--		return bcm3510_tuner_cmd(st,bc,n,a);
-+		return bcm3510_tuner_cmd(st, bc, n, a);
- 
- 	return -EINVAL;
- }
-@@ -495,51 +540,34 @@ static int bcm3510_set_freq(struct bcm3510_state* st,u32 freq)
- static int bcm3510_set_frontend(struct dvb_frontend *fe)
- {
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
- 	struct bcm3510_hab_cmd_ext_acquire cmd;
- 	struct bcm3510_hab_cmd_bert_control bert;
- 	int ret;
- 
--	memset(&cmd,0,sizeof(cmd));
-+	memset(&cmd, 0, sizeof(cmd));
- 	switch (c->modulation) {
--		case QAM_256:
-+	case QAM_256:
- 			cmd.ACQUIRE0.MODE = 0x1;
- 			cmd.ACQUIRE1.SYM_RATE = 0x1;
- 			cmd.ACQUIRE1.IF_FREQ = 0x1;
- 			break;
--		case QAM_64:
-+	case QAM_64:
- 			cmd.ACQUIRE0.MODE = 0x2;
- 			cmd.ACQUIRE1.SYM_RATE = 0x2;
- 			cmd.ACQUIRE1.IF_FREQ = 0x1;
- 			break;
--#if 0
--		case QAM_256:
--			cmd.ACQUIRE0.MODE = 0x3;
--			break;
--		case QAM_128:
--			cmd.ACQUIRE0.MODE = 0x4;
--			break;
--		case QAM_64:
--			cmd.ACQUIRE0.MODE = 0x5;
--			break;
--		case QAM_32:
--			cmd.ACQUIRE0.MODE = 0x6;
--			break;
--		case QAM_16:
--			cmd.ACQUIRE0.MODE = 0x7;
--			break;
--#endif
--		case VSB_8:
-+	case VSB_8:
- 			cmd.ACQUIRE0.MODE = 0x8;
- 			cmd.ACQUIRE1.SYM_RATE = 0x0;
- 			cmd.ACQUIRE1.IF_FREQ = 0x0;
- 			break;
--		case VSB_16:
-+	case VSB_16:
- 			cmd.ACQUIRE0.MODE = 0x9;
- 			cmd.ACQUIRE1.SYM_RATE = 0x0;
- 			cmd.ACQUIRE1.IF_FREQ = 0x0;
- 			break;
--		default:
-+	default:
- 			return -EINVAL;
- 	}
- 	cmd.ACQUIRE0.OFFSET = 0;
-@@ -558,13 +586,21 @@ static int bcm3510_set_frontend(struct dvb_frontend *fe)
- 			cmd.NTSC_OFFSET1;
- 		}
- 	} */
--	bcm3510_do_hab_cmd(st, CMD_ACQUIRE, MSGID_EXT_TUNER_ACQUIRE, (u8 *) &cmd, sizeof(cmd), NULL, 0);
-+	bcm3510_do_hab_cmd(st,
-+			   CMD_ACQUIRE,
-+			   MSGID_EXT_TUNER_ACQUIRE,
-+			   (u8 *) &cmd,
-+			   sizeof(cmd),
-+			   NULL,
-+			   0);
- 
- /* doing it with different MSGIDs, data book and source differs */
- 	bert.BE = 0;
- 	bert.unused = 0;
--	bcm3510_do_hab_cmd(st, CMD_STATE_CONTROL, MSGID_BERT_CONTROL, (u8 *) &bert, sizeof(bert), NULL, 0);
--	bcm3510_do_hab_cmd(st, CMD_STATE_CONTROL, MSGID_BERT_SET, (u8 *) &bert, sizeof(bert), NULL, 0);
-+	bcm3510_do_hab_cmd(st, CMD_STATE_CONTROL, MSGID_BERT_CONTROL,
-+			   (u8 *) &bert, sizeof(bert), NULL, 0);
-+	bcm3510_do_hab_cmd(st, CMD_STATE_CONTROL, MSGID_BERT_SET,
-+			   (u8 *) &bert, sizeof(bert), NULL, 0);
- 
- 	bcm3510_bert_reset(st);
- 
-@@ -572,8 +608,8 @@ static int bcm3510_set_frontend(struct dvb_frontend *fe)
- 	if (ret < 0)
- 		return ret;
- 
--	memset(&st->status1,0,sizeof(st->status1));
--	memset(&st->status2,0,sizeof(st->status2));
-+	memset(&st->status1, 0, sizeof(st->status1));
-+	memset(&st->status2, 0, sizeof(st->status2));
- 	st->status_check_interval = 500;
- 
- /* Give the AP some time */
-@@ -582,12 +618,14 @@ static int bcm3510_set_frontend(struct dvb_frontend *fe)
- 	return 0;
- }
- 
--static int bcm3510_sleep(struct dvb_frontend* fe)
-+static int bcm3510_sleep(struct dvb_frontend *fe)
- {
- 	return 0;
- }
- 
--static int bcm3510_get_tune_settings(struct dvb_frontend *fe, struct dvb_frontend_tune_settings *s)
-+static int
-+bcm3510_get_tune_settings(struct dvb_frontend *fe,
-+			  struct dvb_frontend_tune_settings *s)
- {
- 	s->min_delay_ms = 1000;
- 	s->step_size = 0;
-@@ -595,9 +633,10 @@ static int bcm3510_get_tune_settings(struct dvb_frontend *fe, struct dvb_fronten
- 	return 0;
- }
- 
--static void bcm3510_release(struct dvb_frontend* fe)
-+static void bcm3510_release(struct dvb_frontend *fe)
- {
--	struct bcm3510_state* state = fe->demodulator_priv;
-+	struct bcm3510_state *state = fe->demodulator_priv;
-+
- 	kfree(state);
- }
- 
-@@ -610,34 +649,45 @@ static void bcm3510_release(struct dvb_frontend* fe)
- static int bcm3510_write_ram(struct bcm3510_state *st, u16 addr, const u8 *b,
- 			     u16 len)
- {
--	int ret = 0,i;
--	bcm3510_register_value vH, vL,vD;
-+	int ret = 0, i;
-+	bcm3510_register_value vH, vL, vD;
- 
- 	vH.MADRH_a9 = addr >> 8;
- 	vL.MADRL_aa = addr;
--	if ((ret = bcm3510_writeB(st,0xa9,vH)) < 0) return ret;
--	if ((ret = bcm3510_writeB(st,0xaa,vL)) < 0) return ret;
-+
-+	ret = bcm3510_writeB(st, 0xa9, vH);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = bcm3510_writeB(st, 0xaa, vL);
-+	if (ret < 0)
-+		return ret;
- 
- 	for (i = 0; i < len; i++) {
- 		vD.MDATA_ab = b[i];
--		if ((ret = bcm3510_writeB(st,0xab,vD)) < 0)
-+		ret = bcm3510_writeB(st, 0xab, vD);
-+		if (ret < 0)
- 			return ret;
- 	}
- 
- 	return 0;
- }
- 
--static int bcm3510_download_firmware(struct dvb_frontend* fe)
-+static int bcm3510_download_firmware(struct dvb_frontend *fe)
- {
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
- 	const struct firmware *fw;
--	u16 addr,len;
-+	u16 addr, len;
- 	const u8 *b;
--	int ret,i;
-+	int ret, i;
- 
- 	deb_info("requesting firmware\n");
--	if ((ret = st->config->request_firmware(fe, &fw, BCM3510_DEFAULT_FIRMWARE)) < 0) {
--		err("could not load firmware (%s): %d",BCM3510_DEFAULT_FIRMWARE,ret);
-+
-+	ret = st->config->request_firmware(fe, &fw, BCM3510_DEFAULT_FIRMWARE);
-+	if (ret < 0) {
-+		err("could not load firmware (%s): %d",
-+		    BCM3510_DEFAULT_FIRMWARE,
-+		    ret);
- 		return ret;
- 	}
- 	deb_info("got firmware: %zu\n", fw->size);
-@@ -646,9 +696,11 @@ static int bcm3510_download_firmware(struct dvb_frontend* fe)
- 	for (i = 0; i < fw->size;) {
- 		addr = le16_to_cpu(*((__le16 *)&b[i]));
- 		len  = le16_to_cpu(*((__le16 *)&b[i+2]));
--		deb_info("firmware chunk, addr: 0x%04x, len: 0x%04x, total length: 0x%04zx\n",addr,len,fw->size);
--		if ((ret = bcm3510_write_ram(st,addr,&b[i+4],len)) < 0) {
--			err("firmware download failed: %d\n",ret);
-+		deb_info("firmware chunk, addr: 0x%04x, len: 0x%04x, total length: 0x%04zx\n",
-+			 addr, len, fw->size);
-+		ret = bcm3510_write_ram(st, addr, &b[i+4], len);
-+		if (ret < 0) {
-+			err("firmware download failed: %d\n", ret);
- 			return ret;
- 		}
- 		i += 4 + len;
-@@ -661,10 +713,15 @@ static int bcm3510_download_firmware(struct dvb_frontend* fe)
- static int bcm3510_check_firmware_version(struct bcm3510_state *st)
- {
- 	struct bcm3510_hab_cmd_get_version_info ver;
--	bcm3510_do_hab_cmd(st,CMD_GET_VERSION_INFO,MSGID_GET_VERSION_INFO,NULL,0,(u8*)&ver,sizeof(ver));
-+
-+	bcm3510_do_hab_cmd(st, CMD_GET_VERSION_INFO, MSGID_GET_VERSION_INFO,
-+			   NULL, 0, (u8*)&ver, sizeof(ver));
- 
- 	deb_info("Version information: 0x%02x 0x%02x 0x%02x 0x%02x\n",
--		ver.microcode_version, ver.script_version, ver.config_version, ver.demod_version);
-+		 ver.microcode_version,
-+		 ver.script_version,
-+		 ver.config_version,
-+		 ver.demod_version);
- 
- 	if (ver.script_version == BCM3510_DEF_SCRIPT_VERSION &&
- 		ver.config_version == BCM3510_DEF_CONFIG_VERSION &&
-@@ -682,14 +739,16 @@ static int bcm3510_reset(struct bcm3510_state *st)
- 	unsigned long  t;
- 	bcm3510_register_value v;
- 
--	bcm3510_readB(st,0xa0,&v); v.HCTL1_a0.RESET = 1;
--	if ((ret = bcm3510_writeB(st,0xa0,v)) < 0)
-+	bcm3510_readB(st, 0xa0, &v); v.HCTL1_a0.RESET = 1;
-+	ret = bcm3510_writeB(st, 0xa0, v);
-+	if (ret < 0)
- 		return ret;
- 
- 	t = jiffies + 3*HZ;
- 	while (time_before(jiffies, t)) {
- 		msleep(10);
--		if ((ret = bcm3510_readB(st,0xa2,&v)) < 0)
-+		ret = bcm3510_readB(st, 0xa2, &v);
-+		if (ret < 0)
- 			return ret;
- 
- 		if (v.APSTAT1_a2.RESET)
-@@ -706,13 +765,16 @@ static int bcm3510_clear_reset(struct bcm3510_state *st)
- 	unsigned long t;
- 
- 	v.raw = 0;
--	if ((ret = bcm3510_writeB(st,0xa0,v)) < 0)
-+
-+	ret = bcm3510_writeB(st, 0xa0, v);
-+	if (ret < 0)
- 		return ret;
- 
- 	t = jiffies + 3*HZ;
- 	while (time_before(jiffies, t)) {
- 		msleep(10);
--		if ((ret = bcm3510_readB(st,0xa2,&v)) < 0)
-+		ret = bcm3510_readB(st, 0xa2, &v);
-+		if (ret < 0)
- 			return ret;
- 
- 		/* verify that reset is cleared */
-@@ -728,8 +790,11 @@ static int bcm3510_init_cold(struct bcm3510_state *st)
- 	int ret;
- 	bcm3510_register_value v;
- 
--	/* read Acquisation Processor status register and check it is not in RUN mode */
--	if ((ret = bcm3510_readB(st,0xa2,&v)) < 0)
-+	/* read Acquisation Processor status register and check it is not in RUN
-+	 * mode
-+	 */
-+	ret = bcm3510_readB(st, 0xa2, &v);
-+	if (ret < 0)
- 		return ret;
- 	if (v.APSTAT1_a2.RUN) {
- 		deb_info("AP is already running - firmware already loaded.\n");
-@@ -737,13 +802,17 @@ static int bcm3510_init_cold(struct bcm3510_state *st)
- 	}
- 
- 	deb_info("reset?\n");
--	if ((ret = bcm3510_reset(st)) < 0)
-+
-+	ret = bcm3510_reset(st);
-+	if (ret < 0)
- 		return ret;
- 
- 	deb_info("tristate?\n");
- 	/* tri-state */
- 	v.TSTCTL_2e.CTL = 0;
--	if ((ret = bcm3510_writeB(st,0x2e,v)) < 0)
-+
-+	ret = bcm3510_writeB(st, 0x2e, v);
-+	if (ret < 0)
- 		return ret;
- 
- 	deb_info("firmware?\n");
-@@ -751,40 +820,48 @@ static int bcm3510_init_cold(struct bcm3510_state *st)
- 		(ret = bcm3510_clear_reset(st)) < 0)
- 		return ret;
- 
--	/* anything left here to Let the acquisition processor begin execution at program counter 0000 ??? */
-+	/* anything left here to Let the acquisition processor begin execution
-+	 * at program counter 0000 ???
-+	 */
- 
- 	return 0;
- }
- 
--static int bcm3510_init(struct dvb_frontend* fe)
-+static int bcm3510_init(struct dvb_frontend *fe)
- {
--	struct bcm3510_state* st = fe->demodulator_priv;
-+	struct bcm3510_state *st = fe->demodulator_priv;
-+
- 	bcm3510_register_value j;
- 	struct bcm3510_hab_cmd_set_agc c;
- 	int ret;
- 
--	if ((ret = bcm3510_readB(st,0xca,&j)) < 0)
-+	ret = bcm3510_readB(st, 0xca, &j);
-+	if (ret < 0)
- 		return ret;
- 
--	deb_info("JDEC: %02x\n",j.raw);
-+	deb_info("JDEC: %02x\n", j.raw);
- 
- 	switch (j.JDEC_ca.JDEC) {
--		case JDEC_WAIT_AT_RAM:
-+	case JDEC_WAIT_AT_RAM:
- 			deb_info("attempting to download firmware\n");
--			if ((ret = bcm3510_init_cold(st)) < 0)
-+			ret = bcm3510_init_cold(st);
-+			if (ret < 0)
- 				return ret;
- 			/* fall-through */
--		case JDEC_EEPROM_LOAD_WAIT:
-+	case JDEC_EEPROM_LOAD_WAIT:
- 			deb_info("firmware is loaded\n");
- 			bcm3510_check_firmware_version(st);
- 			break;
--		default:
-+	default:
- 			return -ENODEV;
- 	}
- 
--	memset(&c,0,1);
-+	memset(&c, 0, 1);
- 	c.SEL = 1;
--	bcm3510_do_hab_cmd(st,CMD_AUTO_PARAM,MSGID_SET_RF_AGC_SEL,(u8 *)&c,sizeof(c),NULL,0);
-+	bcm3510_do_hab_cmd(st,
-+			   CMD_AUTO_PARAM,
-+			   MSGID_SET_RF_AGC_SEL,
-+			   (u8 *)&c, sizeof(c), NULL, 0);
- 
- 	return 0;
- }
-@@ -792,10 +869,11 @@ static int bcm3510_init(struct dvb_frontend* fe)
- 
- static const struct dvb_frontend_ops bcm3510_ops;
- 
--struct dvb_frontend* bcm3510_attach(const struct bcm3510_config *config,
--				   struct i2c_adapter *i2c)
-+struct dvb_frontend *bcm3510_attach(const struct bcm3510_config *config,
-+				    struct i2c_adapter *i2c)
- {
--	struct bcm3510_state* state = NULL;
-+	struct bcm3510_state *state = NULL;
-+
- 	int ret;
- 	bcm3510_register_value v;
- 
-@@ -810,21 +888,28 @@ struct dvb_frontend* bcm3510_attach(const struct bcm3510_config *config,
- 	state->i2c = i2c;
- 
- 	/* create dvb_frontend */
--	memcpy(&state->frontend.ops, &bcm3510_ops, sizeof(struct dvb_frontend_ops));
-+	memcpy(&state->frontend.ops,
-+	       &bcm3510_ops,
-+	       sizeof(struct dvb_frontend_ops));
- 	state->frontend.demodulator_priv = state;
- 
- 	mutex_init(&state->hab_mutex);
- 
--	if ((ret = bcm3510_readB(state,0xe0,&v)) < 0)
-+	ret = bcm3510_readB(state, 0xe0, &v);
-+	if (ret < 0)
- 		goto error;
- 
--	deb_info("Revision: 0x%1x, Layer: 0x%1x.\n",v.REVID_e0.REV,v.REVID_e0.LAYER);
-+	deb_info("Revision: 0x%1x, Layer: 0x%1x.\n",
-+		 v.REVID_e0.REV,
-+		 v.REVID_e0.LAYER);
- 
- 	if ((v.REVID_e0.REV != 0x1 && v.REVID_e0.LAYER != 0xb) && /* cold */
- 		(v.REVID_e0.REV != 0x8 && v.REVID_e0.LAYER != 0x0))   /* warm */
- 		goto error;
- 
--	info("Revision: 0x%1x, Layer: 0x%1x.",v.REVID_e0.REV,v.REVID_e0.LAYER);
-+	info("Revision: 0x%1x, Layer: 0x%1x.",
-+	     v.REVID_e0.REV,
-+	     v.REVID_e0.LAYER);
- 
- 	bcm3510_reset(state);
- 
-@@ -842,11 +927,18 @@ static const struct dvb_frontend_ops bcm3510_ops = {
- 		.name = "Broadcom BCM3510 VSB/QAM frontend",
- 		.frequency_min_hz =  54 * MHz,
- 		.frequency_max_hz = 803 * MHz,
--		.caps =
--			FE_CAN_FEC_1_2 | FE_CAN_FEC_2_3 | FE_CAN_FEC_3_4 |
--			FE_CAN_FEC_5_6 | FE_CAN_FEC_7_8 | FE_CAN_FEC_AUTO |
--			FE_CAN_8VSB | FE_CAN_16VSB |
--			FE_CAN_QAM_16 | FE_CAN_QAM_64 | FE_CAN_QAM_128 | FE_CAN_QAM_256
-+		.caps =	FE_CAN_FEC_1_2 |
-+			FE_CAN_FEC_2_3 |
-+			FE_CAN_FEC_3_4 |
-+			FE_CAN_FEC_5_6 |
-+			FE_CAN_FEC_7_8 |
-+			FE_CAN_FEC_AUTO |
-+			FE_CAN_8VSB |
-+			FE_CAN_16VSB |
-+			FE_CAN_QAM_16 |
-+			FE_CAN_QAM_64 |
-+			FE_CAN_QAM_128 |
-+			FE_CAN_QAM_256
- 	},
- 
- 	.release = bcm3510_release,
--- 
-2.24.0
-
+SGksDQoNCkp1biBMaSB3cm90ZToNCj4gVGhpcyBidWcgZXhpc3RzIG9uIGFsbCBjdXJyZW50IHZl
+cnNpb25zIHBlciBpbmZvcm1hdGlvbiBJIGdvdCBmcm9tIFN5bm9wc3lzLg0KPiArIFRoaW5oIE5n
+dXllbiA8dGhpbmhuQHN5bm9wc3lzLmNvbT4uDQo+DQo+IExpIEp1bg0KDQpUaGUgR1VDVEwxLlBB
+UktNT0RFX0RJU0FCTEVfU1MgaXMgb25seSBhdmFpbGFibGUgaW4gZHdjX3VzYjMgY29udHJvbGxl
+ciANCnJ1bm5pbmcgaW4gaG9zdCBtb2RlLiBUaGlzIHNob3VsZCBub3QgYmUgc2V0IGZvciBvdGhl
+ciBJUHMuDQoNClRoaXMgY2FuIGJlIGRpc2FibGVkIGJ5IGRlZmF1bHQgYmFzZWQgb24gSVAsIGJ1
+dCBJIHJlY29tbWVuZCB0byBoYXZlIGEgDQpwcm9wZXJ0eSB0byBlbmFibGUgdGhpcyBmZWF0dXJl
+IGZvciBkZXZpY2VzIHRoYXQgbmVlZCB0aGlzLg0KDQoNCj4NCj4gTmVpbCBBcm1zdHJvbmcgPG5h
+cm1zdHJvbmdAYmF5bGlicmUuY29tPiDkuo4yMDE55bm0MTHmnIgxMuaXpeWRqOS6jCDkuIvljYg1
+OjAw5YaZ6YGT77yaDQo+PiBIaSBMaSwNCj4+DQo+PiBPbiAxMS8xMS8yMDE5IDAyOjU4LCBKdW4g
+TGkgd3JvdGU6DQo+Pj4gSGkgTmVpbA0KPj4+DQo+Pj4gQXMgSSBnb3QgdGhlIGluZm9ybWF0aW9u
+IGZyb20gU3lub3BzeXMsIHRoaXMgYnVnIGV4aXN0cyBvbiBjdXJyZW50IElQIHZlcnNpb25zLA0K
+Pj4+IGFuZCBwZXIgbXkgdGVzdHMgd2l0aCBleHRlcm5hbCBVU0IzIGh1YiArIDIgU3VwZXIgc3Bl
+ZWQgdWRpc2tzIG9uIGRhdGENCj4+PiByZWFkIGJ5IGRkLCBJIGNhbiByZXByb2R1Y2UgdGhpcyBp
+c3N1ZSB3aXRoIGRpZmZlcmVudCBrZXJuZWwgdmVyc2lvbnMsIGFsc28gSQ0KPj4+IGRpZG4ndCBz
+ZWUgb2J2aW91cyBwZXJmb3JtYW5jZSBkcm9wIGJ5IGRkIHRlc3RzIGFmdGVyIGRpc2FibGUgcGFy
+ayBtb2RlIGZvcg0KPj4+IHN1cGVyIHNwZWVkLCBzbyBzaG91bGQgd2UganVzdCBkaXNhYmxlIGl0
+IGJ5IGRlZmF1bHQgc28gbm8gbmVlZCBhIHF1aXJrPw0KPj4gSSBkb24ndCBoYXZlIGFueSBvcGlu
+aW9uIG9uIHRoaXMsIEkgdGhpbmsgdGhlIFVTQiAmIERXQzMgbWFpbnRhaW5lcnMgc2hvdWxkIGRl
+Y2lkZQ0KPj4gaG93IHRvIGhhbmRsZSB0aGlzLg0KPj4NCj4+IERpZCBTeW5vcHN5cyBzcGVjaWZp
+ZWQgYSByYW5nZSBvZiBhZmZlY3RlZCBJUCB2ZXJzaW9uID8NCj4+DQo+PiBOZWlsDQo+Pg0KPj4+
+IExpIEp1bg0KPj4+DQo+Pj4gVGltIDxlbGF0bGxhdEBnbWFpbC5jb20+IOS6jjIwMTnlubQxMeac
+iDEx5pel5ZGo5LiAIOS4iuWNiDg6NDLlhpnpgZPvvJoNCj4+Pj4gVGhhbmtzIGZvciB3b3JraW5n
+IG9uIHRoaXMgTmVpbCwNCj4+Pj4gSXMgdGhlcmUgc29tZXRoaW5nIHRoYXQgbmVlZHMgZG9pbmcg
+Zm9yIHRoaXMgcGF0Y2ggdG8gbWFrZSBpdCBpbnRvIDUuMyBvciA1LjQ/DQo+Pj4+IEFzIHByZXZp
+b3VzbHkgbWVudGlvbmVkIHRoZSBwYXRjaCBzZXQgZml4ZXMgdGhlIGlzc3VlIG9uIGFmZmVjdGVk
+IGhhcmR3YXJlOw0KPj4+PiAgICAgIGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92
+Mi91cmw/dT1odHRwcy0zQV9fcGF0Y2h3b3JrLmtlcm5lbC5vcmdfcGF0Y2hfMTExNjQ1MTVfJmQ9
+RHdJRmFRJmM9RFBMNl9YXzZKa1hGeDdBWFdxQjB0ZyZyPXU5RllveEt0eWhqckdGY3lpeEZZcVRq
+dzFaWDBWc0cyZDhGQ216a1RZLXcmbT1CQ2ZSSE05ZTg2MDM5U3UwLVF2S195VWpObllybmxfQmN2
+eFR0Vml5cFQ4JnM9YVY1dTd1eE5YNm9UTEIzXy1xTnV6ck52eWlxeF9yUEM2UDlUTXFHLUxORSZl
+PQ0KPj4+Pg0KPj4+Pg0KPj4+Pg0KPj4+PiBPbiBXZWQsIE9jdCAyMywgMjAxOSBhdCA0OjExIFBN
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOg0KPj4+Pj4gT24gTW9uLCBPY3Qg
+MTQsIDIwMTkgYXQgMDQ6MTc6MTZQTSArMDIwMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+Pj4+
+Pj4gVGhpcyBwYXRjaCB1cGRhdGVzIHRoZSBkb2N1bWVudGF0aW9uIHdpdGggdGhlIGluZm9ybWF0
+aW9uIHJlbGF0ZWQNCj4+Pj4+PiB0byB0aGUgcXVpcmtzIHRoYXQgbmVlZHMgdG8gYmUgYWRkZWQg
+Zm9yIGRpc2FibGluZyBhbGwgU3VwZXJTcGVlZCBYSENpDQo+Pj4+Pj4gaW5zdGFuY2VzIGluIHBh
+cmsgbW9kZS4NCj4+Pj4+Pg0KPj4+Pj4+IENDOiBEb25namluIEtpbSA8dG9iZXR0ZXJAZ21haWwu
+Y29tPg0KPj4+Pj4+IENjOiBKaWFueGluIFBhbiA8amlhbnhpbi5wYW5AYW1sb2dpYy5jb20+DQo+
+Pj4+Pj4gUmVwb3J0ZWQtYnk6IFRpbSA8ZWxhdGxsYXRAZ21haWwuY29tPg0KPj4+Pj4+IFNpZ25l
+ZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4NCj4+Pj4+
+PiAtLS0NCj4+Pj4+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdj
+My50eHQgfCAyICsrDQo+Pj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+
+Pj4+PiBTaWdoLCB3aGF0J3Mgb25lIG1vcmUgdG8gdGhlIG5ldmVyIGVuZGluZyBsaXN0IG9mIHF1
+aXJrcy4uLg0KPj4+Pj4NCj4+Pj4+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPg0KDQpCUiwNClRoaW5oDQo=
