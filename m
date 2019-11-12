@@ -2,189 +2,153 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD07C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1393AC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328342196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED1121925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573601668;
-	bh=avE5ryt0LyUf1wbwCO+LKq0mIuRLC8Qq65aG1tM/7ek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QEgb+UVzREGr/+TciOMU+lzDp8tZoiw9BuNl7Ue5B/rZ1yARgHajPvMBYboMOD50U
-	 m+pD9npXg/U+rjI0IBmayK/F8gfSC5lCRIL5SHeVqpOYWEGrHno9VyVHf3XaY+M4Yp
-	 kK/QO1ciV27/lgjQ4HDzgpc1qkWXrAp0nGBfUfGw=
+	s=default; t=1573602075;
+	bh=TTHSlshsYeKxRTfQUJtxveXwbR1NuH1LpaDSGuZekbs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rZLifllc2WNpfXhKE/Jb5mqJPjJD4rm1us8JFRI/7vYhACPu5ZTayKIGz31xz/brM
+	 fBNbqa+Mot+cZeZvbZrPN+sZOJBb1Kz53bUvNClEtMK3s/YX3RiUy2DvfnvUNoAIL8
+	 cf0OKryKFSD0qkui1NyRFee87oNSTE05xLToyav0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKLXe0 (ORCPT
+        id S1726995AbfKLXlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:34:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfKLXe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:34:26 -0500
-Received: from earth.universe (unknown [185.216.33.116])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D7A421783;
-        Tue, 12 Nov 2019 23:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573601665;
-        bh=avE5ryt0LyUf1wbwCO+LKq0mIuRLC8Qq65aG1tM/7ek=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sRlyFDfSfw1CnA1sHjNB/4oYlWPh/vWv41/IAzMqWTJt7LrYicdpJQXvee0Tykm9I
-         oyR7c3Uqg3VzyC2JBJnkek0dalC12wvkmdHgAckbuc6bpDtliEevIWzT8s7VGeY1k5
-         p1vr72EJZgT9TBVYQU0dqpQCuWodTc+dask0Qit8=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 3276E3C0C78; Wed, 13 Nov 2019 00:34:21 +0100 (CET)
-Date:   Wed, 13 Nov 2019 00:34:21 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] Input: ili210x - do not retrieve/print chip
- firmware version
-Message-ID: <20191112233421.eh44mv6ji2tk6ki2@earth.universe>
-References: <20191112164429.11225-1-TheSven73@gmail.com>
+        Tue, 12 Nov 2019 18:41:14 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39989 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKLXlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 18:41:14 -0500
+Received: by mail-lf1-f67.google.com with SMTP id j26so309398lfh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:41:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EUXLb1uu1dcQwvM3XnfVOQS/u8rpUwxsukE0911wRv8=;
+        b=BlxyQF/k0RbNlmXP5IB58F/0Xz3h4ttVpHaMWy/tA5ZBmhF0Hc9KKgINDE4bq+7VOV
+         zqj7K+B23f5rkrn/XHC7xsbbzsc8AsUGEmABEH/wooLD/jCPv801/xBfUCp/v8T8n//8
+         yAvsBxLJ7ZGLbzPhrSobnyjECGiABuvCmT8hg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EUXLb1uu1dcQwvM3XnfVOQS/u8rpUwxsukE0911wRv8=;
+        b=Z9eS7sc30cv8J5bQkbaZbfATsS+EvKXJzP2uNjqyc88ULBEl0VbCGw2vrgOh1+5e4J
+         9AJXrYc4H64Ab+5Kn9AsOumxK0A+dzhJvczTRmFwAiRNglF3sfzqHoXk8JyRjHSEFPUO
+         k7zRIo/FpD7kfTZGLy8525DksxAlZrtUjz4cCXutU97V+uMiAHTrI1rq0ex5pg6vy+Uv
+         rdkVb+3IItV6/GgC6lYrQXcNT4MsRcdmc9cdYFn7nRQzBahGdCL+4pQg+kBtr4/Z0rX/
+         XbiEXli0WOUNe+PYESEeWpwsKjT/Miu+vkqyNuqh2MmUbZmLmGtbcgMtujYnhQAr6DMC
+         QvrQ==
+X-Gm-Message-State: APjAAAV7h00CCsgUOP22mXwBVl3BoyigR/GZux3AVaM5EcJ9MRPiJi6W
+        76kAs1x2Ae231BEWyVR+Hjrtub1yJuo=
+X-Google-Smtp-Source: APXvYqxTmCbOF8ZQAEwoaNe/n/SThwdCg36vEUGgta2TSUS+V6O76SlqlVxQkI7ZdqJs11m9JlnJoQ==
+X-Received: by 2002:a19:8092:: with SMTP id b140mr302428lfd.13.1573602070403;
+        Tue, 12 Nov 2019 15:41:10 -0800 (PST)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id y75sm119356lff.58.2019.11.12.15.41.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 15:41:09 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id g3so365141ljl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:41:08 -0800 (PST)
+X-Received: by 2002:a2e:22c1:: with SMTP id i184mr233777lji.1.1573602068124;
+ Tue, 12 Nov 2019 15:41:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tynyp4nbd7ljgtf3"
-Content-Disposition: inline
-In-Reply-To: <20191112164429.11225-1-TheSven73@gmail.com>
-User-Agent: NeoMutt/20180716
+References: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911121639540.1567-100000@iolanthe.rowland.org>
+ <CANn89iKjWH86kChzPiVtCgVpt3GookwGk2x1YCTMeBSPpKU+Ww@mail.gmail.com>
+ <20191112224441.2kxmt727qy4l4ncb@ast-mbp.dhcp.thefacebook.com> <CANn89iKLy-5rnGmVt-nzf6as4MvXgZzSH+BSReXZKpSTjhoWAw@mail.gmail.com>
+In-Reply-To: <CANn89iKLy-5rnGmVt-nzf6as4MvXgZzSH+BSReXZKpSTjhoWAw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 12 Nov 2019 15:40:51 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wj_rFOPF9Sw_-h-6J93tP9qO_UOEvd-e02z9+DEDs2kLQ@mail.gmail.com>
+Message-ID: <CAHk-=wj_rFOPF9Sw_-h-6J93tP9qO_UOEvd-e02z9+DEDs2kLQ@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Marco Elver <elver@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 3:18 PM Eric Dumazet <edumazet@google.com> wrote:
+>
+> Hmm we have the ' volatile'  attribute on jiffies, and it causes
+> confusion already :p
 
---tynyp4nbd7ljgtf3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The jiffies case is partly historical, but partly also because it's
+one of the very very few data structures where 99% of all uses are
+unlocked and for convenience reasons we really don't want to force
+those legacy cases to do anything special about it.
 
-Hi,
+"jiffies" really is very special for those kinds of legacy reasons.
+Look at the kinds of games we play with it on 32-bit architectures:
+the "real" storage is "jiffies_64", but nobody actually wants to use
+that, and because of load tearing issues it's actually hard to use
+too. So what everybody _uses_ is just the low 32 bits, and 'jiffies'
+isn't a real variable, it's done with linker tricks in our
+vmlinux.lds.S files. So, for example, on sparc32, you find this:
 
-On Tue, Nov 12, 2019 at 11:44:27AM -0500, Sven Van Asbroeck wrote:
-> The driver's method to retrieve the firmware version on ili2117/
-> ili2118 chip flavours is incorrect. The firmware version register
-> address and layout are wrong.
->=20
-> The firmware version is not actually used anywhere inside or
-> outside this driver. There is a dev_dbg() print, but that is
-> only visible when the developer explicitly compiles in debug
-> support.
->=20
-> Don't make the code more complicated to preserve a feature that
-> no-one is using. Remove all code associated with chip firmware
-> version.
->=20
-> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
-> Cc: Marek Vasut <marex@denx.de>
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: <linux-kernel@vger.kernel.org>
-> Cc: linux-input@vger.kernel.org
-> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/=
-?h=3Dnext
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
+    jiffies = jiffies_64 + 4;
 
-The firmware version check does one relevant thing: It tests
-the I2C communication, which tends to be useful for board
-bringup and development boards (which often allow to disconnect
-(touch-)screens).
+in the vmlinux.lds.S file, because it's big-endian, and the lower 32
+bits are at offset 4 from the real 64-bit variable.
 
--- Sebastian
+Note that to actually read the "true" full 64-bit value, you have to
+then call a function that does the proper sequence counter stuff etc.
+But nobody really wants it, since what everybody actually _uses_ is
+the "time_after(x,jiffies+10)" kind of thing, which is only done in
+the wrapping "unsigned long" time base. So the odd "linker tricks with
+the atomic low bits marked as a volatile data structure" is actually
+exactly what we want, but people should realize that this is not
+normal.
 
->  drivers/input/touchscreen/ili210x.c | 21 ---------------------
->  1 file changed, 21 deletions(-)
->=20
-> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscr=
-een/ili210x.c
-> index 0ed6014af6d7..a6feae5ce887 100644
-> --- a/drivers/input/touchscreen/ili210x.c
-> +++ b/drivers/input/touchscreen/ili210x.c
-> @@ -21,15 +21,8 @@
->  /* Touchscreen commands */
->  #define REG_TOUCHDATA		0x10
->  #define REG_PANEL_INFO		0x20
-> -#define REG_FIRMWARE_VERSION	0x40
->  #define REG_CALIBRATE		0xcc
-> =20
-> -struct firmware_version {
-> -	u8 id;
-> -	u8 major;
-> -	u8 minor;
-> -} __packed;
-> -
->  struct ili2xxx_chip {
->  	int (*read_reg)(struct i2c_client *client, u8 reg,
->  			void *buf, size_t len);
-> @@ -342,7 +335,6 @@ static int ili210x_i2c_probe(struct i2c_client *clien=
-t,
->  	struct ili210x *priv;
->  	struct gpio_desc *reset_gpio;
->  	struct input_dev *input;
-> -	struct firmware_version firmware;
->  	int error;
-> =20
->  	dev_dbg(dev, "Probing for ILI210X I2C Touschreen driver");
-> @@ -389,15 +381,6 @@ static int ili210x_i2c_probe(struct i2c_client *clie=
-nt,
->  	priv->chip =3D chip;
->  	i2c_set_clientdata(client, priv);
-> =20
-> -	/* Get firmware version */
-> -	error =3D chip->read_reg(client, REG_FIRMWARE_VERSION,
-> -			       &firmware, sizeof(firmware));
-> -	if (error) {
-> -		dev_err(dev, "Failed to get firmware version, err: %d\n",
-> -			error);
-> -		return error;
-> -	}
-> -
->  	/* Setup input device */
->  	input->name =3D "ILI210x Touchscreen";
->  	input->id.bustype =3D BUS_I2C;
-> @@ -439,10 +422,6 @@ static int ili210x_i2c_probe(struct i2c_client *clie=
-nt,
->  		return error;
->  	}
-> =20
-> -	dev_dbg(dev,
-> -		"ILI210x initialized (IRQ: %d), firmware version %d.%d.%d",
-> -		client->irq, firmware.id, firmware.major, firmware.minor);
-> -
->  	return 0;
->  }
-> =20
-> --=20
-> 2.17.1
->=20
+So 'jiffies' is really really special.
 
---tynyp4nbd7ljgtf3
-Content-Type: application/pgp-signature; name="signature.asc"
+And absolutely nothing else should use 'volatile' on data structures
+and be that special.  In the case of jiffies, the rule ends up being
+that nobody should ever write to it (you write to the real
+jiffies_64), and the real jiffies_64 thing gets the real locking, and
+'jiffies' is a read-only volatile thing.
 
------BEGIN PGP SIGNATURE-----
+So "READ_ONCE()" is indeed unnecessary with jiffies, but it won't
+hurt. It's not really "confusion" - there's nothing _wrong_ with using
+READ_ONCE() on volatile data, but we just normally don't do volatile
+data in the kernel (because our normal model is that data is never
+really volatile in general - there may be locked and unlocked accesses
+to it, so it's stable or volatile depending on context, and thus the
+'volatile' goes on the _code_, not on the data structure)
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3LQXkACgkQ2O7X88g7
-+poBmQ//VE9RLaWgxqVEsAsPFyMI3C7gIlrbz8SWYVC+TegFkXdGvuNaoOema632
-O+hp247bYjdIHbUWFiJCaDZ0t7mcjPwfMyu1CYKxDQCaQldBTG6IED/TSufqoPwB
-KdGq1GGRPLpuzkDq4n4uP3wtWYhiphlCXOO0hymPP8iZ3Ul/LLOZ9dys8W3gUw1v
-XyTBMm02g17yqI2S6EwFNmf4DkfuL66/Rs42fscXjTkly0rkk4JFb6JsXHtUDOrA
-j2OQBg1gEzrIWkkor1DK4HXZBpb+o7U56WoQA2VTi61CkqoGJ8snN/+AzONClCTL
-Lfswv+a4RQBsQUu5oS6ePXcemdfsPYqBSp8/8mDnzOcF7/plNxawqIdWBdzq3awx
-JdbQo5AWxe8iW+DeEs9rz7aHKetnXomU+uH18vPpmrZtPibcQaVaa7eNB6XUdXzG
-ET/OUNVsZIVIMAoDnwOz74pvjmrCTeWVIusOk2kE5240TWuAom19tNPtvNfwhGJ5
-uZoVs11lBU0bAvD4+bVZPFX7zde8dXpoh66k0VTdIiy8fM07L2EIodvmo1QTo2yJ
-g+VF9GBiKl7ayydNQ7tz77R/aFKOBzQAyL8+XlBBM+3BxhPj71kJg9eOzSDLM2ty
-N04jGiDauA5eeciRQTaiplnTwm7aLfTO12Tinzg1OBuqSTFNJn0=
-=k1bX
------END PGP SIGNATURE-----
+But while jiffies READ_ONCE() accesses isn't _wrong_, it is also not
+really paired with any WRITE_ONCE(), because the real update is to
+technically not even to the same full data structure.
 
---tynyp4nbd7ljgtf3--
+So don't look to jiffies for how to do things. It's an odd one-off.
+
+That said, for "this might be used racily", if there are annotations
+for clang to just make it shut up about one particular field in a
+structure, than I think that would be ok. As long as it doesn't then
+imply special code generation (outside of the checking, of course).
+
+                 Linus
