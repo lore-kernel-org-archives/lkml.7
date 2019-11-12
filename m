@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0C1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4491C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AC420818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B86206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKLCKr (ORCPT
+        id S1727199AbfKLCKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 21:10:47 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:48016 "EHLO
+        Mon, 11 Nov 2019 21:10:51 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:48024 "EHLO
         omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727132AbfKLCKo (ORCPT
+        with ESMTP id S1727093AbfKLCKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 21:10:44 -0500
-Received: from mr4.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xAC2Ah8B011513
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:10:43 -0500
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xAC2Ace4015944
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:10:43 -0500
-Received: by mail-qt1-f197.google.com with SMTP id k9so19184529qtg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 18:10:43 -0800 (PST)
+        Mon, 11 Nov 2019 21:10:47 -0500
+Received: from mr5.cc.vt.edu (mr5.cc.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xAC2Ak78011525
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:10:46 -0500
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xAC2Afoc001555
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:10:46 -0500
+Received: by mail-qv1-f70.google.com with SMTP id i11so7550427qvh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 18:10:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=tfeIwuZlARKtMiR++Mo+2NVCZ5X6OlyhQI7+5iHKuUE=;
-        b=cvTmreTWSQR4jd2DW3+D6bfPSA4WW0bsjh5Y8pQW0UKXJDVazb0txMuxTwPHtnuoRg
-         z18g3zD4ui0K7pRpR4FXwdK7q82y1NKJYuXgGjarNNRMZzKLm3jPw8bmi4NYttawVfnw
-         TKmZeS5TxgSfNJESp18iJO21f6Tnw4gdON0eQrG8XvPeBFlID/PpQBway3ifxCv8+vkh
-         n7+SaS2+TDbuFg6WSS6k+bBswsg7Y0dgo2w26dVQFQkRVS6X/dl422fddLwpzDZLk19s
-         scxrx6Jaow2ku4O/NXyBeW598xaEwaek8hdexbAr7OajP1rSeAwExSUgOvsOdC0fqxvu
-         K0YQ==
-X-Gm-Message-State: APjAAAVMcXcdrUuEprDVy56L2piTVUYzuU7B7fsKZtqCVg8JFggvvseP
-        88zTo2FhaDqP3GUQH5Qr0bjaDACwJHKFdoRge8HTf67S5Al2MjslQ+DBU2Y1cNGZy8OJNN4W6m2
-        AurDr9/Kt/XorGmMQOP1Wv0yfvI8TfGN7TKc=
-X-Received: by 2002:a0c:b0fa:: with SMTP id p55mr27418878qvc.239.1573524638272;
-        Mon, 11 Nov 2019 18:10:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyCFLoJqfkH/sXAJGngYRG4es7WvFgJ3x610vhZKQLhmcYHBo59mmlbtZ4IsB4csFlxLNji5g==
-X-Received: by 2002:a0c:b0fa:: with SMTP id p55mr27418857qvc.239.1573524637930;
-        Mon, 11 Nov 2019 18:10:37 -0800 (PST)
+        bh=uphTJK2IDaoRqiwK0hx3G7xcHeFWsEZMUn5zNKoPI0w=;
+        b=PaHOrosy+5KKTNh6ZAg1l86mGOmw8yoDQoAvxeRUVsKgzRM29tAZ5ogbn92TQYJxsi
+         9pmz3o18PvHSjxGTl+peoZXhH+OnXIkAsA7cnx8StTFQua1hNxHt0CgphGXggPDEK2lo
+         060mSjAEXF9EYLDWfvqWFQccKenns0aHcPfZ2V5/4OfsfEFVRUZFZL+c51rqofOUBtjB
+         abqmDfjIp+dTjbLX4N51lTDlwVpMvbrEGycp3X+/8rW1nc1cuY5y6gjeH/ANhnxFqOjS
+         CsQ0s+xth1+P6dcex0swdjJ/OGQIT+rbE5ye/ALXX3A/98wweNFKxe/PRNtEZEwbPjCJ
+         NIOw==
+X-Gm-Message-State: APjAAAXRPnS/BfjZe33CZkdYErdW4SuN6Ep9VSjd69iGCrC//ASW03AN
+        xTxQk0uHeICtMUwc225zQIZsW4VS8TFoLsEarwH/KFq18seE9bt2ahoJqgFRUwzgGieiVLS8aKr
+        Y3sB1kiQyykXRthIBENz08oYLHqhTgEyX9Ak=
+X-Received: by 2002:a0c:a998:: with SMTP id a24mr25872138qvb.117.1573524641378;
+        Mon, 11 Nov 2019 18:10:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyP9wpj6EloB26bcXsuYqLDNDs33pV7zPD64rSvVFKAnI1TcwuvnpFunMC2Bkhe+5aVicw5Fw==
+X-Received: by 2002:a0c:a998:: with SMTP id a24mr25872127qvb.117.1573524641133;
+        Mon, 11 Nov 2019 18:10:41 -0800 (PST)
 Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id o195sm8004767qke.35.2019.11.11.18.10.36
+        by smtp.gmail.com with ESMTPSA id o195sm8004767qke.35.2019.11.11.18.10.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 18:10:36 -0800 (PST)
+        Mon, 11 Nov 2019 18:10:40 -0800 (PST)
 From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
 X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 To:     gregkh@linuxfoundation.org
@@ -59,9 +58,9 @@ Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
         Valdis Kletnieks <valdis.kletnieks@vt.edu>,
         linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/9] staging: exfat: Clean up return codes - FFS_ERROR
-Date:   Mon, 11 Nov 2019 21:09:53 -0500
-Message-Id: <20191112021000.42091-6-Valdis.Kletnieks@vt.edu>
+Subject: [PATCH v3 6/9] staging: exfat: Clean up return codes - remove unused codes
+Date:   Mon, 11 Nov 2019 21:09:54 -0500
+Message-Id: <20191112021000.42091-7-Valdis.Kletnieks@vt.edu>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191112021000.42091-1-Valdis.Kletnieks@vt.edu>
 References: <20191112021000.42091-1-Valdis.Kletnieks@vt.edu>
@@ -72,170 +71,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert FFS_ERROR to -EINVAL
+There are 6 FFS_* error values not used at all. Remove them.
 
 Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 ---
- drivers/staging/exfat/exfat.h       |  1 -
- drivers/staging/exfat/exfat_core.c  | 10 +++++-----
- drivers/staging/exfat/exfat_super.c | 20 ++++++++++----------
- 3 files changed, 15 insertions(+), 16 deletions(-)
+ drivers/staging/exfat/exfat.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 7a817405c624..443fafe1d89d 100644
+index 443fafe1d89d..b3fc9bb06c24 100644
 --- a/drivers/staging/exfat/exfat.h
 +++ b/drivers/staging/exfat/exfat.h
-@@ -216,7 +216,6 @@ static inline u16 get_row_index(u16 i)
- #define FFS_SEMAPHOREERR        6
- #define FFS_NOTOPENED           12
- #define FFS_MAXOPENED           13
--#define FFS_ERROR               19
+@@ -210,12 +210,6 @@ static inline u16 get_row_index(u16 i)
+ 
+ /* return values */
+ #define FFS_SUCCESS             0
+-#define FFS_MOUNTED             3
+-#define FFS_NOTMOUNTED          4
+-#define FFS_ALIGNMENTERR        5
+-#define FFS_SEMAPHOREERR        6
+-#define FFS_NOTOPENED           12
+-#define FFS_MAXOPENED           13
  
  #define NUM_UPCASE              2918
  
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 2f6e9d724625..ffcad6867ecb 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -699,7 +699,7 @@ void sync_alloc_bitmap(struct super_block *sb)
- static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
- 			       u32 num_sectors, u32 utbl_checksum)
- {
--	int i, ret = FFS_ERROR;
-+	int i, ret = -EINVAL;
- 	u32 j;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-@@ -774,7 +774,7 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
- 			brelse(tmp_bh);
- 		return FFS_SUCCESS;
- 	}
--	ret = FFS_ERROR;
-+	ret = -EINVAL;
- error:
- 	if (tmp_bh)
- 		brelse(tmp_bh);
-@@ -784,7 +784,7 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
- 
- static s32 __load_default_upcase_table(struct super_block *sb)
- {
--	int i, ret = FFS_ERROR;
-+	int i, ret = -EINVAL;
- 	u32 j;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
-@@ -1906,7 +1906,7 @@ static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
- 	return FFS_SUCCESS;
- err_out:
- 	pr_debug("%s failed\n", __func__);
--	return FFS_ERROR;
-+	return -EINVAL;
- }
- 
- /* write back all entries in entry set */
-@@ -1931,7 +1931,7 @@ s32 write_partial_entries_in_entry_set(struct super_block *sb,
- 
- 	/* vaidity check */
- 	if (ep + count  > ((struct dentry_t *)&es->__buf) + es->num_entries)
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	dir.dir = GET_CLUSTER_FROM_SECTOR(es->sector);
- 	dir.flags = es->alloc_flag;
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index dd6530aef63a..daded767182a 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -498,7 +498,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
- 
- 	/* check the validity of pointer parameters */
- 	if (!info)
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -561,7 +561,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
- 
- 	/* check the validity of pointer parameters */
- 	if (!fid || !path || (*path == '\0'))
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -654,7 +654,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
- 
- 	/* check the validity of pointer parameters */
- 	if (!fid || !path || (*path == '\0'))
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -703,7 +703,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
- 
- 	/* check the validity of pointer parameters */
- 	if (!buffer)
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -835,7 +835,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 
- 	/* check the validity of pointer parameters */
- 	if (!buffer)
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -1241,7 +1241,7 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
- 
- 	/* check the validity of pointer parameters */
- 	if (!new_path || (*new_path == '\0'))
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -1464,7 +1464,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
- 		if (p_fs->dev_ejected)
- 			ret = -EIO;
- 		else
--			ret = FFS_ERROR;
-+			ret = -EINVAL;
- 
- 		if (p_fs->vol_type == EXFAT)
- 			release_entry_set(es);
-@@ -1756,7 +1756,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
- 
- 	/* check the validity of pointer parameters */
- 	if (!clu)
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -1908,7 +1908,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
- 
- 	/* check the validity of pointer parameters */
- 	if (!fid || !path || (*path == '\0'))
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* acquire the lock for file system critical section */
- 	mutex_lock(&p_fs->v_mutex);
-@@ -1954,7 +1954,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 
- 	/* check the validity of pointer parameters */
- 	if (!dir_entry)
--		return FFS_ERROR;
-+		return -EINVAL;
- 
- 	/* check if the given file ID is opened */
- 	if (fid->type != TYPE_DIR)
 -- 
 2.24.0
 
