@@ -2,141 +2,118 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A25C17447
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FDAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCEC20818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B557521783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="n2Mw6n7y"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="FhOoZzKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKLC0l (ORCPT
+        id S1727001AbfKLC3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 21:26:41 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:13920 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfKLC0k (ORCPT
+        Mon, 11 Nov 2019 21:29:05 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43049 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfKLC3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 21:26:40 -0500
-X-Greylist: delayed 25988 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 21:26:39 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573525598;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=/lsl6nTo//BjYrk5oV+rdFSP85ZYnNHrebh0HC0dN2g=;
-        b=n2Mw6n7yQlnP2+Yg86gJCGqtMqi0M51lDJuB/tNgQy0Qxf6whTQBEkcsbSxBKhAD/q
-        gt4aj76Mc5GUvI2T3Gk4OmTYmoRUdDtjPtyrbBYcreXzJafwc3uYmTo4OmjYaQsLQ8Jo
-        2OyKhK3vf0+RcUE80YqNDRAKkHpb+9TxQyRDfqHLbLWIVa9KCLj7LOhvzVYhgThaovWj
-        HyI8xKfjzjhZ8TxPN7VOL1QQA7lSl3fBdYWi3Z2qK3YXAGniahW6iXlSIJCi2wjA2p6T
-        ZAUPdjhlpLzznIS2ZtTUI2eVS9pqeZ1b7o8mhbuOGcplBY9I5pPnYfbOuV6U6R4LH8V/
-        F7EA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zWgDMLyyzTHyZb69qn/xQ3l1emqDBm3cL6VhEyGWhThurAC8gyGEsg=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id N09a57vAC2P54QC
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 12 Nov 2019 03:25:05 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v24 01/12] Linux Random Number Generator
-Date:   Tue, 12 Nov 2019 03:25:03 +0100
-Message-ID: <9370249.4lZBqg7Imc@positron.chronox.de>
-In-Reply-To: <alpine.DEB.2.21.1911120041060.1833@nanos.tec.linutronix.de>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2369119.jSEA3qhmGI@positron.chronox.de> <alpine.DEB.2.21.1911120041060.1833@nanos.tec.linutronix.de>
+        Mon, 11 Nov 2019 21:29:05 -0500
+Received: by mail-qt1-f195.google.com with SMTP id l24so18059749qtp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 18:29:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qig4rmkNJ4m0gykaw+RmR5zfcN4BREbLY12fsfP7HVE=;
+        b=FhOoZzKOgkSUDBp9Ce2AQ0Va8bxX6Hk2GvpQ/6JLie21f3bcdzv4YZkuRc67JPwITa
+         dbQfHeW1cEZim+e6IpI4fjWcvtdbeWbd9Zo01OJg7KK0Imx6kSchAc045Z+8sFCyOr5Z
+         cerG7ijZY16HiPyzXTTbW4ECpe5FmL9iQ925Q2LsOYb3ZqDewv3BUI8xpfPapdO5dnz4
+         GcHxCaXTO51xXlg4icLrc1o0RqHDpzgO0u/bMfh3SeuyZekqfwKXgkiWrbMqFGGJrr6X
+         J7GHyZiiXAuRh8FL7SQX296lsyIQSBbgg649R7xuOT9O4aMyS6LTif+J5oR4ngVFlCoF
+         bCMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qig4rmkNJ4m0gykaw+RmR5zfcN4BREbLY12fsfP7HVE=;
+        b=BVCbW+Tu4SzrsoR+8WjWbM65PidP27Bu5EeFFCc6Azg0SDe+ss551fPS4xUwZTbepP
+         1gZXNNpR2l1XUUufxs5wPg5nhp00YTobKeWbzOyHnm3Xu3cw2uJvHVvKoZXXMFj0qTnm
+         1io3SA4xdzmMPWolRz/WIVV/7oD7OCPJ73VJlydNRtGlD1uC+OX2WtFhKw2pEHDABpJ4
+         PbTPZaKUuE4risY6tBADE7fnrHII3eCxlXkRauREK7vP1THDP3JDtAYes8PYlYWP5f3N
+         UxEPy3Q6EtZ4siFw9BCBmv/y7kuy2ZORrbzsiMC9YCC3i7AhsxTFFLnZoRf7yu4balDj
+         ZB5w==
+X-Gm-Message-State: APjAAAUrZ/9TvLcKhIFkd4uaBZclX206fRrhWSuTxBOrvbiZeDBIdVCF
+        C4c8xrtCgMLdds9tWGFpZY1ULXtLMQCYINzyyM34xeuUi5gBaA==
+X-Google-Smtp-Source: APXvYqx78JE37xWz0R+OnGDIkczM7fduIQqmhhuL2QSYfeg4Vj4kBNXxrykubN3nL8VYzIDHpxWm178W1TIPKzZS/JE=
+X-Received: by 2002:ac8:3968:: with SMTP id t37mr29109381qtb.37.1573525743977;
+ Mon, 11 Nov 2019 18:29:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+References: <20191110104955.131246-1-zhengyongjun3@huawei.com>
+In-Reply-To: <20191110104955.131246-1-zhengyongjun3@huawei.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Tue, 12 Nov 2019 10:28:52 +0800
+Message-ID: <CAB4CAwfCNgd6nr9yrPtPd33P075CURKw+e3ZOUN0iKecvJfR2Q@mail.gmail.com>
+Subject: Re: [PATCH] rtl8xxxu: Remove set but not used variable 'rsr'
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 12. November 2019, 00:54:16 CET schrieb Thomas Gleixner:
+On Sun, Nov 10, 2019 at 6:51 PM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c: In function rtl8xxxu_gen2_config_channel:
+> drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c:1266:13: warning: variable rsr set but not used [-Wunused-but-set-variable]
+>
+> rsr is never used, so remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+Reviewed-by: Chris Chiu <chiu@endlessm.com>
 
-Hi Thomas,
+Since the rtl8xxxu_gen2_config_channel is only invoked for 8723BU. I
+verified the hal/rtl8723b_phycfg.c of RTL8723BU vendor driver. The RSR
+register is also left intact. This commit looks good to me.
 
-> Stephan,
->=20
-> On Mon, 11 Nov 2019, Stephan M=FCller wrote:
->=20
-> thanks for Cc'ing me. I'll have a look at the technical details at later
-> point in time.=20
-
-Thank you very much for considering a review.
-
-> While skimming through the patches I noticed, that you
-> thankfully added the SPDX license identifiers, but
->=20
-> > @@ -0,0 +1,105 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > +/*
-> > + * LRNG Fast Noise Source: CPU-based noise source
-> > + *
-> > + * Copyright (C) 2016 - 2019, Stephan Mueller <smueller@chronox.de>
-> > + *
-> > + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> > + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-> > + * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ALL OF
-> > + * WHICH ARE HEREBY DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE
-> > + * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-> > + * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
-> > + * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-> > + * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-> > + * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> > + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-> > + * USE OF THIS SOFTWARE, EVEN IF NOT ADVISED OF THE POSSIBILITY OF SUCH
-> > + * DAMAGE.
->=20
-> we really want to get rid of these boiler plate disclaimers as they are
-> already implicit by the SPDX license identifier and provide no real
-> value.
->=20
-> Aside of that, the above disclaimer has even a slightly different wording
-> than the standard BSD-2-Clause disclaimer which is going to cause even mo=
-re
-> headaches as automated scanner tools will detect that and someone has to =
-go
-> through that unreadable uppercase yelling mess and figure out whether it's
-> a legaly substantial difference.
->=20
-> Can you please get rid of those?
-
-Absolutely. I have removed that boiler plate disclaimer from all files.
-
-Though I hope it is acceptable to wait for further comments before a=20
-resubmission.
-
-Thank you very much.
-
-Ciao
-Stephan
-
-
+> ---
+>  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> index c6c41fb962ff..2c1ca4bc4e56 100644
+> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> @@ -1255,7 +1255,7 @@ void rtl8xxxu_gen1_config_channel(struct ieee80211_hw *hw)
+>  void rtl8xxxu_gen2_config_channel(struct ieee80211_hw *hw)
+>  {
+>         struct rtl8xxxu_priv *priv = hw->priv;
+> -       u32 val32, rsr;
+> +       u32 val32;
+>         u8 val8, subchannel;
+>         u16 rf_mode_bw;
+>         bool ht = true;
+> @@ -1264,7 +1264,6 @@ void rtl8xxxu_gen2_config_channel(struct ieee80211_hw *hw)
+>
+>         rf_mode_bw = rtl8xxxu_read16(priv, REG_WMAC_TRXPTCL_CTL);
+>         rf_mode_bw &= ~WMAC_TRXPTCL_CTL_BW_MASK;
+> -       rsr = rtl8xxxu_read32(priv, REG_RESPONSE_RATE_SET);
+>         channel = hw->conf.chandef.chan->hw_value;
+>
+>  /* Hack */
+> --
+> 2.23.0
+>
