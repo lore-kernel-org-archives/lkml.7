@@ -2,225 +2,90 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3873AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25EEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFAF2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E0C2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573573878;
+	bh=cZh3J8eO17TfjkQs4HF4Pi5ohfBkslaJixtihKan7z8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=owCfX0+xmPNrR0hTDZe6K0c3pt8Mxeljh+0NlAE+X4wNnGhouFw78ZIBd5Ai85+NO
+	 B4WX+TWrsIfk7bdzm/aF4AnwETz2YmbBsoaY7naL+H+v6INOFAAM/FJSNrqLV+bHEX
+	 5/IZcbMqUIxTc0vq3hifDKa4HOQ012qlrUvUDRS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKLPuQ (ORCPT
+        id S1727022AbfKLPvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:50:16 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58337 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfKLPuP (ORCPT
+        Tue, 12 Nov 2019 10:51:17 -0500
+Received: from mail-qt1-f181.google.com ([209.85.160.181]:37690 "EHLO
+        mail-qt1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLPvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:50:15 -0500
-X-Originating-IP: 86.206.246.123
-Received: from aptenodytes (lfbn-tou-1-421-123.w86-206.abo.wanadoo.fr [86.206.246.123])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 908FDC0022;
-        Tue, 12 Nov 2019 15:50:12 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 16:50:12 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        James Hilliard <james.hilliard1@gmail.com>
-Subject: Re: [PATCH] drm/gma500: Fixup fbdev stolen size usage evaluation
-Message-ID: <20191112155012.GE4506@aptenodytes>
-References: <20191107153048.843881-1-paul.kocialkowski@bootlin.com>
- <CAMeQTsYG+YvXqQqvJvsxT1h0z5zZJbdCtc5wPjUossvwidV=cA@mail.gmail.com>
- <20191112151157.GD4506@aptenodytes>
+        Tue, 12 Nov 2019 10:51:17 -0500
+Received: by mail-qt1-f181.google.com with SMTP id g50so20228914qtb.4;
+        Tue, 12 Nov 2019 07:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rIVoNOz4T7j7fSaGQI1Ha0h4ohKX0AGKJfytZEHxESg=;
+        b=ZNPttLUmJUEbIG2K/YbRhC/Z7rYwyz9P92jlUaFydZKGLbX6+HsM7LimBSZqqCYqhb
+         pYlmXL/tMccVeT08++KILqaPrN2fJxvS+XEsi/RZSvJlJJDuYtsd8w8NjSWVexMJQJvr
+         SCzmFhiXL6du2CYTWsOWOTRLaCvbr6P+n0W858JFXSF9iIVREf66fjuwFoTLvsBtX+81
+         CcaSPZJ4VMhwhvR0DdywQnv1Ru5LW7BRRLbk0Qf+S33Nf6jBIx/p2xDtplYQKX0PxDO5
+         wh6TW07Yjvs17D5M4Ab3OOLXWm7UnokqPlv0dYCPO4bVJMzkYQ05HJZ/OZ/+BReSS3t8
+         xWcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rIVoNOz4T7j7fSaGQI1Ha0h4ohKX0AGKJfytZEHxESg=;
+        b=VCEFZddlKA1J/aE8bNEmNtoxEma48GvmCyKDkD4tNNMscsQ1072acoNHFsuBphUaAu
+         FV5FBnTWjFgfAbspA7b0roLT2BTjPTmvMC3VMbQVxGf+lQw6+tZyt1MfdIQuUb+fvg+W
+         ai5+n5mXTnimyggC/v3NoEEjc+oBzuZ1A3AzCmMPYVZLspgZGqUdciAFEUl1SIujZwyY
+         xOtzXiQrr9fAJzpK2tTAxmTWYXOvbYRH8qf5uiFEhNmj6ZwQf61J7Wt8zSoi3z4DZ1Mr
+         dyoVR+YRbjsuSLOlaarJtBM5BlLoIhs/zMiA9ADDaJQRBrZtiQly+Xsvap7vRjWXzBUn
+         wENg==
+X-Gm-Message-State: APjAAAXTEaLB7dtnXkB1A9hbA729hCiwU0jqXxqLzrVcziooSlE1TOth
+        vu6g+vgA6snJRGd/qus+DYA=
+X-Google-Smtp-Source: APXvYqwFawfeWm6fRBnuZBGHaUnUoeXceuXbsribbvIXwB4WMdL8jLUfv7JHrluf25OhRAZinwumzg==
+X-Received: by 2002:aed:34c6:: with SMTP id x64mr31848120qtd.324.1573573876017;
+        Tue, 12 Nov 2019 07:51:16 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:f36a])
+        by smtp.gmail.com with ESMTPSA id g45sm11316870qtb.48.2019.11.12.07.51.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 07:51:15 -0800 (PST)
+Date:   Tue, 12 Nov 2019 07:51:14 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
+        namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net
+Subject: Re: [PATCHSET cgroup/for-5.5] kernfs,cgroup: support 64bit inos and
+ unify cgroup IDs
+Message-ID: <20191112155114.GF4163745@devbig004.ftw2.facebook.com>
+References: <20191104235944.3470866-1-tj@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Il7n/DHsA0sMLmDu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112151157.GD4506@aptenodytes>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191104235944.3470866-1-tj@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Greg.
 
---Il7n/DHsA0sMLmDu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A gentle ping.  I can route these through cgroup/for-5.5 if you're
+okay with the patch series.
 
-Hi,
+Thanks.
 
-On Tue 12 Nov 19, 16:11, Paul Kocialkowski wrote:
-> Hi,
->=20
-> On Tue 12 Nov 19, 11:20, Patrik Jakobsson wrote:
-> > On Thu, Nov 7, 2019 at 4:30 PM Paul Kocialkowski
-> > <paul.kocialkowski@bootlin.com> wrote:
-> > >
-> > > psbfb_probe performs an evaluation of the required size from the stol=
-en
-> > > GTT memory, but gets it wrong in two distinct ways:
-> > > - The resulting size must be page-size-aligned;
-> > > - The size to allocate is derived from the surface dimensions, not th=
-e fb
-> > >   dimensions.
-> > >
-> > > When two connectors are connected with different modes, the smallest =
-will
-> > > be stored in the fb dimensions, but the size that needs to be allocat=
-ed must
-> > > match the largest (surface) dimensions. This is what is used in the a=
-ctual
-> > > allocation code.
-> > >
-> > > Fix this by correcting the evaluation to conform to the two points ab=
-ove.
-> > > It allows correctly switching to 16bpp when one connector is e.g. 192=
-0x1080
-> > > and the other is 1024x768.
-> > >
-> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > ---
-> > >  drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/g=
-ma500/framebuffer.c
-> > > index 218f3bb15276..90237abee088 100644
-> > > --- a/drivers/gpu/drm/gma500/framebuffer.c
-> > > +++ b/drivers/gpu/drm/gma500/framebuffer.c
-> > > @@ -462,6 +462,7 @@ static int psbfb_probe(struct drm_fb_helper *help=
-er,
-> > >                 container_of(helper, struct psb_fbdev, psb_fb_helper);
-> > >         struct drm_device *dev =3D psb_fbdev->psb_fb_helper.dev;
-> > >         struct drm_psb_private *dev_priv =3D dev->dev_private;
-> > > +       unsigned int fb_size;
-> > >         int bytespp;
-> > >
-> > >         bytespp =3D sizes->surface_bpp / 8;
-> > > @@ -471,8 +472,11 @@ static int psbfb_probe(struct drm_fb_helper *hel=
-per,
-> > >         /* If the mode will not fit in 32bit then switch to 16bit to =
-get
-> > >            a console on full resolution. The X mode setting server wi=
-ll
-> > >            allocate its own 32bit GEM framebuffer */
-> > > -       if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
-> > > -                       dev_priv->vram_stolen_size) {
-> > > +       fb_size =3D ALIGN(sizes->surface_width * bytespp, 64) *
-> > > +                 sizes->surface_height;
-> > > +       fb_size =3D ALIGN(fb_size, PAGE_SIZE);
-> > > +
-> > > +       if (fb_size > dev_priv->vram_stolen_size) {
-> >=20
-> > psb_gtt_alloc_range() already aligns by PAGE_SIZE for us. Looks like
-> > we align a couple of times extra for luck. This needs cleaning up
-> > instead of adding even more aligns.
->=20
-> I'm not sure this is really for luck. As far as I can see, we need to do =
-it
-> properly for this size estimation since it's the final size that will be
-> allocated (and thus needs to be available in whole).
->=20
-> For the other times there is explicit alignment, they seem justified too:
-> - in psb_gem_create: it is common to pass the aligned size when creating =
-the
->   associated GEM object with drm_gem_object_init, even though it's probab=
-ly not
->   crucial given that this is not where allocation actually happens;
-> - in psbfb_create: the full size is apparently only really used to memset=
- 0
->   the allocated buffer. I think this makes sense for security reasons (an=
-d not
->   leak previous contents in the additional space required for alignment).
->=20
-> What strikes me however is that each call to psb_gtt_alloc_range takes the
-> alignment as a parameter when it's really always PAGE_SIZE, so it should
-> probably just be hardcoded in the call to allocate_resource.
->=20
-> What do you think?
->=20
-> > Your size calculation looks correct and indeed makes my 1024x600 +
-> > 1920x1080 setup actually display something, but for some reason I get
-> > an incorrect panning on the smaller screen and stale data on the
-> > surface only visible by the larger CRTC. Any idea what's going on?
->=20
-> I'm not seeing this immediately, but I definitely have something strange
-> after having printed more lines than the smallest display can handle or
-> scrolling, where more than the actual size of the fb is used.
->=20
-> Maybe this is related to using the PowerVR-accelerated fb ops, that aren't
-> quite ready for this use case?
->=20
-> I'll give it a try with psbfb_roll_ops and psbfb_unaccel_ops instead to s=
-ee
-> if it changes something for me. Maybe it would help for you too?
-
-Some quick feedback about that:
-- psbfb_unaccel_ops gives a correct result where the scrolling area is bound
-  to the smallest display;
-- psbfb_roll_ops gives a working scrolling but bound to the largest display
-  (so the current shell line becomes invisible on the smallest one eventual=
-ly);
-- psbfb_ops gives the same issue as above and seems to add artifacts on top.
-
-There's probably limited interest in working on that aspect on our side tho=
-ugh.
-I'd be interested to know if it affects the issue you're seeing though.
-
-Cheers,
-
-Paul
-
-> I suspect that the generic implementation is already bullet-proof for the=
-se
-> kinds of use case.
->=20
-> Cheers and thanks for the feedback,
->=20
-> Paul
->=20
-> >=20
-> > >                  sizes->surface_bpp =3D 16;
-> > >                  sizes->surface_depth =3D 16;
-> > >          }
-> > > --
-> > > 2.23.0
-> > >
->=20
-> --=20
-> Paul Kocialkowski, Bootlin
-> Embedded Linux and kernel engineering
-> https://bootlin.com
-
-
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---Il7n/DHsA0sMLmDu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3K1LQACgkQ3cLmz3+f
-v9FCEwf/XEWwxAYDxZCEg77vGI++OJiygsuiXp3KNDxCAdUxBSgECx4fku772WZG
-E4j/DBf1RFmUfoBAh9NMtm0+ruWu4SMKCnWKCz4o+Yt15gZocG8T2n/u6gDMQIEj
-4ajkRXZ9snM0IDXd5WjmPfktayxETGIs9I3IuMSighuvWUUTrIyUm3kXDQZao10h
-MJZvhmCrzUhXG2V1VS+wSdlzFZtLgDbjvk6X7A6SGF2ONFgDIuEK7N3JEzbvFY6a
-SOnq1DunTL62uURGJ8Xtio9XN/OycXSXZGrp7C+Bg146gLpSfZqR1FqBrQ1JyW7K
-ItMdJAD/rjjcJ61DAagf7H4D9npMwQ==
-=6YLs
------END PGP SIGNATURE-----
-
---Il7n/DHsA0sMLmDu--
+-- 
+tejun
