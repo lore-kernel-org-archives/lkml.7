@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8AAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2D3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278CA2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA772184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfKLBAK (ORCPT
+        id S1727511AbfKLBAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:00:10 -0500
+        Mon, 11 Nov 2019 20:00:15 -0500
 Received: from mga14.intel.com ([192.55.52.115]:61337 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbfKLA7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726985AbfKLA7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Nov 2019 19:59:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,18 +25,18 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 16:59:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,294,1569308400"; 
-   d="scan'208";a="215864798"
+   d="scan'208";a="215864797"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
   by orsmga002.jf.intel.com with ESMTP; 11 Nov 2019 16:59:43 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 168DE301AFA; Mon, 11 Nov 2019 16:59:43 -0800 (PST)
+        id 108F6301AF7; Mon, 11 Nov 2019 16:59:43 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     jolsa@kernel.org
 Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v6 05/12] perf evsel: Add iterator to iterate over events ordered by CPU
-Date:   Mon, 11 Nov 2019 16:59:34 -0800
-Message-Id: <20191112005941.649137-6-andi@firstfloor.org>
+Subject: [PATCH v6 04/12] perf evlist: Maintain evlist->all_cpus
+Date:   Mon, 11 Nov 2019 16:59:33 -0800
+Message-Id: <20191112005941.649137-5-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191112005941.649137-1-andi@firstfloor.org>
 References: <20191112005941.649137-1-andi@firstfloor.org>
@@ -49,116 +49,186 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add some common code that is needed to iterate over all events
-in CPU order. Used in followon patches
+Maintain a cpumap in the evlist that is the union of all the cpus
+of the events.
+
+This needs a cpumap merge operation, which is added together
+with tests.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
+v2:
+Add tests for cpu map merge
+Fix handling of duplicates
+Rename _update to _merge
+Factor out sorting.
+Fix handling of NULL maps in merge
+v3:
+Add comments and empty lines to _merge
 ---
+ tools/perf/lib/cpumap.c                  | 57 ++++++++++++++++++++++++
+ tools/perf/lib/evlist.c                  |  1 +
+ tools/perf/lib/include/internal/evlist.h |  1 +
+ tools/perf/lib/include/perf/cpumap.h     |  2 +
+ tools/perf/tests/builtin-test.c          |  5 +++
+ tools/perf/tests/cpumap.c                | 16 +++++++
+ tools/perf/tests/tests.h                 |  1 +
+ 7 files changed, 83 insertions(+)
 
-v2: Add cpumap__for_each_cpu macro to factor out some common code
-v3: Drop cpumap__for_each_cpu macro again, replace with evlist__for_each_cpu
-Add new evlist__for_each_cpu
-Don't compute cpus nr in cpu_index iterator init, just use all_cpus
-v4:
-Remove __next, move into skip
-Add _no_inc
-Move initialization into iterator macro
-Rename cpu_index to cpu_iter
----
- tools/perf/util/cpumap.h |  1 +
- tools/perf/util/evlist.c | 32 ++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h |  8 ++++++++
- tools/perf/util/evsel.h  |  1 +
- 4 files changed, 42 insertions(+)
-
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 2553bef1279d..dbc1d7e949ed 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -60,4 +60,5 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index d81656b4635e..f93f4e703e4c 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -286,3 +286,60 @@ int perf_cpu_map__max(struct perf_cpu_map *map)
  
- int cpu_map__cpu(struct perf_cpu_map *cpus, int idx);
- bool cpu_map__has(struct perf_cpu_map *cpus, int cpu);
+ 	return max;
+ }
 +
- #endif /* __PERF_CPUMAP_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index fdce590d2278..dae6e846b2f8 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -342,6 +342,38 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
- 		return perf_thread_map__nr(evlist->core.threads);
++/*
++ * Merge two cpumaps
++ *
++ * orig either gets freed and replaced with a new map, or reused
++ * with no reference count change (similar to "realloc")
++ * other has its reference count increased.
++ */
++
++struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
++					 struct perf_cpu_map *other)
++{
++	int *tmp_cpus;
++	int tmp_len;
++	int i, j, k;
++	struct perf_cpu_map *merged;
++
++	if (!orig && !other)
++		return NULL;
++	if (!orig) {
++		perf_cpu_map__get(other);
++		return other;
++	}
++	if (!other)
++		return orig;
++	if (orig->nr == other->nr &&
++	    !memcmp(orig->map, other->map, orig->nr * sizeof(int)))
++		return orig;
++
++	tmp_len = orig->nr + other->nr;
++	tmp_cpus = malloc(tmp_len * sizeof(int));
++	if (!tmp_cpus)
++		return NULL;
++
++	/* Standard merge algorithm from wikipedia */
++	i = j = k = 0;
++	while (i < orig->nr && j < other->nr) {
++		if (orig->map[i] <= other->map[j]) {
++			if (orig->map[i] == other->map[j])
++				j++;
++			tmp_cpus[k++] = orig->map[i++];
++		} else
++			tmp_cpus[k++] = other->map[j++];
++	}
++
++	while (i < orig->nr)
++		tmp_cpus[k++] = orig->map[i++];
++
++	while (j < other->nr)
++		tmp_cpus[k++] = other->map[j++];
++	assert(k <= tmp_len);
++
++	merged = cpu_map__trim_new(k, tmp_cpus);
++	free(tmp_cpus);
++	perf_cpu_map__put(orig);
++	return merged;
++}
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index 205ddbb80bc1..ae9e65aa2491 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -54,6 +54,7 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 
+ 	perf_thread_map__put(evsel->threads);
+ 	evsel->threads = perf_thread_map__get(evlist->threads);
++	evlist->all_cpus = perf_cpu_map__merge(evlist->all_cpus, evsel->cpus);
  }
  
-+void evlist__cpu_iter_start(struct evlist *evlist)
+ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+index a2fbccf1922f..74dc8c3f0b66 100644
+--- a/tools/perf/lib/include/internal/evlist.h
++++ b/tools/perf/lib/include/internal/evlist.h
+@@ -18,6 +18,7 @@ struct perf_evlist {
+ 	int			 nr_entries;
+ 	bool			 has_user_cpus;
+ 	struct perf_cpu_map	*cpus;
++	struct perf_cpu_map	*all_cpus;
+ 	struct perf_thread_map	*threads;
+ 	int			 nr_mmaps;
+ 	size_t			 mmap_len;
+diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
+index ac9aa497f84a..6a17ad730cbc 100644
+--- a/tools/perf/lib/include/perf/cpumap.h
++++ b/tools/perf/lib/include/perf/cpumap.h
+@@ -12,6 +12,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
++LIBPERF_API struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
++						     struct perf_cpu_map *other);
+ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+ LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 8b286e9b7549..5fa37cf7f283 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -259,6 +259,11 @@ static struct test generic_tests[] = {
+ 		.desc = "Print cpu map",
+ 		.func = test__cpu_map_print,
+ 	},
++	{
++		.desc = "Merge cpu map",
++		.func = test__cpu_map_merge,
++	},
++
+ 	{
+ 		.desc = "Probe SDT events",
+ 		.func = test__sdt_event,
+diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+index 8a0d236202b0..4ac56741ac5f 100644
+--- a/tools/perf/tests/cpumap.c
++++ b/tools/perf/tests/cpumap.c
+@@ -120,3 +120,19 @@ int test__cpu_map_print(struct test *test __maybe_unused, int subtest __maybe_un
+ 	TEST_ASSERT_VAL("failed to convert map", cpu_map_print("1-10,12-20,22-30,32-40"));
+ 	return 0;
+ }
++
++int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_unused)
 +{
-+	struct evsel *pos;
++	struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
++	struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
++	struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
++	char buf[100];
 +
-+	/*
-+	 * Reset the per evsel cpu_iter. This is needed because
-+	 * each evsel's cpumap may have a different index space,
-+	 * and some operations need the index to modify
-+	 * the FD xyarray (e.g. open, close)
-+	 */
-+	evlist__for_each_entry(evlist, pos)
-+		pos->cpu_iter = 0;
++	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
++	cpu_map__snprint(c, buf, sizeof(buf));
++	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
++	perf_cpu_map__put(a);
++	perf_cpu_map__put(b);
++	perf_cpu_map__put(c);
++	return 0;
 +}
-+
-+bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu)
-+{
-+	if (ev->cpu_iter >= ev->core.cpus->nr)
-+		return true;
-+	if (cpu >= 0 && ev->core.cpus->map[ev->cpu_iter] != cpu)
-+		return true;
-+	return false;
-+}
-+
-+bool evsel__cpu_iter_skip(struct evsel *ev, int cpu)
-+{
-+	if (!evsel__cpu_iter_skip_no_inc(ev, cpu)) {
-+		ev->cpu_iter++;
-+		return false;
-+	}
-+	return true;
-+}
-+
- void evlist__disable(struct evlist *evlist)
- {
- 	struct evsel *pos;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 13051409fd22..12606efc1f7c 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -333,9 +333,17 @@ void perf_evlist__to_front(struct evlist *evlist,
- #define evlist__for_each_entry_safe(evlist, tmp, evsel) \
- 	__evlist__for_each_entry_safe(&(evlist)->core.entries, tmp, evsel)
- 
-+#define evlist__for_each_cpu(evlist, index, cpu)	\
-+	evlist__cpu_iter_start(evlist);			\
-+	perf_cpu_map__for_each_cpu (cpu, index, (evlist)->core.all_cpus)
-+
- void perf_evlist__set_tracking_event(struct evlist *evlist,
- 				     struct evsel *tracking_evsel);
- 
-+void evlist__cpu_iter_start(struct evlist *evlist);
-+bool evsel__cpu_iter_skip(struct evsel *ev, int cpu);
-+bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu);
-+
- struct evsel *
- perf_evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index ddc5ee6f6592..b10d5ba21966 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -95,6 +95,7 @@ struct evsel {
- 	bool			collect_stat;
- 	bool			weak_group;
- 	bool			percore;
-+	int			cpu_iter;
- 	const char		*pmu_name;
- 	struct {
- 		perf_evsel__sb_cb_t	*cb;
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 9837b6e93023..44b184fd869f 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -98,6 +98,7 @@ int test__event_update(struct test *test, int subtest);
+ int test__event_times(struct test *test, int subtest);
+ int test__backward_ring_buffer(struct test *test, int subtest);
+ int test__cpu_map_print(struct test *test, int subtest);
++int test__cpu_map_merge(struct test *test, int subtest);
+ int test__sdt_event(struct test *test, int subtest);
+ int test__is_printable_array(struct test *test, int subtest);
+ int test__bitmap_print(struct test *test, int subtest);
 -- 
 2.23.0
 
