@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41331C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AE8C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F322246F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67DA2246F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfKLLSO (ORCPT
+        id S1726952AbfKLLVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:18:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33586 "EHLO
+        Tue, 12 Nov 2019 06:21:47 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33672 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfKLLSI (ORCPT
+        with ESMTP id S1727264AbfKLLSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:18:08 -0500
+        Tue, 12 Nov 2019 06:18:14 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBD-0000F5-OF; Tue, 12 Nov 2019 12:17:51 +0100
+        id 1iUUBT-0000V8-ML; Tue, 12 Nov 2019 12:18:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6B7541C0084;
-        Tue, 12 Nov 2019 12:17:51 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:17:51 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2AB691C047B;
+        Tue, 12 Nov 2019 12:18:04 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:03 -0000
+From:   "tip-bot2 for James Clark" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf diff: Don't use hack to skip column length calculation
-Cc:     Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Subject: [tip: perf/core] libsubcmd: Move EXTRA_FLAGS to the end to allow
+ overriding existing flags
+Cc:     James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, nd <nd@arm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191107074719.26139-2-yao.jin@linux.intel.com>
-References: <20191107074719.26139-2-yao.jin@linux.intel.com>
+In-Reply-To: <20191028113340.4282-1-james.clark@arm.com>
+References: <20191028113340.4282-1-james.clark@arm.com>
 MIME-Version: 1.0
-Message-ID: <157355747111.29376.17426346123468487029.tip-bot2@tip-bot2>
+Message-ID: <157355748376.29376.14204856327895210952.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,75 +62,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     0bdf181fe0e5b6f6d5764ff482d7ae4707f8986b
-Gitweb:        https://git.kernel.org/tip/0bdf181fe0e5b6f6d5764ff482d7ae4707f8986b
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Thu, 07 Nov 2019 15:47:13 +08:00
+Commit-ID:     d894967fcaa469cb4c43544855f6fcc18045d526
+Gitweb:        https://git.kernel.org/tip/d894967fcaa469cb4c43544855f6fcc18045d526
+Author:        James Clark <James.Clark@arm.com>
+AuthorDate:    Mon, 28 Oct 2019 11:34:01 
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 07 Nov 2019 09:08:03 -03:00
+CommitterDate: Wed, 06 Nov 2019 15:49:39 -03:00
 
-perf diff: Don't use hack to skip column length calculation
+libsubcmd: Move EXTRA_FLAGS to the end to allow overriding existing flags
 
-Previously we use a nasty hack to skip the hists__calc_col_len for block
-since this function is not very suitable for block column length
-calculation.
+Move EXTRA_WARNINGS and EXTRA_FLAGS to the end of the compilation line,
+otherwise they cannot be used to override the default values.
 
-This patch removes the hack code and add a check at the entry of
-hists__calc_col_len to skip for block case.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191107074719.26139-2-yao.jin@linux.intel.com
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: nd <nd@arm.com>
+Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
+[ split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-diff.c | 11 ++---------
- tools/perf/util/hist.c    |  2 ++
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ tools/lib/subcmd/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 5281629..faf99a8 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -765,13 +765,6 @@ static void block_hists_match(struct hists *hists_base,
- 	}
- }
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 5b2cd5e..352c606 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -19,8 +19,7 @@ MAKEFLAGS += --no-print-directory
  
--static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
--{
--	/* Skip the calculation of column length in output_resort */
--	he->filtered = true;
--	return 0;
--}
--
- static void hists__precompute(struct hists *hists)
- {
- 	struct rb_root_cached *root;
-@@ -820,8 +813,8 @@ static void hists__precompute(struct hists *hists)
- 				if (bh->valid && pair_bh->valid) {
- 					block_hists_match(&bh->block_hists,
- 							  &pair_bh->block_hists);
--					hists__output_resort_cb(&pair_bh->block_hists,
--								NULL, filter_cb);
-+					hists__output_resort(&pair_bh->block_hists,
-+							     NULL);
- 				}
- 				break;
- 			default:
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 679a1d7..daa6eef 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -80,6 +80,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	int symlen;
- 	u16 len;
+ LIBFILE = $(OUTPUT)libsubcmd.a
  
-+	if (h->block_info)
-+		return;
- 	/*
- 	 * +4 accounts for '[x] ' priv level info
- 	 * +2 accounts for 0x prefix on raw addresses
+-CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+-CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
++CFLAGS := -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
+ 
+ ifeq ($(DEBUG),0)
+   ifeq ($(feature-fortify-source), 1)
+@@ -43,6 +42,8 @@ CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+ 
+ CFLAGS += -I$(srctree)/tools/include/
+ 
++CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
++
+ SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
+ 
+ all:
