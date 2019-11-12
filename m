@@ -2,127 +2,141 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C244C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A25C17447
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 803812084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCEC20818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="C1aJehxV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="n2Mw6n7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfKLCV5 (ORCPT
+        id S1726983AbfKLC0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 21:21:57 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:53362 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfKLCV5 (ORCPT
+        Mon, 11 Nov 2019 21:26:41 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:13920 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfKLC0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 21:21:57 -0500
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id xAC2Lku3003792
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:21:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xAC2Lku3003792
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573525307;
-        bh=y7MzE4Tyl7ZA6/nakd70Ls06yxLts/TrU5ic+fxvtfo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=C1aJehxV1KpU4kD1mebXEvYGbuHV1tCyJy2FgOKgNde7u2m1urDSByV5602GtcEHX
-         AbncWs7376oCtbr6pE6+8WodZdJ6DEmPBTHUceX++/I31xaXYpWxg88hWYYb0qSAAm
-         MSiXMDyNTgvdPQaL7wVmb69zJOdVM5H6SjQWOxj/pLSjHvC+xSMeobV8g1+2iHbQKM
-         Hkjxc5QOp8l4aqW1LnBreKskO85rXCrrZQp/a7Cq60hklcZ5Krao+n2Az7MAy9GZQs
-         sf0/HAmVY/DJ6ZwGGZkfKJO30z/Ca9ZX1nsD8L23ammk/W3EWdYBG19FjQsKYWzxKp
-         lP7Coi4msZfdg==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id b16so9762987vso.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 18:21:46 -0800 (PST)
-X-Gm-Message-State: APjAAAWzYx0R2y6V9EpgC0qRQtuXg2OzKBC1HkbOsaCr4IYHW27HJ25b
-        xZUAplKwKQ+kgKNHFvJkmOHbSnyiEyN/bXJSzsk=
-X-Google-Smtp-Source: APXvYqxeanEG4WIYh37eR2tVL4EL2c3BDdD2rPZKpV6mv7REHbZo5fpg3hHZj6xKkC+uGEZrKDIqz7lYWNAgwCoomUs=
-X-Received: by 2002:a05:6102:726:: with SMTP id u6mr20193685vsg.179.1573525305837;
- Mon, 11 Nov 2019 18:21:45 -0800 (PST)
+        Mon, 11 Nov 2019 21:26:40 -0500
+X-Greylist: delayed 25988 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 21:26:39 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573525598;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/lsl6nTo//BjYrk5oV+rdFSP85ZYnNHrebh0HC0dN2g=;
+        b=n2Mw6n7yQlnP2+Yg86gJCGqtMqi0M51lDJuB/tNgQy0Qxf6whTQBEkcsbSxBKhAD/q
+        gt4aj76Mc5GUvI2T3Gk4OmTYmoRUdDtjPtyrbBYcreXzJafwc3uYmTo4OmjYaQsLQ8Jo
+        2OyKhK3vf0+RcUE80YqNDRAKkHpb+9TxQyRDfqHLbLWIVa9KCLj7LOhvzVYhgThaovWj
+        HyI8xKfjzjhZ8TxPN7VOL1QQA7lSl3fBdYWi3Z2qK3YXAGniahW6iXlSIJCi2wjA2p6T
+        ZAUPdjhlpLzznIS2ZtTUI2eVS9pqeZ1b7o8mhbuOGcplBY9I5pPnYfbOuV6U6R4LH8V/
+        F7EA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zWgDMLyyzTHyZb69qn/xQ3l1emqDBm3cL6VhEyGWhThurAC8gyGEsg=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id N09a57vAC2P54QC
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 12 Nov 2019 03:25:05 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v24 01/12] Linux Random Number Generator
+Date:   Tue, 12 Nov 2019 03:25:03 +0100
+Message-ID: <9370249.4lZBqg7Imc@positron.chronox.de>
+In-Reply-To: <alpine.DEB.2.21.1911120041060.1833@nanos.tec.linutronix.de>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2369119.jSEA3qhmGI@positron.chronox.de> <alpine.DEB.2.21.1911120041060.1833@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20191110153043.111710-1-dima@golovin.in>
-In-Reply-To: <20191110153043.111710-1-dima@golovin.in>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 12 Nov 2019 11:21:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQBKjJB0koyAANPb+iwGa7DYi2R+0EFiD6pJ4TihMFjHQ@mail.gmail.com>
-Message-ID: <CAK7LNAQBKjJB0koyAANPb+iwGa7DYi2R+0EFiD6pJ4TihMFjHQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: kbuild: use correct nm executable
-To:     Dmitry Golovin <dima@golovin.in>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Matthias Maennich <maennich@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Stefan Agner <stefan@agner.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 12:32 AM Dmitry Golovin <dima@golovin.in> wrote:
->
-> Since $(NM) variable can be easily overridden for the whole build, it's
-> better to use it instead of $(CROSS_COMPILE)nm. The use of $(CROSS_COMPILE)
-> prefixed variables where their calculated equivalents can be used is
-> incorrect. This fixes issues with builds where $(NM) is set to llvm-nm.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/766
-> Signed-off-by: Dmitry Golovin <dima@golovin.in>
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Matthias Maennich <maennich@google.com>
-> ---
+Am Dienstag, 12. November 2019, 00:54:16 CET schrieb Thomas Gleixner:
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Hi Thomas,
+
+> Stephan,
+>=20
+> On Mon, 11 Nov 2019, Stephan M=FCller wrote:
+>=20
+> thanks for Cc'ing me. I'll have a look at the technical details at later
+> point in time.=20
+
+Thank you very much for considering a review.
+
+> While skimming through the patches I noticed, that you
+> thankfully added the SPDX license identifiers, but
+>=20
+> > @@ -0,0 +1,105 @@
+> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > +/*
+> > + * LRNG Fast Noise Source: CPU-based noise source
+> > + *
+> > + * Copyright (C) 2016 - 2019, Stephan Mueller <smueller@chronox.de>
+> > + *
+> > + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> > + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+> > + * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ALL OF
+> > + * WHICH ARE HEREBY DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE
+> > + * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+> > + * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+> > + * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+> > + * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+> > + * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> > + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+> > + * USE OF THIS SOFTWARE, EVEN IF NOT ADVISED OF THE POSSIBILITY OF SUCH
+> > + * DAMAGE.
+>=20
+> we really want to get rid of these boiler plate disclaimers as they are
+> already implicit by the SPDX license identifier and provide no real
+> value.
+>=20
+> Aside of that, the above disclaimer has even a slightly different wording
+> than the standard BSD-2-Clause disclaimer which is going to cause even mo=
+re
+> headaches as automated scanner tools will detect that and someone has to =
+go
+> through that unreadable uppercase yelling mess and figure out whether it's
+> a legaly substantial difference.
+>=20
+> Can you please get rid of those?
+
+Absolutely. I have removed that boiler plate disclaimer from all files.
+
+Though I hope it is acceptable to wait for further comments before a=20
+resubmission.
+
+Thank you very much.
+
+Ciao
+Stephan
 
 
-
->  arch/arm/boot/compressed/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-> index 9219389bbe61..a1e883c5e5c4 100644
-> --- a/arch/arm/boot/compressed/Makefile
-> +++ b/arch/arm/boot/compressed/Makefile
-> @@ -121,7 +121,7 @@ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin -I$(obj)
->  asflags-y := -DZIMAGE
->
->  # Supply kernel BSS size to the decompressor via a linker symbol.
-> -KBSS_SZ = $(shell echo $$(($$($(CROSS_COMPILE)nm $(obj)/../../../../vmlinux | \
-> +KBSS_SZ = $(shell echo $$(($$($(NM) $(obj)/../../../../vmlinux | \
->                 sed -n -e 's/^\([^ ]*\) [AB] __bss_start$$/-0x\1/p' \
->                        -e 's/^\([^ ]*\) [AB] __bss_stop$$/+0x\1/p') )) )
->  LDFLAGS_vmlinux = --defsym _kernel_bss_size=$(KBSS_SZ)
-> @@ -165,7 +165,7 @@ $(obj)/bswapsdi2.S: $(srctree)/arch/$(SRCARCH)/lib/bswapsdi2.S
->  # The .data section is already discarded by the linker script so no need
->  # to bother about it here.
->  check_for_bad_syms = \
-> -bad_syms=$$($(CROSS_COMPILE)nm $@ | sed -n 's/^.\{8\} [bc] \(.*\)/\1/p') && \
-> +bad_syms=$$($(NM) $@ | sed -n 's/^.\{8\} [bc] \(.*\)/\1/p') && \
->  [ -z "$$bad_syms" ] || \
->    ( echo "following symbols must have non local/private scope:" >&2; \
->      echo "$$bad_syms" >&2; false )
-> --
-> 2.23.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
--- 
-Best Regards
-Masahiro Yamada
