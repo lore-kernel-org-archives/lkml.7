@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B22EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA41CC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01DB22469
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7D02246F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfKLLSm (ORCPT
+        id S1727450AbfKLLSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:18:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34082 "EHLO
+        Tue, 12 Nov 2019 06:18:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34088 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727598AbfKLLSi (ORCPT
+        with ESMTP id S1727392AbfKLLSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 06:18:38 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBg-0000gf-HQ; Tue, 12 Nov 2019 12:18:20 +0100
+        id 1iUUBi-0000jR-Ge; Tue, 12 Nov 2019 12:18:22 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4C7CA1C0084;
-        Tue, 12 Nov 2019 12:18:14 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:18:13 -0000
-From:   "tip-bot2 for Leo Yan" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 46FD71C04CB;
+        Tue, 12 Nov 2019 12:18:16 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:15 -0000
+From:   "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf tests: Fix a typo
-Cc:     Leo Yan <leo.yan@linaro.org>, Will Deacon <will@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: perf/core] perf evsel: Always preserve errno while cleaning up
+ perf_event_open failures
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191023083324.12093-1-leo.yan@linaro.org>
-References: <20191023083324.12093-1-leo.yan@linaro.org>
+In-Reply-To: <20191020175202.32456-2-andi@firstfloor.org>
+References: <20191020175202.32456-2-andi@firstfloor.org>
 MIME-Version: 1.0
-Message-ID: <157355749390.29376.17458804774402570506.tip-bot2@tip-bot2>
+Message-ID: <157355749593.29376.11413893527155626939.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,41 +61,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     b7dc21f546d854aea75245efd88d455f39f5d005
-Gitweb:        https://git.kernel.org/tip/b7dc21f546d854aea75245efd88d455f39f5d005
-Author:        Leo Yan <leo.yan@linaro.org>
-AuthorDate:    Wed, 23 Oct 2019 16:33:24 +08:00
+Commit-ID:     796c01a4bfb4b35ec6d1bd1cd5d520515d078b51
+Gitweb:        https://git.kernel.org/tip/796c01a4bfb4b35ec6d1bd1cd5d520515d078b51
+Author:        Andi Kleen <ak@linux.intel.com>
+AuthorDate:    Sun, 20 Oct 2019 10:51:54 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Wed, 06 Nov 2019 15:43:05 -03:00
 
-perf tests: Fix a typo
+perf evsel: Always preserve errno while cleaning up perf_event_open failures
 
-Correct typo in comment: s/suck/stuck.
+In some cases when perf_event_open fails, it may do some closes to clean
+up. In special cases these closes can fail too, which overwrites the
+errno of the perf_event_open, which is then incorrectly reported.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reported-by: Will Deacon <will@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Save/restore errno around closes.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191023083324.12093-1-leo.yan@linaro.org
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20191020175202.32456-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/bp_signal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 166f411..415903b 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -295,7 +295,7 @@ bool test__bp_signal_is_supported(void)
- 	 * breakpointed instruction.
- 	 *
- 	 * Since arm64 has the same issue with arm for the single-step
--	 * handling, this case also gets suck on the breakpointed
-+	 * handling, this case also gets stuck on the breakpointed
- 	 * instruction.
- 	 *
- 	 * Just disable the test for these architectures until these
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index abc7fda..d831038 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1574,7 +1574,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ {
+ 	int cpu, thread, nthreads;
+ 	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
+-	int pid = -1, err;
++	int pid = -1, err, old_errno;
+ 	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
+ 
+ 	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
+@@ -1727,8 +1727,8 @@ try_fallback:
+ 	 */
+ 	if (err == -EMFILE && set_rlimit < INCREASED_MAX) {
+ 		struct rlimit l;
+-		int old_errno = errno;
+ 
++		old_errno = errno;
+ 		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
+ 			if (set_rlimit == NO_CHANGE)
+ 				l.rlim_cur = l.rlim_max;
+@@ -1812,6 +1812,7 @@ out_close:
+ 	if (err)
+ 		threads->err_thread = thread;
+ 
++	old_errno = errno;
+ 	do {
+ 		while (--thread >= 0) {
+ 			close(FD(evsel, cpu, thread));
+@@ -1819,6 +1820,7 @@ out_close:
+ 		}
+ 		thread = nthreads;
+ 	} while (--cpu >= 0);
++	errno = old_errno;
+ 	return err;
+ }
+ 
