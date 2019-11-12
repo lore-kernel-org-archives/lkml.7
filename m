@@ -2,153 +2,98 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437EBC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B50CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FA9214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7/GnzSK"
+	by mail.kernel.org (Postfix) with ESMTP id 69DB92196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKLQ4a (ORCPT
+        id S1727538AbfKLQ5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:56:30 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35416 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfKLQ43 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:56:29 -0500
-Received: by mail-qt1-f196.google.com with SMTP id n4so15867663qte.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:56:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=er/wmmeDT/FC3WYdMLpILfV6MFzVIjn8Uisf7I5rS/4=;
-        b=U7/GnzSK7a4tnxHCGdoWdfHK2Z3wQAzDYNeGO/33AvU3nvcSg30RqlkvuhDfs58kMV
-         ASareLic8/lM1n6aqa03u4NIMGuH9wIlyU8m+SoiLh4MlqBclJ77M1TjMWVUyGwOLDFi
-         4tlkQBBKCAJwyEGFRXVIOqjs0YKC/u9icMeC1BVNtscZPqN+rAGONDSm/4WT4YibjRL/
-         qmaaTM6CqDd/RqQ8e+bQiUl+zuRc8K00AdkFTdK/21kGmloOfYrX7UVdepXxBKtS9N8A
-         Bs5WY4/2FT9ktA7zj17qiTN+ttA71O1cRBJViNAM4OQzy9Ps0qI61Bt5daxulY8I/3L+
-         OIDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=er/wmmeDT/FC3WYdMLpILfV6MFzVIjn8Uisf7I5rS/4=;
-        b=JkKNPhBT4Aoj+FRaZQa1B96xfXU0RBpqKye8xHPeAs9tz0DnCcIup9b3XAwXAt0wyV
-         SwcDs40OgQuW9JTFGy/mD1gC+w/vRL+D+32wxPPeyMNdt6SW2vdbUQVSlQiYN9tX9JeL
-         kas7WK7QYd4FCzg9qsr9sRuDfzlPAxmF4pWblAqZLQN9wfmhurkNf1xMMJgwKcduIw8R
-         JikqXqtsV3hQoqddwdFoUhT6ddxBIMqn7x6yLqpT1/aQ2YRE5o8WJGHbweIuxArTwo2k
-         8XNrfP/mp/U+C0gLba9DzOGpaLCJJlO6WJ7vBr/KUIYvHyE6fmksGHdhrFe9Qb63y4zF
-         KDtQ==
-X-Gm-Message-State: APjAAAX2JHEKhqpKI22xohtNjkM7n8bzBeYBrebpud+wI9uPwpxLn3i6
-        1h8t1cJvwlkJOw3IrXTR8s6bCxaLPa3h9g==
-X-Google-Smtp-Source: APXvYqxWVZeWVlk1jle2WLwBw8PW1CYrr3UlN6puLkRzhtqwTnYLQSjuUVBT9em4Bs1ywUSSyGAHHg==
-X-Received: by 2002:ac8:5412:: with SMTP id b18mr32561063qtq.34.1573577787752;
-        Tue, 12 Nov 2019 08:56:27 -0800 (PST)
-Received: from gmail.com (dynamic-186-154-98-65.dynamic.etb.net.co. [186.154.98.65])
-        by smtp.gmail.com with ESMTPSA id e10sm11430326qte.51.2019.11.12.08.56.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 08:56:27 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:56:25 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-Subject: [PATCH 9/9] staging: rtl8723bs: Rename variable
-Message-ID: <92695d6d57a3c8acc009d33337cd0aa9cfff3a61.1573577309.git.jarias.linux@gmail.com>
-Mail-Followup-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-References: <cover.1573577309.git.jarias.linux@gmail.com>
+        Tue, 12 Nov 2019 11:57:18 -0500
+Received: from mga05.intel.com ([192.55.52.43]:28377 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbfKLQ5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:57:18 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 08:57:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,297,1569308400"; 
+   d="scan'208";a="229453522"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Nov 2019 08:57:17 -0800
+Date:   Tue, 12 Nov 2019 08:57:17 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+Message-ID: <20191112165717.GA18089@linux.intel.com>
+References: <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
+ <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
+ <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
+ <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
+ <20191107155846.GA7760@linux.intel.com>
+ <20191109014323.GB8254@linux.intel.com>
+ <CAPcyv4hAY_OfExNP+_067Syh9kZAapppNwKZemVROfxgbDLLYQ@mail.gmail.com>
+ <20191111182750.GE11805@linux.intel.com>
+ <CAPcyv4hErx-Hd5q+3+W6VUSWDpEuOfipMsWAL+nnQtZvYAf3bg@mail.gmail.com>
+ <e6637be8-7890-579b-8131-6fdbbd791fa0@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1573577309.git.jarias.linux@gmail.com>
+In-Reply-To: <e6637be8-7890-579b-8131-6fdbbd791fa0@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames a variable name previously defined in uppercase.
+On Tue, Nov 12, 2019 at 11:19:44AM +0100, Paolo Bonzini wrote:
+> On 12/11/19 01:51, Dan Williams wrote:
+> > An elevated page reference count for file mapped pages causes the
+> > filesystem (for a dax mode file) to wait for that reference count to
+> > drop to 1 before allowing the truncate to proceed. For a page cache
+> > backed file mapping (non-dax) the reference count is not considered in
+> > the truncate path. It does prevent the page from getting freed in the
+> > page cache case, but the association to the file is lost for truncate.
+> 
+> KVM support for file-backed guest memory is limited.  It is not
+> completely broken, in fact cases such as hugetlbfs are in use routinely,
+> but corner cases such as truncate aren't covered well indeed.
 
-Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 24 +++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+KVM's actual MMU should be ok since it coordinates with the mmu_notifier.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index be0d83280e1c..1f5fe218fc0e 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -1243,7 +1243,7 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 	struct sta_info 	*psta = NULL;
- 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
- 	s32 bmcst = IS_MCAST(pattrib->ra);
--	u8 *BIP_AAD = NULL;
-+	u8 *bip_aad = NULL;
- 	u8 *MGMT_body = NULL;
- 
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-@@ -1255,10 +1255,10 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 	pwlanhdr = (struct ieee80211_hdr *)pframe;
- 
- 	ori_len = BIP_AAD_SIZE+pattrib->pktlen;
--	tmp_buf = BIP_AAD = rtw_zmalloc(ori_len);
-+	tmp_buf = bip_aad = rtw_zmalloc(ori_len);
- 	subtype = GetFrameSubType(pframe); /* bit(7)~bit(2) */
- 
--	if (!BIP_AAD)
-+	if (!bip_aad)
- 		return _FAIL;
- 
- 	spin_lock_bh(&padapter->security_key_mutex);
-@@ -1301,17 +1301,17 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 		frame_body_len = pattrib->pktlen - sizeof(struct ieee80211_hdr_3addr);
- 
- 		/* conscruct AAD, copy frame control field */
--		memcpy(BIP_AAD, &pwlanhdr->frame_control, 2);
--		ClearRetry(BIP_AAD);
--		ClearPwrMgt(BIP_AAD);
--		ClearMData(BIP_AAD);
-+		memcpy(bip_aad, &pwlanhdr->frame_control, 2);
-+		ClearRetry(bip_aad);
-+		ClearPwrMgt(bip_aad);
-+		ClearMData(bip_aad);
- 		/* conscruct AAD, copy address 1 to address 3 */
--		memcpy(BIP_AAD+2, pwlanhdr->addr1, 18);
-+		memcpy(bip_aad+2, pwlanhdr->addr1, 18);
- 		/* copy management fram body */
--		memcpy(BIP_AAD+BIP_AAD_SIZE, MGMT_body, frame_body_len);
-+		memcpy(bip_aad+BIP_AAD_SIZE, MGMT_body, frame_body_len);
- 		/* calculate mic */
- 		if (omac1_aes_128(padapter->securitypriv.dot11wBIPKey[padapter->securitypriv.dot11wBIPKeyid].skey
--			, BIP_AAD, BIP_AAD_SIZE+frame_body_len, mic))
-+			, bip_aad, BIP_AAD_SIZE+frame_body_len, mic))
- 			goto xmitframe_coalesce_fail;
- 
- 		/* copy right BIP mic value, total is 128bits, we use the 0~63 bits */
-@@ -1391,12 +1391,12 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 
- xmitframe_coalesce_success:
- 	spin_unlock_bh(&padapter->security_key_mutex);
--	kfree(BIP_AAD);
-+	kfree(bip_aad);
- 	return _SUCCESS;
- 
- xmitframe_coalesce_fail:
- 	spin_unlock_bh(&padapter->security_key_mutex);
--	kfree(BIP_AAD);
-+	kfree(bip_aad);
- 	return _FAIL;
- }
- 
--- 
-2.20.1
+kvm_vcpu_map() is where KVM could run afoul of page cache truncation.
+This is the other main use of hva_to_pfn*(), where KVM directly accesses
+guest memory (which could be file-backed) without coordinating with the
+mmu_notifier.  IIUC, an ill-timed page cache truncation could result in a
+write from KVM effectively being dropped due to writeback racing with
+KVM's write to the page.  If that's true, then I think KVM would need to
+to move to the proposed pin_user_pages() to ensure its "DMA" isn't lost.
 
+> > As long as any memory the guest expects to be persistent is backed by
+> > mmu-notifier coordination we're all good, otherwise an elevated
+> > reference count does not coordinate with truncate in a reliable way.
+
+KVM itself is (mostly) blissfully unaware of any such expectations.  The
+userspace VMM, e.g. Qemu, is ultimately responsible for ensuring the guest
+sees a valid model, e.g. that persistent memory (as presented to the guest)
+is actually persistent (from the guest's perspective).
+
+The big caveat is the truncation issue above.
