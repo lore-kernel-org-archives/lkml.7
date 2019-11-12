@@ -2,164 +2,114 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBE3C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6259C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B6F21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC15C20818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XDTPGbX/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neEOr/Xh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfKLVKx (ORCPT
+        id S1727354AbfKLVL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:10:53 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1270 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfKLVKw (ORCPT
+        Tue, 12 Nov 2019 16:11:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35155 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfKLVL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:10:52 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcb1fa00000>; Tue, 12 Nov 2019 13:09:52 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 12 Nov 2019 13:10:48 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 13:10:48 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
- 2019 21:10:47 +0000
-Subject: Re: [PATCH v3 00/23] mm/gup: track dma-pinned pages: FOLL_PIN,
- FOLL_LONGTERM
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191112000700.3455038-1-jhubbard@nvidia.com>
- <20191112203802.GD5584@ziepe.ca>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <02fa935c-3469-b766-b691-5660084b60b9@nvidia.com>
-Date:   Tue, 12 Nov 2019 13:10:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 12 Nov 2019 16:11:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id s5so9045808wrw.2;
+        Tue, 12 Nov 2019 13:11:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TH0pQYUJAlU7IsOFtdmL7+pSDQHhMRdnIPSaufyDmy8=;
+        b=neEOr/XhAjqS2x9v3RgYw6pa2yydP1Q9JSSiLlWFJIxTYLEOLa7mLOTKIl4yhff0jk
+         RTpE4J1jRRQ+eHTi6JZsc24l2Ta2bLpMVWmIbTq3dhhi+L7FoDbZm/sOJ3i4rAsyRdDX
+         V94VvherLU5TtlZ1ae6EgELdAjwKNl5FCOxABoxwuU98Wt1cEx/ikbcVoxxXx80UPkBg
+         hslzLRk+Jc7IbTilicRxneNTDKgQeX2X4A/bUwXN/cpEXqn26xebQHebyNr+1DqzjnFX
+         maUbHtdjsdndpPIDgJqQv9CZZcC/X9Z18TeuE29qzO5/xQ2mQpd1qbEQkK6X2pAIPFtg
+         q8BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TH0pQYUJAlU7IsOFtdmL7+pSDQHhMRdnIPSaufyDmy8=;
+        b=BYWXgYFHSCB2KS/We1XIjUMXYBb8yWoHnHjK3o+H5plo8aZpc4lsP65webZimGnV4b
+         50nXQnnzpAvCVY2miJz9kdHSwvWCDvIOg9Qll3r111E+F1aUGT7s36EqXVbWMSrKlPNa
+         x2OTIKfkd/TDNW/NqhUO78UgPDdz+MJmmbLjCec1jBOsCvzP/Y6H3uCnJjsYVQNQXBxL
+         l6f73chXLrGdPf2c4blPpAK4K54lMjtKWIjUo/Ha0U7Aw+0Pbrwsn389HosmCEcjUNYB
+         IpiRrzPfrSuqgp3xmdrFTsWO+nEpgpK8zl+F+3onDpjCvuGtWYSVW/rVFaB5V+sj95R0
+         H+2w==
+X-Gm-Message-State: APjAAAXdzRR8K9PUGXg3fC1NdELAL/IUhO8F+jn4T/b2Kdn6/5xjbMgC
+        6l/BurnnReOThfUo1EkNz7xxs4hy4wc=
+X-Google-Smtp-Source: APXvYqwPC9fJ42i5AXA+/+UZDEXTSIrJcX9xrFP4nukTIBnH0H3uUwx3Qpgyd/akL0iH1VkPpPpGGw==
+X-Received: by 2002:a5d:660b:: with SMTP id n11mr28661241wru.146.1573593112312;
+        Tue, 12 Nov 2019 13:11:52 -0800 (PST)
+Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
+        by smtp.gmail.com with ESMTPSA id r15sm224436wrc.5.2019.11.12.13.11.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 13:11:50 -0800 (PST)
+Date:   Tue, 12 Nov 2019 22:11:48 +0100
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/3] dt-bindings: arm64: fsl: Add Variscite i.MX6UL
+ compatibles
+Message-ID: <20191112211148.GF20321@ripley>
+References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
+ <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
+ <CAOMZO5Dwt6yJ45gE91opUf3nNx24AG00Lk1KPLJ_7Z4F0os7zA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191112203802.GD5584@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573592992; bh=FYNiQqIIwAjaPTLdgZDFjzpc3PZA+IOd8Qzq/L3NYFI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XDTPGbX/pfLSLEPMZj0U4ST8nWeqLQb9L0gJo2fojuRXhn2sbJZCbDvwG00vq+XIQ
-         colylZtLpZg40dx1ABr6UMyL7nDz+Ko0zZq5udmfA2v8o8KV6jbQ8nMJaMjSxXz3jT
-         /IQas6U39IMXowKsu+Lp15YvwNvsj9I4GEW1qSNrdbdQur8MbFNPpL74slNbnNTKiw
-         2tvXn1JIXwNPZ2+bJmHJ2nQzCpfl0RwWLH4Y7hj0SisnidmxgFdWv36tY7VU9S2345
-         uRxyqWTOY6lQqCfoY1uSgUmsGBjI6laWSw8oWM5BJSMXcH/MubF7tkJ0NoA3AfLsvB
-         eNrIf7Db8lhiQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5Dwt6yJ45gE91opUf3nNx24AG00Lk1KPLJ_7Z4F0os7zA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 12:38 PM, Jason Gunthorpe wrote:
-> On Mon, Nov 11, 2019 at 04:06:37PM -0800, John Hubbard wrote:
->> Hi,
->>
->> The cover letter is long, so the more important stuff is first:
->>
->> * Jason, if you or someone could look at the the VFIO cleanup (patch 8)
->>   and conversion to FOLL_PIN (patch 18), to make sure it's use of
->>   remote and longterm gup matches what we discussed during the review
->>   of v2, I'd appreciate it.
->>
->> * Also for Jason and IB: as noted below, in patch 11, I am (too?) boldly
->>   converting from put_user_pages() to release_pages().
+On 12/11/19, Fabio Estevam wrote:
+> Hi Oliver
 > 
-> Why are we doing this? I think things got confused here someplace, as
-
-
-Because:
-
-a) These need put_page() calls,  and
-
-b) there is no put_pages() call, but there is a release_pages() call that
-is, arguably, what put_pages() would be.
-
-
-> the comment still says:
+> On Tue, Nov 12, 2019 at 4:22 PM Oliver Graute <oliver.graute@gmail.com> wrote:
+> >
+> > Add the compatibles for Variscite i.MX6UL compatibles
 > 
-> /**
->  * put_user_page() - release a gup-pinned page
->  * @page:            pointer to page to be released
->  *
->  * Pages that were pinned via get_user_pages*() must be released via
->  * either put_user_page(), or one of the put_user_pages*() routines
->  * below.
-
-
-Ohhh, I missed those comments. They need to all be changed over to
-say "pages that were pinned via pin_user_pages*() or 
-pin_longterm_pages*() must be released via put_user_page*()."
-
-The get_user_pages*() pages must still be released via put_page.
-
-The churn is due to a fairly significant change in strategy, whis
-is: instead of changing all get_user_pages*() sites to call 
-put_user_page(), change selected sites to call pin_user_pages*() or 
-pin_longterm_pages*(), plus put_user_page().
-
-That allows incrementally converting the kernel over to using the
-new pin APIs, without taking on the huge risk of a big one-shot
-conversion. 
-
-So, I've ended up with one place that actually needs to get reverted
-back to get_user_pages(), and that's the IB ODP code.
-
+> You missed your Signed-off-by tag.
 > 
-> I feel like if put_user_pages() is not the correct way to undo
-> get_user_pages() then it needs to be deleted.
-> 
+> Also, you should remove arm64 from the Subject line as this is a 32-bit SoC :-)
 
-Yes, you're right. I'll fix the put_user_page comments() as described.
+thx, you are right I messed thinks up. Because I also working with
+another 64-bit SoC in parallel.  
 
+I'll fix it soon
 
-thanks,
+Best regards,
 
-John Hubbard
-NVIDIA
+Oliver
