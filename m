@@ -2,131 +2,143 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D2BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703D7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53DB21A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573592358;
-	bh=i2747r2k+U1KEzZHD/PnqKGwliSYnEYCyq/xzgxiXSc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2vv/jbqBqrth30v/WkhbUAzu51rRluomXlikfqi9qSE9NhVqCZQAl1FPvUuss9Zfz
-	 bzogiP0RmXmMqAhmZd0/cP7NJ7HLFZuFu5/4tEePt79vxzSlrT+66DI2d0uZRBTw3C
-	 2vk1PWbF/JYz+nzgy+u0kGo1L2tsI8rQbXSo/8qA=
+	by mail.kernel.org (Postfix) with ESMTP id 1EEBD2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MVzlhpxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKLU7R (ORCPT
+        id S1727153AbfKLVAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:59:17 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44705 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfKLU7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:59:17 -0500
-Received: by mail-lj1-f195.google.com with SMTP id g3so19375509ljl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:59:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wnvOYwfa6qDRGH1va7JtPEY4MALggxuc4YXJOwSoKVY=;
-        b=bIPT90I+28Y1aSlcbzKemY/unFev3VpktnoJsw2rog25WeOeiXV2YOJCa+ttkBwlSO
-         ZR69063yp6U5gZ2TTJIVI23n0ZboiBREakXYprN90R8ijIWb1A+8wIOx1iFnvuHiZoSD
-         h/KA9xiVfnbLgjycX8QDmV+3dLXhmJg195C1I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wnvOYwfa6qDRGH1va7JtPEY4MALggxuc4YXJOwSoKVY=;
-        b=O+gVYlSgfnpad1bvSSYeheOd/Y7mLn82YOQ7MWEFdNZReBS6NRBN2Y1s3t9upvKxFg
-         h/dZ/EA01E+RZ41uJecc4eSrDkmPmFnsq2DtwTPr1YU9G3SeUtYOu4YCyA92LybINJQ4
-         oA58oqy2QGdQRUjAf1sRvQwbvcjuRxqfJboWwYjsHR/jpzwL22CIys75QkprLj1jCdLf
-         p3o+NLju1J8om53W9uOFYWN+Bny07Qfituqix+vJWdKT9j3n7lxcBQI5q4Madu+hV3eY
-         +GnB08cXIcA8XWjGfYo/MR4XnJuRJ1BtWXrEsT42x5blgvnPq8gJrB11ZFQPKU7v1AJC
-         m2oQ==
-X-Gm-Message-State: APjAAAW1hezXffnzG81OXmX3YyDYGRZb2j6Vn2+4PuK9MCLJqDEKNnqj
-        wLT5cjA7Ns5I+43NJJz7i9aSdJKReDk=
-X-Google-Smtp-Source: APXvYqz51oGgmlh3tZI3VXw6ggmkKSfYVNEomEnluqLIyZuVyEM6WDt9SVYGaVBnuHTNx6+R+7jw4A==
-X-Received: by 2002:a2e:b5a2:: with SMTP id f2mr21180715ljn.108.1573592354236;
-        Tue, 12 Nov 2019 12:59:14 -0800 (PST)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id m18sm4754494ljg.3.2019.11.12.12.59.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 12:59:13 -0800 (PST)
-Received: by mail-lf1-f46.google.com with SMTP id q28so9346lfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:59:12 -0800 (PST)
-X-Received: by 2002:a19:c790:: with SMTP id x138mr21291173lff.61.1573592352459;
- Tue, 12 Nov 2019 12:59:12 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHk-=wjGd0Ce2xadkiErPWxVBT2mhyeZ4TKyih2sJwyE3ohdHw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911121515400.1567-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1911121515400.1567-100000@iolanthe.rowland.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 12 Nov 2019 12:58:55 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
-Message-ID: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Tue, 12 Nov 2019 16:00:44 -0500
+Received: from ozlabs.org ([203.11.71.1]:38799 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726697AbfKLVAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 16:00:43 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CKs43JPvz9sNH;
+        Wed, 13 Nov 2019 08:00:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573592440;
+        bh=Fl+cnxImbUdxKiW7FdnzmPITLo/GSGUVAFEIaaL5eo0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MVzlhpxs4rSOX1QJUEOnQslPQrXJ1R279YUQO/nyPodUDCZYiQgnotS9Te1U5QlvE
+         rkBkppTlI2//CHrmsMnZyhuchJkETC9pz1EtBF6vCJr09TOSpzKB3h9UCdb8rlAnZX
+         8sGd9jeNw4qYY/99JoP4dz31tKgFJ6Rq5rfEJ1WVBLDVEpRnOHpQM4ZYBm4k8z1ezh
+         Z6aMmYQEsScFndpTBk7mkS+sFoKFNQ99f+lWPkdPZnPj95A//O1LNW8MxMLH3eSAGZ
+         h84WtvE3mGGKRePiV6gjsk5pDU+EN7qXwPbrn+q9ivxs5lBy89n14pEjVb86NM6/9U
+         8q7daU8fIDbFQ==
+Date:   Wed, 13 Nov 2019 08:00:27 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Junaid Shahid <junaids@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: linux-next: manual merge of the kvm-fixes tree with Linus' tree
+Message-ID: <20191113080027.7f97187e@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/8Xt/mjuISnu+fFn1EoKnuQe";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 12:29 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> I'm trying to solve a real problem: How to tell KCSAN and the compiler
-> that we don't care about certain access patterns which result in
-> hardware-level races, and how to guarantee that the object code will
-> still work correctly when those races occur.  Not telling the compiler
-> anything is a head-in-the-sand approach that will be dangerous in the
-> long run.
+--Sig_/8Xt/mjuISnu+fFn1EoKnuQe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I don't actually know how KCSAN ends up reading the annotations, but
-since it's apparently not using the 'volatile' as a marker.
+Hi all,
 
-[ Goes off and fetches the thing ]
+Today's linux-next merge of the kvm-fixes tree got a conflict in:
 
-Ugh, that's just nasty.
+  virt/kvm/kvm_main.c
 
-Honestly, my preferred model would have been to just add a comment,
-and have the reporting tool know to then just ignore it. So something
-like
+between commit:
 
-+               // Benign data-race on min_flt
-                tsk->min_flt++;
-                perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+  1aa9b9572b10 ("kvm: x86: mmu: Recovery of shattered NX large pages")
 
-for the case that Eric mentioned - the tool would trigger on
-"data-race", and the rest of the comment could/should be for humans.
-Without making the code uglier, but giving the potential for a nice
-leghibl.e explanation instead of a completely illegible "let's
-randomly use WRITE_ONCE() here" or something like that.
+from Linus' tree and commit:
 
-Could the KCSAN code be taught to do something like that by simply not
-instrumenting it? Or, as mentioned, just have the reporting logic
-maybe have a list of those comments (easily generated with some
-variation of "git grep -in data-race" or something) and logic to just
-ignore any report that comes from a line below that kind of comment?
+  8a44119a98be ("KVM: Fix NULL-ptr deref after kvm_create_vm fails")
 
-Because I do not see a pretty way to annotate random things like this
-that actually makes the code more legible. The READ_ONCE/WRITE_ONCE
-annotations have not imho improved the code quality.
+from the kvm-fixes tree.
 
-                 Linus
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc virt/kvm/kvm_main.c
+index 4aab3547a165,0dac149ead16..000000000000
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@@ -693,16 -700,7 +718,11 @@@ static struct kvm *kvm_create_vm(unsign
+  	INIT_HLIST_HEAD(&kvm->irq_ack_notifier_list);
+  #endif
+ =20
+- 	if (init_srcu_struct(&kvm->srcu))
+- 		goto out_err_no_srcu;
+- 	if (init_srcu_struct(&kvm->irq_srcu))
+- 		goto out_err_no_irq_srcu;
+-=20
+  	r =3D kvm_init_mmu_notifier(kvm);
+ +	if (r)
+ +		goto out_err_no_mmu_notifier;
+ +
+ +	r =3D kvm_arch_post_init_vm(kvm);
+  	if (r)
+  		goto out_err;
+ =20
+@@@ -715,15 -713,6 +735,11 @@@
+  	return kvm;
+ =20
+  out_err:
+ +#if defined(CONFIG_MMU_NOTIFIER) && defined(KVM_ARCH_WANT_MMU_NOTIFIER)
+ +	if (kvm->mmu_notifier.ops)
+ +		mmu_notifier_unregister(&kvm->mmu_notifier, current->mm);
+ +#endif
+ +out_err_no_mmu_notifier:
+- 	cleanup_srcu_struct(&kvm->irq_srcu);
+- out_err_no_irq_srcu:
+- 	cleanup_srcu_struct(&kvm->srcu);
+- out_err_no_srcu:
+  	hardware_disable_all();
+  out_err_no_disable:
+  	kvm_arch_destroy_vm(kvm);
+
+--Sig_/8Xt/mjuISnu+fFn1EoKnuQe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LHWsACgkQAVBC80lX
+0GzCPAf/b29ToiuxSPwg8rdX45EO9o3HaaUOIr75goZaHxQ+AikHF38WUH9G7nQf
+gvEOHY35Im8wFMmLXpy+HB/AHAFaUqLegATYyYFnnrYGsZmjC1LtHo/1Ll1RNtpd
+JDjtfTINyD++G2SR1iujUQaVgtth4ysWva3qbMJ9/ytZ26maxRK55Q2lFRJHVKmJ
+jGa5Hqkw44xKGMIfWrqmPpxCGhwS5Q60xwcafuz4Bx9k2dlFG787gHWjolg0ZO/r
+e4T/y5u15jXqtCGNRYIgJgbhgwgLFJl3AXFGkljtste7FFNtynAk6BKyA822IoSp
+CNP0Tei0yRD4G1is1DpDstEqYgIxTQ==
+=jQY5
+-----END PGP SIGNATURE-----
+
+--Sig_/8Xt/mjuISnu+fFn1EoKnuQe--
