@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A9FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798E9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B14B20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CD12067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xo8QS0SV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Eck9OkBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfKLRR3 (ORCPT
+        id S1727276AbfKLRRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:17:29 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42235 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLRR2 (ORCPT
+        Tue, 12 Nov 2019 12:17:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42976 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfKLRRd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:17:28 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q17so12257689pgt.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:17:28 -0800 (PST)
+        Tue, 12 Nov 2019 12:17:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s5so13802650pfh.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:17:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4xxRHw6/3z9e2nyAGWJzoGw1p/LSUOxTCybLFFSHdxw=;
-        b=Xo8QS0SVtI4s+qaYHPpfI6h/nZGf1AlXbz0BoZb5ocvmRZg5XXoB5+wcMAyVAIAT4Z
-         6mOUpWbWGIxouNJip901iGjMT/tYzksw+PDPsnhrNCTR4JdUmFaXIM8BlOPBvAcYlydI
-         6L0cTwTfHYVxSDbY8oDzkzZ8Md+upvqGK6Gag=
+        bh=8VfkhaVR0FXWRYv7TUO3M4lLEIpTtvESy4tfTTW+/D0=;
+        b=Eck9OkBWHfxSZjjibIiuQWO1WWXBY4jQiiMwqUVvTCjRd0kel/+JdOYcUC8CgQY/QM
+         nVizBuNEQYMGHGXv4hMH5aVGNcAUQTx22lQqLRAj9r2rxyGLXUpzuI52FNm4y323K3wc
+         Jn/KseHvjTJPLalBLwPWq2vgEngd54d0J6Cyg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4xxRHw6/3z9e2nyAGWJzoGw1p/LSUOxTCybLFFSHdxw=;
-        b=e6PmeIju0unEnObOf3n9bFuZTAcvq5QPfuXMyDihyfLL4b89FavxwG+jQcj23CUjzS
-         9PNtBwHKb73CL/3kk+BFrCvXc4nIV3D/9uiyRTzHLfrMGZ1Yt3Wsr1jKRnmYjVkFRPX8
-         o21BrcowfEji2E35nYYwc9fc4FwHLbgczx+lE8BpMebCzPIwwc/6pfgvw4xzRjij87qb
-         mVKsg+gZNfV0YwsmslQw7+Ojmij2vGeyZwIq+Nufi8fZ6pKmT+Tb6r6CXKBYXNyYJfWF
-         8Czm9jrEKFkS3bztlY6OrmzEu1iruEd4iYPuWTPblTVWAoZvW018M257CvGn29JuVTuX
-         1aLQ==
-X-Gm-Message-State: APjAAAUNaskL7SSNi9GxWfjAwvp8W6SNEa+e863prreG7SQ/1BlWFhlp
-        gZlPWFs7BYp2QJGnv+O6J8A11TFsP14=
-X-Google-Smtp-Source: APXvYqzcgPkS4O6FeQTFiG7nNrQjhKqrGzeupyYwb4ad78uCvoMVN7a8JupAU0W1pAEsMoCbCdlhqQ==
-X-Received: by 2002:a17:90a:9604:: with SMTP id v4mr7820912pjo.105.1573579047795;
-        Tue, 12 Nov 2019 09:17:27 -0800 (PST)
+        bh=8VfkhaVR0FXWRYv7TUO3M4lLEIpTtvESy4tfTTW+/D0=;
+        b=k39WvhVKTmIv6X3Y/7yPoh7eU41enKG1igDAF5CTDmM5uG7LVOMsH0pUyzcP/5Jzg7
+         97f0cZYzgrKWM2oYeXltoAHl9c1aLWEwpgTwcJdjPeiAuOL1oqD3t6+ci+0uAjRWc6DS
+         4TCSB8+1JPkEpU8tbTfIse5L4IjwytqJ0sovQRP3OWQBG+NZV+vPipU4f7ohuQ4aPCee
+         l8h3Fz+LCol34E02HNfAXNZAsQnUu472eYtTPNRPkATDUtJIuoE+9+uO8r1318V7l++h
+         RHEyX7L5/rtTxPX/2R2BtJbM2a7kYgJaOaYhDnGUGqafMhIjWAM3EVVRkfWOs17GzwEN
+         PWFg==
+X-Gm-Message-State: APjAAAXraPsmyYxDTjfNT0kTg/e9jp2zNTvj0AIssPEZRlj7JSofET54
+        q+RwNXA0Okmn0JvUm7qbxGn9ewyI+zQ=
+X-Google-Smtp-Source: APXvYqxMdjhhO6SVolj4I3rxcxYKkIWLUqdmeXeWHxK0vphaxqGvLdDOrNkQo72JPu2mYsAK35CHtw==
+X-Received: by 2002:a63:d10c:: with SMTP id k12mr37971418pgg.344.1573579052775;
+        Tue, 12 Nov 2019 09:17:32 -0800 (PST)
 Received: from localhost ([2401:fa00:1:10:521e:3469:803b:9ad6])
-        by smtp.gmail.com with ESMTPSA id h195sm3262634pfe.88.2019.11.12.09.17.26
+        by smtp.gmail.com with ESMTPSA id a66sm19987305pfb.166.2019.11.12.09.17.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 09:17:27 -0800 (PST)
+        Tue, 12 Nov 2019 09:17:32 -0800 (PST)
 From:   paulhsia <paulhsia@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
         alsa-devel@alsa-project.org, paulhsia <paulhsia@chromium.org>
-Subject: [PATCH 1/2] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
-Date:   Wed, 13 Nov 2019 01:17:14 +0800
-Message-Id: <20191112171715.128727-2-paulhsia@chromium.org>
+Subject: [PATCH 2/2] ALSA: pcm: Use stream lock in snd_pcm_detach_substream()
+Date:   Wed, 13 Nov 2019 01:17:15 +0800
+Message-Id: <20191112171715.128727-3-paulhsia@chromium.org>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 In-Reply-To: <20191112171715.128727-1-paulhsia@chromium.org>
 References: <20191112171715.128727-1-paulhsia@chromium.org>
@@ -70,44 +70,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the nullity check for `substream->runtime` is outside of the lock
-region, it is possible to have a null runtime in the critical section
-if snd_pcm_detach_substream is called right before the lock.
+Since snd_pcm_detach_substream modifies the input substream, the
+function should use stream lock to protect the modification section.
 
 Signed-off-by: paulhsia <paulhsia@chromium.org>
 ---
- sound/core/pcm_lib.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ sound/core/pcm.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
-index d80041ea4e01..2236b5e0c1f2 100644
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -1782,11 +1782,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+diff --git a/sound/core/pcm.c b/sound/core/pcm.c
+index 9a72d641743d..06da9cb8984a 100644
+--- a/sound/core/pcm.c
++++ b/sound/core/pcm.c
+@@ -980,8 +980,12 @@ void snd_pcm_detach_substream(struct snd_pcm_substream *substream)
+ {
  	struct snd_pcm_runtime *runtime;
- 	unsigned long flags;
  
 -	if (PCM_RUNTIME_CHECK(substream))
 +	if (snd_BUG_ON(!substream))
  		return;
--	runtime = substream->runtime;
- 
- 	snd_pcm_stream_lock_irqsave(substream, flags);
-+	if (PCM_RUNTIME_CHECK(substream))
-+		goto _unlock;
-+	runtime = substream->runtime;
 +
- 	if (!snd_pcm_running(substream) ||
- 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
- 		goto _end;
-@@ -1797,6 +1800,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- #endif
-  _end:
- 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
-+ _unlock:
- 	snd_pcm_stream_unlock_irqrestore(substream, flags);
++	snd_pcm_stream_lock_irq(substream);
++	if (PCM_RUNTIME_CHECK(substream))
++		goto unlock;
+ 	runtime = substream->runtime;
+ 	if (runtime->private_free != NULL)
+ 		runtime->private_free(runtime);
+@@ -1000,6 +1004,8 @@ void snd_pcm_detach_substream(struct snd_pcm_substream *substream)
+ 	put_pid(substream->pid);
+ 	substream->pid = NULL;
+ 	substream->pstr->substream_opened--;
++ unlock:
++	snd_pcm_stream_unlock_irq(substream);
  }
- EXPORT_SYMBOL(snd_pcm_period_elapsed);
+ 
+ static ssize_t show_pcm_class(struct device *dev,
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
