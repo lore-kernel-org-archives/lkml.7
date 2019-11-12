@@ -2,101 +2,96 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4CCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91758C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05DE21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573538178;
-	bh=qQNRUDNK9jYEAFayckdbTTiF5Wzvx8FCJHZqCcJ6bH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JFGnzVkhieWZcsUyi15nGqYTbgvwOkNst140YxFjlRnDLd1ORc+Z3RGvfkTiO6DYw
-	 p+hSv/fEXzfmpEm0NXcDdmnT/18K37vu/aXOMSSqSaGVIJarXzN2cdOUXzBtYIYm7Z
-	 /ee/lbL2WCwUiirWcAhB4Mx8/kBYK7/gnBnt4rSA=
+	by mail.kernel.org (Postfix) with ESMTP id 5FBD6206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AkjoSmay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKLF4Q (ORCPT
+        id S1726981AbfKLF4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 00:56:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfKLF4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:56:16 -0500
-Received: from localhost (unknown [122.167.70.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 12 Nov 2019 00:56:33 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30890 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725775AbfKLF4b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:56:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573538190;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t4H1BAGawGahyIzPrHbrHyHMfWVwsFAeBKzU7Z42zAo=;
+        b=AkjoSmayGVAAMhbnFjP0BTCOzo4XoUQg3jiWRBBBJ8WIEPNEH7CJJUDnq0H0KBNWVLSNT+
+        H6TCpgbAtyB9COvbWfu7X479/aC2lKTw2/x1HPTZ4b0M5dUVOsdFW8OWGYH4AgLr9Lr2pH
+        xMaC4I1fKEFSR3CRqy+KQWMx+kuuVeo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-OfrAog8PPI22IT-AmCI-Nw-1; Tue, 12 Nov 2019 00:56:27 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62F3206BB;
-        Tue, 12 Nov 2019 05:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573538175;
-        bh=qQNRUDNK9jYEAFayckdbTTiF5Wzvx8FCJHZqCcJ6bH4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1pPW4eu8VgEiJD2/DUsjjvGzakKD+GeU6ykt12TKzH10NopahnvEWyL1wPyzeuOFK
-         WqFZHUMz8N8yxCy0rOjVubcQZi7zeAqCNIQwgnLUjefYkKsOcoV22XBtAMHrptexTu
-         8PA/e1uX07cC7EbUF1FjpXPJD8Ogf7OqCgBW70T8=
-Date:   Tue, 12 Nov 2019 11:26:09 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-Message-ID: <20191112055540.GY952516@vkoul-mobl>
-References: <20191022214616.7943-1-logang@deltatee.com>
- <20191022214616.7943-2-logang@deltatee.com>
- <20191109171853.GF952516@vkoul-mobl>
- <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3645800C61;
+        Tue, 12 Nov 2019 05:56:24 +0000 (UTC)
+Received: from localhost (ovpn-112-54.rdu2.redhat.com [10.10.112.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D2D860852;
+        Tue, 12 Nov 2019 05:56:18 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 21:56:17 -0800 (PST)
+Message-Id: <20191111.215617.1625420574702786179.davem@redhat.com>
+To:     Mark-MC.Lee@mediatek.com
+Cc:     sean.wang@mediatek.com, john@phrozen.org, matthias.bgg@gmail.com,
+        andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com,
+        opensource@vdorst.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jakub.kicinski@netronome.com
+Subject: Re: [PATCH net,v2 1/3] net: ethernet: mediatek: Integrate GDM/PSE
+ setup operations
+From:   David Miller <davem@redhat.com>
+In-Reply-To: <20191111065129.30078-2-Mark-MC.Lee@mediatek.com>
+References: <20191111065129.30078-1-Mark-MC.Lee@mediatek.com>
+        <20191111065129.30078-2-Mark-MC.Lee@mediatek.com>
+Mime-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: OfrAog8PPI22IT-AmCI-Nw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-11-19, 09:50, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-11-09 10:18 a.m., Vinod Koul wrote:
-> > Hi Logan,
-> > 
-> > Sorry for delay in reply!
-> > 
-> > On 22-10-19, 15:46, Logan Gunthorpe wrote:
-> >> dma_chan_to_owner() dereferences the driver from the struct device to
-> >> obtain the owner and call module_[get|put](). However, if the backing
-> >> device is unbound before the dma_device is unregistered, the driver
-> >> will be cleared and this will cause a NULL pointer dereference.
-> > 
-> > Have you been able to repro this? If so how..?
-> > 
-> > The expectation is that the driver shall unregister before removed.
-> 
-> Yes, with my new driver, if I do a PCI unbind (which unregisters) while
-> the DMA engine is in use, it panics. The point is the underlying driver
-> can go away before the channel is removed.
+From: MarkLee <Mark-MC.Lee@mediatek.com>
+Date: Mon, 11 Nov 2019 14:51:27 +0800
 
-and in your driver remove you do not unregister? When unbind is invoked
-the driver remove is invoked by core and you should unregister whatever
-you have registered in your probe!
+> +static void mtk_gdm_config(struct mtk_eth *eth, u32 config)
+> +{
+> +=09int i;
+> +
+> +=09for (i =3D 0; i < MTK_MAC_COUNT; i++) {
+> +=09=09u32 val =3D mtk_r32(eth, MTK_GDMA_FWD_CFG(i));
+> +
+> +=09=09/* default setup the forward port to send frame to PDMA */
+> +=09=09val &=3D ~0xffff;
+> +
+> +=09=09/* Enable RX checksum */
+> +=09=09val |=3D MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
+> +
+> +=09=09val |=3D config;
+> +
+> +=09=09mtk_w32(eth, val, MTK_GDMA_FWD_CFG(i));
+> +=09}
+> +=09/*Reset and enable PSE*/
 
-Said that, if someone is using the dmaengine at that point of time, it
-is not a nice thing to do and can cause issues, but on idle it should
-just work!
+Please put spaces before and after the comment sentence, like:
 
-> I suspect this is less of an issue for most devices as they wouldn't
-> normally be unbound while in use (for example there's really no reason
-> to ever unbind IOAT seeing it's built into the system). Though, the fact
-> is, the user could unbind these devices at anytime and we don't want to
-> panic if they do.
+=09/* Reset and enable PSE */
 
-There are many drivers which do modules so yes I am expecting unbind and
-even a bind following that to work
-
--- 
-~Vinod
