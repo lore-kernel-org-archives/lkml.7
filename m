@@ -2,127 +2,98 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA11C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A31C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F7B21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEC121783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mVOnRN1V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LAr3PctE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfKLTI1 (ORCPT
+        id S1727128AbfKLTJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:08:27 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38773 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfKLTI0 (ORCPT
+        Tue, 12 Nov 2019 14:09:48 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38699 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfKLTJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:08:26 -0500
-Received: by mail-pf1-f195.google.com with SMTP id c13so14014899pfp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:08:26 -0800 (PST)
+        Tue, 12 Nov 2019 14:09:48 -0500
+Received: by mail-lf1-f65.google.com with SMTP id q28so13799863lfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:09:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BR4ymyy2vKO2uYqxjB3mPPNwSRoqEyTEGiX+v5/Slpg=;
-        b=mVOnRN1VFG1LQezT4n1aeleww9wgfdVf1EnGVEdr7UvuTM41Q68FBfeDADhsOrzeUb
-         33AfMamI/TexG3RQ1sGCIRtweUATCVoVgdDOudYh19VgpC+W0BMmg1E1Hhh7JlWEUPqt
-         NOQ8EeVvFx9SV2WtjU/Zq0Ap+MrWcohYDikzh/vOYlIInFOuGeBl7loPQf+vdGmPumcE
-         HhARyUvSUx+DMBqIoGzFSnU7e5845u+9IsgGBw+LIvCc6P48vcNHEAeDVPIXLQYdFhq7
-         QkK7D8It9DTCBrHT3JlEuz7J6vP775/VOpRRj1uonqBcFgj7pZnk0fGnalzeaFIi73n5
-         ht8g==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2FPgM7SKFCN9msWXuyWzvDA0G+gWYRF9TEdVYJj4UX4=;
+        b=LAr3PctEvf0Qp97K3E1zPlt4STnZtx88R2lMOGizjf8Qv9n3YYDLOdCeA6Psx+7cKw
+         5JREarMdzn92YHkL67Rqpw4BU4RaeAAWEl6NKOMIGvya/yqlPa33AxGrCE9r/JOsXvcf
+         2XZUsajCtPg7eoVXew31WlRhJKOw7o705SzR8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BR4ymyy2vKO2uYqxjB3mPPNwSRoqEyTEGiX+v5/Slpg=;
-        b=Zm/Jjv1923QfmC55Qy+My3cZPQQpcF0oYON9YzrWEz/mC8XdhxMCtKU78UVt2bw/NB
-         VX1YeKvGJMbJg17y3cTi+wfZsWr+B8CVEU/wYPAOfrjgdmhdimKcNB0+NEwSmKrXNJ1N
-         QWDE1aInwNWj8/DNcm5PWiFqW6yH+P91Tmsc1qvLtAEUm4ONMIeDHkIowoKS84OgfHHy
-         ZaJe9+H04ZnRg0bFvEcCPaZyaI09MOAx1RqztOEj68qVcDuh/qQrhK9F0RXdqYOQx44a
-         O0joO5R9buQYPd+rW/XBLY0wTVoRVtYMZybNsqlNOU9peyM8ToNEGZs1Gd6mOqiYaM9g
-         fm2w==
-X-Gm-Message-State: APjAAAWjy/o8kRmu2o9wZC8q9kNaxlyCd8biqnN/uuzgQ6EHdH3wp0qm
-        BpeKyIKB5J48nITYNCX0OgERKw==
-X-Google-Smtp-Source: APXvYqy1gKPPrXY8YX4+sqitVZiIIJE+0IYMmTNjOu0a56hMa0jbdBrV/YRB4iYlDOv4vA7eF5VOuQ==
-X-Received: by 2002:aa7:80d2:: with SMTP id a18mr14758511pfn.29.1573585705571;
-        Tue, 12 Nov 2019 11:08:25 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u8sm8351425pga.47.2019.11.12.11.08.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:08:24 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:08:22 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     kvalo@codeaurora.org, davem@davemloft.net,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ath10k: Handle "invalid" BDFs for msm8998 devices
-Message-ID: <20191112190822.GA3140946@builder>
-References: <20191106234712.2380-1-jeffrey.l.hugo@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2FPgM7SKFCN9msWXuyWzvDA0G+gWYRF9TEdVYJj4UX4=;
+        b=d9ipHEg0GPOrtuvZxpwI+jO/KuPjW2LeGBrwD6lvxBBL2x4kNtVArTEkSSmdp9lgG6
+         ktl9g4BjLQDcurGp2DBEzyh3QMoaUnXJwZgLD4++mCDVZ2nJVwVNSKD5qzHxrtMKnOm0
+         fEKvCCMgeNw5fypS5q2hHAdzTPiukIOTj+wNI3TtQCx8Iakdk2fa800Zptb9UX2a4eHf
+         YKjxznbju//xZLyqbXkKX/1z8bBS8Jd6o53/qE/GVGr6/x3vaK7shukm/7viUIELLDAB
+         p2a6BBH5lCRGKZvFJlhMkPpq5aCrR9WHwQOS2hTMUvUSasTEUMwuliMQIMLP1j695Ncf
+         louA==
+X-Gm-Message-State: APjAAAXrlSYTzbkYcLNN22onFeZD6LP8XwbA6dAd2tywUvPFIU7o2sbS
+        P0VuUvE9DF+WM17icqcI3+horW353U4=
+X-Google-Smtp-Source: APXvYqysYnHjqCbgGJcsy+hpOee2wmYGTebaXGgMawvPH8arvxzWkI3zAyNCnleBbYo+JvGPeLeeyA==
+X-Received: by 2002:ac2:43a3:: with SMTP id t3mr5067651lfl.150.1573585785994;
+        Tue, 12 Nov 2019 11:09:45 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id n8sm223782lfe.31.2019.11.12.11.09.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 11:09:45 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id z188so6567578lfa.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:09:44 -0800 (PST)
+X-Received: by 2002:a19:40cf:: with SMTP id n198mr20776284lfa.189.1573585784155;
+ Tue, 12 Nov 2019 11:09:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106234712.2380-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191111185030.215451-1-evgreen@chromium.org> <20191111185030.215451-2-evgreen@chromium.org>
+ <20191112083208.GA1848@infradead.org>
+In-Reply-To: <20191112083208.GA1848@infradead.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Tue, 12 Nov 2019 11:09:07 -0800
+X-Gmail-Original-Message-ID: <CAE=gft4=3ysHxWBVjfOsGVRHcORP3XcbSxd3hQ+YtJhMTPNgKg@mail.gmail.com>
+Message-ID: <CAE=gft4=3ysHxWBVjfOsGVRHcORP3XcbSxd3hQ+YtJhMTPNgKg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] loop: Report EOPNOTSUPP properly
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Martin K Petersen <martin.petersen@oracle.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Alexis Savery <asavery@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 06 Nov 15:47 PST 2019, Jeffrey Hugo wrote:
+On Tue, Nov 12, 2019 at 12:32 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Mon, Nov 11, 2019 at 10:50:29AM -0800, Evan Green wrote:
+> > -             if (cmd->ret < 0)
+> > +             if (cmd->ret == -EOPNOTSUPP)
+> > +                     ret = BLK_STS_NOTSUPP;
+> > +             else if (cmd->ret < 0)
+> >                       ret = BLK_STS_IOERR;
+>
+> This really should use errno_to_blk_status.  Same for the other hunk.
 
-> When the BDF download QMI message has the end field set to 1, it signals
-> the end of the transfer, and triggers the firmware to do a CRC check.  The
-> BDFs for msm8998 devices fail this check, yet the firmware is happy to
-> still use the BDF.  It appears that this error is not caught by the
-> downstream drive by concidence, therefore there are production devices
-> in the field where this issue needs to be handled otherwise we cannot
-> support wifi on them.  So, attempt to detect this scenario as best we can
-> and treat it as non-fatal.
-> 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/net/wireless/ath/ath10k/qmi.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-> index eb618a2652db..5ff8cfc93778 100644
-> --- a/drivers/net/wireless/ath/ath10k/qmi.c
-> +++ b/drivers/net/wireless/ath/ath10k/qmi.c
-> @@ -265,10 +265,13 @@ static int ath10k_qmi_bdf_dnld_send_sync(struct ath10k_qmi *qmi)
->  			goto out;
->  
->  		if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
-> -			ath10k_err(ar, "failed to download board data file: %d\n",
-> -				   resp.resp.error);
-> -			ret = -EINVAL;
-> -			goto out;
-> +			if (!(req->end == 1 &&
-> +			      resp.resp.result == QMI_ERR_MALFORMED_MSG_V01)) {
-
-Perhaps worth adding a comment in the code as well, to describe what
-scenario this relates to?
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> +				ath10k_err(ar, "failed to download board data file: %d\n",
-> +					   resp.resp.error);
-> +				ret = -EINVAL;
-> +				goto out;
-> +			}
->  		}
->  
->  		remaining -= req->data_len;
-> -- 
-> 2.17.1
-> 
+Seems reasonable, I can switch to that.
