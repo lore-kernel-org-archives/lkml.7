@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284B6C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEB1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BAB2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213BA20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W2V3qr01"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wv6vD6/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfKLOve (ORCPT
+        id S1727531AbfKLOvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:51:34 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52552 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfKLOvJ (ORCPT
+        Tue, 12 Nov 2019 09:51:46 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41736 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbfKLOvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:51:09 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEop3A097979;
-        Tue, 12 Nov 2019 08:50:51 -0600
+        Tue, 12 Nov 2019 09:51:08 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEp5qn105891;
+        Tue, 12 Nov 2019 08:51:05 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573570251;
-        bh=WV+p2RYewb0Fe/Cr0Lm8UljrmiZRu8wYabf0rEqVZYs=;
+        s=ti-com-17Q1; t=1573570265;
+        bh=eDCdfymwg3zUktc3xZyxe+n8OYjhvINPbAjTECSZBfc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=W2V3qr01hiAyuNusNoyeR1xjVidLVyiACIO0SnaG/LCBDHkkg2ot3UxUq7bduRBKh
-         3pAVHSbL0ztUiaMwvltUYXxgZV8MG7Ua+/jMDCreoGKRoatiTIvnvuD3ljqGhwoPbe
-         bXxtUBkMM9kh1MZ3vy6QN/hAOdxXqArtn6uF8Zf4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEopT6058772
+        b=wv6vD6/ypp26I4lUav6rpffwDUMYCJffXrGggbBdr6fJhnZpO9LoU0x1S410an/nQ
+         5UixoTFz2esaXhpUQ9pEpLQeVFLXF5Z5IDx180b10SNDC6qQifSrS/x/sBEbOxcmee
+         /+jDMsXCywFO4XAkf4/yXzAC0S52DkV0R+935VNY=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEp512024388
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:50:51 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:51:05 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:50:34 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:51:04 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:50:34 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:50:47 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokeq068428;
-        Tue, 12 Nov 2019 08:50:51 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokf5068428;
+        Tue, 12 Nov 2019 08:51:04 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Nikhil Devshatwar <nikhil.nd@ti.com>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [RESEND Patch v3 06/20] media: ti-vpe: cal: Restrict DMA to avoid memory corruption
-Date:   Tue, 12 Nov 2019 08:53:33 -0600
-Message-ID: <20191112145347.23519-7-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [RESEND Patch v3 19/20] media: ti-vpe: cal: fix enum_mbus_code/frame_size subdev arguments
+Date:   Tue, 12 Nov 2019 08:53:46 -0600
+Message-ID: <20191112145347.23519-20-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112145347.23519-1-bparrot@ti.com>
 References: <20191112145347.23519-1-bparrot@ti.com>
@@ -70,51 +68,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Devshatwar <nikhil.nd@ti.com>
+Make sure that both enum_mbus_code() and enum_framesize() properly
+populate the .which parameter member, otherwise -EINVAL is return
+causing the subdev asynchronous registration handshake to fail.
 
-When setting DMA for video capture from CSI channel, if the DMA size
-is not given, it ends up writing as much data as sent by the camera.
-
-This may lead to overwriting the buffers causing memory corruption.
-Observed green lines on the default framebuffer.
-
-Restrict the DMA to maximum height as specified in the S_FMT ioctl.
-
-Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/platform/ti-vpe/cal.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 4f9a7609cb5f..eb3727ba185d 100644
+index 92a54d59d433..be54806180a5 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -767,12 +767,13 @@ static void pix_proc_config(struct cal_ctx *ctx)
- }
+@@ -1493,6 +1493,7 @@ static int cal_enum_framesizes(struct file *file, void *fh,
+ 	fse.index = fsize->index;
+ 	fse.pad = 0;
+ 	fse.code = fmt->code;
++	fse.which = V4L2_SUBDEV_FORMAT_ACTIVE;
  
- static void cal_wr_dma_config(struct cal_ctx *ctx,
--			      unsigned int width)
-+			      unsigned int width, unsigned int height)
- {
- 	u32 val;
+ 	ret = v4l2_subdev_call(ctx->sensor, pad, enum_frame_size, NULL, &fse);
+ 	if (ret)
+@@ -1833,6 +1834,7 @@ static int cal_async_bound(struct v4l2_async_notifier *notifier,
  
- 	val = reg_read(ctx->dev, CAL_WR_DMA_CTRL(ctx->csi2_port));
- 	set_field(&val, ctx->csi2_port, CAL_WR_DMA_CTRL_CPORT_MASK);
-+	set_field(&val, height, CAL_WR_DMA_CTRL_YSIZE_MASK);
- 	set_field(&val, CAL_WR_DMA_CTRL_DTAG_PIX_DAT,
- 		  CAL_WR_DMA_CTRL_DTAG_MASK);
- 	set_field(&val, CAL_WR_DMA_CTRL_MODE_CONST,
-@@ -1395,7 +1396,8 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	csi2_lane_config(ctx);
- 	csi2_ctx_config(ctx);
- 	pix_proc_config(ctx);
--	cal_wr_dma_config(ctx, ctx->v_fmt.fmt.pix.bytesperline);
-+	cal_wr_dma_config(ctx, ctx->v_fmt.fmt.pix.bytesperline,
-+			  ctx->v_fmt.fmt.pix.height);
- 	cal_wr_dma_addr(ctx, addr);
- 	csi2_ppi_enable(ctx);
- 
+ 		memset(&mbus_code, 0, sizeof(mbus_code));
+ 		mbus_code.index = j;
++		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+ 		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
+ 				       NULL, &mbus_code);
+ 		if (ret)
 -- 
 2.17.1
 
