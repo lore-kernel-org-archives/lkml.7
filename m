@@ -2,86 +2,122 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB03EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5DFC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878D42084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4EF421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="l/h8OgTb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u7uD8Ksb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfKLNbM (ORCPT
+        id S1727275AbfKLNdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:31:12 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:60967 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726979AbfKLNbM (ORCPT
+        Tue, 12 Nov 2019 08:33:17 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33358 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfKLNdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:31:12 -0500
-X-UUID: fa344ab78da246fd9d8c411a4751c8c0-20191112
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=hT9QBdG+LtUKaBpt4OHfKg/vmDyoLlBwacPEIY+C38w=;
-        b=l/h8OgTbd9GX8WRcOrFoOu5PNXuzU9akznAB+2X9v2vhclOHI9JXoWV22TJ2xaskjLvfXHqDOvFOha6ZswtjU59oB6GJh6f7GDMPSp1nD/0RQZCMZ13ZIdpChBvf1tyNva4W7ugamIWh8uZOj1w8SV4/VNqGUjqWuIflcZddpZQ=;
-X-UUID: fa344ab78da246fd9d8c411a4751c8c0-20191112
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1889015713; Tue, 12 Nov 2019 21:31:02 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 12 Nov 2019 21:31:00 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 12 Nov 2019 21:31:00 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <linux@armlinux.org.uk>
-CC:     <matthias.bgg@gmail.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <lvqiang.huang@unisoc.com>,
-        <gregkh@linuxfoundation.org>, <info@metux.net>,
-        <tglx@linutronix.de>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yj.chiang@mediatek.com>,
-        <mark-pk.tsai@mediatek.com>, <alix.wu@mediatek.com>,
-        <mike-sl.lin@mediatek.com>, <eddy.lin@mediatek.com>,
-        <phil.chang@mediatek.com>
-Subject: [PATCH] ARM: fix race in for_each_frame
-Date:   Tue, 12 Nov 2019 21:29:38 +0800
-Message-ID: <20191112132937.19335-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 12 Nov 2019 08:33:17 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACDWqEC028139;
+        Tue, 12 Nov 2019 07:32:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573565572;
+        bh=5Z4gxvkjzCKXoR2E/PLowayTQFLHdnvuiFx2gsQMpOw=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=u7uD8Ksb6+SkNTw/B+CguxskxxpzqJhuWCzD1BViIVLYjjyl6h5IkXu4sceepscOt
+         dw2KPu100PEy9jPMXyfIsQ6VvHaJpPwNv0UTysey8ik3vfarPd3g4OqL3XIEY0n6f/
+         63b+XNLUiCKXDHX+xGxKrLy+Mb9P7pwhuBDao1Q0=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACDWppt074078;
+        Tue, 12 Nov 2019 07:32:52 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 07:32:51 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 07:32:34 -0600
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id xACDWpgg005332;
+        Tue, 12 Nov 2019 07:32:51 -0600
+Date:   Tue, 12 Nov 2019 07:35:54 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch v2 12/20] media: ti-vpe: cal: Add DRA76x support
+Message-ID: <20191112133554.u7mbv6h2bzecvakl@ti.com>
+References: <20191104193140.31145-1-bparrot@ti.com>
+ <20191104193140.31145-13-bparrot@ti.com>
+ <20191106085709.GB6253@valkosipuli.retiisi.org.uk>
+ <20191106205839.3zxqdttlqmrzghla@ti.com>
+ <20191112132811.p6xgmxp7co6ugkkn@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 323926A5FB2DE832EA31753876BD697D6E80BA9E1623AE50FC1C3E17F6D5373C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191112132811.p6xgmxp7co6ugkkn@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHN2X3BjLCB3aGljaCBpcyBzYXZlZCBpbiB0aGUgc3RhY2ssIG1heSBiZSBhbiBpbnZhbGlk
-IGFkZHJlc3MNCmlmIHRoZSB0YXJnZXQgdGhyZWFkIGlzIHJ1bm5pbmcgb24gYW5vdGhlciBwcm9j
-ZXNzb3IgaW4gdGhlIG1lYW50aW1lLg0KSXQgd2lsbCBjYXVzZSBrZXJuZWwgY3Jhc2ggYXQgYGxk
-ciByMiwgW3N2X3BjLCAjLTRdYC4NCg0KQ2hlY2sgaWYgc3ZfcGMgaXMgdmFsaWQgYmVmb3JlIHVz
-ZSBpdCBsaWtlIHVud2luZF9mcmFtZSBpbg0KYXJjaC9hcm0va2VybmVsL3Vud2luZC5jLg0KDQpT
-aWduZWQtb2ZmLWJ5OiBNaWtlLVNMIExpbiA8bWlrZS1zbC5saW5AbWVkaWF0ZWsuY29tPg0KU2ln
-bmVkLW9mZi1ieTogTWFyay1QSyBUc2FpIDxtYXJrLXBrLnRzYWlAbWVkaWF0ZWsuY29tPg0KLS0t
-DQogYXJjaC9hcm0vbGliL2JhY2t0cmFjZS5TIHwgNSArKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA1
-IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2xpYi9iYWNrdHJhY2UuUyBi
-L2FyY2gvYXJtL2xpYi9iYWNrdHJhY2UuUw0KaW5kZXggNTgyOTI1MjM4ZDY1Li44NGYwNjM4MWJi
-ZmIgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9saWIvYmFja3RyYWNlLlMNCisrKyBiL2FyY2gvYXJt
-L2xpYi9iYWNrdHJhY2UuUw0KQEAgLTY0LDYgKzY0LDExIEBAIGZvcl9lYWNoX2ZyYW1lOgl0c3QJ
-ZnJhbWUsIG1hc2sJCUAgQ2hlY2sgZm9yIGFkZHJlc3MgZXhjZXB0aW9ucw0KIAkJc3ViCXN2X3Bj
-LCBzdl9wYywgb2Zmc2V0CUAgQ29ycmVjdCBQQyBmb3IgcHJlZmV0Y2hpbmcNCiAJCWJpYwlzdl9w
-Yywgc3ZfcGMsIG1hc2sJQCBtYXNrIFBDL0xSIGZvciB0aGUgbW9kZQ0KIA0KKwkJbW92CXIwLCBz
-dl9wYw0KKwkJYmwJa2VybmVsX3RleHRfYWRkcmVzcwlAIGNoZWNrIGlmIHN2X3BjIGlzIHZhbGlk
-DQorCQljbXAJcjAsICMwCQkJQCBpZiBzdl9wYyBpcyBub3Qga2VybmVsIHRleHQNCisJCWJlcQkx
-MDA2ZgkJCUAgYWRkcmVzcywgYWJvcnQgYmFja3RyYWNlDQorDQogMTAwMzoJCWxkcglyMiwgW3N2
-X3BjLCAjLTRdCUAgaWYgc3RtZmQgc3AhLCB7YXJnc30gZXhpc3RzLA0KIAkJbGRyCXIzLCAuTGRz
-aSs0CQlAIGFkanVzdCBzYXZlZCAncGMnIGJhY2sgb25lDQogCQl0ZXEJcjMsIHIyLCBsc3IgIzEx
-CQlAIGluc3RydWN0aW9uDQotLSANCjIuMTguMA0K
+Benoit Parrot <bparrot@ti.com> wrote on Tue [2019-Nov-12 07:28:11 -0600]:
+> Benoit Parrot <bparrot@ti.com> wrote on Wed [2019-Nov-06 14:58:39 -0600]:
+> > Sakari Ailus <sakari.ailus@iki.fi> wrote on Wed [2019-Nov-06 10:57:09 +0200]:
+> > > Hi Benoit,
+> > > 
+> > > On Mon, Nov 04, 2019 at 01:31:32PM -0600, Benoit Parrot wrote:
+> > > 
+> > > ...
+> > > 
+> > > > +static struct cal_data dra76x_cal_data = {
+> > > 
+> > > const?
+> > 
+> > Hmm, most likely.
+> 
+> Well, it turns out they cannot be constified because we need to be able to
+> update the register offset fir the regmap used for the syscon object.
+> So I'll leave them as is.
 
+Oh I guess you meant just the "static struct cal_data" ones?
+I tried making the other one into const but obviously that didn't work.
+
+But just constifying "static struct cal_data" appears to compiled just
+fine.
+
+> 
+> Benoit
+> 
+> > 
+> > > 
+> > > > +	.csi2_phy_core = dra76x_cal_csi_phy,
+> > > > +	.num_csi2_phy = ARRAY_SIZE(dra76x_cal_csi_phy),
+> > > > +
+> > > 
+> > > This newline seems extra.
+> > > 
+> > > > +	.flags = 0,
+> > > 
+> > > And flags will be zero in any case, as one more struct members are assigned
+> > > to.
+> > 
+> > Is this guaranteed or compiler version dependent?
+> > 
+> > > 
+> > > > +};
+> > > 
+> > > -- 
+> > > Regards,
+> > > 
+> > > Sakari Ailus
