@@ -2,128 +2,283 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F51AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ED0C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D451F20818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eAThWRNS"
+	by mail.kernel.org (Postfix) with ESMTP id 43AA921872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573583665;
+	bh=+vhIZ0c0ncblMMFXs8HX5L6XA77TCUAaj/ugCP6VukI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ZSobNEvOQfZYCOcBTwFQB+C922Gp8miadmzR0S77GrtVbCDh9DC9IfZ8nM44245z2
+	 ts549nG8zreEOdn6s00hECrVkp0DjiuuvpV6QHFbPnvBIqYofceTWn36kqd9bHGXma
+	 kaG0oEbVJHBNx4MKKRDrFYQPAJLxjlZMfBHmi5jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKLSdf (ORCPT
+        id S1727113AbfKLSeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:33:35 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46083 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfKLSdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:33:35 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b3so19634059wrs.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:33:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MzMUKm7mW+HiS0KEQh6EiE2vBd+rpZ1avgmO/GjuR8I=;
-        b=eAThWRNSQOzWC8Xx6+6jsVEniEBzDbLr/wjeljUOoxx683Mx+TQM0py2RJ6BdmGM0V
-         3LZddmT1dxWMQyJdnA2cPCJTzHtnjev0mBRtfzAe5JRm/tPdkncQptAlGGOFT3DxCnOF
-         qixjtpn776Y5Xm3uNY+fhZd7MfeMb6Vz0IdbkfGNH7lLOPlw36i2vHJEs9sH4duCoj6p
-         OaCXftU6JEM7Cf3odOVhMSq0lxDNwSFmPksFWa9rCWEogaohxtzZz5E4OGpPZlmhjaMA
-         RxAPU4DDbjLv2V80wd9MmoE67eQh2w9pQV8tAAtOoXI06zrazZuRTc95HVceTiPzZ0/6
-         zIjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MzMUKm7mW+HiS0KEQh6EiE2vBd+rpZ1avgmO/GjuR8I=;
-        b=VKB5N/EgUic/m4xBL5teUr/TUeU7l8whd4Pzx8eJGTfE8sXOo+awkGu3GyC3zoOM7S
-         HvwpyDyXM/yexzdOlGggvmsGL3a4OO++RCoB6cV7Lo4S1zTrJy8d/WH2HyTfGn7xIUDn
-         f7y96Mk/xPb9cnPuLikCbJjJWbiBvx4/f+CmLJIUXWUluSG5/QL1VHMHTLBH19py3nLr
-         02d+wIgxh1/XFgPUD3fMip4l9PB6EJy+gS88/9GaVwfPvGxgfGvNNA5qvp7ceeaQ5fJK
-         cZ6FKlJW1s7VFL/ptz0a15FkkbujdJCLcW+cuWHM9jTVnKgwPKBCDRaMtLrRksW2clex
-         zpLg==
-X-Gm-Message-State: APjAAAXkCC8q8jI1gRmuDPVrgfJ9XpfKI5SkOkp4ObBVIMqVAanrAVZv
-        cOqVsMF0ovA+Lg67SqfStSEbuSPNpAf6u0OrYWZL5g==
-X-Google-Smtp-Source: APXvYqxeErPjC1+irjMBoCjBQePU2ciTNK2Cd/02XOe6SmdpmpN+6TWyIwmapdLCP17ZKTaWE/H1tYh+6ekN0cyV33g=
-X-Received: by 2002:adf:ffd0:: with SMTP id x16mr3612529wrs.86.1573583612669;
- Tue, 12 Nov 2019 10:33:32 -0800 (PST)
+        Tue, 12 Nov 2019 13:34:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbfKLSeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:34:24 -0500
+Received: from localhost (unknown [77.241.229.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4C8214E0;
+        Tue, 12 Nov 2019 18:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573583662;
+        bh=+vhIZ0c0ncblMMFXs8HX5L6XA77TCUAaj/ugCP6VukI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SoVt7/5emu+NBJp38Z5ykc+OKI1aomZElD4JK8HHv3QWKbHxcMyg4e5dKE3yUCtxB
+         B8ljejoIvOJMR4fJkoadBCJRxJYgen/9CKOhb1+F/iTrCKenPmrt5c8lrwhOKS9Pby
+         QBtWX6DTj83GCr8rCJItD9+HCM6TMlKk5shR2Lkw=
+Date:   Tue, 12 Nov 2019 19:29:56 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.201
+Message-ID: <20191112182956.GA1827802@kroah.com>
 MIME-Version: 1.0
-References: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com> <20191112154144.GC168812@cmpxchg.org>
-In-Reply-To: <20191112154144.GC168812@cmpxchg.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 12 Nov 2019 10:33:21 -0800
-Message-ID: <CAJuCfpE7OG6mzSFXhqqoiN8UhcPcEGVn_9NRXgkBxMOvFyhZdg@mail.gmail.com>
-Subject: Re: [PATCH] psi:fix divide by zero in psi_update_stats
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     tim <xiejingfeng@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 7:41 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Fri, Nov 08, 2019 at 03:33:24PM +0800, tim wrote:
-> > In psi_update_stats, it is possible that period has value like
-> > 0xXXXXXXXX00000000 where the lower 32 bit is 0, then it calls div_u64 which
-> > truncates u64 period to u32, results in zero divisor.
-> > Use div64_u64() instead of div_u64()  if the divisor is u64 to avoid
-> > truncation to 32-bit on 64-bit platforms.
-> >
-> > Signed-off-by: xiejingfeng <xiejingfeng@linux.alibaba.com>
->
-> This is legit. When we stop the periodic averaging worker due to an
-> idle CPU, the period after restart can be much longer than the ~4 sec
-> in the lower 32 bits. See the missed_periods logic in update_averages.
->
-> What is surprising is that you can hit this repeatedly, as the odds
-> are 1 in 4,294,967,296. An extremely coarse clock source?
->
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->
-> There are several more instances of div_u64 in psi.c. They all look
-> fine to me except for one in the psi poll() windowing code, where we
-> divide by the window size, which can be up to 10s. CCing Suren.
->
-> ---
-> From 009cece5f37a38f4baeb1bebdcb432ac9ae66ef8 Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Tue, 12 Nov 2019 10:35:26 -0500
-> Subject: [PATCH] psi: fix a division error in psi poll()
->
-> The psi window size is a u64 an can be up to 10 seconds right now,
-> which exceeds the lower 32 bits of the variable. But div_u64 is meant
-> only for 32-bit divisors. Use div64_u64 for the 64-bit divisor.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  kernel/sched/psi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 517e3719027e..84af7aa158bf 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -481,7 +481,7 @@ static u64 window_update(struct psi_window *win, u64 now, u64 value)
->                 u32 remaining;
->
->                 remaining = win->size - elapsed;
-> -               growth += div_u64(win->prev_growth * remaining, win->size);
-> +               growth += div64_u64(win->prev_growth * remaining, win->size);
->         }
->
->         return growth;
-> --
-> 2.24.0
->
+I'm announcing the release of the 4.4.201 kernel.
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+All users of the 4.4 kernel series must upgrade.
+
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                         |    2 
+ arch/x86/kernel/cpu/perf_event_amd_ibs.c         |    2 
+ drivers/gpu/drm/i915/i915_cmd_parser.c           |  418 +++++++++++++++--------
+ drivers/gpu/drm/i915/i915_dma.c                  |    4 
+ drivers/gpu/drm/i915/i915_drv.c                  |    4 
+ drivers/gpu/drm/i915/i915_drv.h                  |   31 +
+ drivers/gpu/drm/i915/i915_gem_context.c          |    5 
+ drivers/gpu/drm/i915/i915_gem_execbuffer.c       |  118 ++++--
+ drivers/gpu/drm/i915/i915_gem_gtt.c              |   53 +-
+ drivers/gpu/drm/i915/i915_gem_gtt.h              |    3 
+ drivers/gpu/drm/i915/i915_reg.h                  |   11 
+ drivers/gpu/drm/i915/intel_display.c             |    9 
+ drivers/gpu/drm/i915/intel_drv.h                 |    3 
+ drivers/gpu/drm/i915/intel_pm.c                  |  173 ++++++++-
+ drivers/gpu/drm/i915/intel_ringbuffer.c          |   10 
+ drivers/gpu/drm/i915/intel_ringbuffer.h          |    3 
+ drivers/gpu/drm/radeon/si_dpm.c                  |    1 
+ drivers/iio/imu/adis16480.c                      |    5 
+ drivers/net/bonding/bond_main.c                  |    6 
+ drivers/net/can/c_can/c_can.c                    |   25 +
+ drivers/net/can/c_can/c_can.h                    |    1 
+ drivers/net/can/flexcan.c                        |    1 
+ drivers/net/can/usb/gs_usb.c                     |    1 
+ drivers/net/can/usb/peak_usb/pcan_usb.c          |   17 
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c     |    2 
+ drivers/net/can/usb/usb_8dev.c                   |    3 
+ drivers/net/ethernet/hisilicon/hip04_eth.c       |    1 
+ drivers/net/ethernet/intel/e1000/e1000_ethtool.c |    7 
+ drivers/net/ethernet/intel/igb/igb_main.c        |    3 
+ drivers/net/ethernet/qlogic/qede/qede_main.c     |   12 
+ drivers/net/usb/cdc_ncm.c                        |    6 
+ drivers/nfc/fdp/i2c.c                            |    2 
+ drivers/nfc/st21nfca/core.c                      |    1 
+ drivers/pci/host/pci-tegra.c                     |    7 
+ drivers/scsi/lpfc/lpfc_nportdisc.c               |    4 
+ drivers/scsi/qla2xxx/qla_bsg.c                   |    6 
+ drivers/scsi/qla2xxx/qla_os.c                    |    4 
+ drivers/usb/core/config.c                        |    5 
+ drivers/usb/gadget/composite.c                   |    4 
+ drivers/usb/gadget/configfs.c                    |  110 +++++-
+ drivers/usb/gadget/udc/atmel_usba_udc.c          |    6 
+ drivers/usb/gadget/udc/fsl_udc_core.c            |    2 
+ drivers/usb/usbip/vhci_hcd.c                     |    1 
+ fs/ceph/caps.c                                   |   10 
+ fs/configfs/symlink.c                            |   33 +
+ fs/fs-writeback.c                                |    9 
+ fs/nfs/delegation.c                              |   10 
+ fs/nfs/delegation.h                              |    1 
+ fs/nfs/nfs4proc.c                                |    7 
+ include/net/ip_vs.h                              |    1 
+ include/net/neighbour.h                          |    4 
+ include/net/netfilter/nf_tables.h                |    3 
+ include/net/sock.h                               |    4 
+ lib/dump_stack.c                                 |    7 
+ mm/filemap.c                                     |    3 
+ mm/vmstat.c                                      |    2 
+ net/netfilter/ipset/ip_set_core.c                |    8 
+ net/netfilter/ipvs/ip_vs_ctl.c                   |   15 
+ net/nfc/netlink.c                                |    2 
+ sound/firewire/bebob/bebob_focusrite.c           |    3 
+ sound/pci/hda/patch_ca0132.c                     |    2 
+ tools/perf/util/hist.c                           |    2 
+ 62 files changed, 928 insertions(+), 290 deletions(-)
+
+Al Viro (1):
+      configfs: fix a deadlock in configfs_symlink()
+
+Alan Stern (1):
+      USB: Skip endpoints with 0 maxpacket length
+
+Alex Deucher (1):
+      drm/radeon: fix si_enable_smc_cac() failed issue
+
+Alexandru Ardelean (1):
+      iio: imu: adis16480: make sure provided frequency is positive
+
+Ben Hutchings (1):
+      drm/i915/cmdparser: Fix jump whitelist clearing
+
+Chandana Kishori Chiluveru (1):
+      usb: gadget: composite: Fix possible double free memory bug
+
+Chris Wilson (1):
+      drm/i915/gtt: Disable read-only support under GVT
+
+Cristian Birsan (1):
+      usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
+
+Dan Carpenter (1):
+      netfilter: ipset: Fix an error code in ip_set_sockfn_get()
+
+Daniel Wagner (1):
+      scsi: lpfc: Honor module parameter lpfc_use_adisc
+
+Eric Dumazet (3):
+      net: fix data-race in neigh_event_send()
+      ipvs: move old_secure_tcp into struct netns_ipvs
+      net: prevent load/store tearing on sk->sk_stamp
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.201
+
+Gustavo A. R. Silva (1):
+      drivers: usb: usbip: Add missing break statement to switch
+
+Hannes Reinecke (1):
+      scsi: qla2xxx: fixup incorrect usage of host_byte
+
+Imre Deak (1):
+      drm/i915/gen8+: Add RC6 CTX corruption WA
+
+Jiangfeng Xiao (1):
+      net: hisilicon: Fix "Trying to free already-free IRQ"
+
+Jiri Olsa (1):
+      perf tools: Fix time sorting
+
+Joakim Zhang (1):
+      can: flexcan: disable completely the ECC mechanism
+
+Johan Hovold (2):
+      can: usb_8dev: fix use-after-free on disconnect
+      can: peak_usb: fix slab info leak
+
+Jon Bloomfield (11):
+      drm/i915/gtt: Add read only pages to gen8_pte_encode
+      drm/i915/gtt: Read-only pages for insert_entries on bdw+
+      drm/i915: Rename gen7 cmdparser tables
+      drm/i915: Disable Secure Batches for gen6+
+      drm/i915: Remove Master tables from cmdparser
+      drm/i915: Add support for mandatory cmdparsing
+      drm/i915: Support ro ppgtt mapped cmdparser shadow buffers
+      drm/i915: Allow parsing of unsized batches
+      drm/i915: Add gen9 BCS cmdparsing
+      drm/i915/cmdparser: Add support for backward jumps
+      drm/i915/cmdparser: Ignore Length operands during command matching
+
+Kevin Hao (1):
+      dump_stack: avoid the livelock of the dump_lock
+
+Kim Phillips (1):
+      perf/x86/amd/ibs: Fix reading of the IBS OpData register and thus precise RIP validity
+
+Konstantin Khlebnikov (1):
+      mm/filemap.c: don't initiate writeback if mapping has no dirty pages
+
+Kurt Van Dijck (1):
+      can: c_can: c_can_poll(): only read status register after status IRQ
+
+Luis Henriques (1):
+      ceph: fix use-after-free in __ceph_remove_cap()
+
+Lukas Wunner (1):
+      netfilter: nf_tables: Align nft_expr private data to 64-bit
+
+Manfred Rudigier (1):
+      igb: Fix constant media auto sense switching when no cable is connected
+
+Manish Chopra (1):
+      qede: fix NULL pointer deref in __qede_remove()
+
+Michal Hocko (1):
+      mm, vmstat: hide /proc/pagetypeinfo from normal users
+
+Navid Emamdoost (1):
+      can: gs_usb: gs_can_open(): prevent memory leak
+
+Nicholas Piggin (1):
+      scsi: qla2xxx: stop timer in shutdown path
+
+Nikhil Badola (1):
+      usb: fsl: Check memory resource before releasing it
+
+Oliver Neukum (1):
+      CDC-NCM: handle incomplete transfer of MTU
+
+Pan Bian (3):
+      NFC: fdp: fix incorrect free object
+      NFC: st21nfca: fix double free
+      nfc: netlink: fix double device reference drop
+
+Peter Chen (1):
+      usb: gadget: configfs: fix concurrent issue between composite APIs
+
+Stephane Grosjean (1):
+      can: peak_usb: fix a potential out-of-sync while decoding packets
+
+Taehee Yoo (1):
+      bonding: fix unexpected IFF_BONDING bit unset
+
+Takashi Iwai (1):
+      ALSA: hda/ca0132 - Fix possible workqueue stall
+
+Takashi Sakamoto (1):
+      ALSA: bebob: fix to detect configured source of sampling clock for Focusrite Saffire Pro i/o series
+
+Tejun Heo (1):
+      cgroup,writeback: don't switch wbs immediately on dead wbs if the memcg is dead
+
+Trond Myklebust (1):
+      NFSv4: Don't allow a cached open with a revoked delegation
+
+Uma Shankar (1):
+      drm/i915: Lower RM timeout to avoid DSI hard hangs
+
+Vidya Sagar (1):
+      PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
+
+Wenwen Wang (1):
+      e1000: fix memory leaks
+
