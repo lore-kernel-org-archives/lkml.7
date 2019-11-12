@@ -2,365 +2,120 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28435C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482D5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A3A206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168C8206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:14:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pGJUYjRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfKLMOL (ORCPT
+        id S1726932AbfKLMOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:14:11 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:34315 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfKLMOK (ORCPT
+        Tue, 12 Nov 2019 07:14:15 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36242 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfKLMON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:14:10 -0500
-Received: by mail-io1-f69.google.com with SMTP id a13so15953257iol.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 04:14:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=sLQVy0wHNgrrvXHOJoKgmqY97Gox0lEP0K7KxqsGea0=;
-        b=cP9qcC9VC6lJ852YN4a6WQSxHcDiT/yiAC1pnMO8M4zggPyj5BD8hRYP4ZTH1cKVFo
-         E+st4JPhvWMsLQMIocBQMpA40QuFcC/zF/R10kpe2vgYcVd6xthQ/QqeKfMot7rHRPlv
-         wxdEdZ69NDRXqzNPom5AwBzcnWO2uP7R/HqJqWJqOA7zRbLzb1Xe0JthyPalivPBxt/C
-         lenhUUMVN7TZJwUPutqDz41lvOI1nOMYi7qpp6R0PIQ2uDvdPWGn7sOYjUhdab85mgAS
-         UNK1IVF9RquhSJ8Bt0ZrCdBUj4Elpfw6AY/ZJlyKF1nXGVj2hulHzGEZpp4rp0GTyccT
-         7FmQ==
-X-Gm-Message-State: APjAAAUpFNl+RT09ziFaFlQM6UqsBMB41XKUrQKX820THww3L6nvW6V+
-        r6oOaUo9As+UBvT6D2UcKZZMr8mMTEGwCrl5eClAA/RlTsA0
-X-Google-Smtp-Source: APXvYqzUVPQwEZuSHWrKZitQChADIZ95Q4zEdiIUrjKvsymskCsNRquCzM8X17yJiG7NsoQfUhuJLDYuP+IQ0CJkT+W5XkpnXNd6
+        Tue, 12 Nov 2019 07:14:13 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACC93f8089973;
+        Tue, 12 Nov 2019 12:14:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=cwbFHdOtQE8djdjL/sCVjGdnyrOIqq0d6NAU+DO6W2o=;
+ b=pGJUYjRErF5MSYnvt99xZ/GzFKSytJJJighqp1OzWLITlOukYTRfgE+o5GUYIHF9ND4i
+ c7ltWLXPWv/5PA4sB10piz72J7Fe9wSE3ADeeMR+nl50c7m6dadMePOD3pfenVuZvfdt
+ keZnyY9CQTNMUMwAklaB9Pvlxu5MTL0eEqx7tBlKUHbkhSQrnleBggaXX8g95GO0aWpA
+ Z79GBcJIytxJECfZzjspitb9zSUkevvzG9p9EKtBHRct5f2m4g1Ko0g3JRWvnEkwzy2C
+ xUg21vlMCsmIRZ+6Hcmt1xrQaLoNmsx6v63TVYqmrPVY33cyzkIk0Km3lc98cha+Vdo8 Aw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w5p3qm99j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 12:14:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACC8MBm006620;
+        Tue, 12 Nov 2019 12:14:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2w6r8m3pb5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 12:14:08 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xACCE7eb016328;
+        Tue, 12 Nov 2019 12:14:07 GMT
+Received: from [10.191.24.133] (/10.191.24.133)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Nov 2019 04:14:07 -0800
+Subject: Re: [PATCH 3/5] KVM: ensure pool time is longer than block_ns
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
+        rkrcmar@redhat.com
+References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1572060239-17401-4-git-send-email-zhenzhong.duan@oracle.com>
+ <20191101211623.GB20061@amt.cnet>
+ <76044f07-0b76-cd91-dc87-82ed3fca061e@redhat.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <fc9eab27-5251-feb7-29f4-1e2923d5d013@oracle.com>
+Date:   Tue, 12 Nov 2019 20:14:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:104a:: with SMTP id y71mr34841674ill.220.1573560846930;
- Tue, 12 Nov 2019 04:14:06 -0800 (PST)
-Date:   Tue, 12 Nov 2019 04:14:06 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005062e00597252f5e@google.com>
-Subject: KMSAN: uninit-value in __flow_hash_from_keys (2)
-From:   syzbot <syzbot+3bfc4436d26db9a5ca18@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, glider@google.com, jianbol@mellanox.com,
-        jiri@mellanox.com, kafai@fb.com, linux-kernel@vger.kernel.org,
-        mkubecek@suse.cz, netdev@vger.kernel.org, ogerlitz@mellanox.com,
-        pabeni@redhat.com, ppenkov@google.com, sdf@google.com,
-        simon.horman@netronome.com, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com, zhongjiang@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <76044f07-0b76-cd91-dc87-82ed3fca061e@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911120110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911120110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+On 2019/11/11 21:53, Paolo Bonzini wrote:
+> On 01/11/19 22:16, Marcelo Tosatti wrote:
+>>   		if (!vcpu_valid_wakeup(vcpu)) {
+>>   			shrink_halt_poll_ns(vcpu);
+>>   		} else if (halt_poll_ns) {
+>> -			if (block_ns <= vcpu->halt_poll_ns)
+>> +			if (block_ns < vcpu->halt_poll_ns)
+>>   				;
+>>   			/* we had a short halt and our poll time is too small */
+>>   			else if (block_ns < halt_poll_ns)
+> What about making this "if (!waited)"?  The result would be very readable:
+>
+>                          if (!waited)
+>                                  ;
+>                          /* we had a long block, shrink polling */
+>                          else if (block_ns > halt_poll_ns && vcpu->halt_poll_ns)
+>                                  shrink_halt_poll_ns(vcpu);
+>                          /* we had a short halt and our poll time is too small */
+>                          else if (block_ns < halt_poll_ns && vcpu->halt_poll_ns < halt_poll_ns)
+>                                  grow_halt_poll_ns(vcpu);
 
-HEAD commit:    088c01ea kmsan: fix comment, NFC
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1556e137200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=68044283f8b8640d
-dashboard link: https://syzkaller.appspot.com/bug?extid=3bfc4436d26db9a5ca18
-compiler:       clang version 8.0.0 (trunk 350509)
+This patch is dropped in v2 as it rarely happen in real scenario.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Appreciate you reviewing v2 in https://lkml.org/lkml/2019/11/6/447
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3bfc4436d26db9a5ca18@syzkaller.appspotmail.com
+Thanks
 
-==================================================================
-BUG: KMSAN: uninit-value in __flow_hash_consistentify  
-net/core/flow_dissector.c:1318 [inline]
-BUG: KMSAN: uninit-value in __flow_hash_from_keys+0x544/0x1070  
-net/core/flow_dissector.c:1347
-CPU: 0 PID: 14493 Comm: syz-executor.2 Not tainted 5.1.0-rc2+ #21
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:624
-  __msan_warning+0x7a/0xf0 mm/kmsan/kmsan_instr.c:310
-  __flow_hash_consistentify net/core/flow_dissector.c:1318 [inline]
-  __flow_hash_from_keys+0x544/0x1070 net/core/flow_dissector.c:1347
-  ___skb_get_hash net/core/flow_dissector.c:1370 [inline]
-  __skb_get_hash+0x16d/0x3e0 net/core/flow_dissector.c:1433
-  skb_get_hash include/linux/skbuff.h:1326 [inline]
-  ip_tunnel_xmit+0x99c/0x3310 net/ipv4/ip_tunnel.c:750
-  __gre_xmit net/ipv4/ip_gre.c:444 [inline]
-  gre_tap_xmit+0xaa5/0xbb0 net/ipv4/ip_gre.c:707
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  sch_direct_xmit+0x58a/0x880 net/sched/sch_generic.c:327
-  qdisc_restart net/sched/sch_generic.c:390 [inline]
-  __qdisc_run+0x1cd7/0x34b0 net/sched/sch_generic.c:398
-  qdisc_run include/net/pkt_sched.h:121 [inline]
-  __dev_xmit_skb net/core/dev.c:3473 [inline]
-  __dev_queue_xmit+0x1e51/0x3ce0 net/core/dev.c:3832
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  br_dev_queue_push_xmit+0x803/0x8b0 net/bridge/br_forward.c:56
-  NF_HOOK include/linux/netfilter.h:289 [inline]
-  br_forward_finish net/bridge/br_forward.c:69 [inline]
-  NF_HOOK include/linux/netfilter.h:289 [inline]
-  __br_forward+0xa58/0xe10 net/bridge/br_forward.c:113
-  deliver_clone net/bridge/br_forward.c:129 [inline]
-  maybe_deliver net/bridge/br_forward.c:184 [inline]
-  br_flood+0xc65/0x10b0 net/bridge/br_forward.c:226
-  br_dev_xmit+0x1610/0x16a0 net/bridge/br_device.c:99
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  __dev_queue_xmit+0x2e9f/0x3ce0 net/core/dev.c:3864
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  neigh_resolve_output+0xab7/0xb40 net/core/neighbour.c:1487
-  neigh_output include/net/neighbour.h:508 [inline]
-  ip_finish_output2+0x1709/0x1930 net/ipv4/ip_output.c:229
-  ip_finish_output+0xd2b/0xfd0 net/ipv4/ip_output.c:317
-  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-  ip_output+0x53f/0x610 net/ipv4/ip_output.c:405
-  dst_output include/net/dst.h:444 [inline]
-  ip_local_out+0x164/0x1d0 net/ipv4/ip_output.c:124
-  iptunnel_xmit+0x8a7/0xde0 net/ipv4/ip_tunnel_core.c:91
-  ip_tunnel_xmit+0x2f46/0x3310 net/ipv4/ip_tunnel.c:831
-  __gre_xmit net/ipv4/ip_gre.c:444 [inline]
-  ipgre_xmit+0x1098/0x11c0 net/ipv4/ip_gre.c:628
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  __dev_queue_xmit+0x2e9f/0x3ce0 net/core/dev.c:3864
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  packet_snd net/packet/af_packet.c:2931 [inline]
-  packet_sendmsg+0x80f5/0x8ff0 net/packet/af_packet.c:2956
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-  ___sys_sendmsg+0xdb3/0x1220 net/socket.c:2137
-  __sys_sendmsg net/socket.c:2175 [inline]
-  __do_sys_sendmsg net/socket.c:2184 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2182
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2182
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x458209
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007febe94fac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458209
-RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007febe94fb6d4
-R13: 00000000004c581a R14: 00000000004d9ad8 R15: 00000000ffffffff
+Zhenzhong
 
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
-  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
-  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
-  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
-  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
-  __skb_flow_dissect+0x3303/0x7570 net/core/flow_dissector.c:856
-  skb_flow_dissect_flow_keys include/linux/skbuff.h:1303 [inline]
-  ___skb_get_hash net/core/flow_dissector.c:1367 [inline]
-  __skb_get_hash+0x142/0x3e0 net/core/flow_dissector.c:1433
-  skb_get_hash include/linux/skbuff.h:1326 [inline]
-  ip_tunnel_xmit+0x99c/0x3310 net/ipv4/ip_tunnel.c:750
-  __gre_xmit net/ipv4/ip_gre.c:444 [inline]
-  gre_tap_xmit+0xaa5/0xbb0 net/ipv4/ip_gre.c:707
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  sch_direct_xmit+0x58a/0x880 net/sched/sch_generic.c:327
-  qdisc_restart net/sched/sch_generic.c:390 [inline]
-  __qdisc_run+0x1cd7/0x34b0 net/sched/sch_generic.c:398
-  qdisc_run include/net/pkt_sched.h:121 [inline]
-  __dev_xmit_skb net/core/dev.c:3473 [inline]
-  __dev_queue_xmit+0x1e51/0x3ce0 net/core/dev.c:3832
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  br_dev_queue_push_xmit+0x803/0x8b0 net/bridge/br_forward.c:56
-  NF_HOOK include/linux/netfilter.h:289 [inline]
-  br_forward_finish net/bridge/br_forward.c:69 [inline]
-  NF_HOOK include/linux/netfilter.h:289 [inline]
-  __br_forward+0xa58/0xe10 net/bridge/br_forward.c:113
-  deliver_clone net/bridge/br_forward.c:129 [inline]
-  maybe_deliver net/bridge/br_forward.c:184 [inline]
-  br_flood+0xc65/0x10b0 net/bridge/br_forward.c:226
-  br_dev_xmit+0x1610/0x16a0 net/bridge/br_device.c:99
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  __dev_queue_xmit+0x2e9f/0x3ce0 net/core/dev.c:3864
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  neigh_resolve_output+0xab7/0xb40 net/core/neighbour.c:1487
-  neigh_output include/net/neighbour.h:508 [inline]
-  ip_finish_output2+0x1709/0x1930 net/ipv4/ip_output.c:229
-  ip_finish_output+0xd2b/0xfd0 net/ipv4/ip_output.c:317
-  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-  ip_output+0x53f/0x610 net/ipv4/ip_output.c:405
-  dst_output include/net/dst.h:444 [inline]
-  ip_local_out+0x164/0x1d0 net/ipv4/ip_output.c:124
-  iptunnel_xmit+0x8a7/0xde0 net/ipv4/ip_tunnel_core.c:91
-  ip_tunnel_xmit+0x2f46/0x3310 net/ipv4/ip_tunnel.c:831
-  __gre_xmit net/ipv4/ip_gre.c:444 [inline]
-  ipgre_xmit+0x1098/0x11c0 net/ipv4/ip_gre.c:628
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  __dev_queue_xmit+0x2e9f/0x3ce0 net/core/dev.c:3864
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  packet_snd net/packet/af_packet.c:2931 [inline]
-  packet_sendmsg+0x80f5/0x8ff0 net/packet/af_packet.c:2956
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-  ___sys_sendmsg+0xdb3/0x1220 net/socket.c:2137
-  __sys_sendmsg net/socket.c:2175 [inline]
-  __do_sys_sendmsg net/socket.c:2184 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2182
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2182
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
-  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
-  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
-  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
-  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
-  pskb_expand_head+0x3aa/0x1a30 net/core/skbuff.c:1478
-  __skb_cow include/linux/skbuff.h:3029 [inline]
-  skb_cow_head include/linux/skbuff.h:3063 [inline]
-  gre_tap_xmit+0x7dd/0xbb0 net/ipv4/ip_gre.c:704
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  sch_direct_xmit+0x58a/0x880 net/sched/sch_generic.c:327
-  qdisc_restart net/sched/sch_generic.c:390 [inline]
-  __qdisc_run+0x1cd7/0x34b0 net/sched/sch_generic.c:398
-  qdisc_run include/net/pkt_sched.h:121 [inline]
-  __dev_xmit_skb net/core/dev.c:3473 [inline]
-  __dev_queue_xmit+0x1e51/0x3ce0 net/core/dev.c:3832
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  br_dev_queue_push_xmit+0x803/0x8b0 net/bridge/br_forward.c:56
-  NF_HOOK include/linux/netfilter.h:289 [inline]
-  br_forward_finish net/bridge/br_forward.c:69 [inline]
-  NF_HOOK include/linux/netfilter.h:289 [inline]
-  __br_forward+0xa58/0xe10 net/bridge/br_forward.c:113
-  deliver_clone net/bridge/br_forward.c:129 [inline]
-  maybe_deliver net/bridge/br_forward.c:184 [inline]
-  br_flood+0xc65/0x10b0 net/bridge/br_forward.c:226
-  br_dev_xmit+0x1610/0x16a0 net/bridge/br_device.c:99
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  __dev_queue_xmit+0x2e9f/0x3ce0 net/core/dev.c:3864
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  neigh_resolve_output+0xab7/0xb40 net/core/neighbour.c:1487
-  neigh_output include/net/neighbour.h:508 [inline]
-  ip_finish_output2+0x1709/0x1930 net/ipv4/ip_output.c:229
-  ip_finish_output+0xd2b/0xfd0 net/ipv4/ip_output.c:317
-  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-  ip_output+0x53f/0x610 net/ipv4/ip_output.c:405
-  dst_output include/net/dst.h:444 [inline]
-  ip_local_out+0x164/0x1d0 net/ipv4/ip_output.c:124
-  iptunnel_xmit+0x8a7/0xde0 net/ipv4/ip_tunnel_core.c:91
-  ip_tunnel_xmit+0x2f46/0x3310 net/ipv4/ip_tunnel.c:831
-  __gre_xmit net/ipv4/ip_gre.c:444 [inline]
-  ipgre_xmit+0x1098/0x11c0 net/ipv4/ip_gre.c:628
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  __dev_queue_xmit+0x2e9f/0x3ce0 net/core/dev.c:3864
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  packet_snd net/packet/af_packet.c:2931 [inline]
-  packet_sendmsg+0x80f5/0x8ff0 net/packet/af_packet.c:2956
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-  ___sys_sendmsg+0xdb3/0x1220 net/socket.c:2137
-  __sys_sendmsg net/socket.c:2175 [inline]
-  __do_sys_sendmsg net/socket.c:2184 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2182
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2182
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
-  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
-  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
-  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
-  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
-  pskb_expand_head+0x3aa/0x1a30 net/core/skbuff.c:1478
-  __skb_cow include/linux/skbuff.h:3029 [inline]
-  skb_cow_head include/linux/skbuff.h:3063 [inline]
-  ip_tunnel_xmit+0x2c4e/0x3310 net/ipv4/ip_tunnel.c:824
-  __gre_xmit net/ipv4/ip_gre.c:444 [inline]
-  ipgre_xmit+0x1098/0x11c0 net/ipv4/ip_gre.c:628
-  __netdev_start_xmit include/linux/netdevice.h:4411 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x604/0xc40 net/core/dev.c:3294
-  __dev_queue_xmit+0x2e9f/0x3ce0 net/core/dev.c:3864
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3897
-  packet_snd net/packet/af_packet.c:2931 [inline]
-  packet_sendmsg+0x80f5/0x8ff0 net/packet/af_packet.c:2956
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-  ___sys_sendmsg+0xdb3/0x1220 net/socket.c:2137
-  __sys_sendmsg net/socket.c:2175 [inline]
-  __do_sys_sendmsg net/socket.c:2184 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2182
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2182
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:159
-  kmsan_kmalloc+0xa9/0x130 mm/kmsan/kmsan_hooks.c:173
-  kmsan_slab_alloc+0xe/0x10 mm/kmsan/kmsan_hooks.c:182
-  slab_post_alloc_hook mm/slab.h:441 [inline]
-  slab_alloc_node mm/slub.c:2771 [inline]
-  __kmalloc_node_track_caller+0xead/0x1000 mm/slub.c:4396
-  __kmalloc_reserve net/core/skbuff.c:140 [inline]
-  __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
-  alloc_skb include/linux/skbuff.h:1059 [inline]
-  alloc_skb_with_frags+0x186/0xa60 net/core/skbuff.c:5287
-  sock_alloc_send_pskb+0xafd/0x10a0 net/core/sock.c:2220
-  packet_alloc_skb net/packet/af_packet.c:2781 [inline]
-  packet_snd net/packet/af_packet.c:2874 [inline]
-  packet_sendmsg+0x6349/0x8ff0 net/packet/af_packet.c:2956
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-  ___sys_sendmsg+0xdb3/0x1220 net/socket.c:2137
-  __sys_sendmsg net/socket.c:2175 [inline]
-  __do_sys_sendmsg net/socket.c:2184 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2182
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2182
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
