@@ -2,108 +2,108 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C556BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D145C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE292067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DE82067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:52:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="pEYpkLyP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BVOh6/f4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfKLTvm (ORCPT
+        id S1726988AbfKLTwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:51:42 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43018 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfKLTvm (ORCPT
+        Tue, 12 Nov 2019 14:52:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51328 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726376AbfKLTwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:51:42 -0500
-Received: by mail-io1-f67.google.com with SMTP id c11so20097457iom.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:51:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tQtqMeot5LfcVlTdgWDwSqRbJuRC50V8XvcHZihKGG8=;
-        b=pEYpkLyPH+Q301rHLJ8Kvnr1eTMi+fysebKB+dV0aT8wS7OK9njRbyWt/OrGymCl26
-         umQA5eJMRUGkAWMAD9HqWTXO0tL7O5cc4/kAv0cQym46SDDK5P/c5WO6LrtRUyaBZ0Im
-         +eKm0u8JWcvAvBOPhf8MRwz14xkTkpnvC8Qq48xE3cAeaO5LfRSxWUkFZv/pC56ZVBCB
-         KJC59nIid7tWaNHwK058GuJ3QNCeKOBnuk5QXDA+n6Wrg8DFpNid3/Vl6wcLKGLP3XEY
-         deqJB+1/H1SJOdawKdpBI2bm5dUEmTg2VWnWmkbiIWoPfj/8ds46/h9mY3N2IdB3gGzP
-         fRHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tQtqMeot5LfcVlTdgWDwSqRbJuRC50V8XvcHZihKGG8=;
-        b=khTeyGJI4y5u1b8wGnkWgJoxrCQfEC3PcZHDIIKbnT08JtADz6XgeuDxcz6fc4Cozl
-         LXakgxCBQfVjr2vpY1OXpTV1dQYXjdO8GSr9pyXnjRheN7xPbL6el5OMs02idKqNT+Ds
-         +62xNIU7SRgA1CyKOMTf0J67Ysj5I9Alc0xhg6XntFy58dpMIA/hKejyFhJQpZmWnus0
-         bN8LMw3LZbEfA8aaj2fp7s2GZHW8vFCvahDCCeneV6KKZa8nTjhbzXvJfRfTlW3U4EVn
-         bFq7NDtsHe8vcr7Tn4b0gzvzXdyswJZWp8ahzXHsqsTGBVdrxZRFOdHkOApGjdWe7HeA
-         w3zQ==
-X-Gm-Message-State: APjAAAUxfWnAEedmw7EruYGv3bKrmDnqP0My6AEyJoECw0J7KYmj1L0F
-        2o1j5eTYcJZ2Jfnn+7lBQxNlkTnd0VxVPdzs3nm1NA==
-X-Google-Smtp-Source: APXvYqyQOcsKXkFC659627snfUO6v31s9OzLfN/tzsdHnX9psDit7p0+mxKJy9k82P8pcz2Sjh8jBms8VFvs8Iz5ECo=
-X-Received: by 2002:a02:9f12:: with SMTP id z18mr7536892jal.10.1573588301333;
- Tue, 12 Nov 2019 11:51:41 -0800 (PST)
+        Tue, 12 Nov 2019 14:52:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573588364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Pqt6+3OL+HVkzSWOLZR1gcCq624ledyYdP7VW17VDYM=;
+        b=BVOh6/f4uwD7SVTmkUiYsEfwSbIuyrMXkigLynVHilNjnVtzDsS1vNMP5fzCdqzqimLLat
+        UmmKg8NoO5QjCDSB+fOnBjjJTYc6DG9i91wJUr6690lnALFgQYDImfoZaDal8NMLXhG2iP
+        2VVI6LlqytTHnkO5OYdoas030rYBoqI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-74-PNiFmytUMkmrHVWbu61NpA-1; Tue, 12 Nov 2019 14:52:42 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B6BF805C3D;
+        Tue, 12 Nov 2019 19:52:39 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E7A338C5;
+        Tue, 12 Nov 2019 19:52:38 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 14:52:36 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/debug: __dump_page() prints an extra line
+Message-ID: <20191112195236.GB31272@redhat.com>
+References: <20191111225559.19657-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-References: <20191111004211.96425-1-olof@lixom.net> <20191111.214658.1031500406952713920.davem@redhat.com>
- <20191112132311.GA5090@lunn.ch>
-In-Reply-To: <20191112132311.GA5090@lunn.ch>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Tue, 12 Nov 2019 11:51:29 -0800
-Message-ID: <CAOesGMiCKYVjf+-uyU-NeFiXmsL_26OG9k5W7geCPY-aAB-8ow@mail.gmail.com>
-Subject: Re: [PATCH] net: mdio-octeon: Fix pointer/integer casts
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     David Miller <davem@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191111225559.19657-1-rcampbell@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: PNiFmytUMkmrHVWbu61NpA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 5:23 AM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Mon, Nov 11, 2019 at 09:46:58PM -0800, David Miller wrote:
-> > From: Olof Johansson <olof@lixom.net>
-> > Date: Sun, 10 Nov 2019 16:42:11 -0800
-> >
-> > > -static inline void oct_mdio_writeq(u64 val, u64 addr)
-> > > +static inline void oct_mdio_writeq(u64 val, void __iomem *addr)
-> > >  {
-> > > -   cvmx_write_csr(addr, val);
-> > > +   cvmx_write_csr((u64)addr, val);
-> > >  }
-> >
-> > I hate stuff like this, I think you really need to fix this from the bottom
-> > up or similar.  MMIO and such addresses are __iomem pointers, period.
->
-> Yes, i agree, but did not want to push the work to Olof. The point of
-> COMPILE_TEST is to find issues like this, code which should be
-> architecture independent, but is not. The cast just papers over the
-> cracks.
->
-> At a minimum, could we fix the stub cvmx_write_csr() used for
-> everything !MIPS. That should hopefully fix everything !MIPS, but
-> cause MIPS to start issuing warning. The MIPS folks can then cleanup
-> their code, which is really what is broken here.
+On Mon, Nov 11, 2019 at 02:55:59PM -0800, Ralph Campbell wrote:
+> When dumping struct page information, __dump_page() prints the page type
+> with a trailing blank followed by the page flags on a separate line:
+>=20
+> anon
+> flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
+>=20
+> Fix this by using pr_cont() instead of pr_warn() to get a single line:
+>=20
+> anon flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
+>=20
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 
-I'm not disagreeing with Dave, going all the way down the rabbit hole
-is preferred. In this case I mostly pushed the lack of __iomem usage
-down one layer but not the whole way.
+Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
 
-I'm unlikely to find time to do it in the near future myself (this was
-a bit of a weekend drive-by from my side), but I don't mind doing it.
-If someone else beats me to it, feel free to take it over.
+> ---
+>=20
+> v1 -> v2:
+> Oops, fix the subject line.
+>=20
+>  mm/debug.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/mm/debug.c b/mm/debug.c
+> index 8345bb6e4769..752c78721ea0 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -87,7 +87,7 @@ void __dump_page(struct page *page, const char *reason)
+>  =09}
+>  =09BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) !=3D __NR_PAGEFLAGS + 1);
+> =20
+> -=09pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+> +=09pr_cont("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+> =20
+>  hex_only:
+>  =09print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+> --=20
+> 2.20.1
+>=20
+>=20
 
-
--Olof
