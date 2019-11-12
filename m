@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40282C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ED7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205F921925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C402214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfKLXvz (ORCPT
+        id S1727498AbfKLXvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:51:55 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57308 "EHLO
+        Tue, 12 Nov 2019 18:51:52 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57312 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726970AbfKLXuf (ORCPT
+        by vger.kernel.org with ESMTP id S1726973AbfKLXuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 18:50:35 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-0008I5-Lq; Tue, 12 Nov 2019 23:50:33 +0000
+        id 1iUfvc-0008I1-Vf; Tue, 12 Nov 2019 23:50:33 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-00056t-II; Tue, 12 Nov 2019 23:50:32 +0000
+        id 1iUfvc-00056a-Ef; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,20 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
-        "Tony Luck" <tony.luck@intel.com>,
+        "Neelima Krishnan" <neelima.krishnan@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
         "Mark Gross" <mgross@linux.intel.com>,
         "Borislav Petkov" <bp@suse.de>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Neelima Krishnan" <neelima.krishnan@intel.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>
-Date:   Tue, 12 Nov 2019 23:48:04 +0000
-Message-ID: <lsq.1573602477.206197127@decadent.org.uk>
+        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
+        "Tony Luck" <tony.luck@intel.com>
+Date:   Tue, 12 Nov 2019 23:48:00 +0000
+Message-ID: <lsq.1573602477.166595068@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 07/25] x86/speculation/taa: Add sysfs reporting for
- TSX Async  Abort
+Subject: [PATCH 3.16 03/25] x86/msr: Add the IA32_TSX_CTRL MSR
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -64,14 +62,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit 6608b45ac5ecb56f9e171252229c39580cc85f0f upstream.
+commit c2955f270a84762343000f103e0640d29c7a96f3 upstream.
 
-Add the sysfs reporting file for TSX Async Abort. It exposes the
-vulnerability and the mitigation state similar to the existing files for
-the other hardware vulnerabilities.
+Transactional Synchronization Extensions (TSX) may be used on certain
+processors as part of a speculative side channel attack.  A microcode
+update for existing processors that are vulnerable to this attack will
+add a new MSR - IA32_TSX_CTRL to allow the system administrator the
+option to disable TSX as one of the possible mitigations.
 
-Sysfs file path is:
-/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
+The CPUs which get this new MSR after a microcode upgrade are the ones
+which do not set MSR_IA32_ARCH_CAPABILITIES.MDS_NO (bit 5) because those
+CPUs have CPUID.MD_CLEAR, i.e., the VERW implementation which clears all
+CPU buffers takes care of the TAA case as well.
+
+  [ Note that future processors that are not vulnerable will also
+    support the IA32_TSX_CTRL MSR. ]
+
+Add defines for the new IA32_TSX_CTRL MSR and its bits.
+
+TSX has two sub-features:
+
+1. Restricted Transactional Memory (RTM) is an explicitly-used feature
+   where new instructions begin and end TSX transactions.
+2. Hardware Lock Elision (HLE) is implicitly used when certain kinds of
+   "old" style locks are used by software.
+
+Bit 7 of the IA32_ARCH_CAPABILITIES indicates the presence of the
+IA32_TSX_CTRL MSR.
+
+There are two control bits in IA32_TSX_CTRL MSR:
+
+  Bit 0: When set, it disables the Restricted Transactional Memory (RTM)
+         sub-feature of TSX (will force all transactions to abort on the
+	 XBEGIN instruction).
+
+  Bit 1: When set, it disables the enumeration of the RTM and HLE feature
+         (i.e. it will make CPUID(EAX=7).EBX{bit4} and
+	  CPUID(EAX=7).EBX{bit11} read as 0).
+
+The other TSX sub-feature, Hardware Lock Elision (HLE), is
+unconditionally disabled by the new microcode but still enumerated
+as present by CPUID(EAX=7).EBX{bit4}, unless disabled by
+IA32_TSX_CTRL_MSR[1] - TSX_CTRL_CPUID_CLEAR.
 
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
@@ -79,100 +111,31 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
 Reviewed-by: Mark Gross <mgross@linux.intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+[bwh: Backported to 3.16:
+ - Don't use BIT() in msr-index.h because it's a UAPI header
+ - Adjust filename, context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/bugs.c | 23 +++++++++++++++++++++++
- drivers/base/cpu.c         |  9 +++++++++
- include/linux/cpu.h        |  3 +++
- 3 files changed, 35 insertions(+)
+ arch/x86/include/uapi/asm/msr-index.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1365,6 +1365,21 @@ static ssize_t mds_show_state(char *buf)
- 		       sched_smt_active() ? "vulnerable" : "disabled");
- }
+--- a/arch/x86/include/uapi/asm/msr-index.h
++++ b/arch/x86/include/uapi/asm/msr-index.h
+@@ -70,10 +70,15 @@
+ 						    * Microarchitectural Data
+ 						    * Sampling (MDS) vulnerabilities.
+ 						    */
++#define ARCH_CAP_TSX_CTRL_MSR		(1UL << 7) /* MSR for TSX control is available. */
  
-+static ssize_t tsx_async_abort_show_state(char *buf)
-+{
-+	if ((taa_mitigation == TAA_MITIGATION_TSX_DISABLED) ||
-+	    (taa_mitigation == TAA_MITIGATION_OFF))
-+		return sprintf(buf, "%s\n", taa_strings[taa_mitigation]);
-+
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-+		return sprintf(buf, "%s; SMT Host state unknown\n",
-+			       taa_strings[taa_mitigation]);
-+	}
-+
-+	return sprintf(buf, "%s; SMT %s\n", taa_strings[taa_mitigation],
-+		       sched_smt_active() ? "vulnerable" : "disabled");
-+}
-+
- static char *stibp_state(void)
- {
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
-@@ -1430,6 +1445,9 @@ static ssize_t cpu_show_common(struct de
- 	case X86_BUG_MDS:
- 		return mds_show_state(buf);
+ #define MSR_IA32_BBL_CR_CTL		0x00000119
+ #define MSR_IA32_BBL_CR_CTL3		0x0000011e
  
-+	case X86_BUG_TAA:
-+		return tsx_async_abort_show_state(buf);
++#define MSR_IA32_TSX_CTRL		0x00000122
++#define TSX_CTRL_RTM_DISABLE		(1UL << 0) /* Disable RTM feature */
++#define TSX_CTRL_CPUID_CLEAR		(1UL << 1) /* Disable TSX enumeration */
 +
- 	default:
- 		break;
- 	}
-@@ -1466,4 +1484,9 @@ ssize_t cpu_show_mds(struct device *dev,
- {
- 	return cpu_show_common(dev, attr, buf, X86_BUG_MDS);
- }
-+
-+ssize_t cpu_show_tsx_async_abort(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return cpu_show_common(dev, attr, buf, X86_BUG_TAA);
-+}
- #endif
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -456,12 +456,20 @@ ssize_t __weak cpu_show_mds(struct devic
- 	return sprintf(buf, "Not affected\n");
- }
- 
-+ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	return sprintf(buf, "Not affected\n");
-+}
-+
- static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
- static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
- static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
- static DEVICE_ATTR(spec_store_bypass, 0444, cpu_show_spec_store_bypass, NULL);
- static DEVICE_ATTR(l1tf, 0444, cpu_show_l1tf, NULL);
- static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
-+static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
- 
- static struct attribute *cpu_root_vulnerabilities_attrs[] = {
- 	&dev_attr_meltdown.attr,
-@@ -470,6 +478,7 @@ static struct attribute *cpu_root_vulner
- 	&dev_attr_spec_store_bypass.attr,
- 	&dev_attr_l1tf.attr,
- 	&dev_attr_mds.attr,
-+	&dev_attr_tsx_async_abort.attr,
- 	NULL
- };
- 
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -51,6 +51,9 @@ extern ssize_t cpu_show_l1tf(struct devi
- 			     struct device_attribute *attr, char *buf);
- extern ssize_t cpu_show_mds(struct device *dev,
- 			    struct device_attribute *attr, char *buf);
-+extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf);
- 
- #ifdef CONFIG_HOTPLUG_CPU
- extern void unregister_cpu(struct cpu *cpu);
+ #define MSR_IA32_SYSENTER_CS		0x00000174
+ #define MSR_IA32_SYSENTER_ESP		0x00000175
+ #define MSR_IA32_SYSENTER_EIP		0x00000176
 
