@@ -2,73 +2,147 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8284C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEA5C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A703C20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC45E206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wlc7SuWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfKLJvj (ORCPT
+        id S1727329AbfKLJyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:51:39 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33013 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfKLJvj (ORCPT
+        Tue, 12 Nov 2019 04:54:13 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40554 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfKLJyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:51:39 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iUSph-0007Kr-8r; Tue, 12 Nov 2019 10:51:33 +0100
-Date:   Tue, 12 Nov 2019 10:51:31 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
-In-Reply-To: <20191112091521.GX4131@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1911121051110.1833@nanos.tec.linutronix.de>
-References: <20191111220314.519933535@linutronix.de> <20191111223052.603030685@linutronix.de> <20191112091521.GX4131@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 12 Nov 2019 04:54:12 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC9s2sI008247;
+        Tue, 12 Nov 2019 03:54:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573552442;
+        bh=WQT6Vm79FJ7vex/Exo9gZw1GlIJus5QmouBEivGnijk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wlc7SuWVvl6nEn8yCCQalX3OATIF4CSmyUHvj1rrDIMbyQzUNditNVLnjvAckSKdW
+         kSeGb566okJwWX+cmbgNfOVIH/96heCxHty/pyx99ujC/7x51YYa3G/YCJ58aSbeRu
+         RCerjOuZ9Gqobzrs1gI7Em2ImAjI36Ot6O3YvCJE=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC9s2Sn019766;
+        Tue, 12 Nov 2019 03:54:02 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 03:53:44 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 03:53:44 -0600
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC9rvfr077812;
+        Tue, 12 Nov 2019 03:53:58 -0600
+Subject: Re: [PATCH v6 net-next 06/13] dt-bindings: net: ti: add new cpsw
+ switch driver bindings
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Florian Fainelli <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+References: <20191109151525.18651-1-grygorii.strashko@ti.com>
+ <20191109151525.18651-7-grygorii.strashko@ti.com>
+ <20191111172652.GV5610@atomide.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <bac9a300-cbd5-d342-a96d-d90fdcf2e4c3@ti.com>
+Date:   Tue, 12 Nov 2019 11:53:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191111172652.GV5610@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019, Peter Zijlstra wrote:
-> On Mon, Nov 11, 2019 at 11:03:25PM +0100, Thomas Gleixner wrote:
-> > @@ -59,8 +71,26 @@ long ksys_ioperm(unsigned long from, uns
-> >  			return -ENOMEM;
-> >  
-> >  		memset(iobm->bits, 0xff, sizeof(iobm->bits));
-> > +		refcount_set(&iobm->refcnt, 1);
-> > +	}
-> > +
-> > +	/*
-> > +	 * If the bitmap is not shared, then nothing can take a refcount as
-> > +	 * current can obviously not fork at the same time. If it's shared
-> > +	 * duplicate it and drop the refcount on the original one.
-> > +	 */
-> > +	if (refcount_read(&iobm->refcnt) > 1) {
-> > +		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
-> > +		if (!iobm)
-> > +			return -ENOMEM;
-> > +		io_bitmap_exit();
-> 		refcount_set(&iobm->refcnd, 1);
 
-Indeed.
+
+On 11/11/2019 19:26, Tony Lindgren wrote:
+> Hi,
+> 
+> * Grygorii Strashko <grygorii.strashko@ti.com> [191109 15:17]:
+>> +    mac_sw: switch@0 {
+>> +        compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
+>> +        reg = <0x0 0x4000>;
+>> +        ranges = <0 0 0x4000>;
+>> +        clocks = <&gmac_main_clk>;
+>> +        clock-names = "fck";
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +        syscon = <&scm_conf>;
+>> +        inctrl-names = "default", "sleep";
+>> +
+>> +        interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
+>> +        interrupt-names = "rx_thresh", "rx", "tx", "misc";
+> 
+> I think with the ti-sysc managing the interconnect target module as the
+> parent of this, you should be able add all the modules as direct children
+> of ti-sysc with minor fixups. This would simplify things, and makes it
+> easier to update the driver later on when the child modules get
+> changed/updated/moved around.
+> 
+> The child modules just need to call PM runtime to have access to their
+> registers, and whatever cpsw control module part could be a separate
+> driver providing Linux standard services for example for clock gating :)
+> 
+>> +        davinci_mdio_sw: mdio@1000 {
+>> +                compatible = "ti,cpsw-mdio","ti,davinci_mdio";
+>> +                reg = <0x1000 0x100>;
+>> +                clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
+>> +                clock-names = "fck";
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +                bus_freq = <1000000>;
+>> +
+>> +                ethphy0_sw: ethernet-phy@0 {
+>> +                        reg = <0>;
+>> +                };
+>> +
+>> +                ethphy1_sw: ethernet-phy@1 {
+>> +                        reg = <41>;
+>> +                };
+>> +        };
+> 
+> And in this case, mdio above would just move up one level.
+> 
+> This goes back to my earlier comments saying the cpsw is really just
+> a private interconnect with a collection of various mostly independent
+> modules. Sounds like you're heading that way already though at the
+> driver level :)
+
+No, sorry I do not agree. The MDIO is inseparable part of CPSW and it's enabled when CPSW is enabled
+(on interconnect level), more over I want to get rid of platform device in MDIO for most of the cases
+as it only introduces boot/probing complexity.
+
+The same is valid for CPTS.
+
+-- 
+Best regards,
+grygorii
