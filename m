@@ -2,85 +2,146 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD48AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3A7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0BE2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8745E21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="iTB6fj85"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k73DbqVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfKLWgt (ORCPT
+        id S1727049AbfKLWnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:36:49 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:48261 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfKLWgt (ORCPT
+        Tue, 12 Nov 2019 17:43:04 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:6590 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKLWnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:36:49 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8E46223E5E;
-        Tue, 12 Nov 2019 23:36:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573598207;
-        bh=ZQCAeIvVXoosI5EZ8z5kIox93/qG64eH4vjhPLAKDEU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iTB6fj85oF0ZhsoYtDOGYHj34i+UA5ro2SweiXUgFZck9fLcO3Pga1XqRnlRqStNB
-         J4LFkgEL1XTkffZlv5EC6fHHP7Qx/uWTvbva86JOy2gJHR0WH1pi5QsgqBsiWRgtrn
-         EWwoSs60a/xLq6h4p/W28ijJjslI882EOmIn/v5I=
-From:   Michael Walle <michael@walle.cc>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] ASoC: wm8904: fix regcache handling
-Date:   Tue, 12 Nov 2019 23:36:29 +0100
-Message-Id: <20191112223629.21867-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Tue, 12 Nov 2019 17:43:03 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcb353a0000>; Tue, 12 Nov 2019 14:42:02 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 14:42:58 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 12 Nov 2019 14:42:58 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 22:42:57 +0000
+Subject: Re: [PATCH v3 08/23] vfio, mm: fix get_user_pages_remote() and
+ FOLL_LONGTERM
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191112000700.3455038-1-jhubbard@nvidia.com>
+ <20191112000700.3455038-9-jhubbard@nvidia.com>
+ <20191112204338.GE5584@ziepe.ca>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <0db36e86-b779-01af-77e7-469af2a2e19c@nvidia.com>
+Date:   Tue, 12 Nov 2019 14:42:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+In-Reply-To: <20191112204338.GE5584@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573598522; bh=Y5yk8f3O0SqpmKkLqVvRBWCkW319hAOZ+63Twi/leN0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=k73DbqVF1ro4BGXqtoOXY8+RqyGGe2g09YDUx2SX8XytMdTG+dmOpX+jHtYX3sy0m
+         jqRakpKDfOE8+KOF078kMgEWeRTrM64RVzrIc5oOooDxqIVboTzwD8VSvvTsbdqRvZ
+         VUfhjLhHIl5v6iMhsEkxxPV8LaL6dE8RS69ywE4DWS3/QelSGNxpH0rJ4kmEm//y+p
+         XXB4Gdx5hRr2SYYAicrcdd+BO7VysNir33yZ/MmfzzivcmZz0JpK+nUr9PhYe4icqS
+         koYHksTWwDMw0phfipFOQbYisXKLuZUJMy7LSz/++6j9kUwwcPzjslXYFXKOkRwY0a
+         JDLTwENrLW26A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current code assumes that the power is turned off in
-SND_SOC_BIAS_OFF. If there are no actual regulator the codec isn't
-turned off and the registers are not reset to their default values but
-the regcache is still marked as dirty. Thus a value might not be written
-to the hardware if it is set to the default value. Do a software reset
-before turning off the power to make sure the registers are always reset
-to their default states.
+On 11/12/19 12:43 PM, Jason Gunthorpe wrote:
+...
+>> -		}
+>> +	ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
+>> +				    page, vmas, NULL);
+>> +	/*
+>> +	 * The lifetime of a vaddr_get_pfn() page pin is
+>> +	 * userspace-controlled. In the fs-dax case this could
+>> +	 * lead to indefinite stalls in filesystem operations.
+>> +	 * Disallow attempts to pin fs-dax pages via this
+>> +	 * interface.
+>> +	 */
+>> +	if (ret > 0 && vma_is_fsdax(vmas[0])) {
+>> +		ret = -EOPNOTSUPP;
+>> +		put_page(page[0]);
+>>  	}
+> 
+> AFAIK this chunk is redundant now as it is some hack to emulate
+> FOLL_LONGTERM? So vmas can be deleted too.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- sound/soc/codecs/wm8904.c | 1 +
- 1 file changed, 1 insertion(+)
+Let me first make sure I understand what Dan has in mind for the vma
+checking, in the other thread...
 
-diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
-index 2a7d23a5daa8..7d7ea15d73e0 100644
---- a/sound/soc/codecs/wm8904.c
-+++ b/sound/soc/codecs/wm8904.c
-@@ -1933,6 +1933,7 @@ static int wm8904_set_bias_level(struct snd_soc_component *component,
- 		snd_soc_component_update_bits(component, WM8904_BIAS_CONTROL_0,
- 				    WM8904_BIAS_ENA, 0);
- 
-+		snd_soc_component_write(component, WM8904_SW_RESET_AND_ID, 0);
- 		regcache_cache_only(wm8904->regmap, true);
- 		regcache_mark_dirty(wm8904->regmap);
- 
+> 
+> Also unclear why this function has this:
+> 
+>         up_read(&mm->mmap_sem);
+> 
+>         if (ret == 1) {
+>                 *pfn = page_to_pfn(page[0]);
+>                 return 0;
+>         }
+> 
+>         down_read(&mm->mmap_sem);
+> 
+
+Yes, that's really odd. It's not good to release and retake the lock
+anyway in general (without re-checking things), and  certainly it is
+not required to release mmap_sem in order to call page_to_pfn().
+
+I've removed that up_read()/down_read() pair, for v4.
+
+
+thanks,
 -- 
-2.20.1
-
+John Hubbard
+NVIDIA
