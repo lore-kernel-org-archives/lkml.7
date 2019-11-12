@@ -2,118 +2,178 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6B3C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA344C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C8D2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24F421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MwYUSKkD"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="S6RNhfQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfKLMTY (ORCPT
+        id S1727016AbfKLMT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:19:24 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:46782 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfKLMTY (ORCPT
+        Tue, 12 Nov 2019 07:19:27 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:52622 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfKLMT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:19:24 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACC92uk119335;
-        Tue, 12 Nov 2019 12:19:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=vJi+sgSpT/msCu8MaaZcjY30BS9nxFhGVS/H9KWglz8=;
- b=MwYUSKkDy7qhbAyxsaSs4Pe7s3VeJaZi5XFd6CkjEqcHjkAxXXmHveei75re0JsT+VdH
- /IGRzoK4euLvB66LenmKhgQ8XEJTjWhYQ51M/GQ6cAhu21JhfKABtk1R5tmyI7WZzQGj
- hJl29MYPUVkajnbjP41qYT4O/5xbjuSCZQndzqEsr8mOQciFD5nNDaR1RHAeeJot+g37
- 1c8d5cbrI8FjDijZJgyxcvqT+NMd2QN5h0wzPSCHt8Wc6YpznsGlAQyf2VYXBomd7gGU
- hGTZ50wHPln8NK4nApccWUQZzDkgFBmjxEckKD57bDB4FQe6yct2Usd6UymVJWtu/UOG Hg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w5mvtmdr8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 12:19:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACC8n55137438;
-        Tue, 12 Nov 2019 12:19:18 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2w7khk7hvn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 12:19:18 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xACCJHpi018994;
-        Tue, 12 Nov 2019 12:19:17 GMT
-Received: from [10.191.24.133] (/10.191.24.133)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 04:19:17 -0800
-Subject: Re: [PATCH RESEND v2 2/4] KVM: ensure grow start value is nonzero
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, rafael.j.wysocki@intel.com,
-        joao.m.martins@oracle.com, mtosatti@redhat.com,
-        kvm@vger.kernel.org, linux-pm@vger.kernel.org
-References: <1573041302-4904-1-git-send-email-zhenzhong.duan@oracle.com>
- <1573041302-4904-3-git-send-email-zhenzhong.duan@oracle.com>
- <20191111201320.GA7431@linux.intel.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <0c8543e6-7664-cce9-c890-a10663d76d55@oracle.com>
-Date:   Tue, 12 Nov 2019 20:19:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191111201320.GA7431@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Nov 2019 07:19:26 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: FmVGawcAA0XNel20hPKrxspqs2ebyVaSL+DNBA91GFkCDS9eTWO7VB3Xu6xrpALGoRE0146M70
+ rQV/8ynQn/i61DEWwB7r24MaOz6p5vFM6mOLquk5ss4CjTHdvJLj81Z/SyQnehhvhScTHr0N4Q
+ YUf2TTpAosW+eah0i9dDc3ci5v/Y02GXOVlO9rHt1NpV6YOVRJDhDvAvw75vMexlQZ1C+DgFI2
+ Cs8BsFMrpRuZifI3NBlfhDM6cXBDNjT4OtJinhfm1m50EbFANWxuid1Nk0Uhnt0mRAhTI+Y+eK
+ 1sg=
+X-IronPort-AV: E=Sophos;i="5.68,296,1569308400"; 
+   d="scan'208";a="56663512"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Nov 2019 05:19:24 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 12 Nov 2019 05:19:24 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 12 Nov 2019 05:19:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F3dxzQMyvpofqyArY2W0ai5RspRTwFKmReVTRkA+xGd/vW47q9TPqq42c9drFzuZlIDe1VCEWN8TKyQnbN7fMkOwNTenzBZlf3nOXLNXuXYwpXfeQPWS3Rxuf0UnM6EnQfrboeCgY5ADJ+3WpSGwFodGhJc4qmIOU9CxZ3RE6FZmYscQMYu4KEx1u7N9DQ85v0eIBVD3CdCTfjwNg6nWFQlAu+oJCbB/hWrBJVQ8nJy1A3bEVuZoTGo1MkM3khD3ahLb5fcZvP91r/IkBk5l8DCNCNkJNDjteX3HJ8YamWEYtXsPqtcqkVsVQdsuaYTqN3Ld/GG0teH1dOUltHmvBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U6IYTv1UZ8yzV5MdEvnBFSgw1qW/fzIwZXXWAdCbWfo=;
+ b=kFzJitzPgGC3oEByqz7ksS8Ai+KakEWPWg/5kHcpDIEGEWF6Kxd8B4ctKFySHmP4ioBr1R5xoRzcXjq8odTwWBW20xdc6UhX5V1EAjZie6w3TVBSE37mryboNZsLk4qrh7DKKLeh8uiL7IFafQl9RVRPPu3QKax1LsSO2lXD5g6+2sDFyaZb6nb42p4AAbspfn2C8gaTowu3ExE8JaFQA9833VnYGnfdPmjFEyMhSTbF+9hgixLAik31qkfG4TdDws/P6GhaA+KX/CTYhwx69iiZ6JJu6+CmVghVYOZNqQUP4b8DdqPZzPJQ4xNh/nig1JxvqOI6DabVWPxEveev/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U6IYTv1UZ8yzV5MdEvnBFSgw1qW/fzIwZXXWAdCbWfo=;
+ b=S6RNhfQrNb3xpnHg+7QlS7JIYI3wFl/lct9FVNOobZj0esN8JsvEe/8ZDg9hhcb0ep/eYtnrPsNLLhPj6TZGe4fhK+SXSoBcyB7U8yUElvJjjVhF5aTwAuZhKQ4BM7seD4ahefT+ZjAL51XmLYWeO8Db2b6L2FldMdeVERlHsvg=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB3790.namprd11.prod.outlook.com (20.178.253.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Tue, 12 Nov 2019 12:19:23 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 12:19:23 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <yuehaibing@huawei.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <cyrille.pitchen@atmel.com>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 -next] crypto: atmel - Fix build error of
+ CRYPTO_AUTHENC
+Thread-Topic: [PATCH v2 -next] crypto: atmel - Fix build error of
+ CRYPTO_AUTHENC
+Thread-Index: AQHVmSqxwebvg2efp0OwclA6xCpycKeHdHUA
+Date:   Tue, 12 Nov 2019 12:19:23 +0000
+Message-ID: <810b0a9b-d749-b351-18a3-234b3d7ae464@microchip.com>
+References: <20191111133901.19164-1-yuehaibing@huawei.com>
+ <20191112072405.40268-1-yuehaibing@huawei.com>
+In-Reply-To: <20191112072405.40268-1-yuehaibing@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=781
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911120110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=847 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911120110
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR0102CA0041.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208::18) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: af26dcb4-9cb7-41ca-d003-08d7676a8d45
+x-ms-traffictypediagnostic: MN2PR11MB3790:
+x-microsoft-antispam-prvs: <MN2PR11MB379058FA000B4C337791A2D8F0770@MN2PR11MB3790.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:619;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(366004)(136003)(189003)(199004)(36756003)(53546011)(6506007)(386003)(81166006)(7736002)(305945005)(102836004)(81156014)(14454004)(8676002)(6116002)(3846002)(486006)(476003)(2616005)(25786009)(31686004)(478600001)(66066001)(11346002)(446003)(26005)(99286004)(8936002)(2501003)(76176011)(186003)(66556008)(66946007)(71190400001)(71200400001)(256004)(31696002)(6486002)(66446008)(64756008)(52116002)(2201001)(54906003)(86362001)(6246003)(110136005)(316002)(5660300002)(6436002)(2906002)(6512007)(229853002)(4326008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3790;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: o7xvSqaEfP8R23ckzH0SSxsY1eEu1A7tceRMRVYTUmsitZ51pklhnETj120P4xB3Qg48Yvwsnu5CxROz7L3FhkRW+bAfu+elbdCuKYIOhscxsnYHWDh2aH8CZf2ub0cg4ugahS7e5dEL49gLbAlpHbq/KWdENtdu0gqepTEHEExLUq04yLgOm15jo1IQFTmFWMk6OWryUbGDakQllmEho5GQ4BFk3wo8b0nfC7x+jAWotA3u0IErDMhtNjfyLAUwIJtnBIsfZH8WXld8AHnZDE/GfEPrIbgrD+qoDsDQVBWh4n36eNUX+Fl/lQyazQNqaUbYPaK82za7W8MHVZe5qdHhfE7v2X591nAwnSQdDYZSLXqDvwUtSIkB9CvBpsLfuA+MUSP+ECU7cc+EO+KCeJ13H9wzeFQZGdXR9DcYdIwr22sxYXHTu++YWX+neWj2
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <59477B525573B244B9D11D0137874ED7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: af26dcb4-9cb7-41ca-d003-08d7676a8d45
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 12:19:23.2470
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ULb/iRBeZAaPpEqT23kY38gZVXQJF3yECy/++cqXzq6mNdWrocYMft9XG7t22avL795UJJthq3RepnKIayv2HTdkRe6cY70aaOeICPRDi8o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3790
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/11/12 4:13, Sean Christopherson wrote:
-> On Wed, Nov 06, 2019 at 07:55:00PM +0800, Zhenzhong Duan wrote:
->> vcpu->halt_poll_ns could be zeroed in certain cases (e.g. by
->> halt_poll_ns = 0). If halt_poll_grow_start is zero,
->> vcpu->halt_poll_ns will never be bigger than zero.
->>
->> Use param callback to avoid writing zero to halt_poll_grow_start.
-> This doesn't explain why allowing an admin to disable halt polling by
-> writing halt_poll_grow_start=0 is a bad thing.  Paolo had the same
-> question in v1, here[1] and in the guest driver[2].
->
-> [1]https://lkml.kernel.org/r/57679389-6e4a-b7ad-559f-3128a608c28a@redhat.com
-> [2]https://lkml.kernel.org/r/391dd11b-ebbb-28ff-5e57-4a795cd16a1b@redhat.com
-
-Ok, answer all the same questions about grow_start=0 here.
-
-VCPU halt polling time may be nonzero even if grow_start=0, such as in below situation:
-0=grow_start< block_ns< (vcpu->halt_poll_ns)< halt_poll_ns
-
-grow_start=0 has your mentioned effect only in below sequence:
-1. set halt_poll_ns=0 to disable halt polling(this lead to vcpu->halt_poll_ns=0)
-2. set grow_start=0
-3. set halt_poll_ns to nonzero
-4. Admin expect halt polling time auto adjust in range [0, nonzero], but polling time stick at 0.
-
-So I think we should use halt_poll_ns=0 to disable halt polling instead of grow_start=0.
-
-Zhenzhong
-
+DQoNCk9uIDExLzEyLzIwMTkgMDk6MjQgQU0sIFl1ZUhhaWJpbmcgd3JvdGU6DQo+IElmIENSWVBU
+T19ERVZfQVRNRUxfQVVUSEVOQyBpcyBtLCBDUllQVE9fREVWX0FUTUVMX1NIQSBpcyBtLA0KPiBi
+dXQgQ1JZUFRPX0RFVl9BVE1FTF9BRVMgaXMgeSwgYnVpbGRpbmcgd2lsbCBmYWlsczoNCg0Kcy9m
+YWlscy9mYWlsDQoNCj4gDQo+IGRyaXZlcnMvY3J5cHRvL2F0bWVsLWFlcy5vOiBJbiBmdW5jdGlv
+biBgYXRtZWxfYWVzX2F1dGhlbmNfaW5pdF90Zm0nOg0KPiBhdG1lbC1hZXMuYzooLnRleHQrMHg2
+NzApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBhdG1lbF9zaGFfYXV0aGVuY19nZXRfcmVxc2l6
+ZScNCj4gYXRtZWwtYWVzLmM6KC50ZXh0KzB4NjdhKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBg
+YXRtZWxfc2hhX2F1dGhlbmNfc3Bhd24nDQo+IGRyaXZlcnMvY3J5cHRvL2F0bWVsLWFlcy5vOiBJ
+biBmdW5jdGlvbiBgYXRtZWxfYWVzX2F1dGhlbmNfc2V0a2V5JzoNCj4gYXRtZWwtYWVzLmM6KC50
+ZXh0KzB4N2U1KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgYXRtZWxfc2hhX2F1dGhlbmNfc2V0
+a2V5Jw0KPiANCj4gTWFrZSBDUllQVE9fREVWX0FUTUVMX0FVVEhFTkMgZGVwZW5kcyBvbiBDUllQ
+VE9fREVWX0FUTUVMX0FFUywNCg0Kcy9kZXBlbmRzL2RlcGVuZA0KDQo+IGFuZCBzZWxlY3QgQ1JZ
+UFRPX0RFVl9BVE1FTF9TSEEgYW5kIENSWVBUT19BVVRIRU5DIGZvciBpdCB1bmRlciB0aGVyZS4N
+Cj4gDQo+IFJlcG9ydGVkLWJ5OiBIdWxrIFJvYm90IDxodWxrY2lAaHVhd2VpLmNvbT4NCj4gU3Vn
+Z2VzdGVkLWJ5OiBIZXJiZXJ0IFh1IDxoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU+DQo+IEZp
+eGVzOiA4OWE4MmVmODdlMDEgKCJjcnlwdG86IGF0bWVsLWF1dGhlbmMgLSBhZGQgc3VwcG9ydCB0
+by4uLiIpDQo+IFNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNv
+bT4NCg0KUmV2aWV3ZWQtYnk6IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlw
+LmNvbT4NCg0KPiAtLS0NCj4gdjI6IG1ha2UgQ1JZUFRPX0RFVl9BVE1FTF9BVVRIRU5DIGRlcGVu
+ZHMgb24gREVWX0FUTUVMX0FFUw0KPiAtLS0NCj4gIGRyaXZlcnMvY3J5cHRvL0tjb25maWcgfCA4
+ICsrKystLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
+cygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3J5cHRvL0tjb25maWcgYi9kcml2ZXJz
+L2NyeXB0by9LY29uZmlnDQo+IGluZGV4IGM1Y2MwNGQuLjI5NmU4MjkgMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvY3J5cHRvL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9jcnlwdG8vS2NvbmZpZw0K
+PiBAQCAtNDkyLDEwICs0OTIsOSBAQCBpZiBDUllQVE9fREVWX1VYNTAwDQo+ICBlbmRpZiAjIGlm
+IENSWVBUT19ERVZfVVg1MDANCj4gIA0KPiAgY29uZmlnIENSWVBUT19ERVZfQVRNRUxfQVVUSEVO
+Qw0KPiAtCXRyaXN0YXRlICJTdXBwb3J0IGZvciBBdG1lbCBJUFNFQy9TU0wgaHcgYWNjZWxlcmF0
+b3IiDQo+ICsJYm9vbCAiU3VwcG9ydCBmb3IgQXRtZWwgSVBTRUMvU1NMIGh3IGFjY2VsZXJhdG9y
+Ig0KPiAgCWRlcGVuZHMgb24gQVJDSF9BVDkxIHx8IENPTVBJTEVfVEVTVA0KPiAtCXNlbGVjdCBD
+UllQVE9fREVWX0FUTUVMX0FFUw0KPiAtCXNlbGVjdCBDUllQVE9fREVWX0FUTUVMX1NIQQ0KPiAr
+CWRlcGVuZHMgb24gQ1JZUFRPX0RFVl9BVE1FTF9BRVMNCj4gIAloZWxwDQo+ICAJICBTb21lIEF0
+bWVsIHByb2Nlc3NvcnMgY2FuIGNvbWJpbmUgdGhlIEFFUyBhbmQgU0hBIGh3IGFjY2VsZXJhdG9y
+cw0KPiAgCSAgdG8gZW5oYW5jZSBzdXBwb3J0IG9mIElQU0VDL1NTTC4NCj4gQEAgLTUwNyw4ICs1
+MDYsOSBAQCBjb25maWcgQ1JZUFRPX0RFVl9BVE1FTF9BRVMNCj4gIAlkZXBlbmRzIG9uIEFSQ0hf
+QVQ5MSB8fCBDT01QSUxFX1RFU1QNCj4gIAlzZWxlY3QgQ1JZUFRPX0FFUw0KPiAgCXNlbGVjdCBD
+UllQVE9fQUVBRA0KPiAtCXNlbGVjdCBDUllQVE9fQVVUSEVOQw0KPiAgCXNlbGVjdCBDUllQVE9f
+U0tDSVBIRVINCj4gKwlzZWxlY3QgQ1JZUFRPX0FVVEhFTkMgaWYgQ1JZUFRPX0RFVl9BVE1FTF9B
+VVRIRU5DDQo+ICsJc2VsZWN0IENSWVBUT19ERVZfQVRNRUxfU0hBIGlmIENSWVBUT19ERVZfQVRN
+RUxfQVVUSEVOQw0KPiAgCWhlbHANCj4gIAkgIFNvbWUgQXRtZWwgcHJvY2Vzc29ycyBoYXZlIEFF
+UyBodyBhY2NlbGVyYXRvci4NCj4gIAkgIFNlbGVjdCB0aGlzIGlmIHlvdSB3YW50IHRvIHVzZSB0
+aGUgQXRtZWwgbW9kdWxlIGZvcg0KPiANCg==
