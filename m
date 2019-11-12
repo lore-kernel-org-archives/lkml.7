@@ -2,120 +2,111 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E0EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75061C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B3E206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428B52084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfKLQXz (ORCPT
+        id S1727238AbfKLQYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:23:55 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727069AbfKLQXy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:23:54 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACGJW7S144210
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:23:53 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7ya62vus-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:23:53 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
-        Tue, 12 Nov 2019 16:23:51 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Nov 2019 16:23:49 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACGNmEJ61276290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 16:23:48 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 325244203F;
-        Tue, 12 Nov 2019 16:23:48 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3F334204C;
-        Tue, 12 Nov 2019 16:23:41 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.34.195])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 16:23:41 +0000 (GMT)
-Subject: Re: [PATCH] fs: ext4: remove unused variable warning in
- parse_options()
-To:     Olof Johansson <olof@lixom.net>, tytso@mit.edu,
-        adilger.kernel@dilger.ca
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>
-References: <20191111022523.34256-1-olof@lixom.net>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Tue, 12 Nov 2019 21:53:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 12 Nov 2019 11:24:35 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2090 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726645AbfKLQYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:24:35 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 5885442030B8FF11AA90;
+        Tue, 12 Nov 2019 16:24:33 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 12 Nov 2019 16:24:32 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 12 Nov
+ 2019 16:24:32 +0000
+Subject: Re: [PATCH] arm64: Kconfig: add a choice for endianess
+To:     Anders Roxell <anders.roxell@linaro.org>, <catalin.marinas@arm.com>
+CC:     <will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191112160144.8357-1-anders.roxell@linaro.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <e44db1ec-e562-18c4-ca6f-96e4279564ed@huawei.com>
+Date:   Tue, 12 Nov 2019 16:24:31 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20191111022523.34256-1-olof@lixom.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191112160144.8357-1-anders.roxell@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111216-0020-0000-0000-0000038594D2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111216-0021-0000-0000-000021DB9F79
-Message-Id: <20191112162341.E3F334204C@d06av24.portsmouth.uk.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120138
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/11/2019 16:01, Anders Roxell wrote:
+> When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
+> CONFIG_CPU_BIG_ENDIAN gets enabled. Which tends not to be what most
+> people wants. Another concern that thas come up is that ACPI in't built
 
+/s/wants/want/, s/thas/has/, s/in't/isn't/
 
-On 11/11/19 7:55 AM, Olof Johansson wrote:
-> Commit c33fbe8f673c5 ("ext4: Enable blocksize < pagesize for
-> dioread_nolock") removed the only user of 'sbi' outside of the ifdef,
-> so it caused a new warning:
+> for an allmodconfig kernel today since that also depends on !CPU_BIG_ENDIAN.
 > 
-> fs/ext4/super.c:2068:23: warning: unused variable 'sbi' [-Wunused-variable]
+> Rework so that we introduce a 'choice' and default the choice to
+> CPU_LITTLE_ENDIAN. That means that when we build an allmodconfig kernel
+> it will default to CPU_LITTLE_ENDIAN that most people tends to want.
 > 
-> Fixes: c33fbe8f673c5 ("ext4: Enable blocksize < pagesize for dioread_nolock")
-> Signed-off-by: Olof Johansson <olof@lixom.net>
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
-hmm, I see that I had CONFIG_QUOTA enabled, so missed this.
-Thanks for the patch.
+FWIW, apart from spelling mistakes:
 
-You may add:
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
 
 > ---
->   fs/ext4/super.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   arch/arm64/Kconfig | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
 > 
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index f3279210f0ba9..ee8c42d8a04f0 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -2065,7 +2065,7 @@ static int parse_options(char *options, struct super_block *sb,
->   			 unsigned int *journal_ioprio,
->   			 int is_remount)
->   {
-> -	struct ext4_sb_info *sbi = EXT4_SB(sb);
-> +	struct ext4_sb_info __maybe_unused *sbi = EXT4_SB(sb);
->   	char *p, __maybe_unused *usr_qf_name, __maybe_unused *grp_qf_name;
->   	substring_t args[MAX_OPT_ARGS];
->   	int token;
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 64764ca92fca..62f83c234a61 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -877,11 +877,24 @@ config ARM64_PA_BITS
+>   	default 48 if ARM64_PA_BITS_48
+>   	default 52 if ARM64_PA_BITS_52
+>   
+> +choice
+> +	prompt "Endianess"
+
+Should this be "Endianness"?
+
+> +	default CPU_LITTLE_ENDIAN
+> +	help
+> +	  Choose what mode you plan on running your kernel in.
+> +
+>   config CPU_BIG_ENDIAN
+>          bool "Build big-endian kernel"
+>          help
+>            Say Y if you plan on running a kernel in big-endian mode.
+>   
+> +config CPU_LITTLE_ENDIAN
+> +	bool "Build little-endian kernel"
+> +	help
+> +	  Say Y if you plan on running a kernel in little-endian mode.
+> +
+> +endchoice
+> +
+>   config SCHED_MC
+>   	bool "Multi-core scheduler support"
+>   	help
 > 
 
