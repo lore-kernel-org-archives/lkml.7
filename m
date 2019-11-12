@@ -2,139 +2,153 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50CAC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9264AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62022067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674A72067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZolmePyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfKLTzs (ORCPT
+        id S1727016AbfKLTzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:55:48 -0500
-Received: from mga12.intel.com ([192.55.52.136]:21354 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726376AbfKLTzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:55:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 11:55:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,297,1569308400"; 
-   d="scan'208";a="194434538"
-Received: from joshbuck-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.20.68])
-  by orsmga007.jf.intel.com with ESMTP; 12 Nov 2019 11:55:44 -0800
-Date:   Tue, 12 Nov 2019 21:55:42 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org
-Subject: [GIT PULL] tpmdd updates for Linux v5.5
-Message-ID: <20191112195542.GA10619@linux.intel.com>
+        Tue, 12 Nov 2019 14:55:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29146 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726376AbfKLTzw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 14:55:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573588551;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G8pVHb78xVK5U18TfjrGEyD9m0xKuu8EIWaDiAwkGmM=;
+        b=ZolmePySm/WV397J9MoQ37R5icrJu55/EMjZpzq6ORBZ86vYIeww7v0r0qff2eAc1s3dfc
+        TNEylGRguwN6+QEfGcoRnaBe4vsklktTUVQ0YtFb1SbeDqJuf4mkR+YNyqor/hA/Z4CkZ5
+        XKsDtcxzw/U5u5ID7WOdyiIL4BkhheE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-420-fGiM2z01NMe5_WLNumIpVQ-1; Tue, 12 Nov 2019 14:55:50 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23AC1DBF7;
+        Tue, 12 Nov 2019 19:55:49 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A88166018B;
+        Tue, 12 Nov 2019 19:55:48 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 14:55:47 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm/debug: __dump_page() prints an extra line
+Message-ID: <20191112195547.GC31272@redhat.com>
+References: <20191112012608.16926-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191112012608.16926-1-rcampbell@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: fGiM2z01NMe5_WLNumIpVQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Support for Cr50 fTPM.
-2. Support for fTPM on AMD Zen+ CPUs.
-3. TPM 2.0 trusted keys code relocated from drivers/char/tpm to
-   security/keys.
+On Mon, Nov 11, 2019 at 05:26:08PM -0800, Ralph Campbell wrote:
+> When dumping struct page information, __dump_page() prints the page type
+> with a trailing blank followed by the page flags on a separate line:
+>=20
+> anon
+> flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
+>=20
+> It looks like the intent was to use pr_cont() for printing "flags:"
+> but pr_cont() usage is discouraged so fix this by extending the format
+> to include the flags into a single line:
+>=20
+> anon flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
+>=20
+> If the page is file backed, the name might be long so use two lines:
+>=20
+> shmem_aops name:"dev/zero"
+> flags: 0x10000000008000c(uptodate|dirty|swapbacked)
+>=20
+> Eliminate pr_conf() usage as well for appending compound_mapcount.
+>=20
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 
-/Jarkko
+Would be nice to have a changed since v1 v2 ... i was reading my
+inbox in order and i saw Andrew reply after seeing the v2 ... so
+where we at here ?
 
-The following changes since commit eb094f06963bb0fd8134c6a9b805d4ad0002a7d4:
+> ---
+>  mm/debug.c | 27 +++++++++++++++------------
+>  1 file changed, 15 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/mm/debug.c b/mm/debug.c
+> index 8345bb6e4769..772d4cf0691f 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -67,28 +67,31 @@ void __dump_page(struct page *page, const char *reaso=
+n)
+>  =09 */
+>  =09mapcount =3D PageSlab(page) ? 0 : page_mapcount(page);
+> =20
+> -=09pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx",
+> -=09=09  page, page_ref_count(page), mapcount,
+> -=09=09  page->mapping, page_to_pgoff(page));
+>  =09if (PageCompound(page))
+> -=09=09pr_cont(" compound_mapcount: %d", compound_mapcount(page));
+> -=09pr_cont("\n");
+> +=09=09pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+> +=09=09=09"index:%#lx compound_mapcount: %d\n",
+> +=09=09=09page, page_ref_count(page), mapcount,
+> +=09=09=09page->mapping, page_to_pgoff(page),
+> +=09=09=09compound_mapcount(page));
+> +=09else
+> +=09=09pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n=
+",
+> +=09=09=09page, page_ref_count(page), mapcount,
+> +=09=09=09page->mapping, page_to_pgoff(page));
+>  =09if (PageAnon(page))
+> -=09=09pr_warn("anon ");
+> +=09=09pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
+>  =09else if (PageKsm(page))
+> -=09=09pr_warn("ksm ");
+> +=09=09pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
+>  =09else if (mapping) {
+> -=09=09pr_warn("%ps ", mapping->a_ops);
+>  =09=09if (mapping->host && mapping->host->i_dentry.first) {
+>  =09=09=09struct dentry *dentry;
+>  =09=09=09dentry =3D container_of(mapping->host->i_dentry.first, struct d=
+entry, d_u.d_alias);
+> -=09=09=09pr_warn("name:\"%pd\" ", dentry);
+> -=09=09}
+> +=09=09=09pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
+> +=09=09} else
+> +=09=09=09pr_warn("%ps\n", mapping->a_ops);
+> +=09=09pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+>  =09}
+>  =09BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) !=3D __NR_PAGEFLAGS + 1);
+> =20
+> -=09pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+> -
+>  hex_only:
+>  =09print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+>  =09=09=09sizeof(unsigned long), page,
+> --=20
+> 2.20.1
+>=20
+>=20
 
-  Merge branch 'x86-pti-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2019-11-12 10:53:24 -0800)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20191112
-
-for you to fetch changes up to 0b40dbcbba923b5379bd1d601edd6d51e23fe72c:
-
-  KEYS: trusted: Remove set but not used variable 'keyhndl' (2019-11-12 21:45:37 +0200)
-
-----------------------------------------------------------------
-tpmdd update for Linux v5.5
-
-----------------------------------------------------------------
-Andrey Pronin (2):
-      dt-bindings: tpm: document properties for cr50
-      tpm: tpm_tis_spi: Support cr50 devices
-
-Hans de Goede (1):
-      tpm: Switch to platform_get_irq_optional()
-
-Ivan Lazeev (1):
-      tpm_crb: fix fTPM on AMD Zen+ CPUs
-
-James Bottomley (1):
-      tpm: use GFP_KERNEL instead of GFP_HIGHMEM for tpm_buf
-
-Jarkko Sakkinen (1):
-      tpm: Remove duplicate code from caps_show() in tpm-sysfs.c
-
-Jerry Snitselaar (2):
-      tpm: provide a way to override the chip returned durations
-      tpm_tis: override durations for STM tpm with firmware 1.2.8.28
-
-Stephen Boyd (4):
-      tpm: Add a flag to indicate TPM power is managed by firmware
-      tpm: tpm_tis_spi: Introduce a flow control callback
-      tpm: tpm_tis_spi: Cleanup includes
-      tpm: tpm_tis_spi: Drop THIS_MODULE usage from driver struct
-
-Sumit Garg (4):
-      tpm: Move tpm_buf code to include/linux/
-      KEYS: Use common tpm_buf for trusted and asymmetric keys
-      KEYS: trusted: Create trusted keys subsystem
-      KEYS: trusted: Move TPM2 trusted keys code
-
-Tadeusz Struk (1):
-      tpm: add check after commands attribs tab allocation
-
-zhengbin (1):
-      KEYS: trusted: Remove set but not used variable 'keyhndl'
-
- .../bindings/security/tpm/google,cr50.txt          |  19 ++
- crypto/asymmetric_keys/asym_tpm.c                  | 101 +++----
- drivers/char/tpm/Kconfig                           |   7 +
- drivers/char/tpm/Makefile                          |   4 +-
- drivers/char/tpm/tpm-interface.c                   |  64 +---
- drivers/char/tpm/tpm-sysfs.c                       |  45 +--
- drivers/char/tpm/tpm.h                             | 248 +---------------
- drivers/char/tpm/tpm1-cmd.c                        |  15 +
- drivers/char/tpm/tpm2-cmd.c                        | 311 +-------------------
- drivers/char/tpm/tpm_crb.c                         | 123 +++++---
- drivers/char/tpm/tpm_tis.c                         |   2 +-
- drivers/char/tpm/tpm_tis_core.c                    |  79 +++++
- drivers/char/tpm/tpm_tis_spi.c                     | 143 +++++----
- drivers/char/tpm/tpm_tis_spi.h                     |  53 ++++
- drivers/char/tpm/tpm_tis_spi_cr50.c                | 322 +++++++++++++++++++++
- include/Kbuild                                     |   1 -
- include/keys/{trusted.h => trusted_tpm.h}          |  49 +---
- include/linux/tpm.h                                | 250 ++++++++++++++--
- security/keys/Makefile                             |   2 +-
- security/keys/trusted-keys/Makefile                |   8 +
- .../{trusted.c => trusted-keys/trusted_tpm1.c}     |  98 +++----
- security/keys/trusted-keys/trusted_tpm2.c          | 314 ++++++++++++++++++++
- 22 files changed, 1371 insertions(+), 887 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
- create mode 100644 drivers/char/tpm/tpm_tis_spi.h
- create mode 100644 drivers/char/tpm/tpm_tis_spi_cr50.c
- rename include/keys/{trusted.h => trusted_tpm.h} (77%)
- create mode 100644 security/keys/trusted-keys/Makefile
- rename security/keys/{trusted.c => trusted-keys/trusted_tpm1.c} (94%)
- create mode 100644 security/keys/trusted-keys/trusted_tpm2.c
