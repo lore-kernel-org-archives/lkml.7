@@ -2,193 +2,248 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30658C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D53CC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F0F2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6C22196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:25:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g48ViWGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfKLKZT (ORCPT
+        id S1726979AbfKLKZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:25:19 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46585 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfKLKZT (ORCPT
+        Tue, 12 Nov 2019 05:25:26 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60672 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725853AbfKLKZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:25:19 -0500
-Received: from p54ac5726.dip0.t-ipconnect.de ([84.172.87.38] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iUTM2-0003JS-FQ; Tue, 12 Nov 2019 10:24:58 +0000
-Date:   Tue, 12 Nov 2019 11:24:56 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Adrian Reber <areber@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v7 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191112102455.7uzwtahdd5ssoelm@wittgenstein>
-References: <20191111131704.656169-1-areber@redhat.com>
- <20191111152514.GA11389@redhat.com>
- <20191111154028.GF514519@dcbz.redhat.com>
- <20191111161458.fjodxyx566dar6ob@wittgenstein>
- <87ftiuau46.fsf@x220.int.ebiederm.org>
+        Tue, 12 Nov 2019 05:25:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573554324;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=FeJe2qKR4AroS5wb+VoFiHA+D8O79Hn1DkUHm8ygPhU=;
+        b=g48ViWGEgIrWXTSqOCatc9q9ChBIhYZQmGX2cxuD246Gjg/Ciye2V093HckTqINHQyuxtW
+        SdPH+8ViuXeCSgQTik2PUQ8jK/jnD0lPXTm1u6L4LT2IiJpfzPfqxkRwoPnOm2QoL/VRGl
+        nZvkoWAm++wKIllc8V+sYPGHX5JSi1I=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-g_h4dZ5zPmKHvtgE92CvGQ-1; Tue, 12 Nov 2019 05:25:23 -0500
+Received: by mail-wm1-f72.google.com with SMTP id m68so1235052wme.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 02:25:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BrR3QsKS92XMMhW8UwZv36u713+8n4HIqLr/ZFLbFHQ=;
+        b=h1RC0gg3Yz3qOzIRnJkfs2+splgpwfQfhi0obdjm/rQikcS4rPA/uMeMGfGSf8scO0
+         IUIv2lDz2Iy1qnvKMA4l9oQYjbJmxu4wk0QPc0pGOuK3HhMlu2/rsCOJAc2J6WPp6MC9
+         i5mdXeZkBh1ikmxFUyUF+Gc/oruabh4yNLvWQWsFAuzzNOqrW0cfLfr72C92CkDmxlZs
+         tCBPCaMzC7UBqK//hROLttg0yWZPMJ4IOok6iB9I8OWkJXHoftaq42CVucSIgnhX8QnQ
+         H1JmxnjvnjQw478mRRcKB3SFPu7HlxkYAq/WpAcvhOWYFFthEyrEmvtlJZVcsVQt0jIJ
+         OQZg==
+X-Gm-Message-State: APjAAAV1qLDlE7DN+BUOmUpV8xR+ArBFiUdp1ivXhROm2+POeOVDsVm1
+        WQtYKWaketkukDL0QR2Upe48qEYFoY+K8ADhJAI2mSHPKJR9iCLgQD4xTBPTsVUKdfA0IK7EJs3
+        z9yEDUc6wQJMxZ1VOzajU3U3P
+X-Received: by 2002:adf:fd84:: with SMTP id d4mr24416299wrr.152.1573554322593;
+        Tue, 12 Nov 2019 02:25:22 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzzd01lEO1dSmRM5lGpocQcsRID0AkIXa07bDyw/j7sqhyXEVhx1JHsIG70FQL413foyixXCg==
+X-Received: by 2002:adf:fd84:: with SMTP id d4mr24416280wrr.152.1573554322325;
+        Tue, 12 Nov 2019 02:25:22 -0800 (PST)
+Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id x5sm2290277wmj.7.2019.11.12.02.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 02:25:21 -0800 (PST)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org, dev@openvswitch.org
+Cc:     linux-kernel@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bindiya Kurle <bindiyakurle@gmail.com>
+Subject: [PATCH net-next] openvswitch: add TTL decrement action
+Date:   Tue, 12 Nov 2019 11:25:18 +0100
+Message-Id: <20191112102518.4406-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87ftiuau46.fsf@x220.int.ebiederm.org>
-User-Agent: NeoMutt/20180716
+X-MC-Unique: g_h4dZ5zPmKHvtgE92CvGQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 05:08:57PM -0600, Eric W. Biederman wrote:
-> Christian Brauner <christian.brauner@ubuntu.com> writes:
-> 
-> > On Mon, Nov 11, 2019 at 04:40:28PM +0100, Adrian Reber wrote:
-> >> On Mon, Nov 11, 2019 at 04:25:15PM +0100, Oleg Nesterov wrote:
-> >> > On 11/11, Adrian Reber wrote:
-> >> > >
-> >> > > v7:
-> >> > >  - changed set_tid to be an array to set the PID of a process
-> >> > >    in multiple nested PID namespaces at the same time as discussed
-> >> > >    at LPC 2019 (container MC)
-> >> > 
-> >> > cough... iirc you convinced me this is not needed when we discussed
-> >> > the previous version ;) Nevermind, probably my memory fools me.
-> >> 
-> >> You are right. You suggested the same thing and we didn't listen ;)
-> >> 
-> >> > So far I only have some cosmetic nits,
-> >> 
-> >> Thanks for the quick review. I will try to apply your suggestions.
-> >> 
-> >> > > @@ -175,6 +187,18 @@ struct pid *alloc_pid(struct pid_namespace *ns)
-> >> > >
-> >> > >  	for (i = ns->level; i >= 0; i--) {
-> >> > >  		int pid_min = 1;
-> >> > > +		int t_pos = 0;
-> >> >                     ^^^^^
-> >> > 
-> >> > I won't insist, but I'd suggest to cache set_tid[t_pos] instead to make
-> >> > the code a bit more simple.
-> >> > 
-> >> > > @@ -186,12 +210,24 @@ struct pid *alloc_pid(struct pid_namespace *ns)
-> >> > >  		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
-> >> > >  			pid_min = RESERVED_PIDS;
-> >> > 
-> >> > You can probably move this code into the "else" branch below.
-> >> > 
-> >> > IOW, something like
-> >> > 
-> >> > 
-> >> > 	for (i = ns->level; i >= 0; i--) {
-> >> > 		int xxx = 0;
-> >> > 
-> >> > 		if (set_tid_size) {
-> >> > 			int pos = ns->level - i;
-> >> > 
-> >> > 			xxx = set_tid[pos];
-> >> > 			if (xxx < 1 || xxx >= pid_max)
-> >> > 				return ERR_PTR(-EINVAL);
-> >> > 			/* Also fail if a PID != 1 is requested and no PID 1 exists */
-> >> > 			if (xxx != 1 && !tmp->child_reaper)
-> >> > 				return ERR_PTR(-EINVAL);
-> >> > 			if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-> >> > 				return ERR_PTR(-EPERM);
-> >> > 			set_tid_size--;
-> >> > 		}
-> >> > 
-> >> > 		idr_preload(GFP_KERNEL);
-> >> > 		spin_lock_irq(&pidmap_lock);
-> >> > 
-> >> > 		if (xxx) {
-> >> > 			nr = idr_alloc(&tmp->idr, NULL, xxx, xxx + 1,
-> >> > 					GFP_ATOMIC);
-> >> > 			/*
-> >> > 			 * If ENOSPC is returned it means that the PID is
-> >> > 			 * alreay in use. Return EEXIST in that case.
-> >> > 			 */
-> >> > 			if (nr == -ENOSPC)
-> >> > 				nr = -EEXIST;
-> >> > 		} else {
-> >> > 			int pid_min = 1;
-> >> > 			/*
-> >> > 			 * init really needs pid 1, but after reaching the
-> >> > 			 * maximum wrap back to RESERVED_PIDS
-> >> > 			 */
-> >> > 			if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
-> >> > 				pid_min = RESERVED_PIDS;
-> >> > 			/*
-> >> > 			 * Store a null pointer so find_pid_ns does not find
-> >> > 			 * a partially initialized PID (see below).
-> >> > 			 */
-> >> > 			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-> >> > 					      pid_max, GFP_ATOMIC);
-> >> > 		}
-> >> > 
-> >> > 		...
-> >> > 
-> >> > This way only the "if (set_tid_size)" block has to play with set_tid_size/set_tid.
-> >> > 
-> >> > note also that this way we can easily allow set_tid[some_level] == 0, we can
-> >> > simply do
-> >> > 
-> >> > 	-	if (xxx < 1 || xxx >= pid_max)
-> >> > 	+	if (xxx < 0 || xxx >= pid_max)
-> >> > 
-> >> > although I don't think this is really useful.
-> >> 
-> >> Yes. I explicitly didn't allow 0 as a PID as I didn't thought it would
-> >> be useful (or maybe even valid).
-> 
-> I agree not allowing 0 sounds very reasonable.
+New action to decrement TTL instead of setting it to a fixed value.
+This action will decrement the TTL and, in case of expired TTL, send the
+packet to userspace via output_userspace() to take care of it.
 
-Yeah, I think we are all in agreement here.
+Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
 
-> 
-> > How do you express: I don't care about a specific pid in pidns level
-> > <n>, just give me a random one? For example,
-> >
-> > set_tid[0] = 1234
-> > set_tid[1] = 5678
-> > set_tid[2] = random_pid()
-> > set_tid[3] = 9
-> >
-> > Wouldn't that be potentially useful?
-> 
-> I can't imagine how.
-> 
-> At least in my head the fundamental concept is picking up a container on
-> one machine and moving it to another machine.  For that operation you
-> will know starting with the most nested pid namespace the pids that you
-> want up to some point.  Farther up you don't know.
-> 
-> I can't imagine in what scenario you would not know a pid at outer level
-> but want a specified pid at an ever farther removed outer level.  What
-> scenario are you thinking about that could lead to such a situation?
-> 
-> For the me the question is: Are you restoring what you know or not?
+Tested with a corresponding change in the userspace:
 
-I didn't advocate for making this possible (though I can see how this
-would be a neat hacking tool).
-Though this whole paragraph highlights one of my concerns with this
-whole feature. As it stands it is _only_ useful to CRIU. Which as I said
-before is fine but it still makes me queasy when an interface really
-just is designed to serve a single use-case; this specific feature even
-just a single user.
-I'm hopeful that we can find other use-cases for testing. It's probably
-already a fun feature for making pid-reuse based kernel exploits way
-easier.
+    # ovs-dpctl dump-flows
+    in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, acti=
+ons:dec_ttl,1
+    in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, acti=
+ons:dec_ttl,2
+    in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, acti=
+ons:2
+    in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, acti=
+ons:1
 
-Christian
+    # ping -c1 192.168.0.2 -t 42
+    IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), le=
+ngth 84)
+        192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length=
+ 64
+    # ping -c1 192.168.0.2 -t 120
+    IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), l=
+ength 84)
+        192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length=
+ 64
+    # ping -c1 192.168.0.2 -t 1
+    #
+
+Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
+Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ include/uapi/linux/openvswitch.h |  2 ++
+ net/openvswitch/actions.c        | 46 ++++++++++++++++++++++++++++++++
+ net/openvswitch/flow_netlink.c   |  6 +++++
+ 3 files changed, 54 insertions(+)
+
+diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswi=
+tch.h
+index 1887a451c388..a3bdb1ecd1e7 100644
+--- a/include/uapi/linux/openvswitch.h
++++ b/include/uapi/linux/openvswitch.h
+@@ -890,6 +890,7 @@ struct check_pkt_len_arg {
+  * @OVS_ACTION_ATTR_CHECK_PKT_LEN: Check the packet length and execute a s=
+et
+  * of actions if greater than the specified packet length, else execute
+  * another set of actions.
++ * @OVS_ACTION_ATTR_DEC_TTL: Decrement the IP TTL.
+  *
+  * Only a single header can be set with a single %OVS_ACTION_ATTR_SET.  No=
+t all
+  * fields within a header are modifiable, e.g. the IPv4 protocol and fragm=
+ent
+@@ -925,6 +926,7 @@ enum ovs_action_attr {
+ =09OVS_ACTION_ATTR_METER,        /* u32 meter ID. */
+ =09OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
+ =09OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
++=09OVS_ACTION_ATTR_DEC_TTL,      /* Decrement ttl action */
+=20
+ =09__OVS_ACTION_ATTR_MAX,=09      /* Nothing past this will be accepted
+ =09=09=09=09       * from userspace. */
+diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+index 12936c151cc0..077b7f309c93 100644
+--- a/net/openvswitch/actions.c
++++ b/net/openvswitch/actions.c
+@@ -1174,6 +1174,43 @@ static int execute_check_pkt_len(struct datapath *dp=
+, struct sk_buff *skb,
+ =09=09=09     nla_len(actions), last, clone_flow_key);
+ }
+=20
++static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
++{
++=09int err;
++
++=09if (skb->protocol =3D=3D htons(ETH_P_IPV6)) {
++=09=09struct ipv6hdr *nh =3D ipv6_hdr(skb);
++
++=09=09err =3D skb_ensure_writable(skb, skb_network_offset(skb) +
++=09=09=09=09=09  sizeof(*nh));
++=09=09if (unlikely(err))
++=09=09=09return err;
++
++=09=09if (nh->hop_limit <=3D 1)
++=09=09=09return -EHOSTUNREACH;
++
++=09=09key->ip.ttl =3D --nh->hop_limit;
++=09} else {
++=09=09struct iphdr *nh =3D ip_hdr(skb);
++=09=09u8 old_ttl;
++
++=09=09err =3D skb_ensure_writable(skb, skb_network_offset(skb) +
++=09=09=09=09=09  sizeof(*nh));
++=09=09if (unlikely(err))
++=09=09=09return err;
++
++=09=09if (nh->ttl <=3D 1)
++=09=09=09return -EHOSTUNREACH;
++
++=09=09old_ttl =3D nh->ttl--;
++=09=09csum_replace2(&nh->check, htons(old_ttl << 8),
++=09=09=09      htons(nh->ttl << 8));
++=09=09key->ip.ttl =3D nh->ttl;
++=09}
++
++=09return 0;
++}
++
+ /* Execute a list of actions against 'skb'. */
+ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
+ =09=09=09      struct sw_flow_key *key,
+@@ -1345,6 +1382,15 @@ static int do_execute_actions(struct datapath *dp, s=
+truct sk_buff *skb,
+=20
+ =09=09=09break;
+ =09=09}
++
++=09=09case OVS_ACTION_ATTR_DEC_TTL:
++=09=09=09err =3D execute_dec_ttl(skb, key);
++=09=09=09if (err =3D=3D -EHOSTUNREACH) {
++=09=09=09=09output_userspace(dp, skb, key, a, attr,
++=09=09=09=09=09=09 len, OVS_CB(skb)->cutlen);
++=09=09=09=09OVS_CB(skb)->cutlen =3D 0;
++=09=09=09}
++=09=09=09break;
+ =09=09}
+=20
+ =09=09if (unlikely(err)) {
+diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.=
+c
+index 65c2e3458ff5..d17f2d4b420f 100644
+--- a/net/openvswitch/flow_netlink.c
++++ b/net/openvswitch/flow_netlink.c
+@@ -79,6 +79,7 @@ static bool actions_may_change_flow(const struct nlattr *=
+actions)
+ =09=09case OVS_ACTION_ATTR_SET_MASKED:
+ =09=09case OVS_ACTION_ATTR_METER:
+ =09=09case OVS_ACTION_ATTR_CHECK_PKT_LEN:
++=09=09case OVS_ACTION_ATTR_DEC_TTL:
+ =09=09default:
+ =09=09=09return true;
+ =09=09}
+@@ -3005,6 +3006,7 @@ static int __ovs_nla_copy_actions(struct net *net, co=
+nst struct nlattr *attr,
+ =09=09=09[OVS_ACTION_ATTR_METER] =3D sizeof(u32),
+ =09=09=09[OVS_ACTION_ATTR_CLONE] =3D (u32)-1,
+ =09=09=09[OVS_ACTION_ATTR_CHECK_PKT_LEN] =3D (u32)-1,
++=09=09=09[OVS_ACTION_ATTR_DEC_TTL] =3D 0,
+ =09=09};
+ =09=09const struct ovs_action_push_vlan *vlan;
+ =09=09int type =3D nla_type(a);
+@@ -3233,6 +3235,10 @@ static int __ovs_nla_copy_actions(struct net *net, c=
+onst struct nlattr *attr,
+ =09=09=09break;
+ =09=09}
+=20
++=09=09case OVS_ACTION_ATTR_DEC_TTL:
++=09=09=09/* Nothing to do.  */
++=09=09=09break;
++
+ =09=09default:
+ =09=09=09OVS_NLERR(log, "Unknown Action type %d", type);
+ =09=09=09return -EINVAL;
+--=20
+2.23.0
+
