@@ -2,109 +2,252 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8328DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C2AC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585CD20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787EF20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ofkdojRw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKQJCuq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfKLRUY (ORCPT
+        id S1727439AbfKLRVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:20:24 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54820 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfKLRUX (ORCPT
+        Tue, 12 Nov 2019 12:21:11 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40228 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLRVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:20:23 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z26so4097169wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:20:22 -0800 (PST)
+        Tue, 12 Nov 2019 12:21:11 -0500
+Received: by mail-lf1-f65.google.com with SMTP id j26so6411961lfh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:21:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=F9Mi7+/IyXkSUZB/fTNJuaXmyudI2hLv+NhDB5xxcQw=;
-        b=ofkdojRwVgmhNvnCD+2JDgQT0KlK5MBV3Sul2Zn31ERD+BYM+PAXwVySBsJDATt2EO
-         1sRudy8e9QEsOEj8Zlf/XsDUe52amWr1KBn9SfYRcTP735H727LCNtvI9NrDP1Da2IeA
-         uPdil0WXQHUV90rkK8vK/gt6ConlUrBnhH6mr+6e1TTPpsuRSF1ajrAauWUxfKaqAtm8
-         xfuOvOpPedqwNWe/JB+uevGYyrgwUHXwtjLyNRsLhTwQTSOBmJBZv0Ku5aLfEXe52zNd
-         4MYaQ5XfMpNe2tslllZ6kxVJ0iLsHkF6RQMOXlaEWGJvw4ySss2DR6bs87yAoXhkhvkW
-         dyeA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=b5fDbApjKbQXmX0rR85/pftKRLxjK2Tg7QN5BVmg42M=;
+        b=JKQJCuq9s0hJMHC/fLGFr+lsqMghhfoavYWjdyT6WGk/uIOLC7bMLfw8AeXc/3+Vk5
+         W3sn6Iwcm5J03TnrOa0xllu1hQgpPx9D6e942muNF+yhl2OJ+Fy8ws4UyubhN2Rr+PIp
+         H5D7OR78BS8WOCf4rm18xnyNcTlayW9qKBKNILd32t5lbOjmlSiStQhe+qqOco8+6b3N
+         FTjlndP3N/cbxkCKQySywblvE42KASIK1eIf/CnOVG9ufTDm0YftuBERsDYqjaPjILuZ
+         BE6+Xngj+Dm3CcCB0BMeuYczDNIG1iN0deNtKSXFk0mDG5oj0SzhgY7a5qDlcwfNhPEY
+         8HCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=F9Mi7+/IyXkSUZB/fTNJuaXmyudI2hLv+NhDB5xxcQw=;
-        b=R9NhS2bKZJ+uIlzahV/PHNwrSzDoj+/nDmCmYVPNBCcUoxu5gYW228WK+oezD4KUQM
-         8N0YGZoRHs89gEr+XjrG8O1wUXaUOrupBRdfpuO3iZsp5/rFNClKpGn3gYN42TWwgLks
-         Tn24Ndgf6wXE14muq58EoOxTA44pNM0IpPE2XRcvaOe42nbFGVX4f0qZGsVt92Omf7VT
-         iGub6GOzoMA0MedXnLvxsbw30YIuY2yArqq5EBYC6f8r9hcmNuLzDlRM/POl3lXzuWBj
-         I0UF5/dIi5qoSewaf7x5LESdMcY6xFh6Vy6qDMOHSv5YeN0hO1CfjLWXIP3xxzkkhNgb
-         63xQ==
-X-Gm-Message-State: APjAAAVrzgtXKJwrxGKS0GjPE6n7aCC7vIfjq1pIc/o6FlJKq68bXRxO
-        +OCp2/4rBhqpRxN5qLLbXNP2DA==
-X-Google-Smtp-Source: APXvYqzR2tT3ef66DmAq2qnSk2dUDm/RUEfrwxO4e9F/cIoV/ljD0W55pomXTkbTaTNVd0DASTw0oA==
-X-Received: by 2002:a7b:c392:: with SMTP id s18mr4515631wmj.61.1573579221902;
-        Tue, 12 Nov 2019 09:20:21 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d18sm18576621wrm.85.2019.11.12.09.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 09:20:21 -0800 (PST)
-References: <20191027162328.1177402-1-martin.blumenstingl@googlemail.com> <20191027162328.1177402-3-martin.blumenstingl@googlemail.com> <20191108221652.32FA2206C3@mail.kernel.org>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        narmstrong@baylibre.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
-In-reply-to: <20191108221652.32FA2206C3@mail.kernel.org>
-Date:   Tue, 12 Nov 2019 18:20:20 +0100
-Message-ID: <1jd0dxf1uz.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b5fDbApjKbQXmX0rR85/pftKRLxjK2Tg7QN5BVmg42M=;
+        b=cLtZA9DXL5Yla5ooN1bxYf33F/3bauUmlaiLw874p8BkVAtgg96Xwpx2ia07mwGpwm
+         YWMJ+aR7MfIiqiobMMEzD8cSk2O5ATyMqp1YjbLe8c2U3ENJvRIxInlTl9v/wsS2NzuI
+         /IXoUKiTjwrYO/ozjcRnNIvEQdwmlyCSNVSgUVOj7KHb+LSeWYo/VQ5LJwaWE/f534aX
+         d3pAEI7nKKGPzghxrLAdDIknbHHF9GYjcDSPE3c6+rMCOBOMe4zcfTXawQvFo+juqzsz
+         sDGNImMILOyEGcD/ipeOLeC1PDGArC2Xjl9cfJytRNJEWHCV4H2PFhNtr+1ya/8prrm/
+         h4BQ==
+X-Gm-Message-State: APjAAAXGwwi3SeGVqk9Aa6eWyYj6AzbYJ9KcaW3lLgB7/fj63B/hkyMX
+        FvakJhjM793xgDn53gNSX7joa+QOT2uZ51qTy8htJw==
+X-Google-Smtp-Source: APXvYqwpta/gsSZDZVP/J0C1gtL/VrrATsv2UTWozfFFXXndIiFUHXFw4NJYkeeIzbXDrA/NXRdJAHObql5bCcgyLKM=
+X-Received: by 2002:a19:800a:: with SMTP id b10mr20916798lfd.15.1573579268285;
+ Tue, 12 Nov 2019 09:21:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
+ <20191112150544.GA3664@linaro.org> <e6687868-835b-0d01-5e00-c3eaec1cd62c@arm.com>
+In-Reply-To: <e6687868-835b-0d01-5e00-c3eaec1cd62c@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 12 Nov 2019 18:20:56 +0100
+Message-ID: <CAKfTPtALVtNKCSbBG=EFL3+mLV=eierfrvdExkMJdczF+a9x_w@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->> +static const struct of_device_id meson8_ddr_clkc_match_table[] = {
->> +       { .compatible = "amlogic,meson8-ddr-clkc" },
->> +       { .compatible = "amlogic,meson8b-ddr-clkc" },
->> +       { /* sentinel */ },
+On Tue, 12 Nov 2019 at 18:11, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
 >
-> Super nitpick, drop the comma above so that nothing can follow this.
+> Hi Vincent,
+>
+> I didn't see anything in that reply, was that just a spurious email?
 
-I don't think it is worth reposting the series Martin.
-If it is ok with you, I'll just apply it with Stephen comments
-
-In the future, I would prefer if you could separate the series for clock
-(intended for Neil and myself) and the DT one (intended for Kevin)
-
-Thx
+there were a typo in one email address in the 1st message
 
 >
->> +};
->> +
->> +static struct platform_driver meson8_ddr_clkc_driver = {
->> +       .probe          = meson8_ddr_clkc_probe,
->> +       .driver         = {
->> +               .name   = "meson8-ddr-clkc",
->> +               .of_match_table = meson8_ddr_clkc_match_table,
->> +       },
->> +};
->> +
->> +builtin_platform_driver(meson8_ddr_clkc_driver);
->> -- 
->> 2.23.0
->> 
-
+> On 12/11/2019 15:05, Vincent Guittot wrote:
+> > Le Tuesday 12 Nov 2019 =C3=A0 15:48:13 (+0100), Vincent Guittot a =C3=
+=A9crit :
+> >> update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt dec=
+ays,
+> >> which might be inefficient when cpufreq driver has rate limitation.
+> >>
+> >> When a task is attached on a CPU, we have call path:
+> >>
+> >> update_blocked_averages()
+> >>   update_cfs_rq_load_avg()
+> >>     cfs_rq_util_change -- > trig frequency update
+> >>   attach_entity_load_avg()
+> >>     cfs_rq_util_change -- > trig frequency update
+> >>
+> >> The 1st frequency update will not take into account the utilization of=
+ the
+> >> newly attached task and the 2nd one might be discard because of rate
+> >> limitation of the cpufreq driver.
+> >>
+> >> update_cfs_rq_load_avg() is only called by update_blocked_averages()
+> >> and update_load_avg() so we can move the call to
+> >> {cfs_rq,cpufreq}_util_change() into these 2 functions. It's also
+> >> interesting to notice that update_load_avg() already calls directly
+> >> cfs_rq_util_change() for !SMP case.
+> >>
+> >> This changes will also ensure that cpufreq_update_util() is called eve=
+n
+> >> when there is no more CFS rq in the leaf_cfs_rq_list to update but onl=
+y
+> >> irq, rt or dl pelt signals.
+> >>
+> >> Reported-by: Doug Smythies <dsmythies@telus.net>
+> >> Fixes: 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load balanc=
+ing path")
+> >> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> >>
+> >> ---
+> >>
+> >> I have just rebased the patch on latest tip/sched/core and made it a p=
+roper
+> >> patchset after Doug reported that the problem has diseappeared accordi=
+ng to
+> >> his 1st results but tests results are not all based on the same v5.4-r=
+cX
+> >> and with menu instead of teo governor.
+> >>
+> >>  kernel/sched/fair.c | 33 +++++++++++++++++++++------------
+> >>  1 file changed, 21 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >> index e458f52..c93d534 100644
+> >> --- a/kernel/sched/fair.c
+> >> +++ b/kernel/sched/fair.c
+> >> @@ -3508,9 +3508,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *c=
+fs_rq)
+> >>      cfs_rq->load_last_update_time_copy =3D sa->last_update_time;
+> >>  #endif
+> >>
+> >> -    if (decayed)
+> >> -            cfs_rq_util_change(cfs_rq, 0);
+> >> -
+> >>      return decayed;
+> >>  }
+> >>
+> >> @@ -3620,8 +3617,12 @@ static inline void update_load_avg(struct cfs_r=
+q *cfs_rq, struct sched_entity *s
+> >>              attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATIO=
+N);
+> >>              update_tg_load_avg(cfs_rq, 0);
+> >>
+> >> -    } else if (decayed && (flags & UPDATE_TG))
+> >> -            update_tg_load_avg(cfs_rq, 0);
+> >> +    } else if (decayed) {
+> >> +            cfs_rq_util_change(cfs_rq, 0);
+> >> +
+> >> +            if (flags & UPDATE_TG)
+> >> +                    update_tg_load_avg(cfs_rq, 0);
+> >> +    }
+> >>  }
+> >>
+> >>  #ifndef CONFIG_64BIT
+> >> @@ -7484,6 +7485,7 @@ static void update_blocked_averages(int cpu)
+> >>      const struct sched_class *curr_class;
+> >>      struct rq_flags rf;
+> >>      bool done =3D true;
+> >> +    int decayed =3D 0;
+> >>
+> >>      rq_lock_irqsave(rq, &rf);
+> >>      update_rq_clock(rq);
+> >> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
+> >>       * that RT, DL and IRQ signals have been updated before updating =
+CFS.
+> >>       */
+> >>      curr_class =3D rq->curr->sched_class;
+> >> -    update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class =3D=3D &r=
+t_sched_class);
+> >> -    update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class =3D=3D &d=
+l_sched_class);
+> >> -    update_irq_load_avg(rq, 0);
+> >> +    decayed |=3D update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_cl=
+ass =3D=3D &rt_sched_class);
+> >> +    decayed |=3D update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_cl=
+ass =3D=3D &dl_sched_class);
+> >> +    decayed |=3D update_irq_load_avg(rq, 0);
+> >>
+> >>      /* Don't need periodic decay once load/util_avg are null */
+> >>      if (others_have_blocked(rq))
+> >> @@ -7529,6 +7531,9 @@ static void update_blocked_averages(int cpu)
+> >>      }
+> >>
+> >>      update_blocked_load_status(rq, !done);
+> >> +
+> >> +    if (decayed)
+> >> +            cpufreq_update_util(rq, 0);
+> >>      rq_unlock_irqrestore(rq, &rf);
+> >>  }
+> >>
+> >> @@ -7585,6 +7590,7 @@ static inline void update_blocked_averages(int c=
+pu)
+> >>      struct cfs_rq *cfs_rq =3D &rq->cfs;
+> >>      const struct sched_class *curr_class;
+> >>      struct rq_flags rf;
+> >> +    int decayed =3D 0;
+> >>
+> >>      rq_lock_irqsave(rq, &rf);
+> >>      update_rq_clock(rq);
+> >> @@ -7594,13 +7600,16 @@ static inline void update_blocked_averages(int=
+ cpu)
+> >>       * that RT, DL and IRQ signals have been updated before updating =
+CFS.
+> >>       */
+> >>      curr_class =3D rq->curr->sched_class;
+> >> -    update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class =3D=3D &r=
+t_sched_class);
+> >> -    update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class =3D=3D &d=
+l_sched_class);
+> >> -    update_irq_load_avg(rq, 0);
+> >> +    decayed |=3D update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_cl=
+ass =3D=3D &rt_sched_class);
+> >> +    decayed |=3D update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_cl=
+ass =3D=3D &dl_sched_class);
+> >> +    decayed |=3D update_irq_load_avg(rq, 0);
+> >>
+> >> -    update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+> >> +    decayed |=3D update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cf=
+s_rq);
+> >>
+> >>      update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || othe=
+rs_have_blocked(rq));
+> >> +
+> >> +    if (decayed)
+> >> +            cpufreq_update_util(rq, 0);
+> >>      rq_unlock_irqrestore(rq, &rf);
+> >>  }
+> >>
+> >> --
+> >> 2.7.4
+> >>
