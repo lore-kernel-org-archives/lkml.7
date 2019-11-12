@@ -6,73 +6,61 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562F8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9DDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C42821783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D502067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKLSv3 (ORCPT
+        id S1727063AbfKLS5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:51:29 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47630 "EHLO
+        Tue, 12 Nov 2019 13:57:34 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47800 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfKLSv2 (ORCPT
+        with ESMTP id S1726718AbfKLS5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:51:28 -0500
+        Tue, 12 Nov 2019 13:57:34 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BCA45154CC59B;
-        Tue, 12 Nov 2019 10:51:27 -0800 (PST)
-Date:   Tue, 12 Nov 2019 10:51:24 -0800 (PST)
-Message-Id: <20191112.105124.1905938227505046893.davem@davemloft.net>
-To:     maowenan@huawei.com
-Cc:     andrew@lunn.ch, grygorii.strashko@ti.com, tony@atomide.com,
-        brouer@redhat.com, jakub.kicinski@netronome.com,
-        ivan.khoronzhuk@linaro.org, tglx@linutronix.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] net: ethernet: ti: Add dependency for
- TI_DAVINCI_EMAC
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2B25E154CC5B1;
+        Tue, 12 Nov 2019 10:57:33 -0800 (PST)
+Date:   Tue, 12 Nov 2019 10:57:32 -0800 (PST)
+Message-Id: <20191112.105732.2016572665490269858.davem@davemloft.net>
+To:     po.liu@nxp.com
+Cc:     claudiu.manoil@nxp.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, vinicius.gomes@intel.com,
+        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com,
+        xiaoliang.yang_1@nxp.com, roy.zang@nxp.com, mingkai.hu@nxp.com,
+        jerry.huang@nxp.com, leoyang.li@nxp.com
+Subject: Re: [v2,net-next, 1/2] enetc: Configure the Time-Aware Scheduler
+ via tc-taprio offload
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191112063358.73800-1-maowenan@huawei.com>
-References: <20191112063358.73800-1-maowenan@huawei.com>
+In-Reply-To: <20191112082823.28998-1-Po.Liu@nxp.com>
+References: <20191111042715.13444-2-Po.Liu@nxp.com>
+        <20191112082823.28998-1-Po.Liu@nxp.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 10:51:28 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 10:57:33 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
-Date: Tue, 12 Nov 2019 14:33:58 +0800
+From: Po Liu <po.liu@nxp.com>
+Date: Tue, 12 Nov 2019 08:42:49 +0000
 
-> If TI_DAVINCI_EMAC=y and GENERIC_ALLOCATOR is not set,
-> below erros can be seen:
-> drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_desc_pool_destroy.isra.14':
-> davinci_cpdma.c:(.text+0x359): undefined reference to `gen_pool_size'
-> davinci_cpdma.c:(.text+0x365): undefined reference to `gen_pool_avail'
-> davinci_cpdma.c:(.text+0x373): undefined reference to `gen_pool_avail'
-> davinci_cpdma.c:(.text+0x37f): undefined reference to `gen_pool_size'
-> drivers/net/ethernet/ti/davinci_cpdma.o: In function `__cpdma_chan_free':
-> davinci_cpdma.c:(.text+0x4a2): undefined reference to `gen_pool_free_owner'
-> drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_chan_submit_si':
-> davinci_cpdma.c:(.text+0x66c): undefined reference to `gen_pool_alloc_algo_owner'
-> davinci_cpdma.c:(.text+0x805): undefined reference to `gen_pool_free_owner'
-> drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_ctlr_create':
-> davinci_cpdma.c:(.text+0xabd): undefined reference to `devm_gen_pool_create'
-> davinci_cpdma.c:(.text+0xb79): undefined reference to `gen_pool_add_owner'
-> drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_check_free_tx_desc':
-> davinci_cpdma.c:(.text+0x16c6): undefined reference to `gen_pool_avail'
+> ENETC supports in hardware for time-based egress shaping according
+> to IEEE 802.1Qbv. This patch implement the Qbv enablement by the
+> hardware offload method qdisc tc-taprio method.
+> Also update cbdr writeback to up level since control bd ring may
+> writeback data to control bd ring.
 > 
-> This patch mades TI_DAVINCI_EMAC select GENERIC_ALLOCATOR.
-> 
-> Fixes: 99f629718272 ("net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> Signed-off-by: Po Liu <Po.Liu@nxp.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 
 Applied.
