@@ -2,185 +2,265 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE814C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADECAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B3120679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGN+yW1u"
+	by mail.kernel.org (Postfix) with ESMTP id 7C31920679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKLQ1O (ORCPT
+        id S1727010AbfKLQaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:27:14 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:47060 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfKLQ1O (ORCPT
+        Tue, 12 Nov 2019 11:30:00 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51424 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfKLQaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:27:14 -0500
-Received: by mail-ed1-f65.google.com with SMTP id x11so15384624eds.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:27:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=duBtqUXc8rS5Fto0xoNFGu4k3wWR32DazDGPa4wc8r0=;
-        b=UGN+yW1uKArcfiPDGUR7JGTEVHREcKqQbWqUSkRxU1GrUhZB5cGXeRCXVjD3/Q5e59
-         XuXfb2XE9UwxG2Ysdos+EcxrPZXhM6aYkgUyn+k9lRVGZp6trly1plzCltnHTWb+ZaW1
-         wICzhsh7+7cRRZ+7E2OWbFqeRvYG2+84u0OKbWpe1QPCypBqQcrTkMAszx3RmtfH/uZh
-         depjBrbDsnchHYg+L69SZbZKQACZCEJx826T54Z4EoYGOXDm1pfcuB6IxGwqXF8fv24r
-         L7Kda7MuD3e6leDlULl/qPRpahNiVA5srAHHNaj8KrwwWMtANezX0/ixJcKjDnHPsPx/
-         08Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=duBtqUXc8rS5Fto0xoNFGu4k3wWR32DazDGPa4wc8r0=;
-        b=JiQzCSDk9hp5zNOdBTPbChJZI59wBCGI4tS4sa3W7akkAU77erLfVNa4L8X63VUJn3
-         4YwxPrO8jJfB3abwePy7pKN1nnBw14ZDF6YC8NTaMRSmOUGvWtfYMrYbJiOxQHarG18Q
-         Q0vV2OEkmXi6jL2I5tP0uL8G1SHoNbsxggSjMzZaF5YejxZj4HimolNZQuE197CbFCJC
-         3MVon4ehj/B+1sIZJq4ynwtGw7pzszbao+s1JeMkjDiEE9xEyNqq+1AEkKIa1/DqxkJu
-         Q8GJzSGElFqSmZSZ9gLkN46JTUuQGj+NbbJpSqA9BsxiEdDBC7pIzGafyGNwyYb1m3fo
-         yeVA==
-X-Gm-Message-State: APjAAAW4xX66gT0yweOH7HZs8AHthXZ4ERzEOggWG8apX/LNXpkHKPhD
-        AcvPRy9JIEUzquumrsI4EKYJv64a9R3sfFcATHA=
-X-Google-Smtp-Source: APXvYqwINa/wmWIHF2PahNuybTm0H/AGNDuYZehBOWPhVnP8qdvcHhBoYwLBn/HIa7MeIIyGWfDqGK+cDtagO+MOR4g=
-X-Received: by 2002:a17:906:f209:: with SMTP id gt9mr28706102ejb.241.1573576031902;
- Tue, 12 Nov 2019 08:27:11 -0800 (PST)
+        Tue, 12 Nov 2019 11:30:00 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 4558129064A
+Received: by earth.universe (Postfix, from userid 1000)
+        id D9F353C0C78; Tue, 12 Nov 2019 17:29:54 +0100 (CET)
+Date:   Tue, 12 Nov 2019 17:29:54 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: Re: [PATCHv1 5/5] ASoC: da7213: add default clock handling
+Message-ID: <20191112162954.aac77rtfbl6mlut6@earth.universe>
+References: <20191108174843.11227-1-sebastian.reichel@collabora.com>
+ <20191108174843.11227-6-sebastian.reichel@collabora.com>
+ <AM5PR1001MB099473C446536341366A70A680740@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20191104173737.142558-1-robdclark@gmail.com> <20191104173737.142558-2-robdclark@gmail.com>
- <CAFqH_52nFGmG-sMb03ByGSJGckT1D_TKWuy1DpkJt2usxHWHpA@mail.gmail.com>
-In-Reply-To: <CAFqH_52nFGmG-sMb03ByGSJGckT1D_TKWuy1DpkJt2usxHWHpA@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 12 Nov 2019 08:27:00 -0800
-Message-ID: <CAF6AEGtSacLafw3VmNfXMZBM=RCik8bu9XeUYcd0jOqivaN5eg@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v2] drm/atomic: clear new_state pointers at hw_done
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="apjhnqdgp22efygn"
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB099473C446536341366A70A680740@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 7:51 AM Enric Balletbo Serra
-<eballetbo@gmail.com> wrote:
->
-> Hi Rob,
->
-> Missatge de Rob Clark <robdclark@gmail.com> del dia dl., 4 de nov.
-> 2019 a les 18:42:
-> >
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > The new state should not be accessed after this point.  Clear the
-> > pointers to make that explicit.
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
->
-> While looking to another issue I applied this patch on top of 5.4-rc7
-> and my display stopped working. The system gets stuck with the
-> messages below
->
-> ...
-> [   17.558689] rockchip-vop ff8f0000.vop: Adding to iommu group 1
-> [   17.566014] rk3399-gru-sound sound: ASoC: failed to init link DP: -517
-> [   17.567618] rockchip-vop ff900000.vop: Adding to iommu group 2
-> [   17.580671] rk3399-gru-sound sound: ASoC: failed to init link DP: -517
-> [   17.585996] rockchip-drm display-subsystem: bound ff8f0000.vop (ops
-> vop_component_ops [rockchipdrm])
-> [   17.589294] rk3399-gru-sound sound: ASoC: failed to init link DP: -517
-> [   17.599899] rockchip-drm display-subsystem: bound ff900000.vop (ops
-> vop_component_ops [rockchipdrm])
-> [   17.615846] rockchip-dp ff970000.edp: no DP phy configured
-> [   17.622495] rockchip-drm display-subsystem: bound ff970000.edp (ops
-> rockchip_dp_component_ops [rockchipdrm])
-> [   17.633688] rockchip-drm display-subsystem: bound fec00000.dp (ops
-> cdn_dp_component_ops [rockchipdrm])
-> [   17.644141] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> [   17.651548] [drm] No driver support for vblank timestamp query.
->
-> Not really useful information at this point, but I am wondering if
-> could be that the rockchip driver is doing something wrong more than
-> this patch is wrong?
 
-I think we should drop this patch (but 1/2 is defn needed).. it turns
-up some other problems in qemu, it seems.  So there is kind of a
-bigger problem of things accessing new state after hw_done still.  But
-I've not really had time to look into it.
+--apjhnqdgp22efygn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-BR,
--R
+Hi,
 
->
-> Thanks,
->  Enric
->
+On Mon, Nov 11, 2019 at 02:20:07PM +0000, Adam Thomson wrote:
+> On 08 November 2019 17:49, Sebastian Reichel wrote:
+>=20
+> > This adds default clock/PLL configuration to the driver
+> > for usage with generic drivers like simple-card for usage
+> > with a fixed rate clock.
+> >=20
+> > Upstreaming this requires a good way to disable the automatic
+> > clock handling for systems doing it manually to avoid breaking
+> > existing setups.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > > ---
-> >  drivers/gpu/drm/drm_atomic_helper.c | 30 +++++++++++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > index 648494c813e5..aec9759d9df2 100644
-> > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > @@ -2246,12 +2246,42 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
-> >   */
-> >  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
+> >  sound/soc/codecs/da7213.c | 34 +++++++++++++++++++++++++++++++++-
+> >  sound/soc/codecs/da7213.h |  1 +
+> >  2 files changed, 34 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
+> > index 197609691525..a4ed382ddfc7 100644
+> > --- a/sound/soc/codecs/da7213.c
+> > +++ b/sound/soc/codecs/da7213.c
+> > @@ -1163,6 +1163,8 @@ static int da7213_hw_params(struct
+> > snd_pcm_substream *substream,
+> >  			    struct snd_soc_dai *dai)
 > >  {
-> > +       struct drm_connector *connector;
-> > +       struct drm_connector_state *old_conn_state, *new_conn_state;
-> >         struct drm_crtc *crtc;
-> >         struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > +       struct drm_plane *plane;
-> > +       struct drm_plane_state *old_plane_state, *new_plane_state;
-> >         struct drm_crtc_commit *commit;
-> > +       struct drm_private_obj *obj;
-> > +       struct drm_private_state *old_obj_state, *new_obj_state;
-> >         int i;
-> >
-> > +       /*
-> > +        * After this point, drivers should not access the permanent modeset
-> > +        * state, so we also clear the new_state pointers to make this
-> > +        * restriction explicit.
-> > +        *
-> > +        * For the CRTC state, we do this in the same loop where we signal
-> > +        * hw_done, since we still need to new_crtc_state to fish out the
-> > +        * commit.
-> > +        */
+> >  	struct snd_soc_component *component =3D dai->component;
+> > +	struct da7213_priv *da7213 =3D
+> > snd_soc_component_get_drvdata(component);
+> > +	int freq =3D 0;
+> >  	u8 dai_ctrl =3D 0;
+> >  	u8 fs;
+> >=20
+> > @@ -1188,38 +1190,54 @@ static int da7213_hw_params(struct
+> > snd_pcm_substream *substream,
+> >  	switch (params_rate(params)) {
+> >  	case 8000:
+> >  		fs =3D DA7213_SR_8000;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_98304000;
+> >  		break;
+> >  	case 11025:
+> >  		fs =3D DA7213_SR_11025;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_90316800;
+> >  		break;
+> >  	case 12000:
+> >  		fs =3D DA7213_SR_12000;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_98304000;
+> >  		break;
+> >  	case 16000:
+> >  		fs =3D DA7213_SR_16000;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_98304000;
+> >  		break;
+> >  	case 22050:
+> >  		fs =3D DA7213_SR_22050;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_90316800;
+> >  		break;
+> >  	case 32000:
+> >  		fs =3D DA7213_SR_32000;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_98304000;
+> >  		break;
+> >  	case 44100:
+> >  		fs =3D DA7213_SR_44100;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_90316800;
+> >  		break;
+> >  	case 48000:
+> >  		fs =3D DA7213_SR_48000;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_98304000;
+> >  		break;
+> >  	case 88200:
+> >  		fs =3D DA7213_SR_88200;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_90316800;
+> >  		break;
+> >  	case 96000:
+> >  		fs =3D DA7213_SR_96000;
+> > +		freq =3D DA7213_PLL_FREQ_OUT_98304000;
+> >  		break;
+> >  	default:
+> >  		return -EINVAL;
+> >  	}
+> >=20
+> > +	/* setup PLL */
+> > +	if (da7213->fixed_clk_auto) {
+> > +		snd_soc_component_set_pll(component, 0,
+> > DA7213_SYSCLK_PLL,
+> > +					  da7213->mclk_rate, freq);
+> > +	}
 > > +
-> > +       for_each_oldnew_connector_in_state(old_state, connector, old_conn_state, new_conn_state, i) {
-> > +               old_state->connectors[i].new_state = NULL;
-> > +       }
+>=20
+> Are we happy with the PLL being always enabled? Seems like a power drain,
+> especially if you're using an MCLK which is a natural harmonic for the SR=
+ in=20
+> question in which case the PLL can be bypassed. Also the bias level funct=
+ion in
+> this driver will enable and disable the MCLK, if it has been provided, so=
+ it's a
+> bit strange to have the PLL enabled but it's clock source taken away.
+
+So you are suggesting adding something like this to
+da7213_set_bias_level()?
+
+if (freq % da7213->mclk_rate =3D=3D 0)
+    source =3D DA7213_SYSCLK_MCLK
+else
+    source =3D DA7213_SYSCLK_PLL
+snd_soc_component_set_pll(component, 0, source, da7213->mclk_rate, freq);
+
+> >  	snd_soc_component_update_bits(component, DA7213_DAI_CTRL,
+> > DA7213_DAI_WORD_LENGTH_MASK,
+> >  			    dai_ctrl);
+> >  	snd_soc_component_write(component, DA7213_SR, fs);
+> > @@ -1700,10 +1718,10 @@ static struct da7213_platform_data
+> >  	return pdata;
+> >  }
+> >=20
+> > -
+> >  static int da7213_probe(struct snd_soc_component *component)
+> >  {
+> >  	struct da7213_priv *da7213 =3D
+> > snd_soc_component_get_drvdata(component);
+> > +	int ret;
+> >=20
+> >  	pm_runtime_get_sync(component->dev);
+> >=20
+> > @@ -1836,6 +1854,20 @@ static int da7213_probe(struct snd_soc_component
+> > *component)
+> >  			return PTR_ERR(da7213->mclk);
+> >  		else
+> >  			da7213->mclk =3D NULL;
+> > +	} else {
+> > +		/* Store clock rate for fixed clocks for automatic PLL setup */
+> > +		ret =3D clk_prepare_enable(da7213->mclk);
+> > +		if (ret) {
+> > +			dev_err(component->dev, "Failed to enable mclk\n");
+> > +			return ret;
+> > +		}
+>=20
+> I've not gone through the clk framework code but surprised to see the nee=
+d to
+> enable a clock to retrieve it's rate.
+
+/**
+ * clk_get_rate - obtain the current clock rate (in Hz) for a clock source.
+ *                This is only valid once the clock source has been enabled.
+ * @clk: clock source
+ */
+unsigned long clk_get_rate(struct clk *clk);
+
+Which makes sense for a non-fixed clock, which uses the same API.
+
+> > +		da7213->mclk_rate =3D clk_get_rate(da7213->mclk);
 > > +
-> > +       for_each_oldnew_plane_in_state(old_state, plane, old_plane_state, new_plane_state, i) {
-> > +               old_state->planes[i].new_state = NULL;
-> > +       }
+> > +		clk_disable_unprepare(da7213->mclk);
 > > +
-> > +       for_each_oldnew_private_obj_in_state(old_state, obj, old_obj_state, new_obj_state, i) {
-> > +               old_state->private_objs[i].new_state = NULL;
-> > +       }
-> > +
-> >         for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
-> > +               old_state->crtcs[i].new_state = NULL;
-> > +
-> >                 commit = new_crtc_state->commit;
-> >                 if (!commit)
-> >                         continue;
+> > +		/* assume fixed clock until set_sysclk() is being called */
+> > +		da7213->fixed_clk_auto =3D true;
+>=20
+> I don't see any code where 'fixed_clk_auto' is set to false so it seems t=
+hat
+> previous operational usage is being broken here.
+
+oops.
+
+> >  	}
+> >=20
+> >  	return 0;
+> > diff --git a/sound/soc/codecs/da7213.h b/sound/soc/codecs/da7213.h
+> > index 97a250ea39e6..00aca0126cdb 100644
+> > --- a/sound/soc/codecs/da7213.h
+> > +++ b/sound/soc/codecs/da7213.h
+> > @@ -532,6 +532,7 @@ struct da7213_priv {
+> >  	bool master;
+> >  	bool alc_calib_auto;
+> >  	bool alc_en;
+> > +	bool fixed_clk_auto;
+> >  	struct da7213_platform_data *pdata;
+> >  };
+> >=20
 > > --
-> > 2.23.0
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 2.24.0.rc1
+>=20
+
+-- Sebastian
+
+--apjhnqdgp22efygn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3K3d8ACgkQ2O7X88g7
++ppe/w/+NNfpGUUIY83SxgZnAoEPqGHlitffk72hH8jOod5umEbyNBIO5m7QAluw
+QiBgVetwFXJ547ETC6hZof4jwiKip2B+XKO2JFkiOnjUdkctOTjYgT6d5Kb2kg1K
+tyEYg00vY9Ht+kRVrOANUCWA6XkB4aQHWQmT1Bpm+irl4ntG4xOwgFbUuqlhkh73
+UA/bX4YFfnpGbA88BPp/2+nwER3I9xF4yG0eaRMVpsv4SKlHsSal1EeJZxc8Mbs7
+kww7Eytw8NTCiv4NhCxzduY/97mR8YvPyKRr6aDDRF2n10O46zr5TtY0hFBmuZoy
+aHX5IMkHhHFZygzhLHGrZiS4w/fbcf1AY96Nns1iajN2Wi4GDAVZjtFZR6VIxOp7
+w8IL3OdVMXoksoa6zA2AUueuEUdI8yJUEY8WXaaJFW4fOKf0MWqENVes4sUDh+GA
+FT9wEOyWeUV5KkX04goWDtNemZgIoxVGlCY/OSWtiGzlXVfSvVkAsin5uqb+Lo4h
+WDMvzi1mVUWjr1pWIR7OFtQVR2ta3nqecRqAi2pTGprc0eAifFdz+Jn+BIsssDft
+6+HqFzuUFF6XiZjbI+jVpjGmJS13ImEDadMM/Pq9t6D0SMs+j1zWWi0/G0ZWB5p9
+v4lraEsoDRGf4qCWSkrUAqfnC3mi3zWprs+xjC7ur6DdTsNh3K8=
+=ZaXT
+-----END PGP SIGNATURE-----
+
+--apjhnqdgp22efygn--
