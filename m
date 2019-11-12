@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09174C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ED6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D187920818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5289321E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfKLVNv (ORCPT
+        id S1727538AbfKLVNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:13:51 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:44490 "EHLO
+        Tue, 12 Nov 2019 16:13:55 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:44504 "EHLO
         omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727482AbfKLVNs (ORCPT
+        with ESMTP id S1727517AbfKLVNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:13:48 -0500
-Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xACLDlcB012803
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:47 -0500
+        Tue, 12 Nov 2019 16:13:50 -0500
+Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xACLDnkf012825
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:49 -0500
 Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xACLDgHn026697
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:47 -0500
-Received: by mail-qv1-f69.google.com with SMTP id m12so9524887qvv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:13:47 -0800 (PST)
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xACLDi4q015466
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:49 -0500
+Received: by mail-qv1-f69.google.com with SMTP id w7so9549252qvs.15
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:13:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=G+XEM7NqA7duBgC178Q7ObGQk8ZeoGEeRJMM3ee4yAQ=;
-        b=rbNenstvx2/BkK5BwMnYGsYT33fTbRCRHRWgjfwBIZCGAGiZ91gu/rJ3jUN/QudwlU
-         c8+BceNHL9hN0Uj0L0HR+A6lZTRU8zUBWuGQ5Km2DDo/LwZr+g7InKEQcF+NYdynKQ1K
-         uQRrcxGFL8hPqvIjspC8cKnaD4UTcUcTb1YPYfuBpTo2cbmBIvDixPIATDLuIBIKWnS1
-         mFnuarCB9Op83gtCASpCqe4zTL3gG7UmGq8DXSqCIvVhBycalYasaMGsnEJWqPuISDUl
-         +rd2ax+RzAwBSXKBW44+NSTthqmaWTdIU+y4x/e6blZ1aN/P2KG124tectpkNkvW8+xu
-         hxCA==
-X-Gm-Message-State: APjAAAUC/pTu5BSK6hInBMJcoieBoug1VSMr4631xUTCaxCfGZPI3hRs
-        IFCmwvwXsIzuOsJTTgGavG4PWA6NuvKmy1omqeIWdjZarnw1iM2POm40olS/BEqJP5qPWJd/V8y
-        eebee0N+lBPt1TwO1ahnJRSloht8Lwj+IQu8=
-X-Received: by 2002:ac8:1494:: with SMTP id l20mr13675948qtj.356.1573593222067;
-        Tue, 12 Nov 2019 13:13:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzF5gO4XlN15JxU3WTA3jUQX9UNDZq3E87aaI55II1ymFJHv5aHH+FQzD+IV+eipDN7UN+WIA==
-X-Received: by 2002:ac8:1494:: with SMTP id l20mr13675845qtj.356.1573593220899;
-        Tue, 12 Nov 2019 13:13:40 -0800 (PST)
+        bh=nBMeWmqtacDeZwaLfnQQdHa+4rImWGWUbj1hgwCuPP8=;
+        b=myECAjLNpQy0LArCgkkl0u05UPYD4We63LY6Zl0G9/CVe3pfzzTREVMnt3VwMJMsgM
+         ++LGQILdCuggcLdfI2OMyGZbVM/Hcl977lA+k9Q4+ZRWxqXwi8YsfNRVrk/ckYdE/IXQ
+         fRoWVfeNi4Ofj1fVP3wEZKXn+oPi1wHONo1Pu+dHVqpMyCBOLBjNieuFF7oXl4EmNOgc
+         +lDKjGeYoRAzs2c1sexfC2iYfLn7gp4Kr1c3Zx+cyO7eqwGHhsX0lbP5bfgybiGnR2CH
+         UPsY0/Og8h0tmH2JvnsD3PvbgRb6tBLH/gFlL15op+po7icKZ/HNYD6oJ5SX5w4xbQTr
+         /HSw==
+X-Gm-Message-State: APjAAAWqVurgIHV/skKxPjXS+uK7/NqfwA1stSyhwMJf2oZemEYXvyxW
+        rhfNW8mK71oSzGXfUC2x9mkQ91aglvIqDaubvTVaa5zpBWkpas6F+GP3vpNwlZNDlCH2o+5jsyJ
+        rq0hLDlsJcVGU+mx+XTmYMLQBNutjHw2NfTc=
+X-Received: by 2002:a0c:e9c4:: with SMTP id q4mr31520023qvo.61.1573593224232;
+        Tue, 12 Nov 2019 13:13:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzsHoM6Thzt3ejRwUJZu/EOWTzFZnTDcsUK7gX5UJ5IG1AxuhHiUG63JG6ykXzeHz/LqwQ+jg==
+X-Received: by 2002:a0c:e9c4:: with SMTP id q4mr31519995qvo.61.1573593223916;
+        Tue, 12 Nov 2019 13:13:43 -0800 (PST)
 Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id 130sm9674214qkd.33.2019.11.12.13.13.39
+        by smtp.gmail.com with ESMTPSA id 130sm9674214qkd.33.2019.11.12.13.13.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 13:13:40 -0800 (PST)
+        Tue, 12 Nov 2019 13:13:42 -0800 (PST)
 From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
 X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
@@ -58,9 +58,9 @@ Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/12] staging: exfat: Clean up the namespace pollution part 3
-Date:   Tue, 12 Nov 2019 16:12:33 -0500
-Message-Id: <20191112211238.156490-8-Valdis.Kletnieks@vt.edu>
+Subject: [PATCH 08/12] staging: exfat: Clean up the namespace pollution part 4
+Date:   Tue, 12 Nov 2019 16:12:34 -0500
+Message-Id: <20191112211238.156490-9-Valdis.Kletnieks@vt.edu>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
 References: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
@@ -72,85 +72,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions are only used in the local file, make them static
+Relocating these functions to before first use lets us make them static
 
 Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 ---
- drivers/staging/exfat/exfat.h      | 6 ------
- drivers/staging/exfat/exfat_core.c | 8 ++++----
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ drivers/staging/exfat/exfat.h      |  4 --
+ drivers/staging/exfat/exfat_core.c | 78 +++++++++++++++---------------
+ 2 files changed, 39 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 5044523ccb97..407dbb017c5f 100644
+index 407dbb017c5f..48267dd11e9d 100644
 --- a/drivers/staging/exfat/exfat.h
 +++ b/drivers/staging/exfat/exfat.h
-@@ -758,8 +758,6 @@ void fs_set_vol_flags(struct super_block *sb, u32 new_flag);
- void fs_error(struct super_block *sb);
+@@ -775,10 +775,6 @@ void free_upcase_table(struct super_block *sb);
  
- /* cluster management functions */
--s32 clear_cluster(struct super_block *sb, u32 clu);
--u32 find_last_cluster(struct super_block *sb, struct chain_t *p_chain);
- s32 count_num_clusters(struct super_block *sb, struct chain_t *dir);
- void exfat_chain_cont_cluster(struct super_block *sb, u32 chain, s32 len);
+ /* dir entry management functions */
+ struct timestamp_t *tm_current(struct timestamp_t *tm);
+-void init_file_entry(struct file_dentry_t *ep, u32 type);
+-void init_strm_entry(struct strm_dentry_t *ep, u8 flags, u32 start_clu,
+-		     u64 size);
+-void init_name_entry(struct name_dentry_t *ep, u16 *uniname);
  
-@@ -782,8 +780,6 @@ void init_strm_entry(struct strm_dentry_t *ep, u8 flags, u32 start_clu,
- 		     u64 size);
- void init_name_entry(struct name_dentry_t *ep, u16 *uniname);
- 
--s32 find_location(struct super_block *sb, struct chain_t *p_dir, s32 entry,
--		  sector_t *sector, s32 *offset);
  struct dentry_t *get_entry_in_dir(struct super_block *sb, struct chain_t *p_dir,
  				  s32 entry, sector_t *sector);
- struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
-@@ -797,8 +793,6 @@ s32 write_partial_entries_in_entry_set(struct super_block *sb,
- 				       struct dentry_t *ep, u32 count);
- s32 search_deleted_or_unused_entry(struct super_block *sb,
- 				   struct chain_t *p_dir, s32 num_entries);
--s32 find_empty_entry(struct inode *inode, struct chain_t *p_dir,
--		     s32 num_entries);
- s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
- 			   u32 type);
- void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
 diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 5a01fc25f31d..3ea51d12c38d 100644
+index 3ea51d12c38d..24700b251acb 100644
 --- a/drivers/staging/exfat/exfat_core.c
 +++ b/drivers/staging/exfat/exfat_core.c
-@@ -125,7 +125,7 @@ void fs_error(struct super_block *sb)
-  *  Cluster Management Functions
-  */
- 
--s32 clear_cluster(struct super_block *sb, u32 clu)
-+static s32 clear_cluster(struct super_block *sb, u32 clu)
- {
- 	sector_t s, n;
- 	s32 ret = 0;
-@@ -294,7 +294,7 @@ static void exfat_free_cluster(struct super_block *sb, struct chain_t *p_chain,
- 		p_fs->used_clusters -= num_clusters;
+@@ -971,6 +971,45 @@ static void exfat_set_entry_time(struct dentry_t *p_entry, struct timestamp_t *t
+ 	}
  }
  
--u32 find_last_cluster(struct super_block *sb, struct chain_t *p_chain)
-+static u32 find_last_cluster(struct super_block *sb, struct chain_t *p_chain)
++static void init_file_entry(struct file_dentry_t *ep, u32 type)
++{
++	struct timestamp_t tm, *tp;
++
++	exfat_set_entry_type((struct dentry_t *)ep, type);
++
++	tp = tm_current(&tm);
++	exfat_set_entry_time((struct dentry_t *)ep, tp, TM_CREATE);
++	exfat_set_entry_time((struct dentry_t *)ep, tp, TM_MODIFY);
++	exfat_set_entry_time((struct dentry_t *)ep, tp, TM_ACCESS);
++	ep->create_time_ms = 0;
++	ep->modify_time_ms = 0;
++	ep->access_time_ms = 0;
++}
++
++static void init_strm_entry(struct strm_dentry_t *ep, u8 flags, u32 start_clu, u64 size)
++{
++	exfat_set_entry_type((struct dentry_t *)ep, TYPE_STREAM);
++	ep->flags = flags;
++	SET32_A(ep->start_clu, start_clu);
++	SET64_A(ep->valid_size, size);
++	SET64_A(ep->size, size);
++}
++
++static void init_name_entry(struct name_dentry_t *ep, u16 *uniname)
++{
++	int i;
++
++	exfat_set_entry_type((struct dentry_t *)ep, TYPE_EXTEND);
++	ep->flags = 0x0;
++
++	for (i = 0; i < 30; i++, i++) {
++		SET16_A(ep->unicode_0_14 + i, *uniname);
++		if (*uniname == 0x0)
++			break;
++		uniname++;
++	}
++}
++
+ static s32 exfat_init_dir_entry(struct super_block *sb, struct chain_t *p_dir,
+ 			 s32 entry, u32 type, u32 start_clu, u64 size)
  {
- 	u32 clu, next;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -1186,7 +1186,7 @@ static s32 _walk_fat_chain(struct super_block *sb, struct chain_t *p_dir,
+@@ -1047,45 +1086,6 @@ static s32 exfat_init_ext_entry(struct super_block *sb, struct chain_t *p_dir,
  	return 0;
  }
  
--s32 find_location(struct super_block *sb, struct chain_t *p_dir, s32 entry,
-+static s32 find_location(struct super_block *sb, struct chain_t *p_dir, s32 entry,
- 		  sector_t *sector, s32 *offset)
+-void init_file_entry(struct file_dentry_t *ep, u32 type)
+-{
+-	struct timestamp_t tm, *tp;
+-
+-	exfat_set_entry_type((struct dentry_t *)ep, type);
+-
+-	tp = tm_current(&tm);
+-	exfat_set_entry_time((struct dentry_t *)ep, tp, TM_CREATE);
+-	exfat_set_entry_time((struct dentry_t *)ep, tp, TM_MODIFY);
+-	exfat_set_entry_time((struct dentry_t *)ep, tp, TM_ACCESS);
+-	ep->create_time_ms = 0;
+-	ep->modify_time_ms = 0;
+-	ep->access_time_ms = 0;
+-}
+-
+-void init_strm_entry(struct strm_dentry_t *ep, u8 flags, u32 start_clu, u64 size)
+-{
+-	exfat_set_entry_type((struct dentry_t *)ep, TYPE_STREAM);
+-	ep->flags = flags;
+-	SET32_A(ep->start_clu, start_clu);
+-	SET64_A(ep->valid_size, size);
+-	SET64_A(ep->size, size);
+-}
+-
+-void init_name_entry(struct name_dentry_t *ep, u16 *uniname)
+-{
+-	int i;
+-
+-	exfat_set_entry_type((struct dentry_t *)ep, TYPE_EXTEND);
+-	ep->flags = 0x0;
+-
+-	for (i = 0; i < 30; i++, i++) {
+-		SET16_A(ep->unicode_0_14 + i, *uniname);
+-		if (*uniname == 0x0)
+-			break;
+-		uniname++;
+-	}
+-}
+-
+ static void exfat_delete_dir_entry(struct super_block *sb, struct chain_t *p_dir,
+ 			    s32 entry, s32 order, s32 num_entries)
  {
- 	s32 off, ret;
-@@ -1583,7 +1583,7 @@ s32 search_deleted_or_unused_entry(struct super_block *sb,
- 	return -1;
- }
- 
--s32 find_empty_entry(struct inode *inode, struct chain_t *p_dir, s32 num_entries)
-+static s32 find_empty_entry(struct inode *inode, struct chain_t *p_dir, s32 num_entries)
- {
- 	s32 ret, dentry;
- 	u32 last_clu;
 -- 
 2.24.0
 
