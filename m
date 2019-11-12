@@ -2,146 +2,140 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80063C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADE9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5524921A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2080021D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qJC2c4gG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDjMTzDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfKLP11 (ORCPT
+        id S1727412AbfKLP1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:27:27 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48206 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfKLP10 (ORCPT
+        Tue, 12 Nov 2019 10:27:36 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39100 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfKLP1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:27:26 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACFQb3f062774;
-        Tue, 12 Nov 2019 09:26:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573572397;
-        bh=rMWe4kuCSfHHy9n9O/rcq81d4pIroGuMrSEkGSdS+F4=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=qJC2c4gGQYe+XtOFSW8zlZ6fbeLzlhIG1/N+9RR3wjmUmTZcQjDPq3tizAB62H9Wf
-         ykV72RpP4wOCZ6+JGW04RXYY12/H1BdOJBATx7dzGQ23h9ee8UEBaXfiimW+PtPDcM
-         HSUerMrRmbZG0F0zAhB+t6ZLeVTMnjlwz+S4Vj3o=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACFQbnS126537;
-        Tue, 12 Nov 2019 09:26:37 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 09:26:20 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 09:26:20 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACFQbDL011087;
-        Tue, 12 Nov 2019 09:26:37 -0600
-Date:   Tue, 12 Nov 2019 09:28:57 -0600
-From:   Bin Liu <b-liu@ti.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH v2 05/13] usb: musb: create debugfs directory under usb
- root
-Message-ID: <20191112152857.GA5853@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Yangtao Li <tiny.windzz@gmail.com>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
- <1573541519-28488-5-git-send-email-chunfeng.yun@mediatek.com>
+        Tue, 12 Nov 2019 10:27:35 -0500
+Received: by mail-il1-f195.google.com with SMTP id a7so15442865ild.6;
+        Tue, 12 Nov 2019 07:27:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MpymBe9XsQT1dS+UbhPjtN/MblGXirGawihya0jKgPs=;
+        b=hDjMTzDPXNiJpMQgFJFOSQsVO+1E6Pj0NGG116eVdPAREYNtM4/R9YAEnGJoD8qBSS
+         4lAPvnGEatr2O8xzEWY5OaLtNYc3tfhYCPxYHJ+96vbvHDDjQGiN0vZX1c1ccWCb/ZoN
+         aaetvZJ65IKz66eT+y03do5rTHfhdWAhPUY5bC/FFPgCAGOZ4TT+ckVmGkEGf9vNRLcp
+         d00NpzbPBGWYxKrMHR/++4dliFWwr6mS8Mflixja9r20ZO6MDyoKR8u6T6xJSN7cKafz
+         lP7Ss0R+b85bh+y+bAPyI1W5i0l/NfSZlo1WIUvaXVLNukUS1KP793ukOos0f7b4oPP5
+         R0OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MpymBe9XsQT1dS+UbhPjtN/MblGXirGawihya0jKgPs=;
+        b=BtoYvv0WNQgCL7TjtUWfoxGw4U3ihstwJfqAAcfmKKJqI6yzeGvYIrvyhWwzdnvm/J
+         WVI5m+c6+5jeqMUxSawDRvpaNogsdZV+O0w3dWVutKAUogtmgziqNPG1jnOW2Cb8iBcc
+         eZSMPTfMmWugQwpSSTH96ZWkVBwfprxFed7QOwwXSwkI4p8TdPj9hinRwf9++F8rYqxA
+         1jetmIxFJGu2g+QqtmuQJCWSRlxaP3Vdoh+t8ekB6YsIHWL1zGUDJ/fWq51I9mzYJOTP
+         nhy1SLGJsFtbAERzHSUcomyx8ltZvTdqGvIIA9KqgF+t/X66mC+bXmBrp8BN8RYZMOFr
+         ZWwg==
+X-Gm-Message-State: APjAAAUTmT34hCrD/vDGwFC2AAQ+OcRTdFOx2Ttpuaxn6SoCO8QufA5L
+        wiQPNYyi1SZwbU2ytj+AVu8ZRXky
+X-Google-Smtp-Source: APXvYqysdGik8YWhZRoGAvybGTd0EK7TyK5C+YDUaZ3RSwqbsJNoArWaCCdXbyvSREZbJYIca9KYPA==
+X-Received: by 2002:a92:1b49:: with SMTP id b70mr35879042ilb.180.1573572453629;
+        Tue, 12 Nov 2019 07:27:33 -0800 (PST)
+Received: from dahern-DO-MB.local ([2601:282:800:fd80:f828:9329:851c:5f36])
+        by smtp.googlemail.com with ESMTPSA id n20sm2009876ilj.23.2019.11.12.07.27.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 07:27:32 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] net: add trace events for net_device refcnt
+To:     Tony Lu <tonylu@linux.alibaba.com>, davem@davemloft.net
+Cc:     xiyou.wangcong@gmail.com, eric.dumazet@gmail.com,
+        shemminger@osdl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191112130510.91570-1-tonylu@linux.alibaba.com>
+ <20191112130510.91570-2-tonylu@linux.alibaba.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <ea3bf073-68af-d899-2664-fef54953a68d@gmail.com>
+Date:   Tue, 12 Nov 2019 08:27:31 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1573541519-28488-5-git-send-email-chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191112130510.91570-2-tonylu@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 11/12/19 6:05 AM, Tony Lu wrote:
+> diff --git a/include/trace/events/net.h b/include/trace/events/net.h
+> index 3b28843652d2..3bf6dd738882 100644
+> --- a/include/trace/events/net.h
+> +++ b/include/trace/events/net.h
+> @@ -326,6 +326,47 @@ DEFINE_EVENT(net_dev_rx_exit_template, netif_receive_skb_list_exit,
+>  	TP_ARGS(ret)
+>  );
+>  
+> +DECLARE_EVENT_CLASS(net_dev_refcnt_template,
+> +
+> +	TP_PROTO(struct net_device *dev, void *location),
+> +
+> +	TP_ARGS(dev, location),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(	name,		dev->name	)
+> +		__field(	int,		refcnt		)
+> +		__field(	void *,		location	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		int i, refcnt = 0;
+> +
+> +		for_each_possible_cpu(i)
+> +			refcnt += *per_cpu_ptr(dev->pcpu_refcnt, i);
 
-On Tue, Nov 12, 2019 at 02:51:51PM +0800, Chunfeng Yun wrote:
-> Now the USB gadget subsystem can use the USB debugfs root directory,
-> so move musb's directory from the root of the debugfs filesystem into
-> the root of usb
+Rather than copying the definition of netdev_refcnt_read here, so just
+use it.
 
-My opinion is this move is unnecessary. I breaks existing debug tools or
-documentation which is already published on Internet. 
+> +
+> +		__assign_str(name, dev->name);
+> +		__entry->refcnt = refcnt;
+> +		__entry->location = location;
+> +	),
+> +
+> +	TP_printk("dev=%s refcnt=%d location=%p",
+> +		__get_str(name), __entry->refcnt, __entry->location)
+> +);
+> +
+> +DEFINE_EVENT(net_dev_refcnt_template, net_dev_put,
+> +
+> +	TP_PROTO(struct net_device *dev, void *location),
+> +
+> +	TP_ARGS(dev, location)
+> +);
+> +
+> +DEFINE_EVENT(net_dev_refcnt_template, net_dev_hold,
+> +
+> +	TP_PROTO(struct net_device *dev, void *location),
+> +
+> +	TP_ARGS(dev, location)
+> +);
+> +
+>  #endif /* _TRACE_NET_H */
+>  
 
--Bin.
-
+The location alone does nothing for resolving reference count leaks; you
+really have to use stack traces to pair up the hold and put and to give
+context for what are repetitive locations for the hold and put.
