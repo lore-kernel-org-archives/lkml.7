@@ -2,147 +2,101 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66269C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4CCC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC1C21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8smE6MU"
+	by mail.kernel.org (Postfix) with ESMTP id F05DE21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573538178;
+	bh=qQNRUDNK9jYEAFayckdbTTiF5Wzvx8FCJHZqCcJ6bH4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JFGnzVkhieWZcsUyi15nGqYTbgvwOkNst140YxFjlRnDLd1ORc+Z3RGvfkTiO6DYw
+	 p+hSv/fEXzfmpEm0NXcDdmnT/18K37vu/aXOMSSqSaGVIJarXzN2cdOUXzBtYIYm7Z
+	 /ee/lbL2WCwUiirWcAhB4Mx8/kBYK7/gnBnt4rSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKLFyU (ORCPT
+        id S1726994AbfKLF4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 00:54:20 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35712 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfKLFyS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:54:18 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s10so8920217plp.2;
-        Mon, 11 Nov 2019 21:54:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PfLpTXwmTko+wTungBc02PKeDQN7UmUMa4lSWShWaZw=;
-        b=g8smE6MUyrhWi+O5jT2tC9pxowb4qn4mvEpn4T2Ps4ARa51BvJvvwNDVbFfrgzehOE
-         dDPjz47NDeo0D25zWiWzlepCPlCt/Edlx+4ls7viapwtvf3VlIk1S8OazqbLpEXmciP6
-         lcyqWuX/P3Z4v/irj4tncveAn/kJ87aGMkG5X8HrqFTtdUNYzb3q4KRzWrIoOClj9gkl
-         5H2sqPUSww16MOmZ1G2Fldav3orxtwev1eZHxavYd4hoIk9yuPHQ2IiEn6Zq2rqAuODb
-         62y35ef5CH39Rg15KuRhuQBzYTBpAVENwxcy3l6+i8oVXGS+kFiSQXkOJHpjNOQdqGol
-         v1xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PfLpTXwmTko+wTungBc02PKeDQN7UmUMa4lSWShWaZw=;
-        b=qQPqqw+/Z96OdpX34acRjdUk4g8AzAPCbH8/5oNEhxU46MRKgplH49jweXBxrJn60O
-         7nReq7GWdlcEejwxmHisbkWHTqD7amrB7o8ya4OcBKPchEi1hWScEe1N6Rnt7hjSXiXY
-         ti0XgR1jL4IWrxHLiyuv6zvgRF7HozVOqHl0HkDzpbpdNrh38mXB4wPrwRxp3YW6Qu97
-         xxpRqZFgxRsqSamRjB2HRECYeEGsvnilhquER6h9tu7nDqtmQnmsLjqw+tb9eFHxx+Re
-         duIwlMFpJ++BvuOvqDY1wCV0ioNLkw4D1rfEA3DE6s7KDcEuR9n060tVN7J720+W4eLw
-         4phQ==
-X-Gm-Message-State: APjAAAWoDVAyLwbncrL8zysaVJDBkayRaQkGOzidXVAFjeMvrYXdvhle
-        dI+wdcuRGObZuLYfHp8XfVI=
-X-Google-Smtp-Source: APXvYqyRtF8pUyuEwxg+/DQ6H/oW0ptK8vemrlPtYyErFrLgoAQb7atWgILkZafNapbyUiYM4fJyrw==
-X-Received: by 2002:a17:902:6e02:: with SMTP id u2mr30148678plk.234.1573538057420;
-        Mon, 11 Nov 2019 21:54:17 -0800 (PST)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d139sm23160178pfd.162.2019.11.11.21.54.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 21:54:16 -0800 (PST)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH 2/2] spi: wire up wakeup-source/wakeirq handling
-Date:   Mon, 11 Nov 2019 21:54:11 -0800
-Message-Id: <20191112055412.192675-3-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
-References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+        Tue, 12 Nov 2019 00:56:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfKLF4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:56:16 -0500
+Received: from localhost (unknown [122.167.70.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62F3206BB;
+        Tue, 12 Nov 2019 05:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573538175;
+        bh=qQNRUDNK9jYEAFayckdbTTiF5Wzvx8FCJHZqCcJ6bH4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1pPW4eu8VgEiJD2/DUsjjvGzakKD+GeU6ykt12TKzH10NopahnvEWyL1wPyzeuOFK
+         WqFZHUMz8N8yxCy0rOjVubcQZi7zeAqCNIQwgnLUjefYkKsOcoV22XBtAMHrptexTu
+         8PA/e1uX07cC7EbUF1FjpXPJD8Ogf7OqCgBW70T8=
+Date:   Tue, 12 Nov 2019 11:26:09 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
+Message-ID: <20191112055540.GY952516@vkoul-mobl>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-2-logang@deltatee.com>
+ <20191109171853.GF952516@vkoul-mobl>
+ <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many SPI drivers need to configure their devices for waking up the
-system. Instead of forcing them to reimplement wakeup handling, let's
-mirror what I2C core is doing and handle "wakeup-source" device property
-in SPI core.
+On 11-11-19, 09:50, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-11-09 10:18 a.m., Vinod Koul wrote:
+> > Hi Logan,
+> > 
+> > Sorry for delay in reply!
+> > 
+> > On 22-10-19, 15:46, Logan Gunthorpe wrote:
+> >> dma_chan_to_owner() dereferences the driver from the struct device to
+> >> obtain the owner and call module_[get|put](). However, if the backing
+> >> device is unbound before the dma_device is unregistered, the driver
+> >> will be cleared and this will cause a NULL pointer dereference.
+> > 
+> > Have you been able to repro this? If so how..?
+> > 
+> > The expectation is that the driver shall unregister before removed.
+> 
+> Yes, with my new driver, if I do a PCI unbind (which unregisters) while
+> the DMA engine is in use, it panics. The point is the underlying driver
+> can go away before the channel is removed.
 
-Also, let's allow naming device's interrupt lines as "irq" and "wakeup"
-and automatically configure the right one as wakeirq when device is
-supposed to be a wakeup source.
+and in your driver remove you do not unregister? When unbind is invoked
+the driver remove is invoked by core and you should unregister whatever
+you have registered in your probe!
 
-Implementing this is very helpful for drivers that use both I2C and SPI
-for transport, such as tsc2004/tsc2005.
+Said that, if someone is using the dmaengine at that point of time, it
+is not a nice thing to do and can cause issues, but on idle it should
+just work!
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> I suspect this is less of an issue for most devices as they wouldn't
+> normally be unbound while in use (for example there's really no reason
+> to ever unbind IOAT seeing it's built into the system). Though, the fact
+> is, the user could unbind these devices at anytime and we don't want to
+> panic if they do.
 
----
+There are many drivers which do modules so yes I am expecting unbind and
+even a bind following that to work
 
- drivers/spi/spi.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 50769a8475d66..baa7aac300d9f 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -22,6 +22,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/pm_runtime.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_wakeirq.h>
- #include <linux/property.h>
- #include <linux/export.h>
- #include <linux/sched/rt.h>
-@@ -394,13 +395,37 @@ static int spi_drv_probe(struct device *dev)
- 		return ret;
- 
- 	if (dev->of_node) {
--		spi->irq = of_irq_get(dev->of_node, 0);
-+		spi->irq = of_irq_get_byname(dev->of_node, "irq");
-+		if (spi->irq == -EINVAL || spi->irq == -ENODATA)
-+			spi->irq = of_irq_get(dev->of_node, 0);
- 		if (spi->irq == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
- 		if (spi->irq < 0)
- 			spi->irq = 0;
- 	}
- 
-+	if (device_property_read_bool(dev, "wakeup-source")) {
-+		int wakeirq = -ENOENT;
-+
-+		if (dev->of_node) {
-+			wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
-+			if (wakeirq == -EPROBE_DEFER)
-+				return wakeirq;
-+		}
-+
-+		device_init_wakeup(dev, true);
-+
-+		if (wakeirq > 0 && wakeirq != spi->irq)
-+			ret = dev_pm_set_dedicated_wake_irq(dev, wakeirq);
-+		else if (spi->irq > 0)
-+			ret = dev_pm_set_wake_irq(dev, spi->irq);
-+		else
-+			ret = 0;
-+
-+		if (ret)
-+			dev_warn(dev, "failed to set up wakeup irq: %d\n", ret);
-+	}
-+
- 	ret = dev_pm_domain_attach(dev, true);
- 	if (ret)
- 		return ret;
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
-
+~Vinod
