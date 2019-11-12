@@ -2,155 +2,103 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DD5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D420C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23F621E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Gv4CNBoQ"
+	by mail.kernel.org (Postfix) with ESMTP id 7025D20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKLO7p (ORCPT
+        id S1727054AbfKLPAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:59:45 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35573 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfKLO7p (ORCPT
+        Tue, 12 Nov 2019 10:00:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34644 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfKLPAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:59:45 -0500
-Received: by mail-qk1-f194.google.com with SMTP id i19so14698659qki.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 06:59:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gSINY5VnDSmpBftGgJ6lg01oQr1mDIp5ALDVHMXlZtw=;
-        b=Gv4CNBoQWcvSweiWqUWk1x91ARUiIp699peYUwjmh6dVDMofdbK9TZUTy69OMR5wBz
-         Sj+vB2GcvnlKfNRZEIMuMD3yS8pJJt++bT0SIHOtaVbPAljtUuvSlhlcMWxzQGQgoRE3
-         Kcd06rwOsC5lFXfYYtTIKinfT2hJtltQwpwK1te3zTPVqwAUXLHL6fYLU7jrBrgS8qoj
-         5wTN6yJDZt4fm/8Xfr2nFuWSweu2iE2sTod84emu3a9nTDFmzXvrouK8S00TlYIY1f00
-         1fPMpGYYvGHDTjbQoG1Pekl7cneX7THKqwP87lTRSl0Y+XYeoSKkQnVFVOyuY5lkinLg
-         KMnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gSINY5VnDSmpBftGgJ6lg01oQr1mDIp5ALDVHMXlZtw=;
-        b=PiooZ+EhDOHTuDgQlGjZFAKLIr4lY14i5RAxi0PrC1XiBarX7b5cl07mO4br2ctPr7
-         ZRbbamjMfbKCLkEwIs5N34XfFKaQfpjUBomM4m9uxV65aqj4qfPR00RNgOimegQ+yuYC
-         itTmGp1yuORpDmQANmsaA1GROv9sV4c1UXwORGVOzVwEk9xk4eFtgwNJH+1lYwT6rtDS
-         DqIPouwAZJt7gAtSdv8zyzGa48Q460pkO3ngdFlt0164HIAmIda1yiWeamNtRR8CqPAO
-         Tlm+Xagy3o2lNIeolM0g8SUJnLWYq96cg/G3feb4dJaADhbCvTtk9etaoZpBX703VHCF
-         IZnw==
-X-Gm-Message-State: APjAAAW9dSxh3O/Ay1Src4UhwcFUEC7J8VhpA7YUxeNDSXpvfAEsAsec
-        Z+OPLjDa7T1p0rlRU7HskL0GhAoXJRw1Bw==
-X-Google-Smtp-Source: APXvYqxGVHT2d2Zo/+rHOGGT2x3k3jwx+Qqewg1Ac2Y4lPfZSQlSC0MLZdrrZYbG4EQSFse6ASdTJg==
-X-Received: by 2002:a37:9d86:: with SMTP id g128mr5962601qke.191.1573570784074;
-        Tue, 12 Nov 2019 06:59:44 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::aa8c])
-        by smtp.gmail.com with ESMTPSA id q34sm8004104qte.50.2019.11.12.06.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 06:59:43 -0800 (PST)
-Date:   Tue, 12 Nov 2019 06:59:42 -0800
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>, Qian Cai <cai@lca.pw>,
-        akpm@linux-foundation.org, guro@fb.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
-Message-ID: <20191112145942.GA168812@cmpxchg.org>
-References: <20191108204407.1435-1-cai@lca.pw>
- <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
- <20191111130516.GA891635@chrisdown.name>
- <20191111131427.GB891635@chrisdown.name>
- <20191111132812.GK1396@dhcp22.suse.cz>
+        Tue, 12 Nov 2019 10:00:48 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iUXes-00057x-Vi; Tue, 12 Nov 2019 16:00:43 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9E0FF1C0084;
+        Tue, 12 Nov 2019 16:00:42 +0100 (CET)
+Date:   Tue, 12 Nov 2019 15:00:42 -0000
+From:   "tip-bot2 for Kai-Heng Feng" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/quirks: Disable HPET on Intel Coffe Lake platforms
+Cc:     Feng Tang <feng.tang@intel.com>,
+        "Kai-Heng Feng" <kai.heng.feng@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191016103816.30650-1-kai.heng.feng@canonical.com>
+References: <20191016103816.30650-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111132812.GK1396@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-ID: <157357084220.29376.9594483484255734151.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian, thanks for the report and the fix.
+The following commit has been merged into the x86/urgent branch of tip:
 
-On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
-> On Mon 11-11-19 13:14:27, Chris Down wrote:
-> > Chris Down writes:
-> > > Ah, I just saw this in my local checkout and thought it was from my
-> > > changes, until I saw it's also on clean mmots checkout. Thanks for the
-> > > fixup!
-> > 
-> > Also, does this mean we should change callers that may pass through
-> > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
-> > remove this interim fixup? I'm worried otherwise we might paper over real
-> > issues in future.
-> 
-> Yes, removing this special casing is reasonable. I am not sure
-> MAX_NR_ZONES - 1 is a better choice though. It is error prone and
-> zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
-> be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
-> outside of MM reclaim code AFAIK. It would be probably better to have
-> MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
+Commit-ID:     fc5db58539b49351e76f19817ed1102bf7c712d0
+Gitweb:        https://git.kernel.org/tip/fc5db58539b49351e76f19817ed1102bf7c712d0
+Author:        Kai-Heng Feng <kai.heng.feng@canonical.com>
+AuthorDate:    Wed, 16 Oct 2019 18:38:16 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 12 Nov 2019 15:55:20 +01:00
 
-We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
-"no zone restrictions" - get_scan_count() is the odd one out:
+x86/quirks: Disable HPET on Intel Coffe Lake platforms
 
-- mem_cgroup_shrink_node()
-- try_to_free_mem_cgroup_pages()
-- balance_pgdat()
-- kswapd()
-- shrink_all_memory()
+Some Coffee Lake platforms have a skewed HPET timer once the SoCs entered
+PC10, which in consequence marks TSC as unstable because HPET is used as
+watchdog clocksource for TSC.
 
-It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
-subtle than handling both inclusive and exclusive range delimiters.
+Harry Pan tried to work around it in the clocksource watchdog code [1]
+thereby creating a circular dependency between HPET and TSC. This also
+ignores the fact, that HPET is not only unsuitable as watchdog clocksource
+on these systems, it becomes unusable in general.
 
-So I think the better fix would be this:
+Disable HPET on affected platforms.
 
+Suggested-by: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203183
+Link: https://lore.kernel.org/lkml/20190516090651.1396-1-harry.pan@intel.com/ [1]
+Link: https://lkml.kernel.org/r/20191016103816.30650-1-kai.heng.feng@canonical.com
 ---
-From 1566a255eef7c2165d435125231ad1eeecac7959 Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Mon, 11 Nov 2019 13:46:25 -0800
-Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
+ arch/x86/kernel/early-quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
-beyond the range of valid zone indexes, but used to be handled before
-the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
-express "all zones, please", so do the same here.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Reported-by: Chris Down <chris@chrisdown.name>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/vmscan.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index df859b1d583c..34ad8a0f3f27 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
- 	 * anon in [0], file in [1]
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 6f6b1d0..4cba91e 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -710,6 +710,8 @@ static struct chipset early_qrk[] __initdata = {
  	 */
- 
--	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
--		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
--	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
--		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
-+	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
-+		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
-+	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
-+		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
- 
- 	spin_lock_irq(&pgdat->lru_lock);
- 	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
--- 
-2.24.0
-
+ 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
