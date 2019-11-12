@@ -2,115 +2,112 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC68C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C1BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C95B20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40267214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aTK8xCwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKLVjH (ORCPT
+        id S1726994AbfKLVmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:39:07 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59200 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726912AbfKLVjG (ORCPT
+        Tue, 12 Nov 2019 16:42:03 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:34045 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfKLVmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:39:06 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACKQcVM080297;
-        Tue, 12 Nov 2019 15:30:53 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w820mkshg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 15:30:53 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xACKUL5v031354;
-        Tue, 12 Nov 2019 20:30:52 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 2w5n361vcq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 20:30:52 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACKUprg32964922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 20:30:51 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8001FAC05E;
-        Tue, 12 Nov 2019 20:30:51 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 728D9AC059;
-        Tue, 12 Nov 2019 20:30:51 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 20:30:51 +0000 (GMT)
-Subject: Re: question about setting TPM_CHIP_FLAG_IRQ in tpm_tis_core_init
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191112033637.kxotlhm6mtr5irvd@cantor>
- <20191112200703.GB11213@linux.intel.com>
- <20191112201734.sury5nd3cptkckgb@cantor>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <50290fc8-4d22-3eb5-c930-079f8b819a8e@linux.ibm.com>
-Date:   Tue, 12 Nov 2019 15:30:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191112201734.sury5nd3cptkckgb@cantor>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120174
+        Tue, 12 Nov 2019 16:42:03 -0500
+Received: by mail-pf1-f201.google.com with SMTP id a1so16546023pfn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:42:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=oTMLN2K3vaMSRsmMQXrA4suNBO0BmQdJkP45+pyVh8o=;
+        b=aTK8xCwFy5phw4jK+aJ00QT6kRiwelQFXBFWSg+TfLEZdYFkn1y20zB0bgSC82SU3r
+         c1Cic+vuS485o7ckwB4/FdL5VSyvm2cFL5qOrgquUV+KB639qJeUut2FTCHhUE2x1l9v
+         hQBiIgajtWKh4is00+22/GiHU24eX3x6jR5qkxg+BPddVkzZ2fqlVQX271H4TFv0e8mQ
+         BO1zNIcFBAyUhqKSxTOJCdj33ns6E2gf50orujnG8nItr9TO6f9VfH7xb65NdpIW2w/u
+         0TWLQ6h2dZ+0qMW7Sfnvw7LQJwEcwM7rO1M+fkCp1otwWzkXpTkbmBIhhpvpXyqYfant
+         bRyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=oTMLN2K3vaMSRsmMQXrA4suNBO0BmQdJkP45+pyVh8o=;
+        b=YfI/sysPzSLkHBO60eMM7JskJjHIk+a6UNMtf/zo7rcQCSfk9LtPb7vh6Ia3JmEQoS
+         VpqKxhv4nDVPRq6aW7Kgh5F8jtWFR4k7MIvI7NYCEoGgsNz6uu0mqDLXveovAJgJK9z3
+         G0tTKK3VHypfZBDEwW5W6rEDuq2DexkWL3b5My+r+nR5NToy0KFgLrTM53u3rpO+S5gk
+         +UtOki9grP4Y1id+Dagq+q0qB0KCUroKtvORmEUH2NIJB5OF1/qTkseesjtUOQsqGgar
+         HrtX0qyGBQkE+x/539KCRhXVmlfTSJTW7bZEV23j7PutVEj4N1Y/IJhx1PXsbIdWhtlM
+         58Bg==
+X-Gm-Message-State: APjAAAVQxC/fuvTKQMVkZswA+hvM7sPOZuWKAAJ/HbAFlqJ8omuJ1plE
+        ZrWz65K63lpPoikj7i3LYa40wNN62dyyIl38u7c=
+X-Google-Smtp-Source: APXvYqwxfX7vVatjaDv5hHuqJil7Vv+SihlJuPveolSeND2UV/3a6sgf/4KrA3aCMS15ft5nL0GwVfF83uICOXxyuuQ=
+X-Received: by 2002:a63:1c0e:: with SMTP id c14mr15942340pgc.96.1573594922516;
+ Tue, 12 Nov 2019 13:42:02 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:41:56 -0800
+Message-Id: <20191112214156.3430-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+Subject: [PATCH] driver core: platform: use the correct callback type for bus_find_device
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 3:17 PM, Jerry Snitselaar wrote:
-> On Tue Nov 12 19, Jarkko Sakkinen wrote:
->> On Mon, Nov 11, 2019 at 08:36:37PM -0700, Jerry Snitselaar wrote:
->>> Question about 1ea32c83c699 ("tpm_tis_core: Set TPM_CHIP_FLAG_IRQ
->>> before probing for interrupts").  Doesn't tpm_tis_send set this flag,
->>> and setting it here in tpm_tis_core_init short circuits what
->>> tpm_tis_send was doing before? There is a bug report of an interrupt
->>> storm from a tpm on a t490s laptop with the Fedora 31 kernel (5.3),
->>> and I'm wondering if this change could cause that. Before they got the
->>> warning about interrupts not working, and using polling instead.
->>
->> Looks like it. Stefan?
->>
->> /Jarkko
->>
->
-> Stefan is right about the condition check at the beginning of 
-> tpm_tis_send.
->
->     if (!(chip->flags & TPM_CHIP_FLAG_IRQ) || priv->irq_tested)
->         return tpm_tis_send_main(chip, buf, len);
->
-> Before his change it would've gone straight to calling
-> tpm_tis_send_main instead of jumping down and doing the irq test, due
-> to the flag not being set. With his change it should now skip this
-> tpm_tis_send_main call when tpm_tis_gen_interrupt is called, and then
-> after that time through tpm_tis_send priv->irq_tested will be set, and
-> the flag should be set as to whether or not irqs were working.
->
-> I should hopefully have access to a t490s in a few days so I can look 
-> at it,
-> and try to figure out what is happening.
->
-I hope the t490s is an outlier. Give the patch I just posted a try.
+platform_find_device_by_driver calls bus_find_device and passes
+platform_match as the callback function. Casting the function to a
+mismatching type trips indirect call Control-Flow Integrity (CFI) checking.
 
-     Stefan
+This change adds a callback function with the correct type and instead
+of casting the function, explicitly casts the second parameter to struct
+device_driver* as expected by platform_match.
 
+Fixes: 36f3313d6bff9 ("platform: Add platform_find_device_by_driver() helper")
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ drivers/base/platform.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index b230beb6ccb4..3c0cd20925b7 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1278,6 +1278,11 @@ struct bus_type platform_bus_type = {
+ };
+ EXPORT_SYMBOL_GPL(platform_bus_type);
+ 
++static inline int __platform_match(struct device *dev, const void *drv)
++{
++	return platform_match(dev, (struct device_driver *)drv);
++}
++
+ /**
+  * platform_find_device_by_driver - Find a platform device with a given
+  * driver.
+@@ -1288,7 +1293,7 @@ struct device *platform_find_device_by_driver(struct device *start,
+ 					      const struct device_driver *drv)
+ {
+ 	return bus_find_device(&platform_bus_type, start, drv,
+-			       (void *)platform_match);
++			       __platform_match);
+ }
+ EXPORT_SYMBOL_GPL(platform_find_device_by_driver);
+ 
+
+base-commit: 100d46bd72ec689a5582c2f5f4deadc5bcb92d60
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
