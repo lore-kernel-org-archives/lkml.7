@@ -2,199 +2,108 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB8DC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B14C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9DE222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2AB20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="wOJG7TKZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="T45iDQWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfKLQRD (ORCPT
+        id S1727339AbfKLQRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:17:03 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35752 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfKLQRC (ORCPT
+        Tue, 12 Nov 2019 11:17:12 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:3594 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbfKLQRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:17:02 -0500
-Received: by mail-qt1-f193.google.com with SMTP id n4so15718302qte.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:17:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=twt8kJzhtPFZcAO1BhdHJtV6MHvkk/INbWMflmbiAcs=;
-        b=wOJG7TKZxJq4CpTPsx5BBiOVlFuqacNBz9W6xm0qACo/wundYrFHiI0ekBHcU+WcLW
-         0T9Dxdd/2RVxSjtTw3wgLA9Jj54sD1igfoXfVt4ArPEHkPRgdxcedv0G6T9xusV04IOg
-         RX4muJAyIWzmgRS+D8J1xPyY3yxJgaSS+nf7HgsHNAz83ChbKjYS/W/wai49fs0hKxyY
-         Lg667V1xFa+C2jeV2Dt/miS158NRuX3nDBQAqtQ/hYtjq7JES/R7BV76jHKNjPOrLJVz
-         MbpydXjQrDmqeq7BhMOdhQViCt1nzM6u86VU4s/s5OLqaOwJjFhY5KC8x/eib7GMDP2K
-         qFFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twt8kJzhtPFZcAO1BhdHJtV6MHvkk/INbWMflmbiAcs=;
-        b=qe/EGrgOeqUpWKUkmEPvoFQw4/Hovr0sTx3u4VywYg7ITP24//lh9o56A4O4fYSv4G
-         KK1jy9PYNpSFk7ePJ/qSZHQeZZfRLgJ8yvCUH6w/EpoHhufgp2tcwS+duRGbD5plp5ZX
-         LRKac/fuhXoaz1eoWLBP4PfDbFQtapkIaSI8bz08XieOtCSjrCqybkVW5zPkLD1Znbzm
-         IMf/PIggVtxoYVzE2BWIzQ3IgxptZUVaS6kzKZzxpk0NJhLemxVtNDEwbC/ewwuRLxKI
-         yTwjtcqvNNZFyCxUFM6hHJAaGW9+M0UNtG9+4EWE9N67M+P2j+RUVJRM57XZMedi/eqb
-         7dPw==
-X-Gm-Message-State: APjAAAVqwvS73Sy9X43UvmjJJDIJ+HOk7C/MAXT1hQ1NBilqFCWBAu06
-        lSEfQdAQUfCBDjwJ+dIvnQJTSw==
-X-Google-Smtp-Source: APXvYqy5KJiW7cPw9ukstX7WWyRgfEKk9uJb84K1GhrWATzGZmzo1iLD7FFRft6n2cPa6jAJir+f8g==
-X-Received: by 2002:ac8:2361:: with SMTP id b30mr31934126qtb.322.1573575420020;
-        Tue, 12 Nov 2019 08:17:00 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::aa8c])
-        by smtp.gmail.com with ESMTPSA id v186sm8821612qkb.42.2019.11.12.08.16.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 08:16:59 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:16:58 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>, Qian Cai <cai@lca.pw>,
-        akpm@linux-foundation.org, guro@fb.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
-Message-ID: <20191112161658.GF168812@cmpxchg.org>
-References: <20191108204407.1435-1-cai@lca.pw>
- <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
- <20191111130516.GA891635@chrisdown.name>
- <20191111131427.GB891635@chrisdown.name>
- <20191111132812.GK1396@dhcp22.suse.cz>
- <20191112145942.GA168812@cmpxchg.org>
- <20191112152750.GA512@dhcp22.suse.cz>
+        Tue, 12 Nov 2019 11:17:11 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcadacf0000>; Tue, 12 Nov 2019 08:16:15 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 08:17:11 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 12 Nov 2019 08:17:11 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 16:17:11 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 12 Nov 2019 16:17:10 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.175.80]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dcadb050001>; Tue, 12 Nov 2019 08:17:10 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <sboyd@kernel.org>, <mturquette@baylibre.com>,
+        <pgaikwad@nvidia.com>
+CC:     <digetx@gmail.com>, <pdeschrijver@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1] clk: tegra: clk-dfll: Fix to remove pm_runtime_irq_safe
+Date:   Tue, 12 Nov 2019 08:17:06 -0800
+Message-ID: <1573575426-31314-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573575426-31314-1-git-send-email-skomatineni@nvidia.com>
+References: <1573575426-31314-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112152750.GA512@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573575375; bh=1kImHFAkv5/eZtu8j/MuHOjPRhis0bCK9BPWFGyzm9I=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=T45iDQWr39w7/FtEhbbXD/9RXM5zy1kb7D8SZOrDrzdSj8/UJzjvcqMLSS2Epch5B
+         NfPLAjuDfkvdhwNAC9yH0rFT3N7NrbOkqQXzhhchCsLtWA6Lj4u4znN/wDqVV1Y3QB
+         u3ErnpreNqvLzqGHEn9nIx9b7k8cyx8iGAMt2xrz1Jq0JvUwuLFYfncPjLy/Gbtgxq
+         bJRAPqFOEDBSi4cgSsQYhDvEfbYFzSJxgNdrxxJKI61k2aCZyyG5CHfA3cXWsgdaNF
+         H2Th+uXfGvj2BdiIX3iuVdwLolW/kbGoz+MYO4+hs7C9YuLpYzwAnHGZ36VZsq+2vi
+         S8bMBIX85/xTA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:27:50PM +0100, Michal Hocko wrote:
-> On Tue 12-11-19 06:59:42, Johannes Weiner wrote:
-> > Qian, thanks for the report and the fix.
-> > 
-> > On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
-> > > On Mon 11-11-19 13:14:27, Chris Down wrote:
-> > > > Chris Down writes:
-> > > > > Ah, I just saw this in my local checkout and thought it was from my
-> > > > > changes, until I saw it's also on clean mmots checkout. Thanks for the
-> > > > > fixup!
-> > > > 
-> > > > Also, does this mean we should change callers that may pass through
-> > > > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
-> > > > remove this interim fixup? I'm worried otherwise we might paper over real
-> > > > issues in future.
-> > > 
-> > > Yes, removing this special casing is reasonable. I am not sure
-> > > MAX_NR_ZONES - 1 is a better choice though. It is error prone and
-> > > zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
-> > > be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
-> > > outside of MM reclaim code AFAIK. It would be probably better to have
-> > > MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
-> > 
-> > We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
-> > "no zone restrictions" - get_scan_count() is the odd one out:
-> > 
-> > - mem_cgroup_shrink_node()
-> > - try_to_free_mem_cgroup_pages()
-> > - balance_pgdat()
-> > - kswapd()
-> > - shrink_all_memory()
-> > 
-> > It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
-> > subtle than handling both inclusive and exclusive range delimiters.
-> > 
-> > So I think the better fix would be this:
-> 
-> lruvec_lru_size is explicitly documented to use MAX_NR_ZONES for all
-> LRUs and git grep says there are more instances outside of
-> get_scan_count. So all of them have to be fixed.
+pm_runtime_irq_safe is not needed as interrupts are allowed during
+suspend and resume. This was added mistakenly during dfll suspend
+and resume support patch.
 
-Which ones?
+This patch includes fix to remove pm_runtime_irq_safe.
 
-[hannes@computer linux]$ git grep lruvec_lru_size
-include/linux/mmzone.h:extern unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx);
-mm/vmscan.c: * lruvec_lru_size -  Returns the number of pages on the given LRU list.
-mm/vmscan.c:unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
-mm/vmscan.c:    anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
-mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
-mm/vmscan.c:    file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
-mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
-mm/vmscan.c:            lruvec_size = lruvec_lru_size(lruvec, lru, sc->reclaim_idx);
-[hannes@computer linux]$
+Also updated description of dfll_suspend argument.
 
-The only other user already passes sc->reclaim_idx, which always
-points to a valid zone, and is initialized to MAX_NR_ZONES - 1 in many
-places.
-
-> I still think that MAX_NR_ZONES - 1 is a very error prone and subtle
-> construct IMHO and an alias would be better readable.
-
-I wouldn't mind a follow-up patch that changes this pattern
-comprehensively. As it stands, get_scan_count() is the odd one out.
-
-The documentation bit is a good point, though. We should fix
-that. Updated patch:
-
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
+ drivers/clk/tegra/clk-dfll.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-From b1b6ce306010554aba6ebd7aac0abffc1576d71a Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Mon, 11 Nov 2019 13:46:25 -0800
-Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
-
-get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
-beyond the range of valid zone indexes, but used to be handled before
-the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
-express "all zones, please", so do the same here.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Reported-by: Chris Down <chris@chrisdown.name>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/vmscan.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index df859b1d583c..5eb96a63ad1e 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -323,7 +323,7 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
-  * lruvec_lru_size -  Returns the number of pages on the given LRU list.
-  * @lruvec: lru vector
-  * @lru: lru to use
-- * @zone_idx: zones to consider (use MAX_NR_ZONES for the whole LRU list)
-+ * @zone_idx: index of the highest zone to include (use MAX_NR_ZONES - 1 for all)
-  */
- unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
- {
-@@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
- 	 * anon in [0], file in [1]
- 	 */
+diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+index c051d92c2bbf..cfbaa90c7adb 100644
+--- a/drivers/clk/tegra/clk-dfll.c
++++ b/drivers/clk/tegra/clk-dfll.c
+@@ -1487,7 +1487,6 @@ static int dfll_init(struct tegra_dfll *td)
+ 	td->last_unrounded_rate = 0;
  
--	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
--		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
--	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
--		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
-+	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
-+		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
-+	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
-+		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
+ 	pm_runtime_enable(td->dev);
+-	pm_runtime_irq_safe(td->dev);
+ 	pm_runtime_get_sync(td->dev);
  
- 	spin_lock_irq(&pgdat->lru_lock);
- 	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
+ 	dfll_set_mode(td, DFLL_DISABLED);
+@@ -1516,7 +1515,7 @@ static int dfll_init(struct tegra_dfll *td)
+ 
+ /**
+  * tegra_dfll_suspend - check DFLL is disabled
+- * @dev: DFLL device *
++ * @dev: DFLL instance
+  *
+  * DFLL clock should be disabled by the CPUFreq driver. So, make
+  * sure it is disabled and disable all clocks needed by the DFLL.
 -- 
-2.24.0
+2.7.4
 
