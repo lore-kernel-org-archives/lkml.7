@@ -2,176 +2,135 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77B3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CADEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDCF21D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MWBU2TrW"
+	by mail.kernel.org (Postfix) with ESMTP id 6AC5521872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfKLSWp (ORCPT
+        id S1727112AbfKLSWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:22:45 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34171 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKLSWp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:22:45 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n13so13972366pff.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:22:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eN2ydQIW1tC0Y5Z0139/3auQ6iVhazzk9qa2dg7E35A=;
-        b=MWBU2TrWEjnv7/l1uY+2LGCdf2/o3Ps8RrNThkke2K6F5E2Kd7kAIELZvATtRT5rpo
-         44FXpxsAjez8dSk53I99VA17eLO+/DHGY2TcyBtnlWFy55VrQ8bW5P4CmBQULXQ6Jyz/
-         qAVTlGOcsac833IhAMBPJ2Aj/vcOobVMXUx/Vl77MUJlBY7ePRdUfWqHzPb+odViVwwv
-         ILKi2oqNsZ+N92V9GB9awn5VUVN+kraXUpzEzLJQcj5osoE1MSaLog1Kqzec9YdnZSMj
-         aqNP8LjsnUfceLLGOd7VirMYcn8Yryhe5YAqX+dmewAnlGkPHMt11OrG/hihxNrexAme
-         4Yxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eN2ydQIW1tC0Y5Z0139/3auQ6iVhazzk9qa2dg7E35A=;
-        b=DuVIUq16ZUbTYGzooW4gjlPGpwmWjSa23NvrqPkfxRKO+5xHLqvSAWp72tfy334yXi
-         /nt/ggSger6Dysue8xbhYU0CSmxdoVQ/2ubSECm5PDYyRcrkCCI5fm2yb5KUOtl9Zv6W
-         d5T367xxEs0YGBVToafjyL0Kl5owDYs3pUAJ5NIPH5HlSw5crRw+AsrwrK29286u/KFD
-         hXYhPRigHfDr7jFh/EcsdqJ89JygCp1bj2qqsvHdhrFkDLqsFWKXjiHEnvD4w/YhpRhC
-         Vo47LmYrBC65QyTmELlcVVnGAbuY9Yz/zMS+w41GR6fe52v96UaVhOYacH8uhuZJw0Fd
-         PzoA==
-X-Gm-Message-State: APjAAAXsHQPTITZqJiXPLpPeRmhs/BFB/Cslw22iFWOCpae1d2tx0SwE
-        6V3R7Kr0C0Vki6qaupsaOlK3v2aYn1I=
-X-Google-Smtp-Source: APXvYqyNFBPp/s1UwzZ90jSmHOfBQDutaWu+vqexmr5bu/ksMtz7nUUVT9E1TsDpGP8PNhA0IjGiIw==
-X-Received: by 2002:a17:90a:2470:: with SMTP id h103mr8728391pje.12.1573582962818;
-        Tue, 12 Nov 2019 10:22:42 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e24sm3139075pjt.18.2019.11.12.10.22.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 10:22:42 -0800 (PST)
-Date:   Tue, 12 Nov 2019 10:22:39 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Fabien DESSENNE <fabien.dessenne@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH v2] remoteproc: stm32: fix probe error case
-Message-ID: <20191112182239.GA21530@yoga>
-References: <1570433991-16353-1-git-send-email-fabien.dessenne@st.com>
- <20191111220416.GB3108315@builder>
- <392808fa-1504-233f-234b-0cca21886c17@st.com>
+        Tue, 12 Nov 2019 13:22:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:38916 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726912AbfKLSWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:22:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE60E30E;
+        Tue, 12 Nov 2019 10:22:52 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A41563F534;
+        Tue, 12 Nov 2019 10:22:51 -0800 (PST)
+Date:   Tue, 12 Nov 2019 18:22:49 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        torvalds@linux-foundation.org, axboe@kernel.dk,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vincent Whitchurch <rabinv@axis.com>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>
+Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
+ hazard
+Message-ID: <20191112182249.GB22025@arrakis.emea.arm.com>
+References: <20191112130244.16630-1-vincent.whitchurch@axis.com>
+ <20191112160855.GA22025@arrakis.emea.arm.com>
+ <20191112180034.GB19889@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <392808fa-1504-233f-234b-0cca21886c17@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191112180034.GB19889@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12 Nov 06:09 PST 2019, Fabien DESSENNE wrote:
+On Tue, Nov 12, 2019 at 06:00:35PM +0000, Will Deacon wrote:
+> On Tue, Nov 12, 2019 at 04:08:57PM +0000, Catalin Marinas wrote:
+> > On Tue, Nov 12, 2019 at 02:02:44PM +0100, Vincent Whitchurch wrote:
+> > > On my dual-core ARM Cortex-A9, reading from squashfs (over
+> > > dm-verity/ubi/mtd) in a loop for hundreds of hours invariably results in
+> > > a read failure in squashfs_read_data().  The errors occur because the
+> > > buffer_uptodate() check fails after wait_on_buffer().  Further debugging
+> > > shows that the bh was in fact uptodate and that there is no actual I/O
+> > > error in the lower layers.
+> > > 
+> > > The problem is caused by the read-after-read hazards in the ARM
+> > > Cortex-A9 MPCore (erratum #761319, see [1]).  The code generated by the
+> > > compiler for the combination of the wait_on_buffer() and
+> > > buffer_uptodate() calls reads the flags value twice from memory (see the
+> > > excerpt of the assembly below).  The new value of the BH_Lock flag is
+> > > seen but the new value of BH_Uptodate is not even though both the bits
+> > > are read from the same memory location.
+> > > 
+> > >  27c:	9d08      	ldr	r5, [sp, #32]
+> > >  27e:	2400      	movs	r4, #0
+> > >  280:	e006      	b.n	290 <squashfs_read_data+0x290>
+> > >  282:	6803      	ldr	r3, [r0, #0]
+> > >  284:	07da      	lsls	r2, r3, #31
+> > >  286:	f140 810d 	bpl.w	4a4 <squashfs_read_data+0x4a4>
+> > >  28a:	3401      	adds	r4, #1
+> > >  28c:	42bc      	cmp	r4, r7
+> > >  28e:	da08      	bge.n	2a2 <squashfs_read_data+0x2a2>
+> > >  290:	f855 0f04 	ldr.w	r0, [r5, #4]!
+> > >  294:	6803      	ldr	r3, [r0, #0]
+> > >  296:	0759      	lsls	r1, r3, #29
+> > >  298:	d5f3      	bpl.n	282 <squashfs_read_data+0x282>
+> > >  29a:	f7ff fffe 	bl	0 <__wait_on_buffer>
+> > > 
+> > > Work around this problem by adding a DMB between the two reads of
+> > > bh->flags, as recommended in the ARM document.  With this barrier, no
+> > > failures have been seen in more than 5000 hours of the same test.
+> > > 
+> > > [1] http://infocenter.arm.com/help/topic/com.arm.doc.uan0004a/UAN0004A_a9_read_read.pdf
+> > 
+> > I thought we were going to fix the compiler. I found an old thread here:
+> > 
+> > https://gcc.gnu.org/ml/gcc-patches/2014-06/msg00714.html
+> > 
+> > Also cc'ing Richard Earnshaw as he may been involved in the gcc
+> > discussion at the time.
+> > 
+> > While you can add some barrier here, there may be other cases where this
+> > can go wrong.
+> 
+> Hmm, and afaict, even if the compiler was modified to emit LDREX instructions
+> for volatile loads, it wouldn't help in this case because test_bit() isn't
+> using READ_ONCE().
 
-> Hi Bjorn,
-> 
-> 
-> On 11/11/2019 11:04 PM, Bjorn Andersson wrote:
-> > On Mon 07 Oct 00:39 PDT 2019, Fabien Dessenne wrote:
-> >
-> >> If the rproc driver is probed before the mailbox driver and if the rproc
-> >> Device Tree node has some mailbox properties, the rproc driver probe
-> >> shall be deferred instead of being probed without mailbox support.
-> >>
-> >> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> >> ---
-> >> Changes since v1: test IS_ERR() before checking PTR_ERR()
-> >> ---
-> >>   drivers/remoteproc/stm32_rproc.c | 10 ++++++++--
-> >>   1 file changed, 8 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> >> index 2cf4b29..a507332 100644
-> >> --- a/drivers/remoteproc/stm32_rproc.c
-> >> +++ b/drivers/remoteproc/stm32_rproc.c
-> >> @@ -310,7 +310,7 @@ static const struct stm32_mbox stm32_rproc_mbox[MBOX_NB_MBX] = {
-> >>   	}
-> >>   };
-> >>   
-> >> -static void stm32_rproc_request_mbox(struct rproc *rproc)
-> >> +static int stm32_rproc_request_mbox(struct rproc *rproc)
-> >>   {
-> >>   	struct stm32_rproc *ddata = rproc->priv;
-> >>   	struct device *dev = &rproc->dev;
-> >> @@ -329,10 +329,14 @@ static void stm32_rproc_request_mbox(struct rproc *rproc)
-> >>   
-> >>   		ddata->mb[i].chan = mbox_request_channel_byname(cl, name);
-> >>   		if (IS_ERR(ddata->mb[i].chan)) {
-> >> +			if (PTR_ERR(ddata->mb[i].chan) == -EPROBE_DEFER)
-> >> +				return -EPROBE_DEFER;
-> > If for some reason you get EPROBE_DEFER when i > 0 you need to
-> > mbox_free_channel() channels [0..i) before returning.
-> 
-> The mailbox framework returns EPROBE_DIFFER to inform that the mailbox 
-> provider has not registered yet. I do not expected to have a success 
-> followed by a EPROBE_DEFER error.
-> 
-> But in the very special case where we use two different mailbox 
-> providers this may happen.
-> 
+I think changing volatile accesses to LDREX in gcc wasn't acceptable
+since they may read Device memory and not allowed on ARM.
 
-I agree, it's unlikely to ever cause any problems...
-
-> I will send an updated version, thanks for pointing this.
+> It's also slightly odd that the proposed patch makes the code look like:
 > 
+> 	for (i = 0; i < b; i++) {
+> 		if (buffer_locked(bh)) {
+> 			__wait_on_buffer(bh);
+> 			smp_rmb();
+> 		}
 
-I appreciate that.
+The proposed patch actually keeps smp_rmb() outside the 'if' block but
+your point below still stands.
 
-Thanks,
-Bjorn
-
-> BR
+> 		if (!buffer_uptodate(bh[i]))
+> 			goto block_release;
+> 	}
 > 
-> Fabien
+> whereas there are other potential RAR orderings between buffer_locked()
+> and __wait_on_buffer() and also probably between successive iterations
+> of the loop.
 > 
-> >
-> > Regards,
-> > Bjorn
-> >
-> >>   			dev_warn(dev, "cannot get %s mbox\n", name);
-> >>   			ddata->mb[i].chan = NULL;
-> >>   		}
-> >>   	}
-> >> +
-> >> +	return 0;
-> >>   }
-> >>   
-> >>   static int stm32_rproc_set_hold_boot(struct rproc *rproc, bool hold)
-> >> @@ -596,7 +600,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
-> >>   	if (ret)
-> >>   		goto free_rproc;
-> >>   
-> >> -	stm32_rproc_request_mbox(rproc);
-> >> +	ret = stm32_rproc_request_mbox(rproc);
-> >> +	if (ret)
-> >> +		goto free_rproc;
-> >>   
-> >>   	ret = rproc_add(rproc);
-> >>   	if (ret)
-> >> -- 
-> >> 2.7.4
-> >>
+> So, really, the only way I see to solve this is for us to use READ_ONCE
+> consistently for all relaxed atomic loads (KCSAN is starting to tread on
+> this), and then to patch READ_ONCE to emit a DMB at runtime for arch/arm/
+> (maybe a static key would work if you can avoid the recursion).
+
+OK, so this includes changing test_bit() to perform a READ_ONCE.
+
+-- 
+Catalin
