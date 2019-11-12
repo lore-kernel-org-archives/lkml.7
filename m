@@ -2,167 +2,150 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7CEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B09EC17447
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9BD206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3188206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:51:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="VQdtk6+s"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dz+s05Yv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKLAtH (ORCPT
+        id S1727036AbfKLAvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:49:07 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45982 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfKLAtH (ORCPT
+        Mon, 11 Nov 2019 19:51:39 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39369 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfKLAvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:49:07 -0500
-Received: by mail-pf1-f194.google.com with SMTP id z4so11985221pfn.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 16:49:06 -0800 (PST)
+        Mon, 11 Nov 2019 19:51:39 -0500
+Received: by mail-ot1-f68.google.com with SMTP id e17so12887454otk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 16:51:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SHfnAOauvxH+QL+M+wn9JpGV7bZ6YLTyV5/QqLFO508=;
-        b=VQdtk6+sVfprM7qZTXqIDkWhg0OjK2FDZJUwAwjlfjciFxsVW+EzV+nHkeNI5IboAn
-         +7tK8kfxQrDg62LsReAYo1ywxA9lg8h7VJ2i9mQhAIqVBYC+0oaWQSpAyrOGdgs3kHVh
-         d9EyKMqI8wbgrgWR33rBI3gRvJLFYBOAwbkVyHVEBZaT0hn5i8RMxAdujwy9ZcvG/btj
-         DEMS11YGsJpX0kbqGW7XXU97zYz6mSATFbrKqVYK0mzeLnuKhygSLZVwurS7uUjHl2p/
-         BwFp7y1o70WNvp8LlfOb7K2yuD05pKgpvpRXjsA5RdGnUyhaX+PEFMjQup4tfkeAgGlK
-         +nsA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j0wcI8/vYDeQzfI5+yZyNOVKSOKExVS3Qh36JWMEILM=;
+        b=dz+s05YvVJDQXAkmQIBZwvJSZcXxXf9KXUeoV5Wre4jNuBNa67LpbcLslHayjVeE4J
+         SPYc1PicD54ghzvc0FzfJR10FNbKY5lh9fvI1iMKfvCv+tjfuT0MJZ1B7l+4LlNpow5D
+         Lo8r79PpZQ4VKtmxItOAHWDihM0LOiWM80102veJfEN333BeNYqDsmLP7mv7ZId0TTlg
+         f4HwagX++WsSCpsYdoKtMgI4mJFh74vW+mGZRiJvjCkbxG3sSe9Snob9WM9M30CHkuvA
+         yN0Cn1ayVBR8Gjv6U2p4pWEI7NwbfV4UNAvRI6p1K/kTexNSE8EeX9Gn5Nt3Q/F7CztS
+         3qtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SHfnAOauvxH+QL+M+wn9JpGV7bZ6YLTyV5/QqLFO508=;
-        b=p7YGNIyBFhu8bNISXg1jhjueCgjGv18pqF0k03asZuu/O44RHzi/Fjxn0gfcSN+uYS
-         RmVRDMF6OjqC75YAfRW8stI+zFDpjDtEFRNF9theesdCL8h4XaA8Xq8wZg57pTabQAzP
-         bM9UrJhcEhUAELYSpMFscLiuWjSSzV7xTvJd0s54rLeLi/TI7ZpFh8ivqXbwBDay3L5T
-         ZCHTENijWIs88+5sK4s+VxWSzlUPepsIiqwfILgwNv7NYrljZ4op63MMB2kjzCIyCdDv
-         wMFRfImcEyBNi+7rOynJLyAEGioE31iz9OOpXA5VlxjNRebcmkFq4MPElB7G7JDZSjJk
-         T1Sw==
-X-Gm-Message-State: APjAAAVDIL1vrkb6Ya5Y6oG64UJVQVKi8ZSn5iqHZfM/JQ+/mZQwE2Bf
-        KzQte3SOSetzmgBE9to1fMTs8g==
-X-Google-Smtp-Source: APXvYqz5TX5mwtEo3ZJSHgMs9ccFOENBQqOOu8UqyWeIhtwLLZ/ZiqWEfYRhTOQY8AW5U9Fi7nROJA==
-X-Received: by 2002:a62:1c91:: with SMTP id c139mr23723641pfc.175.1573519746088;
-        Mon, 11 Nov 2019 16:49:06 -0800 (PST)
-Received: from localhost ([2401:fa00:d:2:4dd6:fffa:d6aa:9572])
-        by smtp.gmail.com with ESMTPSA id q41sm596688pja.20.2019.11.11.16.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 16:49:05 -0800 (PST)
-Date:   Tue, 12 Nov 2019 09:49:02 +0900
-From:   Sandeep Patil <sspatil@android.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>, Yue Hu <huyue2@yulong.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pratik Patel <pratikp@codeaurora.org>
-Subject: Re: [RFC][PATCH 0/2] Allow DMA BUF heaps to be loaded as modules
-Message-ID: <20191111062807.GA17144@google.com>
-References: <20191025234834.28214-1-john.stultz@linaro.org>
- <20191104095823.GD10326@phenom.ffwll.local>
- <CALAqxLW_CoAn-KXki0dGKK+vo-R4CTnjt1Azrw=mRdL8BUFGWw@mail.gmail.com>
- <20191105094259.GX10326@phenom.ffwll.local>
- <CALAqxLWvNOL=Exybb25GgYQujyJcPNTsFuaBnjLQPKTkVAi6Xw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j0wcI8/vYDeQzfI5+yZyNOVKSOKExVS3Qh36JWMEILM=;
+        b=H22eUis3Dzvi6fGYBj5db1ez4HdFYDmlTpP7bF7kWhsak5RHrr6hfR//tZ8Ei9vlPW
+         bydVxAGCE3camVTgJ71jbkoH7HtlNQhjjVsXz7VWpk6cuRlgGUYLxCox8nu07MNhMKeG
+         Ho1WopBtb5bRJoIuazelPK0P648QRuijJ6Cxrg7607nXueS0ODdY2zYQd9Bqmg62/1/Z
+         g0f1QK7r7GPj2CzekRiLN920Ov7yod0o2/NNefpyGx0h9Wxa2p4kJdyop04LurX1c3Jr
+         +1dQqc/9OxkZcsdmM/fn7goHYJqttYvpKaLj8EKlqb23VmRPYraSSXBCY9RJevrDeLHS
+         ALHQ==
+X-Gm-Message-State: APjAAAW/1TV7UB8hRN0ht956/51QMqJqDPGeo8M66ulVW+3XkmhrV90I
+        sy1p4552JOMkEC2g6YjSbSp0kYakQhI3kKOz26YRHA==
+X-Google-Smtp-Source: APXvYqySz9nDf9cx4nrhgQe0VFFAM8g8LJFknhEecjwp05UNtr65ee3wabSo4wZkkXZYIwLZPR6IUZu+MyOm1VgvYjw=
+X-Received: by 2002:a05:6830:1af7:: with SMTP id c23mr22149205otd.247.1573519898074;
+ Mon, 11 Nov 2019 16:51:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLWvNOL=Exybb25GgYQujyJcPNTsFuaBnjLQPKTkVAi6Xw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+ <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
+ <20191106233913.GC21617@linux.intel.com> <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
+ <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
+ <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com> <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
+ <20191107155846.GA7760@linux.intel.com> <20191109014323.GB8254@linux.intel.com>
+ <CAPcyv4hAY_OfExNP+_067Syh9kZAapppNwKZemVROfxgbDLLYQ@mail.gmail.com> <20191111182750.GE11805@linux.intel.com>
+In-Reply-To: <20191111182750.GE11805@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 11 Nov 2019 16:51:26 -0800
+Message-ID: <CAPcyv4hErx-Hd5q+3+W6VUSWDpEuOfipMsWAL+nnQtZvYAf3bg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 09:41:44AM -0800, John Stultz wrote:
-> On Tue, Nov 5, 2019 at 1:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+On Mon, Nov 11, 2019 at 10:27 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Fri, Nov 08, 2019 at 06:00:46PM -0800, Dan Williams wrote:
+> > On Fri, Nov 8, 2019 at 5:43 PM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > > On Thu, Nov 07, 2019 at 07:58:46AM -0800, Sean Christopherson wrote:
+> > > > Insertion into KVM's secondary MMU is mutually exclusive with an invalidate
+> > > > from the mmu_notifier.  KVM holds a reference to the to-be-inserted page
+> > > > until the page has been inserted, which ensures that the page is pinned and
+> > > > thus won't be invalidated until after the page is inserted.  This prevents
+> > > > an invalidate from racing with insertion.  Dropping the reference
+> > > > immediately after gup() would allow the invalidate to run prior to the page
+> > > > being inserted, and so KVM would map the stale PFN into the guest's page
+> > > > tables after it was invalidated in the host.
+> > >
+> > > My previous analysis is wrong, although I did sort of come to the right
+> > > conclusion.
+> > >
+> > > The part that's wrong is that KVM does not rely on pinning a page/pfn when
+> > > installing the pfn into its secondary MMU (guest page tables).  Instead,
+> > > KVM keeps track of mmu_notifier invalidate requests and cancels insertion
+> > > if an invalidate occured at any point between the start of hva_to_pfn(),
+> > > i.e. the get_user_pages() call, and acquiring KVM's mmu lock (which must
+> > > also be grabbed by mmu_notifier invalidate).  So for any pfn, regardless
+> > > of whether it's backed by a struct page, KVM inserts a pfn if and only if
+> > > it is guaranteed to get an mmu_notifier invalidate for the pfn (and isn't
+> > > already invalidated).
+> > >
+> > > In the page fault flow, KVM doesn't care whether or not the pfn remains
+> > > valid in the associated vma.  In other words, Dan's idea of immediately
+> > > doing put_page() on ZONE_DEVICE pages would work for *page faults*...
+> > >
+> > > ...but not for all the other flows where KVM uses gfn_to_pfn(), and thus
+> > > get_user_pages().  When accessing entire pages of guest memory, e.g. for
+> > > nested virtualization, KVM gets the page associated with a gfn, maps it
+> > > with kmap() to get a kernel address and keeps the mapping/page until it's
+> > > done reading/writing the page.  Immediately putting ZONE_DEVICE pages
+> > > would result in use-after-free scenarios for these flows.
 > >
-> > On Mon, Nov 04, 2019 at 10:57:44AM -0800, John Stultz wrote:
-> > > On Mon, Nov 4, 2019 at 1:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > > On Fri, Oct 25, 2019 at 11:48:32PM +0000, John Stultz wrote:
-> > > So even if the heaps are configured via DT (which at the moment there
-> > > is no such binding, so that's not really a valid method yet), there's
-> > > still the question of if the heap is necessary/makes sense on the
-> > > device. And the DT would only control the availability of the heap
-> > > interface, not if the heap driver is loaded or not.
-> >
-> > Hm I thought the cma regions are configured in DT? How does that work if
-> > it's not using DT?
-> 
-> So yea, CMA regions are either configured by DT or setup at build time
-> (I think there's a cmdline option to set it up as well).
-> 
-> But the CMA regions and the dmabuf cma heap driver are separate
-> things. The latter uses the former.
-> 
-> > > On the HiKey/HiKey960 boards, we have to allocate contiguous buffers
-> > > for the display framebuffer. So gralloc uses ION to allocate from the
-> > > CMA heap. However on the db845c, it has no such restrictions, so the
-> > > CMA heap isn't necessary.
-> >
-> > Why do you have a CMA region for the 2nd board if you don't need it?
-> > _That_ sounds like some serious memory waster, not a few lines of code
-> > loaded for nothing :-)
-> 
-> ??? That's not what I said above.  If the db845c doesn't need CMA it
-> won't have a CMA region.
-> 
-> The issue at hand is that we may want to avoid loading the dmabuf CMA
-> heap driver on a board that doesn't use CMA.
-> 
-> 
-> > > With Android's GKI effort, there needs to be one kernel that works on
-> > > all the devices, and they are using modules to try to minimize the
-> > > amount of memory spent on functionality that isn't universally needed.
-> > > So on devices that don't need the CMA heap, they'd probably prefer not
-> > > to load the CMA dmabuf heap driver, so it would be best if it could be
-> > > built as a module.  If we want to build the CMA heap as a module, the
-> > > symbols it uses need to be exported.
-> >
-> > Yeah, I guess I'm disagreeing on whether dma-buf heaps are core or not.
-> 
-> That's fine to dispute. I'm not really in a place to assert one way or
-> not, but the Android folks have made their ION system and CMA heaps
-> loadable via a module, so it would seem like having the dmabuf system
-> and CMA heaps be modular would be useful to properly replace that
-> usage.
-> 
-> For instance, the system heap as a module probably doesn't make much
-> sense, as most boards that want to use the dmabuf heaps interface are
-> likely to use that as well.  CMA is more optional as not all boards
-> will use that one, so it might make sense to avoid loading it.
-> 
-> Sandeep: Can you chime in here as to how critical having the system
-> and cma heaps be modules are?
+> > Thanks for this clarification. I do want to put out though that
+> > ZONE_DEVICE pages go idle, they don't get freed. As long as KVM drops
+> > its usage on invalidate it's perfectly fine for KVM to operate on idle
+> > ZONE_DEVICE pages. The common case is that ZONE_DEVICE pages are
+> > accessed and mapped while idle. Only direct-I/O temporarily marks them
+> > busy to synchronize with invalidate. KVM obviates that need by
+> > coordinating with mmu-notifiers instead.
+>
+> Only the KVM MMU, e.g. page fault handler, coordinates via mmu_notifier,
+> the kvm_vcpu_map() case would continue using pages across an invalidate.
+>
+> Or did I misunderstand?
 
-With ion, we are making sure there are *standard* heaps that Android should
-be able to rely on to exist in all kernels [1]. That list is based on what
-default heaps ion had out-of-tree.
+Not sure *I* understand KVM's implementation.
 
-As of today, even from those that ion had, Android vendor independent code only
-relies on 'system heap' and 'cma/dma heaps' so, can safely ignore the carveout
-and other ion heaps.
+[ Note, I already acked the solution since it fixes the problem at
+hand (thanks btw!), so feel free to drop this discussion if you don't
+have time to hit me with the clue bat ]
 
-system heap is really the one that is realistically 'hardware independent',
-so that can be in kernel. The cma heaps and their existence is optional, so
-it will be nice to be able to load them as modules.
+An elevated page reference count for file mapped pages causes the
+filesystem (for a dax mode file) to wait for that reference count to
+drop to 1 before allowing the truncate to proceed. For a page cache
+backed file mapping (non-dax) the reference count is not considered in
+the truncate path. It does prevent the page from getting freed in the
+page cache case, but the association to the file is lost for truncate.
 
-
-<snip>
-
-- ssp
-
-1. https://android.googlesource.com/platform/system/core/+/refs/heads/master/libion/kernel-headers/linux/ion_4.19.h#28
+As long as any memory the guest expects to be persistent is backed by
+mmu-notifier coordination we're all good, otherwise an elevated
+reference count does not coordinate with truncate in a reliable way.
