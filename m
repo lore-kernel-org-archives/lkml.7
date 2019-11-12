@@ -2,105 +2,131 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53668C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC9CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CD621925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576BF21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:55:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gjNesBSf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jzJxHJOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKLUwu (ORCPT
+        id S1726995AbfKLUzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:52:50 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33885 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLUwu (ORCPT
+        Tue, 12 Nov 2019 15:55:14 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45837 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfKLUzN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:52:50 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l202so16169352oig.1;
-        Tue, 12 Nov 2019 12:52:49 -0800 (PST)
+        Tue, 12 Nov 2019 15:55:13 -0500
+Received: by mail-pf1-f196.google.com with SMTP id z4so14166003pfn.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:55:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V2BRORY0hBHLizKfzIfi2QGRpqicf8QMY3QuvWoI+ds=;
-        b=gjNesBSfjAvc4kesedeMADClQCu4hYTWbOTzUGLfZvlLFHPbuM4uJjGELh0sbQgDWN
-         8lrWkP3Yvl8mvcsN4mKb4KCZ3qe4W6A0A7z9ixxdQE383EV8AEXqsi6eCrI5JEytcBvH
-         vHA+l6bcOI//BOa+LE7IUWgnSHG9QZwKwI/3YrPNpoUOah6UEQSffUi+8IzTzuDDYU92
-         LkFRFw9yqI50wotbSj3BbpSdI2AI/irw9T4DcvU56MUdwu0JW0gIfdH+y+PHsEDXvZx9
-         J0EYZEmpPKTRcSTm0s1R3uKbwhfWEINfK24+MPxL/QAyKUNs+iDoATkUt1gjVy3EDP13
-         iQsg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=p3sGAQxZSRJH4UZHNpIdLrEGYPs7j+wXkkL7B23DozY=;
+        b=jzJxHJOhBgrxXGo+3hwTEULMtqhW32uUMjkXF6xooOB4YLF0fDp9kjF2ZcEXOqjPmZ
+         wb3eB6O717UcTt+tyAbO8B80zA3u9jbuMXSpdMqJOUrOIw/6tlJouhIZBM+a5PnCN1vj
+         lat++UKcoOXZLI/EBlS4RFvn1FgV/ybJGuQ4A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V2BRORY0hBHLizKfzIfi2QGRpqicf8QMY3QuvWoI+ds=;
-        b=VdynA9QOd+eUviW+Zx4R4FPQjefDRyNaC9dnGJDi3o9J8JF0GvCMI9ZNYKHmOHF0oV
-         3iwyqT+mTn3SXPIPysVfmwyTAKcOw691rQIc2h1ELFtdtnr1yV5dNMk0xyZ2SQiAQCXL
-         euentSTjy18m7KwxtkQ9Hw5AbSRzkZCz7QEsz8sznqQ7RRAEcy9PCDMUckWeLBelD+ya
-         MRSRW5XmPaIdH8hoShdNQ/GVZfaN5twLHBG8qf/KZgH+RHnXohRpPC2kcZbUxVeeGIXI
-         0TVarFWBQkHzQULGiN7zXdUBp7UDUK1PsqaFUTe6/BhMTsWrTKGqrmSbZJOpR9wneWhp
-         g6CQ==
-X-Gm-Message-State: APjAAAXrpdqAAHub/XMXnZlUbfzNe96ql3UtK0eWNa/50lrjkwBiCw/+
-        y1puLZ/77Ra47VdFIMiQm0OFH5RvXqhGg+CLR2o=
-X-Google-Smtp-Source: APXvYqxRmF9qWBGxWM/Cn8ef+fuoL+vr7DkcDUoMRHpMSQl4VaTZvY3t+hLVbva6IXpLe8AdpMoa1ZtmkoCdXt1j/qw=
-X-Received: by 2002:a05:6808:20f:: with SMTP id l15mr852673oie.39.1573591968888;
- Tue, 12 Nov 2019 12:52:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p3sGAQxZSRJH4UZHNpIdLrEGYPs7j+wXkkL7B23DozY=;
+        b=V0hMz+tyXV7e5yYBNjtkhLYmZBg1QtgWob3nKo89Ngmws3xgvv3tYwhVu39BLGjje9
+         6oFiQSCy67K+RrHgME5PmtQK40kGJkbA0HXcP0TKgMzPbby0C91XzkVkcHYvPKOcmy+1
+         HnBuGmQiRqz/C1HdqSzF0HMm1SHDZYFteC5Y21RZNINuljeGaCUdOyfN+nAe5j02rq7n
+         8EPoqcOiVUAWqkiMIoOxQfSuRVrarrl2Fe97Ul0bQqxyS/J9qczX/tUSYJlycZAf+aDY
+         kWjrxYO8YdfzIrXfOsQCKQ0opTYDqdehs/I4Jx/UfPWVYTUMjhAR2K2AYiWCh77QVOCm
+         UiFQ==
+X-Gm-Message-State: APjAAAVyHdMMlN0+njYnB8G7Oyk6mAO8/VFEhbgZLJZNYCOvB/NWAgkB
+        8RrR01YCLJknllMIKspCTaYplA==
+X-Google-Smtp-Source: APXvYqwhpXomPvDY55lP5tiV27rDluqLmojMV7DK9uMTENiwD2XDmRYC37Ogc+dw1yE3QtfbhDL3ZQ==
+X-Received: by 2002:a17:90a:cd03:: with SMTP id d3mr9056375pju.137.1573592111764;
+        Tue, 12 Nov 2019 12:55:11 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l74sm11993pje.29.2019.11.12.12.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 12:55:10 -0800 (PST)
+Date:   Tue, 12 Nov 2019 12:55:09 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/29] vmlinux.lds.h: Replace RODATA with RO_DATA
+Message-ID: <201911121252.25720DC6@keescook>
+References: <20191011000609.29728-1-keescook@chromium.org>
+ <20191011000609.29728-12-keescook@chromium.org>
+ <CAMuHMdXfPyti1wFBb0hhf3CeDSQ=zVv7cV-taeYCmDswMQkXPQ@mail.gmail.com>
+ <201911110922.17A2112B0@keescook>
+ <CAMuHMdUJ8QPvqf51nVmOg1Zm20SNT7pXR72z=qmco=ecwawZ7A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191027162328.1177402-1-martin.blumenstingl@googlemail.com>
- <20191027162328.1177402-3-martin.blumenstingl@googlemail.com>
- <20191108221652.32FA2206C3@mail.kernel.org> <1jd0dxf1uz.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jd0dxf1uz.fsf@starbuckisacylon.baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 12 Nov 2019 21:52:38 +0100
-Message-ID: <CAFBinCBnUs0JdHT3TS+1++NMHtgbMvoT7RYRCnB0eNgs4L-2CA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] clk: meson: add a driver for the Meson8/8b/8m2 DDR
- clock controller
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUJ8QPvqf51nVmOg1Zm20SNT7pXR72z=qmco=ecwawZ7A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
-
-On Tue, Nov 12, 2019 at 6:20 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
->
-> >> +static const struct of_device_id meson8_ddr_clkc_match_table[] = {
-> >> +       { .compatible = "amlogic,meson8-ddr-clkc" },
-> >> +       { .compatible = "amlogic,meson8b-ddr-clkc" },
-> >> +       { /* sentinel */ },
+On Mon, Nov 11, 2019 at 07:08:51PM +0100, Geert Uytterhoeven wrote:
+> Hi Kees,
+> 
+> On Mon, Nov 11, 2019 at 6:23 PM Kees Cook <keescook@chromium.org> wrote:
+> > On Mon, Nov 11, 2019 at 05:58:06PM +0100, Geert Uytterhoeven wrote:
+> > > On Fri, Oct 11, 2019 at 2:07 AM Kees Cook <keescook@chromium.org> wrote:
+> > > > There's no reason to keep the RODATA macro: replace the callers with
+> > > > the expected RO_DATA macro.
+> > > >
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > >  arch/alpha/kernel/vmlinux.lds.S      | 2 +-
+> > > >  arch/ia64/kernel/vmlinux.lds.S       | 2 +-
+> > > >  arch/microblaze/kernel/vmlinux.lds.S | 2 +-
+> > > >  arch/mips/kernel/vmlinux.lds.S       | 2 +-
+> > > >  arch/um/include/asm/common.lds.S     | 2 +-
+> > > >  arch/xtensa/kernel/vmlinux.lds.S     | 2 +-
+> > > >  include/asm-generic/vmlinux.lds.h    | 4 +---
+> > > >  7 files changed, 7 insertions(+), 9 deletions(-)
+> > >
+> > > Somehow you missed:
+> > >
+> > >     arch/m68k/kernel/vmlinux-std.lds:  RODATA
+> > >     arch/m68k/kernel/vmlinux-sun3.lds:      RODATA
 > >
-> > Super nitpick, drop the comma above so that nothing can follow this.
->
-> I don't think it is worth reposting the series Martin.
-> If it is ok with you, I'll just apply it with Stephen comments
-I am more than happy with this.
-just to confirm, you would address all three comments from Stephen:
-- including clk-provider.h
-- use devm_platform_ioremap_resource
-- trailing comma after the sentinel
+> > Argh. I've sent a patch; sorry and thanks for catching this. For my own
+> > cross-build testing, which defconfig targets will hit these two linker
+> > scripts?
+> 
+> vmlinux-sun3.lds: sun3_defconfig
+> vmlinux-std.lds: All other classic 680x0 targets with an MMU, e.g. plain
+>                  defconfig aka multi_defconfig.
 
-> In the future, I would prefer if you could separate the series for clock
-> (intended for Neil and myself) and the DT one (intended for Kevin)
-sorry, we discussed this previously but I completely forgot about it
-when I re-sent this series
-I'll be more careful next time
+Excellent, thank you; I've updated my multi-arch build list. :)
 
-
-
-Martin
+-- 
+Kees Cook
