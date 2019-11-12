@@ -2,123 +2,117 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D7FC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C3CC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CF921A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5EB21A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cHbZNThA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HT2E7HWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfKLKTx (ORCPT
+        id S1727136AbfKLKUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:19:53 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22569 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725874AbfKLKTw (ORCPT
+        Tue, 12 Nov 2019 05:20:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43273 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfKLKUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:19:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573553991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=7i9+SK3hpwTsCv7dTE1Okd0YAcSg1MeSopDF9z7WqQ4=;
-        b=cHbZNThAL9p+C0w7EKjJlDaChoJSfIUdBDdrqL1kq+sMq3ffy4GD/lHrA2j39vd63zJmoo
-        5i33A3CZNh6J48G6F59xf8YWDAnGdzYXZrgMrJ/hrfcHlf+qL+SxMbyLjmvcXyH8RlRBTp
-        hIiPOSdfpWNsSgGAUcMTQQSK0JHWF1M=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-mjBWfmhSNNS8aGiqHkAVtQ-1; Tue, 12 Nov 2019 05:19:46 -0500
-Received: by mail-wr1-f70.google.com with SMTP id e10so9137871wrt.16
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 02:19:46 -0800 (PST)
+        Tue, 12 Nov 2019 05:20:17 -0500
+Received: by mail-ot1-f65.google.com with SMTP id l14so13823460oti.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 02:20:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Rjd1FS8nNm6yRr4WVn+HN8ZG0ZScPCeZT4lpNVe4Zbk=;
+        b=HT2E7HWmfg4NPppXd4Z/N3e+10XqEJpkjLfqXexTfchGFx59EKIlflcB29Pvff1Ii+
+         Pee1vLZ2acJeOayIkvQe1hyi56T6jI6nITcT9E2DBBnQq5J17t3acaq+8cyxRmA4k+fm
+         WA46zucZtzf5PeihhI8Cp2UsziPgYvcqyd1YpZHDAe/RpWNEiIaddhmbc6XHTsTLMwGK
+         hrIRhCGCg12VYvW1IsWdRWeFqQVf/n4WkoCKnbQ8LcdTIxaXkMjkxWrjnviserTeAkL9
+         DarQ/kew1zKc/ZWhn4Ge8QJzrHzk5AEvI8rGEV4/4PKULnnxZybyYBkdT3ayUrli5Mhe
+         b5sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YFkdWT01jyLgEtqFcC61NZ98AMX6STuxDrkyGOC4EK0=;
-        b=KiN5A6T1AHuH33Wq/tueMvts8vaWXz6sYUXbAzGBmyTkywDFhnJhiegEBTU/kj/l0i
-         EKg/tG0N/bWr0uC+iSlYf6nu2jdQsTi7BvYMovzqFog94IKDqJ3trGclNxBiYoLCRxHr
-         V20e1zZ5AKycA659JQDf9s59XDTAf8XDEUEzHskKOLjLqjJmWugqw7CDPXwvFuFDyjFv
-         CG1z5NPIZ52Yunpugb4NWB0TK3goys4mAbnU2bk+3cilr3hmgS729nKIwDGH+4JQiQpl
-         Qo7lD4NpCNZwmIMUPyncX/+Oyx3ZXJQoZFu7oxmUpYHU6n7Qq1ApGFBdiLMELdtckT7t
-         quqg==
-X-Gm-Message-State: APjAAAVHMf8RJ0Ggu0EszJKb3+zMO0ieJatwSJSJOIYVox71FDc7OY0x
-        MErsgiqp1BgJ0Kv+7VrDsBu/bEBKiD26xLxPqN2A334uTWwXHwYpMxioiWSxbg43tnpj5cIgPDM
-        32JzkL/0HiCBckj1WJ+Uf1S6H
-X-Received: by 2002:a7b:c38c:: with SMTP id s12mr3334689wmj.84.1573553985546;
-        Tue, 12 Nov 2019 02:19:45 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyPXIlM2Wpb56oH3XhullKKBX2spmK2zk1Sp2fiUJ3jnWYwlEaUB3yJIwf8L4roR2PgBk5NiQ==
-X-Received: by 2002:a7b:c38c:: with SMTP id s12mr3334655wmj.84.1573553985266;
-        Tue, 12 Nov 2019 02:19:45 -0800 (PST)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id f67sm3314680wme.16.2019.11.12.02.19.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 02:19:44 -0800 (PST)
-Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
- reserved
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>
-References: <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
- <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
- <20191106233913.GC21617@linux.intel.com>
- <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
- <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
- <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
- <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
- <20191107155846.GA7760@linux.intel.com>
- <20191109014323.GB8254@linux.intel.com>
- <CAPcyv4hAY_OfExNP+_067Syh9kZAapppNwKZemVROfxgbDLLYQ@mail.gmail.com>
- <20191111182750.GE11805@linux.intel.com>
- <CAPcyv4hErx-Hd5q+3+W6VUSWDpEuOfipMsWAL+nnQtZvYAf3bg@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <e6637be8-7890-579b-8131-6fdbbd791fa0@redhat.com>
-Date:   Tue, 12 Nov 2019 11:19:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Rjd1FS8nNm6yRr4WVn+HN8ZG0ZScPCeZT4lpNVe4Zbk=;
+        b=ipDhKzOvYpp2u11H2jYhVe9HY6CUbcaywBBoc9I2NGSkDI6vTwF5Qa99Oh+52sERUt
+         F9r8LLqRT5SQB8wlEYfwyQ4JoNcxy65oitDZdLIYOWjSMhGovwdueUhDZOM5oaibac+c
+         dqk0B0jKLSfcA/yH3Eg+MTg8TXWjaLPp7QxSaBWnSQTeLONuiSFwfxAdlw/CUD5at5J6
+         TN7s3WRc0AJDw+1HyLUBGkEQgqjPlE2bAcESBxrvqawXtkXnl8kMYCVEvCduhTKsD/S9
+         AUt6TiURTqBAh129p89mIYCry6BAMfpn91xFFo1zkTvCzu/K1FWMn+dZhRiH7+S663gp
+         /Uww==
+X-Gm-Message-State: APjAAAWEMb0FoXE7m831/ZeFiRX4V0EbjuQiPhWqYHmAeceZTekA8llt
+        m4ydjw5Q+Js4cQgt/oUgxiOLLzzB2tHmhpziMaA4Ww==
+X-Google-Smtp-Source: APXvYqyJYU1a1wAD6RMTrT6g96ZtxZ7A8y0Kd61mPfdbLz15t3BIBUD3Ta5YCEivW+oP4c/yRxIQN1WJuUKzonHyOUI=
+X-Received: by 2002:a05:6830:210e:: with SMTP id i14mr24546593otc.250.1573554016083;
+ Tue, 12 Nov 2019 02:20:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4hErx-Hd5q+3+W6VUSWDpEuOfipMsWAL+nnQtZvYAf3bg@mail.gmail.com>
-Content-Language: en-US
-X-MC-Unique: mjBWfmhSNNS8aGiqHkAVtQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
+References: <20191108160747.3274377-1-thierry.reding@gmail.com> <20191108160747.3274377-2-thierry.reding@gmail.com>
+In-Reply-To: <20191108160747.3274377-2-thierry.reding@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 12 Nov 2019 11:20:05 +0100
+Message-ID: <CAMpxmJUdqWzMJo0LMXudyzyoyP9TZyAA1t50GxG0DCL3aTBASw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: bd70528: Use correct unit for debounce times
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@denx.de>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 01:51, Dan Williams wrote:
-> An elevated page reference count for file mapped pages causes the
-> filesystem (for a dax mode file) to wait for that reference count to
-> drop to 1 before allowing the truncate to proceed. For a page cache
-> backed file mapping (non-dax) the reference count is not considered in
-> the truncate path. It does prevent the page from getting freed in the
-> page cache case, but the association to the file is lost for truncate.
+pt., 8 lis 2019 o 17:07 Thierry Reding <thierry.reding@gmail.com> napisa=C5=
+=82(a):
+>
+> From: Thierry Reding <treding@nvidia.com>
+>
+> The debounce time passed to gpiod_set_debounce() is specifid in
+> microseconds, so make sure to use the correct unit when computing the
+> register values, which denote delays in milliseconds.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  drivers/gpio/gpio-bd70528.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+> index d934d23b77c6..d29cbd3c9e53 100644
+> --- a/drivers/gpio/gpio-bd70528.c
+> +++ b/drivers/gpio/gpio-bd70528.c
+> @@ -25,13 +25,13 @@ static int bd70528_set_debounce(struct bd70528_gpio *=
+bdgpio,
+>         case 0:
+>                 val =3D BD70528_DEBOUNCE_DISABLE;
+>                 break;
+> -       case 1 ... 15:
+> +       case 1 ... 15000:
+>                 val =3D BD70528_DEBOUNCE_15MS;
+>                 break;
+> -       case 16 ... 30:
+> +       case 15001 ... 30000:
+>                 val =3D BD70528_DEBOUNCE_30MS;
+>                 break;
+> -       case 31 ... 50:
+> +       case 30001 ... 50000:
+>                 val =3D BD70528_DEBOUNCE_50MS;
+>                 break;
+>         default:
+> --
+> 2.23.0
+>
 
-KVM support for file-backed guest memory is limited.  It is not
-completely broken, in fact cases such as hugetlbfs are in use routinely,
-but corner cases such as truncate aren't covered well indeed.
+This fixes commit 18bc64b3aebf ("gpio: Initial support for ROHM
+bd70528 GPIO block") present in v5.3 so applied to fixes and marked
+for stable.
 
-Paolo
-
-> As long as any memory the guest expects to be persistent is backed by
-> mmu-notifier coordination we're all good, otherwise an elevated
-> reference count does not coordinate with truncate in a reliable way.
->=20
-
+Bart
