@@ -2,419 +2,279 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4300C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91593C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBC621A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="OCF+vt9m"
+	by mail.kernel.org (Postfix) with ESMTP id 635EE222CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKLLcQ (ORCPT
+        id S1726986AbfKLLdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:32:16 -0500
-Received: from mail-eopbgr730086.outbound.protection.outlook.com ([40.107.73.86]:54520
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfKLLcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:32:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mmgzp1Quri0nawSZrWqp08KpEdnXgraR7uOOV24Y2VvEEtI8lCNIkGdH9nU9NlzgcazzF+3JL4/ivcb2RQL8HxfmEKygn4/LNa5yIJ1Hlsi4GMknq4ejgsPzZSFA0jRGMzM+eS32OtsofMUScS9eYIoutaeY+obgzBMqXJ2PpAqV9fLFbArVEoOEONBXZshVbpNwZ8vzUmqRsC9yXBLYC44TcsbJ2Pkdw8dkP1bySdrOlOMADABhs/2LoYKb3dSpCl6yQTd3Hm5BDT6dWprY5QEGEb50wS6P5hDFGnA98d2EC94yalDUV6jJ27GobETYdkbnt7b25hYb5D4+NMfltQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1DHiGFm7/eoMTe5ZI+bYyT2KC8RTEraKULn32lKtNtE=;
- b=ZsviFpSkGBRUzou2DzEadTnB/u20ZTIG/ZMAfMoWQWQHF9tLso+9kaeVbjuZKbRTKdq3krlexNBwa5L/uCvsfFzRgVkMoZJ4fCTn3nNcqe/SB3LkuwhR3XhY/YzSTpZHt0xB02+WRCXsIdf0X4Lj6CFIKL9Ert1d4UgLkjmv6hNHa+JNHoWp3uBtNDiSE2mnY+oChLzOcWw1vuDEtBkvrj9XtSQTIcmOjLnqyHQVJrYgJBOqk4ECCxd8AdyWhB49gXLPxOJlB+moG2u8ygegwoInE8o3LRQoiRcXRvVpMO6KzKOm1rrhZjAS1JlXG6nxccxKFJj0Wz/r3LyzzXPXNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1DHiGFm7/eoMTe5ZI+bYyT2KC8RTEraKULn32lKtNtE=;
- b=OCF+vt9mf/yVlZB3qaKxM6uHmN1NXyaFN3LnNNjDyMChWZY5aFELcDF6RLSNqcVpQhatynN6nLMabOt/WUyQRgH0c/Qe+qHS4VTueA2/qvcvTb4H0gBtUbFvogNQtA6tzmQYrdo7Vwg8AHevM698iM4hZNJCwJsPrF1QIy6xrq0=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4032.namprd11.prod.outlook.com (20.179.149.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.24; Tue, 12 Nov 2019 11:32:07 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::90bc:abcd:689a:944]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::90bc:abcd:689a:944%7]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 11:32:07 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-CC:     Jules Irenge <jbi.octave@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "Boqun.Feng@microsoft.com" <Boqun.Feng@microsoft.com>
-Subject: Re: [PATCH] staging: wfx: add gcc extension __force cast
-Thread-Topic: [PATCH] staging: wfx: add gcc extension __force cast
-Thread-Index: AQHVlo2vxeA9owBuRU69L3+4vyY0cqeCkGWAgANwwICAAG8CAIAA/F0A
-Date:   Tue, 12 Nov 2019 11:32:07 +0000
-Message-ID: <2852964.2jKPfdd9jE@pc-42>
-References: <20191108233837.33378-1-jbi.octave@gmail.com>
- <alpine.LFD.2.21.1911111347380.226731@ninjahub.org>
- <20191111202852.GX26530@ZenIV.linux.org.uk>
-In-Reply-To: <20191111202852.GX26530@ZenIV.linux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9aade5af-3a7f-4c77-267c-08d76763f359
-x-ms-traffictypediagnostic: MN2PR11MB4032:
-x-microsoft-antispam-prvs: <MN2PR11MB4032478A87C7BB7861A6870193770@MN2PR11MB4032.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(376002)(366004)(396003)(346002)(136003)(39850400004)(199004)(189003)(51914003)(43544003)(99286004)(54906003)(478600001)(66446008)(64756008)(66556008)(66476007)(66574012)(3846002)(6116002)(76176011)(6436002)(14454004)(6506007)(91956017)(76116006)(66946007)(305945005)(66066001)(229853002)(7736002)(5660300002)(25786009)(102836004)(6486002)(86362001)(30864003)(316002)(71200400001)(71190400001)(8676002)(186003)(446003)(11346002)(2906002)(81166006)(81156014)(9686003)(14444005)(6246003)(8936002)(33716001)(476003)(486006)(4326008)(256004)(26005)(6916009)(6512007)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4032;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DtStKbHPBtxKPisxpDAVPyesxWLaEZ2nz0Go+KA8X9hKeXUfZ55zixPnJDwNVenGXS1+JWVzRtALgN+heSZHo00CHfJVHhdXCLPr1bADOOFZjTxuy67QAoMxU5x4ThRrsGBhUUaFUiIJ7bkp+fUdsbm3gFZQM3a4+kdRngQI2EaqYTkq/h4FW6cHTGpc280YexoppnvRf5JgUqM0HY/uRs+6Kb9OrCnIgy7BeSoQhCRzfTkNczqtKOFBF7vYaA0tqd3fWkjpNErEQf2brSATRjfeCGrqSjVeA6pwjF2cMFRB2m7p09iBBN1UzEIRKNS5NMo7cPEautK450v7N5R8kFfp8xM2EeAlSffvh03ppeUQNha1gqMoPKgQfKut7zBd40/FGZU+JxoG/DJhTgEUsXiea3RuvjYzqdmfexjW0zImXKD3NkJYcy8fTP+p/q8G
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <BF533971F86CF44783F4398E169335B1@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Nov 2019 06:33:46 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4452 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbfKLLdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:33:45 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACBXJ3L029822;
+        Tue, 12 Nov 2019 06:33:34 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7tfku83b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 06:33:33 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xACBUVDV003471;
+        Tue, 12 Nov 2019 11:30:59 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma01wdc.us.ibm.com with ESMTP id 2w5n36e475-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 11:30:59 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACBUsBW46793008
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 11:30:54 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 803E3C605B;
+        Tue, 12 Nov 2019 11:30:54 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F633C6057;
+        Tue, 12 Nov 2019 11:30:50 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.199.45.124])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 11:30:49 +0000 (GMT)
+X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, peterz@infradead.org,
+        dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 03/16] libnvdimm: Move nd_device_attribute_group to device_type
+In-Reply-To: <157309901138.1582359.12909354140826530394.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com> <157309901138.1582359.12909354140826530394.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 12 Nov 2019 17:00:46 +0530
+Message-ID: <878soltjq1.fsf@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9aade5af-3a7f-4c77-267c-08d76763f359
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 11:32:07.6674
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R87ZDVyq8YEyqj2TrM1ds7AQFLEnHOJyGSiloVgNWlu8+pCj5JoVAl8vlK1kty8jexSL1c7/x2fwjzFeDd9q7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4032
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Al,
+Dan Williams <dan.j.williams@intel.com> writes:
 
-Thank you for your extensive review.
-
-On Monday 11 November 2019 21:28:52 CET Al Viro wrote:
-> On Mon, Nov 11, 2019 at 01:51:33PM +0000, Jules Irenge wrote:
-> >
-> > > NAK.  force-cast (and it's not a gcc extension, BTW - it's sparse) is=
- basically
-> > > "I know better; the code is right, so STFU already".  *IF* counters.c=
-ount_...
-> > > is really little-endian 32bit, then why isn't it declared that way?  =
-And if
-> > > it's host-endian, you've just papered over a real bug here.
-> > >
-> > > As a general rule "fix" doesn't mean "tell it to shut up"...
-> > >
-> >
-> > Thanks for the comments, I have updated  but I have a mixed mind on the
-> > __le32. I have to read more about it.
-> >
-> > I would appreciate if you can comment again on the update.
->=20
-> From the look at the driver, it seems that all these counters are a part =
-of
-> structure that is read from the hardware and only used as little-endian.
-> So just declare all fields in struct hif_mib_extended_count_table as
-> __le32; easy enough.  Looking a bit further, the same goes for
-> struct hif_mib_bcn_filter_table ->num_of_info_elmts
-> struct hif_mib_keep_alive_period ->keep_alive_period (__le16)
-> struct hif_mib_template_frame ->frame_length (__le16)
-> struct hif_mib_set_association_mode ->basic_rate_set (__le32)
-> struct hif_req_update_ie ->num_i_es (__le16)
-> struct hif_req_write_mib ->mib_id, ->length (__le16 both)
-> struct hif_req_read_mib ->mib_id (__le16)
-> struct hif_req_configuration ->length (__le16)
-
-Indeed, structs declared in hif_api* are shared with the hardware and
-should use __le16/__le32. However, as you noticed below, these structs
-are sometime used in other parts of the code that are not related to
-the hardware.=20
-
-I have in my local queue a set of patches that improve the situation.
-Objective is to limit usage of hif structs to hif_tx.c, hif_tx_mib.c
-and hif_rx.c (which are correct places to handle hardware
-communication). I hope to be able to submit these patches in 2 weeks.
-
-
-[...]
-> and that's where the real bugs start to show up; leaving the misbegotten
-> forest of macros in misbegotten tracing shite aside, we have this:
->=20
-> static const struct ieee80211_supported_band wfx_band_2ghz =3D {
->         .channels =3D wfx_2ghz_chantable,
->         .n_channels =3D ARRAY_SIZE(wfx_2ghz_chantable),
->         .bitrates =3D wfx_rates,
->         .n_bitrates =3D ARRAY_SIZE(wfx_rates),
->         .ht_cap =3D {
->                 // Receive caps
->                 .cap =3D IEEE80211_HT_CAP_GRN_FLD | IEEE80211_HT_CAP_SGI_=
-20 |
->                        IEEE80211_HT_CAP_MAX_AMSDU | (1 << IEEE80211_HT_CA=
-P_RX_STBC_SHIFT),
->                 .ht_supported =3D 1,
->                 .ampdu_factor =3D IEEE80211_HT_MAX_AMPDU_16K,
->                 .ampdu_density =3D IEEE80211_HT_MPDU_DENSITY_NONE,
->                 .mcs =3D {
->                         .rx_mask =3D { 0xFF }, // MCS0 to MCS7
->                         .rx_highest =3D 65,
-> drivers/staging/wfx/main.c:108:39: refering to this initializer.
-> Sparse say that it expects rx_highest to be __le16.  And that's
-> not a driver-specific structure; it's generic ieee80211 one.  Which
-> says
-> struct ieee80211_mcs_info {
->         u8 rx_mask[IEEE80211_HT_MCS_MASK_LEN];
->         __le16 rx_highest;
->         u8 tx_params;
->         u8 reserved[3];
-> } __packed;
-> and grepping for rx_highest through the tree shows that everything else
-> is treating it as little-endian 16bit.
->=20
-> Almost certainly a bug on big-endian hosts; should be .rx_highest =3D cpu=
-_to_le16(65),
-> instead.
-
-Agree.
-
-
-> Looking for more low-hanging fruits, we have
-> static int indirect_read32_locked(struct wfx_dev *wdev, int reg, u32 addr=
-, u32 *val)
-> {
->         int ret;
->         __le32 *tmp =3D kmalloc(sizeof(u32), GFP_KERNEL);
->=20
->         if (!tmp)
->                 return -ENOMEM;
->         wdev->hwbus_ops->lock(wdev->hwbus_priv);
->         ret =3D indirect_read(wdev, reg, addr, tmp, sizeof(u32));
->         *val =3D cpu_to_le32(*tmp);
->         _trace_io_ind_read32(reg, addr, *val);
->         wdev->hwbus_ops->unlock(wdev->hwbus_priv);
->         kfree(tmp);
->         return ret;
-> }
-> with warnings about val =3D cpu_to_le32(*tmp); fair enough, since *val is
-> host-endian (u32) and *tmp - little-endian.  Trivial misannotation -
-> it should've been le32_to_cpu(), not cpu_to_le32().  Same mapping on
-> all CPUs we are ever likely to support, so it's just a misannotation,
-> not a bug per se.
-
-Agree.
-
-
-> drivers/staging/wfx/hif_tx_mib.h:34:38: warning: incorrect type in initia=
-lizer (different base types)
-> drivers/staging/wfx/hif_tx_mib.h:34:38:    expected unsigned char [userty=
-pe] wakeup_period_max
-> drivers/staging/wfx/hif_tx_mib.h:34:38:    got restricted __le16 [usertyp=
-e]
->=20
-> is about
-> static inline int hif_set_beacon_wakeup_period(struct wfx_vif *wvif,
->                                                unsigned int dtim_interval=
-,
->                                                unsigned int listen_interv=
-al)
-> {
->         struct hif_mib_beacon_wake_up_period val =3D {
->                 .wakeup_period_min =3D dtim_interval,
->                 .receive_dtim =3D 0,
->                 .wakeup_period_max =3D cpu_to_le16(listen_interval),
->         };
-> and struct hif_mib_beacon_wake_up_period has wakeup_period_max declared
-> as uint8_t.  We are shoving a le16 value into it.  Almost certain bug -
-> that will result in the listen_interval % 256 on litte-endian host and
-> listen_interval / 256 on big-endian one.  Looking at the callers to
-> see what's actually passed as listen_interval shows only
->         hif_set_beacon_wakeup_period(wvif, wvif->dtim_period, wvif->dtim_=
-period);
-> and dtim_period in *wvif (struct wfx_vif) can be assigned 0, 1 or
-> values coming from struct ieee80211_tim_ie ->dtim_period or
-> struct ieee80211_bss_conf ->dtim_period, 8bit in either structure.
->=20
-> In other words, the value stored in val.wakeup_period_max will be
-> always zero on big-endian hosts.  Definitely bogus, should just
-> store that (8bit) value as-is; cpu_to_le16() is wrong here.
-
-Absolutely agree.
-
-
-> Next piece of fun:
-> static inline int hif_beacon_filter_control(struct wfx_vif *wvif,
->                                             int enable, int beacon_count)
-> {
->         struct hif_mib_bcn_filter_enable arg =3D {
->                 .enable =3D cpu_to_le32(enable),
->                 .bcn_count =3D cpu_to_le32(beacon_count),
->         };
->         return hif_write_mib(wvif->wdev, wvif->id,
->                              HIF_MIB_ID_BEACON_FILTER_ENABLE, &arg, sizeo=
-f(arg));
-> }
-> Sounds like ->enable and ->bcn_count should both be __le32, which makes
-> sense since the structs passed to hardware appear to be fixed-endian on
-> that thing.  However, annotating them as such adds warnigns:
-> drivers/staging/wfx/sta.c:246:35: warning: incorrect type in assignment (=
-different base types)
-> drivers/staging/wfx/sta.c:246:35:    expected restricted __le32 [assigned=
-] [usertype] bcn_count
-> drivers/staging/wfx/sta.c:246:35:    got int
-> drivers/staging/wfx/sta.c:249:32: warning: incorrect type in assignment (=
-different base types)
-> drivers/staging/wfx/sta.c:249:32:    expected restricted __le32 [assigned=
-] [usertype] enable
-> drivers/staging/wfx/sta.c:249:32:    got int
-> drivers/staging/wfx/sta.c:253:32: warning: incorrect type in assignment (=
-different base types)
-> drivers/staging/wfx/sta.c:253:32:    expected restricted __le32 [assigned=
-] [usertype] enable
-> drivers/staging/wfx/sta.c:253:32:    got int
-> drivers/staging/wfx/sta.c:262:62: warning: incorrect type in argument 2 (=
-different base types)
-> drivers/staging/wfx/sta.c:262:62:    expected int enable
-> drivers/staging/wfx/sta.c:262:62:    got restricted __le32 [assigned] [us=
-ertype] enable
-> drivers/staging/wfx/sta.c:262:78: warning: incorrect type in argument 3 (=
-different base types)
-> drivers/staging/wfx/sta.c:262:78:    expected int beacon_count
-> drivers/staging/wfx/sta.c:262:78:    got restricted __le32 [assigned] [us=
-ertype] bcn_count
->=20
-> All in the same function (wfx_update_filtering()) and we really do store
-> host-endian values in those (first 3 places).  In the last one we pass
-> them to hif_beacon_filter_control(), which does expect host-endian.
-> And that's the only thing we do to the instance of hif_mib_bcn_filter_ena=
-ble
-> in there...
->=20
-> Possible solutions:
->         1) store them little-endian there, pass to hif_beacon_filter_cont=
-rol()
-> already l-e, get rid of cpu_to_le32() in the latter.
->         2) store them little-endian, pass the entire pointer to struct
-> instead of forming it again in hif_beacon_filter_control()
->         3) don't pretend that the objects in hif_beacon_filter_control()
-> and in wfx_update_filtering() are of the same type (different layouts on
-> big-endian) and replace the one in the caller with two local variables.
-> My preference would be (3), as in
-[...]
-> but that's a matter of taste.
-
-Yes, this is one of the difficult parts. I work on it (I opted for
-solution 3).
-
-
-
-> Next is bx.c warning about __le32; that's about num_tx_count being fed to=
- cpu_to_le32().
-> grepping for that thing results in
-> drivers/staging/wfx/bh.c:106:                   release_count =3D le32_to=
-_cpu(((struct hif_cnf_multi_transmit *)hif->body)->num_tx_confs);
-> drivers/staging/wfx/hif_api_cmd.h:316:  uint32_t   num_tx_confs;
-> drivers/staging/wfx/hif_rx.c:78:        int count =3D body->num_tx_confs;
-> which is troubling - the first line (in rx_helper()) expects to find
-> a little-endian value in that field, while the last (in hif_multi_tx_conf=
-irm())
-> - a host-endian, with nothing in sight that might account for conversion
-> from one to another.
->=20
-> Let's look at the call chains: hif_multi_tx_confirm() is called only as
-> hif_handlers[...]->handler(), which happens in in wfx_handle_rx().
-> The call is
->                                 hif_handlers[i].handler(wdev, hif, hif->b=
-ody);
-> and hif has come from
->         struct hif_msg *hif =3D (struct hif_msg *) skb->data;
-> wfx_handle_rx() is called by the same rx_helper()...  skb is created by
-> rx_helper() and apparently filled by the call
->         if (wfx_data_read(wdev, skb->data, alloc_len))
->                 goto err;
-> right next to the allocation... and prior to the
->                    release_count =3D le32_to_cpu(((struct hif_cnf_multi_t=
-ransmit *)hif->body)->num_tx_confs);
-> where we expect little-endian, with nothing to modify the skb contents
-> between that and the call of wfx_handle_rx().  hif in rx_helper() points
-> to the same place - skb->data.  OK, we almost certainly have a bug here.
+> A 'struct device_type' instance can carry default attributes for the
+> device. Use this facility to remove the export of
+> nd_device_attribute_group and put the responsibility on the core rather
+> than leaf implementations to define this attribute.
 >
-> That thing allocates a packet and fills it with incoming data.  Then
-> it parses the damn thing, apparently treating the same field of the
-> incoming as little-endian in one place and host-endian in another.
-> In principle it's possible that the rest of the packet determines
-> which one it is, but by the look of that code both places are
-> hit if and only if hif->id is equal to HIF_CNF_ID_MULTI_TRANSMIT.
-> It *can't* be correct on big-endian.  Not even theoretically.
->=20
-> And since it's over-the-wire data, I would expect it to be fixed-endian.
-> That needs to be confirmed with the driver's authors and/or direct
-> experiment on big-endian host, but I strongly suspect that the right
-> fix is to have
->         int count =3D le32_to_cpu(body->num_tx_confs);
-> in hif_multi_tx_confirm() (and num_tx_confs annotated as __le32).
+> For regions this creates a new nd_region_attribute_groups[] added to the
+> per-region device-type instances.
+>
 
-Indeed, num_tx_confs is always a le32 value.
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-=20
-> HOWEVER, that opens another nasty can of worms.  We have
->         struct hif_cnf_tx *buf_loc =3D (struct hif_cnf_tx *) &body->tx_co=
-nf_payload;
-> ...
->         for (i =3D 0; i < count; ++i) {
->                 wfx_tx_confirm_cb(wvif, buf_loc);
->                 buf_loc++;
->         }
-> with count derived from the packet and body pointing into the packet.  An=
-d no
-> visible checks that would make sure the loop won't run out of the data we=
-'d
-> actually got.
->=20
-> The check in rx_helper() verifies that hif->len matches the amount we'd
-> received; the check for ->num_tx_confs in there doesn't look like what
-> we'd needed (that would be offset of body.tx_conf_payload in packet +
-> num_tx_confs * sizeof(struct hif_cnf_multi_transmit) compared to
-> actual size).
->=20
-> So it smells like a remote buffer overrun, little-endian or not.
-> And at that point I would start looking for driver original authors with
-> some rather pointed questions about the validation of data and lack
-> thereof.
-
-There are not so much checks done on data retrieved from the hardware.
-I think we can find other similar issues in the driver.
-
-In this particular case, indeed, a little check on length of received
-data could be a good idea.
-
-
-> BTW, if incoming packets are fixed-endian, I would expect more bugs on
-> big-endian hosts - wfx_tx_confirm_cb() does things like
->                 tx_info->status.tx_time =3D
->                 arg->media_delay - arg->tx_queue_delay;
-> with media_delay and tx_queue_delay both being 32bit fields in the
-> incoming packet.  So another question to the authors (or documentation,
-> or direct experiments) is what endianness do various fields in the incomi=
-ng
-> data have.  We can try and guess, but...
-
-Fortunately, answer is simple enough: everything from hardware is
-little endian :).
-
-Jules, do you want to take care of fixing theses issues (except the one
-about wfx_update_filtering())?
-
-
---=20
-J=E9r=F4me Pouiller
-
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  arch/powerpc/platforms/pseries/papr_scm.c |    2 --
+>  drivers/acpi/nfit/core.c                  |    2 --
+>  drivers/nvdimm/bus.c                      |    3 +--
+>  drivers/nvdimm/dimm_devs.c                |    8 +++++++-
+>  drivers/nvdimm/e820.c                     |    1 -
+>  drivers/nvdimm/nd.h                       |    1 +
+>  drivers/nvdimm/of_pmem.c                  |    1 -
+>  drivers/nvdimm/region_devs.c              |   18 +++++++++++++-----
+>  include/linux/libnvdimm.h                 |    1 -
+>  9 files changed, 22 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> index 61883291defc..04726f8fd189 100644
+> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> @@ -286,7 +286,6 @@ int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+>  
+>  static const struct attribute_group *region_attr_groups[] = {
+>  	&nd_region_attribute_group,
+> -	&nd_device_attribute_group,
+>  	&nd_mapping_attribute_group,
+>  	&nd_numa_attribute_group,
+>  	NULL,
+> @@ -299,7 +298,6 @@ static const struct attribute_group *bus_attr_groups[] = {
+>  
+>  static const struct attribute_group *papr_scm_dimm_groups[] = {
+>  	&nvdimm_attribute_group,
+> -	&nd_device_attribute_group,
+>  	NULL,
+>  };
+>  
+> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+> index 14e68f202f81..dec7c2b08672 100644
+> --- a/drivers/acpi/nfit/core.c
+> +++ b/drivers/acpi/nfit/core.c
+> @@ -1699,7 +1699,6 @@ static const struct attribute_group acpi_nfit_dimm_attribute_group = {
+>  
+>  static const struct attribute_group *acpi_nfit_dimm_attribute_groups[] = {
+>  	&nvdimm_attribute_group,
+> -	&nd_device_attribute_group,
+>  	&acpi_nfit_dimm_attribute_group,
+>  	NULL,
+>  };
+> @@ -2199,7 +2198,6 @@ static const struct attribute_group acpi_nfit_region_attribute_group = {
+>  static const struct attribute_group *acpi_nfit_region_attribute_groups[] = {
+>  	&nd_region_attribute_group,
+>  	&nd_mapping_attribute_group,
+> -	&nd_device_attribute_group,
+>  	&nd_numa_attribute_group,
+>  	&acpi_nfit_region_attribute_group,
+>  	NULL,
+> diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+> index d47412dcdf38..eb422527dd57 100644
+> --- a/drivers/nvdimm/bus.c
+> +++ b/drivers/nvdimm/bus.c
+> @@ -669,10 +669,9 @@ static struct attribute *nd_device_attributes[] = {
+>  /*
+>   * nd_device_attribute_group - generic attributes for all devices on an nd bus
+>   */
+> -struct attribute_group nd_device_attribute_group = {
+> +const struct attribute_group nd_device_attribute_group = {
+>  	.attrs = nd_device_attributes,
+>  };
+> -EXPORT_SYMBOL_GPL(nd_device_attribute_group);
+>  
+>  static ssize_t numa_node_show(struct device *dev,
+>  		struct device_attribute *attr, char *buf)
+> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+> index 196aa44c4936..278867c68682 100644
+> --- a/drivers/nvdimm/dimm_devs.c
+> +++ b/drivers/nvdimm/dimm_devs.c
+> @@ -202,9 +202,15 @@ static void nvdimm_release(struct device *dev)
+>  	kfree(nvdimm);
+>  }
+>  
+> -static struct device_type nvdimm_device_type = {
+> +static const struct attribute_group *nvdimm_attribute_groups[] = {
+> +	&nd_device_attribute_group,
+> +	NULL,
+> +};
+> +
+> +static const struct device_type nvdimm_device_type = {
+>  	.name = "nvdimm",
+>  	.release = nvdimm_release,
+> +	.groups = nvdimm_attribute_groups,
+>  };
+>  
+>  bool is_nvdimm(struct device *dev)
+> diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
+> index 87f72f725e4f..adde2864c6a4 100644
+> --- a/drivers/nvdimm/e820.c
+> +++ b/drivers/nvdimm/e820.c
+> @@ -15,7 +15,6 @@ static const struct attribute_group *e820_pmem_attribute_groups[] = {
+>  
+>  static const struct attribute_group *e820_pmem_region_attribute_groups[] = {
+>  	&nd_region_attribute_group,
+> -	&nd_device_attribute_group,
+>  	NULL,
+>  };
+>  
+> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+> index 5c8b077b3237..3f509bb6b5c0 100644
+> --- a/drivers/nvdimm/nd.h
+> +++ b/drivers/nvdimm/nd.h
+> @@ -298,6 +298,7 @@ struct device *nd_pfn_devinit(struct nd_pfn *nd_pfn,
+>  		struct nd_namespace_common *ndns);
+>  int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig);
+>  extern const struct attribute_group *nd_pfn_attribute_groups[];
+> +extern const struct attribute_group nd_device_attribute_group;
+>  #else
+>  static inline int nd_pfn_probe(struct device *dev,
+>  		struct nd_namespace_common *ndns)
+> diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
+> index 97187d6c0bdb..41348fa6b74c 100644
+> --- a/drivers/nvdimm/of_pmem.c
+> +++ b/drivers/nvdimm/of_pmem.c
+> @@ -11,7 +11,6 @@
+>  
+>  static const struct attribute_group *region_attr_groups[] = {
+>  	&nd_region_attribute_group,
+> -	&nd_device_attribute_group,
+>  	NULL,
+>  };
+>  
+> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+> index e89f2eb3678c..710b5111eaa8 100644
+> --- a/drivers/nvdimm/region_devs.c
+> +++ b/drivers/nvdimm/region_devs.c
+> @@ -763,19 +763,27 @@ struct attribute_group nd_region_attribute_group = {
+>  };
+>  EXPORT_SYMBOL_GPL(nd_region_attribute_group);
+>  
+> -static struct device_type nd_blk_device_type = {
+> +static const struct attribute_group *nd_region_attribute_groups[] = {
+> +	&nd_device_attribute_group,
+> +	NULL,
+> +};
+> +
+> +static const struct device_type nd_blk_device_type = {
+>  	.name = "nd_blk",
+>  	.release = nd_region_release,
+> +	.groups = nd_region_attribute_groups,
+>  };
+>  
+> -static struct device_type nd_pmem_device_type = {
+> +static const struct device_type nd_pmem_device_type = {
+>  	.name = "nd_pmem",
+>  	.release = nd_region_release,
+> +	.groups = nd_region_attribute_groups,
+>  };
+>  
+> -static struct device_type nd_volatile_device_type = {
+> +static const struct device_type nd_volatile_device_type = {
+>  	.name = "nd_volatile",
+>  	.release = nd_region_release,
+> +	.groups = nd_region_attribute_groups,
+>  };
+>  
+>  bool is_nd_pmem(struct device *dev)
+> @@ -931,8 +939,8 @@ void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane)
+>  EXPORT_SYMBOL(nd_region_release_lane);
+>  
+>  static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+> -		struct nd_region_desc *ndr_desc, struct device_type *dev_type,
+> -		const char *caller)
+> +		struct nd_region_desc *ndr_desc,
+> +		const struct device_type *dev_type, const char *caller)
+>  {
+>  	struct nd_region *nd_region;
+>  	struct device *dev;
+> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+> index b6eddf912568..d7dbf42498af 100644
+> --- a/include/linux/libnvdimm.h
+> +++ b/include/linux/libnvdimm.h
+> @@ -67,7 +67,6 @@ enum {
+>  
+>  extern struct attribute_group nvdimm_bus_attribute_group;
+>  extern struct attribute_group nvdimm_attribute_group;
+> -extern struct attribute_group nd_device_attribute_group;
+>  extern struct attribute_group nd_numa_attribute_group;
+>  extern struct attribute_group nd_region_attribute_group;
+>  extern struct attribute_group nd_mapping_attribute_group;
+> _______________________________________________
+> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
+> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
