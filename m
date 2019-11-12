@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C5DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4122C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12B72196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FC62196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfKLXvi (ORCPT
+        id S1727059AbfKLXuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:51:38 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57348 "EHLO
+        Tue, 12 Nov 2019 18:50:35 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57284 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727004AbfKLXug (ORCPT
+        by vger.kernel.org with ESMTP id S1726923AbfKLXue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:50:36 -0500
+        Tue, 12 Nov 2019 18:50:34 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfve-0008IF-0B; Tue, 12 Nov 2019 23:50:34 +0000
+        id 1iUfvc-0008I0-Vd; Tue, 12 Nov 2019 23:50:33 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-00057I-Nz; Tue, 12 Nov 2019 23:50:32 +0000
+        id 1iUfvc-00056U-Db; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Tyler Hicks" <tyhicks@canonical.com>,
-        "Borislav Petkov" <bp@suse.de>
-Date:   Tue, 12 Nov 2019 23:48:09 +0000
-Message-ID: <lsq.1573602477.999910664@decadent.org.uk>
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Jim Mattson" <jmattson@google.com>
+Date:   Tue, 12 Nov 2019 23:47:59 +0000
+Message-ID: <lsq.1573602477.729591670@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 12/25] x86/speculation/taa: Fix printing of
- TAA_MSG_SMT on  IBRS_ALL CPUs
+Subject: [PATCH 3.16 02/25] KVM: x86: use Intel speculation bugs and
+ features as  derived in generic x86 code
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,47 +57,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 012206a822a8b6ac09125bfaa210a95b9eb8f1c1 upstream.
+commit 0c54914d0c52a15db9954a76ce80fee32cf318f4 upstream.
 
-For new IBRS_ALL CPUs, the Enhanced IBRS check at the beginning of
-cpu_bugs_smt_update() causes the function to return early, unintentionally
-skipping the MDS and TAA logic.
+Similar to AMD bits, set the Intel bits from the vendor-independent
+feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
+about the vendor and they should be set on AMD processors as well.
 
-This is not a problem for MDS, because there appears to be no overlap
-between IBRS_ALL and MDS-affected CPUs.  So the MDS mitigation would be
-disabled and nothing would need to be done in this function anyway.
-
-But for TAA, the TAA_MSG_SMT string will never get printed on Cascade
-Lake and newer.
-
-The check is superfluous anyway: when 'spectre_v2_enabled' is
-SPECTRE_V2_IBRS_ENHANCED, 'spectre_v2_user' is always
-SPECTRE_V2_USER_NONE, and so the 'spectre_v2_user' switch statement
-handles it appropriately by doing nothing.  So just remove the check.
-
-Fixes: 1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Suggested-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-Reviewed-by: Borislav Petkov <bp@suse.de>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/bugs.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/kvm/cpuid.c | 7 +++++++
+ arch/x86/kvm/x86.c   | 8 ++++++++
+ 2 files changed, 15 insertions(+)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -919,10 +919,6 @@ static void update_mds_branch_idle(void)
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -395,6 +395,13 @@ static inline int __do_cpuid_ent(struct
+ 			entry->ebx |= F(TSC_ADJUST);
+ 			entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+ 			cpuid_mask(&entry->edx, 10);
++			if (boot_cpu_has(X86_FEATURE_IBPB) &&
++			    boot_cpu_has(X86_FEATURE_IBRS))
++				entry->edx |= F(SPEC_CTRL);
++			if (boot_cpu_has(X86_FEATURE_STIBP))
++				entry->edx |= F(INTEL_STIBP);
++			if (boot_cpu_has(X86_FEATURE_SSBD))
++				entry->edx |= F(SPEC_CTRL_SSBD);
+ 			/*
+ 			 * We emulate ARCH_CAPABILITIES in software even
+ 			 * if the host doesn't support it.
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -917,8 +917,16 @@ u64 kvm_get_arch_capabilities(void)
  
- void arch_smt_update(void)
- {
--	/* Enhanced IBRS implies STIBP. No update required. */
--	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
--		return;
--
- 	mutex_lock(&spec_ctrl_mutex);
+ 	rdmsrl_safe(MSR_IA32_ARCH_CAPABILITIES, &data);
  
- 	switch (spectre_v2_user) {
++	if (!boot_cpu_has_bug(X86_BUG_CPU_MELTDOWN))
++		data |= ARCH_CAP_RDCL_NO;
++	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
++		data |= ARCH_CAP_SSB_NO;
++	if (!boot_cpu_has_bug(X86_BUG_MDS))
++		data |= ARCH_CAP_MDS_NO;
++
+ 	return data;
+ }
++
+ EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
+ 
+ bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
 
