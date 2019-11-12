@@ -2,123 +2,60 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492FCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD806C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7C821925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:15:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ns3BeRqf"
+	by mail.kernel.org (Postfix) with ESMTP id 8B5A52196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfKLIPD (ORCPT
+        id S1727151AbfKLIP2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:15:03 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39052 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfKLIPC (ORCPT
+        Tue, 12 Nov 2019 03:15:28 -0500
+Received: from host-213.158.188.226.tedata.net ([213.158.188.226]:50738 "EHLO
+        syakyo-niigatacity.or.jp" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725825AbfKLIP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:15:02 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC8Ex0u109278;
-        Tue, 12 Nov 2019 02:14:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573546499;
-        bh=FsOVqKbljcnHgICqOdzhzNiPBNYuXWN1KLg4XT+reEw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ns3BeRqfXxRdfzQxIyW4OpvuhbMUih8f6ETFb5E/SgjUVsF8srHMpSXB7130gke+L
-         sULnflqQnWMubCRffB5PAmoIHVvfmPBbkEDf6dgwyjkB6vS+QQVqrdZeKqoopCPm36
-         I44hTbQUIGY6rrIMd//ekELAqENL2XpS+40N+tyc=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAC8ExHv013948
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 02:14:59 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 02:14:41 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 02:14:41 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC8EuMt030332;
-        Tue, 12 Nov 2019 02:14:56 -0600
-Subject: Re: [PATCH 03/17] remoteproc/omap: Add device tree support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
-References: <20191028124238.19224-1-t-kristo@ti.com>
- <20191028124238.19224-4-t-kristo@ti.com> <20191111231650.GE3108315@builder>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <0698f722-c56f-005a-cd9f-51199d73bd12@ti.com>
-Date:   Tue, 12 Nov 2019 10:14:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 03:15:27 -0500
+X-Greylist: delayed 65945 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Nov 2019 03:15:27 EST
+Reply-To: richard@free2312.com
+From:   "Richard" <kirakira3@syakyo-niigatacity.or.jp>
+To:     linux-kernel@vger.kernel.org
+Subject: Please Help
+Date:   12 Nov 2019 10:15:47 +0200
+Message-ID: <20191112101547.1F11E64F36839659@syakyo-niigatacity.or.jp>
 MIME-Version: 1.0
-In-Reply-To: <20191111231650.GE3108315@builder>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 01:16, Bjorn Andersson wrote:
-> On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
->> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> [..]
->> +static int omap_rproc_get_boot_data(struct platform_device *pdev,
->> +				    struct rproc *rproc)
->> +{
->> +	struct device_node *np = pdev->dev.of_node;
->> +	struct omap_rproc *oproc = rproc->priv;
->> +	int ret;
->> +
->> +	if (!of_device_is_compatible(np, "ti,omap4-dsp") &&
->> +	    !of_device_is_compatible(np, "ti,omap5-dsp"))
->> +		return 0;
-> 
-> I think it would be cleaner if you added a "has_bootreg" bool to your
-> omap_rproc_dev_data, do of_device_get_match_data() in omap_rproc_probe()
-> and pass that here.
 
-Hmm you are right. There seem to be couple of other similar checks 
-around the code, let me try to address those as well.
+Hello,
 
-> 
->> +
->> +	oproc->boot_data = devm_kzalloc(&pdev->dev, sizeof(*oproc->boot_data),
->> +					GFP_KERNEL);
->> +	if (!oproc->boot_data)
->> +		return -ENOMEM;
->> +
->> +	if (!of_property_read_bool(np, "syscon-bootreg")) {
->> +		dev_err(&pdev->dev, "syscon-bootreg property is missing\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	oproc->boot_data->syscon =
->> +			syscon_regmap_lookup_by_phandle(np, "syscon-bootreg");
-> 
-> You updated the dt binding document, but this needs to be updated as
-> well.
+I hope this letter finds you in good health. I am writing this 
+letter to ask for assistance towards my tuition fees. 
+Unfortunately I have lost my job thorough redundancy, the income 
+from my job was needed to sustain my studies and pay my tuition 
+fees. I did not take out a student loan as I did not want to get 
+myself into debt, as it is too late to apply I was hoping you 
+would be able to provide some sort of assistance towards my 
+studies. I have contacted all my immediate family members and 
+friends and all the relevant government bodies for grant but have 
+been unsuccessful so far.
 
-Yeah, was waiting for comments before updating the actual code.
+I am determined to finish my studies and would be grateful for 
+any assistance you can provide.You can reach me via 
+richard@free2312.com
 
--Tero
+Please Help
 
-> 
-> Regards,
-> Bjorn
-> 
+Thank You,
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Richard
