@@ -2,169 +2,147 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307A6C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6BCC17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A8521A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:38:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9hrElsX"
+	by mail.kernel.org (Postfix) with ESMTP id D1E3521925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfKLPik (ORCPT
+        id S1727378AbfKLPj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:38:40 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44417 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727316AbfKLPij (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:38:39 -0500
-Received: by mail-il1-f196.google.com with SMTP id i6so15899070ilr.11;
-        Tue, 12 Nov 2019 07:38:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yr6BI4I1G58Q9ppVoxfKvd4slmiaD/nL3ZVF0pbXsZk=;
-        b=K9hrElsX99SWt5Ednn+QUE5MOS8fc8J3NVvLl7BRMQGWsS1fWdA9JEElCCtyaeOk9n
-         Io6irpQ8lqfrQ5ej5SHkFxlDC+/tPTimgZL3QYj6H9VVVgEhiSQYjBNVBWqz7fS/fCQx
-         CkmdQuNF5C+PARJ/o/pArFQmurRyHmyN4dhKNjg9xgdnQ6+1th6bMRPtDzSvZbGDP9/k
-         q45SLHsr+TjPHEuC/Ygaypa72od6jdz06x5VY0PBRJUDB+h/bGqPG11W1xHVuqiL1M2y
-         TDfAOzuog9vUJQGrqcSXcSe/kmVyRlax5KENFMFBxrC11kCZ5FcAaMl1uHR5idIMNx68
-         x7AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yr6BI4I1G58Q9ppVoxfKvd4slmiaD/nL3ZVF0pbXsZk=;
-        b=rMqx4vona6SScM20m2EV/gN5BAJeuYS5fp0gtJuVG42e6gSmHa3XhXq6q3HTBo9EEV
-         ChvwycLW7NZaUQfHExOfz3yj1Y9uq2T+LFt2EVFwNAFNIqVoCbFUgKctUWsicRe2tP9B
-         IwUzJEk2byJjHHTpNM/PEOxrterrb4w5Ojs6WnsJICYpTMdo3qwKPk3Vbqbwy6W/Y1aI
-         xWjFVWbIFEEtO2amE/WQ9CAl699X5ZimS6RuNSj5OSZmhehobp/bNdbgrbAzBZHHDA61
-         6TUUhddiw3oimKU417oyDhy0OpyJ/nzHnrAAr7stbiUF1tRtj/I+76pWu8gEXBhziuwI
-         tfGQ==
-X-Gm-Message-State: APjAAAVyWfFHq6b9gO0mwCGdm2Fif/KS1Ohck5IvuJvz+/tyv3HxshRV
-        nbAJomZ1amJieGRBXopeFGh04oLypdehcJJtvPA=
-X-Google-Smtp-Source: APXvYqySAuW+prOeEBX4YzE0FVWFfe7dV+Mh0+pdW6Q0AWECKwn+x1wFimNSpWPY+i3JTrNJuDQ0Sa1W+XdOoMMdiD8=
-X-Received: by 2002:a92:b60e:: with SMTP id s14mr36796565ili.178.1573573118182;
- Tue, 12 Nov 2019 07:38:38 -0800 (PST)
+        Tue, 12 Nov 2019 10:39:56 -0500
+Received: from muru.com ([72.249.23.125]:41856 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbfKLPj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:39:56 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 58E0B80F3;
+        Tue, 12 Nov 2019 15:40:31 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 07:39:51 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [Patch v2 1/3] ARM: dts: am43xx: add support for clkout1 clock
+Message-ID: <20191112153951.GJ5610@atomide.com>
+References: <20191112142929.23058-1-bparrot@ti.com>
+ <20191112142929.23058-2-bparrot@ti.com>
 MIME-Version: 1.0
-References: <20191112104854.20850-1-masneyb@onstation.org>
-In-Reply-To: <20191112104854.20850-1-masneyb@onstation.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 12 Nov 2019 08:38:27 -0700
-Message-ID: <CAOCk7NosRhRp3vZxg2Nx8106PQ0ryo5b68cUv605XUzCm6gYPA@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/mdp5: enable autocommit
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112142929.23058-2-bparrot@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 3:49 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
-> support"), command-mode panels began throwing the following errors:
->
->     msm fd900000.mdss: pp done time out, lm=0
->
-> Let's fix this by enabling the autorefresh feature that's available in
-> the MDP starting at version 1.0. This will cause the MDP to
-> automatically send a frame to the panel every time the panel invokes
-> the TE signal, which will trigger the PP_DONE IRQ. This requires not
-> sending a START signal for command-mode panels.
->
-> This fixes the error and gives us a counter for command-mode panels that
-> we can use to implement async commit support for the MDP5 in a follow up
-> patch.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+* Benoit Parrot <bparrot@ti.com> [191112 14:30]:
+> From: Tero Kristo <t-kristo@ti.com>
+> 
+> clkout1 clock node and its generation tree was missing. Add this based
+> on the data on TRM and PRCM functional spec.
+> 
+> commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
+> reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
+> clkout1 clock") which is needed for the ov2659 camera sensor clock
+> definition hence it is being re-applied here.
+> 
+> Note that because of the current dts node name dependency for mapping to
+> clock domain, we must still use "clkout1-*ck" naming instead of generic
+> "clock@" naming for the node. And because of this, it's probably best to
+> apply the dts node addition together along with the other clock changes.
+> 
+> Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Tested-by: Benoit Parrot <bparrot@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+Hmm I don't think I did any work on this, the above should be:
+
+Acked-by: Tony Lindgren <tony@atomide.com>
+
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
 > ---
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 15 ++++++++++++++-
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  |  9 +--------
->  2 files changed, 15 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> index 05cc04f729d6..539348cb6331 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> @@ -456,6 +456,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
->  {
->         struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
->         struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
-> +       struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
->         struct mdp5_kms *mdp5_kms = get_kms(crtc);
->         struct device *dev = &mdp5_kms->pdev->dev;
->
-> @@ -493,9 +494,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
->
->         mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
->
-> -       if (mdp5_cstate->cmd_mode)
-> +       if (mdp5_cstate->cmd_mode) {
->                 mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
->
-> +               /*
-> +                * Enable autorefresh so we get regular ping/pong IRQs.
-> +                * - Bit 31 is the enable bit
-> +                * - Bits 0-15 represent the frame count, specifically how many
-> +                *   TE events before the MDP sends a frame.
-> +                */
-> +               mdp5_write(mdp5_kms,
-> +                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
-> +                          BIT(31) | BIT(0));
-> +               crtc_flush_all(crtc);
-> +       }
+>  arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> index 091356f2a8c1..c726cd8dbdf1 100644
+> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> @@ -704,6 +704,60 @@
+>  		ti,bit-shift = <8>;
+>  		reg = <0x2a48>;
+>  	};
 > +
->         mdp5_crtc->enabled = true;
->  }
->
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
-> index 030279d7b64b..aee295abada3 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
-> @@ -187,14 +187,7 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
->         if (!ctl->encoder_enabled)
->                 return false;
->
-> -       switch (intf->type) {
-> -       case INTF_WB:
-> -               return true;
-> -       case INTF_DSI:
-> -               return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
-> -       default:
-> -               return false;
-> -       }
-> +       return intf->type == INTF_WB;
->  }
-
-I don't think this fully works.
-
-The whole "flush" thing exists because the configuration is double
-buffered.  You write to the flush register to tell the hardware to
-pickup the new configuration, but it doesn't do that automatically.
-It only picks up the new config on the next "vsync".  When you have a
-video mode panel, you have the timing engine running, which drives
-that.  With a command mode panel, you have either the start signal, or
-the auto refresh to do the same, but you have a bit of a chicken and
-egg situation where if you are programming the hardware from scratch,
-autorefresh isn't already enabled to then pickup the config to enable
-autorefresh. In this case, you'll need a single start to kick
-everything off.  However, if say the bootloader already configured
-things and has autorefresh running, then you need to not do that start
-because you'll overload the DSI like you saw.
-
-Nothing is simple, is it?  :)
+> +	clkout1_osc_div_ck: clkout1-osc-div-ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,divider-clock";
+> +		clocks = <&sys_clkin_ck>;
+> +		ti,bit-shift = <20>;
+> +		ti,max-div = <4>;
+> +		reg = <0x4100>;
+> +	};
+> +
+> +	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,mux-clock";
+> +		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
+> +			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
+> +			 <&dpll_mpu_m2_ck>;
+> +		reg = <0x4100>;
+> +	};
+> +
+> +	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,divider-clock";
+> +		clocks = <&clkout1_src2_mux_ck>;
+> +		ti,bit-shift = <4>;
+> +		ti,max-div = <8>;
+> +		reg = <0x4100>;
+> +	};
+> +
+> +	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,divider-clock";
+> +		clocks = <&clkout1_src2_pre_div_ck>;
+> +		ti,bit-shift = <8>;
+> +		ti,max-div = <32>;
+> +		ti,index-power-of-two;
+> +		reg = <0x4100>;
+> +	};
+> +
+> +	clkout1_mux_ck: clkout1-mux-ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,mux-clock";
+> +		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
+> +			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
+> +		ti,bit-shift = <16>;
+> +		reg = <0x4100>;
+> +	};
+> +
+> +	clkout1_ck: clkout1-ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,gate-clock";
+> +		clocks = <&clkout1_mux_ck>;
+> +		ti,bit-shift = <23>;
+> +		reg = <0x4100>;
+> +	};
+>  };
+>  
+>  &prcm {
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
