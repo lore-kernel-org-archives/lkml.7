@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B36CC17449
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EC1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240EE2248A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C752246F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfKLLUP (ORCPT
+        id S1727907AbfKLLU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:20:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33943 "EHLO
+        Tue, 12 Nov 2019 06:20:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33902 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727515AbfKLLS2 (ORCPT
+        with ESMTP id S1727485AbfKLLS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:18:28 -0500
+        Tue, 12 Nov 2019 06:18:26 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBQ-0000LU-VR; Tue, 12 Nov 2019 12:18:05 +0100
+        id 1iUUBd-0000YZ-4S; Tue, 12 Nov 2019 12:18:17 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 26DF51C0084;
-        Tue, 12 Nov 2019 12:17:58 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:17:57 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2ED841C03AB;
+        Tue, 12 Nov 2019 12:18:08 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:07 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf parse: Ensure config and str in terms are unique
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Subject: [tip: perf/core] perf auxtrace: Add auxtrace_cache__remove()
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191030223448.12930-6-irogers@google.com>
-References: <20191030223448.12930-6-irogers@google.com>
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191025130000.13032-6-adrian.hunter@intel.com>
+References: <20191025130000.13032-6-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157355747780.29376.16809471033952715746.tip-bot2@tip-bot2>
+Message-ID: <157355748769.29376.9336907434787303711.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,177 +63,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     b6645a72359590ad7f57050d192cd5d8885320df
-Gitweb:        https://git.kernel.org/tip/b6645a72359590ad7f57050d192cd5d8885320df
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Wed, 30 Oct 2019 15:34:43 -07:00
+Commit-ID:     fd62c1097a0700484fc2cbc9a182f341f30890cd
+Gitweb:        https://git.kernel.org/tip/fd62c1097a0700484fc2cbc9a182f341f30890cd
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Fri, 25 Oct 2019 15:59:59 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 06 Nov 2019 15:49:40 -03:00
+CommitterDate: Wed, 06 Nov 2019 15:43:06 -03:00
 
-perf parse: Ensure config and str in terms are unique
+perf auxtrace: Add auxtrace_cache__remove()
 
-Make it easier to release memory associated with parse event terms by
-duplicating the string for the config name and ensuring the val string
-is a duplicate.
+Add auxtrace_cache__remove(). Intel PT uses an auxtrace_cache to store
+the results of code-walking, so that the same block of instructions does
+not have to be decoded repeatedly. However, when there are text poke
+events, the associated cache entries need to be removed.
 
-Currently the parser may memory leak terms and this is addressed in a
-later patch.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191030223448.12930-6-irogers@google.com
+Cc: x86@kernel.org
+Link: http://lore.kernel.org/lkml/20191025130000.13032-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c | 51 +++++++++++++++++++++++++++------
- tools/perf/util/parse-events.y |  4 ++-
- 2 files changed, 45 insertions(+), 10 deletions(-)
+ tools/perf/util/auxtrace.c | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/auxtrace.h |  1 +
+ 2 files changed, 29 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 03e54a2..578288c 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1412,7 +1412,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			       char *str, struct list_head **listp)
- {
--	struct list_head *head;
- 	struct parse_events_term *term;
- 	struct list_head *list;
- 	struct perf_pmu *pmu = NULL;
-@@ -1429,19 +1428,30 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 		list_for_each_entry(alias, &pmu->aliases, list) {
- 			if (!strcasecmp(alias->name, str)) {
-+				struct list_head *head;
-+				char *config;
-+
- 				head = malloc(sizeof(struct list_head));
- 				if (!head)
- 					return -1;
- 				INIT_LIST_HEAD(head);
--				if (parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
--							   str, 1, false, &str, NULL) < 0)
-+				config = strdup(str);
-+				if (!config)
-+					return -1;
-+				if (parse_events_term__num(&term,
-+						   PARSE_EVENTS__TERM_TYPE_USER,
-+						   config, 1, false, &config,
-+						   NULL) < 0) {
-+					free(list);
-+					free(config);
- 					return -1;
-+				}
- 				list_add_tail(&term->list, head);
- 
- 				if (!parse_events_add_pmu(parse_state, list,
- 							  pmu->name, head,
- 							  true, true)) {
--					pr_debug("%s -> %s/%s/\n", str,
-+					pr_debug("%s -> %s/%s/\n", config,
- 						 pmu->name, alias->str);
- 					ok++;
- 				}
-@@ -1450,8 +1460,10 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			}
- 		}
- 	}
--	if (!ok)
-+	if (!ok) {
-+		free(list);
- 		return -1;
-+	}
- 	*listp = list;
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 8470dfe..c555c3c 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1457,6 +1457,34 @@ int auxtrace_cache__add(struct auxtrace_cache *c, u32 key,
  	return 0;
  }
-@@ -2746,30 +2758,51 @@ int parse_events_term__sym_hw(struct parse_events_term **term,
- 			      char *config, unsigned idx)
- {
- 	struct event_symbol *sym;
-+	char *str;
- 	struct parse_events_term temp = {
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_STR,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--		.config    = config ?: (char *) "event",
-+		.config    = config,
- 	};
  
-+	if (!temp.config) {
-+		temp.config = strdup("event");
-+		if (!temp.config)
-+			return -ENOMEM;
-+	}
- 	BUG_ON(idx >= PERF_COUNT_HW_MAX);
- 	sym = &event_symbols_hw[idx];
- 
--	return new_term(term, &temp, (char *) sym->symbol, 0);
-+	str = strdup(sym->symbol);
-+	if (!str)
-+		return -ENOMEM;
-+	return new_term(term, &temp, str, 0);
- }
- 
- int parse_events_term__clone(struct parse_events_term **new,
- 			     struct parse_events_term *term)
- {
-+	char *str;
- 	struct parse_events_term temp = {
- 		.type_val  = term->type_val,
- 		.type_term = term->type_term,
--		.config    = term->config,
-+		.config    = NULL,
- 		.err_term  = term->err_term,
- 		.err_val   = term->err_val,
- 	};
- 
--	return new_term(new, &temp, term->val.str, term->val.num);
-+	if (term->config) {
-+		temp.config = strdup(term->config);
-+		if (!temp.config)
-+			return -ENOMEM;
-+	}
-+	if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
-+		return new_term(new, &temp, NULL, term->val.num);
++static struct auxtrace_cache_entry *auxtrace_cache__rm(struct auxtrace_cache *c,
++						       u32 key)
++{
++	struct auxtrace_cache_entry *entry;
++	struct hlist_head *hlist;
++	struct hlist_node *n;
 +
-+	str = strdup(term->val.str);
-+	if (!str)
-+		return -ENOMEM;
-+	return new_term(new, &temp, str, 0);
- }
- 
- int parse_events_copy_term_list(struct list_head *old,
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index ffa1a1b..545ab7c 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -665,9 +665,11 @@ PE_NAME array '=' PE_VALUE
- PE_DRV_CFG_TERM
++	if (!c)
++		return NULL;
++
++	hlist = &c->hashtable[hash_32(key, c->bits)];
++	hlist_for_each_entry_safe(entry, n, hlist, hash) {
++		if (entry->key == key) {
++			hlist_del(&entry->hash);
++			return entry;
++		}
++	}
++
++	return NULL;
++}
++
++void auxtrace_cache__remove(struct auxtrace_cache *c, u32 key)
++{
++	struct auxtrace_cache_entry *entry = auxtrace_cache__rm(c, key);
++
++	auxtrace_cache__free_entry(c, entry);
++}
++
+ void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key)
  {
- 	struct parse_events_term *term;
-+	char *config = strdup($1);
+ 	struct auxtrace_cache_entry *entry;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index f201f36..3f4aa54 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -489,6 +489,7 @@ void *auxtrace_cache__alloc_entry(struct auxtrace_cache *c);
+ void auxtrace_cache__free_entry(struct auxtrace_cache *c, void *entry);
+ int auxtrace_cache__add(struct auxtrace_cache *c, u32 key,
+ 			struct auxtrace_cache_entry *entry);
++void auxtrace_cache__remove(struct auxtrace_cache *c, u32 key);
+ void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key);
  
-+	ABORT_ON(!config);
- 	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CFG,
--					$1, $1, &@1, NULL));
-+					config, $1, &@1, NULL));
- 	$$ = term;
- }
- 
+ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
