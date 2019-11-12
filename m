@@ -2,70 +2,149 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8473EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8B4C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6261821A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0310F2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:42:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLfvVJiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfKLTk5 (ORCPT
+        id S1727077AbfKLTmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:40:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:35616 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKLTk5 (ORCPT
+        Tue, 12 Nov 2019 14:42:25 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39480 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLTmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:40:57 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iUc22-00035Z-4S; Tue, 12 Nov 2019 20:40:54 +0100
-Date:   Tue, 12 Nov 2019 20:40:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch V2 15/16] x86/iopl: Remove legacy IOPL option
-In-Reply-To: <CALCETrWsr=KXyg_dc+97StqFHPRkvW_db_b4QvnH+ib9YJ761w@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1911122040020.1833@nanos.tec.linutronix.de>
-References: <20191111220314.519933535@linutronix.de> <20191111223052.990437835@linutronix.de> <CALCETrWsr=KXyg_dc+97StqFHPRkvW_db_b4QvnH+ib9YJ761w@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 12 Nov 2019 14:42:24 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x28so14069326pfo.6;
+        Tue, 12 Nov 2019 11:42:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yqktiPl2EC0yR95xmbyrqYNKwgzhcW9RKfI9BIqCrE0=;
+        b=RLfvVJiStfVTn96qzXe6kxlRNrY/i7GV2TmteyCTXT6GlBu2LahG8I/HU4gxdeRxyQ
+         PkDZ3tlU/QNWWTfXSeuUtihzsng+FZTeSOPL+zCdCi1J455XJqzK/iU09iKwkAGkr74B
+         F4hOloOJYnvSuJQexAnRNMnN+aG8G+ewc9wKY3cT+BQHafSeQLIdJxSt/p9hORWYWHiT
+         S0y5fgDXm+7T+f6huLXNUeA0BZQi79XHOcZ4/Tp4JgIH0WmMisZQQnmhae5g67HIU6Xz
+         IcBxs9hf8tmQklNj5lZ9jPEtjsRo9imP2O3aXmyfgZvdgNH6yQfpnPlzsnF41RHJLshk
+         2EQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yqktiPl2EC0yR95xmbyrqYNKwgzhcW9RKfI9BIqCrE0=;
+        b=lPfo1m5DYOOG18GP490p7dRtMbZQz/8SFYSr2nZyQAWkbzx8dCtdsaU1/5ejBbJl2m
+         8UYA3drMGxteSZBcImR1H6I0r+hzzfj8zCO75kpPctc7hQyN0TFdgSse0ytf1CfQMPoV
+         cB9j4yH3gwypU6glsh4KdJCL7ajWKLWwoC5YNs6O0RM8tuNzCNlIObQQtHDmCsykBAdR
+         mBQ9ujzoEKICR1YIfY51aa4Hnmt8ujzqA8otqgACUKyFkD3yB2cWL/Bxot/ZcA5kDrfc
+         fwX5gioEFArZABd13bAhm133IWH4hdArD569jWt+fNxI19O3vIhv95/V4SP7SGtXIyZ4
+         tYUQ==
+X-Gm-Message-State: APjAAAVohyToV5uGtCmjhXeSmdpW8ziRhNbBAZWF8tdddErtNmiACMm1
+        54aZAkekG23qaDBIKWGZWQJNA8lb
+X-Google-Smtp-Source: APXvYqy5VceYuMP3Jc0wwKxQ1YJZG6EGMhwq1tnyC/ce/nnn8oy5zvpT9U2BveiAo1skbwXgUqaoHA==
+X-Received: by 2002:a17:90a:be05:: with SMTP id a5mr684792pjs.73.1573587743630;
+        Tue, 12 Nov 2019 11:42:23 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 23sm6092392pgw.8.2019.11.12.11.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 11:42:22 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:42:20 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] Input: ili210x - add resolution to chip
+ operations structure
+Message-ID: <20191112194220.GD13374@dtor-ws>
+References: <20191112164429.11225-1-TheSven73@gmail.com>
+ <20191112164429.11225-2-TheSven73@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112164429.11225-2-TheSven73@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019, Andy Lutomirski wrote:
-> On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > From: Thomas Gleixner <tglx@linutronix.de>
-> >
-> > The IOPL emulation via the I/O bitmap is sufficient. Remove the legacy
-> > cruft dealing with the (e)flags based IOPL mechanism.
+On Tue, Nov 12, 2019 at 11:44:28AM -0500, Sven Van Asbroeck wrote:
+> Optionally allow the touch screen resolution to be set by adding
+> it to the chip operations structure. If it is omitted (left zero),
+> the resolution defaults to 64K. Which is the previously hard-coded
+> value.
 > 
-> Acked-by: Andy Lutomirski <luto@kernel.org>
+> Set the ili2117 resolution to 2048, as indicated in its datasheet.
 > 
-> But I think you could simplify a little bit and have a single config
-> option that controls the iopl() and iopl() syscalls.
+> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
+> Cc: Marek Vasut <marex@denx.de>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: <linux-kernel@vger.kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  drivers/input/touchscreen/ili210x.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+> index a6feae5ce887..4321f0d676cc 100644
+> --- a/drivers/input/touchscreen/ili210x.c
+> +++ b/drivers/input/touchscreen/ili210x.c
+> @@ -31,6 +31,7 @@ struct ili2xxx_chip {
+>  				 unsigned int *x, unsigned int *y);
+>  	bool (*continue_polling)(const u8 *data, bool touch);
+>  	unsigned int max_touches;
+> +	unsigned int resolution;
+>  };
+>  
+>  struct ili210x {
+> @@ -160,6 +161,7 @@ static const struct ili2xxx_chip ili211x_chip = {
+>  	.parse_touch_data	= ili211x_touchdata_to_coords,
+>  	.continue_polling	= ili211x_decline_polling,
+>  	.max_touches		= 10,
+> +	.resolution		= 2048,
+>  };
+>  
+>  static int ili251x_read_reg(struct i2c_client *client,
+> @@ -336,6 +338,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+>  	struct gpio_desc *reset_gpio;
+>  	struct input_dev *input;
+>  	int error;
+> +	unsigned int max_xy;
+>  
+>  	dev_dbg(dev, "Probing for ILI210X I2C Touschreen driver");
+>  
+> @@ -386,8 +389,12 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+>  	input->id.bustype = BUS_I2C;
+>  
+>  	/* Multi touch */
+> -	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 0xffff, 0, 0);
+> -	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 0xffff, 0, 0);
+> +	if (chip->resolution)
+> +		max_xy = chip->resolution - 1;
+> +	else
+> +		max_xy = 0xffff;
 
-You mean turning off both iopl() and ioperm() in one go. Yes, that'd be
-possible. Let me look.
+	max_xy = (chip->resolution ?: 65536) - 1;
 
-Thanks,
+> +	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_xy, 0, 0);
+> +	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, max_xy, 0, 0);
+>  	touchscreen_parse_properties(input, true, &priv->prop);
+>  
+>  	error = input_mt_init_slots(input, priv->chip->max_touches,
+> -- 
+> 2.17.1
+> 
 
-	tglx
-
+-- 
+Dmitry
