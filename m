@@ -2,122 +2,154 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E932CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61149C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B2E21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAC821783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pPnwnv3Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gdgl6cTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKLWHR (ORCPT
+        id S1726959AbfKLWKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:07:17 -0500
-Received: from mail-il1-f177.google.com ([209.85.166.177]:44679 "EHLO
-        mail-il1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKLWHR (ORCPT
+        Tue, 12 Nov 2019 17:10:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28995 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726896AbfKLWKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:07:17 -0500
-Received: by mail-il1-f177.google.com with SMTP id i6so17025843ilr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 14:07:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6qmNJU/8i/AHYRLowbaJaGkE1pf99MU0Fm8e4I+JI0Y=;
-        b=pPnwnv3YVdwiRnyPsDGGxdNvbSgcWNX7wPpXt/1YuUKOFpcsyzF+WY/N6zbmiBuWCE
-         45mXuAF6aLBdDLTPAn9VLVo5qJ40hrv42lGyfc4U1pGIO2wmfn6VpeJAnY/zcVU4mh+s
-         mVGzvDdnXYJMAN4lyDvpB1ni02yC9OzpwxbNGlWGHtQwZCQxxQzuDJTWnRu4jSj8xpX+
-         eYqE+nGqB7r0lPY92UjTJylbr4yCBrlvlCMLaeqQ1Bs/sNeYkpRGlSU/L9qjVJRNd1Vl
-         tsctlaHmh3RBbi8470QUu6ain1HAbYJkpMSf0v11tOj4wuXgcPrytSEYSa6w+iLzd+I8
-         155w==
+        Tue, 12 Nov 2019 17:10:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573596638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=OGswjGzUffihOSl/n5t/dLNRnhblfx+YfOx5kFh8IX4=;
+        b=Gdgl6cTDiCtR86q6mCw5vxMFCY7zEnH9mCvVGwi6Sq9fKTWY3TSMPaN2KHH3T+VWU/Q49t
+        IqviZcH6F9QcwayZx14XfhTc/RZjqDfxVhp8fQYzRpDrvsM4kZB3dp8sFOyFGe78rF9ZXc
+        jri5I+fj/0JPuPmuV7rhtBFQopUebtg=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-66-qPnCI2psNvWr-rAUDilEYg-1; Tue, 12 Nov 2019 17:10:35 -0500
+Received: by mail-qk1-f197.google.com with SMTP id h80so135170qke.15
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 14:10:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6qmNJU/8i/AHYRLowbaJaGkE1pf99MU0Fm8e4I+JI0Y=;
-        b=kvmNP0Q+P/T1KqAlIWq/SpAH7HHnPb731TGG5o6qY3Cxxg7eZkXF9pt1IZmx1Ns0Rj
-         axv7Eq0EdlZLo8HlU/yWzo7S+kQr7CR+psOeePyOXCPUSGoBE33eV+7T7jV9dGTrRJ/P
-         YxMTdonm+ZPxxIHUIr6FEnbok33tJvnsubfKZN6N9j6cd/l3ZMmkvKUyUecH0WCFLCXV
-         iF6QqnPbD71e9vA2yvLuHvSdhQfqTokjea+SLES361ATJ9en0kT6aoqtgLv/jQGXL2au
-         2pit10kvFDoUgxTZ1CDv2yoOdGWenXpGPTV4rydzXsbDOs7+OJc9syTRoRD1cigXQHg1
-         WI4w==
-X-Gm-Message-State: APjAAAVieL0c0KH6FhRHD8Ck3BPvH4sa+L8m/DfBeFP93VDvadgcbD+7
-        h1hin49DkmmxVI8Ryj5/1Mc1rnA+fj9CQ1qE86NQcA==
-X-Google-Smtp-Source: APXvYqxP+SnV7PqhNBfIq1DNYMyiVSRBSDKNK0aTCIV13r9reLWBhYfhiGi6YhCfHr0TFuoHOEhWz9ojzXoZnHrDox8=
-X-Received: by 2002:a92:ba1b:: with SMTP id o27mr147642ili.269.1573596435824;
- Tue, 12 Nov 2019 14:07:15 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bYI+fJWrfaTVip21z6+iZIacHnQTlTHn+UZkjofOrJ0=;
+        b=DOxKkG1gMGsgbZyoQtCDLUZhrHkFsKTQ8cI4NNHJhTJZAXLGNRzgm3QOZ7b+ewjeAi
+         bIEWpl02l7WyDNMGVJxwYKkD48grbhYPZ3pltCeWv+QmJrjsuPYtvctJmdjW8aN2XlH3
+         W27xcvUlBUmzXuyBxFIQI1vnreZXtOfL0jO20rWWHD5gA+FnYt7/GNmadDygaj4lU89u
+         boAwNAr4nnodKJt0QyAA7fjvymr0TSWHmWnatoCAtGqd1HXnOP+m0K/hjkDQsjnwswvW
+         1X8pgZYdieX4lDa8cZ1owGkxg7JwvFV2TvUXygLIOqaJI/icmbW8JzER3rmcfZOcd1OZ
+         9BIA==
+X-Gm-Message-State: APjAAAWROWaK5CrnmzV9bE8Q/UfIe1uTWE35BKXBzqrfBwcZeCUp6jcf
+        SoyznF5dHROi2woNrN0eo50HuPS0m0UqVjNPmOG1fChPBKTX0YHLVt2oKjNv9KetkgsPTvGFv76
+        dMFIXqWsjxwCYQLdd/B486lKV
+X-Received: by 2002:ac8:41cc:: with SMTP id o12mr33202589qtm.310.1573596634718;
+        Tue, 12 Nov 2019 14:10:34 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxtJyW+Mbx1NhfAQ3HEARf8vkQ6SiLwJiZfZFujYl6xkNZFUELs855wc2YOfNBe2HIaIxJO6A==
+X-Received: by 2002:ac8:41cc:: with SMTP id o12mr33202571qtm.310.1573596634433;
+        Tue, 12 Nov 2019 14:10:34 -0800 (PST)
+Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id s44sm140751qts.22.2019.11.12.14.10.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 14:10:33 -0800 (PST)
+From:   Laura Abbott <labbott@redhat.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Laura Abbott <labbott@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] tools: gpio: Correctly add make dependencies for gpio_utils
+Date:   Tue, 12 Nov 2019 17:10:26 -0500
+Message-Id: <20191112221026.5859-1-labbott@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
- <Pine.LNX.4.44L0.1911121639540.1567-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1911121639540.1567-100000@iolanthe.rowland.org>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 12 Nov 2019 14:07:03 -0800
-Message-ID: <CANn89iKjWH86kChzPiVtCgVpt3GookwGk2x1YCTMeBSPpKU+Ww@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: qPnCI2psNvWr-rAUDilEYg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 1:48 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Tue, 12 Nov 2019, Linus Torvalds wrote:
->
-> > Honestly, my preferred model would have been to just add a comment,
-> > and have the reporting tool know to then just ignore it. So something
-> > like
-> >
-> > +               // Benign data-race on min_flt
-> >                 tsk->min_flt++;
-> >                 perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
-> >
-> > for the case that Eric mentioned - the tool would trigger on
-> > "data-race", and the rest of the comment could/should be for humans.
-> > Without making the code uglier, but giving the potential for a nice
-> > leghibl.e explanation instead of a completely illegible "let's
-> > randomly use WRITE_ONCE() here" or something like that.
->
-> Just to be perfectly clear, then:
->
-> Your feeling is that we don't need to tell the compiler anything at all
-> about these races, because if a compiler generates code that is
-> non-robust against such things then you don't want to use it for the
-> kernel.
->
 
-I would prefer some kind of explicit marking, instead of a comment.
+gpio tools fail to build correctly with make parallelization:
 
-Even if we prefer having a sane compiler, having these clearly
-annotated can help
-code readability quite a lot.
+$ make -s -j24
+ld: gpio-utils.o: file not recognized: file truncated
+make[1]: *** [/home/labbott/linux_upstream/tools/build/Makefile.build:145: =
+lsgpio-in.o] Error 1
+make: *** [Makefile:43: lsgpio-in.o] Error 2
+make: *** Waiting for unfinished jobs....
 
-/*
- * To use when we are ok with minor races... bla bla bla
- */
-static void inline add_relaxed(int *p, int x)
-{
-    x += __atomic_load_n(p, __ATOMIC_RELAXED);
-    __atomic_store_n(p, x, __ATOMIC_RELAXED);
-}
+This is because gpio-utils.o is used across multiple targets.
+Fix this by making gpio-utios.o a proper dependency.
 
-The actual implementation might depend on the compiler, and revert to something
-without any constraint for old compilers  : *p += x;
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+---
+I made a similar fix to iio tools
+lore.kernel.org/r/20191018172908.3761-1-labbott@redhat.com
+---
+ tools/gpio/Build    |  1 +
+ tools/gpio/Makefile | 10 +++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/tools/gpio/Build b/tools/gpio/Build
+index 620c1937d957..4141f35837db 100644
+--- a/tools/gpio/Build
++++ b/tools/gpio/Build
+@@ -1,3 +1,4 @@
++gpio-utils-y +=3D gpio-utils.o
+ lsgpio-y +=3D lsgpio.o gpio-utils.o
+ gpio-hammer-y +=3D gpio-hammer.o gpio-utils.o
+ gpio-event-mon-y +=3D gpio-event-mon.o gpio-utils.o
+diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+index 1178d302757e..6080de58861f 100644
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -35,11 +35,15 @@ $(OUTPUT)include/linux/gpio.h: ../../include/uapi/linux=
+/gpio.h
+=20
+ prepare: $(OUTPUT)include/linux/gpio.h
+=20
++GPIO_UTILS_IN :=3D $(output)gpio-utils-in.o
++$(GPIO_UTILS_IN): prepare FORCE
++=09$(Q)$(MAKE) $(build)=3Dgpio-utils
++
+ #
+ # lsgpio
+ #
+ LSGPIO_IN :=3D $(OUTPUT)lsgpio-in.o
+-$(LSGPIO_IN): prepare FORCE
++$(LSGPIO_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
+ =09$(Q)$(MAKE) $(build)=3Dlsgpio
+ $(OUTPUT)lsgpio: $(LSGPIO_IN)
+ =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+@@ -48,7 +52,7 @@ $(OUTPUT)lsgpio: $(LSGPIO_IN)
+ # gpio-hammer
+ #
+ GPIO_HAMMER_IN :=3D $(OUTPUT)gpio-hammer-in.o
+-$(GPIO_HAMMER_IN): prepare FORCE
++$(GPIO_HAMMER_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
+ =09$(Q)$(MAKE) $(build)=3Dgpio-hammer
+ $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
+ =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+@@ -57,7 +61,7 @@ $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
+ # gpio-event-mon
+ #
+ GPIO_EVENT_MON_IN :=3D $(OUTPUT)gpio-event-mon-in.o
+-$(GPIO_EVENT_MON_IN): prepare FORCE
++$(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
+ =09$(Q)$(MAKE) $(build)=3Dgpio-event-mon
+ $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
+ =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+--=20
+2.21.0
+
