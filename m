@@ -2,95 +2,92 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F6EC17447
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3B1C17447
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B686021D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WoSwtQid"
+	by mail.kernel.org (Postfix) with ESMTP id BDEDD2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573520102;
+	bh=laAYOZq6hHcn1NNidsiCWMhkXBvPm1aupJif7q3op1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pV/hj68yAZzUkHyclnwfpRxrkjlW/Cn3OjWklxsHbNFGB97BhsytcTkXmd1/oCTYR
+	 8CmzEkPs2UqrdRzwKMOwXIEkE24QNozm5s0eZrxooLgr+jlO7OkIy+m+Gr7rUVCnbK
+	 zui395yBIrCA2SvD9kM8uqbX5M0b2mAlvDZi1hh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKLAyn (ORCPT
+        id S1727128AbfKLAzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:54:43 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40876 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKLAyn (ORCPT
+        Mon, 11 Nov 2019 19:55:01 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38180 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKLAzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:54:43 -0500
-Received: by mail-qv1-f66.google.com with SMTP id i3so5511835qvv.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 16:54:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=wDIf+AsFEXv3NCdOQayJNG94WJKxDDU6WBSBA7KBd1Y=;
-        b=WoSwtQidVmlZ8XkxO+Zq/D0sdD/dXfHOSL1CPyaLogJejmZ52HNTiqN4BYzRE0gZM2
-         922kuxJpcSKYDY1hFa5mHk8K3Ay7tox4S0c/J/F2QFkkSaf8gKtWWBQCQLqlfayQNdXk
-         MZtBauhqbNAXeI7O8rmHDCWj6F6YtymPJVzKDWdHV+qpDRUyxw5njcozWtoHfNIYoLzo
-         Zv9ISX3jjbbRzWaR+/XagZkbjR7RChgMQG4DYUCJ4CbzD/vSilVk2JAHp2xTAYOrVlUx
-         jbSdbmfYUjBP7oq0S+TglOC6H9Cc2JAnlKq5U0/CeZeuSUvqmnmHDeGdaIwiu1s2fFli
-         328w==
+        Mon, 11 Nov 2019 19:55:01 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a14so13257296oid.5;
+        Mon, 11 Nov 2019 16:55:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=wDIf+AsFEXv3NCdOQayJNG94WJKxDDU6WBSBA7KBd1Y=;
-        b=FEOWLQO3By7gaaWh89B45KQ2JbFfChq0lfOaZBtz09xz+oNaYsC3BZuCiwstUnl30v
-         P1NBDjnViSPaMwUIBrVwACYcVyPyS1KUsHbiBYkOf6bN20V5qHyNOlEZRBkni9uiY7Gc
-         2a8Q+DUgj+HVVxmvdVT4dASxVFeqNKcC5ymAlCtRZ+Wi8TloMQMeleXrAgdhG/19q4Tb
-         1VE4ytCfaQ1Qg+SWxgb0sIbBO11ZHcgO8MUfhSlpeZJgCgkiqvmIfoYxCCno+pL/MXov
-         ptjgvZzTnH+RLyeLUpmL+hqlznY28r3gL80CJVZ8P5ruIICqTgl/PPS+zBWMb5htSrIe
-         OUGA==
-X-Gm-Message-State: APjAAAUCn6Wv+adgVAuHV5TLqdZvXNY2cJ8NbbI7TzETXCeXzo3QwjhH
-        oqCbfb9oz1S44tCF6qSZHkHfjg==
-X-Google-Smtp-Source: APXvYqw0hxG4YxMvZ8p+kGWJOZquKlxFpN40XW/i3KDi/bDwap1SrSIcd5cG0onCa0pm9ENXXu3pRg==
-X-Received: by 2002:a0c:95c8:: with SMTP id t8mr25861272qvt.227.1573520082377;
-        Mon, 11 Nov 2019 16:54:42 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id a18sm8900449qkc.2.2019.11.11.16.54.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Nov 2019 16:54:41 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH] sched: Avoid spurious lock dependencies
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20191029124453.GM4114@hirez.programming.kicks-ass.net>
-Date:   Mon, 11 Nov 2019 19:54:40 -0500
-Cc:     Andrew Morton <akpm@linux-foundation.org>, bigeasy@linutronix.de,
-        Thomas Gleixner <tglx@linutronix.de>, thgarnie@google.com,
-        tytso@mit.edu, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, mingo@redhat.com, will@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        keescook@chromium.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <17A8506A-D7E1-4EF8-82F0-3AC897B85A5F@lca.pw>
-References: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
- <EE57FDCF-E3CD-4A0D-B0CC-C3CBAA7EBCBD@lca.pw>
- <20191029124453.GM4114@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pBpMOp1pnVgL27PeyDlmextXWELG5e17FH+NqeYI5mE=;
+        b=N3nCP7upDxnXysmPlJxAq+8jZ1XG029yweofcWKWUhUKOtUw2RRUE0OR0hPZ6AwLUz
+         HWorQzwShA91trXRO/m0+xhOoxW3aLXX5VOSqXUTV8g/hlvtOurxJ5GI0r5kzz01KaTe
+         do7RUGIki2g5WRn55Oa8WtgIO67ubaF3o1QEC5dCDNOBMXM5JXv4vByfwpuluIY5xTSO
+         Cq1ypDkxINtADTvfk5Z+Vs5C4mZiuYrKpLDpwe8xce7Ep74kVzorxgAPPIiustmYXzu6
+         Nj2xzpqLiBeFQRy8kWBhxFRTvHOlpG2v9wFR+lNNKHCrXxHQkp5c1KydCtIbqNW+zjXK
+         FJ7g==
+X-Gm-Message-State: APjAAAWv5To+OUQX2IMALee8/KMvOH/WiazGrGDP8IJo7hPz2pqRPnwW
+        yEgXdIdG0OktcVNvI+kMB2oG/2A=
+X-Google-Smtp-Source: APXvYqyljVDthsZCN8eV9945YzI8i3G/6sNTkp6Sv0OOGAYMLdcUA3NT8bIiajw8luXTBalycNC9pA==
+X-Received: by 2002:a05:6808:106:: with SMTP id b6mr1537840oie.44.1573520100283;
+        Mon, 11 Nov 2019 16:55:00 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 94sm5835461otg.70.2019.11.11.16.54.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 16:54:59 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:54:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        andrew@aj.id.au, joel@jms.id.au, maz@kernel.org,
+        jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH 01/12] dt-bindings: interrupt-controller: Add Aspeed SCU
+ interrupt controller
+Message-ID: <20191112005459.GA6260@bogus>
+References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
+ <1573244313-9190-2-git-send-email-eajames@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573244313-9190-2-git-send-email-eajames@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Oct 29, 2019, at 8:44 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri,  8 Nov 2019 14:18:22 -0600, Eddie James wrote:
+> Document the Aspeed SCU interrupt controller and add an include file
+> for the interrupts it provides.
 > 
-> On Tue, Oct 29, 2019 at 07:10:34AM -0400, Qian Cai wrote:
->> 
->> It looks like this patch has been forgotten forever. Do you need to
->> repost, so Ingo might have a better chance to pick it up?
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  .../interrupt-controller/aspeed,ast2xxx-scu-ic.txt | 26 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++++++
+>  .../interrupt-controller/aspeed-scu-ic.h           | 23 +++++++++++++++++++
+>  3 files changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+>  create mode 100644 include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
 > 
-> I've queued it now, sorry!
 
-Hmm, this is still not even in the linux-next after another 2 weeks. Not sure
-what to do except carrying the patch on my own. 
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
+If a tag was not added on purpose, please state why and what changed.
