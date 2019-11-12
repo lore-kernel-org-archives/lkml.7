@@ -2,86 +2,112 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668ECC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91095C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A40621783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B9D21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:00:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5PeEuZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKLW76 (ORCPT
+        id S1727164AbfKLXAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:59:58 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:40138 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKLW75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:59:57 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4DF681A0A61;
-        Tue, 12 Nov 2019 23:59:56 +0100 (CET)
-Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 14F9E1A07FB;
-        Tue, 12 Nov 2019 23:59:56 +0100 (CET)
-Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.70])
-        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id 5646840CB6;
-        Tue, 12 Nov 2019 15:59:55 -0700 (MST)
-From:   Li Yang <leoyang.li@nxp.com>
-To:     arm@kernel.org, soc@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org
-Subject: [GIT PULL] updates to soc/fsl drivers for next(v5.5)
-Date:   Tue, 12 Nov 2019 16:59:55 -0600
-Message-Id: <1573599595-31411-1-git-send-email-leoyang.li@nxp.com>
-X-Mailer: git-send-email 1.9.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 12 Nov 2019 18:00:19 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:36804 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLXAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 18:00:18 -0500
+Received: by mail-yb1-f195.google.com with SMTP id v2so42613ybo.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:00:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YqcrXvyrUhEeGGCBTq1/xcdd+m/MFp2jfaMUakDcF9E=;
+        b=L5PeEuZk/YnUneg+xRE3pQop1ItlOqsY/HUOGV3RnDGEIqfDSW1NZGYHQsZsnC7JF1
+         PtdH/5NC4prhjbRrQ+NU0rNcW6Bq55KWOq6NNRLIXMBm8Nc4A8PgnS308VY7m2ohdu1L
+         IB0KKqRvg6kBMAcmyMMKbxPrOzOV5ia8w7cv2U8aaWLLKbjyMXIc3M3h/s1HJ6GBpvUS
+         Z+U60/Vv19GAezky7tW4zEcTF/xxr2tH31nA3gr6Qs1nAKxnIUwxTZyy0dXBhAdNzWDw
+         oQvlMN+8ifSVFAgGHfBs5/MlviSuehxi2tIxJsw7B5qlpTvddhQaRXAWOFCz57uApXCF
+         DF7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=YqcrXvyrUhEeGGCBTq1/xcdd+m/MFp2jfaMUakDcF9E=;
+        b=MjiAEPuUix5yVoBdIt9/rDD+1BL1uRYBb4k7F5oFt4i81CGFTbV1v7t8SvmL6iDRuR
+         Py0nbdtBdirZAMCK8eIhfwTNWE6hezs5/s+aR5NCwyAtvkSDHVWlPSGsFHPHPJ+mPYgP
+         C5w87UEIEIxcEBd5VTooUbBW6tmzCc/uv88gk1oitQFcOZ8uEaNxgv3XfwlERIus3bfW
+         3U5w5V7AeRBLUsze0DydAivRTRs4ihAWWhlcvUyaonXMmTiMESMccw3uLpP1vP0BDlN0
+         BZnVYgSBS1Qxbip50k8Tlg7WFayijEiBgkCbSRF8asDkfo6o8L+JKj2b/cdnMk/J07aC
+         PZ4Q==
+X-Gm-Message-State: APjAAAW+DgkSEC7oksI/smcyG38qdCFhPwKBuQukUNmHXdvoQXz5ctqq
+        17seUE5LS+qeJWiv1nhQ/8Q=
+X-Google-Smtp-Source: APXvYqzousErKZ8TL6DAgYgmgPeA/h/8ureGLm48RIrBZdjBtTMZTPttrRHzw315GjhO3lfvgIpf3g==
+X-Received: by 2002:a25:3d83:: with SMTP id k125mr380091yba.226.1573599616522;
+        Tue, 12 Nov 2019 15:00:16 -0800 (PST)
+Received: from gmail.com ([196.247.56.44])
+        by smtp.gmail.com with ESMTPSA id h138sm122994ywa.68.2019.11.12.15.00.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 15:00:15 -0800 (PST)
+Date:   Tue, 12 Nov 2019 18:00:12 -0500
+From:   "Javier F. Arias" <jarias.linux@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com
+Subject: Re: [Outreachy kernel] Re: [PATCH 7/9] staging: rtl8723bs: Fix
+ incorrect type in argument warnings
+Message-ID: <20191112230012.rl7z3sbde5vtahcm@gmail.com>
+Mail-Followup-To: Joe Perches <joe@perches.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
+References: <cover.1573577309.git.jarias.linux@gmail.com>
+ <637726782ce6c6ed3d68b5e595481857916bbc56.1573577309.git.jarias.linux@gmail.com>
+ <c243860eeabf9406d166deb6204a69255c51867d.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c243860eeabf9406d166deb6204a69255c51867d.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi arm-soc maintainers,
+On Tue, Nov 12, 2019 at 09:11:42AM -0800, Joe Perches wrote:
+> On Tue, 2019-11-12 at 11:55 -0500, Javier F. Arias wrote:
+> > Fix incorrect type in declarations to solve the 'incorrect
+> > type in argument 3' warnings in the rtw_get_ie function calls.
+> > Issue found by Sparse.
+> []
+> > diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> []
+> > @@ -83,7 +83,7 @@ static char *translate_scan(struct adapter *padapter,
+> >  {
+> >  	struct iw_event iwe;
+> >  	u16 cap;
+> > -	u32 ht_ielen = 0;
+> > +	sint ht_ielen = 0;
+> 
+> more likely the rtw_get_ie function should used u32
+> and not sint.
 
-Please find the pull request for a new NXP/FSL SoC driver to support system
-wakeup with RCPM IP.
+Thanks for your feedback. I'll update the patchset and CC you as
+I can't send anything else to the Outreachy maillist.
 
-Regards,
-Leo
+> one day a sed of 's/\bsint\b/int/g' would be good too.
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+I'll probably do this on a couple of involved files.
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.5
-
-for you to fetch changes up to 3b8db0348c503823fb09b5f304b196c3362754ea:
-
-  soc: fsl: add RCPM driver (2019-11-12 15:26:05 -0600)
-
-----------------------------------------------------------------
-NXP/FSL SoC driver updates for v5.5
-
-RCPM driver for ARM SoCs
-- add RCPM driver to manage the wakeup devices for QorIQ ARM SoCs (HW low
-power states are supported in PSCI firmware)
-- add API to PM wakeup framework to retrieve wakeup sources
-
-----------------------------------------------------------------
-Ran Wang (3):
-      PM: wakeup: Add routine to help fetch wakeup source object.
-      dt-bindings: fsl: rcpm: Add 'little-endian' and update Chassis definition
-      soc: fsl: add RCPM driver
-
- Documentation/devicetree/bindings/soc/fsl/rcpm.txt |  14 +-
- drivers/base/power/wakeup.c                        |  54 ++++++++
- drivers/soc/fsl/Kconfig                            |  10 ++
- drivers/soc/fsl/Makefile                           |   1 +
- drivers/soc/fsl/rcpm.c                             | 151 +++++++++++++++++++++
- include/linux/pm_wakeup.h                          |   9 ++
- 6 files changed, 235 insertions(+), 4 deletions(-)
- create mode 100644 drivers/soc/fsl/rcpm.c
+> 
+> 
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/c243860eeabf9406d166deb6204a69255c51867d.camel%40perches.com.
