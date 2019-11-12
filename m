@@ -2,143 +2,153 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1D2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC9FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF71214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="MILnKfgX"
+	by mail.kernel.org (Postfix) with ESMTP id 7564F214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573540379;
+	bh=cjNX+LG2ikMSXXwt1FQ3TrF7qIEv5ggJXgjZnZIVXD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m91KYmesFLG2D6zGyWApGUUAb6iZ5Y113yq/yLRHW/p4aTlJuuO4z2eb8TSkBlTGr
+	 R2e0wUE1+fyfvN4HkRbZWkvo4Gc/9sjcncgiYg2tTj6iDbkigOE5jMpH4m5yWWPKD+
+	 ulGIOhSfbcMWt/QCXkCUXdPmqRpuXtd/LW1t4xWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfKLGcW (ORCPT
+        id S1726923AbfKLGc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 01:32:22 -0500
-Received: from mail-eopbgr690098.outbound.protection.outlook.com ([40.107.69.98]:17927
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725811AbfKLGcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 01:32:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ic9LVJdQVfvDOr5fw2TSQYYMKpBpcFFoY8JeuIC0Rle7cGF12GSGrXH7+miLJSDyrvbeAuHYcUaxA+s82lMo9234JTHCZOpbzb+3+rV0DuLVhbIdsHwkH1jnZqBnBjurvDUTBm3tsDU+01L8cDffjjK7cdT9rIxmIBnH8L982JSN6CwFXLiwtOvwHxPbeM3pZQmSva4IR7+JX3fH0LvWGMAokLQa/1iwnU9RjIceDlxidwu5mxS5wS4s3Lb1Yt7I6VHcVwHUT68+4v+Ze9wzljeIhRtM+0IQOTYVrf7+q9+JsZzSpLPXYyoO7a8BceZGB/BwVXqbgWxioDrXdpj2Ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6DvtEIlgHiZ3p8b7Of0Jjvzozu6ePAPPD1f8skNjvgk=;
- b=UID34PAFcoEokcz49XPjrjQZxkohMBGbJJWHpVb2v/aW2ofkhCMWedI78vovUwRqw6MbEYKrGFBXlQ7E/yjY9ZnEjwCi64hCzvD26Stzk+SfuIO9W2x+zwnUMLmnjilOtYX3CFivmvopoFH2xxNNq6wS0Je9hKjEUaUy54VW5/sCM1x9GuZ77mtqUtsjyj761NrYxUMYEpBOywLFWIDlqwQ6ppI3t1h99Bn/RSgCjxjsXY9p7ejknFe2jkIkmW6eWlp1ViGWuYwDblRnRZXwF1FXPGIX0f41sCdymQNrMpxpeytxPZgAZ9ULrBa0FOb6V+j0D/HxbYiHaVLErasAjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+        Tue, 12 Nov 2019 01:32:58 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53799 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfKLGc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 01:32:57 -0500
+Received: by mail-wm1-f67.google.com with SMTP id u18so1755952wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 22:32:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6DvtEIlgHiZ3p8b7Of0Jjvzozu6ePAPPD1f8skNjvgk=;
- b=MILnKfgXSqfW8ojDo7TnhKLXa1QDIO52DlhtehrDZxlWDotQ6WiG8N7+EObvDGiNeztpSM1vLT9+4MP7NzXvfBhz5NGeaC9xUg5C3bBF39n/L0MZBra/Ou1sW49gTcQt/1N5dVq0cnPgAc6HY6xIrD84oH11sZvx7oTIHFEoXPY=
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
- SN6PR04MB5424.namprd04.prod.outlook.com (20.177.254.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.25; Tue, 12 Nov 2019 06:32:16 +0000
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::859:2d31:1f00:fa16]) by SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::859:2d31:1f00:fa16%5]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 06:32:15 +0000
-From:   Xin Ji <xji@analogixsemi.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v5 0/2] Add initial support for slimport anx7625
-Thread-Topic: [PATCH v5 0/2] Add initial support for slimport anx7625
-Thread-Index: AQHVmSLsP5Ss0Kn5Z0aTDg3uikCeVg==
-Date:   Tue, 12 Nov 2019 06:32:15 +0000
-Message-ID: <cover.1573540100.git.xji@analogixsemi.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0PR01CA0003.apcprd01.prod.exchangelabs.com
- (2603:1096:203:92::15) To SN6PR04MB4543.namprd04.prod.outlook.com
- (2603:10b6:805:a8::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [114.247.245.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 856406a7-a30e-4059-69fa-08d7673a0f2c
-x-ms-traffictypediagnostic: SN6PR04MB5424:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB542420731E0CB7956DA29201C7770@SN6PR04MB5424.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(366004)(376002)(396003)(136003)(346002)(53754006)(199004)(189003)(6512007)(36756003)(7416002)(476003)(7736002)(486006)(2616005)(66066001)(81166006)(81156014)(26005)(4744005)(478600001)(305945005)(14454004)(8676002)(4326008)(8936002)(107886003)(66476007)(66556008)(25786009)(64756008)(66446008)(86362001)(6116002)(6436002)(256004)(3846002)(14444005)(66946007)(110136005)(71200400001)(71190400001)(186003)(5660300002)(2906002)(6506007)(386003)(316002)(102836004)(99286004)(6486002)(52116002)(54906003)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5424;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /a3im8wrIg/FfdH6VVLozrQTnrpYFuu8Kb/atw8eXtgm7Cd0E0PtrTYG0Yt49fHRSMwFkQUM78oC0XK25CtWtBQ/blDC1bZ0SwfB0/JjMpXvxz6cuF9XE+xDF62N6brm4GRoWDyg2Ew/1HID0UJ2KDzCHNRSOox4x9WRH8Lt04wSfjTYra13cMwP5tFF6ye5oxIGnlaIIuaQ79wTDbvKab5CfJBF1kbf4rXIRjWipGgqvtCoCvKtaPNIyWzrAMMLWNjiXKUbUA9QFoGeiKsdfEaqMYSbzf6PrMEBLbawNwaarM6QrNeqIpltm1XddeYmQgo+upYeYRNI2k9lEusEnCPSVVMCeR4+fhfOjJV/qsQwwZOxLzw8sMEed3dpFuD5YBOTwO3hQe+3YytDA9dtZr2vHpGLifMLSeMXYtm79oW2pwAue7Ex/gruxTkspohi
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2FF7CC8B9914D04AADAF488FF6856BE9@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ks8g1RRafUnsXVngQDv+zMJC+iHCZd3MBlCsPeClAKY=;
+        b=FPH5AmkxTHUMPO/GoizKLNwSyrk5Yj4GGHNIneMQWphvdL2/MayLADx8r/6AIfQI70
+         zvq8NmWHXR2LslOvEITL6yuuiH15v3vFWv1wrBNGLp8LL8cQA45rRU/eNe+i4roy7Rbw
+         DT7xWRb/RkPRU8r339p9WdoheKKtLxdtKe25Lknoqw3fFfQXEnO3MBUTzx1RND2ZHqrk
+         f8QeAAEn1Fcp8YNFkOGtH/qpGO5TLEim18y5YAu2g+7A6DtnFbYZidPffFjoQnSMaINg
+         HjUhU2Hiq0pQUkqRS5Le9HGT2ft8bUJPMcu/pQIX5HIovN4xMOLDWOrkwICppJUp8+Zq
+         cz0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ks8g1RRafUnsXVngQDv+zMJC+iHCZd3MBlCsPeClAKY=;
+        b=SWNyR2qTfEHwxS6NUtyDFbsOlV+JTFDLJQiN1Rvnni+hAgkqlgt+1YoLf/52ktSDKT
+         m0s/Q46t3vBUKu1MnI+Z9uinwPsExmZOVBR38kTgPOu3LuxsL4dpgC00OX0oMDkg2k0z
+         yGf7WgK5CumzwbmCbxbF/nRez9a/XFzsqGKfRsX6n5Qr5J8DXF05kjNDKn4jpy2R2ct7
+         o6p92wVxjIzU6XFZvCk7wzeber+4BFpL2j1h1DGX4M7NNwlKx+0z9U0C1Qp6NtbRQnoI
+         Kx4yLdKpsFLLvODfrtZQuoF28SdvS11WF8ZVTVZXCOkcCyN4Y5t56FXceYcs+4HhozYV
+         g8wQ==
+X-Gm-Message-State: APjAAAUzS7DSTumIxd8icRyOGuuHRrHduQWZNLFlUGHgVoBp8muqQjO+
+        9p/FQOd1x4/4JKjO/RbZzwE=
+X-Google-Smtp-Source: APXvYqzhwmu5rFXdFFqo8WFw/OoLGZs+6lDR1DSBTDSdTGxrKnHMkgORYahu5YwpX19vYnZ0l4dqtg==
+X-Received: by 2002:a1c:a90f:: with SMTP id s15mr2337560wme.100.1573540375494;
+        Mon, 11 Nov 2019 22:32:55 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id j14sm19107399wrp.16.2019.11.11.22.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 22:32:54 -0800 (PST)
+Date:   Tue, 12 Nov 2019 07:32:52 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch V2 14/16] x86/iopl: Restrict iopl() permission scope
+Message-ID: <20191112063252.GB100264@gmail.com>
+References: <20191111220314.519933535@linutronix.de>
+ <20191111223052.881699933@linutronix.de>
+ <alpine.DEB.2.21.1911120000560.1833@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 856406a7-a30e-4059-69fa-08d7673a0f2c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 06:32:15.8566
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PtdMUHLvw9AFAy8jZIlbLI77VczzHwPBfHM3aW8w+P63zO909Ok7p+JDCqVGIduXRe+bHesyGUhU01FAs3254g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5424
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1911120000560.1833@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-The following series add initial support for the Slimport ANX7625 transmitt=
-er, a
-ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable dev=
-ice.
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-This is the initial version, any mistakes, please let me know, I will fix i=
-t in
-the next series.
+> --- a/arch/x86/kernel/ioport.c
+> +++ b/arch/x86/kernel/ioport.c
+> @@ -18,12 +18,15 @@ static atomic64_t io_bitmap_sequence;
+>  
+>  void io_bitmap_share(struct task_struct *tsk)
+>   {
+> -	/*
+> -	 * Take a refcount on current's bitmap. It can be used by
+> -	 * both tasks as long as none of them changes the bitmap.
+> -	 */
+> -	refcount_inc(&current->thread.io_bitmap->refcnt);
+> -	tsk->thread.io_bitmap = current->thread.io_bitmap;
+> +	 /* Can be NULL when current->thread.iopl_emul == 3 */
+> +	 if (current->thread.io_bitmap) {
+> +		 /*
+> +		  * Take a refcount on current's bitmap. It can be used by
+> +		  * both tasks as long as none of them changes the bitmap.
+> +		  */
+> +		 refcount_inc(&current->thread.io_bitmap->refcnt);
+> +		 tsk->thread.io_bitmap = current->thread.io_bitmap;
+> +	 }
+
+Minor side note: whitespace damage managed to slip in that code, see the 
+fix below.
 
 Thanks,
-Xin
 
+	Ingo
 
-Xin Ji (2):
-  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
-  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
+ arch/x86/kernel/ioport.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
- .../bindings/display/bridge/anx7625.yaml           |   91 +
- drivers/gpu/drm/bridge/Makefile                    |    2 +-
- drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
- drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
- drivers/gpu/drm/bridge/analogix/anx7625.c          | 2044 ++++++++++++++++=
-++++
- drivers/gpu/drm/bridge/analogix/anx7625.h          |  406 ++++
- 6 files changed, 2549 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
-5.yaml
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-
---=20
-2.7.4
-
+diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
+index f87844e22ec9..ee37a1c25ecc 100644
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -17,16 +17,16 @@
+ static atomic64_t io_bitmap_sequence;
+ 
+ void io_bitmap_share(struct task_struct *tsk)
+- {
+-	 /* Can be NULL when current->thread.iopl_emul == 3 */
+-	 if (current->thread.io_bitmap) {
+-		 /*
+-		  * Take a refcount on current's bitmap. It can be used by
+-		  * both tasks as long as none of them changes the bitmap.
+-		  */
+-		 refcount_inc(&current->thread.io_bitmap->refcnt);
+-		 tsk->thread.io_bitmap = current->thread.io_bitmap;
+-	 }
++{
++	/* Can be NULL when current->thread.iopl_emul == 3 */
++	if (current->thread.io_bitmap) {
++		/*
++		 * Take a refcount on current's bitmap. It can be used by
++		 * both tasks as long as none of them changes the bitmap.
++		 */
++		refcount_inc(&current->thread.io_bitmap->refcnt);
++		tsk->thread.io_bitmap = current->thread.io_bitmap;
++	}
+ 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+ }
+ 
