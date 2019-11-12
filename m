@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B78CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCB2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360BC20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FDA2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6heNSUx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSXUxw78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfKLVWU (ORCPT
+        id S1727399AbfKLVWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:22:20 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40246 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfKLVVo (ORCPT
+        Tue, 12 Nov 2019 16:22:24 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38562 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfKLVVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 16:21:44 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f3so4508810wmc.5;
-        Tue, 12 Nov 2019 13:21:41 -0800 (PST)
+Received: by mail-wr1-f65.google.com with SMTP id i12so13256415wro.5;
+        Tue, 12 Nov 2019 13:21:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:subject:date:message-id:in-reply-to:references;
-        bh=JnYn9uI3yxG6VZUb0pRxgCquzXyinIAZQISEMZhmypI=;
-        b=c6heNSUxxH0oSCrrZxfbuO1+iBKrdMQPa1BgSH2jEDX7jL30fU/j2fySQZZC0bUpUG
-         yurhMl/qRZbzE41t/pGuNSf1a/5mDIJ3F3eSS1CE5Ot5O/ytZcweG+wArghZ6CdhKVnu
-         IAMfek98DzNDTKQOon6AYCm4CvPqf8dTaKtMibKJowETWqmxxHDVbvNVayirLLnkgTmV
-         jOBJNttUDt5PH0Sn20pgeWsKF/NlTB8df7FpAK6C2p7N0cYO9RnePFrdEEzvNUwXfs7g
-         DR7XSmN45gZs1HTCfVWrq1guTQXt3+ygY8rJOYZoLdPw+gbm0kjoZMEsLNFb7UkiS/T7
-         Adxg==
+        bh=sxfWnb04loE+ufYyv1Wnndt+fSb262tNn1S8lwredBU=;
+        b=MSXUxw78HBDlq1p7PiHOSntg0KyQhFOFyMAHC97OUWdgSAlhrN22EXMTgYNKlBZLs5
+         R/pd54nxXTk6mJJ+p5lFmhqDh85P9ATLxUB7PlIkyp7UVccU2XL3DsWw0eeOzcohSsKi
+         z6G4OZjnNF+HHy4Doj1yODDREsUiooUXxTtsepjz3QqAVXJLc96vxVd0f7Uk8Svl/F0e
+         AwoI+B7oxMQl2NWE22xme1V8hMP/2J7Al8kHoIp004/gbLQR6525FHGlbj6GQ4m446Rd
+         KGjFFHOkjQ0TkfwH+yOifNoakVSs6H0+XEAWDxUd9XRFMqVFQrPCTlzrPw3bnnJlBXqX
+         jQvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:subject:date:message-id
          :in-reply-to:references;
-        bh=JnYn9uI3yxG6VZUb0pRxgCquzXyinIAZQISEMZhmypI=;
-        b=UnMukUBbIKwf926K9c7X1prKzXb4GZ60LnwhoL0FnoQIuHmr9c5OEaUguBaLRQf6ex
-         S8e4KOs+w5q+DYGtuuh8q3eaDZM4skFRCOu2JYWFZ7h091QKstOPUqooge1n/4Eq/YZR
-         FmI+o8PILEbMyN1oc3bTw5fzzyQzLuPNzn6HfRt93+lbtACDQnF85yZ6C8Nhft4E2YKb
-         355Y6g53sGgxvBE/HXwzKUXz1tTTw3xh7PEsP1oYQR5N5AgFveJtfR04E7xVGYS/YTqM
-         MlD9w83i1kbQ8St28BY+9r6C3FVOUcPnxDHgxAlHxmB+GM/k6VUHSYEMLECCOrpvuEpo
-         cn9g==
-X-Gm-Message-State: APjAAAU8k36VLFrNwfQHXM+iBpSEVvuoEhgmIXTA7K63InfWiPxElxMk
-        qMlpbl84E9AuFk3KVbnV7Xt7XXkw
-X-Google-Smtp-Source: APXvYqyflfP/bbvqcVZbOtkbkEMjU2ik2y3Bch5Qkw8SHzU2Rj4s0FcAH8rXTDMj2FRJY5Y+jNf82A==
-X-Received: by 2002:a05:600c:299:: with SMTP id 25mr6265599wmk.50.1573593699937;
-        Tue, 12 Nov 2019 13:21:39 -0800 (PST)
+        bh=sxfWnb04loE+ufYyv1Wnndt+fSb262tNn1S8lwredBU=;
+        b=MP6POC35utP+4YznWm9RIzBXrJyrFtEOrkyJ1vTzokSWZ1FiQThnPfY9NqGeJOMkKX
+         hu5gmcgx6AqpYZ24/Sd82+0M1MMTEFBwTKI2zDvtiTZY22K52PWUBo4PetZLrw0wjDaZ
+         OwpaK4HdAjEAjqtHmg7FmQWVvEpx/X8FEbZw4Kegb/wv5wrecvAZkk/MACl4ZXFi5N+h
+         ilY567LQxTUTPqIkfeobdaGy0lbH3wzD/PSYdjkNcWIOz3q4gtrrJtLV2gh8vcth+1tb
+         5k3suqI+4jroXBgj03uSzrMdve9x3Ul2ULaYJlqG2FcpYdRemei75dWCXy1jEBfLq0hW
+         Vq9g==
+X-Gm-Message-State: APjAAAWW5W/oBv5O6F7JM/rIwaI/AWRyn8xJNfdOrc3eI4t3fBvJSSs+
+        QnUEaMr5Py/A8FP2NWrcixAvX1am
+X-Google-Smtp-Source: APXvYqxaPiuoHfSVC02lyEPNcWNd+rR6mublWqggRhF+2xWQ5wNDaEnyVR7kvUMiM043ibmf6aHU4Q==
+X-Received: by 2002:adf:d18b:: with SMTP id v11mr29233145wrc.308.1573593701550;
+        Tue, 12 Nov 2019 13:21:41 -0800 (PST)
 Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.39
+        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 13:21:39 -0800 (PST)
+        Tue, 12 Nov 2019 13:21:40 -0800 (PST)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 1/7] x86/bugs: Add ITLB_MULTIHIT bug infrastructure
-Date:   Tue, 12 Nov 2019 22:21:31 +0100
-Message-Id: <1573593697-25061-2-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 3/7] cpu/speculation: Uninline and export CPU mitigations helpers
+Date:   Tue, 12 Nov 2019 22:21:33 +0100
+Message-Id: <1573593697-25061-4-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
 References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
@@ -68,270 +68,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
+From: Tyler Hicks <tyhicks@canonical.com>
 
-Some processors may incur a machine check error possibly resulting in an
-unrecoverable CPU lockup when an instruction fetch encounters a TLB
-multi-hit in the instruction TLB. This can occur when the page size is
-changed along with either the physical address or cache type. The relevant
-erratum can be found here:
+A kernel module may need to check the value of the "mitigations=" kernel
+command line parameter as part of its setup when the module needs
+to perform software mitigations for a CPU flaw.
 
-   https://bugzilla.kernel.org/show_bug.cgi?id=205195
+Uninline and export the helper functions surrounding the cpu_mitigations
+enum to allow for their usage from a module.
 
-There are other processors affected for which the erratum does not fully
-disclose the impact.
+Lastly, privatize the enum and cpu_mitigations variable since the value of
+cpu_mitigations can be checked with the exported helper functions.
 
-This issue affects both bare-metal x86 page tables and EPT.
-
-It can be mitigated by either eliminating the use of large pages or by
-using careful TLB invalidations when changing the page size in the page
-tables.
-
-Just like Spectre, Meltdown, L1TF and MDS, a new bit has been allocated in
-MSR_IA32_ARCH_CAPABILITIES (PSCHANGE_MC_NO) and will be set on CPUs which
-are mitigated against this issue.
-
-Signed-off-by: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
-Co-developed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- Documentation/ABI/testing/sysfs-devices-system-cpu |  1 +
- arch/x86/include/asm/cpufeatures.h                 |  1 +
- arch/x86/include/asm/msr-index.h                   |  7 +++
- arch/x86/kernel/cpu/bugs.c                         | 13 +++++
- arch/x86/kernel/cpu/common.c                       | 65 ++++++++++++----------
- drivers/base/cpu.c                                 |  8 +++
- include/linux/cpu.h                                |  2 +
- 7 files changed, 67 insertions(+), 30 deletions(-)
+ include/linux/cpu.h | 25 ++-----------------------
+ kernel/cpu.c        | 27 ++++++++++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 24 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index 0e77569bd5e0..fc20cde63d1e 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -487,6 +487,7 @@ What:		/sys/devices/system/cpu/vulnerabilities
- 		/sys/devices/system/cpu/vulnerabilities/l1tf
- 		/sys/devices/system/cpu/vulnerabilities/mds
- 		/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
-+		/sys/devices/system/cpu/vulnerabilities/itlb_multihit
- Date:		January 2018
- Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
- Description:	Information about CPU vulnerabilities
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 989e03544f18..c4fbe379cc0b 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -400,5 +400,6 @@
- #define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
- #define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
- #define X86_BUG_TAA			X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
-+#define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index b3a8bb2af0b6..6a3124664289 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -93,6 +93,13 @@
- 						  * Microarchitectural Data
- 						  * Sampling (MDS) vulnerabilities.
- 						  */
-+#define ARCH_CAP_PSCHANGE_MC_NO		BIT(6)	 /*
-+						  * The processor is not susceptible to a
-+						  * machine check error due to modifying the
-+						  * code page size along with either the
-+						  * physical address or cache type
-+						  * without TLB invalidation.
-+						  */
- #define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
- #define ARCH_CAP_TAA_NO			BIT(8)	/*
- 						 * Not susceptible to
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 43c647e19439..5364beda8c61 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1419,6 +1419,11 @@ static ssize_t l1tf_show_state(char *buf)
- }
- #endif
- 
-+static ssize_t itlb_multihit_show_state(char *buf)
-+{
-+	return sprintf(buf, "Processor vulnerable\n");
-+}
-+
- static ssize_t mds_show_state(char *buf)
- {
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-@@ -1524,6 +1529,9 @@ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr
- 	case X86_BUG_TAA:
- 		return tsx_async_abort_show_state(buf);
- 
-+	case X86_BUG_ITLB_MULTIHIT:
-+		return itlb_multihit_show_state(buf);
-+
- 	default:
- 		break;
- 	}
-@@ -1565,4 +1573,9 @@ ssize_t cpu_show_tsx_async_abort(struct device *dev, struct device_attribute *at
- {
- 	return cpu_show_common(dev, attr, buf, X86_BUG_TAA);
- }
-+
-+ssize_t cpu_show_itlb_multihit(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return cpu_show_common(dev, attr, buf, X86_BUG_ITLB_MULTIHIT);
-+}
- #endif
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index f8b8afc8f5b5..d29b71ca3ca7 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1016,13 +1016,14 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
- #endif
- }
- 
--#define NO_SPECULATION	BIT(0)
--#define NO_MELTDOWN	BIT(1)
--#define NO_SSB		BIT(2)
--#define NO_L1TF		BIT(3)
--#define NO_MDS		BIT(4)
--#define MSBDS_ONLY	BIT(5)
--#define NO_SWAPGS	BIT(6)
-+#define NO_SPECULATION		BIT(0)
-+#define NO_MELTDOWN		BIT(1)
-+#define NO_SSB			BIT(2)
-+#define NO_L1TF			BIT(3)
-+#define NO_MDS			BIT(4)
-+#define MSBDS_ONLY		BIT(5)
-+#define NO_SWAPGS		BIT(6)
-+#define NO_ITLB_MULTIHIT	BIT(7)
- 
- #define VULNWL(_vendor, _family, _model, _whitelist)	\
- 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-@@ -1043,27 +1044,27 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
- 	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
- 
- 	/* Intel Family 6 */
--	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
--	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
--
--	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_SILVERMONT_D,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SILVERMONT_D,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
- 
--	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_AIRMONT_NP,		NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_AIRMONT_NP,		NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
--	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_GOLDMONT_D,		NO_MDS | NO_L1TF | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_GOLDMONT_D,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	/*
- 	 * Technically, swapgs isn't serializing on AMD (despite it previously
-@@ -1074,14 +1075,14 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
- 	 */
- 
- 	/* AMD Family 0xf - 0x12 */
--	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
--	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 	{}
- };
- 
-@@ -1106,6 +1107,10 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
- {
- 	u64 ia32_cap = x86_read_arch_cap_msr();
- 
-+	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
-+	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
-+		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
-+
- 	if (cpu_matches(NO_SPECULATION))
- 		return;
- 
-diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-index 0fccd8c0312e..6265871a4af2 100644
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -561,6 +561,12 @@ ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
- 	return sprintf(buf, "Not affected\n");
- }
- 
-+ssize_t __weak cpu_show_itlb_multihit(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "Not affected\n");
-+}
-+
- static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
- static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
- static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
-@@ -568,6 +574,7 @@ ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
- static DEVICE_ATTR(l1tf, 0444, cpu_show_l1tf, NULL);
- static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
- static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
-+static DEVICE_ATTR(itlb_multihit, 0444, cpu_show_itlb_multihit, NULL);
- 
- static struct attribute *cpu_root_vulnerabilities_attrs[] = {
- 	&dev_attr_meltdown.attr,
-@@ -577,6 +584,7 @@ ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
- 	&dev_attr_l1tf.attr,
- 	&dev_attr_mds.attr,
- 	&dev_attr_tsx_async_abort.attr,
-+	&dev_attr_itlb_multihit.attr,
- 	NULL
- };
- 
 diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index f35369f79771..2a093434e975 100644
+index 2a093434e975..bc6c879bd110 100644
 --- a/include/linux/cpu.h
 +++ b/include/linux/cpu.h
-@@ -62,6 +62,8 @@ extern ssize_t cpu_show_mds(struct device *dev,
- extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
- 					struct device_attribute *attr,
- 					char *buf);
-+extern ssize_t cpu_show_itlb_multihit(struct device *dev,
-+				      struct device_attribute *attr, char *buf);
+@@ -218,28 +218,7 @@ static inline void cpu_smt_check_topology(void) { }
+ static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+ #endif
  
- extern __printf(4, 5)
- struct device *cpu_device_create(struct device *parent, void *drvdata,
+-/*
+- * These are used for a global "mitigations=" cmdline option for toggling
+- * optional CPU mitigations.
+- */
+-enum cpu_mitigations {
+-	CPU_MITIGATIONS_OFF,
+-	CPU_MITIGATIONS_AUTO,
+-	CPU_MITIGATIONS_AUTO_NOSMT,
+-};
+-
+-extern enum cpu_mitigations cpu_mitigations;
+-
+-/* mitigations=off */
+-static inline bool cpu_mitigations_off(void)
+-{
+-	return cpu_mitigations == CPU_MITIGATIONS_OFF;
+-}
+-
+-/* mitigations=auto,nosmt */
+-static inline bool cpu_mitigations_auto_nosmt(void)
+-{
+-	return cpu_mitigations == CPU_MITIGATIONS_AUTO_NOSMT;
+-}
++extern bool cpu_mitigations_off(void);
++extern bool cpu_mitigations_auto_nosmt(void);
+ 
+ #endif /* _LINUX_CPU_H_ */
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index fc28e17940e0..e2cad3ee2ead 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2373,7 +2373,18 @@ void __init boot_cpu_hotplug_init(void)
+ 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
+ }
+ 
+-enum cpu_mitigations cpu_mitigations __ro_after_init = CPU_MITIGATIONS_AUTO;
++/*
++ * These are used for a global "mitigations=" cmdline option for toggling
++ * optional CPU mitigations.
++ */
++enum cpu_mitigations {
++	CPU_MITIGATIONS_OFF,
++	CPU_MITIGATIONS_AUTO,
++	CPU_MITIGATIONS_AUTO_NOSMT,
++};
++
++static enum cpu_mitigations cpu_mitigations __ro_after_init =
++	CPU_MITIGATIONS_AUTO;
+ 
+ static int __init mitigations_parse_cmdline(char *arg)
+ {
+@@ -2390,3 +2401,17 @@ static int __init mitigations_parse_cmdline(char *arg)
+ 	return 0;
+ }
+ early_param("mitigations", mitigations_parse_cmdline);
++
++/* mitigations=off */
++bool cpu_mitigations_off(void)
++{
++	return cpu_mitigations == CPU_MITIGATIONS_OFF;
++}
++EXPORT_SYMBOL_GPL(cpu_mitigations_off);
++
++/* mitigations=auto,nosmt */
++bool cpu_mitigations_auto_nosmt(void)
++{
++	return cpu_mitigations == CPU_MITIGATIONS_AUTO_NOSMT;
++}
++EXPORT_SYMBOL_GPL(cpu_mitigations_auto_nosmt);
 -- 
 1.8.3.1
 
