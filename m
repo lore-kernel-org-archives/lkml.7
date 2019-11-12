@@ -2,105 +2,91 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E8C17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCAAC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3870721925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtXGnuhi"
+	by mail.kernel.org (Postfix) with ESMTP id 14F372196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573586869;
+	bh=YVPgo+KKFI4eokRGU8vZ1y3LWu0L+SRe0gVOAhPaZPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bq2awel+RgXNeDURY/X+j3LUyfFMu83218K67ML6L1iWREmHBVYBtnsDzdALKCT00
+	 QECTXOdzWT0OhbgAqRsdZih/ZBnBwrQTgBRc32/4p7W0C5jTNC/ZWige2xl2ssy1aW
+	 atNcsN/yYUR5gw4N5UR35jwpIosJyWc+BzMCaNGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfKLTWz (ORCPT
+        id S1727054AbfKLT1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:22:55 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35790 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfKLTWy (ORCPT
+        Tue, 12 Nov 2019 14:27:48 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43298 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfKLT1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:22:54 -0500
-Received: by mail-wr1-f65.google.com with SMTP id s5so8736804wrw.2;
-        Tue, 12 Nov 2019 11:22:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZpEDoN5a5h6fV7ZiE3D69/PGx599J+5pvS1M8/D7rEU=;
-        b=PtXGnuhiB8iHD5lBqu+iKKNrAFCGvcM3PwOHEFNhjSf3PtFG6aVLSF3vtNYolZmc7j
-         /w8g/CtrAsWvzTkfRzrDBQZqy8ygryYeR5Q5QB+9tEV+6QWCBV/P5qk/l0r4gJ1eE87e
-         MYo17lJWztQ7xFIDb3VwIcERrLN34nd1Kwred7wsuxx7kaDLsde2rgiMpRsJzPJ8hJ0y
-         X1/Qy6TLwLFNVGggF7HgAyplqcGH/Lt8PQbUvQE+pBS75cqS7yHvxxepFwGbAcNJk24S
-         xjHsuNXIQRG7q0GeYX3m680kox5udElJlpHx7icuIxVA1dzuwllg34oisSpAhLaBkBDU
-         +4Gw==
+        Tue, 12 Nov 2019 14:27:47 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l20so15879966oie.10;
+        Tue, 12 Nov 2019 11:27:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ZpEDoN5a5h6fV7ZiE3D69/PGx599J+5pvS1M8/D7rEU=;
-        b=HMzzD1Eqkr/y3B0JAC9FaPI/20ZrinXVduT32BNK7HFQuvcLkPg4rFV8fRQ0NKhK/x
-         TYfkvATo/X1+4ys4VFfoD1gz0JfX1OcvqOS4eUYPKq2mMfH5KoOQoP3A9Qj39tE2JIIZ
-         mddQN7XPjzNoOjZQQx58PHB+oluS1lMaG7zG9PhCT/iLd1Fm3uOqBZZJX3e8hDPrDXMV
-         loIj6MA+lI+SuBVmrqOGu5pOqeu5cBMq1XetP0yvnBfV7/oIHQ7+fwMgCkj5ET1VsxhZ
-         KqVaQwlu6Yp4d8fpgLBi7+ScUaxxpyy/SDkcqc+Hni3xVQL2/1mytGDAWE4li82EVW56
-         ba0w==
-X-Gm-Message-State: APjAAAVVY4Eyvh1AfeBatwWueXn6492BdzhR/RiPEY5+bAsVqA0UTv+3
-        1huzcyB0yvf7laB7+FFrBck=
-X-Google-Smtp-Source: APXvYqxmgR0LNDT2aA2VphXtdJJyNweCg4ramG2+PSK6zKdwAeK/GjCrCGV/ESC/K96/pVllEvHutQ==
-X-Received: by 2002:a05:6000:1621:: with SMTP id v1mr28728212wrb.62.1573586572256;
-        Tue, 12 Nov 2019 11:22:52 -0800 (PST)
-Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
-        by smtp.gmail.com with ESMTPSA id y6sm14894974wrn.21.2019.11.12.11.22.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 11:22:51 -0800 (PST)
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     oliver.graute@gmail.com, m.felsch@pengutronix.de,
-        narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] dt-bindings: arm64: fsl: Add Variscite i.MX6UL compatibles
-Date:   Tue, 12 Nov 2019 20:22:03 +0100
-Message-Id: <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
-References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
-X-Patchwork-Bot: notify
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Y4VJU4JPIoN8kP/oz54y8Wq1pxD+B52sbN7PsTOLQlY=;
+        b=exflkZjI2ZBILdpW4axODjadTtAsEC9yplHk6gpcDHwN8UEaZBqUW2Eu/aXFA/841Q
+         8pZYg5asWPMioRYW5Ec7Bl4NfsD6QJfKZrPPF4wA1+N4gXijWdZBNmGXYGYDbfV5nTDD
+         P3OUjNQNMLXAblEKTEOeigw3c3CATQbvdwPGX0eeabfmPD0efEWAKm5P7wvtLMx18qQ8
+         YV4uOduCTDCLp6MnYDMx6vO4BhgVNJc0d0t097r+oeWrdOVlKm9zvecq9hyr5p2xuqOE
+         CYAebG2375JT+GsDZoCZKBDHeMCcRo40jVvj8xR/+Soa5tMutXzusGyGuwA/dfdSd16v
+         K8mA==
+X-Gm-Message-State: APjAAAVQGrLQ8+llY1mrZtTn7ZuaE4oW3O8u6ne3LpLBN0cfCyBuBJaC
+        MLM692buAVlkCe45jbXkvsP0k38=
+X-Google-Smtp-Source: APXvYqz4Jkfw6OOk4L5JFnxQar5zpZUQ12T/aVbn6qghLtQRbJWl1rIMeQ2geyDRfOhX2lw8P+1LcA==
+X-Received: by 2002:aca:5006:: with SMTP id e6mr501570oib.127.1573586866587;
+        Tue, 12 Nov 2019 11:27:46 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 202sm6330662oii.39.2019.11.12.11.27.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 11:27:46 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:27:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com,
+        ssantosh@kernel.org, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
+        tony@atomide.com, j-keerthy@ti.com
+Subject: Re: [PATCH v5 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
+Message-ID: <20191112192745.GA20639@bogus>
+References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
+ <20191111135330.8235-9-peter.ujfalusi@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191111135330.8235-9-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the compatibles for Variscite i.MX6UL compatibles
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, 11 Nov 2019 15:53:23 +0200, Peter Ujfalusi wrote:
+> New binding document for
+> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
+> 
+> UDMA-P is introduced as part of the K3 architecture and can be found in
+> AM654 and j721e.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   | 192 ++++++++++++++++++
+>  1 file changed, 192 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+> 
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index f79683a..d0c7e60 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -182,6 +182,7 @@ properties:
-               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-               - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-               - kontron,imx6ul-n6311-som  # Kontron N6311 SOM
-+              - variscite,6ulcustomboard" # i.MX UltraLite Carrier-board
-           - const: fsl,imx6ul
- 
-       - description: Kontron N6310 S Board
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
