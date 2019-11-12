@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AE8C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CA9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67DA2246F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5DE2246F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKLLVr (ORCPT
+        id S1727344AbfKLLSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:21:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33672 "EHLO
+        Tue, 12 Nov 2019 06:18:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33549 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfKLLSO (ORCPT
+        with ESMTP id S1727201AbfKLLSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:18:14 -0500
+        Tue, 12 Nov 2019 06:18:06 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBT-0000V8-ML; Tue, 12 Nov 2019 12:18:07 +0100
+        id 1iUUBH-0000I8-DF; Tue, 12 Nov 2019 12:17:55 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2AB691C047B;
-        Tue, 12 Nov 2019 12:18:04 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:18:03 -0000
-From:   "tip-bot2 for James Clark" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 087851C0084;
+        Tue, 12 Nov 2019 12:17:55 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:17:54 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libsubcmd: Move EXTRA_FLAGS to the end to allow
- overriding existing flags
-Cc:     James Clark <james.clark@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, nd <nd@arm.com>,
+Subject: [tip: perf/core] perf annotate: Fix heap overflow
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191028113340.4282-1-james.clark@arm.com>
-References: <20191028113340.4282-1-james.clark@arm.com>
+In-Reply-To: <20191026035644.217548-1-irogers@google.com>
+References: <20191026035644.217548-1-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <157355748376.29376.14204856327895210952.tip-bot2@tip-bot2>
+Message-ID: <157355747465.29376.10616272191107642409.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,53 +64,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     d894967fcaa469cb4c43544855f6fcc18045d526
-Gitweb:        https://git.kernel.org/tip/d894967fcaa469cb4c43544855f6fcc18045d526
-Author:        James Clark <James.Clark@arm.com>
-AuthorDate:    Mon, 28 Oct 2019 11:34:01 
+Commit-ID:     5c65b1c0842f9daddc6aec4bdb4b5d898006be19
+Gitweb:        https://git.kernel.org/tip/5c65b1c0842f9daddc6aec4bdb4b5d898006be19
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Fri, 25 Oct 2019 20:56:44 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 06 Nov 2019 15:49:39 -03:00
+CommitterDate: Thu, 07 Nov 2019 08:30:18 -03:00
 
-libsubcmd: Move EXTRA_FLAGS to the end to allow overriding existing flags
+perf annotate: Fix heap overflow
 
-Move EXTRA_WARNINGS and EXTRA_FLAGS to the end of the compilation line,
-otherwise they cannot be used to override the default values.
+Fix expand_tabs that copies the source lines '\0' and then appends
+another '\0' at a potentially out of bounds address.
 
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: nd <nd@arm.com>
-Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
-[ split from a larger patch ]
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20191026035644.217548-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/subcmd/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index 5b2cd5e..352c606 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -19,8 +19,7 @@ MAKEFLAGS += --no-print-directory
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ef1866a..bee0fee 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1892,7 +1892,7 @@ static char *expand_tabs(char *line, char **storage, size_t *storage_len)
+ 	}
  
- LIBFILE = $(OUTPUT)libsubcmd.a
- 
--CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
-+CFLAGS := -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
- 
- ifeq ($(DEBUG),0)
-   ifeq ($(feature-fortify-source), 1)
-@@ -43,6 +42,8 @@ CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
- 
- CFLAGS += -I$(srctree)/tools/include/
- 
-+CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
-+
- SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
- 
- all:
+ 	/* Expand the last region. */
+-	len = line_len + 1 - src;
++	len = line_len - src;
+ 	memcpy(&new_line[dst], &line[src], len);
+ 	dst += len;
+ 	new_line[dst] = '\0';
