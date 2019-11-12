@@ -4,86 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3B1C17447
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A639C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEDD2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BD82196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573520102;
-	bh=laAYOZq6hHcn1NNidsiCWMhkXBvPm1aupJif7q3op1A=;
+	s=default; t=1573520138;
+	bh=JHNP1i9YmOI1UGPdrgz/HbCXbMCA88qzwzoeQZYNuy8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pV/hj68yAZzUkHyclnwfpRxrkjlW/Cn3OjWklxsHbNFGB97BhsytcTkXmd1/oCTYR
-	 8CmzEkPs2UqrdRzwKMOwXIEkE24QNozm5s0eZrxooLgr+jlO7OkIy+m+Gr7rUVCnbK
-	 zui395yBIrCA2SvD9kM8uqbX5M0b2mAlvDZi1hh0=
+	b=VWMAtN7y6cyJS397borOIQ+jb+NlYVsbTVTg7e+mL0mFO8/Ci4lMPxCKdrPmh9VfP
+	 T0V0U5eOxz7c1T64hxXNXbb1FUyNLW4xwomGha27Nr4d8HtbvwihfvfCaXJJ+WF0aL
+	 QgyAteGwJt14d6102FID4PMPWwqJhmrPyANuRcFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfKLAzB (ORCPT
+        id S1727143AbfKLAzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:55:01 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38180 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfKLAzB (ORCPT
+        Mon, 11 Nov 2019 19:55:37 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37546 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKLAzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:55:01 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a14so13257296oid.5;
-        Mon, 11 Nov 2019 16:55:00 -0800 (PST)
+        Mon, 11 Nov 2019 19:55:37 -0500
+Received: by mail-ot1-f65.google.com with SMTP id d5so12899280otp.4;
+        Mon, 11 Nov 2019 16:55:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pBpMOp1pnVgL27PeyDlmextXWELG5e17FH+NqeYI5mE=;
-        b=N3nCP7upDxnXysmPlJxAq+8jZ1XG029yweofcWKWUhUKOtUw2RRUE0OR0hPZ6AwLUz
-         HWorQzwShA91trXRO/m0+xhOoxW3aLXX5VOSqXUTV8g/hlvtOurxJ5GI0r5kzz01KaTe
-         do7RUGIki2g5WRn55Oa8WtgIO67ubaF3o1QEC5dCDNOBMXM5JXv4vByfwpuluIY5xTSO
-         Cq1ypDkxINtADTvfk5Z+Vs5C4mZiuYrKpLDpwe8xce7Ep74kVzorxgAPPIiustmYXzu6
-         Nj2xzpqLiBeFQRy8kWBhxFRTvHOlpG2v9wFR+lNNKHCrXxHQkp5c1KydCtIbqNW+zjXK
-         FJ7g==
-X-Gm-Message-State: APjAAAWv5To+OUQX2IMALee8/KMvOH/WiazGrGDP8IJo7hPz2pqRPnwW
-        yEgXdIdG0OktcVNvI+kMB2oG/2A=
-X-Google-Smtp-Source: APXvYqyljVDthsZCN8eV9945YzI8i3G/6sNTkp6Sv0OOGAYMLdcUA3NT8bIiajw8luXTBalycNC9pA==
-X-Received: by 2002:a05:6808:106:: with SMTP id b6mr1537840oie.44.1573520100283;
-        Mon, 11 Nov 2019 16:55:00 -0800 (PST)
+        bh=+z0lCoBUADm3R12lZfFDcZyZCyiTz2wqkm2IayUdiM0=;
+        b=QWVyVFOrdI6pBr2LfT2m6q/9lIeU3hGNzmuZVkwQaGAFR5Vex8hjcTtLBU4k5I+8E+
+         niYxJdlZl1Dr1RkbcNq99faAywpYnBRLd5EIWqifzc7tBDETF1xcMnzQK8Yg9GRAT90L
+         OF1oY+GG00NMhFLZCXfSFbolZBMM5xmwUIZMpX9MyIOsmidgJXqbFORZ4rrEq2rbWX1u
+         oKSL4Xfq+SUVBXLxQS7qV7zbNEZZXsF1Y5pkHQZTCXpzL600huqlV1OhqEBYpboVS1h0
+         gJZC6dsYtWDEYsByjkV2DfFPvB+aaOtBAia32i7c4mV3UY/8c603GFIIJWb9TeTmCn9c
+         VHHg==
+X-Gm-Message-State: APjAAAVlRC66BogYIEMrIEFWAwt5zH1aBj6NyINdH67FoLrNgOQwj09h
+        mvwlQGbjoqGGuVXJ1LDe1Q==
+X-Google-Smtp-Source: APXvYqwL8yt7UtDKW+o7Qx7dwCNLZg8iJkhnbTBSLmJxk2Tf9FK20JkPABtLDnyJMutfD/0SSf4Tvg==
+X-Received: by 2002:a9d:6141:: with SMTP id c1mr23902824otk.117.1573520128782;
+        Mon, 11 Nov 2019 16:55:28 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 94sm5835461otg.70.2019.11.11.16.54.59
+        by smtp.gmail.com with ESMTPSA id e93sm5925344otb.60.2019.11.11.16.55.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 16:54:59 -0800 (PST)
-Date:   Mon, 11 Nov 2019 18:54:59 -0600
+        Mon, 11 Nov 2019 16:55:28 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:55:27 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        andrew@aj.id.au, joel@jms.id.au, maz@kernel.org,
-        jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH 01/12] dt-bindings: interrupt-controller: Add Aspeed SCU
- interrupt controller
-Message-ID: <20191112005459.GA6260@bogus>
-References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
- <1573244313-9190-2-git-send-email-eajames@linux.ibm.com>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v8 3/4] dt-bindings: clock: Add support for the MSM8998
+ mmcc
+Message-ID: <20191112005527.GA7038@bogus>
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255068-10400-1-git-send-email-jhugo@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573244313-9190-2-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <1573255068-10400-1-git-send-email-jhugo@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 Nov 2019 14:18:22 -0600, Eddie James wrote:
-> Document the Aspeed SCU interrupt controller and add an include file
-> for the interrupts it provides.
+On Fri,  8 Nov 2019 16:17:48 -0700, Jeffrey Hugo wrote:
+> Document the multimedia clock controller found on MSM8998.
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 > ---
->  .../interrupt-controller/aspeed,ast2xxx-scu-ic.txt | 26 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++++++
->  .../interrupt-controller/aspeed-scu-ic.h           | 23 +++++++++++++++++++
->  3 files changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
->  create mode 100644 include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+>  .../devicetree/bindings/clock/qcom,mmcc.yaml       |  36 ++++
+>  include/dt-bindings/clock/qcom,mmcc-msm8998.h      | 210 +++++++++++++++++++++
+>  2 files changed, 246 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
 > 
 
 Please add Acked-by/Reviewed-by tags when posting new versions. However,
