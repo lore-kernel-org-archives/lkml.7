@@ -2,78 +2,82 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B07BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA951C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA08121783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:23:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b2yL+wmO"
+	by mail.kernel.org (Postfix) with ESMTP id A6D08214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKLNXS (ORCPT
+        id S1727392AbfKLNXX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:23:18 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:35702 "EHLO vps0.lunn.ch"
+        Tue, 12 Nov 2019 08:23:23 -0500
+Received: from albireo.enyo.de ([37.24.231.21]:42750 "EHLO albireo.enyo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfKLNXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:23:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=EkOskIfrlI4bkz4+Vg1LatDiIG96BWRzkY/ggrPRwOw=; b=b2yL+wmOhtnmgb4EeBedjT/nTY
-        dPTwwgAouo89wqS7BDa7kJivRsY2wymHv4kx2QZI1rhAViFN87AtxZtoEdbjuxu74AP6nL7+H27d0
-        X0bJBgY/ZK9EtgAS/6z1qRwqwQs+kZvhc1KOZWMyHb2NFvtKOthiVfEaTA2s+v3mDt/0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iUW8V-0001S0-8d; Tue, 12 Nov 2019 14:23:11 +0100
-Date:   Tue, 12 Nov 2019 14:23:11 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     David Miller <davem@redhat.com>
-Cc:     olof@lixom.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: mdio-octeon: Fix pointer/integer casts
-Message-ID: <20191112132311.GA5090@lunn.ch>
-References: <20191111004211.96425-1-olof@lixom.net>
- <20191111.214658.1031500406952713920.davem@redhat.com>
+        id S1726188AbfKLNXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 08:23:22 -0500
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iUW8U-0005If-Jp; Tue, 12 Nov 2019 13:23:10 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1iUW8U-0002Cz-BA; Tue, 12 Nov 2019 14:23:10 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter\, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v24 00/12] /dev/random - a new approach with full SP800-90B compliance
+References: <6157374.ptSnyUpaCn@positron.chronox.de>
+Date:   Tue, 12 Nov 2019 14:23:10 +0100
+In-Reply-To: <6157374.ptSnyUpaCn@positron.chronox.de> ("Stephan
+ \=\?iso-8859-1\?Q\?M\=FCller\=22's\?\=
+        message of "Mon, 11 Nov 2019 19:17:30 +0100")
+Message-ID: <875zjpfcu9.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111.214658.1031500406952713920.davem@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:46:58PM -0800, David Miller wrote:
-> From: Olof Johansson <olof@lixom.net>
-> Date: Sun, 10 Nov 2019 16:42:11 -0800
-> 
-> > -static inline void oct_mdio_writeq(u64 val, u64 addr)
-> > +static inline void oct_mdio_writeq(u64 val, void __iomem *addr)
-> >  {
-> > -	cvmx_write_csr(addr, val);
-> > +	cvmx_write_csr((u64)addr, val);
-> >  }
-> 
-> I hate stuff like this, I think you really need to fix this from the bottom
-> up or similar.  MMIO and such addresses are __iomem pointers, period.
+* Stephan Müller:
 
-Yes, i agree, but did not want to push the work to Olof. The point of
-COMPILE_TEST is to find issues like this, code which should be
-architecture independent, but is not. The cast just papers over the
-cracks.
+> * support deactivation of TRNG (i.e. blocking behavior of /dev/random)
+>   at compile time. If deactivated, /dev/random behaves like
+>   getrandom(2).
 
-At a minimum, could we fix the stub cvmx_write_csr() used for
-everything !MIPS. That should hopefully fix everything !MIPS, but
-cause MIPS to start issuing warning. The MIPS folks can then cleanup
-their code, which is really what is broken here.
+I don't quite understand this comment.  Doesn't getrandom with the
+GRND_RANDOM always behave like /dev/random?  Presumably, without the
+TRNG tap, the GRND_RANDOM flag for getrandom is ignored, and reading
+from /dev/random behaves like reading from /dev/urandom.
 
-      Andrew
+Anyway, reading the accompanying PDF, this looks rather impressive:
+the userspace bootstrapping problem is gone (the issue where waiting
+for more entropy prevents the collection of more entropy), *and* we
+can still make the standards people happy.
+
+(Replying from my other account due to mail issues, sorry.)
