@@ -6,61 +6,63 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9DDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85511C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D502067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6329D2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfKLS5e (ORCPT
+        id S1727119AbfKLS5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:57:34 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47800 "EHLO
+        Tue, 12 Nov 2019 13:57:40 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47810 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfKLS5e (ORCPT
+        with ESMTP id S1726718AbfKLS5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:57:34 -0500
+        Tue, 12 Nov 2019 13:57:38 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2B25E154CC5B1;
-        Tue, 12 Nov 2019 10:57:33 -0800 (PST)
-Date:   Tue, 12 Nov 2019 10:57:32 -0800 (PST)
-Message-Id: <20191112.105732.2016572665490269858.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 24151154CC64C;
+        Tue, 12 Nov 2019 10:57:38 -0800 (PST)
+Date:   Tue, 12 Nov 2019 10:57:37 -0800 (PST)
+Message-Id: <20191112.105737.1048367298577980363.davem@davemloft.net>
 To:     po.liu@nxp.com
 Cc:     claudiu.manoil@nxp.com, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, vinicius.gomes@intel.com,
         vladimir.oltean@nxp.com, alexandru.marginean@nxp.com,
         xiaoliang.yang_1@nxp.com, roy.zang@nxp.com, mingkai.hu@nxp.com,
         jerry.huang@nxp.com, leoyang.li@nxp.com
-Subject: Re: [v2,net-next, 1/2] enetc: Configure the Time-Aware Scheduler
- via tc-taprio offload
+Subject: Re: [v2,net-next, 2/2] enetc: update TSN Qbv PSPEED set according
+ to adjust link speed
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191112082823.28998-1-Po.Liu@nxp.com>
+In-Reply-To: <20191112082823.28998-2-Po.Liu@nxp.com>
 References: <20191111042715.13444-2-Po.Liu@nxp.com>
         <20191112082823.28998-1-Po.Liu@nxp.com>
+        <20191112082823.28998-2-Po.Liu@nxp.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 10:57:33 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 10:57:38 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Po Liu <po.liu@nxp.com>
-Date: Tue, 12 Nov 2019 08:42:49 +0000
+Date: Tue, 12 Nov 2019 08:42:55 +0000
 
-> ENETC supports in hardware for time-based egress shaping according
-> to IEEE 802.1Qbv. This patch implement the Qbv enablement by the
-> hardware offload method qdisc tc-taprio method.
-> Also update cbdr writeback to up level since control bd ring may
-> writeback data to control bd ring.
+> ENETC has a register PSPEED to indicate the link speed of hardware.
+> It is need to update accordingly. PSPEED field needs to be updated
+> with the port speed for QBV scheduling purposes. Or else there is
+> chance for gate slot not free by frame taking the MAC if PSPEED and
+> phy speed not match. So update PSPEED when link adjust. This is
+> implement by the adjust_link.
 > 
 > Signed-off-by: Po Liu <Po.Liu@nxp.com>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 > Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
 Applied.
