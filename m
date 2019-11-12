@@ -2,130 +2,172 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53412C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B08DC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC732084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A6A2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573559533;
+	bh=Daq6b517sCzfRAVgoXbNS8cPSbwp9imKYLb42aYLl0s=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=A1EiCz+LMynhNYN+5obhnMtFacoe6CePCHQoQjRj2XG5cf1JJfSjtz5k5Iy/wYdRV
+	 JV9MCXFZ1kbBpX/e8rkiYI4pYle0fQmD98Avbwrkhh9s/CJv/T1dBTGqa0NyBcVBp3
+	 O62Kv67O8lS0/SNRpZx1g44dZ2tZxjU9cgme2SUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfKLLvV (ORCPT
+        id S1727132AbfKLLwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:51:21 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7038 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727044AbfKLLvU (ORCPT
+        Tue, 12 Nov 2019 06:52:12 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:56730 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbfKLLwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:51:20 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACBlmeE066031;
-        Tue, 12 Nov 2019 06:50:13 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7td0v0mk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 06:50:12 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xACBhKKq016153;
-        Tue, 12 Nov 2019 11:50:15 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01wdc.us.ibm.com with ESMTP id 2w5n36e805-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 11:50:15 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACBoAYs50200876
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 11:50:10 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1BA096A051;
-        Tue, 12 Nov 2019 11:50:10 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57B9E6A047;
-        Tue, 12 Nov 2019 11:50:06 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.199.45.124])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 11:50:05 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
-Cc:     peterz@infradead.org, dave.hansen@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 12/16] dax: Add numa_node to the default device-dax attributes
-In-Reply-To: <157309906102.1582359.4262088001244476001.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com> <157309906102.1582359.4262088001244476001.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Tue, 12 Nov 2019 17:20:03 +0530
-Message-ID: <87imnps49g.fsf@linux.ibm.com>
+        Tue, 12 Nov 2019 06:52:11 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iUUiO-0006dl-1k; Tue, 12 Nov 2019 12:52:08 +0100
+To:     Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add  SPI config register
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120107
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 Nov 2019 13:01:28 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, <evgreen@chromium.org>,
+        <linus.walleij@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <bjorn.andersson@linaro.org>,
+        <mkshah@codeaurora.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+In-Reply-To: <20191111183738.GJ16900@codeaurora.org>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+ <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+ <5d92829e.1c69fb81.d860a.9096@mx.google.com>
+ <5da6b849.1c69fb81.a9b04.1b9f@mx.google.com>
+ <20191105205832.GE16900@codeaurora.org>
+ <5dc219a0.1c69fb81.f5014.42d2@mx.google.com>
+ <20191111183738.GJ16900@codeaurora.org>
+Message-ID: <1fa974e73d2b4871d84501cffc4ef8d3@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: ilina@codeaurora.org, swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
-
-> It is confusing that device-dax instances publish a 'target_node'
-> attribute, but not a 'numa_node'. The 'numa_node' information is
-> available elsewhere in the sysfs device hierarchy, but it is not obvious
-> and not reliable from one device-dax instance-type (e.g. child devices
-> of nvdimm namespaces) to the next (e.g. 'hmem' devices defined by EFI
-> Specific Purpose Memory and the ACPI HMAT).
+On 2019-11-11 19:46, Lina Iyer wrote:
+> On Tue, Nov 05 2019 at 17:53 -0700, Stephen Boyd wrote:
+>>Quoting Lina Iyer (2019-11-05 12:58:32)
+>>> On Tue, Oct 15 2019 at 00:27 -0600, Stephen Boyd wrote:
+>>> >
+>>> >I had another idea the other day. Maybe a better approach would be 
+>>> to
+>>> >make the mailbox or SCM code an interrupt controller with the
+>>> >appropriate functions to poke the bits necessary to make the 
+>>> interrupts
+>>> >work. Then we can make it a chip in the hierarchy between the GIC 
+>>> and
+>>> >PDC and make the interrupts call through from PDC to GIC. The 
+>>> locking
+>>> >could be handled in each respective driver if necessary, and 
+>>> otherwise
+>>> >we don't have to use a regmap or remap the same registers (except 
+>>> we may
+>>> >need to describe if the parent is the mailbox node or the scm 
+>>> fimware
+>>> >node).
+>>> >
+>>> Wouldn't that be a stretch to image the SCM register write  or a 
+>>> random
+>>> register write as an interrupt controller? But I agree that it 
+>>> solves
+>>> the issue of determining whether we want to use SCM or regmap.
+>>
+>>As far as I can tell it's similar to PDC which is basically a gate on
+>>the line from a dedicated chip pad or a GPIO pad that lets the 
+>> interrupt
+>>flow through to the GIC or not. Isn't this yet another hardware block 
+>> on
+>>those paths that control the edge type or something?
+>>
+>>>
+>>> But, we would still need to add syscon to the mailbox and then 
+>>> regmap
+>>> the registers for the interrupt contoller.
+>>
+>>I'm saying that we can make the mailbox driver an interrupt 
+>> controller
+>>driver too. Or if that doesn't work, we can map the region twice in 
+>> each
+>>driver with ioremap and cross fingers that they don't touch the same
+>>register at the same time. It sounds like that is the case. We won't 
+>> be
+>>able to fancily reserve the register region and map it in one 
+>> function
+>>call, but maybe that can be fixed by limiting the size or offset that 
+>> is
+>>reserved for each driver manually based on the same register property
+>>that's described in DT. Basically, one node in DT
+>>
+>> mailbox@f00 {
+>>   reg = <0xf00 0x1000>;
+>> };
+>>
+>>And then each driver will ioremap() the whole register region that's
+>>parsed from DT but each driver will mark sub-regions as reserved for 
+>> the
+>>respective driver. That way we don't have to worry about using a 
+>> regmap
+>>here and we'll still know what drivers are using what regions of IO 
+>> in
+>>/proc/iomem.
 >
-
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/dax/bus.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
+> Marc: What do you think of Stephen's idea? Summarizing my 
+> understanding
+> below -
 >
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index ce6d648d7670..0879b9663eb7 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -322,6 +322,13 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(modalias);
->  
-> +static ssize_t numa_node_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "%d\n", dev_to_node(dev));
-> +}
-> +static DEVICE_ATTR_RO(numa_node);
-> +
->  static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
->  {
->  	struct device *dev = container_of(kobj, struct device, kobj);
-> @@ -329,6 +336,8 @@ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
->  
->  	if (a == &dev_attr_target_node.attr && dev_dax_target_node(dev_dax) < 0)
->  		return 0;
-> +	if (a == &dev_attr_numa_node.attr && !IS_ENABLED(CONFIG_NUMA))
-> +		return 0;
->  	return a->mode;
->  }
->  
-> @@ -337,6 +346,7 @@ static struct attribute *dev_dax_attributes[] = {
->  	&dev_attr_size.attr,
->  	&dev_attr_target_node.attr,
->  	&dev_attr_resource.attr,
-> +	&dev_attr_numa_node.attr,
->  	NULL,
->  };
->  
-> _______________________________________________
-> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
+> We need to set an addition register for GPIOs that are routed to PDC 
+> and
+> the register may need to be written using a SCM call (SDM845) or 
+> written
+> from Linux (SDM855). The idea proposed here is -
+> Create multiple irqchips, one for each type of register access and 
+> then
+> put them in hierarchy based on the target.
+>
+> SDM845:
+> TLMM  --> PDC  --> PDC-SCM-IF  --> GIC
+>
+> SDM855:
+> TLMM  --> PDC  --> PDC-LNX-IF  --> GIC
+>
+> The hierarchy would be explicit from the DT. So we would not have to
+> worry about figuring out using a property in DT or resource name. 
+> (May
+> be we can use a compatible instead?). The use of reserved_resource(),
+> suggested by Stephen, would help avoid other drivers writing to this
+> register which is part of a generic dump area for one-off registers.
+
+That seems sensible: the two SoCs use different implementations of
+their GPIO configurations (at least apparently, I'm pretty sure it
+is the same HW underneath), and it makes sense to abstract that
+as separate entities.
+
+As for the DT binding, use whatever makes sense for you (compatible
+seems a reasonable choice).
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
