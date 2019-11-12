@@ -2,147 +2,205 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6A4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C16C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D48621925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5yUTYdu"
+	by mail.kernel.org (Postfix) with ESMTP id C68A021925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKLU3h (ORCPT
+        id S1727196AbfKLU3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:29:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40882 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfKLU3h (ORCPT
+        Tue, 12 Nov 2019 15:29:42 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:35206 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727171AbfKLU3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:29:37 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 22so16097341oip.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:29:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=nuSxtpboCRFRoH7ONR/ButKqpEu2VWZcgPYrZ3xx478=;
-        b=c5yUTYduIUiho00H0b3vhjtRjB+ajbeo7u2wmpJPSMI0+GG55FNytcQPRmRnWnyFj1
-         m432tYV8/llpTRhPJfog/sSGDxnrAMUqkwR9Zqq+MNfLAtXO56t75b8042lQmynQEPUQ
-         P66WVNVMDWdc5oalPToJYo0bl83h34bPblu7b9DkYCExgOHck3JuCFrqAIJm5P/otTux
-         Uus+Bili5xOtFHdymFj7uqdzv/GtqofxZY5yfPdUTg/eg8NRGUZD9t5M+O/2ST7Pfqiy
-         Wd6X4pUb8PBIxJoVziUV1cNNzAp49YvHBtA/neT73vXlgc9I9FOL2Znm/AbvtWgo0S+K
-         jScw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=nuSxtpboCRFRoH7ONR/ButKqpEu2VWZcgPYrZ3xx478=;
-        b=pt/PuIErGAADXhJBYim+MQ/tM3oFZm/Zsih296Eg/W9pLHRwEWcecrtsLwRb3I2N5j
-         M5LOHz90DW1yOtD6sQ3WNgvSH3ElYXnxWoXqWPcPqMn/UVY7XZVPve6ywitSuTQeZm3J
-         7OQ2ablXJv92Nso4ZLkZazIgscdDW/2L+Ggtj8B1sVC6xSYGTxUcWvw68ZbcgBT4csHp
-         0x3YXrzEh2jYrg4BdO0v1JUKz34YzADjWUOBlFbErFXIy1fHDTVWI9NRxSRx/spBCMz+
-         3Iz0JOwjJnQMuLuzjYeWHeIlAQ2MLCZ3T0fA9sncaCvsnfASIktrDW1jUod4L2uTtvkO
-         izZA==
-X-Gm-Message-State: APjAAAWEgBMlRNdIMKkeABZ/Cm2//IFVYPBOPJeQ9qcmiE48g+4c04lL
-        2HJZvEuIipbBH+ZS4d0DlQ==
-X-Google-Smtp-Source: APXvYqzkAt+1k/8BZCXeyArXDOhGImLjCdeMesIH8HcGa0Km475jeAHh7ADW67WFyJhYu8RqDGgvZQ==
-X-Received: by 2002:a05:6808:181:: with SMTP id w1mr751465oic.109.1573590575994;
-        Tue, 12 Nov 2019 12:29:35 -0800 (PST)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id k6sm2775908otr.35.2019.11.12.12.29.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 12:29:35 -0800 (PST)
-Received: from minyard.net (unknown [192.168.27.180])
-        by serve.minyard.net (Postfix) with ESMTPSA id 4A03118016D;
-        Tue, 12 Nov 2019 20:29:33 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 14:29:32 -0600
-From:   Corey Minyard <minyard@acm.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cminyard@mvista.com" <cminyard@mvista.com>,
-        "asmaa@mellanox.com" <asmaa@mellanox.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Subject: Re: [PATCH 2/2] drivers: ipmi: Modify max length of IPMB packet
-Message-ID: <20191112202932.GJ2882@minyard.net>
-Reply-To: minyard@acm.org
-References: <20191112023610.3644314-1-vijaykhemka@fb.com>
- <20191112023610.3644314-2-vijaykhemka@fb.com>
- <20191112124845.GE2882@minyard.net>
- <7BC487D6-6ACA-46CE-A751-8367FEDEE647@fb.com>
+        Tue, 12 Nov 2019 15:29:42 -0500
+Received: (qmail 5845 invoked by uid 2102); 12 Nov 2019 15:29:40 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 12 Nov 2019 15:29:40 -0500
+Date:   Tue, 12 Nov 2019 15:29:40 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+In-Reply-To: <CAHk-=wjGd0Ce2xadkiErPWxVBT2mhyeZ4TKyih2sJwyE3ohdHw@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1911121515400.1567-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7BC487D6-6ACA-46CE-A751-8367FEDEE647@fb.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 07:56:34PM +0000, Vijay Khemka wrote:
-> 
-> 
-> ﻿On 11/12/19, 4:48 AM, "Corey Minyard" <tcminyard@gmail.com on behalf of minyard@acm.org> wrote:
-> 
->     On Mon, Nov 11, 2019 at 06:36:10PM -0800, Vijay Khemka wrote:
->     > As per IPMB specification, maximum packet size supported is 255,
->     > modified Max length to 240 from 128 to accommodate more data.
->     
->     I couldn't find this in the IPMB specification.
->     
->     IIRC, the maximum on I2C is 32 byts, and table 6-9 in the IPMI spec,
->     under "IPMB Output" states: The IPMB standard message length is
->     specified as 32 bytes, maximum, including slave address.
-> 
-> We are using IPMI OEM messages and our response size is around 150 bytes
-> For some of responses. That's why I had set it to 240 bytes.
+On Tue, 12 Nov 2019, Linus Torvalds wrote:
 
-Hmm.  Well, that is a pretty significant violation of the spec, but
-there's nothing hard in the protocol that prohibits it, I guess.
-
-If Asmaa is ok with this, I'm ok with it, too.
-
--corey
-
->     
->     I'm not sure where 128 came from, but maybe it should be reduced to 31.
->     
->     -corey
->     
->     > 
->     > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
->     > ---
->     >  drivers/char/ipmi/ipmb_dev_int.c | 2 +-
->     >  1 file changed, 1 insertion(+), 1 deletion(-)
->     > 
->     > diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
->     > index 2419b9a928b2..7f9198bbce96 100644
->     > --- a/drivers/char/ipmi/ipmb_dev_int.c
->     > +++ b/drivers/char/ipmi/ipmb_dev_int.c
->     > @@ -19,7 +19,7 @@
->     >  #include <linux/spinlock.h>
->     >  #include <linux/wait.h>
->     >  
->     > -#define MAX_MSG_LEN		128
->     > +#define MAX_MSG_LEN		240
->     >  #define IPMB_REQUEST_LEN_MIN	7
->     >  #define NETFN_RSP_BIT_MASK	0x4
->     >  #define REQUEST_QUEUE_MAX_LEN	256
->     > -- 
->     > 2.17.1
->     > 
->     
+> On Tue, Nov 12, 2019 at 11:14 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > One could be the thing you brought up earlier: Suppose the compiler
+> > decides to use the "write only if changed" transformation, so that the
+> > code generated for the sticky write:
+> >
+> >         x = 1;
+> >
+> > ends up being what you would expect to see for:
+> >
+> >         if (x != 1)
+> >                 x = 1;
 > 
+> That is exactly the kind of  crap that would make me go "use the flag
+> to disable that invalid optimization, or don't use the compiler".
+> 
+> We already do -param=allow-store-data-races=0
+> 
+> The C standards body sadly has a very bad track record on this kind of
+> thing, where they have allowed absolutely insane extensions of "that's
+> undefined" in the name of making C a much worse language (they say "to
+> compete with Fortran", but it's the same thing).
+> 
+> I have talked to some people who have tried to change that course, but
+> they are fed up with the standards body too, and it's fighting
+> windmills.
+> 
+> Which is why I don't even  bother. The C standard language-lawyering
+> is simply not interesting to me. Yes, there are too many people who do
+> it, and I don't care.
+> 
+> For the kernel, we basically do not accept "that's undefined behavior,
+> I might generate odd code".
+> 
+> If the compiler can statitcally give an error for it, then that's one
+> thing, and we'd be ok with that. But the kind of mindset where people
+> think it's ok to have the compiler read the standard cross-eyed and
+> change the obvious meaning of the code "because it's undefined
+> behavior" is to me a sign of a cn incompetent compiler writer, and I
+> am not at all interested in playing that game.
+> 
+> Seriously.
+> 
+> I wish somebody on the C standard had the back-bone to say "undefined
+> behavior is not acceptable", and just say that the proper
+> optimizations are ones where you transform the code the obvious
+> straightforward way, and then you only do optimizations that are based
+> on that code and you can prove do not change semantics.
+> 
+> You can't add reads that weren't there.
+> 
+> But you can look at code that did a read, and then wrote back what you
+> can prove is the same value, and say "that write is redundant, just
+> looking at the code".
+> 
+> See the difference?
+> 
+> One approach makes up shit. The other approach looks at the code AS
+> WRITTEN and can prove "that's stupid, I can do it better, and I can
+> show why it makes no difference".
+> 
+> So you can change "i++; i++;" to "i +=2", even if "i" is not a private
+> variable. Did that remove a write? Yes it did. But it really falls
+> under the "I just improved on the code".
+> 
+> But you can *not* do the insane things that type-based aliasing do
+> (lack the "prove it's the same" part).
+> 
+> Because when we notice that in the kernel, we turn it off. It's why we have
+> 
+>  -fno-strict-overflow
+>  -fno-merge-all-constants
+>  -fno-strict-aliasing
+>  -fno-delete-null-pointer-checks
+>  --param=allow-store-data-races=0
+> 
+> and probably others. Because the standard is simply wrong when you
+> care about reliability.
+> 
+> > But what about C11 relaxed atomic reads and writes?
+> 
+> Again, I'm not in the least interested in the C11 standard
+> language-lawyering, because it has shown itself to not be useful.
+> 
+> Stop bringing up the "what if" cases. They aren't interesting. If a
+> compiler turns a single write into some kind of conditional write, or
+> if the compiler creates dummy writes, the compiler is garbage. No
+> amount of "but but but C11" is at all relevant.
+> 
+> What a compiler can do is:
+> 
+>  - generate multiple (and speculative) reads
+> 
+>  - combine writes to the same location (non-speciulatively)
+> 
+>  - take advantage of actual reads in the source code to do
+> transformations that are obvious (ie "oh, you read value X, you tested
+> by Y was set, now you write it back again, but clearly the value
+> didn't change so I can avoid the write").
+> 
+> so yes, a compiler can remove a _redundant_ write, and if the SOURCE
+> CODE has the read in it and the compiler decides "Oh, I already know
+> it has that value" then that's one thing.
+> 
+> But no, the compiler can not add data races that weren't there in the
+> source code and say "but C11". We're not compiling to the standard.
+> We're compiling to the real world.
+> 
+> So if the compiler just adds its own reads, I don't want to play with
+> that compiler. It may be appropriate in situations where we don't have
+> threads, we don't have security issues, and we don't have various
+> system and kernel concerns, but it's not appropriate for a kernel.
+> 
+> It really is that simple.
+> 
+> This is in no way different from other language lawyering, ie the
+> whole "signed arithmetic overflows are undefined, so i can do
+> optimization X" or "I can silently remove the NULL pointer check
+> because you accessed it before and that invoced undefined behavior, so
+> now I can do anthing".
+> 
+> Those optimizations may be valid in other projects. They are not valid
+> for the kernel.
+> 
+> Stop bringing them up. They are irrelevant. We will keep adding the
+> options to tell the compiler "no, we're not your toy benchmark, we do
+> real work, and that optimization is dangerous".
+
+Linus, calm down and read what I actually wrote.  That optimization was 
+a straw man.
+
+I'm trying to solve a real problem: How to tell KCSAN and the compiler
+that we don't care about certain access patterns which result in
+hardware-level races, and how to guarantee that the object code will
+still work correctly when those races occur.  Not telling the compiler 
+anything is a head-in-the-sand approach that will be dangerous in the 
+long run.
+
+We could annotate all those accesses with READ_ONCE/WRITE_ONCE.  You 
+don't like this approach, mainly because gcc produces lousy object code 
+for volatile accesses.
+
+My question was whether gcc does a better job with C11 relaxed atomic
+accesses.  If it does we could define READ_RELAXED/WRITE_RELAXED
+analogously to READ_ONCE/WRITE_ONCE, and do the annotations that way.  
+The resulting object code certainly ought to be robust against races,
+but I don't know what the quality would be like.
+
+On the other hand, if the compiler generates lousy code even for C11 
+relaxed atomic accesses, you've got a good case to go complain to the 
+GCC maintainers about.  They can't say they don't want to support such 
+things, because it's in the spec.
+
+Alan Stern
+
