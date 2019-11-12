@@ -2,177 +2,110 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00780C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65665C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDCE204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:00:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YOUp0Sb0"
+	by mail.kernel.org (Postfix) with ESMTP id 3FCC3206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573549315;
+	bh=7D34SoJmpLmfC9T9gY6o93RugeKDvEuH5fLN3uop8wI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dCMO7b5Z6x8egPwd1JE4De80ySUN+aq5i1bTnVjvez0IhL3iCj/24S7P8dRorte3z
+	 2/vygSVjmPcbxaLuZjRYLgiQHu2q7BhxDSiz8CDHU3dC1nU7RBDdZC71BNfBIMFQeQ
+	 LMQ/KMqMJBVByf5w0qlqRUKOJlR32zKA89W39oJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKLJAL (ORCPT
+        id S1727097AbfKLJBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:00:11 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:42332 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbfKLJAJ (ORCPT
+        Tue, 12 Nov 2019 04:01:54 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34877 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfKLJBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:00:09 -0500
-Received: by mail-ua1-f67.google.com with SMTP id 31so4465290uas.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 01:00:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1mTS09YV5sLbGRhR8eLBR8az5kI+VEtyXkMiASWLN98=;
-        b=YOUp0Sb06dRuaudxR7t7caTwSTstbvIIdATOS4cpPVNBtB8mbaIJyxZAurEvSsKwhu
-         j6KD9pvfJYz2QJr9Wg8Lkuyx0LEC4wAwEfKx/Oti0eD8qvVCV0JQ6KoTRYOGcEDL6Qp6
-         GECThp5a8BbccT0sBfHGbUfvnicncyqsspf6ISAwZ7HYOxZ1EzbF6I5mchGssao0Hv60
-         GEltbF2Jfx1T1ZMhrqJwIHFXhSEVlYR9nWi9gL/l/q+lY7n3nZGptVdTOUwpA9LDRqBs
-         zcn8s15pCOUOXG2SlncwUP0j8Ql61wdbe1m5siOyJ50PUmu+FxdXenD9CYpRSxaO3bI8
-         rV+w==
+        Tue, 12 Nov 2019 04:01:54 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n16so14148443oig.2;
+        Tue, 12 Nov 2019 01:01:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1mTS09YV5sLbGRhR8eLBR8az5kI+VEtyXkMiASWLN98=;
-        b=rrJWKLaSgZe3/6DtnCfzRcZKnTMlvPaSkmAtK2I1RA964nA009BTXwv+8rh8qwndaT
-         YC9oHSoC8HjA5xnNeQiYx1czf5SdrqTcIJ2U01cVC1gJVZtljZjmma2j/KmFuiIya0rn
-         HEDzNPJi+1Y1Ru5SE8NsL/tIh2kN99nrWLRYjZwCJBiBOqBrzI93eJ5WF/526stymKDi
-         F2jp8IZ4bNhcgKdCRBtJRksvrHSp34PpsaFekmuXi9Gdxnsvzx4Tuqi93hZUfDlzv//u
-         U3YfJgzzQgLrhJqF9cuZNpqkAcNpi61I0+SMNWxZOWck8trSj5Jey2yCkB380iho1fmw
-         ok2A==
-X-Gm-Message-State: APjAAAVs0aeFGoRXPQa4Oy3OnpFoHM4Hb74+jpPiQ7ikp2SBd/bZDTXW
-        DTWQQ4dCmMkiYvB4Tqf4a68RXEfWIJ2EbHPhE9J4Pw==
-X-Google-Smtp-Source: APXvYqxabd40sALVZ8OQ7ToAPJNZ/uS9Scd5B48SraEZjMFQA9vGEPI0Qj3t3JkXgO0wuY66RFrxxze3Ex9ZHJlQsok=
-X-Received: by 2002:ab0:24ce:: with SMTP id k14mr19253276uan.15.1573549208426;
- Tue, 12 Nov 2019 01:00:08 -0800 (PST)
+        bh=ZYn2o69wsvGZPAuGLdk3PmyXa9qfMINjGKG1oBvRpUs=;
+        b=JP853p0Ll6jVMTOBwPEfa/46johROuJsFny92WIOoi83e5D5W7a3ta9S7Is+2OwaAa
+         e2U4PvwUD45lx61qzdQlfAZw0f55yN9ir2T4eU3YX0YaZX968eOoY5n2rZtXS2jqSHML
+         Nzh/tV5le8qWUBiPKB60VEmB15ppX6Q4NpxTS48G42g5+RJ91ECZLMEKpMBTpRXcE3xa
+         zo1vNxnlYlTAvkee5NiZ0d/Pz1U79d/O7Tn/+zuX6zch4iqw0i0neLufTpT82qNialaN
+         09BMTifVJwCAea7cQt/rTfSbRgGL6/kvnVvetA+kb+Irnn6RBWWTE++k3iz7gzLn2nq1
+         W94A==
+X-Gm-Message-State: APjAAAWRk7bZgYS3hWG1fPk5X17GFHofaZ0YC/tA2GELwNA2cRzSphus
+        sthDD+rSHStGX81aMpF144sffkzdEZI75ez2wmHvZg==
+X-Google-Smtp-Source: APXvYqx+TvQRWOeVargE9TyXa3wSvdRA1dTrur04NFtQuErKbPKiELBO/s97GRKV6nHC00VAPI7hsVkImdv62/oC9lE=
+X-Received: by 2002:a05:6808:901:: with SMTP id w1mr3090487oih.57.1573549312903;
+ Tue, 12 Nov 2019 01:01:52 -0800 (PST)
 MIME-Version: 1.0
-References: <25466090-3b24-2695-10fb-88c59be3f149@fivetechno.de>
-In-Reply-To: <25466090-3b24-2695-10fb-88c59be3f149@fivetechno.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 12 Nov 2019 09:59:32 +0100
-Message-ID: <CAPDyKFqo76wi0-7LQqSXuH3YOUSdTTLySzsxEGkEvZayAPuj6g@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add SDR104 mode to SD-card I/F
- on rk3399-roc-pc
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <20191111213426.1415-1-cai@lca.pw>
+In-Reply-To: <20191111213426.1415-1-cai@lca.pw>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 Nov 2019 10:01:41 +0100
+Message-ID: <CAJZ5v0h45YKtEfggt91Cfw=hz_wE7R8raqMbOvBLG2McuQY_0g@mail.gmail.com>
+Subject: Re: [PATCH -next] acpi/numa/hmat: fix a section mismatch
+To:     Qian Cai <cai@lca.pw>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 09:45, Markus Reichl <m.reichl@fivetechno.de> wrote:
+On Mon, Nov 11, 2019 at 10:34 PM Qian Cai <cai@lca.pw> wrote:
 >
-> Add SDR104 capability and regulators to SD card node.
-> While at it, fix a typo in lcd pinctrl and remove two
-> undocumented bindings from pmic.
+> The commit cf8741ac57ed ("ACPI: NUMA: HMAT: Register "soft reserved"
+> memory as an "hmem" device") introduced a linker warning,
 >
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> WARNING: vmlinux.o(.text+0x64ec3c): Section mismatch in reference from
+> the function hmat_register_target() to the function
+> .init.text:hmat_register_target_devices()
+> The function hmat_register_target() references
+> the function __init hmat_register_target_devices().
+> This is often because hmat_register_target lacks a __init
+> annotation or the annotation of hmat_register_target_devices is wrong.
+>
+> Since hmat_register_target() is also called from hmat_callback(), and
+> then register_hotmemory_notifier() where it should not be freed when
+> hmat_init() is done, it indicates the annotation of
+> hmat_register_target_devices() is incorrect.
+>
+> Fixes: cf8741ac57ed ("ACPI: NUMA: HMAT: Register "soft reserved" memory as an "hmem" device")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-FWIW:
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
+Applying with minor modifications of the subject and changelog, thanks!
 
 > ---
-> v2: Remove always-on from vcc3v0_sd
-> ---
->  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 30 +++++++++++++++----
->  1 file changed, 24 insertions(+), 6 deletions(-)
+>  drivers/acpi/numa/hmat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> index d1eb55c855b3..a31099f7620b 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> @@ -135,6 +135,19 @@
->                 vin-supply = <&vcc_1v8>;
->         };
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 42cafeaac336..600ae3babd15 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -694,7 +694,7 @@ static void hmat_register_target_device(struct memory_target *target,
+>         memregion_free(id);
+>  }
 >
-> +       vcc3v0_sd: vcc3v0-sd {
-> +               compatible = "regulator-fixed";
-> +               enable-active-high;
-> +               gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&vcc3v0_sd_en>;
-> +               regulator-name = "vcc3v0_sd";
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <3000000>;
-> +               regulator-max-microvolt = <3000000>;
-> +               vin-supply = <&vcc3v3_sys>;
-> +       };
-> +
->         vcc3v3_sys: vcc3v3-sys {
->                 compatible = "regulator-fixed";
->                 regulator-name = "vcc3v3_sys";
-> @@ -293,8 +306,6 @@
->                 vcc10-supply = <&vcc3v3_sys>;
->                 vcc11-supply = <&vcc3v3_sys>;
->                 vcc12-supply = <&vcc3v3_sys>;
-> -               vcc13-supply = <&vcc3v3_sys>;
-> -               vcc14-supply = <&vcc3v3_sys>;
->                 vddio-supply = <&vcc_3v0>;
+> -static __init void hmat_register_target_devices(struct memory_target *target)
+> +static void hmat_register_target_devices(struct memory_target *target)
+>  {
+>         struct resource *res;
 >
->                 regulators {
-> @@ -576,7 +587,7 @@
->
->         lcd-panel {
->                 lcd_panel_reset: lcd-panel-reset {
-> -                       rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
-> +                       rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_up>;
->                 };
->         };
->
-> @@ -602,6 +613,10 @@
->                 vsel2_gpio: vsel2-gpio {
->                         rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
->                 };
-> +
-> +               pmic_int_l: pmic-int-l {
-> +                       rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-> +               };
->         };
->
->         sdio-pwrseq {
-> @@ -610,9 +625,9 @@
->                 };
->         };
->
-> -       pmic {
-> -               pmic_int_l: pmic-int-l {
-> -                       rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-> +       sdmmc {
-> +               vcc3v0_sd_en: vcc3v0-sd-en {
-> +                       rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
->                 };
->         };
->
-> @@ -667,6 +682,9 @@
->         cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
->         disable-wp;
->         max-frequency = <150000000>;
-> +       sd-uhs-sdr104;
-> +       vmmc-supply = <&vcc3v0_sd>;
-> +       vqmmc-supply = <&vcc_sdio>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
->         status = "okay";
 > --
-> 2.20.1
+> 2.21.0 (Apple Git-122.2)
 >
