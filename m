@@ -2,432 +2,212 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48763C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7509C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3CC20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B383120659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tD+5WCkd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZfNUt0qS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKLVV4 (ORCPT
+        id S1727336AbfKLVWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:21:56 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37112 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbfKLVVu (ORCPT
+        Tue, 12 Nov 2019 16:22:00 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38983 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727187AbfKLVV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:21:50 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b17so4528193wmj.2;
-        Tue, 12 Nov 2019 13:21:47 -0800 (PST)
+        Tue, 12 Nov 2019 16:21:57 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 29so12684751pgm.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:21:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id:in-reply-to:references;
-        bh=9M0fq0aYmniC9Pe7qGsRqdKSERKFCy30TwBPB239Tuo=;
-        b=tD+5WCkdBtrlSG4vfBnEOk+3i3RIuhPEtPgqMJHuC1RSdq/uKEgjmqxyEoDQsTT4JG
-         jJrNP/DPGxG8mZ9KqsrKoP0UEE4rAEovxE9Pcvf2+FZNv63AmDhgPP1ebdPj7ESu2v3i
-         EAtpOMgoLyfVE2GjVQIebC88nd99WCFjy4gdJEpHBG8YTrDabAcewH2lYI9GSEK7J82D
-         wcuKX6I67HwkhN2IUpXeiSKk81xPNFsR1dwQO9ba1ZdtzcxHKKi8RW1hh3UAIV+u2Ycy
-         SN7FXxMmFb8DuwIth8OJa4QpVpWDDfkKBJ3ZEV6oUIObFoezzhc+Lt7HFR29MX9yD+Ff
-         tCLA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=56RmInZgI7Bh5RV3HY6BrZUpnFAVvdE9v++wifdVVbQ=;
+        b=ZfNUt0qSlG/eNpBtAZ0VTYWsyYp45EI1kg059Eym4v5QX0Rd4eJhUdGDHMn6QKbyy7
+         rAEVCINxRbPGFWvH2zmErPehM9LKyDLyBoDAInAHNKT4/quKkG/EtZO/FhCOkM/nDfkP
+         OwUp5RB5f4lGpDiCQlYFyWhQBMqbf0YFKIWuU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id
-         :in-reply-to:references;
-        bh=9M0fq0aYmniC9Pe7qGsRqdKSERKFCy30TwBPB239Tuo=;
-        b=LcEeleOjzX8xJzaF5Ddl9i0z6CKBcm5WDawxGCt6z8zxrMNsohPvcAuXvkMTJJcJxh
-         UHPCpp1lA9Ho4aiDNshUxKcbR0XWMAdfYVc50gYy9Z0LIhoR1nTnorm+x+ERZXzkXWX9
-         +Z++ZnZcW3SqngdjrbHd7o1reEespQmpEoiXvNmABF3JQBuH9H8nNclxlUWXxJb1USKK
-         R5QLyt/LM7HGx2DRQpXTlu+qrZxJUnxQ/TcCGLgvMUzfESC6h9PdHV6sGcQE3QjmJrch
-         J+sqa1V1Xj7ECiNjjTWjWCCyGgyBWaCyWZbYzECDullmcZ2KOR2e06hxYpWkwpjZMmnu
-         TxoA==
-X-Gm-Message-State: APjAAAVWXiJjgdgv0p5D2MUN4/WNFRl6ueifnriy/bDAnK+a0enxVD5Y
-        NgV338M6I/RwJIbKuc82vgOzv0CC
-X-Google-Smtp-Source: APXvYqzpwRFAmkfiVGvX5ZhQ+MwoHiscJjOOfUW2fz398mQ7bAFNcxBuPGVVhZti7Az+/PGL+ZouvQ==
-X-Received: by 2002:a1c:16:: with SMTP id 22mr6344502wma.0.1573593706100;
-        Tue, 12 Nov 2019 13:21:46 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 13:21:45 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 6/7] kvm: x86: mmu: Recovery of shattered NX large pages
-Date:   Tue, 12 Nov 2019 22:21:36 +0100
-Message-Id: <1573593697-25061-7-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=56RmInZgI7Bh5RV3HY6BrZUpnFAVvdE9v++wifdVVbQ=;
+        b=VZpAjMSZA7eIKB9tNf+5dCKb2dxvGsAbQblrrFG8tDlUouYaZ1OMOJHJ8ig5Gq1rbG
+         62KXE6/OfUDOleckGekNvwJqMGF8q3n25rNr6p7xaN67mnzNo27bV1RLZc+zP3lV8MFm
+         M3rpJtFLslu3mcBJR4IeYloxfpl/mSnwadcLxluSkmpv0kJHF8iveWO/nxlAWPszZ+m3
+         KxaVCULkq5PBcBmBzVIiMZs3eYHximUO9IlKXl3qeRxyVHyxH2SjyFgq1JFEZqtxHoS6
+         Gxnn0boN2MK8vJHrTN8TkkHVIeMkClxQrBhqNqQN4u3PdOzofYAqfvB2gjQgXRQPxRHP
+         YMSQ==
+X-Gm-Message-State: APjAAAVJgBjarRxl+jbusydxMcjeoJFHqCTNkYN999WHo5unWqaBxxo1
+        u4zzkA1wIdJH55AnlxlVPn/Y5g==
+X-Google-Smtp-Source: APXvYqzdFzu4zPPFnJ9ABSyKsWziEZi4Dk2O2pVHeNcsXTcPeB3CKkazqUJ/8FJ/XZkexPEBBAMb2g==
+X-Received: by 2002:aa7:8d8b:: with SMTP id i11mr11186741pfr.45.1573593716214;
+        Tue, 12 Nov 2019 13:21:56 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c21sm19635349pgh.25.2019.11.12.13.21.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 13:21:55 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:21:54 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jiri Slaby <jslaby@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Kubecek <mkubecek@suse.cz>
+Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
+ as usercopy caches
+Message-ID: <201911121313.1097D6EE@keescook>
+References: <1515636190-24061-1-git-send-email-keescook@chromium.org>
+ <1515636190-24061-10-git-send-email-keescook@chromium.org>
+ <9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junaid Shahid <junaids@google.com>
+On Tue, Nov 12, 2019 at 08:17:57AM +0100, Jiri Slaby wrote:
+> On 11. 01. 18, 3:02, Kees Cook wrote:
+> > From: David Windsor <dave@nullcore.net>
+> > 
+> > Mark the kmalloc slab caches as entirely whitelisted. These caches
+> > are frequently used to fulfill kernel allocations that contain data
+> > to be copied to/from userspace. Internal-only uses are also common,
+> > but are scattered in the kernel. For now, mark all the kmalloc caches
+> > as whitelisted.
+> > 
+> > This patch is modified from Brad Spengler/PaX Team's PAX_USERCOPY
+> > whitelisting code in the last public patch of grsecurity/PaX based on my
+> > understanding of the code. Changes or omissions from the original code are
+> > mine and don't reflect the original grsecurity/PaX code.
+> > 
+> > Signed-off-by: David Windsor <dave@nullcore.net>
+> > [kees: merged in moved kmalloc hunks, adjust commit log]
+> > Cc: Pekka Enberg <penberg@kernel.org>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-xfs@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > Acked-by: Christoph Lameter <cl@linux.com>
+> > ---
+> >  mm/slab.c        |  3 ++-
+> >  mm/slab.h        |  3 ++-
+> >  mm/slab_common.c | 10 ++++++----
+> >  3 files changed, 10 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/mm/slab.c b/mm/slab.c
+> > index b9b0df620bb9..dd367fe17a4e 100644
+> > --- a/mm/slab.c
+> > +++ b/mm/slab.c
+> ...
+> > @@ -1098,7 +1099,8 @@ void __init setup_kmalloc_cache_index_table(void)
+> >  static void __init new_kmalloc_cache(int idx, slab_flags_t flags)
+> >  {
+> >  	kmalloc_caches[idx] = create_kmalloc_cache(kmalloc_info[idx].name,
+> > -					kmalloc_info[idx].size, flags);
+> > +					kmalloc_info[idx].size, flags, 0,
+> > +					kmalloc_info[idx].size);
+> >  }
+> >  
+> >  /*
+> > @@ -1139,7 +1141,7 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+> >  
+> >  			BUG_ON(!n);
+> >  			kmalloc_dma_caches[i] = create_kmalloc_cache(n,
+> > -				size, SLAB_CACHE_DMA | flags);
+> > +				size, SLAB_CACHE_DMA | flags, 0, 0);
+> 
+> Hi,
+> 
+> was there any (undocumented) reason NOT to mark DMA caches as usercopy?
+> 
+> We are seeing this on s390x:
+> 
+> > usercopy: Kernel memory overwrite attempt detected to SLUB object
+> 'dma-kmalloc-1k' (offset 0, size 11)!
+> > ------------[ cut here ]------------
+> > kernel BUG at mm/usercopy.c:99!
 
-The page table pages corresponding to broken down large pages are zapped in
-FIFO order, so that the large page can potentially be recovered, if it is
-not longer being used for execution.  This removes the performance penalty
-for walking deeper EPT page tables.
+Interesting! I believe the rationale was that if the region is used for
+DMA, allowing direct access to it from userspace could be prone to
+races.
 
-By default, one large page will last about one hour once the guest
-reaches a steady state.
+> See:
+> https://bugzilla.suse.com/show_bug.cgi?id=1156053
 
-Signed-off-by: Junaid Shahid <junaids@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- Documentation/admin-guide/kernel-parameters.txt |   6 ++
- arch/x86/include/asm/kvm_host.h                 |   4 +
- arch/x86/kvm/mmu.c                              | 129 ++++++++++++++++++++++++
- arch/x86/kvm/mmu.h                              |   4 +
- arch/x86/kvm/x86.c                              |  11 ++
- virt/kvm/kvm_main.c                             |  28 +++++
- 6 files changed, 182 insertions(+)
+For context from the bug, the trace is:
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 9d5f123cc218..8dee8f68fe15 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2068,6 +2068,12 @@
- 			If the software workaround is enabled for the host,
- 			guests do need not to enable it for nested guests.
- 
-+	kvm.nx_huge_pages_recovery_ratio=
-+			[KVM] Controls how many 4KiB pages are periodically zapped
-+			back to huge pages.  0 disables the recovery, otherwise if
-+			the value is N KVM will zap 1/Nth of the 4KiB pages every
-+			minute.  The default is 60.
-+
- 	kvm-amd.nested=	[KVM,AMD] Allow nested virtualization in KVM/SVM.
- 			Default is 1 (enabled)
- 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index a37b03483b66..4fc61483919a 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -312,6 +312,8 @@ struct kvm_rmap_head {
- struct kvm_mmu_page {
- 	struct list_head link;
- 	struct hlist_node hash_link;
-+	struct list_head lpage_disallowed_link;
-+
- 	bool unsync;
- 	u8 mmu_valid_gen;
- 	bool mmio_cached;
-@@ -860,6 +862,7 @@ struct kvm_arch {
- 	 */
- 	struct list_head active_mmu_pages;
- 	struct list_head zapped_obsolete_pages;
-+	struct list_head lpage_disallowed_mmu_pages;
- 	struct kvm_page_track_notifier_node mmu_sp_tracker;
- 	struct kvm_page_track_notifier_head track_notifier_head;
- 
-@@ -934,6 +937,7 @@ struct kvm_arch {
- 	bool exception_payload_enabled;
- 
- 	struct kvm_pmu_event_filter *pmu_event_filter;
-+	struct task_struct *nx_lpage_recovery_thread;
- };
- 
- struct kvm_vm_stat {
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index bedf6864b092..529589a42afb 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -37,6 +37,7 @@
- #include <linux/uaccess.h>
- #include <linux/hash.h>
- #include <linux/kern_levels.h>
-+#include <linux/kthread.h>
- 
- #include <asm/page.h>
- #include <asm/pat.h>
-@@ -50,16 +51,26 @@
- extern bool itlb_multihit_kvm_mitigation;
- 
- static int __read_mostly nx_huge_pages = -1;
-+static uint __read_mostly nx_huge_pages_recovery_ratio = 60;
- 
- static int set_nx_huge_pages(const char *val, const struct kernel_param *kp);
-+static int set_nx_huge_pages_recovery_ratio(const char *val, const struct kernel_param *kp);
- 
- static struct kernel_param_ops nx_huge_pages_ops = {
- 	.set = set_nx_huge_pages,
- 	.get = param_get_bool,
- };
- 
-+static struct kernel_param_ops nx_huge_pages_recovery_ratio_ops = {
-+	.set = set_nx_huge_pages_recovery_ratio,
-+	.get = param_get_uint,
-+};
-+
- module_param_cb(nx_huge_pages, &nx_huge_pages_ops, &nx_huge_pages, 0644);
- __MODULE_PARM_TYPE(nx_huge_pages, "bool");
-+module_param_cb(nx_huge_pages_recovery_ratio, &nx_huge_pages_recovery_ratio_ops,
-+		&nx_huge_pages_recovery_ratio, 0644);
-+__MODULE_PARM_TYPE(nx_huge_pages_recovery_ratio, "uint");
- 
- /*
-  * When setting this variable to true it enables Two-Dimensional-Paging
-@@ -1215,6 +1226,8 @@ static void account_huge_nx_page(struct kvm *kvm, struct kvm_mmu_page *sp)
- 		return;
- 
- 	++kvm->stat.nx_lpage_splits;
-+	list_add_tail(&sp->lpage_disallowed_link,
-+		      &kvm->arch.lpage_disallowed_mmu_pages);
- 	sp->lpage_disallowed = true;
- }
- 
-@@ -1239,6 +1252,7 @@ static void unaccount_huge_nx_page(struct kvm *kvm, struct kvm_mmu_page *sp)
- {
- 	--kvm->stat.nx_lpage_splits;
- 	sp->lpage_disallowed = false;
-+	list_del(&sp->lpage_disallowed_link);
- }
- 
- static bool __mmu_gfn_lpage_is_disallowed(gfn_t gfn, int level,
-@@ -6274,6 +6288,8 @@ static int set_nx_huge_pages(const char *val, const struct kernel_param *kp)
- 			idx = srcu_read_lock(&kvm->srcu);
- 			kvm_mmu_zap_all_fast(kvm);
- 			srcu_read_unlock(&kvm->srcu, idx);
-+
-+			wake_up_process(kvm->arch.nx_lpage_recovery_thread);
- 		}
- 		mutex_unlock(&kvm_lock);
- 	}
-@@ -6367,3 +6383,116 @@ void kvm_mmu_module_exit(void)
- 	unregister_shrinker(&mmu_shrinker);
- 	mmu_audit_disable();
- }
-+
-+static int set_nx_huge_pages_recovery_ratio(const char *val, const struct kernel_param *kp)
-+{
-+	unsigned int old_val;
-+	int err;
-+
-+	old_val = nx_huge_pages_recovery_ratio;
-+	err = param_set_uint(val, kp);
-+	if (err)
-+		return err;
-+
-+	if (READ_ONCE(nx_huge_pages) &&
-+	    !old_val && nx_huge_pages_recovery_ratio) {
-+		struct kvm *kvm;
-+
-+		mutex_lock(&kvm_lock);
-+
-+		list_for_each_entry(kvm, &vm_list, vm_list)
-+			wake_up_process(kvm->arch.nx_lpage_recovery_thread);
-+
-+		mutex_unlock(&kvm_lock);
-+	}
-+
-+	return err;
-+}
-+
-+static void kvm_recover_nx_lpages(struct kvm *kvm)
-+{
-+	int rcu_idx;
-+	struct kvm_mmu_page *sp;
-+	unsigned int ratio;
-+	LIST_HEAD(invalid_list);
-+	ulong to_zap;
-+
-+	rcu_idx = srcu_read_lock(&kvm->srcu);
-+	spin_lock(&kvm->mmu_lock);
-+
-+	ratio = READ_ONCE(nx_huge_pages_recovery_ratio);
-+	to_zap = ratio ? DIV_ROUND_UP(kvm->stat.nx_lpage_splits, ratio) : 0;
-+	while (to_zap && !list_empty(&kvm->arch.lpage_disallowed_mmu_pages)) {
-+		/*
-+		 * We use a separate list instead of just using active_mmu_pages
-+		 * because the number of lpage_disallowed pages is expected to
-+		 * be relatively small compared to the total.
-+		 */
-+		sp = list_first_entry(&kvm->arch.lpage_disallowed_mmu_pages,
-+				      struct kvm_mmu_page,
-+				      lpage_disallowed_link);
-+		WARN_ON_ONCE(!sp->lpage_disallowed);
-+		kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
-+		WARN_ON_ONCE(sp->lpage_disallowed);
-+
-+		if (!--to_zap || need_resched() || spin_needbreak(&kvm->mmu_lock)) {
-+			kvm_mmu_commit_zap_page(kvm, &invalid_list);
-+			if (to_zap)
-+				cond_resched_lock(&kvm->mmu_lock);
-+		}
-+	}
-+
-+	spin_unlock(&kvm->mmu_lock);
-+	srcu_read_unlock(&kvm->srcu, rcu_idx);
-+}
-+
-+static long get_nx_lpage_recovery_timeout(u64 start_time)
-+{
-+	return READ_ONCE(nx_huge_pages) && READ_ONCE(nx_huge_pages_recovery_ratio)
-+		? start_time + 60 * HZ - get_jiffies_64()
-+		: MAX_SCHEDULE_TIMEOUT;
-+}
-+
-+static int kvm_nx_lpage_recovery_worker(struct kvm *kvm, uintptr_t data)
-+{
-+	u64 start_time;
-+	long remaining_time;
-+
-+	while (true) {
-+		start_time = get_jiffies_64();
-+		remaining_time = get_nx_lpage_recovery_timeout(start_time);
-+
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		while (!kthread_should_stop() && remaining_time > 0) {
-+			schedule_timeout(remaining_time);
-+			remaining_time = get_nx_lpage_recovery_timeout(start_time);
-+			set_current_state(TASK_INTERRUPTIBLE);
-+		}
-+
-+		set_current_state(TASK_RUNNING);
-+
-+		if (kthread_should_stop())
-+			return 0;
-+
-+		kvm_recover_nx_lpages(kvm);
-+	}
-+}
-+
-+int kvm_mmu_post_init_vm(struct kvm *kvm)
-+{
-+	int err;
-+
-+	err = kvm_vm_create_worker_thread(kvm, kvm_nx_lpage_recovery_worker, 0,
-+					  "kvm-nx-lpage-recovery",
-+					  &kvm->arch.nx_lpage_recovery_thread);
-+	if (!err)
-+		kthread_unpark(kvm->arch.nx_lpage_recovery_thread);
-+
-+	return err;
-+}
-+
-+void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
-+{
-+	if (kvm->arch.nx_lpage_recovery_thread)
-+		kthread_stop(kvm->arch.nx_lpage_recovery_thread);
-+}
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 11f8ec89433b..d55674f44a18 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -210,4 +210,8 @@ static inline u8 permission_fault(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
- bool kvm_mmu_slot_gfn_write_protect(struct kvm *kvm,
- 				    struct kvm_memory_slot *slot, u64 gfn);
- int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu);
-+
-+int kvm_mmu_post_init_vm(struct kvm *kvm);
-+void kvm_mmu_pre_destroy_vm(struct kvm *kvm);
-+
- #endif
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b087d178a774..a30e9962a6ef 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9456,6 +9456,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	INIT_HLIST_HEAD(&kvm->arch.mask_notifier_list);
- 	INIT_LIST_HEAD(&kvm->arch.active_mmu_pages);
- 	INIT_LIST_HEAD(&kvm->arch.zapped_obsolete_pages);
-+	INIT_LIST_HEAD(&kvm->arch.lpage_disallowed_mmu_pages);
- 	INIT_LIST_HEAD(&kvm->arch.assigned_dev_head);
- 	atomic_set(&kvm->arch.noncoherent_dma_count, 0);
- 
-@@ -9484,6 +9485,11 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	return kvm_x86_ops->vm_init(kvm);
- }
- 
-+int kvm_arch_post_init_vm(struct kvm *kvm)
-+{
-+	return kvm_mmu_post_init_vm(kvm);
-+}
-+
- static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
- {
- 	vcpu_load(vcpu);
-@@ -9585,6 +9591,11 @@ int x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
- }
- EXPORT_SYMBOL_GPL(x86_set_memory_region);
- 
-+void kvm_arch_pre_destroy_vm(struct kvm *kvm)
-+{
-+	kvm_mmu_pre_destroy_vm(kvm);
-+}
-+
- void kvm_arch_destroy_vm(struct kvm *kvm)
- {
- 	if (current->mm == kvm->mm) {
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 8aed32b604d9..4aab3547a165 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -626,6 +626,23 @@ static int kvm_create_vm_debugfs(struct kvm *kvm, int fd)
- 	return 0;
- }
- 
-+/*
-+ * Called after the VM is otherwise initialized, but just before adding it to
-+ * the vm_list.
-+ */
-+int __weak kvm_arch_post_init_vm(struct kvm *kvm)
-+{
-+	return 0;
-+}
-+
-+/*
-+ * Called just after removing the VM from the vm_list, but before doing any
-+ * other destruction.
-+ */
-+void __weak kvm_arch_pre_destroy_vm(struct kvm *kvm)
-+{
-+}
-+
- static struct kvm *kvm_create_vm(unsigned long type)
- {
- 	struct kvm *kvm = kvm_arch_alloc_vm();
-@@ -683,6 +700,10 @@ static struct kvm *kvm_create_vm(unsigned long type)
- 
- 	r = kvm_init_mmu_notifier(kvm);
- 	if (r)
-+		goto out_err_no_mmu_notifier;
-+
-+	r = kvm_arch_post_init_vm(kvm);
-+	if (r)
- 		goto out_err;
- 
- 	mutex_lock(&kvm_lock);
-@@ -694,6 +715,11 @@ static struct kvm *kvm_create_vm(unsigned long type)
- 	return kvm;
- 
- out_err:
-+#if defined(CONFIG_MMU_NOTIFIER) && defined(KVM_ARCH_WANT_MMU_NOTIFIER)
-+	if (kvm->mmu_notifier.ops)
-+		mmu_notifier_unregister(&kvm->mmu_notifier, current->mm);
-+#endif
-+out_err_no_mmu_notifier:
- 	cleanup_srcu_struct(&kvm->irq_srcu);
- out_err_no_irq_srcu:
- 	cleanup_srcu_struct(&kvm->srcu);
-@@ -738,6 +764,8 @@ static void kvm_destroy_vm(struct kvm *kvm)
- 	mutex_lock(&kvm_lock);
- 	list_del(&kvm->vm_list);
- 	mutex_unlock(&kvm_lock);
-+	kvm_arch_pre_destroy_vm(kvm);
-+
- 	kvm_free_irq_routing(kvm);
- 	for (i = 0; i < KVM_NR_BUSES; i++) {
- 		struct kvm_io_bus *bus = kvm_get_bus(kvm, i);
+(<0000000000386c5a> usercopy_abort+0xa2/0xa8) 
+ <000000000036097a> __check_heap_object+0x11a/0x120  
+ <0000000000386b3a> __check_object_size+0x18a/0x208  
+ <000000000079b4ba> skb_copy_datagram_from_iter+0x62/0x240  
+ <000003ff804edd5c> iucv_sock_sendmsg+0x1fc/0x858 Ýaf_iucv¨  
+ <0000000000785894> sock_sendmsg+0x54/0x90  
+ <0000000000785944> sock_write_iter+0x74/0xa0  
+ <000000000038a3f0> new_sync_write+0x110/0x180  
+ <000000000038d42e> vfs_write+0xa6/0x1d0  
+ <000000000038d748> ksys_write+0x60/0xe8  
+ <000000000096a660> system_call+0xdc/0x2e0  
+
+I know Al worked on fixing up usercopy checking for iters. I wonder if
+there is redundant checking happening here? i.e. haven't iters already
+done object size verifications, so they're not needed during iter copy
+helpers?
+
+> This indeed fixes it:
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1290,7 +1290,8 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+>                         kmalloc_caches[KMALLOC_DMA][i] =
+> create_kmalloc_cache(
+>                                 kmalloc_info[i].name[KMALLOC_DMA],
+>                                 kmalloc_info[i].size,
+> -                               SLAB_CACHE_DMA | flags, 0, 0);
+> +                               SLAB_CACHE_DMA | flags, 0,
+> +                               kmalloc_info[i].size);
+>                 }
+>         }
+>  #endif
+
+How is iucv the only network protocol that has run into this? Do others
+use a bounce buffer?
+
 -- 
-1.8.3.1
-
-
+Kees Cook
