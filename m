@@ -2,104 +2,155 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C23C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DD5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AC420656
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23F621E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Ah4mAq6x"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Gv4CNBoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfKLO4E (ORCPT
+        id S1727004AbfKLO7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:56:04 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:53616 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfKLO4D (ORCPT
+        Tue, 12 Nov 2019 09:59:45 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35573 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfKLO7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:56:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CC6CDOjq53lam0n3yDiGEmY1dG4I1rOGEfq4W7Fmwjw=; b=Ah4mAq6xeMy0RJp4jo/JkpuRf
-        8hfsp1qtuvNn+wWx+lc6z+YAcUxqHvrqbqBkYnd0Vhpffd5Ooy3oI9PmOFUFwAMf2MCZ0E8bkKWVy
-        qnql9BefveI2ESRbHqnV5FTIPK5//sb8dTaZDdyOdrr2NweIC/cfBF3c3k4NmRMVy3Yh4TaQmWYU3
-        PcyMMv5qmWCXrjX9FkzlbLHIkSXCfMGRlPEsfq7/069xjqRVs79HJXIZ596SjfcGMgnFloIR3WDZQ
-        N4FzaSiG2ev1S5TbOdBMSyg6WDvC7yDskKCTdHP02N6XRAFDBqw3fl9IQGZXvOsHaZn/7Inls3ms/
-        A7jqS2qhg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38692)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iUXaC-0006Gb-1Q; Tue, 12 Nov 2019 14:55:52 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iUXa1-0001Td-TE; Tue, 12 Nov 2019 14:55:41 +0000
-Date:   Tue, 12 Nov 2019 14:55:41 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] arm: kernel: initialize broadcast hrtimer based clock
- event device
-Message-ID: <20191112145541.GK25745@shell.armlinux.org.uk>
-References: <20191112120625.20173-1-benjamin.gaignard@st.com>
- <alpine.DEB.2.21.1911121547490.1833@nanos.tec.linutronix.de>
+        Tue, 12 Nov 2019 09:59:45 -0500
+Received: by mail-qk1-f194.google.com with SMTP id i19so14698659qki.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 06:59:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gSINY5VnDSmpBftGgJ6lg01oQr1mDIp5ALDVHMXlZtw=;
+        b=Gv4CNBoQWcvSweiWqUWk1x91ARUiIp699peYUwjmh6dVDMofdbK9TZUTy69OMR5wBz
+         Sj+vB2GcvnlKfNRZEIMuMD3yS8pJJt++bT0SIHOtaVbPAljtUuvSlhlcMWxzQGQgoRE3
+         Kcd06rwOsC5lFXfYYtTIKinfT2hJtltQwpwK1te3zTPVqwAUXLHL6fYLU7jrBrgS8qoj
+         5wTN6yJDZt4fm/8Xfr2nFuWSweu2iE2sTod84emu3a9nTDFmzXvrouK8S00TlYIY1f00
+         1fPMpGYYvGHDTjbQoG1Pekl7cneX7THKqwP87lTRSl0Y+XYeoSKkQnVFVOyuY5lkinLg
+         KMnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gSINY5VnDSmpBftGgJ6lg01oQr1mDIp5ALDVHMXlZtw=;
+        b=PiooZ+EhDOHTuDgQlGjZFAKLIr4lY14i5RAxi0PrC1XiBarX7b5cl07mO4br2ctPr7
+         ZRbbamjMfbKCLkEwIs5N34XfFKaQfpjUBomM4m9uxV65aqj4qfPR00RNgOimegQ+yuYC
+         itTmGp1yuORpDmQANmsaA1GROv9sV4c1UXwORGVOzVwEk9xk4eFtgwNJH+1lYwT6rtDS
+         DqIPouwAZJt7gAtSdv8zyzGa48Q460pkO3ngdFlt0164HIAmIda1yiWeamNtRR8CqPAO
+         Tlm+Xagy3o2lNIeolM0g8SUJnLWYq96cg/G3feb4dJaADhbCvTtk9etaoZpBX703VHCF
+         IZnw==
+X-Gm-Message-State: APjAAAW9dSxh3O/Ay1Src4UhwcFUEC7J8VhpA7YUxeNDSXpvfAEsAsec
+        Z+OPLjDa7T1p0rlRU7HskL0GhAoXJRw1Bw==
+X-Google-Smtp-Source: APXvYqxGVHT2d2Zo/+rHOGGT2x3k3jwx+Qqewg1Ac2Y4lPfZSQlSC0MLZdrrZYbG4EQSFse6ASdTJg==
+X-Received: by 2002:a37:9d86:: with SMTP id g128mr5962601qke.191.1573570784074;
+        Tue, 12 Nov 2019 06:59:44 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::aa8c])
+        by smtp.gmail.com with ESMTPSA id q34sm8004104qte.50.2019.11.12.06.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 06:59:43 -0800 (PST)
+Date:   Tue, 12 Nov 2019 06:59:42 -0800
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Chris Down <chris@chrisdown.name>, Qian Cai <cai@lca.pw>,
+        akpm@linux-foundation.org, guro@fb.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
+Message-ID: <20191112145942.GA168812@cmpxchg.org>
+References: <20191108204407.1435-1-cai@lca.pw>
+ <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
+ <20191111130516.GA891635@chrisdown.name>
+ <20191111131427.GB891635@chrisdown.name>
+ <20191111132812.GK1396@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911121547490.1833@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191111132812.GK1396@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 03:48:10PM +0100, Thomas Gleixner wrote:
-> On Tue, 12 Nov 2019, Benjamin Gaignard wrote:
-> 
-> > On platforms implementing CPU power management, the CPUidle subsystem
-> > can allow CPUs to enter idle states where local timers logic is lost on power
-> > down. To keep the software timers functional the kernel relies on an
-> > always-on broadcast timer to be present in the platform to relay the
-> > interrupt signalling the timer expiries.
-> > 
-> > For platforms implementing CPU core gating that do not implement an always-on
-> > HW timer or implement it in a broken way, this patch adds code to initialize
-> > the kernel hrtimer based clock event device upon boot (which can be chosen as
-> > tick broadcast device by the kernel).
-> > It relies on a dynamically chosen CPU to be always powered-up. This CPU then
-> > relays the timer interrupt to CPUs in deep-idle states through its HW local
-> > timer device.
-> > 
-> > Having a CPU always-on has implications on power management platform
-> > capabilities and makes CPUidle suboptimal, since at least a CPU is kept
-> > always in a shallow idle state by the kernel to relay timer interrupts,
-> > but at least leaves the kernel with a functional system with some working
-> > power management capabilities.
-> > 
-> > The hrtimer based clock event device is unconditionally registered, but
-> > has the lowest possible rating such that any broadcast-capable HW clock
-> > event device present will be chosen in preference as the tick broadcast
-> > device.
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Qian, thanks for the report and the fix.
 
-Thanks.  Benjamin, please put it in the patch system, thanks.
+On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
+> On Mon 11-11-19 13:14:27, Chris Down wrote:
+> > Chris Down writes:
+> > > Ah, I just saw this in my local checkout and thought it was from my
+> > > changes, until I saw it's also on clean mmots checkout. Thanks for the
+> > > fixup!
+> > 
+> > Also, does this mean we should change callers that may pass through
+> > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
+> > remove this interim fixup? I'm worried otherwise we might paper over real
+> > issues in future.
+> 
+> Yes, removing this special casing is reasonable. I am not sure
+> MAX_NR_ZONES - 1 is a better choice though. It is error prone and
+> zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
+> be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
+> outside of MM reclaim code AFAIK. It would be probably better to have
+> MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
 
+We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
+"no zone restrictions" - get_scan_count() is the odd one out:
+
+- mem_cgroup_shrink_node()
+- try_to_free_mem_cgroup_pages()
+- balance_pgdat()
+- kswapd()
+- shrink_all_memory()
+
+It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
+subtle than handling both inclusive and exclusive range delimiters.
+
+So I think the better fix would be this:
+
+---
+From 1566a255eef7c2165d435125231ad1eeecac7959 Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Mon, 11 Nov 2019 13:46:25 -0800
+Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
+
+get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
+beyond the range of valid zone indexes, but used to be handled before
+the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
+express "all zones, please", so do the same here.
+
+Reported-by: Qian Cai <cai@lca.pw>
+Reported-by: Chris Down <chris@chrisdown.name>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/vmscan.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index df859b1d583c..34ad8a0f3f27 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 	 * anon in [0], file in [1]
+ 	 */
+ 
+-	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
+-		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
+-	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
+-		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
++	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
++		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
++	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
++		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
+ 
+ 	spin_lock_irq(&pgdat->lru_lock);
+ 	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.24.0
+
