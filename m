@@ -2,117 +2,132 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57029C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F96C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE4821925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kang/UmV"
+	by mail.kernel.org (Postfix) with ESMTP id 81D1A21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfKLPN0 (ORCPT
+        id S1727199AbfKLPNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:13:26 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40759 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfKLPNZ (ORCPT
+        Tue, 12 Nov 2019 10:13:52 -0500
+Received: from www62.your-server.de ([213.133.104.62]:55050 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLPNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:13:25 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i10so18927889wrs.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aL0fbv6KeJNvtxT5CdrQViagZLp9s9K8vsOn0Xh8q30=;
-        b=Kang/UmVVO1JPRhaQOEq1cOuhtLfxV7mH+vBGpXjJRl9ZL8f3tEldO5gzgYeyiJSjY
-         UaLVwbBlddvt0CMDMLjBK/QBO7tu8AdXOV2FkyPOTucPuRiQ9aRarfocg7NobZXOg6cs
-         g2OZmqGNhrr4i1olFfKwJrx/6+kWtMbNOjkU9ja8lnp3drrEdN00+6w1jQjL1uRDDwn+
-         /SabzP7k9yE+4TO2nPJcytl5xc6q6NOls2FQTDalkBv9PHB1pLFAQ/ttcZEe+ii2YcmT
-         5kcqQjzJdYmpY8zLndyuvAubs2z7N7Z84tBAA/Zn7tsdU1mSPQvU/Pq9cdd/eygrWgOy
-         4F4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aL0fbv6KeJNvtxT5CdrQViagZLp9s9K8vsOn0Xh8q30=;
-        b=IGZkpeHs+iv9Mtt2ngrVcLMdLj7whHoEMDHiU6XnXP1Q2QUCqTa5EnhEEHbLjkBeuw
-         zUlABv0SsfYvI4/DMMaLHfOlKyvHb0r1I97sS4+Cb2tKTICQuE/U6PlncSwqNZ3EOSYq
-         3fxMazi5qSlFDfO0+2Z4UGV8QHL6yjGRBQiwktqHb1ylNd5lm47AOEhSKPsBAiVvii/5
-         6wnxjH9PjIOjyjfn9OPn8Fjalzn3+0H5BZ1xe+igApXYHtWrEAubMIrr3enHP6dK3a0l
-         tilF6h5Olxb51+pP21wRja59ti7SgkOCb/cgZ46iuYqGk8pqEXtL0P860h/52zICUwl+
-         iKnQ==
-X-Gm-Message-State: APjAAAVRHDtvydftC7Vowvwp9LKvkmgn4ZLJtq+Zv0YGB4BVX/cgs4ZW
-        ALn4jvd+CQCRuMt791EMK4odng==
-X-Google-Smtp-Source: APXvYqyKSz7ayM+LSOBrTbwWxWGYkGmnqdkIZGg0N25K4y3R0Fy9sYBrP0Oa7gkHA4qtDs81NyGe+g==
-X-Received: by 2002:adf:edc5:: with SMTP id v5mr3166501wro.322.1573571603419;
-        Tue, 12 Nov 2019 07:13:23 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id b3sm3107126wmj.44.2019.11.12.07.13.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 07:13:22 -0800 (PST)
-Date:   Tue, 12 Nov 2019 15:13:19 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] thermal: power_allocator: Fix Kconfig warning
-Message-ID: <20191112151319.GA239065@google.com>
-References: <20191112145114.36580-1-yuehaibing@huawei.com>
+        Tue, 12 Nov 2019 10:13:52 -0500
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iUXrV-0001Td-3O; Tue, 12 Nov 2019 16:13:45 +0100
+Received: from [2a02:1205:507e:bf80:bef8:7f66:49c8:72e5] (helo=pc-11.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iUXrU-000QBs-QI; Tue, 12 Nov 2019 16:13:44 +0100
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Xiao Yang <ice_yangxiao@163.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com>
+ <20191112123125.GD17835@willie-the-truck>
+ <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net>
+Date:   Tue, 12 Nov 2019 16:13:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112145114.36580-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25631/Tue Nov 12 10:51:17 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 12 Nov 2019 at 22:51:14 (+0800), YueHaibing wrote:
-> When do randbuiding, we got this:
-> 
-> WARNING: unmet direct dependencies detected for THERMAL_GOV_POWER_ALLOCATOR
->   Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
->   Selected by [y]:
->   - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+On 11/12/19 1:50 PM, Masahiro Yamada wrote:
+> On Tue, Nov 12, 2019 at 9:31 PM Will Deacon <will@kernel.org> wrote:
+>>
+>> [+lkml, Masahiro, Alexei and Daniel]
+>>
+>> On Tue, Nov 12, 2019 at 04:56:39PM +0800, Xiao Yang wrote:
+>>> With your patch[1], I alway get the following error when building
+>>> tools/bpf:
+>>
+>> In case people want to reproduce this, my branch is here:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=lto
+>>
+>>> ----------------------------------------------------------------------------------
+>>>
+>>> make -C tools/bpf/
+>>> make: Entering directory
+>>> '/usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/tools/bpf'
+>>>
+>>> Auto-detecting system features:
+>>> ... libbfd: [ on ]
+>>> ... disassembler-four-args: [ OFF ]
+>>>
+>>> CC bpf_jit_disasm.o
+>>> CC bpf_dbg.o
+>>> In file included from
+>>> /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/include/uapi/linux/filter.h:9:0,
+>>> from
+>>> /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/tools/bpf/bpf_dbg.c:41:
+>>> /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/include/linux/compiler.h:247:24:
+>>> fatal error: asm/rwonce.h: No such file or directory
+>>> #include <asm/rwonce.h>
+>>> ^
+>>> compilation terminated.
+>>> Makefile:61: recipe for target 'bpf_dbg.o' failed
+>>> make: *** [bpf_dbg.o] Error 1
+>>> make: *** Waiting for unfinished jobs....
+>>> make: Leaving directory
+>>>
+>>> ----------------------------------------------------------------------------------
+>>>
+>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/commit/?h=lto&id=642a312d47ceb54603630d9d04f5052f3b46d9a3
+>>>
+>>> It seems that include/linux/compiler.h cannot find the asm/rwonce.h because
+>>> tools/bpf/Makefile doesn't include arch/*/include/generated/asm/rwonce.h.
+>>
+>> The problem with referring to the generated files is that they don't exist
+>> unless you've configured the main source directory. The real problem here
+>> seems to be that tools/bpf/ refers directly to header files in the kernel
+>> sources without any understanding of kbuild, and therefore mandatory-y
+>> headers simply don't exist when it goes looking for them.
 
-This will not cause run-time problems, but I guess the warning is
-annoying so ...
+Hmm, I am puzzled why that is. :/ I think there are two options, i) remove it
+from CFLAGS like below (at least this doesn't let the build fail in my case
+but requires linux headers to be installed) or ii) add a copy of filter.h to
+tools/include/uapi/linux/filter.h so the few tools can just reuse it. We do have
+bpf_common.h and bpf.h there already.
 
-> Make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR also depends on ENERGY_MODEL.
->  
-> Fixes: a4e893e802e6 ("thermal: cpu_cooling: Migrate to using the EM framework")
+diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+index 5d1995fd369c..08dfd289174c 100644
+--- a/tools/bpf/Makefile
++++ b/tools/bpf/Makefile
+@@ -10,7 +10,6 @@ MAKE = make
+  INSTALL ?= install
 
-Daniel: can we rely on this sha1 ? Or is this branch force-pushed ?
+  CFLAGS += -Wall -O2
+-CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/thermal/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 59b79fc..5e9e038 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -108,6 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
->  
->  config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
->  	bool "power_allocator"
-> +	depends on ENERGY_MODEL
->  	select THERMAL_GOV_POWER_ALLOCATOR
->  	help
->  	  Select this if you want to control temperature based on
-> -- 
-> 2.7.4
+  # This will work when bpf is built in tools env. where srctree
+  # isn't set and when invoked from selftests build, where srctree
 
 Thanks,
-Quentin
+Daniel
