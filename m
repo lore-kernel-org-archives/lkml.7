@@ -2,159 +2,79 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55BBC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B2FC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00ED20818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F7B21A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573583839;
-	bh=ClsBijm+tV2ywGmWiMMRKvlFiYq/cLBsl5lNg89WwmM=;
+	s=default; t=1573583843;
+	bh=Lvy4XTOQ7GGxUfbT/8C8wSIhdjF7sD5Vaz52aFvJGwM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gnmNVfN0+R5xXIlc5rRWn+5GLUzphS646iUhhLyjbMAdSHzFNFOgsi7Bf+hlJdFQi
-	 CKxwlZb87mMVVLi61HEB+JYRg2MAn5hMlD+xbU2D5g2oQlIHoDA9Vs8Jyw8Nfi4Obi
-	 jntc/yRUh5S5g/P2pi4KFQ/Si/OsDj0dP+YC4OGw=
+	b=R9Ur4wWS1yyBke56DHWlH6gl/TpDeARBnBre04KI0ZrVqGnGALkFVsNKDgfGNO6vL
+	 Ekuj3sZHHTOSL2oazSurY1TaVSoKGK0lxN7I2oZXKUrpacw4o0sNVzsnXyfT3yRW5f
+	 DaSOZlPeOUKbbemQdOw5rXJ+Ud5aW+2MNB1LKzPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKLShT (ORCPT
+        id S1727337AbfKLShW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:37:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55880 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 13:37:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfKLShS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:37:18 -0500
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        id S1726952AbfKLShV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:37:21 -0500
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B7B721D7F;
-        Tue, 12 Nov 2019 18:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1F92222C5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 18:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573583837;
-        bh=ClsBijm+tV2ywGmWiMMRKvlFiYq/cLBsl5lNg89WwmM=;
+        s=default; t=1573583841;
+        bh=Lvy4XTOQ7GGxUfbT/8C8wSIhdjF7sD5Vaz52aFvJGwM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vruLFu7ENpBlykbdo/Y+H4Y3SP/8xiOwkSOXipue5AFlMZwYISAABQGOsHRNX+597
-         +BUbMZ7NOeZabQG+6KyrNEOUdKZ7Wu2bXUIFXcHZn326+LfItqW7K6t+9Vi1JBZKfo
-         1p9mW8cdtnPZCRvc3FliDt5E/x7ikMvQHP0WuySQ=
-Received: by mail-qk1-f182.google.com with SMTP id e187so15389481qkf.4;
-        Tue, 12 Nov 2019 10:37:17 -0800 (PST)
-X-Gm-Message-State: APjAAAVSB2Uq+isYQHCsx8iS6wzu0kY0j1YD8fnye0BEWD6M6FctY/qi
-        LVOVpcIN81pWn1lpTUNmZLo1nTcB5TKu8/NWzA==
-X-Google-Smtp-Source: APXvYqy4jjbxFKDPV7vSCOnen2eNnt02ZnVZpXB+MPur6jIpEK2TUR0oOqnkMSo4LuntV0L3+UCZlhm9vRywGKUM/gM=
-X-Received: by 2002:ae9:dd83:: with SMTP id r125mr8603172qkf.223.1573583836697;
- Tue, 12 Nov 2019 10:37:16 -0800 (PST)
+        b=lYXqhODX4CTLOMAeg96i8HpOo2f+BT9urGtJ0c0BgQPMN5DoSeCazZONFNfEXVZ7A
+         i0h22T98XfJK9hWokMlxAUXtmBvk5yyrF4qoELEmoBohzHuzQBXOlhYclWRn9nM6YG
+         60HT3NFZEbyU+JENvZ3W3T7ZVIIAiIcb8RDxq7NI=
+Received: by mail-wm1-f44.google.com with SMTP id l1so4379259wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:37:20 -0800 (PST)
+X-Gm-Message-State: APjAAAUrwnc10pBLoXLoIbvsnmPZQQ/d/BKjOjMKEzpYg9CImcplqAxj
+        NqjskV1xkq6ofGnk9SM2ePF5dq2uHv7CQ1+GcfH7iw==
+X-Google-Smtp-Source: APXvYqwUfcHuWCDDKcAWpJ/cAbvkX3JmAvIbFGgBeuBaLKkbf4657GK0B+Gp3FFR/AkLf84UMnbK3uoBaAmUE5CsujQ=
+X-Received: by 2002:a05:600c:1002:: with SMTP id c2mr5288493wmc.79.1573583839351;
+ Tue, 12 Nov 2019 10:37:19 -0800 (PST)
 MIME-Version: 1.0
-References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
- <1573255036-10302-1-git-send-email-jhugo@codeaurora.org> <20191112004417.GA16664@bogus>
- <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
-In-Reply-To: <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 12 Nov 2019 12:37:04 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
-Message-ID: <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
-Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
+References: <20191111220314.519933535@linutronix.de> <20191111223052.990437835@linutronix.de>
+In-Reply-To: <20191111223052.990437835@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 12 Nov 2019 10:37:08 -0800
+X-Gmail-Original-Message-ID: <CALCETrWsr=KXyg_dc+97StqFHPRkvW_db_b4QvnH+ib9YJ761w@mail.gmail.com>
+Message-ID: <CALCETrWsr=KXyg_dc+97StqFHPRkvW_db_b4QvnH+ib9YJ761w@mail.gmail.com>
+Subject: Re: [patch V2 15/16] x86/iopl: Remove legacy IOPL option
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:25 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> On 11/11/2019 5:44 PM, Rob Herring wrote:
-> > On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
-> >> The global clock controller on MSM8998 can consume a number of external
-> >> clocks.  Document them.
-> >>
-> >> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> >> ---
-> >>   .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
-> >>   1 file changed, 33 insertions(+), 14 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> >> index e73a56f..2f3512b 100644
-> >> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> >> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> >> @@ -40,20 +40,38 @@ properties:
-> >>          - qcom,gcc-sm8150
-> >>
-> >>     clocks:
-> >> -    minItems: 1
-> >
-> > 1 or 2 clocks are no longer allowed?
+> From: Thomas Gleixner <tglx@linutronix.de>
 >
-> Correct.
->
-> The primary reason is that Stephen indicated in previous discussions
-> that if the hardware exists, it should be indicated in DT, regardless if
-> the driver uses it.  In the 7180 and 8150 case, the hardware exists, so
-> these should not be optional.
+> The IOPL emulation via the I/O bitmap is sufficient. Remove the legacy
+> cruft dealing with the (e)flags based IOPL mechanism.
 
-Agreed. The commit message should mention this though.
+Acked-by: Andy Lutomirski <luto@kernel.org>
 
->
-> The secondary reason is I found that the schema was broken anyways.  In
-> the way it was written, if you implemented sleep, you could not skip
-> xo_ao, however there is a dts that did exactly that.
-
-If a dts can be updated in a compatible way, we should do that rather
-than carry inconsistencies into the schema.
-
-> The third reason was that I couldn't find a way to write valid yaml to
-> preserve the original meaning.  when you have an "items" as a subnode of
-> "oneOf", you no longer have control over the minItems/maxItems, so all 3
-> became required anyways.
-
-That would be a bug. You're saying something like this doesn't work?:
-
-oneOf:
-  - minItems: 1
-    maxItems: 3
-    items:
-      - const: a
-      - const: b
-      - const: c
-
->  I find it disappointing that the "version" of
-> Yaml used for DT bindings is not documented,
-
-Not sure which part you mean? json-schema is the vocabulary which has
-a spec. The meta-schema then constrains what the json-schema structure
-should look like. That's still evolving a bit as I try to improve it
-based on mistakes people make. Then there's the intermediate .dt.yaml
-format used internally. That's supposed to stay internal and may go
-away when/if we integrate the validation into dtc.
-
-> so after several hours of
-> trial and error, I just gave up since I found this to work (failed cases
-> just gave me an error with no indication of what was wrong, not even a
-> line number).
-
-Schema failures or dts failures? It is possible to get line numbers
-for either, but that makes validation much slower. In the latter case,
-the line numbers aren't too useful either given they are for the
-.dt.yaml file and not the .dts source file (dtc integration would
-solve that). Adding '-n' to dt-doc-validate or dt-validate will turn
-them on though.
-
-Yes, error messages need work. I have some idea how to improve them,
-but haven't had time to implement. Too many binding reviews... You can
-get more detail with '-v' option. It's *way* more verbose, but not
-necessarily more useful.
-
-Rob
+But I think you could simplify a little bit and have a single config
+option that controls the iopl() and iopl() syscalls.
