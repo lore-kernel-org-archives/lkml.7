@@ -2,67 +2,97 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B592C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC58BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352D020679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573574908;
-	bh=F7Oqc0NxmF2ZrnvLzaUQ+E39TJo13Hl0CGan0+wgTp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qah1nB4oU1I8t61FP+9NeeYLFUwiYrXc33kIwJYajx/igXLzHWfBBeumGmpGgU7UD
-	 FMm5ypAtXMYgy+g4CMa6v12nHI7Wg8QXH5sKK5YXe9fIPFgiEcekK0qRxpkbpob+IK
-	 pVhq3IqiYbBJjBNU5Y5OTZksWxaKs8ci8bsfHhTY=
+	by mail.kernel.org (Postfix) with ESMTP id BB2CB214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKLQI1 (ORCPT
+        id S1727237AbfKLQJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:08:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 11:09:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:36834 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfKLQI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:08:26 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68F67214E0;
-        Tue, 12 Nov 2019 16:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573574905;
-        bh=F7Oqc0NxmF2ZrnvLzaUQ+E39TJo13Hl0CGan0+wgTp8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OzFTos7eruaTOsKE5+72Q7SXyMSuITi7cu2SZ4CfLIj4ijcK4cj6dbrsSOAppb/cb
-         Zq6QaiB1bFPqt14BKIn2ojvLBPV7IT19ic/k0oN5mpbLVP1IYHWTGvVoYWVJgh1p+7
-         GR2k3dw1z4y0xR5ET1oNIKJXtq1FUREH4o109kgI=
-Date:   Tue, 12 Nov 2019 17:08:20 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
-        namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net
-Subject: Re: [PATCHSET cgroup/for-5.5] kernfs,cgroup: support 64bit inos and
- unify cgroup IDs
-Message-ID: <20191112160820.GA1685314@kroah.com>
-References: <20191104235944.3470866-1-tj@kernel.org>
- <20191112155114.GF4163745@devbig004.ftw2.facebook.com>
+        id S1726936AbfKLQJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:09:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 639A3D6E;
+        Tue, 12 Nov 2019 08:09:00 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29C753F534;
+        Tue, 12 Nov 2019 08:08:59 -0800 (PST)
+Date:   Tue, 12 Nov 2019 16:08:57 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     torvalds@linux-foundation.org, axboe@kernel.dk,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, will@kernel.org,
+        Vincent Whitchurch <rabinv@axis.com>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>
+Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
+ hazard
+Message-ID: <20191112160855.GA22025@arrakis.emea.arm.com>
+References: <20191112130244.16630-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112155114.GF4163745@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191112130244.16630-1-vincent.whitchurch@axis.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 07:51:14AM -0800, Tejun Heo wrote:
-> Hello, Greg.
+On Tue, Nov 12, 2019 at 02:02:44PM +0100, Vincent Whitchurch wrote:
+> On my dual-core ARM Cortex-A9, reading from squashfs (over
+> dm-verity/ubi/mtd) in a loop for hundreds of hours invariably results in
+> a read failure in squashfs_read_data().  The errors occur because the
+> buffer_uptodate() check fails after wait_on_buffer().  Further debugging
+> shows that the bh was in fact uptodate and that there is no actual I/O
+> error in the lower layers.
 > 
-> A gentle ping.  I can route these through cgroup/for-5.5 if you're
-> okay with the patch series.
+> The problem is caused by the read-after-read hazards in the ARM
+> Cortex-A9 MPCore (erratum #761319, see [1]).  The code generated by the
+> compiler for the combination of the wait_on_buffer() and
+> buffer_uptodate() calls reads the flags value twice from memory (see the
+> excerpt of the assembly below).  The new value of the BH_Lock flag is
+> seen but the new value of BH_Uptodate is not even though both the bits
+> are read from the same memory location.
+> 
+>  27c:	9d08      	ldr	r5, [sp, #32]
+>  27e:	2400      	movs	r4, #0
+>  280:	e006      	b.n	290 <squashfs_read_data+0x290>
+>  282:	6803      	ldr	r3, [r0, #0]
+>  284:	07da      	lsls	r2, r3, #31
+>  286:	f140 810d 	bpl.w	4a4 <squashfs_read_data+0x4a4>
+>  28a:	3401      	adds	r4, #1
+>  28c:	42bc      	cmp	r4, r7
+>  28e:	da08      	bge.n	2a2 <squashfs_read_data+0x2a2>
+>  290:	f855 0f04 	ldr.w	r0, [r5, #4]!
+>  294:	6803      	ldr	r3, [r0, #0]
+>  296:	0759      	lsls	r1, r3, #29
+>  298:	d5f3      	bpl.n	282 <squashfs_read_data+0x282>
+>  29a:	f7ff fffe 	bl	0 <__wait_on_buffer>
+> 
+> Work around this problem by adding a DMB between the two reads of
+> bh->flags, as recommended in the ARM document.  With this barrier, no
+> failures have been seen in more than 5000 hours of the same test.
+> 
+> [1] http://infocenter.arm.com/help/topic/com.arm.doc.uan0004a/UAN0004A_a9_read_read.pdf
 
-Oops, let me go review...
+I thought we were going to fix the compiler. I found an old thread here:
+
+https://gcc.gnu.org/ml/gcc-patches/2014-06/msg00714.html
+
+Also cc'ing Richard Earnshaw as he may been involved in the gcc
+discussion at the time.
+
+While you can add some barrier here, there may be other cases where this
+can go wrong.
+
+-- 
+Catalin
