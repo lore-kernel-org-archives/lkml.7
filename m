@@ -2,86 +2,66 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5957CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC24C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306252196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3382196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfKLQpV (ORCPT
+        id S1727432AbfKLQqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:45:21 -0500
-Received: from mail.netline.ch ([148.251.143.178]:41554 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfKLQpU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:45:20 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id E45422A6046;
-        Tue, 12 Nov 2019 17:45:17 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id IU3ZG7YC6ovU; Tue, 12 Nov 2019 17:45:17 +0100 (CET)
-Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id DF2832A6045;
-        Tue, 12 Nov 2019 17:45:16 +0100 (CET)
-Received: from localhost ([::1])
-        by thor with esmtp (Exim 4.93-RC1)
-        (envelope-from <michel@daenzer.net>)
-        id 1iUZI3-0007oQ-QX; Tue, 12 Nov 2019 17:45:15 +0100
-Subject: Re: [PATCH 1/2] drm: replace incorrect Compliance/Margin magic
- numbers with PCI_EXP_LNKCTL2 definitions
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Frederick Lawler <fred@fredlawl.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20191111192932.36048-1-helgaas@kernel.org>
- <20191111192932.36048-2-helgaas@kernel.org>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Message-ID: <6d86246e-504a-b762-aff8-0449dd6f3d31@daenzer.net>
-Date:   Tue, 12 Nov 2019 17:45:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 12 Nov 2019 11:46:43 -0500
+Received: from ms.lwn.net ([45.79.88.28]:41904 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbfKLQqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:46:42 -0500
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id EC6867DE;
+        Tue, 12 Nov 2019 16:46:40 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 09:46:38 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     Frank.li@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [RFC PATCH] Documentation: perf: fix kernel-doc warnings in
+ imx-ddr.rst
+Message-ID: <20191112094638.54459a23@lwn.net>
+In-Reply-To: <20191107185755.29586-1-dwlsalmeida@gmail.com>
+References: <20191107185755.29586-1-dwlsalmeida@gmail.com>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191111192932.36048-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-11 8:29 p.m., Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Add definitions for these PCIe Link Control 2 register fields:
-> 
->   Enter Compliance
->   Transmit Margin
-> 
-> and use them in amdgpu and radeon.
-> 
-> NOTE: This is a functional change because "7 << 9" was apparently a typo.
-> That mask included the high order bit of Transmit Margin, the Enter
-> Modified Compliance bit, and the Compliance SOS bit, but I think what
-> was intended was the 3-bit Transmit Margin field at bits 9:7.
+On Thu,  7 Nov 2019 15:57:55 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
 
-Can you split out the functional change into a separate patch 1? That
-could make things easier for anyone who bisects the functional change
-for whatever reason.
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> Unexpected indentation errors were reported due to missing blank lines.
+> Now fixed. No change in content otherwise.
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
+So this is in no way your fault, but this particular file has been the
+subject of some merge conflicts in linux-next already, so it's probably
+best not to mess with it further at the moment.   Could I ask you to
+resubmit the patch after the 5.5 merge window?
 
--- 
-Earthling Michel Dänzer               |               https://redhat.com
-Libre software enthusiast             |             Mesa and X developer
+Thanks,
+
+jon
