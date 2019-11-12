@@ -2,188 +2,159 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62517C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BB7C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE6B206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79968206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ia/Hl3Z1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Obtufh1n";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Obtufh1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfKLUnr (ORCPT
+        id S1727093AbfKLUok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:43:47 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42029 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbfKLUnl (ORCPT
+        Tue, 12 Nov 2019 15:44:40 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:41616 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfKLUok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:43:41 -0500
-Received: by mail-qt1-f193.google.com with SMTP id t20so21292096qtn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:43:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kGcjnenI+EnnAHWMcItB24mxm55INky4C94Ykv4geg4=;
-        b=Ia/Hl3Z1HOGYiq6KoluUd9uZCGKzwQBgBr5JQ7I5KyZEUZP07fiLx9egiGiglXV9yp
-         zwduhp53vyEcd290QPaERf3wZ21mOf61BVNQbg6GVzWjLkWaYtjFFrAZ/kB/sX/TsV0O
-         Cqh6vZK9nd1Vig8r0syQpzeADiWtdjhU8C1qoZqr93PSItmh35/j4piNjOHcIgDaKDz3
-         2BaPDGhVa8atEOsvR55GHtOxdcr+RnZlO25xW0gJoiJutB0sYZDed0fX6gxPxoxhf5Zl
-         1FXBtMQo3iHNaStug4eqwxrgV4Z4sqg89JFN5ijz+6oI5UdbjHNjva//V05ajuQKORqi
-         pELA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kGcjnenI+EnnAHWMcItB24mxm55INky4C94Ykv4geg4=;
-        b=mji6dzyQ2uakPbZQdEmBx8aG9GluQ4sFAUq5KE32YixpMdtpI8SEvOm3+OsEl8X1Ua
-         InR8l69e1nLgG+h1Pqjrfg4M7N+xjYJJzF+qWbLsBQhVRMGypm5Ke4kfLqm20NPRHdzj
-         LzDZlZ6hV0sUaovjhkD9xN5/6yT5HFfXBvKqlbm8iOOFbKcnzBAnnM2YjvDOg9I2ycG3
-         yaixJDlcQ9bTPqHX3zz+fPQA0kRFcKTrVXCMoSMZVNX01req6avoJMW37RmAwCW5+y86
-         NEhdOAk0PWbNely0NRne/3Sd2dN2ysv7IoVvfEz8YqnhvwqNDdr42NP7qD7VJjvbpHsT
-         d53w==
-X-Gm-Message-State: APjAAAVPo7ppx+Ptgw6k8b7ca6XFP9K11GG1P6WnMdg0GfNFAlMScdpU
-        La7mE0+ezCsQ4tzOzCRKrtESdg==
-X-Google-Smtp-Source: APXvYqyV99P4cYBxqwR0yk0Vl7NSO/G/hGYwr7orI5pSazTDzznvIwLj5yKe4F2N3m9e7NI6fV/HBQ==
-X-Received: by 2002:ac8:1ba5:: with SMTP id z34mr33733259qtj.162.1573591419675;
-        Tue, 12 Nov 2019 12:43:39 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id u22sm10020470qtb.59.2019.11.12.12.43.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 12:43:39 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iUd0k-00046s-Fb; Tue, 12 Nov 2019 16:43:38 -0400
-Date:   Tue, 12 Nov 2019 16:43:38 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 08/23] vfio, mm: fix get_user_pages_remote() and
- FOLL_LONGTERM
-Message-ID: <20191112204338.GE5584@ziepe.ca>
-References: <20191112000700.3455038-1-jhubbard@nvidia.com>
- <20191112000700.3455038-9-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112000700.3455038-9-jhubbard@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 12 Nov 2019 15:44:40 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D41DF6070D; Tue, 12 Nov 2019 20:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591478;
+        bh=usAK5oIxVOWJOhvvqBp3hfiCGEjyMhT71BeIe36Mkd0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Obtufh1nRgrogRjWXPykG0YzTcqM+3rr513rDAsKAVHPI8hzYEazLXoMEpOcaI3BV
+         dP66LKftfYgszkj9PSLbatS/CioYFMIEQ/jYQmI9yPf3R89V95NMh4AbP36K3XejBW
+         Gxq/Oqlho8G4e9PI3yeQGnoEEgXQg5Itou+l5JxQ=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2287860591;
+        Tue, 12 Nov 2019 20:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591478;
+        bh=usAK5oIxVOWJOhvvqBp3hfiCGEjyMhT71BeIe36Mkd0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Obtufh1nRgrogRjWXPykG0YzTcqM+3rr513rDAsKAVHPI8hzYEazLXoMEpOcaI3BV
+         dP66LKftfYgszkj9PSLbatS/CioYFMIEQ/jYQmI9yPf3R89V95NMh4AbP36K3XejBW
+         Gxq/Oqlho8G4e9PI3yeQGnoEEgXQg5Itou+l5JxQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2287860591
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v9 1/4] dt-bindings: clock: Document external clocks for MSM8998 gcc
+Date:   Tue, 12 Nov 2019 13:44:26 -0700
+Message-Id: <1573591466-14296-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
+References: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 04:06:45PM -0800, John Hubbard wrote:
-> As it says in the updated comment in gup.c: current FOLL_LONGTERM
-> behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
-> FS DAX check requirement on vmas.
-> 
-> However, the corresponding restriction in get_user_pages_remote() was
-> slightly stricter than is actually required: it forbade all
-> FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
-> that do not set the "locked" arg.
-> 
-> Update the code and comments accordingly, and update the VFIO caller
-> to take advantage of this, fixing a bug as a result: the VFIO caller
-> is logically a FOLL_LONGTERM user.
-> 
-> Thanks to Jason Gunthorpe for pointing out a clean way to fix this.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jerome Glisse <jglisse@redhat.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 30 +++++++++++++-----------------
->  mm/gup.c                        | 13 ++++++++-----
->  2 files changed, 21 insertions(+), 22 deletions(-)
+The global clock controller on MSM8998 can consume a number of external
+clocks.  Document them.
 
-This matches what I thought, but I think DanW should check it too, and
-the vfio users should test..
+For 7180 and 8150, the hardware always exists, so no clocks are truly
+optional.  Therefore, simplify the binding by removing the min/max
+qualifiers to clocks.  Also, fixup an example so that dt_binding_check
+passes.
 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index d864277ea16f..017689b7c32b 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -348,24 +348,20 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
->  		flags |= FOLL_WRITE;
->  
->  	down_read(&mm->mmap_sem);
-> -	if (mm == current->mm) {
-> -		ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
-> -				     vmas);
-> -	} else {
-> -		ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
-> -					    vmas, NULL);
-> -		/*
-> -		 * The lifetime of a vaddr_get_pfn() page pin is
-> -		 * userspace-controlled. In the fs-dax case this could
-> -		 * lead to indefinite stalls in filesystem operations.
-> -		 * Disallow attempts to pin fs-dax pages via this
-> -		 * interface.
-> -		 */
-> -		if (ret > 0 && vma_is_fsdax(vmas[0])) {
-> -			ret = -EOPNOTSUPP;
-> -			put_page(page[0]);
-> -		}
-> +	ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
-> +				    page, vmas, NULL);
-> +	/*
-> +	 * The lifetime of a vaddr_get_pfn() page pin is
-> +	 * userspace-controlled. In the fs-dax case this could
-> +	 * lead to indefinite stalls in filesystem operations.
-> +	 * Disallow attempts to pin fs-dax pages via this
-> +	 * interface.
-> +	 */
-> +	if (ret > 0 && vma_is_fsdax(vmas[0])) {
-> +		ret = -EOPNOTSUPP;
-> +		put_page(page[0]);
->  	}
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
 
-AFAIK this chunk is redundant now as it is some hack to emulate
-FOLL_LONGTERM? So vmas can be deleted too.
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+index e73a56f..2f3512b 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+@@ -40,20 +40,38 @@ properties:
+        - qcom,gcc-sm8150
+ 
+   clocks:
+-    minItems: 1
+-    maxItems: 3
+-    items:
+-      - description: Board XO source
+-      - description: Board active XO source
+-      - description: Sleep clock source
++    oneOf:
++      #qcom,gcc-sm8150
++      #qcom,gcc-sc7180
++      - items:
++        - description: Board XO source
++        - description: Board active XO source
++        - description: Sleep clock source
++      #qcom,gcc-msm8998
++      - items:
++        - description: Board XO source
++        - description: USB 3.0 phy pipe clock
++        - description: UFS phy rx symbol clock for pipe 0
++        - description: UFS phy rx symbol clock for pipe 1
++        - description: UFS phy tx symbol clock
++        - description: PCIE phy pipe clock
+ 
+   clock-names:
+-    minItems: 1
+-    maxItems: 3
+-    items:
+-      - const: bi_tcxo
+-      - const: bi_tcxo_ao
+-      - const: sleep_clk
++    oneOf:
++      #qcom,gcc-sm8150
++      #qcom,gcc-sc7180
++      - items:
++        - const: bi_tcxo
++        - const: bi_tcxo_ao
++        - const: sleep_clk
++      #qcom,gcc-msm8998
++      - items:
++        - const: xo
++        - const: usb3_pipe
++        - const: ufs_rx_symbol0
++        - const: ufs_rx_symbol1
++        - const: ufs_tx_symbol0
++        - const: pcie0_pipe
+ 
+   '#clock-cells':
+     const: 1
+@@ -118,6 +136,7 @@ else:
+       compatible:
+         contains:
+           enum:
++            - qcom,gcc-msm8998
+             - qcom,gcc-sm8150
+             - qcom,gcc-sc7180
+   then:
+@@ -179,8 +198,8 @@ examples:
+     clock-controller@100000 {
+       compatible = "qcom,gcc-sc7180";
+       reg = <0x100000 0x1f0000>;
+-      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
+-      clock-names = "bi_tcxo", "bi_tcxo_ao";
++      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
++      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+       #clock-cells = <1>;
+       #reset-cells = <1>;
+       #power-domain-cells = <1>;
+-- 
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-Also unclear why this function has this:
-
-        up_read(&mm->mmap_sem);
-
-        if (ret == 1) {
-                *pfn = page_to_pfn(page[0]);
-                return 0;
-        }
-
-        down_read(&mm->mmap_sem);
-
-Jason
