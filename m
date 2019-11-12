@@ -2,103 +2,125 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F3CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6F0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DA1206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65837206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573580595;
+	bh=2yd10KHYTLI5s6gMxqmI4NvWYQwboiddj2FXrknzmy8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C8K8VbyzoAzR020+RZex12AKAZrFZrthiXlJX082t87Jtg882c7FY8bGzkjwGav1d
+	 gTqp7ZlDZTZNmLAEVw3IEIV8KEH4Qif8r8nSI51f/dxUsG2qmfb4U4BfNsIA4IC7B6
+	 6guUBM5VXnpRgJZyeRjhjbmivZjzb1ze2McmI0UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfKLRmr (ORCPT
+        id S1727104AbfKLRnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:42:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:38298 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfKLRmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:42:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B61A30E;
-        Tue, 12 Nov 2019 09:42:47 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF9143F534;
-        Tue, 12 Nov 2019 09:42:45 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: add comments for group_type and balancing at
- SD_NUMA level
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, dietmar.eggemann@arm.com,
-        juri.lelli@redhat.com, rostedt@goodmis.org, mgorman@suse.de
-Cc:     bsegall@google.com
-References: <1573570243-1903-1-git-send-email-vincent.guittot@linaro.org>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <7325dac4-bb26-9fcb-75bc-15b68d35b62d@arm.com>
-Date:   Tue, 12 Nov 2019 17:42:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 12:43:14 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33090 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfKLRnN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:43:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id t5so18805294ljk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:43:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IBqefimeVs+AYlMba+nG3Ifymts3na+gdpNY2rCXiUk=;
+        b=diHQe+yBS1ptQml1pfafp+kWY2eFlTIw5aehrJHkBhZ8198TLnziuPuv+aWPbMESa4
+         ZLgW0hXjhFPDrgdFG9RXdXxqYD1Ejn46fc1vZ1auR9hlb58u47fldPax7D6iEk6grtjo
+         EpEWHP7zBGk+CKduo6ZBne9+0TPwuTpetW/Ec=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IBqefimeVs+AYlMba+nG3Ifymts3na+gdpNY2rCXiUk=;
+        b=bkCOh7q5tBEv1arraX2jR323zticS6zAE7tV7ErJ8xO1nG5do44zTFGiAQkWskUlFC
+         +hC1y8E/wRYsuHwco1Cx2OEU7mE/pujX3U1WOATGZ2w7Y7Vom1vqjmBADSMeVKzuuIHf
+         z2/yYNUmXcAszMJMIE3b0SREhxbkb8VUEVelalXjlCAWDBjzgChR79qKODegRiw19ncq
+         +enfGwe6WI2Xom1FNAxoNvIgmL5Ap3eOUD9Y9ZCeAZLAJ97lt0EMBjMZr62CtVnvJpBs
+         h1VvlZAiGW5uyKzbxD8053NP/24uaG2gtQ8gAzb7Lyx7gRN4igYh975IHjMssFWnxOtT
+         G73w==
+X-Gm-Message-State: APjAAAVBdtw70fjFPCIWMyz2iDCaVBKobcQlO9TS1IGw7wZ9GGykECtx
+        /1ubuSD4gJXwZkfEu/75Gw9WRRxt/i0=
+X-Google-Smtp-Source: APXvYqwExbn24tvd6TOpmzkWelEN2EDrv6/JMV1xSfdwQJg0De9lPc7wOyHGger2NYbqU2d1tC9ByA==
+X-Received: by 2002:a2e:898d:: with SMTP id c13mr21538374lji.54.1573580591500;
+        Tue, 12 Nov 2019 09:43:11 -0800 (PST)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id v6sm10300484ljd.15.2019.11.12.09.43.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 09:43:11 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id y186so7758253lfa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:43:10 -0800 (PST)
+X-Received: by 2002:ac2:4c86:: with SMTP id d6mr20463115lfl.106.1573580217235;
+ Tue, 12 Nov 2019 09:36:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1573570243-1903-1-git-send-email-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
+ <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com>
+ <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
+ <CAHk-=wg6Zaf09i0XNgCmOzKKWnoAPMfA7WX9OY1Ow1YtF0ZP3A@mail.gmail.com>
+ <CANn89i+hRhweL2N=r1chMpWKU2ue8fiQO=dLxGs9sgLFbgHEWQ@mail.gmail.com>
+ <CANn89iJiuOkKc2AVmccM8z9e_d4zbV61K-3z49ao1UwRDdFiHw@mail.gmail.com>
+ <CAHk-=wgkwBjQWyDQi8mu06DXr_v_4zui+33fk3eK89rPof5b+A@mail.gmail.com>
+ <CAHk-=whFejio0dC3T3a-5wuy9aum45unqacxkFpt5yo+-J502w@mail.gmail.com>
+ <20191112165033.GA7905@deco.navytux.spb.ru> <CAHk-=witx+fY-no_UTNhsxXvZnOaFLM80Q8so6Mvm6hUTjZdGg@mail.gmail.com>
+In-Reply-To: <CAHk-=witx+fY-no_UTNhsxXvZnOaFLM80Q8so6Mvm6hUTjZdGg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 12 Nov 2019 09:36:41 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whPFjpOEfU5N4qz_gGC8_=NLh1VkBLm09K1S1Gcma5pzA@mail.gmail.com>
+Message-ID: <CAHk-=whPFjpOEfU5N4qz_gGC8_=NLh1VkBLm09K1S1Gcma5pzA@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Marco Elver <elver@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincent,
+On Tue, Nov 12, 2019 at 9:23 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Hmm. I thought we already then applied all the patches that marked
+> things that didn't use f_pos as FMODE_STREAM. Including pipes and
+> sockets etc.
+>
+> But if we didn't - and no, I didn't double-check now either - then
+> obviously that part of the patch can't be applied now.
 
-On 12/11/2019 14:50, Vincent Guittot wrote:
-> Add comments to describe each state of goup_type and to add some details
-> about the load balance at NUMA level.
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Ok, looking at it now.
 
-Suggestions/nits below. There's a bit of duplication with existing
-comments (e.g. the nice blob atop sg_imbalanced()), but I think it can't
-hurt to have the few extra lines you're introducing.
+Yeah, commit c5bf68fe0c86 ("*: convert stream-like files from
+nonseekable_open -> stream_open") did the scripted thing, but it only
+did it for nonseekable_open, not for the more complicated cases.
 
----
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index bfdcaf91b325..ec93ebd02352 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6955,28 +6955,26 @@ enum fbq_type { regular, remote, all };
-  * group. see update_sd_pick_busiest().
-  */
- enum group_type {
--	/*
--	 * The group has spare capacity that can be used to process more work.
--	 */
-+	/* The group isn't significantly pressured and can be used to process more work */
- 	group_has_spare = 0,
- 	/*
- 	 * The group is fully used and the tasks don't compete for more CPU
--	 * cycles. Nevetheless, some tasks might wait before running.
-+	 * cycles. Nevertheless, some tasks might wait before running.
- 	 */
- 	group_fully_busy,
- 	/*
--	 * One task doesn't fit with CPU's capacity and must be migrated on a
--	 * more powerful CPU.
-+	 * (SD_ASYM_CPUCAPACITY only) One task doesn't fit on its CPU's
-+	 * capacity and must be migrated to a CPU of higher capacity.
- 	 */
- 	group_misfit_task,
- 	/*
--	 * One local CPU with higher capacity is available and task should be
--	 * migrated on it instead on current CPU.
-+	 * (SD_ASYM_PACKING only) One local CPU with higher capacity is
-+	 * available and task should be migrated to it.
- 	 */
- 	group_asym_packing,
- 	/*
--	 * The tasks affinity prevents the scheduler to balance the load across
--	 * the system.
-+	 * The tasks affinity previously prevented the scheduler from balancing
-+	 * load across the system.
- 	 */
- 	group_imbalanced,
- 	/*
+So yup, you're right - we'd need to at least do the pipe/socket case too.
+
+What happens if the actual conversion part (nonseekable_open ->
+stream_open) is removed from the cocci script, and it's used to only
+find "read/write doesn't use f_pos" cases?
+
+Or maybe trigger on '.llseek = no_llseek'?
+
+                 Linus
