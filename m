@@ -2,175 +2,163 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8E9C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE76C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59CD206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023E521925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:42:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="W944HHeB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hq2cMG+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfKLUmZ (ORCPT
+        id S1727109AbfKLUm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:42:25 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:34590 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfKLUmY (ORCPT
+        Tue, 12 Nov 2019 15:42:29 -0500
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:46317 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbfKLUm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:42:24 -0500
-Received: by mail-yb1-f195.google.com with SMTP id k17so38196ybp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:42:23 -0800 (PST)
+        Tue, 12 Nov 2019 15:42:28 -0500
+Received: by mail-qk1-f201.google.com with SMTP id x186so11079222qke.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:42:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DjCiefqhC9NfqWC/1OWuy32sE5JWmV0rJU7JOPNgew0=;
-        b=W944HHeBKCxkA8DrDh1k5jwoR6EZOWptr72GU329mg37lMtwT4iUEUZ8MibJm1WXxY
-         mp7Vd5ttNkK4CKdk10wHGc7YF9Rmc7Qp+ybpA4tYo7/O523giEtR7c+XhEyDLATnYhVb
-         IHC5y7twtbRJyIHHZRzoKP5vi4ejGXVr27T0mo7g73zutfQIeyf6oGcvFewyLk2NPWyf
-         q8dSyuNzqh3edUolXoBkZG1uAJt7F9zXjjeQZ8cmV2aXlwTzMa1bBwazwh9AoGVjpztq
-         ROJ96zgqiMdd32cZMSWhMI6OeGD1IF1ynEhs9KMTYO6cZ/2BMyturVgRm8wJtwJzGjPa
-         d2sA==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
+        bh=YXQx/W19DjRT45sudkGcownKnjElC/pkN1OhsIzM96I=;
+        b=hq2cMG+Uz05dfP/Fx2OKks757/JeqdQlDjyT1GANKrtXZxgcX/dwHrLtCbo2nf091s
+         vp72Z4yUGit3E53HyROAw7oK6rMU3b+NBm9EN24bTXOzxZlh/hj9Wobe800a6fwDKzvV
+         5+4SB0qmTSV2l0HoWmFfV28iRcuofohr3vLp9YGcdUf3Xf0T+YwwuoizwIVHYzDcT9v/
+         Lfxv+eaysYiuh+CUM1eAC9f9SO2h3C07FwAWlFwJU/bKj9KKJF7O5wtwt+z8WovnqXwI
+         ZgGNYc9Ny2NsXIgZcVjAVpMO5CCZH65ufzWAI2CZS7aKLSKSE3VeNGJwbPQX1N1CK5kn
+         xnlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DjCiefqhC9NfqWC/1OWuy32sE5JWmV0rJU7JOPNgew0=;
-        b=oLu/oEBlgOtOGrkM4RRma0GQ0JpeEBRvleWryKhsPNFhk8dFiqlkkJ3Gk7YtY0Tp2Y
-         Nu/nq7Dy+29lxqCbj6W5uIpkoxm6ExQNUkuU4eXGOYhFYYQCmhCqiySv/ntesGUJLdIK
-         tTO8lJG9Sq9Cnw/nhSfE29CNXL7CEvzn6PXKPOApxNszo/MUmgwxEyDkk9FpckaJRkUM
-         eEjRMdUJlZBNpO5pgaxfO0tfTW+HkItUOTH4KG+Em66I4ccRfg1w90LnG7kFmrtQ2Y4I
-         Z0vT9ye34RLImupCdo+DeWYouZT5cr68zSGo+DOIkBM2dmKCyDzbR5cV2iGZCciZ+JHG
-         449w==
-X-Gm-Message-State: APjAAAVr8l8uNhJlyVcxb6KRhW7fdFB8B17PjicIa2QdQiND7gs2F2F7
-        efu0vF5BcRai3Hg7N5S6Gv50Ww==
-X-Google-Smtp-Source: APXvYqyYtUgeVlNwdv9fMm8VoUMF8TaIvGt5yJhxR65GCBa+3/C4/0mBjyFFaaUNb80Ijg+1jMj5gA==
-X-Received: by 2002:a25:7583:: with SMTP id q125mr2877735ybc.28.1573591343192;
-        Tue, 12 Nov 2019 12:42:23 -0800 (PST)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id 138sm9476213ywr.46.2019.11.12.12.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 12:42:22 -0800 (PST)
-Date:   Tue, 12 Nov 2019 15:42:22 -0500
-From:   Sean Paul <sean@poorly.run>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Johan Hovold <johan@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable <stable@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Dave Airlie <airlied@gmail.com>
-Subject: Re: [PATCH 1/4] drm/msm: fix memleak on release
-Message-ID: <20191112204222.GB25787@art_vandelay>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010131333.23635-2-johan@kernel.org>
- <20191030100146.GC4691@localhost>
- <20191112104001.GP11035@localhost>
- <20191112140155.GJ23790@phenom.ffwll.local>
- <CAF6AEGvom2wZ89434VLhhgAHCk_MMCGRbxSO+DQsX=+LPOCy8A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGvom2wZ89434VLhhgAHCk_MMCGRbxSO+DQsX=+LPOCy8A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:cc;
+        bh=YXQx/W19DjRT45sudkGcownKnjElC/pkN1OhsIzM96I=;
+        b=Ou8DrmQj+ddsprwGimxjfZt7hUCnELQguMdxofY2QO7SlTHOdpakL2cjc1PwzaAjTz
+         5Uruc1e0rhRs9yhtSnwJi15zVeuWLv6NS4jGZSBcxR33H7o6KT97CstBfap0DSwE/1Qt
+         FKRN0fPH1egYpNBThcOCBpJggLtYvwAS/B2EvoSV1zs1KllxZ8uakEZaInwsIiv4UF4e
+         J5kQmn2mJYJU4yMuvksJLT9ttbqD3k4YFkBK1uwLWe9i62tMjWjEgRo7tdNwmzu12Z92
+         jjnrq/1Hesecove7cGO4Ev+PpY01rtbb1r/aWe+3cr55FrB6LcBvQ+y/x5He4rixzea2
+         91Rg==
+X-Gm-Message-State: APjAAAUZSmgjPjHi6M8HFyP5Z++h60VnveFYhWcKVO7bA1ODZH5tbJD/
+        hyyEfATwtaz3AQukKiHbzWHeiRI=
+X-Google-Smtp-Source: APXvYqwbZFKbD9LE+MkSwEN0QEJOryx6wcn25B8ceR9SeAtG1HgyyDCK9nldmGXqK7jhtDw54pM/qqs=
+X-Received: by 2002:a05:6214:1052:: with SMTP id l18mr29832087qvr.204.1573591347257;
+ Tue, 12 Nov 2019 12:42:27 -0800 (PST)
+Date:   Tue, 12 Nov 2019 12:42:23 -0800
+In-Reply-To: <20191112203154.101534-1-wvw@google.com>
+Message-Id: <20191112204223.115589-1-wvw@google.com>
+Mime-Version: 1.0
+References: <20191112203154.101534-1-wvw@google.com>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v2] thermal: Fix deadlock in thermal thermal_zone_device_check
+From:   Wei Wang <wvw@google.com>
+Cc:     wei.vince.wang@gmail.com, Wei Wang <wvw@google.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 08:32:07AM -0800, Rob Clark wrote:
-> On Tue, Nov 12, 2019 at 6:01 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Tue, Nov 12, 2019 at 11:40:01AM +0100, Johan Hovold wrote:
-> > > On Wed, Oct 30, 2019 at 11:01:46AM +0100, Johan Hovold wrote:
-> > > > On Thu, Oct 10, 2019 at 03:13:30PM +0200, Johan Hovold wrote:
-> > > > > If a process is interrupted while accessing the "gpu" debugfs file and
-> > > > > the drm device struct_mutex is contended, release() could return early
-> > > > > and fail to free related resources.
-> > > > >
-> > > > > Note that the return value from release() is ignored.
-> > > > >
-> > > > > Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
-> > > > > Cc: stable <stable@vger.kernel.org>     # 4.18
-> > > > > Cc: Jordan Crouse <jcrouse@codeaurora.org>
-> > > > > Cc: Rob Clark <robdclark@gmail.com>
-> > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > > > ---
-> > > >
-> > > > Rob, Sean,
-> > > >
-> > > > Sending a reminder about this one, which is not yet in linux-next.
-> > > >
-> > > > Perhaps Daniel can pick it up otherwise?
-> > >
-> > > Another two weeks, another reminder. This one is still not in -next.
-> >
-> > Well msm is maintained in a separate tree, so the usual group maintainer
-> > fallback for when patches are stuck doesn't apply.
-> 
-> oh, sorry, this wasn't showing up in patchwork.. or rather it did but
-> the non-msm related series subject made me overlook it.
-> 
-> I've already sent a PR, but this shouldn't conflict with anything and
-> I think it can go in via drm-misc/fixes
-> 
-> Reviewed-by: Rob Clark <robdclark@gmail.com>
+commit [2] changed cancel_delayed_work to cancel_delayed_work_sync to
+avoid a use-after-free issue. However, cancel_delayed_work_sync could be
+called insides the WQ causing deadlock [1].
 
-Thanks for the patch, pushed to drm-misc-next-fixes
+[1]
+[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
+[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
+[54109.642447] c0   1162 Call trace:
+[54109.642456] c0   1162  __switch_to+0x138/0x158
+[54109.642467] c0   1162  __schedule+0xba4/0x1434
+[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
+[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
+[54109.642511] c0   1162  flush_work+0x348/0x40c
+[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
+[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
+[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
+[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
+[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
+[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
+[54109.642593] c0   1162  kthread+0x17c/0x1b0
+[54109.642602] c0   1162  ret_from_fork+0x10/0x18
+[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
+[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
+[54109.643077] c0   1162 Call trace:
+[54109.643085] c0   1162  __switch_to+0x138/0x158
+[54109.643095] c0   1162  __schedule+0xba4/0x1434
+[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
+[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
+[54109.643122] c0   1162  flush_work+0x348/0x40c
+[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
+[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
+[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
+[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
+[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
+[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
+[54109.643186] c0   1162  kthread+0x17c/0x1b0
+[54109.643195] c0   1162  ret_from_fork+0x10/0x18
+[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
+[54109.644515] c0   1162 Call trace:
+[54109.644524] c0   1162  __switch_to+0x138/0x158
+[54109.644536] c0   1162  __schedule+0xba4/0x1434
+[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
+[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
+[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
+[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
+[54109.644586] c0   1162  temp_show+0x30/0x78
+[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
+[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
+[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
+[54109.644656] c0   1162  seq_read+0x1f4/0x73c
+[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
+[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
+[54109.644692] c0   1162  vfs_read+0xa4/0x140
+[54109.644701] c0   1162  SyS_read+0xbc/0x144
+[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
+[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
 
-Sean
+Fixes commit 1851799e1d29 ("thermal: Fix use-after-free when
+unregistering thermal zone device") [2]
 
-> 
-> > Rob, Sean, time to reconsider drm-misc for msm? I think there's some more
-> > oddball patches that occasionally get stuck for msm ...
-> >
-> > Also +Dave.
-> > -Daniel
-> >
-> > >
-> > > Johan
-> > >
-> > > > >  drivers/gpu/drm/msm/msm_debugfs.c | 6 +-----
-> > > > >  1 file changed, 1 insertion(+), 5 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
-> > > > > index 6be879578140..1c74381a4fc9 100644
-> > > > > --- a/drivers/gpu/drm/msm/msm_debugfs.c
-> > > > > +++ b/drivers/gpu/drm/msm/msm_debugfs.c
-> > > > > @@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode *inode, struct file *file)
-> > > > >   struct msm_gpu_show_priv *show_priv = m->private;
-> > > > >   struct msm_drm_private *priv = show_priv->dev->dev_private;
-> > > > >   struct msm_gpu *gpu = priv->gpu;
-> > > > > - int ret;
-> > > > > -
-> > > > > - ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
-> > > > > - if (ret)
-> > > > > -         return ret;
-> > > > >
-> > > > > + mutex_lock(&show_priv->dev->struct_mutex);
-> > > > >   gpu->funcs->gpu_state_put(show_priv->state);
-> > > > >   mutex_unlock(&show_priv->dev->struct_mutex);
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
+Signed-off-by: Wei Wang <wvw@google.com>
+---
+ drivers/thermal/thermal_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index d4481cc8958f..c28271817e43 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -304,7 +304,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
+ 				 &tz->poll_queue,
+ 				 msecs_to_jiffies(delay));
+ 	else
+-		cancel_delayed_work_sync(&tz->poll_queue);
++		cancel_delayed_work(&tz->poll_queue);
+ }
+ 
+ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+@@ -1414,7 +1414,7 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+ 
+ 	mutex_unlock(&thermal_list_lock);
+ 
+-	thermal_zone_device_set_polling(tz, 0);
++	cancel_delayed_work_sync(&tz->poll_queue);
+ 
+ 	thermal_set_governor(tz, NULL);
+ 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.24.0.432.g9d3f5f5b63-goog
+
