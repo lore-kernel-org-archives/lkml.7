@@ -2,96 +2,133 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907DAC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70ADC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601B721783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573572920;
-	bh=QnvCSruA2dXgFtQlr5GwZ/hV80Gv4o8y3Brv0Bctgos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iFp2KWETw3gQTLdRxWoDhKLC/J+tkru/ae7YYwYYL4MQ9Q82uIpTug8GJ5FvUSytM
-	 dGebbARCAPNHjWhnlE0UGY5nkT+eXeC64yaZedXUtldGcuV9nnhvF1keNLyrM2qOtM
-	 YsjDK97JV33CE1QYgV3zEj2/meQTGPFrFzTRhE5A=
+	by mail.kernel.org (Postfix) with ESMTP id A94A421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfKLPfT (ORCPT
+        id S1727324AbfKLPfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:35:19 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:45236 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfKLPfT (ORCPT
+        Tue, 12 Nov 2019 10:35:53 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50830 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726376AbfKLPfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:35:19 -0500
-Received: by mail-qv1-f66.google.com with SMTP id g12so6521487qvy.12;
-        Tue, 12 Nov 2019 07:35:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tNRldxgz4nYl5RPDJ/NAtFk6gRlRZANsJvMyHZT8zB0=;
-        b=U9MBiNDluw2EFplf/vIFtT0tRdk+O162DXjvx8vR8CsvnDtvF3QCPRlfyo7EFQUHVj
-         2DBpAyVyMhQgaZ6im/1rtIwirsx1XLrf+1umu8oPjpDQ6U5YdmEPoWrPfGmLCeN2jYag
-         2EIN5nMcNd4+R3JX932hn712zKSIaDXq8g3nZbpO++B0wOqv3jw9TdKm8tgtrhfX4Z2F
-         zY6tDxDpxs/0Vh4lgA2QQAadBn/tpLWCp6nHqAl3Tw9GRpP9bMUKoLkcaN+dm5GTiHTP
-         BkkJ/MmRLvla8blXHoUXrzID/u/DxyDjqwiKPd6932MdkDQktKElP7NMDfHpOGF0BCFf
-         ZrEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tNRldxgz4nYl5RPDJ/NAtFk6gRlRZANsJvMyHZT8zB0=;
-        b=bc4/0J9cxm9yPaq2Vk/QojgSdaNz2/tI8Gmmxj6JYcANacpKxd2TGVv4Fc2jSWtIjd
-         tDy3MNwmlDoAatC+zCJk7RVsyxKglIdA+YmTJoiPK85IFf22WH4OupREdpET8gAMq2qA
-         ZMsBEX1y9wiVVYQEEAspn4pjON4wz6rZWSxHE+mlXMiPL903YklpD32545GWHJ8LDu/M
-         uJ5kSPCAiNPN07nacdDYALgfG3YfQumM8ob8smvh+t5FPBAdsGZyUsqS+KBqBANvOvAj
-         0a4nIZFnCL2w4d14cYxC8LH64PoI2ivRkcbWX+w+tYqRwx+15vVJd91BvG2vcpAUMkvO
-         HVnw==
-X-Gm-Message-State: APjAAAXOcStRcAI1AQBP4MaI20vNqTow7qhw7y1d292QntAydGq14FFk
-        G8SLq9HbAuFz1BllapFjprA=
-X-Google-Smtp-Source: APXvYqyeF8PPHnLVkZDuDDx+6Re2Boz7tRTkUjJ45TRCBTKKb+ah58UaycNjjZFn9+4BZpV1OoJK/A==
-X-Received: by 2002:a0c:c211:: with SMTP id l17mr28816269qvh.55.1573572917683;
-        Tue, 12 Nov 2019 07:35:17 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::3:f36a])
-        by smtp.gmail.com with ESMTPSA id u26sm742533qkj.24.2019.11.12.07.35.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 07:35:16 -0800 (PST)
-Date:   Tue, 12 Nov 2019 07:35:15 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Hewenliang <hewenliang4@huawei.com>
-Cc:     shuah@kernel.org, guro@fb.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kselftests: cgroup: Avoid the reuse of fd after it is
- deallocated
-Message-ID: <20191112153515.GE4163745@devbig004.ftw2.facebook.com>
-References: <20191112021655.52951-1-hewenliang4@huawei.com>
+        Tue, 12 Nov 2019 10:35:53 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACFTHiM008173;
+        Tue, 12 Nov 2019 10:35:45 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7wqk4u6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 10:35:45 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xACFUOEj003050;
+        Tue, 12 Nov 2019 15:35:44 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma04wdc.us.ibm.com with ESMTP id 2w5n35yukr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 15:35:44 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACFZhxK50397546
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 15:35:43 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 461E6112061;
+        Tue, 12 Nov 2019 15:35:43 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30016112062;
+        Tue, 12 Nov 2019 15:35:43 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 15:35:43 +0000 (GMT)
+Subject: Re: question about setting TPM_CHIP_FLAG_IRQ in tpm_tis_core_init
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191112033637.kxotlhm6mtr5irvd@cantor>
+ <6d6f0899-8ba0-d6cf-ef3b-317ca698b687@linux.ibm.com>
+ <20191112142418.3wwa4iukas4h2glp@cantor>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <23360efd-131d-d696-220e-0cdb388a0201@linux.ibm.com>
+Date:   Tue, 12 Nov 2019 10:35:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112021655.52951-1-hewenliang4@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191112142418.3wwa4iukas4h2glp@cantor>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=883 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:16:55PM -0500, Hewenliang wrote:
-> It is necessary to set fd to -1 when inotify_add_watch() fails in
-> cg_prepare_for_wait. Otherwise the fd which has been closed in
-> cg_prepare_for_wait may be misused in other functions such as
-> cg_enter_and_wait_for_frozen and cg_freeze_wait.
-> 
-> Fixes: 5313bfe425c8 ("selftests: cgroup: add freezer controller self-tests")
-> Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+On 11/12/19 9:24 AM, Jerry Snitselaar wrote:
+> On Tue Nov 12 19, Stefan Berger wrote:
+>> On 11/11/19 10:36 PM, Jerry Snitselaar wrote:
+>>> Question about 1ea32c83c699 ("tpm_tis_core: Set TPM_CHIP_FLAG_IRQ 
+>>> before probing for interrupts").
+>>> Doesn't tpm_tis_send set this flag, and setting it here in 
+>>> tpm_tis_core_init short circuits what
+>>> tpm_tis_send was doing before? There is a bug report of an interrupt 
+>>> storm from a tpm on a t490s laptop
+>>> with the Fedora 31 kernel (5.3), and I'm wondering if this change 
+>>> could cause that. Before they got
+>>> the warning about interrupts not working, and using polling instead.
+>>>
+>> I set this flag for the TIS because it wasn't set anywhere else. 
+>> tpm_tis_send() wouldn't set the flag but go via the path:
+>>
+>> if (!(chip->flags & TPM_CHIP_FLAG_IRQ) || priv->irq_tested)
+>>
+>>         return tpm_tis_send_main(chip, buf, len);
+>>
+>> the only other line for the TIS to set the IRQ flag was in the same 
+>> function further below, though that wouldn't be reached due to the 
+>> above:
+>>
+>> [...]
+>>
+>> priv->irq = irq;
+>>
+>> chip->flags |= TPM_CHIP_FLAG_IRQ;
+>>
+>>
+>>    Stefan
+>>
+>>
+>
+> Ugh, you're right I was reading that as ! around both the flag and 
+> priv->irq_tested.
+>
+> Should the flag be cleared if tpm_tis_probe_irq_single fails prior to 
+> calling
+> tpm_tis_gen_interrupt?
+>
+The disable_interrupts() should be called to reset the flag if, while 
+probing, the interrupt handler wasn't called. Maybe that t490s returns 
+either via this path
 
-Applied to cgroup/for-5.5.
+https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/tpm_tis_core.c#L631
 
-Thanks.
+or this one here
 
--- 
-tejun
+https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/tpm_tis_core.c#L634
+
+thinking the (shared) interrupt is not for it?! But this would mean 
+TPM_INT_STATUS is broken...
+
+
