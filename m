@@ -2,149 +2,108 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85DEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7812C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5E5206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBE4206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GI4WrEWE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Us+JxrYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfKLUb0 (ORCPT
+        id S1727229AbfKLUbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:31:26 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54131 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLUb0 (ORCPT
+        Tue, 12 Nov 2019 15:31:37 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38615 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfKLUbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:31:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573590685;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IByCdOcsK7z2wqcglE3nDgjbdw+hHaKusrjX1MWd/k0=;
-        b=GI4WrEWESI045e4WUffdSxKlM2QqkRYzcwhkogFCJWqmcHHbSQzuOFlkFMBSJ/5CgTbGvQ
-        hY6baX5Vqi0nNY3C9m1ZXpx3IJ/6xzEezM0FpOjqx1Ls1Y2qBx84Yo6DO9YR/zJ2ARsSKB
-        aNFrlmk9TzClZE7Vc45DUm+hBJlkDuw=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-esboA5dMPd2F-Yy7M9ChXA-1; Tue, 12 Nov 2019 15:31:24 -0500
-Received: by mail-lf1-f72.google.com with SMTP id o140so4265929lff.18
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:31:24 -0800 (PST)
+        Tue, 12 Nov 2019 15:31:36 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c13so14159550pfp.5;
+        Tue, 12 Nov 2019 12:31:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2WU8r6NpH8n/CAS7MCMpaG3QRhluQOgBbEqgwxXZR2E=;
+        b=Us+JxrYyd+rY75W/J9AIM4yuTXlc0JbmG5DVkC1peMShddlgvcBQ+TtsEwwQreFGei
+         Akp3nnqEhYSZ8Pd3qpGb7GnNfaISvZQGlq5ZoE84GzeytmLnXQngF7NX4/maqFkRg3TU
+         sSJooTtqEPzyjeABXL9Gip+xaSbzM8StiPMP/Y/5ebEBjyhk2ia4l7IZ5h1v4wv9dD25
+         U/QM4DjQaR3H+eQDxi7LxoWgOi4R3Fe2IzIYYXiRq4zqO51ahBVbcOu/1fSF9m1eg66N
+         jjve6icUXHklXyJqpWp8u7AiCQBElHtjuLx1uFtfevhego5TE/tJ1xhpJTkdgACtOpHR
+         Vc1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aIQasmDACRm3A9ZstJoEy2oYlDFM8WAP33PBbVt6iPM=;
-        b=YcUDP2mC5KzSwMxs3DM5cb+JJwezWesm7p36/cnB/tEa+wFjaxQabgIkRwT8FTwIrg
-         FXYl1lwo1XVd8vBCn/9bp16a7PX9SZhCo5SESVegkAizZKojN1Zqo3QvtRTFRnGbB2eY
-         cwPDPUtTxFriQiFU2DlOMbZTSg4pi4mrursP4JA42we3l6EhQIjVD8i/YjwcqLz1EcC4
-         fueniygxLnZ7AO8IWpbErLOqUgae8NGyrEHQAa72Aa86azuWssum+OdyKVK+LAQxbTJE
-         HyC6ekFqmXY6fmJ0nzkTXTXtOZQHODpsFxsXuRSDFsJIFiSrn5U0pOkFOXS0o20I+oqP
-         B21Q==
-X-Gm-Message-State: APjAAAVTGWKqvK3pMAJ6F6xexbTJ5T0FrABSs7PDqneQMVgTZrHOtXzk
-        Xg4jDSRBiS7ehSFEhy48RkiQxh1eHbO7VNeDJ/+SJQgEN2qLG6CyZRm1CC/Yg2aTlINWNtjRZUi
-        v1ZoTgyuZGx/AfbEPhqfnV4QWerZY26VYf6IwAvyy
-X-Received: by 2002:ac2:46c9:: with SMTP id p9mr19116998lfo.166.1573590680207;
-        Tue, 12 Nov 2019 12:31:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyIcWFUT5nlqJEHWH82BamRW6gkAt+gP4B65DcWbI3oa48KtBNMKOyThKMcfVE1uMMHjJ0kjFclKe3d0NFpOtM=
-X-Received: by 2002:ac2:46c9:: with SMTP id p9mr19116984lfo.166.1573590680032;
- Tue, 12 Nov 2019 12:31:20 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2WU8r6NpH8n/CAS7MCMpaG3QRhluQOgBbEqgwxXZR2E=;
+        b=H9NOxzblVmmrgeie+zzIQ50aOX6bl1bLbgZqXWpAMfzKEktcXNlXViVkDuCizzI+T9
+         ya69mwU4VRisWpFj2r/cEbG5k6FNlHNQ0rtxnP2MA2uv4LMyqtLNXD2oyU5ZAE2gN8gM
+         3BalD8nKUIboOfg7HeqmY7rsp7ws0ulRT86z0Ia+DpcT7E/np4aoVSbhZKOfRURuoDrs
+         keX0ZdxYhm9yxAebrErAOU+TH9VE5TcWvQVAac9cQY8aQv0j94UU1ZNDIbuEE4G13s2s
+         eB0yS5+98NU/W2YD6zo9qrDe+OFHGT3SewHtmctImviVH/R2ycg+yEZwuSTyKcGvH23B
+         8Ljw==
+X-Gm-Message-State: APjAAAV6Ol5CRen7oJ3AZUXYVRLzdibLx2u+j9+MguYg6KGr2FGHyP1n
+        LXvlBvDi8FIun6MHdtwN4kg=
+X-Google-Smtp-Source: APXvYqzVLDHrf3+auWD9Zfwn7HuZakoXwALGy5b2yZuKAYku2zY5xND/HTO7WI3MKhV1doF14qehEA==
+X-Received: by 2002:a62:7c52:: with SMTP id x79mr38241350pfc.18.1573590695493;
+        Tue, 12 Nov 2019 12:31:35 -0800 (PST)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id h13sm23264084pfr.98.2019.11.12.12.31.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 12:31:34 -0800 (PST)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-iio@vger.kernel.orgi, Luca Ceresoli <luca@lucaceresoli.net>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH v3 0/3] Use void pointers instead of char in I2C transfer APIs
+Date:   Tue, 12 Nov 2019 12:31:29 -0800
+Message-Id: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-References: <20191111233418.17676-1-jsnitsel@redhat.com> <20191112200328.GA11213@linux.intel.com>
- <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
- <20191112202623.GB5584@ziepe.ca> <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
-In-Reply-To: <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-Date:   Tue, 12 Nov 2019 13:31:09 -0700
-Message-ID: <CALzcddv2aLQ1krYFeNtWNOxyF3aSD0-p3j_p3CgS2Vx-__sQPA@mail.gmail.com>
-Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-X-MC-Unique: esboA5dMPd2F-Yy7M9ChXA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 1:28 PM Jerry Snitselaar <jsnitsel@redhat.com> wrot=
-e:
->
-> On Tue, Nov 12, 2019 at 1:26 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Tue, Nov 12, 2019 at 01:23:33PM -0700, Jerry Snitselaar wrote:
-> > > On Tue, Nov 12, 2019 at 1:03 PM Jarkko Sakkinen
-> > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > >
-> > > > On Mon, Nov 11, 2019 at 04:34:18PM -0700, Jerry Snitselaar wrote:
-> > > > > With power gating moved out of the tpm_transmit code we need
-> > > > > to power on the TPM prior to calling tpm_get_timeouts.
-> > > > >
-> > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > > Cc: linux-kernel@vger.kernel.org
-> > > > > Cc: linux-stable@vger.kernel.org
-> > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_=
-transmit()")
-> > > > > Reported-by: Christian Bundy <christianbundy@fraction.io>
-> > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > > >  drivers/char/tpm/tpm_tis_core.c | 3 ++-
-> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/t=
-pm_tis_core.c
-> > > > > index 270f43acbb77..cb101cec8f8b 100644
-> > > > > +++ b/drivers/char/tpm/tpm_tis_core.c
-> > > > > @@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev, s=
-truct tpm_tis_data *priv, int irq,
-> > > > >                * to make sure it works. May as well use that comm=
-and to set the
-> > > > >                * proper timeouts for the driver.
-> > > > >                */
-> > > > > +             tpm_chip_start(chip);
-> > > > >               if (tpm_get_timeouts(chip)) {
-> > > > >                       dev_err(dev, "Could not get TPM timeouts an=
-d durations\n");
-> > > > >                       rc =3D -ENODEV;
-> > > > > +                     tpm_stop_chip(chip);
-> > > > >                       goto out_err;
-> > > > >               }
-> > > >
-> > > > Couldn't this call just be removed?
-> > > >
-> > > > /Jarkko
-> > > >
-> > >
-> > > Probably. It will eventually get called when tpm_chip_register
-> > > happens. I don't know what the reason was for trying it prior to the
-> > > irq probe.
-> >
-> > At least tis once needed the timeouts before registration because it
-> > was issuing TPM commands to complete its setup.
-> >
-> > If timeouts have not been set then no TPM command should be executed.
-> >
-> > Jason
-> >
->
-> Would it function with the timeout values set at the beginning of
-> tpm_tis_core_init (max values)?
+While we indeed often deal with a stream of bytes when executing a
+transfer, at the higher layers we usually work with more structured
+data, and there is not really a reason to require casts to u8 * form the
+callers. These series change I2C APIs to accept [const] void pointers,
+and also adjust SMBUS implementation to use get/put_unaligned_16() and
+memcpy() for moving data around.
 
-I guess that doesn't set the duration values though
+Changes in v3:
+- addressed Luca's comments
+- added Jonathan's Acked-by
+- split put_unaligned_le16 into a separate patch
+- more call sites converted to get/put_unaligned_le16
+- new patch using memcpy() for moving data around
+
+Changes in v2:
+- adjusted max1363 to the new i2c_master_send/recv signatures
+
+Dmitry Torokhov (3):
+  i2c: use void pointers for supplying data for reads and writes
+  i2c: smbus: use get/put_unaligned_le16 when working with word data
+  i2c: smbus: switch from loops to memcpy
+
+ drivers/i2c/i2c-core-base.c  |  2 +-
+ drivers/i2c/i2c-core-smbus.c | 40 +++++++++++++++---------------------
+ drivers/iio/adc/max1363.c    | 14 +++++++------
+ include/linux/i2c.h          | 28 +++++++++++++------------
+ 4 files changed, 41 insertions(+), 43 deletions(-)
+
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
