@@ -2,192 +2,153 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D828DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C25BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7A32196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EEE20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q4Xi9fji"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YI4bOiO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfKLBaY (ORCPT
+        id S1727001AbfKLBc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:30:24 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55655 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfKLBaY (ORCPT
+        Mon, 11 Nov 2019 20:32:59 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:56108 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfKLBc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:30:24 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so1282680wmb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 17:30:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8B2NZ4PfR61JzfugaxVIwYxo10Xu/i9sEhzmQqu6MqE=;
-        b=Q4Xi9fjijjroN9+pFk/k+GO3xcSUmBu9dZVChvtk6BNLEHYBIkFEbdY1wnd5TT8VIU
-         pbcq9Uzai87oBpR6pMdr+OZtaRFoDLf4QZcUkJqQ5A3W6CC3pc1g5eWpRcxLvX/WilVF
-         /o0MF0NX3GnFDxcz2OuTRW9PD1N9FYytxhxiGYqrbbxcFtN9N7R0LHeJ172SHyzLihSb
-         DhX5BL5hOMVpFNkUKar4DzdHX9VxiFdQcrilPFtmGAwAjmTPpV0G3P+IkptojbdHRL5L
-         aVWG4OfL3nUbNTcdcfBWfVwJmOBB+URAWBoDBZiXRBbl96ASEPdG4Xj4+Ekk/S4zloBa
-         W+vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8B2NZ4PfR61JzfugaxVIwYxo10Xu/i9sEhzmQqu6MqE=;
-        b=ooWoWanPI/hLHYBQ92FSwrnN/1t1Iy7LizV3H+UcR3YxFlFDu35VJekWhyHRBrRfx4
-         8TS5DaLc+v0ii9wzrrxK41D6dlfy6TFk504stKcO4050V3evaAcUjbZHmV6GnUgcQMoO
-         bqw8DFVd+I5QYEoqr49Wqjlpr5rwu+9aBHsjpOeoj43U0Ui6VwlFgfeDUM/znUBpGdUS
-         SfUfwYnUpD+VGrH4bM4q0UwIZGup8j+Lgx9QdO7RE7P1Cd18Zv7Lf48hacDi74bcGNjz
-         FSLjBEKrI19QaZ6o9nldfHcaVrY0V2W0POURUvniokEOs2LKWjA4Z/uXvnsDBwv8g18H
-         zYNw==
-X-Gm-Message-State: APjAAAXvsz2ZQlEwR7YZ2UyZHVln3VJfkU2iiygZRKiD2IN5Bruza5HL
-        QQoqagX7sbLIeGht9jP3nnJ4cMt4VEx7PG8kzOWUQw==
-X-Google-Smtp-Source: APXvYqyHsOIfQh0ZE+Iewpa2QCk0jqORNL5kDnw68XZLcijkVuKb2lUFQzIHPnj+mD3ll8zMo9bzEqsY90vIJmgBNTM=
-X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr1474407wma.66.1573522221235;
- Mon, 11 Nov 2019 17:30:21 -0800 (PST)
+        Mon, 11 Nov 2019 20:32:59 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAC1JjIO173779;
+        Tue, 12 Nov 2019 01:32:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=fTgWHJSuJxj4enhVwv1L7tLVXaaO+logj3ywjSrwRZE=;
+ b=YI4bOiO6wN/W0dLV/r2UFrXiihHcnxfijh6AQ2sY61eElle1gLkkMpqnaP3h6C7sNgbb
+ 39Gci5pqtewehUM0KDV9nq4wIBMOk8Zoua1fugmIGuCyJOJoobPfrZ9kcPrxlZPeiXES
+ bpBwdTRIvf71hNpV3bMXvkqxUI/oAWh41IgVnCxRhpH98s6V5NTS6yM5ToO4Ue42FTSf
+ ekwx1++VNGQtObYn0UA4n/x0ZT0VSLZ7F5KE4CCMU8D1f8BrRqyHPH4utO1mOzcIxNVd
+ noeE538ZGGK39SvlaeNu1gQLJ1G5bZ93VB9iRJFhbSYfYfVXsugwGvjv9ijc7kMHmosN Lg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2w5p3qhhqg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 01:32:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAC1IKOp113548;
+        Tue, 12 Nov 2019 01:32:52 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2w66wmya5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 01:32:52 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAC1WoSg007351;
+        Tue, 12 Nov 2019 01:32:51 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Nov 2019 01:32:50 +0000
+Date:   Mon, 11 Nov 2019 17:32:49 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Martin K Petersen <martin.petersen@oracle.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Alexis Savery <asavery@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/2] loop: Better discard for block devices
+Message-ID: <20191112013249.GD6235@magnolia>
+References: <20191111185030.215451-1-evgreen@chromium.org>
 MIME-Version: 1.0
-References: <20191107132755.8517-1-jonas@norrbonn.se> <20191107132755.8517-2-jonas@norrbonn.se>
- <CAF2d9jjRLZ07Qx0NJ9fi1iUpHn+qYEJ+cacKgBmeZ2FvZLObEQ@mail.gmail.com>
- <fff51fa7-5c42-7fa7-6208-d911b18bd91e@norrbonn.se> <CAF2d9jib=Qdn9uB=kKn4CTbqvqOiGs+FGh4427=o+UySLf=BwA@mail.gmail.com>
- <7a2038c8-d3a6-2144-f11d-965394d1b420@norrbonn.se>
-In-Reply-To: <7a2038c8-d3a6-2144-f11d-965394d1b420@norrbonn.se>
-From:   =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS14KS+4KSwKQ==?= 
-        <maheshb@google.com>
-Date:   Mon, 11 Nov 2019 17:29:52 -0800
-Message-ID: <CAF2d9jiLcLHUrNveQRFyv_SpV+LVW+aUpMAD_MArd8wzeZnUWA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] rtnetlink: allow RTM_SETLINK to reference other namespaces
-To:     Jonas Bonn <jonas@norrbonn.se>
-Cc:     nicolas.dichtel@6wind.com, linux-netdev <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111185030.215451-1-evgreen@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911120009
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911120009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 9, 2019 at 6:17 AM Jonas Bonn <jonas@norrbonn.se> wrote:
->
-> Hi Mahesh,
->
-> Thanks for the detailed response.  It provided valuable insight.
->
-> On 08/11/2019 19:55, Mahesh Bandewar (=E0=A4=AE=E0=A4=B9=E0=A5=87=E0=A4=
-=B6 =E0=A4=AC=E0=A4=82=E0=A4=A1=E0=A5=87=E0=A4=B5=E0=A4=BE=E0=A4=B0) wrote:
-> > Hi Jonas, thanks for the response.
-> >
-> > On Fri, Nov 8, 2019 at 12:20 AM Jonas Bonn <jonas@norrbonn.se> wrote:
-> >>
-> >> Hi Mahesh,
-> >>
-> >> On 07/11/2019 21:36, Mahesh Bandewar (=E0=A4=AE=E0=A4=B9=E0=A5=87=E0=
-=A4=B6 =E0=A4=AC=E0=A4=82=E0=A4=A1=E0=A5=87=E0=A4=B5=E0=A4=BE=E0=A4=B0) wro=
-te:
-> >>> On Thu, Nov 7, 2019 at 5:30 AM Jonas Bonn <jonas@norrbonn.se> wrote:
-> >>>>
-> >>>>
-> >>>> +       /* A hack to preserve kernel<->userspace interface.
-> >>>> +        * It was previously allowed to pass the IFLA_TARGET_NETNSID
-> >>>> +        * attribute as a way to _set_ the network namespace.  In th=
-is
-> >>>> +        * case, the device interface was assumed to be in the  _cur=
-rent_
-> >>>> +        * namespace.
-> >>>> +        * If the device cannot be found in the target namespace the=
-n we
-> >>>> +        * assume that the request is to set the device in the curre=
-nt
-> >>>> +        * namespace and thus we attempt to find the device there.
-> >>>> +        */
-> >>> Could this bypasses the ns_capable() check? i.e. if the target is
-> >>> "foo" but your current ns is bar. The process may be "capable" is foo
-> >>> but the interface is not found in foo but present in bar and ends up
-> >>> modifying it (especially when you are not capable in bar)?
-> >>
-> >> I don't think so.  There was never any capable-check for the "current"
-> >> namespace so there's no change in that regard.
->
-> I was wrong on this point.  There IS a capable-check for the "current"
-> net.  The code to create interfaces in 'other' namespaces was already in
-> place before my patch and that code does the right thing with respect to
-> checking NS capabilities on the "destination" and "link" nets.
->
-> My patch is mostly just accounting for the "setlink" aspect of NEWLINK
-> where the device already exists in a foreign namespace and needs to be
-> searched for there.  Even in that code path, all the ns-capable checks
-> are in place and the behaviour is the same as before.
->
-> >>
-> > not having capable-check seems wrong as we don't want random
-> > not-capable processes to alter settings. However, it may be at the API
-> > entry level, which will provide necessary protection (haven't
-> > checked!). Having said that, this could be bad for the stuff that you
-> > are implementing since I could be in "foo" and attempting to change
-> > "bar". For this I must be capable in "bar" but the top-level capable
-> > check will by default check me in "foo" as well which is not required
-> > and could potentially block me from performing legal operation in
-> > "bar".
-> >
-> > Not saying this is a problem, but without having an implementation to
-> > use this would be hard to try. You would most likely have a way to
-> > verify this, so please check it.
->
-> The above shouldn't be an issue with the current implementation.
->
-> >
-> >> I do think there is an issue with this hack that I can't see any
-> >> workaround for.  If the user specifies an interface (by name or index)
-> >> for another namespace that doesn't exist, there's a potential problem =
-if
-> >> that name/index happens to exist in the "current" namespace.  In that
-> >> case, one many end up inadvertently modifying the interface in the
-> >> current namespace.  I don't see how to avoid that while maintaining th=
-e
-> >> backwards compatibility.
-> >>
-> > This could very well be the case always for single digit ifindex
-> > values. (We recently suffered a local scare because of something very
-> > similar).
-> >
-> >> My absolute preference would be to drop this compat-hack altogether.
-> >> iproute2 doesn't use a bare TARGET_NETNSID in this manner (for changin=
-g
-> >> namespaces) and I didn't find any other users by a quick search of oth=
-er
-> >> prominent Netlink users:  systemd, network-manager, connman.  This
-> >> compat-hack is there for the _potential ab-user_ of the interface, not
-> >> for any known such.
-> >>
-> > what is forcing you keeping you keeping / implementing this hack? I
-> > would also prefer simple solution without creating a potential problem
-> > / vulnerability (problem: potentially modifying unintended interface,
-> > vulnerability: potentially allow changing without proper credentials;
-> > both not proven but are possibilities) down the line. One possibility
-> > is to drop the compatibility hack and keep it as a backup if something
-> > breaks / someone complains.
->
-> OK, this would be my preference, too.  If we can work on the assumption
-> that this isn't actually providing compatibility for anybody in
-> practice, then we can drop it.  With that, the potential problem of
-> inadvertently modifying the wrong device disappears.  There's no problem
-> of being able to access a namespace that one isn't capable in, but
-> leaving a hole through which the user may end up doing something
-> unexpected is pretty ugly.
->
-> I'll remove this and repost the series.
->
-sgtm
+On Mon, Nov 11, 2019 at 10:50:28AM -0800, Evan Green wrote:
+> This series addresses some errors seen when using the loop
+> device directly backed by a block device. The first change plumbs
+> out the correct error message, and the second change prevents the
+> error from occurring in many cases.
+> 
+> The errors look like this:
+> [   90.880875] print_req_error: I/O error, dev loop5, sector 0
+> 
+> The errors occur when trying to do a discard or write zeroes operation
+> on a loop device backed by a block device that does not support write zeroes.
+> Firstly, the error itself is incorrectly reported as I/O error, but is
+> actually EOPNOTSUPP. The first patch plumbs out EOPNOTSUPP to properly
+> report the error.
+> 
+> The second patch prevents these errors from occurring by mirroring the
+> zeroing capabilities of the underlying block device into the loop device.
+> Before this change, discard was always reported as being supported, and
+> the loop device simply turns around and does an fallocate operation on the
+> backing device. After this change, backing block devices that do support
+> zeroing will continue to work as before, and continue to get all the
+> benefits of doing that. Backing devices that do not support zeroing will
+> fail earlier, avoiding hitting the loop device at all and ultimately
+> avoiding this error in the logs.
+> 
+> I can also confirm that this fixes test block/003 in the blktests, when
+> running blktests on a loop device backed by a block device.
+> 
+> Darrick, I see you've got a related change in linux-next. I'm not sure what
+> the status of that is, so I didn't base my latest spin on top of yours.
 
-thanks,
---mahesh..
+AFAIK the patch you reference changes NOUNMAP requests to use
+FALLOC_FL_ZERO_RANGE and is queued for 5.5, which means patch #2 will
+clash with it.  It sort of looks like patch #2 reimplements the patch
+that Jens already pulled for 5.5, so you probably want to rebase this
+series atop his for-next tree.... but you should really ask Jens.
 
-> Thanks for your insight into this issue.  It was helpful.
->
-> /Jonas
+--D
+
+> Changes in v6:
+> - Updated tags
+> 
+> Changes in v5:
+> - Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
+> 
+> Changes in v4:
+> - Mirror blkdev's write_zeroes into loopdev's discard_sectors.
+> 
+> Changes in v3:
+> - Updated tags
+> - Updated commit description
+> 
+> Changes in v2:
+> - Unnested error if statement (Bart)
+> 
+> Evan Green (2):
+>   loop: Report EOPNOTSUPP properly
+>   loop: Better discard support for block devices
+> 
+>  drivers/block/loop.c | 66 +++++++++++++++++++++++++++++---------------
+>  1 file changed, 44 insertions(+), 22 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
