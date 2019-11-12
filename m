@@ -2,184 +2,124 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E3CC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7870DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D8821872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDyy21Bw"
+	by mail.kernel.org (Postfix) with ESMTP id 50C7C21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfKLHvV (ORCPT
+        id S1727104AbfKLHvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:51:21 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39360 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725283AbfKLHvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:51:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573545079;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6rxyS/tsYPHxeVrlM+DEscFIUAW4qtSS92/VNhtKh8c=;
-        b=FDyy21BwZ80ftKEcM0ECsAdtBsRVMG4FU1eamOyZ1GA7jif0KBOoFLIgvaagxrH30nflZk
-        qaL4oPyIIxgL8Xchgt2CTiGO6dBTiS0uNRF/0VtpW6dNynKVnluR7SPrpX48drJhPcV82T
-        hcy8VJIF/b8SvahcvmeTq+6vOvct+h0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-101-Wj5eCjiIOCSLICFjqeDrCw-1; Tue, 12 Nov 2019 02:51:18 -0500
-Received: by mail-wr1-f70.google.com with SMTP id h7so11250054wrb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 23:51:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VsvZFQRI2YV26AAOzKX2AI/mJO4c1Kc1kKEKWftHXnQ=;
-        b=GUGvK5QHTm3YoDwz+lvqhFxuLilo1QsjoPG4IrAW6NGYX0zyxwwGZaKHlyEfTx4swV
-         ZCMBdMC3zbYPLwfTkCNMtlRNSPJPn7eHRrmSSMvf+nzPLRo1lvI6t0jp5ZEzA3HFkwji
-         No5a8ZdxgsbJD1YiLDmb3hlq8nQXfwH2PjP6fWy4BJ8PDPkqWiHyu5aiuIJI+pYCLV2V
-         T4xW+psmzUPmhFCcMYnzceKYyMnt84zQT80Fg1p+vpT6uMU90vVxtPXu8xiddWzop3qI
-         I14Tey+/E/aVNbsOFQ7wH96yngINNXIB4ZrIlAhLULGbicWNCiAk363vttTBSslTPijC
-         C97A==
-X-Gm-Message-State: APjAAAVlmoExKaqNztCa/SlhWCq4I121kRUqgUNm9t4nZWjGtvZHFQju
-        Rb8xxXTqcrrRo3N4IU9CEbQA9+qk1q4C7jxGa1d5LZ0wSFUaYCJHWF57PbRBgN1OHtbhtbY+vTj
-        5P5H99b7asohgtN+pZm2q27df
-X-Received: by 2002:a1c:2846:: with SMTP id o67mr2637224wmo.7.1573545076088;
-        Mon, 11 Nov 2019 23:51:16 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxEVCMatQKEK93qgShSFL6xhXuoOiSzVJOt45BVZF+3Mq9tvSydYKZ6+TQCkfM5J0Mr4VyjYg==
-X-Received: by 2002:a1c:2846:: with SMTP id o67mr2637212wmo.7.1573545075797;
-        Mon, 11 Nov 2019 23:51:15 -0800 (PST)
-Received: from localhost.localdomain.com ([151.29.177.194])
-        by smtp.gmail.com with ESMTPSA id i71sm39498658wri.68.2019.11.11.23.51.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Nov 2019 23:51:14 -0800 (PST)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     peterz@infradead.org, mingo@redhat.com, glenn@aurora.tech
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        tglx@linutronix.de, luca.abeni@santannapisa.it,
-        c.scordino@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
-        bristot@redhat.com, juri.lelli@redhat.com
-Subject: [PATCH 2/2] sched/deadline: Temporary copy static parameters to boosted non-DEADLINE entities
-Date:   Tue, 12 Nov 2019 08:50:56 +0100
-Message-Id: <20191112075056.19971-3-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191112075056.19971-1-juri.lelli@redhat.com>
-References: <20191112075056.19971-1-juri.lelli@redhat.com>
-X-MC-Unique: Wj5eCjiIOCSLICFjqeDrCw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Nov 2019 02:51:47 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6639 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725847AbfKLHvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 02:51:46 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1DA92BC29FDA6D619B61;
+        Tue, 12 Nov 2019 15:51:43 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 12 Nov 2019
+ 15:51:38 +0800
+Subject: Re: [PATCH -next] drm/amd/display: Fix old-style declaration
+To:     Joe Perches <joe@perches.com>, <harry.wentland@amd.com>,
+        <sunpeng.li@amd.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>, <Bhawanpreet.Lakha@amd.com>,
+        <Jun.Lei@amd.com>, <David.Francis@amd.com>,
+        <Dmytro.Laktyushkin@amd.com>, <nicholas.kazlauskas@amd.com>,
+        <martin.leung@amd.com>, <Chris.Park@amd.com>
+References: <20191111122801.18584-1-yuehaibing@huawei.com>
+ <01c630e6d4c58b3f6184603e158f53fb9aaeae7d.camel@perches.com>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <3361b760-fe4f-87e8-b0a4-ebda390aa492@huawei.com>
+Date:   Tue, 12 Nov 2019 15:51:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <01c630e6d4c58b3f6184603e158f53fb9aaeae7d.camel@perches.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Boosted entities (Priority Inheritance) use static DEADLINE parameters
-of the top priority waiter. However, there might be cases where top
-waiter could be a non-DEADLINE entity that is currently boosted by a
-DEADLINE entity from a different lock chain (i.e., nested priority
-chains involving entities of non-DEADLINE classes). In this case, top
-waiter static DEADLINE parameters could null (initialized to 0 at
-fork()) and replenish_dl_entity() would hit a BUG().
+On 2019/11/12 10:39, Joe Perches wrote:
+> On Mon, 2019-11-11 at 20:28 +0800, YueHaibing wrote:
+>> Fix a build warning:
+>>
+>> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:75:1:
+>>  warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
+> []
+>> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> []
+>> @@ -69,7 +69,7 @@
+>>  #define DC_LOGGER \
+>>  	dc->ctx->logger
+>>  
+>> -const static char DC_BUILD_ID[] = "production-build";
+>> +static const char DC_BUILD_ID[] = "production-build";
+> 
+> DC_BUILD_ID is used exactly once.
+> Maybe just use it directly and remove DC_BUILD_ID instead?
 
-Fix this by temporarily copying static DEADLINE parameters of top
-DEADLINE waiter (there must be at least one in the chain(s) for the
-problem above to happen) into boosted entities. Parameters are reset
-during deboost.
+commit be61df574256ae8c0dbd45ac148ca7260a0483c0
+Author: Jun Lei <Jun.Lei@amd.com>
+Date:   Thu Sep 13 09:32:26 2018 -0400
 
-Reported-by: Glenn Elliott <glenn@aurora.tech>
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
----
- kernel/sched/core.c     |  6 ++++--
- kernel/sched/deadline.c | 17 +++++++++++++++++
- kernel/sched/sched.h    |  1 +
- 3 files changed, 22 insertions(+), 2 deletions(-)
+    drm/amd/display: Add DC build_id to determine build type
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7880f4f64d0e..a3eb57cfcfb4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4441,19 +4441,21 @@ void rt_mutex_setprio(struct task_struct *p, struct=
- task_struct *pi_task)
- =09=09if (!dl_prio(p->normal_prio) ||
- =09=09    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
- =09=09=09p->dl.dl_boosted =3D 1;
-+=09=09=09if (!dl_prio(p->normal_prio))
-+=09=09=09=09__dl_copy_static(p, pi_task);
- =09=09=09queue_flag |=3D ENQUEUE_REPLENISH;
- =09=09} else
- =09=09=09p->dl.dl_boosted =3D 0;
- =09=09p->sched_class =3D &dl_sched_class;
- =09} else if (rt_prio(prio)) {
- =09=09if (dl_prio(oldprio))
--=09=09=09p->dl.dl_boosted =3D 0;
-+=09=09=09__dl_clear_params(p);
- =09=09if (oldprio < prio)
- =09=09=09queue_flag |=3D ENQUEUE_HEAD;
- =09=09p->sched_class =3D &rt_sched_class;
- =09} else {
- =09=09if (dl_prio(oldprio))
--=09=09=09p->dl.dl_boosted =3D 0;
-+=09=09=09__dl_clear_params(p);
- =09=09if (rt_prio(oldprio))
- =09=09=09p->rt.timeout =3D 0;
- =09=09p->sched_class =3D &fair_sched_class;
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 951a7b44156f..a823391b245e 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2676,6 +2676,22 @@ bool __checkparam_dl(const struct sched_attr *attr)
- =09return true;
- }
-=20
-+/*
-+ * This function clears the sched_dl_entity static params.
-+ */
-+void __dl_copy_static(struct task_struct *to, struct task_struct *from)
-+{
-+=09struct sched_dl_entity *to_se =3D &to->dl;
-+=09struct sched_dl_entity *from_se =3D &from->dl;
-+
-+=09to_se->dl_runtime=09=3D from_se->dl_runtime;
-+=09to_se->dl_deadline=09=3D from_se->dl_deadline;
-+=09to_se->dl_period=09=3D from_se->dl_period;
-+=09to_se->flags=09=09=3D from_se->flags;
-+=09to_se->dl_bw=09=09=3D from_se->dl_bw;
-+=09to_se->dl_density=09=3D from_se->dl_density;
-+}
-+
- /*
-  * This function clears the sched_dl_entity static params.
-  */
-@@ -2690,6 +2706,7 @@ void __dl_clear_params(struct task_struct *p)
- =09dl_se->dl_bw=09=09=09=3D 0;
- =09dl_se->dl_density=09=09=3D 0;
-=20
-+=09dl_se->dl_boosted=09=09=3D 0;
- =09dl_se->dl_throttled=09=09=3D 0;
- =09dl_se->dl_yielded=09=09=3D 0;
- =09dl_se->dl_non_contending=09=3D 0;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 0db2c1b3361e..92444306fff7 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -239,6 +239,7 @@ struct rt_bandwidth {
- =09unsigned int=09=09rt_period_active;
- };
-=20
-+void __dl_copy_static(struct task_struct *to, struct task_struct *from);
- void __dl_clear_params(struct task_struct *p);
-=20
- /*
---=20
-2.17.2
+    [why]
+    Sometimes there are indications that the incorrect driver is being
+    loaded in automated tests. This change adds the ability for builds to
+    be tagged with a string, and picked up by the test infrastructure.
+
+    [how]
+    dc.c will allocate const for build id, which is init-ed with default
+    value, indicating production build. For test builds, build server will
+    find/replace this value. The test machine will then verify this value.
+
+It seems DC_BUILD_ID is used by the build server, so maybe we should keep it.
+
+> 
+> ---
+>  drivers/gpu/drm/amd/display/dc/core/dc.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> index 1fdba13..803dc14 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> @@ -69,8 +69,6 @@
+>  #define DC_LOGGER \
+>  	dc->ctx->logger
+>  
+> -const static char DC_BUILD_ID[] = "production-build";
+> -
+>  /**
+>   * DOC: Overview
+>   *
+> @@ -815,7 +813,7 @@ struct dc *dc_create(const struct dc_init_data *init_params)
+>  	if (dc->res_pool->dmcu != NULL)
+>  		dc->versions.dmcu_version = dc->res_pool->dmcu->dmcu_version;
+>  
+> -	dc->build_id = DC_BUILD_ID;
+> +	dc->build_id = "production-build";
+>  
+>  	DC_LOG_DC("Display Core initialized\n");
+>  
+> 
+> 
+> 
+> .
+> 
 
