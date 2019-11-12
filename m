@@ -2,182 +2,69 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFE2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC618C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5124320578
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:11:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uF05IGne"
+	by mail.kernel.org (Postfix) with ESMTP id 9B05D214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfKLTLy (ORCPT
+        id S1727112AbfKLTNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:11:54 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46910 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfKLTLx (ORCPT
+        Tue, 12 Nov 2019 14:13:19 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:48020 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfKLTNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:11:53 -0500
-Received: by mail-pl1-f194.google.com with SMTP id l4so9773681plt.13;
-        Tue, 12 Nov 2019 11:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6wnjVJNiNGBNCKbfitQ8nRvbfeqLmiziqmbiztt6dMw=;
-        b=uF05IGneF7eiHDEZxLay3N0hu8BhaVbmG/Djg5RBwPJehPiZvNfXTGxA8T5IYC16Oq
-         khs5DDzR9A14HBDqQpsVl+FmSASQLlHMexb7TpG8GAcMbZbHzh+DRKc3Ay57bGSqn2zv
-         T+xS4dr+4xXEvMbUSb3g/8HLUj/EJXTeFUx3n+xKv4EkfJDCkEAld+vMEnRnU/ZLpuBN
-         THzCcdE46Ko4eGcnWcjwwMQFRCJrW7sY/FsoDcA3L3OzmlvVgQrb4xIrAODTmknwkavA
-         2gu2IQAldUU/kJlSETXZrNUSAg809NTIawbqx+7fu0HZr2GDpiZAPSrVOkcnR5aVckKS
-         Bf3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6wnjVJNiNGBNCKbfitQ8nRvbfeqLmiziqmbiztt6dMw=;
-        b=VKJ1Nux/lXP9OuyXM4qKwQHDJH1ZJgFKVXwkVSH128eCflhyV1vx0Hwd671KjUIWdm
-         Cy40VOs9J6eL98w51MgbcxMbsYQ5LwTjylZwliTueeECDA4oZvfXTKcB3cFmk8cSWEEj
-         +NaeVj500Verib81yg0bRi0PQThN0nQxfGVQOqMsJWuW7MvyDH7En7slyYo6smz4tWVG
-         DGHBBbJRTHCL/u3N+LGitmaToVTCWi+77laag6IQmtpzKRqPzCV/Y9SW8P0C0ivQnzSL
-         GnLJkCGTyHO05j8bVkST0boBLMYDSDpV/VqYdjNSZgDfVffJPPyWnhaywHGRUZWuXJwR
-         ctcA==
-X-Gm-Message-State: APjAAAXvaJ3xTjM2I1mym/tKItp7ukKYVuLRuuR/PZUU4cYm7JUSbqGz
-        OBNBS9bM53Ib6vUEazL5Y3c=
-X-Google-Smtp-Source: APXvYqzSf8BGpB1lxzu/3YDxbHRq1CfqCvB2TqJ6On+ESkU3Sdbfee2ZAfwEQTRQj0gyMaub/201gA==
-X-Received: by 2002:a17:902:8f94:: with SMTP id z20mr33283511plo.21.1573585912467;
-        Tue, 12 Nov 2019 11:11:52 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id s3sm3309141pjr.13.2019.11.12.11.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:11:51 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:11:49 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: use void pointers for supplying data for reads
- and writes
-Message-ID: <20191112191149.GA13374@dtor-ws>
-References: <20191112005826.GA96746@dtor-ws>
- <f1bda5eb-b3ad-e7e1-f832-54a62e708d9c@lucaceresoli.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1bda5eb-b3ad-e7e1-f832-54a62e708d9c@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 12 Nov 2019 14:13:19 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B5670154CD36F;
+        Tue, 12 Nov 2019 11:13:18 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:13:18 -0800 (PST)
+Message-Id: <20191112.111318.1764384720609728917.davem@davemloft.net>
+To:     hslester96@gmail.com
+Cc:     fugang.duan@nxp.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] net: fec: add a check for CONFIG_PM to avoid
+ clock count mis-match
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191112112830.27561-1-hslester96@gmail.com>
+References: <20191112112830.27561-1-hslester96@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 11:13:18 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 09:45:56AM +0100, Luca Ceresoli wrote:
-> Hi Dmitry,
-> 
-> On 12/11/19 01:58, Dmitry Torokhov wrote:
-> > There is no need to force users of i2c_master_send()/i2c_master_recv()
-> > and other i2c read/write bulk data API to cast everything into u8
-> > pointers.  While everything can be considered byte stream, the drivers
-> > are usually work with more structured data.
-> > 
-> > Let's switch the APIs to accept [const] void pointers to cut amount of
-> > casting needed.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> I agree on the principle, but I have a question, see below.
-> 
-> [...]
-> >  s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
-> > -					      u8 command, u8 length, u8 *values)
-> > +					      u8 command, u8 length, void *values)
-> >  {
-> >  	u8 i = 0;
-> >  	int status;
-> > @@ -647,8 +648,7 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
-> >  			status = i2c_smbus_read_word_data(client, command + i);
-> >  			if (status < 0)
-> >  				return status;
-> > -			values[i] = status & 0xff;
-> > -			values[i + 1] = status >> 8;
-> > +			put_unaligned_le16(status, values + i);
-> 
-> The switch to put_unaligned_le16() looks unrelated, is it?
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Tue, 12 Nov 2019 19:28:30 +0800
 
-Yeah, I'll split it out.
+> If CONFIG_PM is enabled, runtime pm will work and call runtime_suspend
+> automatically to disable clks.
+> Therefore, remove only needs to disable clks when CONFIG_PM is disabled.
+> Add this check to avoid clock count mis-match caused by double-disable.
+> 
+> Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-> 
-> >  			i += 2;
-> >  		}
-> >  	}
-> > @@ -657,7 +657,7 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
-> >  		status = i2c_smbus_read_byte_data(client, command + i);
-> >  		if (status < 0)
-> >  			return status;
-> > -		values[i] = status;
-> > +		*(u8 *)(values + i) = status;
-> 
-> My preference is to use an u8* helper variable in these cases:
+I don't understand this at all.
 
-Sure, I can do this.
+The clk disables here match the unconditional clk enables in the probe
+function.
 
-> 
-> s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client
-> *client,
-> -			      u8 command, u8 length, u8 *values)
-> +			      u8 command, u8 length, void *buf)
->  {
-> +	u8 *bytes = buf;
-> @@
-> -		values[i] = status;
-> +		bytes[i] = status;
-> 
-> This clarifies we are accessing the raw bytes, avoids typecasts in the
-> middle of code for readability and avoids void pointer math.
-> 
-> PS: look, it's exactly what you do in the max1363.c file below! :)
-> 
-> > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> > index 5c2cc61b666e7..48ed76a0e83d4 100644
-> > --- a/drivers/iio/adc/max1363.c
-> > +++ b/drivers/iio/adc/max1363.c
-> > @@ -182,9 +182,9 @@ struct max1363_state {
-> >  	struct regulator		*vref;
-> >  	u32				vref_uv;
-> >  	int				(*send)(const struct i2c_client *client,
-> > -						const char *buf, int count);
-> > +						const void *buf, int count);
-> >  	int				(*recv)(const struct i2c_client *client,
-> > -						char *buf, int count);
-> > +						void *buf, int count);
-> >  };
-> >  
-> >  #define MAX1363_MODE_SINGLE(_num, _mask) {				\
-> > @@ -310,27 +310,29 @@ static const struct max1363_mode
-> >  	return NULL;
-> >  }
-> >  
-> > -static int max1363_smbus_send(const struct i2c_client *client, const char *buf,
-> > +static int max1363_smbus_send(const struct i2c_client *client, const void *buf,
-> >  		int count)
-> >  {
-> > +	const u8 *data = buf;
-> 
-> Here it is! ^
->
+And that is how this is supposed to work, probe enables match remove
+disables.  And suspend disables match resume enables.
 
-Thanks for the review!
-
--- 
-Dmitry
+Why isn't the probe enable taking the correct count, which the remove
+function must match with an appropriate disable?  There is no CONFIG_PM
+guarding the probe time clk enables.
