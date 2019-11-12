@@ -2,99 +2,67 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1F4C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99736C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A455F21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AuhgNldH"
+	by mail.kernel.org (Postfix) with ESMTP id 6F845206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfKLRnh (ORCPT
+        id S1727021AbfKLRox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:43:37 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:58426 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKLRnh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:43:37 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 840AA20B7192;
-        Tue, 12 Nov 2019 09:43:36 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 840AA20B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573580616;
-        bh=gL4GwRpk0PWlTJzGrB0LKNSqKfDDLY5JhTDv2wWXNMA=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=AuhgNldHUcVqizdampYRLQUgbO6DPog4DHUBXWaX0gH+eRJQ99Qj4d49IqQ2RzHAi
-         e1xFa4p0QttxJ6T8q6E04jo/vkXCVCLPSUpYMm2MnE0cNrGZHyvfZtpI2J0ofXStZJ
-         CIftdHy5V2cIeqjLpdfRBEKky7AJoxxmt5qTc6oU=
-Subject: Re: [PATCH v5 02/10] IMA: Added keyrings= option in IMA policy to
- only measure keys added to the specified keyrings.
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191111193303.12781-1-nramas@linux.microsoft.com>
- <20191111193303.12781-3-nramas@linux.microsoft.com>
- <1573578305.17949.42.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <1f940f9d-fb1b-a0a4-b5f4-3f3532dbc041@linux.microsoft.com>
-Date:   Tue, 12 Nov 2019 09:43:57 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 12 Nov 2019 12:44:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:38360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbfKLRox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:44:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 896B130E;
+        Tue, 12 Nov 2019 09:44:52 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 845113F534;
+        Tue, 12 Nov 2019 09:44:50 -0800 (PST)
+Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
+ <20191112150544.GA3664@linaro.org>
+ <e6687868-835b-0d01-5e00-c3eaec1cd62c@arm.com>
+ <CAKfTPtALVtNKCSbBG=EFL3+mLV=eierfrvdExkMJdczF+a9x_w@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <672f2d9c-d633-2e7c-a1fd-ef7434d24239@arm.com>
+Date:   Tue, 12 Nov 2019 17:44:49 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1573578305.17949.42.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAKfTPtALVtNKCSbBG=EFL3+mLV=eierfrvdExkMJdczF+a9x_w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/2019 9:05 AM, Mimi Zohar wrote:
-
-> The C maximum line length is 80 characters.  The subject line is even
-> less than that (~50).  The Subject line here could be "ima: add
-> support to limit measuring keys".
-I'll update the subject line for the patches - limit to max 50 chars.
-
+On 12/11/2019 17:20, Vincent Guittot wrote:
+>> I didn't see anything in that reply, was that just a spurious email?
 > 
-> On Mon, 2019-11-11 at 11:32 -0800, Lakshmi Ramasubramanian wrote:
->> IMA policy needs to support measuring only those keys linked to
->> a specific set of keyrings.
-> 
-> Patch descriptions should be written in the imperative.  For example,
-> "Limit measuring keys to those keys being loaded onto a specific
-> keyring."
-Will update.
+> there were a typo in one email address in the 1st message
 
-> 
->>
->> This patch defines a new IMA policy option namely "keyrings=" that
->> can be used to specify a set of keyrings. If this option is specified
->> in the policy for func=KEYRING_CHECK then only the keys linked to
->> the keyrings given in "keyrings=" option are measured.
-> 
-> This description does not seem to match the code, which for some
-> reason isn't included in this patch, nor in 3/10.  Please
-> combine/squash patches 2 & 3.  Missing from the combined patch is the
-> keyring matching code in ima_match_rules().
-
-This patch defines "keyrings=" option in the IMA policy and adds the 
-related field in ima_rule_entry struct.
-
-The code for updating the new field in ima_rule_entry is in patch #4
-[PATCH v5 04/10] IMA: Updated IMA policy functions to return keyrings 
-option read from the policy
-
-I'll update the description for this patch (#2).
-
-  -lakshmi
+Oh right, got it, sorry.
