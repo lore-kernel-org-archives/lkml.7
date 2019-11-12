@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDA7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A430C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845EC214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3B121A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKLXui (ORCPT
+        id S1727220AbfKLXuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:50:38 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57410 "EHLO
+        Tue, 12 Nov 2019 18:50:40 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57502 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727073AbfKLXug (ORCPT
+        by vger.kernel.org with ESMTP id S1727137AbfKLXuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:50:36 -0500
+        Tue, 12 Nov 2019 18:50:37 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvf-0008J9-0i; Tue, 12 Nov 2019 23:50:35 +0000
+        id 1iUfvf-0008JO-57; Tue, 12 Nov 2019 23:50:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-00058A-JT; Tue, 12 Nov 2019 23:50:33 +0000
+        id 1iUfvd-00058L-V7; Tue, 12 Nov 2019 23:50:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Ori Nimron" <orinimron123@gmail.com>
-Date:   Tue, 12 Nov 2019 23:48:20 +0000
-Message-ID: <lsq.1573602477.728733158@decadent.org.uk>
+        "Ping-Ke Shih" <pkshih@realtek.com>,
+        "Laura Abbott" <labbott@redhat.com>,
+        "Kalle Valo" <kvalo@codeaurora.org>,
+        "Nicolas Waisman" <nico@semmle.com>
+Date:   Tue, 12 Nov 2019 23:48:22 +0000
+Message-ID: <lsq.1573602477.292188943@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 23/25] nfc: enforce CAP_NET_RAW for raw sockets
+Subject: [PATCH 3.16 25/25] rtlwifi: Fix potential overflow on P2P code
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,37 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Laura Abbott <labbott@redhat.com>
 
-commit 3a359798b176183ef09efb7a3dc59abad1cc7104 upstream.
+commit 8c55dedb795be8ec0cf488f98c03a1c2176f7fb1 upstream.
 
-When creating a raw AF_NFC socket, CAP_NET_RAW needs to be checked
-first.
+Nicolas Waisman noticed that even though noa_len is checked for
+a compatible length it's still possible to overrun the buffers
+of p2pinfo since there's no check on the upper bound of noa_num.
+Bound noa_num against P2P_MAX_NOA_NUM.
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/nfc/llcp_sock.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/wireless/rtlwifi/ps.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -1004,10 +1004,13 @@ static int llcp_sock_create(struct net *
- 	    sock->type != SOCK_RAW)
- 		return -ESOCKTNOSUPPORT;
- 
--	if (sock->type == SOCK_RAW)
-+	if (sock->type == SOCK_RAW) {
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		sock->ops = &llcp_rawsock_ops;
--	else
-+	} else {
- 		sock->ops = &llcp_sock_ops;
-+	}
- 
- 	sk = nfc_llcp_sock_alloc(sock, sock->type, GFP_ATOMIC);
- 	if (sk == NULL)
+--- a/drivers/net/wireless/rtlwifi/ps.c
++++ b/drivers/net/wireless/rtlwifi/ps.c
+@@ -801,6 +801,9 @@ static void rtl_p2p_noa_ie(struct ieee80
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+@@ -895,6 +898,9 @@ static void rtl_p2p_action_ie(struct iee
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
 
