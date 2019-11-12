@@ -2,172 +2,95 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBB0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41566C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A105C222C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CC9222C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SCx0hF/2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NFWCUY3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKLWYf (ORCPT
+        id S1727159AbfKLWYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:24:35 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14583 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfKLWYe (ORCPT
+        Tue, 12 Nov 2019 17:24:42 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:57740 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLWYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:24:34 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcb31200000>; Tue, 12 Nov 2019 14:24:32 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 12 Nov 2019 14:24:33 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 14:24:33 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
- 2019 22:24:32 +0000
-Subject: Re: [PATCH v3 08/23] vfio, mm: fix get_user_pages_remote() and
- FOLL_LONGTERM
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191112000700.3455038-1-jhubbard@nvidia.com>
- <20191112000700.3455038-9-jhubbard@nvidia.com>
- <CAPcyv4hgKEqoxeQJH9R=YiZosvazj308Kk7jJA1NLxJkNenDcQ@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <471e513c-833f-2f8b-60db-5d9c56a8f766@nvidia.com>
-Date:   Tue, 12 Nov 2019 14:24:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 12 Nov 2019 17:24:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wKj7csVmFjJ/d3XC8UyAdMC+KDFGULyNNr0/bTycga8=; b=NFWCUY3Yb7NDkqJ99ECqcxfox
+        +CCwXY+CG4txQHwyRU9227wVc5WLq4ZfUL3iHL413E7TFDD632pZSbgfkrjWpl1mMVIIm+sh/6C49
+        lllxf1lVAtTcvQaqz1HaAiyYDIYjfUTkMeYXQJXqjtL++ql0pmWzIoCYg1hjXBqOUhRs9/3+3ML3Q
+        aEW72gniVgSbD3elZ2EDLkW+nSjQcn9BNiPYpSIIMN9YUhSSjZ5/n48ZGsAzPFJmmEsUtlMYltgim
+        uRK9aHFCpe/6atuVivojg9XsflOdDYDhUzi5RdOc/Oi6Lc6zjsz0m6I5sh9clbYu2nglubwNFfCVL
+        ZLyAUtFmQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUea8-0000OG-OP; Tue, 12 Nov 2019 22:24:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 65FBE3056C8;
+        Tue, 12 Nov 2019 23:23:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 55A6D20261852; Tue, 12 Nov 2019 23:24:13 +0100 (CET)
+Date:   Tue, 12 Nov 2019 23:24:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        alexei.starovoitov@gmail.com
+Subject: Re: [PATCH -v5 05/17] x86/ftrace: Use text_poke()
+Message-ID: <20191112222413.GB4131@hirez.programming.kicks-ass.net>
+References: <20191111131252.921588318@infradead.org>
+ <20191111132457.761255803@infradead.org>
+ <20191112132536.28ac1b32@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4hgKEqoxeQJH9R=YiZosvazj308Kk7jJA1NLxJkNenDcQ@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573597472; bh=UAR1d5GKJU/1KahVmHwOR6A9jK9nwoB3wSa2dPf7qQ0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SCx0hF/22GHwsQWIhebJkJWfDE6W1v3w54kBd61ULtK+gIirCeDvEe+mYnEHJgwF3
-         N309YgZ8A546WwB5IQMwcVMEM6bPuxfgNODHVHbvBgEiVWtLyxj0B398vc3JKHqHLW
-         fYVbOfGFayiJTsvTBYUVssA0KXLzsSF47AIiXijFRvt1VZIYNmWsBao0fUMlxfVb9y
-         FK/kGRlw4DPqDT/iEi5HrOqFBttHVHyJMVpOjnpKQsoAEutvLb0R76IcvAhSMz3Te2
-         8LwQjMHLUXqcwuSETUK6U7GZZJxoHzli9rQ73NjcXdAxPWo6WYwRsOMHLimlMGza1W
-         kJHm8uWG9iU5g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112132536.28ac1b32@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 1:57 PM, Dan Williams wrote:
-...
->> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->> index d864277ea16f..017689b7c32b 100644
->> --- a/drivers/vfio/vfio_iommu_type1.c
->> +++ b/drivers/vfio/vfio_iommu_type1.c
->> @@ -348,24 +348,20 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
->>                 flags |= FOLL_WRITE;
->>
->>         down_read(&mm->mmap_sem);
->> -       if (mm == current->mm) {
->> -               ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
->> -                                    vmas);
->> -       } else {
->> -               ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
->> -                                           vmas, NULL);
->> -               /*
->> -                * The lifetime of a vaddr_get_pfn() page pin is
->> -                * userspace-controlled. In the fs-dax case this could
->> -                * lead to indefinite stalls in filesystem operations.
->> -                * Disallow attempts to pin fs-dax pages via this
->> -                * interface.
->> -                */
->> -               if (ret > 0 && vma_is_fsdax(vmas[0])) {
->> -                       ret = -EOPNOTSUPP;
->> -                       put_page(page[0]);
->> -               }
->> +       ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
->> +                                   page, vmas, NULL);
+On Tue, Nov 12, 2019 at 01:25:36PM -0500, Steven Rostedt wrote:
+> On Mon, 11 Nov 2019 14:12:57 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+
+> >  int ftrace_arch_code_modify_post_process(void)
+> >      __releases(&text_mutex)
+> >  {
+> > -	set_all_modules_text_ro();
+> > -	set_kernel_text_ro();
+> > +	text_poke_finish();
 > 
-> Hmm, what's the point of passing FOLL_LONGTERM to
-> get_user_pages_remote() if get_user_pages_remote() is not going to
-> check the vma? I think we got to this code state because the
+> Why is the text_poke_finish() needed here? Can we add a comment about
+> why?
 
-FOLL_LONGTERM is short-lived in this location, because patch 23 
-("mm/gup: remove support for gup(FOLL_LONGTERM)") removes it, after
-callers are changed over to pin_longterm_pages*().
+I think this is because of the text_poke_queue() in
+ftrace_modify_code_direct(). I seem to have forgotten the code-flow
+between the core and arch parts of ftrace again.
 
-So FOLL_LONGTERM is not doing much now, but it is basically a marker for
-"change gup(FOLL_LONGTERM) to pin_longterm_pages()", and patch 18
-actually makes that change.
+But sure, I can try and dig that out again and write a comment.
 
-And then pin_longterm_pages*() is, in turn, a way to mark all the 
-places that need file system and/or user space interactions (layout
-leases, etc), as per "Case 2: RDMA" in the new 
-Documentation/vm/pin_user_pages.rst.
 
-> get_user_pages() vs get_user_pages_remote() split predated the
-> introduction of FOLL_LONGTERM.
-
-Yes. And I do want clean this up as I go, so we don't end up with
-stale concepts lingering in gup.c...
-
+> > +	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL); // BATCH
 > 
-> I think check_vma_flags() should do the ((FOLL_LONGTERM | FOLL_GET) &&
-> vma_is_fsdax()) check and that would also remove the need for
-> __gup_longterm_locked.
-> 
+> What do you mean by "BATCH" ?
 
-Good idea, but there is still the call to check_and_migrate_cma_pages(), 
-inside __gup_longterm_locked().  So it's a little more involved and
-we can't trivially delete __gup_longterm_locked() yet, right?
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Ah, that was a question, can/should we use text_poke_queue() there?
