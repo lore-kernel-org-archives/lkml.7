@@ -2,188 +2,172 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CF2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3330C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1526F21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3BF21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:24:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JTZwx1ve"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RCD/1hgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKLSXP (ORCPT
+        id S1727178AbfKLSY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:23:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:51926 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfKLSXO (ORCPT
+        Tue, 12 Nov 2019 13:24:29 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33478 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKLSY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:23:14 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACIIn2T042133;
-        Tue, 12 Nov 2019 18:23:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=gNQDayv4/6vSaE3ZOq4DNXB6lT/PH93bkXGOaNWGu20=;
- b=JTZwx1veX8A2Jl5RB6ahp+wnSC1suS3PcTN10DafY40jg/3ppS1tn4SQIt57upV+AzXK
- IVfNxzlMs4vkoXFKfGr48Y7FcMwa16ZB9lGgpIMADmGaqtdm1OWTG1HcGSAiWuTYK0vv
- FXNETtswG1oIQcWBXrKERB+czXc2VIksWqYcdPkvF5H3bRq4ZZTf+FWRCIZAIPhOGBVw
- 6ssZo8b8iWa1nYK1QnbBgEe7jG0UrDtswZJwf9rWtfR8RU6teYi+pl9TskeSRrTW269Y
- /Ap+6PbLIVzgPjhZjoFALfmUwcNxLrlAuA9BHtrPSVp2gxBvRaYyKdc6+sV7un4/hB6Z hQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2w5p3qpnes-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 18:23:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACIN03o033380;
-        Tue, 12 Nov 2019 18:23:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2w7vpmqpp9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 18:23:00 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xACIMrt9002418;
-        Tue, 12 Nov 2019 18:22:56 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 10:22:53 -0800
-Subject: Re: [PATCH v2] hugetlbfs: add O_TMPFILE support
-To:     Piotr Sarna <p.sarna@tlen.pl>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, mhocko@kernel.org,
-        syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <bc9383eff6e1374d79f3a92257ae829ba1e6ae60.1573285189.git.p.sarna@tlen.pl>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <603fc4b5-92c9-1ccf-82d3-699e24af97d9@oracle.com>
-Date:   Tue, 12 Nov 2019 10:22:52 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 12 Nov 2019 13:24:29 -0500
+Received: by mail-oi1-f196.google.com with SMTP id m193so15727110oig.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:24:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=r31nz+kZF/TKNHaB6gtaSbNm2gH5BovCO5Pp07i/Wqw=;
+        b=RCD/1hgFNPTp/mnDzk1v9MF0BK0jZDLGEg9Kt8xJfdSlls7xEQ3sMC+h4Mkjzxrn2L
+         Zxa8Kg0E98+n58D1Y8J5CqxUDorwG4Oyg+rloM5a0Rj5C9RE8MOoG3VsN6vtWqGKdVdZ
+         J7jdNLMg1zQwh+6oiBDWK9O5MK6PK848/jyaw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=r31nz+kZF/TKNHaB6gtaSbNm2gH5BovCO5Pp07i/Wqw=;
+        b=fdFR5eKseaPSddDpOu8yV8PbtxAY2I/Ne3JzsFXDP6G5qqCkfuoxVtcXSdywGBhvYD
+         Fu0bJsGeRCmrYAFBi9lsTdEuvRCIjEwfNrE9B/jaZWUoJ3x57P/9E8PMX/t+tyAOCr7D
+         sOSqrcrADMN4gwHhjpQ0yDUsEzuW2HMIahlJrpLRSJGpXM7PFY7l8kaPTHRe8R/1PUQq
+         cS7QFpao7ALUt0vZPbvvj3eAU+/ZkPntP1y0lz13moAlldZSM4wBMkC36xEl/u0hn0EZ
+         f9UwAyl3SZz7gB7vC9PFHyUg1P6Yxtc0dOoXFa/OTjZjN++MfQ2vZZUjhCWmsB1ieaTP
+         G0RA==
+X-Gm-Message-State: APjAAAU94rinwenwzglfQ43esvoqdbcGeqqIrbvl/w+gfQX+YOLtu0hl
+        +UHflq8hqacBCTCJMu2lcD0Tx+2mcxV0UXZth9+k0g==
+X-Google-Smtp-Source: APXvYqzRgnCRMXxqQj79BtqZX1LPtWXkExcHdXYQWDqN4Kqq2E4Z9rVKxzMdBaB6Wc5vhP9G0tDMsM1gsn38R4D4eYA=
+X-Received: by 2002:aca:b805:: with SMTP id i5mr308729oif.110.1573583067752;
+ Tue, 12 Nov 2019 10:24:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <bc9383eff6e1374d79f3a92257ae829ba1e6ae60.1573285189.git.p.sarna@tlen.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911120158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911120157
+References: <20191107114155.54307-1-mihail.atanassov@arm.com>
+ <20191107114155.54307-6-mihail.atanassov@arm.com> <20191111155313.iiz37se2f7526ehp@e110455-lin.cambridge.arm.com>
+ <39367348.R9gcQaf2xt@e123338-lin>
+In-Reply-To: <39367348.R9gcQaf2xt@e123338-lin>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 12 Nov 2019 19:24:16 +0100
+Message-ID: <CAKMK7uHB-mHmuBA-VkKuhUSRHQRu0wvHHJA+a=Q1fXSXaJgrpw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] drm/komeda: add rate limiting disable to err_verbosity
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>, nd <nd@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Andrew
+On Tue, Nov 12, 2019 at 2:00 PM Mihail Atanassov
+<Mihail.Atanassov@arm.com> wrote:
+>
+> On Monday, 11 November 2019 15:53:14 GMT Liviu Dudau wrote:
+> > On Thu, Nov 07, 2019 at 11:42:44AM +0000, Mihail Atanassov wrote:
+> > > It's possible to get multiple events in a single frame/flip, so add a=
+n
+> > > option to print them all.
+> > >
+> > > Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@=
+arm.com>
+> > > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> >
+> > For the whole series:
+> >
+> > Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+>
+> Thanks, applied to drm-misc-next.
 
-On 11/8/19 11:50 PM, Piotr Sarna wrote:
-> With hugetlbfs, a common pattern for mapping anonymous huge pages
-> is to create a temporary file first. Currently libraries like
-> libhugetlbfs and seastar create these with a standard mkstemp+unlink
-> trick, but it would be more robust to be able to simply pass
-> the O_TMPFILE flag to open(). O_TMPFILE is already supported by several
-> file systems like ext4 and xfs. The implementation simply uses the existing
-> d_tmpfile utility function to instantiate the dcache entry for the file.
-> 
-> Tested manually by successfully creating a temporary file by opening
-> it with (O_TMPFILE|O_RDWR) on mounted hugetlbfs and successfully
-> mapping 2M huge pages with it. Without the patch, trying to open
-> a file with O_TMPFILE results in -ENOSUP.
-> 
-> v2 changes:
->  * syzkaller thankfully discovered a bug during unmount - tmpfile
-> erroneously called dget() on a dentry when creating a tmpfile,
-> and it was never countered by a dput(), because tmpfile is never
-> explicitly unlinked. In v2, dget() is simply not called for tmpfile.
-> Verified manually, and also with the reproducer provided by syzkaller.
-> Reported-by: syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com
-> 
-> Signed-off-by: Piotr Sarna <p.sarna@tlen.pl>
+And now komeda doesn't even compile anymore. I'm ... impressed.
 
-My apologies for not catching the extra dget().
+I mean generally people break other people's driver, not their own.
+-Daniel
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
--- 
-Mike Kravetz
+> >
+> > Best regards,
+> > Liviu
+> >
+> > > ---
+> > >
+> > >  v2: Clean up continuation line warning from checkpatch.
+> > >
+> > >  drivers/gpu/drm/arm/display/komeda/komeda_dev.h   | 2 ++
+> > >  drivers/gpu/drm/arm/display/komeda/komeda_event.c | 2 +-
+> > >  2 files changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/driver=
+s/gpu/drm/arm/display/komeda/komeda_dev.h
+> > > index d9fc9c48859a..15f52e304c08 100644
+> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > > @@ -224,6 +224,8 @@ struct komeda_dev {
+> > >  #define KOMEDA_DEV_PRINT_INFO_EVENTS BIT(2)
+> > >     /* Dump DRM state on an error or warning event. */
+> > >  #define KOMEDA_DEV_PRINT_DUMP_STATE_ON_EVENT BIT(8)
+> > > +   /* Disable rate limiting of event prints (normally one per commit=
+) */
+> > > +#define KOMEDA_DEV_PRINT_DISABLE_RATELIMIT BIT(12)
+> > >  };
+> > >
+> > >  static inline bool
+> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c b/driv=
+ers/gpu/drm/arm/display/komeda/komeda_event.c
+> > > index 7fd624761a2b..bf269683f811 100644
+> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> > > @@ -119,7 +119,7 @@ void komeda_print_events(struct komeda_events *ev=
+ts, struct drm_device *dev)
+> > >     /* reduce the same msg print, only print the first evt for one fr=
+ame */
+> > >     if (evts->global || is_new_frame(evts))
+> > >             en_print =3D true;
+> > > -   if (!en_print)
+> > > +   if (!(err_verbosity & KOMEDA_DEV_PRINT_DISABLE_RATELIMIT) && !en_=
+print)
+> > >             return;
+> > >
+> > >     if (err_verbosity & KOMEDA_DEV_PRINT_ERR_EVENTS)
+> > > --
+> > > 2.23.0
+> > >
+> >
+> > --
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > | I would like to |
+> > | fix the world,  |
+> > | but they're not |
+> > | giving me the   |
+> >  \ source code!  /
+> >   ---------------
+> >     =C2=AF\_(=E3=83=84)_/=C2=AF
+> >
+>
+>
+> --
+> Mihail
+>
+>
+>
 
-> ---
->  fs/hugetlbfs/inode.c | 28 ++++++++++++++++++++++++----
->  1 file changed, 24 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index a478df035651..a39d7a0a158e 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -815,8 +815,11 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
->  /*
->   * File creation. Allocate an inode, and we're done..
->   */
-> -static int hugetlbfs_mknod(struct inode *dir,
-> -			struct dentry *dentry, umode_t mode, dev_t dev)
-> +static int do_hugetlbfs_mknod(struct inode *dir,
-> +			struct dentry *dentry,
-> +			umode_t mode,
-> +			dev_t dev,
-> +			bool tmpfile)
->  {
->  	struct inode *inode;
->  	int error = -ENOSPC;
-> @@ -824,13 +827,23 @@ static int hugetlbfs_mknod(struct inode *dir,
->  	inode = hugetlbfs_get_inode(dir->i_sb, dir, mode, dev);
->  	if (inode) {
->  		dir->i_ctime = dir->i_mtime = current_time(dir);
-> -		d_instantiate(dentry, inode);
-> -		dget(dentry);	/* Extra count - pin the dentry in core */
-> +		if (tmpfile) {
-> +			d_tmpfile(dentry, inode);
-> +		} else {
-> +			d_instantiate(dentry, inode);
-> +			dget(dentry);/* Extra count - pin the dentry in core */
-> +		}
->  		error = 0;
->  	}
->  	return error;
->  }
->  
-> +static int hugetlbfs_mknod(struct inode *dir,
-> +			struct dentry *dentry, umode_t mode, dev_t dev)
-> +{
-> +	return do_hugetlbfs_mknod(dir, dentry, mode, dev, false);
-> +}
-> +
->  static int hugetlbfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
->  {
->  	int retval = hugetlbfs_mknod(dir, dentry, mode | S_IFDIR, 0);
-> @@ -844,6 +857,12 @@ static int hugetlbfs_create(struct inode *dir, struct dentry *dentry, umode_t mo
->  	return hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0);
->  }
->  
-> +static int hugetlbfs_tmpfile(struct inode *dir,
-> +			struct dentry *dentry, umode_t mode)
-> +{
-> +	return do_hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0, true);
-> +}
-> +
->  static int hugetlbfs_symlink(struct inode *dir,
->  			struct dentry *dentry, const char *symname)
->  {
-> @@ -1102,6 +1121,7 @@ static const struct inode_operations hugetlbfs_dir_inode_operations = {
->  	.mknod		= hugetlbfs_mknod,
->  	.rename		= simple_rename,
->  	.setattr	= hugetlbfs_setattr,
-> +	.tmpfile	= hugetlbfs_tmpfile,
->  };
->  
->  static const struct inode_operations hugetlbfs_inode_operations = {
-> 
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
