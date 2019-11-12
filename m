@@ -7,62 +7,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3B7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3553C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B749721A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB44721A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nKKRyPq8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="il1oX2YP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKLXKT (ORCPT
+        id S1727344AbfKLXK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:10:19 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40746 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbfKLXKP (ORCPT
+        Tue, 12 Nov 2019 18:10:26 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39683 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfKLXKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:10:15 -0500
-Received: by mail-pl1-f196.google.com with SMTP id e3so174536plt.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:10:14 -0800 (PST)
+        Tue, 12 Nov 2019 18:10:16 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x28so173450pfo.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:10:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OUwCOpGGevpZeid7mwzdv9OSg11AIX45PGSablIpMsk=;
-        b=nKKRyPq8yRpB6YFcsUoedlOm/u4gIwku6f0qA0wk5vyxivksJNMVGNKLXqbf3+d56f
-         DKaxdvDLDBePFO+4mhsd3nQMkGQWorouTZlQZyUUJQ4fb9sW09nzSM1ByKkVvC/gJC70
-         1QsJeEI6R8MFepyR6MNOg5g3zDc9eufF2G9U4=
+        bh=ZbIDTwp4tu6O0c9hAtlHVKFNN3DvpyKyTnrVQEjbRfE=;
+        b=il1oX2YPsQrYMYIPzDIlTQIh1b0A2P3+Rmp3gsKmtutrIWhcWhHRaEQez9k38Ayfsx
+         0gbgSYFgYoiEG2l/1WeVvkysdhKbYgNph0ZBrVPBLm8xqhuHZK/ZBOyaMP5lZ1+IzWCq
+         KKTy9UiqaLlDIl2kVkhacl2qrBxf9XKs0PslM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OUwCOpGGevpZeid7mwzdv9OSg11AIX45PGSablIpMsk=;
-        b=M0PEDxCnKRQVZVLmGjqkKSIuOTSNNtfF5oIdgeIze9nNOI/0KMUixqcsm/+lcdmbPv
-         /JnifPwQmPOvgQDcN2s3gO9M6PWQ7jIIG4TlsOA4h3pVdHB+ggD6TVJMLBTC86bbCM/u
-         9L3XzjT+0jL7MVC20Ee6kIC8F+CbAvKjIIhG3t+VGDlIdBIlE6fauU7t/0VuMd4sZzP4
-         kG7yIHSZPXa4XGgZ+l3/9cRXCnbEv10m5M0i7mfkF1fdeMY2m2lErayOtFo7cHOfR7FN
-         vM3dN4dgt2bl965DvMUvtq0YGVlpn4RwRnicp9SJhSA+TzSwQHRh6pZcgg4F7YL3znkh
-         P31A==
-X-Gm-Message-State: APjAAAVyIAatpHRM1q580wf4jXvs/QhCWC25nW3NeFPBn7MNIQjhMNr9
-        9EM326bh1rLS9v7VnZbph/hrBw==
-X-Google-Smtp-Source: APXvYqyWiG939mF2ySxbBU6okGki8HAwc4B8xcaOeaG8zYyLPrWggenVYOsU2dGIpzgQrFuNv4NS5g==
-X-Received: by 2002:a17:902:854c:: with SMTP id d12mr341549plo.264.1573600213881;
-        Tue, 12 Nov 2019 15:10:13 -0800 (PST)
+        bh=ZbIDTwp4tu6O0c9hAtlHVKFNN3DvpyKyTnrVQEjbRfE=;
+        b=LroA049G/sxp6WqrjyEflDT9RwtjutD2rouv0uKe3DG+te2dw5EgdVQhGXhv3H297E
+         dYhtuEoe2RqCbON92qTvDIxVwCw676Bq2Kbz0ugdBvS+nKxS5hXu6Ds/Dz4km0n58vMY
+         tXnnvAwlvdenvF+j+M33xm+rrgL/ACH/IFW07I8FPQ4AQUMuJg7G/Wb7GpzMYfqx4YHR
+         0X5jlhbNMv50hRrxvnUkqTTpjbdFXSteTst27GZw6Szi4iiO86dWKHf+VSOisDE77b6E
+         cFJ+nvAmunxUb9NJFvUkTAGtMkEw3/VlSEk0LolIYQGq7Mk1aqsu13uaOJq3mwxeAXvk
+         RMsQ==
+X-Gm-Message-State: APjAAAXHjutMcTfShL1M5Sl20fyg+lg8mG1s7yAfWiQm2WeojTnE10GG
+        VcCo071j/RLSPjiLQwdnOlrHAg==
+X-Google-Smtp-Source: APXvYqzsH+SDlUbcUJurNNVAosVjMz2moIaL9KfA7litYXqwpXEsiF4OSGVI4gGDP/cK6fbe4dc6Rw==
+X-Received: by 2002:a63:1e4e:: with SMTP id p14mr17554pgm.127.1573600215428;
+        Tue, 12 Nov 2019 15:10:15 -0800 (PST)
 Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id w27sm67694pgc.20.2019.11.12.15.10.12
+        by smtp.gmail.com with ESMTPSA id w27sm67694pgc.20.2019.11.12.15.10.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 15:10:12 -0800 (PST)
+        Tue, 12 Nov 2019 15:10:14 -0800 (PST)
 From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 To:     Marcel Holtmann <marcel@holtmann.org>,
         Johan Hedberg <johan.hedberg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
         Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/4] Bluetooth: hci_bcm: Support pcm params in dts
-Date:   Tue, 12 Nov 2019 15:09:43 -0800
-Message-Id: <20191112230944.48716-4-abhishekpandit@chromium.org>
+        devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+Date:   Tue, 12 Nov 2019 15:09:44 -0800
+Message-Id: <20191112230944.48716-5-abhishekpandit@chromium.org>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 In-Reply-To: <20191112230944.48716-1-abhishekpandit@chromium.org>
 References: <20191112230944.48716-1-abhishekpandit@chromium.org>
@@ -73,85 +77,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM chips may require configuration of PCM to operate correctly and
-there is a vendor specific HCI command to do this. Add support in the
-hci_bcm driver to parse this from devicetree and configure the chip.
+Add documentation for pcm parameters.
 
 Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+
 ---
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Changes in v4:
+- Fix incorrect function name in hci_bcm
 
- drivers/bluetooth/hci_bcm.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+Changes in v3:
+- Change disallow baudrate setting to return -EBUSY if called before
+  ready. bcm_proto is no longer modified and is back to being const.
+- Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
+- Changed brcm,sco-routing to brcm,bt-sco-routing
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 6134bff58748..4ee0b45be7e2 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -88,6 +88,8 @@ struct bcm_device_data {
-  *	used to disable flow control during runtime suspend and system sleep
-  * @is_suspended: whether flow control is currently disabled
-  * @disallow_set_baudrate: don't allow set_baudrate
-+ * @has_pcm_params: whether PCM parameters need to be configured
-+ * @pcm_params: PCM and routing parameters
-  */
- struct bcm_device {
- 	/* Must be the first member, hci_serdev.c expects this. */
-@@ -122,6 +124,9 @@ struct bcm_device {
- 	bool			is_suspended;
- #endif
- 	bool			disallow_set_baudrate;
+Changes in v2:
+- Use match data to disallow baudrate setting
+- Parse pcm parameters by name instead of as a byte string
+- Fix prefix for dt-bindings commit
+
+ .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+index c749dc297624..42fb2fa8143d 100644
+--- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -29,6 +29,11 @@ Optional properties:
+    - "lpo": external low power 32.768 kHz clock
+  - vbat-supply: phandle to regulator supply for VBAT
+  - vddio-supply: phandle to regulator supply for VDDIO
++ - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
++ - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
++ - brcm,pcm-frame-type: 0-1 (short, long)
++ - brcm,pcm-sync-mode: 0-1 (slave, master)
++ - brcm,pcm-clock-mode: 0-1 (slave, master)
+ 
+ 
+ Example:
+@@ -40,5 +45,11 @@ Example:
+        bluetooth {
+                compatible = "brcm,bcm43438-bt";
+                max-speed = <921600>;
 +
-+	bool				has_pcm_params;
-+	struct bcm_set_pcm_int_params	pcm_params;
++               brcm,bt-sco-routing = [01];
++               brcm,pcm-interface-rate = [02];
++               brcm,pcm-frame-type = [00];
++               brcm,pcm-sync-mode = [01];
++               brcm,pcm-clock-mode = [01];
+        };
  };
- 
- /* generic bcm uart resources */
-@@ -596,6 +601,16 @@ static int bcm_setup(struct hci_uart *hu)
- 			host_set_baudrate(hu, speed);
- 	}
- 
-+	/* PCM parameters if any*/
-+	if (bcm->dev && bcm->dev->has_pcm_params) {
-+		err = btbcm_set_pcm_int_params(hu->hdev, &bcm->dev->pcm_params);
-+
-+		if (err) {
-+			bt_dev_info(hu->hdev, "BCM: Set pcm params failed (%d)",
-+				    err);
-+		}
-+	}
-+
- finalize:
- 	release_firmware(fw);
- 
-@@ -1132,7 +1147,24 @@ static int bcm_acpi_probe(struct bcm_device *dev)
- 
- static int bcm_of_probe(struct bcm_device *bdev)
- {
-+	int err;
-+
- 	device_property_read_u32(bdev->dev, "max-speed", &bdev->oper_speed);
-+
-+	err = device_property_read_u8(bdev->dev, "brcm,bt-sco-routing",
-+				      &bdev->pcm_params.routing);
-+	if (!err)
-+		bdev->has_pcm_params = true;
-+
-+	device_property_read_u8(bdev->dev, "brcm,pcm-interface-rate",
-+				&bdev->pcm_params.rate);
-+	device_property_read_u8(bdev->dev, "brcm,pcm-frame-type",
-+				&bdev->pcm_params.frame_sync);
-+	device_property_read_u8(bdev->dev, "brcm,pcm-sync-mode",
-+				&bdev->pcm_params.sync_mode);
-+	device_property_read_u8(bdev->dev, "brcm,pcm-clock-mode",
-+				&bdev->pcm_params.clock_mode);
-+
- 	return 0;
- }
- 
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
