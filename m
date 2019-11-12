@@ -2,147 +2,184 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEA5C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0230FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC45E206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C775F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:55:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wlc7SuWV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hKnWSFjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKLJyN (ORCPT
+        id S1727186AbfKLJzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:54:13 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40554 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfKLJyM (ORCPT
+        Tue, 12 Nov 2019 04:55:03 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35783 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726008AbfKLJzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:54:12 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC9s2sI008247;
-        Tue, 12 Nov 2019 03:54:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573552442;
-        bh=WQT6Vm79FJ7vex/Exo9gZw1GlIJus5QmouBEivGnijk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wlc7SuWVvl6nEn8yCCQalX3OATIF4CSmyUHvj1rrDIMbyQzUNditNVLnjvAckSKdW
-         kSeGb566okJwWX+cmbgNfOVIH/96heCxHty/pyx99ujC/7x51YYa3G/YCJ58aSbeRu
-         RCerjOuZ9Gqobzrs1gI7Em2ImAjI36Ot6O3YvCJE=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC9s2Sn019766;
-        Tue, 12 Nov 2019 03:54:02 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 03:53:44 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 03:53:44 -0600
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC9rvfr077812;
-        Tue, 12 Nov 2019 03:53:58 -0600
-Subject: Re: [PATCH v6 net-next 06/13] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Florian Fainelli <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-References: <20191109151525.18651-1-grygorii.strashko@ti.com>
- <20191109151525.18651-7-grygorii.strashko@ti.com>
- <20191111172652.GV5610@atomide.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <bac9a300-cbd5-d342-a96d-d90fdcf2e4c3@ti.com>
-Date:   Tue, 12 Nov 2019 11:53:50 +0200
+        Tue, 12 Nov 2019 04:55:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573552502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AdBHFyhioxfCvrwsJAry/REnsYtBUierHYY+S1ZJ0LQ=;
+        b=hKnWSFjvFfwUKEK3kqcI+JI4VUA9duvYB4BV1ZHDPXA3bdqZ9S8RaWVseLw72QJRSESHpA
+        8hedksMnD8C7OpkpCeYyb8c9baRP/KFje1iut0MuNFAjdH5S2uqrt2tKQMV7cjUdtNOODD
+        AQgaBjKNaEShebVf+F6Ot+KAFezfTuU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-lS6wqL5ROSi5zE9pjn3Wyg-1; Tue, 12 Nov 2019 04:55:01 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A36B91800D63;
+        Tue, 12 Nov 2019 09:54:59 +0000 (UTC)
+Received: from [10.36.116.54] (ovpn-116-54.ams2.redhat.com [10.36.116.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B35E061F58;
+        Tue, 12 Nov 2019 09:54:53 +0000 (UTC)
+From:   Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH v7 06/11] iommu/vt-d: Avoid duplicated code for PASID
+ setup
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Message-ID: <552c55f3-a8d6-10aa-5dbc-5b2c45ad90d0@redhat.com>
+Date:   Tue, 12 Nov 2019 10:54:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20191111172652.GV5610@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1571946904-86776-7-git-send-email-jacob.jun.pan@linux.intel.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: lS6wqL5ROSi5zE9pjn3Wyg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
+On 10/24/19 9:54 PM, Jacob Pan wrote:
+> After each setup for PASID entry, related translation caches must be flus=
+hed.
+> We can combine duplicated code into one function which is less error pron=
+e.
+>=20
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel-pasid.c | 48 +++++++++++++++++----------------------=
+------
+>  1 file changed, 18 insertions(+), 30 deletions(-)
+>=20
+> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+> index e79d680fe300..ffbd416ed3b8 100644
+> --- a/drivers/iommu/intel-pasid.c
+> +++ b/drivers/iommu/intel-pasid.c
+> @@ -485,6 +485,21 @@ void intel_pasid_tear_down_entry(struct intel_iommu =
+*iommu,
+>  =09=09devtlb_invalidation_with_pasid(iommu, dev, pasid);
+>  }
+> =20
+> +static void pasid_flush_caches(struct intel_iommu *iommu,
+> +=09=09=09=09struct pasid_entry *pte,
+> +=09=09=09=09int pasid, u16 did)
+> +{
+> +=09if (!ecap_coherent(iommu->ecap))
+> +=09=09clflush_cache_range(pte, sizeof(*pte));
+> +
+> +=09if (cap_caching_mode(iommu->cap)) {
+> +=09=09pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> +=09=09iotlb_invalidation_with_pasid(iommu, did, pasid);
+> +=09} else {
+> +=09=09iommu_flush_write_buffer(iommu);
+> +=09}
+> +}
+> +
+>  /*
+>   * Set up the scalable mode pasid table entry for first only
+>   * translation type.
+> @@ -530,16 +545,7 @@ int intel_pasid_setup_first_level(struct intel_iommu=
+ *iommu,
+>  =09/* Setup Present and PASID Granular Transfer Type: */
+>  =09pasid_set_translation_type(pte, 1);
+>  =09pasid_set_present(pte);
+> -
+> -=09if (!ecap_coherent(iommu->ecap))
+> -=09=09clflush_cache_range(pte, sizeof(*pte));
+> -
+> -=09if (cap_caching_mode(iommu->cap)) {
+> -=09=09pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> -=09=09iotlb_invalidation_with_pasid(iommu, did, pasid);
+> -=09} else {
+> -=09=09iommu_flush_write_buffer(iommu);
+> -=09}
+> +=09pasid_flush_caches(iommu, pte, pasid, did);
+> =20
+>  =09return 0;
+>  }
+> @@ -603,16 +609,7 @@ int intel_pasid_setup_second_level(struct intel_iomm=
+u *iommu,
+>  =09 */
+>  =09pasid_set_sre(pte);
+>  =09pasid_set_present(pte);
+> -
+> -=09if (!ecap_coherent(iommu->ecap))
+> -=09=09clflush_cache_range(pte, sizeof(*pte));
+> -
+> -=09if (cap_caching_mode(iommu->cap)) {
+> -=09=09pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> -=09=09iotlb_invalidation_with_pasid(iommu, did, pasid);
+> -=09} else {
+> -=09=09iommu_flush_write_buffer(iommu);
+> -=09}
+> +=09pasid_flush_caches(iommu, pte, pasid, did);
+> =20
+>  =09return 0;
+>  }
+> @@ -646,16 +643,7 @@ int intel_pasid_setup_pass_through(struct intel_iomm=
+u *iommu,
+>  =09 */
+>  =09pasid_set_sre(pte);
+>  =09pasid_set_present(pte);
+> -
+> -=09if (!ecap_coherent(iommu->ecap))
+> -=09=09clflush_cache_range(pte, sizeof(*pte));
+> -
+> -=09if (cap_caching_mode(iommu->cap)) {
+> -=09=09pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> -=09=09iotlb_invalidation_with_pasid(iommu, did, pasid);
+> -=09} else {
+> -=09=09iommu_flush_write_buffer(iommu);
+> -=09}
+> +=09pasid_flush_caches(iommu, pte, pasid, did);
+> =20
+>  =09return 0;
+>  }
+>=20
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-On 11/11/2019 19:26, Tony Lindgren wrote:
-> Hi,
-> 
-> * Grygorii Strashko <grygorii.strashko@ti.com> [191109 15:17]:
->> +    mac_sw: switch@0 {
->> +        compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
->> +        reg = <0x0 0x4000>;
->> +        ranges = <0 0 0x4000>;
->> +        clocks = <&gmac_main_clk>;
->> +        clock-names = "fck";
->> +        #address-cells = <1>;
->> +        #size-cells = <1>;
->> +        syscon = <&scm_conf>;
->> +        inctrl-names = "default", "sleep";
->> +
->> +        interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
->> +                     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
->> +                     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
->> +                     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
->> +        interrupt-names = "rx_thresh", "rx", "tx", "misc";
-> 
-> I think with the ti-sysc managing the interconnect target module as the
-> parent of this, you should be able add all the modules as direct children
-> of ti-sysc with minor fixups. This would simplify things, and makes it
-> easier to update the driver later on when the child modules get
-> changed/updated/moved around.
-> 
-> The child modules just need to call PM runtime to have access to their
-> registers, and whatever cpsw control module part could be a separate
-> driver providing Linux standard services for example for clock gating :)
-> 
->> +        davinci_mdio_sw: mdio@1000 {
->> +                compatible = "ti,cpsw-mdio","ti,davinci_mdio";
->> +                reg = <0x1000 0x100>;
->> +                clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
->> +                clock-names = "fck";
->> +                #address-cells = <1>;
->> +                #size-cells = <0>;
->> +                bus_freq = <1000000>;
->> +
->> +                ethphy0_sw: ethernet-phy@0 {
->> +                        reg = <0>;
->> +                };
->> +
->> +                ethphy1_sw: ethernet-phy@1 {
->> +                        reg = <41>;
->> +                };
->> +        };
-> 
-> And in this case, mdio above would just move up one level.
-> 
-> This goes back to my earlier comments saying the cpsw is really just
-> a private interconnect with a collection of various mostly independent
-> modules. Sounds like you're heading that way already though at the
-> driver level :)
+Thanks
 
-No, sorry I do not agree. The MDIO is inseparable part of CPSW and it's enabled when CPSW is enabled
-(on interconnect level), more over I want to get rid of platform device in MDIO for most of the cases
-as it only introduces boot/probing complexity.
+Eric
 
-The same is valid for CPTS.
-
--- 
-Best regards,
-grygorii
