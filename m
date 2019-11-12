@@ -2,183 +2,146 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645D2C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80063C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34EBF21E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5524921A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:27:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PoZxIbne"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qJC2c4gG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfKLP1F (ORCPT
+        id S1727355AbfKLP11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:27:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25887 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727152AbfKLP1E (ORCPT
+        Tue, 12 Nov 2019 10:27:27 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48206 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfKLP10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:27:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573572423;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dJGkv89SxqX+D6V/I+khNNj8XzVZdQi06iL4/RI2mAU=;
-        b=PoZxIbne6VW4pGent/BL1W/qrN2CQC6qMJwhnLeTBLxLbl4AinW2of+9AA8FY7CS/0TBa6
-        u+Vb2Tb7bOMZ7NulKieNGqi5CB+4frzoos48TbNOh8cUCiKxLMgRoGfl5Oh9Mqr/Qu4vO/
-        MJrq8S2bxeV987Voat5RVnyOuUPs2mc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-Ug5OLg3tNsGq-Dn0yDu9cQ-1; Tue, 12 Nov 2019 10:27:00 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1DF78C5C8E;
-        Tue, 12 Nov 2019 15:26:58 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-116-65.ams2.redhat.com [10.36.116.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D9B05E1AF;
-        Tue, 12 Nov 2019 15:26:54 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 16:26:51 +0100
-From:   Adrian Reber <areber@redhat.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v7 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191112152651.GB667444@dcbz.redhat.com>
-References: <20191111131704.656169-1-areber@redhat.com>
- <cc5f90b6-ea1f-dbdb-e713-cc0fceceafbe@rasmusvillemoes.dk>
+        Tue, 12 Nov 2019 10:27:26 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACFQb3f062774;
+        Tue, 12 Nov 2019 09:26:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573572397;
+        bh=rMWe4kuCSfHHy9n9O/rcq81d4pIroGuMrSEkGSdS+F4=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=qJC2c4gGQYe+XtOFSW8zlZ6fbeLzlhIG1/N+9RR3wjmUmTZcQjDPq3tizAB62H9Wf
+         ykV72RpP4wOCZ6+JGW04RXYY12/H1BdOJBATx7dzGQ23h9ee8UEBaXfiimW+PtPDcM
+         HSUerMrRmbZG0F0zAhB+t6ZLeVTMnjlwz+S4Vj3o=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACFQbnS126537;
+        Tue, 12 Nov 2019 09:26:37 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 09:26:20 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 09:26:20 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACFQbDL011087;
+        Tue, 12 Nov 2019 09:26:37 -0600
+Date:   Tue, 12 Nov 2019 09:28:57 -0600
+From:   Bin Liu <b-liu@ti.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH v2 05/13] usb: musb: create debugfs directory under usb
+ root
+Message-ID: <20191112152857.GA5853@uda0271908>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Yangtao Li <tiny.windzz@gmail.com>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1573541519-28488-5-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <cc5f90b6-ea1f-dbdb-e713-cc0fceceafbe@rasmusvillemoes.dk>
-X-Operating-System: Linux (5.3.8-300.fc31.x86_64)
-X-Load-Average: 3.47 3.27 2.34
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: Ug5OLg3tNsGq-Dn0yDu9cQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
+In-Reply-To: <1573541519-28488-5-git-send-email-chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:41:39PM +0100, Rasmus Villemoes wrote:
-> On 11/11/2019 14.17, Adrian Reber wrote:
-> > The main motivation to add set_tid to clone3() is CRIU.
-> >=20
-> > To restore a process with the same PID/TID CRIU currently uses
-> > /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> > ns_last_pid and then (quickly) does a clone(). This works most of the
-> > time, but it is racy. It is also slow as it requires multiple syscalls.
-> >=20
-> > Extending clone3() to support *set_tid makes it possible restore a
-> > process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> > race free (as long as the desired PID/TID is available).
-> >=20
-> > This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> > on clone3() with *set_tid as they are currently in place for ns_last_pi=
-d.
-> >=20
-> > The original version of this change was using a single value for
-> > set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
-> > decided to change set_tid to an array to enable setting the PID of a
-> > process in multiple PID namespaces at the same time. If a process is
-> > created in a PID namespace it is possible to influence the PID inside
-> > and outside of the PID namespace. Details also in the corresponding
-> > selftest.
-> >=20
->=20
-> >  =09/*
-> >  =09 * Verify that higher 32bits of exit_signal are unset and that
-> >  =09 * it is a valid signal
-> > @@ -2556,8 +2561,17 @@ noinline static int copy_clone_args_from_user(st=
-ruct kernel_clone_args *kargs,
-> >  =09=09.stack=09=09=3D args.stack,
-> >  =09=09.stack_size=09=3D args.stack_size,
-> >  =09=09.tls=09=09=3D args.tls,
-> > +=09=09.set_tid=09=3D kargs->set_tid,
-> > +=09=09.set_tid_size=09=3D args.set_tid_size,
-> >  =09};
->=20
-> This is a bit ugly. And is it even well-defined? I mean, it's a bit
-> similar to the "i =3D i++;". So it would be best to avoid.
->=20
-> > +=09for (i =3D 0; i < args.set_tid_size; i++) {
-> > +=09=09if (copy_from_user(&kargs->set_tid[i],
-> > +=09=09    u64_to_user_ptr(args.set_tid + (i * sizeof(args.set_tid))),
-> > +=09=09    sizeof(pid_t)))
-> > +=09=09=09return -EFAULT;
-> > +=09}
-> > +
->=20
-> If I'm reading this (and your test case) right, you expect the user
-> pointer to point at an array of u64, and here you're copying the first
-> half of each u64 to the pid_t array. That only works on little-endian.
->=20
-> It seems more obvious (since I don't think there's any disagreement
-> anywhere on sizeof(pid_t)) to expect the user pointer to point at an
-> array of pid_t and then simply copy_from_user() the whole thing in one go=
-.
->=20
-> >  =09return 0;
-> >  }
-> > =20
-> > @@ -2631,6 +2645,10 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user=
- *, uargs, size_t, size)
-> >  =09int err;
-> > =20
-> >  =09struct kernel_clone_args kargs;
-> > +=09pid_t set_tid[MAX_PID_NS_LEVEL];
-> > +
-> > +=09memset(set_tid, 0, sizeof(set_tid));
-> > +=09kargs.set_tid =3D set_tid;
->=20
-> Hm, isn't it a bit much to add two cachelines (and dirtying them via the
-> memset) to the stack footprint of clone3, considering that almost nobody
-> (relatively speaking) will use this?
->=20
-> So how about copy_clone_args_from_user() does
->=20
-> if (args.set_tid) {
->   set_tid =3D memdup_user(u64_to_user_ptr(), ...)
->   if (IS_ERR(set_tid))
->     return PTR_ERR(set_tid);
->   kargs.set_tid =3D set_tid;
-> }
->=20
-> Then somebody needs to free that, but this is probably not the last
-> clone extension that might need extra data, so one could do
->=20
-> s/long _do_fork/static long __do_fork/
->=20
-> and then create a _do_fork that always cleans up the passed-in kargs, i.e=
-.
->=20
-> long _do_fork(struct kargs *args)
-> {
->   long ret =3D __do_fork(args);
->   kfree(args->set_tid);
->   return ret;
-> }
+Hi,
 
-Thanks for your review. Did you had a look at what Christian suggested?
-That should solve most of the points you mentioned. I will also remove
-the memset() as it is not necessary at all.
+On Tue, Nov 12, 2019 at 02:51:51PM +0800, Chunfeng Yun wrote:
+> Now the USB gadget subsystem can use the USB debugfs root directory,
+> so move musb's directory from the root of the debugfs filesystem into
+> the root of usb
 
-=09=09Adrian
+My opinion is this move is unnecessary. I breaks existing debug tools or
+documentation which is already published on Internet. 
+
+-Bin.
 
