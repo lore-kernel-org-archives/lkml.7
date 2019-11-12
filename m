@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6692BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DA0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36912222C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB828222CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FOR2w4Wb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kSoegeX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfKLO33 (ORCPT
+        id S1727869AbfKLO3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:29:29 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39154 "EHLO
+        Tue, 12 Nov 2019 09:29:32 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39160 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfKLO3Y (ORCPT
+        with ESMTP id S1727722AbfKLO31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:29:24 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACET8nS099243;
-        Tue, 12 Nov 2019 08:29:08 -0600
+        Tue, 12 Nov 2019 09:29:27 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACETAcA099249;
+        Tue, 12 Nov 2019 08:29:10 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573568948;
-        bh=XBC//7ty97nr7NYKTRfnQwqgfLUhSFqWfE9agxGH2o4=;
+        s=ti-com-17Q1; t=1573568950;
+        bh=Zm1DAkD5kdVnx/YycC32mnNw5DowmAO+JNH1v0pEsp0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=FOR2w4WbY0bKe5y9gJ2FAniZg0IBDA4p9ntUbgGUhwNqOkSJIihtboE3VsFhjch3X
-         t9KlCYkovr9VWLv2Wn8e0OAW8q6SBxua50msyXA4ggTTFpdgpe0/oEnBdMZ111QVEs
-         qMCcRbY2qHxHtiSuSNvf8JNuy+WvhxhqPlXMTyMs=
+        b=kSoegeX7JjqEpO/Jx5hhHYWy9wWoLAFrMpIgukoQDpW+ayqUtRNiLe3TlaYKNdjXB
+         JFV8ZragzYTNn47czF28Ne1Qb2LQfsAk4B0atHwbJubWX1UdDcZe60b7YX5OloAFhY
+         BCYAAvfG13lw00fHUDCJGNx6LkLfpjJxBv/fY9Ck=
 Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACET8GU019467
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACETAJl027244
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:29:08 -0600
+        Tue, 12 Nov 2019 08:29:10 -0600
 Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
  (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:28:50 -0600
+ Nov 2019 08:28:53 -0600
 Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
  (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:28:50 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:28:53 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriO044422;
-        Tue, 12 Nov 2019 08:29:08 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriR044422;
+        Tue, 12 Nov 2019 08:29:10 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 12/20] dt-bindings: media: cal: update binding to add DRA76x support
-Date:   Tue, 12 Nov 2019 08:31:44 -0600
-Message-ID: <20191112143152.23176-13-bparrot@ti.com>
+Subject: [Patch v3 15/20] media: ti-vpe: cal: Add AM654 support
+Date:   Tue, 12 Nov 2019 08:31:47 -0600
+Message-ID: <20191112143152.23176-16-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112143152.23176-1-bparrot@ti.com>
 References: <20191112143152.23176-1-bparrot@ti.com>
@@ -67,26 +67,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update Device Tree bindings for the CAL driver to add DRA76x support.
+Add the needed control module register bit layout to support the AM654
+family of devices.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/media/ti-cal.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/Kconfig      |  2 +-
+ drivers/media/platform/ti-vpe/cal.c | 26 +++++++++++++++++++++++++-
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-index cb2dc50a24fb..eca28a779370 100644
---- a/Documentation/devicetree/bindings/media/ti-cal.txt
-+++ b/Documentation/devicetree/bindings/media/ti-cal.txt
-@@ -10,6 +10,7 @@ Required properties:
- - compatible:
-  Should be "ti,dra72-cal", for DRA72 controllers
-  Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
-+ Should be "ti,dra76-cal", for DRA76 controllers
- - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
- 	control address space
- - reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index e84f35d3a68e..995f4c67f764 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -151,7 +151,7 @@ source "drivers/media/platform/sunxi/Kconfig"
+ config VIDEO_TI_CAL
+ 	tristate "TI CAL (Camera Adaptation Layer) driver"
+ 	depends on VIDEO_DEV && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+-	depends on SOC_DRA7XX || COMPILE_TEST
++	depends on SOC_DRA7XX || ARCH_K3 || COMPILE_TEST
+ 	select VIDEOBUF2_DMA_CONTIG
+ 	select V4L2_FWNODE
+ 	help
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 0ed517b3c00d..58d2edc087fb 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -317,6 +317,24 @@ static const struct cal_data dra76x_cal_data = {
+ 	.num_csi2_phy = ARRAY_SIZE(dra76x_cal_csi_phy),
+ };
+ 
++static struct reg_field am654_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
++	[F_CTRLCLKEN] = REG_FIELD(0, 15, 15),
++	[F_CAMMODE] = REG_FIELD(0, 24, 25),
++	[F_LANEENABLE] = REG_FIELD(0, 0, 4),
++};
++
++static struct cal_csi2_phy am654_cal_csi_phy[] = {
++	{
++		.base_fields = am654_ctrl_core_csi0_reg_fields,
++		.num_lanes = 5,
++	},
++};
++
++static const struct cal_data am654_cal_data = {
++	.csi2_phy_core = am654_cal_csi_phy,
++	.num_csi2_phy = ARRAY_SIZE(am654_cal_csi_phy),
++};
++
+ /*
+  * there is one cal_dev structure in the driver, it is shared by
+  * all instances.
+@@ -543,7 +561,9 @@ static void camerarx_phy_enable(struct cal_ctx *ctx)
+ 	/* Always enable all lanes at the phy control level */
+ 	max_lanes = (1 << cal_data_get_phy_max_lanes(ctx)) - 1;
+ 	regmap_field_write(phy->fields[F_LANEENABLE], max_lanes);
+-	regmap_field_write(phy->fields[F_CSI_MODE], 1);
++	/* F_CSI_MODE is not present on every architecture */
++	if (phy->fields[F_CSI_MODE])
++		regmap_field_write(phy->fields[F_CSI_MODE], 1);
+ 	regmap_field_write(phy->fields[F_CTRLCLKEN], 1);
+ }
+ 
+@@ -2321,6 +2341,10 @@ static const struct of_device_id cal_of_match[] = {
+ 		.compatible = "ti,dra76-cal",
+ 		.data = (void *)&dra76x_cal_data,
+ 	},
++	{
++		.compatible = "ti,am654-cal",
++		.data = (void *)&am654_cal_data,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, cal_of_match);
 -- 
 2.17.1
 
