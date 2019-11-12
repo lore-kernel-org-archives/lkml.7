@@ -2,142 +2,124 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E91C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF14CC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0120721A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573581643;
-	bh=e9/F3/UN1c96zIp1MBv7wevLhUbEOyNc7RWCS22mtPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2NgvMghRYvL5qleK2ie9agXhLpsO0u4LqGv/7C76+05n5tBMxKgRY33TbfJ216YTD
-	 Tb4nSrkcxWv+ICCGvnRj/BHmYFTUcETuZdCeo0ZCIECP6yxy7ZKvU8w2n8wAkGoB9X
-	 GZVHv5a2AVxlOGq5lmraADljrlPJ1DroxL7FAsJ4=
+	by mail.kernel.org (Postfix) with ESMTP id B22702067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfKLSAm (ORCPT
+        id S1727046AbfKLSGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:00:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfKLSAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:00:41 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0BD921925;
-        Tue, 12 Nov 2019 18:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573581640;
-        bh=e9/F3/UN1c96zIp1MBv7wevLhUbEOyNc7RWCS22mtPo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TyaJxT8EsksNIcJUeuG02hv5kg8mgIJYYse0Ik99HuSqsRv1YuuTPbF1c5VJ0bK//
-         nhIzIgrTk+bvIQS8OxCLjuaHq3Xdk7mm4ugKGfUcHF5kFpYHoQAo/S/UYWYC/UiWXt
-         xWEiAvRUOAZuUSY/hpD1kFJfwotpUj96CJthUd0w=
-Date:   Tue, 12 Nov 2019 18:00:35 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        torvalds@linux-foundation.org, axboe@kernel.dk,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vincent Whitchurch <rabinv@axis.com>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>
-Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
- hazard
-Message-ID: <20191112180034.GB19889@willie-the-truck>
-References: <20191112130244.16630-1-vincent.whitchurch@axis.com>
- <20191112160855.GA22025@arrakis.emea.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112160855.GA22025@arrakis.emea.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 12 Nov 2019 13:06:13 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12836 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726979AbfKLSGN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:06:13 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACI0L6R120963
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:06:12 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w80383ebj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:06:11 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 12 Nov 2019 18:06:09 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Nov 2019 18:06:05 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACI65me49610782
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 18:06:05 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0597AE04D;
+        Tue, 12 Nov 2019 18:06:04 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C984AAE045;
+        Tue, 12 Nov 2019 18:06:03 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.194.252])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 18:06:03 +0000 (GMT)
+Subject: Re: [PATCH v5 04/10] IMA: Updated IMA policy functions to return
+ keyrings option read from the policy
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 12 Nov 2019 13:06:03 -0500
+In-Reply-To: <407b93e1-f474-7b01-816f-62b45690f417@linux.microsoft.com>
+References: <20191111193303.12781-1-nramas@linux.microsoft.com>
+         <20191111193303.12781-5-nramas@linux.microsoft.com>
+         <1573578316.17949.43.camel@linux.ibm.com>
+         <407b93e1-f474-7b01-816f-62b45690f417@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111218-0016-0000-0000-000002C31290
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111218-0017-0000-0000-00003324A9F2
+Message-Id: <1573581963.17949.63.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:08:57PM +0000, Catalin Marinas wrote:
-> On Tue, Nov 12, 2019 at 02:02:44PM +0100, Vincent Whitchurch wrote:
-> > On my dual-core ARM Cortex-A9, reading from squashfs (over
-> > dm-verity/ubi/mtd) in a loop for hundreds of hours invariably results in
-> > a read failure in squashfs_read_data().  The errors occur because the
-> > buffer_uptodate() check fails after wait_on_buffer().  Further debugging
-> > shows that the bh was in fact uptodate and that there is no actual I/O
-> > error in the lower layers.
-> > 
-> > The problem is caused by the read-after-read hazards in the ARM
-> > Cortex-A9 MPCore (erratum #761319, see [1]).  The code generated by the
-> > compiler for the combination of the wait_on_buffer() and
-> > buffer_uptodate() calls reads the flags value twice from memory (see the
-> > excerpt of the assembly below).  The new value of the BH_Lock flag is
-> > seen but the new value of BH_Uptodate is not even though both the bits
-> > are read from the same memory location.
-> > 
-> >  27c:	9d08      	ldr	r5, [sp, #32]
-> >  27e:	2400      	movs	r4, #0
-> >  280:	e006      	b.n	290 <squashfs_read_data+0x290>
-> >  282:	6803      	ldr	r3, [r0, #0]
-> >  284:	07da      	lsls	r2, r3, #31
-> >  286:	f140 810d 	bpl.w	4a4 <squashfs_read_data+0x4a4>
-> >  28a:	3401      	adds	r4, #1
-> >  28c:	42bc      	cmp	r4, r7
-> >  28e:	da08      	bge.n	2a2 <squashfs_read_data+0x2a2>
-> >  290:	f855 0f04 	ldr.w	r0, [r5, #4]!
-> >  294:	6803      	ldr	r3, [r0, #0]
-> >  296:	0759      	lsls	r1, r3, #29
-> >  298:	d5f3      	bpl.n	282 <squashfs_read_data+0x282>
-> >  29a:	f7ff fffe 	bl	0 <__wait_on_buffer>
-> > 
-> > Work around this problem by adding a DMB between the two reads of
-> > bh->flags, as recommended in the ARM document.  With this barrier, no
-> > failures have been seen in more than 5000 hours of the same test.
-> > 
-> > [1] http://infocenter.arm.com/help/topic/com.arm.doc.uan0004a/UAN0004A_a9_read_read.pdf
+On Tue, 2019-11-12 at 09:47 -0800, Lakshmi Ramasubramanian wrote:
+> On 11/12/2019 9:05 AM, Mimi Zohar wrote:
 > 
-> I thought we were going to fix the compiler. I found an old thread here:
+> >>   int ima_match_policy(struct inode *inode, const struct cred *cred, u32 secid,
+> >>   		     enum ima_hooks func, int mask, int flags, int *pcr,
+> >> -		     struct ima_template_desc **template_desc)
+> >> +		     struct ima_template_desc **template_desc,
+> >> +		     char **keyrings)
+> >>   {
+> >>   	struct ima_rule_entry *entry;
+> >>   	int action = 0, actmask = flags | (flags << 1);
+> >> @@ -527,6 +529,9 @@ int ima_match_policy(struct inode *inode, const struct cred *cred, u32 secid,
+> >>   		if ((pcr) && (entry->flags & IMA_PCR))
+> >>   			*pcr = entry->pcr;
+> >>   
+> >> +		if ((keyrings) && (entry->flags & IMA_KEYRINGS))
+> >> +			*keyrings = entry->keyrings;
+> > 
+> > ima_match_rules() determines whether the rule is in policy or not. It
+> > returns true on rule match, false on failure.  There's no need to
+> > return the list of keyrings.
 > 
-> https://gcc.gnu.org/ml/gcc-patches/2014-06/msg00714.html
+> But the above code change is in ima_match_policy() - not in 
+> ima_match_rules() function.
 > 
-> Also cc'ing Richard Earnshaw as he may been involved in the gcc
-> discussion at the time.
+> ima_match_rules() function is updated in Patch #1 -
+> [PATCH v5 01/10] IMA: Added KEYRING_CHECK func in IMA policy to measure keys
 > 
-> While you can add some barrier here, there may be other cases where this
-> can go wrong.
+> I've updated that function to check if func is "KEYRING_CHECK" and 
+> return true\false as appropriate.
+> 
+> Am I missing something?
 
-Hmm, and afaict, even if the compiler was modified to emit LDREX instructions
-for volatile loads, it wouldn't help in this case because test_bit() isn't
-using READ_ONCE().
+The first patch adds basic support for the new "func".  This allows
+measuring all keys.  ima_match_rules() then needs to be updated in the
+patch that adds the "keyrings=" or "keyring=" support to limit it to a
+specific keyring.
 
-It's also slightly odd that the proposed patch makes the code look like:
+Mimi
 
-	for (i = 0; i < b; i++) {
-		if (buffer_locked(bh)) {
-			__wait_on_buffer(bh);
-			smp_rmb();
-		}
-		if (!buffer_uptodate(bh[i]))
-			goto block_release;
-	}
-
-whereas there are other potential RAR orderings between buffer_locked()
-and __wait_on_buffer() and also probably between successive iterations
-of the loop.
-
-So, really, the only way I see to solve this is for us to use READ_ONCE
-consistently for all relaxed atomic loads (KCSAN is starting to tread on
-this), and then to patch READ_ONCE to emit a DMB at runtime for arch/arm/
-(maybe a static key would work if you can avoid the recursion).
-
-I've already got patches at [1] to allow architectures to override
-READ_ONCE, because Alpha needs to do something similar.
-
-Will
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=lto
