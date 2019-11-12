@@ -7,81 +7,80 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D442FC17447
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E994DC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8312184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D7A2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573520147;
-	bh=P23uXxnqZM/BL6bAsTDyEXMWrYv7ZgC/aU5T2D3OpDc=;
+	s=default; t=1573520163;
+	bh=EgcXPkRcFzzSP/5tJczvfXCkrgf+Z8YwY8DLVs/PB30=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yUxuiKZNluTaejQX5YFLYdAxAVPxqapn8pUBILnKR+VFiAWKyfzRBl4zMsHfxDdel
-	 eni+HxljOWTq7E3Tdqc1rwPspQYa1Ejmjzh+2JrPLsx5h6pwjTgunPLdLMR2kNZHGK
-	 Po/rNi4mto1wDR4Ya4RxYUOonX0czqQ14RvWaK5c=
+	b=SYWhU0AgurXgA3K6DNmJ+2WaObHVzapGjCFPmejSbA6Ul+R3aR474e71u6SD6ZgA9
+	 RjniVtE+Om2XhJ7wAnIBdc3x3UStQAVGPOtfzj3kTD6bLtjs5gIovw1yrJgU9Tt6DR
+	 inqxcIXmJr2pLBJgkNi1FuKF68+1+usMZTIey/Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKLAzq (ORCPT
+        id S1727206AbfKLA4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:55:46 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37189 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfKLAzq (ORCPT
+        Mon, 11 Nov 2019 19:56:03 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44650 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKLA4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:55:46 -0500
-Received: by mail-oi1-f195.google.com with SMTP id y194so13281971oie.4;
-        Mon, 11 Nov 2019 16:55:45 -0800 (PST)
+        Mon, 11 Nov 2019 19:56:02 -0500
+Received: by mail-oi1-f194.google.com with SMTP id s71so13244964oih.11;
+        Mon, 11 Nov 2019 16:56:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S1Rkl+7YzBL7zyaCWJBYcYMMFhNkSGP8H9icKQ+dNa8=;
-        b=FfzluQdxz/qmBJz8mcVYsfOGfY11t2vYFVZzNXqRBBCu8qpHN0PYLk7ViIDuFkCk1y
-         dCnqcypa4LXo7LyCnN46J+jsZW4yDrCPSrgFkEMJzAFuMWunOD9MnVsk7UgF8K4X8oMh
-         GyIz4W5vPcs9Vw802589hhxiw0T2n0iYCjDN4HcBJLaF9DIwy+curm6+RvGAO7cdNvhf
-         N8z9BUV/lA1B5B8Mf9ABtN369EDHAsQnTwqs1ChTCGquP4UCbFhLG7nabYqFzqDmGQo+
-         8T54/XvAp31Fi0Kzjd42Bu/wbfdI45fNtDhennr9R5uKccRisfAzj12s4JHCq75MOwr1
-         Mrug==
-X-Gm-Message-State: APjAAAWK835qij3GSdVu9EAw6u/nGW9izmJaSfjrZv1iEkwX7VzyFxUB
-        9h6YxCSaMkbAJDKlH6VvrQ==
-X-Google-Smtp-Source: APXvYqwt7XIRcL/jlfvvYa/NNzx3/HJnxiWONynmSjKMMkTErHPnguu5aT+y+yjgDRvLGCRzhwmmOQ==
-X-Received: by 2002:aca:3e8a:: with SMTP id l132mr1559897oia.146.1573520145339;
-        Mon, 11 Nov 2019 16:55:45 -0800 (PST)
+        bh=w0hUYi0aGomUJ4biwZlamKptJP2MsFJNZc7O1AJ4TG8=;
+        b=n3/Ie6gj1I+OnH8jn9MUn8iBqTaaYNtnM91vbTZToTjWi9ITlMrP2qFC5EFD4jIFLN
+         OjM1H0aOmQLtmWnDOHJBfEAY0nqiYzp1/L2oFLLEWE1pBRNYWg1I1NOwEFvh3my/m0Ve
+         1f3d8U+QvHvzd0BGZ49peo3GcLU19XnMVdYH6pIOH2xBH/T3NMMnevAQ2mTGOJH17oIR
+         8kFl+rtPIpL1U+8UPVGKPjKyAAPlyZlE6VomZ4I0sqeY53AR+uwG8alStqsm1hsch/Kq
+         QVM3YfgI3x4aJ+hJmc0TBYr29jfGpzOrjtzlWXJwpQ0osRBpiHmjK+yPS/FEqN5vi5Vw
+         IrXg==
+X-Gm-Message-State: APjAAAUR5MJUSdSg31TRG6fg27kGvc4RGkALg5WYog2JLdSlavWMFbz+
+        OyBWMJUUZdJInkT6JniJxQ==
+X-Google-Smtp-Source: APXvYqx2Uo0z2A9826gykm3QcmFFSP9JCMB+Kt9j4tuCDauBT2sxNJmHkIGIBoEtHY81NCmQmfLNug==
+X-Received: by 2002:a05:6808:906:: with SMTP id w6mr1541050oih.162.1573520161596;
+        Mon, 11 Nov 2019 16:56:01 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 63sm5620622oty.58.2019.11.11.16.55.44
+        by smtp.gmail.com with ESMTPSA id e19sm5332044otj.51.2019.11.11.16.56.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 16:55:44 -0800 (PST)
-Date:   Mon, 11 Nov 2019 18:55:44 -0600
+        Mon, 11 Nov 2019 16:56:01 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:56:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, paul.burton@mips.com, sboyd@kernel.org,
-        robh+dt@kernel.org, syq@debian.org, mark.rutland@arm.com,
-        paul@crapouillou.net
-Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
-Message-ID: <20191112005544.GB7038@bogus>
-References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
- <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
- <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
+To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: serial: Add a new compatible string
+ for SC9863A
+Message-ID: <20191112005600.GA9055@bogus>
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+ <20191111090230.3402-5-chunyan.zhang@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <20191111090230.3402-5-chunyan.zhang@unisoc.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 Nov 2019 17:28:21 +0800, Zhou Yanjie wrote:
-> Add the clock bindings for the X1000 Soc from Ingenic.
+On Mon, 11 Nov 2019 17:02:29 +0800, Chunyan Zhang wrote:
 > 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> SC9863A use the same serial device which SC9836 uses.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
->  include/dt-bindings/clock/x1000-cgu.h              | 44 ++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
->  create mode 100644 include/dt-bindings/clock/x1000-cgu.h
+>  Documentation/devicetree/bindings/serial/sprd-uart.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Please add Acked-by/Reviewed-by tags when posting new versions. However,
