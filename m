@@ -2,583 +2,111 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E2CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABD1C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E89222BD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EDC222CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMuvqXuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbfKLQza (ORCPT
+        id S1727922AbfKLQzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 12 Nov 2019 11:55:33 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41997 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbfKLQza (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 11:55:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33514 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727485AbfKLQxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:53:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 580B3B365;
-        Tue, 12 Nov 2019 16:53:29 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Breno Leitao <leitao@debian.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Romero <gromero@linux.ibm.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/33] powerpc/64s/exception: move real->virt switch into the common handler
-Date:   Tue, 12 Nov 2019 17:52:08 +0100
-Message-Id: <7bc75059055afe1b10aaf5c3c06af4f4a4b60eb4.1573576649.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
-References: <cover.1573576649.git.msuchanek@suse.de>
+Received: by mail-qk1-f194.google.com with SMTP id m4so15040817qke.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:55:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0M0FA1unlp8F1Z996jxzOlmlSaGicPhBII8CqVqj8hA=;
+        b=lMuvqXuCUyxt7K6tw9iOUffeRkz8nL6/nayHdtv/eE/m5Yvq0Mp4Bu4wUl8ev822K2
+         5ufbDyuNNAROGVvkDCJqzwz13Xv3qFlQahfuRzUZy23A941vJzNeqTun+9xBVx679mGp
+         k/oIKvH7b02vXAlDy+l7Apd29jJQ40PjtgN5YVYovPovRgYOD2xF+8WIOGxxBv5Ggwja
+         NL2zK6/j+8yzelhwsoxah7QpAmL1SIWHrPfitW//1jwjKw/KNcYuozjMTmJHXGrKK7RD
+         ndS997Xal8ryO2bJj39mwK2UTvSINOFki/KZa1/zr255ochOuFcOAHLDhDlymSvo5SCD
+         uMzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=0M0FA1unlp8F1Z996jxzOlmlSaGicPhBII8CqVqj8hA=;
+        b=VzJfnYhp9I5k60A/vRvZp0gG9Mr2I+fe/eu5Ch7L64DvEf0szRYVPuEXbG5r6Vro/A
+         cUiDbiQ0Aj+abDwJWM0Eh1LPAMnHAzF/1Z2FskpZCgSqMZ691RUVm6T8qQ9fanOEpiOb
+         HMKKU7Y1ni+RPgKd1+aGZ9QbMoDu6/BJQ1ZIDeT5M3hLFpbNyRlHezDX2sjNA4jQ7Eac
+         ZNt037qkOnCOqDb5DMAOtrwvlPRbGfIDsnKbjjBft4wV18dVfAZlCAHz26d11CDoWval
+         I7Io3kpuI+a1x+yO6mI6upGgNXFfTA0VKkk7N6PGGuPT20IwmThdaxJFgz70EA93sGGx
+         4NOg==
+X-Gm-Message-State: APjAAAVUfKOAWBv9mmLLw0NKiv6bGB4IKdjzEn63J+RfpCd2IPuJP11g
+        mPnC6lR57zLIFlgN0OJu3wGXNTrhsh9yow==
+X-Google-Smtp-Source: APXvYqx/3pdPBFKUQspMyLPM+3UtuiuwD3qp9I4tZqiQC7QQSsPVMV9CwnkU8IAF1ohXfH8vDeA2Lw==
+X-Received: by 2002:a37:582:: with SMTP id 124mr16678884qkf.396.1573577729731;
+        Tue, 12 Nov 2019 08:55:29 -0800 (PST)
+Received: from gmail.com (dynamic-186-154-98-65.dynamic.etb.net.co. [186.154.98.65])
+        by smtp.gmail.com with ESMTPSA id n56sm11283172qtb.73.2019.11.12.08.55.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 08:55:29 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:55:27 -0500
+From:   "Javier F. Arias" <jarias.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
+Subject: [PATCH 7/9] staging: rtl8723bs: Fix incorrect type in argument
+ warnings
+Message-ID: <637726782ce6c6ed3d68b5e595481857916bbc56.1573577309.git.jarias.linux@gmail.com>
+Mail-Followup-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com
+References: <cover.1573577309.git.jarias.linux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1573577309.git.jarias.linux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+Fix incorrect type in declarations to solve the 'incorrect
+type in argument 3' warnings in the rtw_get_ie function calls.
+Issue found by Sparse.
 
-The real mode interrupt entry points currently use rfid to branch to
-the common handler in virtual mode. This is a significant amount of
-code, and forces other code (notably the KVM test) to live in the
-real mode handler.
-
-In the interest of minimising the amount of code that runs unrelocated
-move the switch to virt mode into the common code, and do it with
-mtmsrd, which avoids clobbering SRRs (although the post-KVMTEST
-performance of real-mode interrupt handlers is not a big concern these
-days).
-
-This requires CTR to always be saved (real-mode needs to reach 0xc...)
-but that's not a huge impact these days. It could be optimized away in
-future.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
 ---
- arch/powerpc/include/asm/exception-64s.h |   4 -
- arch/powerpc/kernel/exceptions-64s.S     | 251 ++++++++++-------------
- 2 files changed, 109 insertions(+), 146 deletions(-)
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/exception-64s.h b/arch/powerpc/include/asm/exception-64s.h
-index 33f4f72eb035..47bd4ea0837d 100644
---- a/arch/powerpc/include/asm/exception-64s.h
-+++ b/arch/powerpc/include/asm/exception-64s.h
-@@ -33,11 +33,7 @@
- #include <asm/feature-fixups.h>
- 
- /* PACA save area size in u64 units (exgen, exmc, etc) */
--#if defined(CONFIG_RELOCATABLE)
- #define EX_SIZE		10
--#else
--#define EX_SIZE		9
--#endif
- 
- /*
-  * maximum recursive depth of MCE exceptions
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index b8588618cdc3..5803ce3b9404 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -32,16 +32,10 @@
- #define EX_CCR		52
- #define EX_CFAR		56
- #define EX_PPR		64
--#if defined(CONFIG_RELOCATABLE)
- #define EX_CTR		72
- .if EX_SIZE != 10
- 	.error "EX_SIZE is wrong"
- .endif
--#else
--.if EX_SIZE != 9
--	.error "EX_SIZE is wrong"
--.endif
--#endif
- 
- /*
-  * Following are fixed section helper macros.
-@@ -124,22 +118,6 @@ name:
- #define EXC_HV		1
- #define EXC_STD		0
- 
--#if defined(CONFIG_RELOCATABLE)
--/*
-- * If we support interrupts with relocation on AND we're a relocatable kernel,
-- * we need to use CTR to get to the 2nd level handler.  So, save/restore it
-- * when required.
-- */
--#define SAVE_CTR(reg, area)	mfctr	reg ; 	std	reg,area+EX_CTR(r13)
--#define GET_CTR(reg, area) 			ld	reg,area+EX_CTR(r13)
--#define RESTORE_CTR(reg, area)	ld	reg,area+EX_CTR(r13) ; mtctr reg
--#else
--/* ...else CTR is unused and in register. */
--#define SAVE_CTR(reg, area)
--#define GET_CTR(reg, area) 	mfctr	reg
--#define RESTORE_CTR(reg, area)
--#endif
--
- /*
-  * PPR save/restore macros used in exceptions-64s.S
-  * Used for P7 or later processors
-@@ -199,6 +177,7 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
- #define IVEC		.L_IVEC_\name\()
- #define IHSRR		.L_IHSRR_\name\()
- #define IAREA		.L_IAREA_\name\()
-+#define IVIRT		.L_IVIRT_\name\()
- #define IISIDE		.L_IISIDE_\name\()
- #define IDAR		.L_IDAR_\name\()
- #define IDSISR		.L_IDSISR_\name\()
-@@ -232,6 +211,9 @@ do_define_int n
- 	.ifndef IAREA
- 		IAREA=PACA_EXGEN
- 	.endif
-+	.ifndef IVIRT
-+		IVIRT=1
-+	.endif
- 	.ifndef IISIDE
- 		IISIDE=0
- 	.endif
-@@ -325,7 +307,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	 * outside the head section. CONFIG_RELOCATABLE KVM expects CTR
- 	 * to be saved in HSTATE_SCRATCH1.
- 	 */
--	mfctr	r9
-+	ld	r9,IAREA+EX_CTR(r13)
- 	std	r9,HSTATE_SCRATCH1(r13)
- 	__LOAD_FAR_HANDLER(r9, kvmppc_interrupt)
- 	mtctr	r9
-@@ -362,101 +344,6 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- .endm
- #endif
- 
--.macro INT_SAVE_SRR_AND_JUMP label, hsrr, set_ri
--	ld	r10,PACAKMSR(r13)	/* get MSR value for kernel */
--	.if ! \set_ri
--	xori	r10,r10,MSR_RI		/* Clear MSR_RI */
--	.endif
--	.if \hsrr == EXC_HV_OR_STD
--	BEGIN_FTR_SECTION
--	mfspr	r11,SPRN_HSRR0		/* save HSRR0 */
--	mfspr	r12,SPRN_HSRR1		/* and HSRR1 */
--	mtspr	SPRN_HSRR1,r10
--	FTR_SECTION_ELSE
--	mfspr	r11,SPRN_SRR0		/* save SRR0 */
--	mfspr	r12,SPRN_SRR1		/* and SRR1 */
--	mtspr	SPRN_SRR1,r10
--	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--	.elseif \hsrr
--	mfspr	r11,SPRN_HSRR0		/* save HSRR0 */
--	mfspr	r12,SPRN_HSRR1		/* and HSRR1 */
--	mtspr	SPRN_HSRR1,r10
--	.else
--	mfspr	r11,SPRN_SRR0		/* save SRR0 */
--	mfspr	r12,SPRN_SRR1		/* and SRR1 */
--	mtspr	SPRN_SRR1,r10
--	.endif
--	LOAD_HANDLER(r10, \label\())
--	.if \hsrr == EXC_HV_OR_STD
--	BEGIN_FTR_SECTION
--	mtspr	SPRN_HSRR0,r10
--	HRFI_TO_KERNEL
--	FTR_SECTION_ELSE
--	mtspr	SPRN_SRR0,r10
--	RFI_TO_KERNEL
--	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--	.elseif \hsrr
--	mtspr	SPRN_HSRR0,r10
--	HRFI_TO_KERNEL
--	.else
--	mtspr	SPRN_SRR0,r10
--	RFI_TO_KERNEL
--	.endif
--	b	.	/* prevent speculative execution */
--.endm
--
--/* INT_SAVE_SRR_AND_JUMP works for real or virt, this is faster but virt only */
--.macro INT_VIRT_SAVE_SRR_AND_JUMP label, hsrr
--#ifdef CONFIG_RELOCATABLE
--	.if \hsrr == EXC_HV_OR_STD
--	BEGIN_FTR_SECTION
--	mfspr	r11,SPRN_HSRR0	/* save HSRR0 */
--	FTR_SECTION_ELSE
--	mfspr	r11,SPRN_SRR0	/* save SRR0 */
--	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--	.elseif \hsrr
--	mfspr	r11,SPRN_HSRR0	/* save HSRR0 */
--	.else
--	mfspr	r11,SPRN_SRR0	/* save SRR0 */
--	.endif
--	LOAD_HANDLER(r12, \label\())
--	mtctr	r12
--	.if \hsrr == EXC_HV_OR_STD
--	BEGIN_FTR_SECTION
--	mfspr	r12,SPRN_HSRR1	/* and HSRR1 */
--	FTR_SECTION_ELSE
--	mfspr	r12,SPRN_SRR1	/* and HSRR1 */
--	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--	.elseif \hsrr
--	mfspr	r12,SPRN_HSRR1	/* and HSRR1 */
--	.else
--	mfspr	r12,SPRN_SRR1	/* and HSRR1 */
--	.endif
--	li	r10,MSR_RI
--	mtmsrd 	r10,1		/* Set RI (EE=0) */
--	bctr
--#else
--	.if \hsrr == EXC_HV_OR_STD
--	BEGIN_FTR_SECTION
--	mfspr	r11,SPRN_HSRR0		/* save HSRR0 */
--	mfspr	r12,SPRN_HSRR1		/* and HSRR1 */
--	FTR_SECTION_ELSE
--	mfspr	r11,SPRN_SRR0		/* save SRR0 */
--	mfspr	r12,SPRN_SRR1		/* and SRR1 */
--	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--	.elseif \hsrr
--	mfspr	r11,SPRN_HSRR0		/* save HSRR0 */
--	mfspr	r12,SPRN_HSRR1		/* and HSRR1 */
--	.else
--	mfspr	r11,SPRN_SRR0		/* save SRR0 */
--	mfspr	r12,SPRN_SRR1		/* and SRR1 */
--	.endif
--	li	r10,MSR_RI
--	mtmsrd 	r10,1			/* Set RI (EE=0) */
--	b	\label
--#endif
--.endm
--
- /*
-  * This is the BOOK3S interrupt entry code macro.
-  *
-@@ -477,6 +364,23 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
-  * - Fall through and continue executing in real, unrelocated mode.
-  *   This is done if early=2.
-  */
-+
-+.macro GEN_BRANCH_TO_COMMON name, virt
-+	.if \virt
-+#ifndef CONFIG_RELOCATABLE
-+	b	\name\()_common_virt
-+#else
-+	LOAD_HANDLER(r10, \name\()_common_virt)
-+	mtctr	r10
-+	bctr
-+#endif
-+	.else
-+	LOAD_HANDLER(r10, \name\()_common_real)
-+	mtctr	r10
-+	bctr
-+	.endif
-+.endm
-+
- .macro GEN_INT_ENTRY name, virt, ool=0
- 	SET_SCRATCH0(r13)			/* save r13 */
- 	GET_PACA(r13)
-@@ -500,8 +404,10 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	OPT_SAVE_REG_TO_PACA(IAREA+EX_PPR, r9, CPU_FTR_HAS_PPR)
- 	OPT_SAVE_REG_TO_PACA(IAREA+EX_CFAR, r10, CPU_FTR_CFAR)
- 	INTERRUPT_TO_KERNEL
--	SAVE_CTR(r10, IAREA)
-+	mfctr	r10
-+	std	r10,IAREA+EX_CTR(r13)
- 	mfcr	r9
-+
- 	.if (!\virt && IKVM_REAL) || (\virt && IKVM_VIRT)
- 		KVMTEST \name IHSRR IVEC
- 	.endif
-@@ -566,27 +472,58 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	.if IEARLY == 2
- 	/* nothing more */
- 	.elseif IEARLY
--	mfctr	r10			/* save ctr, even for !RELOCATABLE */
- 	BRANCH_TO_C000(r11, \name\()_common)
--	.elseif !\virt
--	INT_SAVE_SRR_AND_JUMP \name\()_common, IHSRR, ISET_RI
- 	.else
--	INT_VIRT_SAVE_SRR_AND_JUMP \name\()_common, IHSRR
-+	.if IHSRR == EXC_HV_OR_STD
-+	BEGIN_FTR_SECTION
-+	mfspr	r11,SPRN_HSRR0		/* save HSRR0 */
-+	mfspr	r12,SPRN_HSRR1		/* and HSRR1 */
-+	FTR_SECTION_ELSE
-+	mfspr	r11,SPRN_SRR0		/* save SRR0 */
-+	mfspr	r12,SPRN_SRR1		/* and SRR1 */
-+	ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
-+	.elseif IHSRR
-+	mfspr	r11,SPRN_HSRR0		/* save HSRR0 */
-+	mfspr	r12,SPRN_HSRR1		/* and HSRR1 */
-+	.else
-+	mfspr	r11,SPRN_SRR0		/* save SRR0 */
-+	mfspr	r12,SPRN_SRR1		/* and SRR1 */
- 	.endif
-+	GEN_BRANCH_TO_COMMON \name \virt
-+	.endif
-+
- 	.if \ool
- 	.popsection
- 	.endif
- .endm
- 
- /*
-- * On entry r13 points to the paca, r9-r13 are saved in the paca,
-- * r9 contains the saved CR, r11 and r12 contain the saved SRR0 and
-- * SRR1, and relocation is on.
-- *
-- * If stack=0, then the stack is already set in r1, and r1 is saved in r10.
-- * PPR save and CPU accounting is not done for the !stack case (XXX why not?)
-+ * __GEN_COMMON_ENTRY is required to receive the branch from interrupt
-+ * entry, except in the case of the IEARLY handlers.
-+ * This switches to virtual mode and sets MSR[RI].
-  */
--.macro GEN_COMMON name
-+.macro __GEN_COMMON_ENTRY name
-+DEFINE_FIXED_SYMBOL(\name\()_common_real)
-+\name\()_common_real:
-+	ld	r10,PACAKMSR(r13)	/* get MSR value for kernel */
-+	/* MSR[RI] is clear iff using SRR regs */
-+	.if IHSRR == EXC_HV_OR_STD
-+	BEGIN_FTR_SECTION
-+	xori	r10,r10,MSR_RI
-+	END_FTR_SECTION_IFCLR(CPU_FTR_HVMODE)
-+	.elseif ! IHSRR
-+	xori	r10,r10,MSR_RI
-+	.endif
-+	mtmsrd	r10
-+
-+	.if IVIRT
-+	.balign IFETCH_ALIGN_BYTES
-+DEFINE_FIXED_SYMBOL(\name\()_common_virt)
-+\name\()_common_virt:
-+	.endif /* IVIRT */
-+.endm
-+
-+.macro __GEN_COMMON_BODY name
- 	.if ISTACK
- 	andi.	r10,r12,MSR_PR		/* See if coming from user	*/
- 	mr	r10,r1			/* Save r1			*/
-@@ -604,6 +541,11 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	std	r0,GPR0(r1)		/* save r0 in stackframe	*/
- 	std	r10,GPR1(r1)		/* save r1 in stackframe	*/
- 
-+	.if ISET_RI
-+	li	r10,MSR_RI
-+	mtmsrd	r10,1			/* Set MSR_RI */
-+	.endif
-+
- 	.if ISTACK
- 	.if IKUAP
- 	kuap_save_amr_and_lock r9, r10, cr1, cr0
-@@ -654,7 +596,7 @@ BEGIN_FTR_SECTION_NESTED(66)
- 	ld	r10,IAREA+EX_CFAR(r13)
- 	std	r10,ORIG_GPR3(r1)
- END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
--	GET_CTR(r10, IAREA)
-+	ld	r10,IAREA+EX_CTR(r13)
- 	std	r10,_CTR(r1)
- 	std	r2,GPR2(r1)		/* save r2 in stackframe	*/
- 	SAVE_4GPRS(3, r1)		/* save r3 - r6 in stackframe   */
-@@ -682,6 +624,19 @@ END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
- 	.endif
- .endm
- 
-+/*
-+ * On entry r13 points to the paca, r9-r13 are saved in the paca,
-+ * r9 contains the saved CR, r11 and r12 contain the saved SRR0 and
-+ * SRR1, and relocation is on.
-+ *
-+ * If stack=0, then the stack is already set in r1, and r1 is saved in r10.
-+ * PPR save and CPU accounting is not done for the !stack case (XXX why not?)
-+ */
-+.macro GEN_COMMON name
-+	__GEN_COMMON_ENTRY \name
-+	__GEN_COMMON_BODY \name
-+.endm
-+
- /*
-  * Restore all registers including H/SRR0/1 saved in a stack frame of a
-  * standard exception.
-@@ -834,6 +789,7 @@ EXC_VIRT_NONE(0x4000, 0x100)
- INT_DEFINE_BEGIN(system_reset)
- 	IVEC=0x100
- 	IAREA=PACA_EXNMI
-+	IVIRT=0 /* no virt entry point */
- 	/*
- 	 * MSR_RI is not enabled, because PACA_EXNMI and nmi stack is
- 	 * being used, so a nested NMI exception would corrupt it.
-@@ -913,6 +869,7 @@ TRAMP_REAL_BEGIN(system_reset_fwnmi)
- #endif /* CONFIG_PPC_PSERIES */
- 
- EXC_COMMON_BEGIN(system_reset_common)
-+	__GEN_COMMON_ENTRY system_reset
- 	/*
- 	 * Increment paca->in_nmi then enable MSR_RI. SLB or MCE will be able
- 	 * to recover, but nested NMI will notice in_nmi and not recover
-@@ -928,7 +885,7 @@ EXC_COMMON_BEGIN(system_reset_common)
- 	mr	r10,r1
- 	ld	r1,PACA_NMI_EMERG_SP(r13)
- 	subi	r1,r1,INT_FRAME_SIZE
--	GEN_COMMON system_reset
-+	__GEN_COMMON_BODY system_reset
- 	bl	save_nvgprs
- 	/*
- 	 * Set IRQS_ALL_DISABLED unconditionally so arch_irqs_disabled does
-@@ -973,6 +930,7 @@ EXC_COMMON_BEGIN(system_reset_common)
- INT_DEFINE_BEGIN(machine_check_early)
- 	IVEC=0x200
- 	IAREA=PACA_EXMC
-+	IVIRT=0 /* no virt entry point */
- 	/*
- 	 * MSR_RI is not enabled, because PACA_EXMC is being used, so a
- 	 * nested machine check corrupts it. machine_check_common enables
-@@ -990,6 +948,7 @@ INT_DEFINE_END(machine_check_early)
- INT_DEFINE_BEGIN(machine_check)
- 	IVEC=0x200
- 	IAREA=PACA_EXMC
-+	IVIRT=0 /* no virt entry point */
- 	ISET_RI=0
- 	IDAR=1
- 	IDSISR=1
-@@ -1022,7 +981,6 @@ TRAMP_KVM_BEGIN(machine_check_kvm)
- 	EXCEPTION_RESTORE_REGS EXC_STD
- 
- EXC_COMMON_BEGIN(machine_check_early_common)
--	mtctr	r10			/* Restore ctr */
- 	mfspr	r11,SPRN_SRR0
- 	mfspr	r12,SPRN_SRR1
- 
-@@ -1061,7 +1019,7 @@ EXC_COMMON_BEGIN(machine_check_early_common)
- 	bgt	cr1,unrecoverable_mce	/* Check if we hit limit of 4 */
- 	subi	r1,r1,INT_FRAME_SIZE	/* alloc stack frame */
- 
--	GEN_COMMON machine_check_early
-+	__GEN_COMMON_BODY machine_check_early
- 
- BEGIN_FTR_SECTION
- 	bl	enable_machine_check
-@@ -1448,6 +1406,8 @@ EXC_VIRT_END(program_check, 0x4700, 0x100)
- TRAMP_KVM_BEGIN(program_check_kvm)
- 	GEN_KVM program_check
- EXC_COMMON_BEGIN(program_check_common)
-+	__GEN_COMMON_ENTRY program_check
-+
- 	/*
- 	 * It's possible to receive a TM Bad Thing type program check with
- 	 * userspace register values (in particular r1), but with SRR1 reporting
-@@ -1473,11 +1433,11 @@ EXC_COMMON_BEGIN(program_check_common)
- 	ld	r1,PACAEMERGSP(r13)	/* Use emergency stack		*/
- 	subi	r1,r1,INT_FRAME_SIZE	/* alloc stack frame		*/
- 	__ISTACK(program_check)=0
--	GEN_COMMON program_check
-+	__GEN_COMMON_BODY program_check
- 	b 3f
- 2:
- 	__ISTACK(program_check)=1
--	GEN_COMMON program_check
-+	__GEN_COMMON_BODY program_check
- 3:
- 	bl	save_nvgprs
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
-@@ -1874,14 +1834,13 @@ TRAMP_KVM_BEGIN(hmi_exception_kvm)
- 	GEN_KVM hmi_exception
- 
- EXC_COMMON_BEGIN(hmi_exception_early_common)
--	mtctr	r10			/* Restore ctr */
- 	mfspr	r11,SPRN_HSRR0		/* Save HSRR0 */
- 	mfspr	r12,SPRN_HSRR1		/* Save HSRR1 */
- 	mr	r10,r1			/* Save r1 */
- 	ld	r1,PACAEMERGSP(r13)	/* Use emergency stack for realmode */
- 	subi	r1,r1,INT_FRAME_SIZE	/* alloc stack frame		*/
- 
--	GEN_COMMON hmi_exception_early
-+	__GEN_COMMON_BODY hmi_exception_early
- 
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	hmi_exception_realmode
-@@ -2208,7 +2167,9 @@ EXC_REAL_BEGIN(denorm_exception, 0x1500, 0x100)
- 	bne+	denorm_assist
- #endif
- 	KVMTEST denorm_exception, EXC_HV, 0x1500
--	INT_SAVE_SRR_AND_JUMP denorm_exception_common, EXC_HV, 1
-+	mfspr	r11,SPRN_HSRR0
-+	mfspr	r12,SPRN_HSRR1
-+	GEN_BRANCH_TO_COMMON denorm_exception, virt=0
- EXC_REAL_END(denorm_exception, 0x1500, 0x100)
- #ifdef CONFIG_PPC_DENORMALISATION
- EXC_VIRT_BEGIN(denorm_exception, 0x5500, 0x100)
-@@ -2216,7 +2177,9 @@ EXC_VIRT_BEGIN(denorm_exception, 0x5500, 0x100)
- 	mfspr	r10,SPRN_HSRR1
- 	andis.	r10,r10,(HSRR1_DENORM)@h /* denorm? */
- 	bne+	denorm_assist
--	INT_VIRT_SAVE_SRR_AND_JUMP denorm_exception_common, EXC_HV
-+	mfspr	r11,SPRN_HSRR0
-+	mfspr	r12,SPRN_HSRR1
-+	GEN_BRANCH_TO_COMMON denorm_exception, virt=1
- EXC_VIRT_END(denorm_exception, 0x5500, 0x100)
- #else
- EXC_VIRT_NONE(0x5500, 0x100)
-@@ -2387,7 +2350,11 @@ EXC_VIRT_NONE(0x5800, 0x100)
- 	std	r12,PACA_EXGEN+EX_R12(r13);		\
- 	GET_SCRATCH0(r10);				\
- 	std	r10,PACA_EXGEN+EX_R13(r13);		\
--	INT_SAVE_SRR_AND_JUMP soft_nmi_common, _H, 1
-+	mfspr	r11,SPRN_SRR0;		/* save SRR0 */	\
-+	mfspr	r12,SPRN_SRR1;		/* and SRR1 */	\
-+	LOAD_HANDLER(r10, soft_nmi_common);		\
-+	mtctr	r10;					\
-+	bctr
- 
- /*
-  * Branch to soft_nmi_interrupt using the emergency stack. The emergency
-@@ -2403,7 +2370,7 @@ EXC_COMMON_BEGIN(soft_nmi_common)
- 	ld	r1,PACAEMERGSP(r13)
- 	subi	r1,r1,INT_FRAME_SIZE
- 	__ISTACK(decrementer)=0
--	GEN_COMMON decrementer
-+	__GEN_COMMON_BODY decrementer
- 	bl	save_nvgprs
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	soft_nmi_interrupt
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index db6528a01229..bb63295e8d4e 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -83,7 +83,7 @@ static char *translate_scan(struct adapter *padapter,
+ {
+ 	struct iw_event iwe;
+ 	u16 cap;
+-	u32 ht_ielen = 0;
++	sint ht_ielen = 0;
+ 	char *custom = NULL;
+ 	char *p;
+ 	u16 max_rate = 0, rate, ht_cap =false, vht_cap = false;
+@@ -760,7 +760,7 @@ static int rtw_wx_get_name(struct net_device *dev,
+ 			     union iwreq_data *wrqu, char *extra)
+ {
+ 	struct adapter *padapter = (struct adapter *)rtw_netdev_priv(dev);
+-	u32 ht_ielen = 0;
++	sint ht_ielen = 0;
+ 	char *p;
+ 	u8 ht_cap =false, vht_cap =false;
+ 	struct	mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 -- 
-2.23.0
+2.20.1
 
