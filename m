@@ -2,219 +2,123 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8905FC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2328C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642AC21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7C62196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lWbjKPSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKLJj7 (ORCPT
+        id S1727272AbfKLJkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:39:59 -0500
-Received: from mga02.intel.com ([134.134.136.20]:18473 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbfKLJj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:39:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 01:39:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,295,1569308400"; 
-   d="scan'208";a="214042274"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 12 Nov 2019 01:39:54 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 12 Nov 2019 11:39:53 +0200
-Date:   Tue, 12 Nov 2019 11:39:53 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Message-ID: <20191112093953.GD2644@lahna.fi.intel.com>
-References: <PS2P216MB07554FF63C34AFBCE04BD55D80780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+        Tue, 12 Nov 2019 04:40:36 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34843 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfKLJkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:40:35 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 8so2193081wmo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 01:40:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ejx/kqQy3kcUiiFlaD/FPSSHJrxrW00iUrEoU2xAx90=;
+        b=lWbjKPSh3T/bDqJI/OHcdLlHvZS5ZQztXcO2OXBpY5i56aD1VdfCigUlZJ3ECo8PkX
+         c5BD6/OUUkowHGZ0krgx5x2QCrVgAaZYg8lbDU4ZKdFofGst8i6HqOXyIbBwSmdeZoYl
+         d1iLL7m24zo7aI/7PXf4CBZRYc/omP54nwyD8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=ejx/kqQy3kcUiiFlaD/FPSSHJrxrW00iUrEoU2xAx90=;
+        b=b55TcwaInlwXGsEyzynwgjApgv6dPar35QVf3BPllaMlW3HGUuHbZfTmTyWyZna7TR
+         P72/rV4mZMIkntbCwb2TSpGJTFR8sY6FLxLiQnJFw4hhghLWwiwC2GUnJA7Aqm/lP1Xv
+         HCR38BGjUbXT88KzX1pgYG3DoNPwWqZF7/XsZaN8E14xymapihhpXe5+Rd+Hlzwnsu0t
+         Ppi6wTXBG1lAAIiQD2ngfuW8lK97yk3tLdRE3gcRJODtlmZsk8lGbfcfO89WHTgnPYjG
+         r7dkNdchMBZEdUzoPUb2UD3At237hTSOF7PtNKIOHSIhneGrG93+HNrvWaK7qr7WX/SS
+         SMlQ==
+X-Gm-Message-State: APjAAAXOSRqIXCDM4B4IYGlGMBVLs4aQiK0L6Kn1NhPHc4zk6K7ShIJu
+        QEN/5eqR3TqWbarXqVWIDMO7/g==
+X-Google-Smtp-Source: APXvYqwrO8bU+BJYM7oebMXYjkT49Im67i7AQuC63Zqgak8bgNrt+yEN/H6dPBWSj91L92X3BD5VAw==
+X-Received: by 2002:a1c:c28a:: with SMTP id s132mr2985572wmf.162.1573551633503;
+        Tue, 12 Nov 2019 01:40:33 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id 62sm26900378wre.38.2019.11.12.01.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 01:40:32 -0800 (PST)
+Date:   Tue, 12 Nov 2019 10:40:31 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/virtgpu: fix double unregistration
+Message-ID: <20191112094031.GF23790@phenom.ffwll.local>
+Mail-Followup-To: Chuhong Yuan <hslester96@gmail.com>,
+        David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <20191109075417.29808-1-hslester96@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PS2P216MB07554FF63C34AFBCE04BD55D80780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191109075417.29808-1-hslester96@gmail.com>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 01:50:57PM +0000, Nicholas Johnson wrote:
-> Currently, the kernel can sometimes assign the MMIO_PREF window
-> additional size into the MMIO window, resulting in extra MMIO additional
-> size, despite the MMIO_PREF additional size being assigned successfully
-> into the MMIO_PREF window.
+On Sat, Nov 09, 2019 at 03:54:17PM +0800, Chuhong Yuan wrote:
+> drm_put_dev also calls drm_dev_unregister, so dev will be unregistered
+> twice.
+> Replace it with drm_dev_put to fix it.
 > 
-> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
-> fails. In the next pass, because MMIO_PREF is already assigned, the
-> attempt to assign MMIO_PREF returns an error code instead of success
-> (nothing more to do, already allocated). Hence, the size which is
-> actually allocated, but thought to have failed, is placed in the MMIO
-> window.
-> 
-> Example of problem (more context can be found in the bug report URL):
-> 
-> Mainline kernel:
-> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
-> 
-> Patched kernel:
-> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
-> 
-> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
-> with the same configuration, with a Ubuntu mainline kernel and a kernel
-> patched with this patch.
-> 
-> The bug results in the MMIO_PREF being added to the MMIO window, which
-> means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
-> the MMIO window will likely fail to be assigned altogether due to lack
-> of 32-bit address space.
-> 
-> Change find_free_bus_resource() to do the following:
-> - Return first unassigned resource of the correct type.
-> - If none of the above, return first assigned resource of the correct type.
-> - If none of the above, return NULL.
-> 
-> Returning an assigned resource of the correct type allows the caller to
-> distinguish between already assigned and no resource of the correct type.
-> 
-> Rename find_free_bus_resource to find_bus_resource_of_type().
-> 
-> Add checks in pbus_size_io() and pbus_size_mem() to return success if
-> resource returned from find_free_bus_resource() is already allocated.
-> 
-> This avoids pbus_size_io() and pbus_size_mem() returning error code to
-> __pci_bus_size_bridges() when a resource has been successfully assigned
-> in a previous pass. This fixes the existing behaviour where space for a
-> resource could be reserved multiple times in different parent bridge
-> windows.
-> 
-> Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-> 
-> Reported-by: Kit Chow <kchow@gigaio.com>
-> Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Nice catch, I'll apply.
 
-Minor nits below.
+Since this is so confusing, we actually have a todo to remove drm_put_dev
+completely from the codebase (and open-code it with explicit
+unregister+put). Want to do that little patch series to update the
+remaining few drivers and then remove drm_put_dev from core code?
+
+Thanks, Daniel
 
 > ---
->  drivers/pci/setup-bus.c | 34 +++++++++++++++++++++++-----------
->  1 file changed, 23 insertions(+), 11 deletions(-)
+>  drivers/gpu/drm/virtio/virtgpu_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index e7dbe2170..f97c36a1e 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> index 0fc32fa0b3c0..fccc24e21af8 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> @@ -138,7 +138,7 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+>  
+>  	drm_dev_unregister(dev);
+>  	virtio_gpu_deinit(dev);
+> -	drm_put_dev(dev);
+> +	drm_dev_put(dev);
 >  }
 >  
->  /*
-> - * Helper function for sizing routines: find first available bus resource
-> - * of a given type.  Note: we intentionally skip the bus resources which
-> - * have already been assigned (that is, have non-NULL parent resource).
-> + * Helper function for sizing routines.
-> + * Assigned resources have non-NULL parent resource.
-> + *
-> + * Return first unassigned resource of the correct type.
-> + * If none of the above, return first assigned resource of the correct type.
-> + * If none of the above, return NULL.
-> + *
-> + * Returning an assigned resource of the correct type allows the caller to
-> + * distinguish between already assigned and no resource of the correct type.
->   */
-> -static struct resource *find_free_bus_resource(struct pci_bus *bus,
-> -					       unsigned long type_mask,
-> -					       unsigned long type)
-> +static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
-> +						  unsigned long type_mask,
-> +						  unsigned long type)
->  {
->  	int i;
-> -	struct resource *r;
-> +	struct resource *r, *r_assigned = NULL;
-
-Maybe order them
-
-	struct resource *r, *r_assigned = NULL;
- 	int i;
-
->  
->  	pci_bus_for_each_resource(bus, r, i) {
->  		if (r == &ioport_resource || r == &iomem_resource)
->  			continue;
->  		if (r && (r->flags & type_mask) == type && !r->parent)
->  			return r;
-> +		if (r && (r->flags & type_mask) == type && !r_assigned)
-> +			r_assigned = r;
->  	}
-> -	return NULL;
-> +	return r_assigned;
->  }
->  
->  static resource_size_t calculate_iosize(resource_size_t size,
-> @@ -866,14 +874,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
->  			 struct list_head *realloc_head)
->  {
->  	struct pci_dev *dev;
-> -	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
-> -							IORESOURCE_IO);
-> +	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
-> +								IORESOURCE_IO);
->  	resource_size_t size = 0, size0 = 0, size1 = 0;
->  	resource_size_t children_add_size = 0;
->  	resource_size_t min_align, align;
->  
->  	if (!b_res)
->  		return;
-
-I think it may be good to comment here that skip the resources that are
-assigned (->parent != NULL).
-
-> +	if (b_res->parent)
-> +		return;
->  
->  	min_align = window_alignment(bus, IORESOURCE_IO);
->  	list_for_each_entry(dev, &bus->devices, bus_list) {
-> @@ -978,7 +988,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
->  	resource_size_t min_align, align, size, size0, size1;
->  	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
->  	int order, max_order;
-> -	struct resource *b_res = find_free_bus_resource(bus,
-> +	struct resource *b_res = find_bus_resource_of_type(bus,
->  					mask | IORESOURCE_PREFETCH, type);
->  	resource_size_t children_add_size = 0;
->  	resource_size_t children_add_align = 0;
-> @@ -986,6 +996,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
->  
->  	if (!b_res)
->  		return -ENOSPC;
-
-Ditto.
-
-> +	if (b_res->parent)
-> +		return 0;
->  
->  	memset(aligns, 0, sizeof(aligns));
->  	max_order = 0;
+>  static void virtio_gpu_config_changed(struct virtio_device *vdev)
 > -- 
 > 2.23.0
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
