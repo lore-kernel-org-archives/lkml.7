@@ -2,83 +2,83 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 083A0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68FFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4865206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1A22067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKLHSN (ORCPT
+        id S1727124AbfKLHSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:18:13 -0500
-Received: from mga11.intel.com ([192.55.52.93]:32500 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfKLHSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:18:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 23:18:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,295,1569308400"; 
-   d="scan'208";a="207023340"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 11 Nov 2019 23:18:11 -0800
-Received: from [10.226.39.46] (unknown [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 2FBDA5801E3;
-        Mon, 11 Nov 2019 23:18:07 -0800 (PST)
-Subject: Re: [PATCH v5 2/3] dwc: PCI: intel: PCIe RC controller driver
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
- <20191106122452.GA32742@smile.fi.intel.com>
- <eee3e6ee-fd55-9c88-a628-34f883b19988@linux.intel.com>
-Message-ID: <f7d2c4e6-101d-5f52-f3df-6adb0c8b8396@linux.intel.com>
-Date:   Tue, 12 Nov 2019 15:18:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 02:18:24 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35407 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725283AbfKLHSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 02:18:24 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Thsv3KG_1573543100;
+Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0Thsv3KG_1573543100)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 12 Nov 2019 15:18:20 +0800
+Date:   Tue, 12 Nov 2019 15:18:19 +0800
+From:   Tony Lu <tonylu@linux.alibaba.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     davem@davemloft.net, shemminger@osdl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: remove static inline from dev_put/dev_hold
+Message-ID: <20191112071819.GB67139@TonyMac-Alibaba>
+Reply-To: Tony Lu <tonylu@linux.alibaba.com>
+References: <20191111140502.17541-1-tonylu@linux.alibaba.com>
+ <20191111085632.24d88706@hermes.lan>
 MIME-Version: 1.0
-In-Reply-To: <eee3e6ee-fd55-9c88-a628-34f883b19988@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111085632.24d88706@hermes.lan>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 11, 2019 at 08:56:32AM -0800, Stephen Hemminger wrote:
+> On Mon, 11 Nov 2019 22:05:03 +0800
+> Tony Lu <tonylu@linux.alibaba.com> wrote:
+> 
+> > This patch removes static inline from dev_put/dev_hold in order to help
+> > trace the pcpu_refcnt leak of net_device.
+> > 
+> > We have sufferred this kind of issue for several times during
+> > manipulating NIC between different net namespaces. It prints this
+> > log in dmesg:
+> > 
+> >   unregister_netdevice: waiting for eth0 to become free. Usage count = 1
+> > 
+> > However, it is hard to find out who called and leaked refcnt in time. It
+> > only left the crime scene but few evidence. Once leaked, it is not
+> > safe to fix it up on the running host. We can't trace dev_put/dev_hold
+> > directly, for the functions are inlined and used wildly amoung modules.
+> > And this issue is common, there are tens of patches fix net_device
+> > refcnt leak for various causes.
+> > 
+> > To trace the refcnt manipulating, this patch removes static inline from
+> > dev_put/dev_hold. We can use handy tools, such as eBPF with kprobe, to
+> > find out who holds but forgets to put refcnt. This will not be called
+> > frequently, so the overhead is limited.
+> > 
+> > Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
+> 
+> In the past dev_hold/dev_put was in the hot path for several
+> operations. What is the performance implication of doing this?
 
-On 11/11/2019 4:08 PM, Dilip Kota wrote:
->
-> On 11/6/2019 8:24 PM, Andy Shevchenko wrote:
->> On Wed, Nov 06, 2019 at 11:44:02AM +0800, Dilip Kota wrote:
-[...]
->>
->>> +    return ret;
->>> +}
->>> +    platform_set_drvdata(pdev, lpp);
->> I think it makes sense to setup at the end of the function (before 
->> dev_info()
->> call).
-> I have done it immediately after the memory allocation.
-> Ok, i will move it before dev_info().
->
-I ran test with all the changes and kernel panic is hit due to NULL 
-pointer access. It is because of platform_set_drvdata() moved before 
-dev_info, which resulted in  intel_pcie_get_resources()  doing 
-platform_get_drvdata and end up accessing NULL pointer. I will keep 
-'platform_set_drvdata()' remain unchanged.
+From code analysis, there should be a little performance backwards.
+I don't have the benchmark data for now. I will make a kernel module to
+take a series of benchmarks for dev_put/dev_hold. Actually there is a plan
+to take a whole solution for this issue. The benchmarks will be done
+after this.
 
-Regards,
-Dilip
+Cheers
+Tony Lu
