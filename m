@@ -2,125 +2,124 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E0CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9B6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756B22196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alertlogic.onmicrosoft.com header.i=@alertlogic.onmicrosoft.com header.b="nVqbxNQZ"
+	by mail.kernel.org (Postfix) with ESMTP id 35BF521E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573580534;
+	bh=ukFBRhjz6JA+xtvHkGTJeVxwHWLAp4FvKedRKr02fsc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kei7nu/1Fkj4aSLxT1HsTIqVCBqO+jDGQvcveBwltSWoWaDSmkFYZK7so5EVF0kU3
+	 +rlAzVTptI5Fc2Du1MriOwhgthptuXm373Y2gS727xoyggGXpSGgWRdI51RpfsCreI
+	 T0KZk8vWPtQFjSoV5powtKXclJfco4lJnHwvGQtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfKLRlB (ORCPT
+        id S1727002AbfKLRmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:41:01 -0500
-Received: from mail-eopbgr760123.outbound.protection.outlook.com ([40.107.76.123]:48259
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726912AbfKLRlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:41:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n9LiG8/uktkl/A/oYX7UwGbSZvwO8KhXvnnNw39DiS+CgmIvc1xfKFbUsgRVxdhA9Uc8vpNvkJeOrWiHjvkOXYqX0rzQVFxmUsR95hRbCYsdNB93NgtGpeZoCHPgi93ZBgH+rwrhNMmY7OeZ3YkoVdnll9ZRC4WWZhtDBDYeJ00snH4d8MatdMd1Zf5/N6Nw27M60UJP5Dyi8votWM9aE6lqSQ6cz4W2AvA9zV7M8I74fKOr14slTG1phZ+znyOe1z7ZuVJHMbYIKM3tQV+ROlJD6TY9DvXknHG9qLx51BslWGT7RFOosTN0W5xQxAs/fkwRESqONO78YzZanT/ibw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hgruqcHvVD8E01cUJLFYzJpbA7g1PtW4tmTV2KRZhho=;
- b=HtIEzX1c6demt8AMNU8cPUGs69qtImIDKdfzmvKRKS2OcoewipJ8+NQekt/DrEha6dfDiGycgfDEZiJzy9+sBCPT1wwrHDJSPOyHnN/6O4lmaw81O1txt0F8U1CiXEsxWCQBQv4gqhCaaqDj55L4Ry0YulwkPQuuE7gxWakKZH19oNgKDNpFA8wxrQ6E0pM/bbGX9mcS/yzZE1yX/qBUAej2SJmFCFA54wZ2XhM9Iu7I5IBdYmnNFjVpNZzGeVeUJYPgdPw7N9IKRKBOiYHq1h+7sNkpt4nq86K9MDSFbWBDSP5iSPjIDeGu7lV6lJRr1x0cIgWA+XG0fcaJz64AZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=alertlogic.com; dmarc=pass action=none
- header.from=alertlogic.com; dkim=pass header.d=alertlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=alertlogic.onmicrosoft.com; s=selector2-alertlogic-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hgruqcHvVD8E01cUJLFYzJpbA7g1PtW4tmTV2KRZhho=;
- b=nVqbxNQZiPYWkdr7XWG9kVxXFGyw9XTnFuxHaZV1/3dMYZdAvTRMYmbeChlfvOxe2uX1tJKj0xdLOgZ4fDT45W2PRz6jnfvaMvvYORh+4cWfl8ChQ8OM4dviJ9jm1Rv1fWvXzPkUaSrlL6K0so2yQDwX8yU8P5Dcx6mljO54k8s=
-Received: from BYAPR20MB2726.namprd20.prod.outlook.com (20.178.238.150) by
- BYAPR20MB2245.namprd20.prod.outlook.com (20.179.155.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Tue, 12 Nov 2019 17:40:55 +0000
-Received: from BYAPR20MB2726.namprd20.prod.outlook.com
- ([fe80::b1ef:70a1:4100:26a4]) by BYAPR20MB2726.namprd20.prod.outlook.com
- ([fe80::b1ef:70a1:4100:26a4%3]) with mapi id 15.20.2451.023; Tue, 12 Nov 2019
- 17:40:55 +0000
-From:   "Harris, Robert" <robert.harris@alertlogic.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Harris, Robert" <robert.harris@alertlogic.com>
-Subject: Help requested: futex(..., FUTEX_WAIT_PRIVATE, ...) returns EPERM
-Thread-Topic: Help requested: futex(..., FUTEX_WAIT_PRIVATE, ...) returns
- EPERM
-Thread-Index: AQHVmYBWNvZci+jLJUqod1Huijtj9w==
-Date:   Tue, 12 Nov 2019 17:40:55 +0000
-Message-ID: <E0332978-739B-4546-9C3F-975216C349D2@alertlogic.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=robert.harris@alertlogic.com; 
-x-originating-ip: [165.225.81.101]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5863aed9-66c7-4753-a0b0-08d7679778a9
-x-ms-traffictypediagnostic: BYAPR20MB2245:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR20MB2245ACDD446CEDC86A7742C594770@BYAPR20MB2245.namprd20.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(39850400004)(396003)(366004)(346002)(199004)(189003)(478600001)(102836004)(6506007)(36756003)(5660300002)(99286004)(54906003)(55236004)(6486002)(8676002)(66066001)(33656002)(6116002)(3846002)(25786009)(476003)(2616005)(486006)(2906002)(186003)(8936002)(26005)(6436002)(2201001)(76116006)(66946007)(110136005)(4326008)(66476007)(64756008)(81166006)(81156014)(66446008)(91956017)(316002)(66556008)(71200400001)(86362001)(14454004)(107886003)(305945005)(5024004)(71190400001)(14444005)(256004)(7736002)(2501003)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR20MB2245;H:BYAPR20MB2726.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: alertlogic.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GkzuYyFoe2/iwDh3WnFchPivlxqcaTmXywQOItFKFeoZb+Ui7Xb3uX7GUpezPq6gzith4AZ1PRNeOK3zbSN7DNPolFOOfBZPRlXMnW7B2Gv5lFOwfGYzGhmfVbkILxrIa55wOGlFMq6JKU5h8fQM+fIXxHNy82vlDiSLz7UNeLzWRHSGdMBtZX4VgGvF4SJIymj0iL9CIKR/qhPGnGOhJBzcaQUpv2RHApwryCmworToEWLD/X3sNqL3xMO3kZYNEcpvo+cEPvSXuvtTVIYntV0siuYqIOakG1lxd04NsZ3yIsXuWj1GWUUzApRVD9DreKD4dPZ6DHAZDtpuMh8skZqCmliFiVM1BtmPDAXNNdb/MysvlmDcVpjzgNmyZWE93LQqwAKv+LUoBEcmVpuiaUIc6uHq034Buq7+FJRBu7+7Dp7HZoGi2cwJBkSnM3lO
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <CA28362B3B347E4AB25AF9DCB04CCA1F@namprd20.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Nov 2019 12:42:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbfKLRmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:42:12 -0500
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC99222C5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 17:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573580531;
+        bh=ukFBRhjz6JA+xtvHkGTJeVxwHWLAp4FvKedRKr02fsc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PT8aZS5k5uk1BrbAC7cNvr/pkyPFyeuni8KsKdtHz6lpszOh/ABcEZwpMmylUnqTv
+         jiYW9DbfxE3WJ1p22ZTZKUlt+4mKx7EmsLzsY44rOD8tImoHcLc3y7CyBKPJrbinYv
+         VlU+UugKp25u4f7q5psUvCA9z9fdv3t1njkWt8nE=
+Received: by mail-wr1-f49.google.com with SMTP id i10so19503850wrs.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:42:11 -0800 (PST)
+X-Gm-Message-State: APjAAAXPi2y7srNMnSQ3TLdcWSW/uJDtVDq1stD5VBUAxk5Dz1Dsxwjq
+        IfdAzjRSoTgfQKXG8+jJYJZ+yIQyEhG2cqUa0oN0oA==
+X-Google-Smtp-Source: APXvYqxTjtLWa+Ir8T+ZvAlxbNKfjXXLSPgi/Ebf5LBLoWqwqNRsOrz3lCjL6jnQ7giufNX3xudoimjIUYBS8YjMcC4=
+X-Received: by 2002:adf:e4c5:: with SMTP id v5mr27739401wrm.106.1573580529594;
+ Tue, 12 Nov 2019 09:42:09 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: alertlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5863aed9-66c7-4753-a0b0-08d7679778a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 17:40:55.6470
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 04151827-cb2a-4231-9c24-1ef5ffc408eb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Cicr87e9LYyAK6F0gsBgSIP85mYmXwfl7AaHcpt3GtfBPD+JNMCzIRy76bqvs0Vk+ilJqEH5Xt+UWdBVeoP5mzO69l33nV/CJESZmEFvGwU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR20MB2245
+References: <20191111220314.519933535@linutronix.de> <20191111223052.400498664@linutronix.de>
+ <CALCETrU1i4_N8M0o=8hxxPFYisLsxpmDqM-GTsymORp9UeZYSg@mail.gmail.com> <alpine.DEB.2.21.1911121811150.1833@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1911121811150.1833@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 12 Nov 2019 09:41:58 -0800
+X-Gmail-Original-Message-ID: <CALCETrWX7POruLpr27mVoZ-CtVjz35tJBaZz0FNy9_eXfZo_fg@mail.gmail.com>
+Message-ID: <CALCETrWX7POruLpr27mVoZ-CtVjz35tJBaZz0FNy9_eXfZo_fg@mail.gmail.com>
+Subject: Re: [patch V2 09/16] x86/ioperm: Move TSS bitmap update to exit to
+ user work
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am investigating an issue on 4.9.184 in which futex() returns EPERM
-intermittently for
+On Tue, Nov 12, 2019 at 9:20 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Tue, 12 Nov 2019, Andy Lutomirski wrote:
+> > On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >
+> > > There is no point to update the TSS bitmap for tasks which use I/O bitmaps
+> > > on every context switch. It's enough to update it right before exiting to
+> > > user space.
+> > +
+> > > +static inline void switch_to_bitmap(unsigned long tifp)
+> > > +{
+> > > +       /*
+> > > +        * Invalidate I/O bitmap if the previous task used it. If the next
+> > > +        * task has an I/O bitmap it will handle it on exit to user mode.
+> > > +        */
+> > > +       if (tifp & _TIF_IO_BITMAP)
+> > > +               tss_invalidate_io_bitmap(this_cpu_ptr(&cpu_tss_rw));
+> > > +}
+> >
+> > Shouldn't you be invalidating the io bitmap if the *next* task doesn't
+> > use?  Or is the rule that, when a non-io-bitmap-using task is running,
+> > even in kernel mode, the io bitmap is always invalid.
+>
+> Well it does not make much of a difference whether we do the above or
+> !(tifn & _TIF_IO_BITMAP). We always end up in that code when one of the
+> involved tasks has TIF_IO_BITMAP set. I decided to use the sched out check
+> because that makes it clear that this is the end of the valid I/O
+> bitmap. If the next task has TIF_IO_BITMAP set as well, then it will anyway
+> end up in the exit to user mode update code. Clearing it here ensures that
+> even if the exit to user mode malfunctions the bitmap cannot be leaked.
+>
+> > As it stands, you need exit_thread() to invalidate the bitmap.  I
+> > assume it does, but I can't easily see it in the middle of the series
+> > like this.
+>
+> It does.
+>
+> > IOW your code might be fine, but it could at least use some comments
+> > in appropriate places (exit_to_usermode_loop()?) that we guarantee
+> > that, if the bit is *clear*, then the TSS has the io bitmap marked
+> > invalid.  And add an assertion under CONFIG_DEBUG_ENTRY.
+> >
+> > Also, do you need to update EXIT_TO_USERMODE_LOOP_FLAGS?
+>
+> No, the TIF_IO_BITMAP check is done once after the loop has run and it
+> would not make any sense in the loop as TIF_IO_BITMAP cannot be cleared
+> there and we'd loop forever. The other usermode loop flags are transient.
+>
 
-futex(uaddr, FUTEX_WAIT_PRIVATE, val, &timeout, NULL, 0)
+Right.  But your diff tool *said* the diff was in
+exit_to_usermode_loop().  Can you look at your .gitconfig and see if
+you have something weird going on?
 
-The failure affects an application in an AWS lambda;  traditional
-debugging approaches vary from difficult to impossible.  I cannot
-reproduce the problem at will, instrument the kernel, install a new
-kernel or get an application core dump.
-
-Understanding the circumstances under which EPERM can be returned for
-FUTEX_WAIT_PRIVATE would be useful but it is not a documented failure
-mode.  I have spent some time looking through futex.c but have not
-found anything yet.  I would be grateful for a hint from someone more
-knowledgeable.
-
-Please address/cc me on any reply.
-
-Thanks,
-
-Robert Harris
-Confidentiality Notice | This email and any included attachments may be pri=
-vileged, confidential and/or otherwise protected from disclosure. Access to=
- this email by anyone other than the intended recipient is unauthorized. If=
- you believe you have received this email in error, please contact the send=
-er immediately and delete all copies. If you are not the intended recipient=
-, you are notified that disclosing, copying, distributing or taking any act=
-ion in reliance on the contents of this information is strictly prohibited.
+--Andy
