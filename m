@@ -2,201 +2,114 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9843C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27747C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996AB20818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B67F20818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfKLJY4 (ORCPT
+        id S1727302AbfKLJZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:24:56 -0500
-Received: from mga03.intel.com ([134.134.136.65]:34805 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfKLJY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:24:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 01:24:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,295,1569308400"; 
-   d="scan'208";a="202339237"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Nov 2019 01:24:53 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 6294EEB; Tue, 12 Nov 2019 11:24:52 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>, Mario.Limonciello@dell.com,
-        Christian Kellner <ckellner@redhat.com>, zang <dump@tzib.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH] thunderbolt: Power cycle the router if NVM authentication fails
-Date:   Tue, 12 Nov 2019 12:24:52 +0300
-Message-Id: <20191112092452.70789-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 12 Nov 2019 04:25:37 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32931 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfKLJZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:25:36 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iUSQQ-0006xt-PU; Tue, 12 Nov 2019 10:25:26 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5ADC41C0084;
+        Tue, 12 Nov 2019 10:25:26 +0100 (CET)
+Date:   Tue, 12 Nov 2019 09:25:26 -0000
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] m68k: Convert missed RODATA to RO_DATA
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-m68k@lists.linux-m68k.org, Sam Creasey <sammy@sammy.net>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <201911110920.5840E9AF1@keescook>
+References: <201911110920.5840E9AF1@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <157355072603.29376.646015580479750741.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On zang's Dell XPS 13 9370 after Thunderbolt NVM firmware upgrade the
-Thunderbolt controller did not come back as expected. Only after the
-system was rebooted it became available again. It is not entirely clear
-what happened but I suspect the new NVM firmware image authentication
-failed for some reason. Regardless of this the router needs to be power
-cycled if NVM authentication fails in order to get it fully functional
-again.
+The following commit has been merged into the x86/build branch of tip:
 
-This modifies the driver to issue a power cycle in case the NVM
-authentication fails immediately when dma_port_flash_update_auth()
-returns. We also need to call tb_switch_set_uuid() earlier to be able to
-fetch possible NVM authentication failure when DMA port is added.
+Commit-ID:     de7156689d69e9861d9ddc54a9dea623c25020c5
+Gitweb:        https://git.kernel.org/tip/de7156689d69e9861d9ddc54a9dea623c25020c5
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Mon, 11 Nov 2019 09:22:00 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 12 Nov 2019 09:56:51 +01:00
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205457
-Reported-by: zang <dump@tzib.net>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+m68k: Convert missed RODATA to RO_DATA
+
+I missed two instances of the old RODATA macro (seems I was searching
+for vmlinux.lds* not vmlinux*lds*). Fix both instances and double-check
+the entire tree for other "RODATA" instances in linker scripts.
+
+Fixes: c82318254d15 ("vmlinux.lds.h: Replace RODATA with RO_DATA")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: Sam Creasey <sammy@sammy.net>
+Link: https://lkml.kernel.org/r/201911110920.5840E9AF1@keescook
 ---
-This applies on top of my thunderbolt.git/next.
+ arch/m68k/kernel/vmlinux-std.lds  | 2 +-
+ arch/m68k/kernel/vmlinux-sun3.lds | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
- drivers/thunderbolt/switch.c | 54 ++++++++++++++++++++++++++++--------
- 1 file changed, 42 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 3f477df2730a..ca86a8e09c77 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -168,7 +168,7 @@ static int nvm_validate_and_write(struct tb_switch *sw)
+diff --git a/arch/m68k/kernel/vmlinux-std.lds b/arch/m68k/kernel/vmlinux-std.lds
+index 6e7eb49..4d33da4 100644
+--- a/arch/m68k/kernel/vmlinux-std.lds
++++ b/arch/m68k/kernel/vmlinux-std.lds
+@@ -31,7 +31,7 @@ SECTIONS
  
- static int nvm_authenticate_host(struct tb_switch *sw)
- {
--	int ret;
-+	int ret = 0;
+   _sdata = .;			/* Start of data section */
  
- 	/*
- 	 * Root switch NVM upgrade requires that we disconnect the
-@@ -176,6 +176,8 @@ static int nvm_authenticate_host(struct tb_switch *sw)
- 	 * already).
- 	 */
- 	if (!sw->safe_mode) {
-+		u32 status;
-+
- 		ret = tb_domain_disconnect_all_paths(sw->tb);
- 		if (ret)
- 			return ret;
-@@ -184,7 +186,16 @@ static int nvm_authenticate_host(struct tb_switch *sw)
- 		 * everything goes well so getting timeout is expected.
- 		 */
- 		ret = dma_port_flash_update_auth(sw->dma_port);
--		return ret == -ETIMEDOUT ? 0 : ret;
-+		if (!ret || ret == -ETIMEDOUT)
-+			return 0;
-+
-+		/*
-+		 * Any error from update auth operation requires power
-+		 * cycling of the host router.
-+		 */
-+		tb_sw_warn(sw, "failed to authenticate NVM, power cycling\n");
-+		if (dma_port_flash_update_auth_status(sw->dma_port, &status) > 0)
-+			nvm_set_auth_status(sw, status);
- 	}
+-  RODATA
++  RO_DATA(4096)
  
- 	/*
-@@ -192,7 +203,7 @@ static int nvm_authenticate_host(struct tb_switch *sw)
- 	 * switch.
- 	 */
- 	dma_port_power_cycle(sw->dma_port);
--	return 0;
-+	return ret;
- }
+   RW_DATA(16, PAGE_SIZE, THREAD_SIZE)
  
- static int nvm_authenticate_device(struct tb_switch *sw)
-@@ -200,8 +211,16 @@ static int nvm_authenticate_device(struct tb_switch *sw)
- 	int ret, retries = 10;
+diff --git a/arch/m68k/kernel/vmlinux-sun3.lds b/arch/m68k/kernel/vmlinux-sun3.lds
+index 1a0ad6b..87d9f4d 100644
+--- a/arch/m68k/kernel/vmlinux-sun3.lds
++++ b/arch/m68k/kernel/vmlinux-sun3.lds
+@@ -24,7 +24,7 @@ SECTIONS
+ 	*(.fixup)
+ 	*(.gnu.warning)
+ 	} :text = 0x4e75
+-	RODATA
++	RO_DATA(4096)
  
- 	ret = dma_port_flash_update_auth(sw->dma_port);
--	if (ret && ret != -ETIMEDOUT)
-+	switch (ret) {
-+	case 0:
-+	case -ETIMEDOUT:
-+	case -EACCES:
-+	case -EINVAL:
-+		/* Power cycle is required */
-+		break;
-+	default:
- 		return ret;
-+	}
+   _etext = .;			/* End of text section */
  
- 	/*
- 	 * Poll here for the authentication status. It takes some time
-@@ -1420,8 +1439,6 @@ static ssize_t nvm_authenticate_store(struct device *dev,
- 			 */
- 			nvm_authenticate_start(sw);
- 			ret = nvm_authenticate_host(sw);
--			if (ret)
--				nvm_authenticate_complete(sw);
- 		} else {
- 			ret = nvm_authenticate_device(sw);
- 		}
-@@ -1876,13 +1893,16 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
- 	int ret;
- 
- 	switch (sw->generation) {
--	case 3:
--		break;
--
- 	case 2:
- 		/* Only root switch can be upgraded */
- 		if (tb_route(sw))
- 			return 0;
-+
-+		/* fallthrough */
-+	case 3:
-+		ret = tb_switch_set_uuid(sw);
-+		if (ret)
-+			return ret;
- 		break;
- 
- 	default:
-@@ -1906,6 +1926,19 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
- 	if (sw->no_nvm_upgrade)
- 		return 0;
- 
-+	/*
-+	 * If there is status already set then authentication failed
-+	 * when the dma_port_flash_update_auth() returned. Power cycling
-+	 * is not needed (it was done already) so only thing we do here
-+	 * is to unblock runtime PM of the root port.
-+	 */
-+	nvm_get_auth_status(sw, &status);
-+	if (status) {
-+		if (!tb_route(sw))
-+			nvm_authenticate_complete(sw);
-+		return 0;
-+	}
-+
- 	/*
- 	 * Check status of the previous flash authentication. If there
- 	 * is one we need to power cycle the switch in any case to make
-@@ -1921,9 +1954,6 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
- 
- 	if (status) {
- 		tb_sw_info(sw, "switch flash authentication failed\n");
--		ret = tb_switch_set_uuid(sw);
--		if (ret)
--			return ret;
- 		nvm_set_auth_status(sw, status);
- 	}
- 
--- 
-2.24.0
-
