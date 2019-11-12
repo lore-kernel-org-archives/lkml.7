@@ -2,146 +2,118 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90B5C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6B3C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7736620818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C8D2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="u8NwhSUk"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MwYUSKkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfKLMQK (ORCPT
+        id S1726697AbfKLMTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:16:10 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:52275 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfKLMQJ (ORCPT
+        Tue, 12 Nov 2019 07:19:24 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46782 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfKLMTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:16:09 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: VhDmuIIeOZDSm8BevpO98nniAdBCUZEVXSwnM2yABge+RS0UT+I9UQ4jLAfXzprCs/zpQw9BjP
- Sp2K+modU6CgZCys5XajYm+ojEW+4piHYYcNRyanxXhb1sxBw2qV+3BQRUEgq7lcBrkurKdmzc
- cidWvy7SKZ02qudDE23elm/o+Z0GX5zaVA3KaCvsEXB6+3/iSUCkLfgydVs4zEk0MCEV4kdlya
- ZIHqub8YfvXWivCqU0qUL1oXGs0gyiIgTVW3lp0tB7L/T7YEKB+nLwSAN100FFSWmgw44TZVRa
- pNA=
-X-IronPort-AV: E=Sophos;i="5.68,296,1569308400"; 
-   d="scan'208";a="56661930"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Nov 2019 05:16:08 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 12 Nov 2019 05:16:08 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Tue, 12 Nov 2019 05:16:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EX+uSaGr0vcbPG+7k0VCm20+pDbtV1YWOVQ3ApTYwJ8mWFqdwvJLyI4pzTdkCt9dwaIm2fXMGTs8IFga2JXNh6qwX66k40YRqhPdY5QSSk7Bp4op5lBH2BsIAAGxLDTKRi1R/WC/WnB9Xy71gRujr2zaJGtf0ufgjsUlbX7yY7ho4TiapBX0r6lJ0dVqSCT/HE5uVZcUlLNzFnkrfRlxDRTU1wXkfjjvBvjIOka+Xy1tOd/Rw+xRCYq6cyxEuuQZ6DsGgkAU4jOLTfygpIIVqf20jq4Cc6riI2QhogJJVgatZiL7rOVDMoESSJwOxG7qeCBC5voQirzC3m68cHWMvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+bynUQryyE9kRcvPVfcCs9g4F1t3iUgJM1gds8bGEv0=;
- b=KVWlyMdF/RRWkZOvVEakm4Zw8B/aqCq7vg/3egImgm8TdMie7DvtvfMDAgypOD7yBNq91q/ICzaVD6wkpClea00gkefACRr1ybUng2rYQYo5EPVB8UOwyehmiq5mRh93mDgeQie1w1Hpscr/CPd9qYjeMLmUmpPyo8D7HK6lUm2h0ugyORx+AfYl2rq5V9E/hKjivA6TOys/Ui7uWBtvr+xW7EFHm+PW32xawqweyhLFLXftYRuP5SbMDhsmOZ62jbyaksOSZV/DkO+A+x3qDLtcH5fk75lGXy7pJeBtx0xYNLrhFiDWhOloURmXl3Rb/of7qpsDUZ9bqQGk20+Mhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+bynUQryyE9kRcvPVfcCs9g4F1t3iUgJM1gds8bGEv0=;
- b=u8NwhSUkk4iwVHnVAqMlp/AZnyOsEmdDHD340g8hyucDKwO6CHheVg3iL4+iFM2rGqOb269ZLU1exAojrFE0OMzkvD0eNQvSUeBCOboVuWi3ii7hZrzKCnGL7lj71nQCkby3BNlcoj4pD1hhSyJUb0s7/wEAiMUYLhYUEhYtQUM=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3695.namprd11.prod.outlook.com (20.178.252.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.22; Tue, 12 Nov 2019 12:16:06 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 12:16:06 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <herbert@gondor.apana.org.au>, <yuehaibing@huawei.com>
-CC:     <davem@davemloft.net>, <cyrille.pitchen@atmel.com>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] crypto: atmel - Fix randbuild error
-Thread-Topic: [PATCH -next] crypto: atmel - Fix randbuild error
-Thread-Index: AQHVmJWIP0EGiUeHhUKrP5SYoH74XqeGzHoAgAAAW4CAAKJjgIAABX4A
-Date:   Tue, 12 Nov 2019 12:16:06 +0000
-Message-ID: <bfe0db64-209e-603d-759b-70ac2f691007@microchip.com>
-References: <20191111133901.19164-1-yuehaibing@huawei.com>
- <20191112021350.qu44becwmwom7ywu@gondor.apana.org.au>
- <20191112021507.y52sqecdaotqptcf@gondor.apana.org.au>
- <7988a8aa-e0e7-b031-7e79-fb9c5bd4e81a@microchip.com>
-In-Reply-To: <7988a8aa-e0e7-b031-7e79-fb9c5bd4e81a@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4P190CA0019.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:200:56::29) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eb9d7558-7be2-4eab-9976-08d7676a1828
-x-ms-traffictypediagnostic: MN2PR11MB3695:
-x-microsoft-antispam-prvs: <MN2PR11MB3695DB4404B93097C891F824F0770@MN2PR11MB3695.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(396003)(366004)(376002)(199004)(189003)(3846002)(478600001)(6116002)(229853002)(99286004)(2906002)(25786009)(2501003)(2616005)(305945005)(7736002)(66066001)(186003)(31686004)(446003)(11346002)(6486002)(26005)(76176011)(52116002)(476003)(6436002)(53546011)(6506007)(386003)(102836004)(486006)(256004)(71200400001)(71190400001)(8936002)(14444005)(14454004)(36756003)(4744005)(8676002)(81156014)(81166006)(110136005)(6246003)(54906003)(5660300002)(86362001)(66556008)(66476007)(31696002)(66946007)(316002)(64756008)(6512007)(66446008)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3695;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FgOIjR+9GUtKw3JH27gygBZPQXGFcgWnUqXE623RxrH1BoWlI5pIblid5uwl6s7mrzAxPyh7hqxSBN7hnSX8J8houiDfaxqYs1j+FGrPbUIMJDXfonrg34I0ufRz2D48ZNPi1kNQZC3QQsQe+b4FtgXKqpu776jh29HbBvf0Upsg0roiVEUT9zIy+d3edKtcf+HDnOlG4qslfX+rRvgsWUFe6lMevePhjYSL2RzoBR9p7odY0J0BFcGZ5MjPc4561AjKmsGzmpMgloXyV0sZLUfRU9a53fm3kZM39QGp6t6XKLgTCxgeKL7nwktVo/q87fScxduLUpC7e+A4KhS86cjtjiAePos3p5pbrLk9zVr+wY5uZPpGPspqR4Pv95Blu3Mv3GolgcYvmG6MaxtgS4zzotYYnQWVOf/Jhc6e60KggYDtZsu/b3u+mn4fbZUe
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C438E02F457D444EA3A810AF280E13FF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 12 Nov 2019 07:19:24 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACC92uk119335;
+        Tue, 12 Nov 2019 12:19:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=vJi+sgSpT/msCu8MaaZcjY30BS9nxFhGVS/H9KWglz8=;
+ b=MwYUSKkDy7qhbAyxsaSs4Pe7s3VeJaZi5XFd6CkjEqcHjkAxXXmHveei75re0JsT+VdH
+ /IGRzoK4euLvB66LenmKhgQ8XEJTjWhYQ51M/GQ6cAhu21JhfKABtk1R5tmyI7WZzQGj
+ hJl29MYPUVkajnbjP41qYT4O/5xbjuSCZQndzqEsr8mOQciFD5nNDaR1RHAeeJot+g37
+ 1c8d5cbrI8FjDijZJgyxcvqT+NMd2QN5h0wzPSCHt8Wc6YpznsGlAQyf2VYXBomd7gGU
+ hGTZ50wHPln8NK4nApccWUQZzDkgFBmjxEckKD57bDB4FQe6yct2Usd6UymVJWtu/UOG Hg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w5mvtmdr8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 12:19:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACC8n55137438;
+        Tue, 12 Nov 2019 12:19:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2w7khk7hvn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 12:19:18 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xACCJHpi018994;
+        Tue, 12 Nov 2019 12:19:17 GMT
+Received: from [10.191.24.133] (/10.191.24.133)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Nov 2019 04:19:17 -0800
+Subject: Re: [PATCH RESEND v2 2/4] KVM: ensure grow start value is nonzero
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        rkrcmar@redhat.com, rafael.j.wysocki@intel.com,
+        joao.m.martins@oracle.com, mtosatti@redhat.com,
+        kvm@vger.kernel.org, linux-pm@vger.kernel.org
+References: <1573041302-4904-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1573041302-4904-3-git-send-email-zhenzhong.duan@oracle.com>
+ <20191111201320.GA7431@linux.intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <0c8543e6-7664-cce9-c890-a10663d76d55@oracle.com>
+Date:   Tue, 12 Nov 2019 20:19:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb9d7558-7be2-4eab-9976-08d7676a1828
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 12:16:06.7591
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t0TL7xUhk7HGADESimOfVVbZn4v6oYLspXpHNUepVyHlRncmzoLArQpRa53wAh/GT8ZhgSTY4q3LslxP74lT4fcZMIjha/+8W7Lz0jD/0xM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3695
+In-Reply-To: <20191111201320.GA7431@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=781
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911120110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=847 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911120110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDExLzEyLzIwMTkgMDE6NTYgUE0sIFR1ZG9yLkFtYmFydXNAbWljcm9jaGlwLmNvbSB3
-cm90ZToNCj4gDQo+IA0KPiBPbiAxMS8xMi8yMDE5IDA0OjE1IEFNLCBIZXJiZXJ0IFh1IHdyb3Rl
-Og0KPj4gRXh0ZXJuYWwgRS1NYWlsDQo+Pg0KPj4NCj4+IE9uIFR1ZSwgTm92IDEyLCAyMDE5IGF0
-IDEwOjEzOjUwQU0gKzA4MDAsIEhlcmJlcnQgWHUgd3JvdGU6DQo+Pj4NCj4+PiBXaGF0IHdlIHNo
-b3VsZCBkbyBpbnN0ZWFkIGlzIHR1cm4gREVWX0FUTUVMX0FVVEhFTkMgaW50byBhIGJvb2wsDQo+
-Pg0KPj4gT2ggYW5kIERFVl9BVE1FTF9BVVRIRU5DIHNob3VsZCBhbHNvIGRlcGVuZCBvbiBDUllQ
-VE9fREVWX0FUTUVMX0FFUw0KPj4gYW5kIGxvc2UgYWxsIGl0cyBzZWxlY3RzLg0KPj4NCj4gDQo+
-IEhvdyBhYm91dCBnZXR0aW5nIHJpZCBvZiBDT05GSUdfQ1JZUFRPX0RFVl9BVE1FTF9BVVRIRU5D
-IGVudGlyZWx5Pw0KPiANCg0KbW0sIHdlIGNhbid0IGRvIHRoaXMgYmVjYXVzZSBhdG1lbC1hZXMg
-YW5kIGF0bWVsLXNoYSBhcmUgdHJlYXRlZCBhcyB0d28NCnNlcGFyYXRlZCBlbnRpdGllcy4NCg==
+On 2019/11/12 4:13, Sean Christopherson wrote:
+> On Wed, Nov 06, 2019 at 07:55:00PM +0800, Zhenzhong Duan wrote:
+>> vcpu->halt_poll_ns could be zeroed in certain cases (e.g. by
+>> halt_poll_ns = 0). If halt_poll_grow_start is zero,
+>> vcpu->halt_poll_ns will never be bigger than zero.
+>>
+>> Use param callback to avoid writing zero to halt_poll_grow_start.
+> This doesn't explain why allowing an admin to disable halt polling by
+> writing halt_poll_grow_start=0 is a bad thing.  Paolo had the same
+> question in v1, here[1] and in the guest driver[2].
+>
+> [1]https://lkml.kernel.org/r/57679389-6e4a-b7ad-559f-3128a608c28a@redhat.com
+> [2]https://lkml.kernel.org/r/391dd11b-ebbb-28ff-5e57-4a795cd16a1b@redhat.com
+
+Ok, answer all the same questions about grow_start=0 here.
+
+VCPU halt polling time may be nonzero even if grow_start=0, such as in below situation:
+0=grow_start< block_ns< (vcpu->halt_poll_ns)< halt_poll_ns
+
+grow_start=0 has your mentioned effect only in below sequence:
+1. set halt_poll_ns=0 to disable halt polling(this lead to vcpu->halt_poll_ns=0)
+2. set grow_start=0
+3. set halt_poll_ns to nonzero
+4. Admin expect halt polling time auto adjust in range [0, nonzero], but polling time stick at 0.
+
+So I think we should use halt_poll_ns=0 to disable halt polling instead of grow_start=0.
+
+Zhenzhong
+
