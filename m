@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ED7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B20EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C402214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB05214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfKLXvw (ORCPT
+        id S1727563AbfKLXwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:51:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57312 "EHLO
+        Tue, 12 Nov 2019 18:52:08 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57300 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726973AbfKLXuf (ORCPT
+        by vger.kernel.org with ESMTP id S1726960AbfKLXuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 18:50:35 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-0008I1-Vf; Tue, 12 Nov 2019 23:50:33 +0000
+        id 1iUfvd-0008I7-Lk; Tue, 12 Nov 2019 23:50:33 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-00056a-Ef; Tue, 12 Nov 2019 23:50:32 +0000
+        id 1iUfvc-000573-K7; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Neelima Krishnan" <neelima.krishnan@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Mark Gross" <mgross@linux.intel.com>,
         "Borislav Petkov" <bp@suse.de>,
-        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
-        "Tony Luck" <tony.luck@intel.com>
-Date:   Tue, 12 Nov 2019 23:48:00 +0000
-Message-ID: <lsq.1573602477.166595068@decadent.org.uk>
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>
+Date:   Tue, 12 Nov 2019 23:48:06 +0000
+Message-ID: <lsq.1573602477.93544792@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 03/25] x86/msr: Add the IA32_TSX_CTRL MSR
+Subject: [PATCH 3.16 09/25] x86/tsx: Add "auto" option to the tsx= cmdline
+  parameter
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,80 +61,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit c2955f270a84762343000f103e0640d29c7a96f3 upstream.
+commit 7531a3596e3272d1f6841e0d601a614555dc6b65 upstream.
 
-Transactional Synchronization Extensions (TSX) may be used on certain
-processors as part of a speculative side channel attack.  A microcode
-update for existing processors that are vulnerable to this attack will
-add a new MSR - IA32_TSX_CTRL to allow the system administrator the
-option to disable TSX as one of the possible mitigations.
+Platforms which are not affected by X86_BUG_TAA may want the TSX feature
+enabled. Add "auto" option to the TSX cmdline parameter. When tsx=auto
+disable TSX when X86_BUG_TAA is present, otherwise enable TSX.
 
-The CPUs which get this new MSR after a microcode upgrade are the ones
-which do not set MSR_IA32_ARCH_CAPABILITIES.MDS_NO (bit 5) because those
-CPUs have CPUID.MD_CLEAR, i.e., the VERW implementation which clears all
-CPU buffers takes care of the TAA case as well.
+More details on X86_BUG_TAA can be found here:
+https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/tsx_async_abort.html
 
-  [ Note that future processors that are not vulnerable will also
-    support the IA32_TSX_CTRL MSR. ]
-
-Add defines for the new IA32_TSX_CTRL MSR and its bits.
-
-TSX has two sub-features:
-
-1. Restricted Transactional Memory (RTM) is an explicitly-used feature
-   where new instructions begin and end TSX transactions.
-2. Hardware Lock Elision (HLE) is implicitly used when certain kinds of
-   "old" style locks are used by software.
-
-Bit 7 of the IA32_ARCH_CAPABILITIES indicates the presence of the
-IA32_TSX_CTRL MSR.
-
-There are two control bits in IA32_TSX_CTRL MSR:
-
-  Bit 0: When set, it disables the Restricted Transactional Memory (RTM)
-         sub-feature of TSX (will force all transactions to abort on the
-	 XBEGIN instruction).
-
-  Bit 1: When set, it disables the enumeration of the RTM and HLE feature
-         (i.e. it will make CPUID(EAX=7).EBX{bit4} and
-	  CPUID(EAX=7).EBX{bit11} read as 0).
-
-The other TSX sub-feature, Hardware Lock Elision (HLE), is
-unconditionally disabled by the new microcode but still enumerated
-as present by CPUID(EAX=7).EBX{bit4}, unless disabled by
-IA32_TSX_CTRL_MSR[1] - TSX_CTRL_CPUID_CLEAR.
+ [ bp: Extend the arg buffer to accommodate "auto\0". ]
 
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Reviewed-by: Mark Gross <mgross@linux.intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-[bwh: Backported to 3.16:
- - Don't use BIT() in msr-index.h because it's a UAPI header
- - Adjust filename, context, indentation]
+[bwh: Backported to 4.4: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/uapi/asm/msr-index.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/kernel-parameters.txt | 3 +++
+ arch/x86/kernel/cpu/tsx.c           | 7 ++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/uapi/asm/msr-index.h
-+++ b/arch/x86/include/uapi/asm/msr-index.h
-@@ -70,10 +70,15 @@
- 						    * Microarchitectural Data
- 						    * Sampling (MDS) vulnerabilities.
- 						    */
-+#define ARCH_CAP_TSX_CTRL_MSR		(1UL << 7) /* MSR for TSX control is available. */
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -3602,6 +3602,9 @@ bytes respectively. Such letter suffixes
+ 				update. This new MSR allows for the reliable
+ 				deactivation of the TSX functionality.)
  
- #define MSR_IA32_BBL_CR_CTL		0x00000119
- #define MSR_IA32_BBL_CR_CTL3		0x0000011e
- 
-+#define MSR_IA32_TSX_CTRL		0x00000122
-+#define TSX_CTRL_RTM_DISABLE		(1UL << 0) /* Disable RTM feature */
-+#define TSX_CTRL_CPUID_CLEAR		(1UL << 1) /* Disable TSX enumeration */
++			auto	- Disable TSX if X86_BUG_TAA is present,
++				  otherwise enable TSX on the system.
 +
- #define MSR_IA32_SYSENTER_CS		0x00000174
- #define MSR_IA32_SYSENTER_ESP		0x00000175
- #define MSR_IA32_SYSENTER_EIP		0x00000176
+ 			Not specifying this option is equivalent to tsx=off.
+ 
+ 			See Documentation/hw-vuln/tsx_async_abort.rst
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -75,7 +75,7 @@ static bool __init tsx_ctrl_is_supported
+ 
+ void __init tsx_init(void)
+ {
+-	char arg[4] = {};
++	char arg[5] = {};
+ 	int ret;
+ 
+ 	if (!tsx_ctrl_is_supported())
+@@ -87,6 +87,11 @@ void __init tsx_init(void)
+ 			tsx_ctrl_state = TSX_CTRL_ENABLE;
+ 		} else if (!strcmp(arg, "off")) {
+ 			tsx_ctrl_state = TSX_CTRL_DISABLE;
++		} else if (!strcmp(arg, "auto")) {
++			if (boot_cpu_has_bug(X86_BUG_TAA))
++				tsx_ctrl_state = TSX_CTRL_DISABLE;
++			else
++				tsx_ctrl_state = TSX_CTRL_ENABLE;
+ 		} else {
+ 			tsx_ctrl_state = TSX_CTRL_DISABLE;
+ 			pr_err("tsx: invalid option, defaulting to off\n");
 
