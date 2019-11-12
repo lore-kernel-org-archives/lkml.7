@@ -2,237 +2,466 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4516EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11763C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E1320650
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1x1jPWdz"
+	by mail.kernel.org (Postfix) with ESMTP id D3AC620650
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfKLPAw (ORCPT
+        id S1727161AbfKLPBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:00:52 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34851 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfKLPAw (ORCPT
+        Tue, 12 Nov 2019 10:01:11 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34652 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKLPBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:00:52 -0500
-Received: by mail-wr1-f66.google.com with SMTP id s5so7784820wrw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:00:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5UwP7siHF7rXmwCKrvI+cVhn0JyvOeSUcSusWVJIBwM=;
-        b=1x1jPWdzU7c+Yrtlase69mZpy1u6gho3J/UUk2vh8ig52gH+WlLkljzOObNK+S+gBJ
-         VEhhyd/ewCJ6KEgaYKRjNnz69TjSlt2InZNzXwIAsTpRKQsWwoULr+gq+0V9k3/uaIq8
-         EUvM+2YH1hv69THV/e+h0kcWdsoKE3XDovxDub7fsArXj5PiVk8kBrx8npCEReRLTdc1
-         7Nq4v2E2UW7yEv+qywYF90LHWP0si+Xqalp4CO7Q8kW/Q2A3FaXQf0j/PHuLwtGjRJW6
-         9+CPlluBi6DlyCyrfjQF+YPWr4L5WQHdpZ4BHEeHoFtSI2PfF43chQoUFr5KAZ7TOIYt
-         AAIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5UwP7siHF7rXmwCKrvI+cVhn0JyvOeSUcSusWVJIBwM=;
-        b=kGtF5OIlhEBSwgJ3801evPqh8HDzlR3SB5bTwJkfAidjlciHq3IRUPZqF4Ng6NHWT8
-         e0PwEwdoyvYYVO8CBjzMfQziaeznhswdokm7qXsq6xv+wxqlOXTj1OWJMS83sKQeF50H
-         29R5NTLqdYOYMrLtw2iU+iBZQ4whuXoEG8QQ6XdMXTr6uchzIR5YY0trkD9wdT92nd0k
-         3ejSBkniwJoCkXpC/IZ6HQq5Nh9xRKdo1Pxqs4baVtaEs6JBW4s/2TpxqvO9o0NgY6jl
-         GWCAVI6N/Xvz7sU2j+r+NgIwpubLzyKsaIa/7Y8iYbSagAXgCxERVl6ixNgXXJiZqU66
-         o/bQ==
-X-Gm-Message-State: APjAAAVEJx6Wk6268PYi7bBGdM5gEFJH1WI5CDehGFdXMJmXiYBqleKR
-        NpaGaD5bM59cPXFHMMjfZ8PEBw==
-X-Google-Smtp-Source: APXvYqzclVPnWuMSYRfa8xkYEomDe4ABUuF6Pz3Hl0PtMzAhJIz7fko6JVjkJtqri3TCQNzwuG10NQ==
-X-Received: by 2002:a5d:678f:: with SMTP id v15mr24776473wru.242.1573570848873;
-        Tue, 12 Nov 2019 07:00:48 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id n17sm18481152wrp.40.2019.11.12.07.00.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 07:00:48 -0800 (PST)
-Date:   Tue, 12 Nov 2019 16:00:47 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     netdev@vger.kernel.org, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bindiya Kurle <bindiyakurle@gmail.com>
-Subject: Re: [PATCH net-next] openvswitch: add TTL decrement action
-Message-ID: <20191112150046.2aehmeoq7ri6duwo@netronome.com>
-References: <20191112102518.4406-1-mcroce@redhat.com>
+        Tue, 12 Nov 2019 10:01:11 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iUXf4-00058v-I3; Tue, 12 Nov 2019 16:00:54 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2E2341C0084;
+        Tue, 12 Nov 2019 16:00:54 +0100 (CET)
+Date:   Tue, 12 Nov 2019 15:00:53 -0000
+From:   "tip-bot2 for Srinivas Pandruvada" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce/therm_throt: Optimize notifications of
+ thermal throttle
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        bberg@redhat.com, ckellner@redhat.com, hdegoede@redhat.com,
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-edac" <linux-edac@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191111214312.81365-1-srinivas.pandruvada@linux.intel.com>
+References: <20191111214312.81365-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112102518.4406-1-mcroce@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Message-ID: <157357085376.29376.9191302193256787154.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:25:18AM +0100, Matteo Croce wrote:
-> New action to decrement TTL instead of setting it to a fixed value.
-> This action will decrement the TTL and, in case of expired TTL, send the
-> packet to userspace via output_userspace() to take care of it.
-> 
-> Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
-> 
-> Tested with a corresponding change in the userspace:
-> 
->     # ovs-dpctl dump-flows
->     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl,1
->     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl,2
->     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
->     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
-> 
->     # ping -c1 192.168.0.2 -t 42
->     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
->         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
->     # ping -c1 192.168.0.2 -t 120
->     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
->         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
->     # ping -c1 192.168.0.2 -t 1
->     #
-> 
-> Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+The following commit has been merged into the ras/core branch of tip:
 
-Usually OVS achieves this behaviour by matching on the TTL and
-setting it to the desired value, pre-calculated as TTL -1.
-With that in mind could you explain the motivation for this
-change?
+Commit-ID:     f6656208f04e5b3804054008eba4bf7170f4c841
+Gitweb:        https://git.kernel.org/tip/f6656208f04e5b3804054008eba4bf7170f4c841
+Author:        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+AuthorDate:    Mon, 11 Nov 2019 13:43:12 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 12 Nov 2019 15:56:04 +01:00
 
-> ---
->  include/uapi/linux/openvswitch.h |  2 ++
->  net/openvswitch/actions.c        | 46 ++++++++++++++++++++++++++++++++
->  net/openvswitch/flow_netlink.c   |  6 +++++
->  3 files changed, 54 insertions(+)
-> 
-> diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
-> index 1887a451c388..a3bdb1ecd1e7 100644
-> --- a/include/uapi/linux/openvswitch.h
-> +++ b/include/uapi/linux/openvswitch.h
-> @@ -890,6 +890,7 @@ struct check_pkt_len_arg {
->   * @OVS_ACTION_ATTR_CHECK_PKT_LEN: Check the packet length and execute a set
->   * of actions if greater than the specified packet length, else execute
->   * another set of actions.
-> + * @OVS_ACTION_ATTR_DEC_TTL: Decrement the IP TTL.
->   *
->   * Only a single header can be set with a single %OVS_ACTION_ATTR_SET.  Not all
->   * fields within a header are modifiable, e.g. the IPv4 protocol and fragment
-> @@ -925,6 +926,7 @@ enum ovs_action_attr {
->  	OVS_ACTION_ATTR_METER,        /* u32 meter ID. */
->  	OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
->  	OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
-> +	OVS_ACTION_ATTR_DEC_TTL,      /* Decrement ttl action */
->  
->  	__OVS_ACTION_ATTR_MAX,	      /* Nothing past this will be accepted
->  				       * from userspace. */
-> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-> index 12936c151cc0..077b7f309c93 100644
-> --- a/net/openvswitch/actions.c
-> +++ b/net/openvswitch/actions.c
-> @@ -1174,6 +1174,43 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
->  			     nla_len(actions), last, clone_flow_key);
->  }
->  
-> +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
-> +{
-> +	int err;
-> +
-> +	if (skb->protocol == htons(ETH_P_IPV6)) {
-> +		struct ipv6hdr *nh = ipv6_hdr(skb);
-> +
-> +		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-> +					  sizeof(*nh));
-> +		if (unlikely(err))
-> +			return err;
-> +
-> +		if (nh->hop_limit <= 1)
-> +			return -EHOSTUNREACH;
-> +
-> +		key->ip.ttl = --nh->hop_limit;
-> +	} else {
-> +		struct iphdr *nh = ip_hdr(skb);
-> +		u8 old_ttl;
-> +
-> +		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-> +					  sizeof(*nh));
-> +		if (unlikely(err))
-> +			return err;
-> +
-> +		if (nh->ttl <= 1)
-> +			return -EHOSTUNREACH;
-> +
-> +		old_ttl = nh->ttl--;
-> +		csum_replace2(&nh->check, htons(old_ttl << 8),
-> +			      htons(nh->ttl << 8));
-> +		key->ip.ttl = nh->ttl;
-> +	}
+x86/mce/therm_throt: Optimize notifications of thermal throttle
 
-The above may send packets with TTL = 0, is that desired?
+Some modern systems have very tight thermal tolerances. Because of this
+they may cross thermal thresholds when running normal workloads (even
+during boot). The CPU hardware will react by limiting power/frequency
+and using duty cycles to bring the temperature back into normal range.
 
-> +
-> +	return 0;
-> +}
-> +
->  /* Execute a list of actions against 'skb'. */
->  static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
->  			      struct sw_flow_key *key,
-> @@ -1345,6 +1382,15 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
->  
->  			break;
->  		}
-> +
-> +		case OVS_ACTION_ATTR_DEC_TTL:
-> +			err = execute_dec_ttl(skb, key);
-> +			if (err == -EHOSTUNREACH) {
-> +				output_userspace(dp, skb, key, a, attr,
-> +						 len, OVS_CB(skb)->cutlen);
-> +				OVS_CB(skb)->cutlen = 0;
-> +			}
-> +			break;
->  		}
->  
->  		if (unlikely(err)) {
-> diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-> index 65c2e3458ff5..d17f2d4b420f 100644
-> --- a/net/openvswitch/flow_netlink.c
-> +++ b/net/openvswitch/flow_netlink.c
-> @@ -79,6 +79,7 @@ static bool actions_may_change_flow(const struct nlattr *actions)
->  		case OVS_ACTION_ATTR_SET_MASKED:
->  		case OVS_ACTION_ATTR_METER:
->  		case OVS_ACTION_ATTR_CHECK_PKT_LEN:
-> +		case OVS_ACTION_ATTR_DEC_TTL:
->  		default:
->  			return true;
->  		}
-> @@ -3005,6 +3006,7 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
->  			[OVS_ACTION_ATTR_METER] = sizeof(u32),
->  			[OVS_ACTION_ATTR_CLONE] = (u32)-1,
->  			[OVS_ACTION_ATTR_CHECK_PKT_LEN] = (u32)-1,
-> +			[OVS_ACTION_ATTR_DEC_TTL] = 0,
->  		};
->  		const struct ovs_action_push_vlan *vlan;
->  		int type = nla_type(a);
-> @@ -3233,6 +3235,10 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
->  			break;
->  		}
->  
-> +		case OVS_ACTION_ATTR_DEC_TTL:
-> +			/* Nothing to do.  */
-> +			break;
-> +
->  		default:
->  			OVS_NLERR(log, "Unknown Action type %d", type);
->  			return -EINVAL;
-> -- 
-> 2.23.0
-> 
+Thus users may see a "critical" message about the "temperature above
+threshold" which is soon followed by "temperature/speed normal". These
+messages are rate-limited, but still may repeat every few minutes.
+
+This issue became worse starting with the Ivy Bridge generation of
+CPUs because they include a TCC activation offset in the MSR
+IA32_TEMPERATURE_TARGET. OEMs use this to provide alerts long before
+critical temperatures are reached.
+
+A test run on a laptop with Intel 8th Gen i5 core for two hours with a
+workload resulted in 20K+ thermal interrupts per CPU for core level and
+another 20K+ interrupts at package level. The kernel logs were full of
+throttling messages.
+
+The real value of these threshold interrupts, is to debug problems with
+the external cooling solutions and performance issues due to excessive
+throttling.
+
+So the solution here is the following:
+
+  - In the current thermal_throttle folder, show:
+    - the maximum time for one throttling event and,
+    - the total amount of time the system was in throttling state.
+
+  - Do not log short excursions.
+
+  - Log only when, in spite of thermal throttling, the temperature is rising.
+  On the high threshold interrupt trigger a delayed workqueue that
+  monitors the threshold violation log bit (THERM_STATUS_PROCHOT_LOG). When
+  the log bit is set, this workqueue callback calculates three point moving
+  average and logs a warning message when the temperature trend is rising.
+
+  When this log bit is clear and temperature is below threshold
+  temperature, then the workqueue callback logs a "Normal" message. Once a
+  high threshold event is logged, the logging is rate-limited.
+
+With this patch on the same test laptop, no warnings are printed in the logs
+as the max time the processor could bring the temperature under control is
+only 280 ms.
+
+This implementation is done with the inputs from Alan Cox and Tony Luck.
+
+ [ bp: Touchups. ]
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: bberg@redhat.com
+Cc: ckellner@redhat.com
+Cc: hdegoede@redhat.com
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191111214312.81365-1-srinivas.pandruvada@linux.intel.com
+---
+ arch/x86/kernel/cpu/mce/therm_throt.c | 251 ++++++++++++++++++++++---
+ 1 file changed, 227 insertions(+), 24 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index bc441d6..d01e0da 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -40,15 +40,58 @@
+ #define THERMAL_THROTTLING_EVENT	0
+ #define POWER_LIMIT_EVENT		1
+ 
+-/*
+- * Current thermal event state:
++/**
++ * struct _thermal_state - Represent the current thermal event state
++ * @next_check:			Stores the next timestamp, when it is allowed
++ *				to log the next warning message.
++ * @last_interrupt_time:	Stores the timestamp for the last threshold
++ *				high event.
++ * @therm_work:			Delayed workqueue structure
++ * @count:			Stores the current running count for thermal
++ *				or power threshold interrupts.
++ * @last_count:			Stores the previous running count for thermal
++ *				or power threshold interrupts.
++ * @max_time_ms:		This shows the maximum amount of time CPU was
++ *				in throttled state for a single thermal
++ *				threshold high to low state.
++ * @total_time_ms:		This is a cumulative time during which CPU was
++ *				in the throttled state.
++ * @rate_control_active:	Set when a throttling message is logged.
++ *				This is used for the purpose of rate-control.
++ * @new_event:			Stores the last high/low status of the
++ *				THERM_STATUS_PROCHOT or
++ *				THERM_STATUS_POWER_LIMIT.
++ * @level:			Stores whether this _thermal_state instance is
++ *				for a CORE level or for PACKAGE level.
++ * @sample_index:		Index for storing the next sample in the buffer
++ *				temp_samples[].
++ * @sample_count:		Total number of samples collected in the buffer
++ *				temp_samples[].
++ * @average:			The last moving average of temperature samples
++ * @baseline_temp:		Temperature at which thermal threshold high
++ *				interrupt was generated.
++ * @temp_samples:		Storage for temperature samples to calculate
++ *				moving average.
++ *
++ * This structure is used to represent data related to thermal state for a CPU.
++ * There is a separate storage for core and package level for each CPU.
+  */
+ struct _thermal_state {
+-	bool			new_event;
+-	int			event;
+ 	u64			next_check;
++	u64			last_interrupt_time;
++	struct delayed_work	therm_work;
+ 	unsigned long		count;
+ 	unsigned long		last_count;
++	unsigned long		max_time_ms;
++	unsigned long		total_time_ms;
++	bool			rate_control_active;
++	bool			new_event;
++	u8			level;
++	u8			sample_index;
++	u8			sample_count;
++	u8			average;
++	u8			baseline_temp;
++	u8			temp_samples[3];
+ };
+ 
+ struct thermal_state {
+@@ -121,8 +164,22 @@ define_therm_throt_device_one_ro(package_throttle_count);
+ define_therm_throt_device_show_func(package_power_limit, count);
+ define_therm_throt_device_one_ro(package_power_limit_count);
+ 
++define_therm_throt_device_show_func(core_throttle, max_time_ms);
++define_therm_throt_device_one_ro(core_throttle_max_time_ms);
++
++define_therm_throt_device_show_func(package_throttle, max_time_ms);
++define_therm_throt_device_one_ro(package_throttle_max_time_ms);
++
++define_therm_throt_device_show_func(core_throttle, total_time_ms);
++define_therm_throt_device_one_ro(core_throttle_total_time_ms);
++
++define_therm_throt_device_show_func(package_throttle, total_time_ms);
++define_therm_throt_device_one_ro(package_throttle_total_time_ms);
++
+ static struct attribute *thermal_throttle_attrs[] = {
+ 	&dev_attr_core_throttle_count.attr,
++	&dev_attr_core_throttle_max_time_ms.attr,
++	&dev_attr_core_throttle_total_time_ms.attr,
+ 	NULL
+ };
+ 
+@@ -135,6 +192,105 @@ static const struct attribute_group thermal_attr_group = {
+ #define CORE_LEVEL	0
+ #define PACKAGE_LEVEL	1
+ 
++#define THERM_THROT_POLL_INTERVAL	HZ
++#define THERM_STATUS_PROCHOT_LOG	BIT(1)
++
++static void clear_therm_status_log(int level)
++{
++	int msr;
++	u64 msr_val;
++
++	if (level == CORE_LEVEL)
++		msr = MSR_IA32_THERM_STATUS;
++	else
++		msr = MSR_IA32_PACKAGE_THERM_STATUS;
++
++	rdmsrl(msr, msr_val);
++	wrmsrl(msr, msr_val & ~THERM_STATUS_PROCHOT_LOG);
++}
++
++static void get_therm_status(int level, bool *proc_hot, u8 *temp)
++{
++	int msr;
++	u64 msr_val;
++
++	if (level == CORE_LEVEL)
++		msr = MSR_IA32_THERM_STATUS;
++	else
++		msr = MSR_IA32_PACKAGE_THERM_STATUS;
++
++	rdmsrl(msr, msr_val);
++	if (msr_val & THERM_STATUS_PROCHOT_LOG)
++		*proc_hot = true;
++	else
++		*proc_hot = false;
++
++	*temp = (msr_val >> 16) & 0x7F;
++}
++
++static void throttle_active_work(struct work_struct *work)
++{
++	struct _thermal_state *state = container_of(to_delayed_work(work),
++						struct _thermal_state, therm_work);
++	unsigned int i, avg, this_cpu = smp_processor_id();
++	u64 now = get_jiffies_64();
++	bool hot;
++	u8 temp;
++
++	get_therm_status(state->level, &hot, &temp);
++	/* temperature value is offset from the max so lesser means hotter */
++	if (!hot && temp > state->baseline_temp) {
++		if (state->rate_control_active)
++			pr_info("CPU%d: %s temperature/speed normal (total events = %lu)\n",
++				this_cpu,
++				state->level == CORE_LEVEL ? "Core" : "Package",
++				state->count);
++
++		state->rate_control_active = false;
++		return;
++	}
++
++	if (time_before64(now, state->next_check) &&
++			  state->rate_control_active)
++		goto re_arm;
++
++	state->next_check = now + CHECK_INTERVAL;
++
++	if (state->count != state->last_count) {
++		/* There was one new thermal interrupt */
++		state->last_count = state->count;
++		state->average = 0;
++		state->sample_count = 0;
++		state->sample_index = 0;
++	}
++
++	state->temp_samples[state->sample_index] = temp;
++	state->sample_count++;
++	state->sample_index = (state->sample_index + 1) % ARRAY_SIZE(state->temp_samples);
++	if (state->sample_count < ARRAY_SIZE(state->temp_samples))
++		goto re_arm;
++
++	avg = 0;
++	for (i = 0; i < ARRAY_SIZE(state->temp_samples); ++i)
++		avg += state->temp_samples[i];
++
++	avg /= ARRAY_SIZE(state->temp_samples);
++
++	if (state->average > avg) {
++		pr_warn("CPU%d: %s temperature is above threshold, cpu clock is throttled (total events = %lu)\n",
++			this_cpu,
++			state->level == CORE_LEVEL ? "Core" : "Package",
++			state->count);
++		state->rate_control_active = true;
++	}
++
++	state->average = avg;
++
++re_arm:
++	clear_therm_status_log(state->level);
++	schedule_delayed_work_on(this_cpu, &state->therm_work, THERM_THROT_POLL_INTERVAL);
++}
++
+ /***
+  * therm_throt_process - Process thermal throttling event from interrupt
+  * @curr: Whether the condition is current or not (boolean), since the
+@@ -178,27 +334,33 @@ static void therm_throt_process(bool new_event, int event, int level)
+ 	if (new_event)
+ 		state->count++;
+ 
+-	if (time_before64(now, state->next_check) &&
+-			state->count != state->last_count)
++	if (event != THERMAL_THROTTLING_EVENT)
+ 		return;
+ 
+-	state->next_check = now + CHECK_INTERVAL;
+-	state->last_count = state->count;
++	if (new_event && !state->last_interrupt_time) {
++		bool hot;
++		u8 temp;
++
++		get_therm_status(state->level, &hot, &temp);
++		/*
++		 * Ignore short temperature spike as the system is not close
++		 * to PROCHOT. 10C offset is large enough to ignore. It is
++		 * already dropped from the high threshold temperature.
++		 */
++		if (temp > 10)
++			return;
+ 
+-	/* if we just entered the thermal event */
+-	if (new_event) {
+-		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+-				this_cpu,
+-				level == CORE_LEVEL ? "Core" : "Package",
+-				state->count);
+-		return;
+-	}
+-	if (old_event) {
+-		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_info("CPU%d: %s temperature/speed normal\n", this_cpu,
+-				level == CORE_LEVEL ? "Core" : "Package");
+-		return;
++		state->baseline_temp = temp;
++		state->last_interrupt_time = now;
++		schedule_delayed_work_on(this_cpu, &state->therm_work, THERM_THROT_POLL_INTERVAL);
++	} else if (old_event && state->last_interrupt_time) {
++		unsigned long throttle_time;
++
++		throttle_time = jiffies_delta_to_msecs(now - state->last_interrupt_time);
++		if (throttle_time > state->max_time_ms)
++			state->max_time_ms = throttle_time;
++		state->total_time_ms += throttle_time;
++		state->last_interrupt_time = 0;
+ 	}
+ }
+ 
+@@ -244,20 +406,47 @@ static int thermal_throttle_add_dev(struct device *dev, unsigned int cpu)
+ 	if (err)
+ 		return err;
+ 
+-	if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable)
++	if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable) {
+ 		err = sysfs_add_file_to_group(&dev->kobj,
+ 					      &dev_attr_core_power_limit_count.attr,
+ 					      thermal_attr_group.name);
++		if (err)
++			goto del_group;
++	}
++
+ 	if (cpu_has(c, X86_FEATURE_PTS)) {
+ 		err = sysfs_add_file_to_group(&dev->kobj,
+ 					      &dev_attr_package_throttle_count.attr,
+ 					      thermal_attr_group.name);
+-		if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable)
++		if (err)
++			goto del_group;
++
++		err = sysfs_add_file_to_group(&dev->kobj,
++					      &dev_attr_package_throttle_max_time_ms.attr,
++					      thermal_attr_group.name);
++		if (err)
++			goto del_group;
++
++		err = sysfs_add_file_to_group(&dev->kobj,
++					      &dev_attr_package_throttle_total_time_ms.attr,
++					      thermal_attr_group.name);
++		if (err)
++			goto del_group;
++
++		if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable) {
+ 			err = sysfs_add_file_to_group(&dev->kobj,
+ 					&dev_attr_package_power_limit_count.attr,
+ 					thermal_attr_group.name);
++			if (err)
++				goto del_group;
++		}
+ 	}
+ 
++	return 0;
++
++del_group:
++	sysfs_remove_group(&dev->kobj, &thermal_attr_group);
++
+ 	return err;
+ }
+ 
+@@ -269,15 +458,29 @@ static void thermal_throttle_remove_dev(struct device *dev)
+ /* Get notified when a cpu comes on/off. Be hotplug friendly. */
+ static int thermal_throttle_online(unsigned int cpu)
+ {
++	struct thermal_state *state = &per_cpu(thermal_state, cpu);
+ 	struct device *dev = get_cpu_device(cpu);
+ 
++	state->package_throttle.level = PACKAGE_LEVEL;
++	state->core_throttle.level = CORE_LEVEL;
++
++	INIT_DELAYED_WORK(&state->package_throttle.therm_work, throttle_active_work);
++	INIT_DELAYED_WORK(&state->core_throttle.therm_work, throttle_active_work);
++
+ 	return thermal_throttle_add_dev(dev, cpu);
+ }
+ 
+ static int thermal_throttle_offline(unsigned int cpu)
+ {
++	struct thermal_state *state = &per_cpu(thermal_state, cpu);
+ 	struct device *dev = get_cpu_device(cpu);
+ 
++	cancel_delayed_work(&state->package_throttle.therm_work);
++	cancel_delayed_work(&state->core_throttle.therm_work);
++
++	state->package_throttle.rate_control_active = false;
++	state->core_throttle.rate_control_active = false;
++
+ 	thermal_throttle_remove_dev(dev);
+ 	return 0;
+ }
