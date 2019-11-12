@@ -2,184 +2,143 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C214C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B71C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691F721E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B4120818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAaOFLc1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M+zD7DiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfKLVO3 (ORCPT
+        id S1727619AbfKLVPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:14:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22098 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726952AbfKLVO2 (ORCPT
+        Tue, 12 Nov 2019 16:15:05 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15900 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfKLVPE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:14:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573593267;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KhaSq6F0boqwPJebWHU+vS4X8WSartUyEjWwqUHsPz4=;
-        b=BAaOFLc1TJKBdf7dJ1oce3nTXUsLtrjbBtRUCaCTtpZ6vRiNg4nSoA1Jt4sejkZaLkkv1+
-        7R5pjvRgjJzgAGcxUbugDQEoWU1M6Ezir/Y5mQHRJd7StQfoVv8pGNThDAwhIC/Wik5qh2
-        PqMZOgZK5I1z0pW66GEbdVay1hRS0w8=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-qNM5JECJM3W-I5r0HSksMQ-1; Tue, 12 Nov 2019 16:14:26 -0500
-Received: by mail-yb1-f198.google.com with SMTP id t33so87314ybt.20
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:14:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=jB1CQxHZY09v+dVO/IW1sLsxw+s5h/wXvYhyMUh4nd4=;
-        b=LxZyNf5QerCxGKlvi/1Coj6/Za0VrPT7sN31J5JMQ9Qfai+TKRpEwnvLTTNoxmOo2x
-         zFGaM2YSZfa5bsou0fyX0t6H8xqlwAYj+MNF/a7qUxXNrbbecDu7mrecFYsGBIpuDsMX
-         CYe2ex5LaXEXtRTRFAbRoxJEgTrRWrmJSQUIBdUrTMstDBheKS4SFH3IFF3XI4ZK5pO6
-         pgBGAqemNHD/SxtJW55gBAX5HqtaaN6o6n3LI0YK6W8ggzcoP2XH+9LAIAwlh8m8HRIq
-         9hl4G1LIsirCOkqiEr9IJUJQPJHbO0b1Eq12eBfhINVl2ijDSKwwb1DIYcUlSMTftWux
-         A30Q==
-X-Gm-Message-State: APjAAAUY7yw0CsMv+83CdMe9bJ1+YfJXYdJ3Vgohwl1Sx8m4gBIkbW6f
-        32u7xjM5xJDyHTMFvpV0DanvNuDmRH9y/nl4gGNszBTwqD/+nhgxQbQ+Vp/Gj8RgeXGq/cB69sf
-        JMB0hQS8SczGyi2Akk7NcpuRl
-X-Received: by 2002:a81:10d4:: with SMTP id 203mr49037ywq.390.1573593265499;
-        Tue, 12 Nov 2019 13:14:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwEcKNvBFCa/Pi9LABko8hxEtyRnZOUme9kRE5c2iBVZmTkmYukiWzYoyB8ZRofsuIDcutGWg==
-X-Received: by 2002:a81:10d4:: with SMTP id 203mr49020ywq.390.1573593265161;
-        Tue, 12 Nov 2019 13:14:25 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id v5sm128965ywi.95.2019.11.12.13.14.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 13:14:24 -0800 (PST)
-Date:   Tue, 12 Nov 2019 14:14:23 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
+        Tue, 12 Nov 2019 16:15:04 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcb20d50000>; Tue, 12 Nov 2019 13:15:01 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 13:14:58 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 13:14:58 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 21:14:57 +0000
+Subject: Re: [PATCH v3 11/23] IB/{core,hw,umem}: set FOLL_PIN, FOLL_LONGTERM
+ via pin_longterm_pages*()
 To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
-Message-ID: <20191112211423.vgtervfk52txgfmm@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-References: <20191111233418.17676-1-jsnitsel@redhat.com>
- <20191112200328.GA11213@linux.intel.com>
- <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
- <20191112202623.GB5584@ziepe.ca>
- <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
- <CALzcddv2aLQ1krYFeNtWNOxyF3aSD0-p3j_p3CgS2Vx-__sQPA@mail.gmail.com>
- <20191112204623.GG5584@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191112000700.3455038-1-jhubbard@nvidia.com>
+ <20191112000700.3455038-12-jhubbard@nvidia.com>
+ <20191112204449.GF5584@ziepe.ca>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <3513d317-8e29-006f-1624-e9aa94ce9ad5@nvidia.com>
+Date:   Tue, 12 Nov 2019 13:14:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191112204623.GG5584@ziepe.ca>
-X-MC-Unique: qNM5JECJM3W-I5r0HSksMQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191112204449.GF5584@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573593301; bh=IA5cc3Ug8y/Soy37I3lcgnCK4KJuS9HA5F969hpkGDk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=M+zD7DiTvJEHWyZUscBaWsNyvdd7nW2Z8MINjy6zlNtzbk8yDqUSKZUYoDkjLfsT1
+         jhJdgaW8sOVEVYkkTrDIJJa4fwOit67TvUa2zybzBPmS46CYVBpq/47LCJQvGX/3++
+         kN6TX/8r3rAiSK8yfXz19Ap8X1CeF0WYNvVBYngtzVePIwXr6m7SCdxfr4dOboh5Y+
+         2hlHGc9hiYvLqwfEFqtP6wQ0eViLmw5Mlq+PhJcVMOubS+xNo9DKWwkDLrS4gEKUIZ
+         bPZcwVTnmn5+kG5LhprB02X6C6BdeIO1M4uKbavcouV5mwBgzW09isv1UnQ87weLii
+         Kt8d5q/apbk1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Nov 12 19, Jason Gunthorpe wrote:
->On Tue, Nov 12, 2019 at 01:31:09PM -0700, Jerry Snitselaar wrote:
->> On Tue, Nov 12, 2019 at 1:28 PM Jerry Snitselaar <jsnitsel@redhat.com> w=
-rote:
->> >
->> > On Tue, Nov 12, 2019 at 1:26 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->> > >
->> > > On Tue, Nov 12, 2019 at 01:23:33PM -0700, Jerry Snitselaar wrote:
->> > > > On Tue, Nov 12, 2019 at 1:03 PM Jarkko Sakkinen
->> > > > <jarkko.sakkinen@linux.intel.com> wrote:
->> > > > >
->> > > > > On Mon, Nov 11, 2019 at 04:34:18PM -0700, Jerry Snitselaar wrote=
-:
->> > > > > > With power gating moved out of the tpm_transmit code we need
->> > > > > > to power on the TPM prior to calling tpm_get_timeouts.
->> > > > > >
->> > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> > > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
->> > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> > > > > > Cc: linux-kernel@vger.kernel.org
->> > > > > > Cc: linux-stable@vger.kernel.org
->> > > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of t=
-pm_transmit()")
->> > > > > > Reported-by: Christian Bundy <christianbundy@fraction.io>
->> > > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->> > > > > >  drivers/char/tpm/tpm_tis_core.c | 3 ++-
->> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
->> > > > > >
->> > > > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tp=
-m/tpm_tis_core.c
->> > > > > > index 270f43acbb77..cb101cec8f8b 100644
->> > > > > > +++ b/drivers/char/tpm/tpm_tis_core.c
->> > > > > > @@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev=
-, struct tpm_tis_data *priv, int irq,
->> > > > > >                * to make sure it works. May as well use that c=
-ommand to set the
->> > > > > >                * proper timeouts for the driver.
->> > > > > >                */
->> > > > > > +             tpm_chip_start(chip);
->> > > > > >               if (tpm_get_timeouts(chip)) {
->> > > > > >                       dev_err(dev, "Could not get TPM timeouts=
- and durations\n");
->> > > > > >                       rc =3D -ENODEV;
->> > > > > > +                     tpm_stop_chip(chip);
->> > > > > >                       goto out_err;
->> > > > > >               }
->> > > > >
->> > > > > Couldn't this call just be removed?
->> > > > >
->> > > > > /Jarkko
->> > > > >
->> > > >
->> > > > Probably. It will eventually get called when tpm_chip_register
->> > > > happens. I don't know what the reason was for trying it prior to t=
-he
->> > > > irq probe.
->> > >
->> > > At least tis once needed the timeouts before registration because it
->> > > was issuing TPM commands to complete its setup.
->> > >
->> > > If timeouts have not been set then no TPM command should be executed=
-.
->> >
->> > Would it function with the timeout values set at the beginning of
->> > tpm_tis_core_init (max values)?
->>
->> I guess that doesn't set the duration values though
->
->There is no reason to use anything but the correct timeouts, as read
->from the device.
->
->Jason
->
 
-Should there be a check in tpm1_get_timeouts and tpm2_get_timeouts:
+On 11/12/19 12:44 PM, Jason Gunthorpe wrote:
+> On Mon, Nov 11, 2019 at 04:06:48PM -0800, John Hubbard wrote:
+>> @@ -542,7 +541,7 @@ static int ib_umem_odp_map_dma_single_page(
+>>  	}
+>>  
+>>  out:
+>> -	put_user_page(page);
+>> +	put_page(page);
+>>  
+>>  	if (remove_existing_mapping) {
+>>  		ib_umem_notifier_start_account(umem_odp);
+>> @@ -639,13 +638,14 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>>  		/*
+>>  		 * Note: this might result in redundent page getting. We can
+>>  		 * avoid this by checking dma_list to be 0 before calling
+>> -		 * get_user_pages. However, this make the code much more
+>> -		 * complex (and doesn't gain us much performance in most use
+>> -		 * cases).
+>> +		 * get_user_pages. However, this makes the code much
+>> +		 * more complex (and doesn't gain us much performance in most
+>> +		 * use cases).
+>>  		 */
+>>  		npages = get_user_pages_remote(owning_process, owning_mm,
+>> -				user_virt, gup_num_pages,
+>> -				flags, local_page_list, NULL, NULL);
+>> +					       user_virt, gup_num_pages,
+>> +					       flags, local_page_list, NULL,
+>> +					       NULL);
+>>  		up_read(&owning_mm->mmap_sem);
+> 
+> This is just whitespace churn? Drop it..
+> 
 
-=09if (chip->flags & TPM_CHIP_FLAG_HAVE_TIMEOUTS)
-=09=09return 0;
 
-to skip going through it again in the auto startup code if it was
-already called and set?
+Whoops, yes. It got there because of going through the pin*() conversion
+and then a revert, and now it's just whitespace. I'll drop it, thanks for
+catching that.
 
+
+thanks,
+
+John Hubbard
+NVIDIA
