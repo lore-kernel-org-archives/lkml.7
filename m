@@ -2,196 +2,157 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F4BC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D5CC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0342084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573576322;
-	bh=f3V0/6R2peL9mIGNYcS931O9JAJBqXRsLF87rSbcpHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yMrIZfRJdOyVMk1CTpOT/bzRZocmAmyDW8PT1twbc+VQZGgw7A1TBJFYdw2/fZ5qh
-	 0dHySO/22lAdQ5pSWVQqjVNkDysxnQDn0N/jkdSg++LpJlvd43i78RORh9wTrgASvt
-	 al18ubXf5wsyK5HhIfy7DGpT/+6wqr70XpevAtn8=
+	by mail.kernel.org (Postfix) with ESMTP id 3C58621D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juR6/t7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfKLQcB (ORCPT
+        id S1727291AbfKLQcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:32:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49312 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726799AbfKLQcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:32:01 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5A5E8B2D8;
-        Tue, 12 Nov 2019 16:31:58 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 17:31:56 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Chris Down <chris@chrisdown.name>, Qian Cai <cai@lca.pw>,
-        akpm@linux-foundation.org, guro@fb.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
-Message-ID: <20191112163156.GB512@dhcp22.suse.cz>
-References: <20191108204407.1435-1-cai@lca.pw>
- <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
- <20191111130516.GA891635@chrisdown.name>
- <20191111131427.GB891635@chrisdown.name>
- <20191111132812.GK1396@dhcp22.suse.cz>
- <20191112145942.GA168812@cmpxchg.org>
- <20191112152750.GA512@dhcp22.suse.cz>
- <20191112161658.GF168812@cmpxchg.org>
+        Tue, 12 Nov 2019 11:32:21 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41606 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfKLQcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:32:21 -0500
+Received: by mail-ed1-f67.google.com with SMTP id a21so15417908edj.8;
+        Tue, 12 Nov 2019 08:32:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e2Jz3E/qC25NF9IiKUouiFwK/DvFsp3VH/99djW83Tw=;
+        b=juR6/t7s9JzCUry7/6lTMFF27i/rneVimIPKY2HgzFAnMiFuV1WmO2ww+Pj8PdVbej
+         qP6gfhPakJK4d6SPvlUeYiQWRLeOka1T5sxZZLeaLfpdnYbQ46HBKD5amyqCU6c8u5nW
+         m9YuvO9yG5zyNdHia7jl93PojR4QMnOZj/9qK/h2bw+OdnE5vgw/8B95LZ5HFdCvF500
+         K9rOVtrRpx3vVI/iVCupSf21kBaSLBnRbBJdWNbM+WjxE8v33s1/0LZU/1bkbih/Uvk1
+         H56RFOj2/JCuZqeW0hNsE0Gci+GtOe0ILTaF4vIDij05gs6AXmjaeyVB4RgsjMf+3uQh
+         yXkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e2Jz3E/qC25NF9IiKUouiFwK/DvFsp3VH/99djW83Tw=;
+        b=tBvbb2PAXL/CevqviHs6GcibHgRUuo7bdMjJBRNLPcsO4RuBoDdeq4biQsUj8Oulmr
+         vIZaW+xm437l6iKVQF6+YGGw5t9AaqshMlNMBT4GDf+HWDRp8Q95jC9uFDoidkGlmUyZ
+         Kw/97pjzy6P3dxHVJpD2D+SS5DUirlaaBegvZN8B2QtbEEwDWhrEWgwG7AHWgExO1dgZ
+         Gh6t5V669STraYmo5PHOz7wpytzfuZV9DNi7s8daZQ3hNHej8OxUerNcwdODYVuBs0kd
+         WxvMc8zUA84UA8It+bIsAs9TWb4uEslBL1UzND9nd8daaMN20lpmI4eFn6uTSgV61liC
+         YDew==
+X-Gm-Message-State: APjAAAXI6InRXONHPE0zbKQnwVtv6POTfm94xYG9CzGhovIPknsA3Hm4
+        Twd+9E5c5CakRmXiFyCWvGjgL9MytIWMIDNEkpQBkhj2
+X-Google-Smtp-Source: APXvYqxUJWvwSmr0nM3W2I8m8qS350GR+Yh1XQx0NXoCk7SkB+BvkcrjP5jRJcrXZBYMM4/uW4AMh0vphypZhJFQYwE=
+X-Received: by 2002:a17:906:73d5:: with SMTP id n21mr29350021ejl.228.1573576338515;
+ Tue, 12 Nov 2019 08:32:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112161658.GF168812@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191010131333.23635-1-johan@kernel.org> <20191010131333.23635-2-johan@kernel.org>
+ <20191030100146.GC4691@localhost> <20191112104001.GP11035@localhost> <20191112140155.GJ23790@phenom.ffwll.local>
+In-Reply-To: <20191112140155.GJ23790@phenom.ffwll.local>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 12 Nov 2019 08:32:07 -0800
+Message-ID: <CAF6AEGvom2wZ89434VLhhgAHCk_MMCGRbxSO+DQsX=+LPOCy8A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] drm/msm: fix memleak on release
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Johan Hovold <johan@kernel.org>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable <stable@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Dave Airlie <airlied@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-11-19 11:16:58, Johannes Weiner wrote:
-> On Tue, Nov 12, 2019 at 04:27:50PM +0100, Michal Hocko wrote:
-> > On Tue 12-11-19 06:59:42, Johannes Weiner wrote:
-> > > Qian, thanks for the report and the fix.
-> > > 
-> > > On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
-> > > > On Mon 11-11-19 13:14:27, Chris Down wrote:
-> > > > > Chris Down writes:
-> > > > > > Ah, I just saw this in my local checkout and thought it was from my
-> > > > > > changes, until I saw it's also on clean mmots checkout. Thanks for the
-> > > > > > fixup!
-> > > > > 
-> > > > > Also, does this mean we should change callers that may pass through
-> > > > > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
-> > > > > remove this interim fixup? I'm worried otherwise we might paper over real
-> > > > > issues in future.
-> > > > 
-> > > > Yes, removing this special casing is reasonable. I am not sure
-> > > > MAX_NR_ZONES - 1 is a better choice though. It is error prone and
-> > > > zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
-> > > > be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
-> > > > outside of MM reclaim code AFAIK. It would be probably better to have
-> > > > MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
-> > > 
-> > > We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
-> > > "no zone restrictions" - get_scan_count() is the odd one out:
-> > > 
-> > > - mem_cgroup_shrink_node()
-> > > - try_to_free_mem_cgroup_pages()
-> > > - balance_pgdat()
-> > > - kswapd()
-> > > - shrink_all_memory()
-> > > 
-> > > It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
-> > > subtle than handling both inclusive and exclusive range delimiters.
-> > > 
-> > > So I think the better fix would be this:
-> > 
-> > lruvec_lru_size is explicitly documented to use MAX_NR_ZONES for all
-> > LRUs and git grep says there are more instances outside of
-> > get_scan_count. So all of them have to be fixed.
-> 
-> Which ones?
-> 
-> [hannes@computer linux]$ git grep lruvec_lru_size
-> include/linux/mmzone.h:extern unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx);
-> mm/vmscan.c: * lruvec_lru_size -  Returns the number of pages on the given LRU list.
-> mm/vmscan.c:unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
-> mm/vmscan.c:    anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
-> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
-> mm/vmscan.c:    file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
-> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
-> mm/vmscan.c:            lruvec_size = lruvec_lru_size(lruvec, lru, sc->reclaim_idx);
-> [hannes@computer linux]$
+On Tue, Nov 12, 2019 at 6:01 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Tue, Nov 12, 2019 at 11:40:01AM +0100, Johan Hovold wrote:
+> > On Wed, Oct 30, 2019 at 11:01:46AM +0100, Johan Hovold wrote:
+> > > On Thu, Oct 10, 2019 at 03:13:30PM +0200, Johan Hovold wrote:
+> > > > If a process is interrupted while accessing the "gpu" debugfs file and
+> > > > the drm device struct_mutex is contended, release() could return early
+> > > > and fail to free related resources.
+> > > >
+> > > > Note that the return value from release() is ignored.
+> > > >
+> > > > Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
+> > > > Cc: stable <stable@vger.kernel.org>     # 4.18
+> > > > Cc: Jordan Crouse <jcrouse@codeaurora.org>
+> > > > Cc: Rob Clark <robdclark@gmail.com>
+> > > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > > ---
+> > >
+> > > Rob, Sean,
+> > >
+> > > Sending a reminder about this one, which is not yet in linux-next.
+> > >
+> > > Perhaps Daniel can pick it up otherwise?
+> >
+> > Another two weeks, another reminder. This one is still not in -next.
+>
+> Well msm is maintained in a separate tree, so the usual group maintainer
+> fallback for when patches are stuck doesn't apply.
 
-I have checked the Linus tree but now double checked with the current
-next
-$ git describe next/master
-next-20191112
-$ git grep "lruvec_lru_size.*MAX_NR_ZONES" next/master
-next/master:mm/vmscan.c:                        lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
-next/master:mm/vmscan.c:                        lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
-next/master:mm/vmscan.c:        anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
-next/master:mm/vmscan.c:                lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
-next/master:mm/vmscan.c:        file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
-next/master:mm/vmscan.c:                lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
-next/master:mm/workingset.c:    active_file = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES);
+oh, sorry, this wasn't showing up in patchwork.. or rather it did but
+the non-msm related series subject made me overlook it.
 
-are there any changes which didn't make it to linux next yet?
+I've already sent a PR, but this shouldn't conflict with anything and
+I think it can go in via drm-misc/fixes
 
-> The only other user already passes sc->reclaim_idx, which always
-> points to a valid zone, and is initialized to MAX_NR_ZONES - 1 in many
-> places.
-> 
-> > I still think that MAX_NR_ZONES - 1 is a very error prone and subtle
-> > construct IMHO and an alias would be better readable.
-> 
-> I wouldn't mind a follow-up patch that changes this pattern
-> comprehensively. As it stands, get_scan_count() is the odd one out.
+Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-OK, a follow up patch to unify everything makes sense to me.
-
-> The documentation bit is a good point, though. We should fix
-> that. Updated patch:
-> 
-> ---
-> 
-> >From b1b6ce306010554aba6ebd7aac0abffc1576d71a Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Mon, 11 Nov 2019 13:46:25 -0800
-> Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
-> 
-> get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
-> beyond the range of valid zone indexes, but used to be handled before
-> the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
-> express "all zones, please", so do the same here.
-> 
-> Reported-by: Qian Cai <cai@lca.pw>
-> Reported-by: Chris Down <chris@chrisdown.name>
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  mm/vmscan.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index df859b1d583c..5eb96a63ad1e 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -323,7 +323,7 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
->   * lruvec_lru_size -  Returns the number of pages on the given LRU list.
->   * @lruvec: lru vector
->   * @lru: lru to use
-> - * @zone_idx: zones to consider (use MAX_NR_ZONES for the whole LRU list)
-> + * @zone_idx: index of the highest zone to include (use MAX_NR_ZONES - 1 for all)
->   */
->  unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
->  {
-> @@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
->  	 * anon in [0], file in [1]
->  	 */
->  
-> -	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
-> -		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
-> -	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
-> -		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
-> +	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
-> +		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
-> +	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
-> +		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
->  
->  	spin_lock_irq(&pgdat->lru_lock);
->  	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
-> -- 
-> 2.24.0
-
--- 
-Michal Hocko
-SUSE Labs
+> Rob, Sean, time to reconsider drm-misc for msm? I think there's some more
+> oddball patches that occasionally get stuck for msm ...
+>
+> Also +Dave.
+> -Daniel
+>
+> >
+> > Johan
+> >
+> > > >  drivers/gpu/drm/msm/msm_debugfs.c | 6 +-----
+> > > >  1 file changed, 1 insertion(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+> > > > index 6be879578140..1c74381a4fc9 100644
+> > > > --- a/drivers/gpu/drm/msm/msm_debugfs.c
+> > > > +++ b/drivers/gpu/drm/msm/msm_debugfs.c
+> > > > @@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode *inode, struct file *file)
+> > > >   struct msm_gpu_show_priv *show_priv = m->private;
+> > > >   struct msm_drm_private *priv = show_priv->dev->dev_private;
+> > > >   struct msm_gpu *gpu = priv->gpu;
+> > > > - int ret;
+> > > > -
+> > > > - ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
+> > > > - if (ret)
+> > > > -         return ret;
+> > > >
+> > > > + mutex_lock(&show_priv->dev->struct_mutex);
+> > > >   gpu->funcs->gpu_state_put(show_priv->state);
+> > > >   mutex_unlock(&show_priv->dev->struct_mutex);
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
