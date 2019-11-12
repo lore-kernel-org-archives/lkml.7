@@ -2,51 +2,46 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A320C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB4DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422CD2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9C02067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfKLHRB (ORCPT
+        id S1726985AbfKLHRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:17:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60924 "EHLO
+        Tue, 12 Nov 2019 02:17:54 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60926 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfKLHRA (ORCPT
+        with ESMTP id S1725283AbfKLHRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:17:00 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        Tue, 12 Nov 2019 02:17:54 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUQQ3-0005Vk-HK; Tue, 12 Nov 2019 08:16:55 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AEB471C0084;
-        Tue, 12 Nov 2019 08:16:54 +0100 (CET)
-Date:   Tue, 12 Nov 2019 07:16:54 -0000
-From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] ntp/y2038: Remove incorrect time_t truncation
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191108203435.112759-2-arnd@arndb.de>
-References: <20191108203435.112759-2-arnd@arndb.de>
+        (envelope-from <tglx@linutronix.de>)
+        id 1iUQQv-0005Wk-7m; Tue, 12 Nov 2019 08:17:49 +0100
+Date:   Tue, 12 Nov 2019 08:17:47 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
+In-Reply-To: <20191112071406.GC100264@gmail.com>
+Message-ID: <alpine.DEB.2.21.1911120816570.1833@nanos.tec.linutronix.de>
+References: <20191111220314.519933535@linutronix.de> <20191111223052.603030685@linutronix.de> <20191112071406.GC100264@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Message-ID: <157354301429.29376.9889491292971482073.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -55,43 +50,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Tue, 12 Nov 2019, Ingo Molnar wrote:
+> * Thomas Gleixner <tglx@linutronix.de> wrote:
+> > +void io_bitmap_share(struct task_struct *tsk)
+> > + {
+> > +	/*
+> > +	 * Take a refcount on current's bitmap. It can be used by
+> > +	 * both tasks as long as none of them changes the bitmap.
+> > +	 */
+> > +	refcount_inc(&current->thread.io_bitmap->refcnt);
+> > +	tsk->thread.io_bitmap = current->thread.io_bitmap;
+> > +	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+> > +}
+> 
+> Ok, this is really neat. I suspect there might be some pathological cases 
+> on ancient NUMA systems with a really high NUMA factor and bad caching 
+> where this new sharing might regress performance, but I doubt this 
+> matters, as both the hardware and this software functionality is legacy.
 
-Commit-ID:     2f5841349df281ecf8f81cc82d869b8476f0db0b
-Gitweb:        https://git.kernel.org/tip/2f5841349df281ecf8f81cc82d869b8476f0db0b
-Author:        Arnd Bergmann <arnd@arndb.de>
-AuthorDate:    Fri, 08 Nov 2019 21:34:24 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 Nov 2019 08:13:44 +01:00
+Definitely.
 
-ntp/y2038: Remove incorrect time_t truncation
+> > +	/*
+> > +	 * If the bitmap is not shared, then nothing can take a refcount as
+> > +	 * current can obviously not fork at the same time. If it's shared
+> > +	 * duplicate it and drop the refcount on the original one.
+> > +	 */
+> > +	if (refcount_read(&iobm->refcnt) > 1) {
+> > +		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
+> > +		if (!iobm)
+> > +			return -ENOMEM;
+> > +		io_bitmap_exit();
+> >  	}
+> >  
+> > +	/* Set the tasks io_bitmap pointer (might be the same) */
+> 
+> speling nit:
 
-A cast to 'time_t' was accidentally left in place during the
-conversion of __do_adjtimex() to 64-bit timestamps, so the
-resulting value is incorrectly truncated.
-
-Remove the cast so the 64-bit time gets propagated correctly.
-
-Fixes: ead25417f82e ("timex: use __kernel_timex internally")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191108203435.112759-2-arnd@arndb.de
-
----
- kernel/time/ntp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 65eb796..069ca78 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -771,7 +771,7 @@ int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
- 	/* fill PPS status fields */
- 	pps_fill_timex(txc);
+s/speling/spelling/ :)
  
--	txc->time.tv_sec = (time_t)ts->tv_sec;
-+	txc->time.tv_sec = ts->tv_sec;
- 	txc->time.tv_usec = ts->tv_nsec;
- 	if (!(time_status & STA_NANO))
- 		txc->time.tv_usec = ts->tv_nsec / NSEC_PER_USEC;
+> s/tasks
+>  /task's
+
+Thanks,
+
+	tglx
