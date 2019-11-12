@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB3EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F1BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1068020650
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B2320650
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ffJzGMuk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cJUgssu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfKLO0k (ORCPT
+        id S1727466AbfKLO26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:26:40 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49652 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfKLO0i (ORCPT
+        Tue, 12 Nov 2019 09:28:58 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40868 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfKLO26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:26:38 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEQWBd090825;
-        Tue, 12 Nov 2019 08:26:32 -0600
+        Tue, 12 Nov 2019 09:28:58 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACESu9l045437;
+        Tue, 12 Nov 2019 08:28:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573568792;
-        bh=gpv+haEFzzKdzy9mhyYEcsJmcwqJdZynv2MIZuwV8kA=;
+        s=ti-com-17Q1; t=1573568936;
+        bh=tLf8SXtD5MIh4RuLfkAo79HCpF/i9eG4PtrsPy5Sv/A=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ffJzGMukJRIBh55FUrs/B+aUsWIiBuaDmy8oH9zgDQodOVDLFCWzR35hRoYjfVhEn
-         7h0MXEDqCNU+z3Y+saVvh0Q2O0vktYpu88Ul2kFXVafYbv1P2n8K2mUQxSgkzLtgMC
-         3cTtDI/V9UdgCOg8RbOTTIZH9wHeGMmAf6Ygc/j4=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEQWMA014358
+        b=cJUgssu8m5EDKUlH/Jj+Xy4FMD9CdRsej78csFeM0HE7jvidwnCnss7ksmDtDG0TM
+         LsM9SWHPw5UkydpDx4yiWu0XqQuvfGD+R9N6lQ37CtvUqDUL/w3OoADNmGILOv3V2K
+         qLJoCm8FSANrUOfXuvoqa5ZpoP4gvc4gPmTVBPJU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACESu64026632
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:26:32 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:28:56 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:26:14 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:28:38 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:26:14 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:28:38 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEQUtu040290;
-        Tue, 12 Nov 2019 08:26:31 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriD044422;
+        Tue, 12 Nov 2019 08:28:55 -0600
 From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 1/3] ARM: dts: am43xx: add support for clkout1 clock
-Date:   Tue, 12 Nov 2019 08:29:27 -0600
-Message-ID: <20191112142929.23058-2-bparrot@ti.com>
+Subject: [Patch v3 01/20] dt-bindings: media: cal: update binding to use syscon
+Date:   Tue, 12 Nov 2019 08:31:33 -0600
+Message-ID: <20191112143152.23176-2-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191112142929.23058-1-bparrot@ti.com>
-References: <20191112142929.23058-1-bparrot@ti.com>
+In-Reply-To: <20191112143152.23176-1-bparrot@ti.com>
+References: <20191112143152.23176-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -68,95 +67,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+Update Device Tree bindings for the CAL driver to use syscon to access
+the phy config register instead of trying to map it directly.
 
-clkout1 clock node and its generation tree was missing. Add this based
-on the data on TRM and PRCM functional spec.
-
-commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
-reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
-clkout1 clock") which is needed for the ov2659 camera sensor clock
-definition hence it is being re-applied here.
-
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "clkout1-*ck" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
-
-Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Tested-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ Documentation/devicetree/bindings/media/ti-cal.txt | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 091356f2a8c1..c726cd8dbdf1 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -704,6 +704,60 @@
- 		ti,bit-shift = <8>;
- 		reg = <0x2a48>;
- 	};
-+
-+	clkout1_osc_div_ck: clkout1-osc-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&sys_clkin_ck>;
-+		ti,bit-shift = <20>;
-+		ti,max-div = <4>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-+			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-+			 <&dpll_mpu_m2_ck>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_mux_ck>;
-+		ti,bit-shift = <4>;
-+		ti,max-div = <8>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_pre_div_ck>;
-+		ti,bit-shift = <8>;
-+		ti,max-div = <32>;
-+		ti,index-power-of-two;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_mux_ck: clkout1-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
-+			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
-+		ti,bit-shift = <16>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_ck: clkout1-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&clkout1_mux_ck>;
-+		ti,bit-shift = <23>;
-+		reg = <0x4100>;
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+index ae9b52f37576..93096d924786 100644
+--- a/Documentation/devicetree/bindings/media/ti-cal.txt
++++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+@@ -10,9 +10,14 @@ Required properties:
+ - compatible: must be "ti,dra72-cal"
+ - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
+ 	control address space
+-- reg-names: cal_top, cal_rx_core0, cal_rx_core1, and camerrx_control
++- reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
+ 	     registers
+ - interrupts: should contain IRQ line for the CAL;
++- ti,camerrx-control: phandle to the device control module and offset to
++		      the control_camerarx_core register.
++		      This node is meant to replace the "camerrx_control"
++		      reg entry above but "camerrx_control" is still
++		      handled for backward compatibility.
  
- &prcm {
+ CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
+ should contain a 'port' child node with child 'endpoint' node. Please
+@@ -25,13 +30,12 @@ Example:
+ 		ti,hwmods = "cal";
+ 		reg = <0x4845B000 0x400>,
+ 		      <0x4845B800 0x40>,
+-		      <0x4845B900 0x40>,
+-		      <0x4A002e94 0x4>;
++		      <0x4845B900 0x40>;
+ 		reg-names = "cal_top",
+ 			    "cal_rx_core0",
+-			    "cal_rx_core1",
+-			    "camerrx_control";
++			    "cal_rx_core1";
+ 		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		ti,camerrx-control = <&scm_conf 0xE94>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
 -- 
 2.17.1
 
