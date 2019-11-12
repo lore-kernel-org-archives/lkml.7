@@ -2,77 +2,79 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40874C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86952C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FA6206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573541796;
-	bh=r0sc5/XzhNJIqfRx4BwQyUrbUeptifp8j9vAKXgaYjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bLM2p9UvtgtJ/1q6hSxbkIvaq9+Sdl/bIfl3hD8Go9nyn7dFCubN3LzBymKi5Hcgr
-	 buF1Qa/Fk1gNn13xJiVfTpxvxFH2NZhTYapbAAw9pX8V/vt94hdPy3gNpz/qouf7bb
-	 Lsd2LJlTqskVOiGNLblUIaBoZqNjIEUHd5u2n7nw=
+	by mail.kernel.org (Postfix) with ESMTP id 515CB206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OlFvdt3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfKLG4f (ORCPT
+        id S1726973AbfKLG4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 01:56:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfKLG4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 01:56:34 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A9E2206A3;
-        Tue, 12 Nov 2019 06:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573541793;
-        bh=r0sc5/XzhNJIqfRx4BwQyUrbUeptifp8j9vAKXgaYjQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zFKYlVXOsiL7FaaBRZj3pZQA+ljakifCep4BzkE7lHK14YdhMWhb1UeymOeCpXgtl
-         rUWylDHSGWblvFdlUHPUnGwrDUM5bkWW0oxbcahxseMrPioIyeyZCvkwXQSHvs2o6O
-         39kxVd60E4PzxfJnJmVi6Tp5CoV02Q6X2PwRXCpg=
-Date:   Tue, 12 Nov 2019 07:56:29 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     devel@linuxdriverproject.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] IIO fixes / Staging driver for 5.4-rc7
-Message-ID: <20191112065629.GA1242198@kroah.com>
-References: <20191110154303.GA2867499@kroah.com>
- <20191112063440.GA15951@infradead.org>
+        Tue, 12 Nov 2019 01:56:42 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35944 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfKLG4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 01:56:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WzJP5ecelfPrbPkpFdZW5saIiDsiXjsKrOz9Vo/Rvb0=; b=OlFvdt3wLOwmBUAZk2yEp4RNW
+        I3bct+sprhJ6pz1IsQYpJkg8FZDpj28AVlIHBeoHgWxYKaFSrgigAQoslr65aDVp+bGS+jUUpPnf7
+        +0pwKUa0rB4i+8tBxIRr2+gglGQoqUvEVP9aqoJWfBTbysXf8MBtKCC6mc2MUYiUd4rEEGlb8Vzmz
+        zdH9ghLmseScW4y7uV88+9flHR3xHMMJVsvg7KfHo7sPjyA3sqXSYWk6cnu2qcGLjFry7PGzwYTVg
+        a7zaeMrFGOsbUGeBh1bEH9eftnbXBBcs+swwnOa83egkEtbN0At9pMmDOANTZdwPKwNZyONoemVXo
+        iR7q83i7A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUQ4x-0005RM-4z; Tue, 12 Nov 2019 06:55:07 +0000
+Date:   Mon, 11 Nov 2019 22:55:07 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
+Message-ID: <20191112065507.GA15915@infradead.org>
+References: <20191112003452.4756-1-ira.weiny@intel.com>
+ <20191112003452.4756-3-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112063440.GA15951@infradead.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191112003452.4756-3-ira.weiny@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 10:34:40PM -0800, Christoph Hellwig wrote:
-> On Sun, Nov 10, 2019 at 04:43:03PM +0100, Greg KH wrote:
-> > The staging driver addition is the vboxsf filesystem, which is the
-> > VirtualBox guest shared folder code.  Hans has been trying to get
-> > filesystem reviewers to review the code for many months now, and
-> > Christoph finally said to just merge it in staging now as it is
-> > stand-alone and the filesystem people can review it easier over time
-> > that way.
+On Mon, Nov 11, 2019 at 04:34:52PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> No, this is absolutely contrary to what I said.  I told Hans to just
-> send it to Linus because it is ready and not staging fodder a atll.
+> swap_activate() and swap_deactivate() have nothing to do with
+> address spaces.  We want to eventually make the address space operations
+> dynamic to switch inode flags on the fly.  So to simplify this code as
+> well as properly track these operations we move these functions to the
+> file_operations vector.
 
-Hah, ok, I got that totally wrong.  I'll send a patch moving it to the
-"real" part of the kernel now.
-
-thanks,
-
-greg k-h
+What is the point?  If we switch aops for DAX vs not we might as well
+switch file operations as well, as they pretty much are entirely
+different.
