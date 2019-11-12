@@ -2,122 +2,268 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ECEC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A167DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0D82084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="VORlG8Nn"
+	by mail.kernel.org (Postfix) with ESMTP id 74BD12084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfKLKyw (ORCPT
+        id S1726946AbfKLKzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:54:52 -0500
-Received: from onstation.org ([52.200.56.107]:48248 "EHLO onstation.org"
+        Tue, 12 Nov 2019 05:55:14 -0500
+Received: from verein.lst.de ([213.95.11.211]:55107 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfKLKyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:54:51 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 76AAA3E994;
-        Tue, 12 Nov 2019 10:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1573556090;
-        bh=jjKN6d8ptQSkUyJcPph5rCkFf0mBynfnJx+7tQMICQ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VORlG8Nn/3lq3rYkTopLtuLPXh2vlijLFzlNyEBCu4fJtdhpfSVehn+fa32ryyxyU
-         LxnIYKoabfxZU5OhptEPMIOeM3FbFpqdhWPOiHSxLbihbLXYO2eKzMOEsJFxb6pL4R
-         F+PmEubwY8vTdhKlUiQMI55U73QeJvBrbtU1alDE=
-Date:   Tue, 12 Nov 2019 05:54:50 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async
- commit changes
-Message-ID: <20191112105450.GA9144@onstation.org>
-References: <CAF6AEGsZkJJTNZ8SzHsSioEnkpekr1Texu5_EeBW1hP-bsOyjQ@mail.gmail.com>
- <20191107111019.GA24028@onstation.org>
- <CAF6AEGtbP=X2+DELajQq9zMZYGgmhyUhe62ncvHvyFnyZexTXg@mail.gmail.com>
- <CAOCk7NrPdGqc4vo70NmTuyszkPaPe41-e89ym2vAYBY+GTt9BA@mail.gmail.com>
- <CAJs_Fx4UJYd-k3_3AAGJo-8udThhvf6t-J=OZi3jappWjTNnFQ@mail.gmail.com>
- <CAOCk7Nq7rPmraofy+o8vWTwSAd1+dTRsoZ4QN0mRAOOz7u7TUg@mail.gmail.com>
- <20191110135321.GA6728@onstation.org>
- <CAOCk7Nr3nkUWOynxVK_0SxWKUss803_fhkdVehRajtiA9vi8ng@mail.gmail.com>
- <20191111113806.GA1420@onstation.org>
- <CAOCk7NoZN63zZQrbw-RRnbUko3OREy=15FMC7sN5M95oNb5JNw@mail.gmail.com>
+        id S1725899AbfKLKzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 05:55:14 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id D7B4C68AFE; Tue, 12 Nov 2019 11:55:07 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:55:07 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Christoph Hellwig <hch@lst.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and
+ ia64
+Message-ID: <20191112105507.GA7122@lst.de>
+References: <20191111192258.2234502-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOCk7NoZN63zZQrbw-RRnbUko3OREy=15FMC7sN5M95oNb5JNw@mail.gmail.com>
+In-Reply-To: <20191111192258.2234502-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 07:51:22AM -0700, Jeffrey Hugo wrote:
-> On Mon, Nov 11, 2019 at 4:38 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > On Sun, Nov 10, 2019 at 10:37:33AM -0700, Jeffrey Hugo wrote:
-> > > On Sun, Nov 10, 2019 at 6:53 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > >
-> > > > On Fri, Nov 08, 2019 at 07:56:25AM -0700, Jeffrey Hugo wrote:
-> > > > There's a REG_MDP5_PP_AUTOREFRESH_CONFIG() macro upstream here:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/msm/disp/mdp5/mdp5.xml.h#n1383
-> > > >
-> > > > I'm not sure what to put in that register but I tried configuring it
-> > > > with a 1 this way and still have the same issue.
-> > > >
-> > > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > > > index eeef41fcd4e1..6b9acf68fd2c 100644
-> > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cmd_encoder.c
-> > > > @@ -80,6 +80,7 @@ static int pingpong_tearcheck_setup(struct drm_encoder *encoder,
-> > > >         mdp5_write(mdp5_kms, REG_MDP5_PP_SYNC_THRESH(pp_id),
-> > > >                         MDP5_PP_SYNC_THRESH_START(4) |
-> > > >                         MDP5_PP_SYNC_THRESH_CONTINUE(4));
-> > > > +       mdp5_write(mdp5_kms, REG_MDP5_PP_AUTOREFRESH_CONFIG(pp_id), 1);
-> > > >
-> > > >         return 0;
-> > > >  }
-> > >
-> > > bit 31 is the enable bit (set that to 1), bits 15:0 are the
-> > > frame_count (how many te events before the MDP sends a frame, I'd
-> > > recommend set to 1).  Then after its programmed, you'll have to flush
-> > > the config, and probably use a _START to make sure the flush takes
-> > > effect.
-> >
-> > I think that I initially get autorefresh enabled based on your
-> > description above since the ping pong IRQs occur much more frequently.
-> > However pretty quickly the error 'dsi_err_worker: status=c' is shown,
-> > the contents on the screen shift to the right, and the screen no longer
-> > updates after that. That error decodes to
-> > DSI_ERR_STATE_DLN0_PHY | DSI_ERR_STATE_FIFO according to dsi_host.c.
-> >
-> > Here's the relevant code that I have so far:
+On Mon, Nov 11, 2019 at 08:22:50PM +0100, Arnd Bergmann wrote:
+> ioremap_uc() is only meaningful on old x86-32 systems with the PAT
+> extension, and on ia64 with its slightly unconventional ioremap()
+> behavior, everywhere else this is the same as ioremap() anyway.
 > 
-> So, Unless I missed it, you haven't disabled using _start when
-> autorefresh is enabled.  If you are using both at the same time,
-> you'll overload the DSI and get those kinds of errors.
+> Change the only driver that still references ioremap_uc() to only do so
+> on x86-32/ia64 in order to allow removing that interface at some
+> point in the future for the other architectures.
+> 
+> On some architectures, ioremap_uc() just returns NULL, changing
+> the driver to call ioremap() means that they now have a chance
+> of working correctly.
 
-That fixed the issue. Just to close out this thread, I submitted a
-patch with what I have here:
-https://lore.kernel.org/lkml/20191112104854.20850-1-masneyb@onstation.org/T/#u
+So this whole area is a bit of a mess.  ioremap_uc on ia64 is brand
+new in this cycle, for ia64-internal users that were previously
+using ioremap_nocache.  And ioremap_nocache was identical to ioremap
+everywhere but ia64.  So I think we can safely skip ia64 in the ifdef
+if we go down that route.
 
-I'll work on async commit support for the MDP5.
+But also on x86 I'd actually rather prefer killing off this only mainline
+user of ioremap_uc.  It was added by Luis in commit 3cc2dac5be3f
+("drivers/video/fbdev/atyfb: Replace MTRR UC hole with strong UC",
+which looks like an optimization of MTRR usage.  I feel like I really
+don't understand the point there, but it also seems a pity to keep
+the API around just for that.
 
-Thanks Jeff and Rob!
+That being said linux-next added another call to ioremap_uc in
+drivers/mfd/intel-lpss.c, so it looks like the API might have to stay.
 
-Brian
+So I guess modulo excluding ia64 your patch looks fine, and should go
+along something like the one below.  I'll happily carry them in the
+ioremap tree with the right ACKs.
+
+---
+From 81243b2aa78babcc5f97b2c2a29957fcf3fd3664 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 12 Nov 2019 11:52:25 +0100
+Subject: ioremap: remove ioremap_uc except on x86 and ia64
+
+ioremap_uc is a special API to work around caching oddities on
+Intel platforms.  Remove it from all other architectures now that
+only x86 and ia64-specific callers are left.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/alpha/include/asm/io.h    |  1 -
+ arch/m68k/include/asm/kmap.h   |  1 -
+ arch/mips/include/asm/io.h     |  1 -
+ arch/parisc/include/asm/io.h   |  1 -
+ arch/powerpc/include/asm/io.h  |  1 -
+ arch/sh/include/asm/io.h       |  1 -
+ arch/sparc/include/asm/io_64.h |  1 -
+ include/asm-generic/io.h       | 15 ---------------
+ include/linux/io.h             |  2 ++
+ lib/devres.c                   |  4 ++++
+ 10 files changed, 6 insertions(+), 22 deletions(-)
+
+diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+index 1989b946a28d..11fdcade3c5c 100644
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -290,7 +290,6 @@ static inline void __iomem * ioremap_nocache(unsigned long offset,
+ }
+ 
+ #define ioremap_wc ioremap_nocache
+-#define ioremap_uc ioremap_nocache
+ 
+ static inline void iounmap(volatile void __iomem *addr)
+ {
+diff --git a/arch/m68k/include/asm/kmap.h b/arch/m68k/include/asm/kmap.h
+index 559cb91bede1..22b5ea4fc8b8 100644
+--- a/arch/m68k/include/asm/kmap.h
++++ b/arch/m68k/include/asm/kmap.h
+@@ -28,7 +28,6 @@ static inline void __iomem *ioremap(unsigned long physaddr, unsigned long size)
+ }
+ 
+ #define ioremap_nocache ioremap
+-#define ioremap_uc ioremap
+ #define ioremap_wt ioremap_wt
+ static inline void __iomem *ioremap_wt(unsigned long physaddr,
+ 				       unsigned long size)
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 3f6ce74335b4..9195ded1d6a7 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -249,7 +249,6 @@ static inline void __iomem *ioremap_prot(phys_addr_t offset,
+  */
+ #define ioremap_nocache(offset, size)					\
+ 	__ioremap_mode((offset), (size), _CACHE_UNCACHED)
+-#define ioremap_uc ioremap_nocache
+ 
+ /*
+  * ioremap_cache -	map bus memory into CPU space
+diff --git a/arch/parisc/include/asm/io.h b/arch/parisc/include/asm/io.h
+index 46212b52c23e..0674f5cd3045 100644
+--- a/arch/parisc/include/asm/io.h
++++ b/arch/parisc/include/asm/io.h
+@@ -130,7 +130,6 @@ static inline void gsc_writeq(unsigned long long val, unsigned long addr)
+ void __iomem *ioremap(unsigned long offset, unsigned long size);
+ #define ioremap_nocache(off, sz)	ioremap((off), (sz))
+ #define ioremap_wc			ioremap_nocache
+-#define ioremap_uc			ioremap_nocache
+ 
+ extern void iounmap(const volatile void __iomem *addr);
+ 
+diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
+index a63ec938636d..119bcbe3e328 100644
+--- a/arch/powerpc/include/asm/io.h
++++ b/arch/powerpc/include/asm/io.h
+@@ -716,7 +716,6 @@ extern void __iomem *ioremap_wc(phys_addr_t address, unsigned long size);
+ void __iomem *ioremap_wt(phys_addr_t address, unsigned long size);
+ void __iomem *ioremap_coherent(phys_addr_t address, unsigned long size);
+ #define ioremap_nocache(addr, size)	ioremap((addr), (size))
+-#define ioremap_uc(addr, size)		ioremap((addr), (size))
+ #define ioremap_cache(addr, size) \
+ 	ioremap_prot((addr), (size), pgprot_val(PAGE_KERNEL))
+ 
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 1495489225ac..30bbe787f1ef 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -368,7 +368,6 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
+ #endif
+ 
+ #define ioremap_nocache	ioremap
+-#define ioremap_uc	ioremap
+ 
+ /*
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
+diff --git a/arch/sparc/include/asm/io_64.h b/arch/sparc/include/asm/io_64.h
+index f4afa301954a..688911051b44 100644
+--- a/arch/sparc/include/asm/io_64.h
++++ b/arch/sparc/include/asm/io_64.h
+@@ -407,7 +407,6 @@ static inline void __iomem *ioremap(unsigned long offset, unsigned long size)
+ }
+ 
+ #define ioremap_nocache(X,Y)		ioremap((X),(Y))
+-#define ioremap_uc(X,Y)			ioremap((X),(Y))
+ #define ioremap_wc(X,Y)			ioremap((X),(Y))
+ #define ioremap_wt(X,Y)			ioremap((X),(Y))
+ 
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index 325fc98cc9ff..357e8638040c 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -972,21 +972,6 @@ static inline void __iomem *ioremap(phys_addr_t addr, size_t size)
+ #define ioremap_wt ioremap
+ #endif
+ 
+-/*
+- * ioremap_uc is special in that we do require an explicit architecture
+- * implementation.  In general you do not want to use this function in a
+- * driver and use plain ioremap, which is uncached by default.  Similarly
+- * architectures should not implement it unless they have a very good
+- * reason.
+- */
+-#ifndef ioremap_uc
+-#define ioremap_uc ioremap_uc
+-static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
+-{
+-	return NULL;
+-}
+-#endif
+-
+ #ifdef CONFIG_HAS_IOPORT_MAP
+ #ifndef CONFIG_GENERIC_IOMAP
+ #ifndef ioport_map
+diff --git a/include/linux/io.h b/include/linux/io.h
+index a59834bc0a11..6574bb0f28e6 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -64,8 +64,10 @@ static inline void devm_ioport_unmap(struct device *dev, void __iomem *addr)
+ 
+ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+ 			   resource_size_t size);
++#ifdef ioremap_uc
+ void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
+ 				   resource_size_t size);
++#endif
+ void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+ 				   resource_size_t size);
+ void __iomem *devm_ioremap_wc(struct device *dev, resource_size_t offset,
+diff --git a/lib/devres.c b/lib/devres.c
+index f56070cf970b..0299279ddf02 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -40,9 +40,11 @@ static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
+ 	case DEVM_IOREMAP_NC:
+ 		addr = ioremap_nocache(offset, size);
+ 		break;
++#ifdef ioremap_uc
+ 	case DEVM_IOREMAP_UC:
+ 		addr = ioremap_uc(offset, size);
+ 		break;
++#endif
+ 	case DEVM_IOREMAP_WC:
+ 		addr = ioremap_wc(offset, size);
+ 		break;
+@@ -72,6 +74,7 @@ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+ }
+ EXPORT_SYMBOL(devm_ioremap);
+ 
++#ifdef ioremap_uc
+ /**
+  * devm_ioremap_uc - Managed ioremap_uc()
+  * @dev: Generic device to remap IO address for
+@@ -86,6 +89,7 @@ void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
+ 	return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_UC);
+ }
+ EXPORT_SYMBOL_GPL(devm_ioremap_uc);
++#endif /* ioremap_uc */
+ 
+ /**
+  * devm_ioremap_nocache - Managed ioremap_nocache()
+-- 
+2.20.1
+
