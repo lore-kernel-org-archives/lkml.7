@@ -2,120 +2,131 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF2FC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62169C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467F22084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311C12084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwcU2/mI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nezus2jc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfKLNob (ORCPT
+        id S1727302AbfKLNpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:44:31 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37982 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfKLNob (ORCPT
+        Tue, 12 Nov 2019 08:45:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33778 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfKLNph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:44:31 -0500
-Received: by mail-ed1-f65.google.com with SMTP id s10so14950078edi.5;
-        Tue, 12 Nov 2019 05:44:28 -0800 (PST)
+        Tue, 12 Nov 2019 08:45:37 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a17so2387491wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 05:45:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gXwOc0pJ6hqLtPP5MF3njwCDDhwJ+LtuEm52q4JdFG0=;
-        b=YwcU2/mITcV4eLtuCPb7UvqNbE8wHLtLX/4m397nu8Ryp88ewpHBgxlJ1IB8gkm/4D
-         +y1zXkERVtNiYvtmcqA/ADrdJsNZd299zT6m+hZ3c/uSjcWwqOydkDXZKTG0ubCfpAxP
-         ySLfu1WWcUYFbJPmqrkVi56XkRw4sjEL/6hfDwSuUa1tY2xYk/7LkTNhAS5WxFJjIegZ
-         N5ZCaAi5dXg1YsV7viSgFpNHCw/3qlIqSCH24n3MVoSz1ppEHhSdBibhjzSvZk41K6yb
-         IHqYq40KcXiUX0IV4GA5YpfvxyUkaFbr9NL0u3slJap8qUMWvzk8Ipabi9HMPk5T21US
-         jCFA==
+        h=from:to:cc:subject:date:message-id;
+        bh=D37ooG4hj3d1tXGJWLb9ByvS8fwj2I3PRg/Yzi41kaQ=;
+        b=nezus2jc7OyhXhqgc1ez0i9/RrmAQqe1UTXA3XYdV3hPCcxl10Ub3opRTLe1Q/DJMk
+         ggvq1y3VTxomrMPHYbRglK4AeFSRI3j4h2e/mntAd9XPDz6HnmH4uXFhduoHJtpremlG
+         r5yQy3F29PS0arfyr08JclHyCrgxj6UhjSnlNNBC1fOhIKSO//xl/Eg2/Ut+iGJFIQ/L
+         FqLhlw1rggaROADNv39rHm/CrJumzJi9EEFV0BcBtP0UdndMU0fNii5bH6YjRUbwghuF
+         EKecC48Z+vPctX6ZFqH0GPVY3fGRl1gXbHAwcyenvLhRt42AEq73nel1Bw+uQUtf4eZB
+         DXKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gXwOc0pJ6hqLtPP5MF3njwCDDhwJ+LtuEm52q4JdFG0=;
-        b=umyKzyBIOxXePAvciST6v1NdEl06JacCjgtO2OUk4pV3gkSu0h5J35+OGzJwGgeOGj
-         b+w5i7oBe1N5sMIqh4jEQefO5HpApFgh+gKKclGxP1aNo09d/cQ90ZeSIVIOFf/VTVnb
-         EaX0S/iT43fDn0CY4m9m7oQVEBz3NWvjAAxaZbDIFU+PGSZy/lZXt9ePEfOooiDD7YLw
-         m7XF5j8xG6Tirx0aMZkTWVWPjy0lxMRac+8t12zh7UPaTyXKucljHyuYG5QNbw2chiUg
-         /ESk8sXjw30vQdHwIcno0e38a2ANewXrdcaGma7ab4W/4dxgayGmVa5NeCBUMNmdSyzx
-         rxbQ==
-X-Gm-Message-State: APjAAAXa+1cQN2ZaLnllm0JeG2tH/D5XE9TzB+iQUzJlidrej5PHlzFF
-        +DooMgCRK25Nd0QIWKzGM17l2SjipVSgc9zJaiA=
-X-Google-Smtp-Source: APXvYqwEfukonUP8KqyQ+bKuKOQ1O/aGrq59NYnVrf1rT78e31Bw/atAL5285NQic4/J5nTNN05SD0UaFdCbcBRbuL4=
-X-Received: by 2002:a50:b63b:: with SMTP id b56mr33037948ede.165.1573566267462;
- Tue, 12 Nov 2019 05:44:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20191112132010.18274-1-linux@rasmusvillemoes.dk> <20191112132010.18274-3-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191112132010.18274-3-linux@rasmusvillemoes.dk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 12 Nov 2019 15:44:16 +0200
-Message-ID: <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=D37ooG4hj3d1tXGJWLb9ByvS8fwj2I3PRg/Yzi41kaQ=;
+        b=EM7kST9dMM3cnMhM7/lOnmzdEG3ymrb6CbEHYvu7pRYDJBJOCYCJOqhA27x4sNLjRV
+         2SMVUGbt2Cz9e2GHmdICgwWoFxvOmC683hfmorC9JbvguK2G0lmyJo6cIyy96gER5gEd
+         uK+oINIcCWv5H7bmkXfje4/amhWbQhpnHg7a4j8cWV8v2pSrSvQyaU3wiVeb1OrHohKz
+         OMPEG4n4grye9g+oWdLVA+hC8SlIH8t1LqJ09x/KPA2soa4F2gf5gfZI8mjsF/TALjKE
+         XjF05PJdpD6YZZEv/TJBT89fjLZOMREUwhNsLUCiZVzP+WFDQrD3aB+KxfILk4dZ30mJ
+         +SWA==
+X-Gm-Message-State: APjAAAUX/9iUXyK7TSYsDxCWPNHLlJyRKdGNo+aEO/5ZwAtuhY7r/O1h
+        0E5GZBATvV2kKHRRSD3bXd8=
+X-Google-Smtp-Source: APXvYqz2i/h9avAb+ybByAsrmIjD/sDcoNqg8/CdBsf/EOV0pRTOoSKacvVW2lvRpXvSUQi86uXqXg==
+X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr3842177wma.177.1573566335889;
+        Tue, 12 Nov 2019 05:45:35 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a58:8166:7500:7146:58dd:6d5e:970])
+        by smtp.gmail.com with ESMTPSA id 4sm4496178wmd.33.2019.11.12.05.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 05:45:35 -0800 (PST)
+From:   Ilie Halip <ilie.halip@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Ilie Halip <ilie.halip@gmail.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] scripts/tools-support-relr.sh: un-quote variables
+Date:   Tue, 12 Nov 2019 15:45:20 +0200
+Message-Id: <20191112134522.12177-1-ilie.halip@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 15:20, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
->
-> From: Vladimir Oltean <olteanv@gmail.com>
->
-> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
-> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
->
-> Switching to interrupts offloads the PHY library from the task of
-> polling the MDIO status and AN registers (1, 4, 5) every second.
->
-> Unfortunately, the BCM5464R quad PHY connected to the switch does not
-> appear to have an interrupt line routed to the SoC.
->
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->  arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-> index 5b7689094b70..135d36461af4 100644
-> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
-> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-> @@ -203,11 +203,15 @@
->         /* AR8031 */
->         sgmii_phy1: ethernet-phy@1 {
->                 reg = <0x1>;
-> +               /* SGMII1_PHY_INT_B: connected to IRQ2, active low */
-> +               interrupts-extended = <&extirq 2 IRQ_TYPE_EDGE_FALLING>;
->         };
->
->         /* AR8031 */
->         sgmii_phy2: ethernet-phy@2 {
->                 reg = <0x2>;
-> +               /* SGMII2_PHY_INT_B: connected to IRQ2, active low */
-> +               interrupts-extended = <&extirq 2 IRQ_TYPE_EDGE_FALLING>;
->         };
->
->         /* BCM5464 quad PHY */
-> --
-> 2.23.0
->
+When the CC variable contains quotes, e.g. when using
+ccache (make CC="ccache <compiler>"), this script always
+fails, so CONFIG_RELR is never enabled, even when the
+toolchain supports this feature. Removing the /dev/null
+redirect and invoking the script manually shows the issue:
 
-+netdev and Andrew for this patch, since the interrupt polarity caught
-his attention in v1.
+    $ CC='/usr/bin/ccache clang' ./scripts/tools-support-relr.sh
+    ./scripts/tools-support-relr.sh: 7: ./scripts/tools-support-relr.sh: /usr/bin/ccache clang: not found
+
+Fix this by un-quoting the variables.
+
+Before:
+    $ make ARCH=arm64 CC='/usr/bin/ccache clang' LD=ld.lld \
+        NM=llvm-nm OBJCOPY=llvm-objcopy defconfig
+    $ grep RELR .config
+    CONFIG_ARCH_HAS_RELR=y
+
+With this change:
+    $ make ARCH=arm64 CC='/usr/bin/ccache clang' LD=ld.lld \
+        NM=llvm-nm OBJCOPY=llvm-objcopy defconfig
+    $ grep RELR .config
+    CONFIG_TOOLS_SUPPORT_RELR=y
+    CONFIG_ARCH_HAS_RELR=y
+    CONFIG_RELR=y
+
+Fixes: 5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Link: https://github.com/ClangBuiltLinux/linux/issues/769
+Cc: Peter Collingbourne <pcc@google.com>
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+---
+ scripts/tools-support-relr.sh | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/tools-support-relr.sh b/scripts/tools-support-relr.sh
+index 97a2c844a95e..45e8aa360b45 100755
+--- a/scripts/tools-support-relr.sh
++++ b/scripts/tools-support-relr.sh
+@@ -4,13 +4,13 @@
+ tmp_file=$(mktemp)
+ trap "rm -f $tmp_file.o $tmp_file $tmp_file.bin" EXIT
+ 
+-cat << "END" | "$CC" -c -x c - -o $tmp_file.o >/dev/null 2>&1
++cat << "END" | $CC -c -x c - -o $tmp_file.o >/dev/null 2>&1
+ void *p = &p;
+ END
+-"$LD" $tmp_file.o -shared -Bsymbolic --pack-dyn-relocs=relr -o $tmp_file
++$LD $tmp_file.o -shared -Bsymbolic --pack-dyn-relocs=relr -o $tmp_file
+ 
+ # Despite printing an error message, GNU nm still exits with exit code 0 if it
+ # sees a relr section. So we need to check that nothing is printed to stderr.
+-test -z "$("$NM" $tmp_file 2>&1 >/dev/null)"
++test -z "$($NM $tmp_file 2>&1 >/dev/null)"
+ 
+-"$OBJCOPY" -O binary $tmp_file $tmp_file.bin
++$OBJCOPY -O binary $tmp_file $tmp_file.bin
+-- 
+2.17.1
+
