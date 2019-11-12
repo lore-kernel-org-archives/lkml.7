@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616ACC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284B6C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3780D2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BAB2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l9FS/D06"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W2V3qr01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfKLOvd (ORCPT
+        id S1727529AbfKLOve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:51:33 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43700 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfKLOv1 (ORCPT
+        Tue, 12 Nov 2019 09:51:34 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52552 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfKLOvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:51:27 -0500
+        Tue, 12 Nov 2019 09:51:09 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEot98052197;
-        Tue, 12 Nov 2019 08:50:55 -0600
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEop3A097979;
+        Tue, 12 Nov 2019 08:50:51 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573570255;
-        bh=fxkl6EobTAT1J+Cb0bAfjajLxzJGK5I9H/BGiUdtKHg=;
+        s=ti-com-17Q1; t=1573570251;
+        bh=WV+p2RYewb0Fe/Cr0Lm8UljrmiZRu8wYabf0rEqVZYs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=l9FS/D06V9s7NWL7gxuKkTEeKXfHj3n56JoxHaopGmtX9USGc1oDX4nqH6hmHbLAb
-         U82m4QT+2WVeEa1KwY05tpo2kKG44HSh9+ru6uzaDw4Gl8iXz3Ui58PCSS8+QG1gPj
-         AdRwElrOT19TsXYxOhKcJ0/TV2iZUYS5VQMIoTUA=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEot75058827
+        b=W2V3qr01hiAyuNusNoyeR1xjVidLVyiACIO0SnaG/LCBDHkkg2ot3UxUq7bduRBKh
+         3pAVHSbL0ztUiaMwvltUYXxgZV8MG7Ua+/jMDCreoGKRoatiTIvnvuD3ljqGhwoPbe
+         bXxtUBkMM9kh1MZ3vy6QN/hAOdxXqArtn6uF8Zf4=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEopT6058772
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:50:55 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:50:51 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:50:37 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:50:34 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:50:37 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:50:34 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokeu068428;
-        Tue, 12 Nov 2019 08:50:54 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokeq068428;
+        Tue, 12 Nov 2019 08:50:51 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [RESEND Patch v3 10/20] media: ti-vpe: cal: Fix pixel processing parameters
-Date:   Tue, 12 Nov 2019 08:53:37 -0600
-Message-ID: <20191112145347.23519-11-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>,
+        Nikhil Devshatwar <nikhil.nd@ti.com>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [RESEND Patch v3 06/20] media: ti-vpe: cal: Restrict DMA to avoid memory corruption
+Date:   Tue, 12 Nov 2019 08:53:33 -0600
+Message-ID: <20191112145347.23519-7-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112145347.23519-1-bparrot@ti.com>
 References: <20191112145347.23519-1-bparrot@ti.com>
@@ -68,74 +70,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pixel processing unit was hard coded to only handle 8 bits per pixel
-from input to output.
+From: Nikhil Devshatwar <nikhil.nd@ti.com>
 
-We now add handling for 10, 12 and 16 bits per pixel at the source and
-setting the in-memory size (i.e. container size) to 16 bits for these 3
-cases.
+When setting DMA for video capture from CSI channel, if the DMA size
+is not given, it ends up writing as much data as sent by the camera.
 
+This may lead to overwriting the buffers causing memory corruption.
+Observed green lines on the default framebuffer.
+
+Restrict the DMA to maximum height as specified in the S_FMT ioctl.
+
+Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 41 ++++++++++++++++++++++++++---
- 1 file changed, 38 insertions(+), 3 deletions(-)
+ drivers/media/platform/ti-vpe/cal.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 51edc7bc3135..1b4a74f0d751 100644
+index 4f9a7609cb5f..eb3727ba185d 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -800,13 +800,48 @@ static void csi2_ctx_config(struct cal_ctx *ctx)
+@@ -767,12 +767,13 @@ static void pix_proc_config(struct cal_ctx *ctx)
+ }
  
- static void pix_proc_config(struct cal_ctx *ctx)
+ static void cal_wr_dma_config(struct cal_ctx *ctx,
+-			      unsigned int width)
++			      unsigned int width, unsigned int height)
  {
--	u32 val;
-+	u32 val, extract, pack;
-+
-+	switch (ctx->fmt->bpp) {
-+	case 8:
-+		extract = CAL_PIX_PROC_EXTRACT_B8;
-+		pack = CAL_PIX_PROC_PACK_B8;
-+		break;
-+	case 10:
-+		extract = CAL_PIX_PROC_EXTRACT_B10_MIPI;
-+		pack = CAL_PIX_PROC_PACK_B16;
-+		break;
-+	case 12:
-+		extract = CAL_PIX_PROC_EXTRACT_B12_MIPI;
-+		pack = CAL_PIX_PROC_PACK_B16;
-+		break;
-+	case 16:
-+		extract = CAL_PIX_PROC_EXTRACT_B16_LE;
-+		pack = CAL_PIX_PROC_PACK_B16;
-+		break;
-+	default:
-+		/*
-+		 * If you see this warning then it means that you added
-+		 * some new entry in the cal_formats[] array with a different
-+		 * bit per pixel values then the one supported below.
-+		 * Either add support for the new bpp value below or adjust
-+		 * the new entry to use one of the value below.
-+		 *
-+		 * Instead of failing here just use 8 bpp as a default.
-+		 */
-+		dev_warn_once(&ctx->dev->pdev->dev,
-+			      "%s:%d:%s: bpp:%d unsupported! Overwritten with 8.\n",
-+			      __FILE__, __LINE__, __func__, ctx->fmt->bpp);
-+		extract = CAL_PIX_PROC_EXTRACT_B8;
-+		pack = CAL_PIX_PROC_PACK_B8;
-+		break;
-+	}
+ 	u32 val;
  
- 	val = reg_read(ctx->dev, CAL_PIX_PROC(ctx->csi2_port));
--	set_field(&val, CAL_PIX_PROC_EXTRACT_B8, CAL_PIX_PROC_EXTRACT_MASK);
-+	set_field(&val, extract, CAL_PIX_PROC_EXTRACT_MASK);
- 	set_field(&val, CAL_PIX_PROC_DPCMD_BYPASS, CAL_PIX_PROC_DPCMD_MASK);
- 	set_field(&val, CAL_PIX_PROC_DPCME_BYPASS, CAL_PIX_PROC_DPCME_MASK);
--	set_field(&val, CAL_PIX_PROC_PACK_B8, CAL_PIX_PROC_PACK_MASK);
-+	set_field(&val, pack, CAL_PIX_PROC_PACK_MASK);
- 	set_field(&val, ctx->csi2_port, CAL_PIX_PROC_CPORT_MASK);
- 	set_field(&val, CAL_GEN_ENABLE, CAL_PIX_PROC_EN_MASK);
- 	reg_write(ctx->dev, CAL_PIX_PROC(ctx->csi2_port), val);
+ 	val = reg_read(ctx->dev, CAL_WR_DMA_CTRL(ctx->csi2_port));
+ 	set_field(&val, ctx->csi2_port, CAL_WR_DMA_CTRL_CPORT_MASK);
++	set_field(&val, height, CAL_WR_DMA_CTRL_YSIZE_MASK);
+ 	set_field(&val, CAL_WR_DMA_CTRL_DTAG_PIX_DAT,
+ 		  CAL_WR_DMA_CTRL_DTAG_MASK);
+ 	set_field(&val, CAL_WR_DMA_CTRL_MODE_CONST,
+@@ -1395,7 +1396,8 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	csi2_lane_config(ctx);
+ 	csi2_ctx_config(ctx);
+ 	pix_proc_config(ctx);
+-	cal_wr_dma_config(ctx, ctx->v_fmt.fmt.pix.bytesperline);
++	cal_wr_dma_config(ctx, ctx->v_fmt.fmt.pix.bytesperline,
++			  ctx->v_fmt.fmt.pix.height);
+ 	cal_wr_dma_addr(ctx, addr);
+ 	csi2_ppi_enable(ctx);
+ 
 -- 
 2.17.1
 
