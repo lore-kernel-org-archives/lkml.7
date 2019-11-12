@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47E9C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD60C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A6E21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77887222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573583897;
-	bh=G2yJCRFFdXK5M+LrYl75Kiay27RH2VwdUmFCJMrE3nc=;
+	s=default; t=1573583902;
+	bh=GegQjfzUYdLIjtzfZwBrCmZHhq3xJnPjPgXxMRwpvF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VdKog8Tm1l8xWSAw6XFVdIgTKJH4KRUyaRUAGoc2hUWMnbOhxbTtmu5srRV40yhKm
-	 tIkM+G+b02JHFsm1DQAGpD7wmOU0OJ1j6KCmdos08rKivRxV022X+ZDSPZcw8fbBFp
-	 VhuqsoaSr5H8gKH8zmNUVMIusi2EGQKSukxcRKvM=
+	b=QriGOK95jZXoU+twaN4IDaGcJHNVniKxbZDY50U/+6JDpG/WNoJBKXynL7MbFFtNB
+	 Ni3caaobzAN5iMKcK02JRmckr9eubnwJgAwiE0zsqnDEiFgiB4lVSwzBxvqZyALf6o
+	 xJ6STZ9WL66hZlxZpgIa7DDKr7fqqVMszzSzwG8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfKLSiQ (ORCPT
+        id S1727284AbfKLSiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:38:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 13:38:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKLSiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:38:15 -0500
+        id S1726912AbfKLSiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:38:20 -0500
 Received: from quaco.ghostprotocols.net (unknown [177.195.211.83])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78A3021783;
-        Tue, 12 Nov 2019 18:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79DEA21A49;
+        Tue, 12 Nov 2019 18:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573583895;
-        bh=G2yJCRFFdXK5M+LrYl75Kiay27RH2VwdUmFCJMrE3nc=;
+        s=default; t=1573583898;
+        bh=GegQjfzUYdLIjtzfZwBrCmZHhq3xJnPjPgXxMRwpvF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p1+ykmG+qmz/CnU8utC4c0LpYL40qON1tLbVxlP35zmULuS0KC7wxHgJcV5LOzZHz
-         OLdIuKNHSp1yFAv9dof8Jv2NkbACmDNIolLE/fj4aLXFES9X488vRvX+3Atf5IsuKU
-         zp11TeZRbtF78hsND1W7EjVVtGNA+TrzLe0YYkwM=
+        b=IAWVzR6WmvyolmvxNKI7ACby7EgabA9xHySgtr+MEhXXkiVmHzrgbnIMv4mwQ/Yqj
+         fhnRbEib+fKp2lYzYNJrhL4LYscPyF+rJb8uSIxCekTJEiN6Ak8NyMjZNCSzYElFFM
+         Qe0ldPEra75ABogKlxn9TPhYvFNNXCH4SdXQT9Eg=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,13 +48,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 01/15] perf map: Use map->dso->kernel + map__kmaps() in map__kmaps()
-Date:   Tue, 12 Nov 2019 15:37:43 -0300
-Message-Id: <20191112183757.28660-2-acme@kernel.org>
+Subject: [PATCH 02/15] perf symbols: Stop using map->groups, we can use kmaps instead
+Date:   Tue, 12 Nov 2019 15:37:44 -0300
+Message-Id: <20191112183757.28660-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191112183757.28660-1-acme@kernel.org>
 References: <20191112183757.28660-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,44 +64,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Its equivalent to using map->groups to obtain the machine struct.
+To test that that function is being called I just added a probe on that
+place, enabled it via 'perf trace' asking for at most 16 levels of
+backtraces, system wide, and then ran 'perf top' on another xterm,
+voilà:
+
+  # perf probe -x ~/bin/perf dso__process_kernel_symbol
+  Added new event:
+    probe_perf:dso__process_kernel_symbol (on dso__process_kernel_symbol in /home/acme/bin/perf)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe_perf:dso__process_kernel_symbol -aR sleep 1
+
+  # perf trace -e probe_perf:dso__process_kernel_symbol/max-stack=16/ --max-events=2
+  # perf trace -e probe_perf:dso__process_kernel_symbol/max-stack=16/ --max-events=2
+       0.000 :17345/17345 probe_perf:dso__process_kernel_symbol(__probe_ip: 5680224)
+                                         dso__process_kernel_symbol (/home/acme/bin/perf)
+                                         dso__load_vmlinux (/home/acme/bin/perf)
+                                         dso__load_vmlinux_path (/home/acme/bin/perf)
+                                         dso__load (/home/acme/bin/perf)
+                                         map__load (/home/acme/bin/perf)
+                                         thread__find_map (/home/acme/bin/perf)
+                                         machine__resolve (/home/acme/bin/perf)
+                                         deliver_event (/home/acme/bin/perf)
+                                         __ordered_events__flush.part.0 (/home/acme/bin/perf)
+                                         process_thread (/home/acme/bin/perf)
+                                         start_thread (/usr/lib64/libpthread-2.29.so)
+       0.064 :17345/17345 probe_perf:dso__process_kernel_symbol(__probe_ip: 5680224)
+                                         dso__process_kernel_symbol (/home/acme/bin/perf)
+                                         dso__load_vmlinux (/home/acme/bin/perf)
+                                         dso__load_vmlinux_path (/home/acme/bin/perf)
+                                         dso__load (/home/acme/bin/perf)
+                                         map__load (/home/acme/bin/perf)
+                                         thread__find_map (/home/acme/bin/perf)
+                                         machine__resolve (/home/acme/bin/perf)
+                                         deliver_event (/home/acme/bin/perf)
+                                         __ordered_events__flush.part.0 (/home/acme/bin/perf)
+                                         process_thread (/home/acme/bin/perf)
+                                         start_thread (/usr/lib64/libpthread-2.29.so)
+  #
+  # perf stat -e probe_perf:dso__process_kernel_symbol
+  ^C
+   Performance counter stats for 'system wide':
+
+           107,308      probe_perf:dso__process_kernel_symbol
+
+       8.215399813 seconds time elapsed
+  #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-bdbazuj4ggrmzxdviaqdrdwh@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-5fy66x5hr5ct9pmw84jkiwvm@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ tools/perf/util/symbol-elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 466c9b035e19..a4d889c0fa88 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -244,18 +244,11 @@ struct map *map__new2(u64 start, struct dso *dso)
- 	return map;
- }
- 
--/*
-- * Use this and __map__is_kmodule() for map instances that are in
-- * machine->kmaps, and thus have map->groups->machine all properly set, to
-- * disambiguate between the kernel and modules.
-- *
-- * When the need arises, introduce map__is_{kernel,kmodule)() that
-- * checks (map->groups != NULL && map->groups->machine != NULL &&
-- * map->dso->kernel) before calling __map__is_{kernel,kmodule}())
-- */
- bool __map__is_kernel(const struct map *map)
- {
--	return machine__kernel_map(map->groups->machine) == map;
-+	if (!map->dso->kernel)
-+		return false;
-+	return machine__kernel_map(map__kmaps((struct map *)map)->machine) == map;
- }
- 
- bool __map__is_extra_kernel_map(const struct map *map)
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 66f4be1df573..16776d5fbaea 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -934,7 +934,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		 * we still are sure to have a reference to this DSO via
+ 		 * *curr_map->dso.
+ 		 */
+-		dsos__add(&map->groups->machine->dsos, curr_dso);
++		dsos__add(&kmaps->machine->dsos, curr_dso);
+ 		/* kmaps already got it */
+ 		map__put(curr_map);
+ 		dso__set_loaded(curr_dso);
 -- 
 2.21.0
 
