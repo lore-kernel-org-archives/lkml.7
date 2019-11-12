@@ -2,148 +2,132 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2A7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D777C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B40A2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED00D21A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:47:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eLwd7Iy5"
+	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="NYwPO0bG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKLSqB (ORCPT
+        id S1727058AbfKLSrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:46:01 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37324 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfKLSqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:46:00 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t1so19726718wrv.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:45:56 -0800 (PST)
+        Tue, 12 Nov 2019 13:47:06 -0500
+Received: from mail-eopbgr680045.outbound.protection.outlook.com ([40.107.68.45]:44559
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726970AbfKLSrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:47:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wiz9NtkIY0dU15lNEn4EjTG7mNmpw2e92cu7/LNR3dPRWslVY+AzX6xNd0nmYvOA3g4V1/qmlxdt2JMvslWzHMAqXjyzBC6sYKNGzakQtWmQVrZNoJLUg/KzN+cdsC4apYSmlZzqn2i42Uv6XcFdbkNa0XqfuCGwZBoxI1JInGkxi6sbDXPANQdD83C5wve3cocGo+nlg6PTb0hU8szBH24WxXKlXrWvaxD6LKrCSB6hatybsmYtnNZNUUT6lzZQIf5pnJVhQt40U1ymFgBNePG1knHTNj8u7oJWru8IJWmplYnS0SO37hNVBoYVkCzl/8mEJhpM5lVcpRKL3Cppcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eP1X+opom7ndeZuL89qZ16uBlmKa0pJhgXe5Oh+/Pv8=;
+ b=lP0RDmerF1LSdW2AGBLCaISu20AK/0YGSHyKZatsX41tLmYZel/pLRAQhBDOnTcXWEZtHjBjdAIGTCA3RNt6aTRaNDPnmZMli3RRViMjylH+aykfDoOsn2YsrVBMN2OKGyanaMAVP0eeRkIJVyWAy2rm7CfBBGcbxbGUqRBWprESzvrnGtei6jMq3DZYBd85eCRyqWbAB4jya/VaJWKfVEqAJfl3SU+NqegbJnA6iycmpQdACpIN8MKEMoj9ziBa1wylfrl5R3QMRJ0RHLCvRGYCcfI+8Yp2jJzTh6pte2krydkLfXeGvZP6h+IoWnFKbmm9AwV3pszONl5NIkUFxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
+ dkim=pass header.d=netapp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hxMhnNTPNMqUl9aYg/+q9b2xf6WaAQRl4vSfzI/n7p4=;
-        b=eLwd7Iy5L1mI4E21IClk5SY41lrRU+CDtVSYFCoaOR/KUjfehCrHpcwrUvhp5HmTAT
-         uhs0ezHEN43/gLsummGlDTM/iWi7hu/cK+YLg7/dcWasjaAw10a2+vjz46+e6Ll6PbEd
-         kk7UC9to+igCpH1Qy7B86f84kz2U9b0jeR7oGoeHgPuti9b6KYvUj9VoslJCfooG0qk/
-         72DcEX4NgQ9jNxxJ7WebVvv6PsNmtNSc3uYsBxmg6jwEtpuvxGLrflrVyJzoCJk2ByKe
-         9QVYH8BACYdUA2k9t12xq9WwexnMZMO5giUKpafTjobHbHZ3dpi4zK2f6QHCXUkyDnMY
-         G88g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hxMhnNTPNMqUl9aYg/+q9b2xf6WaAQRl4vSfzI/n7p4=;
-        b=jwK1NOLe/9tp59Wdm45/V/RW76btdhQbCsLqdcF1WfUOfEW4k1KThDcmrBU75Ddpqs
-         UjsQ7DE0xHAKVL6BVIo7V2e5LS+DNqzIohs9j9zH0PUsuPKSX5haEDc5OF26gkwnF5LV
-         ykSJxTXv6cd5mOSbpcDVl7y3Knq6rCpX9pc+825IenCrJeh1Cop8rpjiv1zu/a5xfeHd
-         ONHa12UilvqDWeWNL+cwHcUh2zw4S3I/BSEEAr2kMoypp46E1YoyEMS24Q2bxk6w/9tm
-         c4+DeIZOXCpxXhZEJrKlrGdGk6xs5DcinDsoKB2eErfdhWswZvIQCfpu5RVB9PBYYAc8
-         tkkg==
-X-Gm-Message-State: APjAAAVr+pLTp8iDDFPT5v+ms7EmLRUpIEmP53qxkdFS0X0+8bERHcaF
-        PKqA3kLKGHCdjZssMqqxBGSdrB6OfZ7ZajuGcpdWJA==
-X-Google-Smtp-Source: APXvYqwQYYci7I67aRBonFwOTDDHZvisnT9MPd62fmUFGWvgmGL1eI7K9On3FwQg9b+v550fPLGLr8uzThpKIIMkhe0=
-X-Received: by 2002:a5d:678c:: with SMTP id v12mr2383882wru.116.1573584355560;
- Tue, 12 Nov 2019 10:45:55 -0800 (PST)
+ d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eP1X+opom7ndeZuL89qZ16uBlmKa0pJhgXe5Oh+/Pv8=;
+ b=NYwPO0bGPyaZODvybUvcq4pvvR+S3ZBeUH2MCh25WSLcZIB2sdRxb6ZxzRxvV9pi5plh8TUFuXB1cuyFt7o95A2JjQXuI8A5MfK65umabehcz5LlT9I0onJZbLA4bRiadcaweTcfshIf78g8j/y+ymxRnDex+/glOg4iHDmpmsE=
+Received: from BYAPR06MB6054.namprd06.prod.outlook.com (20.178.51.220) by
+ BYAPR06MB5270.namprd06.prod.outlook.com (20.178.48.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.26; Tue, 12 Nov 2019 18:47:02 +0000
+Received: from BYAPR06MB6054.namprd06.prod.outlook.com
+ ([fe80::918d:490e:90f0:61f8]) by BYAPR06MB6054.namprd06.prod.outlook.com
+ ([fe80::918d:490e:90f0:61f8%5]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 18:47:02 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "navid.emamdoost@gmail.com" <navid.emamdoost@gmail.com>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "emamd001@umn.edu" <emamd001@umn.edu>,
+        "smccaman@umn.edu" <smccaman@umn.edu>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
+Thread-Topic: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
+Thread-Index: AQHVb0mHQVf9nUcIFEq8YuaR2ZlCSKd96fMAgApKmwA=
+Date:   Tue, 12 Nov 2019 18:47:01 +0000
+Message-ID: <d7531388512379288c5719f152fc5ae5ecd8509a.camel@netapp.com>
+References: <20190920002232.27477-1-navid.emamdoost@gmail.com>
+         <CAEkB2EQ2BPpXcpRpN-+ErJD5Vkq6LiKONy8XQfvu0F1pO4weqw@mail.gmail.com>
+In-Reply-To: <CAEkB2EQ2BPpXcpRpN-+ErJD5Vkq6LiKONy8XQfvu0F1pO4weqw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.1 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [68.42.68.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2f5dc0b8-ddd7-4f00-9989-08d767a0b4b1
+x-ms-traffictypediagnostic: BYAPR06MB5270:
+x-microsoft-antispam-prvs: <BYAPR06MB5270480C3E324FD3218DE2DAF8770@BYAPR06MB5270.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(189003)(199004)(66066001)(7736002)(14454004)(186003)(446003)(2616005)(4326008)(5660300002)(11346002)(478600001)(476003)(486006)(2501003)(118296001)(25786009)(6506007)(102836004)(53546011)(305945005)(91956017)(2906002)(76116006)(66946007)(26005)(81156014)(8936002)(81166006)(86362001)(8676002)(99286004)(6116002)(36756003)(6246003)(316002)(66446008)(71190400001)(71200400001)(6512007)(76176011)(6486002)(58126008)(6436002)(64756008)(256004)(110136005)(229853002)(66556008)(66476007)(54906003)(3846002)(14444005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR06MB5270;H:BYAPR06MB6054.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GtI+5WmbDtjwtvgTPCwCOJIuJvxY5X+qccFkjY6ULbQ/9xlA/hjGN2Z4mfyHrVYm/COKfA+oG1/FPIy9yrhsk7QnIvIcgGzgq6su7ZcSTLw6dEzy7egklkWEZ3DEf7SsOjV2FNVMUkVerEomcmbccKp1BfMAdBHgwZ1ZYiEeJsSUfLVwzXmZanhyq1N/hkeBbKbz9EaRdsrydecJAx9zyQNXx31hI8eTGcWgl3iAUW1uv3p6s8qAqU3KaG/6wHPVJFB/kiQcOof+rVr2N+UBNWe3Eo2GfHZwaNu79akghiRvaH5TOnJ0QCge7hWIfI5Ya7fQKE5kjndFVYUspoiPDBfNYAmkMwl9TG5bT16rLvYExGNUfWq0AHtCYvWKnWJn0c4CTCFZFuMEBJyd1ZtjQsQwb3YoZaxqJ0Ga5LHG1S3V8Gjnqmoi5IbVcSclpRDX
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3CB12A06CC22C64FBECABDDAC3EFD7F3@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-3-hannes@cmpxchg.org>
- <CAJuCfpFtr9ODyOEJWt+=z=fnR0j8CJPSfhN+50N=d4SjLO-Z7A@mail.gmail.com> <20191112174533.GA178331@cmpxchg.org>
-In-Reply-To: <20191112174533.GA178331@cmpxchg.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 12 Nov 2019 10:45:44 -0800
-Message-ID: <CAJuCfpHSMcXOZ4zF7X3FVbnyOL_HNgepNYCYsVdcs_gT3Gtm3Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
-        cgroups mailinglist <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f5dc0b8-ddd7-4f00-9989-08d767a0b4b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 18:47:01.9211
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 11VfcYXe4Q02tkugQDCtAcJWUM9U7pYw1RbZZ9E5NXEH3t+DgLOh+3kIUowJAnjcMNk8/fvu/joYhkurk2tvUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR06MB5270
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 9:45 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Sun, Nov 10, 2019 at 06:01:18PM -0800, Suren Baghdasaryan wrote:
-> > On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > >
-> > > We use refault information to determine whether the cache workingset
-> > > is stable or transitioning, and dynamically adjust the inactive:active
-> > > file LRU ratio so as to maximize protection from one-off cache during
-> > > stable periods, and minimize IO during transitions.
-> > >
-> > > With cgroups and their nested LRU lists, we currently don't do this
-> > > correctly. While recursive cgroup reclaim establishes a relative LRU
-> > > order among the pages of all involved cgroups, refaults only affect
-> > > the local LRU order in the cgroup in which they are occuring. As a
-> > > result, cache transitions can take longer in a cgrouped system as the
-> > > active pages of sibling cgroups aren't challenged when they should be.
-> > >
-> > > [ Right now, this is somewhat theoretical, because the siblings, under
-> > >   continued regular reclaim pressure, should eventually run out of
-> > >   inactive pages - and since inactive:active *size* balancing is also
-> > >   done on a cgroup-local level, we will challenge the active pages
-> > >   eventually in most cases. But the next patch will move that relative
-> > >   size enforcement to the reclaim root as well, and then this patch
-> > >   here will be necessary to propagate refault pressure to siblings. ]
-> > >
-> > > This patch moves refault detection to the root of reclaim. Instead of
-> > > remembering the cgroup owner of an evicted page, remember the cgroup
-> > > that caused the reclaim to happen. When refaults later occur, they'll
-> > > correctly influence the cross-cgroup LRU order that reclaim follows.
-> >
-> > I spent some time thinking about the idea of calculating refault
-> > distance using target_memcg's inactive_age and then activating
-> > refaulted page in (possibly) another memcg and I am still having
-> > trouble convincing myself that this should work correctly. However I
-> > also was unable to convince myself otherwise... We use refault
-> > distance to calculate the deficit in inactive LRU space and then
-> > activate the refaulted page if that distance is less that
-> > active+inactive LRU size. However making that decision based on LRU
-> > sizes of one memcg and then activating the page in another one seems
-> > very counterintuitive to me. Maybe that's just me though...
->
-> It's not activating in a random, unrelated memcg - it's the parental
-> relationship that makes it work.
->
-> If you have a cgroup tree
->
->         root
->          |
->          A
->         / \
->        B1 B2
->
-> and reclaim is driven by a limit in A, we are reclaiming the pages in
-> B1 and B2 as if they were on a single LRU list A (it's approximated by
-> the round-robin reclaim and has some caveats, but that's the idea).
->
-> So when a page that belongs to B2 gets evicted, it gets evicted from
-> virtual LRU list A. When it refaults later, we make the (in)active
-> size and distance comparisons against virtual LRU list A as well.
->
-> The pages on the physical LRU list B2 are not just ordered relative to
-> its B2 peers, they are also ordered relative to the pages in B1. And
-> that of course is necessary if we want fair competition between them
-> under shared reclaim pressure from A.
-
-Thanks for clarification. The testcase in your description when group
-B has a large inactive cache which does not get reclaimed while its
-sibling group A has to drop its active cache got me under the
-impression that sibling cgroups (in your reply above B1 and B2) can
-cause memory pressure in each other. Maybe that's not a legit case and
-B1 would not cause pressure in B2 without causing pressure in their
-shared parent A? It now makes more sense to me and I want to confirm
-that is the case.
+SGkgTmF2aWQsDQoNCk9uIFR1ZSwgMjAxOS0xMS0wNSBhdCAyMzozNyAtMDYwMCwgTmF2aWQgRW1h
+bWRvb3N0IHdyb3RlOg0KPiBXb3VsZCB5b3UgcGxlYXNlIHJldmlldyB0aGlzIHBhdGNoPw0KDQpU
+aGlzIG1lbW9yeSBsZWFrIHdhcyBmaXhlZCBieToNCg0KY29tbWl0IDFlNjcyZTM2NDQ5NDBkODNi
+ZDk0ZTdjYjQ2YmFjNmJiMzYyN2RlMDINCkF1dGhvcjogV2Vud2VuIFdhbmcgPHdlbndlbkBjcy51
+Z2EuZWR1Pg0KRGF0ZTogICBUdWUgQXVnIDIwIDIyOjIxOjIxIDIwMTkgLTA1MDANCg0KICAgIE5G
+U3Y0OiBGaXggYSBtZW1vcnkgbGVhayBidWcNCiAgICANCiAgICBJbiBuZnM0X3RyeV9taWdyYXRp
+b24oKSwgaWYgbmZzNF9iZWdpbl9kcmFpbl9zZXNzaW9uKCkgZmFpbHMsIHRoZQ0KICAgIHByZXZp
+b3VzbHkgYWxsb2NhdGVkICdwYWdlJyBhbmQgJ2xvY2F0aW9ucycgYXJlIG5vdCBkZWFsbG9jYXRl
+ZCwgbGVhZGluZyB0bw0KICAgIG1lbW9yeSBsZWFrcy4gVG8gZml4IHRoaXMgaXNzdWUsIGdvIHRv
+IHRoZSAnb3V0JyBsYWJlbCB0byBmcmVlICdwYWdlJyBhbmQNCiAgICAnbG9jYXRpb25zJyBiZWZv
+cmUgcmV0dXJuaW5nIHRoZSBlcnJvci4NCiAgICANCiAgICBTaWduZWQtb2ZmLWJ5OiBXZW53ZW4g
+V2FuZyA8d2Vud2VuQGNzLnVnYS5lZHU+DQogICAgU2lnbmVkLW9mZi1ieTogQW5uYSBTY2h1bWFr
+ZXIgPEFubmEuU2NodW1ha2VyQE5ldGFwcC5jb20+DQoNCg0KDQpBbmQgd2FzIGluY2x1ZGVkIGFz
+IHBhcnQgb2YgdGhlIGluaXRpYWwgTkZTIG1lcmdlIGZvciB0aGUgdjUuNC1yYyBjeWNsZS4NCg0K
+VGhhbmtzLA0KQW5uYQ0KDQo+IA0KPiBPbiBUaHUsIFNlcCAxOSwgMjAxOSBhdCA3OjIyIFBNIE5h
+dmlkIEVtYW1kb29zdA0KPiA8bmF2aWQuZW1hbWRvb3N0QGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4g
+SW4gbmZzNF90cnlfbWlncmF0aW9uLCBpZiBuZnM0X2JlZ2luX2RyYWluX3Nlc3Npb24gZmFpbHMg
+dGhlIGFsbG9jYXRlZA0KPiA+IG1lbW9yeSBzaG91bGQgYmUgcmVsZWFzZWQuDQo+ID4gDQo+ID4g
+U2lnbmVkLW9mZi1ieTogTmF2aWQgRW1hbWRvb3N0IDxuYXZpZC5lbWFtZG9vc3RAZ21haWwuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBmcy9uZnMvbmZzNHN0YXRlLmMgfCAyICstDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1n
+aXQgYS9mcy9uZnMvbmZzNHN0YXRlLmMgYi9mcy9uZnMvbmZzNHN0YXRlLmMNCj4gPiBpbmRleCBj
+YWQ0ZTA2NGIzMjguLjEyNDY0OWYxMjA2NyAxMDA2NDQNCj4gPiAtLS0gYS9mcy9uZnMvbmZzNHN0
+YXRlLmMNCj4gPiArKysgYi9mcy9uZnMvbmZzNHN0YXRlLmMNCj4gPiBAQCAtMjA5Niw3ICsyMDk2
+LDcgQEAgc3RhdGljIGludCBuZnM0X3RyeV9taWdyYXRpb24oc3RydWN0IG5mc19zZXJ2ZXINCj4g
+PiAqc2VydmVyLCBjb25zdCBzdHJ1Y3QgY3JlZCAqY3JlZA0KPiA+IA0KPiA+ICAgICAgICAgc3Rh
+dHVzID0gbmZzNF9iZWdpbl9kcmFpbl9zZXNzaW9uKGNscCk7DQo+ID4gICAgICAgICBpZiAoc3Rh
+dHVzICE9IDApDQo+ID4gLSAgICAgICAgICAgICAgIHJldHVybiBzdGF0dXM7DQo+ID4gKyAgICAg
+ICAgICAgICAgIGdvdG8gb3V0Ow0KPiA+IA0KPiA+ICAgICAgICAgc3RhdHVzID0gbmZzNF9yZXBs
+YWNlX3RyYW5zcG9ydChzZXJ2ZXIsIGxvY2F0aW9ucyk7DQo+ID4gICAgICAgICBpZiAoc3RhdHVz
+ICE9IDApIHsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+IA0KPiANCj4gLS0NCj4gTmF2aWQuDQo=
