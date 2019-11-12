@@ -2,161 +2,149 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDD3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA60C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F389E2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573546562;
-	bh=J/OThn6iLck1PKQEzgYOrdrJIO3+vZLAM21GL3dDj7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jMuZfhhvlJDQTGve97D9KXDs2mYyqlpJ1egMQo2NrElflMYUmt8h7xyCtAeoITjGw
-	 YAjHqYF0rYt9/2oSisYo2MVWo/p2eofKpFCM1qJ4QCiDTwosQ69ol7KjHwNYhVn9AQ
-	 /1XhEdQZiHU40lgJroBrSDWkUH9rdCNMQvvwlZhY=
+	by mail.kernel.org (Postfix) with ESMTP id 40A572084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:16:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FeMJ77m5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfKLIQA (ORCPT
+        id S1727201AbfKLIQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:16:00 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36824 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfKLIQA (ORCPT
+        Tue, 12 Nov 2019 03:16:20 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39166 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfKLIQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:16:00 -0500
-Received: by mail-qk1-f193.google.com with SMTP id d13so13703604qko.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 00:15:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iSiNV5scpDBuaeOgWdkNzYJXOXgt273IMaBQBvWkFxg=;
-        b=ubFk442k6Qo+4DCHOghiwUojCKSiwtYqodWzLLYmlxFwYP00iJKgZ1PotFrZBQSXmN
-         nvbp0ZZxZ+j7wtmCsM1LxKZAL4akAwAOS09yvfgsK8wcyszclv8b61aeuQSSAePxkmbX
-         B+OgEDhi8GtlORT057O8I4FL4QiUoI3ggyrQ+Slok6FVWwR+k0yUhZ67fLRkGKzxtc1Y
-         cUntcvc6r9ilypwEkEnDXQI1IEjeiVJY6iuyFohkZhLa70ravNQVzqUkdoKLFBWV2AkB
-         /K88503KPwwokzbzT8/T6KRZvSs/krVVeK5fqfegNPhokXSDVMNnicGVB+6sLFQDktUV
-         V9uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iSiNV5scpDBuaeOgWdkNzYJXOXgt273IMaBQBvWkFxg=;
-        b=Tg2W+22PRVp/Rdc2Mw/bLI74vwFLMSfbdXGjqA28kuDZl10hWG4o3nXRm/Cw8aoT9C
-         8ENh9MHVEwVC/MFupC86GNYYmUFcw8hFjl4AdZy+Doe8Tfxh50Qg0wW1w54hNuTYnyg1
-         ql1/6Xv7BOCrWX3YCDermPlpb7kPDrXwlDqPIEEdL5Lbw+Mh0Tq4FTtMHgOtWhBSh/zT
-         x+qH18uXPRX+ySIZb/EE+IztuFqfmST1M/zQVqSrOdz2CSHKXVKcYHpRyMdVYhtKrGRr
-         Y7ngW4ZuE0rSohc+yudtMpTiSc/r/tkFIWOgHGEonDUVAqUIOgygnT5oglRPoQGw2Sbc
-         CdJA==
-X-Gm-Message-State: APjAAAXreCpaEeAGCsaZq8ZLQFVh16ElvISQv7LsoKWUD/M9+uayT3UT
-        kttPOsvV//D7JHFUdnW1EO31kujW
-X-Google-Smtp-Source: APXvYqz+MCuPdzMn3Gq6vuN/M97IR0ATc7nfvv3FhRs70RzJyGGIOlNP9KbdksudvWScx5mCeegApg==
-X-Received: by 2002:a05:620a:9dc:: with SMTP id y28mr14426574qky.297.1573546559542;
-        Tue, 12 Nov 2019 00:15:59 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id 130sm8711498qkd.33.2019.11.12.00.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 00:15:59 -0800 (PST)
-Date:   Tue, 12 Nov 2019 09:15:55 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/iopl: Rename <asm/iobitmap.h> to <asm/io_bitmap.h>
-Message-ID: <20191112081555.GH100264@gmail.com>
-References: <20191111220314.519933535@linutronix.de>
- <20191112074052.GD100264@gmail.com>
+        Tue, 12 Nov 2019 03:16:19 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC8GHo7025729;
+        Tue, 12 Nov 2019 02:16:17 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573546577;
+        bh=90PIXBNPPxoBh+X/S5ytuCw+cth895+fkNlDDDdfZ+8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FeMJ77m5y3EVGtD6hxOuUSEawKpztgksem+syQxvD7uwIa9NDrMklb83EgddPLJG4
+         bued6byurwO8oIYb5vR4Bj5rF4+UTKCyMgcv5x3QW0IkmVEdMaq2T/wj33T+X5T1D6
+         Kq+b9jV2YPwdej//DbuggjvcpA0iCD/ywyYYGUzM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAC8GHDt015929
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 02:16:17 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 02:15:59 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 02:15:59 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC8GD4P067663;
+        Tue, 12 Nov 2019 02:16:15 -0600
+Subject: Re: [PATCH 02/17] remoteproc/omap: Switch to SPDX license identifiers
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-3-t-kristo@ti.com> <20191109010348.GB5662@tuxbook-pro>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <bed42f27-3a67-bfa7-fdcc-bf333233828f@ti.com>
+Date:   Tue, 12 Nov 2019 10:16:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112074052.GD100264@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191109010348.GB5662@tuxbook-pro>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 09/11/2019 03:03, Bjorn Andersson wrote:
+> On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
+> 
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> Use the appropriate SPDX license identifiers in various OMAP remoteproc
+>> source files and drop the previous boilerplate license text.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/remoteproc/omap_remoteproc.h | 27 +--------------------------
+>>   1 file changed, 1 insertion(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.h b/drivers/remoteproc/omap_remoteproc.h
+>> index f6d2036d383d..1e6fef753c4f 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.h
+>> +++ b/drivers/remoteproc/omap_remoteproc.h
+>> @@ -1,35 +1,10 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+> 
+> Please confirm that you actually intend to change the license from BSD
+> to dual here.
 
-Rename <asm/iobitmap.h> to <asm/io_bitmap.h>, because IMHO the header 
-that defines 'struct io_bitmap' should be called io_bitmap.h. :-)
+That is a very good point. Let me try to get clarification to this 
+internally, this series is anyways too late for 5.5 so there is no rush 
+to get this done anytime soon. Worst case I just drop this patch and 
+keep the existing license in place.
 
-Build tested.
+-Tero
 
-Thanks,
+> 
+> Regards,
+> Bjorn
+> 
+>>   /*
+>>    * Remote processor messaging
+>>    *
+>>    * Copyright (C) 2011 Texas Instruments, Inc.
+>>    * Copyright (C) 2011 Google, Inc.
+>>    * All rights reserved.
+>> - *
+>> - * Redistribution and use in source and binary forms, with or without
+>> - * modification, are permitted provided that the following conditions
+>> - * are met:
+>> - *
+>> - * * Redistributions of source code must retain the above copyright
+>> - *   notice, this list of conditions and the following disclaimer.
+>> - * * Redistributions in binary form must reproduce the above copyright
+>> - *   notice, this list of conditions and the following disclaimer in
+>> - *   the documentation and/or other materials provided with the
+>> - *   distribution.
+>> - * * Neither the name Texas Instruments nor the names of its
+>> - *   contributors may be used to endorse or promote products derived
+>> - *   from this software without specific prior written permission.
+>> - *
+>> - * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+>> - * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+>> - * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+>> - * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+>> - * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+>> - * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+>> - * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+>> - * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+>> - * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+>> - * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+>> - * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>>    */
+>>   
+>>   #ifndef _OMAP_RPMSG_H
+>> -- 
+>> 2.17.1
+>>
+>> --
 
-	Ingo
-
----
- arch/x86/entry/common.c                          | 2 +-
- arch/x86/include/asm/{iobitmap.h => io_bitmap.h} | 0
- arch/x86/kernel/ioport.c                         | 2 +-
- arch/x86/kernel/process.c                        | 2 +-
- arch/x86/kernel/ptrace.c                         | 2 +-
- 5 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 85e8a8d7b380..9747876980b5 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -33,7 +33,7 @@
- #include <asm/cpufeature.h>
- #include <asm/fpu/api.h>
- #include <asm/nospec-branch.h>
--#include <asm/iobitmap.h>
-+#include <asm/io_bitmap.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/syscalls.h>
-diff --git a/arch/x86/include/asm/iobitmap.h b/arch/x86/include/asm/io_bitmap.h
-similarity index 100%
-rename from arch/x86/include/asm/iobitmap.h
-rename to arch/x86/include/asm/io_bitmap.h
-diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
-index 203f82383bf6..d1a3a9f5314b 100644
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -11,7 +11,7 @@
- #include <linux/sched.h>
- #include <linux/slab.h>
- 
--#include <asm/iobitmap.h>
-+#include <asm/io_bitmap.h>
- #include <asm/desc.h>
- 
- static atomic64_t io_bitmap_sequence;
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index ecf97855ed68..7bf60741e80a 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -41,7 +41,7 @@
- #include <asm/desc.h>
- #include <asm/prctl.h>
- #include <asm/spec-ctrl.h>
--#include <asm/iobitmap.h>
-+#include <asm/io_bitmap.h>
- #include <asm/proto.h>
- 
- #include "process.h"
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index f27c322f1c93..72bf005c8208 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -42,7 +42,7 @@
- #include <asm/traps.h>
- #include <asm/syscall.h>
- #include <asm/fsgsbase.h>
--#include <asm/iobitmap.h>
-+#include <asm/io_bitmap.h>
- 
- #include "tls.h"
- 
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
