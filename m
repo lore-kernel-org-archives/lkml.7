@@ -2,148 +2,119 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35C2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A63FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B419020679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573574469;
-	bh=p8zMhulkPTF3qGOvBM5JbkPItAB7I09ZwT1tBcj8erE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WeEgmWPgJ0J7wwuYU9YBrDMn0fHZhc2P+XJwoGyGVJ2ZZIc8KEXxAaaManxebYGTy
-	 d8mAfly9Pb/IMsXYQttriNVjUfeeoJW9YTPB3ivb9gVh6ITAyhwd+QeDmwvUaA3txE
-	 FmAr+RrMpMzwf1xm8bOnRMqUzJxHI1mHv5U2Ic3o=
+	by mail.kernel.org (Postfix) with ESMTP id 1FB9120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:01:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vb1PBepH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfKLQBI (ORCPT
+        id S1727113AbfKLQB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:01:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfKLQBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:01:08 -0500
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FE7320679
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573574467;
-        bh=p8zMhulkPTF3qGOvBM5JbkPItAB7I09ZwT1tBcj8erE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jz3tc2uqfpmicZq5sAb642xiopfDsAFeWviTqKZKnOiTkZNYxnj4cijk8D8d+gttN
-         hgpEAXvRNecQHrW3AIaDcTC3xo2/VAgEB0HOW8aJ2Y5ff9O/kHlooCvhdqgUl8aKDT
-         zPk0c17Mv47c372G4306IwyxyNNM6JmSmNIBLh/0=
-Received: by mail-wm1-f54.google.com with SMTP id b17so3536685wmj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:01:06 -0800 (PST)
-X-Gm-Message-State: APjAAAWk5ng4d89RPe4uuM0cYzwVDAif/+6tdsDnn2C+NYn627Q0ksO6
-        HTcj1+u48B0NfGL/qRXQ7xmGFMQvOP872+boau/qIg==
-X-Google-Smtp-Source: APXvYqz06E6Um4KUpYkaNf5d9VYxu0/9mMt8HMubseNGUX3kzIbnjLrnmLWZtCe4M7k4A6DyOKUqQWykoCSfCeyHgXk=
-X-Received: by 2002:a05:600c:3cf:: with SMTP id z15mr4702320wmd.76.1573574465509;
- Tue, 12 Nov 2019 08:01:05 -0800 (PST)
+        Tue, 12 Nov 2019 11:01:56 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41600 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLQBz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:01:55 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d22so6879131lji.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:01:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4kdtfZv1UWGs4z6mZX1Xj2hNLNvOhEkV9MFCDyUM5WY=;
+        b=Vb1PBepHxX3U8dmOFv17pjejpZizz7XnsepoMKFySZxszgEZoBT3aII0a7WvybC8EL
+         jn7pvOgzymp7/xN46tuKOiNL33sfWFhTAO4NnVtdbeKd3DZ4+Kjbomt31ocY6v3PulLZ
+         w7HFQPiV8MZ5oulC2anS8lGnKusuGZme/ldc3KmWuaRIMYfFsww/O9yoa69voPa7ssJx
+         0wZoZvJPD/2JYo0UQDTUV94lukvVKDeUMyq4d1f6ByiaFyGbcQwzlKgBk58jMNjSBcCL
+         dsBjjId+R+R7t7dghP0ljBOMGWvWVY78IKWcPH38+OtyjyB1eAvNqsUvjM2XsROzJmVS
+         2KSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4kdtfZv1UWGs4z6mZX1Xj2hNLNvOhEkV9MFCDyUM5WY=;
+        b=AR+VmLKD56qzaFohnoVuv2cg29kKg8ZsXngFdCmkEtDlck/Vgf680iG7B4jaOL40bm
+         9TPrn0kpN22ESAIbkemHLkFLqcQr7JJNbS+hYpwNfhVME6hAIGZfHlJLwIvqPQzJo+VD
+         UNQe0EcfK3jcuq+UW9wzxrZBHmpnPEWXQQVdytnJLzdeE4lLKRwy/RL8BXKO0tW9jb6h
+         2Qib5KzAPtr8g5rgrHhmVC0wGZfx1bBlcmbU8D3irwevPM5qHvcuDRGgif4acai74XV3
+         E4qUfa6pkNMdYgrprgOCmP97kkx3dncEudJzMAWLuzOwOnOu7Ksvq/KaWF5cO+lpdM5K
+         kkGw==
+X-Gm-Message-State: APjAAAX/2PR4EoF2pV3iZVvejT1omIkTCiY3eQaHy5QOSCSw/eL/r82v
+        ngSH13x+6oVw5GacnEbLXtfM3w==
+X-Google-Smtp-Source: APXvYqxN/R60ymZE5BgyfVYlnYrvwIMdBjJapz4sBo4B+ExwAHn5hXfIq+WgqZCPqVQMVlWLa5VvyA==
+X-Received: by 2002:a05:651c:1025:: with SMTP id w5mr9990594ljm.68.1573574513469;
+        Tue, 12 Nov 2019 08:01:53 -0800 (PST)
+Received: from localhost (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
+        by smtp.gmail.com with ESMTPSA id v21sm8394109lfe.68.2019.11.12.08.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 08:01:52 -0800 (PST)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     catalin.marinas@arm.com
+Cc:     will@kernel.org, john.garry@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] arm64: Kconfig: add a choice for endianess
+Date:   Tue, 12 Nov 2019 17:01:44 +0100
+Message-Id: <20191112160144.8357-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191111220314.519933535@linutronix.de> <20191111223052.086299881@linutronix.de>
-In-Reply-To: <20191111223052.086299881@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 12 Nov 2019 08:00:54 -0800
-X-Gmail-Original-Message-ID: <CALCETrUcY_DhZC8CH0NhoRp_r6mh4v1Z2dmhsdErV8wx6FsLaw@mail.gmail.com>
-Message-ID: <CALCETrUcY_DhZC8CH0NhoRp_r6mh4v1Z2dmhsdErV8wx6FsLaw@mail.gmail.com>
-Subject: Re: [patch V2 06/16] x86/io: Speedup schedule out of I/O bitmap user
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> From: Thomas Gleixner <tglx@linutronix.de>
->
-> There is no requirement to update the TSS I/O bitmap when a thread using it is
-> scheduled out and the incoming thread does not use it.
->
-> For the permission check based on the TSS I/O bitmap the CPU calculates the memory
-> location of the I/O bitmap by the address of the TSS and the io_bitmap_base member
-> of the tss_struct. The easiest way to invalidate the I/O bitmap is to switch the
-> offset to an address outside of the TSS limit.
->
-> If an I/O instruction is issued from user space the TSS limit causes #GP to be
-> raised in the same was as valid I/O bitmap with all bits set to 1 would do.
->
-> This removes the extra work when an I/O bitmap using task is scheduled out
-> and puts the burden on the rare I/O bitmap users when they are scheduled
-> in.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->
+When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
+CONFIG_CPU_BIG_ENDIAN gets enabled. Which tends not to be what most
+people wants. Another concern that thas come up is that ACPI in't built
+for an allmodconfig kernel today since that also depends on !CPU_BIG_ENDIAN.
 
-> --- a/arch/x86/kernel/ioport.c
-> +++ b/arch/x86/kernel/ioport.c
+Rework so that we introduce a 'choice' and default the choice to
+CPU_LITTLE_ENDIAN. That means that when we build an allmodconfig kernel
+it will default to CPU_LITTLE_ENDIAN that most people tends to want.
 
-I won't swear this is wrong, but I'm not convinced it's correct
-either.  I see two issues:
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ arch/arm64/Kconfig | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> @@ -40,8 +40,6 @@ long ksys_ioperm(unsigned long from, uns
->                         return -ENOMEM;
->
->                 memset(bitmap, 0xff, IO_BITMAP_BYTES);
-> -               t->io_bitmap_ptr = bitmap;
-> -               set_thread_flag(TIF_IO_BITMAP);
->
->                 /*
->                  * Now that we have an IO bitmap, we need our TSS limit to be
-> @@ -50,6 +48,11 @@ long ksys_ioperm(unsigned long from, uns
->                  * limit correct.
->                  */
->                 preempt_disable();
-> +               t->io_bitmap_ptr = bitmap;
-> +               set_thread_flag(TIF_IO_BITMAP);
-> +               /* Make the bitmap base in the TSS valid */
-> +               tss = this_cpu_ptr(&cpu_tss_rw);
-> +               tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
->                 refresh_tss_limit();
->                 preempt_enable();
->         }
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 64764ca92fca..62f83c234a61 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -877,11 +877,24 @@ config ARM64_PA_BITS
+ 	default 48 if ARM64_PA_BITS_48
+ 	default 52 if ARM64_PA_BITS_52
+ 
++choice
++	prompt "Endianess"
++	default CPU_LITTLE_ENDIAN
++	help
++	  Choose what mode you plan on running your kernel in.
++
+ config CPU_BIG_ENDIAN
+        bool "Build big-endian kernel"
+        help
+          Say Y if you plan on running a kernel in big-endian mode.
+ 
++config CPU_LITTLE_ENDIAN
++	bool "Build little-endian kernel"
++	help
++	  Say Y if you plan on running a kernel in little-endian mode.
++
++endchoice
++
+ config SCHED_MC
+ 	bool "Multi-core scheduler support"
+ 	help
+-- 
+2.20.1
 
-It's not shown in the diff, but the very next line of code turns
-preemption back off.  This means that we might schedule right here
-with TIF_IO_BITMAP set, the base set to VALID, but the wrong data in
-the bitmap.  I *think* this will actually end up being okay, but it
-certainly makes understanding the code harder.  Can you adjust the
-code so that preemption stays off?
-
-More importantly, the code below this modifies the TSS copy in place
-instead of writing a whole new copy.  But now that you've added your
-optimization, the TSS copy might be *someone else's* IO bitmap.  So I
-think you might end up with more io ports allowed than you intended.
-For example:
-
-Task A uses ioperm() to enable all ports.
-Switch to task B.  Now the TSS base is INVALID but all bitmap bits are still 0.
-Task B calls ioperm().
-
-The code will set the base to VALID and will correctly set up the
-thread's copy of the bitmap, but I think the copy will only update the
-bits 0 through whatever ioperm() touched and not the bits above that
-in the TSS.
-
-I would believe that this is fixed later in your patch set.  If so,
-perhaps you should just memcpy() the whole thing without trying to
-optimize in this patch and then let the changes later re-optimize it
-as appropriate.  IOW change memcpy(tss->io_bitmap, t->io_bitmap_ptr,
-bytes_updated); to memcpy(..., BYTES_PER_LONG * IO_BITMAP_LONGS) or
-similar.
-
---Andy
