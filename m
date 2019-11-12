@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83BDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090A7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A3D22469
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1D722469
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfKLLUj (ORCPT
+        id S1727874AbfKLLUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:20:39 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33840 "EHLO
+        Tue, 12 Nov 2019 06:20:45 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33799 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbfKLLSX (ORCPT
+        with ESMTP id S1727428AbfKLLSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:18:23 -0500
+        Tue, 12 Nov 2019 06:18:21 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBT-0000PC-TY; Tue, 12 Nov 2019 12:18:07 +0100
+        id 1iUUBX-0000YG-HP; Tue, 12 Nov 2019 12:18:11 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 97E711C03AB;
-        Tue, 12 Nov 2019 12:17:59 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:17:59 -0000
-From:   "tip-bot2 for John Garry" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7CB1C1C0483;
+        Tue, 12 Nov 2019 12:18:07 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:07 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf tools: Fix cross compile for ARM64
-Cc:     John Garry <john.garry@huawei.com>,
+Subject: [tip: perf/core] perf dso: Refactor dso_cache__read()
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
-References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191025130000.13032-3-adrian.hunter@intel.com>
+References: <20191025130000.13032-3-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157355747919.29376.7056460865693873731.tip-bot2@tip-bot2>
+Message-ID: <157355748703.29376.7349254792650617038.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,66 +63,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     71f699078b154fcb1c9162fd0208ada9ce532ffc
-Gitweb:        https://git.kernel.org/tip/71f699078b154fcb1c9162fd0208ada9ce532ffc
-Author:        John Garry <john.garry@huawei.com>
-AuthorDate:    Wed, 06 Nov 2019 21:00:54 +08:00
+Commit-ID:     366df72657e0cd6bd072b56a48e63b8d89718f70
+Gitweb:        https://git.kernel.org/tip/366df72657e0cd6bd072b56a48e63b8d89718f70
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Fri, 25 Oct 2019 15:59:56 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 06 Nov 2019 15:49:39 -03:00
+CommitterDate: Wed, 06 Nov 2019 15:43:06 -03:00
 
-perf tools: Fix cross compile for ARM64
+perf dso: Refactor dso_cache__read()
 
-Currently when cross compiling perf tool for ARM64 on my x86 machine I
-get this error:
+Refactor dso_cache__read() to separate populating the cache from copying
+data from it.  This is preparation for adding a cache "write" that will
+update the data in the cache.
 
-  arch/arm64/util/sym-handling.c:9:10: fatal error: gelf.h: No such file or directory
-   #include <gelf.h>
-
-For the build, libelf is reported off:
-
-  Auto-detecting system features:
-  ...
-  ...                        libelf: [ OFF ]
-
-Indeed, test-libelf is not built successfully:
-
-  more ./build/feature/test-libelf.make.output
-  test-libelf.c:2:10: fatal error: libelf.h: No such file or directory
-   #include <libelf.h>
-          ^~~~~~~~~~
-  compilation terminated.
-
-I have no such problems natively compiling on ARM64, and I did not
-previously have this issue for cross compiling. Fix by relocating the
-gelf.h include.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/1573045254-39833-1-git-send-email-john.garry@huawei.com
+Cc: x86@kernel.org
+Link: http://lore.kernel.org/lkml/20191025130000.13032-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/util/sym-handling.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/dso.c | 64 ++++++++++++++++++++++++------------------
+ 1 file changed, 37 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/sym-handling.c b/tools/perf/arch/arm64/util/sym-handling.c
-index 5df7889..8dfa3e5 100644
---- a/tools/perf/arch/arm64/util/sym-handling.c
-+++ b/tools/perf/arch/arm64/util/sym-handling.c
-@@ -6,9 +6,10 @@
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index e11ddf8..460330d 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -768,7 +768,7 @@ dso_cache__free(struct dso *dso)
+ 	pthread_mutex_unlock(&dso->lock);
+ }
  
- #include "symbol.h" // for the elf__needs_adjust_symbols() prototype
- #include <stdbool.h>
--#include <gelf.h>
- 
- #ifdef HAVE_LIBELF_SUPPORT
-+#include <gelf.h>
-+
- bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
+-static struct dso_cache *dso_cache__find(struct dso *dso, u64 offset)
++static struct dso_cache *__dso_cache__find(struct dso *dso, u64 offset)
  {
- 	return ehdr.e_type == ET_EXEC ||
+ 	const struct rb_root *root = &dso->data.cache;
+ 	struct rb_node * const *p = &root->rb_node;
+@@ -863,54 +863,64 @@ out:
+ 	return ret;
+ }
+ 
+-static ssize_t
+-dso_cache__read(struct dso *dso, struct machine *machine,
+-		u64 offset, u8 *data, ssize_t size)
++static struct dso_cache *dso_cache__populate(struct dso *dso,
++					     struct machine *machine,
++					     u64 offset, ssize_t *ret)
+ {
+ 	u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
+ 	struct dso_cache *cache;
+ 	struct dso_cache *old;
+-	ssize_t ret;
+ 
+ 	cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
+-	if (!cache)
+-		return -ENOMEM;
++	if (!cache) {
++		*ret = -ENOMEM;
++		return NULL;
++	}
+ 
+ 	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
+-		ret = bpf_read(dso, cache_offset, cache->data);
++		*ret = bpf_read(dso, cache_offset, cache->data);
+ 	else
+-		ret = file_read(dso, machine, cache_offset, cache->data);
++		*ret = file_read(dso, machine, cache_offset, cache->data);
+ 
+-	if (ret > 0) {
+-		cache->offset = cache_offset;
+-		cache->size   = ret;
++	if (*ret <= 0) {
++		free(cache);
++		return NULL;
++	}
+ 
+-		old = dso_cache__insert(dso, cache);
+-		if (old) {
+-			/* we lose the race */
+-			free(cache);
+-			cache = old;
+-		}
++	cache->offset = cache_offset;
++	cache->size   = *ret;
+ 
+-		ret = dso_cache__memcpy(cache, offset, data, size);
++	old = dso_cache__insert(dso, cache);
++	if (old) {
++		/* we lose the race */
++		free(cache);
++		cache = old;
+ 	}
+ 
+-	if (ret <= 0)
+-		free(cache);
++	return cache;
++}
+ 
+-	return ret;
++static struct dso_cache *dso_cache__find(struct dso *dso,
++					 struct machine *machine,
++					 u64 offset,
++					 ssize_t *ret)
++{
++	struct dso_cache *cache = __dso_cache__find(dso, offset);
++
++	return cache ? cache : dso_cache__populate(dso, machine, offset, ret);
+ }
+ 
+ static ssize_t dso_cache_read(struct dso *dso, struct machine *machine,
+ 			      u64 offset, u8 *data, ssize_t size)
+ {
+ 	struct dso_cache *cache;
++	ssize_t ret = 0;
+ 
+-	cache = dso_cache__find(dso, offset);
+-	if (cache)
+-		return dso_cache__memcpy(cache, offset, data, size);
+-	else
+-		return dso_cache__read(dso, machine, offset, data, size);
++	cache = dso_cache__find(dso, machine, offset, &ret);
++	if (!cache)
++		return ret;
++
++	return dso_cache__memcpy(cache, offset, data, size);
+ }
+ 
+ /*
