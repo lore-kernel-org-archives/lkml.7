@@ -2,130 +2,167 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2432CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490ACC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E290B2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B35B2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LaKmPHUF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IfvI1TWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfKLAIN (ORCPT
+        id S1727845AbfKLAIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:08:13 -0500
-Received: from mail-eopbgr700053.outbound.protection.outlook.com ([40.107.70.53]:24193
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727793AbfKLAIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:08:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FICuulxL66LTwhkLvDjPdmwdzacRVpHa2goUNQMG4ouw5EIKi5qEmntQnfXnzSHUdqFXPCR4nF+kr1c4gR77PJTZo56t2EjwLvqLzYxEaBRNNAYYfttjqbWua1VQwShuzOuXPzQQVhEH7r74PeYY8wSy4CBhKxBPHgHdIhM+roFsZHf3DlLJb53TgiKmWosOWJmCf6qP0Ez72q5butTbcaPzIakiYVnfagpKcSRdkuHKx/qjgvNkvSlhOxwWXwpaa+mv5FyLNAHRcQXJyYIMHlWxHqrnhfMOZyWBKerWZlwF4eepSFx4kKg08qH2WxoQZLEdrU10FkCCwyhVmgA0gA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YxcxT4enKquqOZSfxUBr3KsWiQfpHJVq4MWaHDZHTUE=;
- b=HIvR2bOwojIFdWBuTQtAGVSvAoGM4RW5ILjsaFmywXQ1tMpPfRelWLBNI0wfhUsx1ZsD/wepjV7vTNouv8/Zbvj2gaJNjdwVnKy3NopiVVX8wI6xidqW1NVuT7XjHIj/qIoAOS4UcyLnNnRD2tN6TO67GM5kQOXZT63zzwBLrxKHXVt4iMan9Z8uQS7rzHH8xipUh3OBIObWZl1VrErhaF71wdP5fLPP7/d+lET4k6rSaAfIzup2K/13h9gYeAcST0tO8U9zbOzfD/gUU0VElYHoib95/HUDKocBLMqpRWuVRtwMqXqQq+LV2StqOib5iqfi4zLHlVKb/HDnn2vi5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YxcxT4enKquqOZSfxUBr3KsWiQfpHJVq4MWaHDZHTUE=;
- b=LaKmPHUFfNyMrZdFZDsO4241aiFSZR0jlgAeXGkCxu7r7Yp9+T0PkCYfRXOVFDevwreQ4UTbfqaTCbPnSM8lCMdXJWctmXU//aefW6irAnmrHELwBiI0kfjKNiVFkJenb98PHTwo7XrxEdnSHABtTpAqEbyUMZ0YQPKFfJTbbew=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
- DM6PR12MB3722.namprd12.prod.outlook.com (10.255.172.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.23; Tue, 12 Nov 2019 00:08:09 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 00:08:09 +0000
-Subject: Re: [PATCH v4 08/17] kvm: x86: Introduce APICv pre-update hook
-To:     "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1572648072-84536-9-git-send-email-suravee.suthikulpanit@amd.com>
- <20191104220457.GB23545@rkaganb.lan>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <a087061a-1217-962f-43ae-1d791c9d38f6@amd.com>
-Date:   Mon, 11 Nov 2019 18:08:05 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.1
-In-Reply-To: <20191104220457.GB23545@rkaganb.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR08CA0017.namprd08.prod.outlook.com
- (2603:10b6:805:66::30) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c8::18)
+        Mon, 11 Nov 2019 19:08:23 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:3406 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727615AbfKLAH3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:07:29 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc9f7870000>; Mon, 11 Nov 2019 16:06:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 11 Nov 2019 16:07:27 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 11 Nov 2019 16:07:27 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 00:07:27 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 12 Nov 2019 00:07:25 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dc9f7bc0004>; Mon, 11 Nov 2019 16:07:25 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v3 20/23] mm/gup_benchmark: use proper FOLL_WRITE flags instead of hard-coding "1"
+Date:   Mon, 11 Nov 2019 16:06:57 -0800
+Message-ID: <20191112000700.3455038-21-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191112000700.3455038-1-jhubbard@nvidia.com>
+References: <20191112000700.3455038-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-X-Originating-IP: [165.204.77.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f3dde5a2-3187-4467-8ff7-08d76704667d
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3722:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3722B41451ED4450E603E81EF3770@DM6PR12MB3722.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 021975AE46
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(366004)(39860400002)(346002)(199004)(189003)(478600001)(26005)(230700001)(99286004)(6116002)(3846002)(2486003)(52116002)(50466002)(2906002)(53546011)(6506007)(386003)(76176011)(446003)(36756003)(2616005)(11346002)(476003)(486006)(44832011)(25786009)(2501003)(47776003)(4744005)(66066001)(65956001)(65806001)(14454004)(6666004)(23676004)(5660300002)(6636002)(66556008)(7736002)(8676002)(86362001)(81156014)(31686004)(6512007)(66476007)(229853002)(186003)(66946007)(2201001)(31696002)(6486002)(15650500001)(14444005)(110136005)(58126008)(316002)(7416002)(6436002)(81166006)(6246003)(8936002)(305945005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3722;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MoPIKB1SeqI9frViaftfvpHRS+hq5r1p+b2Il+Tm9m+24K+08MC195xNIUPOIANGV8waNZ3wCtCixeQ7Zlo6oZSQpet3xXr0wbvS+wRH2IW82t6qmhMEBmV2MHDYUdac/P8RkCmExWsPAzewQ8TV5hHILi83qMS4u90i7SPwPp+nsVbcS/9qhyM6gQMBy279s1fO3SOzUce74KeXbThMhnDHkdLcmKf3UQq2ZMeqGRCmF1Iusim3ym2TAkqVNJXcUzU4ruwPpZD71UXXVD6Hc2+WWJqUEa61jum32setbjwVkXtnE6Qxn5K2kHsaNrgT2/5hc2IpBEH5zd6YiuBdQxQqFL3udpVDi9r+MLzdrzzO80qwbfTA6mvt0FnbFWgwhmAyF7ygz9xbJLBHlYGi8pBu6fNTG+aB32iJc3B4ycen1HgjENh8D0pdqdA7zs0Z
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3dde5a2-3187-4467-8ff7-08d76704667d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2019 00:08:09.6677
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TWbaMMO8uoCSsTMlLDjEZkp9XH/4Qn7KHGPPsVK1FvFNJ/LgkcCu92H8W6+Lme4FOikef4z1B5MRvD3R9B+KBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3722
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573517191; bh=7Vmsb+9KRgkgzRB+pY1tHWrSRQ+BM3AUrdVPH7GeYFc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=IfvI1TWtyCjO8OKOwI3I6WbabrJYVA+N4Jz98QsvLpsrZ643xabZCJXPOx4MydE4D
+         MuardO1IggwR2l+GAUtDMBIuT2QOyTWvgpRG4ViJuMFVzCUX53ZdppPYW1H/Wspg8t
+         VCIWUAprOaL0MyjTiTLKKRdu4OipTnaSfDsI/FFYPSSeRnJkVWnzsv3+cCFITtYgbj
+         CFdOqvnxVkrMp6RVFgPSm7x9J7q51Uzf0X0TPdZs+ckD9YPS/mFkdt/Kq0llzdav8t
+         oMqra+Yu2pIf6BBwyRsPl4kqozyu6pF5TLHPmoUp9DxVy7iKslb3X7AuObyLgJltZO
+         R+CroqZ5r/Shg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Roman,
+Fix the gup benchmark flags to use the symbolic FOLL_WRITE,
+instead of a hard-coded "1" value.
 
-On 11/4/19 4:05 PM, Roman Kagan wrote:
-> On Fri, Nov 01, 2019 at 10:41:31PM +0000, Suthikulpanit, Suravee wrote:
->> AMD SVM AVIC needs to update APIC backing page mapping before changing
->> APICv mode. Introduce struct kvm_x86_ops.pre_update_apicv_exec_ctrl
->> function hook to be called prior KVM APICv update request to each vcpu.
-> This again seems to mix up APIC backing page and APIC access page.
-> 
-> And I must be missing something obvious, but why is it necessary to
-> unmap the APIC access page while AVIC is disabled?  Does keeping it
-> around stand in the way when working with AVIC disabled?
+Also, clean up the filtering of gup flags a little, by just doing
+it once before issuing any of the get_user_pages*() calls. This
+makes it harder to overlook, instead of having little "gup_flags & 1"
+phrases in the function calls.
 
-I have replied to patch 07/17 with explanation.
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/gup_benchmark.c                         | 9 ++++++---
+ tools/testing/selftests/vm/gup_benchmark.c | 6 +++++-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-Yes, keeping the APIC access page while disabling AVIC would cause
-the SVM to not function properly.
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 7dd602d7f8db..7fc44d25eca7 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -48,18 +48,21 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 			nr =3D (next - addr) / PAGE_SIZE;
+ 		}
+=20
++		/* Filter out most gup flags: only allow a tiny subset here: */
++		gup->flags &=3D FOLL_WRITE;
++
+ 		switch (cmd) {
+ 		case GUP_FAST_BENCHMARK:
+-			nr =3D get_user_pages_fast(addr, nr, gup->flags & 1,
++			nr =3D get_user_pages_fast(addr, nr, gup->flags,
+ 						 pages + i);
+ 			break;
+ 		case GUP_LONGTERM_BENCHMARK:
+ 			nr =3D get_user_pages(addr, nr,
+-					    (gup->flags & 1) | FOLL_LONGTERM,
++					    gup->flags | FOLL_LONGTERM,
+ 					    pages + i, NULL);
+ 			break;
+ 		case GUP_BENCHMARK:
+-			nr =3D get_user_pages(addr, nr, gup->flags & 1, pages + i,
++			nr =3D get_user_pages(addr, nr, gup->flags, pages + i,
+ 					    NULL);
+ 			break;
+ 		default:
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/sel=
+ftests/vm/gup_benchmark.c
+index 485cf06ef013..389327e9b30a 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -18,6 +18,9 @@
+ #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
+=20
++/* Just the flags we need, copied from mm.h: */
++#define FOLL_WRITE	0x01	/* check pte is writable */
++
+ struct gup_benchmark {
+ 	__u64 get_delta_usec;
+ 	__u64 put_delta_usec;
+@@ -85,7 +88,8 @@ int main(int argc, char **argv)
+ 	}
+=20
+ 	gup.nr_pages_per_call =3D nr_pages;
+-	gup.flags =3D write;
++	if (write)
++		gup.flags |=3D FOLL_WRITE;
+=20
+ 	fd =3D open("/sys/kernel/debug/gup_benchmark", O_RDWR);
+ 	if (fd =3D=3D -1)
+--=20
+2.24.0
 
-Thanks,
-Suravee
-
-> Thanks,
-> Roman.
-> 
