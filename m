@@ -2,145 +2,308 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58092C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42164C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2239A214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:40:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="elsSpTlX"
+	by mail.kernel.org (Postfix) with ESMTP id 05871214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573544460;
+	bh=v/F5sTUf2yWEEvuwHVbJ6XDHKXcxZ9UoFtx0jwYCzzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wp/VRa/8jSWgFMuF1xEZsROJIi1iqMzNWNJFgHu4QSflNEypZ5Ioat+igsIteqjwY
+	 tyl1u8qHVi8IfYbPLUpqlkgF9kNVbgps2GixREmFO85VRjX8ePXjABCi2tHo83VZfH
+	 DMTbTJO/KeCGX4raKhLR3aTsb8KNGxYnRR53MUpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfKLHk2 (ORCPT
+        id S1726939AbfKLHk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:40:28 -0500
-Received: from mout.web.de ([217.72.192.78]:50559 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfKLHk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:40:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573544422;
-        bh=Bx/I0yo1cYmt1qgy7b9s0S9BXeDFQ3nSHmzgRbJyA+8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=elsSpTlXI9QZgtgUpXANUkNyDi2InsaiIt7CAf67EipS+GiFBk7+5B+NUNxB1tPLT
-         nytHejinKDudoKWI7JVjP4buhx3AcpyMExdXUKcMN3HebHHl3J+k74C8t/y4DNHlux
-         9otOPUu7MfCAhAiClZ1VyvXOVWrDnzNSuBSq34VY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.102.255]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LuuS5-1hmk1103O5-0108a6; Tue, 12
- Nov 2019 08:40:22 +0100
-Subject: Re: [3/4] pwm: omap-dmtimer: put_device() after
- of_find_device_by_node()
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-pwm@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Neil Brown <neilb@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191111071952.6pbswbboqreen6im@pengutronix.de>
- <20191111090357.13903-1-u.kleine-koenig@pengutronix.de>
- <20191111090357.13903-3-u.kleine-koenig@pengutronix.de>
- <812c95a0-7eb6-7ad6-16fa-c9e8339ff213@web.de>
- <20191111200907.vclloogaiu3mqxsn@pengutronix.de>
- <d4c63704-8c4c-c1c8-ab97-ce9701cf2da4@web.de>
- <20191111214619.whp2obgbrgb75a7k@pengutronix.de>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <8f3c4829-8634-74f8-20c4-b63c01ba526e@web.de>
-Date:   Tue, 12 Nov 2019 08:40:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 12 Nov 2019 02:40:59 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35380 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfKLHk6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 02:40:58 -0500
+Received: by mail-wr1-f65.google.com with SMTP id s5so6212458wrw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 23:40:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YfZMD2v0n4y9o90Eui6sfyXglUtKExySBM2mVvR5DAA=;
+        b=Z3mC+njo5DL8+ETb81MWm1IJ62z3wcvcozjBGCfW/iW5Svg1oTcLE9dXX61u4ZR2ej
+         0Cg4lgyh8zHuQ2PnNSahNOlJh8C9b0MsVxvEMBhi23Ww5OQmur581+r81rVKIodxPsxn
+         l+xEUfLZRv1BASa7751D8brpFBXCoYjxB0nU7Wrj3JhJ3A5OB8FEOhNRnj/Bt/SgbkCY
+         ZwqOf42NRKnqGYTmz67BKDOulppvm+iDYAHkzYWAThKUvJqUkPqOrYp8Hahbh/0glknv
+         HOisGItZh1Ge6EX6g44Yqn+E9+qfoiLf7LXOEeT11o578C365DC1hqrqtreneoNWqX9u
+         B1+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YfZMD2v0n4y9o90Eui6sfyXglUtKExySBM2mVvR5DAA=;
+        b=f93H2AsHG6UoFXDHGiDEfcAo2r1Ias4A0+PEbkpOjGsri16nLyhhmss71X+baNwEE8
+         MHlxMpG3fRDfnzHzgvylVrEUT/21THjFAaD3unC6mACdjkoiedFN+3wv7W9dJ8WIQY3Z
+         2d4xoPESi1D/m7YwM9lkb1DZf4dA8kGxM2JtsJciy/nEnYXnRBt20XUD8KsvdRDm3MZ8
+         purzHXuoizjnDfMWtZROuN8ZcbWY4W4XI6vfi2obAnqxoKPudr8J9z3E9NmzxMl0oqx/
+         0686FKtwgQ99b0spXww5eL+ooZKQh3xg6nXDW3fBNvt73CDRdq1kDGJFnd+2iG2HWBpw
+         UQxQ==
+X-Gm-Message-State: APjAAAUshMTUbzkCo8I0g894B+8M8+JrorvJGxII5r9DDqWebR5qKK3e
+        uQwPJZ3osi66Ai/AO2H49no=
+X-Google-Smtp-Source: APXvYqx54IUO1bycopDUYHtCELhFuRL69Ir+2++yoVoKNEfNI/azmSAUa6xdsxeiSU+alI5Qvxd/DQ==
+X-Received: by 2002:adf:cd0a:: with SMTP id w10mr13649065wrm.4.1573544455122;
+        Mon, 11 Nov 2019 23:40:55 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id x8sm17880666wrm.7.2019.11.11.23.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 23:40:54 -0800 (PST)
+Date:   Tue, 12 Nov 2019 08:40:52 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86/iopl: Factor out IO-bitmap related TSS fields into
+ 'struct x86_io_bitmap'
+Message-ID: <20191112074052.GD100264@gmail.com>
+References: <20191111220314.519933535@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191111214619.whp2obgbrgb75a7k@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jrucYJTFomSJTLjFNd4jChPNn2ko2jJHvN+BoD2vZ4z/ROBMlO/
- F3pZIAjrEs4zEp+5KgS77X4FJb2i/rGp3wnOKiby98YOl7EeaLqDGPxi1VO8GDlRCIrmb1d
- s7sX25aCo45gwqUiX18k4aC/UjW6IFRFKFAc+QwPlijgqcnVhp1DDguS2M62aZgvDTlR2Tv
- CC/Mah/w9t+hlO/n/UVMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TFQsNmdxjHU=:rjEn1Dpq2uQ49HbBHVXUi1
- wMz1JXRbCvR3GYQ8DaaRjZS5u4lwi/X8wrI19HtFuxUj8c3ElNjLAvYEDuOcMymcyJIBtWJl4
- hG7Ht2op94uTKNuengbQ4/o+89+Psqm/1oWq79tpQfSQMJ5mJY8zofyPHGXf2GG858z11Q95m
- gyb/TVdgbnM3TEIT6fpBUZ/PgCslW585QgMEstgEPHS9rauMKIycQY/aoJbCqP5nOfLqBpjpS
- oFVnDooe4pTLGwaQkwPFmi5kT9sdySXTvTUka2skeAdVjZhfb4c7vuvWlNQ5Dbp64V8ct0DnG
- im0wmp6ucPpUMIPFn1BHIT2u28zBD5bUV0NjqQh312wBf9gDplj5/w9wXYr47VA/9fAP75Pim
- kz3d7gxk6OkGRQ/h4RqWIyJ5Oh6FMLfhJI80nG1galSgRf3Dfc1vebYp0FQJSrP3oote5JNt8
- wxEhP1D83Tv9R6N3lbh7eYHlguaP8b/MeSzbjsTJeMUmnPoClCGTtcDT8bY0aCAQSh+u2urRG
- bASiDN8c0fSpy9TWosPf2qq3UL52vzHkpoaaSPLLm39axEq35bhqFfvL79MrhlAVYOzK5K2Ob
- s1IFoB6RzxD60V84RM2wx3iAegnce+9HdmZ3WMTHxArie/7d5wakxtd+6FICfuQEQVyWW0tRA
- hXmTaBltA9qtpQKpCJehk7v+DPDemz0RUDYObRgtcey22bThDwMUOfFKNvNZmT7LNxmwF0pVA
- wkpP35z9psfOG34jsiuPSDaqRGggnuVLnGtqEX+c/NrRPSqkmOH7hCzuBLRfgBc4Skmu70FWk
- K1m1Y7cDTQnQNDAJ5TU6KsIIvUzhbco60z84BxRUDlRnYgQn0La7t4GcL1Nz1FU65kePrM+du
- ncLP1ee5T8gi2T1qeK/W/+Nleh6tP5Ob2927FW71sdJbzxrjJds4LfZO27jFIaj6xtnp1TQBo
- Ap0jwxpxEdjSpoY9rToKwHD2q/1y4zW/0bXyIHHZFYZCcestwk64EjBEA3UjqfI70LHWHq1CN
- Xx556m39cMBXag8IIPAwT5J+/o1FlirSNlfh4uoTrRTH4aEezbQJ1NOLlKLYIsfNUWKSfXYfS
- nYIRYMG+qavxhodDp5G7DFBuSBmPIx/aNCg3vls34obAk9CuS+BO2WHqHwEcMQxN0CUWks0QO
- WJtGBl7OsC2sNNj8wdXX39EpjYBula4hzWEsqaJxLCIbYiEBwBVPgl2dHYmYjz0RYzAoB+zoU
- T61vKJpIuWQOjRTzT/waysFSW94V6pwl21sVbZVfInx5bDkV8Ta0fV4Ps9sU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111220314.519933535@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Would you like to mention any actions in the commit message explicitly?
->
-> I don't understand your question,
 
-I hope that remaining communication difficulties will be resolved better.
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
+> This is the second version of the attempt to confine the unwanted side
+> effects of iopl(). The first version of this series can be found here:
+> 
+>    https://lore.kernel.org/r/20191106193459.581614484@linutronix.de
+> 
+> The V1 cover letter also contains a longer variant of the
+> background. Summary:
+> 
+> iopl(level = 3) enables aside of access to all 65536 I/O ports also the
+> usage of CLI/STI in user space.
+> 
+> Disabling interrupts in user space can lead to system lockups and breaks
+> assumptions in the kernel that userspace always runs with interrupts
+> enabled.
+> 
+> iopl() is often preferred over ioperm() as it avoids the overhead of
+> copying the tasks I/O bitmap to the TSS bitmap on context switch. This
+> overhead can be avoided by providing a all zeroes bitmap in the TSS and
+> switching the TSS bitmap offset to this permit all IO bitmap. It's
+> marginally slower than iopl() which is a one time setup, but prevents the
+> usage of CLI/STI in user space.
+> 
+> The changes vs. V1:
+> 
+>     - Fix the reported fallout on 32bit (0-day/Ingo)
+> 
+>     - Implement a sequence count based conditional update (Linus)
+> 
+>     - Drop the copy optimization
+> 
+>     - Move the bitmap copying out of the context switch into the exit to
+>       user mode machinery. The context switch merely invalidates the TSS
+>       bitmap offset when a task using an I/O bitmap gets scheduled out.
+> 
+>     - Move all bitmap information into a data structure to avoid adding
+>       more fields to thread_struct.
+> 
+>     - Add a refcount so the potentially pointless duplication of the bitmap
+>       at fork can be avoided. 
+> 
+>     - Better sharing of update functions (Andy)
+> 
+>     - More updates to self tests to verify the share/unshare mechanism and
+>       the restore of an I/O bitmap when iopl() permissions are dropped.
+> 
+>     - Pick up a few acked/reviewed-by tags as applicable
 
-> but I assume the answer is "No, I want to keep the commit log as is".
+>  23 files changed, 614 insertions(+), 459 deletions(-)
 
-I suggest to take another look at the relevance of the corresponding
-Linux development documentation then.
+Ok, this new version is much easier on the eyes.
 
-Regards,
-Markus
+There's now a bigger collection of various x86_tss_struct fields related 
+to the IO-bitmap, and the organization of those fields is still a bit 
+idiosyncratic - for example tss->last_sequence doesn't tell us that it's 
+bitmap related.
+
+How about the patch below?
+
+It reorganizes all those fields into a new container structure, 'struct 
+x86_io_bitmap', adds it as tss.io_bitmap, and uses the prefix to shorten 
+and organize the names of the fields:
+
+   tss.last_bitmap         =>  tss.io_bitmap.last_bitmap
+   tss.last_sequence       =>  tss.io_bitmap.last_sequence
+   tss.io_bitmap_prev_max  =>  tss.io_bitmap.prev_max
+   tss.io_bitmap_bytes     =>  tss.io_bitmap.map_bytes
+   tss.io_bitmap_all       =>  tss.io_bitmap.map_all
+
+This makes it far more readable, and the local variable references as 
+short and tidy:
+
+   iobm->last_bitmap
+   iobm->last_sequence
+   iobm->prev_max
+   iobm->map_bytes
+   iobm->map_all
+
+Only build tested.
+
+Thanks,
+
+	Ingo
+
+ arch/x86/include/asm/processor.h | 38 +++++++++++++++++++++++---------------
+ arch/x86/kernel/cpu/common.c     |  6 +++---
+ arch/x86/kernel/process.c        | 14 +++++++-------
+ 3 files changed, 33 insertions(+), 25 deletions(-)
+
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 933f0b9b1cd7..4358ae63c252 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -333,11 +333,11 @@ struct x86_hw_tss {
+ #define IO_BITMAP_LONGS			(IO_BITMAP_BYTES / sizeof(long))
+ 
+ #define IO_BITMAP_OFFSET_VALID_MAP			\
+-	(offsetof(struct tss_struct, io_bitmap_bytes) -	\
++	(offsetof(struct tss_struct, io_bitmap.map_bytes) -	\
+ 	 offsetof(struct tss_struct, x86_tss))
+ 
+ #define IO_BITMAP_OFFSET_VALID_ALL			\
+-	(offsetof(struct tss_struct, io_bitmap_all) -	\
++	(offsetof(struct tss_struct, io_bitmap.map_all) -	\
+ 	 offsetof(struct tss_struct, x86_tss))
+ 
+ /*
+@@ -361,14 +361,11 @@ struct entry_stack_page {
+ 	struct entry_stack stack;
+ } __aligned(PAGE_SIZE);
+ 
+-struct tss_struct {
+-	/*
+-	 * The fixed hardware portion.  This must not cross a page boundary
+-	 * at risk of violating the SDM's advice and potentially triggering
+-	 * errata.
+-	 */
+-	struct x86_hw_tss	x86_tss;
+-
++/*
++ * All IO bitmap related data stored in the TSS:
++ */
++struct x86_io_bitmap
++{
+ 	/*
+ 	 * The bitmap pointer and the sequence number of the last active
+ 	 * bitmap. last_bitmap cannot be dereferenced. It's solely for
+@@ -384,7 +381,7 @@ struct tss_struct {
+ 	 * outside of the TSS limit. So for sane tasks there is no need to
+ 	 * actually touch the io_bitmap at all.
+ 	 */
+-	unsigned int		io_bitmap_prev_max;
++	unsigned int		prev_max;
+ 
+ 	/*
+ 	 * The extra 1 is there because the CPU will access an
+@@ -392,14 +389,25 @@ struct tss_struct {
+ 	 * bitmap. The extra byte must be all 1 bits, and must
+ 	 * be within the limit.
+ 	 */
+-	unsigned char		io_bitmap_bytes[IO_BITMAP_BYTES + 1]
+-				__aligned(sizeof(unsigned long));
++	unsigned char		map_bytes[IO_BITMAP_BYTES + 1] __aligned(sizeof(unsigned long));
++
+ 	/*
+ 	 * Special I/O bitmap to emulate IOPL(3). All bytes zero,
+ 	 * except the additional byte at the end.
+ 	 */
+-	unsigned char		io_bitmap_all[IO_BITMAP_BYTES + 1]
+-				__aligned(sizeof(unsigned long));
++	unsigned char		map_all[IO_BITMAP_BYTES + 1] __aligned(sizeof(unsigned long));
++};
++
++struct tss_struct {
++	/*
++	 * The fixed hardware portion.  This must not cross a page boundary
++	 * at risk of violating the SDM's advice and potentially triggering
++	 * errata.
++	 */
++	struct x86_hw_tss	x86_tss;
++
++	struct x86_io_bitmap	io_bitmap;
++
+ } __aligned(PAGE_SIZE);
+ 
+ DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index dfbe6fce04f3..eea0e3170de4 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1861,9 +1861,9 @@ void cpu_init(void)
+ 	/* Initialize the TSS. */
+ 	tss_setup_ist(tss);
+ 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
+-	tss->last_bitmap = NULL;
+-	tss->io_bitmap_prev_max = 0;
+-	memset(tss->io_bitmap_bytes, 0xff, sizeof(tss->io_bitmap_bytes));
++	tss->io_bitmap.last_bitmap = NULL;
++	tss->io_bitmap.prev_max = 0;
++	memset(tss->io_bitmap.map_bytes, 0xff, sizeof(tss->io_bitmap.map_bytes));
+ 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+ 
+ 	load_TR_desc();
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index ccb48f4dab75..8179f3ee6a55 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -350,16 +350,16 @@ static void tss_copy_io_bitmap(struct tss_struct *tss, struct io_bitmap *iobm)
+ 	 * permitted, then the copy needs to cover those as well so they
+ 	 * get turned off.
+ 	 */
+-	memcpy(tss->io_bitmap_bytes, iobm->bitmap_bytes,
+-	       max(tss->io_bitmap_prev_max, iobm->io_bitmap_max));
++	memcpy(tss->io_bitmap.map_bytes, iobm->bitmap_bytes,
++	       max(tss->io_bitmap.prev_max, iobm->io_bitmap_max));
+ 
+ 	/*
+ 	 * Store the new max and the sequence number of this bitmap
+ 	 * and a pointer to the bitmap itself.
+ 	 */
+-	tss->io_bitmap_prev_max = iobm->io_bitmap_max;
+-	tss->last_sequence = iobm->sequence;
+-	tss->last_bitmap = iobm;
++	tss->io_bitmap.prev_max = iobm->io_bitmap_max;
++	tss->io_bitmap.last_sequence = iobm->sequence;
++	tss->io_bitmap.last_bitmap = iobm;
+ }
+ 
+ /**
+@@ -388,8 +388,8 @@ void tss_update_io_bitmap(void)
+ 			 * sequence number differs. The update time is
+ 			 * accounted to the incoming task.
+ 			 */
+-			if (tss->last_bitmap != iobm ||
+-			    tss->last_sequence != iobm->sequence)
++			if (tss->io_bitmap.last_bitmap != iobm ||
++			    tss->io_bitmap.last_sequence != iobm->sequence)
+ 				tss_copy_io_bitmap(tss, iobm);
+ 
+ 			/* Enable the bitmap */
