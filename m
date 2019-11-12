@@ -2,383 +2,138 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BD2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D360C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F300214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBC220578
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwQfrM41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfKLXwH (ORCPT
+        id S1727593AbfKLXwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:52:07 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57318 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726962AbfKLXuf (ORCPT
+        Tue, 12 Nov 2019 18:52:43 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33688 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfKLXwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:50:35 -0500
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-0008IG-Pi; Tue, 12 Nov 2019 23:50:33 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-00057S-QY; Tue, 12 Nov 2019 23:50:32 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Tue, 12 Nov 2019 18:52:43 -0500
+Received: by mail-pl1-f193.google.com with SMTP id ay6so232140plb.0;
+        Tue, 12 Nov 2019 15:52:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tw91lst0dNde7dimiqIf8EtBl/EXAQ1HLGmuLyxMvds=;
+        b=TwQfrM41lZiZHLZb/qu7NsuUBShPPqwMoTbrjeRet1KfqGkoxSJ7nrrp2y5GTT5qi1
+         NPUJ7+KFPGhFJoviLKCtyVsE5Q4+A1rvqmHXO9foeBHnHkCRqOm+CzSwh2lVMPLlmyuz
+         yUvbDgNljUXlGAtYOLYosFdOTJsUlKPQKYCv8uoc7q7UWV/+AynJpbx13ZZ/cHtNlhip
+         scXCSUm6YZsGsaX2uJDZfNXmP/OmNki5/rQq8wAMCO8KxVMbbiM9oWCOgTloyMh8U+1p
+         hbRwiJ3CygN3XauzLUEdl5qh2niHtJLM67ABFRrERNmn1lQXekSPhagF6DUbbS9wu6XH
+         uQvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tw91lst0dNde7dimiqIf8EtBl/EXAQ1HLGmuLyxMvds=;
+        b=rMWVLo7sXInoaEc8F0L/ST3QZHWVFmFlv32lR34RKADYmLfVMWQXEuNstJiE6u9zUe
+         Chf5hVvp3FdOSco4eSb0ktpWRWNk4wNDKFuQQwtv2oP2A8p70yjdaBIDBFeVB6GKADwQ
+         8a6RKB57vVOUKDZg2o6EE/RRLC8a2N0ndANJoEme37EkO56d4wpt4w2az8HVmM7HVwWe
+         KhcxuWL9tZWiLUMg1jF2LMZLoeZRUUgXKjtx+ejAicZ0/IakhbEyPFxBblQm/4o30hwY
+         cKshhXMUxnEaawnMTt+83Lw/bIaVoaBh8jdSz/58lQ0uj879z62nIn0d3E6dtw0MsWga
+         41sg==
+X-Gm-Message-State: APjAAAVVs0I46rDUywH4HkfUfBo4UUx2d5DTy2e4cRc8e68RuP4rDz3u
+        cjEQj7+SdeE3tScbuYvGDSY=
+X-Google-Smtp-Source: APXvYqzTyHk7x9efOOdmCLESQZEO9lqisWDr1jViWTdzFHuFT5qZpaYOLEwdN+vqqmSTc/Km2iAsmg==
+X-Received: by 2002:a17:902:1:: with SMTP id 1mr490950pla.338.1573602761713;
+        Tue, 12 Nov 2019 15:52:41 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id v3sm98110pfi.26.2019.11.12.15.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 15:52:40 -0800 (PST)
+Date:   Tue, 12 Nov 2019 15:52:38 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] Input: ili210x - add resolution to chip
+ operations structure
+Message-ID: <20191112235238.GE13374@dtor-ws>
+References: <20191112210148.3535-1-TheSven73@gmail.com>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Imre Deak" <imre.deak@intel.com>,
-        "Mika Kuoppala" <mika.kuoppala@linux.intel.com>
-Date:   Tue, 12 Nov 2019 23:48:11 +0000
-Message-ID: <lsq.1573602477.299501581@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 14/25] drm/i915/gen8+: Add RC6 CTX corruption WA
-In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112210148.3535-1-TheSven73@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.77-rc1 review patch.  If anyone has any objections, please let me know.
+On Tue, Nov 12, 2019 at 04:01:47PM -0500, Sven Van Asbroeck wrote:
+> Optionally allow the touch screen resolution to be set by adding
+> it to the chip operations structure. If it is omitted (left zero),
+> the resolution defaults to 64K. Which is the previously hard-coded
+> value.
+> 
+> Set the ili2117 resolution to 2048, as indicated in its datasheet.
+> 
+> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
+> Cc: Marek Vasut <marex@denx.de>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: <linux-kernel@vger.kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  drivers/input/touchscreen/ili210x.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+> index a6feae5ce887..3b8e24815a1f 100644
+> --- a/drivers/input/touchscreen/ili210x.c
+> +++ b/drivers/input/touchscreen/ili210x.c
+> @@ -31,6 +31,7 @@ struct ili2xxx_chip {
+>  				 unsigned int *x, unsigned int *y);
+>  	bool (*continue_polling)(const u8 *data, bool touch);
+>  	unsigned int max_touches;
+> +	unsigned int resolution;
+>  };
+>  
+>  struct ili210x {
+> @@ -160,6 +161,7 @@ static const struct ili2xxx_chip ili211x_chip = {
+>  	.parse_touch_data	= ili211x_touchdata_to_coords,
+>  	.continue_polling	= ili211x_decline_polling,
+>  	.max_touches		= 10,
+> +	.resolution		= 2048,
+>  };
+>  
+>  static int ili251x_read_reg(struct i2c_client *client,
+> @@ -336,6 +338,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+>  	struct gpio_desc *reset_gpio;
+>  	struct input_dev *input;
+>  	int error;
+> +	unsigned int max_xy;
+>  
+>  	dev_dbg(dev, "Probing for ILI210X I2C Touschreen driver");
+>  
+> @@ -386,8 +389,9 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+>  	input->id.bustype = BUS_I2C;
+>  
+>  	/* Multi touch */
+> -	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 0xffff, 0, 0);
+> -	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 0xffff, 0, 0);
+> +	max_xy = (chip->resolution ?: SZ_64K) - 1;
 
-------------------
+I had to add linux/sizes.h for this.
 
-From: Imre Deak <imre.deak@intel.com>
+Applied, thank you.
 
-commit 7e34f4e4aad3fd34c02b294a3cf2321adf5b4438 upstream.
-
-In some circumstances the RC6 context can get corrupted. We can detect
-this and take the required action, that is disable RC6 and runtime PM.
-The HW recovers from the corrupted state after a system suspend/resume
-cycle, so detect the recovery and re-enable RC6 and runtime PM.
-
-v2: rebase (Mika)
-v3:
-- Move intel_suspend_gt_powersave() to the end of the GEM suspend
-  sequence.
-- Add commit message.
-v4:
-- Rebased on intel_uncore_forcewake_put(i915->uncore, ...) API
-  change.
-v5:
-- Rebased on latest upstream gt_pm refactoring.
-
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Signed-off-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/gpu/drm/i915/i915_drv.c      |   4 +
- drivers/gpu/drm/i915/i915_drv.h      |   5 +
- drivers/gpu/drm/i915/i915_reg.h      |   2 +
- drivers/gpu/drm/i915/intel_display.c |   9 ++
- drivers/gpu/drm/i915/intel_drv.h     |   3 +
- drivers/gpu/drm/i915/intel_pm.c      | 146 +++++++++++++++++++++++++--
- 6 files changed, 162 insertions(+), 7 deletions(-)
-
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -604,6 +604,8 @@ static int i915_drm_thaw_early(struct dr
- 	intel_uncore_sanitize(dev);
- 	intel_power_domains_init_hw(dev_priv);
- 
-+	i915_rc6_ctx_wa_resume(dev_priv);
-+
- 	return 0;
- }
- 
-@@ -926,6 +928,8 @@ static int i915_pm_suspend_late(struct d
- 	if (drm_dev->switch_power_state == DRM_SWITCH_POWER_OFF)
- 		return 0;
- 
-+	i915_rc6_ctx_wa_suspend(to_i915(drm_dev));
-+
- 	pci_disable_device(pdev);
- 	pci_set_power_state(pdev, PCI_D3hot);
- 
---- a/drivers/gpu/drm/i915/i915_drv.h
-+++ b/drivers/gpu/drm/i915/i915_drv.h
-@@ -910,6 +910,7 @@ struct intel_gen6_power_mgmt {
- 	enum { LOW_POWER, BETWEEN, HIGH_POWER } power;
- 
- 	bool enabled;
-+	bool ctx_corrupted;
- 	struct delayed_work delayed_resume_work;
- 
- 	/*
-@@ -1959,6 +1960,10 @@ struct drm_i915_cmd_table {
- 
- /* Early gen2 have a totally busted CS tlb and require pinned batches. */
- #define HAS_BROKEN_CS_TLB(dev)		(IS_I830(dev) || IS_845G(dev))
-+
-+#define NEEDS_RC6_CTX_CORRUPTION_WA(dev)	\
-+	(IS_BROADWELL(dev) || INTEL_INFO(dev)->gen == 9)
-+
- /*
-  * dp aux and gmbus irq on gen4 seems to be able to generate legacy interrupts
-  * even when in MSI mode. This results in spurious interrupt warnings if the
---- a/drivers/gpu/drm/i915/i915_reg.h
-+++ b/drivers/gpu/drm/i915/i915_reg.h
-@@ -136,6 +136,8 @@
- #define   ECOCHK_PPGTT_WT_HSW		(0x2<<3)
- #define   ECOCHK_PPGTT_WB_HSW		(0x3<<3)
- 
-+#define GEN8_RC6_CTX_INFO		0x8504
-+
- #define GAC_ECO_BITS			0x14090
- #define   ECOBITS_SNB_BIT		(1<<13)
- #define   ECOBITS_PPGTT_CACHE64B	(3<<8)
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -8787,6 +8787,10 @@ void intel_mark_busy(struct drm_device *
- 		return;
- 
- 	intel_runtime_pm_get(dev_priv);
-+
-+	if (NEEDS_RC6_CTX_CORRUPTION_WA(dev))
-+		gen6_gt_force_wake_get(dev_priv, FORCEWAKE_ALL);
-+
- 	i915_update_gfx_val(dev_priv);
- 	dev_priv->mm.busy = true;
- }
-@@ -8814,6 +8818,11 @@ void intel_mark_idle(struct drm_device *
- 	if (INTEL_INFO(dev)->gen >= 6)
- 		gen6_rps_idle(dev->dev_private);
- 
-+	if (NEEDS_RC6_CTX_CORRUPTION_WA(dev)) {
-+		i915_rc6_ctx_wa_check(dev_priv);
-+		gen6_gt_force_wake_put(dev_priv, FORCEWAKE_ALL);
-+	}
-+
- out:
- 	intel_runtime_pm_put(dev_priv);
- }
---- a/drivers/gpu/drm/i915/intel_drv.h
-+++ b/drivers/gpu/drm/i915/intel_drv.h
-@@ -965,6 +965,9 @@ void intel_enable_gt_powersave(struct dr
- void intel_disable_gt_powersave(struct drm_device *dev);
- void intel_reset_gt_powersave(struct drm_device *dev);
- void ironlake_teardown_rc6(struct drm_device *dev);
-+bool i915_rc6_ctx_wa_check(struct drm_i915_private *i915);
-+void i915_rc6_ctx_wa_suspend(struct drm_i915_private *i915);
-+void i915_rc6_ctx_wa_resume(struct drm_i915_private *i915);
- void gen6_update_ring_freq(struct drm_device *dev);
- void gen6_rps_idle(struct drm_i915_private *dev_priv);
- void gen6_rps_boost(struct drm_i915_private *dev_priv);
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -3378,11 +3378,17 @@ static void gen6_disable_rps_interrupts(
- 	I915_WRITE(GEN6_PMIIR, dev_priv->pm_rps_events);
- }
- 
--static void gen6_disable_rps(struct drm_device *dev)
-+static void gen6_disable_rc6(struct drm_device *dev)
- {
- 	struct drm_i915_private *dev_priv = dev->dev_private;
- 
- 	I915_WRITE(GEN6_RC_CONTROL, 0);
-+}
-+
-+static void gen6_disable_rps(struct drm_device *dev)
-+{
-+	struct drm_i915_private *dev_priv = dev->dev_private;
-+
- 	I915_WRITE(GEN6_RPNSWREQ, 1 << 31);
- 
- 	if (IS_BROADWELL(dev))
-@@ -3391,12 +3397,15 @@ static void gen6_disable_rps(struct drm_
- 		gen6_disable_rps_interrupts(dev);
- }
- 
--static void valleyview_disable_rps(struct drm_device *dev)
-+static void valleyview_disable_rc6(struct drm_device *dev)
- {
- 	struct drm_i915_private *dev_priv = dev->dev_private;
- 
- 	I915_WRITE(GEN6_RC_CONTROL, 0);
-+}
- 
-+static void valleyview_disable_rps(struct drm_device *dev)
-+{
- 	gen6_disable_rps_interrupts(dev);
- }
- 
-@@ -3529,7 +3538,8 @@ static void gen8_enable_rps(struct drm_d
- 	I915_WRITE(GEN6_RC6_THRESHOLD, 50000); /* 50/125ms per EI */
- 
- 	/* 3: Enable RC6 */
--	if (intel_enable_rc6(dev) & INTEL_RC6_ENABLE)
-+	if (!dev_priv->rps.ctx_corrupted &&
-+	    intel_enable_rc6(dev) & INTEL_RC6_ENABLE)
- 		rc6_mask = GEN6_RC_CTL_RC6_ENABLE;
- 	intel_print_rc6_info(dev, rc6_mask);
- 	I915_WRITE(GEN6_RC_CONTROL, GEN6_RC_CTL_HW_ENABLE |
-@@ -4707,10 +4717,103 @@ static void intel_init_emon(struct drm_d
- 	dev_priv->ips.corr = (lcfuse & LCFUSE_HIV_MASK);
- }
- 
-+static bool i915_rc6_ctx_corrupted(struct drm_i915_private *dev_priv)
-+{
-+	return !I915_READ(GEN8_RC6_CTX_INFO);
-+}
-+
-+static void i915_rc6_ctx_wa_init(struct drm_i915_private *i915)
-+{
-+	if (!NEEDS_RC6_CTX_CORRUPTION_WA(i915->dev))
-+		return;
-+
-+	if (i915_rc6_ctx_corrupted(i915)) {
-+		DRM_INFO("RC6 context corrupted, disabling runtime power management\n");
-+		i915->rps.ctx_corrupted = true;
-+		intel_runtime_pm_get(i915);
-+	}
-+}
-+
-+static void i915_rc6_ctx_wa_cleanup(struct drm_i915_private *i915)
-+{
-+	if (i915->rps.ctx_corrupted) {
-+		intel_runtime_pm_put(i915);
-+		i915->rps.ctx_corrupted = false;
-+	}
-+}
-+
-+/**
-+ * i915_rc6_ctx_wa_suspend - system suspend sequence for the RC6 CTX WA
-+ * @i915: i915 device
-+ *
-+ * Perform any steps needed to clean up the RC6 CTX WA before system suspend.
-+ */
-+void i915_rc6_ctx_wa_suspend(struct drm_i915_private *i915)
-+{
-+	if (i915->rps.ctx_corrupted)
-+		intel_runtime_pm_put(i915);
-+}
-+
-+/**
-+ * i915_rc6_ctx_wa_resume - system resume sequence for the RC6 CTX WA
-+ * @i915: i915 device
-+ *
-+ * Perform any steps needed to re-init the RC6 CTX WA after system resume.
-+ */
-+void i915_rc6_ctx_wa_resume(struct drm_i915_private *i915)
-+{
-+	if (!i915->rps.ctx_corrupted)
-+		return;
-+
-+	if (i915_rc6_ctx_corrupted(i915)) {
-+		intel_runtime_pm_get(i915);
-+		return;
-+	}
-+
-+	DRM_INFO("RC6 context restored, re-enabling runtime power management\n");
-+	i915->rps.ctx_corrupted = false;
-+}
-+
-+static void intel_disable_rc6(struct drm_device *dev);
-+
-+/**
-+ * i915_rc6_ctx_wa_check - check for a new RC6 CTX corruption
-+ * @i915: i915 device
-+ *
-+ * Check if an RC6 CTX corruption has happened since the last check and if so
-+ * disable RC6 and runtime power management.
-+ *
-+ * Return false if no context corruption has happened since the last call of
-+ * this function, true otherwise.
-+*/
-+bool i915_rc6_ctx_wa_check(struct drm_i915_private *i915)
-+{
-+	if (!NEEDS_RC6_CTX_CORRUPTION_WA(i915->dev))
-+		return false;
-+
-+	if (i915->rps.ctx_corrupted)
-+		return false;
-+
-+	if (!i915_rc6_ctx_corrupted(i915))
-+		return false;
-+
-+	printk(KERN_NOTICE "[" DRM_NAME "] "
-+	       "RC6 context corruption, disabling runtime power management\n");
-+
-+	intel_disable_rc6(i915->dev);
-+	i915->rps.ctx_corrupted = true;
-+	intel_runtime_pm_get_noresume(i915);
-+
-+	return true;
-+}
-+
-+
- void intel_init_gt_powersave(struct drm_device *dev)
- {
- 	i915.enable_rc6 = sanitize_rc6_option(dev, i915.enable_rc6);
- 
-+	i915_rc6_ctx_wa_init(to_i915(dev));
-+
- 	if (IS_VALLEYVIEW(dev))
- 		valleyview_init_gt_powersave(dev);
- }
-@@ -4719,6 +4822,33 @@ void intel_cleanup_gt_powersave(struct d
- {
- 	if (IS_VALLEYVIEW(dev))
- 		valleyview_cleanup_gt_powersave(dev);
-+
-+	i915_rc6_ctx_wa_cleanup(to_i915(dev));
-+}
-+
-+static void __intel_disable_rc6(struct drm_device *dev)
-+{
-+	if (IS_VALLEYVIEW(dev))
-+		valleyview_disable_rc6(dev);
-+	else
-+		gen6_disable_rc6(dev);
-+}
-+
-+static void intel_disable_rc6(struct drm_device *dev)
-+{
-+	struct drm_i915_private *dev_priv = to_i915(dev);
-+
-+	mutex_lock(&dev_priv->rps.hw_lock);
-+	__intel_disable_rc6(dev);
-+	mutex_unlock(&dev_priv->rps.hw_lock);
-+}
-+
-+static void intel_disable_rps(struct drm_device *dev)
-+{
-+	if (IS_VALLEYVIEW(dev))
-+		valleyview_disable_rps(dev);
-+	else
-+		gen6_disable_rps(dev);
- }
- 
- void intel_disable_gt_powersave(struct drm_device *dev)
-@@ -4736,12 +4866,14 @@ void intel_disable_gt_powersave(struct d
- 			intel_runtime_pm_put(dev_priv);
- 
- 		cancel_work_sync(&dev_priv->rps.work);
-+
- 		mutex_lock(&dev_priv->rps.hw_lock);
--		if (IS_VALLEYVIEW(dev))
--			valleyview_disable_rps(dev);
--		else
--			gen6_disable_rps(dev);
-+
-+		__intel_disable_rc6(dev);
-+		intel_disable_rps(dev);
-+
- 		dev_priv->rps.enabled = false;
-+
- 		mutex_unlock(&dev_priv->rps.hw_lock);
- 	}
- }
-
+-- 
+Dmitry
