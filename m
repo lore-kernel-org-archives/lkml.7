@@ -2,102 +2,150 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8AAC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D955BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B9F21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD75021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmruY7yE"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="YZ+8M0RH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKLBi5 (ORCPT
+        id S1727073AbfKLBjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:38:57 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41305 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfKLBi4 (ORCPT
+        Mon, 11 Nov 2019 20:39:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39905 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfKLBjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:38:56 -0500
-Received: by mail-wr1-f67.google.com with SMTP id p4so16683636wrm.8;
-        Mon, 11 Nov 2019 17:38:55 -0800 (PST)
+        Mon, 11 Nov 2019 20:39:06 -0500
+Received: by mail-wr1-f66.google.com with SMTP id l7so5117871wrp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 17:39:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YiULEZkokgNmMrqFci3Nlwk7YUL2pDKG1OagmCeHKvI=;
-        b=dmruY7yE/dvccXk/rZHi6iA417hakL/D4k0+WlWyVHS3lG66vQGEGdLZfyfXFH3Fo/
-         xzgu3YOr1Eo7FEUm84GaDxtxo/quydotTWFBtlb/Q0ePub1uYuvz91GMaWay5v1DcjqT
-         a7hssXl5vvxYG6AylwOzUpw6F4UO+YdlAOV4ulUZIe4pCYjv9mqtzd1sV9fgmR/MQuw3
-         pS/Pkk90WHUkObOaL/7CqwjB+Ew9SOKfVxaORz0WqWjXCnIpMUAt9dg5at21AP8yUh8T
-         qzMpEnJdWFT6g2iJprBWI3xQckE5Fyj2fQlqSXKa+W8YJ7L9kcbvdG9y1Z5MCRx6OHgk
-         n/kQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=lp+rjsn167C3lmtCe6z3qS3tIVfXOT/rrM9f7kFPRTI=;
+        b=YZ+8M0RHIzmdHlAGYOAvTxZOoeDVpZHRgZ89hVxKT4t6R+2JdLlah32oH0wl93yfV8
+         R1Rh/dsZc3emYfh4rUjbLHZ/fT5RBbcATgEZ7xSF43idD22qCiLJ/QB4AbK02gTMB7fw
+         cbpFZv2o1nsZAKhyxlaaGxfnYnXFQgW5C6SrrTZS2QQC5g4n6kgoHAaSg0I50hXEcaYG
+         mGNootWCuWZ87DWA9w0B2bLMBryq6UraGt27gmTtKNWkQDYSirLad2jx041GIeQ19jiG
+         nyHHe/PYQvB/Ks73mmlvubBSrwlsUIiuIhlw4Ae+93e2VJfBHZTDEHRiW8S/5g4spmxW
+         1IBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YiULEZkokgNmMrqFci3Nlwk7YUL2pDKG1OagmCeHKvI=;
-        b=Jq00SQJ+Q1upx/qAkAPEPJc1zcOH9dYLXZrT86kK/Fk40dNYNT1XR642RHYafXqPTU
-         BRf9n40XGc3XJ5yEqUb0LQh3F0XZ5NB1uSGdoyjQoNtrmo+/UHhmYRR6GyWFzkwnZoD+
-         io6MznA80nd+G27nRHy9HVmk3vXYafKOtmF76u4yBBOimge11eLDSWIim6kWxgyRMJ9N
-         qSvnKlE4bLWqFTVOfTMvCoMOSfbl65FR9nmRKOE4F04SD+AmhQ6lsfi1/mI6fh11NB8D
-         tZWF39hIRSlVcmkm6ZyCF4RDR73R4JDUAS17Byh9WHyY37/x8egllxPlnA1eGMtm0CTd
-         kQuw==
-X-Gm-Message-State: APjAAAX78coPjXm9I7ILn4jucVojNEqXmobEfZ7oH3dousn+BObbfNu2
-        q9fcSeDKCVGxLL+clTTrb/jsCHTY4sY/dVH1vUjIazdU
-X-Google-Smtp-Source: APXvYqxXYyG7hCRjp8kmObfGVJp0w42islnFxgov672V5SeQh1/RJn08uQQh3TQcyy85z1RrDTE69+WTJFPVDtId0sQ=
-X-Received: by 2002:adf:f547:: with SMTP id j7mr24219844wrp.69.1573522734750;
- Mon, 11 Nov 2019 17:38:54 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=lp+rjsn167C3lmtCe6z3qS3tIVfXOT/rrM9f7kFPRTI=;
+        b=fnmmic0MVJ8OLctuYWjJ2EZ3KLiL7rcbov1r4elO/NHxhAC9Uj0sv3bwaLrF+RYpiq
+         6e1REKt8PSJ5vQqzqkELwAvTuLHPZS/fnXpGUHyJyhttmYQc9mXP+TUVQ6PR30tigXWr
+         VDm6EE6M+BqBC9VZBargRHQbxaSgAK45E03u/q+Yzn6I5SmMmN1dm8LI0WIUUE53sfnw
+         HNuyxxDN3Ghytfxzrq3UJOCcpfMW8P2yIVS/eBvX1D7e/ZubkG2/yKZ2TF+IzrLkZHOI
+         0+zVTXLol6oacxFe/mKPruoRGHVy1EIkKJUsJ1JwgVt3098h+kT1QIfB0ZwTHqYzHTxs
+         jq+g==
+X-Gm-Message-State: APjAAAVadrn2n82lBK8bwrrh6d2HsBKMOvlEJkk5w2YRO2d4CzaeEFt1
+        Vcx4UrC/jrMKscOWuxkLgfCR/vR0MJiC2w==
+X-Google-Smtp-Source: APXvYqx5IKJpOyjgqwQIy8+eEzp96ylq9hr4vtUpzWTCHYSiEC/zyz/yKZBSPz5utCMo4QzDLzo6eA==
+X-Received: by 2002:adf:de0a:: with SMTP id b10mr2161236wrm.268.1573522742552;
+        Mon, 11 Nov 2019 17:39:02 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a7sm18766652wrr.89.2019.11.11.17.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 17:39:02 -0800 (PST)
+Message-ID: <5dca0d36.1c69fb81.9d3b3.bf52@mx.google.com>
+Date:   Mon, 11 Nov 2019 17:39:02 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
- <20191111090230.3402-5-chunyan.zhang@unisoc.com> <20191112005600.GA9055@bogus>
-In-Reply-To: <20191112005600.GA9055@bogus>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 12 Nov 2019 09:38:18 +0800
-Message-ID: <CAAfSe-uohXXHyQ7txhPmLCpyQODDHAuxjuUVbGcwYySN6G9tNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] dt-bindings: serial: Add a new compatible string
- for SC9863A
-To:     Rob Herring <robh@kernel.org>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: linux-4.4.y
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.4.200-44-g92b9901ba23d
+In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
+References: <20191111181246.772983347@linuxfoundation.org>
+Subject: Re: [PATCH 4.4 00/43] 4.4.201-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 08:56, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, 11 Nov 2019 17:02:29 +0800, Chunyan Zhang wrote:
-> >
-> > SC9863A use the same serial device which SC9836 uses.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  Documentation/devicetree/bindings/serial/sprd-uart.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
->
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+stable-rc/linux-4.4.y boot: 84 boots: 7 failed, 68 passed with 7 offline, 2=
+ conflicts (v4.4.200-44-g92b9901ba23d)
 
-Yes, I know.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.4.y/kernel/v4.4.200-44-g92b9901ba23d/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
+/kernel/v4.4.200-44-g92b9901ba23d/
 
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
+Tree: stable-rc
+Branch: linux-4.4.y
+Git Describe: v4.4.200-44-g92b9901ba23d
+Git Commit: 92b9901ba23dbd26e916a393e557a5ffec117124
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 42 unique boards, 17 SoC families, 13 builds out of 190
 
-The reason was that I switched to yaml rather than txt in last version
-which recieved your Acked-by.
-Not sure for this kind of case I can still add your Acked-by.
+Boot Failures Detected:
 
-Thanks,
-Chunyan
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            exynos4412-odroidx2: 1 failed lab
+            exynos5422-odroidxu3: 2 failed labs
+            rk3288-rock2-square: 1 failed lab
+            rk3288-veyron-jaq: 1 failed lab
+            tegra124-jetson-tk1: 1 failed lab
+            tegra124-nyan-big: 1 failed lab
+
+Offline Platforms:
+
+arm:
+
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+    davinci_all_defconfig:
+        gcc-8
+            dm365evm,legacy: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+
+Conflicting Boot Failures Detected: (These likely are not failures as other=
+ labs are reporting PASS. Needs review.)
+
+arm:
+    multi_v7_defconfig:
+        exynos5800-peach-pi:
+            lab-collabora: FAIL (gcc-8)
+            lab-baylibre-seattle: PASS (gcc-8)
+
+x86_64:
+    x86_64_defconfig:
+        qemu_x86_64:
+            lab-collabora: PASS (gcc-8)
+            lab-baylibre: FAIL (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
