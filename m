@@ -2,101 +2,129 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21924C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821B1C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACFD206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573575394;
-	bh=TRwPZGlH//bhlgDF+Wk5v6jKkDq4rxd0924VenCbDbA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xA6Vkw9jNu9HRP4QXQGtAOVjLUFURf7wWbwHQZLGpUA4/30pNErvsdYClV9J4Adls
-	 RLlxadXH5e+ibFkrhOS2rc+TX6NWJI/OL9P1IQ+yNcQLG3u9FNPedrm7IjPCtEmIyq
-	 +T4CC7kMHrWcV/vpF7E3uhPpgAic7SF/IfRrzG5s=
+	by mail.kernel.org (Postfix) with ESMTP id 58974206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:16:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NVDLY1pr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKLQQc (ORCPT
+        id S1727102AbfKLQQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:16:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726799AbfKLQQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:16:32 -0500
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 12 Nov 2019 11:16:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52379 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726994AbfKLQQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:16:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573575397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=til87Hw17HKI7TEgbgUhu2Gk+tx9OhdI8SUQLLm8NMQ=;
+        b=NVDLY1pr5WvoG6V3EzQCkt+FfuHpvmiRqWQjDz6kM2+2zucg0MaJJhLJeXmMzXrVXaju/n
+        1kyTZQ+LWRgAlRlIxgAGEZ3oYD9aTmm7mMjfS02rlFCcTB+QyqfDmX01ujwUvNIzXvaHCx
+        khnmAQXluUzSOhJhYmdaAnHl8eE9bw8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-4pd-lHFHON-uapLGkhrGKQ-1; Tue, 12 Nov 2019 11:16:34 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9476B21A49
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573575391;
-        bh=TRwPZGlH//bhlgDF+Wk5v6jKkDq4rxd0924VenCbDbA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=y6WZxlIOMJWiuGYviWMAoGZuPgnos5KR1qJYnzL80B9ilyST4TVy7IF8IdS6wPe8q
-         6trP8hkm1BMPgmzDI3Ukmz2HJ903bGFX4GyJ3xmLyFt/N6wIGDqLH9LSssqGO5yzVY
-         B3SF56jlFHrfzQhhGtDZRldM3Y6xHEED8wRP2K80=
-Received: by mail-wm1-f52.google.com with SMTP id b11so3836210wmb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:16:31 -0800 (PST)
-X-Gm-Message-State: APjAAAUprDNR8zkoSoy05uvIQ2i5B5jKLRs9uhcLILIwHHxpYcavwp8C
-        6fmlz8WZQXzGf1nLcIXKzpADjHyVwdqtNenToZIlpA==
-X-Google-Smtp-Source: APXvYqzpJQ9PY/KWxX9UgBBVfbsbmsttUlmKmnDSyvt/OQnhgEqdCpruY+qVAoqbmOeB89wLZwhIyMuY7J+LPnt8lhs=
-X-Received: by 2002:a7b:c1ca:: with SMTP id a10mr5089137wmj.161.1573575390074;
- Tue, 12 Nov 2019 08:16:30 -0800 (PST)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1FE91800D63;
+        Tue, 12 Nov 2019 16:16:32 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1EA7E67E40;
+        Tue, 12 Nov 2019 16:16:30 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id xACGGTZK018091;
+        Tue, 12 Nov 2019 11:16:29 -0500
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id xACGGTeA018087;
+        Tue, 12 Nov 2019 11:16:29 -0500
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Tue, 12 Nov 2019 11:16:29 -0500 (EST)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     tglx@linutronix.de, linux-rt-users@vger.kernel.org
+cc:     Mike Snitzer <msnitzer@redhat.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>,
+        Scott Wood <swood@redhat.com>,
+        Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH RT 2/2 v2] list_bl: avoid BUG when the list is not locked
+Message-ID: <alpine.LRH.2.02.1911121110430.12815@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-References: <20191111220314.519933535@linutronix.de> <20191111223052.400498664@linutronix.de>
-In-Reply-To: <20191111223052.400498664@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 12 Nov 2019 08:16:19 -0800
-X-Gmail-Original-Message-ID: <CALCETrU1i4_N8M0o=8hxxPFYisLsxpmDqM-GTsymORp9UeZYSg@mail.gmail.com>
-Message-ID: <CALCETrU1i4_N8M0o=8hxxPFYisLsxpmDqM-GTsymORp9UeZYSg@mail.gmail.com>
-Subject: Re: [patch V2 09/16] x86/ioperm: Move TSS bitmap update to exit to
- user work
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 4pd-lHFHON-uapLGkhrGKQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: TEXT/PLAIN; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> There is no point to update the TSS bitmap for tasks which use I/O bitmaps
-> on every context switch. It's enough to update it right before exiting to
-> user space.
->
+list_bl would crash with BUG() if we used it without locking. dm-snapshot=
+=20
+uses its own locking on realtime kernels (it can't use list_bl because=20
+list_bl uses raw spinlock and dm-snapshot takes other non-raw spinlocks=20
+while holding bl_lock).
 
-+
-> +static inline void switch_to_bitmap(unsigned long tifp)
-> +{
-> +       /*
-> +        * Invalidate I/O bitmap if the previous task used it. If the next
-> +        * task has an I/O bitmap it will handle it on exit to user mode.
-> +        */
-> +       if (tifp & _TIF_IO_BITMAP)
-> +               tss_invalidate_io_bitmap(this_cpu_ptr(&cpu_tss_rw));
-> +}
+To avoid this BUG, we must set LIST_BL_LOCKMASK =3D 0.
 
-Shouldn't you be invalidating the io bitmap if the *next* task doesn't
-use?  Or is the rule that, when a non-io-bitmap-using task is running,
-even in kernel mode, the io bitmap is always invalid.
+This patch is intended only for the realtime kernel patchset, not for the=
+=20
+upstream kernel.
 
-As it stands, you need exit_thread() to invalidate the bitmap.  I
-assume it does, but I can't easily see it in the middle of the series
-like this.
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 
-IOW your code might be fine, but it could at least use some comments
-in appropriate places (exit_to_usermode_loop()?) that we guarantee
-that, if the bit is *clear*, then the TSS has the io bitmap marked
-invalid.  And add an assertion under CONFIG_DEBUG_ENTRY.
+Index: linux-rt-devel/include/linux/list_bl.h
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+--- linux-rt-devel.orig/include/linux/list_bl.h=092019-11-07 14:01:51.00000=
+0000 +0100
++++ linux-rt-devel/include/linux/list_bl.h=092019-11-08 10:12:49.000000000 =
++0100
+@@ -19,7 +19,7 @@
+  * some fast and compact auxiliary data.
+  */
+=20
+-#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
++#if (defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)) && !defined(CO=
+NFIG_PREEMPT_RT_BASE)
+ #define LIST_BL_LOCKMASK=091UL
+ #else
+ #define LIST_BL_LOCKMASK=090UL
+@@ -161,9 +161,6 @@ static inline void hlist_bl_lock(struct
+ =09bit_spin_lock(0, (unsigned long *)b);
+ #else
+ =09raw_spin_lock(&b->lock);
+-#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+-=09__set_bit(0, (unsigned long *)b);
+-#endif
+ #endif
+ }
+=20
+@@ -172,9 +169,6 @@ static inline void hlist_bl_unlock(struc
+ #ifndef CONFIG_PREEMPT_RT_BASE
+ =09__bit_spin_unlock(0, (unsigned long *)b);
+ #else
+-#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+-=09__clear_bit(0, (unsigned long *)b);
+-#endif
+ =09raw_spin_unlock(&b->lock);
+ #endif
+ }
 
-Also, do you need to update EXIT_TO_USERMODE_LOOP_FLAGS?
