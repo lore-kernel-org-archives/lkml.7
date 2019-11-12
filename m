@@ -2,120 +2,128 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F0FC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86732C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313A421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:17:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573586251;
-	bh=Wt3rFYctydOjbIfuhPKesLt74dXSwwsHPoiS7XNLSqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A5k7uWzwcEnOVS6CtYynLzABEWNFrM+xCJRluiUKOrdXwesATY2KHc65u9LvelcU0
-	 mlx0FWzrmoBkziuVOQ8347SLpF3y1Xisz2Y+SjSGNMCaMIiaJ9XPY56O37mC1gWSlP
-	 azxi6Y2gxD49ZOayksWzpOMpkUhXroYRi1WY+uK8=
+	by mail.kernel.org (Postfix) with ESMTP id 494D920818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7ZOC0g3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKLTRa (ORCPT
+        id S1727192AbfKLTSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:17:30 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39296 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfKLTRa (ORCPT
+        Tue, 12 Nov 2019 14:18:12 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39501 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfKLTSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:17:30 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v138so15866565oif.6;
-        Tue, 12 Nov 2019 11:17:29 -0800 (PST)
+        Tue, 12 Nov 2019 14:18:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id l7so8243628wrp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:18:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oXIfziVZw7Y8YB+U/H+A8E7j7mdgw7KPd8TkxpnLw/w=;
+        b=o7ZOC0g3VEfY8wREMzeySe9Dh5QhqIpKo2YMTVSS+gQTEI84LsqPuLHuJsdh5uGqCW
+         KsA6nuAqnPA5URCV+Oj3B/2lVfU2XgAjEbIPI3er/XY9f5uXZFEAarXycWmXRgEF3F/l
+         pbQNT7vffch4MO40SxYIdzJx5pw3NMIaAcBZpej70dTC7TLsTu+D34cxPtoO5LqxArro
+         Pjozy5H11OuFqBqJSTi4aUC13njlni1EJRx0BKjzUniGtO4D+vVlCoWYlDzMBPRgHU6R
+         aLgD4SkRpwOkbVvg7pngpR76gZCL6PdsyzHq54RnBsPkxlvcZKFYOHII2t77sGUtZ31j
+         9tkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DOxaXG+TZhstIZVYqS22mLzGBLiEMvGN3yM+TwStSBM=;
-        b=JiAQGmiW3P+CAzmp5YZu1/e3wXw1Gt9DXKKdMD8R309/6Q/BP0o/EodtSdMiRab/J+
-         iCNuW2z4/V9Ex7IXPkxDWbNP8rtKmrnX/uaTcVPctqd6Mze845afVR0G0ixzEvHfOK+d
-         hDPBf/vCnDNNU1mHAmgL2eJDVFU4cnetEg5/ZifM6eZwVUclO34lz1F7spAqbygKmtak
-         eJt8BiUeo6F9S9tRUsocETjmpgeZUdb7k/fWZYqFiv2XEFWJ2LRbwU68ESWsp5/GWozI
-         WL95wJ9rWFDxhS3Vit1T/DnjMvTK6CpSgvJpEicx/JHw9KEfY72WA39b0fMcseCMWhiA
-         Rs7w==
-X-Gm-Message-State: APjAAAXmo3Cx0lLPMtLfeg/Xz1cS+1eLQEmu5r9DLo/RjI4xpNTVawTt
-        Jk4o+aIgMikGop84abEk2Q==
-X-Google-Smtp-Source: APXvYqwB55rTeoE/9VgMp/1/IaxWGe0DHNYKNm7RGK1FZv/6GHDEAhjinAxPJdRKz5XEmcQISuEpSw==
-X-Received: by 2002:aca:edd8:: with SMTP id l207mr484171oih.102.1573586248860;
-        Tue, 12 Nov 2019 11:17:28 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j2sm1557043otn.20.2019.11.12.11.17.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oXIfziVZw7Y8YB+U/H+A8E7j7mdgw7KPd8TkxpnLw/w=;
+        b=hvFdmrzRttNzhPPuRcYUmQE6fHUiTboKDt1YoRrcKecKHf6a0Zk3a1B283HQ31ZTnm
+         1ZmfADVvrIMZcvilunWaygPQ84gTBfmovxZhHUVFo6lzCfXSs8FSJe0AvgET40a7z6xW
+         X44ODmR781VB95ULWxidT7Il6m65pHInh+3zgrahkM0UALmvwopIql3otUoTkF7Kjwle
+         QbVEBGi2um+tCHIXotGfagDh1EfftKftBAb4gb4FUJtTi8QEGrz6YT7ZuVT+M7oaoT8/
+         XZj5phgpx8couCwWm+558vNqLc9nRcYbXzCnfF+1ghS+xaI9CojN8mtBqFopMda0q6Tg
+         QQwQ==
+X-Gm-Message-State: APjAAAWoJP0ntP1qVlV0BQsGp7yH3Msc1kKZzUz7HajHIPRjx4rRt/nw
+        Qja5c+d5OyjwyjneU1Lk36sBFmhJRUY=
+X-Google-Smtp-Source: APXvYqwh1DxMBAiiArhj1BLtmYLNvW+fu1PXXz7MICsQ28Ustudx7b1fleNwOElvrjX69g9euasPJA==
+X-Received: by 2002:a5d:678f:: with SMTP id v15mr560972wru.242.1573586289862;
+        Tue, 12 Nov 2019 11:18:09 -0800 (PST)
+Received: from localhost.localdomain ([141.226.31.91])
+        by smtp.gmail.com with ESMTPSA id t134sm4565850wmt.24.2019.11.12.11.18.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:17:28 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:17:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v5 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-Message-ID: <20191112191727.GA31422@bogus>
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <73655e49e80ac08826ad2d470e1387ba1b662d83.1572950559.git.eswara.kota@linux.intel.com>
+        Tue, 12 Nov 2019 11:18:09 -0800 (PST)
+From:   Ramon Fried <rfried.dev@gmail.com>
+To:     tytso@mit.edu, arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ramon Fried <rfried.dev@gmail.com>
+Subject: [PATCH] random: switch pr_notice with pr_info
+Date:   Tue, 12 Nov 2019 21:17:25 +0200
+Message-Id: <20191112191724.13818-1-rfried.dev@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73655e49e80ac08826ad2d470e1387ba1b662d83.1572950559.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:44:01AM +0800, Dilip Kota wrote:
-> Add YAML schemas for PCIe RC controller on Intel Gateway SoCs
-> which is Synopsys DesignWare based PCIe core.
-> 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> ---
-> Changes on v5:
-> 	Add Reviewed-by Andrew Murray.
-> 	Add possible values and default value for max-link-speed.
-> 	Remove $ref and add maximum and default for reset-assert-ms.
-> 	Set true flag for linux,pci-domain.
-> 	Define maxItems for ranges and clock.
-> 	Define maximum for num-lanes.
-> 	Update required list:
-> 	  Add #address-cells, #size-cells, #interrupt-cells.
-> 	  Remove num-lanes and linux,pci-domain.
-> 	Add required header files in example.
-> 	Remove status entry in example.
-> 
-> changes on v4:
-> 	Add "snps,dw-pcie" compatible.
-> 	Rename phy-names property value to pcie.
-> 	And maximum and minimum values to num-lanes.
-> 	Add ref for reset-assert-ms entry and update the
-> 	 description for easy understanding.
-> 	Remove PCIe core interrupt entry.
-> 
-> changes on v3:
->         Add the appropriate License-Identifier
->         Rename intel,rst-interval to 'reset-assert-us'
->         Add additionalProperties: false
->         Rename phy-names to 'pciephy'
->         Remove the dtsi node split of SoC and board in the example
->         Add #interrupt-cells = <1>; or else interrupt parsing will fail
->         Name yaml file with compatible name
-> 
->  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 +++++++++++++++++++++
->  1 file changed, 138 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+Because there's no need to shout that loud.
+In a lot of systems pr_notice ends up also on the console
+especially in embedded systems, where it just annoying
+to get the "fast init done" just when you type a command
+in the terminal.
 
-I'm working on a common PCI schema which will shrink this, but in the 
-meantime:
+Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+---
+ drivers/char/random.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index de434feb873a..a619002f96af 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -885,7 +885,7 @@ static void crng_initialize(struct crng_state *crng)
+ 		invalidate_batched_entropy();
+ 		numa_crng_init();
+ 		crng_init = 2;
+-		pr_notice("random: crng done (trusting CPU's manufacturer)\n");
++		pr_info("random: crng done (trusting CPU's manufacturer)\n");
+ 	}
+ 	crng->init_time = jiffies - CRNG_RESEED_INTERVAL - 1;
+ }
+@@ -948,7 +948,7 @@ static int crng_fast_load(const char *cp, size_t len)
+ 		invalidate_batched_entropy();
+ 		crng_init = 1;
+ 		wake_up_interruptible(&crng_init_wait);
+-		pr_notice("random: fast init done\n");
++		pr_info("random: fast init done\n");
+ 	}
+ 	return 1;
+ }
+@@ -1033,15 +1033,15 @@ static void crng_reseed(struct crng_state *crng, struct entropy_store *r)
+ 		crng_init = 2;
+ 		process_random_ready_list();
+ 		wake_up_interruptible(&crng_init_wait);
+-		pr_notice("random: crng init done\n");
++		pr_info("random: crng init done\n");
+ 		if (unseeded_warning.missed) {
+-			pr_notice("random: %d get_random_xx warning(s) missed "
++			pr_info("random: %d get_random_xx warning(s) missed "
+ 				  "due to ratelimiting\n",
+ 				  unseeded_warning.missed);
+ 			unseeded_warning.missed = 0;
+ 		}
+ 		if (urandom_warning.missed) {
+-			pr_notice("random: %d urandom warning(s) missed "
++			pr_info("random: %d urandom warning(s) missed "
+ 				  "due to ratelimiting\n",
+ 				  urandom_warning.missed);
+ 			urandom_warning.missed = 0;
+-- 
+2.23.0
+
