@@ -2,177 +2,405 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2761C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE8DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B488620679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lg5ayaLm"
+	by mail.kernel.org (Postfix) with ESMTP id 7B63221925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfKLQKA (ORCPT
+        id S1727015AbfKLQLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:10:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20338 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726953AbfKLQKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:10:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573574999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=c7nS+L24X7lJanaYypJtlLKF8SsjhTn6uG0Gv83hCho=;
-        b=Lg5ayaLmvi0WXqh0Q8yu8yuA6xIsjdEs/QYbBcT2Aw8/L0zzZTVlS3RYy/2F64JYP1O4wk
-        h4fejeQ1rO8K4MsNdXf3qkdhWQpQhLU20hrR0qhyUteSp05oJwmUfoCT+SfkDTiw5T7JDN
-        k3puLkBGVUYUKiGVlvl2gmDoNfdPsrk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-Iv-B_fuvOduL8bLkc3OrQg-1; Tue, 12 Nov 2019 11:09:56 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 12 Nov 2019 11:11:04 -0500
+Received: from ms.lwn.net ([45.79.88.28]:41728 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfKLQLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:11:04 -0500
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA81FDC54;
-        Tue, 12 Nov 2019 16:09:54 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39F9C816E;
-        Tue, 12 Nov 2019 16:09:52 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id xACG9pOd017623;
-        Tue, 12 Nov 2019 11:09:51 -0500
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id xACG9pJr017619;
-        Tue, 12 Nov 2019 11:09:51 -0500
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 12 Nov 2019 11:09:51 -0500 (EST)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Mike Snitzer <msnitzer@redhat.com>
-cc:     Nikos Tsironis <ntsironis@arrikto.com>,
-        Scott Wood <swood@redhat.com>,
-        Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, tglx@linutronix.de
-Subject: [PATCH RT 1/2 v2] dm-snapshot: fix crash with the realtime kernel
-Message-ID: <alpine.LRH.2.02.1911121057490.12815@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by ms.lwn.net (Postfix) with ESMTPSA id 6E5F85A0;
+        Tue, 12 Nov 2019 16:11:02 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 09:11:00 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [RFC PATCH] Documentation: filesystems: convert vfat.txt to RST
+Message-ID: <20191112091100.3fb3dd06@lwn.net>
+In-Reply-To: <20191108183941.71760-1-dwlsalmeida@gmail.com>
+References: <20191108183941.71760-1-dwlsalmeida@gmail.com>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: Iv-B_fuvOduL8bLkc3OrQg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: TEXT/PLAIN; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Snapshot doesn't work with realtime kernels since the commit f79ae415b64c.
-hlist_bl is implemented as a raw spinlock and the code takes two non-raw
-spinlocks while holding hlist_bl (non-raw spinlocks are blocking mutexes
-in the realtime kernel).
+On Fri,  8 Nov 2019 15:39:41 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
 
-We can't change hlist_bl to use non-raw spinlocks, this triggers warnings=
-=20
-in dentry lookup code, because the dentry lookup code uses hlist_bl while=
-=20
-holding a seqlock.
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> Converts vfat.txt to the reStructuredText format, improving presentation
+> without changing the underlying content.
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
-This patch fixes the problem by using non-raw spinlock=20
-exception_table_lock instead of the hlist_bl lock.
+Thanks for doing this conversion!  A number of my comments from the FUSE
+patch apply here as well:
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Fixes: f79ae415b64c ("dm snapshot: Make exception tables scalable")
+- Copy the maintainer
 
----
- drivers/md/dm-snap.c |   23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+- Update MAINTAINERS
 
-Index: linux-2.6/drivers/md/dm-snap.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
---- linux-2.6.orig/drivers/md/dm-snap.c=092019-11-12 16:44:36.000000000 +01=
-00
-+++ linux-2.6/drivers/md/dm-snap.c=092019-11-12 17:01:46.000000000 +0100
-@@ -141,6 +141,10 @@ struct dm_snapshot {
- =09 * for them to be committed.
- =09 */
- =09struct bio_list bios_queued_during_merge;
-+
-+#ifdef CONFIG_PREEMPT_RT_BASE
-+=09spinlock_t exception_table_lock;
-+#endif
- };
-=20
- /*
-@@ -625,30 +629,46 @@ static uint32_t exception_hash(struct dm
-=20
- /* Lock to protect access to the completed and pending exception hash tabl=
-es. */
- struct dm_exception_table_lock {
-+#ifndef CONFIG_PREEMPT_RT_BASE
- =09struct hlist_bl_head *complete_slot;
- =09struct hlist_bl_head *pending_slot;
-+#else
-+=09spinlock_t *lock;
-+#endif
- };
-=20
- static void dm_exception_table_lock_init(struct dm_snapshot *s, chunk_t ch=
-unk,
- =09=09=09=09=09 struct dm_exception_table_lock *lock)
- {
-+#ifndef CONFIG_PREEMPT_RT_BASE
- =09struct dm_exception_table *complete =3D &s->complete;
- =09struct dm_exception_table *pending =3D &s->pending;
-=20
- =09lock->complete_slot =3D &complete->table[exception_hash(complete, chunk=
-)];
- =09lock->pending_slot =3D &pending->table[exception_hash(pending, chunk)];
-+#else
-+=09lock->lock =3D &s->exception_table_lock;
-+#endif
- }
-=20
- static void dm_exception_table_lock(struct dm_exception_table_lock *lock)
- {
-+#ifndef CONFIG_PREEMPT_RT_BASE
- =09hlist_bl_lock(lock->complete_slot);
- =09hlist_bl_lock(lock->pending_slot);
-+#else
-+=09spin_lock(lock->lock);
-+#endif
- }
-=20
- static void dm_exception_table_unlock(struct dm_exception_table_lock *lock=
-)
- {
-+#ifndef CONFIG_PREEMPT_RT_BASE
- =09hlist_bl_unlock(lock->pending_slot);
- =09hlist_bl_unlock(lock->complete_slot);
-+#else
-+=09spin_unlock(lock->lock);
-+#endif
- }
-=20
- static int dm_exception_table_init(struct dm_exception_table *et,
-@@ -1318,6 +1338,9 @@ static int snapshot_ctr(struct dm_target
- =09s->first_merging_chunk =3D 0;
- =09s->num_merging_chunks =3D 0;
- =09bio_list_init(&s->bios_queued_during_merge);
-+#ifdef CONFIG_PREEMPT_RT_BASE
-+=09spin_lock_init(&s->exception_table_lock);
-+#endif
-=20
- =09/* Allocate hash table for COW data */
- =09if (init_hash_tables(s)) {
+- Limit use of markup
 
+- Consider a move to the admin guide.  It's less obvious here, though,
+  because the information about the structure of the filesystem itself
+  arguably does not belong there.  A better place, honestly, might be as a
+  DOC block in the driver source itself, but that would need to be run past
+  the maintainer.
+
+A few other minor comments below.
+
+>  Documentation/filesystems/index.rst |   1 +
+>  Documentation/filesystems/vfat.rst  | 389 ++++++++++++++++++++++++++++
+>  Documentation/filesystems/vfat.txt  | 347 -------------------------
+>  3 files changed, 390 insertions(+), 347 deletions(-)
+>  create mode 100644 Documentation/filesystems/vfat.rst
+>  delete mode 100644 Documentation/filesystems/vfat.txt
+> 
+> diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+> index 2c3a9f761205..aaffaa9042c3 100644
+> --- a/Documentation/filesystems/index.rst
+> +++ b/Documentation/filesystems/index.rst
+> @@ -47,3 +47,4 @@ Documentation for filesystem implementations.
+>     :maxdepth: 2
+>  
+>     virtiofs
+> +   vfat
+> diff --git a/Documentation/filesystems/vfat.rst b/Documentation/filesystems/vfat.rst
+> new file mode 100644
+> index 000000000000..e24e69a2817d
+> --- /dev/null
+> +++ b/Documentation/filesystems/vfat.rst
+> @@ -0,0 +1,389 @@
+> +====
+> +VFAT
+> +====
+> +
+> +USING VFAT
+> +==========
+> +
+> +To use the vfat filesystem, use the filesystem type 'vfat'.  i.e.::
+> +
+> +  mount -t vfat /dev/fd0 /mnt
+> +
+> +
+> +No special partition formatter is required.
+> +``mkdosfs`` will work fine if you want to format from within Linux.
+> +
+> +VFAT MOUNT OPTIONS
+> +==================
+> +
+> +**uid=###**
+> +	Set the owner of all files on this filesystem.
+> +	The default is the *uid* of current process.
+> +
+> +**gid=###**
+> +	Set the group of all files on this filesystem.
+> +	The default is the *gid* of current process.
+> +
+> +**umask=###**     
+> +	The permission mask (for files and directories, see *umask(1)*).
+> +	The default is the *umask* of current process.
+> +
+> +**dmask=###**
+> +	The permission mask for the directory.
+> +	The default is the *umask* of current process.
+> +
+> +**fmask=###**
+> +	The permission mask for files.
+> +	The default is the *umask* of current process.
+> +
+> +**allow_utime=###**
+> +	This option controls the permission check of mtime/atime.
+> +
+> +		**-20**: If current process is in group of file's group ID, you can change timestamp.
+
+This has become a very long line; it will be more readable if you break
+it. 
+
+> +
+> +		**-2**: Other users can change timestamp.
+> +
+> +	The default is set from ``dmask`` option. If the directory is
+> +	writable, *utime(2)* is also allowed. i.e. ``~dmask & 022``.
+> +
+> +	Normally ``utime(2)`` checks current process is owner of
+> +	the file, or it has ``CAP_FOWNER`` capability.  But FAT
+> +	filesystem doesn't have uid/gid on disk, so normal
+> +	check is too unflexible. With this option you can
+> +	relax it.
+> +
+> +**codepage=###**
+> +	Sets the codepage number for converting to shortname
+> +	characters on FAT filesystem.
+> +	By default, ``FAT_DEFAULT_CODEPAGE`` setting is used.
+> +
+> +**iocharset=<name>**
+> +	Character set to use for converting between the
+> +	encoding is used for user visible filename and 16 bit
+> +	Unicode characters. Long filenames are stored on disk
+> +	in Unicode format, but Unix for the most part doesn't
+> +	know how to deal with Unicode.
+> +	By default, ``FAT_DEFAULT_IOCHARSET`` setting is used.
+> +
+> +	There is also an option of doing UTF-8 translations
+> +	with the utf8 option.
+> +
+> +.. note:: ``iocharset=utf8`` is not recommended. If unsure, you should consider the utf8 option instead.
+
+Here too.  This should be something like:
+
+  .. note::
+      ``iocharset=utf8`` is not recommended. If unsure, you should consider
+      the utf8 option instead.
+
+> +
+> +**utf8=<bool>**
+> +	UTF-8 is the filesystem safe version of Unicode that
+> +	is used by the console. It can be enabled or disabled
+> +	for the filesystem with this option.
+> +	If 'uni_xlate' gets set, UTF-8 gets disabled.
+> +	By default, ``FAT_DEFAULT_UTF8`` setting is used.
+> +
+> +**uni_xlate=<bool>**
+> +	Translate unhandled Unicode characters to special
+> +	escaped sequences.  This would let you backup and
+> +	restore filenames that are created with any Unicode
+> +	characters.  Until Linux supports Unicode for real,
+> +	this gives you an alternative.  Without this option,
+> +	a '?' is used when no translation is possible.  The
+> +	escape character is ':' because it is otherwise
+> +	illegal on the vfat filesystem.  The escape sequence
+> +	that gets used is ':' and the four digits of hexadecimal
+> +	unicode.
+> +
+> +**nonumtail=<bool>**
+> +	When creating 8.3 aliases, normally the alias will
+> +	end in '~1' or tilde followed by some number.  If this
+> +	option is set, then if the filename is 
+> +	"longfilename.txt" and "longfile.txt" does not
+> +	currently exist in the directory, ``longfile.txt`` will
+> +	be the short alias instead of ``longfi~1.txt``. 
+> +                  
+> +**usefree**
+> +	Use the "free clusters" value stored on ``FSINFO``. It'll
+> +	be used to determine number of free clusters without
+> +	scanning disk. But it's not used by default, because
+> +	recent Windows don't update it correctly in some
+> +	case. If you are sure the "free clusters" on ``FSINFO`` is
+> +	correct, by this option you can avoid scanning disk.
+> +
+> +**quiet**
+> +	Stops printing certain warning messages.
+> +
+> +**check=s|r|n**   
+> +	Case sensitivity checking setting.
+> +
+> +	**s**: strict, case sensitive
+> +
+> +	**r**: relaxed, case insensitive
+> +
+> +	**n**: normal, default setting, currently case insensitive
+> +
+> +**nocase**
+> +	This was deprecated for vfat. Use ``shortname=win95`` instead.
+> +
+> +**shortname=lower|win95|winnt|mixed**
+> +	Shortname display/create setting.
+> +
+> +	**lower**: convert to lowercase for display,
+> +	emulate the Windows 95 rule for create.
+> +
+> +	**win95**: emulate the Windows 95 rule for display/create.
+> +
+> +	**winnt**: emulate the Windows NT rule for display/create.
+> +
+> +	**mixed**: emulate the Windows NT rule for display,
+> +	emulate the Windows 95 rule for create.
+> +
+> +	Default setting is `mixed`.
+> +
+> +**tz=UTC**        
+> +	Interpret timestamps as UTC rather than local time.
+> +	This option disables the conversion of timestamps
+> +	between local time (as used by Windows on FAT) and UTC
+> +	(which Linux uses internally).  This is particularly
+> +	useful when mounting devices (like digital cameras)
+> +	that are set to UTC in order to avoid the pitfalls of
+> +	local time.
+> +
+> +**time_offset=minutes**
+> +	Set offset for conversion of timestamps from local time
+> +	used by FAT to UTC. I.e. <minutes> minutes will be subtracted
+> +	from each timestamp to convert it to UTC used internally by
+> +	Linux. This is useful when time zone set in ``sys_tz`` is
+> +	not the time zone used by the filesystem. Note that this
+> +	option still does not provide correct time stamps in all
+> +	cases in presence of DST - time stamps in a different DST
+> +	setting will be off by one hour.
+> +
+> +**showexec**      
+> +	If set, the execute permission bits of the file will be
+> +	allowed only if the extension part of the name is ``.EXE``,
+> +	``.COM``, or ``.BAT``. Not set by default.
+> +
+> +**debug**
+> +	Can be set, but unused by the current implementation.
+> +
+> +**sys_immutable**
+> +	If set, ATTR_SYS attribute on FAT is handled as
+> +	``IMMUTABLE`` flag on Linux. Not set by default.
+> +
+> +**flush**        
+> +	If set, the filesystem will try to flush to disk more
+> +	early than normal. Not set by default.
+> +
+> +**rodir**	 
+> +	FAT has the ``ATTR_RO`` (read-only) attribute. On Windows,
+> +	the ``ATTR_RO`` of the directory will just be ignored,
+> +	and is used only by applications as a flag (e.g. it's set
+> +	for the customized folder).
+> +
+> +	If you want to use ``ATTR_RO`` as read-only flag even for
+> +	the directory, set this option.
+> +
+> +**errors=panic|continue|remount-ro**
+> +	specify FAT behavior on critical errors: panic, continue
+> +	without doing anything or remount the partition in
+> +	read-only mode (default behavior).
+> +
+> +**discard**
+> +	If set, issues discard/TRIM commands to the block
+> +	device when blocks are freed. This is useful for SSD devices
+> +	and sparse/thinly-provisoned LUNs.
+> +
+> +**nfs=stale_rw|nostale_ro**
+> +	Enable this only if you want to export the FAT filesystem
+> +	over NFS.
+> +
+> +		**stale_rw**: This option maintains an index (cache) of directory
+> +		*inodes* by *i_logstart* which is used by the nfs-related code to
+> +		improve look-ups. Full file operations (read/write) over *NFS* is
+> +		supported but with cache eviction at *NFS* server, this could
+> +		result in ``ESTALE`` issues.
+> +
+> +		**nostale_ro**: This option bases the *inode* number and filehandle
+> +		on the on-disk location of a file in the MS-DOS directory entry.
+> +		This ensures that ``ESTALE`` will not be returned after a file is
+> +		evicted from the *inode* cache. However, it means that operations
+> +		such as rename, create and unlink could cause filehandles that
+> +		previously pointed at one file to point at a different file,
+> +		potentially causing data corruption. For this reason, this
+> +		option also mounts the filesystem readonly.
+> +
+> +	To maintain backward compatibility, ``'-o nfs'`` is also accepted,
+> +	defaulting to ``stale_rw``
+> +
+> +**dos1xfloppy  <bool>: 0,1,yes,no,true,false**
+> +	If set, use a fallback default BIOS Parameter Block
+> +	configuration, determined by backing device size. These static
+> +	parameters match defaults assumed by DOS 1.x for 160 kiB,
+> +	180 kiB, 320 kiB, and 360 kiB floppies and floppy images.
+> +
+> +
+> +
+> +LIMITATION
+> +==========
+> +The fallocated region of file is discarded at umount/evict time
+
+Put a blank line after the subheading markup.
+
+> +when using fallocate with FALLOC_FL_KEEP_SIZE.
+> +So, User should assume that fallocated region can be discarded at
+> +last close if there is memory pressure resulting in eviction of
+> +the inode from the memory. As a result, for any dependency on
+> +the fallocated region, user should make sure to recheck fallocate
+> +after reopening the file.
+> +
+> +TODO
+> +====
+> +Need to get rid of the raw scanning stuff.  Instead, always use
+> +a get next directory entry approach.  The only thing left that uses
+> +raw scanning is the directory renaming code.
+> +
+> +
+> +POSSIBLE PROBLEMS
+> +=================
+> +
+> +- vfat_valid_longname does not properly checked reserved names.
+> +- When a volume name is the same as a directory name in the root
+> +  directory of the filesystem, the directory name sometimes shows
+> +  up as an empty file.
+> +- autoconv option does not work correctly.
+> +
+> +BUG REPORTS
+> +===========
+> +If you have trouble with the *VFAT* filesystem, mail bug reports to
+> +chaffee@bmrc.cs.berkeley.edu.
+> +
+> +Please specify the filename and the operation that gave you trouble.
+> +
+> +TEST SUITE
+> +==========
+> +If you plan to make any modifications to the vfat filesystem, please
+> +get the test suite that comes with the vfat distribution at
+> +
+> +`<http://web.archive.org/web/*/http://bmrc.berkeley.edu/people/chaffee/vfat.html>`_
+> +
+> +This tests quite a few parts of the vfat filesystem and additional
+> +tests for new features or untested features would be appreciated.
+> +
+> +NOTES ON THE STRUCTURE OF THE VFAT FILESYSTEM
+> +=============================================
+> +This documentation was provided by Galen C. Hunt gchunt@cs.rochester.edu and lightly annotated by Gordon Chaffee.
+
+One more time, please avoid these really long lines.
+
+> +
+> +This document presents a very rough, technical overview of my
+> +knowledge of the extended FAT file system used in Windows NT 3.5 and
+> +Windows 95.  I don't guarantee that any of the following is correct,
+> +but it appears to be so.
+
+A paragraph like that suggests that this information might be a wee bit out
+of date - even if VFAT hasn't been changing much.  It might be worth asking
+the maintainer for an opinion on how current things are and maybe putting
+in a warning if it's truly obsolete.
+
+> +The extended FAT file system is almost identical to the FAT
+> +file system used in DOS versions up to and including *6.223410239847*
+> +:-).  The significant change has been the addition of long file names.
+> +These names support up to *255* characters including spaces and lower
+> +case characters as opposed to the traditional *8.3* short names.
+> +
+> +Here is the description of the traditional *FAT* entry in the current
+> +Windows 95 filesystem: ::
+
+Too many colons, just say "filesystem::".  There's a number of these.
+
+I'll stop here, that's enough to work on for now.
+
+Thanks,
+
+jon
