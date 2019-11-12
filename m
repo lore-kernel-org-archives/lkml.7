@@ -3,85 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F06DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE8921A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0012196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfKLRKc (ORCPT
+        id S1727561AbfKLRLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:10:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfKLRKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:10:32 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4461320679;
-        Tue, 12 Nov 2019 17:10:30 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 12:10:28 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        alexei.starovoitov@gmail.com
-Subject: Re: [PATCH -v5 04/17] x86/alternatives: Add and use text_gen_insn()
- helper
-Message-ID: <20191112121028.3ef25207@gandalf.local.home>
-In-Reply-To: <20191111132457.703538332@infradead.org>
-References: <20191111131252.921588318@infradead.org>
-        <20191111132457.703538332@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 12 Nov 2019 12:11:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35030 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbfKLRLA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:11:00 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iUZgv-0008Dy-2g; Tue, 12 Nov 2019 18:10:57 +0100
+Date:   Tue, 12 Nov 2019 18:10:56 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [patch V2 08/16] x86/ioperm: Add bitmap sequence number
+In-Reply-To: <CALCETrXcBpxwvoPtqa1-c+SF+4K9oeebUA_JFNaN2Yn2USwVNA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1911121809020.1833@nanos.tec.linutronix.de>
+References: <20191111220314.519933535@linutronix.de> <20191111223052.292300453@linutronix.de> <CALCETrXcBpxwvoPtqa1-c+SF+4K9oeebUA_JFNaN2Yn2USwVNA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 14:12:56 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, 12 Nov 2019, Andy Lutomirski wrote:
+> On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >         /*
+> > +        * The bitmap pointer and the sequence number of the last active
+> > +        * bitmap. last_bitmap cannot be dereferenced. It's solely for
+> > +        * comparison.
+> > +        */
+> > +       struct io_bitmap        *last_bitmap;
+> > +       u64                     last_sequence;
+> > +
+> > +       /*
+> >          * Store the dirty size of the last io bitmap offender. The next
+> >          * one will have to do the cleanup as the switch out to a non io
+> >          * bitmap user will just set x86_tss.io_bitmap_base to a value
+> 
+> Why is all this stuff in the TSS?  Would it make more sense in a
+> percpu variable tss_state?  By putting it in the TSS, you're putting
+> it in cpu_entry_area, which is at least a bit odd if not an actual
+> security problem.
+> 
+> And why do you need a last_bitmap pointer?  I thin that comparing just
+> last_sequence should be enough.  Keeping last_bitmap around at all is
+> asking for trouble, since it might point to freed memory.
 
-> +void *text_gen_insn(u8 opcode, const void *addr, const void *dest)
-> +{
-> +	static union text_poke_insn insn; /* text_mutex */
-> +	int size = 0;
-> +
-> +	lockdep_assert_held(&text_mutex);
-> +
-> +	insn.opcode = opcode;
-> +
-> +#define __CASE(insn)	\
-> +	case insn##_INSN_OPCODE: size = insn##_INSN_SIZE; break
-> +
-> +	switch(opcode) {
-> +	__CASE(INT3);
-> +	__CASE(CALL);
-> +	__CASE(JMP32);
-> +	__CASE(JMP8);
-> +	}
-> +
-> +	if (size > 1) {
-> +		insn.disp = (long)dest - (long)(addr + size);
-> +		if (size == 2)
+The bitmap pointer is pointless as I said in an earlier reply to Peter. It
+will go away. The sequence number and the dirty size are surely not a
+problem leakage wise, but yes, we could put it into a per cpu variable as
+well. Not sure whether it buys much.
+ 
+> > -               memcpy(tss->io_bitmap_bytes, iobm->bitmap_bytes,
+> > -                      max(tss->io_bitmap_prev_max, iobm->io_bitmap_max));
+> > +               if (tss->last_bitmap != iobm ||
+> > +                   tss->last_sequence != iobm->sequence)
+> 
+> As above, I think this could just be if (tss->last_sequence !=
+> iobm->sequence) or even if (this_cpu_read(cpu_tss_state.iobm_sequence)
+> != iobm->sequence).
 
-Could we add a comment here. It took me a little bit to figure out why
-you have this BUG_ON().
+Already fixed as per Peter's comments.
 
--- Steve
+Thanks,
 
-
-> +			BUG_ON((insn.disp >> 31) != (insn.disp >> 7));
-> +	}
-> +
-> +	return &insn.text;
-> +}
+	tglx
