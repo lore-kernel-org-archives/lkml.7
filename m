@@ -2,140 +2,116 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674D5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05113C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC8520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E4920659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofAr6ZvP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fU7vwVcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfKLVB6 (ORCPT
+        id S1726985AbfKLVJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:01:58 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37299 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfKLVB4 (ORCPT
+        Tue, 12 Nov 2019 16:09:19 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35064 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfKLVJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:01:56 -0500
-Received: by mail-qt1-f195.google.com with SMTP id g50so28934qtb.4;
-        Tue, 12 Nov 2019 13:01:54 -0800 (PST)
+        Tue, 12 Nov 2019 16:09:19 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r7so52597ljg.2;
+        Tue, 12 Nov 2019 13:09:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qyX4Z7dk195T8SFGUPO4T2jowou4yUxsFAfRoSseSpM=;
-        b=ofAr6ZvPPVnsqQBVUUfwdtvm3h/mGX9d+rC/I+dLjlRy2p+t3weW4DbGu6iSCmJH/I
-         3k8J+ya07BH0c2+xPa1RqV1yalf3VQk7/rp3SLTxdqaEz7kwpIxO8xROFRqVO1dgFktc
-         +pjNhL9KixAPbDGN17w2AAg598YQsBMJmKUoYMxtCGmcYYAY4xIChYarprmLxtO4udIX
-         cCrNkk3oN7PC1U5Qim/eEdKI8VojwTldDCjpFLcQ5VICXHFHttqv6+34oSVpb2aPm5tJ
-         8wCCeMBnKffuOjzsrVivkl6ZnR3cyTdoJt496RgdA9pOXjaCyNwO3UkwUs5nabPwk+Lr
-         PqlA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JPZechq2eKF4wwi+8Qv9lfknYNyHmyO47xHG86HtDMs=;
+        b=fU7vwVcrYm0D0uGcCtgj0ZXXNmSaBK8mJoOPiWQqqTejkcej/6TWQmT8eSkDCn4Jf/
+         Pr2gGz0366EnVZSFzSalSEisx2UYQv2iLejrLZdy1/PmVkbxERC3U08mvKGfl9VnXNhD
+         eG8dWD0PWDMQeFRVeCN43IAJViixazSac7nKrm6Fz0aYjflN8BCjXd5ENVGOk77tH5uw
+         s3NkaypO210iBobuYM8NgwwjOPZiL7rOKlV8y5tKqjIUGChDU8CHOoS8IjSCasdyn/Az
+         8r8Jf/O/RZu2evBDlSN/59MIt33XBDP+Hh1Kf9RP7DSKpnhoeCmsrxJjGsdlouvXvDlp
+         rZxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qyX4Z7dk195T8SFGUPO4T2jowou4yUxsFAfRoSseSpM=;
-        b=GadTDLoViZYqLZZkut2KWNUD/9S8GNcEE8uWoZjzd/R8rgwUBgJbWe+U8J7t+Lql2D
-         dNOl2XQkEKhjCh2TU7niJ3DOfLVJk1iQIHnxQmo6cUIFTlGe1AN+3l5RlSy5ZOIU+MM6
-         nFeo0ZbDW3vp/8fU6H2BVa5ZEvPHCDFMYOugrNw06/vWhDp4IP5D5V2TPDpHuKpD54jF
-         7cA9PLSSd5W8DitF3lMrzSxdMiMBK+a/tWNpW5UpkDEX7OFPskkzL7XblS5twY+LDL0/
-         Ll5wb7V38S2UW5o4yGhvjm7tROfQ5Gt1Qn30d88Vh9MW+DiQRwR2f50Upcz+dm+YfRMj
-         qJ6Q==
-X-Gm-Message-State: APjAAAU+Zy0kFIFdJJ0ymnTPblhQ+rT4UVsuYbmNaE3r5tXnBOsY2KhW
-        7YbK6YwhttHEXUOrZmONZw8=
-X-Google-Smtp-Source: APXvYqykZ/+J6YxcQZSfxkhdNfem524fdjlMh32brVJcCy1cVMACtbR9vrzBSxJlKVBWGR2pvs12eQ==
-X-Received: by 2002:ac8:1c03:: with SMTP id a3mr33306752qtk.31.1573592514196;
-        Tue, 12 Nov 2019 13:01:54 -0800 (PST)
-Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id 40sm1395635qtc.95.2019.11.12.13.01.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JPZechq2eKF4wwi+8Qv9lfknYNyHmyO47xHG86HtDMs=;
+        b=WLUcuqz1o/05TlKnpeX9SqJp8IvhikGpgMrRpgTDSLOs6of3p4qa6Jm8wgeuvzl2zq
+         ORjUuX0+hCOTYNiNs2IGGfn2jeSLezpXncBjULLT4or5FWTJ1d8oHolqG3erFvUNrpxn
+         QPMx8NAsfOMuDmmZZEXoqsBdxchIPI1/jcK7UjYKY3tMKhtPcDISVjlPsX70SPxDqsqY
+         QDdsunebGgO9tZaMAY2oAkv6vFqr6lW8BOqcEepsqMsvKM+KP9QfiqmikqNHmAKNpMdU
+         w4TcksGZ1uLit0EiaJeZCO2WvNOhI7aaAeua0hZaWXuhW07NdmUfPvDIov2P23Fvi44E
+         R7bg==
+X-Gm-Message-State: APjAAAUJfhXPwjaGOzJj5lqzDIPWgpO5OkJTTqbLpWDTjHXH+vzo0Z9L
+        5l37hEVFYrDnxb6qC5VIpPA=
+X-Google-Smtp-Source: APXvYqyo8cgTa2EjqKxK1NhWe5i3Yoq8ReGunMfOjSn81p4+F4lqwfdn3S7sooJZvNF/Jg8C9ieggg==
+X-Received: by 2002:a2e:9802:: with SMTP id a2mr21941492ljj.254.1573592957014;
+        Tue, 12 Nov 2019 13:09:17 -0800 (PST)
+Received: from uranus.localdomain ([5.18.102.224])
+        by smtp.gmail.com with ESMTPSA id u5sm9400286ljg.68.2019.11.12.13.09.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 13:01:53 -0800 (PST)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH v2 2/2] Input: ili210x - optionally show calibrate sysfs attribute
-Date:   Tue, 12 Nov 2019 16:01:48 -0500
-Message-Id: <20191112210148.3535-2-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191112210148.3535-1-TheSven73@gmail.com>
-References: <20191112210148.3535-1-TheSven73@gmail.com>
+        Tue, 12 Nov 2019 13:09:15 -0800 (PST)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 5B4884605D3; Wed, 13 Nov 2019 00:09:15 +0300 (MSK)
+Date:   Wed, 13 Nov 2019 00:09:15 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038@lists.linaro.org, Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 11/23] y2038: rusage: use __kernel_old_timeval
+Message-ID: <20191112210915.GD5130@uranus>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+ <20191108211323.1806194-2-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108211323.1806194-2-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only show the 'calibrate' sysfs attribute on chip flavours
-which support calibration by writing to a calibration register.
+On Fri, Nov 08, 2019 at 10:12:10PM +0100, Arnd Bergmann wrote:
+> There are two 'struct timeval' fields in 'struct rusage'.
+> 
+> Unfortunately the definition of timeval is now ambiguous when used in
+> user space with a libc that has a 64-bit time_t, and this also changes
+> the 'rusage' definition in user space in a way that is incompatible with
+> the system call interface.
+> 
+> While there is no good solution to avoid all ambiguity here, change
+> the definition in the kernel headers to be compatible with the kernel
+> ABI, using __kernel_old_timeval as an unambiguous base type.
+> 
+> In previous discussions, there was also a plan to add a replacement
+> for rusage based on 64-bit timestamps and nanosecond resolution,
+> i.e. 'struct __kernel_timespec'. I have patches for that as well,
+> if anyone thinks we should do that.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> Question: should we also rename 'struct rusage' into 'struct __kernel_rusage'
+> here, to make them completely unambiguous?
 
-Do this by adding a flag to the chip operations structure.
+The patch looks ok to me. I must confess I looked into rusage long ago
+so __kernel_timespec type used in uapi made me nervious at first,
+but then i found that we've this type defined in time_types.h uapi
+so userspace should be safe. I also like the idea of __kernel_rusage
+but definitely on top of the series.
 
-Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
-Cc: Marek Vasut <marex@denx.de>
-Cc: Adam Ford <aford173@gmail.com>
-Cc: <linux-kernel@vger.kernel.org>
-Cc: linux-input@vger.kernel.org
-Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/input/touchscreen/ili210x.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-index 3b8e24815a1f..b0454cdacf38 100644
---- a/drivers/input/touchscreen/ili210x.c
-+++ b/drivers/input/touchscreen/ili210x.c
-@@ -32,6 +32,7 @@ struct ili2xxx_chip {
- 	bool (*continue_polling)(const u8 *data, bool touch);
- 	unsigned int max_touches;
- 	unsigned int resolution;
-+	bool has_calibrate_reg;
- };
- 
- struct ili210x {
-@@ -102,6 +103,7 @@ static const struct ili2xxx_chip ili210x_chip = {
- 	.parse_touch_data	= ili210x_touchdata_to_coords,
- 	.continue_polling	= ili210x_check_continue_polling,
- 	.max_touches		= 2,
-+	.has_calibrate_reg	= true,
- };
- 
- static int ili211x_read_touch_data(struct i2c_client *client, u8 *data)
-@@ -227,6 +229,7 @@ static const struct ili2xxx_chip ili251x_chip = {
- 	.parse_touch_data	= ili251x_touchdata_to_coords,
- 	.continue_polling	= ili251x_check_continue_polling,
- 	.max_touches		= 10,
-+	.has_calibrate_reg	= true,
- };
- 
- static bool ili210x_report_events(struct ili210x *priv, u8 *touchdata)
-@@ -310,8 +313,19 @@ static struct attribute *ili210x_attributes[] = {
- 	NULL,
- };
- 
-+static umode_t ili210x_calibrate_visible(struct kobject *kobj,
-+					  struct attribute *attr, int index)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ili210x *priv = i2c_get_clientdata(client);
-+
-+	return priv->chip->has_calibrate_reg;
-+}
-+
- static const struct attribute_group ili210x_attr_group = {
- 	.attrs = ili210x_attributes,
-+	.is_visible = ili210x_calibrate_visible,
- };
- 
- static void ili210x_power_down(void *data)
--- 
-2.17.1
-
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
