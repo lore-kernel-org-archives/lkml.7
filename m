@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A13CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A069C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BF72196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0A721925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfKLVOL (ORCPT
+        id S1727608AbfKLVOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:14:11 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:44564 "EHLO
+        Tue, 12 Nov 2019 16:14:18 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:44530 "EHLO
         omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727567AbfKLVOH (ORCPT
+        with ESMTP id S1727517AbfKLVN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:14:07 -0500
-Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xACLE3qT012911
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:14:03 -0500
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xACLDwZP027134
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:14:03 -0500
-Received: by mail-qv1-f71.google.com with SMTP id w2so9517733qvz.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:14:03 -0800 (PST)
+        Tue, 12 Nov 2019 16:13:57 -0500
+Received: from mr1.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xACLDtK9012865
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:55 -0500
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xACLDoRc021727
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:55 -0500
+Received: by mail-qk1-f199.google.com with SMTP id a16so42244qka.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:13:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=/5dcXb5jV0vJyIQ9aOWwrA8j2Q6YPlHuGiZpqMvB+PQ=;
-        b=uRo7bbwR6tlzaTH78rP8et7WE7tNkn2/FZh2EkkXXKlv8Fp5sw5jFTNOGX6oSKsRzG
-         OaTfAN+bh+9XTN6bTfWBrFSVEEc1HdONV+u9pQQComK+PGicIAGOxpcX8mp6VVXT8FCr
-         kfEfJxxIm9JHx4XuozQeD1IDmZF/z+upbZZbag80lNpA6MLgJGveWU/Ap7EbBwGWjwyk
-         QaN7e4LH4NYcLmYT9Obmxn9E0m+3pFdiChPxr1/jxhbkMGHjWYxG/ZeGyuT2K/xTsSIm
-         oBL8CAaCmpfh9BAQJlmesgCNjaNEB0rbReBkTf6xTHOUAFDU/73bB59+jj59NcGgomRE
-         w/iQ==
-X-Gm-Message-State: APjAAAV2M7xyLucbJB8Ph+Mz09weNakRZHjTB45BW2rdK+sgsyJ6tXp7
-        X6VO50b3iKeOHWI5sq1JbvtF3dFtdkLel5yMsOYBAbVvP2fWTxc3V9GoBjbbz5K3X/dNOPp9fzg
-        /kuJ4UCteWlRdn3FMy3R7xc+AH7H/lFr2ZVs=
-X-Received: by 2002:a37:4d02:: with SMTP id a2mr8614320qkb.355.1573593237922;
-        Tue, 12 Nov 2019 13:13:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxd9VZIS7nGDh383zn1WydTIXMz1P9L23XzuarGLHSGnABTjveASme+ArnfSLRboUJapDFYsw==
-X-Received: by 2002:a37:4d02:: with SMTP id a2mr8614285qkb.355.1573593237396;
-        Tue, 12 Nov 2019 13:13:57 -0800 (PST)
+        bh=vWz5qWU6fNbBoERW9/nUa4gCsQuEg8PE4Fn2E/plUag=;
+        b=MHPJ3oFm0t+XF6u0UJVAd5Fcncw2Cu69/N5GX/MN/YTFycOnHJYNc7T0dcuFJHnBWz
+         ahwAuDLbSVmTIZQFxyoAiHYo17fEaYq44Pg6Fiz1D8GKiEbh31NqLtXuQ6W4NTeSFL5n
+         iT4TgOT1ryTngtgLu429wdK/7toFz4uLwpLwez8vCGxBJ0fYKSm1Jro1okIOceL5YoAu
+         mdePjoQbidKEtPmYzezkxgjWf2SWMUynOr+QsTy2b5N+ECfaeKmhP0ubL+PJKbuk41yv
+         DzkJl0Be4+kLa5hAvMUysqbe4dcQB4GWy4a5wavx1twiVWhXbmgIJiiZQeGh93SFKHdz
+         Ls0g==
+X-Gm-Message-State: APjAAAUObmKXNasfWINQtuGyaKGLLkLNkSNIaowJLOL+6REVl/JHmhjL
+        n6FdPXCriGk4CbYwYu9LbbVs3h0UREUI22TL7P6//QF9pTVLiUJvv3Ufgol2HDgn+B3gI+OUQsc
+        JnOqGYZddUwH/M7fTVTxRLrEBH9TV0PH4QPU=
+X-Received: by 2002:ad4:4e2c:: with SMTP id dm12mr31281831qvb.195.1573593230380;
+        Tue, 12 Nov 2019 13:13:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwveitpZlD3XdcvBQv8maP7sPUqp6dj5WueJm6mmmmAUPelBtYx/SsUzyMn71kNjjFyhPjjHw==
+X-Received: by 2002:ad4:4e2c:: with SMTP id dm12mr31281804qvb.195.1573593229928;
+        Tue, 12 Nov 2019 13:13:49 -0800 (PST)
 Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id 130sm9674214qkd.33.2019.11.12.13.13.56
+        by smtp.gmail.com with ESMTPSA id 130sm9674214qkd.33.2019.11.12.13.13.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 13:13:56 -0800 (PST)
+        Tue, 12 Nov 2019 13:13:49 -0800 (PST)
 From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
 X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
@@ -58,9 +59,9 @@ Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] staging: exfat: Clean up the namespace pollution part 8
-Date:   Tue, 12 Nov 2019 16:12:38 -0500
-Message-Id: <20191112211238.156490-13-Valdis.Kletnieks@vt.edu>
+Subject: [PATCH 10/12] staging: exfat: Clean up the namespace pollution part 6
+Date:   Tue, 12 Nov 2019 16:12:36 -0500
+Message-Id: <20191112211238.156490-11-Valdis.Kletnieks@vt.edu>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
 References: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
@@ -72,411 +73,247 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename all the FAT_* functions to exfat_fat_*.
+Move a few more things so we can make them static and clear exfat.h out.
+At this point, pretty much everything that can be static is static.
+(Note: FAT_sync(), buf_sync(), and sync_alloc_bitmap() aren't called
+anyplace, but aren't static because (a) that will toss an error and
+(b) they probably *should* be getting called someplace
 
 Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 ---
- drivers/staging/exfat/exfat.h       | 12 +++++-----
- drivers/staging/exfat/exfat_cache.c | 26 +++++++++++-----------
- drivers/staging/exfat/exfat_core.c  | 34 ++++++++++++++---------------
- drivers/staging/exfat/exfat_super.c | 30 ++++++++++++-------------
- 4 files changed, 51 insertions(+), 51 deletions(-)
+ drivers/staging/exfat/exfat.h      |   8 --
+ drivers/staging/exfat/exfat_core.c | 170 ++++++++++++++---------------
+ 2 files changed, 85 insertions(+), 93 deletions(-)
 
 diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 6a9cb6c68d28..2aac1e000977 100644
+index c41fc3ec9f29..188ea1bd7162 100644
 --- a/drivers/staging/exfat/exfat.h
 +++ b/drivers/staging/exfat/exfat.h
-@@ -739,12 +739,12 @@ void nls_cstring_to_uniname(struct super_block *sb,
- /* buffer cache management */
- void exfat_buf_init(struct super_block *sb);
- void exfat_buf_shutdown(struct super_block *sb);
--int FAT_read(struct super_block *sb, u32 loc, u32 *content);
--s32 FAT_write(struct super_block *sb, u32 loc, u32 content);
--u8 *FAT_getblk(struct super_block *sb, sector_t sec);
--void FAT_modify(struct super_block *sb, sector_t sec);
--void FAT_release_all(struct super_block *sb);
--void FAT_sync(struct super_block *sb);
-+int exfat_fat_read(struct super_block *sb, u32 loc, u32 *content);
-+s32 exfat_fat_write(struct super_block *sb, u32 loc, u32 content);
-+u8 *exfat_fat_getblk(struct super_block *sb, sector_t sec);
-+void exfat_fat_modify(struct super_block *sb, sector_t sec);
-+void exfat_fat_release_all(struct super_block *sb);
-+void exfat_fat_sync(struct super_block *sb);
- u8 *exfat_buf_getblk(struct super_block *sb, sector_t sec);
- void exfat_buf_modify(struct super_block *sb, sector_t sec);
- void exfat_buf_lock(struct super_block *sb, sector_t sec);
-diff --git a/drivers/staging/exfat/exfat_cache.c b/drivers/staging/exfat/exfat_cache.c
-index 835871b2a3d0..3fd5604058a9 100644
---- a/drivers/staging/exfat/exfat_cache.c
-+++ b/drivers/staging/exfat/exfat_cache.c
-@@ -193,7 +193,7 @@ void exfat_buf_shutdown(struct super_block *sb)
- {
- }
+@@ -780,12 +780,6 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 					       u32 type,
+ 					       struct dentry_t **file_ep);
+ void release_entry_set(struct entry_set_cache_t *es);
+-s32 write_whole_entry_set(struct super_block *sb, struct entry_set_cache_t *es);
+-s32 write_partial_entries_in_entry_set(struct super_block *sb,
+-				       struct entry_set_cache_t *es,
+-				       struct dentry_t *ep, u32 count);
+-s32 search_deleted_or_unused_entry(struct super_block *sb,
+-				   struct chain_t *p_dir, s32 num_entries);
+ s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
+ 			   u32 type);
+ void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
+@@ -798,8 +792,6 @@ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir);
+ s32 get_num_entries_and_dos_name(struct super_block *sb, struct chain_t *p_dir,
+ 				 struct uni_name_t *p_uniname, s32 *entries,
+ 				 struct dos_name_t *p_dosname);
+-s32 extract_uni_name_from_name_entry(struct name_dentry_t *ep,
+-				     u16 *uniname, s32 order);
+ u16 calc_checksum_2byte(void *data, s32 len, u16 chksum, s32 type);
  
--static int __FAT_read(struct super_block *sb, u32 loc, u32 *content)
-+static int __exfat_fat_read(struct super_block *sb, u32 loc, u32 *content)
- {
- 	s32 off;
- 	u32 _content;
-@@ -206,7 +206,7 @@ static int __FAT_read(struct super_block *sb, u32 loc, u32 *content)
- 		(loc >> (p_bd->sector_size_bits - 2));
- 	off = (loc << 2) & p_bd->sector_size_mask;
- 
--	fat_sector = FAT_getblk(sb, sec);
-+	fat_sector = exfat_fat_getblk(sb, sec);
- 	if (!fat_sector)
- 		return -1;
- 
-@@ -226,18 +226,18 @@ static int __FAT_read(struct super_block *sb, u32 loc, u32 *content)
-  * returns 0 on success
-  *            -1 on error
-  */
--int FAT_read(struct super_block *sb, u32 loc, u32 *content)
-+int exfat_fat_read(struct super_block *sb, u32 loc, u32 *content)
- {
- 	s32 ret;
- 
- 	mutex_lock(&f_mutex);
--	ret = __FAT_read(sb, loc, content);
-+	ret = __exfat_fat_read(sb, loc, content);
- 	mutex_unlock(&f_mutex);
- 
- 	return ret;
- }
- 
--static s32 __FAT_write(struct super_block *sb, u32 loc, u32 content)
-+static s32 __exfat_fat_write(struct super_block *sb, u32 loc, u32 content)
- {
- 	s32 off;
- 	sector_t sec;
-@@ -249,7 +249,7 @@ static s32 __FAT_write(struct super_block *sb, u32 loc, u32 content)
- 					 (p_bd->sector_size_bits - 2));
- 	off = (loc << 2) & p_bd->sector_size_mask;
- 
--	fat_sector = FAT_getblk(sb, sec);
-+	fat_sector = exfat_fat_getblk(sb, sec);
- 	if (!fat_sector)
- 		return -1;
- 
-@@ -257,22 +257,22 @@ static s32 __FAT_write(struct super_block *sb, u32 loc, u32 content)
- 
- 	SET32_A(fat_entry, content);
- 
--	FAT_modify(sb, sec);
-+	exfat_fat_modify(sb, sec);
- 	return 0;
- }
- 
--int FAT_write(struct super_block *sb, u32 loc, u32 content)
-+int exfat_fat_write(struct super_block *sb, u32 loc, u32 content)
- {
- 	s32 ret;
- 
- 	mutex_lock(&f_mutex);
--	ret = __FAT_write(sb, loc, content);
-+	ret = __exfat_fat_write(sb, loc, content);
- 	mutex_unlock(&f_mutex);
- 
- 	return ret;
- }
- 
--u8 *FAT_getblk(struct super_block *sb, sector_t sec)
-+u8 *exfat_fat_getblk(struct super_block *sb, sector_t sec)
- {
- 	struct buf_cache_t *bp;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -307,7 +307,7 @@ u8 *FAT_getblk(struct super_block *sb, sector_t sec)
- 	return bp->buf_bh->b_data;
- }
- 
--void FAT_modify(struct super_block *sb, sector_t sec)
-+void exfat_fat_modify(struct super_block *sb, sector_t sec)
- {
- 	struct buf_cache_t *bp;
- 
-@@ -316,7 +316,7 @@ void FAT_modify(struct super_block *sb, sector_t sec)
- 		sector_write(sb, sec, bp->buf_bh, 0);
- }
- 
--void FAT_release_all(struct super_block *sb)
-+void exfat_fat_release_all(struct super_block *sb)
- {
- 	struct buf_cache_t *bp;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -341,7 +341,7 @@ void FAT_release_all(struct super_block *sb)
- 	mutex_unlock(&f_mutex);
- }
- 
--void FAT_sync(struct super_block *sb)
-+void exfat_fat_sync(struct super_block *sb)
- {
- 	struct buf_cache_t *bp;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ /* name resolution functions */
 diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index f60fb691e165..1638ed266f68 100644
+index 8d38f70c9726..3cc13aaaed24 100644
 --- a/drivers/staging/exfat/exfat_core.c
 +++ b/drivers/staging/exfat/exfat_core.c
-@@ -283,7 +283,7 @@ static s32 exfat_alloc_cluster(struct super_block *sb, s32 num_alloc,
- 		num_clusters++;
- 
- 		if (p_chain->flags == 0x01) {
--			if (FAT_write(sb, new_clu, CLUSTER_32(~0)) < 0)
-+			if (exfat_fat_write(sb, new_clu, CLUSTER_32(~0)) < 0)
- 				return -EIO;
- 		}
- 
-@@ -291,7 +291,7 @@ static s32 exfat_alloc_cluster(struct super_block *sb, s32 num_alloc,
- 			p_chain->dir = new_clu;
- 		} else {
- 			if (p_chain->flags == 0x01) {
--				if (FAT_write(sb, last_clu, new_clu) < 0)
-+				if (exfat_fat_write(sb, last_clu, new_clu) < 0)
- 					return -EIO;
- 			}
- 		}
-@@ -375,7 +375,7 @@ static void exfat_free_cluster(struct super_block *sb, struct chain_t *p_chain,
- 			if (clr_alloc_bitmap(sb, clu - 2) != 0)
- 				break;
- 
--			if (FAT_read(sb, clu, &clu) == -1)
-+			if (exfat_fat_read(sb, clu, &clu) == -1)
- 				break;
- 			num_clusters++;
- 		} while ((clu != CLUSTER_32(0)) && (clu != CLUSTER_32(~0)));
-@@ -395,7 +395,7 @@ static u32 find_last_cluster(struct super_block *sb, struct chain_t *p_chain)
- 	if (p_chain->flags == 0x03) {
- 		clu += p_chain->size - 1;
- 	} else {
--		while ((FAT_read(sb, clu, &next) == 0) &&
-+		while ((exfat_fat_read(sb, clu, &next) == 0) &&
- 		       (next != CLUSTER_32(~0))) {
- 			if (p_fs->dev_ejected)
- 				break;
-@@ -422,7 +422,7 @@ s32 count_num_clusters(struct super_block *sb, struct chain_t *p_chain)
- 	} else {
- 		for (i = 2; i < p_fs->num_clusters; i++) {
- 			count++;
--			if (FAT_read(sb, clu, &clu) != 0)
-+			if (exfat_fat_read(sb, clu, &clu) != 0)
- 				return 0;
- 			if (clu == CLUSTER_32(~0))
- 				break;
-@@ -461,12 +461,12 @@ void exfat_chain_cont_cluster(struct super_block *sb, u32 chain, s32 len)
- 		return;
- 
- 	while (len > 1) {
--		if (FAT_write(sb, chain, chain + 1) < 0)
-+		if (exfat_fat_write(sb, chain, chain + 1) < 0)
- 			break;
- 		chain++;
- 		len--;
- 	}
--	FAT_write(sb, chain, CLUSTER_32(~0));
-+	exfat_fat_write(sb, chain, CLUSTER_32(~0));
+@@ -1140,6 +1140,73 @@ void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
+ 	buf_unlock(sb, sector);
  }
  
- /*
-@@ -538,7 +538,7 @@ s32 load_alloc_bitmap(struct super_block *sb)
- 			}
- 		}
++static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
++						struct entry_set_cache_t *es,
++						sector_t sec, s32 off, u32 count)
++{
++	s32 num_entries, buf_off = (off - es->offset);
++	u32 remaining_byte_in_sector, copy_entries;
++	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
++	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
++	u32 clu;
++	u8 *buf, *esbuf = (u8 *)&es->__buf;
++
++	pr_debug("%s entered es %p sec %llu off %d count %d\n",
++		 __func__, es, (unsigned long long)sec, off, count);
++	num_entries = count;
++
++	while (num_entries) {
++		/* white per sector base */
++		remaining_byte_in_sector = (1 << p_bd->sector_size_bits) - off;
++		copy_entries = min_t(s32,
++				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
++				     num_entries);
++		buf = buf_getblk(sb, sec);
++		if (!buf)
++			goto err_out;
++		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
++		pr_debug("copying %d entries from %p to sector %llu\n",
++			 copy_entries, (esbuf + buf_off),
++			 (unsigned long long)sec);
++		memcpy(buf + off, esbuf + buf_off,
++		       copy_entries << DENTRY_SIZE_BITS);
++		buf_modify(sb, sec);
++		num_entries -= copy_entries;
++
++		if (num_entries) {
++			/* get next sector */
++			if (IS_LAST_SECTOR_IN_CLUSTER(sec)) {
++				clu = GET_CLUSTER_FROM_SECTOR(sec);
++				if (es->alloc_flag == 0x03) {
++					clu++;
++				} else {
++					if (FAT_read(sb, clu, &clu) == -1)
++						goto err_out;
++				}
++				sec = START_SECTOR(clu);
++			} else {
++				sec++;
++			}
++			off = 0;
++			buf_off += copy_entries << DENTRY_SIZE_BITS;
++		}
++	}
++
++	pr_debug("%s exited successfully\n", __func__);
++	return 0;
++err_out:
++	pr_debug("%s failed\n", __func__);
++	return -EINVAL;
++}
++
++/* write back all entries in entry set */
++static s32 write_whole_entry_set(struct super_block *sb, struct entry_set_cache_t *es)
++{
++	return __write_partial_entries_in_entry_set(sb, es, es->sector,
++						    es->offset,
++						    es->num_entries);
++}
++
+ void update_dir_checksum_with_entry_set(struct super_block *sb,
+ 					struct entry_set_cache_t *es)
+ {
+@@ -1421,75 +1488,8 @@ void release_entry_set(struct entry_set_cache_t *es)
+ 	kfree(es);
+ }
  
--		if (FAT_read(sb, clu.dir, &clu.dir) != 0)
-+		if (exfat_fat_read(sb, clu.dir, &clu.dir) != 0)
- 			return -EIO;
- 	}
- 
-@@ -760,7 +760,7 @@ s32 load_upcase_table(struct super_block *sb)
- 				break;
- 			return 0;
- 		}
--		if (FAT_read(sb, clu.dir, &clu.dir) != 0)
-+		if (exfat_fat_read(sb, clu.dir, &clu.dir) != 0)
- 			return -EIO;
- 	}
- 	/* load default upcase table */
-@@ -1180,7 +1180,7 @@ static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
- 				if (es->alloc_flag == 0x03) {
- 					clu++;
- 				} else {
+-static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
+-						struct entry_set_cache_t *es,
+-						sector_t sec, s32 off, u32 count)
+-{
+-	s32 num_entries, buf_off = (off - es->offset);
+-	u32 remaining_byte_in_sector, copy_entries;
+-	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+-	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+-	u32 clu;
+-	u8 *buf, *esbuf = (u8 *)&es->__buf;
+-
+-	pr_debug("%s entered es %p sec %llu off %d count %d\n",
+-		 __func__, es, (unsigned long long)sec, off, count);
+-	num_entries = count;
+-
+-	while (num_entries) {
+-		/* white per sector base */
+-		remaining_byte_in_sector = (1 << p_bd->sector_size_bits) - off;
+-		copy_entries = min_t(s32,
+-				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
+-				     num_entries);
+-		buf = buf_getblk(sb, sec);
+-		if (!buf)
+-			goto err_out;
+-		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
+-		pr_debug("copying %d entries from %p to sector %llu\n",
+-			 copy_entries, (esbuf + buf_off),
+-			 (unsigned long long)sec);
+-		memcpy(buf + off, esbuf + buf_off,
+-		       copy_entries << DENTRY_SIZE_BITS);
+-		buf_modify(sb, sec);
+-		num_entries -= copy_entries;
+-
+-		if (num_entries) {
+-			/* get next sector */
+-			if (IS_LAST_SECTOR_IN_CLUSTER(sec)) {
+-				clu = GET_CLUSTER_FROM_SECTOR(sec);
+-				if (es->alloc_flag == 0x03) {
+-					clu++;
+-				} else {
 -					if (FAT_read(sb, clu, &clu) == -1)
-+					if (exfat_fat_read(sb, clu, &clu) == -1)
- 						goto err_out;
- 				}
- 				sec = START_SECTOR(clu);
-@@ -1242,7 +1242,7 @@ static s32 _walk_fat_chain(struct super_block *sb, struct chain_t *p_dir,
- 		cur_clu += clu_offset;
- 	} else {
- 		while (clu_offset > 0) {
--			if (FAT_read(sb, cur_clu, &cur_clu) == -1)
-+			if (exfat_fat_read(sb, cur_clu, &cur_clu) == -1)
- 				return -EIO;
- 			clu_offset--;
- 		}
-@@ -1450,7 +1450,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
- 				if (es->alloc_flag == 0x03) {
- 					clu++;
- 				} else {
--					if (FAT_read(sb, clu, &clu) == -1)
-+					if (exfat_fat_read(sb, clu, &clu) == -1)
- 						goto err_out;
- 				}
- 				sec = START_SECTOR(clu);
-@@ -1575,7 +1575,7 @@ static s32 search_deleted_or_unused_entry(struct super_block *sb,
- 			else
- 				clu.dir = CLUSTER_32(~0);
- 		} else {
--			if (FAT_read(sb, clu.dir, &clu.dir) != 0)
-+			if (exfat_fat_read(sb, clu.dir, &clu.dir) != 0)
- 				return -1;
- 		}
- 	}
-@@ -1625,7 +1625,7 @@ static s32 find_empty_entry(struct inode *inode, struct chain_t *p_dir, s32 num_
- 			p_fs->hint_uentry.clu.flags = 0x01;
- 		}
- 		if (clu.flags == 0x01)
--			if (FAT_write(sb, last_clu, clu.dir) < 0)
-+			if (exfat_fat_write(sb, last_clu, clu.dir) < 0)
- 				return -EIO;
+-						goto err_out;
+-				}
+-				sec = START_SECTOR(clu);
+-			} else {
+-				sec++;
+-			}
+-			off = 0;
+-			buf_off += copy_entries << DENTRY_SIZE_BITS;
+-		}
+-	}
+-
+-	pr_debug("%s exited successfully\n", __func__);
+-	return 0;
+-err_out:
+-	pr_debug("%s failed\n", __func__);
+-	return -EINVAL;
+-}
+-
+-/* write back all entries in entry set */
+-s32 write_whole_entry_set(struct super_block *sb, struct entry_set_cache_t *es)
+-{
+-	return __write_partial_entries_in_entry_set(sb, es, es->sector,
+-						    es->offset,
+-						    es->num_entries);
+-}
+-
+ /* search EMPTY CONTINUOUS "num_entries" entries */
+-s32 search_deleted_or_unused_entry(struct super_block *sb,
++static s32 search_deleted_or_unused_entry(struct super_block *sb,
+ 				   struct chain_t *p_dir, s32 num_entries)
+ {
+ 	int i, dentry, num_empty = 0;
+@@ -1665,6 +1665,23 @@ static s32 find_empty_entry(struct inode *inode, struct chain_t *p_dir, s32 num_
+ 	return dentry;
+ }
  
- 		if (p_fs->hint_uentry.entry == -1) {
-@@ -1822,7 +1822,7 @@ static s32 exfat_find_dir_entry(struct super_block *sb, struct chain_t *p_dir,
- 			else
- 				clu.dir = CLUSTER_32(~0);
- 		} else {
--			if (FAT_read(sb, clu.dir, &clu.dir) != 0)
-+			if (exfat_fat_read(sb, clu.dir, &clu.dir) != 0)
- 				return -2;
- 		}
- 	}
-@@ -1903,7 +1903,7 @@ s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
- 			else
- 				clu.dir = CLUSTER_32(~0);
- 		} else {
--			if (FAT_read(sb, clu.dir, &clu.dir) != 0)
-+			if (exfat_fat_read(sb, clu.dir, &clu.dir) != 0)
- 				return -EIO;
- 		}
- 	}
-@@ -1963,7 +1963,7 @@ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
- 			else
- 				clu.dir = CLUSTER_32(~0);
- 		}
--		if (FAT_read(sb, clu.dir, &clu.dir) != 0)
-+		if (exfat_fat_read(sb, clu.dir, &clu.dir) != 0)
- 			break;
- 	}
++static s32 extract_uni_name_from_name_entry(struct name_dentry_t *ep, u16 *uniname,
++				     s32 order)
++{
++	int i, len = 0;
++
++	for (i = 0; i < 30; i += 2) {
++		*uniname = GET16_A(ep->unicode_0_14 + i);
++		if (*uniname == 0x0)
++			return len;
++		uniname++;
++		len++;
++	}
++
++	*uniname = 0x0;
++	return len;
++}
++
+ /* return values of exfat_find_dir_entry()
+  * >= 0 : return dir entiry position with the name in dir
+  * -1 : (root dir, ".") it is the root dir itself
+@@ -2013,23 +2030,6 @@ static void exfat_get_uni_name_from_ext_entry(struct super_block *sb,
+ 	release_entry_set(es);
+ }
  
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index ea6161e8456a..d2e1e7aa7404 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -457,7 +457,7 @@ static int ffsUmountVol(struct super_block *sb)
- 	free_upcase_table(sb);
- 	free_alloc_bitmap(sb);
- 
--	FAT_release_all(sb);
-+	exfat_fat_release_all(sb);
- 	exfat_buf_release_all(sb);
- 
- 	/* close the block device */
-@@ -722,8 +722,8 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
- 			}
- 
- 			while (clu_offset > 0) {
--				/* clu = FAT_read(sb, clu); */
--				if (FAT_read(sb, clu, &clu) == -1) {
-+				/* clu = exfat_fat_read(sb, clu); */
-+				if (exfat_fat_read(sb, clu, &clu) == -1) {
- 					ret = -EIO;
- 					goto out;
- 				}
-@@ -868,8 +868,8 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 
- 			while ((clu_offset > 0) && (clu != CLUSTER_32(~0))) {
- 				last_clu = clu;
--				/* clu = FAT_read(sb, clu); */
--				if (FAT_read(sb, clu, &clu) == -1) {
-+				/* clu = exfat_fat_read(sb, clu); */
-+				if (exfat_fat_read(sb, clu, &clu) == -1) {
- 					ret = -EIO;
- 					goto out;
- 				}
-@@ -911,7 +911,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 					modified = true;
- 				}
- 				if (new_clu.flags == 0x01)
--					FAT_write(sb, last_clu, new_clu.dir);
-+					exfat_fat_write(sb, last_clu, new_clu.dir);
- 			}
- 
- 			num_clusters += num_alloced;
-@@ -1081,7 +1081,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
- 		} else {
- 			while (num_clusters > 0) {
- 				last_clu = clu.dir;
--				if (FAT_read(sb, clu.dir, &clu.dir) == -1) {
-+				if (exfat_fat_read(sb, clu.dir, &clu.dir) == -1) {
- 					ret = -EIO;
- 					goto out;
- 				}
-@@ -1123,7 +1123,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
- 	/* (2) cut off from the FAT chain */
- 	if (last_clu != CLUSTER_32(0)) {
- 		if (fid->flags == 0x01)
--			FAT_write(sb, last_clu, CLUSTER_32(~0));
-+			exfat_fat_write(sb, last_clu, CLUSTER_32(~0));
- 	}
- 
- 	/* (3) free the clusters */
-@@ -1687,7 +1687,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
- 
- 		while ((clu_offset > 0) && (*clu != CLUSTER_32(~0))) {
- 			last_clu = *clu;
--			if (FAT_read(sb, *clu, clu) == -1) {
-+			if (exfat_fat_read(sb, *clu, clu) == -1) {
- 				ret = -EIO;
- 				goto out;
- 			}
-@@ -1727,7 +1727,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
- 				modified = true;
- 			}
- 			if (new_clu.flags == 0x01)
--				FAT_write(sb, last_clu, new_clu.dir);
-+				exfat_fat_write(sb, last_clu, new_clu.dir);
- 		}
- 
- 		num_clusters += num_alloced;
-@@ -1888,8 +1888,8 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 			}
- 
- 			while (clu_offset > 0) {
--				/* clu.dir = FAT_read(sb, clu.dir); */
--				if (FAT_read(sb, clu.dir, &clu.dir) == -1) {
-+				/* clu.dir = exfat_fat_read(sb, clu.dir); */
-+				if (exfat_fat_read(sb, clu.dir, &clu.dir) == -1) {
- 					ret = -EIO;
- 					goto out;
- 				}
-@@ -1983,8 +1983,8 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 			else
- 				clu.dir = CLUSTER_32(~0);
- 		} else {
--			/* clu.dir = FAT_read(sb, clu.dir); */
--			if (FAT_read(sb, clu.dir, &clu.dir) == -1) {
-+			/* clu.dir = exfat_fat_read(sb, clu.dir); */
-+			if (exfat_fat_read(sb, clu.dir, &clu.dir) == -1) {
- 				ret = -EIO;
- 				goto out;
- 			}
-@@ -3821,7 +3821,7 @@ static void exfat_debug_kill_sb(struct super_block *sb)
- 			 * dirty. We use this to simulate device removal.
- 			 */
- 			mutex_lock(&p_fs->v_mutex);
--			FAT_release_all(sb);
-+			exfat_fat_release_all(sb);
- 			exfat_buf_release_all(sb);
- 			mutex_unlock(&p_fs->v_mutex);
- 
+-s32 extract_uni_name_from_name_entry(struct name_dentry_t *ep, u16 *uniname,
+-				     s32 order)
+-{
+-	int i, len = 0;
+-
+-	for (i = 0; i < 30; i += 2) {
+-		*uniname = GET16_A(ep->unicode_0_14 + i);
+-		if (*uniname == 0x0)
+-			return len;
+-		uniname++;
+-		len++;
+-	}
+-
+-	*uniname = 0x0;
+-	return len;
+-}
+-
+ static s32 exfat_calc_num_entries(struct uni_name_t *p_uniname)
+ {
+ 	s32 len;
 -- 
 2.24.0
 
