@@ -2,300 +2,148 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9465BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F870C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBD72184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="i364+Mmt"
+	by mail.kernel.org (Postfix) with ESMTP id 7B8302184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfKLB2n (ORCPT
+        id S1727603AbfKLB2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:28:43 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52852 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbfKLB2O (ORCPT
+        Mon, 11 Nov 2019 20:28:45 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:34795 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727571AbfKLB2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:28:14 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l1so1305878wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 17:28:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YJBQklbdth4fIqy8cKhdwCD9F1vJaIAaANn9KZEbUtM=;
-        b=i364+MmtGbU6vHOHLHon5GH22AObDEt7OrTi9/xpukajG+W+pbZuHGMjtJ1gccfpJr
-         fLzyGOAPbaXUVwJXPrbKrhB03z4T5tJlrZ+n23YliKYQvjqBGW+HoJg8qbRXjba+nF/w
-         wASLTAlqUMMQeH5AjsqYnQncc6tEp8ttKb3KeU9Pm3B/qFbkjubirOdZ65z4KPw6DHH6
-         S9KaVVKXNTu35HDyF/adWobkw2zoBeA9Dax+gZ0K6yzvn1qxDQYD7Ld+PyiLvsElH0oc
-         aKwb9LoTYt4IDPTzpWVx62AmbfTfVh+kfSYkMaab6zeKw0SRS7A2bxdWVY4gNMrIBQNM
-         bYxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YJBQklbdth4fIqy8cKhdwCD9F1vJaIAaANn9KZEbUtM=;
-        b=Hv7882d6HSNPjh+fdk1EnR6khC8jftptMpxmgu72xQigFTUrVEl2cjSfpAD5VCLNoO
-         Bl6MJGJGYGKQz5MAsrG5WUOAKlDZQTWj7o7+TQ5FVH50/qstbe00Z24OzJulWUIMvfZi
-         S0hmoBhBgRg4/fk4iWmvIYmiKOUAowUSwJi4K+4n/H102kTqP+49rWGSyTTAPEYCXsK4
-         YUevQp0JNPHn7ELkIGgQMeBevT9Buf51j3SBq/l5/kGx5ONTFKYw9SdtsqnThjD/A62a
-         r5yrBI+yeJvKopYnvOtxPwdy31PXS4yTP0b4oCmgV7NQhCRshD6hBVquoZA7a6w4NXb6
-         VF7A==
-X-Gm-Message-State: APjAAAWf3dOgYRZWFNHLcDETt/vSwYEPW/PB9M5fwiTS4WF80cmAsRhe
-        jp7KqCcPECCNDnAwIRqinkBARMHkzrk=
-X-Google-Smtp-Source: APXvYqxHI1ovecMhGzQ9G3ozKPftNon5uLRyzoO2hY8YPQU6LMdHhctX2uNvUvbfBExFSpUsyaXlOg==
-X-Received: by 2002:a1c:48f:: with SMTP id 137mr1644088wme.68.1573522092232;
-        Mon, 11 Nov 2019 17:28:12 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id u187sm1508096wme.15.2019.11.11.17.28.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 17:28:11 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv8 30/34] selftests/timens: Add a test for clock_nanosleep()
-Date:   Tue, 12 Nov 2019 01:27:19 +0000
-Message-Id: <20191112012724.250792-31-dima@arista.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191112012724.250792-1-dima@arista.com>
-References: <20191112012724.250792-1-dima@arista.com>
+        Mon, 11 Nov 2019 20:28:44 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0Thqw6v2_1573522118;
+Received: from C02XQCBJJG5H.local(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Thqw6v2_1573522118)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 12 Nov 2019 09:28:39 +0800
+Subject: Re: [PATCH V2 2/7] rcu: cleanup rcu_preempt_deferred_qs()
+To:     paulmck@kernel.org
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+References: <20191102124559.1135-1-laijs@linux.alibaba.com>
+ <20191102124559.1135-3-laijs@linux.alibaba.com>
+ <20191103020150.GA23770@tardis>
+ <7489f817-adaf-275b-b19d-18ad248b071f@linux.alibaba.com>
+ <20191104145539.GY20975@paulmck-ThinkPad-P72>
+ <e820852f-87ca-f974-2245-99833205e270@linux.alibaba.com>
+ <20191105071911.GL20975@paulmck-ThinkPad-P72>
+ <20191111143238.GA13306@paulmck-ThinkPad-P72>
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+Message-ID: <cbded276-6770-25a0-2975-2c087872a38e@linux.alibaba.com>
+Date:   Tue, 12 Nov 2019 09:28:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191111143238.GA13306@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
 
-Check that clock_nanosleep() takes into account clock offsets.
 
-Output on success:
- 1..4
- ok 1 clockid: 1 abs:0
- ok 2 clockid: 1 abs:1
- ok 3 clockid: 9 abs:0
- ok 4 clockid: 9 abs:1
+On 2019/11/11 10:32 下午, Paul E. McKenney wrote:
+> On Mon, Nov 04, 2019 at 11:19:11PM -0800, Paul E. McKenney wrote:
+>> On Tue, Nov 05, 2019 at 10:09:15AM +0800, Lai Jiangshan wrote:
+>>> On 2019/11/4 10:55 下午, Paul E. McKenney wrote:
+>>>> On Sun, Nov 03, 2019 at 01:01:21PM +0800, Lai Jiangshan wrote:
+>>>>>
+>>>>>
+>>>>> On 2019/11/3 10:01 上午, Boqun Feng wrote:
+>>>>>> Hi Jiangshan,
+>>>>>>
+>>>>>>
+>>>>>> I haven't checked the correctness of this patch carefully, but..
+>>>>>>
+>>>>>>
+>>>>>> On Sat, Nov 02, 2019 at 12:45:54PM +0000, Lai Jiangshan wrote:
+>>>>>>> Don't need to set ->rcu_read_lock_nesting negative, irq-protected
+>>>>>>> rcu_preempt_deferred_qs_irqrestore() doesn't expect
+>>>>>>> ->rcu_read_lock_nesting to be negative to work, it even
+>>>>>>> doesn't access to ->rcu_read_lock_nesting any more.
+>>>>>>
+>>>>>> rcu_preempt_deferred_qs_irqrestore() will report RCU qs, and may
+>>>>>> eventually call swake_up() or its friends to wake up, say, the gp
+>>>>>> kthread, and the wake up functions could go into the scheduler code
+>>>>>> path which might have RCU read-side critical section in it, IOW,
+>>>>>> accessing ->rcu_read_lock_nesting.
+>>>>>
+>>>>> Sure, thank you for pointing it out.
+>>>>>
+>>>>> I should rewrite the changelog in next round. Like this:
+>>>>>
+>>>>> rcu: cleanup rcu_preempt_deferred_qs()
+>>>>>
+>>>>> IRQ-protected rcu_preempt_deferred_qs_irqrestore() itself doesn't
+>>>>> expect ->rcu_read_lock_nesting to be negative to work.
+>>>>>
+>>>>> There might be RCU read-side critical section in it (from wakeup()
+>>>>> or so), 1711d15bf5ef(rcu: Clear ->rcu_read_unlock_special only once)
+>>>>> will ensure that ->rcu_read_unlock_special is zero and these RCU
+>>>>> read-side critical sections will not call rcu_read_unlock_special().
+>>>>>
+>>>>> Thanks
+>>>>> Lai
+>>>>>
+>>>>> ===
+>>>>> PS: Were 1711d15bf5ef(rcu: Clear ->rcu_read_unlock_special only once)
+>>>>> not applied earlier, it will be protected by previous patch (patch1)
+>>>>> in this series
+>>>>> "rcu: use preempt_count to test whether scheduler locks is held"
+>>>>> when rcu_read_unlock_special() is called.
+>>>>
+>>>> This one in -rcu, you mean?
+>>>>
+>>>> 5c5d9065e4eb ("rcu: Clear ->rcu_read_unlock_special only once")
+>>>
+>>> Yes, but the commit ID is floating in the tree.
+>>
+>> Indeed, that part of -rcu is subject to rebase, and will continue
+>> to be until about v5.5-rc5 or thereabouts.
+>>
+>> https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/rcutodo.html
+>>
+>> My testing of your full stack should be complete by this coming Sunday
+>> morning, Pacific Time.
+> 
+> And you will be happy to hear that it ran the full time without errors.
+> 
+> Good show!!!
+> 
+> My next step is to look much more carefully at the remaining patches,
+> checking my first impressions.  This will take a few days.
+> 
 
-Output with lack of permissions:
- 1..4
- not ok 1 # SKIP need to run as root
+Hi, All
 
-Output without support of time namespaces:
- 1..4
- not ok 1 # SKIP Time namespaces are not supported
+I'm still asking for more comments.
 
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- tools/testing/selftests/timens/.gitignore     |   1 +
- tools/testing/selftests/timens/Makefile       |   4 +-
- .../selftests/timens/clock_nanosleep.c        | 150 ++++++++++++++++++
- 3 files changed, 153 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/timens/clock_nanosleep.c
+By now, I have received some precious comments, mainly due to my
+stupid naming mistakes and a misleading changelog. I should have
+updated all these with a new series patches. But I hope I
+can polish more in the new patchset with more suggestions from
+valuable comments, especially in x86,scheduler,percpu and rcu
+areas.
 
-diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-index b609f6ee9fb9..9b6c8ddac2c8 100644
---- a/tools/testing/selftests/timens/.gitignore
-+++ b/tools/testing/selftests/timens/.gitignore
-@@ -1,2 +1,3 @@
-+clock_nanosleep
- timens
- timerfd
-diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index 293aed6be95e..40f630d46ca8 100644
---- a/tools/testing/selftests/timens/Makefile
-+++ b/tools/testing/selftests/timens/Makefile
-@@ -1,6 +1,6 @@
--TEST_GEN_PROGS := timens timerfd
-+TEST_GEN_PROGS := timens timerfd clock_nanosleep
- 
--CFLAGS := -Wall -Werror
-+CFLAGS := -Wall -Werror -pthread
- LDFLAGS := -lrt
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
-new file mode 100644
-index 000000000000..c6f871fb0704
---- /dev/null
-+++ b/tools/testing/selftests/timens/clock_nanosleep.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <sched.h>
-+
-+#include <sys/timerfd.h>
-+#include <sys/syscall.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <stdint.h>
-+#include <pthread.h>
-+#include <signal.h>
-+#include <string.h>
-+
-+#include "log.h"
-+#include "timens.h"
-+
-+void test_sig(int sig)
-+{
-+	if (sig == SIGUSR2)
-+		pthread_exit(NULL);
-+}
-+
-+struct thread_args {
-+	struct timespec *now, *rem;
-+	pthread_mutex_t *lock;
-+	int clockid;
-+	int abs;
-+};
-+
-+void *call_nanosleep(void *_args)
-+{
-+	struct thread_args *args = _args;
-+
-+	clock_nanosleep(args->clockid, args->abs ? TIMER_ABSTIME : 0, args->now, args->rem);
-+	pthread_mutex_unlock(args->lock);
-+	return NULL;
-+}
-+
-+int run_test(int clockid, int abs)
-+{
-+	struct timespec now = {}, rem;
-+	struct thread_args args = { .now = &now, .rem = &rem, .clockid = clockid};
-+	struct timespec start;
-+	pthread_mutex_t lock;
-+	pthread_t thread;
-+	int j, ok, ret;
-+
-+	signal(SIGUSR1, test_sig);
-+	signal(SIGUSR2, test_sig);
-+
-+	pthread_mutex_init(&lock, NULL);
-+	pthread_mutex_lock(&lock);
-+
-+	if (clock_gettime(clockid, &start) == -1) {
-+		if (errno == EINVAL && check_skip(clockid))
-+			return 0;
-+		return pr_perror("clock_gettime");
-+	}
-+
-+
-+	if (abs) {
-+		now.tv_sec = start.tv_sec;
-+		now.tv_nsec = start.tv_nsec;
-+	}
-+
-+	now.tv_sec += 3600;
-+	args.abs = abs;
-+	args.lock = &lock;
-+	ret = pthread_create(&thread, NULL, call_nanosleep, &args);
-+	if (ret != 0) {
-+		pr_err("Unable to create a thread: %s", strerror(ret));
-+		return 1;
-+	}
-+
-+	/* Wait when the thread will call clock_nanosleep(). */
-+	ok = 0;
-+	for (j = 0; j < 8; j++) {
-+		/* The maximum timeout is about 5 seconds. */
-+		usleep(10000 << j);
-+
-+		/* Try to interrupt clock_nanosleep(). */
-+		pthread_kill(thread, SIGUSR1);
-+
-+		usleep(10000 << j);
-+		/* Check whether clock_nanosleep() has been interrupted or not. */
-+		if (pthread_mutex_trylock(&lock) == 0) {
-+			/**/
-+			ok = 1;
-+			break;
-+		}
-+	}
-+	if (!ok)
-+		pthread_kill(thread, SIGUSR2);
-+	pthread_join(thread, NULL);
-+	pthread_mutex_destroy(&lock);
-+
-+	if (!ok) {
-+		ksft_test_result_pass("clockid: %d abs:%d timeout\n", clockid, abs);
-+		return 1;
-+	}
-+
-+	if (rem.tv_sec < 3300 || rem.tv_sec > 3900) {
-+		pr_fail("clockid: %d abs: %d remain: %ld\n",
-+			clockid, abs, rem.tv_sec);
-+		return 1;
-+	}
-+	ksft_test_result_pass("clockid: %d abs:%d\n", clockid, abs);
-+
-+	return 0;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int ret, nsfd;
-+
-+	nscheck();
-+
-+	ksft_set_plan(4);
-+
-+	check_config_posix_timers();
-+
-+	if (unshare_timens())
-+		return 1;
-+
-+	if (_settime(CLOCK_MONOTONIC, 7 * 24 * 3600))
-+		return 1;
-+	if (_settime(CLOCK_BOOTTIME, 9 * 24 * 3600))
-+		return 1;
-+
-+	nsfd = open("/proc/self/ns/time_for_children", O_RDONLY);
-+	if (nsfd < 0)
-+		return pr_perror("Unable to open timens_for_children");
-+
-+	if (setns(nsfd, CLONE_NEWTIME))
-+		return pr_perror("Unable to set timens");
-+
-+	ret = 0;
-+	ret |= run_test(CLOCK_MONOTONIC, 0);
-+	ret |= run_test(CLOCK_MONOTONIC, 1);
-+	ret |= run_test(CLOCK_BOOTTIME_ALARM, 0);
-+	ret |= run_test(CLOCK_BOOTTIME_ALARM, 1);
-+
-+	if (ret)
-+		ksft_exit_fail();
-+	ksft_exit_pass();
-+	return ret;
-+}
-+
--- 
-2.24.0
+I'm very obliged to hear anything.
 
+Thanks
+Lai
