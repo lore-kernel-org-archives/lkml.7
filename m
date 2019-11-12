@@ -2,157 +2,131 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E7CC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDBFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2642084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C7A214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:11:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B16kGHPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKLLKu (ORCPT
+        id S1727210AbfKLLLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:10:50 -0500
-Received: from proxmox-new.maurer-it.com ([212.186.127.180]:33524 "EHLO
-        proxmox-new.maurer-it.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfKLLKp (ORCPT
+        Tue, 12 Nov 2019 06:11:10 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55430 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726991AbfKLLLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:10:45 -0500
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-        by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 3B811467A0;
-        Tue, 12 Nov 2019 12:10:44 +0100 (CET)
-Subject: Re: [PATCH 4.19 STABLE] KVM: x86: introduce is_pae_paging
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
-References: <20191111225423.29309-1-sean.j.christopherson@intel.com>
-From:   Thomas Lamprecht <t.lamprecht@proxmox.com>
-Message-ID: <4d382b90-34d8-5a4d-1f62-b9dcb479e2ed@proxmox.com>
-Date:   Tue, 12 Nov 2019 12:10:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:71.0) Gecko/20100101
- Thunderbird/71.0
+        Tue, 12 Nov 2019 06:11:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573557068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UCDzF3I7PqpWpcWmCXsJTENxJT/HWr5M11CK6M+e5Cc=;
+        b=B16kGHPnd95n8Xe3qSMrPaq48oN+aRuBisdYiHXy95isDUr7h0qQMTgn/Vd6sPgusJtOMv
+        jt6pp8bTbusJZaTs4HjOKOQkOxcPrVIsNHofmjhAT7qhWZ/dF366c1bAG+EkB/31OVJfu7
+        SDL4GDj7ZIjQoUkmbqSSQEkd3F2+ssM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-236-vGqH9W-0N8G3pcQ8is3d0w-1; Tue, 12 Nov 2019 06:11:05 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4BB122F29;
+        Tue, 12 Nov 2019 11:11:04 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-23.pek2.redhat.com [10.72.8.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1025B100EBD0;
+        Tue, 12 Nov 2019 11:10:57 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 19:10:53 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     jejb@linux.vnet.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linuxarm@huawei.com,
+        linux-kernel@vger.kernel.org, hare@suse.com
+Subject: Re: [PATCH 6/6] scsi: hisi_sas: Expose multiple hw queues for v3 as
+ experimental
+Message-ID: <20191112111053.GA31697@ming.t460p>
+References: <1571926881-75524-1-git-send-email-john.garry@huawei.com>
+ <1571926881-75524-7-git-send-email-john.garry@huawei.com>
+ <20191027081910.GB16704@ming.t460p>
+ <bd3b09f7-4a51-7cec-49c4-8e2eab3bdfd0@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111225423.29309-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <bd3b09f7-4a51-7cec-49c4-8e2eab3bdfd0@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: vGqH9W-0N8G3pcQ8is3d0w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 11:54 PM, Sean Christopherson wrote:
-> From: Paolo Bonzini <pbonzini@redhat.com>
-> 
-> Upstream commit bf03d4f9334728bf7c8ffc7de787df48abd6340e.
-> 
-> Checking for 32-bit PAE is quite common around code that fiddles with
-> the PDPTRs.  Add a function to compress all checks into a single
-> invocation.
-> 
-> Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
-> where it fails to check is_long_mode() and results in KVM incorrectly
-> attempting to load PDPTRs for a 64-bit guest.
-> 
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> [sean: backport to 4.x; handle vmx.c split in 5.x, call out the bugfix]
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx.c | 7 +++----
->  arch/x86/kvm/x86.c | 8 ++++----
->  arch/x86/kvm/x86.h | 5 +++++
->  3 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> index 6f7b3acdab26..83acaed244ba 100644
-> --- a/arch/x86/kvm/vmx.c
-> +++ b/arch/x86/kvm/vmx.c
-> @@ -5181,7 +5181,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
->  		      (unsigned long *)&vcpu->arch.regs_dirty))
->  		return;
->  
-> -	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-> +	if (is_pae_paging(vcpu)) {
->  		vmcs_write64(GUEST_PDPTR0, mmu->pdptrs[0]);
->  		vmcs_write64(GUEST_PDPTR1, mmu->pdptrs[1]);
->  		vmcs_write64(GUEST_PDPTR2, mmu->pdptrs[2]);
-> @@ -5193,7 +5193,7 @@ static void ept_save_pdptrs(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
->  
-> -	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-> +	if (is_pae_paging(vcpu)) {
->  		mmu->pdptrs[0] = vmcs_read64(GUEST_PDPTR0);
->  		mmu->pdptrs[1] = vmcs_read64(GUEST_PDPTR1);
->  		mmu->pdptrs[2] = vmcs_read64(GUEST_PDPTR2);
-> @@ -12021,8 +12021,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
->  		 * If PAE paging and EPT are both on, CR3 is not used by the CPU and
->  		 * must not be dereferenced.
->  		 */
-> -		if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu) &&
-> -		    !nested_ept) {
-> +		if (is_pae_paging(vcpu) && !nested_ept) {
->  			if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3)) {
->  				*entry_failure_code = ENTRY_FAIL_PDPTE;
->  				return 1;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 6ae8a013af31..b9b87fb75ac0 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -633,7 +633,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
->  	gfn_t gfn;
->  	int r;
->  
-> -	if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
-> +	if (!is_pae_paging(vcpu))
->  		return false;
->  
->  	if (!test_bit(VCPU_EXREG_PDPTR,
-> @@ -884,8 +884,8 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
->  	if (is_long_mode(vcpu) &&
->  	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
->  		return 1;
-> -	else if (is_pae(vcpu) && is_paging(vcpu) &&
-> -		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-> +	else if (is_pae_paging(vcpu) &&
-> +		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
->  		return 1;
->  
->  	kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
-> @@ -8312,7 +8312,7 @@ static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
->  		kvm_update_cpuid(vcpu);
->  
->  	idx = srcu_read_lock(&vcpu->kvm->srcu);
-> -	if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
-> +	if (is_pae_paging(vcpu)) {
->  		load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
->  		mmu_reset_needed = 1;
->  	}
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 3a91ea760f07..608e5f8c5d0a 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -139,6 +139,11 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
->  	return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
->  }
->  
-> +static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
-> +{
-> +	return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
-> +}
-> +
->  static inline u32 bit(int bitno)
->  {
->  	return 1 << (bitno & 31);
-> 
+On Mon, Nov 11, 2019 at 02:02:27PM +0000, John Garry wrote:
+> On 27/10/2019 08:19, Ming Lei wrote:
+> > >   =09.this_id=09=09=3D -1,
+> > > @@ -3265,8 +3300,14 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const =
+struct pci_device_id *id)
+> > >   =09shost->max_lun =3D ~0;
+> > >   =09shost->max_channel =3D 1;
+> > >   =09shost->max_cmd_len =3D 16;
+> > > -=09shost->can_queue =3D HISI_SAS_UNRESERVED_IPTT;
+> > > -=09shost->cmd_per_lun =3D HISI_SAS_UNRESERVED_IPTT;
+> > > +
+>=20
+> Hi Ming,
+>=20
+> I mentioned in the thread "blk-mq: improvement on handling IO during CPU
+> hotplug" that I was using this series to test that patchset.
+>=20
+> So just with this patchset (and without yours), I get what looks like som=
+e
+> IO errors in the LLDD. The error is an underflow error. I can't figure ou=
+t
+> what is the cause.
 
-Thanks for the fast and good answer and the backport, made things more
-clear here. Cannot reproduce the issues with that patch anymore
+Can you post the error log? Or interpret the 'underflow error' from hisi
+sas or scsi viewpoint?
 
-Tested-by: Thomas Lamprecht <t.lamprecht@proxmox.com>
- 
+>=20
+> I'm wondering if the SCSI command is getting corrupted someway.
+
+Why do you think the command is corrupted?
+
+>=20
+> > > +=09if (expose_mq_experimental) {
+> > > +=09=09shost->can_queue =3D HISI_SAS_MAX_COMMANDS;
+> > > +=09=09shost->cmd_per_lun =3D HISI_SAS_MAX_COMMANDS;
+> > The above is contradictory with current 'nr_hw_queues''s meaning,
+> > see commit on Scsi_Host.nr_hw_queues.
+> >=20
+>=20
+> Right, so I am generating the hostwide tag in the LLDD. And the Scsi
+> host-wide host_busy counter should ensure that we don't pump too much IO =
+to
+> the HBA.
+
+Even without the host-wide host_busy, your approach should work if you
+build the hisi sas tag correctly(uniquely), just not efficiently. I'd
+suggest you to collect trace and observe if request with expected hisi sas
+tag is sent to hardware.
+
+BTW, the patch of 'scsi: core: avoid host-wide host_busy counter for scsi_m=
+q'
+will be merged to v5.5 if everything is fine.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=3D5.=
+5/scsi-queue&id=3D6eb045e092efefafc6687409a6fa6d1dabf0fb69
+
+Thanks,=20
+Ming
 
