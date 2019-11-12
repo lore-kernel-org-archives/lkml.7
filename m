@@ -2,159 +2,232 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6990C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36210C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF6221783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cV1/yMqB"
+	by mail.kernel.org (Postfix) with ESMTP id 0F49F2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573587586;
+	bh=1MKU32qu4bZ+rzKBmsoBVEFYZR5/JFL//34VWl5Vc7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OjKkynuFqkRYEYTS9Jwj4dDHAQEtV8UU0iidrCqgiCgJdjew9S4bGrOFfkk+CL6lj
+	 gTyZmULAUFLlRX+17NGB8K2YSbktMfGi6q6kOLZqQ+ZoCVNJqbIi6TPoRN4Bdhr2hp
+	 vc2gFHa24gZmemZDz8/xJSKbFbJbFsThKaNoRsr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfKLTi4 (ORCPT
+        id S1727137AbfKLTjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:38:56 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44932 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfKLTi4 (ORCPT
+        Tue, 12 Nov 2019 14:39:45 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43352 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfKLTjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:38:56 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q26so14045035pfn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:38:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o8c8L+yq5uuteeSNGFKsd4YFj6CHGTB4powAvhzFPnY=;
-        b=cV1/yMqBzCFsW6cFqDNJvCbf2UDQGqjhfDyhntfVDOLeKmGZAU2S/sS0b9oxxz9Ysb
-         5GPFydtMuD9otbBfQIyFGfHV+GCkeZE5SvQWGMldPwawqp9UO6oG+Z+6As4gBbp5LT3w
-         8u6Cc97jizxpjA8Ks7Plgt6wjmjvMnLQ40WqAYsO+4phSj3r0yyVqGy5d1HANlh4jQFo
-         80Dx+1uE0UzOL3JrCNpxqc7vuCXRakkYQ8wtse1gGABogprdqX192w3kNUAkSHMUbH5u
-         ZEJJpDVCtgJZosJz/Cc9OrwzUZUZNDKAdv51G7+BY3qUEAiQUGAZvWLBwR2dUhK911sN
-         qxvA==
+        Tue, 12 Nov 2019 14:39:44 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l20so15917093oie.10;
+        Tue, 12 Nov 2019 11:39:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o8c8L+yq5uuteeSNGFKsd4YFj6CHGTB4powAvhzFPnY=;
-        b=dq+bgYPauNCYt188smt7gn1+MvjoXlMq2szE8wI7A2fnGy2T6E7FqIrLEhWIJmWJhB
-         G5XzNdgOfxeXG0ZxNXQjgtr44XoSk0VkMDh/2hMTFTHNgWso7F0ZHWdkzmG9MyiKzR2F
-         EaDjc2/o48toGjEMo9ftrWRQStDu3LJ+klX1OWw3KruwBi1+W/EWR6jT14a9V+FWJpm0
-         5kB3j/HJ2cHLgZ0026Ufvm5PHz+FcfjctNLBtDQ0LVE/Lq+Zibgo9f6uLkChGi9IYUh6
-         4PvpY/yGd4pMGgH1BbaIkZDqoJlPRE9Bjc1xJGWQBkXnKIxiltvx1wZBbBHMlaASPcdQ
-         yotw==
-X-Gm-Message-State: APjAAAWbj/Ub6ZZg/LTfPdo+Ng6L7EF8YauX/C+b3yN0qhjxSBB9EcEs
-        imKGcxECOnqjTkwMfIm8+NTqgw==
-X-Google-Smtp-Source: APXvYqwNk8rTopisVa5O//iCgC0uJ+EsNW1aFkZUV/LOERUiXv1g7ZmWg9AUyGjWe5ZiQ8QmBCXIhg==
-X-Received: by 2002:a17:90a:6d27:: with SMTP id z36mr8893488pjj.38.1573587535530;
-        Tue, 12 Nov 2019 11:38:55 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y11sm23437710pfq.1.2019.11.12.11.38.54
+        bh=2OeV1TEjg5DUl+fuWBn8Jfdeie+nCeDPsRLgvJFEBFg=;
+        b=GGhtCMHG4Nnq0mcudZ2vskjnPB/INf9fYZG7qn+y5YjOF39UD5h3LVHwf9oVmq7t0t
+         q+c8ZbVGw1vdyA/mxsbwD3gnN0xe6jryI6sCZmgmvQ3BoNByls09WG1J1ZIhWMO+GgZ0
+         4NCiUJBpF4NlGty+GY0KniDlbDVEJ5N99M7BvNIeNZDOxaHfwR1XIv0M81Hy+rB9I6+d
+         DuKMeRy7gQDn6JVxZuEg2b0lF3dsZsfCtVE3S3iQfe4AggY/i0Zn4YLSxQAwxYT1hdoe
+         UF32KEX0MQ0rCoymdJmAtIvmVswpLSPgYWNgR5h7A/BwyqBsNMd7x2TzvU/OF8VpRGw5
+         s96g==
+X-Gm-Message-State: APjAAAXEBHP5JI79uZRIFdoaTKkarxmp3/cad7VR3pbyCYIW8QbJctoS
+        mT9WlsvRSMX1P/6GIQQHyA==
+X-Google-Smtp-Source: APXvYqxnOqQm37cKu+NMagKIQidyM/CvP2y92s3RL4Lfv0Gxm8Qyd0vtW8Jg61doTgsADBWXFsSO3Q==
+X-Received: by 2002:aca:7285:: with SMTP id p127mr589107oic.120.1573587583113;
+        Tue, 12 Nov 2019 11:39:43 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l32sm6543738otl.74.2019.11.12.11.39.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:38:54 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:38:52 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        edubezval@gmail.com, swboyd@chromium.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 1/3] drivers: thermal: tsens: Add critical interrupt
- support
-Message-ID: <20191112193852.GC3140946@builder>
-References: <cover.1573499020.git.amit.kucheria@linaro.org>
- <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
+        Tue, 12 Nov 2019 11:39:42 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:39:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
+        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
+Message-ID: <20191112193942.GA27334@bogus>
+References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
+ <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
-
-> TSENS IP v2.x adds critical threshold interrupt support for each sensor
-> in addition to the upper/lower threshold interrupt. Add support in the
-> driver.
+On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:
+> Add a devicetree schema for AD7292 monitor and control system.
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 > ---
->  drivers/thermal/qcom/tsens-common.c | 129 ++++++++++++++++++++++++++--
->  drivers/thermal/qcom/tsens-v2.c     |   8 +-
->  drivers/thermal/qcom/tsens.c        |  21 +++++
->  drivers/thermal/qcom/tsens.h        |  73 ++++++++++++++++
->  4 files changed, 220 insertions(+), 11 deletions(-)
+> Changelog V3 -> V4:
+> - updated SPDX identifier to GPL-2.0-only
+> - changed maxitems constraint on channel property
 > 
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> index 4359a4247ac3..2989cb952cdb 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -23,6 +23,10 @@
->   * @low_thresh:     lower threshold temperature value
->   * @low_irq_mask:   mask register for lower threshold irqs
->   * @low_irq_clear:  clear register for lower threshold irqs
-> + * @crit_viol:      critical threshold violated
+>  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 ++
+>  2 files changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> new file mode 100644
+> index 000000000000..b68be3aaf587
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-"violated" as in "temperature is above crit_thresh"?
+Sigh, I gave you the exact line to use:
 
-> + * @crit_thresh:    critical threshold temperature value
-> + * @crit_irq_mask:  mask register for critical threshold irqs
-> + * @crit_irq_clear: clear register for critical threshold irqs
->   *
-[..]
-> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-> index 7d317660211e..784c4976c4f9 100644
-> --- a/drivers/thermal/qcom/tsens.c
-> +++ b/drivers/thermal/qcom/tsens.c
-> @@ -121,6 +121,27 @@ static int tsens_register(struct tsens_priv *priv)
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people 
+think I mean to pick one. So now I just give the whole line. I don't 
+know how to be clearer.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7292 10-Bit Monitor and Control System
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +
+> +description: |
+> +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
+> +  Temperature Sensor, and GPIOs
+> +
+> +  Specifications about the part can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7292
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vref-supply:
+> +    description: |
+> +      The regulator supply for ADC and DAC reference voltage.
+> +
+> +  spi-cpha: true
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-cpha
+> +
+> +patternProperties:
+> +  "^channel@[0-7]$":
+> +    type: object
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The channel number. It can have up to 8 channels numbered from 0 to 7.
+> +        items:
+> +          maximum: 7
+
+Not what I said either. A slight but important difference in that you 
+are missing a '-' to make 'items' a list rather than a schema/dict.
+
+Update dt-schema. This should give a warning now.
+
+> +
+> +      diff-channels:
+> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      ad7292: adc@0 {
+> +        compatible = "adi,ad7292";
+> +        reg = <0>;
+> +        spi-max-frequency = <25000000>;
+> +        vref-supply = <&adc_vref>;
+> +        spi-cpha;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        channel@0 {
+> +          reg = <0>;
+> +          diff-channels = <0 1>;
+> +        };
+> +        channel@2 {
+> +          reg = <2>;
+> +        };
+> +        channel@3 {
+> +          reg = <3>;
+> +        };
+> +        channel@4 {
+> +          reg = <4>;
+> +        };
+> +        channel@5 {
+> +          reg = <5>;
+> +        };
+> +        channel@6 {
+> +          reg = <6>;
+> +        };
+> +        channel@7 {
+> +          reg = <7>;
+> +        };
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32bf5f8116d0..5d00e871c4c6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -813,6 +813,13 @@ S:	Supported
+>  F:	drivers/iio/adc/ad7124.c
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
 >  
->  	enable_irq_wake(irq);
->  
-> +	if (tsens_version(priv) > VER_1_X) {
-> +		irq = platform_get_irq_byname(pdev, "critical");
-> +		if (irq < 0) {
-
-Treating this as a fatal error breaks backwards compatibility with
-current devicetree; and even within your patch series, tsens should fail
-to probe between this patch and the application of patch 3.
-
-Please flip this around and do:
-
-irq = platform_get_irq_byname(pdev, "critical");
-if (irq >= 0 && tsens_version(priv) > VER_1_X) {
-	request_irq()...
-}
-
-> +			ret = irq;
-> +			goto err_put_device;
-> +		}
+> +ANALOG DEVICES INC AD7292 DRIVER
+> +M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +W:	http://ez.analog.com/community/linux-device-drivers
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
 > +
-> +		ret = devm_request_threaded_irq(&pdev->dev, irq,
-> +						NULL, tsens_critical_irq_thread,
-> +						IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> +						dev_name(&pdev->dev), priv);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "%s: failed to get critical irq\n", __func__);
-> +			goto err_put_device;
-> +		}
-> +
-> +		enable_irq_wake(irq);
-> +	}
-> +
-> +	return 0;
-> +
->  err_put_device:
->  	put_device(&pdev->dev);
->  	return ret;
-
-Regards,
-Bjorn
+>  ANALOG DEVICES INC AD7606 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
+>  L:	linux-iio@vger.kernel.org
+> -- 
+> 2.23.0
+> 
