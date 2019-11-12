@@ -2,177 +2,129 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96508C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E7AC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F5D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ABDA2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573556899;
+	bh=LuK4ZYXLmOoNj5c7uUBukyUIVfCzbY5zWUc51mTkX3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EVMPH+fgcBNRanbwKgLWGlj73umTzGNvL/dz56i+akw0N51fz6ztYjYVb9YXXZ4Qt
+	 IbI3+Y+hf/6FBpsWwzHIU3mwQhBEGPtAUtMJAMhniznidYwnQM3YhvIACkWUQbMsuB
+	 xItOE46Hf2UXuCW1lgpwxIep59x8Vs8r3ZTng1BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfKLLGx (ORCPT
+        id S1726980AbfKLLIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:06:53 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:45386 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725957AbfKLLGx (ORCPT
+        Tue, 12 Nov 2019 06:08:18 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41314 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLLIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:06:53 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iUU0Q-0007lz-FV; Tue, 12 Nov 2019 12:06:42 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xACB6ahL019198
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 12 Nov 2019 12:06:37 +0100
-Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
-To:     Soeren Moch <smoch@web.de>, Kever Yang <kever.yang@rock-chips.com>,
-        heiko@sntech.de
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Alexis Ballier <aballier@gentoo.org>,
-        devicetree@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Akash Gajjar <akash@openedev.com>, Nick Xie <nick@khadas.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, Andy Yan <andyshrk@gmail.com>
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-3-kever.yang@rock-chips.com>
- <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
- <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
- <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
- <17e14b30-02ee-2379-8891-088677924479@rock-chips.com>
- <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <f2c34d85-4d71-d9ff-99ea-044e6354fc87@fivetechno.de>
-Date:   Tue, 12 Nov 2019 12:06:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 12 Nov 2019 06:08:17 -0500
+Received: by mail-qt1-f196.google.com with SMTP id o3so19267532qtj.8;
+        Tue, 12 Nov 2019 03:08:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GWSI5VBMhZqOe6OatG1gmNDzycVYMlsfF+bAeau7Eao=;
+        b=W3E7rpmDg+eDNpJ+pAHKPmOlGuWa4xq1Go8GAYnCNGYiY5lWGNiYyB+0sZ94djH+i3
+         eTJO2PlAP5GmhMOmqvuyvUT76vgqc/ulvhFV152HpQnKxG0wE7wCkmt9wBfNTTDH9X30
+         0r3fomE5p/iZ9j2MphmJ6Yki6NCXfEmAdx8DjPJlfb0sG7o/FB0vlS57KKonya63AiSo
+         Bowqqc2WLviwDVpw3nXESI19zH/VZBbMf2bH7pL12w9yTRLTDz7PaJqk339GhYnZyfOk
+         fRtS3GmG/pkjN4+UMmSTCIX8mwC0zaLFUPdggJiox5Qm7fmSkJsQvT2qdD9RbSnTdu9T
+         tMXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GWSI5VBMhZqOe6OatG1gmNDzycVYMlsfF+bAeau7Eao=;
+        b=S5Ie9JvTX0/UZHOfvtJZQotQWKG3/rNJhPjiwlw1AUag1Dw8sLwj45yDGSCDJk9OyP
+         L2ajExMUgF66+RoUtgiqjBn5mX6QVzgQoLKlFWQSYQQ3hfdgB+QOK4vL4jCyPDO6oLn/
+         pxnR9aYh0niHgNP4wZgfeKQg8bp1IKCx92GLIl+LR82KfnJ4MPjHAQfSB/J8XlYuxWO4
+         taj7SPWJkvfz+OIY56hU91ocZQzKArTefqEDPJ2tPliV1E8/EwlDiSvgt7o2zeorlOc8
+         GqNPV9u/qPesxJCbQ31bEpEfRHcwcFaeXE2xnZ8BqsFCclaDPKF2cPOt9IGhRkSBOq6w
+         +ETg==
+X-Gm-Message-State: APjAAAXKQVxPUxRkbJG7TgHj7KsPeBVyiyI5fNHn5mUolPjHsJeUVPHJ
+        I0PLuh2sv58l+Q0wKYEuN/kO51yI
+X-Google-Smtp-Source: APXvYqz3fRD5JT9KcLl3m5/qEY8PdFH7BPwWg9dEzG1Vsb4+27ljHcFFYSybZB66vghVGgU8FqiSMg==
+X-Received: by 2002:ac8:53c5:: with SMTP id c5mr31458699qtq.55.1573556895037;
+        Tue, 12 Nov 2019 03:08:15 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id o195sm8494807qke.35.2019.11.12.03.08.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 03:08:14 -0800 (PST)
+Date:   Tue, 12 Nov 2019 12:08:09 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        James Clark <james.clark@arm.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20191112110809.GA106922@gmail.com>
+References: <20191107190011.23924-1-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573556811;c921f886;
-X-HE-SMSGID: 1iUU0Q-0007lz-FV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Sore, Kever,
 
-Am 12.11.19 um 11:19 schrieb Soeren Moch:
-> 
-> 
-> On 12.11.19 11:02, Kever Yang wrote:
->> Markus,
->>
->>
->> On 2019/11/12 下午4:16, Markus Reichl wrote:
->>> Hi Kever,
->>>
->>> have a rk3399-roc-pc running mainline U-Boot and kernel and vdd_log is
->>> showing 1118 mV.
->>
->> The rk3399-roc-pc have the same vdd_log circuit in schematic, so it
->> should like the patch 1/3 of
->>
->> this patch set.
->>
->> I don't understand who is setting this value, maybe the default value
->> without pwm regulator enabled?
->>
->>> Is this a danger for the board?
->>> How to fix it?
->>
->> The best way is to set correct min/max microvolt of the
->> regulator(measure with PWM output low and high),
-> I didn't look into the schematic of this board, but if it is similar to
-> RockPro64, setting the pwm regulator to the max voltage of 1.7V will
-> probably kill the rk3399 immediately. So I recommend not to do this...
-> 
-It has to be set to 450mV - 1400mV to give 953mV.
-I will come out with a patch that fixes this.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> Regards,
-> Soeren
->>
->> (note that if  no driver touch the regulator, the PWM is default
->> input, not output;)
->> to
->> and set a init-microvolt for U-Boot driver, and I think no kernel
->> driver touch this regulator now.
->>
->>
->> Thanks,
->>
->> - Kever
->>
->>> Btw. vin-supply for this pwm-regulator is ignored and I could not
->>> find it
->>> in bindings doc.
->>>
->>> Gruß,
->>
->>
+> Hi Ingo/Thomas,
 > 
+> 	Please consider pulling,
 > 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> Best regards,
 > 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit d44f821b0e13275735e8f3fe4db8703b45f05d52:
+> 
+>   perf/core: Optimize perf_init_event() for TYPE_SOFTWARE (2019-10-28 12:53:28 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191107
+> 
+> for you to fetch changes up to 7fa46cbf20d327d78114b1c8c7e69fabe7c57794:
+> 
+>   perf report: Sort by sampled cycles percent per block for tui (2019-11-07 10:14:48 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
 
-Gruß,
--- 
-Markus Reichl
+>  87 files changed, 22145 insertions(+), 19453 deletions(-)
+
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
