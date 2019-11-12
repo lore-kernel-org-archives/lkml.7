@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56D7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630D5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BAC214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BF8214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfKLXvK (ORCPT
+        id S1727365AbfKLXvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:51:10 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57352 "EHLO
+        Tue, 12 Nov 2019 18:51:13 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57398 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727015AbfKLXug (ORCPT
+        by vger.kernel.org with ESMTP id S1727069AbfKLXug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 18:50:36 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-0008IN-WE; Tue, 12 Nov 2019 23:50:34 +0000
+        id 1iUfve-0008IU-6d; Tue, 12 Nov 2019 23:50:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-00057c-SZ; Tue, 12 Nov 2019 23:50:32 +0000
+        id 1iUfvc-00057q-Vu; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mathias Payer" <mathias.payer@nebelwelt.net>,
-        "Hui Peng" <benquike@gmail.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
+        "Ori Nimron" <orinimron123@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 12 Nov 2019 23:48:13 +0000
-Message-ID: <lsq.1573602477.324913677@decadent.org.uk>
+Date:   Tue, 12 Nov 2019 23:48:16 +0000
+Message-ID: <lsq.1573602477.499544425@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 16/25] ath6kl: fix a NULL-ptr-deref bug in
- ath6kl_usb_alloc_urb_from_pipe()
+Subject: [PATCH 3.16 19/25] ax25: enforce CAP_NET_RAW for raw sockets
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,71 +56,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hui Peng <benquike@gmail.com>
+From: Ori Nimron <orinimron123@gmail.com>
 
-commit 39d170b3cb62ba98567f5c4f40c27b5864b304e5 upstream.
+commit 0614e2b73768b502fc32a75349823356d98aae2c upstream.
 
-The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
-are initialized to point to the containing `ath6kl_usb` object
-according to endpoint descriptors read from the device side, as shown
-below in `ath6kl_usb_setup_pipe_resources`:
+When creating a raw AF_AX25 socket, CAP_NET_RAW needs to be checked
+first.
 
-for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
-	endpoint = &iface_desc->endpoint[i].desc;
-
-	// get the address from endpoint descriptor
-	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
-						endpoint->bEndpointAddress,
-						&urbcount);
-	......
-	// select the pipe object
-	pipe = &ar_usb->pipes[pipe_num];
-
-	// initialize the ar_usb field
-	pipe->ar_usb = ar_usb;
-}
-
-The driver assumes that the addresses reported in endpoint
-descriptors from device side  to be complete. If a device is
-malicious and does not report complete addresses, it may trigger
-NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
-`ath6kl_usb_free_urb_to_pipe`.
-
-This patch fixes the bug by preventing potential NULL-ptr-deref
-(CVE-2019-15098).
-
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ori Nimron <orinimron123@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/ath/ath6kl/usb.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/ax25/af_ax25.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/wireless/ath/ath6kl/usb.c
-+++ b/drivers/net/wireless/ath/ath6kl/usb.c
-@@ -132,6 +132,10 @@ ath6kl_usb_alloc_urb_from_pipe(struct at
- 	struct ath6kl_urb_context *urb_context = NULL;
- 	unsigned long flags;
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -853,6 +853,8 @@ static int ax25_create(struct net *net,
+ 		break;
  
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return NULL;
-+
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 	if (!list_empty(&pipe->urb_list_head)) {
- 		urb_context =
-@@ -150,6 +154,10 @@ static void ath6kl_usb_free_urb_to_pipe(
- {
- 	unsigned long flags;
- 
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return;
-+
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 	pipe->urb_cnt++;
- 
+ 	case SOCK_RAW:
++		if (!capable(CAP_NET_RAW))
++			return -EPERM;
+ 		break;
+ 	default:
+ 		return -ESOCKTNOSUPPORT;
 
