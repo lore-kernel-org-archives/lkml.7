@@ -2,42 +2,43 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF86C17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F376C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8883D21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6911421D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573580117;
-	bh=+4EzQSM/k1VOif0/E/W/Xzv0GPRgNyMJHG5BQwoLXVU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=EK5INrDHPcOQuouD4T6waLZM6+mOUFphmdzWKoa93jvFWfC8w3LIrdD3mmIL81ez/
-	 xtQZ1VH/aBs9ro7qycbd3L1s6HwTf47z2JoGJf55Os/lDguGBrnjdoKr1uVJYh7bE7
-	 Y49fxfczAMd7r176XXLQezL6s2UV2bN8eWAGnyCk=
+	s=default; t=1573580121;
+	bh=pJWYwPDI1b+7VTqKGjBEhvWsVOjHjFseDOVjhaStdhc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ydKvjEBjNASrE2KVCy6FpUy7OawjbwR/OKrwzJgptK+FatGcgvKcFPORbMd0HlL+3
+	 BOKNWO3d8aME9tuZKSALK57Xd0+KGojuc7CLLuLNyRkEwsPeZHkW4uJU4UPXy+kIwH
+	 hKwZIWIm05NjJCifq3XpGjKEJ5UHW0vqdIgqFsIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfKLRfQ (ORCPT
+        id S1727481AbfKLRfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:35:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59574 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 12:35:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbfKLRfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:35:16 -0500
+        id S1726718AbfKLRfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:35:18 -0500
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CB18214E0;
-        Tue, 12 Nov 2019 17:35:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6590F21A49;
+        Tue, 12 Nov 2019 17:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573580115;
-        bh=+4EzQSM/k1VOif0/E/W/Xzv0GPRgNyMJHG5BQwoLXVU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mceh4Ur/VUEpqNhsdVlcNrzbKQFA3I3i+cQuPTI008T6RWy3FC2d15H05pRpKd3BW
-         jWQWNqALKkTJyK/FbmzWRaDCohiyixeo0KKI1QAU4toEhNq++YbHzZVlVjoHQeVyeT
-         1bmiyZkFCmbQ0PnoDeuOgGmZUQ6HFRsRubGkHM00=
+        s=default; t=1573580117;
+        bh=pJWYwPDI1b+7VTqKGjBEhvWsVOjHjFseDOVjhaStdhc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NH3I85rs04Cj7LE2dCGkcVub5miRBedV4VEu+E+WzltzlWm2def9vstZwbHOlX7Uf
+         elNI4E9oHPtqqlgyWoXzuQtQHcfS4s0TX6XvSpvXFbxhEg/6RMr17xvTlx3eep9GsQ
+         Nwlp0Fw9inZ9IGaFaJwel8v4cOusWuk6JevnY0PA=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Alex Deucher <alexander.deucher@amd.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -50,10 +51,12 @@ Cc:     Frederick Lawler <fred@fredlawl.com>,
         linux-pci@vger.kernel.org,
         =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel@daenzer.net>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH V3 0/3] drm: replace magic numbers
-Date:   Tue, 12 Nov 2019 11:35:00 -0600
-Message-Id: <20191112173503.176611-1-helgaas@kernel.org>
+Subject: [PATCH 1/3] PCI: Add #defines for Enter Compliance, Transmit Margin
+Date:   Tue, 12 Nov 2019 11:35:01 -0600
+Message-Id: <20191112173503.176611-2-helgaas@kernel.org>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+In-Reply-To: <20191112173503.176611-1-helgaas@kernel.org>
+References: <20191112173503.176611-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,33 +66,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-amdgpu and radeon do a bit of mucking with the PCIe Link Control 2
-register, some of it using hard-coded magic numbers.  The idea here is to
-replace those with #defines.
+Add definitions for the Enter Compliance and Transmit Margin fields of the
+PCIe Link Control 2 register.
 
-Since v2:
-  - Fix a gpu_cfg2 case in amdgpu/si.c that I had missed
-  - Separate out the functional changes for better bisection (thanks,
-    Michel!)
-  - Add #defines in a patch by themselves (so a GPU revert wouldn't break
-    other potential users)
-  - Squash all the magic number -> #define changes into one patch
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ include/uapi/linux/pci_regs.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Since v1:
-  - Add my signed-off-by and Alex's reviewed-by.
-
-Bjorn Helgaas (3):
-  PCI: Add #defines for Enter Compliance, Transmit Margin
-  drm: correct Transmit Margin masks
-  drm: replace numbers with PCI_EXP_LNKCTL2 definitions
-
- drivers/gpu/drm/amd/amdgpu/cik.c | 22 ++++++++++++++--------
- drivers/gpu/drm/amd/amdgpu/si.c  | 22 ++++++++++++++--------
- drivers/gpu/drm/radeon/cik.c     | 22 ++++++++++++++--------
- drivers/gpu/drm/radeon/si.c      | 22 ++++++++++++++--------
- include/uapi/linux/pci_regs.h    |  2 ++
- 5 files changed, 58 insertions(+), 32 deletions(-)
-
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 29d6e93fd15e..5869e5778a05 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -673,6 +673,8 @@
+ #define  PCI_EXP_LNKCTL2_TLS_8_0GT	0x0003 /* Supported Speed 8GT/s */
+ #define  PCI_EXP_LNKCTL2_TLS_16_0GT	0x0004 /* Supported Speed 16GT/s */
+ #define  PCI_EXP_LNKCTL2_TLS_32_0GT	0x0005 /* Supported Speed 32GT/s */
++#define  PCI_EXP_LNKCTL2_ENTER_COMP	0x0010 /* Enter Compliance */
++#define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
+ #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+ #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+ #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
