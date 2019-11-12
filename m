@@ -2,329 +2,170 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3107AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A242C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09179206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426BD206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:12:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azxIbnR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfKLOLJ (ORCPT
+        id S1727437AbfKLOMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:11:09 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:40834 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727298AbfKLOLI (ORCPT
+        Tue, 12 Nov 2019 09:12:16 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37814 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfKLOMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:11:08 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0ThuRPWj_1573567600;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ThuRPWj_1573567600)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Nov 2019 22:06:40 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     alex.shi@linux.alibaba.com, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v2 4/8] mm/lru: only change the lru_lock iff page's lruvec is different
-Date:   Tue, 12 Nov 2019 22:06:24 +0800
-Message-Id: <1573567588-47048-5-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573567588-47048-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1573567588-47048-1-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 12 Nov 2019 09:12:16 -0500
+Received: by mail-ed1-f68.google.com with SMTP id k14so15012153eds.4;
+        Tue, 12 Nov 2019 06:12:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KxSPlrqtEzHjDjmMoesMoA1oYmvT3buCd5ykJgz1zH4=;
+        b=azxIbnR14SLX1EEBSNv3knBGIxYmKTsERV55xjemZBeEqgKPTy37mAxU7sFe2Rj/tf
+         OY1Jisto9ME9u6C31XRuv2Sh6WwETVDHCBCGdGvfUpUafPdNZRrn7hg8Fcc6kJVqsL+N
+         LDHra+Z0UDv49RtAlISWxn5bNJ65EXgriDHyOUw/jwOjySmNy/jmAbtwONICQJBTaP6I
+         QF5kBz2CAuZ6yfB3/QV7SzKo9ofZBaV/TfsijKaGB0av6B+9x7LaikNc5YYLvTJKHzeK
+         XZd39b7WwXlmuRPFEF/Xj4h87odt64jwzcjSVZx+vuArqAIJ+o1WeDZS/hjln6zSd+zW
+         aGog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KxSPlrqtEzHjDjmMoesMoA1oYmvT3buCd5ykJgz1zH4=;
+        b=uikXJrOJcwFWX59IwiiCZ/vKU4fMAZzvaHquO2WpR58DYmsONxR1wCFpE16pPf3g/y
+         24Q2so7MUppoTvspnGfTBORnXsobAmVMfiLopY2OYRxJYpH0K2Ph8Ix94RwXiO+aNP3y
+         +OIRWA706xG4yPxgIum5pLHs8+vnbqUhBzQkYBzKvcQNTS0ncN5VVAVGfcOyUOljBr6T
+         LeaxkIW65RTI/Ic+vI6ZXf+aUV9IHL+6jf/ekCQ2ZgawrS1cMU34GGkSefes7WwI39t4
+         et4LE/xm00OdfZS0QrStoJgs20jtWIBVNjbZPxucvwJ63TjCjI9+6X4AEhblcRXmbeTe
+         5reQ==
+X-Gm-Message-State: APjAAAUtaA/Z73efshZ4MGuhkbl8s+ZNIV1Ij2oa0LPRhpOnE8/mvawk
+        nNlcV/668Rrs9d5wslDSUL2VS83L96edbj0jnUw=
+X-Google-Smtp-Source: APXvYqx6gy2SiezBYVxCNFX0y4S7P2z/l2MUZWIDu9IBINqX69LmFc046Aug3tBhXJobpzrUhTTqryc2NmW89CYErdw=
+X-Received: by 2002:a50:91c4:: with SMTP id h4mr33376125eda.36.1573567933749;
+ Tue, 12 Nov 2019 06:12:13 -0800 (PST)
+MIME-Version: 1.0
+References: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
+ <20191112132010.18274-3-linux@rasmusvillemoes.dk> <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
+ <6d4292fcb0cf290837306388bdfe9b0f@www.loen.fr> <CA+h21hpE-Nu_Sh1fRizUoEs082ev=9nzuumSXDrk-QTXdnEbzg@mail.gmail.com>
+ <aee81d64979bb72b63a8889fb7193c3f@www.loen.fr>
+In-Reply-To: <aee81d64979bb72b63a8889fb7193c3f@www.loen.fr>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 12 Nov 2019 16:12:02 +0200
+Message-ID: <CA+h21hqxpy-n6HBkyGSKFEm_CujG5x3Y3Wj-frj0OSwbVWgCng@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the pagevec locking, a new page's lruvec is may same as
-previous one. So we may save a lruvec locking if the lruvec is same as
-previous one, and only change the lock iff lruvec is new.
+On Tue, 12 Nov 2019 at 16:04, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2019-11-12 15:03, Vladimir Oltean wrote:
+> > On Tue, 12 Nov 2019 at 15:49, Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On 2019-11-12 14:53, Vladimir Oltean wrote:
+> >> > On Tue, 12 Nov 2019 at 15:20, Rasmus Villemoes
+> >> > <linux@rasmusvillemoes.dk> wrote:
+> >> >>
+> >> >> From: Vladimir Oltean <olteanv@gmail.com>
+> >> >>
+> >> >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and
+> >> >> eth1
+> >> >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+> >> >>
+> >> >> Switching to interrupts offloads the PHY library from the task of
+> >> >> polling the MDIO status and AN registers (1, 4, 5) every second.
+> >> >>
+> >> >> Unfortunately, the BCM5464R quad PHY connected to the switch does
+> >> >> not
+> >> >> appear to have an interrupt line routed to the SoC.
+> >> >>
+> >> >> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> >> >> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> >> >> ---
+> >> >>  arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
+> >> >>  1 file changed, 4 insertions(+)
+> >> >>
+> >> >> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts
+> >> >> b/arch/arm/boot/dts/ls1021a-tsn.dts
+> >> >> index 5b7689094b70..135d36461af4 100644
+> >> >> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
+> >> >> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+> >> >> @@ -203,11 +203,15 @@
+> >> >>         /* AR8031 */
+> >> >>         sgmii_phy1: ethernet-phy@1 {
+> >> >>                 reg = <0x1>;
+> >> >> +               /* SGMII1_PHY_INT_B: connected to IRQ2, active
+> >> low
+> >> >> */
+> >> >> +               interrupts-extended = <&extirq 2
+> >> >> IRQ_TYPE_EDGE_FALLING>;
+> >> >>         };
+> >> >>
+> >> >>         /* AR8031 */
+> >> >>         sgmii_phy2: ethernet-phy@2 {
+> >> >>                 reg = <0x2>;
+> >> >> +               /* SGMII2_PHY_INT_B: connected to IRQ2, active
+> >> low
+> >> >> */
+> >> >> +               interrupts-extended = <&extirq 2
+> >> >> IRQ_TYPE_EDGE_FALLING>;
+> >> >>         };
+> >> >>
+> >> >>         /* BCM5464 quad PHY */
+> >> >> --
+> >> >> 2.23.0
+> >> >>
+> >> >
+> >> > +netdev and Andrew for this patch, since the interrupt polarity
+> >> > caught
+> >> > his attention in v1.
+> >>
+> >> Certainly, the comments and the interrupt specifier do not match.
+> >> Which one is true?
+> >>
+> >>          M.
+> >> --
+> >> Jazz is not dead. It just smells funny...
+> >
+> > The interrupt specifier certainly works. So that points to an issue
+> > with the description. What do you mean, exactly? Does "active low"
+> > mean "level-triggered"? How would you have described this?
+>
+> Active Low definitely implies level triggered. And if that's how it
+> is described in the TRM, than the interrupt specifier is wrong, and
+> just *seem to work* because the level goes back to high between two
+> interrupts.
+>
+> Also, shared *edge* interrupts do not work, full stop. So I'm pretty
+> convinced that what you have here is just wrong.
+>
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
 
-Function named relock_page_lruvec following Hugh Dickins patch.
+Ok, I've tested both interrupts with IRQ_TYPE_LEVEL_LOW and they still
+work. I'll let Rasmus re-send if there is no trouble with the dtsi
+patch. Sorry for the trouble and thanks for teaching me something new.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: swkhack <swkhack@gmail.com>
-Cc: "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Nikolay Borisov <nborisov@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- include/linux/memcontrol.h | 49 ++++++++++++++++++++++++++++++++++++++++++++++
- mm/mlock.c                 | 16 ++++++++-------
- mm/swap.c                  | 14 ++++++-------
- mm/vmscan.c                | 24 +++++++++++------------
- 4 files changed, 76 insertions(+), 27 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 1c1e68537eca..2421b720d272 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1300,6 +1300,55 @@ static inline void dec_lruvec_page_state(struct page *page,
- 	mod_lruvec_page_state(page, idx, -1);
- }
- 
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
-+					struct lruvec *locked_lruvec)
-+{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
-+
-+	rcu_read_lock();
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (locked_lruvec == lruvec) {
-+		rcu_read_unlock();
-+		return lruvec;
-+	}
-+	rcu_read_unlock();
-+
-+	if (locked_lruvec)
-+		spin_unlock_irq(&locked_lruvec->lru_lock);
-+
-+	lruvec = lock_page_lruvec_irq(page, pgdat);
-+
-+	return lruvec;
-+}
-+
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
-+					struct lruvec *locked_lruvec)
-+{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
-+
-+	rcu_read_lock();
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (locked_lruvec == lruvec) {
-+		rcu_read_unlock();
-+		return lruvec;
-+	}
-+	rcu_read_unlock();
-+
-+	if (locked_lruvec)
-+		spin_unlock_irqrestore(&locked_lruvec->lru_lock,
-+							locked_lruvec->flags);
-+
-+	lruvec = lock_page_lruvec_irqsave(page, pgdat);
-+
-+	return lruvec;
-+}
-+
- #ifdef CONFIG_CGROUP_WRITEBACK
- 
- struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
-diff --git a/mm/mlock.c b/mm/mlock.c
-index b509b80b8513..8b3a97b62c0a 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -290,6 +290,7 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- {
- 	int i;
- 	int nr = pagevec_count(pvec);
-+	int delta_munlocked = -nr;
- 	struct pagevec pvec_putback;
- 	struct lruvec *lruvec = NULL;
- 	int pgrescued = 0;
-@@ -300,20 +301,19 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- 	for (i = 0; i < nr; i++) {
- 		struct page *page = pvec->pages[i];
- 
--		lruvec = lock_page_lruvec_irq(page, page_pgdat(page));
-+		lruvec = relock_page_lruvec_irq(page, lruvec);
- 
- 		if (TestClearPageMlocked(page)) {
- 			/*
- 			 * We already have pin from follow_page_mask()
- 			 * so we can spare the get_page() here.
- 			 */
--			if (__munlock_isolate_lru_page(page, lruvec, false)) {
--				__mod_zone_page_state(zone, NR_MLOCK,  -1);
--				spin_unlock_irq(&lruvec->lru_lock);
-+			if (__munlock_isolate_lru_page(page, lruvec, false))
- 				continue;
--			} else
-+			else
- 				__munlock_isolation_failed(page);
--		}
-+		} else
-+			delta_munlocked++;
- 
- 		/*
- 		 * We won't be munlocking this page in the next phase
-@@ -323,8 +323,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- 		 */
- 		pagevec_add(&pvec_putback, pvec->pages[i]);
- 		pvec->pages[i] = NULL;
--		spin_unlock_irq(&lruvec->lru_lock);
- 	}
-+	__mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-+	if (lruvec)
-+		spin_unlock_irq(&lruvec->lru_lock);
- 
- 	/* Now we can release pins of pages that we are not munlocking */
- 	pagevec_release(&pvec_putback);
-diff --git a/mm/swap.c b/mm/swap.c
-index 267c3e262254..0639b3e9e03b 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -195,11 +195,12 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 	for (i = 0; i < pagevec_count(pvec); i++) {
- 		struct page *page = pvec->pages[i];
- 
--		lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page));
-+		lruvec = relock_page_lruvec_irqsave(page, lruvec);
- 
- 		(*move_fn)(page, lruvec, arg);
--		spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->flags);
- 	}
-+	if (lruvec)
-+		spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->flags);
- 
- 	release_pages(pvec->pages, pvec->nr);
- 	pagevec_reinit(pvec);
-@@ -802,15 +803,12 @@ void release_pages(struct page **pages, int nr)
- 		}
- 
- 		if (PageLRU(page)) {
--			struct lruvec *new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+			struct lruvec *pre_lruvec = lruvec;
- 
--			if (new_lruvec != lruvec) {
--				if (lruvec)
--					spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->flags);
-+			lruvec = relock_page_lruvec_irqsave(page, lruvec);
-+			if (pre_lruvec != lruvec)
- 				lock_batch = 0;
--				lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page));
- 
--			}
- 			VM_BUG_ON_PAGE(!PageLRU(page), page);
- 			__ClearPageLRU(page);
- 			del_page_from_lru_list(page, lruvec, page_off_lru(page));
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 50f15d1e5f18..cbebd9b0b9c8 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1874,22 +1874,25 @@ static int too_many_isolated(struct pglist_data *pgdat, int file,
-  * Returns the number of pages moved to the given lruvec.
-  */
- 
--static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
-+static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *llvec,
- 						     struct list_head *list)
- {
- 	int nr_pages, nr_moved = 0;
- 	LIST_HEAD(pages_to_free);
- 	struct page *page;
- 	enum lru_list lru;
-+	struct lruvec *lruvec = llvec;
- 
- 	while (!list_empty(list)) {
- 		page = lru_to_page(list);
-+		lruvec = relock_page_lruvec_irq(page, lruvec);
-+
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
- 		if (unlikely(!page_evictable(page))) {
- 			list_del(&page->lru);
- 			spin_unlock_irq(&lruvec->lru_lock);
-+			lruvec = NULL;
- 			putback_lru_page(page);
--			spin_lock_irq(&lruvec->lru_lock);
- 			continue;
- 		}
- 
-@@ -1907,8 +1910,8 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 
- 			if (unlikely(PageCompound(page))) {
- 				spin_unlock_irq(&lruvec->lru_lock);
-+				lruvec = NULL;
- 				(*get_compound_page_dtor(page))(page);
--				spin_lock_irq(&lruvec->lru_lock);
- 			} else
- 				list_add(&page->lru, &pages_to_free);
- 		} else {
-@@ -1916,6 +1919,11 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 		}
- 	}
- 
-+	if (lruvec != llvec) {
-+		if (lruvec)
-+			spin_unlock_irq(&lruvec->lru_lock);
-+		spin_lock_irq(&llvec->lru_lock);
-+	}
- 	/*
- 	 * To save our caller's stack, now use input list for pages to free.
- 	 */
-@@ -4338,18 +4346,10 @@ void check_move_unevictable_pages(struct pagevec *pvec)
- 
- 	for (i = 0; i < pvec->nr; i++) {
- 		struct page *page = pvec->pages[i];
--		struct pglist_data *pgdat = page_pgdat(page);
--		struct lruvec *new_lruvec = mem_cgroup_page_lruvec(page, pgdat);
--
- 
- 		pgscanned++;
- 
--		if (lruvec != new_lruvec) {
--			if (lruvec)
--				spin_unlock_irq(&lruvec->lru_lock);
--			lruvec = new_lruvec;
--			spin_lock_irq(&lruvec->lru_lock);
--		}
-+		lruvec = relock_page_lruvec_irq(page, lruvec);
- 
- 		if (!PageLRU(page) || !PageUnevictable(page))
- 			continue;
--- 
-1.8.3.1
-
+Cheers,
+-Vladimir
