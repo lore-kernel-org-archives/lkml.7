@@ -2,163 +2,187 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391D6C17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC80FC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AF221925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FC820818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:00:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Xi5VpxUR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhDMNtD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKLV5k (ORCPT
+        id S1727002AbfKLWAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:57:40 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43160 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbfKLV5j (ORCPT
+        Tue, 12 Nov 2019 17:00:08 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44073 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKLWAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:57:39 -0500
-Received: by mail-ot1-f65.google.com with SMTP id l14so15713589oti.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:57:38 -0800 (PST)
+        Tue, 12 Nov 2019 17:00:08 -0500
+Received: by mail-oi1-f193.google.com with SMTP id s71so16321777oih.11;
+        Tue, 12 Nov 2019 14:00:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GVsjPqJbGl0vB/+Gk+mdS3wPD6eGzXnfLsFoQJ3IvwY=;
-        b=Xi5VpxURlOvKgdnc2CCM8ogRa/H5/0k5sFmSuFB8dP7mdDgr87G2ihgcoAULaWG/WG
-         Hj8o+3+ie5rrJujDRUeLRQcOeiNzn8YKMM2VBeVNBKVsnBN0FQns+w7w3PsW4i65s8a5
-         N+VULX92Qszd6uoAo9krZIME0J3xIfL4gJiRjCsCskWvVjLpfyuINcuFYSor/+iuZuqF
-         2TY8xkdKZQu+VBpockLjH+8q98S3mNVqmKjCD+wTD8kkFuDZ2LtRYTFByjXSsRxruC6f
-         SXuVKXEgsV4rmu18ICvQbVomOgOwxUGMXKdLYloN5hq1WNlcDitiNl2/AmVQ4Ykyplh2
-         IsGw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SM3kzFDlQX16L/SqN04Biyd1Tj/HnHRpvkPbCwJ453o=;
+        b=MhDMNtD9ZWPZeT4JeFVRu7zKMj4JAWPGtQtmFdT+YIcXHpn/NqhUl8I8W23+/AoO7Q
+         nn06oigDLgupi8ina7DwtKW9nDJuaqqqmXuDT8VrxUZqEd2ehlooNU9RQh6QPLoYh0bf
+         IajsyY8KQbaB+AOuMSgR4/v0s7A2IePipyuTAoWl90RXUJqop0KXpAS3uBNMH6Hrt5n1
+         0SBiPFVhKaipsDvo13FZ6IRYIdgRYEcGbTwAGAxwJRvHfN99yIU+jMXCwPcxEjF9Md4G
+         1UUBwL5bISWBJPM22F7v8w69g+dTWrPMsrMb7gBdFawE2/8gqdaFhvoKkfbYoRct72io
+         MYZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GVsjPqJbGl0vB/+Gk+mdS3wPD6eGzXnfLsFoQJ3IvwY=;
-        b=KzSsMEBAqPccTM+8UqW/3i6tYo3pMNIoLfEEu66BM8Q25fs79GDO+49+cXVwDQQTum
-         +KbEyRNRTxoQeBG2kNiuD79pWYwWP9ZyMs6tN/JZjOi+6tUB9enE90eK2QTsqqVHQLPg
-         s7UPOBa/laeREX+Hr7FTlqtDaH/lSu6DJ0HvL+NCKrNPGLtEaI8QE1Z7Yl6mXMmC1HHV
-         B0IKorlPusEQiQ7aWDu2W6N0bP8wiIn0Ie2XLbgePI4MrXDvLxMhbNddwQkztwYrWKsL
-         dvFcpaORtuOiIzDw2GtjuzPgYYjLP0sjaVR6wMy2dM6F/02GfDbvBM/S+gTCVOVhtzPk
-         qL7Q==
-X-Gm-Message-State: APjAAAXdFbJIKioi1rjeb+yGJ4Wsima2Zyh9d4nKIbk6o0dQW1PeUBaw
-        HqHZ6AabMtSsQH/wAHDd5MrVbSOEow7xwAEa0mvb2Q==
-X-Google-Smtp-Source: APXvYqzkEVRCSmKc+X1f3BY1LRLo7eG1sZvx8YX/MxrMpGOBy0kbPmD/k6U1Bv0DnK/agC4LCbQG5TvJ1BrQq2DF3mo=
-X-Received: by 2002:a9d:5f11:: with SMTP id f17mr5454287oti.207.1573595857896;
- Tue, 12 Nov 2019 13:57:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20191112000700.3455038-1-jhubbard@nvidia.com> <20191112000700.3455038-9-jhubbard@nvidia.com>
-In-Reply-To: <20191112000700.3455038-9-jhubbard@nvidia.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Nov 2019 13:57:27 -0800
-Message-ID: <CAPcyv4hgKEqoxeQJH9R=YiZosvazj308Kk7jJA1NLxJkNenDcQ@mail.gmail.com>
-Subject: Re: [PATCH v3 08/23] vfio, mm: fix get_user_pages_remote() and FOLL_LONGTERM
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
-        linux-block@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SM3kzFDlQX16L/SqN04Biyd1Tj/HnHRpvkPbCwJ453o=;
+        b=CiPJRj/5oYWWe3il9vP5blWIdbxhj1NpY0vAkxzBLAjECSXZ1CloTvsseXr7OjxmBK
+         LzOfVT9eWTEq1okG+S/gWDgPklcf5apXgA+WXPClZ3xTzsfkYtukNpmhU5lDu9287E6t
+         tOeEcZ5LM/zwiIcEeSqQTs/iLUR8feV9R1TQX2/hmzeYGDbkpiZyl3b4f5N6BavXcUdb
+         myZf4+zRiK4sazhVJiwM4ZhdmOhSAKGIc3wtyDJfQg4duVk5jWyfU8XhKxQVfAZJPVQm
+         NrcNgcOAxvwr/bQ0lMssY889DiYqauCdlqBpiykmv3HFNRiUSeM6cU71MHHPYhLe1OY/
+         LrYw==
+X-Gm-Message-State: APjAAAXLJrqM1A7CBwzvcRq4xAGhVRYtD2mYTSEt4IBFO28FdyKm7ld+
+        X0z1vntT2Fk7w3tgaYKUBLU=
+X-Google-Smtp-Source: APXvYqy00Kao8BdxRrpMSwj6gjyWVlESQh9Zt18w6/UeOJeMLEfTfdzm7EZ97i6/hr7islWybH6DSQ==
+X-Received: by 2002:aca:7285:: with SMTP id p127mr1116498oic.120.1573596005228;
+        Tue, 12 Nov 2019 14:00:05 -0800 (PST)
+Received: from localhost.localdomain ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id d132sm3911oif.2.2019.11.12.14.00.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 14:00:04 -0800 (PST)
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
+Date:   Tue, 12 Nov 2019 16:59:38 -0500
+Message-Id: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 4:07 PM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> As it says in the updated comment in gup.c: current FOLL_LONGTERM
-> behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
-> FS DAX check requirement on vmas.
->
-> However, the corresponding restriction in get_user_pages_remote() was
-> slightly stricter than is actually required: it forbade all
-> FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
-> that do not set the "locked" arg.
->
-> Update the code and comments accordingly, and update the VFIO caller
-> to take advantage of this, fixing a bug as a result: the VFIO caller
-> is logically a FOLL_LONGTERM user.
->
-> Thanks to Jason Gunthorpe for pointing out a clean way to fix this.
->
-> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jerome Glisse <jglisse@redhat.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 30 +++++++++++++-----------------
->  mm/gup.c                        | 13 ++++++++-----
->  2 files changed, 21 insertions(+), 22 deletions(-)
->
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index d864277ea16f..017689b7c32b 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -348,24 +348,20 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
->                 flags |= FOLL_WRITE;
->
->         down_read(&mm->mmap_sem);
-> -       if (mm == current->mm) {
-> -               ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
-> -                                    vmas);
-> -       } else {
-> -               ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
-> -                                           vmas, NULL);
-> -               /*
-> -                * The lifetime of a vaddr_get_pfn() page pin is
-> -                * userspace-controlled. In the fs-dax case this could
-> -                * lead to indefinite stalls in filesystem operations.
-> -                * Disallow attempts to pin fs-dax pages via this
-> -                * interface.
-> -                */
-> -               if (ret > 0 && vma_is_fsdax(vmas[0])) {
-> -                       ret = -EOPNOTSUPP;
-> -                       put_page(page[0]);
-> -               }
-> +       ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
-> +                                   page, vmas, NULL);
+The pciehp interrupt handler pciehp_isr() will read the slot status
+register and then write back to it to clear just the bits that caused the
+interrupt. If a different interrupt event bit gets set between the read and
+the write, pciehp_isr() will exit without having cleared all of the
+interrupt event bits, so we will never get another hotplug interrupt from
+that device.
 
-Hmm, what's the point of passing FOLL_LONGTERM to
-get_user_pages_remote() if get_user_pages_remote() is not going to
-check the vma? I think we got to this code state because the
-get_user_pages() vs get_user_pages_remote() split predated the
-introduction of FOLL_LONGTERM.
+That is expected behavior according to the PCI Express spec (v.5.0, section
+6.7.3.4, "Software Notification of Hot-Plug Events").
 
-I think check_vma_flags() should do the ((FOLL_LONGTERM | FOLL_GET) &&
-vma_is_fsdax()) check and that would also remove the need for
-__gup_longterm_locked.
+Because the "presence detect changed" and "data link layer state changed"
+event bits are both getting set at nearly the same time when a device is
+added or removed, this is more likely to happen than it might seem. The
+issue can be reproduced rather easily by connecting and disconnecting an
+NVMe device on at least one system model.
+
+This patch fixes the issue by modifying pciehp_isr() to loop back and
+re-read the slot status register immediately after writing to it, until
+it sees that all of the event status bits have been cleared.
+
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+---
+ drivers/pci/hotplug/pciehp_hpc.c | 39 +++++++++++++++++++++++++++-----
+ 1 file changed, 33 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 1a522c1c4177..8ec22a872b28 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -487,12 +487,21 @@ void pciehp_power_off_slot(struct controller *ctrl)
+ 		 PCI_EXP_SLTCTL_PWR_OFF);
+ }
+ 
++/*
++ * We should never need to re-read the slot status register this many times,
++ * because there are only six possible events that could generate this
++ * interrupt.  If we still see events after this many reads, there's a stuck
++ * bit.
++ */
++#define MAX_ISR_STATUS_READS 6
++
+ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ {
+ 	struct controller *ctrl = (struct controller *)dev_id;
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	struct device *parent = pdev->dev.parent;
+-	u16 status, events;
++	u16 status, events = 0;
++	int status_reads = 0;
+ 
+ 	/*
+ 	 * Interrupts only occur in D3hot or shallower and only if enabled
+@@ -517,6 +526,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 		}
+ 	}
+ 
++read_status:
+ 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+ 	if (status == (u16) ~0) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+@@ -529,16 +539,34 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 	 * Slot Status contains plain status bits as well as event
+ 	 * notification bits; right now we only want the event bits.
+ 	 */
+-	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+-			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+-			   PCI_EXP_SLTSTA_DLLSC);
++	status &= (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
++		   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
++		   PCI_EXP_SLTSTA_DLLSC);
+ 
+ 	/*
+ 	 * If we've already reported a power fault, don't report it again
+ 	 * until we've done something to handle it.
+ 	 */
+ 	if (ctrl->power_fault_detected)
+-		events &= ~PCI_EXP_SLTSTA_PFD;
++		status &= ~PCI_EXP_SLTSTA_PFD;
++
++	if (status) {
++		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
++		events |= status;
++	}
++
++	/*
++	 * All of the event bits must be zero before the port will send
++	 * a new interrupt.  If an event bit gets set between the read
++	 * and the write, we'll never get another interrupt, so loop until
++	 * we see no event bits set.
++	 */
++	if (status && status_reads++ < MAX_ISR_STATUS_READS)
++		goto read_status;
++
++	if (status_reads == MAX_ISR_STATUS_READS)
++		ctrl_warn(ctrl, "Slot(%s): Hot plug event bit stuck, reading %x\n",
++			  status, slot_name(ctrl));
+ 
+ 	if (!events) {
+ 		if (parent)
+@@ -546,7 +574,6 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 		return IRQ_NONE;
+ 	}
+ 
+-	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+ 	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+ 	if (parent)
+ 		pm_runtime_put(parent);
+-- 
+2.18.1
+
