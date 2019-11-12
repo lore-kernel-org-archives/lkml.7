@@ -2,100 +2,238 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BC9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9EEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECFC2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B3B21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CIiJnEly"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SzZ0gqyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfKLIT5 (ORCPT
+        id S1727058AbfKLIVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:19:57 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34048 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725811AbfKLIT5 (ORCPT
+        Tue, 12 Nov 2019 03:21:11 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43626 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfKLIVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:19:57 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAC8HbWf001225;
-        Tue, 12 Nov 2019 09:19:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=v4gTBAxsgJ7NKkWijREg7mahBipp4rc6jcfGG/NsFI0=;
- b=CIiJnElyeqyya4SwztKSMIIb+ShthqGBFDvSx+z2/v7kGyurVxpqNeRJm3KC22Hgmek4
- UvA7WexYTj78WTwf9+aIHPtWbneFzDGWSAdUiuSUDsZAWB/c1eRyHCZDW5gmHQDyiVQF
- V90jQl5QYrr5hYCRXvIv8pS0zpdGO/NFJQ4JJrAmjZGZko5WtsKHcM0QtyvNdAbxbT5g
- aQLPU7ymC+pFU7gKPjIgoiay9TNuXNi5vVWSKnmCCUriGuX9ctpICERweNSDM1txx8cf
- pWMrZsVL9uhaKGKXD20GGnJF0mBlv8aONdLIa0ETu4b3MaLliSncGSNqTkKsgZNCrpD1 HA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w7pstrp5v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 09:19:45 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4688510002A;
-        Tue, 12 Nov 2019 09:19:45 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2C20C2AA4E5;
-        Tue, 12 Nov 2019 09:19:45 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 12 Nov 2019 09:19:44
- +0100
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
-CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: [PATCH] i2c: i2c-stm32f7: fix 10-bits check in slave free id search loop
-Date:   Tue, 12 Nov 2019 09:19:44 +0100
-Message-ID: <1573546784-28182-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 12 Nov 2019 03:21:11 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC8L8QR058939;
+        Tue, 12 Nov 2019 02:21:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573546868;
+        bh=nl1J6mTWnnUFj4yFSAtWqZEp/cTAu5r/moLzQPZ0gLY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SzZ0gqySagxC5s2hy/6//P3gwjFbYZRlK/5IbR1vVdrsar3Q4vwkDJNxZPkeFnkmq
+         xcmtcGIG/gH9xOyo01W/KbiRNInBDZC9Y4E5AhU2SJ6Z6cOoza7jqHzk501yyJmaGg
+         k0iAcZsM/ScsxfRKZ36ncQ5UTtHSSLiNiR2ofscM=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAC8L8cm110847
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 02:21:08 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 02:20:50 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 02:20:49 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC8L3eC118804;
+        Tue, 12 Nov 2019 02:21:04 -0600
+Subject: Re: [PATCH 05/17] remoteproc/omap: Add support to parse internal
+ memories from DT
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-6-t-kristo@ti.com> <20191111232122.GG3108315@builder>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <8af6defc-17b0-c927-2360-581c495c4888@ti.com>
+Date:   Tue, 12 Nov 2019 10:21:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-12_02:2019-11-11,2019-11-12 signatures=0
+In-Reply-To: <20191111232122.GG3108315@builder>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a typo in the free slave id search loop. Instead of I2C_CLIENT_PEC,
-it should have been I2C_CLIENT_TEN. The slave id 1 can only handle 7-bit
-addresses and thus is not eligible in case of 10-bit addresses.
-As a matter of fact none of the slave id support I2C_CLIENT_PEC, overall
-check is performed at the beginning of the stm32f7_i2c_reg_slave function.
+On 12/11/2019 01:21, Bjorn Andersson wrote:
+> On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
+> 
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> The OMAP remoteproc driver has been enhanced to parse and store
+>> the kernel mappings for different internal RAM memories that may
+>> be present within each remote processor IP subsystem. Different
+>> devices have varying memories present on current SoCs. The current
+>> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+>> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+>> L2 RAM memories.
+>>
+>> IPUs are expected to have the L2RAM at a fixed device address of
+>> 0x20000000, based on the current limitations on Attribute MMU
+>> configurations.
+>>
+>> NOTE:
+>> The current logic doesn't handle the parsing of memories for DRA7
+>> remoteproc devices, and will be added alongside the DRA7 support.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/remoteproc/omap_remoteproc.c | 69 ++++++++++++++++++++++++++++
+>>   1 file changed, 69 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index a10377547533..bbd6ff360e10 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -29,6 +29,8 @@
+>>   #include "omap_remoteproc.h"
+>>   #include "remoteproc_internal.h"
+>>   
+>> +#define OMAP_RPROC_IPU_L2RAM_DEV_ADDR		(0x20000000)
+>> +
+>>   /**
+>>    * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+>>    * @syscon: regmap handle for the system control configuration module
+>> @@ -39,11 +41,27 @@ struct omap_rproc_boot_data {
+>>   	unsigned int boot_reg;
+>>   };
+>>   
+>> +/*
+>> + * struct omap_rproc_mem - internal memory structure
+>> + * @cpu_addr: MPU virtual address of the memory region
+>> + * @bus_addr: bus address used to access the memory region
+>> + * @dev_addr: device address of the memory region from DSP view
+>> + * @size: size of the memory region
+>> + */
+>> +struct omap_rproc_mem {
+>> +	void __iomem *cpu_addr;
+>> +	phys_addr_t bus_addr;
+>> +	u32 dev_addr;
+>> +	size_t size;
+>> +};
+>> +
+>>   /**
+>>    * struct omap_rproc - omap remote processor state
+>>    * @mbox: mailbox channel handle
+>>    * @client: mailbox client to request the mailbox channel
+>>    * @boot_data: boot data structure for setting processor boot address
+>> + * @mem: internal memory regions data
+>> + * @num_mems: number of internal memory regions
+>>    * @rproc: rproc handle
+>>    * @reset: reset handle
+>>    */
+>> @@ -51,6 +69,8 @@ struct omap_rproc {
+>>   	struct mbox_chan *mbox;
+>>   	struct mbox_client client;
+>>   	struct omap_rproc_boot_data *boot_data;
+>> +	struct omap_rproc_mem *mem;
+>> +	int num_mems;
+>>   	struct rproc *rproc;
+>>   	struct reset_control *reset;
+>>   };
+>> @@ -307,6 +327,51 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>>   	return 0;
+>>   }
+>>   
+>> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+>> +					       struct rproc *rproc)
+>> +{
+>> +	static const char * const mem_names[] = {"l2ram"};
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	struct omap_rproc *oproc = rproc->priv;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *res;
+>> +	int num_mems;
+>> +	int i;
+>> +
+>> +	/* OMAP4 and OMAP5 DSPs do not have support for flat SRAM */
+>> +	if (of_device_is_compatible(np, "ti,omap4-dsp") ||
+>> +	    of_device_is_compatible(np, "ti,omap5-dsp"))
+>> +		return 0;
+>> +
+>> +	num_mems = ARRAY_SIZE(mem_names);
+>> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+>> +				  GFP_KERNEL);
+>> +	if (!oproc->mem)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < num_mems; i++) {
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   mem_names[i]);
+>> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+>> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+>> +			dev_err(dev, "failed to parse and map %s memory\n",
+>> +				mem_names[i]);
+>> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+>> +		}
+>> +		oproc->mem[i].bus_addr = res->start;
+>> +		oproc->mem[i].dev_addr = OMAP_RPROC_IPU_L2RAM_DEV_ADDR;
+> 
+> Presumably this means that mem_names[] will only ever be {"l2ram"} ?
+> 
+> This would imply that you can either remove the loop or you should
+> generalize this for dev_addr as well.
 
-Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
+Well, actually support for dra7 remoteprocs is added in patch #8, which 
+adds also l1pram/l1dram to the mix.
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- drivers/i2c/busses/i2c-stm32f7.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-Tero
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index b9a082f64d58..b2634afe066d 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1268,7 +1268,7 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
- 	 * slave[1] supports 7-bit slave address only
- 	 */
- 	for (i = STM32F7_I2C_MAX_SLAVE - 1; i >= 0; i--) {
--		if (i == 1 && (slave->flags & I2C_CLIENT_PEC))
-+		if (i == 1 && (slave->flags & I2C_CLIENT_TEN))
- 			continue;
- 		if (!i2c_dev->slave[i]) {
- 			*id = i;
--- 
-2.7.4
+> 
+> 
+> Apart from that, this looks good.
+> 
+> Regards,
+> Bjorn
+> 
+>> +		oproc->mem[i].size = resource_size(res);
+>> +
+>> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
+>> +			mem_names[i], &oproc->mem[i].bus_addr,
+>> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+>> +			oproc->mem[i].dev_addr);
+>> +	}
+>> +	oproc->num_mems = num_mems;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int omap_rproc_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device_node *np = pdev->dev.of_node;
+>> @@ -346,6 +411,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>>   	/* All existing OMAP IPU and DSP processors have an MMU */
+>>   	rproc->has_iommu = true;
+>>   
+>> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+>> +	if (ret)
+>> +		goto free_rproc;
+>> +
+>>   	ret = omap_rproc_get_boot_data(pdev, rproc);
+>>   	if (ret)
+>>   		goto free_rproc;
+>> -- 
+>> 2.17.1
+>>
+>> --
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
