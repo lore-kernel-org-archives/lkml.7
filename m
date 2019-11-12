@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE36C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDED6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9FE214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB472196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cEPffaIS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SOMAv161"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QSYNw04H";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bpR7Z4A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfKLVX4 (ORCPT
+        id S1727693AbfKLVYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:23:56 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:39456 "EHLO
+        Tue, 12 Nov 2019 16:24:02 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:39224 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbfKLVXa (ORCPT
+        with ESMTP id S1727484AbfKLVXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:23:30 -0500
+        Tue, 12 Nov 2019 16:23:23 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4A8AE60E74; Tue, 12 Nov 2019 21:23:20 +0000 (UTC)
+        id BF25360D85; Tue, 12 Nov 2019 21:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573593809;
-        bh=wYDOZB/YAonq1CatbFTG+Ux5sV3vBmtfWfxuRkP1OYc=;
+        s=default; t=1573593802;
+        bh=nhAeTUEUZOtIr1aQoEJfNexTuZH1+kTL+/NP6LNQJnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cEPffaISI1brHz+vp/a5R7SuxlHC1o+FFJZD2CyG+L9ow2mT3GZu0/QoCz9sTx8kb
-         6hvfpVvfVMtxdF2BnpuB1/kuJ8FTPp1fHYtVS3LSxvpn7tKqa3puouGbRrkgq1/Lsc
-         bQpQxVRSL5j1vtrtYAhqmww7///o9YXvaphFkk8E=
+        b=QSYNw04H2cFBDztxGk5mJs0zaQ/okhl7dEke1+FhmEhhq0Upy27YaEtPIgypR+MmF
+         hhcMur2QV2IaTzkRw4A0gYjdjoI6df8tTKb1k5ONciyaR7XlwlozNJUGsz9cTn+H5w
+         EnNhWgOONHRK27FL7mSLlYnVO20BvwJeC9aPJDyY=
 Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: eberman@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 328EA60DEA;
-        Tue, 12 Nov 2019 21:23:18 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 631A960CA5;
+        Tue, 12 Nov 2019 21:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573593799;
-        bh=wYDOZB/YAonq1CatbFTG+Ux5sV3vBmtfWfxuRkP1OYc=;
+        s=default; t=1573593790;
+        bh=nhAeTUEUZOtIr1aQoEJfNexTuZH1+kTL+/NP6LNQJnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOMAv161py6eYFrXt2MxTysDoh+uWErBJIQOPUH5aRmQl6OJmlZnY5eOcP0cK1oio
-         UeG6mAHOd0IIaTEKarBz43KD1B5+c/vcV2ULVuP1VcJYxFNHEk5x8na0znqlcIqrBB
-         SsK8O9EhzBmeqVEgst75bTEUH2aAoQYQgcvSNMzA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 328EA60DEA
+        b=bpR7Z4A9ex0SuMJJobfEOZJj78e+qdunru8RQkun5044DT4trUgoiD7I/Uj1nee59
+         ryQ/ovgLk33YP7kh/N0/G1I72EMRs3FqD5HlaPNHgIAgFRTwyEWIc3zbghBmDJkUbu
+         ZF5CYFACenkn+KE8zn/KVHU8SyaisPpt7z5PhiBM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 631A960CA5
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
 From:   Elliot Berman <eberman@codeaurora.org>
@@ -55,9 +55,9 @@ To:     bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org,
 Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
         sidgup@codeaurora.org, psodagud@codeaurora.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/18] firmware: qcom_scm-32: Add device argument to atomic calls
-Date:   Tue, 12 Nov 2019 13:22:51 -0800
-Message-Id: <1573593774-12539-16-git-send-email-eberman@codeaurora.org>
+Subject: [PATCH v2 07/18] firmware: qcom_scm-64: Add SCM results to descriptor
+Date:   Tue, 12 Nov 2019 13:22:43 -0800
+Message-Id: <1573593774-12539-8-git-send-email-eberman@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573593774-12539-1-git-send-email-eberman@codeaurora.org>
 References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org>
@@ -66,159 +66,399 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add this unused parameter to reduce merge friction between SMCCC and
-legacy based conventions.
+Remove knowledge of arm_smccc_res struct from client wrappers so that
+client wrappers only work QCOM SCM data structures. SCM calls may have
+up to 3 arguments, so qcom_scm_call_smccc is responsible now for filling
+those 3 arguments accordingly.
 
 Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 ---
- drivers/firmware/qcom_scm-32.c | 17 +++++++++--------
- drivers/firmware/qcom_scm-64.c |  5 +++--
- drivers/firmware/qcom_scm.c    |  5 +++--
- drivers/firmware/qcom_scm.h    |  5 +++--
- 4 files changed, 18 insertions(+), 14 deletions(-)
+ drivers/firmware/qcom_scm-64.c | 105 ++++++++++++++++++-----------------------
+ 1 file changed, 45 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index eca18e1..c1c0831 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -269,7 +269,7 @@ static int qcom_scm_call(struct device *dev, struct qcom_scm_desc *desc)
-  * This shall only be used with commands that are guaranteed to be
-  * uninterruptable, atomic and SMP safe.
-  */
--static int qcom_scm_call_atomic(struct qcom_scm_desc *desc)
-+static int qcom_scm_call_atomic(struct device *dev, struct qcom_scm_desc *desc)
- {
- 	int context_id;
- 	struct arm_smccc_args smc = {0};
-@@ -302,7 +302,8 @@ static int qcom_scm_call_atomic(struct qcom_scm_desc *desc)
-  * Set the cold boot address of the cpus. Any cpu outside the supported
-  * range would be removed from the cpu present mask.
-  */
--int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
-+int __qcom_scm_set_cold_boot_addr(struct device *dev, void *entry,
-+				  const cpumask_t *cpus)
- {
- 	int flags = 0;
- 	int cpu;
-@@ -332,7 +333,7 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- 	desc.args[1] = virt_to_phys(entry);
- 	desc.arginfo = QCOM_SCM_ARGS(2);
+diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+index e81fb6e..f0a5f24 100644
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -50,6 +50,7 @@ struct qcom_scm_desc {
+ 	u32 cmd;
+ 	u32 arginfo;
+ 	u64 args[MAX_QCOM_SCM_ARGS];
++	u64 result[MAX_QCOM_SCM_RETS];
+ 	u32 owner;
+ };
  
--	return qcom_scm_call_atomic(&desc);
-+	return qcom_scm_call_atomic(dev, &desc);
+@@ -115,8 +116,7 @@ static void qcom_scm_call_do_smccc(const struct qcom_scm_desc *desc,
+ }
+ 
+ static int ___qcom_scm_call_smccc(struct device *dev,
+-				  const struct qcom_scm_desc *desc,
+-				  struct arm_smccc_res *res, bool atomic)
++				  struct qcom_scm_desc *desc, bool atomic)
+ {
+ 	int arglen = desc->arginfo & 0xf;
+ 	int i;
+@@ -125,6 +125,7 @@ static int ___qcom_scm_call_smccc(struct device *dev,
+ 	void *args_virt = NULL;
+ 	size_t alloc_len;
+ 	gfp_t flag = atomic ? GFP_ATOMIC : GFP_KERNEL;
++	struct arm_smccc_res res;
+ 
+ 	if (unlikely(arglen > SMCCC_N_REG_ARGS)) {
+ 		alloc_len = SMCCC_N_EXT_ARGS * sizeof(u64);
+@@ -158,15 +159,19 @@ static int ___qcom_scm_call_smccc(struct device *dev,
+ 		x5 = args_phys;
+ 	}
+ 
+-	qcom_scm_call_do_smccc(desc, res, x5, atomic);
++	qcom_scm_call_do_smccc(desc, &res, x5, atomic);
+ 
+ 	if (args_virt) {
+ 		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
+ 		kfree(args_virt);
+ 	}
+ 
+-	if (res->a0 < 0)
+-		return qcom_scm_remap_error(res->a0);
++	desc->result[0] = res.a1;
++	desc->result[1] = res.a2;
++	desc->result[2] = res.a3;
++
++	if (res.a0 < 0)
++		return qcom_scm_remap_error(res.a0);
+ 
+ 	return 0;
+ }
+@@ -181,11 +186,10 @@ static int ___qcom_scm_call_smccc(struct device *dev,
+  * Sends a command to the SCM and waits for the command to finish processing.
+  * This should *only* be called in pre-emptible context.
+  */
+-static int qcom_scm_call(struct device *dev, const struct qcom_scm_desc *desc,
+-			 struct arm_smccc_res *res)
++static int qcom_scm_call(struct device *dev, struct qcom_scm_desc *desc)
+ {
+ 	might_sleep();
+-	return ___qcom_scm_call_smccc(dev, desc, res, false);
++	return ___qcom_scm_call_smccc(dev, desc, false);
  }
  
  /**
-@@ -389,7 +390,7 @@ int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
-  * the control would return from this function, otherwise, the cpu jumps to the
-  * warm boot entry point set for this cpu upon reset.
+@@ -199,11 +203,9 @@ static int qcom_scm_call(struct device *dev, const struct qcom_scm_desc *desc,
+  * Sends a command to the SCM and waits for the command to finish processing.
+  * This can be called in atomic context.
   */
--void __qcom_scm_cpu_power_down(u32 flags)
-+void __qcom_scm_cpu_power_down(struct device *dev, u32 flags)
+-static int qcom_scm_call_atomic(struct device *dev,
+-				const struct qcom_scm_desc *desc,
+-				struct arm_smccc_res *res)
++static int qcom_scm_call_atomic(struct device *dev, struct qcom_scm_desc *desc)
  {
- 	struct qcom_scm_desc desc = {
- 		.svc = QCOM_SCM_SVC_BOOT,
-@@ -399,7 +400,7 @@ void __qcom_scm_cpu_power_down(u32 flags)
- 		.owner = ARM_SMCCC_OWNER_SIP,
- 	};
- 
--	qcom_scm_call_atomic(&desc);
-+	qcom_scm_call_atomic(dev, &desc);
+-	return ___qcom_scm_call_smccc(dev, desc, res, true);
++	return ___qcom_scm_call_smccc(dev, desc, true);
  }
  
- int __qcom_scm_is_call_available(struct device *dev, u32 svc_id, u32 cmd_id)
-@@ -569,7 +570,7 @@ int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
- 	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
+ /**
+@@ -254,15 +256,14 @@ int __qcom_scm_is_call_available(struct device *dev, u32 svc_id, u32 cmd_id)
+ 		.cmd = QCOM_SCM_INFO_IS_CALL_AVAIL,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 	desc.args[0] = SMCCC_FUNCNUM(svc_id, cmd_id) |
+ 			(ARM_SMCCC_OWNER_SIP << ARM_SMCCC_OWNER_SHIFT);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
+@@ -274,7 +275,6 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
+ 		.cmd = QCOM_SCM_HDCP_INVOKE,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	if (req_cnt > QCOM_SCM_HDCP_MAX_REQ_CNT)
+ 		return -ERANGE;
+@@ -291,8 +291,8 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
+ 	desc.args[9] = req[4].val;
+ 	desc.arginfo = QCOM_SCM_ARGS(10);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
+-	*resp = res.a1;
++	ret = qcom_scm_call(dev, &desc);
++	*resp = desc.result[0];
+ 
+ 	return ret;
+ }
+@@ -324,14 +324,13 @@ bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral)
+ 		.cmd = QCOM_SCM_PIL_PAS_IS_SUPPORTED,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? false : !!res.a1;
++	return ret ? false : !!desc.result[0];
+ }
+ 
+ int __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
+@@ -343,15 +342,14 @@ int __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
+ 		.cmd = QCOM_SCM_PIL_PAS_INIT_IMAGE,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.args[1] = metadata_phys;
+ 	desc.arginfo = QCOM_SCM_ARGS(2, QCOM_SCM_VAL, QCOM_SCM_RW);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
+@@ -363,16 +361,15 @@ int __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
+ 		.cmd = QCOM_SCM_PIL_PAS_MEM_SETUP,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.args[1] = addr;
+ 	desc.args[2] = size;
+ 	desc.arginfo = QCOM_SCM_ARGS(3);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral)
+@@ -383,14 +380,13 @@ int __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral)
+ 		.cmd = QCOM_SCM_PIL_PAS_AUTH_AND_RESET,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral)
+@@ -401,14 +397,13 @@ int __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral)
+ 		.cmd = QCOM_SCM_PIL_PAS_SHUTDOWN,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
+@@ -418,16 +413,15 @@ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
+ 		.cmd = QCOM_SCM_PIL_PAS_MSS_RESET,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 	int ret;
+ 
+ 	desc.args[0] = reset;
+ 	desc.args[1] = 0;
  	desc.arginfo = QCOM_SCM_ARGS(2);
  
--	return qcom_scm_call_atomic(&desc);
-+	return qcom_scm_call_atomic(dev, &desc);
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
  }
  
  int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
-@@ -627,7 +628,7 @@ int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+@@ -437,16 +431,15 @@ int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
+ 		.cmd = QCOM_SCM_BOOT_SET_REMOTE_STATE,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 	int ret;
+ 
+ 	desc.args[0] = state;
+ 	desc.args[1] = id;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+@@ -459,7 +452,6 @@ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+ 		.cmd = QCOM_SCM_MP_ASSIGN,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = mem_region;
+ 	desc.args[1] = mem_sz;
+@@ -473,9 +465,9 @@ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+ 				     QCOM_SCM_RO, QCOM_SCM_VAL, QCOM_SCM_RO,
+ 				     QCOM_SCM_VAL, QCOM_SCM_VAL);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id, u32 spare)
+@@ -485,16 +477,15 @@ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id, u32 spare)
+ 		.cmd = QCOM_SCM_MP_RESTORE_SEC_CFG,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 	int ret;
+ 
+ 	desc.args[0] = device_id;
+ 	desc.args[1] = spare;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+-	return ret ? : res.a1;
++	return ret ? : desc.result[0];
+ }
+ 
+ int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+@@ -505,18 +496,17 @@ int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+ 		.cmd = QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 	int ret;
+ 
+ 	desc.args[0] = spare;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+ 	if (size)
+-		*size = res.a1;
++		*size = desc.result[0];
+ 
+-	return ret ? : res.a2;
++	return ret ? : desc.result[1];
+ }
+ 
+ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+@@ -527,7 +517,6 @@ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+ 		.cmd = QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 	int ret;
+ 
+ 	desc.args[0] = addr;
+@@ -536,7 +525,7 @@ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+ 	desc.arginfo = QCOM_SCM_ARGS(3, QCOM_SCM_RW, QCOM_SCM_VAL,
+ 				     QCOM_SCM_VAL);
+ 
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
+ 
+ 	/* the pg table has been initialized already, ignore the error */
+ 	if (ret == -EPERM)
+@@ -552,13 +541,12 @@ int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+ 		.cmd = QCOM_SCM_BOOT_SET_DLOAD_MODE,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = QCOM_SCM_BOOT_SET_DLOAD_MODE;
+ 	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	return qcom_scm_call(dev, &desc, &res);
++	return qcom_scm_call(dev, &desc);
+ }
+ 
+ int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+@@ -569,15 +557,14 @@ int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+ 		.cmd = QCOM_SCM_IO_READ,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 	int ret;
+ 
  	desc.args[0] = addr;
  	desc.arginfo = QCOM_SCM_ARGS(1);
  
--	ret = qcom_scm_call_atomic(&desc);
-+	ret = qcom_scm_call_atomic(dev, &desc);
+-	ret = qcom_scm_call(dev, &desc, &res);
++	ret = qcom_scm_call(dev, &desc);
  	if (ret >= 0)
- 		*val = desc.result[0];
+-		*val = res.a1;
++		*val = desc.result[0];
  
-@@ -646,7 +647,7 @@ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
+ 	return ret < 0 ? ret : 0;
+ }
+@@ -589,13 +576,12 @@ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
+ 		.cmd = QCOM_SCM_IO_WRITE,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = addr;
  	desc.args[1] = val;
  	desc.arginfo = QCOM_SCM_ARGS(2);
  
--	return qcom_scm_call_atomic(&desc);
+-	return qcom_scm_call(dev, &desc, &res);
++	return qcom_scm_call(dev, &desc);
+ }
+ 
+ int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool en)
+@@ -605,11 +591,10 @@ int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool en)
+ 		.cmd = QCOM_SCM_SMMU_CONFIG_ERRATA1,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = QCOM_SCM_SMMU_CONFIG_ERRATA1_CLIENT_ALL;
+ 	desc.args[1] = en;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	return qcom_scm_call_atomic(dev, &desc, &res);
 +	return qcom_scm_call_atomic(dev, &desc);
  }
- 
- int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool enable)
-diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index b82b450..5088c0c 100644
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -219,7 +219,8 @@ static int qcom_scm_call_atomic(struct device *dev, struct qcom_scm_desc *desc)
-  * Set the cold boot address of the cpus. Any cpu outside the supported
-  * range would be removed from the cpu present mask.
-  */
--int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
-+int __qcom_scm_set_cold_boot_addr(struct device *dev, void *entry,
-+				  const cpumask_t *cpus)
- {
- 	return -ENOTSUPP;
- }
-@@ -247,7 +248,7 @@ int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
-  * the control would return from this function, otherwise, the cpu jumps to the
-  * warm boot entry point set for this cpu upon reset.
-  */
--void __qcom_scm_cpu_power_down(u32 flags)
-+void __qcom_scm_cpu_power_down(struct device *dev, u32 flags)
- {
- }
- 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 72757c5..1875e48 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -94,7 +94,8 @@ static void qcom_scm_clk_disable(void)
-  */
- int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- {
--	return __qcom_scm_set_cold_boot_addr(entry, cpus);
-+	return __qcom_scm_set_cold_boot_addr(__scm ? __scm->dev : NULL, entry,
-+					     cpus);
- }
- EXPORT_SYMBOL(qcom_scm_set_cold_boot_addr);
- 
-@@ -122,7 +123,7 @@ EXPORT_SYMBOL(qcom_scm_set_warm_boot_addr);
-  */
- void qcom_scm_cpu_power_down(u32 flags)
- {
--	__qcom_scm_cpu_power_down(flags);
-+	__qcom_scm_cpu_power_down(__scm ? __scm->dev : NULL, flags);
- }
- EXPORT_SYMBOL(qcom_scm_cpu_power_down);
- 
-diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-index dfb5db2..35cdacf 100644
---- a/drivers/firmware/qcom_scm.h
-+++ b/drivers/firmware/qcom_scm.h
-@@ -13,11 +13,12 @@ extern int __qcom_scm_set_dload_mode(struct device *dev, bool enable);
- 
- extern int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
- 		const cpumask_t *cpus);
--extern int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus);
-+extern int __qcom_scm_set_cold_boot_addr(struct device *dev, void *entry,
-+		const cpumask_t *cpus);
- 
- #define QCOM_SCM_BOOT_TERMINATE_PC	0x2
- #define QCOM_SCM_FLUSH_FLAG_MASK	0x3
--extern void __qcom_scm_cpu_power_down(u32 flags);
-+extern void __qcom_scm_cpu_power_down(struct device *dev, u32 flags);
- 
- #define QCOM_SCM_SVC_IO			0x5
- #define QCOM_SCM_IO_READ		0x1
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
