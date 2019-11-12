@@ -2,249 +2,104 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988F2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3461C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AC421A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9100B204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PF/S6iWT"
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="aPZJaNpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfKLIwK (ORCPT
+        id S1727272AbfKLIwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:52:10 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:36799 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfKLIwJ (ORCPT
+        Tue, 12 Nov 2019 03:52:50 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35863 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfKLIwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:52:09 -0500
-Received: by mail-qv1-f68.google.com with SMTP id f12so6061477qvu.3;
-        Tue, 12 Nov 2019 00:52:08 -0800 (PST)
+        Tue, 12 Nov 2019 03:52:50 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c22so2015785wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 00:52:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cROzNmdYxisqWoueYc9W+eIG2Mx3qlHP7NfXN3GI/FQ=;
-        b=PF/S6iWT4CYos5f/Qxiyrj819yA9DztoVnQngjCM7ST0A6/xHzOKuFza6aEAOEIHFD
-         IRs3g/sDkmOZsVUg5BfLLNbhxSMsVVb1DEnttjxKmX81P3vu2Wx0WRs/PKqDolQ/IqMK
-         uPtjTNahNUl/KH+yjsZZF+CoOeh+jZqwG7uXGo3nhOFae7Ampy0721WlrVLudKDpbQ6w
-         Ne05cDDAK3nINRCW8InLefN68zNgFYrAuL9YQ5NnpKcJktjb30Vy1+p0A29rUFLtn67e
-         CyPwRK92ARrt+aagj3u2Ed/rcJMFZLBJNDyZ8A+QOoxqRdIwXIhdl4nE8zBZgMbMWl9y
-         KZDA==
+        d=6wind.com; s=google;
+        h=reply-to:subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/4ilrxOZ4QdJ3UAgm96VMI/hVQ/UHpZg4vUaW945RSk=;
+        b=aPZJaNpEqDsGZd07oyKR/UqP127LqAjk+WBw7hwfVMN0FoWn8Kz88BWPovdn0p0Hdn
+         etVge4dcyyOlncyHRIp/SrzCa9jixeA5xTceibSlk3mTdSH0nZQMqE/TZ+vZ65lu7RE9
+         BdWtvuS4aObI1J8/ycZGmCHJxbd9nW3KX7Xu0ZzP8cLosg2EMYs3FApz/KQp2bB0n6hL
+         cL7x1GCaxz6Bephfjz7MZG1CIImNYgbbiowJitpiferperrMn/vk3gE8ULGd2hiGCXFN
+         CQKL3pU50oO41lZsHvZQvb7tJ351KhVVEFYBOy5Jr/e0KJPJ0WFdYi4bkCyxbTA9+jUg
+         FuNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cROzNmdYxisqWoueYc9W+eIG2Mx3qlHP7NfXN3GI/FQ=;
-        b=YNAf5bi0IwYHZYEY1+2wXQaFQUJkvOzeXvYB3tC7UZaOMLcuX+vd2l1fdxhxQm2XN3
-         8wTGx61vLOXuZQqLbQNbJFTiMWR0RbcMozzIiPDhMKycLQ0cgaSB18oz6eIU3HVfQWxA
-         98R61PW6tsp/IENRLeAz5Vb56OfIzhCXNFMhzmuKGgADIvkmaAGlPsGLZ8dFtjEIXAH6
-         oXt9Aq9Zj9lt2YKMxHc6LrBPKmHMIWPXOcDOqnNAWfLnucMN/7B6v8cf8ad3JRvUvW7M
-         bIdFJkcgM5V9xm98crMw3LqJeZRErrRiZxbxjlkCKkMBbpV/pVSTfFAgo8pEQ9PpsVCE
-         6sIw==
-X-Gm-Message-State: APjAAAUP+caTtJZCypdyRsHqKGjdSEoq3FVSTWVJh1cngQoYJD+tsJ7i
-        Wx5X4H0W1ZKcd9fnhneQ/EJSTIDBui8WEiKQGbA=
-X-Google-Smtp-Source: APXvYqx6NKc2ScCo7khfKTbduCZ3tXXPnpOsLDXFoJ5p/wlTm7Nj9aXW2BAPakV8QIjz95Uh9EuSyoZxwk73743by2g=
-X-Received: by 2002:a0c:d0e1:: with SMTP id b30mr27967066qvh.197.1573548727413;
- Tue, 12 Nov 2019 00:52:07 -0800 (PST)
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/4ilrxOZ4QdJ3UAgm96VMI/hVQ/UHpZg4vUaW945RSk=;
+        b=KNtUbAa5FLmL2MtRj02Pt+g9qwV1K32DxAdwZk20iC1KhL5hKY7IeARKe5vhGWcn7p
+         tfJmymsqbeX7PX51fpOagjY4aqiuy2nTk5rexeZ9ZWrlM6/73K22y+Ad9ZUN1e4+XxqM
+         WDWj6aQYBUnRM32KRxGpYbGFV89xNSY062TzuIqhjrolARdyI0AgPDN/biXOtPbjUkHd
+         kCcK/uzSWidDeXLfYONUbvr1lcSuXsTxh03YLDti4ubrl0UKZT87J6QUHVd24eHLefOj
+         6dZ24znuAZ+pWowoib1gqOOHi2P5H9biEAxgeb5pvMAtrnUSOdvEtSvIS565MjTLEfey
+         MoaQ==
+X-Gm-Message-State: APjAAAVeYyL0rMf0ptMqkcGZt/fFC5K37804iB+skzaC2ibwH2xdGh80
+        oDn8CkAkLzXdqz7HrYFPxJscHbQu2UY=
+X-Google-Smtp-Source: APXvYqxB+LhiAPOVc20S1pf0/sMiK+DUibXaSNSdU9a5OrptV2LYhTLqmvcVDk0wDC06CP5vUIyMdg==
+X-Received: by 2002:a1c:3843:: with SMTP id f64mr2652366wma.129.1573548767671;
+        Tue, 12 Nov 2019 00:52:47 -0800 (PST)
+Received: from ?IPv6:2a01:e35:8b63:dc30:3456:63b2:eba1:f7d5? ([2a01:e35:8b63:dc30:3456:63b2:eba1:f7d5])
+        by smtp.gmail.com with ESMTPSA id 72sm264150wrl.73.2019.11.12.00.52.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 00:52:46 -0800 (PST)
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH net 1/2] openvswitch: support asymmetric conntrack
+To:     Aaron Conole <aconole@redhat.com>, netdev@vger.kernel.org
+Cc:     Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org
+References: <20191108210714.12426-1-aconole@redhat.com>
+From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Organization: 6WIND
+Message-ID: <eb0bdc35-7f29-77c7-c013-e88f74772c24@6wind.com>
+Date:   Tue, 12 Nov 2019 09:52:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-20-hch@lst.de>
-In-Reply-To: <20191029064834.23438-20-hch@lst.de>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Tue, 12 Nov 2019 16:51:29 +0800
-Message-ID: <CAEbi=3c58Pb=Q3BqeTLhEK8OsdTpbD5tAe6VcGOC7JBWbTjetQ@mail.gmail.com>
-Subject: Re: [PATCH 19/21] nds32: use generic ioremap
-To:     Christoph Hellwig <hch@lst.de>, Nickhu <nickhu@andestech.com>,
-        alankao@andestech.com
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-sh@vger.kernel.org, sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, linux-mtd@lists.infradead.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108210714.12426-1-aconole@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Le 08/11/2019 à 22:07, Aaron Conole a écrit :
+> The openvswitch module shares a common conntrack and NAT infrastructure
+> exposed via netfilter.  It's possible that a packet needs both SNAT and
+> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+> this because it runs through the NAT table twice - once on ingress and
+> again after egress.  The openvswitch module doesn't have such capability.
+> 
+> Like netfilter hook infrastructure, we should run through NAT twice to
+> keep the symmetry.
+> 
+> Fixes: 05752523e565 ("openvswitch: Interface with NAT.")
+> Signed-off-by: Aaron Conole <aconole@redhat.com>
+In this case, ovs_ct_find_existing() won't be able to find the conntrack, right?
+Inverting the tuple to find the conntrack doesn't work anymore with double NAT.
+Am I wrong?
 
-Christoph Hellwig <hch@lst.de> =E6=96=BC 2019=E5=B9=B410=E6=9C=8829=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=882:49=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Use the generic ioremap_prot and iounmap helpers.
->
-> Note that the io.h include in pgtable.h had to be removed to not create
-> an include loop.  As far as I can tell there was no need for it to
-> start with.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/nds32/Kconfig               |  1 +
->  arch/nds32/include/asm/io.h      |  3 +-
->  arch/nds32/include/asm/pgtable.h |  4 ++-
->  arch/nds32/mm/Makefile           |  3 +-
->  arch/nds32/mm/ioremap.c          | 62 --------------------------------
->  5 files changed, 6 insertions(+), 67 deletions(-)
->  delete mode 100644 arch/nds32/mm/ioremap.c
->
-> diff --git a/arch/nds32/Kconfig b/arch/nds32/Kconfig
-> index fbd68329737f..12c06a833b7c 100644
-> --- a/arch/nds32/Kconfig
-> +++ b/arch/nds32/Kconfig
-> @@ -20,6 +20,7 @@ config NDS32
->         select GENERIC_CLOCKEVENTS
->         select GENERIC_IRQ_CHIP
->         select GENERIC_IRQ_SHOW
-> +       select GENERIC_IOREMAP
->         select GENERIC_LIB_ASHLDI3
->         select GENERIC_LIB_ASHRDI3
->         select GENERIC_LIB_CMPDI2
-> diff --git a/arch/nds32/include/asm/io.h b/arch/nds32/include/asm/io.h
-> index fb0e8a24c7af..e57378d04006 100644
-> --- a/arch/nds32/include/asm/io.h
-> +++ b/arch/nds32/include/asm/io.h
-> @@ -6,8 +6,6 @@
->
->  #include <linux/types.h>
->
-> -void __iomem *ioremap(phys_addr_t phys_addr, size_t size);
-> -extern void iounmap(volatile void __iomem *addr);
->  #define __raw_writeb __raw_writeb
->  static inline void __raw_writeb(u8 val, volatile void __iomem *addr)
->  {
-> @@ -80,6 +78,7 @@ static inline u32 __raw_readl(const volatile void __iom=
-em *addr)
->  #define writeb(v,c)    ({ __iowmb(); writeb_relaxed((v),(c)); })
->  #define writew(v,c)    ({ __iowmb(); writew_relaxed((v),(c)); })
->  #define writel(v,c)    ({ __iowmb(); writel_relaxed((v),(c)); })
-> +
->  #include <asm-generic/io.h>
->
->  #endif /* __ASM_NDS32_IO_H */
-> diff --git a/arch/nds32/include/asm/pgtable.h b/arch/nds32/include/asm/pg=
-table.h
-> index 0588ec99725c..6fbf251cfc26 100644
-> --- a/arch/nds32/include/asm/pgtable.h
-> +++ b/arch/nds32/include/asm/pgtable.h
-> @@ -12,7 +12,6 @@
->  #include <asm/nds32.h>
->  #ifndef __ASSEMBLY__
->  #include <asm/fixmap.h>
-> -#include <asm/io.h>
->  #include <nds32_intrinsic.h>
->  #endif
->
-> @@ -130,6 +129,9 @@ extern void __pgd_error(const char *file, int line, u=
-nsigned long val);
->  #define _PAGE_CACHE            _PAGE_C_MEM_WB
->  #endif
->
-> +#define _PAGE_IOREMAP \
-> +       (_PAGE_V | _PAGE_M_KRW | _PAGE_D | _PAGE_G | _PAGE_C_DEV)
-> +
->  /*
->   * + Level 1 descriptor (PMD)
->   */
-> diff --git a/arch/nds32/mm/Makefile b/arch/nds32/mm/Makefile
-> index bd360e4583b5..897ecaf5cf54 100644
-> --- a/arch/nds32/mm/Makefile
-> +++ b/arch/nds32/mm/Makefile
-> @@ -1,6 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -obj-y                          :=3D extable.o tlb.o \
-> -                                  fault.o init.o ioremap.o mmap.o \
-> +obj-y                          :=3D extable.o tlb.o fault.o init.o mmap.=
-o \
->                                     mm-nds32.o cacheflush.o proc.o
->
->  obj-$(CONFIG_ALIGNMENT_TRAP)   +=3D alignment.o
-> diff --git a/arch/nds32/mm/ioremap.c b/arch/nds32/mm/ioremap.c
-> deleted file mode 100644
-> index 690140bb23a2..000000000000
-> --- a/arch/nds32/mm/ioremap.c
-> +++ /dev/null
-> @@ -1,62 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -// Copyright (C) 2005-2017 Andes Technology Corporation
-> -
-> -#include <linux/vmalloc.h>
-> -#include <linux/io.h>
-> -#include <linux/mm.h>
-> -#include <asm/pgtable.h>
-> -
-> -void __iomem *ioremap(phys_addr_t phys_addr, size_t size);
-> -
-> -static void __iomem *__ioremap_caller(phys_addr_t phys_addr, size_t size=
-,
-> -                                     void *caller)
-> -{
-> -       struct vm_struct *area;
-> -       unsigned long addr, offset, last_addr;
-> -       pgprot_t prot;
-> -
-> -       /* Don't allow wraparound or zero size */
-> -       last_addr =3D phys_addr + size - 1;
-> -       if (!size || last_addr < phys_addr)
-> -               return NULL;
-> -
-> -       /*
-> -        * Mappings have to be page-aligned
-> -        */
-> -       offset =3D phys_addr & ~PAGE_MASK;
-> -       phys_addr &=3D PAGE_MASK;
-> -       size =3D PAGE_ALIGN(last_addr + 1) - phys_addr;
-> -
-> -       /*
-> -        * Ok, go for it..
-> -        */
-> -       area =3D get_vm_area_caller(size, VM_IOREMAP, caller);
-> -       if (!area)
-> -               return NULL;
-> -
-> -       area->phys_addr =3D phys_addr;
-> -       addr =3D (unsigned long)area->addr;
-> -       prot =3D __pgprot(_PAGE_V | _PAGE_M_KRW | _PAGE_D |
-> -                       _PAGE_G | _PAGE_C_DEV);
-> -       if (ioremap_page_range(addr, addr + size, phys_addr, prot)) {
-> -               vunmap((void *)addr);
-> -               return NULL;
-> -       }
-> -       return (__force void __iomem *)(offset + (char *)addr);
-> -
-> -}
-> -
-> -void __iomem *ioremap(phys_addr_t phys_addr, size_t size)
-> -{
-> -       return __ioremap_caller(phys_addr, size,
-> -                               __builtin_return_address(0));
-> -}
-> -
-> -EXPORT_SYMBOL(ioremap);
-> -
-> -void iounmap(volatile void __iomem * addr)
-> -{
-> -       vunmap((void *)(PAGE_MASK & (unsigned long)addr));
-> -}
-> -
-> -EXPORT_SYMBOL(iounmap);
 
-Acked-by: Greentime Hu <green.hu@gmail.com>
-Looks good to me.
+Regards,
+Nicolas
