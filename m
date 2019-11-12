@@ -2,100 +2,94 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9B9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF86C17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC6621925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:33:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ihsqak0b"
+	by mail.kernel.org (Postfix) with ESMTP id 8883D21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573580117;
+	bh=+4EzQSM/k1VOif0/E/W/Xzv0GPRgNyMJHG5BQwoLXVU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EK5INrDHPcOQuouD4T6waLZM6+mOUFphmdzWKoa93jvFWfC8w3LIrdD3mmIL81ez/
+	 xtQZ1VH/aBs9ro7qycbd3L1s6HwTf47z2JoGJf55Os/lDguGBrnjdoKr1uVJYh7bE7
+	 Y49fxfczAMd7r176XXLQezL6s2UV2bN8eWAGnyCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKLRdP (ORCPT
+        id S1727357AbfKLRfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:33:15 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:54742 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727409AbfKLRdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:33:14 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E33CE20B7192;
-        Tue, 12 Nov 2019 09:33:13 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E33CE20B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573579994;
-        bh=xx3ca2mXIh+U41lW7vrWoqUfcbvWxR0SGNsgcT5S7rQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ihsqak0bLJndwzANhp76UsG97Hw8N5zkHSYUgQNSBqH5uaKe4zhsSGhcTI4aSzrfZ
-         llZhqlHI/ZBf3975h27sna5oO6Quw6VZYGw7q3jlajWWtvl3dHgNCyTs5PDK34s0I9
-         F0cKkM52WI/odNdT07zuS7tw5BcpqtoMn3CTp5ZI=
-Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Patrick Callaghan <patrickc@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-References: <20191111192348.30535-1-patrickc@linux.ibm.com>
- <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
- <1573578841.17949.48.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
-Date:   Tue, 12 Nov 2019 09:33:34 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 12 Nov 2019 12:35:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbfKLRfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:35:16 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CB18214E0;
+        Tue, 12 Nov 2019 17:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573580115;
+        bh=+4EzQSM/k1VOif0/E/W/Xzv0GPRgNyMJHG5BQwoLXVU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mceh4Ur/VUEpqNhsdVlcNrzbKQFA3I3i+cQuPTI008T6RWy3FC2d15H05pRpKd3BW
+         jWQWNqALKkTJyK/FbmzWRaDCohiyixeo0KKI1QAU4toEhNq++YbHzZVlVjoHQeVyeT
+         1bmiyZkFCmbQ0PnoDeuOgGmZUQ6HFRsRubGkHM00=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
+        linux-pci@vger.kernel.org,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel@daenzer.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH V3 0/3] drm: replace magic numbers
+Date:   Tue, 12 Nov 2019 11:35:00 -0600
+Message-Id: <20191112173503.176611-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-In-Reply-To: <1573578841.17949.48.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/2019 9:14 AM, Mimi Zohar wrote:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> On Mon, 2019-11-11 at 14:29 -0800, Lakshmi Ramasubramanian wrote:
->> On 11/11/19 11:23 AM, Patrick Callaghan wrote:
->>
->>> -		if (rbuf_len == 0)
->>> +		if (rbuf_len == 0) {	/* unexpected EOF */
->>> +			rc = -EINVAL;
->>>    			break;
->>> +		}
->>>    		offset += rbuf_len;
->>
->> Should there be an additional check to validate that (offset + rbuf_len)
->> is less than i_size before calling cypto_shash_update (since rbuf_len is
->> one of the parameters for this call)?
-> 
-> The "while" statement enforces that.
-> 
-> Mimi
+amdgpu and radeon do a bit of mucking with the PCIe Link Control 2
+register, some of it using hard-coded magic numbers.  The idea here is to
+replace those with #defines.
 
-Yes - but that check happens after the call to crypto_shash_update().
+Since v2:
+  - Fix a gpu_cfg2 case in amdgpu/si.c that I had missed
+  - Separate out the functional changes for better bisection (thanks,
+    Michel!)
+  - Add #defines in a patch by themselves (so a GPU revert wouldn't break
+    other potential users)
+  - Squash all the magic number -> #define changes into one patch
 
-Perhaps integrity_kernel_read() will never return (rbuf_len) that will
-  => violate the check in the "while" statement.
-  => number of bytes read that is greater than the memory allocated for 
-rbuf even in error conditions.
+Since v1:
+  - Add my signed-off-by and Alex's reviewed-by.
 
-Just making sure.
+Bjorn Helgaas (3):
+  PCI: Add #defines for Enter Compliance, Transmit Margin
+  drm: correct Transmit Margin masks
+  drm: replace numbers with PCI_EXP_LNKCTL2 definitions
 
-thanks,
-  -lakshmi
+ drivers/gpu/drm/amd/amdgpu/cik.c | 22 ++++++++++++++--------
+ drivers/gpu/drm/amd/amdgpu/si.c  | 22 ++++++++++++++--------
+ drivers/gpu/drm/radeon/cik.c     | 22 ++++++++++++++--------
+ drivers/gpu/drm/radeon/si.c      | 22 ++++++++++++++--------
+ include/uapi/linux/pci_regs.h    |  2 ++
+ 5 files changed, 58 insertions(+), 32 deletions(-)
 
-> 
->>
->>                  if ((rbuf_len == 0) || (offset + rbuf_len >= i_size)) {
->>                           rc = -EINVAL;
->>                           break;
->>                  }
->>                  offset += rbuf_len;
->>
->>>    	       rc = crypto_shash_update(shash, rbuf, rbuf_len);
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
