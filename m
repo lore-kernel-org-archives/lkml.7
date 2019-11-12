@@ -2,279 +2,118 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91593C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD22C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635EE222CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5059821783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:36:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573558616;
+	bh=IBRZ0V+FizBPRXBE7AIelmGcF/rqx4zxpH+FTVnkzDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xg0x4hz+7ndx8tu2gqNPx2/BUtVe1nCBbFEjPPqw0ethqXokJn509E/sOwizLfnIQ
+	 E1pVYGyMRuEJP/psdjCjdN+jr8HKY7S7s1ED7ZCaiZJGwCqFNy0JxYHNf66X1+NHBM
+	 MvPwKVqFx6/fves7pdJDJKM1l2OOYT+93x6jFOZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfKLLdq (ORCPT
+        id S1726976AbfKLLgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:33:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4452 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725874AbfKLLdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:33:45 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACBXJ3L029822;
-        Tue, 12 Nov 2019 06:33:34 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7tfku83b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 06:33:33 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xACBUVDV003471;
-        Tue, 12 Nov 2019 11:30:59 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01wdc.us.ibm.com with ESMTP id 2w5n36e475-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 11:30:59 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACBUsBW46793008
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 11:30:54 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 803E3C605B;
-        Tue, 12 Nov 2019 11:30:54 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F633C6057;
-        Tue, 12 Nov 2019 11:30:50 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.199.45.124])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 11:30:49 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, peterz@infradead.org,
-        dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 03/16] libnvdimm: Move nd_device_attribute_group to device_type
-In-Reply-To: <157309901138.1582359.12909354140826530394.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com> <157309901138.1582359.12909354140826530394.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Tue, 12 Nov 2019 17:00:46 +0530
-Message-ID: <878soltjq1.fsf@linux.ibm.com>
+        Tue, 12 Nov 2019 06:36:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbfKLLgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:36:54 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61D6421925;
+        Tue, 12 Nov 2019 11:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573558613;
+        bh=IBRZ0V+FizBPRXBE7AIelmGcF/rqx4zxpH+FTVnkzDQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vgR6vb6pygOrhYdh1tLbICYpzNyLiNW/NGEr6J8+nCx71yHQDyEQ3zjASKeUfsJrC
+         tr9H+e8krqDcjj664LKgstygnZJcLRjtIzdyrNXpDLEotbjAeOGuGg3W0fRW/q0rLK
+         wrAAh0Cey56Uy6sOjPmN8QeMewVkm+GLfLdNBr24=
+Date:   Tue, 12 Nov 2019 11:36:47 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yunjae Lee <lyj7694@gmail.com>,
+        SeongJae Park <sj38.park@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Joe Perches <joe@perches.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 01/13] compiler.h: Split {READ,WRITE}_ONCE definitions
+ out into rwonce.h
+Message-ID: <20191112113646.GC17835@willie-the-truck>
+References: <20191108170120.22331-1-will@kernel.org>
+ <20191108170120.22331-2-will@kernel.org>
+ <CAK8P3a0f=WvSQSBQ4t0FmEkcFE_mC3oARxaeTviTSkSa-D2qhg@mail.gmail.com>
+ <93f80017-d65e-7c3a-29b0-d9a568d08f58@de.ibm.com>
+ <CAK8P3a21KdGKMDDPs3jc9XEg3=LbzFnGwVm+xDTB+EqGXiZorA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120105
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a21KdGKMDDPs3jc9XEg3=LbzFnGwVm+xDTB+EqGXiZorA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Mon, Nov 11, 2019 at 10:32:46AM +0100, Arnd Bergmann wrote:
+> On Mon, Nov 11, 2019 at 9:10 AM Christian Borntraeger
+> <borntraeger@de.ibm.com> wrote:
+> > On 08.11.19 20:57, Arnd Bergmann wrote:
+> > > On Fri, Nov 8, 2019 at 6:01 PM Will Deacon <will@kernel.org> wrote:
+> > >>
+> > >> In preparation for allowing architectures to define their own
+> > >> implementation of the 'READ_ONCE()' macro, move the generic
+> > >> '{READ,WRITE}_ONCE()' definitions out of the unwieldy 'linux/compiler.h'
+> > >> and into a new 'rwonce.h' header under 'asm-generic'.
+> > >
+> > > Adding Christian Bornträger to Cc, he originally added the
+> > > READ_ONCE()/WRITE_ONCE()
+> > > code.
+> > >
+> > > I wonder if it would be appropriate now to revert back to a much simpler version
+> > > of these helpers for any modern compiler. As I understand, only gcc-4.6 and
+> > > gcc4.7 actually need the song-and-dance version with the union and switch/case,
+> > > while for others, we can might be able back to a macro doing a volatile access.
+> >
+> > As far as I know this particular issue with  volatile access on aggregate types
+> > was fixed in gcc 4.8. On the other hand we know that the current construct will
+> > work on all compilers. Not so sure about the orignal ACCESS_ONCE implementation.
+> 
+> I've seen problems with clang on the current version, leading to unnecessary
+> temporaries being spilled to the stack in some cases, so I think it would still
+> help to simplify it.
+> 
+> We probably don't want the exact ACCESS_ONCE() implementation back
+> that existed before, but rather something that implements the stricter
+> READ_ONCE() and WRITE_ONCE(). I'd probably also want to avoid the
+> __builtin_memcpy() exception for odd-sized accesses and instead have
+> a separate way to do those.
 
-> A 'struct device_type' instance can carry default attributes for the
-> device. Use this facility to remove the export of
-> nd_device_attribute_group and put the responsibility on the core rather
-> than leaf implementations to define this attribute.
->
-> For regions this creates a new nd_region_attribute_groups[] added to the
-> per-region device-type instances.
->
+If you have a patch, I'm happy to carry it at the end of the series to
+avoid conflicts. It's not completely clear to me what you're after, so if
+you need me to adjust anything here then please shout!
 
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  arch/powerpc/platforms/pseries/papr_scm.c |    2 --
->  drivers/acpi/nfit/core.c                  |    2 --
->  drivers/nvdimm/bus.c                      |    3 +--
->  drivers/nvdimm/dimm_devs.c                |    8 +++++++-
->  drivers/nvdimm/e820.c                     |    1 -
->  drivers/nvdimm/nd.h                       |    1 +
->  drivers/nvdimm/of_pmem.c                  |    1 -
->  drivers/nvdimm/region_devs.c              |   18 +++++++++++++-----
->  include/linux/libnvdimm.h                 |    1 -
->  9 files changed, 22 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-> index 61883291defc..04726f8fd189 100644
-> --- a/arch/powerpc/platforms/pseries/papr_scm.c
-> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
-> @@ -286,7 +286,6 @@ int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
->  
->  static const struct attribute_group *region_attr_groups[] = {
->  	&nd_region_attribute_group,
-> -	&nd_device_attribute_group,
->  	&nd_mapping_attribute_group,
->  	&nd_numa_attribute_group,
->  	NULL,
-> @@ -299,7 +298,6 @@ static const struct attribute_group *bus_attr_groups[] = {
->  
->  static const struct attribute_group *papr_scm_dimm_groups[] = {
->  	&nvdimm_attribute_group,
-> -	&nd_device_attribute_group,
->  	NULL,
->  };
->  
-> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-> index 14e68f202f81..dec7c2b08672 100644
-> --- a/drivers/acpi/nfit/core.c
-> +++ b/drivers/acpi/nfit/core.c
-> @@ -1699,7 +1699,6 @@ static const struct attribute_group acpi_nfit_dimm_attribute_group = {
->  
->  static const struct attribute_group *acpi_nfit_dimm_attribute_groups[] = {
->  	&nvdimm_attribute_group,
-> -	&nd_device_attribute_group,
->  	&acpi_nfit_dimm_attribute_group,
->  	NULL,
->  };
-> @@ -2199,7 +2198,6 @@ static const struct attribute_group acpi_nfit_region_attribute_group = {
->  static const struct attribute_group *acpi_nfit_region_attribute_groups[] = {
->  	&nd_region_attribute_group,
->  	&nd_mapping_attribute_group,
-> -	&nd_device_attribute_group,
->  	&nd_numa_attribute_group,
->  	&acpi_nfit_region_attribute_group,
->  	NULL,
-> diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-> index d47412dcdf38..eb422527dd57 100644
-> --- a/drivers/nvdimm/bus.c
-> +++ b/drivers/nvdimm/bus.c
-> @@ -669,10 +669,9 @@ static struct attribute *nd_device_attributes[] = {
->  /*
->   * nd_device_attribute_group - generic attributes for all devices on an nd bus
->   */
-> -struct attribute_group nd_device_attribute_group = {
-> +const struct attribute_group nd_device_attribute_group = {
->  	.attrs = nd_device_attributes,
->  };
-> -EXPORT_SYMBOL_GPL(nd_device_attribute_group);
->  
->  static ssize_t numa_node_show(struct device *dev,
->  		struct device_attribute *attr, char *buf)
-> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-> index 196aa44c4936..278867c68682 100644
-> --- a/drivers/nvdimm/dimm_devs.c
-> +++ b/drivers/nvdimm/dimm_devs.c
-> @@ -202,9 +202,15 @@ static void nvdimm_release(struct device *dev)
->  	kfree(nvdimm);
->  }
->  
-> -static struct device_type nvdimm_device_type = {
-> +static const struct attribute_group *nvdimm_attribute_groups[] = {
-> +	&nd_device_attribute_group,
-> +	NULL,
-> +};
-> +
-> +static const struct device_type nvdimm_device_type = {
->  	.name = "nvdimm",
->  	.release = nvdimm_release,
-> +	.groups = nvdimm_attribute_groups,
->  };
->  
->  bool is_nvdimm(struct device *dev)
-> diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-> index 87f72f725e4f..adde2864c6a4 100644
-> --- a/drivers/nvdimm/e820.c
-> +++ b/drivers/nvdimm/e820.c
-> @@ -15,7 +15,6 @@ static const struct attribute_group *e820_pmem_attribute_groups[] = {
->  
->  static const struct attribute_group *e820_pmem_region_attribute_groups[] = {
->  	&nd_region_attribute_group,
-> -	&nd_device_attribute_group,
->  	NULL,
->  };
->  
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index 5c8b077b3237..3f509bb6b5c0 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -298,6 +298,7 @@ struct device *nd_pfn_devinit(struct nd_pfn *nd_pfn,
->  		struct nd_namespace_common *ndns);
->  int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig);
->  extern const struct attribute_group *nd_pfn_attribute_groups[];
-> +extern const struct attribute_group nd_device_attribute_group;
->  #else
->  static inline int nd_pfn_probe(struct device *dev,
->  		struct nd_namespace_common *ndns)
-> diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
-> index 97187d6c0bdb..41348fa6b74c 100644
-> --- a/drivers/nvdimm/of_pmem.c
-> +++ b/drivers/nvdimm/of_pmem.c
-> @@ -11,7 +11,6 @@
->  
->  static const struct attribute_group *region_attr_groups[] = {
->  	&nd_region_attribute_group,
-> -	&nd_device_attribute_group,
->  	NULL,
->  };
->  
-> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-> index e89f2eb3678c..710b5111eaa8 100644
-> --- a/drivers/nvdimm/region_devs.c
-> +++ b/drivers/nvdimm/region_devs.c
-> @@ -763,19 +763,27 @@ struct attribute_group nd_region_attribute_group = {
->  };
->  EXPORT_SYMBOL_GPL(nd_region_attribute_group);
->  
-> -static struct device_type nd_blk_device_type = {
-> +static const struct attribute_group *nd_region_attribute_groups[] = {
-> +	&nd_device_attribute_group,
-> +	NULL,
-> +};
-> +
-> +static const struct device_type nd_blk_device_type = {
->  	.name = "nd_blk",
->  	.release = nd_region_release,
-> +	.groups = nd_region_attribute_groups,
->  };
->  
-> -static struct device_type nd_pmem_device_type = {
-> +static const struct device_type nd_pmem_device_type = {
->  	.name = "nd_pmem",
->  	.release = nd_region_release,
-> +	.groups = nd_region_attribute_groups,
->  };
->  
-> -static struct device_type nd_volatile_device_type = {
-> +static const struct device_type nd_volatile_device_type = {
->  	.name = "nd_volatile",
->  	.release = nd_region_release,
-> +	.groups = nd_region_attribute_groups,
->  };
->  
->  bool is_nd_pmem(struct device *dev)
-> @@ -931,8 +939,8 @@ void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane)
->  EXPORT_SYMBOL(nd_region_release_lane);
->  
->  static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
-> -		struct nd_region_desc *ndr_desc, struct device_type *dev_type,
-> -		const char *caller)
-> +		struct nd_region_desc *ndr_desc,
-> +		const struct device_type *dev_type, const char *caller)
->  {
->  	struct nd_region *nd_region;
->  	struct device *dev;
-> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-> index b6eddf912568..d7dbf42498af 100644
-> --- a/include/linux/libnvdimm.h
-> +++ b/include/linux/libnvdimm.h
-> @@ -67,7 +67,6 @@ enum {
->  
->  extern struct attribute_group nvdimm_bus_attribute_group;
->  extern struct attribute_group nvdimm_attribute_group;
-> -extern struct attribute_group nd_device_attribute_group;
->  extern struct attribute_group nd_numa_attribute_group;
->  extern struct attribute_group nd_region_attribute_group;
->  extern struct attribute_group nd_mapping_attribute_group;
-> _______________________________________________
-> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
+Will
