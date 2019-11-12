@@ -2,156 +2,106 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E510C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2FC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB87521A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573560144;
-	bh=Yg2XoR2AQ2Dyq+/wLccnV918OcIcs8U+HHKtW2NtsuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D3W5rBUlNmJaEYszfFz07Qlb2T+wW6A4DfoyJPPn9jXK9e2vDqG7rS2a5YDtJcSZx
-	 sBNiGK9n2ZPwrqAerGMA0P++ZLjMGb7og8zQ0A2Omkc1u8mUaOD9l5yJ2ylbgac0g8
-	 /Kf9BOwPTtxZwSrXPZ7T+vAcE0I2p0EGrNgswGxg=
+	by mail.kernel.org (Postfix) with ESMTP id 9D7FB2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hyczwn3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfKLMCY (ORCPT
+        id S1727316AbfKLMCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:02:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbfKLMCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:02:23 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 12 Nov 2019 07:02:30 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31743 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfKLMC2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:02:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573560147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=86d78sKJ++ShqokmkOTiST9dtUBC3J059GE8dycM4HY=;
+        b=hyczwn3GGyXGIO1Wfa39K+jwKNuUCxWNrVIYziz/TQeP5xDiYS3FRam3M/GYJIv0x6JJqh
+        svPJ0d3Vs/xv2MrwLFP+MpsqJ7DdqMeDs2zzXoG2SrcF65yvfirzHxjmAOi0HQPqRkQ3+K
+        +0zfOotKw4iOpU6KhCuSTjqlXxS1KE8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-9-AVPtyDyaNjWDwpaiGBLQTg-1; Tue, 12 Nov 2019 07:02:24 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A7D2084E;
-        Tue, 12 Nov 2019 12:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573560142;
-        bh=Yg2XoR2AQ2Dyq+/wLccnV918OcIcs8U+HHKtW2NtsuE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y1lXsl/2SYZExjnI3bCn60A/vEVh5Q8AgmPiN3D5HpkHicJZiNZ8DZaBhEwR7XOT2
-         uNJU6DYWLgJRPqIECNi7BDx2OScrnaUp9adyY7rtxal0CxODze+7iHK0AYidXGjE1A
-         IuIxihpjR+DCaJM5NDBypIR5ePrLbjfUim4mT6Sg=
-Date:   Tue, 12 Nov 2019 13:02:19 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 1/2] ARM64: dts: sun50i-h6-pine-h64: state that the DT
- supports the modelA
-Message-ID: <20191112120219.GX4345@gilmour.lan>
-References: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
- <1573316433-40669-2-git-send-email-clabbe@baylibre.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BC8B7A50B;
+        Tue, 12 Nov 2019 12:02:23 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EB0A60171;
+        Tue, 12 Nov 2019 12:02:23 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 4306018089C8;
+        Tue, 12 Nov 2019 12:02:23 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 07:02:23 -0500 (EST)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Ian Kent <raven@themaw.net>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
+        lkp@lists.01.org, Christoph Hellwig <hch@lst.de>,
+        ltp@lists.linux.it
+Message-ID: <1108442397.11662343.1573560143066.JavaMail.zimbra@redhat.com>
+In-Reply-To: <3fb8b1b04dd7808b45caf5262ee629c09c71e0b6.camel@themaw.net>
+References: <20191111010022.GH29418@shao2-debian> <3fb8b1b04dd7808b45caf5262ee629c09c71e0b6.camel@themaw.net>
+Subject: Re: [LTP] [xfs] 73e5fff98b: kmsg.dev/zero:Can't_open_blockdev
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="MhP8cYafZlTESjGT"
-Content-Disposition: inline
-In-Reply-To: <1573316433-40669-2-git-send-email-clabbe@baylibre.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Originating-IP: [10.43.17.163, 10.4.195.27]
+Thread-Topic: 73e5fff98b: kmsg.dev/zero:Can't_open_blockdev
+Thread-Index: lFLu9oVj8OlcWVE2QLH5SvyKY02GuQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: AVPtyDyaNjWDwpaiGBLQTg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---MhP8cYafZlTESjGT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+----- Original Message -----
+> >=20
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> >=20
+> > [  135.976643] LTP: starting fs_fill
+> > [  135.993912] /dev/zero: Can't open blockdev
+>=20
+> I've looked at the github source but I don't see how to find out what
+> command was used when this error occurred so I don't know even how to
+> start to work out what might have caused this.
+>=20
+> Can you help me to find the test script source please.
 
-Hi,
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/f=
+s_fill/fs_fill.c
 
-On Sat, Nov 09, 2019 at 04:20:32PM +0000, Corentin Labbe wrote:
-> The current sun50i-h6-pine-h64 DT does not specify which model (A or B)
-> it supports.
-> When this file was created, only modelA was existing, but now both model
-> exists and with the time, this DT drifted to support the model B since it is
-> the most common one.
-> Furtheremore, some part of the model A does not work with it like ethernet and
-> HDMI connector (as confirmed by Jernej on IRC).
->
-> So it is time to settle the issue, and the easiest way was to state that
-> this DT is for model B.
-> Easiest since only a small name changes is required.
-> Doing the opposite (stating this file is for model A) will add changes (for
-> ethernet and HDMI) and so, will break too many setup.
->
-> But as asked by the maintainer this patch state this file is for model A.
-> In the process this patch adds the missing compoments to made it work on
-> model A.
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  .../devicetree/bindings/arm/sunxi.yaml        |  4 ++--
->  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 19 +++++++++++++++----
->  2 files changed, 17 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> index 8a1e38a1d7ab..b8ec616c2538 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> @@ -599,9 +599,9 @@ properties:
->            - const: pine64,pine64-plus
->            - const: allwinner,sun50i-a64
->
-> -      - description: Pine64 PineH64
-> +      - description: Pine64 PineH64 model A
->          items:
-> -          - const: pine64,pine-h64
-> +          - const: pine64,pine-h64-modelA
+Setup of that test is trying different file system types, and it looks
+at errno code of "mount -t $fs /dev/zero /mnt/$fs".
 
-You can change the description to make it more obvious if you want to,
-but changing the compatible is a no-go.
+Test still PASSes. This report appears to be only about extra message in dm=
+esg,
+which wasn't there before:
 
->            - const: allwinner,sun50i-h6
->
->        - description: Pine64 LTS
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> index 74899ede00fb..1d9afde4d3d7 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> @@ -10,8 +10,8 @@
->  #include <dt-bindings/gpio/gpio.h>
->
->  / {
-> -	model = "Pine H64";
-> -	compatible = "pine64,pine-h64", "allwinner,sun50i-h6";
-> +	model = "Pine H64 model A";
-> +	compatible = "pine64,pine-h64-modelA", "allwinner,sun50i-h6";
+# mount -t xfs /dev/zero /mnt/xfs
+# dmesg -c
+[  897.177168] /dev/zero: Can't open blockdev
 
-Same thing here, changing the model is fine, the compatible isn't
+Regards,
+Jan
 
->  	aliases {
->  		ethernet0 = &emac;
-> @@ -22,9 +22,10 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->
-> -	connector {
-> +	hdmi_connector: connector {
-
-Why do you need to add the label?
-
-Thanks!
-Maxime
-
---MhP8cYafZlTESjGT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcqfSwAKCRDj7w1vZxhR
-xbtVAQCjK/Nue5ofSHTF+N2UYD2oQHh9eCSQaNnpwH0L9zEvIgEAn9sTMRVhOQZp
-PbvVGTIVHfDgrpeI3lrH/v6mZmKcbAI=
-=1SAq
------END PGP SIGNATURE-----
-
---MhP8cYafZlTESjGT--
