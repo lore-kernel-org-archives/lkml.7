@@ -2,143 +2,108 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0D0C17447
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B444A2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D762184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:05:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CSRLALhI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLPKNrMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKLAFO (ORCPT
+        id S1727119AbfKLAFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:05:14 -0500
-Received: from mail-eopbgr750080.outbound.protection.outlook.com ([40.107.75.80]:3300
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726887AbfKLAFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:05:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MTYF17Q6OyQvtsn3cU9LQcohgLKk8zGLTa0oBJPx/MhWmn+gVXFPChTzi5AkNmwh2A5dX41p9rnR5fLkJF3PK8tgeq/fU5IciwENU/hv0ZOJBbV/TYnywIb7nvccsyOrlU4HlDEKCnkuJK/ujsjFWa8Ru5Y1mWOH0gq0KLUaTOBaRRKbUc9sJlkt0U62X5W9oBGP4LcpUfZf6tEfyg2FhWsxeVSCndPe5YVPZK51wVUpXtFseyfwC+vcNDMy7bAu/TeUvR+jRIF8SgS8WxeQAf+1RjJ0VmIoX4gcylcTJxtnIRL8bkCDsdZpDWrjnnchLiC+zubPdlEd6usRbITwyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cmp62GIKU10zl2WT532L6sEaOnbe7XWvnjkkTLWgYlU=;
- b=bYfcpQVA7fWaKI5LNJKXZPMuw9PpUN+/Up1NCIwIy2Cy/3Nm9j6nTEY4SF18uRdxLoC0xhZKFPyfrdnSJqoiF2HwGQVvuhoVP0bJYJYSbBuAzF1bRKTsRAEvgHEuemTxmniJAlRLcg+rdl5Y672DSOmpiCOsxDjCAQG+5kQMx6DyMYDW18PvyMG98rsD/+yqxv6FWoj8+wQj8nkYdPu9G5obd/u3yiAk8HQOFMToPjjL1rKnEpCCDhQQsuMTfl7TxdwrkUFRfjfHYvEsmAIJfMvgqxxSAMTucTRN0nKjNHqUVweujPRkeckhRjty/2kkCwsnwRXWkJbpa6BMjGvB6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 11 Nov 2019 19:05:39 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46795 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfKLAFi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:05:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 193so11900816pfc.13;
+        Mon, 11 Nov 2019 16:05:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cmp62GIKU10zl2WT532L6sEaOnbe7XWvnjkkTLWgYlU=;
- b=CSRLALhIF/86lcnWAtroiK3pA1R0GwR0DtzT5tq4PrxDguoSZTW7YFpKlpKg10JPee05cNQpw07/DHva1hkepaS9FVFW2CeSNXIQxsbreNd6UXrvmZJxEOXCtq/g65hzN8hx/Y7drAH0gIgX1kA6PfwLNfXmm191QpV4TMlrLFs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
- DM6PR12MB3722.namprd12.prod.outlook.com (10.255.172.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.23; Tue, 12 Nov 2019 00:05:11 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 00:05:10 +0000
-Subject: Re: [PATCH v4 07/17] svm: Add support for setup/destroy virutal APIC
- backing page for AVIC
-To:     "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6KOnCMXCOiPQLfi45fFcE0+C3er2wheoIsrf8843ny0=;
+        b=OLPKNrMFGFF7U1922nn0E++/tjzkZ0mNS2hYpYmYINmWigGDYrRdqdSag3Fy1NIbuM
+         hm/XRybSWrx/kxgDrRUknQ51q8xz8P8pQu8rYB/MS+N6zl/EhWPv51Qn7qEUe6/r5/UT
+         2tQLKCDJwLDs2yluQKt57CrtXP18B0e48SxH7DUXVVxDN/epgr1NTiP6HQ7PhVcZ7pid
+         uc0F3STd5z+Y9PWakN7Xwl3yLygrzHOpJGA38O35pkkafjEJDG+tmKcIlJXyJNqqAdEM
+         vAROblpNXiwZdlxIptgSmh3FWkZv6zhonPvL9gT9Ddrbtwxw+Dbwdnv2FCXPoXRn8W3h
+         VcrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6KOnCMXCOiPQLfi45fFcE0+C3er2wheoIsrf8843ny0=;
+        b=tU2g5acqJ40/SmSJhlI0WNqGcsj427KmirYbg7rcmu+qkSb6M9qlsMcxSBIUfx+6/F
+         +cyfGKcX6GC634X5ABVTx4q/sBKB1oLQkTYciiPTxsyoVC72ZFWgJ8Rn1KyaNhKZPIf9
+         AicET84hpt67du0btODCrMao182qQDb8JrlPQifJ+O1l2KqYJYiBO1M3M0CkY7blalRy
+         XPB99V8vsSN6rdTf+nVJUfQ0vgrtUDwg1+vkiwLD8fi7RqZrUH0zskZaf7lspZpng1jI
+         xYRV/yDkFxvoCdGWUXCERZddz2njxhZy3IA3RoJI+pVI/i+ZqrwNI5Y2AMiENPVId7ID
+         63bw==
+X-Gm-Message-State: APjAAAX+SH3849r5ChCd1bCg27spWB4ryJvrdE6z3NhPsvqV+DdKcprQ
+        wy5WKHn9CCXd81xqkQwZ5/8=
+X-Google-Smtp-Source: APXvYqzXZdmbvuUorKINeW0zhCwHHDdLsKqKa7cZjwYSCyOGWKC/69DcZIZRO7sBDnAEay9pLOkCIg==
+X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr2349371pjv.89.1573517137516;
+        Mon, 11 Nov 2019 16:05:37 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id f13sm20131016pfa.57.2019.11.11.16.05.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 16:05:36 -0800 (PST)
+Date:   Mon, 11 Nov 2019 16:05:34 -0800
+From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1572648072-84536-8-git-send-email-suravee.suthikulpanit@amd.com>
- <20191104215348.GA23545@rkaganb.lan>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <070710b6-0bf4-5f6e-2352-969e077eba14@amd.com>
-Date:   Mon, 11 Nov 2019 18:05:07 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.1
-In-Reply-To: <20191104215348.GA23545@rkaganb.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0401CA0005.namprd04.prod.outlook.com
- (2603:10b6:803:21::15) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c8::18)
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
+ node names in example
+Message-ID: <20191112000534.GA192119@dtor-ws>
+References: <20191026090403.3057-1-marcel@ziswiler.com>
+ <20191026090403.3057-3-marcel@ziswiler.com>
+ <20191030140455.GA4544@bogus>
+ <20191030231205.GI57214@dtor-ws>
+ <c200444ba450d7884cd26e12163b68db6db63725.camel@toradex.com>
 MIME-Version: 1.0
-X-Originating-IP: [165.204.77.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0c07b5e1-187e-4955-896c-08d76703fbbf
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3722:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3722ADF07976C439D9EC5530F3770@DM6PR12MB3722.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 021975AE46
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(366004)(39860400002)(346002)(199004)(189003)(478600001)(26005)(230700001)(99286004)(6116002)(3846002)(2486003)(52116002)(50466002)(2906002)(53546011)(6506007)(386003)(76176011)(446003)(36756003)(2616005)(11346002)(476003)(486006)(44832011)(25786009)(2501003)(47776003)(66066001)(65956001)(65806001)(14454004)(6666004)(23676004)(5660300002)(6636002)(66556008)(7736002)(8676002)(86362001)(81156014)(31686004)(6512007)(66476007)(229853002)(186003)(66946007)(2201001)(31696002)(6486002)(14444005)(110136005)(58126008)(316002)(7416002)(6436002)(81166006)(6246003)(8936002)(305945005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3722;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iIenCPG+2foHjQUoqoNBCwwo4aPZttszjVb/Zt7HAoINPq9hdCuZN5FHBt9IOg271pqB+j0kbshGASKIyA2HE8di2RbvZc4KsuhkK80LYgXk5I8d7O1f7LoVEUH3WsMrYkEzL86ezw66Em4Clalgi4mtSFmnFpu2k7xD8AZ1kN4X0Dd0MvzSK8ncAoVkx6qQ00zsSDkMNQTg/GKWwcmTzWH/JVfcb3OeYClQNsIRme3c0SGJJzx4/r0wpZtTbuw4IIaWhaVD+/PSUzbmQMVQOIve74uYOe1QjojoO03YfM8/DEo7EjjFJ02FBlDflDkMFwNrXddPGx8/E+MHJUtlcEsowNDdnhLgoYKhqwqdEsgONFxsUVz//i4K+CwGrAIjzls1aohIJ4YJU3ewm6A1yPmuWHvIR7RlUqg084qBUZU8AplBP+jVnWHjNRpRY0ME
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c07b5e1-187e-4955-896c-08d76703fbbf
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2019 00:05:10.8817
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a+ouvbODVFE1IEmTWvvJV690BXCTElpAjGsuyKlMhD9M8dknHRifW//BU8NsFYbdBQAweOHMtTrnzqWQK4plXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3722
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c200444ba450d7884cd26e12163b68db6db63725.camel@toradex.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Roman,
-
-On 11/4/19 3:53 PM, Roman Kagan wrote:
-> On Fri, Nov 01, 2019 at 10:41:30PM +0000, Suthikulpanit, Suravee wrote:
->> Re-factor avic_init_access_page() to avic_update_access_page() since
->> activate/deactivate AVIC requires setting/unsetting the memory region used
->> for virtual APIC backing page (APIC_ACCESS_PAGE_PRIVATE_MEMSLOT).
->
-> AFAICT the patch actually touches the (de)allocation of the APIC access
-> page rather than the APIC backing page (or I'm confused in the
-> nomenclature).
-
-The APIC backing page is allocated during vcpu initialization, while
-the APIC_ACCESS_PAGE_PRIVATE_MEMSLOT, is initialized per-vm, and is
-used mainly for access permission control of the APIC backing page.
-
-There is a comment in the arch/x86/kvm/svm.c:
-
-  /**
-   * Note:
-   * AVIC hardware walks the nested page table to check permissions,
-   * but does not use the SPA address specified in the leaf page
-   * table entry since it uses address in the AVIC_BACKING_PAGE pointer
-   * field of the VMCB. Therefore, we set up the
-   * APIC_ACCESS_PAGE_PRIVATE_MEMSLOT (4KB) here.
-   */
-
-When deactivate APICv, we do not destroy the APIC backing page, but
-we need to de-allocate the APIC_ACCESS_PAGE_PRIVATE_MEMSLOT.
-
-Thanks,
-Suravee
-
-> Thanks,
-> Roman.
+On Wed, Nov 06, 2019 at 08:58:25AM +0000, Marcel Ziswiler wrote:
+> On Wed, 2019-10-30 at 16:12 -0700, Dmitry Torokhov wrote:
+> > On Wed, Oct 30, 2019 at 09:04:55AM -0500, Rob Herring wrote:
+> > > On Sat, Oct 26, 2019 at 11:04:01AM +0200, Marcel Ziswiler wrote:
+> > > > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > > 
+> > > There's a typo in the subject.
+> > 
+> > I fixed it up file applying, thank you for noticing.
 > 
+> Where exactly did you apply this? As I still can't find it applied
+> anywhere. Thanks!
+
+Umm, to my internal queue *blush*
+
+Now applied to 'next' branch and pushed out.
+
+Thanks.
+
+-- 
+Dmitry
