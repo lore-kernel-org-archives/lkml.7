@@ -2,127 +2,57 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA861C17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606C8C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12CB21E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B0C21D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfKLPZZ (ORCPT
+        id S1727265AbfKLP0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:25:25 -0500
-Received: from verein.lst.de ([213.95.11.211]:56403 "EHLO verein.lst.de"
+        Tue, 12 Nov 2019 10:26:11 -0500
+Received: from muru.com ([72.249.23.125]:41786 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbfKLPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:25:25 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1C20F68BE1; Tue, 12 Nov 2019 16:25:22 +0100 (CET)
-Date:   Tue, 12 Nov 2019 16:25:21 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Shuah Khan <shuah@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
-Message-ID: <20191112152521.GC12550@lst.de>
-References: <20191104222141.5173-1-rcampbell@nvidia.com> <20191104222141.5173-3-rcampbell@nvidia.com>
+        id S1725954AbfKLP0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:26:11 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9EF4080F3;
+        Tue, 12 Nov 2019 15:26:46 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 07:26:07 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch v4 2/3] ARM: dts: dra7: add vpe clkctrl node
+Message-ID: <20191112152607.GC5610@atomide.com>
+References: <20191112142657.22898-1-bparrot@ti.com>
+ <20191112142657.22898-3-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191104222141.5173-3-rcampbell@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191112142657.22898-3-bparrot@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shouldn't this go into mm/ instead? It certainly doesn't seem
-like a library.
+* Benoit Parrot <bparrot@ti.com> [191112 14:24]:
+> Add clkctrl nodes for VPE module.
+> 
+> Note that because of the current dts node name dependency for mapping to
+> clock domain, we must still use "vpe-clkctrl@" naming instead of generic
+> "clock@" naming for the node. And because of this, it's probably best to
+> apply the dts node addition together along with the other clock changes.
 
-> +static int dmirror_bounce_copy_from(struct dmirror_bounce *bounce,
-> +				    unsigned long addr)
-> +{
-> +	unsigned long end = addr + bounce->size;
-> +	char __user *uptr = (void __user *)addr;
-> +	void *ptr = bounce->ptr;
-> +
-> +	for (; addr < end; addr += PAGE_SIZE, ptr += PAGE_SIZE,
-> +					      uptr += PAGE_SIZE) {
-> +		int ret;
-> +
-> +		ret = copy_from_user(ptr, uptr, PAGE_SIZE);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
+Thanks looks good to me now. Yeah it's probably best to queue this one
+along with the clock driver changes. I can then collect the dts related
+driver dts change on top of a branch from Tero. So please feel free to
+add this:
 
-Why does this iterate in page sized chunks?  I don't remember a page
-size limit on copy_{from,to}_user.
-
-> +static int dmirror_invalidate_range_start(struct mmu_notifier *mn,
-> +				const struct mmu_notifier_range *update)
-> +{
-> +	struct dmirror *dmirror = container_of(mn, struct dmirror, notifier);
-> +
-> +	if (mmu_notifier_range_blockable(update))
-> +		mutex_lock(&dmirror->mutex);
-> +	else if (!mutex_trylock(&dmirror->mutex))
-> +		return -EAGAIN;
-> +
-> +	dmirror_do_update(dmirror, update->start, update->end);
-> +	mutex_unlock(&dmirror->mutex);
-> +	return 0;
-> +}
-
-Can we adopts this to Jasons new interval tree invalidate?
-
-> +static int dmirror_fops_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct cdev *cdev = inode->i_cdev;
-> +	struct dmirror_device *mdevice;
-> +	struct dmirror *dmirror;
-> +
-> +	/* No exclusive opens. */
-> +	if (filp->f_flags & O_EXCL)
-> +		return -EINVAL;
-
-Device files usually just ignore O_EXCL, I don't see why this one
-would be any different.
-
-> +	mdevice = container_of(cdev, struct dmirror_device, cdevice);
-> +	dmirror = dmirror_new(mdevice);
-> +	if (!dmirror)
-> +		return -ENOMEM;
-> +
-> +	/* Only the first open registers the address space. */
-> +	mutex_lock(&mdevice->devmem_lock);
-> +	if (filp->private_data)
-> +		goto err_busy;
-> +	filp->private_data = dmirror;
-> +	mutex_unlock(&mdevice->devmem_lock);
-
-->open is only called for the first open of a given file structure..
-
-> +static int dmirror_fops_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct dmirror *dmirror = filp->private_data;
-> +
-> +	if (!dmirror)
-> +		return 0;
-
-This can't happen if your ->open never returns 0 without setting the
-private data.
-
-> +	filp->private_data = NULL;
-
-The file is feed afterwards, no need to clear the private data.
+Acked-by: Tony Lindgren <tony@atomide.com>
