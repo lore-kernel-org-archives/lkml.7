@@ -2,100 +2,100 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C737C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8624DC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E978206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="OmfMPkcU"
+	by mail.kernel.org (Postfix) with ESMTP id 6096221925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKLETv (ORCPT
+        id S1726959AbfKLE3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 23:19:51 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55053 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKLETv (ORCPT
+        Mon, 11 Nov 2019 23:29:19 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:12690 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKLE3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 23:19:51 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z26so1536999wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 20:19:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F92ESdQX6UoJ61XjdWNouamb4m5JYUWzj/93fvLdDW8=;
-        b=OmfMPkcUsU4z4Sge8bbBGEf7SLKlM3zhGCh0zWkASXg12E0B76dN5oZOy50OqSen1L
-         1qJ58buJa6TvWFnwHI6+I4W2b/5sa2njMM/hRsRF2CzNeTvxKHHc5XODZGkOkAZNQdb+
-         kmQUKgqavl1owTAsagWk5aktCyU5/kKKFMAYIECRxHFV4QYPrknpv+bLeBERhlefqQix
-         zC4Ll2iHktkfcr4x9fNo18SgWbImwnGqLDv+YuvYnE+ZIUC/rbth6mhX7cL1De1ihAwf
-         uwO/R75QZaq4bpRhJ1WbV1KqRcesyyM1jw7m3UJ6e35HL63OYmtydAILVbAjDmHpTosG
-         YVyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F92ESdQX6UoJ61XjdWNouamb4m5JYUWzj/93fvLdDW8=;
-        b=gQsuu4w1t0FjYIRiDoQKVwxg4/FhKa+Kynv8wSJ/BxqWeT1b3+wISGRPeZBWpc13sb
-         25D1cXpeZcENMPkzsiEZylqJLYCi8SAxLPC7QeFIvbeJ+BaW50hnsofNnCAHaog7C91w
-         hq/G7oS5sAY1TwJNm/mPJXNsHdmNa1CYf9EkhRKmkMapYV6FHSWFHBMwmXqWKwh0UC3f
-         Dv/BC6KAxKYsLBsl7UhMvt3adHwTN3pb60FpwvZ0uqUgFwwNk78dcSZ+jTmluMoWvQ94
-         RRWExKsXCElscGZBBuyHYKISL7sOzDMqgS0YSF6aleXci37knOpkYk07Jxl3RvgFruyD
-         DLZQ==
-X-Gm-Message-State: APjAAAXumxYTVKlwNRCLveOscHA5yjt1YRl6mnqcMSle7me5xZckcbiq
-        mtuqnGuZ0UVguDmGVMd+l01By/RKIj/q6bgXKp50Bg==
-X-Google-Smtp-Source: APXvYqxfmg4gwVVmXOge9gfCiEkbE8Xe6rCqSJCbDSL9MSZe/0J4HCGkyOMrCS/FGlQu5ML00TxzFQzsi3f5hz3ZMUw=
-X-Received: by 2002:a1c:9a4f:: with SMTP id c76mr1912349wme.103.1573532389104;
- Mon, 11 Nov 2019 20:19:49 -0800 (PST)
+        Mon, 11 Nov 2019 23:29:19 -0500
+Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 12 Nov 2019
+ 12:29:38 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH v5 0/4] arm64: meson: add support for A1 Power Domains
+Date:   Tue, 12 Nov 2019 12:28:46 +0800
+Message-ID: <1573532930-39505-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20191111133421.14390-1-anup.patel@wdc.com> <alpine.DEB.2.21.999.1911111705350.30304@utopia.booyaka.com>
-In-Reply-To: <alpine.DEB.2.21.999.1911111705350.30304@utopia.booyaka.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 12 Nov 2019 09:49:38 +0530
-Message-ID: <CAAhSdy28n=XkhcZC2=7L8YZyxa5yJ+CUso_s7kK5FacUQM6tMA@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Enable SYSCON reboot and poweroff drivers
-To:     Paul Walmsley <paul@pwsan.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [116.236.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 10:36 PM Paul Walmsley <paul@pwsan.com> wrote:
->
-> On Mon, 11 Nov 2019, Anup Patel wrote:
->
-> > We can use SYSCON reboot and poweroff drivers for the
-> > SiFive test device found on QEMU virt machine and SiFive
-> > SOCs.
-> >
-> > This patch enables SYSCON reboot and poweroff drivers
-> > in RV64 and RV32 defconfigs.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
->
-> I'd much prefer Christoph's driver, once it's fixed up per my earlier
-> comments.  This business with writing random registers based on what's in
-> the DT data has always been a bad idea.
+This patchset introduces a "Secure Power Doamin Controller". In A1/C1, power
+controller registers such as PWRCTRL_FOCRSTN, PWRCTRL_PWR_OFF, PWRCTRL_MEM_PD
+and PWRCTRL_ISO_EN, are in the secure domain, and should be accessed from ATF
+by smc.
 
-Like mentioned in other email thread, we are not writing random
-date to registers. In fact, we are describing Reboot and Poweroff
-mechanism in DT using SYSCON Reboot and Poweroff DT nodes.
+Changes since v4 at [3]:                                                         
+ - add SM_A1_ prefix for PWRC_SET/GET
+ - rename variable and update comments
 
-This is not a new approach. It has been used by a variety of SOCs
-in past.
+Changes since v3 at [2]:                                                         
+ - remove phandle to secure-monitor node
 
-Regards,
-Anup
+Changes since v2 at [1]:
+- update domain id
+- include dt-bindings in dts
+
+Changes since v1 at [0]:
+- use APIs from sm driver
+- rename pwrc_secure_get_power as Kevin suggested
+- add comments for always on domains
+- replace arch_initcall_sync with builtin_platform_driver
+- fix coding style
+
+[0]  https://lore.kernel.org/linux-amlogic/1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com
+[1]  https://lore.kernel.org/linux-amlogic/1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com
+[2]  https://lore.kernel.org/linux-amlogic/1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com
+[3]  https://lore.kernel.org/linux-amlogic/1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com
+
+Jianxin Pan (4):
+  dt-bindings: power: add Amlogic secure power domains bindings
+  firmware: meson_sm: Add secure power domain support
+  soc: amlogic: Add support for Secure power domains controller
+  arm64: dts: meson: a1: add secure power domain controller
+
+ .../bindings/power/amlogic,meson-sec-pwrc.yaml     |  37 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   7 +
+ drivers/firmware/meson/meson_sm.c                  |   2 +
+ drivers/soc/amlogic/Kconfig                        |  13 ++
+ drivers/soc/amlogic/Makefile                       |   1 +
+ drivers/soc/amlogic/meson-secure-pwrc.c            | 204 +++++++++++++++++++++
+ include/dt-bindings/power/meson-a1-power.h         |  32 ++++
+ include/linux/firmware/meson/meson_sm.h            |   2 +
+ 8 files changed, 298 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+ create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+ create mode 100644 include/dt-bindings/power/meson-a1-power.h
+
+-- 
+2.7.4
+
