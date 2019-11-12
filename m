@@ -2,144 +2,275 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D17C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D5FC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA78F2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC07D2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VL+s3q4J"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CyRC84Ij";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gtdGaCkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfKLTiP (ORCPT
+        id S1727187AbfKLTij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:38:15 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45501 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfKLTiP (ORCPT
+        Tue, 12 Nov 2019 14:38:39 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:35342 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfKLTij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:38:15 -0500
-Received: by mail-pg1-f193.google.com with SMTP id w11so12488068pga.12;
-        Tue, 12 Nov 2019 11:38:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0La2CwEbsU0iGpHRN+E6CgdPEQt/LTHDnbCunj4lTb8=;
-        b=VL+s3q4JE6h3dgJv7/N9uNIKe2mR2SJGxXYbo+a1AB3kkBkuDmf9fbBhr3tDyAVwnT
-         OYORuGVOakJjTDiwQxel/n3/wsKYXljpRVC+j3B12ryXEwiu5/JrFQ+jqcxiVEo0olBG
-         MI25O+WLxcwdoLjicMSqAFH4wtKmDsxUiU+hD7lSOLcb7IZzbryzbaMOyRm5hP8lk1gd
-         zyk+zQNSHx/J4GOZZ5ZGeiYsX4WpFxg+Cc50JZu/LUT8sbXnwX72++euhDkVcTc8+hKK
-         AiW2Lv0hXclDEtlSUVI9NW8d8svDe2rAvVkYCWtTGKhR3Kr6zL2PdqTR8pNeya4T2ITg
-         zP3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0La2CwEbsU0iGpHRN+E6CgdPEQt/LTHDnbCunj4lTb8=;
-        b=np0P+iVsivdgJc5gtgMtsb9lyI6YkJxtztz/rakdRl8MeKa+p6RxZFTvQheoUWh7Mu
-         WZ8lQFtK1/jwxlNO/A6HMuFUCRlmkVGEWWt5TslbPYht8YkrWqckCCfLthUoWUwE7jTt
-         vyX4TOzEJIc0iTI9vCaRClTaHfdLUdTuL6j+rI4Daa3IeLXszSJHn0x+5ds5Ec8pY0Ek
-         NTj9CHNPXjvl61ntz8qxj+MaryFteOdhQ1krHaw2u87lYqdN9uPlJeOgVU0T9OJX1MG8
-         CBOpaE2bODOvvgaloIlzSjPt4FiHQNy8m9R3r6sYKxQhmFpw/DCVfU7QTgZgZXRZviP8
-         AQDA==
-X-Gm-Message-State: APjAAAV2mJZWfeqnaghrRT9nWcra2W8tPyEm1XmRaE0S8XTdcRrsiLvK
-        Ww8UvUkdayN1LGgojcX6RE8=
-X-Google-Smtp-Source: APXvYqxxR8hyTH24EqC9K4ZhJ2LqaamzTWY4SFMUk/Bz4VfqPPdNGTeLpZuYAcnL2e2qm2YDnWO7AQ==
-X-Received: by 2002:a17:90a:280e:: with SMTP id e14mr8720772pjd.135.1573587494177;
-        Tue, 12 Nov 2019 11:38:14 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 81sm23692014pfx.142.2019.11.12.11.38.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:38:13 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:38:11 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] Input: ili210x - optionally hide calibrate sysfs
- attribute
-Message-ID: <20191112193811.GC13374@dtor-ws>
-References: <20191112164429.11225-1-TheSven73@gmail.com>
- <20191112164429.11225-3-TheSven73@gmail.com>
+        Tue, 12 Nov 2019 14:38:39 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B084C60909; Tue, 12 Nov 2019 19:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573587517;
+        bh=+uE/TWS5WT8aFrtGdahchP4ieE7STcp0632ThIZt/sE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CyRC84Ij6CI+3h2p1gWV8AWKBK5uwzuQ19mREjgw/kSoft6QxxwzIORDzf3hnPfHw
+         9oJphT/qTLZzhetCVolZin5Z7RbAIcvk5uRKXnXpOGqOAujcXDVcGtTO3+k/Eta5Io
+         gUqTT0DDoAnE3fbr3zx36IYlc/hMiBzCPBJ3r+6s=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C694608FF;
+        Tue, 12 Nov 2019 19:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573587516;
+        bh=+uE/TWS5WT8aFrtGdahchP4ieE7STcp0632ThIZt/sE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gtdGaCkrsVeb0/yAIchbtq3UqXqlLoWhomAjyhn0SLtPIX9KZMK9vxAXS8hvsIpVg
+         PgKOqqR7r10cwf8//V4VsFn5ii5WLOsJ727PhQ5w14MpWjqyrUC/YbBB2dpx75q7jx
+         RW6cibJs2v9IVf6PeDoYWX6OdDWktD4dBtfdyTdY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C694608FF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
+ MSM8998 gcc
+To:     Rob Herring <robh@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
+ <20191112004417.GA16664@bogus>
+ <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
+ <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <fb73ec1e-e5b9-239b-737b-a687f65283d3@codeaurora.org>
+Date:   Tue, 12 Nov 2019 12:38:34 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112164429.11225-3-TheSven73@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:44:29AM -0500, Sven Van Asbroeck wrote:
-> Only show the 'calibrate' sysfs attribute on chip flavours
-> which support calibration by writing to a calibration register.
+On 11/12/2019 11:37 AM, Rob Herring wrote:
+> On Tue, Nov 12, 2019 at 10:25 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>>
+>> On 11/11/2019 5:44 PM, Rob Herring wrote:
+>>> On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
+>>>> The global clock controller on MSM8998 can consume a number of external
+>>>> clocks.  Document them.
+>>>>
+>>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>>>> ---
+>>>>    .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
+>>>>    1 file changed, 33 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>>>> index e73a56f..2f3512b 100644
+>>>> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>>>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>>>> @@ -40,20 +40,38 @@ properties:
+>>>>           - qcom,gcc-sm8150
+>>>>
+>>>>      clocks:
+>>>> -    minItems: 1
+>>>
+>>> 1 or 2 clocks are no longer allowed?
+>>
+>> Correct.
+>>
+>> The primary reason is that Stephen indicated in previous discussions
+>> that if the hardware exists, it should be indicated in DT, regardless if
+>> the driver uses it.  In the 7180 and 8150 case, the hardware exists, so
+>> these should not be optional.
 > 
-> Do this by adding a flag to the chip operations structure.
-> 
-> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
-> Cc: Marek Vasut <marex@denx.de>
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: <linux-kernel@vger.kernel.org>
-> Cc: linux-input@vger.kernel.org
-> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->  drivers/input/touchscreen/ili210x.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-> index 4321f0d676cc..810770ad02e2 100644
-> --- a/drivers/input/touchscreen/ili210x.c
-> +++ b/drivers/input/touchscreen/ili210x.c
-> @@ -32,6 +32,7 @@ struct ili2xxx_chip {
->  	bool (*continue_polling)(const u8 *data, bool touch);
->  	unsigned int max_touches;
->  	unsigned int resolution;
-> +	bool no_calibrate_reg;
+> Agreed. The commit message should mention this though.
 
-Please use positive logic and have chips opt-in into the calibration.
+Fair enough, will do.
 
->  };
->  
->  struct ili210x {
-> @@ -162,6 +163,7 @@ static const struct ili2xxx_chip ili211x_chip = {
->  	.continue_polling	= ili211x_decline_polling,
->  	.max_touches		= 10,
->  	.resolution		= 2048,
-> +	.no_calibrate_reg	= true,
->  };
->  
->  static int ili251x_read_reg(struct i2c_client *client,
-> @@ -310,8 +312,19 @@ static struct attribute *ili210x_attributes[] = {
->  	NULL,
->  };
->  
-> +static umode_t ili210x_calibrate_visible(struct kobject *kobj,
-> +					  struct attribute *attr, int index)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct ili210x *priv = i2c_get_clientdata(client);
-> +
-> +	return !priv->chip->no_calibrate_reg;
-> +}
-> +
->  static const struct attribute_group ili210x_attr_group = {
->  	.attrs = ili210x_attributes,
-> +	.is_visible = ili210x_calibrate_visible,
->  };
->  
->  static void ili210x_power_down(void *data)
-> -- 
-> 2.17.1
 > 
+>>
+>> The secondary reason is I found that the schema was broken anyways.  In
+>> the way it was written, if you implemented sleep, you could not skip
+>> xo_ao, however there is a dts that did exactly that.
+> 
+> If a dts can be updated in a compatible way, we should do that rather
+> than carry inconsistencies into the schema.
+> 
+>> The third reason was that I couldn't find a way to write valid yaml to
+>> preserve the original meaning.  when you have an "items" as a subnode of
+>> "oneOf", you no longer have control over the minItems/maxItems, so all 3
+>> became required anyways.
+> 
+> That would be a bug. You're saying something like this doesn't work?:
+> 
+> oneOf:
+>    - minItems: 1
+>      maxItems: 3
+>      items:
+>        - const: a
+>        - const: b
+>        - const: c
+
+Yes.  That specifically won't work.  "items" would need to have the dash 
+preceding it, otherwise it won't compile if you have more than one.  But 
+ignoring that, yes, when it compiled, and I saw the output from the 
+check failing (after adding verbose mode), min and max for the items 
+list would be 3, and the check would fail.
+
+> 
+>>   I find it disappointing that the "version" of
+>> Yaml used for DT bindings is not documented,
+> 
+> Not sure which part you mean? json-schema is the vocabulary which has
+> a spec. The meta-schema then constrains what the json-schema structure
+> should look like. That's still evolving a bit as I try to improve it
+> based on mistakes people make. Then there's the intermediate .dt.yaml
+> format used internally. That's supposed to stay internal and may go
+> away when/if we integrate the validation into dtc.
+
+So, this is probably off-topic, but hopefully you'll find this useful.
+
+I'm probably in the minority, but I really haven't used json-schema nor 
+yaml before.  I have experience with other "schema" languages, so I 
+figured I could pick what I need from the documentation.
+
+The only documentation I see is writing-schema.md and example-schema.yaml
+
+To me, writing-schema.md is insufficient.  Its better than nothing, so 
+I'm still glad it exists, but I don't have any confidence I can really 
+write a binding yaml from scratch based on it.  It does a good thing by 
+telling you what are important properties of a binding, so based on that 
+you can kind of start to understand how existing bindings actually work. 
+  Its great in telling you how to run the validation checks (the Running 
+checks) section.  The dependencies section is awesome from my 
+perspective - most projects seem to assume you just know what their 
+dependencies are, and its painful to try to figure them out when you get 
+cryptic errors during make.
+
+Where it really fails is that I get no sense of the language.  As a 
+minimum a lexigraphic specification that would allow me to write a 
+compiler (I've done this before).  Then I would understand what are the 
+keywords, and where they are valid.  I wouldn't understand what they 
+mean, but at-least I can look at some implemented examples and 
+extrapolate from there.
+
+Have you by chance ever looked at the ACPI spec?  Maybe not the best 
+example, but its the one that comes to my mind first.  ACPI has ACPI 
+Source Language (ASL).  Its an interpreted hardware description language 
+that doesn't match yaml, but I think the ACPI spec does a reasonable job 
+of describing it.  You have a lexographic definition which seems to be 
+really helpful to ACPICA in implementing the intrepreter.  It lists all 
+of the valid operators, types, etc.  It provides detailed references of 
+each keyword - how they are used, what they do, etc.  Its not the 
+greatest at "how to write ASL 101" or "these are common problems that 
+people face, and how they can be solved", but atleast with what there 
+is, I could read every keyword that seems to be possibly related to what 
+I want to do, and hazard a guess if it would work for my problem.
+
+Perhaps that is outside the scope of the writing-schema.md document, 
+that is fair.  However, I argue that the document does not provide 
+sufficient references.  The document provides a reference to the 
+json-schema spec, but the spec is kinda useless (atleast I feel that it 
+is).  "minItems" is not defined anywhere in the spec.  What does it 
+mean?  How can I use it?  Specific to minItems/maxItems, I'll I've 
+gathered about it is from example-schema.yaml which indicates its a way 
+to identify mandatory and optional values for a property, but it doesn't 
+describe the fact that order matters, and you cannot mix/match things - 
+IE it looks like you need atleast min items, and at most max items, but 
+even if you have enough items to satisfy min, there cannot be gaps (you 
+can't pick items 1, 5, 10 from the list).  I only found that out from 
+running the validation checks with trial/error.
+
+There is no reference to the yaml spec, despite the document stating 
+that the bindings are written in yaml.
+
+However, having found the yaml spec, its really not much better than the 
+json-schema spec, and it doesn't line up because as the document states, 
+the bindings are not really written in yaml - its a subset of yaml where 
+a ton of the boilerplate "code" is skipped.
+
+What is boilerplate that is skipped?  IMO, if you are not strictly 
+adhering to yaml, then you need to clearly document your own derivative 
+language so that someone like me whom is being introduced to all of this 
+for the first time can start to figure out some of it.  It would be 
+helpful to look at other yaml examples, and understand what is 
+considered to be boilerplate so I can translate that to a DT binding.
+
+I understand, the majority of the above is complaints and demands which 
+is really not fair to you, since you are spending what I presume to be 
+your "non-dayjob" time to make the community better.  However, I don't 
+really know how to contribute to make the documentation better.  I don't 
+understand enough.  As far as this topic is concerned, I'm a dumb monkey 
+banging on a keyboard hoping to get close enough to Shakespeare to pass 
+mustard by accident, and maybe learn something along the way so that 
+next time, I might have an idea of how to do something of what I need.
+
+Hopefully you've made it this far - that ended up being a lot more text 
+that I thought it would be.  I really hope this is useful feedback to 
+you, but let me know if I am still not clear on something.  I will try 
+my best to clarify more.  If you feel like I can contribute somehow, 
+just let me know.
+
+> 
+>> so after several hours of
+>> trial and error, I just gave up since I found this to work (failed cases
+>> just gave me an error with no indication of what was wrong, not even a
+>> line number).
+> 
+> Schema failures or dts failures? It is possible to get line numbers
+> for either, but that makes validation much slower. In the latter case,
+> the line numbers aren't too useful either given they are for the
+> .dt.yaml file and not the .dts source file (dtc integration would
+> solve that). Adding '-n' to dt-doc-validate or dt-validate will turn
+> them on though.
+
+Schema compilation failures.  I don't recall the exact error message, 
+but it was something like "no valid schema found, continuing". 
+Essentially running "dt_binding_check".  I tried with -v but wasn't 
+getting much more in this case.  I didn't try -n.
+
+> 
+> Yes, error messages need work. I have some idea how to improve them,
+> but haven't had time to implement. Too many binding reviews... You can
+> get more detail with '-v' option. It's *way* more verbose, but not
+> necessarily more useful.
+> 
+> Rob
+> 
+
 
 -- 
-Dmitry
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
