@@ -2,312 +2,136 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17C4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC25C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5E5214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA162084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGcrxOsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKLK7n (ORCPT
+        id S1726388AbfKLLDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:59:43 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34170 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbfKLK7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:59:43 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DE34055BB9C1E56D07BD;
-        Tue, 12 Nov 2019 18:59:39 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 12 Nov 2019
- 18:59:37 +0800
-Date:   Tue, 12 Nov 2019 10:59:30 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2] i2c: use void pointers for supplying data for reads
- and writes
-Message-ID: <20191112105930.000059e3@huawei.com>
-In-Reply-To: <20191112005826.GA96746@dtor-ws>
-References: <20191112005826.GA96746@dtor-ws>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 12 Nov 2019 06:03:18 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41623 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfKLLDS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:03:18 -0500
+Received: by mail-ed1-f66.google.com with SMTP id a21so14558651edj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 03:03:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7v/v4nr+zqzk2y/jAd0gNZ9DfjLyLFd4Z21yLnvf0Dw=;
+        b=WGcrxOsczq3GVLUIOlQBv9NqR40pTHNB89f52HlTcJP/airVxcI1SbQma3s/xI/y9b
+         3FzS+nvwEDIrjUz2i2JkCwft5P+/PNYXiNcxG6SeQicGHSv4apY9rtF/iOfeKgKERvGi
+         49Mh+wxoUpPZaJmxb9Nw6btNQVViXnOh65IYkoGrkBwPGsVMEnTa7lGIUtfNvTF+Gn3V
+         Qe6PMS86mVL8zxP5qiu8kymKk6Zx8AH19LR1tOXygo4H+xoYMcZsRW7KYCViZ0cRc+oW
+         /MXLGW+zWRzqppdLzFyZg5PVEzdYx8ePWwKKIta0fJ9bjReuWFvvR2ms3JaP8Joey/fo
+         0Rkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7v/v4nr+zqzk2y/jAd0gNZ9DfjLyLFd4Z21yLnvf0Dw=;
+        b=ct8idkxTLsYi5rZ+y+oB5rg3OeVH11+o2+gDe7pDTVtxKSZKAdbGJEjLnP6LG0sT8l
+         8xopb8KL5sOjtr0chmEOWCiBVzEXrHg+Psk11lG7zGvYGcMQMo8u4kPuZdRapfzzj+22
+         +dh8m0ilfSgQrgtmafQMEAvsN+A0JwaL4etN8uHEyLFCmFKLUxPxaIyQRi8fbqTfHWWN
+         +ZjJs5jykXEr9IUKuJ+jKbnugyw8H2rFeXsFBS4fCo7NH4syTkgafydBZEnghoVJgT1C
+         N/nw8NeybJ6HSs6qeExhb7h+8y6YUOnd09TR4ZhpgWdocpSsWauRdREDlIxq37FofUvD
+         F60g==
+X-Gm-Message-State: APjAAAVVTxyQ2MFEdMiG1votf+flMVo6TILRYRd7rj39X4j17bcdve14
+        OqVLOffmb7N5G6iYIt1Cmy888PrRJCh7bAfyMgM=
+X-Google-Smtp-Source: APXvYqyF5pycYcqNWugO2851/NH1Ih0TM/Tf5B7Bn9iBKqBF7TP/lwxHh3YlfKn//hB0aWX0AcvVEX/a2g+CgBbh4C8=
+X-Received: by 2002:a17:906:f109:: with SMTP id gv9mr28018882ejb.196.1573556596349;
+ Tue, 12 Nov 2019 03:03:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+References: <20191109075417.29808-1-hslester96@gmail.com> <20191112094031.GF23790@phenom.ffwll.local>
+In-Reply-To: <20191112094031.GF23790@phenom.ffwll.local>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Tue, 12 Nov 2019 19:03:05 +0800
+Message-ID: <CANhBUQ1HRe4FNWo0o18zxV2ZoANRdNd3PaTeeBZ6dG__0quDUA@mail.gmail.com>
+Subject: Re: [PATCH] drm/virtgpu: fix double unregistration
+To:     Chuhong Yuan <hslester96@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 16:58:26 -0800
-Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+On Tue, Nov 12, 2019 at 5:40 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Sat, Nov 09, 2019 at 03:54:17PM +0800, Chuhong Yuan wrote:
+> > drm_put_dev also calls drm_dev_unregister, so dev will be unregistered
+> > twice.
+> > Replace it with drm_dev_put to fix it.
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+>
+> Nice catch, I'll apply.
+>
+> Since this is so confusing, we actually have a todo to remove drm_put_dev
+> completely from the codebase (and open-code it with explicit
+> unregister+put). Want to do that little patch series to update the
+> remaining few drivers and then remove drm_put_dev from core code?
+>
+> Thanks, Daniel
+>
 
-> There is no need to force users of i2c_master_send()/i2c_master_recv()
-> and other i2c read/write bulk data API to cast everything into u8
-> pointers.  While everything can be considered byte stream, the drivers
-> are usually work with more structured data.
-> 
-> Let's switch the APIs to accept [const] void pointers to cut amount of
-> casting needed.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+I am sorry that I have to focus on my current project in recent days.
+But since this is a problem, I have written a Coccinelle script just now
+to find drm_put_dev and open-code it.
+I hope this helps.
+The script is:
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+virtual patch
 
-> ---
-> 
-> Changes in v2:
-> 
-> - adjusted max1363 to the new i2c_master_send/recv signatures
-> 
-> I sent the previous version of this patch 04/01/17 and kbuild promptly
-> noticed that it broke max1363. And it took me only 2.5 years to get back
-> to it ;)
-> 
-> Given that it is only one IIO driver that is affected I hope it can go
-> through Wolfram's tree and we do not need to go through staged API
-> rollout.
-> 
->  drivers/i2c/i2c-core-base.c  |  2 +-
->  drivers/i2c/i2c-core-smbus.c | 16 ++++++++--------
->  drivers/iio/adc/max1363.c    | 14 ++++++++------
->  include/linux/i2c.h          | 28 +++++++++++++++-------------
->  4 files changed, 32 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 6a5183cffdfc3..aeb4201ef55e4 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -2065,7 +2065,7 @@ EXPORT_SYMBOL(i2c_transfer);
->   *
->   * Returns negative errno, or else the number of bytes transferred.
->   */
-> -int i2c_transfer_buffer_flags(const struct i2c_client *client, char *buf,
-> +int i2c_transfer_buffer_flags(const struct i2c_client *client, void *buf,
->  			      int count, u16 flags)
->  {
->  	int ret;
-> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-> index 3ac426a8ab5ab..4172f8e647f81 100644
-> --- a/drivers/i2c/i2c-core-smbus.c
-> +++ b/drivers/i2c/i2c-core-smbus.c
-> @@ -15,6 +15,7 @@
->  #include <linux/i2c.h>
->  #include <linux/i2c-smbus.h>
->  #include <linux/slab.h>
-> +#include <asm/unaligned.h>
->  
->  #include "i2c-core.h"
->  
-> @@ -213,7 +214,7 @@ EXPORT_SYMBOL(i2c_smbus_write_word_data);
->   * mechanism (I2C_M_RECV_LEN) which may not be implemented.
->   */
->  s32 i2c_smbus_read_block_data(const struct i2c_client *client, u8 command,
-> -			      u8 *values)
-> +			      void *values)
->  {
->  	union i2c_smbus_data data;
->  	int status;
-> @@ -240,7 +241,7 @@ EXPORT_SYMBOL(i2c_smbus_read_block_data);
->   * else zero on success.
->   */
->  s32 i2c_smbus_write_block_data(const struct i2c_client *client, u8 command,
-> -			       u8 length, const u8 *values)
-> +			       u8 length, const void *values)
->  {
->  	union i2c_smbus_data data;
->  
-> @@ -256,7 +257,7 @@ EXPORT_SYMBOL(i2c_smbus_write_block_data);
->  
->  /* Returns the number of read bytes */
->  s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client, u8 command,
-> -				  u8 length, u8 *values)
-> +				  u8 length, void *values)
->  {
->  	union i2c_smbus_data data;
->  	int status;
-> @@ -276,7 +277,7 @@ s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client, u8 command,
->  EXPORT_SYMBOL(i2c_smbus_read_i2c_block_data);
->  
->  s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client, u8 command,
-> -				   u8 length, const u8 *values)
-> +				   u8 length, const void *values)
->  {
->  	union i2c_smbus_data data;
->  
-> @@ -628,7 +629,7 @@ EXPORT_SYMBOL(__i2c_smbus_xfer);
->   * transfer.
->   */
->  s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
-> -					      u8 command, u8 length, u8 *values)
-> +					      u8 command, u8 length, void *values)
->  {
->  	u8 i = 0;
->  	int status;
-> @@ -647,8 +648,7 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
->  			status = i2c_smbus_read_word_data(client, command + i);
->  			if (status < 0)
->  				return status;
-> -			values[i] = status & 0xff;
-> -			values[i + 1] = status >> 8;
-> +			put_unaligned_le16(status, values + i);
->  			i += 2;
->  		}
->  	}
-> @@ -657,7 +657,7 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
->  		status = i2c_smbus_read_byte_data(client, command + i);
->  		if (status < 0)
->  			return status;
-> -		values[i] = status;
-> +		*(u8 *)(values + i) = status;
->  		i++;
->  	}
->  
-> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> index 5c2cc61b666e7..48ed76a0e83d4 100644
-> --- a/drivers/iio/adc/max1363.c
-> +++ b/drivers/iio/adc/max1363.c
-> @@ -182,9 +182,9 @@ struct max1363_state {
->  	struct regulator		*vref;
->  	u32				vref_uv;
->  	int				(*send)(const struct i2c_client *client,
-> -						const char *buf, int count);
-> +						const void *buf, int count);
->  	int				(*recv)(const struct i2c_client *client,
-> -						char *buf, int count);
-> +						void *buf, int count);
->  };
->  
->  #define MAX1363_MODE_SINGLE(_num, _mask) {				\
-> @@ -310,27 +310,29 @@ static const struct max1363_mode
->  	return NULL;
->  }
->  
-> -static int max1363_smbus_send(const struct i2c_client *client, const char *buf,
-> +static int max1363_smbus_send(const struct i2c_client *client, const void *buf,
->  		int count)
->  {
-> +	const u8 *data = buf;
->  	int i, err;
->  
->  	for (i = err = 0; err == 0 && i < count; ++i)
-> -		err = i2c_smbus_write_byte(client, buf[i]);
-> +		err = i2c_smbus_write_byte(client, data[i]);
->  
->  	return err ? err : count;
->  }
->  
-> -static int max1363_smbus_recv(const struct i2c_client *client, char *buf,
-> +static int max1363_smbus_recv(const struct i2c_client *client, void *buf,
->  		int count)
->  {
-> +	u8 *data = buf;
->  	int i, ret;
->  
->  	for (i = 0; i < count; ++i) {
->  		ret = i2c_smbus_read_byte(client);
->  		if (ret < 0)
->  			return ret;
-> -		buf[i] = ret;
-> +		data[i] = ret;
->  	}
->  
->  	return count;
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index aaf57d9b41dbb..64cf92e191aa8 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -51,7 +51,7 @@ struct property_entry;
->   * @count must be be less than 64k since msg.len is u16.
->   */
->  extern int i2c_transfer_buffer_flags(const struct i2c_client *client,
-> -				     char *buf, int count, u16 flags);
-> +				     void *buf, int count, u16 flags);
->  
->  /**
->   * i2c_master_recv - issue a single I2C message in master receive mode
-> @@ -62,7 +62,7 @@ extern int i2c_transfer_buffer_flags(const struct i2c_client *client,
->   * Returns negative errno, or else the number of bytes read.
->   */
->  static inline int i2c_master_recv(const struct i2c_client *client,
-> -				  char *buf, int count)
-> +				  void *buf, int count)
->  {
->  	return i2c_transfer_buffer_flags(client, buf, count, I2C_M_RD);
->  };
-> @@ -77,7 +77,7 @@ static inline int i2c_master_recv(const struct i2c_client *client,
->   * Returns negative errno, or else the number of bytes read.
->   */
->  static inline int i2c_master_recv_dmasafe(const struct i2c_client *client,
-> -					  char *buf, int count)
-> +					  void *buf, int count)
->  {
->  	return i2c_transfer_buffer_flags(client, buf, count,
->  					 I2C_M_RD | I2C_M_DMA_SAFE);
-> @@ -92,9 +92,10 @@ static inline int i2c_master_recv_dmasafe(const struct i2c_client *client,
->   * Returns negative errno, or else the number of bytes written.
->   */
->  static inline int i2c_master_send(const struct i2c_client *client,
-> -				  const char *buf, int count)
-> +				  const void *buf, int count)
->  {
-> -	return i2c_transfer_buffer_flags(client, (char *)buf, count, 0);
-> +	return i2c_transfer_buffer_flags(client, (void *)buf /* const cast */,
-> +					 count, 0);
->  };
->  
->  /**
-> @@ -107,10 +108,10 @@ static inline int i2c_master_send(const struct i2c_client *client,
->   * Returns negative errno, or else the number of bytes written.
->   */
->  static inline int i2c_master_send_dmasafe(const struct i2c_client *client,
-> -					  const char *buf, int count)
-> +					  const void *buf, int count)
->  {
-> -	return i2c_transfer_buffer_flags(client, (char *)buf, count,
-> -					 I2C_M_DMA_SAFE);
-> +	return i2c_transfer_buffer_flags(client, (void *)buf /* const cast */,
-> +					 count, I2C_M_DMA_SAFE);
->  };
->  
->  /* Transfer num messages.
-> @@ -166,18 +167,19 @@ i2c_smbus_write_word_swapped(const struct i2c_client *client,
->  
->  /* Returns the number of read bytes */
->  extern s32 i2c_smbus_read_block_data(const struct i2c_client *client,
-> -				     u8 command, u8 *values);
-> +				     u8 command, void *values);
->  extern s32 i2c_smbus_write_block_data(const struct i2c_client *client,
-> -				      u8 command, u8 length, const u8 *values);
-> +				      u8 command, u8 length,
-> +				      const void *values);
->  /* Returns the number of read bytes */
->  extern s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client,
-> -					 u8 command, u8 length, u8 *values);
-> +					 u8 command, u8 length, void *values);
->  extern s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client,
->  					  u8 command, u8 length,
-> -					  const u8 *values);
-> +					  const void *values);
->  extern s32
->  i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
-> -					  u8 command, u8 length, u8 *values);
-> +					  u8 command, u8 length, void *values);
->  int i2c_get_device_id(const struct i2c_client *client,
->  		      struct i2c_device_identity *id);
->  #endif /* I2C */
+@ drm_put_dev depends on patch exists @
+expression dev;
+@@
 
+- drm_put_dev(dev);
++ drm_dev_unregister(dev);
++ drm_dev_put(dev);
 
+Regards,
+Chuhong
+> > ---
+> >  drivers/gpu/drm/virtio/virtgpu_drv.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > index 0fc32fa0b3c0..fccc24e21af8 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > @@ -138,7 +138,7 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+> >
+> >       drm_dev_unregister(dev);
+> >       virtio_gpu_deinit(dev);
+> > -     drm_put_dev(dev);
+> > +     drm_dev_put(dev);
+> >  }
+> >
+> >  static void virtio_gpu_config_changed(struct virtio_device *vdev)
+> > --
+> > 2.23.0
+> >
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
