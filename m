@@ -2,154 +2,139 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61149C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79203C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAC821783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gdgl6cTD"
+	by mail.kernel.org (Postfix) with ESMTP id 5109A2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573597070;
+	bh=3aPwM7/Buc2TPWA2LaatjIUsl/IROjYtb51Osl3oQ74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KtuKVVaAwmzwSsO16x1YykjCZesLaK8F1LtHtxNFeLD+iteWcqv08GhmiAG+ZSdZt
+	 mcAfS3xFsl2XmFUnEj7OQf5hrWHYHauNhSm8dpdBr+Kb/LQIzKEx/VhCbhL5yTLcJ+
+	 VBaoghedk27DK8uSPc2OvIvOW+zrehUJa+ymXGKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfKLWKk (ORCPT
+        id S1726981AbfKLWRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:10:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28995 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726896AbfKLWKj (ORCPT
+        Tue, 12 Nov 2019 17:17:49 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42201 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLWRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:10:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573596638;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OGswjGzUffihOSl/n5t/dLNRnhblfx+YfOx5kFh8IX4=;
-        b=Gdgl6cTDiCtR86q6mCw5vxMFCY7zEnH9mCvVGwi6Sq9fKTWY3TSMPaN2KHH3T+VWU/Q49t
-        IqviZcH6F9QcwayZx14XfhTc/RZjqDfxVhp8fQYzRpDrvsM4kZB3dp8sFOyFGe78rF9ZXc
-        jri5I+fj/0JPuPmuV7rhtBFQopUebtg=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-qPnCI2psNvWr-rAUDilEYg-1; Tue, 12 Nov 2019 17:10:35 -0500
-Received: by mail-qk1-f197.google.com with SMTP id h80so135170qke.15
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 14:10:35 -0800 (PST)
+        Tue, 12 Nov 2019 17:17:49 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so72650pfh.9;
+        Tue, 12 Nov 2019 14:17:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bYI+fJWrfaTVip21z6+iZIacHnQTlTHn+UZkjofOrJ0=;
-        b=DOxKkG1gMGsgbZyoQtCDLUZhrHkFsKTQ8cI4NNHJhTJZAXLGNRzgm3QOZ7b+ewjeAi
-         bIEWpl02l7WyDNMGVJxwYKkD48grbhYPZ3pltCeWv+QmJrjsuPYtvctJmdjW8aN2XlH3
-         W27xcvUlBUmzXuyBxFIQI1vnreZXtOfL0jO20rWWHD5gA+FnYt7/GNmadDygaj4lU89u
-         boAwNAr4nnodKJt0QyAA7fjvymr0TSWHmWnatoCAtGqd1HXnOP+m0K/hjkDQsjnwswvW
-         1X8pgZYdieX4lDa8cZ1owGkxg7JwvFV2TvUXygLIOqaJI/icmbW8JzER3rmcfZOcd1OZ
-         9BIA==
-X-Gm-Message-State: APjAAAWROWaK5CrnmzV9bE8Q/UfIe1uTWE35BKXBzqrfBwcZeCUp6jcf
-        SoyznF5dHROi2woNrN0eo50HuPS0m0UqVjNPmOG1fChPBKTX0YHLVt2oKjNv9KetkgsPTvGFv76
-        dMFIXqWsjxwCYQLdd/B486lKV
-X-Received: by 2002:ac8:41cc:: with SMTP id o12mr33202589qtm.310.1573596634718;
-        Tue, 12 Nov 2019 14:10:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxtJyW+Mbx1NhfAQ3HEARf8vkQ6SiLwJiZfZFujYl6xkNZFUELs855wc2YOfNBe2HIaIxJO6A==
-X-Received: by 2002:ac8:41cc:: with SMTP id o12mr33202571qtm.310.1573596634433;
-        Tue, 12 Nov 2019 14:10:34 -0800 (PST)
-Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id s44sm140751qts.22.2019.11.12.14.10.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2iN/yehd/2GpguMn0OanzUdHqNojDPjN6OvR1ZyuODs=;
+        b=Z/wZDWSk5mFf89Fb8/3Y0xGC9fssKtTdmeO8keyTIg22H7rlxPLIHMC9LcW0MrFMtU
+         aoONa62BDkTxlUKdrwYrRBXHGPV64cKK1h8QyC88J7qbMTsMqwyj7YwG6/Kdmp59m+F1
+         mU1CxEdu72O4uOEMop4UUHJ6PhCI7izpRrguSAhr54JSqM2uqc2JA4BBHmbL7tdvd+Vz
+         YfcwSkBs2uJD+B2f3y57Ddso3mgq2BerqL/6DVXJqM1F5gJs/o+eTRhbUmHSWd/trZtG
+         n14dvzMfCQU1cbav3DyuR5NQujDemI96/2iM9sk/20YTXAekYsuXZt70dnaqyKEKv3hR
+         PXKw==
+X-Gm-Message-State: APjAAAUu2UK9lWKwakO09ke/ajkyK6WKTdblniJIHB+EJMIij6sH+bdm
+        Uamtswn1JeCCFMVgrVh4miDIYWbu
+X-Google-Smtp-Source: APXvYqzmMph9NtFrykVRKlX9bwLyIRf3sdm0HU9U256KmolyB3mrRD4hWUhyWgMjtQQJGTaDNgBAJw==
+X-Received: by 2002:a63:3f4e:: with SMTP id m75mr37022515pga.392.1573597066577;
+        Tue, 12 Nov 2019 14:17:46 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x20sm21005912pfa.186.2019.11.12.14.17.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 14:10:33 -0800 (PST)
-From:   Laura Abbott <labbott@redhat.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Laura Abbott <labbott@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] tools: gpio: Correctly add make dependencies for gpio_utils
-Date:   Tue, 12 Nov 2019 17:10:26 -0500
-Message-Id: <20191112221026.5859-1-labbott@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 12 Nov 2019 14:17:45 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A6CD8403DC; Tue, 12 Nov 2019 22:17:44 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 22:17:44 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>, Juergen Gross <jgross@suse.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and
+ ia64
+Message-ID: <20191112221744.GN11244@42.do-not-panic.com>
+References: <20191111192258.2234502-1-arnd@arndb.de>
+ <20191112105507.GA7122@lst.de>
+ <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com>
+ <20191112140631.GA10922@lst.de>
 MIME-Version: 1.0
-X-MC-Unique: qPnCI2psNvWr-rAUDilEYg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112140631.GA10922@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 03:06:31PM +0100, Christoph Hellwig wrote:
+> On Tue, Nov 12, 2019 at 02:04:16PM +0100, Daniel Vetter wrote:
+> > Wut ... Maybe I'm missing something, but from how we use mtrr in other
+> > gpu drivers it's a) either you use MTRR because that's all you got or
+> > b) you use pat. Mixing both sounds like a pretty bad idea,
 
-gpio tools fail to build correctly with make parallelization:
+You misread the patch. And indeed there is a bit of complexity involved
+here folks should be aware of as .. well, its been a while.
 
-$ make -s -j24
-ld: gpio-utils.o: file not recognized: file truncated
-make[1]: *** [/home/labbott/linux_upstream/tools/build/Makefile.build:145: =
-lsgpio-in.o] Error 1
-make: *** [Makefile:43: lsgpio-in.o] Error 2
-make: *** Waiting for unfinished jobs....
+A mix of both MTRR and PAT is not effectively done on the code patch for
+the atyb driver. If you have PAT only PAT is used.  If you don't have
+PAT a solution is provided to use MTRR.
 
-This is because gpio-utils.o is used across multiple targets.
-Fix this by making gpio-utios.o a proper dependency.
+The goal of the patch really was to help finally avoid direct calls
+to MTRR. *This* driver was the *one* crazy exception where we needed
+to adddress this with a solution which would work effectively for both
+non-PAT and PAT world which had crazy constraints.
 
-Signed-off-by: Laura Abbott <labbott@redhat.com>
----
-I made a similar fix to iio tools
-lore.kernel.org/r/20191018172908.3761-1-labbott@redhat.com
----
- tools/gpio/Build    |  1 +
- tools/gpio/Makefile | 10 +++++++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+So with this out of the way, no direct calls of MTRRs was possible and
+there are future possible gains with this for x86. The biggest two were:
 
-diff --git a/tools/gpio/Build b/tools/gpio/Build
-index 620c1937d957..4141f35837db 100644
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -1,3 +1,4 @@
-+gpio-utils-y +=3D gpio-utils.o
- lsgpio-y +=3D lsgpio.o gpio-utils.o
- gpio-hammer-y +=3D gpio-hammer.o gpio-utils.o
- gpio-event-mon-y +=3D gpio-event-mon.o gpio-utils.o
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 1178d302757e..6080de58861f 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -35,11 +35,15 @@ $(OUTPUT)include/linux/gpio.h: ../../include/uapi/linux=
-/gpio.h
-=20
- prepare: $(OUTPUT)include/linux/gpio.h
-=20
-+GPIO_UTILS_IN :=3D $(output)gpio-utils-in.o
-+$(GPIO_UTILS_IN): prepare FORCE
-+=09$(Q)$(MAKE) $(build)=3Dgpio-utils
-+
- #
- # lsgpio
- #
- LSGPIO_IN :=3D $(OUTPUT)lsgpio-in.o
--$(LSGPIO_IN): prepare FORCE
-+$(LSGPIO_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- =09$(Q)$(MAKE) $(build)=3Dlsgpio
- $(OUTPUT)lsgpio: $(LSGPIO_IN)
- =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -48,7 +52,7 @@ $(OUTPUT)lsgpio: $(LSGPIO_IN)
- # gpio-hammer
- #
- GPIO_HAMMER_IN :=3D $(OUTPUT)gpio-hammer-in.o
--$(GPIO_HAMMER_IN): prepare FORCE
-+$(GPIO_HAMMER_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- =09$(Q)$(MAKE) $(build)=3Dgpio-hammer
- $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -57,7 +61,7 @@ $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- # gpio-event-mon
- #
- GPIO_EVENT_MON_IN :=3D $(OUTPUT)gpio-event-mon-in.o
--$(GPIO_EVENT_MON_IN): prepare FORCE
-+$(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- =09$(Q)$(MAKE) $(build)=3Dgpio-event-mon
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
---=20
-2.21.0
+  1) Xen didn't have to implement MTRR hypervisor calls out for Linux
+     guests. This means Xen guests don't have to enable MTRRs. Any code
+     path avoiding such craziness as stop_machine() on each CPU during
+     bootup, resume, CPU online and whenever an MTRR is set is a blessing.
 
+  2) We may be closer in the future to getting ioremap_nocache to use
+     UC isntead of UC-, this would be a win. x86 ioremap_nocache() does
+     not use UC (strong UC), it just uses UC-.
+
+Note though that BIOSes can *only* enable UC by using MTRR directly, fan
+control for a system was one use case example that can come up, just as
+an example. Ideally your BIOS won't need this. When and how this is done
+is platform and BIOS specific though. So effectively, if a BIOS enables
+MTRRs the Linux must keep them enabled. If the BIOS disables MTRRs the
+kernel keeps them disabled.
+
+> Can you take a look at "mfd: intel-lpss: Use devm_ioremap_uc for MMIO"
+> in linux-next, which also looks rather fishy to me?  Can't we use
+> the MTRR APIs to override the broken BIOS MTRR setup there as well?
+
+The call there was put to allow precisely for such work around but also
+allow the code to work on PAT / non-PAT systems by using the same API.
+
+> With that we could kill ioremap_uc entirely.
+
+ioremap_uc() is a compromise to avoid direct calls to MTRRs, since
+ioremap_nocache() is not effectively yet using UC. Whether or not
+other archs carry it.
+
+  Luis
