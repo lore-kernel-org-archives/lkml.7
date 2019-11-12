@@ -2,68 +2,66 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1C7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31482196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C69222BD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="hNYMUWW7"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="bsSmf/yN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfKLB2a (ORCPT
+        id S1727564AbfKLB2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:28:30 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34856 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727515AbfKLB2S (ORCPT
+        Mon, 11 Nov 2019 20:28:34 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45170 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbfKLB2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:28:18 -0500
-Received: by mail-wr1-f66.google.com with SMTP id s5so5585825wrw.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 17:28:17 -0800 (PST)
+        Mon, 11 Nov 2019 20:28:17 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z10so11375422wrs.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 17:28:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vW6B7Eil3yaPs+ihFzNbruM8PxcL6P573Ruwltpz7sY=;
-        b=hNYMUWW7kIRXkTR03gukprqxz5YEFs7bQFjhYn2kcgVKUGyhEjc5may6MgzzJMaK4G
-         tggGFOVdlMPEjrNVJoBDiaa6AD3ucDCInrMIJhdP4hh6o3a9umgdhtDQEHfs5MgzU0x6
-         +sWe6F/cmaBS0KAWnugn6EwLkuR6rAPD26Kfg8G3Mj0MMTZLRt14Y8z/PdbUFg3zX+PB
-         /ro6G5tnx5JzIps1ZW5rvtyT2tuHksMsLSjAKRaOrRT68z3/FHHStireMP6YM9iG8IhW
-         IIYVMK+LEHHAufLXVElcP3kRiMrwgm4ksJoUc7m4RBTrH7uYU2vvtTUXbrjk/Z06Uyhb
-         ZPDQ==
+        bh=43uabJPUT25dOEO5aOzHLYV+2M03Vh9B+p0I1Yoebnc=;
+        b=bsSmf/yNh8yeKtUsMJwO5ldjSsro7NNujXe1Lb0ZSrGrEDveo3lM+anI5LxQmh9tkU
+         xFGa4lnE3k5B4sFMGdM+z2sAvuxhwUI0JUzVqIEFXvaD8GsVJ0RWfZBmKKb6Ke31D0Ve
+         0DFOv7UjrqsysBQjobjEhsP5C06e5AOztmReMKt79b/TRH2W4c3aGMJbQJxajrvA6ehf
+         1P88411JmfA1b0kHlAfHmmATshNAZO8eubPUaBFSiRid5TwAlo91y3OiX8S9GoEzJ1PE
+         G1AG39pOCsSI5CD1ieeTUdut4VD32xUjdSg0aXli2PF12IFB4y31uqf0oStOeEZCbzXH
+         nhEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vW6B7Eil3yaPs+ihFzNbruM8PxcL6P573Ruwltpz7sY=;
-        b=NLQK7kqJOQ0u6DwrrPXqybkHuytUvjxmVba7U1B+wuu0Z03MGPkWeOL6CHmFvCzuD6
-         TtJVxbB7Md/p0PcFOa6QiNpoRvfX8fac0pY54Cf4lhlCDbHB/sU0Tcbr8zLhGw/46cy0
-         HkAbDJVfDYNT0g6V7qwqzidQR4JkX9hFXgs09cW4p+YCF2+tm/Xjg5KKSovf6cUn9Ba8
-         ynyWtxj9OD2UNO9DrpV6ic1JR0Ftmy+t7iz4O4s02jOhU+q8r4nlxtC17Noo6IlIC0PF
-         4A413Hvyza1YGtRvGWr0htcWGX2GTyNixg7NKI86nj5qXbssDTXpvZFz9eZewrKW6/m7
-         a1Kw==
-X-Gm-Message-State: APjAAAXwxXQ5ZwIQ4JNQGW0xBHjOQOIL5DAJYx8Z6to410dIFrZ9tv6w
-        gRWCwO8UgQdslYQProMcnHvwkG2lyW8=
-X-Google-Smtp-Source: APXvYqwhcMQdFIeTVvMuAugqGdDK1b42vRhXZHP6MfJPr+rmw5rQ+tDFdxjzazqocbDMX9Pia9Cg8w==
-X-Received: by 2002:a5d:6944:: with SMTP id r4mr22262634wrw.238.1573522096276;
-        Mon, 11 Nov 2019 17:28:16 -0800 (PST)
+        bh=43uabJPUT25dOEO5aOzHLYV+2M03Vh9B+p0I1Yoebnc=;
+        b=p4JmK/mrmLlyU2rADpci3vHXiXPijuenRMQ1lkxVIwbW3EHXDzC1rZRHy3hAh9nvm/
+         VaGvI9webQ1ohnZR0eQWaweVl2gf17uyhogaYVi6jSOi3JC+K8vY37Bsfzk6StjXUtFu
+         8jd3hdOTF2Qp/oMnxY0liFkhUY0Z87rozOqoICYQoKFPD9TTXvjhnhLbDGw47vb1zn9j
+         DTu56OzLdZoTqL3+xfHiTRLcBraPRNsF7asckigGdKAFkDLTkFttb3867OBmLqtSVoG3
+         t9T4S7FmujbXzDVNfEwJ8X0itv58on6Pji+nqFqtAZvwEzI3S3v5gU/P78ouE24Z8Gmt
+         A3nQ==
+X-Gm-Message-State: APjAAAXTlWWFUAl+i+RazJk8v2/qkYhNit9OJmoh3oswlkBsMLDDCy2d
+        ghkhcITJjozyFfPO6uJ44plGmJyWHi4=
+X-Google-Smtp-Source: APXvYqxdFNJhw4386AhAIvdl1WOyFYUNnhcKXoNCjaMYPbdTWeP0Cpwo5MWi4Yvk6ISumy7Gnpk9Pg==
+X-Received: by 2002:a5d:6607:: with SMTP id n7mr10003552wru.133.1573522094941;
+        Mon, 11 Nov 2019 17:28:14 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id u187sm1508096wme.15.2019.11.11.17.28.15
+        by smtp.gmail.com with ESMTPSA id u187sm1508096wme.15.2019.11.11.17.28.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 17:28:15 -0800 (PST)
+        Mon, 11 Nov 2019 17:28:14 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
         Dmitry Safonov <dima@arista.com>,
         Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
         Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Christian Brauner <christian.brauner@ubuntu.com>,
@@ -77,10 +75,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv8 33/34] selftests/timens: Add a simple perf test for clock_gettime()
-Date:   Tue, 12 Nov 2019 01:27:22 +0000
-Message-Id: <20191112012724.250792-34-dima@arista.com>
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCHv8 32/34] selftests/timens: Add timer offsets test
+Date:   Tue, 12 Nov 2019 01:27:21 +0000
+Message-Id: <20191112012724.250792-33-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191112012724.250792-1-dima@arista.com>
 References: <20191112012724.250792-1-dima@arista.com>
@@ -91,163 +90,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+From: Andrei Vagin <avagin@openvz.org>
+
+Check that timer_create() takes into account clock offsets.
 
 Output on success:
-1..4
- ok 1 host:	clock:  monotonic	cycles:	 148323947
- ok 2 host:	clock:   boottime	cycles:	 148577503
- ok 3 ns:	clock:  monotonic	cycles:	 137659217
- ok 4 ns:	clock:   boottime	cycles:	 137959154
- # Pass 4 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
+ 1..3
+ ok 1 clockid=7
+ ok 2 clockid=1
+ ok 3 clockid=9
+ # Pass 3 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
 
 Output with lack of permissions:
- 1..4
- ok 1 host:	clock:  monotonic	cycles:	 145671139
- ok 2 host:	clock:   boottime	cycles:	 146958357
- not ok 3 # SKIP need to run as root
+ 1..3
+ not ok 1 # SKIP need to run as root
 
 Output without support of time namespaces:
- 1..4
- ok 1 host:	clock:  monotonic	cycles:	 145671139
- ok 2 host:	clock:   boottime	cycles:	 146958357
- not ok 3 # SKIP Time namespaces are not supported
+ 1..3
+ not ok 1 # SKIP Time namespaces are not supported
 
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- tools/testing/selftests/timens/.gitignore     |  2 +
- tools/testing/selftests/timens/Makefile       |  3 +-
- tools/testing/selftests/timens/gettime_perf.c | 95 +++++++++++++++++++
- 3 files changed, 99 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/timens/gettime_perf.c
+ tools/testing/selftests/timens/.gitignore |   1 +
+ tools/testing/selftests/timens/Makefile   |   2 +-
+ tools/testing/selftests/timens/timer.c    | 123 ++++++++++++++++++++++
+ 3 files changed, 125 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/timens/timer.c
 
 diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-index 3b7eda8f35ce..16292e4d08a5 100644
+index 94ffdd9cead7..3b7eda8f35ce 100644
 --- a/tools/testing/selftests/timens/.gitignore
 +++ b/tools/testing/selftests/timens/.gitignore
-@@ -1,4 +1,6 @@
+@@ -1,4 +1,5 @@
  clock_nanosleep
-+gettime_perf
-+gettime_perf_cold
  procfs
  timens
- timer
++timer
+ timerfd
 diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index 08164548a49d..6aefcaccb8f4 100644
+index 8a33df7111c4..08164548a49d 100644
 --- a/tools/testing/selftests/timens/Makefile
 +++ b/tools/testing/selftests/timens/Makefile
-@@ -1,6 +1,7 @@
- TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs
-+TEST_GEN_PROGS_EXTENDED := gettime_perf
+@@ -1,4 +1,4 @@
+-TEST_GEN_PROGS := timens timerfd clock_nanosleep procfs
++TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs
  
  CFLAGS := -Wall -Werror -pthread
--LDFLAGS := -lrt
-+LDFLAGS := -lrt -ldl
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/timens/gettime_perf.c b/tools/testing/selftests/timens/gettime_perf.c
+ LDFLAGS := -lrt
+diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
 new file mode 100644
-index 000000000000..7bf841a3967b
+index 000000000000..58a43cb407fb
 --- /dev/null
-+++ b/tools/testing/selftests/timens/gettime_perf.c
-@@ -0,0 +1,95 @@
++++ b/tools/testing/selftests/timens/timer.c
+@@ -0,0 +1,123 @@
 +// SPDX-License-Identifier: GPL-2.0
 +#define _GNU_SOURCE
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <errno.h>
-+#include <fcntl.h>
 +#include <sched.h>
-+#include <time.h>
-+#include <stdio.h>
-+#include <unistd.h>
++
 +#include <sys/syscall.h>
-+#include <dlfcn.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <time.h>
++#include <unistd.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <stdint.h>
++#include <signal.h>
++#include <time.h>
 +
 +#include "log.h"
 +#include "timens.h"
 +
-+typedef int (*vgettime_t)(clockid_t, struct timespec *);
-+
-+vgettime_t vdso_clock_gettime;
-+
-+static void fill_function_pointers(void)
++int run_test(int clockid, struct timespec now)
 +{
-+	void *vdso = dlopen("linux-vdso.so.1",
-+			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-+	if (!vdso)
-+		vdso = dlopen("linux-gate.so.1",
-+			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-+	if (!vdso) {
-+		pr_err("[WARN]\tfailed to find vDSO\n");
-+		return;
++	struct itimerspec new_value;
++	long long elapsed;
++	timer_t fd;
++	int i;
++
++	for (i = 0; i < 2; i++) {
++		struct sigevent sevp = {.sigev_notify = SIGEV_NONE};
++		int flags = 0;
++
++		new_value.it_value.tv_sec = 3600;
++		new_value.it_value.tv_nsec = 0;
++		new_value.it_interval.tv_sec = 1;
++		new_value.it_interval.tv_nsec = 0;
++
++		if (i == 1) {
++			new_value.it_value.tv_sec += now.tv_sec;
++			new_value.it_value.tv_nsec += now.tv_nsec;
++		}
++
++		if (timer_create(clockid, &sevp, &fd) == -1) {
++			if (errno == ENOSYS) {
++				ksft_test_result_skip("Posix Clocks & timers are supported\n");
++				return 0;
++			}
++			return pr_perror("timerfd_create");
++		}
++
++		if (i == 1)
++			flags |= TIMER_ABSTIME;
++		if (timer_settime(fd, flags, &new_value, NULL) == -1)
++			return pr_perror("timerfd_settime");
++
++		if (timer_gettime(fd, &new_value) == -1)
++			return pr_perror("timerfd_gettime");
++
++		elapsed = new_value.it_value.tv_sec;
++		if (abs(elapsed - 3600) > 60) {
++			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
++					      clockid, elapsed);
++			return 1;
++		}
 +	}
 +
-+	vdso_clock_gettime = (vgettime_t)dlsym(vdso, "__vdso_clock_gettime");
-+	if (!vdso_clock_gettime)
-+		pr_err("Warning: failed to find clock_gettime in vDSO\n");
++	ksft_test_result_pass("clockid=%d\n", clockid);
 +
-+}
-+
-+static void test(clock_t clockid, char *clockstr, bool in_ns)
-+{
-+	struct timespec tp, start;
-+	long i = 0;
-+	const int timeout = 3;
-+
-+	vdso_clock_gettime(clockid, &start);
-+	tp = start;
-+	for (tp = start; start.tv_sec + timeout > tp.tv_sec ||
-+			 (start.tv_sec + timeout == tp.tv_sec &&
-+			  start.tv_nsec > tp.tv_nsec); i++) {
-+		vdso_clock_gettime(clockid, &tp);
-+	}
-+
-+	ksft_test_result_pass("%s:\tclock: %10s\tcycles:\t%10ld\n",
-+			      in_ns ? "ns" : "host", clockstr, i);
++	return 0;
 +}
 +
 +int main(int argc, char *argv[])
 +{
-+	time_t offset = 10;
-+	int nsfd;
-+
-+	ksft_set_plan(8);
-+
-+	fill_function_pointers();
-+
-+	test(CLOCK_MONOTONIC, "monotonic", false);
-+	test(CLOCK_MONOTONIC_COARSE, "monotonic-coarse", false);
-+	test(CLOCK_MONOTONIC_RAW, "monotonic-raw", false);
-+	test(CLOCK_BOOTTIME, "boottime", false);
++	int ret, status, len, fd;
++	char buf[4096];
++	pid_t pid;
++	struct timespec btime_now, mtime_now;
 +
 +	nscheck();
++
++	ksft_set_plan(3);
++
++	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
++	clock_gettime(CLOCK_BOOTTIME, &btime_now);
 +
 +	if (unshare_timens())
 +		return 1;
 +
-+	nsfd = open("/proc/self/ns/time_for_children", O_RDONLY);
-+	if (nsfd < 0)
-+		return pr_perror("Can't open a time namespace");
++	len = snprintf(buf, sizeof(buf), "%d %d 0\n%d %d 0",
++			CLOCK_MONOTONIC, 70 * 24 * 3600,
++			CLOCK_BOOTTIME, 9 * 24 * 3600);
++	fd = open("/proc/self/timens_offsets", O_WRONLY);
++	if (fd < 0)
++		return pr_perror("/proc/self/timens_offsets");
 +
-+	if (_settime(CLOCK_MONOTONIC, offset))
-+		return 1;
-+	if (_settime(CLOCK_BOOTTIME, offset))
-+		return 1;
++	if (write(fd, buf, len) != len)
++		return pr_perror("/proc/self/timens_offsets");
 +
-+	if (setns(nsfd, CLONE_NEWTIME))
-+		return pr_perror("setns");
++	close(fd);
++	mtime_now.tv_sec += 70 * 24 * 3600;
++	btime_now.tv_sec += 9 * 24 * 3600;
 +
-+	test(CLOCK_MONOTONIC, "monotonic", true);
-+	test(CLOCK_MONOTONIC_COARSE, "monotonic-coarse", true);
-+	test(CLOCK_MONOTONIC_RAW, "monotonic-raw", true);
-+	test(CLOCK_BOOTTIME, "boottime", true);
++	pid = fork();
++	if (pid < 0)
++		return pr_perror("Unable to fork");
++	if (pid == 0) {
++		ret = 0;
++		ret |= run_test(CLOCK_BOOTTIME, btime_now);
++		ret |= run_test(CLOCK_MONOTONIC, mtime_now);
++		ret |= run_test(CLOCK_BOOTTIME_ALARM, btime_now);
 +
-+	ksft_exit_pass();
-+	return 0;
++		if (ret)
++			ksft_exit_fail();
++		ksft_exit_pass();
++		return ret;
++	}
++
++	if (waitpid(pid, &status, 0) != pid)
++		return pr_perror("Unable to wait the child process");
++
++	if (WIFEXITED(status))
++		return WEXITSTATUS(status);
++
++	return 1;
 +}
++
 -- 
 2.24.0
 
