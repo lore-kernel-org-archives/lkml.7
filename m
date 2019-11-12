@@ -2,27 +2,27 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36A6C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EA5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F32222C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D55222C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfKLQxr (ORCPT
+        id S1727645AbfKLQxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:53:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34510 "EHLO mx1.suse.de"
+        Tue, 12 Nov 2019 11:53:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33964 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727561AbfKLQxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:53:41 -0500
+        id S1727540AbfKLQxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:37 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D00A6AFF0;
-        Tue, 12 Nov 2019 16:53:39 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 57119B0BA;
+        Tue, 12 Nov 2019 16:53:35 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 17/33] powerpc/64s/exception: re-inline some handlers
-Date:   Tue, 12 Nov 2019 17:52:15 +0100
-Message-Id: <9c3642df8f701f3b7027e25debac374b74e6de19.1573576649.git.msuchanek@suse.de>
+Subject: [PATCH 14/33] powerpc/64s/exception: remove the SPR saving patch code macros
+Date:   Tue, 12 Nov 2019 17:52:12 +0100
+Message-Id: <2fd0f0cb35f3632b6f3474860981455b2d15af39.1573576649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
 References: <cover.1573576649.git.msuchanek@suse.de>
@@ -81,45 +81,170 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-The reduction in interrupt entry size allows some handlers to be
-re-inlined.
+These are used infrequently enough they don't provide much help, so
+inline them.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 82 ++++++++++------------------
+ 1 file changed, 28 insertions(+), 54 deletions(-)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 7a234e6d7bf5..9494403b9586 100644
+index 716a95ba814f..abf26db36427 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1186,7 +1186,7 @@ INT_DEFINE_BEGIN(data_access)
- INT_DEFINE_END(data_access)
+@@ -110,46 +110,6 @@ name:
+ #define EXC_HV		1
+ #define EXC_STD		0
  
- EXC_REAL_BEGIN(data_access, 0x300, 0x80)
--	GEN_INT_ENTRY data_access, virt=0, ool=1
-+	GEN_INT_ENTRY data_access, virt=0
- EXC_REAL_END(data_access, 0x300, 0x80)
- EXC_VIRT_BEGIN(data_access, 0x4300, 0x80)
- 	GEN_INT_ENTRY data_access, virt=1
-@@ -1216,7 +1216,7 @@ INT_DEFINE_BEGIN(data_access_slb)
- INT_DEFINE_END(data_access_slb)
+-/*
+- * PPR save/restore macros used in exceptions-64s.S
+- * Used for P7 or later processors
+- */
+-#define SAVE_PPR(area, ra)						\
+-BEGIN_FTR_SECTION_NESTED(940)						\
+-	ld	ra,area+EX_PPR(r13);	/* Read PPR from paca */	\
+-	std	ra,_PPR(r1);						\
+-END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,940)
+-
+-#define RESTORE_PPR_PACA(area, ra)					\
+-BEGIN_FTR_SECTION_NESTED(941)						\
+-	ld	ra,area+EX_PPR(r13);					\
+-	mtspr	SPRN_PPR,ra;						\
+-END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,941)
+-
+-/*
+- * Get an SPR into a register if the CPU has the given feature
+- */
+-#define OPT_GET_SPR(ra, spr, ftr)					\
+-BEGIN_FTR_SECTION_NESTED(943)						\
+-	mfspr	ra,spr;							\
+-END_FTR_SECTION_NESTED(ftr,ftr,943)
+-
+-/*
+- * Set an SPR from a register if the CPU has the given feature
+- */
+-#define OPT_SET_SPR(ra, spr, ftr)					\
+-BEGIN_FTR_SECTION_NESTED(943)						\
+-	mtspr	spr,ra;							\
+-END_FTR_SECTION_NESTED(ftr,ftr,943)
+-
+-/*
+- * Save a register to the PACA if the CPU has the given feature
+- */
+-#define OPT_SAVE_REG_TO_PACA(offset, ra, ftr)				\
+-BEGIN_FTR_SECTION_NESTED(943)						\
+-	std	ra,offset(r13);						\
+-END_FTR_SECTION_NESTED(ftr,ftr,943)
+-
+ /*
+  * Branch to label using its 0xC000 address. This results in instruction
+  * address suitable for MSR[IR]=0 or 1, which allows relocation to be turned
+@@ -278,18 +238,18 @@ do_define_int n
+ 	cmpwi	r10,KVM_GUEST_MODE_SKIP
+ 	beq	89f
+ 	.else
+-BEGIN_FTR_SECTION_NESTED(947)
++BEGIN_FTR_SECTION
+ 	ld	r10,IAREA+EX_CFAR(r13)
+ 	std	r10,HSTATE_CFAR(r13)
+-END_FTR_SECTION_NESTED(CPU_FTR_CFAR,CPU_FTR_CFAR,947)
++END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ 	.endif
  
- EXC_REAL_BEGIN(data_access_slb, 0x380, 0x80)
--	GEN_INT_ENTRY data_access_slb, virt=0, ool=1
-+	GEN_INT_ENTRY data_access_slb, virt=0
- EXC_REAL_END(data_access_slb, 0x380, 0x80)
- EXC_VIRT_BEGIN(data_access_slb, 0x4380, 0x80)
- 	GEN_INT_ENTRY data_access_slb, virt=1
-@@ -1472,7 +1472,7 @@ INT_DEFINE_BEGIN(decrementer)
- INT_DEFINE_END(decrementer)
+ 	ld	r10,PACA_EXGEN+EX_CTR(r13)
+ 	mtctr	r10
+-BEGIN_FTR_SECTION_NESTED(948)
++BEGIN_FTR_SECTION
+ 	ld	r10,IAREA+EX_PPR(r13)
+ 	std	r10,HSTATE_PPR(r13)
+-END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
++END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 	ld	r11,IAREA+EX_R11(r13)
+ 	ld	r12,IAREA+EX_R12(r13)
+ 	std	r12,HSTATE_SCRATCH0(r13)
+@@ -386,10 +346,14 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+ 	SET_SCRATCH0(r13)			/* save r13 */
+ 	GET_PACA(r13)
+ 	std	r9,IAREA+EX_R9(r13)		/* save r9 */
+-	OPT_GET_SPR(r9, SPRN_PPR, CPU_FTR_HAS_PPR)
++BEGIN_FTR_SECTION
++	mfspr	r9,SPRN_PPR
++END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 	HMT_MEDIUM
+ 	std	r10,IAREA+EX_R10(r13)		/* save r10 - r12 */
+-	OPT_GET_SPR(r10, SPRN_CFAR, CPU_FTR_CFAR)
++BEGIN_FTR_SECTION
++	mfspr	r10,SPRN_CFAR
++END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ 	.if \ool
+ 	.if !\virt
+ 	b	tramp_real_\name
+@@ -402,8 +366,12 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+ 	.endif
+ 	.endif
  
- EXC_REAL_BEGIN(decrementer, 0x900, 0x80)
--	GEN_INT_ENTRY decrementer, virt=0, ool=1
-+	GEN_INT_ENTRY decrementer, virt=0
- EXC_REAL_END(decrementer, 0x900, 0x80)
- EXC_VIRT_BEGIN(decrementer, 0x4900, 0x80)
- 	GEN_INT_ENTRY decrementer, virt=1
+-	OPT_SAVE_REG_TO_PACA(IAREA+EX_PPR, r9, CPU_FTR_HAS_PPR)
+-	OPT_SAVE_REG_TO_PACA(IAREA+EX_CFAR, r10, CPU_FTR_CFAR)
++BEGIN_FTR_SECTION
++	std	r9,IAREA+EX_PPR(r13)
++END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
++BEGIN_FTR_SECTION
++	std	r10,IAREA+EX_CFAR(r13)
++END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ 	INTERRUPT_TO_KERNEL
+ 	mfctr	r10
+ 	std	r10,IAREA+EX_CTR(r13)
+@@ -558,7 +526,10 @@ DEFINE_FIXED_SYMBOL(\name\()_common_virt)
+ 	.endif
+ 	beq	101f			/* if from kernel mode		*/
+ 	ACCOUNT_CPU_USER_ENTRY(r13, r9, r10)
+-	SAVE_PPR(IAREA, r9)
++BEGIN_FTR_SECTION
++	ld	r9,IAREA+EX_PPR(r13)	/* Read PPR from paca		*/
++	std	r9,_PPR(r1)
++END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 101:
+ 	.else
+ 	.if IKUAP
+@@ -598,10 +569,10 @@ DEFINE_FIXED_SYMBOL(\name\()_common_virt)
+ 	std	r10,_DSISR(r1)
+ 	.endif
+ 
+-BEGIN_FTR_SECTION_NESTED(66)
++BEGIN_FTR_SECTION
+ 	ld	r10,IAREA+EX_CFAR(r13)
+ 	std	r10,ORIG_GPR3(r1)
+-END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
++END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ 	ld	r10,IAREA+EX_CTR(r13)
+ 	std	r10,_CTR(r1)
+ 	std	r2,GPR2(r1)		/* save r2 in stackframe	*/
+@@ -1696,10 +1667,10 @@ TRAMP_REAL_BEGIN(system_call_kvm)
+ 	  * HMT_MEDIUM. That allows the KVM code to save that value into the
+ 	  * guest state (it is the guest's PPR value).
+ 	  */
+-BEGIN_FTR_SECTION_NESTED(948)
++BEGIN_FTR_SECTION
+ 	mfspr	r10,SPRN_PPR
+ 	std	r10,HSTATE_PPR(r13)
+-END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
++END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 	HMT_MEDIUM
+ 	mfctr	r10
+ 	SET_SCRATCH0(r10)
+@@ -2254,7 +2225,10 @@ denorm_done:
+ 	mtspr	SPRN_HSRR0,r11
+ 	mtcrf	0x80,r9
+ 	ld	r9,PACA_EXGEN+EX_R9(r13)
+-	RESTORE_PPR_PACA(PACA_EXGEN, r10)
++BEGIN_FTR_SECTION
++	ld	r10,PACA_EXGEN+EX_PPR(r13)
++	mtspr	SPRN_PPR,r10
++END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ BEGIN_FTR_SECTION
+ 	ld	r10,PACA_EXGEN+EX_CFAR(r13)
+ 	mtspr	SPRN_CFAR,r10
 -- 
 2.23.0
 
