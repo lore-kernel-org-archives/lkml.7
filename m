@@ -2,98 +2,79 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4C5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DD2C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6927F206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974C52084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfKLCNA (ORCPT
+        id S1727046AbfKLCOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 21:13:00 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:48424 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726965AbfKLCM7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 21:12:59 -0500
-Received: from mr1.cc.vt.edu (junk.cc.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xAC2CwoW012069
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:12:58 -0500
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xAC2Cr8g020667
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:12:58 -0500
-Received: by mail-qv1-f71.google.com with SMTP id bz8so5467129qvb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 18:12:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=polEwBDR8XXLARzNp+HkpzWHOByZmMxX1iuAZdjZWhc=;
-        b=mWJm0IPFxqt3IvDxGIvn+hiTVmKcE7ary1cTeDnWJG6ZFSH1CPNYuOfb0eJbGkxVDV
-         fre0Zg4pl5g/RoRtA9V3nchjzrVPLZAh1zbGnSrhTa+XJUdkuEy6JCh4QDnqtgdqnRa3
-         NVIHAcJ7ixpDDmOwFd0lOgOvFp2d4BnxwC8FvcCgqIMRGqUlGXrA0F6SQgPvg2v9Zql6
-         AZqoYSX/6YBV0lnnZYMFV3/gScVo0vAkpIpSE/z03GsTd9J/tOgiSgnHXmJg/goKum5/
-         mG6s7qrNtq777/h0UaDa2/H9W34j+CNZUJXoKpWsob4pdIwFm7TYYQcOU3A3nmHHbJ94
-         q1bQ==
-X-Gm-Message-State: APjAAAUYDKB+iHnqR/Rp6rQgt3RGLnEnvnf2KOtXqTElARuYqrzj/002
-        of8lVSyrs8NuYRRJQqlY2eSD9vunGHCnnhllhWU1XxjIvvORqKi2EKar9b8nm1qphfriyJXHbRD
-        5AKTIMw8sQn7W5OljgONcPNCIlJQ9xU+jtOc=
-X-Received: by 2002:a05:620a:896:: with SMTP id b22mr12855087qka.386.1573524773447;
-        Mon, 11 Nov 2019 18:12:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwy3ab3YXg8NLEvbLnXy2wX6Wbxx2azYGpPT3/n2YbPGjWD4sfMc09fWFB7AQ+6oEC2HKezhQ==
-X-Received: by 2002:a05:620a:896:: with SMTP id b22mr12855078qka.386.1573524773159;
-        Mon, 11 Nov 2019 18:12:53 -0800 (PST)
-Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id v54sm9150233qtc.77.2019.11.11.18.12.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 18:12:51 -0800 (PST)
-From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
-X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
-To:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
-Subject: [PATCH v3 0/9] staging: exfat: Clean up return codes
-Date:   Mon, 11 Nov 2019 21:12:42 -0500
-Message-Id: <20191112021242.42412-1-Valdis.Kletnieks@vt.edu>
-X-Mailer: git-send-email 2.24.0
+        Mon, 11 Nov 2019 21:14:12 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:35308 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726923AbfKLCOM (ORCPT <rfc822;linux-kernel@vger.kernel.orG>);
+        Mon, 11 Nov 2019 21:14:12 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iULgm-0007WR-Ua; Tue, 12 Nov 2019 10:13:53 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iULgk-0004WR-QV; Tue, 12 Nov 2019 10:13:50 +0800
+Date:   Tue, 12 Nov 2019 10:13:50 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, cyrille.pitchen@atmel.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: Re: [PATCH -next] crypto: atmel - Fix randbuild error
+Message-ID: <20191112021350.qu44becwmwom7ywu@gondor.apana.org.au>
+References: <20191111133901.19164-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111133901.19164-1-yuehaibing@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the oddball return codes with Linux-standard values
+On Mon, Nov 11, 2019 at 09:39:01PM +0800, YueHaibing wrote:
+> If CRYPTO_AUTHENC is m, CRYPTO_DEV_ATMEL_SHA is m, but
+> CRYPTO_DEV_ATMEL_AES is y, building will fails:
+> 
+> drivers/crypto/atmel-aes.o: In function `atmel_aes_authenc_init_tfm':
+> atmel-aes.c:(.text+0x670): undefined reference to `atmel_sha_authenc_get_reqsize'
+> atmel-aes.c:(.text+0x67a): undefined reference to `atmel_sha_authenc_spawn'
+> drivers/crypto/atmel-aes.o: In function `atmel_aes_authenc_setkey':
+> atmel-aes.c:(.text+0x7e5): undefined reference to `atmel_sha_authenc_setkey'
+> 
+> Fix this by moving the selection of CRYPTO_DEV_ATMEL_SHA under
+> CRYPTO_DEV_ATMEL_AES.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 89a82ef87e01 ("crypto: atmel-authenc - add support to...")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Changes since v2:
+This patch shows that moving CRYPTO_AUTHENC over was just papering
+over a real problem.  Applying your patch essentially makes SHA
+the same option as AES.
 
-Fixed the git miscue that left one patch fragment in the wrong commit
-Dropped the patch that added EFSCORRUPTED to errno.h because that method
-won't work on some architectures.
-Rebased to today's staging-next tree.
+What we should do instead is turn DEV_ATMEL_AUTHENC into a bool,
+and then add these to DEV_ATMEL_AES:
 
-Valdis Kletnieks (9):
-  staging: exfat: Clean up return codes - FFS_FORMATERR
-  staging: exfat: Clean up return codes - FFS_MEDIAERR
-  staging: exfat: Clean up return codes - FFS_EOF
-  staging: exfat: Clean up return codes - FFS_INVALIDFID
-  staging: exfat: Clean up return codes - FFS_ERROR
-  staging: exfat: Clean up return codes - remove unused codes
-  staging: exfat: Clean up return codes - FFS_SUCCESS
-  staging: exfat: Collapse redundant return code translations
-  staging: exfat: Correct return code
+	select CRYPTO_AUTHENC if CRYPTO_DEV_ATMEL_AUTHENC
+	select CRYPTO_DEV_ATMEL_SHA if CRYPTO_DEV_ATMEL_AUTHENC
 
- drivers/staging/exfat/exfat.h        |  16 +-
- drivers/staging/exfat/exfat_blkdev.c |  18 +-
- drivers/staging/exfat/exfat_cache.c  |   4 +-
- drivers/staging/exfat/exfat_core.c   | 202 +++++++++---------
- drivers/staging/exfat/exfat_super.c  | 293 +++++++++++----------------
- 5 files changed, 229 insertions(+), 304 deletions(-)
+Could you please do this and repost?
 
+Thanks,
 -- 
-2.24.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
