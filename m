@@ -2,121 +2,161 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AB5C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB3EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A92222BD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1068020650
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:26:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BxRrXJzC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ffJzGMuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfKLO0u (ORCPT
+        id S1727747AbfKLO0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:26:50 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39584 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbfKLO0s (ORCPT
+        Tue, 12 Nov 2019 09:26:40 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49652 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbfKLO0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:26:48 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v138so14915634oif.6
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 06:26:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vOq3Ga6TU7d+OBIVxdc75mj6tT8YQYRdorOOD6OFfXY=;
-        b=BxRrXJzCCx1hIyEvZSBVA0yZXvf4Od5JT6l96C9dyN0qzywU8gAzJY+k+1FXxp5U8b
-         mjqYVSvosbEgInhTINXOvCrJh8KWb8Cq/gr9rEqAPGz2C4d7Q6wn4rqp9tqzAZjAWs82
-         j6Ape7bP7RYA6XvgX0LqZl9CF1t26JVGPpTz8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vOq3Ga6TU7d+OBIVxdc75mj6tT8YQYRdorOOD6OFfXY=;
-        b=g2V1wDS8Ty/gMz9WM/H8gMFHhg+yvWyVKuHoj6+jDtU4haSivZu41tLAhVxRzbz1yG
-         OIAQO200J6UdE/KL98HVNqU1QVR9zH1TY+anh+oc7OHRarm9Y5SAOf6WOQPXzbo3p3Xf
-         Eepc0wpKmfcdxiEycK49xUkpfUULJHocco0RyHCx+OiaMWjz6UqI9zC9JgR/Sksr17Fq
-         tlnuR2AoUjqTxnvLsNK0oT5qLEcvuWoFE33FK2o0t9obLBx7X0AoaNfpsqD0Y3ZRndmO
-         1EDIdbe53C4UdIcn+NRZAo70klMUCOYY07Lks6G+q1o2MlI736+LwiFwyCba/xAt6a5i
-         TIBQ==
-X-Gm-Message-State: APjAAAX/3FsZisXy3Zd/5R2OaQ39/vPHMbf26XmRpqNv+YKKlmjf/z0M
-        6xfcuiAoHfOwf4EscqmEii8xKVfU2nbZtRNx6/OEqA==
-X-Google-Smtp-Source: APXvYqzxht4Kq/NUweMLOm8iFPqZy+ybMvdqrPmbR2Vb2ZUVHK8mNb/HzPnUuK+o0IXo9qRHecPgclqQzte2uFHRgyY=
-X-Received: by 2002:aca:ead7:: with SMTP id i206mr4359423oih.128.1573568807592;
- Tue, 12 Nov 2019 06:26:47 -0800 (PST)
+        Tue, 12 Nov 2019 09:26:38 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEQWBd090825;
+        Tue, 12 Nov 2019 08:26:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573568792;
+        bh=gpv+haEFzzKdzy9mhyYEcsJmcwqJdZynv2MIZuwV8kA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ffJzGMukJRIBh55FUrs/B+aUsWIiBuaDmy8oH9zgDQodOVDLFCWzR35hRoYjfVhEn
+         7h0MXEDqCNU+z3Y+saVvh0Q2O0vktYpu88Ul2kFXVafYbv1P2n8K2mUQxSgkzLtgMC
+         3cTtDI/V9UdgCOg8RbOTTIZH9wHeGMmAf6Ygc/j4=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEQWMA014358
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 08:26:32 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 08:26:14 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 08:26:14 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEQUtu040290;
+        Tue, 12 Nov 2019 08:26:31 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 1/3] ARM: dts: am43xx: add support for clkout1 clock
+Date:   Tue, 12 Nov 2019 08:29:27 -0600
+Message-ID: <20191112142929.23058-2-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191112142929.23058-1-bparrot@ti.com>
+References: <20191112142929.23058-1-bparrot@ti.com>
 MIME-Version: 1.0
-References: <20191111192258.2234502-1-arnd@arndb.de> <20191112105507.GA7122@lst.de>
- <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com> <20191112140631.GA10922@lst.de>
-In-Reply-To: <20191112140631.GA10922@lst.de>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 12 Nov 2019 15:26:35 +0100
-Message-ID: <CAKMK7uFaA607rOS6x_FWjXQ2+Qdm8dQ1dQ+Oi-9if_Qh_wHWPg@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and ia64
-To:     Christoph Hellwig <hch@lst.de>, Tuowen Zhao <ztuowen@gmail.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Roman Gilg <subdiff@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Luis R. Rodriguez" <mcgrof@suse.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 3:06 PM Christoph Hellwig <hch@lst.de> wrote:
-> On Tue, Nov 12, 2019 at 02:04:16PM +0100, Daniel Vetter wrote:
-> > Wut ... Maybe I'm missing something, but from how we use mtrr in other
-> > gpu drivers it's a) either you use MTRR because that's all you got or
-> > b) you use pat. Mixing both sounds like a pretty bad idea, since if
-> > you need MTRR for performance (because you dont have PAT) then you
-> > can't fix the wc with the PAT-based ioremap_uc. And if you have PAT,
-> > then you don't really need an MTRR to get wc.
-> >
-> > So I'd revert this patch from Luis and ...
->
-> Sounds great to me..
->
-> > ... apply this one. Since the same reasoning should apply to anything
-> > that's running on any cpu with PAT.
->
-> Can you take a look at "mfd: intel-lpss: Use devm_ioremap_uc for MMIO"
-> in linux-next, which also looks rather fishy to me?  Can't we use
-> the MTRR APIs to override the broken BIOS MTRR setup there as well?
+From: Tero Kristo <t-kristo@ti.com>
 
-Hm so that's way out of my knowledge, but I think mtrr_cleanup() was
-supposed to fix up messy/broken MTRR setups by the bios. So maybe they
-simply didn't enable that in their .config with CONFIG_MTRR_SANITIZER.
+clkout1 clock node and its generation tree was missing. Add this based
+on the data on TRM and PRCM functional spec.
 
-An explicit cleanup is currently not possible for drivers, since the
-only interface exported to drivers is arch_phys_wc_add/del (which
-short-circuits if pat works since you don't need mtrr in that case).
-Adding everyone from that commit, plus Luis. Drivers really shouldn't
-assume/work around the bios setting up superflous/wrong MTRR.
+commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
+reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
+clkout1 clock") which is needed for the ov2659 camera sensor clock
+definition hence it is being re-applied here.
 
-> With that we could kill ioremap_uc entirely.
+Note that because of the current dts node name dependency for mapping to
+clock domain, we must still use "clkout1-*ck" naming instead of generic
+"clock@" naming for the node. And because of this, it's probably best to
+apply the dts node addition together along with the other clock changes.
 
-So yeah removing that seems definitely like the right thing.
--Daniel
+Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Tested-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index 091356f2a8c1..c726cd8dbdf1 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -704,6 +704,60 @@
+ 		ti,bit-shift = <8>;
+ 		reg = <0x2a48>;
+ 	};
++
++	clkout1_osc_div_ck: clkout1-osc-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&sys_clkin_ck>;
++		ti,bit-shift = <20>;
++		ti,max-div = <4>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
++			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
++			 <&dpll_mpu_m2_ck>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_mux_ck>;
++		ti,bit-shift = <4>;
++		ti,max-div = <8>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_pre_div_ck>;
++		ti,bit-shift = <8>;
++		ti,max-div = <32>;
++		ti,index-power-of-two;
++		reg = <0x4100>;
++	};
++
++	clkout1_mux_ck: clkout1-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
++			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
++		ti,bit-shift = <16>;
++		reg = <0x4100>;
++	};
++
++	clkout1_ck: clkout1-ck {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&clkout1_mux_ck>;
++		ti,bit-shift = <23>;
++		reg = <0x4100>;
++	};
+ };
+ 
+ &prcm {
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.17.1
+
