@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EAEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C8FC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C10D20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB07620650
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfKLJee (ORCPT
+        id S1727473AbfKLJef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:34:34 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6205 "EHLO huawei.com"
+        Tue, 12 Nov 2019 04:34:35 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6206 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727171AbfKLJe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:34:27 -0500
+        id S1727302AbfKLJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:34:29 -0500
 Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CF1CF6C0DA9CB716FA85;
+        by Forcepoint Email with ESMTP id D3AB48A5A483CEA67AAB;
         Tue, 12 Nov 2019 17:34:24 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
@@ -31,9 +31,9 @@ CC:     <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
         <linux-kernel@vger.kernel.org>,
         Xiang Chen <chenxiang66@hisilicon.com>,
         "John Garry" <john.garry@huawei.com>
-Subject: [PATCH 3/4] scsi: hisi_sas: Relocate call to hisi_sas_debugfs_exit()
-Date:   Tue, 12 Nov 2019 17:30:58 +0800
-Message-ID: <1573551059-107873-4-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 1/4] scsi: hisi_sas: Check sas_port before using it
+Date:   Tue, 12 Nov 2019 17:30:56 +0800
+Message-ID: <1573551059-107873-2-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1573551059-107873-1-git-send-email-john.garry@huawei.com>
 References: <1573551059-107873-1-git-send-email-john.garry@huawei.com>
@@ -48,44 +48,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiang Chen <chenxiang66@hisilicon.com>
 
-Currently we call function hisi_sas_debugfs_exit() to remove debugfs_dir
-before freeing interrupt irqs and destroying workqueue in the driver
-remove path.
-
-If a dump is triggered before function hisi_sas_debugfs_exit() but
-debugfs_work may be called after it, so it may refer to already removed
-debugfs_dir which will cause NULL pointer dereference.
-
-To avoid it, put function hisi_sas_debugfs_exit() after free_irqs and
-destroy workqueue when removing hisi_sas driver.
+Need to check the structure sas_port before using it.
 
 Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index b7836406debe..bf5d5f138437 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3302,8 +3302,6 @@ static void hisi_sas_v3_remove(struct pci_dev *pdev)
- 	struct hisi_hba *hisi_hba = sha->lldd_ha;
- 	struct Scsi_Host *shost = sha->core.shost;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 18c95b33592b..c72fc59353bd 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -974,12 +974,13 @@ static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy)
+ 	struct hisi_hba *hisi_hba = sas_ha->lldd_ha;
+ 	struct hisi_sas_phy *phy = sas_phy->lldd_phy;
+ 	struct asd_sas_port *sas_port = sas_phy->port;
+-	struct hisi_sas_port *port = to_hisi_sas_port(sas_port);
++	struct hisi_sas_port *port;
+ 	unsigned long flags;
  
--	hisi_sas_debugfs_exit(hisi_hba);
--
- 	if (timer_pending(&hisi_hba->timer))
- 		del_timer(&hisi_hba->timer);
+ 	if (!sas_port)
+ 		return;
  
-@@ -3315,6 +3313,7 @@ static void hisi_sas_v3_remove(struct pci_dev *pdev)
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
- 	hisi_sas_free(hisi_hba);
-+	hisi_sas_debugfs_exit(hisi_hba);
- 	scsi_host_put(shost);
- }
- 
++	port = to_hisi_sas_port(sas_port);
+ 	spin_lock_irqsave(&hisi_hba->lock, flags);
+ 	port->port_attached = 1;
+ 	port->id = phy->port_id;
 -- 
 2.17.1
 
