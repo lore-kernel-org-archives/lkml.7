@@ -2,143 +2,137 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B65C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E534AC17447
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB35521925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lfF3K+xv"
+	by mail.kernel.org (Postfix) with ESMTP id C10B02196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfKLBW2 (ORCPT
+        id S1726960AbfKLB0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:22:28 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57026 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfKLBW1 (ORCPT
+        Mon, 11 Nov 2019 20:26:07 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7012 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726924AbfKLB0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:22:27 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAC1JTn4192249;
-        Tue, 12 Nov 2019 01:20:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=lt7kkzcvr2Zm1WF2FX3Ksi0MjcHQEjcfJJDJewsWcYI=;
- b=lfF3K+xvXBRLhyzLBdNEzLgWiDXdCo5FUt/15WHATTk/4qf5I+/lhhYXKuGLEkm9B1PN
- 3pZvv5XkvrJ5z0yII2YehD4yLk0tXPyazpdHM4+j61lIlFKLp8v7x+mbpFxpIr5viMkQ
- B2l/HId1bpd27on/Eo643KO3VuuW2JP2kaA9OuvvaXgBCkJYQIjwD/+wFAOgaSxbLzQy
- lVgd5ejB+QAgki41orPc8rKFs9FcFHmylS/jI44E1P95vRpGDFWmSTfPZIzBXn8S7ovZ
- vNTi8KShws8rLkwXpFU/AvWqJRkU6b7kbQOmZ1Q+6zIy0xospzde6AalavXAP0YjvDzE yA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2w5ndq1jmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 01:20:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAC1JTJM180457;
-        Tue, 12 Nov 2019 01:20:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2w67kmu553-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 01:20:42 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAC1KdN4027423;
-        Tue, 12 Nov 2019 01:20:39 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Nov 2019 17:20:39 -0800
-Date:   Mon, 11 Nov 2019 17:20:37 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 1/2] fs: Clean up mapping variable
-Message-ID: <20191112012037.GU6219@magnolia>
-References: <20191112003452.4756-1-ira.weiny@intel.com>
- <20191112003452.4756-2-ira.weiny@intel.com>
+        Mon, 11 Nov 2019 20:26:07 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAC1HKno023981;
+        Mon, 11 Nov 2019 20:25:50 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7jpagevg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 20:25:50 -0500
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xAC1JJbc027854;
+        Mon, 11 Nov 2019 20:25:49 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7jpagevb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 20:25:49 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAC1LAHd026975;
+        Tue, 12 Nov 2019 01:25:53 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 2w5n36afqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 01:25:52 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAC1PkUs50725354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 01:25:46 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1AF6AC05B;
+        Tue, 12 Nov 2019 01:25:46 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF725AC059;
+        Tue, 12 Nov 2019 01:25:41 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 01:25:41 +0000 (GMT)
+Subject: Re: [PATCH v1 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
+To:     amirmizi6@gmail.comg, Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
+        amir.mizinski@nuvoton.com
+References: <20191110162137.230913-1-amirmizi6@gmail.com>
+ <20191110162137.230913-4-amirmizi6@gmail.com>
+ <20191110180010.xyvv4gf6jiqyrac3@cantor>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <3214005f-740b-46a8-7c0b-db96b63cd6f3@linux.ibm.com>
+Date:   Mon, 11 Nov 2019 20:25:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112003452.4756-2-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911120009
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911120009
+In-Reply-To: <20191110180010.xyvv4gf6jiqyrac3@cantor>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 04:34:51PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The mapping variable is not directly used in these functions.  Just
-> remove the additional variable.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  fs/f2fs/data.c      | 3 +--
->  fs/iomap/swapfile.c | 3 +--
->  2 files changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index ba3bcf4c7889..3c7777bfae17 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -3146,8 +3146,7 @@ int f2fs_migrate_page(struct address_space *mapping,
->  /* Copied from generic_swapfile_activate() to check any holes */
->  static int check_swap_activate(struct file *swap_file, unsigned int max)
->  {
-> -	struct address_space *mapping = swap_file->f_mapping;
-> -	struct inode *inode = mapping->host;
-> +	struct inode *inode = swap_file->f_mapping->host;
->  	unsigned blocks_per_page;
->  	unsigned long page_no;
->  	unsigned blkbits;
-> diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
-> index a648dbf6991e..80571add0180 100644
-> --- a/fs/iomap/swapfile.c
-> +++ b/fs/iomap/swapfile.c
-> @@ -140,8 +140,7 @@ int iomap_swapfile_activate(struct swap_info_struct *sis,
->  		.sis = sis,
->  		.lowest_ppage = (sector_t)-1ULL,
->  	};
-> -	struct address_space *mapping = swap_file->f_mapping;
-> -	struct inode *inode = mapping->host;
-> +	struct inode *inode = swap_file->f_mapping->host;
+On 11/10/19 1:00 PM, Jerry Snitselaar wrote:
+> On Sun Nov 10 19, amirmizi6@gmail.com wrote:
+>> From: Amir Mizinski <amirmizi6@gmail.com>
+>>
+>> using this function while read/write data resulted in aborted operation.
+>> after investigating according to TCG TPM Profile (PTP) Specifications,
+>> i found cancel should happen only if TPM_STS.commandReady bit is lit
+>> and couldn't find a case when the current condition is valid.
+>> also only cmdReady bit need to be compared instead of the full lower 
+>> status register byte.
+>>
+>> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+>> ---
+>> drivers/char/tpm/tpm_tis_core.c | 12 +-----------
+>> 1 file changed, 1 insertion(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/char/tpm/tpm_tis_core.c 
+>> b/drivers/char/tpm/tpm_tis_core.c
+>> index ce7f8a1..9016f06 100644
+>> --- a/drivers/char/tpm/tpm_tis_core.c
+>> +++ b/drivers/char/tpm/tpm_tis_core.c
+>> @@ -627,17 +627,7 @@ static int probe_itpm(struct tpm_chip *chip)
+>>
+>> static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
+>> {
+>> -    struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>> -
+>> -    switch (priv->manufacturer_id) {
+>> -    case TPM_VID_WINBOND:
+>> -        return ((status == TPM_STS_VALID) ||
+>> -            (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
+>> -    case TPM_VID_STM:
+>> -        return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+>
+> Stefan were these cases you found that were deviating from the spec? 
+> Wondering
+> if dropping these will cause issues for these devices.
 
-For the iomap part,
 
-Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
+I believe these devices needed special handling of the status register 
+as they didn't behave as the 'other' devices, so I would expect issues.
 
---D
+    Stefan
 
->  	loff_t pos = 0;
->  	loff_t len = ALIGN_DOWN(i_size_read(inode), PAGE_SIZE);
->  	loff_t ret;
-> -- 
-> 2.20.1
-> 
