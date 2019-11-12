@@ -2,219 +2,108 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F666C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C556BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B4D2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573588105;
-	bh=RT5+HBJOQegpC4XyCnNkopfYqc0pI+KQQAN8cY3Gm2o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=le8pAIw+4tpEug2WtOSSVywjDcKk3pYlgsEki7IRI7PXtP0xf7ZcRgTV9T1ioDuL8
-	 Ag0KWbAmfPttgCLvJL9xrYK32JKteQHLNc5jrRAZWWuVPMSU6oJyJuUAniIzqnH0DE
-	 mHuJg0mRQUAJ0sP74a7wVkwTUpx69yQprKwKM6zw=
+	by mail.kernel.org (Postfix) with ESMTP id 8CE292067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:51:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="pEYpkLyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfKLTsY (ORCPT
+        id S1726953AbfKLTvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:48:24 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44123 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfKLTsX (ORCPT
+        Tue, 12 Nov 2019 14:51:42 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43018 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfKLTvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:48:23 -0500
-Received: by mail-lj1-f196.google.com with SMTP id g3so19162439ljl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:48:21 -0800 (PST)
+        Tue, 12 Nov 2019 14:51:42 -0500
+Received: by mail-io1-f67.google.com with SMTP id c11so20097457iom.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:51:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KgHAQu7q0hm2Jv+kZ/rgn9kx8R73GBFOOYAXZwlwBjs=;
-        b=Ycf3JkS+jGUVRsZr8w99fixozLYf51BvrU3zaMhrBAR16NGapJ8VQPu8ncSdGpa2IK
-         hSapVFPjSIPqZMiUTF5hiodE5GC4J7qwEURg2JPonVhonpNSsAzqypUdoKPrevU0G7NL
-         J/9K8p70fU365uvj8fxUZZXUHB/YXKCut7YO8=
+        bh=tQtqMeot5LfcVlTdgWDwSqRbJuRC50V8XvcHZihKGG8=;
+        b=pEYpkLyPH+Q301rHLJ8Kvnr1eTMi+fysebKB+dV0aT8wS7OK9njRbyWt/OrGymCl26
+         umQA5eJMRUGkAWMAD9HqWTXO0tL7O5cc4/kAv0cQym46SDDK5P/c5WO6LrtRUyaBZ0Im
+         +eKm0u8JWcvAvBOPhf8MRwz14xkTkpnvC8Qq48xE3cAeaO5LfRSxWUkFZv/pC56ZVBCB
+         KJC59nIid7tWaNHwK058GuJ3QNCeKOBnuk5QXDA+n6Wrg8DFpNid3/Vl6wcLKGLP3XEY
+         deqJB+1/H1SJOdawKdpBI2bm5dUEmTg2VWnWmkbiIWoPfj/8ds46/h9mY3N2IdB3gGzP
+         fRHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KgHAQu7q0hm2Jv+kZ/rgn9kx8R73GBFOOYAXZwlwBjs=;
-        b=KdpkSo6pNkJIqzKstLlsNw8wuxZ5gam/I+0zG9p67qMzQWfrUzCAzuXgBO/CUFf8od
-         fYpz6AYOK2wGMV7wavnXDizesWp+BoqSATn5yHZ4mZXwrGnWYA8jLPebkoJeWB5LdjK5
-         rxrIaZIR6mgkI36R5eeKjebl9Gz5wD1Q/G7jLvlmvHTWqXDeuL2TQYAXDxkPDdteFrMb
-         2pcW6IObrJcM7rlNNAx4WcJ+ukxLMVhFXrRU48rZNV8dJ21a+ExoKqixvhJvVritFxcq
-         FLhLnCJd/xL0H+frihBiScYLU4OclGFu5mvHZZewRyh7iXqy01a592T/TlGoATFGkA6r
-         sDhw==
-X-Gm-Message-State: APjAAAX9HP1FlAoSxpWxnQFBAFWcmWCxnBE8Q6ZeUkPi2lN+efbpnbyN
-        b+FXvy52V3A2nxQV7H0ZIyBgFGib5AI=
-X-Google-Smtp-Source: APXvYqwnWffrYZaGfDliSefX5mwJ94UX+BZcqWSRg4Ff9UB7hWc6+Da1eE94cGPBJXwwVg2H22OB0A==
-X-Received: by 2002:a2e:8608:: with SMTP id a8mr21782184lji.172.1573588099439;
-        Tue, 12 Nov 2019 11:48:19 -0800 (PST)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id k186sm9140627lfd.64.2019.11.12.11.48.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 11:48:18 -0800 (PST)
-Received: by mail-lf1-f49.google.com with SMTP id z12so13844947lfj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:48:17 -0800 (PST)
-X-Received: by 2002:a19:c790:: with SMTP id x138mr21100386lff.61.1573588097381;
- Tue, 12 Nov 2019 11:48:17 -0800 (PST)
+        bh=tQtqMeot5LfcVlTdgWDwSqRbJuRC50V8XvcHZihKGG8=;
+        b=khTeyGJI4y5u1b8wGnkWgJoxrCQfEC3PcZHDIIKbnT08JtADz6XgeuDxcz6fc4Cozl
+         LXakgxCBQfVjr2vpY1OXpTV1dQYXjdO8GSr9pyXnjRheN7xPbL6el5OMs02idKqNT+Ds
+         +62xNIU7SRgA1CyKOMTf0J67Ysj5I9Alc0xhg6XntFy58dpMIA/hKejyFhJQpZmWnus0
+         bN8LMw3LZbEfA8aaj2fp7s2GZHW8vFCvahDCCeneV6KKZa8nTjhbzXvJfRfTlW3U4EVn
+         bFq7NDtsHe8vcr7Tn4b0gzvzXdyswJZWp8ahzXHsqsTGBVdrxZRFOdHkOApGjdWe7HeA
+         w3zQ==
+X-Gm-Message-State: APjAAAUxfWnAEedmw7EruYGv3bKrmDnqP0My6AEyJoECw0J7KYmj1L0F
+        2o1j5eTYcJZ2Jfnn+7lBQxNlkTnd0VxVPdzs3nm1NA==
+X-Google-Smtp-Source: APXvYqyQOcsKXkFC659627snfUO6v31s9OzLfN/tzsdHnX9psDit7p0+mxKJy9k82P8pcz2Sjh8jBms8VFvs8Iz5ECo=
+X-Received: by 2002:a02:9f12:: with SMTP id z18mr7536892jal.10.1573588301333;
+ Tue, 12 Nov 2019 11:51:41 -0800 (PST)
 MIME-Version: 1.0
-References: <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
- <Pine.LNX.4.44L0.1911121400200.1567-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1911121400200.1567-100000@iolanthe.rowland.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 12 Nov 2019 11:47:59 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjGd0Ce2xadkiErPWxVBT2mhyeZ4TKyih2sJwyE3ohdHw@mail.gmail.com>
-Message-ID: <CAHk-=wjGd0Ce2xadkiErPWxVBT2mhyeZ4TKyih2sJwyE3ohdHw@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+References: <20191111004211.96425-1-olof@lixom.net> <20191111.214658.1031500406952713920.davem@redhat.com>
+ <20191112132311.GA5090@lunn.ch>
+In-Reply-To: <20191112132311.GA5090@lunn.ch>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 12 Nov 2019 11:51:29 -0800
+Message-ID: <CAOesGMiCKYVjf+-uyU-NeFiXmsL_26OG9k5W7geCPY-aAB-8ow@mail.gmail.com>
+Subject: Re: [PATCH] net: mdio-octeon: Fix pointer/integer casts
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     David Miller <davem@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:14 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+On Tue, Nov 12, 2019 at 5:23 AM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> One could be the thing you brought up earlier: Suppose the compiler
-> decides to use the "write only if changed" transformation, so that the
-> code generated for the sticky write:
+> On Mon, Nov 11, 2019 at 09:46:58PM -0800, David Miller wrote:
+> > From: Olof Johansson <olof@lixom.net>
+> > Date: Sun, 10 Nov 2019 16:42:11 -0800
+> >
+> > > -static inline void oct_mdio_writeq(u64 val, u64 addr)
+> > > +static inline void oct_mdio_writeq(u64 val, void __iomem *addr)
+> > >  {
+> > > -   cvmx_write_csr(addr, val);
+> > > +   cvmx_write_csr((u64)addr, val);
+> > >  }
+> >
+> > I hate stuff like this, I think you really need to fix this from the bottom
+> > up or similar.  MMIO and such addresses are __iomem pointers, period.
 >
->         x = 1;
+> Yes, i agree, but did not want to push the work to Olof. The point of
+> COMPILE_TEST is to find issues like this, code which should be
+> architecture independent, but is not. The cast just papers over the
+> cracks.
 >
-> ends up being what you would expect to see for:
->
->         if (x != 1)
->                 x = 1;
+> At a minimum, could we fix the stub cvmx_write_csr() used for
+> everything !MIPS. That should hopefully fix everything !MIPS, but
+> cause MIPS to start issuing warning. The MIPS folks can then cleanup
+> their code, which is really what is broken here.
 
-That is exactly the kind of  crap that would make me go "use the flag
-to disable that invalid optimization, or don't use the compiler".
+I'm not disagreeing with Dave, going all the way down the rabbit hole
+is preferred. In this case I mostly pushed the lack of __iomem usage
+down one layer but not the whole way.
 
-We already do -param=allow-store-data-races=0
+I'm unlikely to find time to do it in the near future myself (this was
+a bit of a weekend drive-by from my side), but I don't mind doing it.
+If someone else beats me to it, feel free to take it over.
 
-The C standards body sadly has a very bad track record on this kind of
-thing, where they have allowed absolutely insane extensions of "that's
-undefined" in the name of making C a much worse language (they say "to
-compete with Fortran", but it's the same thing).
 
-I have talked to some people who have tried to change that course, but
-they are fed up with the standards body too, and it's fighting
-windmills.
-
-Which is why I don't even  bother. The C standard language-lawyering
-is simply not interesting to me. Yes, there are too many people who do
-it, and I don't care.
-
-For the kernel, we basically do not accept "that's undefined behavior,
-I might generate odd code".
-
-If the compiler can statitcally give an error for it, then that's one
-thing, and we'd be ok with that. But the kind of mindset where people
-think it's ok to have the compiler read the standard cross-eyed and
-change the obvious meaning of the code "because it's undefined
-behavior" is to me a sign of a cn incompetent compiler writer, and I
-am not at all interested in playing that game.
-
-Seriously.
-
-I wish somebody on the C standard had the back-bone to say "undefined
-behavior is not acceptable", and just say that the proper
-optimizations are ones where you transform the code the obvious
-straightforward way, and then you only do optimizations that are based
-on that code and you can prove do not change semantics.
-
-You can't add reads that weren't there.
-
-But you can look at code that did a read, and then wrote back what you
-can prove is the same value, and say "that write is redundant, just
-looking at the code".
-
-See the difference?
-
-One approach makes up shit. The other approach looks at the code AS
-WRITTEN and can prove "that's stupid, I can do it better, and I can
-show why it makes no difference".
-
-So you can change "i++; i++;" to "i +=2", even if "i" is not a private
-variable. Did that remove a write? Yes it did. But it really falls
-under the "I just improved on the code".
-
-But you can *not* do the insane things that type-based aliasing do
-(lack the "prove it's the same" part).
-
-Because when we notice that in the kernel, we turn it off. It's why we have
-
- -fno-strict-overflow
- -fno-merge-all-constants
- -fno-strict-aliasing
- -fno-delete-null-pointer-checks
- --param=allow-store-data-races=0
-
-and probably others. Because the standard is simply wrong when you
-care about reliability.
-
-> But what about C11 relaxed atomic reads and writes?
-
-Again, I'm not in the least interested in the C11 standard
-language-lawyering, because it has shown itself to not be useful.
-
-Stop bringing up the "what if" cases. They aren't interesting. If a
-compiler turns a single write into some kind of conditional write, or
-if the compiler creates dummy writes, the compiler is garbage. No
-amount of "but but but C11" is at all relevant.
-
-What a compiler can do is:
-
- - generate multiple (and speculative) reads
-
- - combine writes to the same location (non-speciulatively)
-
- - take advantage of actual reads in the source code to do
-transformations that are obvious (ie "oh, you read value X, you tested
-by Y was set, now you write it back again, but clearly the value
-didn't change so I can avoid the write").
-
-so yes, a compiler can remove a _redundant_ write, and if the SOURCE
-CODE has the read in it and the compiler decides "Oh, I already know
-it has that value" then that's one thing.
-
-But no, the compiler can not add data races that weren't there in the
-source code and say "but C11". We're not compiling to the standard.
-We're compiling to the real world.
-
-So if the compiler just adds its own reads, I don't want to play with
-that compiler. It may be appropriate in situations where we don't have
-threads, we don't have security issues, and we don't have various
-system and kernel concerns, but it's not appropriate for a kernel.
-
-It really is that simple.
-
-This is in no way different from other language lawyering, ie the
-whole "signed arithmetic overflows are undefined, so i can do
-optimization X" or "I can silently remove the NULL pointer check
-because you accessed it before and that invoced undefined behavior, so
-now I can do anthing".
-
-Those optimizations may be valid in other projects. They are not valid
-for the kernel.
-
-Stop bringing them up. They are irrelevant. We will keep adding the
-options to tell the compiler "no, we're not your toy benchmark, we do
-real work, and that optimization is dangerous".
-
-              Linus
+-Olof
