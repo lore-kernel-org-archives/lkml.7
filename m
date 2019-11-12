@@ -2,549 +2,196 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498FFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F4BC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1587521D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0342084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573576322;
+	bh=f3V0/6R2peL9mIGNYcS931O9JAJBqXRsLF87rSbcpHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yMrIZfRJdOyVMk1CTpOT/bzRZocmAmyDW8PT1twbc+VQZGgw7A1TBJFYdw2/fZ5qh
+	 0dHySO/22lAdQ5pSWVQqjVNkDysxnQDn0N/jkdSg++LpJlvd43i78RORh9wTrgASvt
+	 al18ubXf5wsyK5HhIfy7DGpT/+6wqr70XpevAtn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfKLQbH (ORCPT
+        id S1727152AbfKLQcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:31:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726799AbfKLQbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:31:06 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C18242067B;
-        Tue, 12 Nov 2019 16:31:04 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 11:31:02 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v3] tracing: Introduce trace event injection
-Message-ID: <20191112113102.0ffc883c@gandalf.local.home>
-In-Reply-To: <20190904211456.31204-1-xiyou.wangcong@gmail.com>
-References: <20190904211456.31204-1-xiyou.wangcong@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 12 Nov 2019 11:32:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49312 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726799AbfKLQcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:32:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5A5E8B2D8;
+        Tue, 12 Nov 2019 16:31:58 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 17:31:56 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>, Qian Cai <cai@lca.pw>,
+        akpm@linux-foundation.org, guro@fb.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
+Message-ID: <20191112163156.GB512@dhcp22.suse.cz>
+References: <20191108204407.1435-1-cai@lca.pw>
+ <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
+ <20191111130516.GA891635@chrisdown.name>
+ <20191111131427.GB891635@chrisdown.name>
+ <20191111132812.GK1396@dhcp22.suse.cz>
+ <20191112145942.GA168812@cmpxchg.org>
+ <20191112152750.GA512@dhcp22.suse.cz>
+ <20191112161658.GF168812@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112161658.GF168812@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 12-11-19 11:16:58, Johannes Weiner wrote:
+> On Tue, Nov 12, 2019 at 04:27:50PM +0100, Michal Hocko wrote:
+> > On Tue 12-11-19 06:59:42, Johannes Weiner wrote:
+> > > Qian, thanks for the report and the fix.
+> > > 
+> > > On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
+> > > > On Mon 11-11-19 13:14:27, Chris Down wrote:
+> > > > > Chris Down writes:
+> > > > > > Ah, I just saw this in my local checkout and thought it was from my
+> > > > > > changes, until I saw it's also on clean mmots checkout. Thanks for the
+> > > > > > fixup!
+> > > > > 
+> > > > > Also, does this mean we should change callers that may pass through
+> > > > > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
+> > > > > remove this interim fixup? I'm worried otherwise we might paper over real
+> > > > > issues in future.
+> > > > 
+> > > > Yes, removing this special casing is reasonable. I am not sure
+> > > > MAX_NR_ZONES - 1 is a better choice though. It is error prone and
+> > > > zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
+> > > > be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
+> > > > outside of MM reclaim code AFAIK. It would be probably better to have
+> > > > MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
+> > > 
+> > > We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
+> > > "no zone restrictions" - get_scan_count() is the odd one out:
+> > > 
+> > > - mem_cgroup_shrink_node()
+> > > - try_to_free_mem_cgroup_pages()
+> > > - balance_pgdat()
+> > > - kswapd()
+> > > - shrink_all_memory()
+> > > 
+> > > It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
+> > > subtle than handling both inclusive and exclusive range delimiters.
+> > > 
+> > > So I think the better fix would be this:
+> > 
+> > lruvec_lru_size is explicitly documented to use MAX_NR_ZONES for all
+> > LRUs and git grep says there are more instances outside of
+> > get_scan_count. So all of them have to be fixed.
+> 
+> Which ones?
+> 
+> [hannes@computer linux]$ git grep lruvec_lru_size
+> include/linux/mmzone.h:extern unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx);
+> mm/vmscan.c: * lruvec_lru_size -  Returns the number of pages on the given LRU list.
+> mm/vmscan.c:unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+> mm/vmscan.c:    anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
+> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
+> mm/vmscan.c:    file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
+> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
+> mm/vmscan.c:            lruvec_size = lruvec_lru_size(lruvec, lru, sc->reclaim_idx);
+> [hannes@computer linux]$
 
-Again, sorry for the late review. Things have just been crazy :-/
+I have checked the Linus tree but now double checked with the current
+next
+$ git describe next/master
+next-20191112
+$ git grep "lruvec_lru_size.*MAX_NR_ZONES" next/master
+next/master:mm/vmscan.c:                        lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
+next/master:mm/vmscan.c:                        lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
+next/master:mm/vmscan.c:        anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
+next/master:mm/vmscan.c:                lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
+next/master:mm/vmscan.c:        file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
+next/master:mm/vmscan.c:                lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
+next/master:mm/workingset.c:    active_file = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES);
 
-On Wed,  4 Sep 2019 14:14:56 -0700
-Cong Wang <xiyou.wangcong@gmail.com> wrote:
+are there any changes which didn't make it to linux next yet?
 
-> We have been trying to use rasdaemon to monitor hardware errors like
-> correctable memory errors. rasdaemon uses trace events to monitor
-> various hardware errors. In order to test it, we have to inject some
-> hardware errors, unfortunately not all of them provide error
-> injections. MCE does provide a way to inject MCE errors, but errors
-> like PCI error and devlink error don't, it is not easy to add error
-> injection to each of them. Instead, it is relatively easier to just
-> allow users to inject trace events in a generic way so that all trace
-> events can be injected.
+> The only other user already passes sc->reclaim_idx, which always
+> points to a valid zone, and is initialized to MAX_NR_ZONES - 1 in many
+> places.
 > 
-> This patch introduces trace event injection, where a new 'inject' is
-> added to each tracepoint directory. Users could write into this file
-> with key=value pairs to specify the value of each fields of the trace
-> event, all unspecified fields are set to zero values by default.
+> > I still think that MAX_NR_ZONES - 1 is a very error prone and subtle
+> > construct IMHO and an alias would be better readable.
 > 
-> For example, for the net/net_dev_queue tracepoint, we can inject:
+> I wouldn't mind a follow-up patch that changes this pattern
+> comprehensively. As it stands, get_scan_count() is the odd one out.
+
+OK, a follow up patch to unify everything makes sense to me.
+
+> The documentation bit is a good point, though. We should fix
+> that. Updated patch:
 > 
->   INJECT=/sys/kernel/debug/tracing/events/net/net_dev_queue/inject
->   echo "" > $INJECT
->   echo "name='test'" > $INJECT
->   echo "name='test' len=1024" > $INJECT
->   cat /sys/kernel/debug/tracing/trace
->   ...
->    <...>-614   [000] ....    36.571483: net_dev_queue: dev= skbaddr=00000000fbf338c2 len=0
->    <...>-614   [001] ....   136.588252: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=0
->    <...>-614   [001] .N..   208.431878: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=1024
-> 
-> Triggers could be triggered as usual too:
-> 
->   echo "stacktrace if len == 1025" > /sys/kernel/debug/tracing/events/net/net_dev_queue/trigger
->   echo "len=1025" > $INJECT
->   cat /sys/kernel/debug/tracing/trace
->   ...
->       bash-614   [000] ....    36.571483: net_dev_queue: dev= skbaddr=00000000fbf338c2 len=0
->       bash-614   [001] ....   136.588252: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=0
->       bash-614   [001] .N..   208.431878: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=1024
->       bash-614   [001] .N.1   284.236349: <stack trace>
->  => event_inject_write
->  => vfs_write
->  => ksys_write
->  => do_syscall_64
->  => entry_SYSCALL_64_after_hwframe  
-> 
-> The only thing that can't be injected is string pointers as they
-> require constant string pointers, this can't be done at run time.
-> 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 > ---
-> v3: introduce a Kconfig
-> v2: address Steven's review comments
 > 
->  kernel/trace/Kconfig               |  10 +
->  kernel/trace/Makefile              |   1 +
->  kernel/trace/trace.h               |   1 +
->  kernel/trace/trace_events.c        |   6 +
->  kernel/trace/trace_events_inject.c | 328 +++++++++++++++++++++++++++++
->  5 files changed, 346 insertions(+)
->  create mode 100644 kernel/trace/trace_events_inject.c
+> >From b1b6ce306010554aba6ebd7aac0abffc1576d71a Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Mon, 11 Nov 2019 13:46:25 -0800
+> Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
 > 
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 98da8998c25c..1c86fbf7e6d0 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -663,6 +663,16 @@ config HIST_TRIGGERS
->  	  See Documentation/trace/histogram.rst.
->  	  If in doubt, say N.
+> get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
+> beyond the range of valid zone indexes, but used to be handled before
+> the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
+> express "all zones, please", so do the same here.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Reported-by: Chris Down <chris@chrisdown.name>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/vmscan.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index df859b1d583c..5eb96a63ad1e 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -323,7 +323,7 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
+>   * lruvec_lru_size -  Returns the number of pages on the given LRU list.
+>   * @lruvec: lru vector
+>   * @lru: lru to use
+> - * @zone_idx: zones to consider (use MAX_NR_ZONES for the whole LRU list)
+> + * @zone_idx: index of the highest zone to include (use MAX_NR_ZONES - 1 for all)
+>   */
+>  unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+>  {
+> @@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+>  	 * anon in [0], file in [1]
+>  	 */
 >  
-> +config TRACE_EVENT_INJECT
-> +	bool "Trace event injection"
-> +	depends on TRACING
-> +	default n
-
-No need for the above "default n", that's the default.
-
-> +	help
-> +	  Allow user-space to inject a specific trace event into the ring
-> +	  buffer. This is mainly used for testing purpose.
-> +
-> +	  If unsure, say N.
-> +
->  config MMIOTRACE_TEST
->  	tristate "Test module for mmiotrace"
->  	depends on MMIOTRACE && m
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index c2b2148bb1d2..0e63db62225f 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_EVENT_TRACING) += trace_event_perf.o
->  endif
->  obj-$(CONFIG_EVENT_TRACING) += trace_events_filter.o
->  obj-$(CONFIG_EVENT_TRACING) += trace_events_trigger.o
-> +obj-$(CONFIG_TRACE_EVENT_INJECT) += trace_events_inject.o
->  obj-$(CONFIG_HIST_TRIGGERS) += trace_events_hist.o
->  obj-$(CONFIG_BPF_EVENTS) += bpf_trace.o
->  obj-$(CONFIG_KPROBE_EVENTS) += trace_kprobe.o
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 005f08629b8b..23741d9b59f1 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -1582,6 +1582,7 @@ extern struct list_head ftrace_events;
+> -	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
+> -		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
+> -	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
+> -		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
+> +	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
+> +		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
+> +	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
+> +		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
 >  
->  extern const struct file_operations event_trigger_fops;
->  extern const struct file_operations event_hist_fops;
-> +extern const struct file_operations event_inject_fops;
->  
->  #ifdef CONFIG_HIST_TRIGGERS
->  extern int register_trigger_hist_cmd(void);
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 648930823b57..30a0c42fb575 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -2018,6 +2018,12 @@ event_create_dir(struct dentry *parent, struct trace_event_file *file)
->  	trace_create_file("format", 0444, file->dir, call,
->  			  &ftrace_event_format_fops);
->  
-> +#ifdef CONFIG_TRACE_EVENT_INJECT
-> +	if (call->event.type && call->class->reg)
-> +		trace_create_file("inject", 0200, file->dir, file,
-> +				  &event_inject_fops);
-> +#endif
-> +
->  	return 0;
->  }
->  
-> diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
-> new file mode 100644
-> index 000000000000..6347029a1fa1
-> --- /dev/null
-> +++ b/kernel/trace/trace_events_inject.c
-> @@ -0,0 +1,328 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * trace_events_inject - trace event injection
-> + *
-> + * Copyright (C) 2019 Cong Wang <cwang@twitter.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/ctype.h>
-> +#include <linux/mutex.h>
-> +#include <linux/slab.h>
-> +#include <linux/rculist.h>
-> +
-> +#include "trace.h"
-> +
-> +static int
-> +trace_inject_entry(struct trace_event_file *file, void *rec, int len)
-> +{
-> +	struct trace_event_buffer fbuffer;
-> +	struct ring_buffer *buffer;
-> +	int written = 0;
-> +	void *entry;
-> +
-> +	buffer = file->tr->trace_buffer.buffer;
-> +	entry = trace_event_buffer_reserve(&fbuffer, file, len);
-> +	if (entry) {
-> +		memcpy(entry, rec, len);
-> +		written = len;
-> +		trace_event_buffer_commit(&fbuffer);
-> +	}
-> +
-> +	return written;
-> +}
-> +
-> +static int
-> +parse_field(char *str, struct trace_event_call *call,
-> +	    struct ftrace_event_field **pf, u64 *pv)
-> +{
-> +	struct ftrace_event_field *field;
-> +	char *field_name;
-> +	int s, i = 0;
-> +	char *p;
-> +	int len;
-> +	u64 val;
-> +
-> +	if (!str[i])
-> +		return 0;
-> +	/* First find the field to associate to */
-> +	while (isspace(str[i]))
-> +		i++;
-> +	s = i;
-> +	while (isalnum(str[i]) || str[i] == '_')
-> +		i++;
-> +	len = i - s;
-> +	if (!len)
-> +		return -EINVAL;
-> +
-> +	field_name = kmemdup_nul(str + s, len, GFP_KERNEL);
-> +	if (!field_name)
-> +		return -ENOMEM;
-> +	field = trace_find_event_field(call, field_name);
-> +	kfree(field_name);
-> +	if (!field)
-> +		return -ENOENT;
-> +
-> +	*pf = field;
-> +	p = strchr(str + i, '=');
+>  	spin_lock_irq(&pgdat->lru_lock);
+>  	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
+> -- 
+> 2.24.0
 
-Hmm, the above here will parse out:
-
-	"field some garbarge = one"
-
-It will skip the some garbage, and jump straight to 1.
-
-> +	if (!p)
-> +		return -EINVAL;
-> +	i = p + 1 - str;
-> +	while (isspace(str[i]))
-> +		i++;
-> +	s = i;
-> +	if (isdigit(str[i]) || str[i] == '-') {
-> +		char *num, c;
-> +		int ret;
-> +
-> +		/* Make sure the field is not a string */
-> +		if (is_string_field(field))
-> +			return -EINVAL;
-> +
-> +		if (str[i] == '-')
-> +			i++;
-> +
-> +		/* We allow 0xDEADBEEF */
-> +		while (isalnum(str[i]))
-> +			i++;
-> +		num = str + s;
-> +		c = str[i];
-
-Probably should verify that c is whitespace or '\0'.
-
-> +		str[i] = '\0';
-> +		/* Make sure it is a value */
-> +		if (field->is_signed)
-> +			ret = kstrtoll(num, 0, &val);
-> +		else
-> +			ret = kstrtoull(num, 0, &val);
-> +		str[i] = c;
-> +		if (ret)
-> +			return ret;
-> +
-> +		*pv = val;
-> +		return i;
-> +	} else if (str[i] == '\'' || str[i] == '"') {
-> +		char q = str[i];
-> +
-> +		/* Make sure the field is OK for strings */
-> +		if (!is_string_field(field))
-> +			return -EINVAL;
-> +
-> +		for (i++; str[i]; i++) {
-> +			if (str[i] == '\\' && str[i + 1]) {
-> +				i++;
-> +				continue;
-> +			}
-> +			if (str[i] == q)
-> +				break;
-> +		}
-> +		if (!str[i])
-> +			return -EINVAL;
-> +
-> +		/* Skip quotes */
-> +		s++;
-> +		len = i - s;
-> +		if (len >= MAX_FILTER_STR_VAL)
-> +			return -EINVAL;
-> +
-> +		*pv = (unsigned long)(str + s);
-> +		str[i] = 0;
-> +		/* go past the last quote */
-> +		i++;
-> +		return i;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int trace_get_entry_size(struct trace_event_call *call)
-> +{
-> +	struct ftrace_event_field *field;
-> +	struct list_head *head;
-> +	int size = 0;
-> +
-> +	head = trace_get_fields(call);
-> +	list_for_each_entry(field, head, link) {
-> +		if (field->size + field->offset > size)
-> +			size = field->size + field->offset;
-> +	}
-> +
-> +	return size;
-> +}
-> +
-> +static void *trace_alloc_entry(struct trace_event_call *call, int *size)
-> +{
-> +	int entry_size = trace_get_entry_size(call);
-> +	struct ftrace_event_field *field;
-> +	struct list_head *head;
-> +	void *entry = NULL;
-> +
-> +	/* We need an extra '\0' at the end. */
-> +	entry = kzalloc(entry_size + 1, GFP_KERNEL);
-> +	if (!entry)
-> +		return NULL;
-> +
-> +	head = trace_get_fields(call);
-> +	list_for_each_entry(field, head, link) {
-> +		if (!is_string_field(field))
-> +			continue;
-> +		if (field->filter_type == FILTER_STATIC_STRING)
-> +			continue;
-> +		if (field->filter_type == FILTER_DYN_STRING) {
-> +			u32 *str_item;
-> +			int str_len = 0;
-> +			int str_loc = entry_size & 0xffff;
-> +
-> +			str_item = (u32 *)(entry + field->offset);
-> +			*str_item = (str_len << 16) | str_loc;
-
-str_len is always zero here, right? Might as well just make this
-
- *str_item = str_loc;
-
-
-> +		} else {
-> +			char **paddr;
-> +
-> +			paddr = (char **)(entry + field->offset);
-> +			*paddr = "";
-
-Hmm, I know this is a default pointer to a sting, but perhaps we should
-make it point to NULL, and not a string defined by this function?
-
-> +		}
-> +	}
-> +
-> +	*size = entry_size + 1;
-> +	return entry;
-> +}
-> +
-> +#define INJECT_STRING "STATIC STRING CAN NOT BE INJECTED"
-> +
-> +/* Caller is responsible to free the *pentry. */
-> +static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
-> +{
-> +	struct ftrace_event_field *field;
-> +	unsigned long irq_flags;
-> +	void *entry = NULL;
-> +	int entry_size;
-> +	u64 val;
-> +	int len;
-> +
-> +	entry = trace_alloc_entry(call, &entry_size);
-> +	*pentry = entry;
-> +	if (!entry)
-> +		return -ENOMEM;
-> +
-> +	local_save_flags(irq_flags);
-> +	tracing_generic_entry_update(entry, call->event.type, irq_flags,
-> +				     preempt_count());
-> +
-> +	while ((len = parse_field(str, call, &field, &val)) > 0) {
-> +		if (is_function_field(field))
-
-Why not allow injecting function fields?
-
-> +			return -EINVAL;
-> +
-> +		if (is_string_field(field)) {
-> +			char *addr = (char *)(unsigned long) val;
-> +
-> +			if (field->filter_type == FILTER_STATIC_STRING) {
-> +				strlcpy(entry + field->offset, addr, field->size);
-> +			} else if (field->filter_type == FILTER_DYN_STRING) {
-> +				int str_len = strlen(addr) + 1;
-> +				int str_loc = entry_size & 0xffff;
-> +				u32 *str_item;
-> +
-> +				entry_size += str_len;
-> +				*pentry = krealloc(entry, entry_size, GFP_KERNEL);
-> +				entry = *pentry;
-> +				if (!entry)
-> +					return -ENOMEM;
-
-The above leaks memory, as if *pentry is NULL then the old entry is not
-freed. The above needs to be:
-
-				*pentry = krealloc(entry, entry_size, GFP_KERNEL);
-				if (!*pentry) {
-					kfree(entry);
-					return -ENOMEM;
-				}
-				entry = *pentry;
-
-> +
-> +				strlcpy(entry + (entry_size - str_len), addr, str_len);
-> +				str_item = (u32 *)(entry + field->offset);
-> +				*str_item = (str_len << 16) | str_loc;
-> +			} else {
-> +				char **paddr;
-> +
-> +				/* TODO: can we find the constant string? */
-
-				probably not ;-)
-
-
--- Steve
-
-> +				paddr = (char **)(entry + field->offset);
-> +				*paddr = INJECT_STRING;
-> +			}
-> +		} else {
-> +			switch (field->size) {
-> +			case 1: {
-> +				u8 tmp = (u8) val;
-> +
-> +				memcpy(entry + field->offset, &tmp, 1);
-> +				break;
-> +			}
-> +			case 2: {
-> +				u16 tmp = (u16) val;
-> +
-> +				memcpy(entry + field->offset, &tmp, 2);
-> +				break;
-> +			}
-> +			case 4: {
-> +				u32 tmp = (u32) val;
-> +
-> +				memcpy(entry + field->offset, &tmp, 4);
-> +				break;
-> +			}
-> +			case 8:
-> +				memcpy(entry + field->offset, &val, 8);
-> +				break;
-> +			default:
-> +				return -EINVAL;
-> +			}
-> +		}
-> +
-> +		str += len;
-> +	}
-> +
-> +	if (len < 0)
-> +		return len;
-> +
-> +	return entry_size;
-> +}
-> +
-> +static ssize_t
-> +event_inject_write(struct file *filp, const char __user *ubuf, size_t cnt,
-> +		   loff_t *ppos)
-> +{
-> +	struct trace_event_call *call;
-> +	struct trace_event_file *file;
-> +	int err = -ENODEV, size;
-> +	void *entry = NULL;
-> +	char *buf;
-> +
-> +	if (cnt >= PAGE_SIZE)
-> +		return -EINVAL;
-> +
-> +	buf = memdup_user_nul(ubuf, cnt);
-> +	if (IS_ERR(buf))
-> +		return PTR_ERR(buf);
-> +	strim(buf);
-> +
-> +	mutex_lock(&event_mutex);
-> +	file = event_file_data(filp);
-> +	if (file) {
-> +		call = file->event_call;
-> +		size = parse_entry(buf, call, &entry);
-> +		if (size < 0)
-> +			err = size;
-> +		else
-> +			err = trace_inject_entry(file, entry, size);
-> +	}
-> +	mutex_unlock(&event_mutex);
-> +
-> +	kfree(entry);
-> +	kfree(buf);
-> +
-> +	if (err < 0)
-> +		return err;
-> +
-> +	*ppos += err;
-> +	return cnt;
-> +}
-> +
-> +static ssize_t
-> +event_inject_read(struct file *file, char __user *buf, size_t size,
-> +		  loff_t *ppos)
-> +{
-> +	return -EPERM;
-> +}
-> +
-> +const struct file_operations event_inject_fops = {
-> +	.open = tracing_open_generic,
-> +	.read = event_inject_read,
-> +	.write = event_inject_write,
-> +};
-> +
-
+-- 
+Michal Hocko
+SUSE Labs
