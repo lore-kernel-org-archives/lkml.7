@@ -2,136 +2,249 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CC9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988F2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E10204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64AC421A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PF/S6iWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKLIwA (ORCPT
+        id S1727254AbfKLIwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:52:00 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:45672 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbfKLIwA (ORCPT
+        Tue, 12 Nov 2019 03:52:10 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:36799 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfKLIwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:52:00 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iURtx-0005Zc-HE; Tue, 12 Nov 2019 09:51:53 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAC8pqVS013015
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 12 Nov 2019 09:51:52 +0100
-Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
-To:     =?UTF-8?Q?S=c3=b6ren_Moch?= <smoch@web.de>,
-        Kever Yang <kever.yang@rock-chips.com>, heiko@sntech.de
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
-        linux-kernel@vger.kernel.org, Alexis Ballier <aballier@gentoo.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Andy Yan <andyshrk@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Nick Xie <nick@khadas.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Akash Gajjar <akash@openedev.com>
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-3-kever.yang@rock-chips.com>
- <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
- <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
- <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
- <88ad7dc9-5299-791b-e285-7775ddf885ba@web.de>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <c5519934-2715-d5cd-a236-0fec9a41dc67@fivetechno.de>
-Date:   Tue, 12 Nov 2019 09:51:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 12 Nov 2019 03:52:09 -0500
+Received: by mail-qv1-f68.google.com with SMTP id f12so6061477qvu.3;
+        Tue, 12 Nov 2019 00:52:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cROzNmdYxisqWoueYc9W+eIG2Mx3qlHP7NfXN3GI/FQ=;
+        b=PF/S6iWT4CYos5f/Qxiyrj819yA9DztoVnQngjCM7ST0A6/xHzOKuFza6aEAOEIHFD
+         IRs3g/sDkmOZsVUg5BfLLNbhxSMsVVb1DEnttjxKmX81P3vu2Wx0WRs/PKqDolQ/IqMK
+         uPtjTNahNUl/KH+yjsZZF+CoOeh+jZqwG7uXGo3nhOFae7Ampy0721WlrVLudKDpbQ6w
+         Ne05cDDAK3nINRCW8InLefN68zNgFYrAuL9YQ5NnpKcJktjb30Vy1+p0A29rUFLtn67e
+         CyPwRK92ARrt+aagj3u2Ed/rcJMFZLBJNDyZ8A+QOoxqRdIwXIhdl4nE8zBZgMbMWl9y
+         KZDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cROzNmdYxisqWoueYc9W+eIG2Mx3qlHP7NfXN3GI/FQ=;
+        b=YNAf5bi0IwYHZYEY1+2wXQaFQUJkvOzeXvYB3tC7UZaOMLcuX+vd2l1fdxhxQm2XN3
+         8wTGx61vLOXuZQqLbQNbJFTiMWR0RbcMozzIiPDhMKycLQ0cgaSB18oz6eIU3HVfQWxA
+         98R61PW6tsp/IENRLeAz5Vb56OfIzhCXNFMhzmuKGgADIvkmaAGlPsGLZ8dFtjEIXAH6
+         oXt9Aq9Zj9lt2YKMxHc6LrBPKmHMIWPXOcDOqnNAWfLnucMN/7B6v8cf8ad3JRvUvW7M
+         bIdFJkcgM5V9xm98crMw3LqJeZRErrRiZxbxjlkCKkMBbpV/pVSTfFAgo8pEQ9PpsVCE
+         6sIw==
+X-Gm-Message-State: APjAAAUP+caTtJZCypdyRsHqKGjdSEoq3FVSTWVJh1cngQoYJD+tsJ7i
+        Wx5X4H0W1ZKcd9fnhneQ/EJSTIDBui8WEiKQGbA=
+X-Google-Smtp-Source: APXvYqx6NKc2ScCo7khfKTbduCZ3tXXPnpOsLDXFoJ5p/wlTm7Nj9aXW2BAPakV8QIjz95Uh9EuSyoZxwk73743by2g=
+X-Received: by 2002:a0c:d0e1:: with SMTP id b30mr27967066qvh.197.1573548727413;
+ Tue, 12 Nov 2019 00:52:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <88ad7dc9-5299-791b-e285-7775ddf885ba@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573548719;bc2c7baf;
-X-HE-SMSGID: 1iURtx-0005Zc-HE
+References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-20-hch@lst.de>
+In-Reply-To: <20191029064834.23438-20-hch@lst.de>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Tue, 12 Nov 2019 16:51:29 +0800
+Message-ID: <CAEbi=3c58Pb=Q3BqeTLhEK8OsdTpbD5tAe6VcGOC7JBWbTjetQ@mail.gmail.com>
+Subject: Re: [PATCH 19/21] nds32: use generic ioremap
+To:     Christoph Hellwig <hch@lst.de>, Nickhu <nickhu@andestech.com>,
+        alankao@andestech.com
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-sh@vger.kernel.org, sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, linux-mtd@lists.infradead.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Sören,
+Hi,
 
-Am 12.11.19 um 09:44 schrieb Sören Moch:
-> On 12.11.19 09:16, Markus Reichl wrote:
->> Hi Kever,
->>
->> have a rk3399-roc-pc running mainline U-Boot and kernel and vdd_log is
->> showing 1118 mV.
->> Is this a danger for the board?
-> I think yes. What I read vdd_log on rk3399 must not exceed 1.0V.
->> How to fix it?
-> You probably need to do something like [1].
+Christoph Hellwig <hch@lst.de> =E6=96=BC 2019=E5=B9=B410=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=882:49=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Use the generic ioremap_prot and iounmap helpers.
+>
+> Note that the io.h include in pgtable.h had to be removed to not create
+> an include loop.  As far as I can tell there was no need for it to
+> start with.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/nds32/Kconfig               |  1 +
+>  arch/nds32/include/asm/io.h      |  3 +-
+>  arch/nds32/include/asm/pgtable.h |  4 ++-
+>  arch/nds32/mm/Makefile           |  3 +-
+>  arch/nds32/mm/ioremap.c          | 62 --------------------------------
+>  5 files changed, 6 insertions(+), 67 deletions(-)
+>  delete mode 100644 arch/nds32/mm/ioremap.c
+>
+> diff --git a/arch/nds32/Kconfig b/arch/nds32/Kconfig
+> index fbd68329737f..12c06a833b7c 100644
+> --- a/arch/nds32/Kconfig
+> +++ b/arch/nds32/Kconfig
+> @@ -20,6 +20,7 @@ config NDS32
+>         select GENERIC_CLOCKEVENTS
+>         select GENERIC_IRQ_CHIP
+>         select GENERIC_IRQ_SHOW
+> +       select GENERIC_IOREMAP
+>         select GENERIC_LIB_ASHLDI3
+>         select GENERIC_LIB_ASHRDI3
+>         select GENERIC_LIB_CMPDI2
+> diff --git a/arch/nds32/include/asm/io.h b/arch/nds32/include/asm/io.h
+> index fb0e8a24c7af..e57378d04006 100644
+> --- a/arch/nds32/include/asm/io.h
+> +++ b/arch/nds32/include/asm/io.h
+> @@ -6,8 +6,6 @@
+>
+>  #include <linux/types.h>
+>
+> -void __iomem *ioremap(phys_addr_t phys_addr, size_t size);
+> -extern void iounmap(volatile void __iomem *addr);
+>  #define __raw_writeb __raw_writeb
+>  static inline void __raw_writeb(u8 val, volatile void __iomem *addr)
+>  {
+> @@ -80,6 +78,7 @@ static inline u32 __raw_readl(const volatile void __iom=
+em *addr)
+>  #define writeb(v,c)    ({ __iowmb(); writeb_relaxed((v),(c)); })
+>  #define writew(v,c)    ({ __iowmb(); writew_relaxed((v),(c)); })
+>  #define writel(v,c)    ({ __iowmb(); writel_relaxed((v),(c)); })
+> +
+>  #include <asm-generic/io.h>
+>
+>  #endif /* __ASM_NDS32_IO_H */
+> diff --git a/arch/nds32/include/asm/pgtable.h b/arch/nds32/include/asm/pg=
+table.h
+> index 0588ec99725c..6fbf251cfc26 100644
+> --- a/arch/nds32/include/asm/pgtable.h
+> +++ b/arch/nds32/include/asm/pgtable.h
+> @@ -12,7 +12,6 @@
+>  #include <asm/nds32.h>
+>  #ifndef __ASSEMBLY__
+>  #include <asm/fixmap.h>
+> -#include <asm/io.h>
+>  #include <nds32_intrinsic.h>
+>  #endif
+>
+> @@ -130,6 +129,9 @@ extern void __pgd_error(const char *file, int line, u=
+nsigned long val);
+>  #define _PAGE_CACHE            _PAGE_C_MEM_WB
+>  #endif
+>
+> +#define _PAGE_IOREMAP \
+> +       (_PAGE_V | _PAGE_M_KRW | _PAGE_D | _PAGE_G | _PAGE_C_DEV)
+> +
+>  /*
+>   * + Level 1 descriptor (PMD)
+>   */
+> diff --git a/arch/nds32/mm/Makefile b/arch/nds32/mm/Makefile
+> index bd360e4583b5..897ecaf5cf54 100644
+> --- a/arch/nds32/mm/Makefile
+> +++ b/arch/nds32/mm/Makefile
+> @@ -1,6 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -obj-y                          :=3D extable.o tlb.o \
+> -                                  fault.o init.o ioremap.o mmap.o \
+> +obj-y                          :=3D extable.o tlb.o fault.o init.o mmap.=
+o \
+>                                     mm-nds32.o cacheflush.o proc.o
+>
+>  obj-$(CONFIG_ALIGNMENT_TRAP)   +=3D alignment.o
+> diff --git a/arch/nds32/mm/ioremap.c b/arch/nds32/mm/ioremap.c
+> deleted file mode 100644
+> index 690140bb23a2..000000000000
+> --- a/arch/nds32/mm/ioremap.c
+> +++ /dev/null
+> @@ -1,62 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -// Copyright (C) 2005-2017 Andes Technology Corporation
+> -
+> -#include <linux/vmalloc.h>
+> -#include <linux/io.h>
+> -#include <linux/mm.h>
+> -#include <asm/pgtable.h>
+> -
+> -void __iomem *ioremap(phys_addr_t phys_addr, size_t size);
+> -
+> -static void __iomem *__ioremap_caller(phys_addr_t phys_addr, size_t size=
+,
+> -                                     void *caller)
+> -{
+> -       struct vm_struct *area;
+> -       unsigned long addr, offset, last_addr;
+> -       pgprot_t prot;
+> -
+> -       /* Don't allow wraparound or zero size */
+> -       last_addr =3D phys_addr + size - 1;
+> -       if (!size || last_addr < phys_addr)
+> -               return NULL;
+> -
+> -       /*
+> -        * Mappings have to be page-aligned
+> -        */
+> -       offset =3D phys_addr & ~PAGE_MASK;
+> -       phys_addr &=3D PAGE_MASK;
+> -       size =3D PAGE_ALIGN(last_addr + 1) - phys_addr;
+> -
+> -       /*
+> -        * Ok, go for it..
+> -        */
+> -       area =3D get_vm_area_caller(size, VM_IOREMAP, caller);
+> -       if (!area)
+> -               return NULL;
+> -
+> -       area->phys_addr =3D phys_addr;
+> -       addr =3D (unsigned long)area->addr;
+> -       prot =3D __pgprot(_PAGE_V | _PAGE_M_KRW | _PAGE_D |
+> -                       _PAGE_G | _PAGE_C_DEV);
+> -       if (ioremap_page_range(addr, addr + size, phys_addr, prot)) {
+> -               vunmap((void *)addr);
+> -               return NULL;
+> -       }
+> -       return (__force void __iomem *)(offset + (char *)addr);
+> -
+> -}
+> -
+> -void __iomem *ioremap(phys_addr_t phys_addr, size_t size)
+> -{
+> -       return __ioremap_caller(phys_addr, size,
+> -                               __builtin_return_address(0));
+> -}
+> -
+> -EXPORT_SYMBOL(ioremap);
+> -
+> -void iounmap(volatile void __iomem * addr)
+> -{
+> -       vunmap((void *)(PAGE_MASK & (unsigned long)addr));
+> -}
+> -
+> -EXPORT_SYMBOL(iounmap);
 
-will measure and come up with a patch.
-
-> 
-> [1] https://patchwork.kernel.org/patch/11173465/
-> 
-> Gruß,
-> Sören
->> Btw. vin-supply for this pwm-regulator is ignored and I could not find it
->> in bindings doc.
->>
-> Gruß,
--- 
-Markus Reichl
+Acked-by: Greentime Hu <green.hu@gmail.com>
+Looks good to me.
