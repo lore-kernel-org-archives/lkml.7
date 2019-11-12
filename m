@@ -2,109 +2,77 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7606CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A0FC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471CD214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D84214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:01:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kdU551XW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfKLOA7 (ORCPT
+        id S1727401AbfKLOBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:00:59 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19092 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726497AbfKLOA6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:00:58 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACE0kV4125518
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:00:57 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7vwgb7aq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:00:52 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Tue, 12 Nov 2019 14:00:13 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Nov 2019 14:00:10 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACE092161145222
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 14:00:09 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60425A4057;
-        Tue, 12 Nov 2019 14:00:09 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF2D9A404D;
-        Tue, 12 Nov 2019 14:00:07 +0000 (GMT)
-Received: from [9.199.52.230] (unknown [9.199.52.230])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 14:00:07 +0000 (GMT)
-Subject: Re: [PATCH v2] perf tool: Provide an option to print perf_event_open
- args and return value
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20191108093024.27077-1-ravi.bangoria@linux.ibm.com>
- <20191108094128.28769-1-ravi.bangoria@linux.ibm.com>
- <20191108110009.GE18723@krava> <20191112112910.GK9365@kernel.org>
- <20191112113748.GL9365@kernel.org>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Tue, 12 Nov 2019 19:30:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 12 Nov 2019 09:01:14 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:35926 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfKLOBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 09:01:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/RI6fmn/sUXIGU/PUViPxPFyONizIT5yqn4fGxzbWxQ=; b=kdU551XWBYrVXong2h3XiotiJw
+        JEiOK35L945IH4Zcekg9kweTxxuCuNnr4G0T1uFTXjeEbSxUJbRhXRAQY4ypq1qe9FEywx8BFQPJ2
+        R0pOR300JtGlbAsbLKXQXxI61kwlu+ffVZ6W9GsL5xI0UZG2io2JlKEGIPQECAXq4z9c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iUWjF-0001m2-E6; Tue, 12 Nov 2019 15:01:09 +0100
+Date:   Tue, 12 Nov 2019 15:01:09 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII
+ PHYs
+Message-ID: <20191112140109.GK5090@lunn.ch>
+References: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
+ <20191112132010.18274-3-linux@rasmusvillemoes.dk>
+ <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
+ <6d4292fcb0cf290837306388bdfe9b0f@www.loen.fr>
+ <CA+h21hpE-Nu_Sh1fRizUoEs082ev=9nzuumSXDrk-QTXdnEbzg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191112113748.GL9365@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111214-0028-0000-0000-000003B63D34
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111214-0029-0000-0000-0000247940B3
-Message-Id: <85a6a2a2-0aa0-ef71-d2e7-816013e5f80d@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hpE-Nu_Sh1fRizUoEs082ev=9nzuumSXDrk-QTXdnEbzg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> > >> +               /* SGMII2_PHY_INT_B: connected to IRQ2, active low
+> > >> */
+> > >> +               interrupts-extended = <&extirq 2
+> > >> IRQ_TYPE_EDGE_FALLING>;
 
+> The interrupt specifier certainly works. So that points to an issue
+> with the description. What do you mean, exactly? Does "active low"
+> mean "level-triggered"? How would you have described this?
 
-On 11/12/19 5:07 PM, Arnaldo Carvalho de Melo wrote:
->> [root@quaco ~]# perf test -v python
->> 18: 'import perf' in python                               :
->> --- start ---
->> test child forked, pid 19237
->> Traceback (most recent call last):
->>    File "<stdin>", line 1, in <module>
->> ImportError: /tmp/build/perf/python/perf.so: undefined symbol: debug_peo_args
->> test child finished with -1
->> ---- end ----
->> 'import perf' in python: FAILED!
->> [root@quaco ~]#
->>
->> Please always test your changes using 'perf test', before and after, to
->> see if some regression is being added. I'm trying to fix this one.
-> 
-> I added this to fix this issue,
+I would expect IRQ_TYPE_ACTIVE_LOW, or whatever it is called. Since
+this is a shared interrupt, going on the edge i think opens up a race
+condition and interrupts can be missed.
 
-Sorry about that. Missed to run it. Will take care next time onwards.
-Thanks for the fix.
-
--Ravi
-
+	  Andrew
