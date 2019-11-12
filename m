@@ -2,116 +2,132 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EF3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9358AC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E752214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C35D2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gM8MrR8f"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="P+vDv5hN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfKLNUV (ORCPT
+        id S1727183AbfKLNV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:20:21 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44894 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfKLNUT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:20:19 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z188so5612212lfa.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 05:20:16 -0800 (PST)
+        Tue, 12 Nov 2019 08:21:26 -0500
+Received: from mail-eopbgr790079.outbound.protection.outlook.com ([40.107.79.79]:6064
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725834AbfKLNV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 08:21:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CZJk0Sgst9KVQHf8Zz//aXqEMConfEDOgNXGAUCaY4nw9r9Emn1HAA9D80Acv5tiLzu7z5PsgqzlOM13jMtYiEbWqt6DllGJpIlhpwgjZMBvMMIOMh3sX3uFILWBsc8oYGlFxaV/nlsiRTSQBAuxWqfAWuuPXQ5Ze8jcQnpaEX66jc3UN4k7JP29NT4sYcsyB5Va9+oYaIfvrucP84vHKFhtVG12iPm92k8yvofBpq2KB2asFHuRJoAImtkHGItiTOrdq+KeVpqzb6oM1cwaVViVstbVbpK9ivd7DjMY8YnrTfE98iyOiKLoKdD6KjyejRSWhkm7qcMulAjXircuMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ic+szegcMXmRV+L8BIyV5McFHgsPGogwbqd2F48xxZs=;
+ b=bxX2GubOa7f4G+uqvOrwJyz2kvo/ZMp3gc5jqAeV4ymNP0epUMXFAnixoFvwvyl3G/BMC1MUCYjEjTVp7OwXEn0vnwBZKgWEVKNWEGBq0JUB2kQfs4yi7UhGkSb4CF1VG5CL+cQtMagqz4qsyKCKMZcEYI/9PeF5g789gB+zgP+sAwJDNbnmh814q0jPu2zpfSsvcjeL6csd9mbATh+fwefvN0aQiPtzGNmM2GDwrnHOaA2YFuOycpvtmqoSb0rRwwNRn3qBeCYnJ6yzdVP+LWIHsdhJxs+QuOB+tY16JRnU+w8FFSiCxXVOWLKBeNfATWetF0MJizK6Xot4YS72Cw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=U/A2f9kHIFOCYbqEWyI5d4hToF+Uq4/YnGy8bo4uWSk=;
-        b=gM8MrR8fpyn4D3f/S9EA8B8+euhGtgB+lGz82qjsDCTe1bJ1kiHnsQYFbiW/5akGyH
-         0mp2q9cT8A/OkZQgMiiVMsZSMYP7lzx+i0+PscS5YENMZjpxjMRfriZdcUEGItBE4t1y
-         tuIfz4VW5ZZL40S/NoLsb+KAqWW86ZFGdIV1s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=U/A2f9kHIFOCYbqEWyI5d4hToF+Uq4/YnGy8bo4uWSk=;
-        b=jQjatp2PQyOjxMBcQI96wTtssjKgN7YY2dOjXBiwTEdCrx4OzQ5JI925oDHJx9U9by
-         GSNNN6xek9aBLHZ83DpgZo+KJ6/BNnD+GjdVjNUoVhtsdzk+IBjhmYfklL9GHSh8Og0H
-         4OxrRCoxmylWNkHEyghXOP1XPDr3IGpwyNnP5hI1gGu5Vz9++QLYUSRAegRWF3SIjOZj
-         VHl/QtWCBhmviNyIiZHehUeaAwdRPNf7bJtyD23CzLDDxgCYb9/i+EZnVY4i7bo6ulug
-         JHZpBsKlPJEUweZPJXekZgOUXbo07Gqw5bF6t9DI2voV1dFtiJ7dVmLhatYo+E3FK5iM
-         znZg==
-X-Gm-Message-State: APjAAAWYQb6kyusSLjVpL42mBgyVkZxJmAu9AtIs+fJfs3QpUgOt1RtN
-        s7ARxBhWIRW7hwpyT29pTuzHnX47zqBglEEA
-X-Google-Smtp-Source: APXvYqz/sFZqp2pxbjkEJ36q/AU0dl23QXcsNzmg6b9X5nHorefiUNSVmG7PoCczzVrEgRSF7p9rHw==
-X-Received: by 2002:a19:c514:: with SMTP id w20mr19905250lfe.143.1573564815900;
-        Tue, 12 Nov 2019 05:20:15 -0800 (PST)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id f20sm869050lfc.75.2019.11.12.05.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 05:20:15 -0800 (PST)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, Marc Zyngier <maz@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: ls1021a: add node describing external interrupt lines
-Date:   Tue, 12 Nov 2019 14:20:09 +0100
-Message-Id: <20191112132010.18274-2-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
-References: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ic+szegcMXmRV+L8BIyV5McFHgsPGogwbqd2F48xxZs=;
+ b=P+vDv5hNYGXCzv3c221StUDex7lhuKzS7Nqpf43phaf7ddbq5tbezEJdY6ZOsLnzf4ZrpAIYf+tQ7Gnt4GDpPdhWIRQPXFfY80trlPHcyt/rfJ7BpP4i6pfix4DB8a5+q5U1Ox/RLDpfTg0VqznWr6rLC5NLglO+BPqf13IBDPI=
+Received: from BL0PR02CA0098.namprd02.prod.outlook.com (2603:10b6:208:51::39)
+ by BYAPR02MB4678.namprd02.prod.outlook.com (2603:10b6:a03:43::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.25; Tue, 12 Nov
+ 2019 13:21:22 +0000
+Received: from CY1NAM02FT063.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::202) by BL0PR02CA0098.outlook.office365.com
+ (2603:10b6:208:51::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.24 via Frontend
+ Transport; Tue, 12 Nov 2019 13:21:21 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT063.mail.protection.outlook.com (10.152.75.161) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2430.20
+ via Frontend Transport; Tue, 12 Nov 2019 13:21:21 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1iUW6i-0003ux-Mf; Tue, 12 Nov 2019 05:21:20 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1iUW6d-00058k-JJ; Tue, 12 Nov 2019 05:21:15 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xACDLDSA012481;
+        Tue, 12 Nov 2019 05:21:13 -0800
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1iUW6b-000578-9l; Tue, 12 Nov 2019 05:21:13 -0800
+From:   Rajan Vaja <rajan.vaja@xilinx.com>
+To:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        michal.simek@xilinx.com, jollys@xilinx.com, tejas.patel@xilinx.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rajan Vaja <rajan.vaja@xilinx.com>
+Subject: [PATCH 0/2] drivers: soc: xilinx: Add support for init suspend
+Date:   Tue, 12 Nov 2019 05:20:49 -0800
+Message-Id: <1573564851-9275-1-git-send-email-rajan.vaja@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(136003)(199004)(189003)(6636002)(186003)(81156014)(8676002)(81166006)(8936002)(50226002)(4744005)(356004)(6666004)(15650500001)(106002)(2906002)(36756003)(36386004)(478600001)(336012)(316002)(486006)(305945005)(16586007)(5660300002)(9786002)(126002)(48376002)(26005)(7696005)(426003)(70206006)(4326008)(51416003)(476003)(2616005)(70586007)(44832011)(107886003)(47776003)(50466002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4678;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1371a3d5-0f44-4fc2-06ad-08d7677335af
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4678:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB46787F2BCF6BC2D46D2FA487B7770@BYAPR02MB4678.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 021975AE46
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dTVjn0c9stNcGH2OdhxGO0qkTgFWAjg0YsIdqDWRZxvXr55vOAsU4uVN7rvrrcKxo+3LniQ2Xlf5pnfy7jq9FpiFwQETKjeBUeCurDyCIMa3Pdiar7WoxcFzDmUxlyFVQfcht30oocxQQaipIPC/d3t4KELMjfMEOYuHI29JaHClHv5ST3xmMEApebS+kv8P1OzXxbQkYKoLiY+U/MVNJKaCuzEAWbZT8FPIcxQWE82C5IyUar8azAlaDYBzGLTCTvY5DlXCGs1GfKJK5I5w/BozDn8jpmQNHREIhy2S06HWgT2vz1eTeu7ZcirVDtBxK74DxJ19+y4u+869vRSa9SrB4zIOdpA9kNPArlwLqtsERbMWg876Zw9hoqXlowKPdbl76TzVXAdbu/sQ3tmH+cH9BkQJsHQUerPFESCTkSVBotx5XIX74gXIwzNUJb3D
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2019 13:21:21.4306
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1371a3d5-0f44-4fc2-06ad-08d7677335af
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4678
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a node describing the six external interrupt lines IRQ0-IRQ5
-with configurable polarity.
+Add support for init suspend in xilinx soc driver. Also update
+documentation of zynqmp-power with IPI mailbox property.
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- arch/arm/boot/dts/ls1021a.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Rajan Vaja (1):
+  dt-bindings: power: reset: xilinx: Add bindings for ipi mailbox
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 2f6977ada447..0855b1fe98e0 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -216,6 +216,25 @@
- 			compatible = "fsl,ls1021a-scfg", "syscon";
- 			reg = <0x0 0x1570000 0x0 0x10000>;
- 			big-endian;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x1570000 0x10000>;
-+
-+			extirq: interrupt-controller@1ac {
-+				compatible = "fsl,ls1021a-extirq";
-+				#interrupt-cells = <2>;
-+				#address-cells = <0>;
-+				interrupt-controller;
-+				reg = <0x1ac 4>;
-+				interrupt-map =
-+					<0 0 &gic GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
-+					<1 0 &gic GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
-+					<2 0 &gic GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
-+					<3 0 &gic GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
-+					<4 0 &gic GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-+					<5 0 &gic GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-map-mask = <0xffffffff 0x0>;
-+			};
- 		};
- 
- 		crypto: crypto@1700000 {
+Tejas Patel (1):
+  drivers: soc: xilinx: Use mailbox IPI callback
+
+ .../bindings/power/reset/xlnx,zynqmp-power.txt     |  41 ++++++-
+ drivers/soc/xilinx/zynqmp_power.c                  | 119 ++++++++++++++++++---
+ 2 files changed, 144 insertions(+), 16 deletions(-)
+
 -- 
-2.23.0
+2.7.4
 
