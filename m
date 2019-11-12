@@ -2,170 +2,143 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCB2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBFDC17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FDA2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F7020659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSXUxw78"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ERvNdYCU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AsnohukH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfKLVWY (ORCPT
+        id S1727298AbfKLVXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:22:24 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38562 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfKLVVo (ORCPT
+        Tue, 12 Nov 2019 16:23:06 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:38502 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLVXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:21:44 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so13256415wro.5;
-        Tue, 12 Nov 2019 13:21:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id:in-reply-to:references;
-        bh=sxfWnb04loE+ufYyv1Wnndt+fSb262tNn1S8lwredBU=;
-        b=MSXUxw78HBDlq1p7PiHOSntg0KyQhFOFyMAHC97OUWdgSAlhrN22EXMTgYNKlBZLs5
-         R/pd54nxXTk6mJJ+p5lFmhqDh85P9ATLxUB7PlIkyp7UVccU2XL3DsWw0eeOzcohSsKi
-         z6G4OZjnNF+HHy4Doj1yODDREsUiooUXxTtsepjz3QqAVXJLc96vxVd0f7Uk8Svl/F0e
-         AwoI+B7oxMQl2NWE22xme1V8hMP/2J7Al8kHoIp004/gbLQR6525FHGlbj6GQ4m446Rd
-         KGjFFHOkjQ0TkfwH+yOifNoakVSs6H0+XEAWDxUd9XRFMqVFQrPCTlzrPw3bnnJlBXqX
-         jQvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id
-         :in-reply-to:references;
-        bh=sxfWnb04loE+ufYyv1Wnndt+fSb262tNn1S8lwredBU=;
-        b=MP6POC35utP+4YznWm9RIzBXrJyrFtEOrkyJ1vTzokSWZ1FiQThnPfY9NqGeJOMkKX
-         hu5gmcgx6AqpYZ24/Sd82+0M1MMTEFBwTKI2zDvtiTZY22K52PWUBo4PetZLrw0wjDaZ
-         OwpaK4HdAjEAjqtHmg7FmQWVvEpx/X8FEbZw4Kegb/wv5wrecvAZkk/MACl4ZXFi5N+h
-         ilY567LQxTUTPqIkfeobdaGy0lbH3wzD/PSYdjkNcWIOz3q4gtrrJtLV2gh8vcth+1tb
-         5k3suqI+4jroXBgj03uSzrMdve9x3Ul2ULaYJlqG2FcpYdRemei75dWCXy1jEBfLq0hW
-         Vq9g==
-X-Gm-Message-State: APjAAAWW5W/oBv5O6F7JM/rIwaI/AWRyn8xJNfdOrc3eI4t3fBvJSSs+
-        QnUEaMr5Py/A8FP2NWrcixAvX1am
-X-Google-Smtp-Source: APXvYqxaPiuoHfSVC02lyEPNcWNd+rR6mublWqggRhF+2xWQ5wNDaEnyVR7kvUMiM043ibmf6aHU4Q==
-X-Received: by 2002:adf:d18b:: with SMTP id v11mr29233145wrc.308.1573593701550;
-        Tue, 12 Nov 2019 13:21:41 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 13:21:40 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 3/7] cpu/speculation: Uninline and export CPU mitigations helpers
-Date:   Tue, 12 Nov 2019 22:21:33 +0100
-Message-Id: <1573593697-25061-4-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+        Tue, 12 Nov 2019 16:23:05 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id EC48A608CC; Tue, 12 Nov 2019 21:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573593783;
+        bh=Lf5D9ppBmtQ1eV7DCgHEY543Ji26UJSEoevyHMcYOaA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ERvNdYCUJRHiMpxGQEgUPVBKTC29WU7uLV/pcnSPq9hbelh5YlmECWD8TPO7hvGuk
+         JvBYHnw9F/hrDcsTTjPo522nTylodrlJBIML2+3vr++AvBlefKzynpHYvAGYL6g8zp
+         sDOW57Tj+9cSY07FS2/ONHGIQVc/4PG0StWrzbgo=
+Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5827160591;
+        Tue, 12 Nov 2019 21:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573593782;
+        bh=Lf5D9ppBmtQ1eV7DCgHEY543Ji26UJSEoevyHMcYOaA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AsnohukHYLKnAUw+CuxTfahOwWdJ25B2vDDPq6X3hos+H8A88vV00HtgDVpW5R0nx
+         EKdBTkqegx7v/srDrNAhCpQKT5TN+Yshr0b4d7G44KOPhhK+3NSkpDcorpU2frwejC
+         IPrg6y92yKa70Qs+ZUKhPmbCcZD6E1ZgUmcVb1d0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5827160591
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+To:     bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org,
+        agross@kernel.org, swboyd@chromium.org
+Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/18] Restructure, improve target support for qcom_scm driver
+Date:   Tue, 12 Nov 2019 13:22:36 -0800
+Message-Id: <1573593774-12539-1-git-send-email-eberman@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@canonical.com>
+This series improves support for 32-bit Qualcomm targets on qcom_scm driver.
 
-A kernel module may need to check the value of the "mitigations=" kernel
-command line parameter as part of its setup when the module needs
-to perform software mitigations for a CPU flaw.
+Currently, the qcom_scm driver supports only 64-bit Qualcomm targets and very
+old 32-bit Qualcomm targets. Newer 32-bit targets use ARM's SMC Calling
+Convention to communicate with secure world. Older 32-bit targets use a
+"buffer-based" legacy approach for communicating with secure world (as
+implemented in qcom_scm-32.c). All arm64 Qualcomm targets use ARM SMCCC.
+Currently, SMCCC-based communication is enabled only on ARM64 config and
+buffer-based communication only on ARM config. This patch-series combines SMCCC
+and legacy conventions and selects the correct convention by querying the secure
+world [1].
 
-Uninline and export the helper functions surrounding the cpu_mitigations
-enum to allow for their usage from a module.
+We decided to take the opportunity as well to clean up the driver rather than
+try to patch together qcom_scm-32 and qcom_scm-64.
 
-Lastly, privatize the enum and cpu_mitigations variable since the value of
-cpu_mitigations can be checked with the exported helper functions.
+Patches 1-5 improve macro names, reorder macros/functions, and prune unused
+            macros/functions. No functional changes were introduced.
+Patches 6-10 clears up the SCM abstraction in qcom_scm-64.
+Patches 11-15 clears up the SCM abstraction in qcom_scm-32.
+Patches 10 and 16-18 enable dynamically using the different calling conventions.
 
-Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/linux/cpu.h | 25 ++-----------------------
- kernel/cpu.c        | 27 ++++++++++++++++++++++++++-
- 2 files changed, 28 insertions(+), 24 deletions(-)
-
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 2a093434e975..bc6c879bd110 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -218,28 +218,7 @@ static inline void cpu_smt_check_topology(void) { }
- static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
- #endif
+This series is based on https://lore.kernel.org/patchwork/cover/1129991/
  
--/*
-- * These are used for a global "mitigations=" cmdline option for toggling
-- * optional CPU mitigations.
-- */
--enum cpu_mitigations {
--	CPU_MITIGATIONS_OFF,
--	CPU_MITIGATIONS_AUTO,
--	CPU_MITIGATIONS_AUTO_NOSMT,
--};
--
--extern enum cpu_mitigations cpu_mitigations;
--
--/* mitigations=off */
--static inline bool cpu_mitigations_off(void)
--{
--	return cpu_mitigations == CPU_MITIGATIONS_OFF;
--}
--
--/* mitigations=auto,nosmt */
--static inline bool cpu_mitigations_auto_nosmt(void)
--{
--	return cpu_mitigations == CPU_MITIGATIONS_AUTO_NOSMT;
--}
-+extern bool cpu_mitigations_off(void);
-+extern bool cpu_mitigations_auto_nosmt(void);
- 
- #endif /* _LINUX_CPU_H_ */
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index fc28e17940e0..e2cad3ee2ead 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2373,7 +2373,18 @@ void __init boot_cpu_hotplug_init(void)
- 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
- }
- 
--enum cpu_mitigations cpu_mitigations __ro_after_init = CPU_MITIGATIONS_AUTO;
-+/*
-+ * These are used for a global "mitigations=" cmdline option for toggling
-+ * optional CPU mitigations.
-+ */
-+enum cpu_mitigations {
-+	CPU_MITIGATIONS_OFF,
-+	CPU_MITIGATIONS_AUTO,
-+	CPU_MITIGATIONS_AUTO_NOSMT,
-+};
-+
-+static enum cpu_mitigations cpu_mitigations __ro_after_init =
-+	CPU_MITIGATIONS_AUTO;
- 
- static int __init mitigations_parse_cmdline(char *arg)
- {
-@@ -2390,3 +2401,17 @@ static int __init mitigations_parse_cmdline(char *arg)
- 	return 0;
- }
- early_param("mitigations", mitigations_parse_cmdline);
-+
-+/* mitigations=off */
-+bool cpu_mitigations_off(void)
-+{
-+	return cpu_mitigations == CPU_MITIGATIONS_OFF;
-+}
-+EXPORT_SYMBOL_GPL(cpu_mitigations_off);
-+
-+/* mitigations=auto,nosmt */
-+bool cpu_mitigations_auto_nosmt(void)
-+{
-+	return cpu_mitigations == CPU_MITIGATIONS_AUTO_NOSMT;
-+}
-+EXPORT_SYMBOL_GPL(cpu_mitigations_auto_nosmt);
+[1]: https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/soc/qcom/scm.c?h=kernel.lnx.4.9.r28-rel#n555
+
+Changes since v1:
+ - Renamed functions/variables per Vinod's suggestions
+ - Split v1 01/17 into v2 [01,02,03]/18 per Vinod's suggestion
+ - Fix suggestions by Bjorn in v1 09/18 (now v2 10/18)
+ - Refactor last 3 commits per Bjorn suggestions in v1 17/18 and v1 10/18
+
+Changes since RFC:
+ - Fixed missing return values in qcom_scm_call_smccc
+ - Fixed order of arguments in qcom_scm_set_warm_boot_addr
+ - Adjusted logic of SMC convention to properly support older QCOM secure worlds
+ - Boot tested on IFC6410 based on linaro kernel tag:
+   debian-qcom-dragonboard410c-18.01 (which does basic verification of legacy
+   SCM calls: at least warm_boot_addr, cold_boot_addr, and power_down)
+
+Elliot Berman (18):
+  firmware: qcom_scm: Rename macros and structures
+  firmware: qcom_scm: Add funcnum IDs
+  firmware: qcom_scm-64: Make SMCCC macros less magical
+  firmware: qcom_scm: Apply consistent naming scheme to command IDs
+  firmware: qcom_scm: Remove unused qcom_scm_get_version
+  firmware: qcom_scm-64: Move svc/cmd/owner into qcom_scm_desc
+  firmware: qcom_scm-64: Add SCM results to descriptor
+  firmware: qcom_scm-64: Remove qcom_scm_call_do_smccc
+  firmware: qcom_scm-64: Move SMC register filling to
+    qcom_scm_call_smccc
+  firmware: qcom_scm-64: Improve SMC convention detection
+  firmware: qcom_scm-32: Use SMC arch wrappers
+  firmware: qcom_scm-32: Use qcom_scm_desc in non-atomic calls
+  firmware: qcom_scm-32: Move SMCCC register filling to qcom_scm_call
+  firmware: qcom_scm-32: Create common legacy atomic call
+  firmware: qcom_scm-32: Add device argument to atomic calls
+  firmware: qcom_scm: Remove thin wrappers
+  firmware: qcom_scm: Dynamically support SMCCC and legacy conventions
+  firmware: qcom_scm: Order functions, definitions by service/command
+
+ drivers/firmware/Kconfig           |   8 -
+ drivers/firmware/Makefile          |   5 +-
+ drivers/firmware/qcom_scm-32.c     | 621 --------------------------------
+ drivers/firmware/qcom_scm-64.c     | 567 -----------------------------
+ drivers/firmware/qcom_scm-legacy.c | 233 ++++++++++++
+ drivers/firmware/qcom_scm-smccc.c  | 141 ++++++++
+ drivers/firmware/qcom_scm.c        | 708 +++++++++++++++++++++++++++++--------
+ drivers/firmware/qcom_scm.h        | 166 +++++----
+ include/linux/qcom_scm.h           |  99 +++---
+ 9 files changed, 1086 insertions(+), 1462 deletions(-)
+ delete mode 100644 drivers/firmware/qcom_scm-32.c
+ delete mode 100644 drivers/firmware/qcom_scm-64.c
+ create mode 100644 drivers/firmware/qcom_scm-legacy.c
+ create mode 100644 drivers/firmware/qcom_scm-smccc.c
+
 -- 
-1.8.3.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
