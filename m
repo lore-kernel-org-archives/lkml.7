@@ -2,318 +2,184 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A069C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C214C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0A721925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691F721E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAaOFLc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfKLVOS (ORCPT
+        id S1727611AbfKLVO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:14:18 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:44530 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727517AbfKLVN5 (ORCPT
+        Tue, 12 Nov 2019 16:14:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22098 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726952AbfKLVO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:13:57 -0500
-Received: from mr1.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xACLDtK9012865
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:55 -0500
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xACLDoRc021727
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:55 -0500
-Received: by mail-qk1-f199.google.com with SMTP id a16so42244qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:13:55 -0800 (PST)
+        Tue, 12 Nov 2019 16:14:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573593267;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KhaSq6F0boqwPJebWHU+vS4X8WSartUyEjWwqUHsPz4=;
+        b=BAaOFLc1TJKBdf7dJ1oce3nTXUsLtrjbBtRUCaCTtpZ6vRiNg4nSoA1Jt4sejkZaLkkv1+
+        7R5pjvRgjJzgAGcxUbugDQEoWU1M6Ezir/Y5mQHRJd7StQfoVv8pGNThDAwhIC/Wik5qh2
+        PqMZOgZK5I1z0pW66GEbdVay1hRS0w8=
+Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
+ [209.85.219.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-qNM5JECJM3W-I5r0HSksMQ-1; Tue, 12 Nov 2019 16:14:26 -0500
+Received: by mail-yb1-f198.google.com with SMTP id t33so87314ybt.20
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:14:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=vWz5qWU6fNbBoERW9/nUa4gCsQuEg8PE4Fn2E/plUag=;
-        b=MHPJ3oFm0t+XF6u0UJVAd5Fcncw2Cu69/N5GX/MN/YTFycOnHJYNc7T0dcuFJHnBWz
-         ahwAuDLbSVmTIZQFxyoAiHYo17fEaYq44Pg6Fiz1D8GKiEbh31NqLtXuQ6W4NTeSFL5n
-         iT4TgOT1ryTngtgLu429wdK/7toFz4uLwpLwez8vCGxBJ0fYKSm1Jro1okIOceL5YoAu
-         mdePjoQbidKEtPmYzezkxgjWf2SWMUynOr+QsTy2b5N+ECfaeKmhP0ubL+PJKbuk41yv
-         DzkJl0Be4+kLa5hAvMUysqbe4dcQB4GWy4a5wavx1twiVWhXbmgIJiiZQeGh93SFKHdz
-         Ls0g==
-X-Gm-Message-State: APjAAAUObmKXNasfWINQtuGyaKGLLkLNkSNIaowJLOL+6REVl/JHmhjL
-        n6FdPXCriGk4CbYwYu9LbbVs3h0UREUI22TL7P6//QF9pTVLiUJvv3Ufgol2HDgn+B3gI+OUQsc
-        JnOqGYZddUwH/M7fTVTxRLrEBH9TV0PH4QPU=
-X-Received: by 2002:ad4:4e2c:: with SMTP id dm12mr31281831qvb.195.1573593230380;
-        Tue, 12 Nov 2019 13:13:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwveitpZlD3XdcvBQv8maP7sPUqp6dj5WueJm6mmmmAUPelBtYx/SsUzyMn71kNjjFyhPjjHw==
-X-Received: by 2002:ad4:4e2c:: with SMTP id dm12mr31281804qvb.195.1573593229928;
-        Tue, 12 Nov 2019 13:13:49 -0800 (PST)
-Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id 130sm9674214qkd.33.2019.11.12.13.13.48
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=jB1CQxHZY09v+dVO/IW1sLsxw+s5h/wXvYhyMUh4nd4=;
+        b=LxZyNf5QerCxGKlvi/1Coj6/Za0VrPT7sN31J5JMQ9Qfai+TKRpEwnvLTTNoxmOo2x
+         zFGaM2YSZfa5bsou0fyX0t6H8xqlwAYj+MNF/a7qUxXNrbbecDu7mrecFYsGBIpuDsMX
+         CYe2ex5LaXEXtRTRFAbRoxJEgTrRWrmJSQUIBdUrTMstDBheKS4SFH3IFF3XI4ZK5pO6
+         pgBGAqemNHD/SxtJW55gBAX5HqtaaN6o6n3LI0YK6W8ggzcoP2XH+9LAIAwlh8m8HRIq
+         9hl4G1LIsirCOkqiEr9IJUJQPJHbO0b1Eq12eBfhINVl2ijDSKwwb1DIYcUlSMTftWux
+         A30Q==
+X-Gm-Message-State: APjAAAUY7yw0CsMv+83CdMe9bJ1+YfJXYdJ3Vgohwl1Sx8m4gBIkbW6f
+        32u7xjM5xJDyHTMFvpV0DanvNuDmRH9y/nl4gGNszBTwqD/+nhgxQbQ+Vp/Gj8RgeXGq/cB69sf
+        JMB0hQS8SczGyi2Akk7NcpuRl
+X-Received: by 2002:a81:10d4:: with SMTP id 203mr49037ywq.390.1573593265499;
+        Tue, 12 Nov 2019 13:14:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwEcKNvBFCa/Pi9LABko8hxEtyRnZOUme9kRE5c2iBVZmTkmYukiWzYoyB8ZRofsuIDcutGWg==
+X-Received: by 2002:a81:10d4:: with SMTP id 203mr49020ywq.390.1573593265161;
+        Tue, 12 Nov 2019 13:14:25 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id v5sm128965ywi.95.2019.11.12.13.14.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 13:13:49 -0800 (PST)
-From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
-X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
-Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/12] staging: exfat: Clean up the namespace pollution part 6
-Date:   Tue, 12 Nov 2019 16:12:36 -0500
-Message-Id: <20191112211238.156490-11-Valdis.Kletnieks@vt.edu>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
-References: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
+        Tue, 12 Nov 2019 13:14:24 -0800 (PST)
+Date:   Tue, 12 Nov 2019 14:14:23 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Christian Bundy <christianbundy@fraction.io>
+Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
+Message-ID: <20191112211423.vgtervfk52txgfmm@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Christian Bundy <christianbundy@fraction.io>
+References: <20191111233418.17676-1-jsnitsel@redhat.com>
+ <20191112200328.GA11213@linux.intel.com>
+ <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
+ <20191112202623.GB5584@ziepe.ca>
+ <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
+ <CALzcddv2aLQ1krYFeNtWNOxyF3aSD0-p3j_p3CgS2Vx-__sQPA@mail.gmail.com>
+ <20191112204623.GG5584@ziepe.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191112204623.GG5584@ziepe.ca>
+X-MC-Unique: qNM5JECJM3W-I5r0HSksMQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move a few more things so we can make them static and clear exfat.h out.
-At this point, pretty much everything that can be static is static.
-(Note: FAT_sync(), buf_sync(), and sync_alloc_bitmap() aren't called
-anyplace, but aren't static because (a) that will toss an error and
-(b) they probably *should* be getting called someplace
+On Tue Nov 12 19, Jason Gunthorpe wrote:
+>On Tue, Nov 12, 2019 at 01:31:09PM -0700, Jerry Snitselaar wrote:
+>> On Tue, Nov 12, 2019 at 1:28 PM Jerry Snitselaar <jsnitsel@redhat.com> w=
+rote:
+>> >
+>> > On Tue, Nov 12, 2019 at 1:26 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>> > >
+>> > > On Tue, Nov 12, 2019 at 01:23:33PM -0700, Jerry Snitselaar wrote:
+>> > > > On Tue, Nov 12, 2019 at 1:03 PM Jarkko Sakkinen
+>> > > > <jarkko.sakkinen@linux.intel.com> wrote:
+>> > > > >
+>> > > > > On Mon, Nov 11, 2019 at 04:34:18PM -0700, Jerry Snitselaar wrote=
+:
+>> > > > > > With power gating moved out of the tpm_transmit code we need
+>> > > > > > to power on the TPM prior to calling tpm_get_timeouts.
+>> > > > > >
+>> > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>> > > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
+>> > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>> > > > > > Cc: linux-kernel@vger.kernel.org
+>> > > > > > Cc: linux-stable@vger.kernel.org
+>> > > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of t=
+pm_transmit()")
+>> > > > > > Reported-by: Christian Bundy <christianbundy@fraction.io>
+>> > > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>> > > > > >  drivers/char/tpm/tpm_tis_core.c | 3 ++-
+>> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+>> > > > > >
+>> > > > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tp=
+m/tpm_tis_core.c
+>> > > > > > index 270f43acbb77..cb101cec8f8b 100644
+>> > > > > > +++ b/drivers/char/tpm/tpm_tis_core.c
+>> > > > > > @@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev=
+, struct tpm_tis_data *priv, int irq,
+>> > > > > >                * to make sure it works. May as well use that c=
+ommand to set the
+>> > > > > >                * proper timeouts for the driver.
+>> > > > > >                */
+>> > > > > > +             tpm_chip_start(chip);
+>> > > > > >               if (tpm_get_timeouts(chip)) {
+>> > > > > >                       dev_err(dev, "Could not get TPM timeouts=
+ and durations\n");
+>> > > > > >                       rc =3D -ENODEV;
+>> > > > > > +                     tpm_stop_chip(chip);
+>> > > > > >                       goto out_err;
+>> > > > > >               }
+>> > > > >
+>> > > > > Couldn't this call just be removed?
+>> > > > >
+>> > > > > /Jarkko
+>> > > > >
+>> > > >
+>> > > > Probably. It will eventually get called when tpm_chip_register
+>> > > > happens. I don't know what the reason was for trying it prior to t=
+he
+>> > > > irq probe.
+>> > >
+>> > > At least tis once needed the timeouts before registration because it
+>> > > was issuing TPM commands to complete its setup.
+>> > >
+>> > > If timeouts have not been set then no TPM command should be executed=
+.
+>> >
+>> > Would it function with the timeout values set at the beginning of
+>> > tpm_tis_core_init (max values)?
+>>
+>> I guess that doesn't set the duration values though
+>
+>There is no reason to use anything but the correct timeouts, as read
+>from the device.
+>
+>Jason
+>
 
-Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
----
- drivers/staging/exfat/exfat.h      |   8 --
- drivers/staging/exfat/exfat_core.c | 170 ++++++++++++++---------------
- 2 files changed, 85 insertions(+), 93 deletions(-)
+Should there be a check in tpm1_get_timeouts and tpm2_get_timeouts:
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index c41fc3ec9f29..188ea1bd7162 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -780,12 +780,6 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
- 					       u32 type,
- 					       struct dentry_t **file_ep);
- void release_entry_set(struct entry_set_cache_t *es);
--s32 write_whole_entry_set(struct super_block *sb, struct entry_set_cache_t *es);
--s32 write_partial_entries_in_entry_set(struct super_block *sb,
--				       struct entry_set_cache_t *es,
--				       struct dentry_t *ep, u32 count);
--s32 search_deleted_or_unused_entry(struct super_block *sb,
--				   struct chain_t *p_dir, s32 num_entries);
- s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
- 			   u32 type);
- void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
-@@ -798,8 +792,6 @@ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir);
- s32 get_num_entries_and_dos_name(struct super_block *sb, struct chain_t *p_dir,
- 				 struct uni_name_t *p_uniname, s32 *entries,
- 				 struct dos_name_t *p_dosname);
--s32 extract_uni_name_from_name_entry(struct name_dentry_t *ep,
--				     u16 *uniname, s32 order);
- u16 calc_checksum_2byte(void *data, s32 len, u16 chksum, s32 type);
- 
- /* name resolution functions */
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 8d38f70c9726..3cc13aaaed24 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -1140,6 +1140,73 @@ void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
- 	buf_unlock(sb, sector);
- }
- 
-+static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
-+						struct entry_set_cache_t *es,
-+						sector_t sec, s32 off, u32 count)
-+{
-+	s32 num_entries, buf_off = (off - es->offset);
-+	u32 remaining_byte_in_sector, copy_entries;
-+	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-+	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-+	u32 clu;
-+	u8 *buf, *esbuf = (u8 *)&es->__buf;
-+
-+	pr_debug("%s entered es %p sec %llu off %d count %d\n",
-+		 __func__, es, (unsigned long long)sec, off, count);
-+	num_entries = count;
-+
-+	while (num_entries) {
-+		/* white per sector base */
-+		remaining_byte_in_sector = (1 << p_bd->sector_size_bits) - off;
-+		copy_entries = min_t(s32,
-+				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
-+				     num_entries);
-+		buf = buf_getblk(sb, sec);
-+		if (!buf)
-+			goto err_out;
-+		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
-+		pr_debug("copying %d entries from %p to sector %llu\n",
-+			 copy_entries, (esbuf + buf_off),
-+			 (unsigned long long)sec);
-+		memcpy(buf + off, esbuf + buf_off,
-+		       copy_entries << DENTRY_SIZE_BITS);
-+		buf_modify(sb, sec);
-+		num_entries -= copy_entries;
-+
-+		if (num_entries) {
-+			/* get next sector */
-+			if (IS_LAST_SECTOR_IN_CLUSTER(sec)) {
-+				clu = GET_CLUSTER_FROM_SECTOR(sec);
-+				if (es->alloc_flag == 0x03) {
-+					clu++;
-+				} else {
-+					if (FAT_read(sb, clu, &clu) == -1)
-+						goto err_out;
-+				}
-+				sec = START_SECTOR(clu);
-+			} else {
-+				sec++;
-+			}
-+			off = 0;
-+			buf_off += copy_entries << DENTRY_SIZE_BITS;
-+		}
-+	}
-+
-+	pr_debug("%s exited successfully\n", __func__);
-+	return 0;
-+err_out:
-+	pr_debug("%s failed\n", __func__);
-+	return -EINVAL;
-+}
-+
-+/* write back all entries in entry set */
-+static s32 write_whole_entry_set(struct super_block *sb, struct entry_set_cache_t *es)
-+{
-+	return __write_partial_entries_in_entry_set(sb, es, es->sector,
-+						    es->offset,
-+						    es->num_entries);
-+}
-+
- void update_dir_checksum_with_entry_set(struct super_block *sb,
- 					struct entry_set_cache_t *es)
- {
-@@ -1421,75 +1488,8 @@ void release_entry_set(struct entry_set_cache_t *es)
- 	kfree(es);
- }
- 
--static s32 __write_partial_entries_in_entry_set(struct super_block *sb,
--						struct entry_set_cache_t *es,
--						sector_t sec, s32 off, u32 count)
--{
--	s32 num_entries, buf_off = (off - es->offset);
--	u32 remaining_byte_in_sector, copy_entries;
--	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
--	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
--	u32 clu;
--	u8 *buf, *esbuf = (u8 *)&es->__buf;
--
--	pr_debug("%s entered es %p sec %llu off %d count %d\n",
--		 __func__, es, (unsigned long long)sec, off, count);
--	num_entries = count;
--
--	while (num_entries) {
--		/* white per sector base */
--		remaining_byte_in_sector = (1 << p_bd->sector_size_bits) - off;
--		copy_entries = min_t(s32,
--				     remaining_byte_in_sector >> DENTRY_SIZE_BITS,
--				     num_entries);
--		buf = buf_getblk(sb, sec);
--		if (!buf)
--			goto err_out;
--		pr_debug("es->buf %p buf_off %u\n", esbuf, buf_off);
--		pr_debug("copying %d entries from %p to sector %llu\n",
--			 copy_entries, (esbuf + buf_off),
--			 (unsigned long long)sec);
--		memcpy(buf + off, esbuf + buf_off,
--		       copy_entries << DENTRY_SIZE_BITS);
--		buf_modify(sb, sec);
--		num_entries -= copy_entries;
--
--		if (num_entries) {
--			/* get next sector */
--			if (IS_LAST_SECTOR_IN_CLUSTER(sec)) {
--				clu = GET_CLUSTER_FROM_SECTOR(sec);
--				if (es->alloc_flag == 0x03) {
--					clu++;
--				} else {
--					if (FAT_read(sb, clu, &clu) == -1)
--						goto err_out;
--				}
--				sec = START_SECTOR(clu);
--			} else {
--				sec++;
--			}
--			off = 0;
--			buf_off += copy_entries << DENTRY_SIZE_BITS;
--		}
--	}
--
--	pr_debug("%s exited successfully\n", __func__);
--	return 0;
--err_out:
--	pr_debug("%s failed\n", __func__);
--	return -EINVAL;
--}
--
--/* write back all entries in entry set */
--s32 write_whole_entry_set(struct super_block *sb, struct entry_set_cache_t *es)
--{
--	return __write_partial_entries_in_entry_set(sb, es, es->sector,
--						    es->offset,
--						    es->num_entries);
--}
--
- /* search EMPTY CONTINUOUS "num_entries" entries */
--s32 search_deleted_or_unused_entry(struct super_block *sb,
-+static s32 search_deleted_or_unused_entry(struct super_block *sb,
- 				   struct chain_t *p_dir, s32 num_entries)
- {
- 	int i, dentry, num_empty = 0;
-@@ -1665,6 +1665,23 @@ static s32 find_empty_entry(struct inode *inode, struct chain_t *p_dir, s32 num_
- 	return dentry;
- }
- 
-+static s32 extract_uni_name_from_name_entry(struct name_dentry_t *ep, u16 *uniname,
-+				     s32 order)
-+{
-+	int i, len = 0;
-+
-+	for (i = 0; i < 30; i += 2) {
-+		*uniname = GET16_A(ep->unicode_0_14 + i);
-+		if (*uniname == 0x0)
-+			return len;
-+		uniname++;
-+		len++;
-+	}
-+
-+	*uniname = 0x0;
-+	return len;
-+}
-+
- /* return values of exfat_find_dir_entry()
-  * >= 0 : return dir entiry position with the name in dir
-  * -1 : (root dir, ".") it is the root dir itself
-@@ -2013,23 +2030,6 @@ static void exfat_get_uni_name_from_ext_entry(struct super_block *sb,
- 	release_entry_set(es);
- }
- 
--s32 extract_uni_name_from_name_entry(struct name_dentry_t *ep, u16 *uniname,
--				     s32 order)
--{
--	int i, len = 0;
--
--	for (i = 0; i < 30; i += 2) {
--		*uniname = GET16_A(ep->unicode_0_14 + i);
--		if (*uniname == 0x0)
--			return len;
--		uniname++;
--		len++;
--	}
--
--	*uniname = 0x0;
--	return len;
--}
--
- static s32 exfat_calc_num_entries(struct uni_name_t *p_uniname)
- {
- 	s32 len;
--- 
-2.24.0
+=09if (chip->flags & TPM_CHIP_FLAG_HAVE_TIMEOUTS)
+=09=09return 0;
+
+to skip going through it again in the auto startup code if it was
+already called and set?
 
