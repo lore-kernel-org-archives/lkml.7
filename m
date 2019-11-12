@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196D4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CC5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFD5222C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25989222C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfKLQxn (ORCPT
+        id S1727608AbfKLQxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:53:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34418 "EHLO mx1.suse.de"
+        Tue, 12 Nov 2019 11:53:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34320 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727516AbfKLQxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:53:40 -0500
+        id S1727549AbfKLQxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:38 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5526BB398;
-        Tue, 12 Nov 2019 16:53:38 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id CB4D3B37C;
+        Tue, 12 Nov 2019 16:53:36 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 16/33] powerpc/64s/exception: hdecrementer avoid touching the stack
-Date:   Tue, 12 Nov 2019 17:52:14 +0100
-Message-Id: <7d943bd8afda8c4b9a36080caadc9b53d1ffb54c.1573576649.git.msuchanek@suse.de>
+Subject: [PATCH 15/33] powerpc/64s/exception: trim unused arguments from KVMTEST macro
+Date:   Tue, 12 Nov 2019 17:52:13 +0100
+Message-Id: <e7bda51932f8e7a41b114cf75747325d33a790d6.1573576649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
 References: <cover.1573576649.git.msuchanek@suse.de>
@@ -81,100 +81,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-The hdec interrupt handler is reported to sometimes fire in Linux if
-KVM leaves it pending after a guest exists. This is harmless, so there
-is a no-op handler for it.
-
-The interrupt handler currently uses the regular kernel stack. Change
-this to avoid touching the stack entirely.
-
-This should be the last place where the regular Linux stack can be
-accessed with asynchronous interrupts (including PMI) soft-masked.
-It might be possible to take advantage of this invariant, e.g., to
-context switch the kernel stack SLB entry without clearing MSR[EE].
-
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/include/asm/time.h      |  1 -
- arch/powerpc/kernel/exceptions-64s.S | 25 ++++++++++++++++++++-----
- arch/powerpc/kernel/time.c           |  9 ---------
- 3 files changed, 20 insertions(+), 15 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/time.h b/arch/powerpc/include/asm/time.h
-index 08dbe3e6831c..e0107495c4de 100644
---- a/arch/powerpc/include/asm/time.h
-+++ b/arch/powerpc/include/asm/time.h
-@@ -24,7 +24,6 @@ extern struct clock_event_device decrementer_clockevent;
- 
- 
- extern void generic_calibrate_decr(void);
--extern void hdec_interrupt(struct pt_regs *regs);
- 
- /* Some sane defaults: 125 MHz timebase, 1GHz processor */
- extern unsigned long ppc_proc_freq;
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 9fa71d51ecf4..7a234e6d7bf5 100644
+index abf26db36427..9fa71d51ecf4 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1491,6 +1491,8 @@ EXC_COMMON_BEGIN(decrementer_common)
- INT_DEFINE_BEGIN(hdecrementer)
- 	IVEC=0x980
- 	IHSRR=EXC_HV
-+	ISTACK=0
-+	IRECONCILE=0
- 	IKVM_REAL=1
- 	IKVM_VIRT=1
- INT_DEFINE_END(hdecrementer)
-@@ -1502,11 +1504,24 @@ EXC_VIRT_BEGIN(hdecrementer, 0x4980, 0x80)
- 	GEN_INT_ENTRY hdecrementer, virt=1
- EXC_VIRT_END(hdecrementer, 0x4980, 0x80)
- EXC_COMMON_BEGIN(hdecrementer_common)
--	GEN_COMMON hdecrementer
--	bl	save_nvgprs
--	addi	r3,r1,STACK_FRAME_OVERHEAD
--	bl	hdec_interrupt
--	b	ret_from_except
-+	__GEN_COMMON_ENTRY hdecrementer
-+	/*
-+	 * Hypervisor decrementer interrupts not caught by the KVM test
-+	 * shouldn't occur but are sometimes left pending on exit from a KVM
-+	 * guest.  We don't need to do anything to clear them, as they are
-+	 * edge-triggered.
-+	 *
-+	 * Be careful to avoid touching the kernel stack.
-+	 */
-+	ld	r10,PACA_EXGEN+EX_CTR(r13)
-+	mtctr	r10
-+	mtcrf	0x80,r9
-+	ld	r9,PACA_EXGEN+EX_R9(r13)
-+	ld	r10,PACA_EXGEN+EX_R10(r13)
-+	ld	r11,PACA_EXGEN+EX_R11(r13)
-+	ld	r12,PACA_EXGEN+EX_R12(r13)
-+	ld	r13,PACA_EXGEN+EX_R13(r13)
-+	HRFI_TO_KERNEL
- 
- 	GEN_KVM hdecrementer
- 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 694522308cd5..bebc8c440289 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -663,15 +663,6 @@ void timer_broadcast_interrupt(void)
- }
+@@ -224,7 +224,7 @@ do_define_int n
+ #define kvmppc_interrupt kvmppc_interrupt_pr
  #endif
  
--/*
-- * Hypervisor decrementer interrupts shouldn't occur but are sometimes
-- * left pending on exit from a KVM guest.  We don't need to do anything
-- * to clear them, as they are edge-triggered.
-- */
--void hdec_interrupt(struct pt_regs *regs)
--{
--}
--
- #ifdef CONFIG_SUSPEND
- static void generic_suspend_disable_irqs(void)
- {
+-.macro KVMTEST name, hsrr, n
++.macro KVMTEST name
+ 	lbz	r10,HSTATE_IN_GUEST(r13)
+ 	cmpwi	r10,0
+ 	bne	\name\()_kvm
+@@ -293,7 +293,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ .endm
+ 
+ #else
+-.macro KVMTEST name, hsrr, n
++.macro KVMTEST name
+ .endm
+ .macro GEN_KVM name
+ .endm
+@@ -437,7 +437,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ DEFINE_FIXED_SYMBOL(\name\()_common_real)
+ \name\()_common_real:
+ 	.if IKVM_REAL
+-		KVMTEST \name IHSRR IVEC
++		KVMTEST \name
+ 	.endif
+ 
+ 	ld	r10,PACAKMSR(r13)	/* get MSR value for kernel */
+@@ -460,7 +460,7 @@ DEFINE_FIXED_SYMBOL(\name\()_common_real)
+ DEFINE_FIXED_SYMBOL(\name\()_common_virt)
+ \name\()_common_virt:
+ 	.if IKVM_VIRT
+-		KVMTEST \name IHSRR IVEC
++		KVMTEST \name
+ 1:
+ 	.endif
+ 	.endif /* IVIRT */
+@@ -1595,7 +1595,7 @@ INT_DEFINE_END(system_call)
+ 	GET_PACA(r13)
+ 	std	r10,PACA_EXGEN+EX_R10(r13)
+ 	INTERRUPT_TO_KERNEL
+-	KVMTEST system_call EXC_STD 0xc00 /* uses r10, branch to system_call_kvm */
++	KVMTEST system_call /* uses r10, branch to system_call_kvm */
+ 	mfctr	r9
+ #else
+ 	mr	r9,r13
 -- 
 2.23.0
 
