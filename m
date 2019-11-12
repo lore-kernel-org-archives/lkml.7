@@ -2,112 +2,127 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31670C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A56C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080E62084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bq6pJIEV"
+	by mail.kernel.org (Postfix) with ESMTP id D411721925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573566563;
+	bh=6XMWe/tgt0P/juZyTHtJJv45+E6TW1sRskKkrjJOLJc=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=nue2Wf07zn8mf+xD+sg95EcaQwmi4NDXgZASRy6CXhBRNYrbb1qJLyFNJT5/geVdi
+	 04ZSxXfpgf/zmLrcYaV2AraHBq1HcXVrj4199wEscCM14evSPu5//OFFvONcPerqkS
+	 YluxJX+Zp5Ryr0Fq8ebCk+t1nFFp3DY+1Ti/0cUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfKLNs5 (ORCPT
+        id S1727427AbfKLNtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:48:57 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:42184 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfKLNs4 (ORCPT
+        Tue, 12 Nov 2019 08:49:23 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:50360 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726946AbfKLNtW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:48:56 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACDimK6003260;
-        Tue, 12 Nov 2019 13:47:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=sMMKPgpww4smX1YXtV6wvZBBiRbV6FeG/gIOCQT+ds0=;
- b=Bq6pJIEVs4RMpNnXnIBOggUpB4Pl+OJCfwsaO7OdULOY1eVaDRgmE4FttDhZAl2GFacg
- Jc5xudY3smfglUuw/njbjej9AVjqLt2Y9N7TKzdzczNr6CW7EocX6h0e//J3Pj27Lm05
- SbcaevEvvY1l5GUe796cnfT+9fhFKLKdUueVLLdw0ojx9iPLUJ2tum5VGUu5djZtUKrL
- 9MupeomPWigh66UlhkInUrtyqKTUArrVvaC4BEbPfur+MfwYXWVuxbF+Ed7tU9wQy4vC
- oHcCCQb7+V4v4C8C1aDl1Sy36cz9HSL9FhfUob7U0bo3Pb+mcXeLSCTCa4zhKO6qjY4y IQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2w5mvtmvda-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 13:47:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACDhMli076743;
-        Tue, 12 Nov 2019 13:47:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2w7vbav1xw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 13:47:04 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xACDkuC7009057;
-        Tue, 12 Nov 2019 13:46:58 GMT
-Received: from tomti.i.net-space.pl (/10.175.202.33)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 05:46:56 -0800
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        hpa@zytor.com, jgross@suse.com, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, mingo@redhat.com, rdunlap@infradead.org,
-        ross.philipson@oracle.com, tglx@linutronix.de
-Subject: [PATCH v6 0/3] x86/boot: Introduce the kernel_info et consortes
-Date:   Tue, 12 Nov 2019 14:46:37 +0100
-Message-Id: <20191112134640.16035-1-daniel.kiper@oracle.com>
-X-Mailer: git-send-email 2.11.0
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=659
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911120124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9438 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=725 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911120124
+        Tue, 12 Nov 2019 08:49:22 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iUWXl-00084H-Gl; Tue, 12 Nov 2019 14:49:17 +0100
+To:     Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII  PHYs
+X-PHP-Originating-Script: 0:main.inc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 Nov 2019 14:58:38 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
+In-Reply-To: <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
+References: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
+ <20191112132010.18274-3-linux@rasmusvillemoes.dk>
+ <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
+Message-ID: <6d4292fcb0cf290837306388bdfe9b0f@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: olteanv@gmail.com, linux@rasmusvillemoes.dk, shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2019-11-12 14:53, Vladimir Oltean wrote:
+> On Tue, 12 Nov 2019 at 15:20, Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+>>
+>> From: Vladimir Oltean <olteanv@gmail.com>
+>>
+>> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and 
+>> eth1
+>> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+>>
+>> Switching to interrupts offloads the PHY library from the task of
+>> polling the MDIO status and AN registers (1, 4, 5) every second.
+>>
+>> Unfortunately, the BCM5464R quad PHY connected to the switch does 
+>> not
+>> appear to have an interrupt line routed to the SoC.
+>>
+>> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+>> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> ---
+>>  arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts 
+>> b/arch/arm/boot/dts/ls1021a-tsn.dts
+>> index 5b7689094b70..135d36461af4 100644
+>> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
+>> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+>> @@ -203,11 +203,15 @@
+>>         /* AR8031 */
+>>         sgmii_phy1: ethernet-phy@1 {
+>>                 reg = <0x1>;
+>> +               /* SGMII1_PHY_INT_B: connected to IRQ2, active low 
+>> */
+>> +               interrupts-extended = <&extirq 2 
+>> IRQ_TYPE_EDGE_FALLING>;
+>>         };
+>>
+>>         /* AR8031 */
+>>         sgmii_phy2: ethernet-phy@2 {
+>>                 reg = <0x2>;
+>> +               /* SGMII2_PHY_INT_B: connected to IRQ2, active low 
+>> */
+>> +               interrupts-extended = <&extirq 2 
+>> IRQ_TYPE_EDGE_FALLING>;
+>>         };
+>>
+>>         /* BCM5464 quad PHY */
+>> --
+>> 2.23.0
+>>
+>
+> +netdev and Andrew for this patch, since the interrupt polarity 
+> caught
+> his attention in v1.
 
-Due to very limited space in the setup_header this patch series introduces new
-kernel_info struct which will be used to convey information from the kernel to
-the bootloader. This way the boot protocol can be extended regardless of the
-setup_header limitations. Additionally, the patch series introduces some
-convenience features like the setup_indirect struct and the
-kernel_info.setup_type_max field.
+Certainly, the comments and the interrupt specifier do not match.
+Which one is true?
 
-Daniel
-
- Documentation/x86/boot.rst             | 174 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- arch/x86/boot/Makefile                 |   2 +-
- arch/x86/boot/compressed/Makefile      |   4 +-
- arch/x86/boot/compressed/kaslr.c       |  12 ++++++
- arch/x86/boot/compressed/kernel_info.S |  22 ++++++++++
- arch/x86/boot/header.S                 |   3 +-
- arch/x86/boot/tools/build.c            |   5 +++
- arch/x86/include/uapi/asm/bootparam.h  |  16 +++++++-
- arch/x86/kernel/e820.c                 |  11 +++++
- arch/x86/kernel/kdebugfs.c             |  21 ++++++++--
- arch/x86/kernel/ksysfs.c               |  31 ++++++++++----
- arch/x86/kernel/setup.c                |   6 +++
- arch/x86/mm/ioremap.c                  |  11 +++++
- 13 files changed, 302 insertions(+), 16 deletions(-)
-
-Daniel Kiper (3):
-      x86/boot: Introduce the kernel_info
-      x86/boot: Introduce the kernel_info.setup_type_max
-      x86/boot: Introduce the setup_indirect
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
