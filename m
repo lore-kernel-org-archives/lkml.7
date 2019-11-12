@@ -2,92 +2,142 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE81C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14669C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7352F2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Qk0Uxk/g"
+	by mail.kernel.org (Postfix) with ESMTP id E4E4A2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfKLA7v (ORCPT
+        id S1727406AbfKLA7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:59:51 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34617 "EHLO ozlabs.org"
+        Mon, 11 Nov 2019 19:59:50 -0500
+Received: from mga14.intel.com ([192.55.52.115]:61338 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbfKLA7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:59:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47BqCN2b3dz9s7T;
-        Tue, 12 Nov 2019 11:59:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573520384;
-        bh=keCg8e+U+Atffb3YaegfdPkbXQVajztNOGjGSeZJiyE=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Qk0Uxk/gFaiyZ/AtoHKUxjlALFcXFappKOTYT43yi9KcB6Ao+O7RBWQzU+OlZ/mIz
-         PDTgA04ddEw4ua8xiuEDXSCoK0R1Pxde3n1A2+hlMZAIABJY7ScB0pfz99b5KSsaX6
-         EnQ4lBVyC72kVQ+/wN4SpE/lYLh1wEJkBVLQI2qZmPg81Yhb3CfYF+FsJJwwNo+R6F
-         FNQtYuVeoD8YFL+EtsFwvpp61h5Vvt+oBcbHdKMlKVmpNfbOR2UYF6Hb0fIqelRdRN
-         0T4P1L9GKDjUxzUbrbs1tMlPvnN4YkZUJDtXzdAhFvpKmTkSPlG4ge4kQD3BdZ8XNr
-         b3D4u3Iux5tyw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-In-Reply-To: <871rue4so0.fsf@mpe.ellerman.id.au>
-References: <20191105211920.787df2ab@canb.auug.org.au> <0892a018-152f-629d-3dd0-60ce79f2887b@oracle.com> <871rue4so0.fsf@mpe.ellerman.id.au>
-Date:   Tue, 12 Nov 2019 11:59:41 +1100
-Message-ID: <87v9rp3o5e.fsf@mpe.ellerman.id.au>
+        id S1727337AbfKLA7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:59:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 16:59:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,294,1569308400"; 
+   d="scan'208";a="215864805"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga002.jf.intel.com with ESMTP; 11 Nov 2019 16:59:43 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 40F57301A83; Mon, 11 Nov 2019 16:59:43 -0800 (PST)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     jolsa@kernel.org
+Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v6 12/12] perf stat: Use affinity for enabling/disabling events
+Date:   Mon, 11 Nov 2019 16:59:41 -0800
+Message-Id: <20191112005941.649137-13-andi@firstfloor.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191112005941.649137-1-andi@firstfloor.org>
+References: <20191112005941.649137-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> writes:
->
-> Mike Kravetz <mike.kravetz@oracle.com> writes:
->> On 11/5/19 2:19 AM, Stephen Rothwell wrote:
-...
->> From 4b3ab017e639e4e583fff801e6d8e6727b7877e8 Mon Sep 17 00:00:00 2001
->> From: Mike Kravetz <mike.kravetz@oracle.com>
->> Date: Tue, 5 Nov 2019 15:12:15 -0800
->> Subject: [PATCH] powerpc/mm: remove pmd_huge/pud_huge stubs and include
->>  hugetlb.h
->>
->> This removes the power specific stubs created by commit aad71e3928be
->> ("powerpc/mm: Fix build break with RADIX=y & HUGETLBFS=n") used when
->> !CONFIG_HUGETLB_PAGE.  Instead, it addresses the build break by
->> getting the definitions from <linux/hugetlb.h>.
->>
->> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
->> ---
->>  arch/powerpc/include/asm/book3s/64/pgtable-4k.h  | 3 ---
->>  arch/powerpc/include/asm/book3s/64/pgtable-64k.h | 3 ---
->>  arch/powerpc/mm/book3s64/radix_pgtable.c         | 1 +
->>  3 files changed, 1 insertion(+), 6 deletions(-)
->
-> The two pgtable headers are included eventually by our top-level
-> pgtable.h, and that is included by over 100 files. So I worry this is
-> going to break the build somewhere in some obscure configuration.
->
-> I'll push it through some test builds and see what happens.
+From: Andi Kleen <ak@linux.intel.com>
 
-Seems OK, it didn't introduce any new build failures.
+Restructure event enabling/disabling to use affinity, which
+minimizes the number of IPIs needed.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Before on a large test case with 94 CPUs:
 
-cheers
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 54.65    1.899986          22     84812       660 ioctl
+
+after:
+
+ 39.21    0.930451          10     84796       644 ioctl
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+
+---
+
+v2: Use new iterator macros
+v3: Use new iterator macros
+v4: Update iterators again
+---
+ tools/perf/util/evlist.c | 40 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 37 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 17960e4d3a45..682a1f37d244 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -378,11 +378,28 @@ bool evsel__cpu_iter_skip(struct evsel *ev, int cpu)
+ void evlist__disable(struct evlist *evlist)
+ {
+ 	struct evsel *pos;
++	struct affinity affinity;
++	int cpu, i;
++
++	if (affinity__setup(&affinity) < 0)
++		return;
++
++	evlist__for_each_cpu (evlist, i, cpu) {
++		affinity__set(&affinity, cpu);
+ 
++		evlist__for_each_entry(evlist, pos) {
++			if (evsel__cpu_iter_skip(pos, cpu))
++				continue;
++			if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
++				continue;
++			evsel__disable_cpu(pos, pos->cpu_iter - 1);
++		}
++	}
++	affinity__cleanup(&affinity);
+ 	evlist__for_each_entry(evlist, pos) {
+-		if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
++		if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+-		evsel__disable(pos);
++		pos->disabled = true;
+ 	}
+ 
+ 	evlist->enabled = false;
+@@ -391,11 +408,28 @@ void evlist__disable(struct evlist *evlist)
+ void evlist__enable(struct evlist *evlist)
+ {
+ 	struct evsel *pos;
++	struct affinity affinity;
++	int cpu, i;
+ 
++	if (affinity__setup(&affinity) < 0)
++		return;
++
++	evlist__for_each_cpu (evlist, i, cpu) {
++		affinity__set(&affinity, cpu);
++
++		evlist__for_each_entry(evlist, pos) {
++			if (evsel__cpu_iter_skip(pos, cpu))
++				continue;
++			if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
++				continue;
++			evsel__enable_cpu(pos, pos->cpu_iter - 1);
++		}
++	}
++	affinity__cleanup(&affinity);
+ 	evlist__for_each_entry(evlist, pos) {
+ 		if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+-		evsel__enable(pos);
++		pos->disabled = false;
+ 	}
+ 
+ 	evlist->enabled = true;
+-- 
+2.23.0
+
