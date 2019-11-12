@@ -2,546 +2,1673 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E67C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4A7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4813214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:03:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AqOtEItX"
+	by mail.kernel.org (Postfix) with ESMTP id 9AD6921D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfKLQDG (ORCPT
+        id S1727097AbfKLQEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:03:06 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45516 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfKLQDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:03:06 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v8so13242963lfa.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:03:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J4jwRZqjd4l540cGkxytaRFha/R6Ih/k2goKtfn0EIo=;
-        b=AqOtEItXImqKxZHhAJWBsVyFp5jrHd8WvnpVRfxmlFX/7g0KlzyiYdqqWFVd6MS9kM
-         oZFGPUxkIf7I3phqGqetaxRvB80lpfsuzksy3MvI6OgK+ERS/7zBH3jJlfMiHygRrNy0
-         HwT69WnwiZ3bPP0BY3yDqC7tGpi+8xyDzIN05/AdVfo2/UThFy/WqsrsyQ25XVv7c9Z7
-         QeRdnejSlEUcQj2GJPkape+TMrbTg5IuVnTxvZ/HB4X+h1PzWgyfscKftKco9A3yywet
-         XOAXo+9204vtPeq4UKHIlVci4JFtdxccW19C2v4uye4oIQXc/3IXWUr+rbI7cmRwqE6n
-         BmfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=J4jwRZqjd4l540cGkxytaRFha/R6Ih/k2goKtfn0EIo=;
-        b=K2E5wz3GFDyBHlhnd/lZgF57U6n4XL0rTd/Nz3VgDyFr065pKtudSOe8OHFNd6w+m9
-         quv5YJbbI/enD++RZ5Ip67yPNkP0wBpaDamkCrWAk0kNxCTdoJ+pZXDageUJNuS5KST0
-         ZmjrCAYmgp3kLSkprdtIRYybt6olhVAj2Y7HVjcFj53zES8my26gAKBDpcbLMDgh0A0B
-         //mtJ907W//kt7ywCeCLEebXptlzugVzeTpemO9A8kw2/tdanY7WH/86pdcKn81BnurM
-         WiEjYrhY4vxH+EjNNHy6xGhyHklsQMaSGs4ErDYPjh3tOb2AXJs0DfRU9Ogdqhz/9XWr
-         CVLg==
-X-Gm-Message-State: APjAAAUMQ/VIZLwfzn8hxYCOGUqPEDfO5yWJy/skQKe3PV3xaY7pcYUo
-        jS/IOS83+65GcFuP4JQsiZ8seQ==
-X-Google-Smtp-Source: APXvYqwyUItMaWUVjD9+EmnxpEsowI8xx5HMmUAe2mAdlc3qwMvVKRlOYFi9tIgYUkZ3TYkYx8xszg==
-X-Received: by 2002:ac2:5967:: with SMTP id h7mr19346554lfp.119.1573574583220;
-        Tue, 12 Nov 2019 08:03:03 -0800 (PST)
-Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
-        by smtp.gmail.com with ESMTPSA id y189sm15028284lfc.9.2019.11.12.08.03.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 08:03:02 -0800 (PST)
-Date:   Tue, 12 Nov 2019 18:03:00 +0200
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Po Liu <po.liu@nxp.com>
-Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [net-next, 1/2] enetc: Configure the Time-Aware Scheduler via
- tc-taprio offload
-Message-ID: <20191112160258.GA1833@khorivan>
-Mail-Followup-To: Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-References: <20191111042715.13444-1-Po.Liu@nxp.com>
+        Tue, 12 Nov 2019 11:04:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:36712 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbfKLQEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:04:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 973BB30E;
+        Tue, 12 Nov 2019 08:03:59 -0800 (PST)
+Received: from e112479-lin.warwick.arm.com (e112479-lin.warwick.arm.com [10.32.36.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D0133F534;
+        Tue, 12 Nov 2019 08:03:56 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     nd@arm.com, james.clark@arm.com,
+        John Garry <john.garry@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kevin Mooney <kevin.mooney@arm.com>
+Subject: [PATCH 1/3] perf vendor events arm64: Fix commas so PMU event files are valid JSON
+Date:   Tue, 12 Nov 2019 16:03:39 +0000
+Message-Id: <20191112160342.26470-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191111042715.13444-1-Po.Liu@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 04:41:26AM +0000, Po Liu wrote:
->ENETC supports in hardware for time-based egress shaping according
->to IEEE 802.1Qbv. This patch implement the Qbv enablement by the
->hardware offload method qdisc tc-taprio method.
->Also update cbdr writeback to up level since control bd ring may
->writeback data to control bd ring.
->
->Signed-off-by: Po Liu <Po.Liu@nxp.com>
->Singed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
->---
-> drivers/net/ethernet/freescale/enetc/Makefile |   1 +
-> drivers/net/ethernet/freescale/enetc/enetc.c  |  19 ++-
-> drivers/net/ethernet/freescale/enetc/enetc.h  |   2 +
-> .../net/ethernet/freescale/enetc/enetc_cbdr.c |   5 +-
-> .../net/ethernet/freescale/enetc/enetc_hw.h   | 150 ++++++++++++++++--
-> .../net/ethernet/freescale/enetc/enetc_qos.c  | 130 +++++++++++++++
-> 6 files changed, 285 insertions(+), 22 deletions(-)
-> create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_qos.c
->
->diff --git a/drivers/net/ethernet/freescale/enetc/Makefile b/drivers/net/ethernet/freescale/enetc/Makefile
->index d200c27c3bf6..389f722efc43 100644
->--- a/drivers/net/ethernet/freescale/enetc/Makefile
->+++ b/drivers/net/ethernet/freescale/enetc/Makefile
->@@ -5,6 +5,7 @@ common-objs := enetc.o enetc_cbdr.o enetc_ethtool.o
-> obj-$(CONFIG_FSL_ENETC) += fsl-enetc.o
-> fsl-enetc-y := enetc_pf.o enetc_mdio.o $(common-objs)
-> fsl-enetc-$(CONFIG_PCI_IOV) += enetc_msg.o
->+fsl-enetc-$(CONFIG_NET_SCH_TAPRIO) += enetc_qos.o
->
-> obj-$(CONFIG_FSL_ENETC_VF) += fsl-enetc-vf.o
-> fsl-enetc-vf-y := enetc_vf.o $(common-objs)
->diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
->index 3e8f9819f08c..d58dbc2c4270 100644
->--- a/drivers/net/ethernet/freescale/enetc/enetc.c
->+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
->@@ -1427,8 +1427,7 @@ int enetc_close(struct net_device *ndev)
-> 	return 0;
-> }
->
->-int enetc_setup_tc(struct net_device *ndev, enum tc_setup_type type,
->-		   void *type_data)
->+int enetc_setup_tc_mqprio(struct net_device *ndev, void *type_data)
-> {
-> 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
-> 	struct tc_mqprio_qopt *mqprio = type_data;
->@@ -1436,9 +1435,6 @@ int enetc_setup_tc(struct net_device *ndev, enum tc_setup_type type,
-> 	u8 num_tc;
-> 	int i;
->
->-	if (type != TC_SETUP_QDISC_MQPRIO)
->-		return -EOPNOTSUPP;
->-
-> 	mqprio->hw = TC_MQPRIO_HW_OFFLOAD_TCS;
-> 	num_tc = mqprio->num_tc;
->
->@@ -1483,6 +1479,19 @@ int enetc_setup_tc(struct net_device *ndev, enum tc_setup_type type,
-> 	return 0;
-> }
->
->+int enetc_setup_tc(struct net_device *ndev, enum tc_setup_type type,
->+		   void *type_data)
->+{
->+	switch (type) {
->+	case TC_SETUP_QDISC_MQPRIO:
->+		return enetc_setup_tc_mqprio(ndev, type_data);
+No functional change.
 
-This patch is for taprio offload, I see that mqprio is related and is part of
-taprio offload configuration. But taprio offload has own mqprio settings.
-The taprio mqprio part is not offloaded with TC_SETUP_QDISC_MQPRIO.
+Add and remove extra commas in the arm64 JSON files so that the files
+can be parsed and validated by other utilities such as Python
+that fail to parse invalid JSON.
 
-So, a combination of mqprio and tario qdiscs used.
-Could you please share the commands were used for your setup?
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kevin Mooney <kevin.mooney@arm.com>
+---
+ .../arch/arm64/ampere/emag/branch.json        |   8 +-
+ .../arch/arm64/ampere/emag/bus.json           |  14 +-
+ .../arch/arm64/ampere/emag/cache.json         |  28 ++--
+ .../arch/arm64/ampere/emag/clock.json         |   2 +-
+ .../arch/arm64/ampere/emag/exception.json     |  26 +--
+ .../arch/arm64/ampere/emag/instruction.json   |  28 ++--
+ .../arch/arm64/ampere/emag/intrinsic.json     |  10 +-
+ .../arch/arm64/ampere/emag/memory.json        |  12 +-
+ .../arch/arm64/ampere/emag/pipeline.json      |   2 +-
+ .../arch/arm64/arm/cortex-a53/branch.json     |   2 +-
+ .../arch/arm64/arm/cortex-a53/bus.json        |   4 +-
+ .../arch/arm64/arm/cortex-a53/other.json      |   4 +-
+ .../arm/cortex-a57-a72/core-imp-def.json      | 120 ++++++-------
+ .../arch/arm64/armv8-recommended.json         | 158 +++++++++---------
+ .../arm64/cavium/thunderx2/core-imp-def.json  |  74 ++++----
+ .../arm64/hisilicon/hip08/core-imp-def.json   |  60 +++----
+ .../arm64/hisilicon/hip08/uncore-ddrc.json    |  18 +-
+ .../arm64/hisilicon/hip08/uncore-hha.json     |  22 +--
+ .../arm64/hisilicon/hip08/uncore-l3c.json     |  28 ++--
+ 19 files changed, 310 insertions(+), 310 deletions(-)
 
-And couple interesting questions about all of this:
-- The taprio qdisc has to have mqprio settings, but if it's done with
-mqprio then it just skipped (by reading tc class num).
-- If no separate mqprio qdisc configuration then mqprio conf from taprio
-is set, who should restore tc mappings when taprio qdisc is unloaded?
-
-Maybe there is reason to implement TC_SETUP_QDISC_MQPRIO offload in taprio
-since it's required feature?
-
-Would be better to move changes for mqprio in separate patch with explanation.
-
->+	case TC_SETUP_QDISC_TAPRIO:
->+		return enetc_setup_tc_taprio(ndev, type_data);
->+	default:
->+		return -EOPNOTSUPP;
->+	}
->+}
->+
-> struct net_device_stats *enetc_get_stats(struct net_device *ndev)
-> {
-> 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
->diff --git a/drivers/net/ethernet/freescale/enetc/enetc.h b/drivers/net/ethernet/freescale/enetc/enetc.h
->index 541b4e2073fe..8676631041d5 100644
->--- a/drivers/net/ethernet/freescale/enetc/enetc.h
->+++ b/drivers/net/ethernet/freescale/enetc/enetc.h
->@@ -244,3 +244,5 @@ int enetc_set_fs_entry(struct enetc_si *si, struct enetc_cmd_rfse *rfse,
-> void enetc_set_rss_key(struct enetc_hw *hw, const u8 *bytes);
-> int enetc_get_rss_table(struct enetc_si *si, u32 *table, int count);
-> int enetc_set_rss_table(struct enetc_si *si, const u32 *table, int count);
->+int enetc_send_cmd(struct enetc_si *si, struct enetc_cbd *cbd);
->+int enetc_setup_tc_taprio(struct net_device *ndev, void *type_data);
->diff --git a/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c b/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
->index de466b71bf8f..201cbc362e33 100644
->--- a/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
->+++ b/drivers/net/ethernet/freescale/enetc/enetc_cbdr.c
->@@ -32,7 +32,7 @@ static int enetc_cbd_unused(struct enetc_cbdr *r)
-> 		r->bd_count;
-> }
->
->-static int enetc_send_cmd(struct enetc_si *si, struct enetc_cbd *cbd)
->+int enetc_send_cmd(struct enetc_si *si, struct enetc_cbd *cbd)
-> {
-> 	struct enetc_cbdr *ring = &si->cbd_ring;
-> 	int timeout = ENETC_CBDR_TIMEOUT;
->@@ -66,6 +66,9 @@ static int enetc_send_cmd(struct enetc_si *si, struct enetc_cbd *cbd)
-> 	if (!timeout)
-> 		return -EBUSY;
->
->+	/* CBD may writeback data, feedback up level */
->+	*cbd = *dest_cbd;
->+
-> 	enetc_clean_cbdr(si);
->
-> 	return 0;
->diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
->index 88276299f447..75a7c0f1f8ce 100644
->--- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
->+++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
->@@ -18,6 +18,7 @@
-> #define ENETC_SICTR0	0x18
-> #define ENETC_SICTR1	0x1c
-> #define ENETC_SIPCAPR0	0x20
->+#define ENETC_SIPCAPR0_QBV	BIT(4)
-> #define ENETC_SIPCAPR0_RSS	BIT(8)
-> #define ENETC_SIPCAPR1	0x24
-> #define ENETC_SITGTGR	0x30
->@@ -148,6 +149,12 @@ enum enetc_bdr_type {TX, RX};
-> #define ENETC_PORT_BASE		0x10000
-> #define ENETC_PMR		0x0000
-> #define ENETC_PMR_EN	GENMASK(18, 16)
->+#define ENETC_PMR_PSPEED_MASK GENMASK(11, 8)
->+#define ENETC_PMR_PSPEED_10M 0x000
->+#define ENETC_PMR_PSPEED_100M 0x100
->+#define ENETC_PMR_PSPEED_1000M 0x200
->+#define ENETC_PMR_PSPEED_2500M 0x400
->+
-> #define ENETC_PSR		0x0004 /* RO */
-> #define ENETC_PSIPMR		0x0018
-> #define ENETC_PSIPMR_SET_UP(n)	BIT(n) /* n = SI index */
->@@ -440,22 +447,6 @@ union enetc_rx_bd {
-> #define EMETC_MAC_ADDR_FILT_RES	3 /* # of reserved entries at the beginning */
-> #define ENETC_MAX_NUM_VFS	2
->
->-struct enetc_cbd {
->-	union {
->-		struct {
->-			__le32 addr[2];
->-			__le32 opt[4];
->-		};
->-		__le32 data[6];
->-	};
->-	__le16 index;
->-	__le16 length;
->-	u8 cmd;
->-	u8 cls;
->-	u8 _res;
->-	u8 status_flags;
->-};
->-
-> #define ENETC_CBD_FLAGS_SF	BIT(7) /* short format */
-> #define ENETC_CBD_STATUS_MASK	0xf
->
->@@ -554,3 +545,130 @@ static inline void enetc_set_bdr_prio(struct enetc_hw *hw, int bdr_idx,
-> 	val |= ENETC_TBMR_SET_PRIO(prio);
-> 	enetc_txbdr_wr(hw, bdr_idx, ENETC_TBMR, val);
-> }
->+
->+enum bdcr_cmd_class {
->+	BDCR_CMD_UNSPEC = 0,
->+	BDCR_CMD_MAC_FILTER,
->+	BDCR_CMD_VLAN_FILTER,
->+	BDCR_CMD_RSS,
->+	BDCR_CMD_RFS,
->+	BDCR_CMD_PORT_GCL,
->+	BDCR_CMD_RECV_CLASSIFIER,
->+	__BDCR_CMD_MAX_LEN,
->+	BDCR_CMD_MAX_LEN = __BDCR_CMD_MAX_LEN - 1,
->+};
->+
->+/* class 5, command 0 */
->+struct tgs_gcl_conf {
->+	u8	atc;	/* init gate value */
->+	u8	res[7];
->+	union {
->+		struct {
->+			u8	res1[4];
->+			__le16	acl_len;
->+			u8	res2[2];
->+		};
->+		struct {
->+			u32 cctl;
->+			u32 ccth;
->+		};
->+	};
->+};
->+
->+#define ENETC_CBDR_SGL_IOMEN	BIT(0)
->+#define ENETC_CBDR_SGL_IPVEN	BIT(3)
->+#define ENETC_CBDR_SGL_GTST	BIT(4)
->+#define ENETC_CBDR_SGL_IPV_MASK 0xe
->+
->+/* gate control list entry */
->+struct gce {
->+	u32	period;
->+	u8	gate;
->+	u8	res[3];
->+};
->+
->+/* tgs_gcl_conf address point to this data space */
->+struct tgs_gcl_data {
->+	u32	btl;
->+	u32	bth;
->+	u32	ct;
->+	u32	cte;
->+};
->+
->+/* class 5, command 1 */
->+struct tgs_gcl_query {
->+		u8	res[12];
->+		union {
->+			struct {
->+				__le16	acl_len; /* admin list length */
->+				__le16	ocl_len; /* operation list length */
->+			};
->+			struct {
->+				u16 admin_list_len;
->+				u16 oper_list_len;
->+			};
->+		};
->+};
->+
->+/* tgs_gcl_query command response data format */
->+struct tgs_gcl_resp {
->+	u32 abtl;	/* base time */
->+	u32 abth;
->+	u32 act;	/* cycle time */
->+	u32 acte;	/* cycle time extend */
->+	u32 cctl;	/* config change time */
->+	u32 ccth;
->+	u32 obtl;	/* operation base time */
->+	u32 obth;
->+	u32 oct;	/* operation cycle time */
->+	u32 octe;	/* operation cycle time extend */
->+	u32 ccel;	/* config change error */
->+	u32 cceh;
->+};
->+
->+struct enetc_cbd {
->+	union{
->+		struct {
->+			__le32	addr[2];
->+			union {
->+				__le32	opt[4];
->+				struct tgs_gcl_conf	gcl_conf;
->+				struct tgs_gcl_query	gcl_query;
->+			};
->+		};	/* Long format */
->+		__le32 data[6];
->+	};
->+	__le16 index;
->+	__le16 length;
->+	u8 cmd;
->+	u8 cls;
->+	u8 _res;
->+	u8 status_flags;
->+};
->+
->+#define ENETC_PTCFPR(n)		(0x1910 + (n) * 4) /* n = [0 ..7] */
->+#define ENETC_FPE		BIT(31)
->+
->+/* Port capability register 0 */
->+#define ENETC_PCAPR0_PSFPM	BIT(10)
->+#define ENETC_PCAPR0_PSFP	BIT(9)
->+#define ENETC_PCAPR0_TSN	BIT(4)
->+#define ENETC_PCAPR0_QBU	BIT(3)
->+
->+/* port time gating control register */
->+#define ENETC_QBV_PTGCR_OFFSET		0x11a00
->+#define ENETC_QBV_TGE			0x80000000
->+#define ENETC_QBV_TGPE			BIT(30)
->+#define ENETC_QBV_TGDROP_DISABLE	BIT(29)
->+
->+/* Port time gating capability register */
->+#define ENETC_QBV_PTGCAPR_OFFSET	0x11a08
->+#define ENETC_QBV_MAX_GCL_LEN_MASK	0xffff
->+
->+/* Port time gating admin gate list status register */
->+#define ENETC_QBV_PTGAGLSR_OFFSET	0x11a10
->+#define ENETC_QBV_CFG_PEND_MASK	0x00000002
->+
->+#define ENETC_TGLSTR			0xa200
->+#define ENETC_TGS_MIN_DIS_MASK		0x80000000
->+#define ENETC_MIN_LOOKAHEAD_MASK	0xffff
->diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
->new file mode 100644
->index 000000000000..036bb39c7a0b
->--- /dev/null
->+++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
->@@ -0,0 +1,130 @@
->+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->+/* Copyright 2019 NXP */
->+
->+#include "enetc.h"
->+
->+#include <net/pkt_sched.h>
->+
->+static u16 enetc_get_max_gcl_len(struct enetc_hw *hw)
->+{
->+	return enetc_rd(hw, ENETC_QBV_PTGCAPR_OFFSET)
->+		& ENETC_QBV_MAX_GCL_LEN_MASK;
->+}
->+
->+static int enetc_setup_taprio(struct net_device *ndev,
->+			      struct tc_taprio_qopt_offload *admin_conf)
->+{
->+	struct enetc_ndev_priv *priv = netdev_priv(ndev);
->+	struct enetc_cbd cbd = {.cmd = 0};
->+	struct tgs_gcl_conf *gcl_config;
->+	struct tgs_gcl_data *gcl_data;
->+	struct gce *gce;
->+	dma_addr_t dma;
->+	u16 data_size;
->+	u16 gcl_len;
->+	u32 temp;
->+	int i;
->+
->+	gcl_len = admin_conf->num_entries;
->+	if (gcl_len > enetc_get_max_gcl_len(&priv->si->hw))
->+		return -EINVAL;
->+
->+	if (admin_conf->enable) {
->+		enetc_wr(&priv->si->hw,
->+			 ENETC_QBV_PTGCR_OFFSET,
->+			 temp & (~ENETC_QBV_TGE));
->+		usleep_range(10, 20);
->+		enetc_wr(&priv->si->hw,
->+			 ENETC_QBV_PTGCR_OFFSET,
->+			 temp | ENETC_QBV_TGE);
->+	} else {
->+		enetc_wr(&priv->si->hw,
->+			 ENETC_QBV_PTGCR_OFFSET,
->+			 temp & (~ENETC_QBV_TGE));
->+		return 0;
->+	}
->+
->+	/* Configure the (administrative) gate control list using the
->+	 * control BD descriptor.
->+	 */
->+	gcl_config = &cbd.gcl_conf;
->+
->+	data_size = sizeof(struct tgs_gcl_data) + gcl_len * sizeof(struct gce);
->+
->+	gcl_data = kzalloc(data_size, __GFP_DMA | GFP_KERNEL);
->+	if (!gcl_data)
->+		return -ENOMEM;
->+
->+	gce = (struct gce *)(gcl_data + 1);
->+
->+	/* Since no initial state config in taprio, set gates open as default.
->+	 */
->+	gcl_config->atc = 0xff;
->+	gcl_config->acl_len = cpu_to_le16(gcl_len);
->+
->+	if (!admin_conf->base_time) {
->+		gcl_data->btl =
->+			cpu_to_le32(enetc_rd(&priv->si->hw, ENETC_SICTR0));
->+		gcl_data->bth =
->+			cpu_to_le32(enetc_rd(&priv->si->hw, ENETC_SICTR1));
->+	} else {
->+		gcl_data->btl =
->+			cpu_to_le32(lower_32_bits(admin_conf->base_time));
->+		gcl_data->bth =
->+			cpu_to_le32(upper_32_bits(admin_conf->base_time));
->+	}
->+
->+	gcl_data->ct = cpu_to_le32(admin_conf->cycle_time);
->+	gcl_data->cte = cpu_to_le32(admin_conf->cycle_time_extension);
->+
->+	for (i = 0; i < gcl_len; i++) {
->+		struct tc_taprio_sched_entry *temp_entry;
->+		struct gce *temp_gce = gce + i;
->+
->+		temp_entry = &admin_conf->entries[i];
->+
->+		temp_gce->gate = cpu_to_le32(temp_entry->gate_mask);
->+		temp_gce->period = cpu_to_le32(temp_entry->interval);
->+	}
->+
->+	cbd.length = cpu_to_le16(data_size);
->+	cbd.status_flags = 0;
->+
->+	dma = dma_map_single(&priv->si->pdev->dev, gcl_data,
->+			     data_size, DMA_TO_DEVICE);
->+	if (dma_mapping_error(&priv->si->pdev->dev, dma)) {
->+		netdev_err(priv->si->ndev, "DMA mapping failed!\n");
->+		kfree(gcl_data);
->+		return -ENOMEM;
->+	}
->+
->+	cbd.addr[0] = lower_32_bits(dma);
->+	cbd.addr[1] = upper_32_bits(dma);
->+	cbd.cls = BDCR_CMD_PORT_GCL;
->+
->+	/* Updated by ENETC on completion of the configuration
->+	 * command. A zero value indicates success.
->+	 */
->+	cbd.status_flags = 0;
->+
->+	enetc_send_cmd(priv->si, &cbd);
->+
->+	dma_unmap_single(&priv->si->pdev->dev, dma, data_size, DMA_TO_DEVICE);
->+	kfree(gcl_data);
->+
->+	return 0;
->+}
->+
->+int enetc_setup_tc_taprio(struct net_device *ndev, void *type_data)
->+{
->+	struct tc_taprio_qopt_offload *taprio = type_data;
->+	struct enetc_ndev_priv *priv = netdev_priv(ndev);
->+	int i;
->+
->+	for (i = 0; i < priv->num_tx_rings; i++)
->+		enetc_set_bdr_prio(&priv->si->hw,
->+				   priv->tx_ring[i]->index,
->+				   taprio->enable ? i : 0);
->+
->+	return enetc_setup_taprio(ndev, taprio);
->+}
->-- 
->2.17.1
->
-
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json
+index abc98b018446..2d15b11e5383 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json
+@@ -1,12 +1,12 @@
+ [
+     {
+-        "ArchStdEvent": "BR_IMMED_SPEC",
++        "ArchStdEvent": "BR_IMMED_SPEC"
+     },
+     {
+-        "ArchStdEvent": "BR_RETURN_SPEC",
++        "ArchStdEvent": "BR_RETURN_SPEC"
+     },
+     {
+-        "ArchStdEvent": "BR_INDIRECT_SPEC",
++        "ArchStdEvent": "BR_INDIRECT_SPEC"
+     },
+     {
+         "PublicDescription": "Mispredicted or not predicted branch speculatively executed",
+@@ -19,5 +19,5 @@
+         "EventCode": "0x12",
+         "EventName": "BR_PRED",
+         "BriefDescription": "Predictable branch"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json
+index 687b2629e1d1..5c1a9a922ca4 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json
+@@ -1,26 +1,26 @@
+ [
+     {
+-        "ArchStdEvent": "BUS_ACCESS_RD",
++        "ArchStdEvent": "BUS_ACCESS_RD"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_WR",
++        "ArchStdEvent": "BUS_ACCESS_WR"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_SHARED",
++        "ArchStdEvent": "BUS_ACCESS_SHARED"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
++        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_NORMAL",
++        "ArchStdEvent": "BUS_ACCESS_NORMAL"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_PERIPH",
++        "ArchStdEvent": "BUS_ACCESS_PERIPH"
+     },
+     {
+         "PublicDescription": "Bus access",
+         "EventCode": "0x19",
+         "EventName": "BUS_ACCESS",
+         "BriefDescription": "Bus access"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
+index df9201434cb6..40010a8724b3 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
+@@ -1,42 +1,42 @@
+ [
+     {
+-        "ArchStdEvent": "L1D_CACHE_RD",
++        "ArchStdEvent": "L1D_CACHE_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WR",
++        "ArchStdEvent": "L1D_CACHE_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_INVAL",
++        "ArchStdEvent": "L1D_CACHE_INVAL"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_RD",
++        "ArchStdEvent": "L1D_TLB_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_WR",
++        "ArchStdEvent": "L1D_TLB_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_RD",
++        "ArchStdEvent": "L2D_CACHE_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WR",
++        "ArchStdEvent": "L2D_CACHE_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_INVAL",
++        "ArchStdEvent": "L2D_CACHE_INVAL"
+     },
+     {
+         "PublicDescription": "Level 1 instruction cache refill",
+@@ -187,5 +187,5 @@
+         "EventCode": "0x116",
+         "EventName": "PAGE_WALK_L2_STAGE2_HIT",
+         "BriefDescription": "Page walk, L2 stage-2 hit"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/clock.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/clock.json
+index 38cd1f1a70dc..51d1dc1519b2 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/clock.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/clock.json
+@@ -16,5 +16,5 @@
+         "EventCode": "0x110",
+         "EventName": "Wait_CYCLES",
+         "BriefDescription": "Wait state cycle"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/exception.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/exception.json
+index 3720dc28a15f..66e51bc64b22 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/exception.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/exception.json
+@@ -1,39 +1,39 @@
+ [
+     {
+-        "ArchStdEvent": "EXC_UNDEF",
++        "ArchStdEvent": "EXC_UNDEF"
+     },
+     {
+-        "ArchStdEvent": "EXC_SVC",
++        "ArchStdEvent": "EXC_SVC"
+     },
+     {
+-        "ArchStdEvent": "EXC_PABORT",
++        "ArchStdEvent": "EXC_PABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_DABORT",
++        "ArchStdEvent": "EXC_DABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_IRQ",
++        "ArchStdEvent": "EXC_IRQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_FIQ",
++        "ArchStdEvent": "EXC_FIQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_HVC",
++        "ArchStdEvent": "EXC_HVC"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_PABORT",
++        "ArchStdEvent": "EXC_TRAP_PABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_DABORT",
++        "ArchStdEvent": "EXC_TRAP_DABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_OTHER",
++        "ArchStdEvent": "EXC_TRAP_OTHER"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_IRQ",
++        "ArchStdEvent": "EXC_TRAP_IRQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_FIQ",
++        "ArchStdEvent": "EXC_TRAP_FIQ"
+     },
+     {
+         "PublicDescription": "Exception taken",
+@@ -46,5 +46,5 @@
+         "EventCode": "0x0a",
+         "EventName": "EXC_RETURN",
+         "BriefDescription": "Exception return"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/instruction.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/instruction.json
+index 82cf753e6472..0d3e46776642 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/instruction.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/instruction.json
+@@ -1,42 +1,42 @@
+ [
+     {
+-        "ArchStdEvent": "LD_SPEC",
++        "ArchStdEvent": "LD_SPEC"
+     },
+     {
+-        "ArchStdEvent": "ST_SPEC",
++        "ArchStdEvent": "ST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "LDST_SPEC",
++        "ArchStdEvent": "LDST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "DP_SPEC",
++        "ArchStdEvent": "DP_SPEC"
+     },
+     {
+-        "ArchStdEvent": "ASE_SPEC",
++        "ArchStdEvent": "ASE_SPEC"
+     },
+     {
+-        "ArchStdEvent": "VFP_SPEC",
++        "ArchStdEvent": "VFP_SPEC"
+     },
+     {
+-        "ArchStdEvent": "PC_WRITE_SPEC",
++        "ArchStdEvent": "PC_WRITE_SPEC"
+     },
+     {
+-        "ArchStdEvent": "CRYPTO_SPEC",
++        "ArchStdEvent": "CRYPTO_SPEC"
+     },
+     {
+-        "ArchStdEvent": "ISB_SPEC",
++        "ArchStdEvent": "ISB_SPEC"
+     },
+     {
+-        "ArchStdEvent": "DSB_SPEC",
++        "ArchStdEvent": "DSB_SPEC"
+     },
+     {
+-        "ArchStdEvent": "DMB_SPEC",
++        "ArchStdEvent": "DMB_SPEC"
+     },
+     {
+-        "ArchStdEvent": "RC_LD_SPEC",
++        "ArchStdEvent": "RC_LD_SPEC"
+     },
+     {
+-        "ArchStdEvent": "RC_ST_SPEC",
++        "ArchStdEvent": "RC_ST_SPEC"
+     },
+     {
+         "PublicDescription": "Instruction architecturally executed, software increment",
+@@ -85,5 +85,5 @@
+         "EventCode": "0x100",
+         "EventName": "NOP_SPEC",
+         "BriefDescription": "Speculatively executed, NOP"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/intrinsic.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/intrinsic.json
+index 2aecc5c2347d..7ecffb989ae0 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/intrinsic.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/intrinsic.json
+@@ -1,14 +1,14 @@
+ [
+     {
+-        "ArchStdEvent": "LDREX_SPEC",
++        "ArchStdEvent": "LDREX_SPEC"
+     },
+     {
+-        "ArchStdEvent": "STREX_PASS_SPEC",
++        "ArchStdEvent": "STREX_PASS_SPEC"
+     },
+     {
+-        "ArchStdEvent": "STREX_FAIL_SPEC",
++        "ArchStdEvent": "STREX_FAIL_SPEC"
+     },
+     {
+-        "ArchStdEvent": "STREX_SPEC",
+-    },
++        "ArchStdEvent": "STREX_SPEC"
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/memory.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/memory.json
+index 08508697b318..c2fe674df960 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/memory.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/memory.json
+@@ -1,18 +1,18 @@
+ [
+     {
+-        "ArchStdEvent": "MEM_ACCESS_RD",
++        "ArchStdEvent": "MEM_ACCESS_RD"
+     },
+     {
+-        "ArchStdEvent": "MEM_ACCESS_WR",
++        "ArchStdEvent": "MEM_ACCESS_WR"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_LD_SPEC",
++        "ArchStdEvent": "UNALIGNED_LD_SPEC"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_ST_SPEC",
++        "ArchStdEvent": "UNALIGNED_ST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
+     },
+     {
+         "PublicDescription": "Data memory access",
+@@ -25,5 +25,5 @@
+         "EventCode": "0x1a",
+         "EventName": "MEM_ERROR",
+         "BriefDescription": "Memory error"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/pipeline.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/pipeline.json
+index e2087de586bf..17c71aba6612 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/pipeline.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/pipeline.json
+@@ -46,5 +46,5 @@
+         "EventCode": "0x10f",
+         "EventName": "FX_STALL",
+         "BriefDescription": "FX stalled"
+-    },
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
+index 0b0e6b26605b..8f5cf88aaf38 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
+@@ -1,6 +1,6 @@
+ [
+   {
+-    "ArchStdEvent":  "BR_INDIRECT_SPEC",
++    "ArchStdEvent":  "BR_INDIRECT_SPEC"
+   },
+   {
+     "EventCode": "0xC9",
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
+index ce33b2553277..0a70b82f753f 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
+@@ -1,8 +1,8 @@
+ [
+   {
+-        "ArchStdEvent": "BUS_ACCESS_RD",
++        "ArchStdEvent": "BUS_ACCESS_RD"
+   },
+   {
+-        "ArchStdEvent": "BUS_ACCESS_WR",
++        "ArchStdEvent": "BUS_ACCESS_WR"
+   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
+index 6cc6cbd7bf0b..e9f7e4c3900d 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
+@@ -1,9 +1,9 @@
+ [
+   {
+-        "ArchStdEvent": "EXC_IRQ",
++        "ArchStdEvent": "EXC_IRQ"
+   },
+   {
+-        "ArchStdEvent": "EXC_FIQ",
++        "ArchStdEvent": "EXC_FIQ"
+   },
+   {
+         "EventCode": "0xC6",
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+index 0ac9b7927450..543c7692677a 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+@@ -1,179 +1,179 @@
+ [
+     {
+-        "ArchStdEvent": "L1D_CACHE_RD",
++        "ArchStdEvent": "L1D_CACHE_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WR",
++        "ArchStdEvent": "L1D_CACHE_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_INVAL",
++        "ArchStdEvent": "L1D_CACHE_INVAL"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_RD",
++        "ArchStdEvent": "L1D_TLB_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_WR",
++        "ArchStdEvent": "L1D_TLB_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_RD",
++        "ArchStdEvent": "L2D_CACHE_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WR",
++        "ArchStdEvent": "L2D_CACHE_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_INVAL",
++        "ArchStdEvent": "L2D_CACHE_INVAL"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_RD",
++        "ArchStdEvent": "BUS_ACCESS_RD"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_WR",
++        "ArchStdEvent": "BUS_ACCESS_WR"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_SHARED",
++        "ArchStdEvent": "BUS_ACCESS_SHARED"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
++        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_NORMAL",
++        "ArchStdEvent": "BUS_ACCESS_NORMAL"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_PERIPH",
++        "ArchStdEvent": "BUS_ACCESS_PERIPH"
+     },
+     {
+-        "ArchStdEvent": "MEM_ACCESS_RD",
++        "ArchStdEvent": "MEM_ACCESS_RD"
+     },
+     {
+-        "ArchStdEvent": "MEM_ACCESS_WR",
++        "ArchStdEvent": "MEM_ACCESS_WR"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_LD_SPEC",
++        "ArchStdEvent": "UNALIGNED_LD_SPEC"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_ST_SPEC",
++        "ArchStdEvent": "UNALIGNED_ST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "LDREX_SPEC",
++        "ArchStdEvent": "LDREX_SPEC"
+     },
+     {
+-        "ArchStdEvent": "STREX_PASS_SPEC",
++        "ArchStdEvent": "STREX_PASS_SPEC"
+     },
+     {
+-        "ArchStdEvent": "STREX_FAIL_SPEC",
++        "ArchStdEvent": "STREX_FAIL_SPEC"
+     },
+     {
+-        "ArchStdEvent": "LD_SPEC",
++        "ArchStdEvent": "LD_SPEC"
+     },
+     {
+-        "ArchStdEvent": "ST_SPEC",
++        "ArchStdEvent": "ST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "LDST_SPEC",
++        "ArchStdEvent": "LDST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "DP_SPEC",
++        "ArchStdEvent": "DP_SPEC"
+     },
+     {
+-        "ArchStdEvent": "ASE_SPEC",
++        "ArchStdEvent": "ASE_SPEC"
+     },
+     {
+-        "ArchStdEvent": "VFP_SPEC",
++        "ArchStdEvent": "VFP_SPEC"
+     },
+     {
+-        "ArchStdEvent": "PC_WRITE_SPEC",
++        "ArchStdEvent": "PC_WRITE_SPEC"
+     },
+     {
+-        "ArchStdEvent": "CRYPTO_SPEC",
++        "ArchStdEvent": "CRYPTO_SPEC"
+     },
+     {
+-        "ArchStdEvent": "BR_IMMED_SPEC",
++        "ArchStdEvent": "BR_IMMED_SPEC"
+     },
+     {
+-        "ArchStdEvent": "BR_RETURN_SPEC",
++        "ArchStdEvent": "BR_RETURN_SPEC"
+     },
+     {
+-        "ArchStdEvent": "BR_INDIRECT_SPEC",
++        "ArchStdEvent": "BR_INDIRECT_SPEC"
+     },
+     {
+-        "ArchStdEvent": "ISB_SPEC",
++        "ArchStdEvent": "ISB_SPEC"
+     },
+     {
+-        "ArchStdEvent": "DSB_SPEC",
++        "ArchStdEvent": "DSB_SPEC"
+     },
+     {
+-        "ArchStdEvent": "DMB_SPEC",
++        "ArchStdEvent": "DMB_SPEC"
+     },
+     {
+-        "ArchStdEvent": "EXC_UNDEF",
++        "ArchStdEvent": "EXC_UNDEF"
+     },
+     {
+-        "ArchStdEvent": "EXC_SVC",
++        "ArchStdEvent": "EXC_SVC"
+     },
+     {
+-        "ArchStdEvent": "EXC_PABORT",
++        "ArchStdEvent": "EXC_PABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_DABORT",
++        "ArchStdEvent": "EXC_DABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_IRQ",
++        "ArchStdEvent": "EXC_IRQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_FIQ",
++        "ArchStdEvent": "EXC_FIQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_SMC",
++        "ArchStdEvent": "EXC_SMC"
+     },
+     {
+-        "ArchStdEvent": "EXC_HVC",
++        "ArchStdEvent": "EXC_HVC"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_PABORT",
++        "ArchStdEvent": "EXC_TRAP_PABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_DABORT",
++        "ArchStdEvent": "EXC_TRAP_DABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_OTHER",
++        "ArchStdEvent": "EXC_TRAP_OTHER"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_IRQ",
++        "ArchStdEvent": "EXC_TRAP_IRQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_FIQ",
++        "ArchStdEvent": "EXC_TRAP_FIQ"
+     },
+     {
+-        "ArchStdEvent": "RC_LD_SPEC",
++        "ArchStdEvent": "RC_LD_SPEC"
+     },
+     {
+-        "ArchStdEvent": "RC_ST_SPEC",
+-    },
++        "ArchStdEvent": "RC_ST_SPEC"
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/armv8-recommended.json b/tools/perf/pmu-events/arch/arm64/armv8-recommended.json
+index 6328828c018c..d0a19866563d 100644
+--- a/tools/perf/pmu-events/arch/arm64/armv8-recommended.json
++++ b/tools/perf/pmu-events/arch/arm64/armv8-recommended.json
+@@ -154,297 +154,297 @@
+         "EventCode": "0x61",
+         "EventName": "BUS_ACCESS_WR",
+         "BriefDescription": "Bus access write"
+-   }
++   },
+    {
+         "PublicDescription": "Bus access, Normal, Cacheable, Shareable",
+         "EventCode": "0x62",
+         "EventName": "BUS_ACCESS_SHARED",
+         "BriefDescription": "Bus access, Normal, Cacheable, Shareable"
+-   }
++   },
+    {
+         "PublicDescription": "Bus access, not Normal, Cacheable, Shareable",
+         "EventCode": "0x63",
+         "EventName": "BUS_ACCESS_NOT_SHARED",
+         "BriefDescription": "Bus access, not Normal, Cacheable, Shareable"
+-   }
++   },
+    {
+         "PublicDescription": "Bus access, Normal",
+         "EventCode": "0x64",
+         "EventName": "BUS_ACCESS_NORMAL",
+         "BriefDescription": "Bus access, Normal"
+-   }
++   },
+    {
+         "PublicDescription": "Bus access, peripheral",
+         "EventCode": "0x65",
+         "EventName": "BUS_ACCESS_PERIPH",
+         "BriefDescription": "Bus access, peripheral"
+-   }
++   },
+    {
+         "PublicDescription": "Data memory access, read",
+         "EventCode": "0x66",
+         "EventName": "MEM_ACCESS_RD",
+         "BriefDescription": "Data memory access, read"
+-   }
++   },
+    {
+         "PublicDescription": "Data memory access, write",
+         "EventCode": "0x67",
+         "EventName": "MEM_ACCESS_WR",
+         "BriefDescription": "Data memory access, write"
+-   }
++   },
+    {
+         "PublicDescription": "Unaligned access, read",
+         "EventCode": "0x68",
+         "EventName": "UNALIGNED_LD_SPEC",
+         "BriefDescription": "Unaligned access, read"
+-   }
++   },
+    {
+         "PublicDescription": "Unaligned access, write",
+         "EventCode": "0x69",
+         "EventName": "UNALIGNED_ST_SPEC",
+         "BriefDescription": "Unaligned access, write"
+-   }
++   },
+    {
+         "PublicDescription": "Unaligned access",
+         "EventCode": "0x6a",
+         "EventName": "UNALIGNED_LDST_SPEC",
+         "BriefDescription": "Unaligned access"
+-   }
++   },
+    {
+         "PublicDescription": "Exclusive operation speculatively executed, LDREX or LDX",
+         "EventCode": "0x6c",
+         "EventName": "LDREX_SPEC",
+         "BriefDescription": "Exclusive operation speculatively executed, LDREX or LDX"
+-   }
++   },
+    {
+         "PublicDescription": "Exclusive operation speculatively executed, STREX or STX pass",
+         "EventCode": "0x6d",
+         "EventName": "STREX_PASS_SPEC",
+         "BriefDescription": "Exclusive operation speculatively executed, STREX or STX pass"
+-   }
++   },
+    {
+         "PublicDescription": "Exclusive operation speculatively executed, STREX or STX fail",
+         "EventCode": "0x6e",
+         "EventName": "STREX_FAIL_SPEC",
+         "BriefDescription": "Exclusive operation speculatively executed, STREX or STX fail"
+-   }
++   },
+    {
+         "PublicDescription": "Exclusive operation speculatively executed, STREX or STX",
+         "EventCode": "0x6f",
+         "EventName": "STREX_SPEC",
+         "BriefDescription": "Exclusive operation speculatively executed, STREX or STX"
+-   }
++   },
+    {
+         "PublicDescription": "Operation speculatively executed, load",
+         "EventCode": "0x70",
+         "EventName": "LD_SPEC",
+         "BriefDescription": "Operation speculatively executed, load"
+-   }
++   },
+    {
+-        "PublicDescription": "Operation speculatively executed, store"
++        "PublicDescription": "Operation speculatively executed, store",
+         "EventCode": "0x71",
+         "EventName": "ST_SPEC",
+         "BriefDescription": "Operation speculatively executed, store"
+-   }
++   },
+    {
+         "PublicDescription": "Operation speculatively executed, load or store",
+         "EventCode": "0x72",
+         "EventName": "LDST_SPEC",
+         "BriefDescription": "Operation speculatively executed, load or store"
+-   }
++   },
+    {
+         "PublicDescription": "Operation speculatively executed, integer data processing",
+         "EventCode": "0x73",
+         "EventName": "DP_SPEC",
+         "BriefDescription": "Operation speculatively executed, integer data processing"
+-   }
++   },
+    {
+         "PublicDescription": "Operation speculatively executed, Advanced SIMD instruction",
+         "EventCode": "0x74",
+         "EventName": "ASE_SPEC",
+-        "BriefDescription": "Operation speculatively executed, Advanced SIMD instruction",
+-   }
++        "BriefDescription": "Operation speculatively executed, Advanced SIMD instruction"
++   },
+    {
+         "PublicDescription": "Operation speculatively executed, floating-point instruction",
+         "EventCode": "0x75",
+         "EventName": "VFP_SPEC",
+         "BriefDescription": "Operation speculatively executed, floating-point instruction"
+-   }
++   },
+    {
+         "PublicDescription": "Operation speculatively executed, software change of the PC",
+         "EventCode": "0x76",
+         "EventName": "PC_WRITE_SPEC",
+         "BriefDescription": "Operation speculatively executed, software change of the PC"
+-   }
++   },
+    {
+         "PublicDescription": "Operation speculatively executed, Cryptographic instruction",
+         "EventCode": "0x77",
+         "EventName": "CRYPTO_SPEC",
+         "BriefDescription": "Operation speculatively executed, Cryptographic instruction"
+-   }
++   },
+    {
+-        "PublicDescription": "Branch speculatively executed, immediate branch"
++        "PublicDescription": "Branch speculatively executed, immediate branch",
+         "EventCode": "0x78",
+         "EventName": "BR_IMMED_SPEC",
+         "BriefDescription": "Branch speculatively executed, immediate branch"
+-   }
++   },
+    {
+-        "PublicDescription": "Branch speculatively executed, procedure return"
++        "PublicDescription": "Branch speculatively executed, procedure return",
+         "EventCode": "0x79",
+         "EventName": "BR_RETURN_SPEC",
+         "BriefDescription": "Branch speculatively executed, procedure return"
+-   }
++   },
+    {
+-        "PublicDescription": "Branch speculatively executed, indirect branch"
++        "PublicDescription": "Branch speculatively executed, indirect branch",
+         "EventCode": "0x7a",
+         "EventName": "BR_INDIRECT_SPEC",
+         "BriefDescription": "Branch speculatively executed, indirect branch"
+-   }
++   },
+    {
+-        "PublicDescription": "Barrier speculatively executed, ISB"
++        "PublicDescription": "Barrier speculatively executed, ISB",
+         "EventCode": "0x7c",
+         "EventName": "ISB_SPEC",
+         "BriefDescription": "Barrier speculatively executed, ISB"
+-   }
++   },
+    {
+-        "PublicDescription": "Barrier speculatively executed, DSB"
++        "PublicDescription": "Barrier speculatively executed, DSB",
+         "EventCode": "0x7d",
+         "EventName": "DSB_SPEC",
+         "BriefDescription": "Barrier speculatively executed, DSB"
+-   }
++   },
+    {
+-        "PublicDescription": "Barrier speculatively executed, DMB"
++        "PublicDescription": "Barrier speculatively executed, DMB",
+         "EventCode": "0x7e",
+         "EventName": "DMB_SPEC",
+         "BriefDescription": "Barrier speculatively executed, DMB"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Other synchronous"
++        "PublicDescription": "Exception taken, Other synchronous",
+         "EventCode": "0x81",
+         "EventName": "EXC_UNDEF",
+         "BriefDescription": "Exception taken, Other synchronous"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Supervisor Call"
++        "PublicDescription": "Exception taken, Supervisor Call",
+         "EventCode": "0x82",
+         "EventName": "EXC_SVC",
+         "BriefDescription": "Exception taken, Supervisor Call"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Instruction Abort"
++        "PublicDescription": "Exception taken, Instruction Abort",
+         "EventCode": "0x83",
+         "EventName": "EXC_PABORT",
+         "BriefDescription": "Exception taken, Instruction Abort"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Data Abort and SError"
++        "PublicDescription": "Exception taken, Data Abort and SError",
+         "EventCode": "0x84",
+         "EventName": "EXC_DABORT",
+         "BriefDescription": "Exception taken, Data Abort and SError"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, IRQ"
++        "PublicDescription": "Exception taken, IRQ",
+         "EventCode": "0x86",
+         "EventName": "EXC_IRQ",
+         "BriefDescription": "Exception taken, IRQ"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, FIQ"
++        "PublicDescription": "Exception taken, FIQ",
+         "EventCode": "0x87",
+         "EventName": "EXC_FIQ",
+         "BriefDescription": "Exception taken, FIQ"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Secure Monitor Call"
++        "PublicDescription": "Exception taken, Secure Monitor Call",
+         "EventCode": "0x88",
+         "EventName": "EXC_SMC",
+         "BriefDescription": "Exception taken, Secure Monitor Call"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Hypervisor Call"
++        "PublicDescription": "Exception taken, Hypervisor Call",
+         "EventCode": "0x8a",
+         "EventName": "EXC_HVC",
+         "BriefDescription": "Exception taken, Hypervisor Call"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Instruction Abort not taken locally"
++        "PublicDescription": "Exception taken, Instruction Abort not taken locally",
+         "EventCode": "0x8b",
+         "EventName": "EXC_TRAP_PABORT",
+         "BriefDescription": "Exception taken, Instruction Abort not taken locally"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Data Abort or SError not taken locally"
++        "PublicDescription": "Exception taken, Data Abort or SError not taken locally",
+         "EventCode": "0x8c",
+         "EventName": "EXC_TRAP_DABORT",
+         "BriefDescription": "Exception taken, Data Abort or SError not taken locally"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, Other traps not taken locally"
++        "PublicDescription": "Exception taken, Other traps not taken locally",
+         "EventCode": "0x8d",
+         "EventName": "EXC_TRAP_OTHER",
+         "BriefDescription": "Exception taken, Other traps not taken locally"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, IRQ not taken locally"
++        "PublicDescription": "Exception taken, IRQ not taken locally",
+         "EventCode": "0x8e",
+         "EventName": "EXC_TRAP_IRQ",
+         "BriefDescription": "Exception taken, IRQ not taken locally"
+-   }
++   },
+    {
+-        "PublicDescription": "Exception taken, FIQ not taken locally"
++        "PublicDescription": "Exception taken, FIQ not taken locally",
+         "EventCode": "0x8f",
+         "EventName": "EXC_TRAP_FIQ",
+         "BriefDescription": "Exception taken, FIQ not taken locally"
+-   }
++   },
+    {
+-        "PublicDescription": "Release consistency operation speculatively executed, Load-Acquire"
++        "PublicDescription": "Release consistency operation speculatively executed, Load-Acquire",
+         "EventCode": "0x90",
+         "EventName": "RC_LD_SPEC",
+         "BriefDescription": "Release consistency operation speculatively executed, Load-Acquire"
+-   }
++   },
+    {
+-        "PublicDescription": "Release consistency operation speculatively executed, Store-Release"
++        "PublicDescription": "Release consistency operation speculatively executed, Store-Release",
+         "EventCode": "0x91",
+         "EventName": "RC_ST_SPEC",
+         "BriefDescription": "Release consistency operation speculatively executed, Store-Release"
+-   }
++   },
+    {
+-        "PublicDescription": "Attributable Level 3 data or unified cache access, read"
++        "PublicDescription": "Attributable Level 3 data or unified cache access, read",
+         "EventCode": "0xa0",
+         "EventName": "L3D_CACHE_RD",
+         "BriefDescription": "Attributable Level 3 data or unified cache access, read"
+-   }
++   },
+    {
+-        "PublicDescription": "Attributable Level 3 data or unified cache access, write"
++        "PublicDescription": "Attributable Level 3 data or unified cache access, write",
+         "EventCode": "0xa1",
+         "EventName": "L3D_CACHE_WR",
+         "BriefDescription": "Attributable Level 3 data or unified cache access, write"
+-   }
++   },
+    {
+-        "PublicDescription": "Attributable Level 3 data or unified cache refill, read"
++        "PublicDescription": "Attributable Level 3 data or unified cache refill, read",
+         "EventCode": "0xa2",
+         "EventName": "L3D_CACHE_REFILL_RD",
+         "BriefDescription": "Attributable Level 3 data or unified cache refill, read"
+-   }
++   },
+    {
+-        "PublicDescription": "Attributable Level 3 data or unified cache refill, write"
++        "PublicDescription": "Attributable Level 3 data or unified cache refill, write",
+         "EventCode": "0xa3",
+         "EventName": "L3D_CACHE_REFILL_WR",
+         "BriefDescription": "Attributable Level 3 data or unified cache refill, write"
+-   }
++   },
+    {
+-        "PublicDescription": "Attributable Level 3 data or unified cache Write-Back, victim"
++        "PublicDescription": "Attributable Level 3 data or unified cache Write-Back, victim",
+         "EventCode": "0xa6",
+         "EventName": "L3D_CACHE_WB_VICTIM",
+         "BriefDescription": "Attributable Level 3 data or unified cache Write-Back, victim"
+-   }
++   },
+    {
+-        "PublicDescription": "Attributable Level 3 data or unified cache Write-Back, cache clean"
++        "PublicDescription": "Attributable Level 3 data or unified cache Write-Back, cache clean",
+         "EventCode": "0xa7",
+         "EventName": "L3D_CACHE_WB_CLEAN",
+         "BriefDescription": "Attributable Level 3 data or unified cache Write-Back, cache clean"
+-   }
++   },
+    {
+-        "PublicDescription": "Attributable Level 3 data or unified cache access, invalidate"
++        "PublicDescription": "Attributable Level 3 data or unified cache access, invalidate",
+         "EventCode": "0xa8",
+         "EventName": "L3D_CACHE_INVAL",
+         "BriefDescription": "Attributable Level 3 data or unified cache access, invalidate"
+diff --git a/tools/perf/pmu-events/arch/arm64/cavium/thunderx2/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/cavium/thunderx2/core-imp-def.json
+index 752e47eb6977..3a87d351cc39 100644
+--- a/tools/perf/pmu-events/arch/arm64/cavium/thunderx2/core-imp-def.json
++++ b/tools/perf/pmu-events/arch/arm64/cavium/thunderx2/core-imp-def.json
+@@ -1,113 +1,113 @@
+ [
+     {
+-        "ArchStdEvent": "L1D_CACHE_RD",
++        "ArchStdEvent": "L1D_CACHE_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WR",
++        "ArchStdEvent": "L1D_CACHE_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_INNER",
++        "ArchStdEvent": "L1D_CACHE_REFILL_INNER"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER",
++        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_INVAL",
++        "ArchStdEvent": "L1D_CACHE_INVAL"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_RD",
++        "ArchStdEvent": "L1D_TLB_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_WR",
++        "ArchStdEvent": "L1D_TLB_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_RD",
++        "ArchStdEvent": "L1D_TLB_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_WR",
++        "ArchStdEvent": "L1D_TLB_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_TLB_REFILL_RD",
++        "ArchStdEvent": "L2D_TLB_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_TLB_REFILL_WR",
++        "ArchStdEvent": "L2D_TLB_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_TLB_RD",
++        "ArchStdEvent": "L2D_TLB_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_TLB_WR",
++        "ArchStdEvent": "L2D_TLB_WR"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_RD",
++        "ArchStdEvent": "BUS_ACCESS_RD"
+     },
+     {
+-        "ArchStdEvent": "BUS_ACCESS_WR",
++        "ArchStdEvent": "BUS_ACCESS_WR"
+     },
+     {
+-        "ArchStdEvent": "MEM_ACCESS_RD",
++        "ArchStdEvent": "MEM_ACCESS_RD"
+     },
+     {
+-        "ArchStdEvent": "MEM_ACCESS_WR",
++        "ArchStdEvent": "MEM_ACCESS_WR"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_LD_SPEC",
++        "ArchStdEvent": "UNALIGNED_LD_SPEC"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_ST_SPEC",
++        "ArchStdEvent": "UNALIGNED_ST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
+     },
+     {
+-        "ArchStdEvent": "EXC_UNDEF",
++        "ArchStdEvent": "EXC_UNDEF"
+     },
+     {
+-        "ArchStdEvent": "EXC_SVC",
++        "ArchStdEvent": "EXC_SVC"
+     },
+     {
+-        "ArchStdEvent": "EXC_PABORT",
++        "ArchStdEvent": "EXC_PABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_DABORT",
++        "ArchStdEvent": "EXC_DABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_IRQ",
++        "ArchStdEvent": "EXC_IRQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_FIQ",
++        "ArchStdEvent": "EXC_FIQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_SMC",
++        "ArchStdEvent": "EXC_SMC"
+     },
+     {
+-        "ArchStdEvent": "EXC_HVC",
++        "ArchStdEvent": "EXC_HVC"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_PABORT",
++        "ArchStdEvent": "EXC_TRAP_PABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_DABORT",
++        "ArchStdEvent": "EXC_TRAP_DABORT"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_OTHER",
++        "ArchStdEvent": "EXC_TRAP_OTHER"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_IRQ",
++        "ArchStdEvent": "EXC_TRAP_IRQ"
+     },
+     {
+-        "ArchStdEvent": "EXC_TRAP_FIQ",
++        "ArchStdEvent": "EXC_TRAP_FIQ"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
+index 9f0f15d15f75..a4a6408639b4 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
+@@ -1,122 +1,122 @@
+ [
+     {
+-        "ArchStdEvent": "L1D_CACHE_RD",
++        "ArchStdEvent": "L1D_CACHE_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WR",
++        "ArchStdEvent": "L1D_CACHE_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_INVAL",
++        "ArchStdEvent": "L1D_CACHE_INVAL"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_RD",
++        "ArchStdEvent": "L1D_TLB_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_REFILL_WR",
++        "ArchStdEvent": "L1D_TLB_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_RD",
++        "ArchStdEvent": "L1D_TLB_RD"
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_WR",
++        "ArchStdEvent": "L1D_TLB_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_RD",
++        "ArchStdEvent": "L2D_CACHE_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WR",
++        "ArchStdEvent": "L2D_CACHE_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN"
+     },
+     {
+-        "ArchStdEvent": "L2D_CACHE_INVAL",
++        "ArchStdEvent": "L2D_CACHE_INVAL"
+     },
+     {
+         "PublicDescription": "Level 1 instruction cache prefetch access count",
+         "EventCode": "0x102e",
+         "EventName": "L1I_CACHE_PRF",
+-        "BriefDescription": "L1I cache prefetch access count",
++        "BriefDescription": "L1I cache prefetch access count"
+     },
+     {
+         "PublicDescription": "Level 1 instruction cache miss due to prefetch access count",
+         "EventCode": "0x102f",
+         "EventName": "L1I_CACHE_PRF_REFILL",
+-        "BriefDescription": "L1I cache miss due to prefetch access count",
++        "BriefDescription": "L1I cache miss due to prefetch access count"
+     },
+     {
+         "PublicDescription": "Instruction queue is empty",
+         "EventCode": "0x1043",
+         "EventName": "IQ_IS_EMPTY",
+-        "BriefDescription": "Instruction queue is empty",
++        "BriefDescription": "Instruction queue is empty"
+     },
+     {
+         "PublicDescription": "Instruction fetch stall cycles",
+         "EventCode": "0x1044",
+         "EventName": "IF_IS_STALL",
+-        "BriefDescription": "Instruction fetch stall cycles",
++        "BriefDescription": "Instruction fetch stall cycles"
+     },
+     {
+         "PublicDescription": "Instructions can receive, but not send",
+         "EventCode": "0x2014",
+         "EventName": "FETCH_BUBBLE",
+-        "BriefDescription": "Instructions can receive, but not send",
++        "BriefDescription": "Instructions can receive, but not send"
+     },
+     {
+         "PublicDescription": "Prefetch request from LSU",
+         "EventCode": "0x6013",
+         "EventName": "PRF_REQ",
+-        "BriefDescription": "Prefetch request from LSU",
++        "BriefDescription": "Prefetch request from LSU"
+     },
+     {
+         "PublicDescription": "Hit on prefetched data",
+         "EventCode": "0x6014",
+         "EventName": "HIT_ON_PRF",
+-        "BriefDescription": "Hit on prefetched data",
++        "BriefDescription": "Hit on prefetched data"
+     },
+     {
+         "PublicDescription": "Cycles of that the number of issuing micro operations are less than 4",
+         "EventCode": "0x7001",
+         "EventName": "EXE_STALL_CYCLE",
+-        "BriefDescription": "Cycles of that the number of issue ups are less than 4",
++        "BriefDescription": "Cycles of that the number of issue ups are less than 4"
+     },
+     {
+         "PublicDescription": "No any micro operation is issued and meanwhile any load operation is not resolved",
+         "EventCode": "0x7004",
+         "EventName": "MEM_STALL_ANYLOAD",
+-        "BriefDescription": "No any micro operation is issued and meanwhile any load operation is not resolved",
++        "BriefDescription": "No any micro operation is issued and meanwhile any load operation is not resolved"
+     },
+     {
+         "PublicDescription": "No any micro operation is issued and meanwhile there is any load operation missing L1 cache and pending data refill",
+         "EventCode": "0x7006",
+         "EventName": "MEM_STALL_L1MISS",
+-        "BriefDescription": "No any micro operation is issued and meanwhile there is any load operation missing L1 cache and pending data refill",
++        "BriefDescription": "No any micro operation is issued and meanwhile there is any load operation missing L1 cache and pending data refill"
+     },
+     {
+         "PublicDescription": "No any micro operation is issued and meanwhile there is any load operation missing both L1 and L2 cache and pending data refill from L3 cache",
+         "EventCode": "0x7007",
+         "EventName": "MEM_STALL_L2MISS",
+-        "BriefDescription": "No any micro operation is issued and meanwhile there is any load operation missing both L1 and L2 cache and pending data refill from L3 cache",
+-    },
++        "BriefDescription": "No any micro operation is issued and meanwhile there is any load operation missing both L1 and L2 cache and pending data refill from L3 cache"
++    }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+index 7da86942dae2..61514d38601b 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+@@ -4,55 +4,55 @@
+ 	    "EventName": "uncore_hisi_ddrc.flux_wr",
+ 	    "BriefDescription": "DDRC total write operations",
+ 	    "PublicDescription": "DDRC total write operations",
+-	    "Unit": "hisi_sccl,ddrc",
++	    "Unit": "hisi_sccl,ddrc"
+    },
+    {
+ 	    "EventCode": "0x01",
+ 	    "EventName": "uncore_hisi_ddrc.flux_rd",
+ 	    "BriefDescription": "DDRC total read operations",
+ 	    "PublicDescription": "DDRC total read operations",
+-	    "Unit": "hisi_sccl,ddrc",
++	    "Unit": "hisi_sccl,ddrc"
+    },
+    {
+ 	    "EventCode": "0x02",
+ 	    "EventName": "uncore_hisi_ddrc.flux_wcmd",
+ 	    "BriefDescription": "DDRC write commands",
+ 	    "PublicDescription": "DDRC write commands",
+-	    "Unit": "hisi_sccl,ddrc",
++	    "Unit": "hisi_sccl,ddrc"
+    },
+    {
+ 	    "EventCode": "0x03",
+ 	    "EventName": "uncore_hisi_ddrc.flux_rcmd",
+ 	    "BriefDescription": "DDRC read commands",
+ 	    "PublicDescription": "DDRC read commands",
+-	    "Unit": "hisi_sccl,ddrc",
++	    "Unit": "hisi_sccl,ddrc"
+    },
+    {
+ 	    "EventCode": "0x04",
+ 	    "EventName": "uncore_hisi_ddrc.pre_cmd",
+ 	    "BriefDescription": "DDRC precharge commands",
+ 	    "PublicDescription": "DDRC precharge commands",
+-	    "Unit": "hisi_sccl,ddrc",
++	    "Unit": "hisi_sccl,ddrc"
+    },
+    {
+ 	    "EventCode": "0x05",
+ 	    "EventName": "uncore_hisi_ddrc.act_cmd",
+ 	    "BriefDescription": "DDRC active commands",
+ 	    "PublicDescription": "DDRC active commands",
+-	    "Unit": "hisi_sccl,ddrc",
++	    "Unit": "hisi_sccl,ddrc"
+    },
+    {
+ 	    "EventCode": "0x06",
+ 	    "EventName": "uncore_hisi_ddrc.rnk_chg",
+ 	    "BriefDescription": "DDRC rank commands",
+ 	    "PublicDescription": "DDRC rank commands",
+-	    "Unit": "hisi_sccl,ddrc",
++	    "Unit": "hisi_sccl,ddrc"
+    },
+    {
+ 	    "EventCode": "0x07",
+ 	    "EventName": "uncore_hisi_ddrc.rw_chg",
+ 	    "BriefDescription": "DDRC read and write changes",
+ 	    "PublicDescription": "DDRC read and write changes",
+-	    "Unit": "hisi_sccl,ddrc",
+-   },
++	    "Unit": "hisi_sccl,ddrc"
++   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+index 3be418a248ea..ada86782933f 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+@@ -4,69 +4,69 @@
+ 	    "EventName": "uncore_hisi_hha.rx_ops_num",
+ 	    "BriefDescription": "The number of all operations received by the HHA",
+ 	    "PublicDescription": "The number of all operations received by the HHA",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x01",
+ 	    "EventName": "uncore_hisi_hha.rx_outer",
+ 	    "BriefDescription": "The number of all operations received by the HHA from another socket",
+ 	    "PublicDescription": "The number of all operations received by the HHA from another socket",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x02",
+ 	    "EventName": "uncore_hisi_hha.rx_sccl",
+ 	    "BriefDescription": "The number of all operations received by the HHA from another SCCL in this socket",
+ 	    "PublicDescription": "The number of all operations received by the HHA from another SCCL in this socket",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x03",
+ 	    "EventName": "uncore_hisi_hha.rx_ccix",
+ 	    "BriefDescription": "Count of the number of operations that HHA has received from CCIX",
+ 	    "PublicDescription": "Count of the number of operations that HHA has received from CCIX",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x1c",
+ 	    "EventName": "uncore_hisi_hha.rd_ddr_64b",
+ 	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 64 bytes",
+ 	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 64bytes",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x1d",
+ 	    "EventName": "uncore_hisi_hha.wr_ddr_64b",
+ 	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
+ 	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x1e",
+ 	    "EventName": "uncore_hisi_hha.rd_ddr_128b",
+ 	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
+ 	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x1f",
+ 	    "EventName": "uncore_hisi_hha.wr_ddr_128b",
+ 	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
+ 	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x20",
+ 	    "EventName": "uncore_hisi_hha.spill_num",
+ 	    "BriefDescription": "Count of the number of spill operations that the HHA has sent",
+ 	    "PublicDescription": "Count of the number of spill operations that the HHA has sent",
+-	    "Unit": "hisi_sccl,hha",
++	    "Unit": "hisi_sccl,hha"
+    },
+    {
+ 	    "EventCode": "0x21",
+ 	    "EventName": "uncore_hisi_hha.spill_success",
+ 	    "BriefDescription": "Count of the number of successful spill operations that the HHA has sent",
+ 	    "PublicDescription": "Count of the number of successful spill operations that the HHA has sent",
+-	    "Unit": "hisi_sccl,hha",
+-   },
++	    "Unit": "hisi_sccl,hha"
++   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
+index f463d0acfaef..67ab19e8cf3a 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
+@@ -4,90 +4,90 @@
+ 	    "EventName": "uncore_hisi_l3c.rd_cpipe",
+ 	    "BriefDescription": "Total read accesses",
+ 	    "PublicDescription": "Total read accesses",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x01",
+ 	    "EventName": "uncore_hisi_l3c.wr_cpipe",
+ 	    "BriefDescription": "Total write accesses",
+ 	    "PublicDescription": "Total write accesses",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x02",
+ 	    "EventName": "uncore_hisi_l3c.rd_hit_cpipe",
+ 	    "BriefDescription": "Total read hits",
+ 	    "PublicDescription": "Total read hits",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x03",
+ 	    "EventName": "uncore_hisi_l3c.wr_hit_cpipe",
+ 	    "BriefDescription": "Total write hits",
+ 	    "PublicDescription": "Total write hits",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x04",
+ 	    "EventName": "uncore_hisi_l3c.victim_num",
+ 	    "BriefDescription": "l3c precharge commands",
+ 	    "PublicDescription": "l3c precharge commands",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x20",
+ 	    "EventName": "uncore_hisi_l3c.rd_spipe",
+ 	    "BriefDescription": "Count of the number of read lines that come from this cluster of CPU core in spipe",
+ 	    "PublicDescription": "Count of the number of read lines that come from this cluster of CPU core in spipe",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x21",
+ 	    "EventName": "uncore_hisi_l3c.wr_spipe",
+ 	    "BriefDescription": "Count of the number of write lines that come from this cluster of CPU core in spipe",
+ 	    "PublicDescription": "Count of the number of write lines that come from this cluster of CPU core in spipe",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x22",
+ 	    "EventName": "uncore_hisi_l3c.rd_hit_spipe",
+ 	    "BriefDescription": "Count of the number of read lines that hits in spipe of this L3C",
+ 	    "PublicDescription": "Count of the number of read lines that hits in spipe of this L3C",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x23",
+ 	    "EventName": "uncore_hisi_l3c.wr_hit_spipe",
+ 	    "BriefDescription": "Count of the number of write lines that hits in spipe of this L3C",
+ 	    "PublicDescription": "Count of the number of write lines that hits in spipe of this L3C",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x29",
+ 	    "EventName": "uncore_hisi_l3c.back_invalid",
+ 	    "BriefDescription": "Count of the number of L3C back invalid operations",
+ 	    "PublicDescription": "Count of the number of L3C back invalid operations",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x40",
+ 	    "EventName": "uncore_hisi_l3c.retry_cpu",
+ 	    "BriefDescription": "Count of the number of retry that L3C suppresses the CPU operations",
+ 	    "PublicDescription": "Count of the number of retry that L3C suppresses the CPU operations",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x41",
+ 	    "EventName": "uncore_hisi_l3c.retry_ring",
+ 	    "BriefDescription": "Count of the number of retry that L3C suppresses the ring operations",
+ 	    "PublicDescription": "Count of the number of retry that L3C suppresses the ring operations",
+-	    "Unit": "hisi_sccl,l3c",
++	    "Unit": "hisi_sccl,l3c"
+    },
+    {
+ 	    "EventCode": "0x42",
+ 	    "EventName": "uncore_hisi_l3c.prefetch_drop",
+ 	    "BriefDescription": "Count of the number of prefetch drops from this L3C",
+ 	    "PublicDescription": "Count of the number of prefetch drops from this L3C",
+-	    "Unit": "hisi_sccl,l3c",
+-   },
++	    "Unit": "hisi_sccl,l3c"
++   }
+ ]
 -- 
-Regards,
-Ivan Khoronzhuk
+2.23.0
+
