@@ -2,73 +2,107 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD9CC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC390C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6CB321E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573572183;
-	bh=C8pFx+z61g1o2Rqv59xs+NMVdBuyXFgC/DuTJsbFGM4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hxx9r1Ysia6M1ZSeDpm8iblfZl++CbFtJ59BG3GUIRV+1345GCkW4uLIEVM20WD7D
-	 OitJeKGYCz67z6iCgrsgZntMOd2Air0WLEDmMmOmOKb7GCcstM/dUoJLfGJi0OZUW1
-	 xIM7GGpw3nqvPUe2qL2s/IVnAbfzSctP1piWiO/o=
+	by mail.kernel.org (Postfix) with ESMTP id 8814221D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ni/jRc6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfKLPXC (ORCPT
+        id S1727205AbfKLPX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:23:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbfKLPXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:23:02 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A10AD21D7F;
-        Tue, 12 Nov 2019 15:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573572182;
-        bh=C8pFx+z61g1o2Rqv59xs+NMVdBuyXFgC/DuTJsbFGM4=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=uH+r73cGBEMaC4rLWGr4x94nApsVJruY88nXPCBAwmE/g+2yDV3utHiqaNidtewmX
-         gjDWUa4+NCaHDWcwcVWZw/VH3OIUpZ5bvZ6BdydTJMGNaK8NnE9dViuj59aFoD+1t7
-         IA9iu83LuYtdCLTKyhrJGTFGhJCLXmiTuLwamr4I=
-Date:   Tue, 12 Nov 2019 16:22:57 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-cc:     Candle Sun <candlesea@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        =?GB2312?Q?=B5=D4=BE=A9_=28Orson_Zhai=29?= <orson.zhai@unisoc.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Subject: Re: [PATCH v4] HID: core: check whether Usage Page item is after
- Usage ID items
-In-Reply-To: <CAO-hwJKO5u6xUrBe_ne0OqFAHM9dpwtTOWtYW+3z-LxSFT6VWQ@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.1911121621550.1799@cbobk.fhfr.pm>
-References: <20191022142139.16789-1-candlesea@gmail.com> <nycvar.YFH.7.76.1911121457050.1799@cbobk.fhfr.pm> <CAO-hwJKO5u6xUrBe_ne0OqFAHM9dpwtTOWtYW+3z-LxSFT6VWQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 12 Nov 2019 10:23:28 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34665 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfKLPX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:23:28 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z188so6135497pgb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:23:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ErfzrZR/5ryvUWJAJL1JzOPNG3JQELKeoUJmWdVzOHY=;
+        b=ni/jRc6xyt6mTVHOl+knnLMXVa+vyCITLwdegkAjNX6LFfs+QC3+oXeYzoyxn2p46K
+         mIV+CeRUlAqZc4RX8m8L/H+fiWQCYSde67Ia8C3BI5hwwPOePeRpecYwHXY2/sdi0Iwh
+         m6GZPNb6Hkyp7G7lQoz6e4edML3+wE9uXNiVwrfoF9dFVToGANImTvSctV5JMSwkT/GL
+         n6JOoUSfOW5+Z0DhYIPg/Ze/ZVN+PN9d8x5vRs5XVfgcd7OZU8Aluc4EZrnqOM+MxM1v
+         paZrIMNcU+w92f5OEdABOTEv9l9u+W2M9wW1EeZq+ZWFmDCobjp8SFSR1o3SCGwCQxEy
+         Eaqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ErfzrZR/5ryvUWJAJL1JzOPNG3JQELKeoUJmWdVzOHY=;
+        b=afEDexCFT4SK+M4ii+MhJWl2V3KXTgxP+lyz9K5kIwAC5ZE0gax+daGCELY6e2JHFI
+         PXIzGiU4wpQ/Z+zRj3RK8TPwGi9NhpYlzOpL4DDWFmR3MkFWCy+EGQLk9MOg0zLfOYZV
+         pQbIq0qGUMpmBH1HsdF8EOSPVOYh6W2uI5mqjZYOJcyCRV0sLVFY+ue1BKBylh83FC/0
+         EWZOcO8GYY+SAf+q4M2rTcgIrgN9G61eJsCC7PP9M6IurHY3M4V/CTTQTylNhD1S8dsI
+         CKN5i3dAqFAf/gi4PJXelpydeucl9M2cftzbveaySdc5LxWDiCyDtMmO18AGGo7e6zTJ
+         tt/w==
+X-Gm-Message-State: APjAAAUqQL76m8ZWNevRYm0TURao0ldU7SXt8T97EyHNurpKVeb5kv7N
+        Go7TvxRI8f75C9sUmGwSz/aCxQ==
+X-Google-Smtp-Source: APXvYqxlHkZ01oDRuL0uZnTPJwWbHJF3CWHUrXsIMQBPosRgzS3C9h1egzT6U+OdgoP6ZLrXQ5zzRA==
+X-Received: by 2002:aa7:8edd:: with SMTP id b29mr37339092pfr.23.1573572206096;
+        Tue, 12 Nov 2019 07:23:26 -0800 (PST)
+Received: from [192.168.201.136] ([50.234.116.4])
+        by smtp.gmail.com with ESMTPSA id e2sm17267011pgj.62.2019.11.12.07.23.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 07:23:25 -0800 (PST)
+Subject: Re: [PATCH BUGFIX] block, bfq: deschedule empty bfq_queues not
+ referred by any process
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        Chris Evich <cevich@redhat.com>,
+        Patrick Dung <patdung100@gmail.com>,
+        Thorsten Schubert <tschubert@bafh.org>
+References: <20191112074856.40433-1-paolo.valente@linaro.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <83a56a54-3269-ecb9-f4ae-01c3f9717279@kernel.dk>
+Date:   Tue, 12 Nov 2019 07:23:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191112074856.40433-1-paolo.valente@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019, Benjamin Tissoires wrote:
+On 11/11/19 11:48 PM, Paolo Valente wrote:
+> Since commit 3726112ec731 ("block, bfq: re-schedule empty queues if
+> they deserve I/O plugging"), to prevent the service guarantees of a
+> bfq_queue from being violated, the bfq_queue may be left busy, i.e.,
+> scheduled for service, even if empty (see comments in
+> __bfq_bfqq_expire() for details). But, if no process will send
+> requests to the bfq_queue any longer, then there is no point in
+> keeping the bfq_queue scheduled for service.
+> 
+> In addition, keeping the bfq_queue scheduled for service, but with no
+> process reference any longer, may cause the bfq_queue to be freed when
+> descheduled from service. But this is assumed to never happen, and
+> causes a UAF if it happens. This, in turn, caused crashes [1, 2].
+> 
+> This commit fixes this issue by descheduling an empty bfq_queue when
+> it remains with not process reference.
+> 
+> [1] https://bugzilla.redhat.com/show_bug.cgi?id=1767539
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=205447
 
-> The kernel patch is now OK, so we can grab it now (either you take it
-> Jiri, and add my acked-by or I'll push it later...)
-
-I've just queued it in for-5.5/core. Thanks,
+Applied, thanks.
 
 -- 
-Jiri Kosina
-SUSE Labs
+Jens Axboe
 
