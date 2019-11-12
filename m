@@ -2,210 +2,185 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD57BC17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE814C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFDF20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B3120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HbwnJAn1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Yz+J/1Vy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGN+yW1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfKLQZt (ORCPT
+        id S1727083AbfKLQ1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:25:49 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:36096 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKLQZt (ORCPT
+        Tue, 12 Nov 2019 11:27:14 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:47060 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfKLQ1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:25:49 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EB4E660909; Tue, 12 Nov 2019 16:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573575947;
-        bh=DXkWV66VkppVyJ+i/rYBmYzA5hXfIYYXNPGMHx1zrQc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HbwnJAn1ILUq/icq4thw2EebaC0DSTP96B2LFVOovATYTih09MkDUkTMc998SutWt
-         kkH/4TcQLpAtxo0btcpPmhTZUs6kOX2Zf/qivSXVnkbB0m1nDlOUEmyBqMTW8YSY6j
-         UWsvqRb0faQMvklkTYtl0a3/IOh251BPNFoGlgQ0=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDB0A6053B;
-        Tue, 12 Nov 2019 16:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573575944;
-        bh=DXkWV66VkppVyJ+i/rYBmYzA5hXfIYYXNPGMHx1zrQc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Yz+J/1VyCQQpVfU0+a3O5kA5mGybn8BMb+BYrndOIVQ6h8vy9iy089MlUHCu1yKtH
-         I6d1dbaD43ebM3Qu7Y2D7kSwEyMCdUWUrQRMySQYqZMSMDXGF1PeqUZSG+hTLXbbZw
-         RGkxPMxv9zRgAxMlB7rPv6qrIGahfSt/sYt6couA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDB0A6053B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-To:     Rob Herring <robh@kernel.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
- <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
- <20191112004417.GA16664@bogus>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
-Date:   Tue, 12 Nov 2019 09:25:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 11:27:14 -0500
+Received: by mail-ed1-f65.google.com with SMTP id x11so15384624eds.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:27:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=duBtqUXc8rS5Fto0xoNFGu4k3wWR32DazDGPa4wc8r0=;
+        b=UGN+yW1uKArcfiPDGUR7JGTEVHREcKqQbWqUSkRxU1GrUhZB5cGXeRCXVjD3/Q5e59
+         XuXfb2XE9UwxG2Ysdos+EcxrPZXhM6aYkgUyn+k9lRVGZp6trly1plzCltnHTWb+ZaW1
+         wICzhsh7+7cRRZ+7E2OWbFqeRvYG2+84u0OKbWpe1QPCypBqQcrTkMAszx3RmtfH/uZh
+         depjBrbDsnchHYg+L69SZbZKQACZCEJx826T54Z4EoYGOXDm1pfcuB6IxGwqXF8fv24r
+         L7Kda7MuD3e6leDlULl/qPRpahNiVA5srAHHNaj8KrwwWMtANezX0/ixJcKjDnHPsPx/
+         08Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=duBtqUXc8rS5Fto0xoNFGu4k3wWR32DazDGPa4wc8r0=;
+        b=JiQzCSDk9hp5zNOdBTPbChJZI59wBCGI4tS4sa3W7akkAU77erLfVNa4L8X63VUJn3
+         4YwxPrO8jJfB3abwePy7pKN1nnBw14ZDF6YC8NTaMRSmOUGvWtfYMrYbJiOxQHarG18Q
+         Q0vV2OEkmXi6jL2I5tP0uL8G1SHoNbsxggSjMzZaF5YejxZj4HimolNZQuE197CbFCJC
+         3MVon4ehj/B+1sIZJq4ynwtGw7pzszbao+s1JeMkjDiEE9xEyNqq+1AEkKIa1/DqxkJu
+         Q8GJzSGElFqSmZSZ9gLkN46JTUuQGj+NbbJpSqA9BsxiEdDBC7pIzGafyGNwyYb1m3fo
+         yeVA==
+X-Gm-Message-State: APjAAAW4xX66gT0yweOH7HZs8AHthXZ4ERzEOggWG8apX/LNXpkHKPhD
+        AcvPRy9JIEUzquumrsI4EKYJv64a9R3sfFcATHA=
+X-Google-Smtp-Source: APXvYqwINa/wmWIHF2PahNuybTm0H/AGNDuYZehBOWPhVnP8qdvcHhBoYwLBn/HIa7MeIIyGWfDqGK+cDtagO+MOR4g=
+X-Received: by 2002:a17:906:f209:: with SMTP id gt9mr28706102ejb.241.1573576031902;
+ Tue, 12 Nov 2019 08:27:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191112004417.GA16664@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191104173737.142558-1-robdclark@gmail.com> <20191104173737.142558-2-robdclark@gmail.com>
+ <CAFqH_52nFGmG-sMb03ByGSJGckT1D_TKWuy1DpkJt2usxHWHpA@mail.gmail.com>
+In-Reply-To: <CAFqH_52nFGmG-sMb03ByGSJGckT1D_TKWuy1DpkJt2usxHWHpA@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 12 Nov 2019 08:27:00 -0800
+Message-ID: <CAF6AEGtSacLafw3VmNfXMZBM=RCik8bu9XeUYcd0jOqivaN5eg@mail.gmail.com>
+Subject: Re: [PATCH 2/2 v2] drm/atomic: clear new_state pointers at hw_done
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/2019 5:44 PM, Rob Herring wrote:
-> On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
->> The global clock controller on MSM8998 can consume a number of external
->> clocks.  Document them.
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
->>   1 file changed, 33 insertions(+), 14 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> index e73a56f..2f3512b 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> @@ -40,20 +40,38 @@ properties:
->>          - qcom,gcc-sm8150
->>   
->>     clocks:
->> -    minItems: 1
-> 
-> 1 or 2 clocks are no longer allowed?
+On Tue, Nov 12, 2019 at 7:51 AM Enric Balletbo Serra
+<eballetbo@gmail.com> wrote:
+>
+> Hi Rob,
+>
+> Missatge de Rob Clark <robdclark@gmail.com> del dia dl., 4 de nov.
+> 2019 a les 18:42:
+> >
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > The new state should not be accessed after this point.  Clear the
+> > pointers to make that explicit.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+>
+> While looking to another issue I applied this patch on top of 5.4-rc7
+> and my display stopped working. The system gets stuck with the
+> messages below
+>
+> ...
+> [   17.558689] rockchip-vop ff8f0000.vop: Adding to iommu group 1
+> [   17.566014] rk3399-gru-sound sound: ASoC: failed to init link DP: -517
+> [   17.567618] rockchip-vop ff900000.vop: Adding to iommu group 2
+> [   17.580671] rk3399-gru-sound sound: ASoC: failed to init link DP: -517
+> [   17.585996] rockchip-drm display-subsystem: bound ff8f0000.vop (ops
+> vop_component_ops [rockchipdrm])
+> [   17.589294] rk3399-gru-sound sound: ASoC: failed to init link DP: -517
+> [   17.599899] rockchip-drm display-subsystem: bound ff900000.vop (ops
+> vop_component_ops [rockchipdrm])
+> [   17.615846] rockchip-dp ff970000.edp: no DP phy configured
+> [   17.622495] rockchip-drm display-subsystem: bound ff970000.edp (ops
+> rockchip_dp_component_ops [rockchipdrm])
+> [   17.633688] rockchip-drm display-subsystem: bound fec00000.dp (ops
+> cdn_dp_component_ops [rockchipdrm])
+> [   17.644141] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> [   17.651548] [drm] No driver support for vblank timestamp query.
+>
+> Not really useful information at this point, but I am wondering if
+> could be that the rockchip driver is doing something wrong more than
+> this patch is wrong?
 
-Correct.
+I think we should drop this patch (but 1/2 is defn needed).. it turns
+up some other problems in qemu, it seems.  So there is kind of a
+bigger problem of things accessing new state after hw_done still.  But
+I've not really had time to look into it.
 
-The primary reason is that Stephen indicated in previous discussions 
-that if the hardware exists, it should be indicated in DT, regardless if 
-the driver uses it.  In the 7180 and 8150 case, the hardware exists, so 
-these should not be optional.
+BR,
+-R
 
-The secondary reason is I found that the schema was broken anyways.  In 
-the way it was written, if you implemented sleep, you could not skip 
-xo_ao, however there is a dts that did exactly that.
-
-The third reason was that I couldn't find a way to write valid yaml to 
-preserve the original meaning.  when you have an "items" as a subnode of 
-"oneOf", you no longer have control over the minItems/maxItems, so all 3 
-became required anyways.  I find it disappointing that the "version" of 
-Yaml used for DT bindings is not documented, so after several hours of 
-trial and error, I just gave up since I found this to work (failed cases 
-just gave me an error with no indication of what was wrong, not even a 
-line number).
-
-> 
->> -    maxItems: 3
->> -    items:
->> -      - description: Board XO source
->> -      - description: Board active XO source
->> -      - description: Sleep clock source
->> +    oneOf:
->> +      #qcom,gcc-sm8150
->> +      #qcom,gcc-sc7180
-> 
-> Typically, this would be an if/then schema, but I'm okay with leaving it
-> like this. Depends whether you want to check the clocks match the
-> compatible.
-
-Is there an example somewhere?  The only thing I found was 
-example-schema.yaml which seemed to suggest this way.
-
-> 
->> +      - items:
->> +        - description: Board XO source
->> +        - description: Board active XO source
->> +        - description: Sleep clock source
->> +      #qcom,gcc-msm8998
->> +      - items:
->> +        - description: Board XO source
->> +        - description: USB 3.0 phy pipe clock
->> +        - description: UFS phy rx symbol clock for pipe 0
->> +        - description: UFS phy rx symbol clock for pipe 1
->> +        - description: UFS phy tx symbol clock
->> +        - description: PCIE phy pipe clock
->>   
->>     clock-names:
->> -    minItems: 1
->> -    maxItems: 3
->> -    items:
->> -      - const: bi_tcxo
->> -      - const: bi_tcxo_ao
->> -      - const: sleep_clk
->> +    oneOf:
->> +      #qcom,gcc-sm8150
->> +      #qcom,gcc-sc7180
->> +      - items:
->> +        - const: bi_tcxo
->> +        - const: bi_tcxo_ao
->> +        - const: sleep_clk
->> +      #qcom,gcc-msm8998
->> +      - items:
->> +        - const: xo
->> +        - const: usb3_pipe
->> +        - const: ufs_rx_symbol0
->> +        - const: ufs_rx_symbol1
->> +        - const: ufs_tx_symbol0
->> +        - const: pcie0_pipe
->>   
->>     '#clock-cells':
->>       const: 1
->> @@ -118,6 +136,7 @@ else:
->>         compatible:
->>           contains:
->>             enum:
->> +            - qcom,gcc-msm8998
->>               - qcom,gcc-sm8150
->>               - qcom,gcc-sc7180
->>     then:
->> @@ -179,8 +198,8 @@ examples:
->>       clock-controller@100000 {
->>         compatible = "qcom,gcc-sc7180";
->>         reg = <0x100000 0x1f0000>;
->> -      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
->> -      clock-names = "bi_tcxo", "bi_tcxo_ao";
->> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
->> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
-> 
-> The patch subject says 8998, but this is changing sc7180.
-
-I'm fixing up the example so that it no longer fails checks.  See the 
-above comment.
-
-> 
->>         #clock-cells = <1>;
->>         #reset-cells = <1>;
->>         #power-domain-cells = <1>;
->> -- 
->> Qualcomm Technologies, Inc. is a member of the
->> Code Aurora Forum, a Linux Foundation Collaborative Project.
->>
-
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+>
+> Thanks,
+>  Enric
+>
+> > ---
+> >  drivers/gpu/drm/drm_atomic_helper.c | 30 +++++++++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> > index 648494c813e5..aec9759d9df2 100644
+> > --- a/drivers/gpu/drm/drm_atomic_helper.c
+> > +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> > @@ -2246,12 +2246,42 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
+> >   */
+> >  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
+> >  {
+> > +       struct drm_connector *connector;
+> > +       struct drm_connector_state *old_conn_state, *new_conn_state;
+> >         struct drm_crtc *crtc;
+> >         struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> > +       struct drm_plane *plane;
+> > +       struct drm_plane_state *old_plane_state, *new_plane_state;
+> >         struct drm_crtc_commit *commit;
+> > +       struct drm_private_obj *obj;
+> > +       struct drm_private_state *old_obj_state, *new_obj_state;
+> >         int i;
+> >
+> > +       /*
+> > +        * After this point, drivers should not access the permanent modeset
+> > +        * state, so we also clear the new_state pointers to make this
+> > +        * restriction explicit.
+> > +        *
+> > +        * For the CRTC state, we do this in the same loop where we signal
+> > +        * hw_done, since we still need to new_crtc_state to fish out the
+> > +        * commit.
+> > +        */
+> > +
+> > +       for_each_oldnew_connector_in_state(old_state, connector, old_conn_state, new_conn_state, i) {
+> > +               old_state->connectors[i].new_state = NULL;
+> > +       }
+> > +
+> > +       for_each_oldnew_plane_in_state(old_state, plane, old_plane_state, new_plane_state, i) {
+> > +               old_state->planes[i].new_state = NULL;
+> > +       }
+> > +
+> > +       for_each_oldnew_private_obj_in_state(old_state, obj, old_obj_state, new_obj_state, i) {
+> > +               old_state->private_objs[i].new_state = NULL;
+> > +       }
+> > +
+> >         for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
+> > +               old_state->crtcs[i].new_state = NULL;
+> > +
+> >                 commit = new_crtc_state->commit;
+> >                 if (!commit)
+> >                         continue;
+> > --
+> > 2.23.0
+> >
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
