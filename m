@@ -2,126 +2,145 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4125C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EE0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753352067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HR9AGHyY"
+	by mail.kernel.org (Postfix) with ESMTP id 4930C2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:30:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573540202;
+	bh=MJTKphnDJHSZGO61ZKNpGYVhF//NXy3y8/GyhUd8yhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J9rlZDRgBMMa/ELM+saV3hfHr2tVyTIsNANxF74uHHVbgcXVoV3qtq9hf8S6xuVOo
+	 x7nZhpSULeI4QeF3rdpjRab34KOzCrl7nSreu7e/k4+oZUTVdyjSKRi0MrtYqfSHZr
+	 8jtAg7uu15uxcidNUSx67oChlL+UWx5o+X4fk45Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfKLG2X (ORCPT
+        id S1726949AbfKLGaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 01:28:23 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43686 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfKLG2X (ORCPT
+        Tue, 12 Nov 2019 01:30:01 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34732 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfKLGaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 01:28:23 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 3so12591028pfb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 22:28:22 -0800 (PST)
+        Tue, 12 Nov 2019 01:30:00 -0500
+Received: by mail-wr1-f65.google.com with SMTP id e6so17208454wrw.1;
+        Mon, 11 Nov 2019 22:29:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=iAL+4Mb+bihLwcbbUJQManyIi0HMq8FS6irH7b5rRco=;
-        b=HR9AGHyYy2UyvvEwb96MgtYOJsg0vdjPcRAqywN8KNqqP4V6g+ZSCV/WD941rThPYl
-         MAiDAn47ObgTr175cJScgIpsBf9LZ8Bx5Jw4p5vr6HYg+i6En/TlpBsCZ05TjZTF3uQZ
-         xK5JAmH3TUZV7KekreIkJWeTAj+xuor82PCZc7LGvb3RT4fKF9OkaRA4wONEvhuPMnNS
-         Pi1qLSjmrTYGeu88D+mLRpoj3tmI8Bl+pai6mh2j8x32NyV2lfrb2b/NFo4a1+0ky8Bj
-         BfRHNloJSBoe2UUSJwEigmR8hfUfgqNIY2feikVGqCvlUUI3osAyerOOkNPGXm2KFIMv
-         ygkg==
+        bh=lAYMmo1eJk0nu5Pp/QFztO4nECppTXXyiwDmyLApAMU=;
+        b=CmNQS9o057m02iB3aVZCvD9IKuX8qvcKJgJUgyo4KExtj2bJGSViNfCsIbt5SiuwMO
+         vuoCblpkhQtIhImySY2l9xgcSalma2cLx/gmbDWtxOG+KeWeZqQREyCEiZtz2MaeiTEY
+         RldTTXX6x5mGp2gTJOMJKKnH3ErtuhTGJVb/oxnV4qflBhEKc0iGhFu9X9Z6Ewwj/nv7
+         RJ+bk94WWdoFyERGDm1828mxsXI6cvzgXYdmifbVY3rPGuNlfG2Jz7tz9D0yBEL7amvI
+         N9XaeSRhLvOl3rh+bmOKbDc4uYMU01us4xdrDKX0UOdp1yr6ys5I9p7y6gCnhALJgHcw
+         WXUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iAL+4Mb+bihLwcbbUJQManyIi0HMq8FS6irH7b5rRco=;
-        b=NZTQJjR/BNHy4lUBYtjEW8zdZTMrWN8dtWvm414DZnDQJLdtDjslhB1tYNU04vfvCB
-         vOBhcu4m+o0JEMR5zjM1OblPnDOUEIHYD5jd18Nq+IHNyvLWrBqMpqHk0su67sl+IVuN
-         gwcxHnOokOdUJZGPL66zfHxB09tCTkMq2f0QIb/IzDY2GRgD6+nAxbokWQgc6G1AqmTd
-         AKEiyj2WVXguM3SxTBUnAVbvuo0dZf7L5PeREdYT4QqW9MUKtpGtfJEJL2uK/+TpmRJD
-         IiTZtLutupjVh3GAJjiPe2+J6zDLWvDI82uEldBbbF3yXiM+kX0qa9pUKVT1qbwnW9Xy
-         0l7g==
-X-Gm-Message-State: APjAAAWBJ7OLXj1AmgTAGO3XRhRcC1mYqG9rDU1zWQkuZobpbV9gL8V1
-        619b0465b14s/9IAws/6RFr+iA==
-X-Google-Smtp-Source: APXvYqwTFvsGpfht34NVHjjcAtJ51bzZyaVTKPPTGApX4yc+88RyqobogAUQBkRncC4z2VMigW6V2w==
-X-Received: by 2002:a63:cf45:: with SMTP id b5mr32848687pgj.36.1573540102283;
-        Mon, 11 Nov 2019 22:28:22 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j14sm15828464pfi.168.2019.11.11.22.28.21
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lAYMmo1eJk0nu5Pp/QFztO4nECppTXXyiwDmyLApAMU=;
+        b=SuB+rEekAaU3uHUYMv0CsdK8pzV3QhZQiwcHCDzY3zz1Z7UAanvBUcGoqtJ0/Pd3n3
+         5VMEkbI57C0HVs00yDCEeHl9PhS0oqiFryZhGQ3fBNTSfLT/fOOZaMWu6Sr8OdnHGhN9
+         5c5tRQ7NTdxhsq37lhLHERvcIfTdQ7dNtvZVKB+aVwsKoQ9DAKbhltJuuaCyZWOE5eZU
+         3Zl3DiRM8HVujRcu9sfc8uNyALXnpunp1uGfP9BjZv4GnPxeYmqWJqGx39+8PxqYNLk6
+         8tIm7dz+nILDChTMsNPy9CCwbtOVj4+TGTTuBb77tW7vGZDFMEkIpavSjJkU12u/OLqY
+         8aNw==
+X-Gm-Message-State: APjAAAV3Wmoah0Y4hbrHKSAnZ3OTjgdbaYxT8z1SHVkHxYU8bA4gV1Y7
+        ABiT6Z44UZ9c5Wj3bRZM+so=
+X-Google-Smtp-Source: APXvYqwg7II6op5rkcQCA+kVGqp8JW9qmm3wOv2otknPBBGlW4hCTPNNQNQ0ueZUnows/DjxDY46Ng==
+X-Received: by 2002:adf:ab4c:: with SMTP id r12mr23079230wrc.3.1573540195668;
+        Mon, 11 Nov 2019 22:29:55 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 19sm40418570wrc.47.2019.11.11.22.29.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 22:28:21 -0800 (PST)
-Date:   Mon, 11 Nov 2019 22:28:19 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        s-anna@ti.com
-Subject: Re: [PATCH 17/17] remoteproc/omap: fix auto-suspend failure warning
- during crashed state
-Message-ID: <20191112062819.GQ3108315@builder>
-References: <20191028124238.19224-1-t-kristo@ti.com>
- <20191028124238.19224-18-t-kristo@ti.com>
+        Mon, 11 Nov 2019 22:29:54 -0800 (PST)
+Date:   Tue, 12 Nov 2019 07:29:51 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V9] mm/debug: Add tests validating architecture page
+ table helpers
+Message-ID: <20191112062951.GA100264@gmail.com>
+References: <1573532326-24084-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028124238.19224-18-t-kristo@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1573532326-24084-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
 
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The runtime autosuspend on a OMAP remoteproc device is attempted when
-> the suspend timer expires (autosuspend delay elapsed since the last
-> time the device is busy). This is the normal autosuspend scenario
-> for a device functioning normally. This timer can also expire during
-> the debugging of a remoteproc crash when the remoteproc recovery is
-> disabled. This is an invalid pre-condition though, so check for the
-> RPROC_CRASHED state and bail out before the actual check for the
-> RPROC_RUNNING state. The auto-suspend is also not re-attempted until
-> the remoteproc is recovered and restored to normal functional state.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+* Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-This should be folded back into the previous patch (which I have yet to
-review).
-
-Regards,
-Bjorn
-
-> ---
->  drivers/remoteproc/omap_remoteproc.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index 2eb05d7a4dec..1dfac82224f7 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -945,6 +945,11 @@ static int omap_rproc_runtime_suspend(struct device *dev)
->  	struct omap_rproc *oproc = rproc->priv;
->  	int ret;
->  
-> +	if (rproc->state == RPROC_CRASHED) {
-> +		dev_dbg(dev, "rproc cannot be runtime suspended when crashed!\n");
-> +		return -EBUSY;
-> +	}
+> +config DEBUG_VM_PGTABLE
+> +	bool "Debug arch page table for semantics compliance"
+> +	depends on MMU
+> +	depends on DEBUG_VM
+> +	depends on ARCH_HAS_DEBUG_VM_PGTABLE
+> +	help
+> +	  This option provides a debug method which can be used to test
+> +	  architecture page table helper functions on various platforms in
+> +	  verifying if they comply with expected generic MM semantics. This
+> +	  will help architecture code in making sure that any changes or
+> +	  new additions of these helpers still conform to expected
+> +	  semantics of the generic MM.
 > +
->  	if (WARN_ON(rproc->state != RPROC_RUNNING)) {
->  		dev_err(dev, "rproc cannot be runtime suspended when not running!\n");
->  		return -EBUSY;
-> -- 
-> 2.17.1
-> 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> +	  If unsure, say N.
+
+Since CONFIG_DEBUG_VM is generally disabled in distro kernel packages, 
+why not make this 'default y' to maximize testing coverage? The code size 
+increase should be minimal, and DEBUG_VM increases size anyway.
+
+Other than that this looks good to me:
+
+  Reviewed-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
