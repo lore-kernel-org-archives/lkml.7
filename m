@@ -2,103 +2,134 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B49FC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26857C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738F02196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED5D8206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OWZdIq3y"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MKkc4UyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfKLKJV (ORCPT
+        id S1726497AbfKLKQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:09:21 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49617 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725834AbfKLKJU (ORCPT
+        Tue, 12 Nov 2019 05:16:21 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40875 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfKLKQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:09:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573553360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=rm+SpsgER6q0ZzJGxmttnhDXfih8qrCKpsGq3yb+Vgs=;
-        b=OWZdIq3y/bIAj39GVfMWVolDWj1kg4YXzq2Vw3KBZ6XKfde4arrH9vkFiHvQu2d4MgSX0J
-        RkzZoD1b7kuuHTk006uF8SC4LeHFOEtkZolsf4d0Gp973OedS6WC3s3f23NpVDxQpmaGGN
-        GdSVWyl0ptTp0ghyqII6yQk9SU79hsw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-Ng-hEyGFPDaVnavp_JwT1A-1; Tue, 12 Nov 2019 05:09:17 -0500
-Received: by mail-wm1-f71.google.com with SMTP id v8so963034wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 02:09:16 -0800 (PST)
+        Tue, 12 Nov 2019 05:16:21 -0500
+Received: by mail-ot1-f65.google.com with SMTP id m15so13815080otq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 02:16:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AKZO0OAzyyYGtpbwsEj0QOcTH8vqhFRIVBhgV2yDI1g=;
+        b=MKkc4UyNjo46K6JpSwpbGmcYcHb694jLXJxKceHuu01hTDC6t0f3f7w4XAQlrwJdLI
+         +0dpUVgiYRfD4m4UTM61GbEUvKzH+cV+RCj5NHe8Ym6pLVsHUgofeIn6/UVh62vDPLdW
+         geQPN19YcJozX+8NZpNEJ64YZU94tHhcp/ZvYALtrAMHUIKgbjcPvWpoGlKS9By3QvV2
+         PaUsCD112vgto4G5Y3Hhh1JqsctWluEZv3TN5zcfcd4b03LIPzifxELba/ah9UlNNXnO
+         BXVWVzzx6j9S7294+QI3B6uAjGfFuOu0yHiZAvweTQKDOBjSX4c/1R1uAIrvt0MQCDFk
+         sHcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/T+UqvDPJA0ruFuxC0ui4R1v70oUmaDOHs4UxSNtf/o=;
-        b=DyLaizry99FnF/6KKhRGQbJ+ulBBwCMDdlFDXFSljuGw+g0VD5w8z/WkRY8Qr46gt6
-         aV+r2AUZlKa9f8U8r5eKHdvFxrJFkcvkuNgfl4MXARhqOKSkVy04zOrHjZRZKn2WwzUq
-         on7oOhPoWAFYnK3R+Urx1ZgF/vTSYoM+3BeQ6CiFrtDdEWLD7hq3clyUcPYhoaFnELL8
-         wslQTq062qjEHA4dd/8w19/lp0q1uMd8OunjV0K1/n4P2ujcjIW6GLO8l6jkGL8OQBHG
-         Prkf4moEStlOrJdD6perdNqStDknTdlIq2Bh8RDjyq/r5xaABox55ASJb1l9v/WT74jP
-         MlPw==
-X-Gm-Message-State: APjAAAWEfGWQNPzNs4VpQyThnORE8z7ckK26TNag4/LcKlW8CLf4HnxZ
-        bYtDj+rmTPnSwUByRm4EXAczLG69qDhE7Pgc5BEw56AsiDac7UwcWDigk6M8fxDEF48SL/eRtTt
-        AcaAXZxBMcMWHueiw4D+4FejR
-X-Received: by 2002:a05:600c:22cb:: with SMTP id 11mr3211639wmg.117.1573553355857;
-        Tue, 12 Nov 2019 02:09:15 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxieILYD7Oki2LtPWxGLPvRXneVlPzXp94IaP9x7iQbDbM7jR4WAKOfSK+ZLP0yVwAzUEp3zw==
-X-Received: by 2002:a05:600c:22cb:: with SMTP id 11mr3211614wmg.117.1573553355624;
-        Tue, 12 Nov 2019 02:09:15 -0800 (PST)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q15sm10709704wrs.91.2019.11.12.02.09.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 02:09:15 -0800 (PST)
-Subject: Re: [PATCH v4 0/6] KVM: x86/vPMU: Efficiency optimization by reusing
- last created perf_event
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20191027105243.34339-1-like.xu@linux.intel.com>
- <20191028164324.GJ4097@hirez.programming.kicks-ass.net>
- <dcbc78f5-c267-d5be-f4e8-deaebf91fe1f@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <21372ed6-b8c1-3609-1ab8-2d566a4319e6@redhat.com>
-Date:   Tue, 12 Nov 2019 11:09:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AKZO0OAzyyYGtpbwsEj0QOcTH8vqhFRIVBhgV2yDI1g=;
+        b=GBa546LT5tchkylNnf3X9MjPWbdYDaBd51yE0I1V0hoBRXWxILjXKZ6rWdqDojM/Y7
+         QcV7nVAMhBIEejHHonVIFPrSVRT9lCQ5fx6YyvhiEWTuf5N+f38+vjdp9Z19jzea1GKh
+         zjLEqeU4vy2NiY7U35vy5CfpKBXboWwVQg9djlYkSq2Ra6Gs8YQIg1BMfQ0VJSPtVUlT
+         QrrqjncyWtdXHfOzbMsYLdw0AN5prlXOB1apEZ8Om2s9NO3DmgoBY8gYDe7yGEH7+6Ld
+         k/8MYzILvoApWnBvaqEnQ+m3eu6+7gww1xisZOzqvUaJN7WsZXSq5NkVcHHk7DYpB2Tq
+         up8A==
+X-Gm-Message-State: APjAAAUjWKVGSapcgr8f9bsT21fBXUAY7D6jTX4CVAFoJFu8uxgVQPZB
+        3j9eZel2g7VkzDGfAZlwZahi6M5+dq9QAJnWNs3s6tWJ
+X-Google-Smtp-Source: APXvYqxsF1/3YJCj6U1j3gN+WttI0zCinM36IFtdfM94pQ8mxyn5ROGK+eMn6Ut7Z3q6li9ZlTIynntWVR/yXJZMrio=
+X-Received: by 2002:a9d:344a:: with SMTP id v68mr25496129otb.85.1573553780649;
+ Tue, 12 Nov 2019 02:16:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <dcbc78f5-c267-d5be-f4e8-deaebf91fe1f@linux.intel.com>
-Content-Language: en-US
-X-MC-Unique: Ng-hEyGFPDaVnavp_JwT1A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
+References: <20191108160747.3274377-1-thierry.reding@gmail.com> <20191108205407.GE23750@amd>
+In-Reply-To: <20191108205407.GE23750@amd>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 12 Nov 2019 11:16:10 +0100
+Message-ID: <CAMpxmJX0oM3cUQULr8UmKtJ5mGuzSvGeR5jCmo88Q_9+gDXqjA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: max77620: Fixup debounce delays
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 07:08, Like Xu wrote:
->=20
-> For vPMU, please review two more patches as well:
-> +
-> https://lore.kernel.org/kvm/20191030164418.2957-1-like.xu@linux.intel.com=
-/
-> (kvm)
+pt., 8 lis 2019 o 21:54 Pavel Machek <pavel@denx.de> napisa=C5=82(a):
+>
+> On Fri 2019-11-08 17:07:46, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > When converting milliseconds to microseconds in commit fffa6af94894
+> > ("gpio: max77620: Use correct unit for debounce times") some ~1 ms gaps
+> > were introduced between the various ranges supported by the controller.
+> > Fix this by changing the start of each range to the value immediately
+> > following the end of the previous range. This way a debounce time of,
+> > say 8250 us will translate into 16 ms instead of returning an -EINVAL
+> > error.
+> >
+> > Typically the debounce delay is only ever set through device tree and
+> > specified in milliseconds, so we can never really hit this issue becaus=
+e
+> > debounce times are always a multiple of 1000 us.
+> >
+> > The only notable exception for this is drivers/mmc/host/mmc-spi.c where
+> > the CD GPIO is requested, which passes a 1 us debounce time. According
+> > to a comment preceeding that code this should actually be 1 ms (i.e.
+> > 1000 us).
+> >
+> > Reported-by: Pavel Machek <pavel@denx.de>
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+>
+> Thanks for doing this!
+>
+> Acked-by: Pavel Machek <pavel@denx.de>
+>
+> And I guess this should be cc: stable, as the commit this fixes was
+> making its way there.
+>
+> Best regards,
+>                                                                 Pavel
+>
+>
+> > @@ -198,13 +198,13 @@ static int max77620_gpio_set_debounce(struct max7=
+7620_gpio *mgpio,
+> >       case 0:
+> >               val =3D MAX77620_CNFG_GPIO_DBNC_None;
+> >               break;
+> > -     case 1000 ... 8000:
+> > +     case 1 ... 8000:
+> >               val =3D MAX77620_CNFG_GPIO_DBNC_8ms;
+> >               break;
+> > -     case 9000 ... 16000:
+> > +     case 8001 ... 16000:
+> >               val =3D MAX77620_CNFG_GPIO_DBNC_16ms;
+> >               break;
+> > -     case 17000 ... 32000:
+> > +     case 16001 ... 32000:
+> >               val =3D MAX77620_CNFG_GPIO_DBNC_32ms;
+> >               break;
+> >       default:
+>
+> --
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-If I understand this patch correctly, you are patching the CPUID values
-passed to the KVM_SET_CPUID2 ioctl if they are not valid for the host.
-Generally we don't do that, if there is garbage in CPUID the behavior of
-the guest will be unreliable.
+Applied for fixes and marked for stable.
 
-Paolo
-
+Thanks
