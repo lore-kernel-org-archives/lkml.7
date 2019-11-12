@@ -7,57 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03760C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2822EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C7B22469
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CA122469
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfKLLTF (ORCPT
+        id S1727774AbfKLLTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:19:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34111 "EHLO
+        Tue, 12 Nov 2019 06:19:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34009 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727563AbfKLLTE (ORCPT
+        with ESMTP id S1727552AbfKLLSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:19:04 -0500
+        Tue, 12 Nov 2019 06:18:32 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBl-0000go-RY; Tue, 12 Nov 2019 12:18:26 +0100
+        id 1iUUBn-0000mn-H2; Tue, 12 Nov 2019 12:18:27 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F08A11C0357;
-        Tue, 12 Nov 2019 12:18:14 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:18:14 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 40B8E1C04F4;
+        Tue, 12 Nov 2019 12:18:19 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:18 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf tools: Avoid a malloc() for array events
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
+Subject: [tip: perf/core] perf data: Rename directory "header" file to "data"
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191023005337.196160-6-irogers@google.com>
-References: <20191023005337.196160-6-irogers@google.com>
+In-Reply-To: <20191004083121.12182-4-adrian.hunter@intel.com>
+References: <20191004083121.12182-4-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157355749440.29376.10975700265435116588.tip-bot2@tip-bot2>
+Message-ID: <157355749889.29376.8219215484265166163.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,63 +58,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     826100a7ce9a659b42140710ebe789d710799048
-Gitweb:        https://git.kernel.org/tip/826100a7ce9a659b42140710ebe789d710799048
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Tue, 22 Oct 2019 17:53:33 -07:00
+Commit-ID:     9b70b9db4e0cc03d224795a18088fdb916dec823
+Gitweb:        https://git.kernel.org/tip/9b70b9db4e0cc03d224795a18088fdb916dec823
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Fri, 04 Oct 2019 11:31:19 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Wed, 06 Nov 2019 15:43:05 -03:00
 
-perf tools: Avoid a malloc() for array events
+perf data: Rename directory "header" file to "data"
 
-Use realloc() rather than malloc()+memcpy() to possibly avoid a memory
-allocation when appending array elements.
+In preparation to support a single file directory format, rename "header"
+to "data" because "header" is a mis-leading name when there is only 1 file.
+Note, in the multi-file case, the "header" file also contains data.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191023005337.196160-6-irogers@google.com
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191004083121.12182-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.y | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ tools/perf/util/data.c | 2 +-
+ tools/perf/util/util.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 5863acb..ffa1a1b 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -689,14 +689,12 @@ array_terms ',' array_term
- 	struct parse_events_array new_array;
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 8993253..df173f0 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -306,7 +306,7 @@ static int open_dir(struct perf_data *data)
+ 	 * So far we open only the header, so we can read the data version and
+ 	 * layout.
+ 	 */
+-	if (asprintf(&data->file.path, "%s/header", data->path) < 0)
++	if (asprintf(&data->file.path, "%s/data", data->path) < 0)
+ 		return -1;
  
- 	new_array.nr_ranges = $1.nr_ranges + $3.nr_ranges;
--	new_array.ranges = malloc(sizeof(new_array.ranges[0]) *
--				  new_array.nr_ranges);
-+	new_array.ranges = realloc($1.ranges,
-+				sizeof(new_array.ranges[0]) *
-+				new_array.nr_ranges);
- 	ABORT_ON(!new_array.ranges);
--	memcpy(&new_array.ranges[0], $1.ranges,
--	       $1.nr_ranges * sizeof(new_array.ranges[0]));
- 	memcpy(&new_array.ranges[$1.nr_ranges], $3.ranges,
- 	       $3.nr_ranges * sizeof(new_array.ranges[0]));
--	free($1.ranges);
- 	free($3.ranges);
- 	$$ = new_array;
- }
+ 	if (perf_data__is_write(data) &&
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index ae56c76..3096654 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -185,7 +185,7 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
+ int rm_rf_perf_data(const char *path)
+ {
+ 	const char *pat[] = {
+-		"header",
++		"data",
+ 		"data.*",
+ 		NULL,
+ 	};
