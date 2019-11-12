@@ -2,170 +2,191 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066D6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2425AC17447
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE9C2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:56:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="g5FCw/Ir"
+	by mail.kernel.org (Postfix) with ESMTP id ED2AC2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573520287;
+	bh=SLPLpiA4nmtWCaw2yKdJIwEaU4xCLbhvP/HAc7r6jcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0szTjCajrMAufa8iwwKWs46sc7lI3pf49BqgcAJDXiO8f+XjlEBy7DKLSB/2IUkx/
+	 2HeasYowYRGFfmNt/0HgUwwno1/7TTPswedY6kvFS7i6Ripe+9bJ1T/PwFN1xy/EUX
+	 1OSO1Rp0mOvppLw+u68v7Y/twfRbwPVM+2NTaHCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfKLA4M (ORCPT
+        id S1727063AbfKLA6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:56:12 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45721 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfKLA4M (ORCPT
+        Mon, 11 Nov 2019 19:58:05 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37350 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfKLA6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:56:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id w11so10611769pga.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 16:56:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G+W/WgXFQW+lt7IfFRrFaHlfa6KYsGjbDHKvVT4OS68=;
-        b=g5FCw/IrcyCS1t94m4uHwMuV4Q3V5h7wkcZG9mdWN/i4/r74kHXoFxRopB1hP4HYNT
-         Rhoi+JpodhCjU4z0t5yxD8TCE0oGNH9l3mtzZgtTyqlmi/2Ljg9eR8fZ6areT3FHNMlr
-         r03QRqPz9c4fvkCM9ISoeNY5EZ01cyxNKr2mLZhYt3uuA1yD6sgpRN5CWro+j6gfUxEO
-         KkUygH0E0yiK9/Uyfx76DxUJQCVplN5l8caDT5g5QzoqGNU3jzDytjWqGut9jEKw8bK5
-         aYkIhntlaimGrJkGOKh0k6ZKz10+Cq9LjdKyiZs96ik3WI6w++0q+vnhKfAV7KPAhTTk
-         y6Jg==
+        Mon, 11 Nov 2019 19:58:05 -0500
+Received: by mail-oi1-f195.google.com with SMTP id y194so13286249oie.4;
+        Mon, 11 Nov 2019 16:58:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G+W/WgXFQW+lt7IfFRrFaHlfa6KYsGjbDHKvVT4OS68=;
-        b=CKPHxh1eK0MmaRQNouZ+wS5NmiS8TGMlHObM8Tqmrq0Rn0nu2XfaHewpuCkXTfU01s
-         CnvkanWi3pjU1B+uhnx4p2tIoQY8YeOS7VX1zxjWCpGp5Pv+DyzVjquAdLI3LHTBtWOO
-         JkbS8r4TmtYI2t3pUBCkcEwLOhdR068IMFnw316m/JYzHvXTv5tSK3umJyWiQC/ta0nI
-         WZoslFJLzyy4AJqQJPDQE0Yu9tOVxvfwfUfDLM1HyoBRDA7DoQtbf83extY/HGBWyg7g
-         AoyWYXXxlmzyfslOzajTfZzHSSQbhoObaQ61tF0iNfDhccYe0W5Rs+rGwLPhAE/oOOHD
-         M7PQ==
-X-Gm-Message-State: APjAAAWVi5aq2InKS2NB+rk8YT3VZgfoqu1fbRyMK3+T+iNGPt1k7kHh
-        uT55JF88TLjjomIZu3IhhWi3Fw==
-X-Google-Smtp-Source: APXvYqw9wZ8KS9Kjzz+u+JmppGkycaLQwPal5QAlHhwTBI9UAlrxZzGzLRvP1TWhZaqpf0BzWA2MdQ==
-X-Received: by 2002:a63:950c:: with SMTP id p12mr33368602pgd.238.1573520170966;
-        Mon, 11 Nov 2019 16:56:10 -0800 (PST)
-Received: from localhost ([2401:fa00:d:2:4dd6:fffa:d6aa:9572])
-        by smtp.gmail.com with ESMTPSA id k103sm627402pje.16.2019.11.11.16.56.09
+        bh=n8yCb64f2+vEBZV/9ixdkldO/XVsA4VOMgs6/Cgt0Vk=;
+        b=N0xMbEE60TgmG8SdbElj6nwrSD0+KqQhdA8hy/l3zIPjnyzFijezvdZ8ldBCbKmkfa
+         gq06s/reRMdvdkV3wrt3Nk0IriVIreVEodXtON78HaYvRF6LzAShx5GnJVuRMh2L9Lyi
+         GurRBkAgyL3eavrX7knfod9bJg35uVmDchST9JAinQ7hJlp+O6IbwKPJFbyjeXRvvIdO
+         SHwa/ncz9qMpRRvUbIouQ1F23JpkLxAbHwLFeI9GCDhErUSXLDkuVRHxyTAkwND7/Cft
+         h6CI7YjCq32H0sr3HCIFCcOsblVDRHY+oEdGCDoDDhknoKjMDf3NhjS2uUoCpiBxS7EF
+         S+Cw==
+X-Gm-Message-State: APjAAAXYrFTGGiNV0Jgwg92AGcCSf53sfI5pbGc9RLKmAzW2SeBjy+j5
+        86DgvvWngxFeYq0OHl428Q==
+X-Google-Smtp-Source: APXvYqxnq2IwODcD/0epd41wU7Q53F63aVD5thvJ1yUI4eywxF0miSsq5IQCgQE/yJE0l4Ij8XergQ==
+X-Received: by 2002:a05:6808:906:: with SMTP id w6mr1524677oih.122.1573520284294;
+        Mon, 11 Nov 2019 16:58:04 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s133sm3953811oia.58.2019.11.11.16.58.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 16:56:10 -0800 (PST)
-Date:   Tue, 12 Nov 2019 09:56:07 +0900
-From:   Sandeep Patil <sspatil@android.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>, Yue Hu <huyue2@yulong.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pratik Patel <pratikp@codeaurora.org>
-Subject: Re: [RFC][PATCH 0/2] Allow DMA BUF heaps to be loaded as modules
-Message-ID: <20191112005607.GB17144@google.com>
-References: <20191025234834.28214-1-john.stultz@linaro.org>
- <20191104095823.GD10326@phenom.ffwll.local>
- <CALAqxLW_CoAn-KXki0dGKK+vo-R4CTnjt1Azrw=mRdL8BUFGWw@mail.gmail.com>
- <20191105094259.GX10326@phenom.ffwll.local>
- <CALAqxLWvNOL=Exybb25GgYQujyJcPNTsFuaBnjLQPKTkVAi6Xw@mail.gmail.com>
- <CAKMK7uFSBNqVWy0N-GH7CzH-R7c9CVb97LgCffdMzGCgvVan4Q@mail.gmail.com>
- <CALAqxLV+MfESanq+PenRUNR_w6KZT1KQ7suPjmiT-bdAFx83EA@mail.gmail.com>
+        Mon, 11 Nov 2019 16:58:03 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:58:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 2/4] dt-bindings: clock: Convert qcom,mmcc to DT schema
+Message-ID: <20191112005802.GA9638@bogus>
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255053-10351-1-git-send-email-jhugo@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALAqxLV+MfESanq+PenRUNR_w6KZT1KQ7suPjmiT-bdAFx83EA@mail.gmail.com>
+In-Reply-To: <1573255053-10351-1-git-send-email-jhugo@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 11:47:53AM -0800, John Stultz wrote:
-> On Tue, Nov 5, 2019 at 11:19 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > On Tue, Nov 5, 2019 at 6:41 PM John Stultz <john.stultz@linaro.org> wrote:
-> > > On Tue, Nov 5, 2019 at 1:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > >
-> > > > On Mon, Nov 04, 2019 at 10:57:44AM -0800, John Stultz wrote:
-> > > > > On Mon, Nov 4, 2019 at 1:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > > > > On Fri, Oct 25, 2019 at 11:48:32PM +0000, John Stultz wrote:
-> > > > > So even if the heaps are configured via DT (which at the moment there
-> > > > > is no such binding, so that's not really a valid method yet), there's
-> > > > > still the question of if the heap is necessary/makes sense on the
-> > > > > device. And the DT would only control the availability of the heap
-> > > > > interface, not if the heap driver is loaded or not.
-> > > >
-> > > > Hm I thought the cma regions are configured in DT? How does that work if
-> > > > it's not using DT?
-> > >
-> > > So yea, CMA regions are either configured by DT or setup at build time
-> > > (I think there's a cmdline option to set it up as well).
-> > >
-> > > But the CMA regions and the dmabuf cma heap driver are separate
-> > > things. The latter uses the former.
-> >
-> > Huh, I assumed the plan is that whenever there's a cma region, we want
-> > to instantiate a dma-buf heap for it? Why/when would we not want to do
-> > that?
+On Fri, Nov 08, 2019 at 04:17:33PM -0700, Jeffrey Hugo wrote:
+> Convert the qcom,mmcc-X clock controller binding to DT schema.
 > 
-> Not quite. Andrew noted that we may not want to expose all CMA regions
-> via dmabuf heaps, so right now we only expose the default region. I
-> have follow on patches that I sent out earlier (which requires a
-> to-be-finalized DT binding) which allows us to specify which other CMA
-> regions to expose.
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,mmcc.txt        | 28 ----------
+>  .../devicetree/bindings/clock/qcom,mmcc.yaml       | 59 ++++++++++++++++++++++
+>  2 files changed, 59 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
 > 
-> > > > > On the HiKey/HiKey960 boards, we have to allocate contiguous buffers
-> > > > > for the display framebuffer. So gralloc uses ION to allocate from the
-> > > > > CMA heap. However on the db845c, it has no such restrictions, so the
-> > > > > CMA heap isn't necessary.
-> > > >
-> > > > Why do you have a CMA region for the 2nd board if you don't need it?
-> > > > _That_ sounds like some serious memory waster, not a few lines of code
-> > > > loaded for nothing :-)
-> > >
-> > > ??? That's not what I said above.  If the db845c doesn't need CMA it
-> > > won't have a CMA region.
-> > >
-> > > The issue at hand is that we may want to avoid loading the dmabuf CMA
-> > > heap driver on a board that doesn't use CMA.
-> >
-> > So the CMA core code is also a module, or how does that work? Not
-> 
-> No.  CMA core isn't available as a module.
-> 
-> > loading the cma dma-buf heap, but keeping all the other cma code
-> > around feels slightly silly. Do we have numbers that justify this
-> > silliness?
-> 
-> I agree that is maybe not the most critical item on the list, but its
-> one of many that do add up over time.
-> 
-> Again, I'll defer to Sandeep or other folks on the Google side to help
-> with the importance here. Mostly I'm trying to ensure there is
-> functional parity to ION so we don't give folks any reason they could
-> object to deprecating it.
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+> deleted file mode 100644
+> index 8b0f784..0000000
+> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -Qualcomm Multimedia Clock & Reset Controller Binding
+> -----------------------------------------------------
+> -
+> -Required properties :
+> -- compatible : shall contain only one of the following:
+> -
+> -			"qcom,mmcc-apq8064"
+> -			"qcom,mmcc-apq8084"
+> -			"qcom,mmcc-msm8660"
+> -			"qcom,mmcc-msm8960"
+> -			"qcom,mmcc-msm8974"
+> -			"qcom,mmcc-msm8996"
+> -
+> -- reg : shall contain base register location and length
+> -- #clock-cells : shall contain 1
+> -- #reset-cells : shall contain 1
+> -
+> -Optional properties :
+> -- #power-domain-cells : shall contain 1
+> -
+> -Example:
+> -	clock-controller@4000000 {
+> -		compatible = "qcom,mmcc-msm8960";
+> -		reg = <0x4000000 0x1000>;
+> -		#clock-cells = <1>;
+> -		#reset-cells = <1>;
+> -		#power-domain-cells = <1>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+> new file mode 100644
+> index 0000000..61ed4a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mmcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Multimedia Clock & Reset Controller Binding
+> +
+> +maintainers:
+> +  - Jeffrey Hugo <jhugo@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm multimedia clock control module which supports the clocks, resets and
+> +  power domains.
+> +
+> +properties:
+> +  compatible :
+> +    enum:
+> +       - qcom,mmcc-apq8064
+> +       - qcom,mmcc-apq8084
+> +       - qcom,mmcc-msm8660
+> +       - qcom,mmcc-msm8960
+> +       - qcom,mmcc-msm8974
+> +       - qcom,mmcc-msm8996
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#reset-cells':
+> +    const: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  protected-clocks:
+> +    description:
+> +       Protected clock specifier list as per common clock binding
 
-Parity with ION will definitely be nice. For now, however, even if we achieve
-that parity with UAPI and think about the cma-heap-as-module bit later, I
-guess that's ok.
+Wasn't documented before. Okay to add here, but mention it in the commit 
+msg.
 
-The real problem is the need for these heaps to be a module in the first
-place.  I'd much rather have an upstream user to show the need for cache
-maintenance operations that have been talked about so many times, so we can
-make them happen for dma-buf-heaps in upstream. None of this has to be
-a module if that happens :(.
-
-The reason for the "modularization"  for ion heaps is also the CMOs for
-Android use cases. Unfortunately we haven't had any luck with proving the
-need for. John, CMIIW.
-
-
-- ssp
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
+> +  - '#reset-cells'
+> +  - '#power-domain-cells'
+> +
+> +examples:
+> +  # Example for MMCC for MSM8960:
+> +  - |
+> +    clock-controller@4000000 {
+> +      compatible = "qcom,mmcc-msm8960";
+> +      reg = <0x4000000 0x1000>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +    };
+> +...
+> -- 
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
