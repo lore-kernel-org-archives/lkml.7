@@ -2,132 +2,181 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D777C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6301C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED00D21A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9121721872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="NYwPO0bG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="izSY/8EH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKLSrG (ORCPT
+        id S1727002AbfKLStU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:47:06 -0500
-Received: from mail-eopbgr680045.outbound.protection.outlook.com ([40.107.68.45]:44559
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726970AbfKLSrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:47:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wiz9NtkIY0dU15lNEn4EjTG7mNmpw2e92cu7/LNR3dPRWslVY+AzX6xNd0nmYvOA3g4V1/qmlxdt2JMvslWzHMAqXjyzBC6sYKNGzakQtWmQVrZNoJLUg/KzN+cdsC4apYSmlZzqn2i42Uv6XcFdbkNa0XqfuCGwZBoxI1JInGkxi6sbDXPANQdD83C5wve3cocGo+nlg6PTb0hU8szBH24WxXKlXrWvaxD6LKrCSB6hatybsmYtnNZNUUT6lzZQIf5pnJVhQt40U1ymFgBNePG1knHTNj8u7oJWru8IJWmplYnS0SO37hNVBoYVkCzl/8mEJhpM5lVcpRKL3Cppcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eP1X+opom7ndeZuL89qZ16uBlmKa0pJhgXe5Oh+/Pv8=;
- b=lP0RDmerF1LSdW2AGBLCaISu20AK/0YGSHyKZatsX41tLmYZel/pLRAQhBDOnTcXWEZtHjBjdAIGTCA3RNt6aTRaNDPnmZMli3RRViMjylH+aykfDoOsn2YsrVBMN2OKGyanaMAVP0eeRkIJVyWAy2rm7CfBBGcbxbGUqRBWprESzvrnGtei6jMq3DZYBd85eCRyqWbAB4jya/VaJWKfVEqAJfl3SU+NqegbJnA6iycmpQdACpIN8MKEMoj9ziBa1wylfrl5R3QMRJ0RHLCvRGYCcfI+8Yp2jJzTh6pte2krydkLfXeGvZP6h+IoWnFKbmm9AwV3pszONl5NIkUFxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
+        Tue, 12 Nov 2019 13:49:20 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37401 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLStU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:49:20 -0500
+Received: by mail-io1-f68.google.com with SMTP id 1so19899412iou.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:49:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eP1X+opom7ndeZuL89qZ16uBlmKa0pJhgXe5Oh+/Pv8=;
- b=NYwPO0bGPyaZODvybUvcq4pvvR+S3ZBeUH2MCh25WSLcZIB2sdRxb6ZxzRxvV9pi5plh8TUFuXB1cuyFt7o95A2JjQXuI8A5MfK65umabehcz5LlT9I0onJZbLA4bRiadcaweTcfshIf78g8j/y+ymxRnDex+/glOg4iHDmpmsE=
-Received: from BYAPR06MB6054.namprd06.prod.outlook.com (20.178.51.220) by
- BYAPR06MB5270.namprd06.prod.outlook.com (20.178.48.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.26; Tue, 12 Nov 2019 18:47:02 +0000
-Received: from BYAPR06MB6054.namprd06.prod.outlook.com
- ([fe80::918d:490e:90f0:61f8]) by BYAPR06MB6054.namprd06.prod.outlook.com
- ([fe80::918d:490e:90f0:61f8%5]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 18:47:02 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "navid.emamdoost@gmail.com" <navid.emamdoost@gmail.com>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "emamd001@umn.edu" <emamd001@umn.edu>,
-        "smccaman@umn.edu" <smccaman@umn.edu>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
-Thread-Topic: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
-Thread-Index: AQHVb0mHQVf9nUcIFEq8YuaR2ZlCSKd96fMAgApKmwA=
-Date:   Tue, 12 Nov 2019 18:47:01 +0000
-Message-ID: <d7531388512379288c5719f152fc5ae5ecd8509a.camel@netapp.com>
-References: <20190920002232.27477-1-navid.emamdoost@gmail.com>
-         <CAEkB2EQ2BPpXcpRpN-+ErJD5Vkq6LiKONy8XQfvu0F1pO4weqw@mail.gmail.com>
-In-Reply-To: <CAEkB2EQ2BPpXcpRpN-+ErJD5Vkq6LiKONy8XQfvu0F1pO4weqw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.1 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [68.42.68.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2f5dc0b8-ddd7-4f00-9989-08d767a0b4b1
-x-ms-traffictypediagnostic: BYAPR06MB5270:
-x-microsoft-antispam-prvs: <BYAPR06MB5270480C3E324FD3218DE2DAF8770@BYAPR06MB5270.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(189003)(199004)(66066001)(7736002)(14454004)(186003)(446003)(2616005)(4326008)(5660300002)(11346002)(478600001)(476003)(486006)(2501003)(118296001)(25786009)(6506007)(102836004)(53546011)(305945005)(91956017)(2906002)(76116006)(66946007)(26005)(81156014)(8936002)(81166006)(86362001)(8676002)(99286004)(6116002)(36756003)(6246003)(316002)(66446008)(71190400001)(71200400001)(6512007)(76176011)(6486002)(58126008)(6436002)(64756008)(256004)(110136005)(229853002)(66556008)(66476007)(54906003)(3846002)(14444005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR06MB5270;H:BYAPR06MB6054.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GtI+5WmbDtjwtvgTPCwCOJIuJvxY5X+qccFkjY6ULbQ/9xlA/hjGN2Z4mfyHrVYm/COKfA+oG1/FPIy9yrhsk7QnIvIcgGzgq6su7ZcSTLw6dEzy7egklkWEZ3DEf7SsOjV2FNVMUkVerEomcmbccKp1BfMAdBHgwZ1ZYiEeJsSUfLVwzXmZanhyq1N/hkeBbKbz9EaRdsrydecJAx9zyQNXx31hI8eTGcWgl3iAUW1uv3p6s8qAqU3KaG/6wHPVJFB/kiQcOof+rVr2N+UBNWe3Eo2GfHZwaNu79akghiRvaH5TOnJ0QCge7hWIfI5Ya7fQKE5kjndFVYUspoiPDBfNYAmkMwl9TG5bT16rLvYExGNUfWq0AHtCYvWKnWJn0c4CTCFZFuMEBJyd1ZtjQsQwb3YoZaxqJ0Ga5LHG1S3V8Gjnqmoi5IbVcSclpRDX
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3CB12A06CC22C64FBECABDDAC3EFD7F3@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xvqyLpPA5kcKjuswGO1+kIpP11dfUKZHmvVJw9JK1n0=;
+        b=izSY/8EHcI+HX8mwoHOor9JBuEM15JmT9CwpquMRgiluHLU/bV1ApJeg3ThW8kVfu4
+         B4RvQSbsQPN7ANR7kRYld6xNexbk1UvddfLntNe9YwbcGB7Nj+2TXbsWzSyREBV62P6j
+         l1XjUDtJJ4p9gZV5FUW6CUrZJDoXq/anpg572YJIxJ8ZvjlnDOMtEEnYL+dIe1/xeczH
+         E0k2NAqYdS1Mx0F2gg7qOZyWYzCDcVEkHHveVGaMPn4z95zXCQAHodEqsS0nQZ937/Yh
+         Y2//9uRmtwEu9isiYHP7ihWzFSoGI13IWlfseDcyGOH1mtWR8RaqkkY/Bu/FBMCFCZT3
+         YBqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xvqyLpPA5kcKjuswGO1+kIpP11dfUKZHmvVJw9JK1n0=;
+        b=hu+n6ol+k6zixjg+FuFSGnJCFD+d+2kDX/taVXsJAd+UsgD8ArHZy/REKpcJ9+tBWc
+         k9CbMRYyhLuiA/ACKhmIrUVuElC1qoXvNpCDj7R8RogdZnN81DNUkcmyPr+Msv+sixjj
+         RjM0B7SwauhCnRuYZFwpZm1rPb/QbF/TYvitZJjeYvIvBnxwFn03I6KSJHB90MvSJxAO
+         hjIVj/fZs5092vKULMTwaaOLULBjjN4uf4MywtLoxkWX9SKpB77nWXBok81BNlhNPIy6
+         9LzYnmYByZIDwnb4yKSDbZ8MNPRqvxUZewmQlapEEdXoAfZXeYniGEVAcwjJvyOKw41j
+         vYhA==
+X-Gm-Message-State: APjAAAX/SZiO/MSpZ5FmevKQs4FWdpbh4F+VV8h/wMrtANWxUXi5L0ja
+        m3FDjVXW/PxfS0DEzlYvWMq8qt4v8OyXlzpaXoBq+w==
+X-Google-Smtp-Source: APXvYqxUYk11cnSmSgrLa6DZPJ/i1J3bR4EJC27ZaxQ5lVBCQUv8ymCjuBB6qkW8ExbmrxZTlQ/AFYCxW/muga/juks=
+X-Received: by 2002:a5d:8d8f:: with SMTP id b15mr16562550ioj.296.1573584558733;
+ Tue, 12 Nov 2019 10:49:18 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f5dc0b8-ddd7-4f00-9989-08d767a0b4b1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 18:47:01.9211
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 11VfcYXe4Q02tkugQDCtAcJWUM9U7pYw1RbZZ9E5NXEH3t+DgLOh+3kIUowJAnjcMNk8/fvu/joYhkurk2tvUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR06MB5270
+References: <1573478741-30959-1-git-send-email-pbonzini@redhat.com> <1573478741-30959-2-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1573478741-30959-2-git-send-email-pbonzini@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 12 Nov 2019 10:49:07 -0800
+Message-ID: <CALMp9eSnf7ag_Rep1V_AA44Bug2LCF9xzK+L2Bod9THuvBLOmg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: Fix NULL-ptr deref after kvm_create_vm fails
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Junaid Shahid <junaids@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTmF2aWQsDQoNCk9uIFR1ZSwgMjAxOS0xMS0wNSBhdCAyMzozNyAtMDYwMCwgTmF2aWQgRW1h
-bWRvb3N0IHdyb3RlOg0KPiBXb3VsZCB5b3UgcGxlYXNlIHJldmlldyB0aGlzIHBhdGNoPw0KDQpU
-aGlzIG1lbW9yeSBsZWFrIHdhcyBmaXhlZCBieToNCg0KY29tbWl0IDFlNjcyZTM2NDQ5NDBkODNi
-ZDk0ZTdjYjQ2YmFjNmJiMzYyN2RlMDINCkF1dGhvcjogV2Vud2VuIFdhbmcgPHdlbndlbkBjcy51
-Z2EuZWR1Pg0KRGF0ZTogICBUdWUgQXVnIDIwIDIyOjIxOjIxIDIwMTkgLTA1MDANCg0KICAgIE5G
-U3Y0OiBGaXggYSBtZW1vcnkgbGVhayBidWcNCiAgICANCiAgICBJbiBuZnM0X3RyeV9taWdyYXRp
-b24oKSwgaWYgbmZzNF9iZWdpbl9kcmFpbl9zZXNzaW9uKCkgZmFpbHMsIHRoZQ0KICAgIHByZXZp
-b3VzbHkgYWxsb2NhdGVkICdwYWdlJyBhbmQgJ2xvY2F0aW9ucycgYXJlIG5vdCBkZWFsbG9jYXRl
-ZCwgbGVhZGluZyB0bw0KICAgIG1lbW9yeSBsZWFrcy4gVG8gZml4IHRoaXMgaXNzdWUsIGdvIHRv
-IHRoZSAnb3V0JyBsYWJlbCB0byBmcmVlICdwYWdlJyBhbmQNCiAgICAnbG9jYXRpb25zJyBiZWZv
-cmUgcmV0dXJuaW5nIHRoZSBlcnJvci4NCiAgICANCiAgICBTaWduZWQtb2ZmLWJ5OiBXZW53ZW4g
-V2FuZyA8d2Vud2VuQGNzLnVnYS5lZHU+DQogICAgU2lnbmVkLW9mZi1ieTogQW5uYSBTY2h1bWFr
-ZXIgPEFubmEuU2NodW1ha2VyQE5ldGFwcC5jb20+DQoNCg0KDQpBbmQgd2FzIGluY2x1ZGVkIGFz
-IHBhcnQgb2YgdGhlIGluaXRpYWwgTkZTIG1lcmdlIGZvciB0aGUgdjUuNC1yYyBjeWNsZS4NCg0K
-VGhhbmtzLA0KQW5uYQ0KDQo+IA0KPiBPbiBUaHUsIFNlcCAxOSwgMjAxOSBhdCA3OjIyIFBNIE5h
-dmlkIEVtYW1kb29zdA0KPiA8bmF2aWQuZW1hbWRvb3N0QGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4g
-SW4gbmZzNF90cnlfbWlncmF0aW9uLCBpZiBuZnM0X2JlZ2luX2RyYWluX3Nlc3Npb24gZmFpbHMg
-dGhlIGFsbG9jYXRlZA0KPiA+IG1lbW9yeSBzaG91bGQgYmUgcmVsZWFzZWQuDQo+ID4gDQo+ID4g
-U2lnbmVkLW9mZi1ieTogTmF2aWQgRW1hbWRvb3N0IDxuYXZpZC5lbWFtZG9vc3RAZ21haWwuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBmcy9uZnMvbmZzNHN0YXRlLmMgfCAyICstDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1n
-aXQgYS9mcy9uZnMvbmZzNHN0YXRlLmMgYi9mcy9uZnMvbmZzNHN0YXRlLmMNCj4gPiBpbmRleCBj
-YWQ0ZTA2NGIzMjguLjEyNDY0OWYxMjA2NyAxMDA2NDQNCj4gPiAtLS0gYS9mcy9uZnMvbmZzNHN0
-YXRlLmMNCj4gPiArKysgYi9mcy9uZnMvbmZzNHN0YXRlLmMNCj4gPiBAQCAtMjA5Niw3ICsyMDk2
-LDcgQEAgc3RhdGljIGludCBuZnM0X3RyeV9taWdyYXRpb24oc3RydWN0IG5mc19zZXJ2ZXINCj4g
-PiAqc2VydmVyLCBjb25zdCBzdHJ1Y3QgY3JlZCAqY3JlZA0KPiA+IA0KPiA+ICAgICAgICAgc3Rh
-dHVzID0gbmZzNF9iZWdpbl9kcmFpbl9zZXNzaW9uKGNscCk7DQo+ID4gICAgICAgICBpZiAoc3Rh
-dHVzICE9IDApDQo+ID4gLSAgICAgICAgICAgICAgIHJldHVybiBzdGF0dXM7DQo+ID4gKyAgICAg
-ICAgICAgICAgIGdvdG8gb3V0Ow0KPiA+IA0KPiA+ICAgICAgICAgc3RhdHVzID0gbmZzNF9yZXBs
-YWNlX3RyYW5zcG9ydChzZXJ2ZXIsIGxvY2F0aW9ucyk7DQo+ID4gICAgICAgICBpZiAoc3RhdHVz
-ICE9IDApIHsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+IA0KPiANCj4gLS0NCj4gTmF2aWQuDQo=
+On Mon, Nov 11, 2019 at 5:25 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> Reported by syzkaller:
+>
+>     kasan: CONFIG_KASAN_INLINE enabled
+>     kasan: GPF could be caused by NULL-ptr deref or user memory access
+>     general protection fault: 0000 [#1] PREEMPT SMP KASAN
+>     CPU: 0 PID: 14727 Comm: syz-executor.3 Not tainted 5.4.0-rc4+ #0
+>     RIP: 0010:kvm_coalesced_mmio_init+0x5d/0x110 arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
+>     Call Trace:
+>      kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3446 [inline]
+>      kvm_dev_ioctl+0x781/0x1490 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3494
+>      vfs_ioctl fs/ioctl.c:46 [inline]
+>      file_ioctl fs/ioctl.c:509 [inline]
+>      do_vfs_ioctl+0x196/0x1150 fs/ioctl.c:696
+>      ksys_ioctl+0x62/0x90 fs/ioctl.c:713
+>      __do_sys_ioctl fs/ioctl.c:720 [inline]
+>      __se_sys_ioctl fs/ioctl.c:718 [inline]
+>      __x64_sys_ioctl+0x6e/0xb0 fs/ioctl.c:718
+>      do_syscall_64+0xca/0x5d0 arch/x86/entry/common.c:290
+>      entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> Commit 9121923c457d ("kvm: Allocate memslots and buses before calling kvm_arch_init_vm")
+> moves memslots and buses allocations around, however, if kvm->srcu/irq_srcu fails
+> initialization, NULL will be returned instead of error code, NULL will not be intercepted
+> in kvm_dev_ioctl_create_vm() and be deferenced by kvm_coalesced_mmio_init(), this patch
+> fixes it.
+>
+> Moving the initialization is required anyway to avoid an incorrect synchronize_srcu that
+> was also reported by syzkaller:
+>
+>  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+>  __synchronize_srcu+0x197/0x250 kernel/rcu/srcutree.c:921
+>  synchronize_srcu_expedited kernel/rcu/srcutree.c:946 [inline]
+>  synchronize_srcu+0x239/0x3e8 kernel/rcu/srcutree.c:997
+>  kvm_page_track_unregister_notifier+0xe7/0x130 arch/x86/kvm/page_track.c:212
+>  kvm_mmu_uninit_vm+0x1e/0x30 arch/x86/kvm/mmu.c:5828
+>  kvm_arch_destroy_vm+0x4a2/0x5f0 arch/x86/kvm/x86.c:9579
+>  kvm_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:702 [inline]
+>
+> so do it.
+
+Thanks for doing this!
+
+> Reported-by: syzbot+89a8060879fa0bd2db4f@syzkaller.appspotmail.com
+> Reported-by: syzbot+e27e7027eb2b80e44225@syzkaller.appspotmail.com
+> Fixes: 9121923c457d ("kvm: Allocate memslots and buses before calling kvm_arch_init_vm")
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  virt/kvm/kvm_main.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index d6f0696d98ef..e22ff63e5b1a 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -645,6 +645,11 @@ static struct kvm *kvm_create_vm(unsigned long type)
+>
+>         BUILD_BUG_ON(KVM_MEM_SLOTS_NUM > SHRT_MAX);
+
+Nit: I would keep the BUILD_BUG_ON closer to the memslot allocation.
+
+> +       if (init_srcu_struct(&kvm->srcu))
+> +               goto out_err_no_srcu;
+> +       if (init_srcu_struct(&kvm->irq_srcu))
+> +               goto out_err_no_irq_srcu;
+> +
+>         for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
+>                 struct kvm_memslots *slots = kvm_alloc_memslots();
+>
+> @@ -675,11 +680,6 @@ static struct kvm *kvm_create_vm(unsigned long type)
+>         INIT_HLIST_HEAD(&kvm->irq_ack_notifier_list);
+>  #endif
+>
+> -       if (init_srcu_struct(&kvm->srcu))
+> -               goto out_err_no_srcu;
+> -       if (init_srcu_struct(&kvm->irq_srcu))
+> -               goto out_err_no_irq_srcu;
+> -
+>         r = kvm_init_mmu_notifier(kvm);
+>         if (r)
+>                 goto out_err;
+> @@ -693,10 +693,6 @@ static struct kvm *kvm_create_vm(unsigned long type)
+>         return kvm;
+>
+>  out_err:
+> -       cleanup_srcu_struct(&kvm->irq_srcu);
+> -out_err_no_irq_srcu:
+> -       cleanup_srcu_struct(&kvm->srcu);
+> -out_err_no_srcu:
+>         hardware_disable_all();
+>  out_err_no_disable:
+>         kvm_arch_destroy_vm(kvm);
+> @@ -706,6 +702,10 @@ static struct kvm *kvm_create_vm(unsigned long type)
+>                 kfree(kvm_get_bus(kvm, i));
+>         for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++)
+>                 kvm_free_memslots(kvm, __kvm_memslots(kvm, i));
+> +       cleanup_srcu_struct(&kvm->irq_srcu);
+> +out_err_no_irq_srcu:
+> +       cleanup_srcu_struct(&kvm->srcu);
+> +out_err_no_srcu:
+>         kvm_arch_free_vm(kvm);
+>         mmdrop(current->mm);
+>         return ERR_PTR(r);
+> --
+> 1.8.3.1
+
+Reviewed-by: Jim Mattson <jmattson@google.com>
