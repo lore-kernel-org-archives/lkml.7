@@ -2,75 +2,92 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA708C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41197C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B73C21E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B397222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfKLOGh (ORCPT
+        id S1727414AbfKLOGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:06:37 -0500
-Received: from verein.lst.de ([213.95.11.211]:55964 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbfKLOGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:06:37 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4587368BE1; Tue, 12 Nov 2019 15:06:32 +0100 (CET)
-Date:   Tue, 12 Nov 2019 15:06:31 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Tuowen Zhao <ztuowen@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and
- ia64
-Message-ID: <20191112140631.GA10922@lst.de>
-References: <20191111192258.2234502-1-arnd@arndb.de> <20191112105507.GA7122@lst.de> <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Tue, 12 Nov 2019 09:06:43 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:46872 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbfKLOGm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 09:06:42 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Thubem1_1573567598;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Thubem1_1573567598)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 12 Nov 2019 22:06:38 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     alex.shi@linux.alibaba.com, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com
+Subject: [PATCH v2 0/8] per lruvec lru_lock for memcg
+Date:   Tue, 12 Nov 2019 22:06:20 +0800
+Message-Id: <1573567588-47048-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 02:04:16PM +0100, Daniel Vetter wrote:
-> Wut ... Maybe I'm missing something, but from how we use mtrr in other
-> gpu drivers it's a) either you use MTRR because that's all you got or
-> b) you use pat. Mixing both sounds like a pretty bad idea, since if
-> you need MTRR for performance (because you dont have PAT) then you
-> can't fix the wc with the PAT-based ioremap_uc. And if you have PAT,
-> then you don't really need an MTRR to get wc.
-> 
-> So I'd revert this patch from Luis and ...
+Hi all,
 
-Sounds great to me..
+This patchset move lru_lock into lruvec, give a lru_lock for each of
+lruvec, thus bring a lru_lock for each of memcg per node.
 
-> ... apply this one. Since the same reasoning should apply to anything
-> that's running on any cpu with PAT.
+According to Daniel Jordan's suggestion, I run 64 'dd' with on 32
+containers on my 2s* 8 core * HT box with the modefied case:
+  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
 
-Can you take a look at "mfd: intel-lpss: Use devm_ioremap_uc for MMIO"
-in linux-next, which also looks rather fishy to me?  Can't we use
-the MTRR APIs to override the broken BIOS MTRR setup there as well?
+With this change above lru_lock censitive testing improved 17% with multiple
+containers scenario. And no performance lose w/o mem_cgroup.
 
-With that we could kill ioremap_uc entirely.
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both bring the same idea
+7 years ago. I don't know why they didn't go further, but according to my 
+testing, and google internal usage. This feathre is clearly benefit
+multi-container user.
+
+So I like to introduce it here.
+
+v2: bypass a performance regression bug and fix some function issues
+
+---
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +++------------
+ Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +++---
+ Documentation/trace/events-kmem.rst                |  2 +-
+ Documentation/vm/unevictable-lru.rst               | 22 ++++++++--------------
+ include/linux/memcontrol.h                         | 67 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mm_types.h                           |  2 +-
+ include/linux/mmzone.h                             |  7 +++++--
+ mm/compaction.c                                    | 62 ++++++++++++++++++++++++++++++++++++++++++--------------------
+ mm/filemap.c                                       |  4 ++--
+ mm/huge_memory.c                                   | 16 ++++++----------
+ mm/memcontrol.c                                    | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++-------------
+ mm/mlock.c                                         | 27 ++++++++++++++-------------
+ mm/mmzone.c                                        |  1 +
+ mm/page_alloc.c                                    |  1 -
+ mm/page_idle.c                                     |  5 +++--
+ mm/rmap.c                                          |  2 +-
+ mm/swap.c                                          | 77 +++++++++++++++++++++++++++++++----------------------------------------------
+ mm/vmscan.c                                        | 74 ++++++++++++++++++++++++++++++++++++++------------------------------------
+ 18 files changed, 277 insertions(+), 177 deletions(-)
+
+
+[PATCH v2 1/8] mm/lru: add per lruvec lock for memcg
+[PATCH v2 2/8] mm/lruvec: add irqsave flags into lruvec struct
+[PATCH v2 3/8] mm/lru: replace pgdat lru_lock with lruvec lock
+[PATCH v2 4/8] mm/lru: only change the lru_lock iff page's lruvec is
+[PATCH v2 5/8] mm/pgdat: remove pgdat lru_lock
+[PATCH v2 6/8] mm/lru: remove rcu_read_lock to fix performance
+[PATCH v2 7/8] mm/lru: likely enhancement
+[PATCH v2 8/8] mm/lru: revise the comments of lru_lock
