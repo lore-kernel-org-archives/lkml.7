@@ -2,215 +2,99 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0217CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75D5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27F121925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:05:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f78JwAVh"
+	by mail.kernel.org (Postfix) with ESMTP id C616B21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKLPFv (ORCPT
+        id S1727100AbfKLPGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:05:51 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39980 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbfKLPFv (ORCPT
+        Tue, 12 Nov 2019 10:06:41 -0500
+Received: from outbound-smtp10.blacknight.com ([46.22.139.15]:34689 "EHLO
+        outbound-smtp10.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726952AbfKLPGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:05:51 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f3so3314229wmc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:05:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+tyvV/5E996LDIHsndVKgQTT2nmYBAp+8tJn3tDeXsQ=;
-        b=f78JwAVh8m3qh6NShS2kfGB+l5WgYxgRHV35SHkXE1PklwA5nVSF4r5xxM8FTSxf1J
-         4+/53rGDs9v5RZ8stsxDWZHQw1eO248RJU7v06AY9MBn7nbzMvH4BEyYypbED4ba/lLK
-         RqvuzsrzI0DkdUsw5r0tD2d8uZ2D3ChhszQjyT9Znem7nAwJRgznP128qlZtOSCA4wPF
-         bSxoEWIv6wkL2USXfRcIq6Y7OCtfNXgYTbAo66X0W/LtY1VDYGgtlciDHIdkKpjPwICZ
-         K1miVosbXCkopdxsGsch5Ua0Z08/8iXeORvuL35FMSRhA7wiiG16qJqyjPEnoy8m4HM1
-         98Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+tyvV/5E996LDIHsndVKgQTT2nmYBAp+8tJn3tDeXsQ=;
-        b=mcRhK47ZKoRNU6HCccMxMYuuUiKjGAtDrqKNzyWoqPvQ34PI3XuYcgKmSQU5wlNWST
-         D19GVQibdLfV0esPU0lGJN1v+B4GOIZyc+KJdpy9PFe6E1g51Z3GGo3wYwCGGZmWxcz3
-         T7rYOCsvpZ/efub3+dYoUCP8Rf7KCRUuF0Xectmq30N7iOQC+EQ8FXnJwu9bTz2TU4n2
-         FdFAGE79mC1QErVXx9Xnpc5lvp6sfbdYYg1fKxRyoPFMzmp9AuVG1S8X1A091grIgvzx
-         NkxTpjKZ2gKqS1w8w7MkefjToQSzuwAhE1jgOJgLe84UokhNOnzZ0PXB0r4efhp+vZkM
-         yb8A==
-X-Gm-Message-State: APjAAAXgsxKGk5ZSnQBEjYFqs1NKNbAAlPXHQuG4RekFCfg7/Byy6h1X
-        XGbzkSImgDS0yXMAO8/g7CYwHVRd/Nk=
-X-Google-Smtp-Source: APXvYqxa+x5eG33cvaM0b8URg3VOtBVZUa/SJNjueQfR6wOQzh2Lw1y4I/Q0+z7SMr3SnUkHaW17Aw==
-X-Received: by 2002:a05:600c:214b:: with SMTP id v11mr4557023wml.149.1573571147460;
-        Tue, 12 Nov 2019 07:05:47 -0800 (PST)
-Received: from linaro.org ([2a01:e0a:f:6020:e45f:4180:5590:a312])
-        by smtp.gmail.com with ESMTPSA id r15sm42364990wrc.5.2019.11.12.07.05.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 07:05:46 -0800 (PST)
-Date:   Tue, 12 Nov 2019 16:05:44 +0100
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, dietmar.eggemann@arm.com,
-        juri.lelli@redhat.com, rostedt@goodmis.org, mgorman@suse.de,
-        dsmythies@telus.net
-Cc:     linux-pm@vger.kernel.org, torvalds@linux-foundation.org,
-        tglx@linutronix.de, sargun@sargun.me, tj@kernel.org,
-        xiexiuqi@huawei.com, xiezhipeng1@huawei.com,
-        srinivas.pandruvada@linux.intel.com
-Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191112150544.GA3664@linaro.org>
-References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
+        Tue, 12 Nov 2019 10:06:41 -0500
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp10.blacknight.com (Postfix) with ESMTPS id 38CAF1C2223
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:06:39 +0000 (GMT)
+Received: (qmail 12763 invoked from network); 12 Nov 2019 15:06:39 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.23.195])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Nov 2019 15:06:38 -0000
+Date:   Tue, 12 Nov 2019 15:06:36 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
+Message-ID: <20191112150636.GX3016@techsingularity.net>
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-5-git-send-email-vincent.guittot@linaro.org>
+ <20191030154534.GJ3016@techsingularity.net>
+ <CAKfTPtB_6kBq69E=-YFuon6fg21CxHneMpncpbLcPGk6uoVcMQ@mail.gmail.com>
+ <20191031101544.GP3016@techsingularity.net>
+ <CAKfTPtByO7oLQZxF_+-FxZ9u1JhO24-rujW3j-QDqr+PFDOQ=Q@mail.gmail.com>
+ <20191031114020.GQ3016@techsingularity.net>
+ <20191108163501.GA26528@linaro.org>
+ <20191108183730.GU3016@techsingularity.net>
+ <20191112105830.GA8765@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191112105830.GA8765@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le Tuesday 12 Nov 2019 à 15:48:13 (+0100), Vincent Guittot a écrit :
-> update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> which might be inefficient when cpufreq driver has rate limitation.
+On Tue, Nov 12, 2019 at 11:58:30AM +0100, Vincent Guittot wrote:
+> > This roughly matches what I've seen. The interesting part to me for
+> > netperf is the next section of the report that reports the locality of
+> > numa hints. With netperf on a 2-socket machine, it's generally around
+> > 50% as the client/server are pulled apart. Because netperf is not
+> > heavily memory bound, it doesn't have much impact on the overall
+> > performance but it's good at catching the cross-node migrations.
 > 
-> When a task is attached on a CPU, we have call path:
+> Ok. I didn't want to make my reply too long. I have put them below for 
+> the netperf-tcp results:
+>                                         5.3-rc2        5.3-rc2
+>                                             tip      +rwk+fix
+> Ops NUMA alloc hit                  60077762.00    60387907.00
+> Ops NUMA alloc miss                        0.00           0.00
+> Ops NUMA interleave hit                    0.00           0.00
+> Ops NUMA alloc local                60077571.00    60387798.00
+> Ops NUMA base-page range updates        5948.00       17223.00
+> Ops NUMA PTE updates                    5948.00       17223.00
+> Ops NUMA PMD updates                       0.00           0.00
+> Ops NUMA hint faults                    4639.00       14050.00
+> Ops NUMA hint local faults %            2073.00        6515.00
+> Ops NUMA hint local percent               44.69          46.37
+> Ops NUMA pages migrated                 1528.00        4306.00
+> Ops AutoNUMA cost                         23.27          70.45
 > 
-> update_blocked_averages()
->   update_cfs_rq_load_avg()
->     cfs_rq_util_change -- > trig frequency update
->   attach_entity_load_avg()
->     cfs_rq_util_change -- > trig frequency update
-> 
-> The 1st frequency update will not take into account the utilization of the
-> newly attached task and the 2nd one might be discard because of rate
-> limitation of the cpufreq driver.
-> 
-> update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> and update_load_avg() so we can move the call to
-> {cfs_rq,cpufreq}_util_change() into these 2 functions. It's also
-> interesting to notice that update_load_avg() already calls directly
-> cfs_rq_util_change() for !SMP case.
-> 
-> This changes will also ensure that cpufreq_update_util() is called even
-> when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> irq, rt or dl pelt signals.
-> 
-> Reported-by: Doug Smythies <dsmythies@telus.net>
-> Fixes: 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load balancing path")
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> 
-> ---
-> 
-> I have just rebased the patch on latest tip/sched/core and made it a proper
-> patchset after Doug reported that the problem has diseappeared according to
-> his 1st results but tests results are not all based on the same v5.4-rcX
-> and with menu instead of teo governor.
-> 
->  kernel/sched/fair.c | 33 +++++++++++++++++++++------------
->  1 file changed, 21 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index e458f52..c93d534 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3508,9 +3508,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
->  	cfs_rq->load_last_update_time_copy = sa->last_update_time;
->  #endif
->  
-> -	if (decayed)
-> -		cfs_rq_util_change(cfs_rq, 0);
-> -
->  	return decayed;
->  }
->  
-> @@ -3620,8 +3617,12 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->  		attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
->  		update_tg_load_avg(cfs_rq, 0);
->  
-> -	} else if (decayed && (flags & UPDATE_TG))
-> -		update_tg_load_avg(cfs_rq, 0);
-> +	} else if (decayed) {
-> +		cfs_rq_util_change(cfs_rq, 0);
-> +
-> +		if (flags & UPDATE_TG)
-> +			update_tg_load_avg(cfs_rq, 0);
-> +	}
->  }
->  
->  #ifndef CONFIG_64BIT
-> @@ -7484,6 +7485,7 @@ static void update_blocked_averages(int cpu)
->  	const struct sched_class *curr_class;
->  	struct rq_flags rf;
->  	bool done = true;
-> +	int decayed = 0;
->  
->  	rq_lock_irqsave(rq, &rf);
->  	update_rq_clock(rq);
-> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
->  	 * that RT, DL and IRQ signals have been updated before updating CFS.
->  	 */
->  	curr_class = rq->curr->sched_class;
-> -	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> -	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> -	update_irq_load_avg(rq, 0);
-> +	decayed |= update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> +	decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> +	decayed |= update_irq_load_avg(rq, 0);
->  
->  	/* Don't need periodic decay once load/util_avg are null */
->  	if (others_have_blocked(rq))
-> @@ -7529,6 +7531,9 @@ static void update_blocked_averages(int cpu)
->  	}
->  
->  	update_blocked_load_status(rq, !done);
-> +
-> +	if (decayed)
-> +		cpufreq_update_util(rq, 0);
->  	rq_unlock_irqrestore(rq, &rf);
->  }
->  
-> @@ -7585,6 +7590,7 @@ static inline void update_blocked_averages(int cpu)
->  	struct cfs_rq *cfs_rq = &rq->cfs;
->  	const struct sched_class *curr_class;
->  	struct rq_flags rf;
-> +	int decayed = 0;
->  
->  	rq_lock_irqsave(rq, &rf);
->  	update_rq_clock(rq);
-> @@ -7594,13 +7600,16 @@ static inline void update_blocked_averages(int cpu)
->  	 * that RT, DL and IRQ signals have been updated before updating CFS.
->  	 */
->  	curr_class = rq->curr->sched_class;
-> -	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> -	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> -	update_irq_load_avg(rq, 0);
-> +	decayed |= update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> +	decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> +	decayed |= update_irq_load_avg(rq, 0);
->  
-> -	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-> +	decayed |= update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
->  
->  	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
-> +
-> +	if (decayed)
-> +		cpufreq_update_util(rq, 0);
->  	rq_unlock_irqrestore(rq, &rf);
->  }
->  
-> -- 
-> 2.7.4
-> 
+
+Thanks -- it was "NUMA hint local percent" I was interested in and the
+46.37% local hinting faults is likely indicative of the client/server
+being load balanced across SD_NUMA domains without NUMA Balancing being
+aggressive enough to fix it. At least I know I am not just seriously
+unlucky or testing magical machines!
+
+-- 
+Mel Gorman
+SUSE Labs
