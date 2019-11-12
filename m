@@ -2,102 +2,172 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15301C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5331CC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4FF21D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29196222C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573519403;
-	bh=2ydOdcJmPK7SfwcXHI6Om5OCHngakPJ/DYZhOTWW10o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0ijkStKFbT6GaQwRQu0JDEScS2mDJdU4ZgGnW2jx7Np0hHgKlJH6uTsjV6N1uKzt/
-	 Ps8NwATCB/2xC6QfoFe6ZgISLS1jQSSxXF6elWELcFGFAyCwGNIYtBwtZkM8dph3dD
-	 z8+x5x/wD5TXb56AG6JFuXQRFAZqtcI9m4dcBkHs=
+	s=default; t=1573519461;
+	bh=9sS35dLM1rvvJ4R++M6VovpfEgrfV5/99jZT1HQ5mJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zWqEU2uQR9NDFpyT+Y0BO6SXaPeBDL9XLV8R9c3gTS1YxSPCGAprTz95tj0a1YUvn
+	 bWK76NN5vBXUV0jTj0CleCFMYq0+aJxg0dOkWl8dwDNzZNcnJ1LZm6MxkKgKvQgJwO
+	 t5I/VjS8lOR6yJM2S97dGGEjg1uPnH29if8V9s+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKLAnW (ORCPT
+        id S1727189AbfKLAoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:43:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfKLAnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:43:22 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D337121872;
-        Tue, 12 Nov 2019 00:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573519401;
-        bh=2ydOdcJmPK7SfwcXHI6Om5OCHngakPJ/DYZhOTWW10o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SOzp8l2jF+hnRTMM8q4NciR40xpr2wA8IEZXzXLtzty1uJCCAHC48frwRoMrmhIgj
-         /7KlrVHe8GSSQzkgLciyKV6Wjc2QrBzyUz7KSoNvmSZmxLcVP9FF5gG3lBZZ8iYeIs
-         16TeSWpaFSFmQYkdL5nMvM/M08VwG7jCggvpqX5s=
-Date:   Mon, 11 Nov 2019 16:43:20 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     ira.weiny@intel.com
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
-Message-Id: <20191111164320.80f814161469055b14f27045@linux-foundation.org>
-In-Reply-To: <20191112003452.4756-3-ira.weiny@intel.com>
-References: <20191112003452.4756-1-ira.weiny@intel.com>
-        <20191112003452.4756-3-ira.weiny@intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Nov 2019 19:44:20 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37822 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfKLAoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:44:20 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d5so12881048otp.4;
+        Mon, 11 Nov 2019 16:44:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Vfe9Fg7BmbDCLOpxmVpT7Cu0nR/H6JXWKbwODF2l2L0=;
+        b=BYEE/fEHgsIMq9l0w5p1hlAN4RqHln1gWWvwmaHdF+uLtl5xbdvsEWdkG+vWhmOHfu
+         J5TYND7sJf3NDGNUGNsOAlqBUTHkUWgeKyvGdHFzoJCPcUPLjF+cX9H8KzUwX6EYDAPA
+         BuPBReEYP2yNrWt9qJ2btXKDRk1ebeUn+6gG1bA4FY7JhbQVan33StqdxC9tOvfYUqj3
+         +vFn4QkO92Ck7YzVspT3xe/qSfSjVTzhd59/n/8Q7CcV3BaYJkcJ5K3/o/TTafaxwR8j
+         vZwpx8Ns8avewJ/IBzClWPDrhPE7L5y4ijqXhnxUJFj7evgz0+uixVfeSvy8KkqH2Rnp
+         knzA==
+X-Gm-Message-State: APjAAAVSDp2LVjPF5F9geZrxoTXqHKPvrHmxdq9enPVeexQwzVIM5/pt
+        4j///2DdLwq37Pz9Be/lsA==
+X-Google-Smtp-Source: APXvYqzF36pipFPrfQSDb0XrigmalI4FTBoRhRDY4hsis2SzkDYu16sSKQh1L3XO/f36b7A7IKthgw==
+X-Received: by 2002:a9d:365:: with SMTP id 92mr1083256otv.9.1573519458955;
+        Mon, 11 Nov 2019 16:44:18 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 100sm5621630otl.48.2019.11.11.16.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 16:44:18 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:44:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
+ MSM8998 gcc
+Message-ID: <20191112004417.GA16664@bogus>
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 16:34:52 -0800 ira.weiny@intel.com wrote:
-
-> From: Ira Weiny <ira.weiny@intel.com>
+On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
+> The global clock controller on MSM8998 can consume a number of external
+> clocks.  Document them.
 > 
-> swap_activate() and swap_deactivate() have nothing to do with
-> address spaces.  We want to eventually make the address space operations
-> dynamic to switch inode flags on the fly.
-
-What does this mean?
-
->  So to simplify this code as
-> well as properly track these operations we move these functions to the
-> file_operations vector.
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
 > 
-> This has been tested with XFS but not NFS, f2fs, or btrfs.
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> index e73a56f..2f3512b 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> @@ -40,20 +40,38 @@ properties:
+>         - qcom,gcc-sm8150
+>  
+>    clocks:
+> -    minItems: 1
+
+1 or 2 clocks are no longer allowed?
+
+> -    maxItems: 3
+> -    items:
+> -      - description: Board XO source
+> -      - description: Board active XO source
+> -      - description: Sleep clock source
+> +    oneOf:
+> +      #qcom,gcc-sm8150
+> +      #qcom,gcc-sc7180
+
+Typically, this would be an if/then schema, but I'm okay with leaving it 
+like this. Depends whether you want to check the clocks match the 
+compatible.
+
+> +      - items:
+> +        - description: Board XO source
+> +        - description: Board active XO source
+> +        - description: Sleep clock source
+> +      #qcom,gcc-msm8998
+> +      - items:
+> +        - description: Board XO source
+> +        - description: USB 3.0 phy pipe clock
+> +        - description: UFS phy rx symbol clock for pipe 0
+> +        - description: UFS phy rx symbol clock for pipe 1
+> +        - description: UFS phy tx symbol clock
+> +        - description: PCIE phy pipe clock
+>  
+>    clock-names:
+> -    minItems: 1
+> -    maxItems: 3
+> -    items:
+> -      - const: bi_tcxo
+> -      - const: bi_tcxo_ao
+> -      - const: sleep_clk
+> +    oneOf:
+> +      #qcom,gcc-sm8150
+> +      #qcom,gcc-sc7180
+> +      - items:
+> +        - const: bi_tcxo
+> +        - const: bi_tcxo_ao
+> +        - const: sleep_clk
+> +      #qcom,gcc-msm8998
+> +      - items:
+> +        - const: xo
+> +        - const: usb3_pipe
+> +        - const: ufs_rx_symbol0
+> +        - const: ufs_rx_symbol1
+> +        - const: ufs_tx_symbol0
+> +        - const: pcie0_pipe
+>  
+>    '#clock-cells':
+>      const: 1
+> @@ -118,6 +136,7 @@ else:
+>        compatible:
+>          contains:
+>            enum:
+> +            - qcom,gcc-msm8998
+>              - qcom,gcc-sm8150
+>              - qcom,gcc-sc7180
+>    then:
+> @@ -179,8 +198,8 @@ examples:
+>      clock-controller@100000 {
+>        compatible = "qcom,gcc-sc7180";
+>        reg = <0x100000 0x1f0000>;
+> -      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
+> -      clock-names = "bi_tcxo", "bi_tcxo_ao";
+> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
+> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+
+The patch subject says 8998, but this is changing sc7180. 
+
+>        #clock-cells = <1>;
+>        #reset-cells = <1>;
+>        #power-domain-cells = <1>;
+> -- 
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
 > 
-> Also note f2fs and xfs have simple moves of their functions to
-> facilitate compilation.  No functional changes are contained within
-> those functions.
->
-> ...
->
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -11002,6 +11002,8 @@ static const struct file_operations btrfs_dir_file_operations = {
->  #endif
->  	.release        = btrfs_release_file,
->  	.fsync		= btrfs_sync_file,
-> +	.swap_activate	= btrfs_swap_activate,
-> +	.swap_deactivate = btrfs_swap_deactivate,
->  };
-
-Shouldn't this be btrfs_file_operations?
-
-
