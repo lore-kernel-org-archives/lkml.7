@@ -2,205 +2,149 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C16C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85DEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68A021925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5E5206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GI4WrEWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKLU3m (ORCPT
+        id S1727206AbfKLUb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:29:42 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:35206 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727171AbfKLU3m (ORCPT
+        Tue, 12 Nov 2019 15:31:26 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54131 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfKLUb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:29:42 -0500
-Received: (qmail 5845 invoked by uid 2102); 12 Nov 2019 15:29:40 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 12 Nov 2019 15:29:40 -0500
-Date:   Tue, 12 Nov 2019 15:29:40 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-In-Reply-To: <CAHk-=wjGd0Ce2xadkiErPWxVBT2mhyeZ4TKyih2sJwyE3ohdHw@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1911121515400.1567-100000@iolanthe.rowland.org>
+        Tue, 12 Nov 2019 15:31:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573590685;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IByCdOcsK7z2wqcglE3nDgjbdw+hHaKusrjX1MWd/k0=;
+        b=GI4WrEWESI045e4WUffdSxKlM2QqkRYzcwhkogFCJWqmcHHbSQzuOFlkFMBSJ/5CgTbGvQ
+        hY6baX5Vqi0nNY3C9m1ZXpx3IJ/6xzEezM0FpOjqx1Ls1Y2qBx84Yo6DO9YR/zJ2ARsSKB
+        aNFrlmk9TzClZE7Vc45DUm+hBJlkDuw=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-11-esboA5dMPd2F-Yy7M9ChXA-1; Tue, 12 Nov 2019 15:31:24 -0500
+Received: by mail-lf1-f72.google.com with SMTP id o140so4265929lff.18
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:31:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aIQasmDACRm3A9ZstJoEy2oYlDFM8WAP33PBbVt6iPM=;
+        b=YcUDP2mC5KzSwMxs3DM5cb+JJwezWesm7p36/cnB/tEa+wFjaxQabgIkRwT8FTwIrg
+         FXYl1lwo1XVd8vBCn/9bp16a7PX9SZhCo5SESVegkAizZKojN1Zqo3QvtRTFRnGbB2eY
+         cwPDPUtTxFriQiFU2DlOMbZTSg4pi4mrursP4JA42we3l6EhQIjVD8i/YjwcqLz1EcC4
+         fueniygxLnZ7AO8IWpbErLOqUgae8NGyrEHQAa72Aa86azuWssum+OdyKVK+LAQxbTJE
+         HyC6ekFqmXY6fmJ0nzkTXTXtOZQHODpsFxsXuRSDFsJIFiSrn5U0pOkFOXS0o20I+oqP
+         B21Q==
+X-Gm-Message-State: APjAAAVTGWKqvK3pMAJ6F6xexbTJ5T0FrABSs7PDqneQMVgTZrHOtXzk
+        Xg4jDSRBiS7ehSFEhy48RkiQxh1eHbO7VNeDJ/+SJQgEN2qLG6CyZRm1CC/Yg2aTlINWNtjRZUi
+        v1ZoTgyuZGx/AfbEPhqfnV4QWerZY26VYf6IwAvyy
+X-Received: by 2002:ac2:46c9:: with SMTP id p9mr19116998lfo.166.1573590680207;
+        Tue, 12 Nov 2019 12:31:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyIcWFUT5nlqJEHWH82BamRW6gkAt+gP4B65DcWbI3oa48KtBNMKOyThKMcfVE1uMMHjJ0kjFclKe3d0NFpOtM=
+X-Received: by 2002:ac2:46c9:: with SMTP id p9mr19116984lfo.166.1573590680032;
+ Tue, 12 Nov 2019 12:31:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20191111233418.17676-1-jsnitsel@redhat.com> <20191112200328.GA11213@linux.intel.com>
+ <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
+ <20191112202623.GB5584@ziepe.ca> <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
+In-Reply-To: <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+Date:   Tue, 12 Nov 2019 13:31:09 -0700
+Message-ID: <CALzcddv2aLQ1krYFeNtWNOxyF3aSD0-p3j_p3CgS2Vx-__sQPA@mail.gmail.com>
+Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-stable@vger.kernel.org,
+        Christian Bundy <christianbundy@fraction.io>
+X-MC-Unique: esboA5dMPd2F-Yy7M9ChXA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019, Linus Torvalds wrote:
-
-> On Tue, Nov 12, 2019 at 11:14 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+On Tue, Nov 12, 2019 at 1:28 PM Jerry Snitselaar <jsnitsel@redhat.com> wrot=
+e:
+>
+> On Tue, Nov 12, 2019 at 1:26 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > >
-> > One could be the thing you brought up earlier: Suppose the compiler
-> > decides to use the "write only if changed" transformation, so that the
-> > code generated for the sticky write:
+> > On Tue, Nov 12, 2019 at 01:23:33PM -0700, Jerry Snitselaar wrote:
+> > > On Tue, Nov 12, 2019 at 1:03 PM Jarkko Sakkinen
+> > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > >
+> > > > On Mon, Nov 11, 2019 at 04:34:18PM -0700, Jerry Snitselaar wrote:
+> > > > > With power gating moved out of the tpm_transmit code we need
+> > > > > to power on the TPM prior to calling tpm_get_timeouts.
+> > > > >
+> > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
+> > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > Cc: linux-stable@vger.kernel.org
+> > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_=
+transmit()")
+> > > > > Reported-by: Christian Bundy <christianbundy@fraction.io>
+> > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > > > >  drivers/char/tpm/tpm_tis_core.c | 3 ++-
+> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/t=
+pm_tis_core.c
+> > > > > index 270f43acbb77..cb101cec8f8b 100644
+> > > > > +++ b/drivers/char/tpm/tpm_tis_core.c
+> > > > > @@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev, s=
+truct tpm_tis_data *priv, int irq,
+> > > > >                * to make sure it works. May as well use that comm=
+and to set the
+> > > > >                * proper timeouts for the driver.
+> > > > >                */
+> > > > > +             tpm_chip_start(chip);
+> > > > >               if (tpm_get_timeouts(chip)) {
+> > > > >                       dev_err(dev, "Could not get TPM timeouts an=
+d durations\n");
+> > > > >                       rc =3D -ENODEV;
+> > > > > +                     tpm_stop_chip(chip);
+> > > > >                       goto out_err;
+> > > > >               }
+> > > >
+> > > > Couldn't this call just be removed?
+> > > >
+> > > > /Jarkko
+> > > >
+> > >
+> > > Probably. It will eventually get called when tpm_chip_register
+> > > happens. I don't know what the reason was for trying it prior to the
+> > > irq probe.
 > >
-> >         x = 1;
+> > At least tis once needed the timeouts before registration because it
+> > was issuing TPM commands to complete its setup.
 > >
-> > ends up being what you would expect to see for:
+> > If timeouts have not been set then no TPM command should be executed.
 > >
-> >         if (x != 1)
-> >                 x = 1;
-> 
-> That is exactly the kind of  crap that would make me go "use the flag
-> to disable that invalid optimization, or don't use the compiler".
-> 
-> We already do -param=allow-store-data-races=0
-> 
-> The C standards body sadly has a very bad track record on this kind of
-> thing, where they have allowed absolutely insane extensions of "that's
-> undefined" in the name of making C a much worse language (they say "to
-> compete with Fortran", but it's the same thing).
-> 
-> I have talked to some people who have tried to change that course, but
-> they are fed up with the standards body too, and it's fighting
-> windmills.
-> 
-> Which is why I don't even  bother. The C standard language-lawyering
-> is simply not interesting to me. Yes, there are too many people who do
-> it, and I don't care.
-> 
-> For the kernel, we basically do not accept "that's undefined behavior,
-> I might generate odd code".
-> 
-> If the compiler can statitcally give an error for it, then that's one
-> thing, and we'd be ok with that. But the kind of mindset where people
-> think it's ok to have the compiler read the standard cross-eyed and
-> change the obvious meaning of the code "because it's undefined
-> behavior" is to me a sign of a cn incompetent compiler writer, and I
-> am not at all interested in playing that game.
-> 
-> Seriously.
-> 
-> I wish somebody on the C standard had the back-bone to say "undefined
-> behavior is not acceptable", and just say that the proper
-> optimizations are ones where you transform the code the obvious
-> straightforward way, and then you only do optimizations that are based
-> on that code and you can prove do not change semantics.
-> 
-> You can't add reads that weren't there.
-> 
-> But you can look at code that did a read, and then wrote back what you
-> can prove is the same value, and say "that write is redundant, just
-> looking at the code".
-> 
-> See the difference?
-> 
-> One approach makes up shit. The other approach looks at the code AS
-> WRITTEN and can prove "that's stupid, I can do it better, and I can
-> show why it makes no difference".
-> 
-> So you can change "i++; i++;" to "i +=2", even if "i" is not a private
-> variable. Did that remove a write? Yes it did. But it really falls
-> under the "I just improved on the code".
-> 
-> But you can *not* do the insane things that type-based aliasing do
-> (lack the "prove it's the same" part).
-> 
-> Because when we notice that in the kernel, we turn it off. It's why we have
-> 
->  -fno-strict-overflow
->  -fno-merge-all-constants
->  -fno-strict-aliasing
->  -fno-delete-null-pointer-checks
->  --param=allow-store-data-races=0
-> 
-> and probably others. Because the standard is simply wrong when you
-> care about reliability.
-> 
-> > But what about C11 relaxed atomic reads and writes?
-> 
-> Again, I'm not in the least interested in the C11 standard
-> language-lawyering, because it has shown itself to not be useful.
-> 
-> Stop bringing up the "what if" cases. They aren't interesting. If a
-> compiler turns a single write into some kind of conditional write, or
-> if the compiler creates dummy writes, the compiler is garbage. No
-> amount of "but but but C11" is at all relevant.
-> 
-> What a compiler can do is:
-> 
->  - generate multiple (and speculative) reads
-> 
->  - combine writes to the same location (non-speciulatively)
-> 
->  - take advantage of actual reads in the source code to do
-> transformations that are obvious (ie "oh, you read value X, you tested
-> by Y was set, now you write it back again, but clearly the value
-> didn't change so I can avoid the write").
-> 
-> so yes, a compiler can remove a _redundant_ write, and if the SOURCE
-> CODE has the read in it and the compiler decides "Oh, I already know
-> it has that value" then that's one thing.
-> 
-> But no, the compiler can not add data races that weren't there in the
-> source code and say "but C11". We're not compiling to the standard.
-> We're compiling to the real world.
-> 
-> So if the compiler just adds its own reads, I don't want to play with
-> that compiler. It may be appropriate in situations where we don't have
-> threads, we don't have security issues, and we don't have various
-> system and kernel concerns, but it's not appropriate for a kernel.
-> 
-> It really is that simple.
-> 
-> This is in no way different from other language lawyering, ie the
-> whole "signed arithmetic overflows are undefined, so i can do
-> optimization X" or "I can silently remove the NULL pointer check
-> because you accessed it before and that invoced undefined behavior, so
-> now I can do anthing".
-> 
-> Those optimizations may be valid in other projects. They are not valid
-> for the kernel.
-> 
-> Stop bringing them up. They are irrelevant. We will keep adding the
-> options to tell the compiler "no, we're not your toy benchmark, we do
-> real work, and that optimization is dangerous".
+> > Jason
+> >
+>
+> Would it function with the timeout values set at the beginning of
+> tpm_tis_core_init (max values)?
 
-Linus, calm down and read what I actually wrote.  That optimization was 
-a straw man.
-
-I'm trying to solve a real problem: How to tell KCSAN and the compiler
-that we don't care about certain access patterns which result in
-hardware-level races, and how to guarantee that the object code will
-still work correctly when those races occur.  Not telling the compiler 
-anything is a head-in-the-sand approach that will be dangerous in the 
-long run.
-
-We could annotate all those accesses with READ_ONCE/WRITE_ONCE.  You 
-don't like this approach, mainly because gcc produces lousy object code 
-for volatile accesses.
-
-My question was whether gcc does a better job with C11 relaxed atomic
-accesses.  If it does we could define READ_RELAXED/WRITE_RELAXED
-analogously to READ_ONCE/WRITE_ONCE, and do the annotations that way.  
-The resulting object code certainly ought to be robust against races,
-but I don't know what the quality would be like.
-
-On the other hand, if the compiler generates lousy code even for C11 
-relaxed atomic accesses, you've got a good case to go complain to the 
-GCC maintainers about.  They can't say they don't want to support such 
-things, because it's in the spec.
-
-Alan Stern
+I guess that doesn't set the duration values though
 
