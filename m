@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A430C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B328DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3B121A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88396214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfKLXuk (ORCPT
+        id S1727176AbfKLXui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:50:40 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57502 "EHLO
+        Tue, 12 Nov 2019 18:50:38 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57378 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727137AbfKLXuh (ORCPT
+        by vger.kernel.org with ESMTP id S1727046AbfKLXug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:50:37 -0500
+        Tue, 12 Nov 2019 18:50:36 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvf-0008JO-57; Tue, 12 Nov 2019 23:50:35 +0000
+        id 1iUfvd-0008IE-WA; Tue, 12 Nov 2019 23:50:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-00058L-V7; Tue, 12 Nov 2019 23:50:33 +0000
+        id 1iUfvc-00057E-Mj; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ping-Ke Shih" <pkshih@realtek.com>,
-        "Laura Abbott" <labbott@redhat.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Nicolas Waisman" <nico@semmle.com>
-Date:   Tue, 12 Nov 2019 23:48:22 +0000
-Message-ID: <lsq.1573602477.292188943@decadent.org.uk>
+        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
+        "Borislav Petkov" <bp@suse.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Michal Hocko" <mhocko@suse.com>,
+        "Borislav Petkov" <bpetkov@suse.de>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>
+Date:   Tue, 12 Nov 2019 23:48:08 +0000
+Message-ID: <lsq.1573602477.219721907@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 25/25] rtlwifi: Fix potential overflow on P2P code
+Subject: [PATCH 3.16 11/25] x86/tsx: Add config options to set tsx=on|off|auto
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +59,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Laura Abbott <labbott@redhat.com>
+From: Michal Hocko <mhocko@suse.com>
 
-commit 8c55dedb795be8ec0cf488f98c03a1c2176f7fb1 upstream.
+commit db616173d787395787ecc93eef075fa975227b10 upstream.
 
-Nicolas Waisman noticed that even though noa_len is checked for
-a compatible length it's still possible to overrun the buffers
-of p2pinfo since there's no check on the upper bound of noa_num.
-Bound noa_num against P2P_MAX_NOA_NUM.
+There is a general consensus that TSX usage is not largely spread while
+the history shows there is a non trivial space for side channel attacks
+possible. Therefore the tsx is disabled by default even on platforms
+that might have a safe implementation of TSX according to the current
+knowledge. This is a fair trade off to make.
 
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+There are, however, workloads that really do benefit from using TSX and
+updating to a newer kernel with TSX disabled might introduce a
+noticeable regressions. This would be especially a problem for Linux
+distributions which will provide TAA mitigations.
+
+Introduce config options X86_INTEL_TSX_MODE_OFF, X86_INTEL_TSX_MODE_ON
+and X86_INTEL_TSX_MODE_AUTO to control the TSX feature. The config
+setting can be overridden by the tsx cmdline options.
+
+ [ bp: Text cleanups from Josh. ]
+
+Suggested-by: Borislav Petkov <bpetkov@suse.de>
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+[bwh: Backported to 3.16: adjust doc filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/rtlwifi/ps.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/Kconfig          | 45 +++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/tsx.c | 22 +++++++++++++------
+ 2 files changed, 61 insertions(+), 6 deletions(-)
 
---- a/drivers/net/wireless/rtlwifi/ps.c
-+++ b/drivers/net/wireless/rtlwifi/ps.c
-@@ -801,6 +801,9 @@ static void rtl_p2p_noa_ie(struct ieee80
- 				return;
- 			} else {
- 				noa_num = (noa_len - 2) / 13;
-+				if (noa_num > P2P_MAX_NOA_NUM)
-+					noa_num = P2P_MAX_NOA_NUM;
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1531,6 +1531,51 @@ config X86_SMAP
+ 
+ 	  If unsure, say Y.
+ 
++choice
++	prompt "TSX enable mode"
++	depends on CPU_SUP_INTEL
++	default X86_INTEL_TSX_MODE_OFF
++	help
++	  Intel's TSX (Transactional Synchronization Extensions) feature
++	  allows to optimize locking protocols through lock elision which
++	  can lead to a noticeable performance boost.
 +
- 			}
- 			noa_index = ie[3];
- 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
-@@ -895,6 +898,9 @@ static void rtl_p2p_action_ie(struct iee
- 				return;
- 			} else {
- 				noa_num = (noa_len - 2) / 13;
-+				if (noa_num > P2P_MAX_NOA_NUM)
-+					noa_num = P2P_MAX_NOA_NUM;
++	  On the other hand it has been shown that TSX can be exploited
++	  to form side channel attacks (e.g. TAA) and chances are there
++	  will be more of those attacks discovered in the future.
 +
- 			}
- 			noa_index = ie[3];
- 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
++	  Therefore TSX is not enabled by default (aka tsx=off). An admin
++	  might override this decision by tsx=on the command line parameter.
++	  Even with TSX enabled, the kernel will attempt to enable the best
++	  possible TAA mitigation setting depending on the microcode available
++	  for the particular machine.
++
++	  This option allows to set the default tsx mode between tsx=on, =off
++	  and =auto. See Documentation/kernel-parameters.txt for more
++	  details.
++
++	  Say off if not sure, auto if TSX is in use but it should be used on safe
++	  platforms or on if TSX is in use and the security aspect of tsx is not
++	  relevant.
++
++config X86_INTEL_TSX_MODE_OFF
++	bool "off"
++	help
++	  TSX is disabled if possible - equals to tsx=off command line parameter.
++
++config X86_INTEL_TSX_MODE_ON
++	bool "on"
++	help
++	  TSX is always enabled on TSX capable HW - equals the tsx=on command
++	  line parameter.
++
++config X86_INTEL_TSX_MODE_AUTO
++	bool "auto"
++	help
++	  TSX is enabled on TSX capable HW that is believed to be safe against
++	  side channel attacks- equals the tsx=auto command line parameter.
++endchoice
++
+ config EFI
+ 	bool "EFI runtime service support"
+ 	depends on ACPI
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -73,6 +73,14 @@ static bool __init tsx_ctrl_is_supported
+ 	return !!(ia32_cap & ARCH_CAP_TSX_CTRL_MSR);
+ }
+ 
++static enum tsx_ctrl_states x86_get_tsx_auto_mode(void)
++{
++	if (boot_cpu_has_bug(X86_BUG_TAA))
++		return TSX_CTRL_DISABLE;
++
++	return TSX_CTRL_ENABLE;
++}
++
+ void __init tsx_init(void)
+ {
+ 	char arg[5] = {};
+@@ -88,17 +96,19 @@ void __init tsx_init(void)
+ 		} else if (!strcmp(arg, "off")) {
+ 			tsx_ctrl_state = TSX_CTRL_DISABLE;
+ 		} else if (!strcmp(arg, "auto")) {
+-			if (boot_cpu_has_bug(X86_BUG_TAA))
+-				tsx_ctrl_state = TSX_CTRL_DISABLE;
+-			else
+-				tsx_ctrl_state = TSX_CTRL_ENABLE;
++			tsx_ctrl_state = x86_get_tsx_auto_mode();
+ 		} else {
+ 			tsx_ctrl_state = TSX_CTRL_DISABLE;
+ 			pr_err("tsx: invalid option, defaulting to off\n");
+ 		}
+ 	} else {
+-		/* tsx= not provided, defaulting to off */
+-		tsx_ctrl_state = TSX_CTRL_DISABLE;
++		/* tsx= not provided */
++		if (IS_ENABLED(CONFIG_X86_INTEL_TSX_MODE_AUTO))
++			tsx_ctrl_state = x86_get_tsx_auto_mode();
++		else if (IS_ENABLED(CONFIG_X86_INTEL_TSX_MODE_OFF))
++			tsx_ctrl_state = TSX_CTRL_DISABLE;
++		else
++			tsx_ctrl_state = TSX_CTRL_ENABLE;
+ 	}
+ 
+ 	if (tsx_ctrl_state == TSX_CTRL_DISABLE) {
 
