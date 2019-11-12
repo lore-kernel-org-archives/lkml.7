@@ -2,451 +2,98 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE14CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7FBC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCB6214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCAA214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573581275;
+	bh=Ua9UrxbuWpTREDVckC9mOPVVtqvHEOjNV1brqlRg7JY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Qux4OAlm+n44Rggc83fGfh+QvWgN0PRlNcIuU4pzSf/KdtkVpAgfR7Rj7P4n4DYLB
+	 D7E5mKYBgBjj8HWuqtn+1qJc1bmrbO9hTVwEMbA+wm/uFe4T65MgqWi11iJqR278wv
+	 jv3xNW6zyETvwpvCQWzD/wrW1ZXARmWI2sScX8PA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfKLRy1 (ORCPT
+        id S1727145AbfKLRyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:54:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:35234 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfKLRyZ (ORCPT
+        Tue, 12 Nov 2019 12:54:33 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45913 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfKLRy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:54:25 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUaMW-0000ey-9v; Tue, 12 Nov 2019 18:53:56 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DD54E1C0084;
-        Tue, 12 Nov 2019 18:53:55 +0100 (CET)
-Date:   Tue, 12 Nov 2019 17:53:55 -0000
-From:   "tip-bot2 for Daniel Kiper" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/boot: Introduce setup_indirect
-Cc:     "H. Peter Anvin (Intel)" <hpa@zytor.com>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Borislav Petkov <bp@suse.de>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        ard.biesheuvel@linaro.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        dave.hansen@linux.intel.com, eric.snowberg@oracle.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juergen Gross <jgross@suse.com>, kanth.ghatraju@oracle.com,
-        linux-doc@vger.kernel.org, "linux-efi" <linux-efi@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, rdunlap@infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, xen-devel@lists.xenproject.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191112134640.16035-4-daniel.kiper@oracle.com>
-References: <20191112134640.16035-4-daniel.kiper@oracle.com>
+        Tue, 12 Nov 2019 12:54:28 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n21so18829044ljg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:54:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C9/3cBw+s1St4spxQYIlofga3jANKje6wVfYU7Z8I14=;
+        b=XArryZV/v4RmtTO4Uz8dg1dXkxZB1fxbh+wisjfXATawAXtZq8WaEDH0Xo5G0TfMHC
+         GpvFN/7I4mKoAqw8+MhDIyW+CxF8fSw7n3q6QTJsVFKwHaHAuMEbhXUmfpTnaN/xr2Pe
+         /LxmamUpQTbHpSF6mu+lfYlInTwgYktnh3+xc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C9/3cBw+s1St4spxQYIlofga3jANKje6wVfYU7Z8I14=;
+        b=dcCRMG1vlPYWj+Q3pTqmOvKYs6bNjDLeZFA7bjPjyDUtGEoExeVYidp3GHQvWe2LOr
+         r3Sk7W6pJiA2nVQI/kHeI1ccuUTCaY2MFm/a+kDUhuLcZfgVsh161HZvHa6lCDpgtOjU
+         0aA7UP08sWC8WGhB2wqTpDTDrTPqeju8POW0Z9+SWsLafmj78aycDYnW/ziewdDnAyP4
+         /MaIcYPGCTXZfN+p74ZRxHBj0b0oyMypEjP9zej5O1cVFO5gSBOl324skM2wKioFazDw
+         M8uqmTTPf/Jg7WfAzpcX55hV0uAUPxj41GXXuPYEXPOv03rDxf135euHWQx5K6M6Jc4E
+         /ukw==
+X-Gm-Message-State: APjAAAVDKllQfPJIVhOJD3UstmcDXXKngYBZIpM3al1d5Xdm+O+BkHu9
+        7RpkB8Yz0C1k6qvQI+jR28KQQSrJvX8=
+X-Google-Smtp-Source: APXvYqzUoLxQFA3wxhiNP53eFHPr8ZCTmOxCW3OpG+slBi26EQXS0UrgMzEkZO9ME9QwaUON6XFOkw==
+X-Received: by 2002:a2e:b5d0:: with SMTP id g16mr21464831ljn.88.1573581265274;
+        Tue, 12 Nov 2019 09:54:25 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id d24sm3781723ljg.73.2019.11.12.09.54.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 09:54:24 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id n21so18828901ljg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:54:24 -0800 (PST)
+X-Received: by 2002:a05:651c:331:: with SMTP id b17mr21291645ljp.133.1573581263488;
+ Tue, 12 Nov 2019 09:54:23 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157358123549.29376.9018722901282041797.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20191112130244.16630-1-vincent.whitchurch@axis.com> <20191112160855.GA22025@arrakis.emea.arm.com>
+In-Reply-To: <20191112160855.GA22025@arrakis.emea.arm.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 12 Nov 2019 09:54:07 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi=LHkmw9SS066X_00TszjWzj-5t4F3ODua8W_tagVb=w@mail.gmail.com>
+Message-ID: <CAHk-=wi=LHkmw9SS066X_00TszjWzj-5t4F3ODua8W_tagVb=w@mail.gmail.com>
+Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read hazard
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Vincent Whitchurch <rabinv@axis.com>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/boot branch of tip:
+On Tue, Nov 12, 2019 at 8:09 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> While you can add some barrier here, there may be other cases where this
+> can go wrong.
 
-Commit-ID:     b3c72fc9a78e74161f9d05ef7191706060628f8c
-Gitweb:        https://git.kernel.org/tip/b3c72fc9a78e74161f9d05ef7191706060628f8c
-Author:        Daniel Kiper <daniel.kiper@oracle.com>
-AuthorDate:    Tue, 12 Nov 2019 14:46:40 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 12 Nov 2019 16:21:15 +01:00
+Yeah, that patch isn't going to be accepted. We don't add random arch
+workarounds to core header files like that - particularly when it's
+not at all clear that there aren't hundreds of other cases where that
+cpu errata can trigger..
 
-x86/boot: Introduce setup_indirect
-
-The setup_data is a bit awkward to use for extremely large data objects,
-both because the setup_data header has to be adjacent to the data object
-and because it has a 32-bit length field. However, it is important that
-intermediate stages of the boot process have a way to identify which
-chunks of memory are occupied by kernel data. Thus introduce an uniform
-way to specify such indirect data as setup_indirect struct and
-SETUP_INDIRECT type.
-
-And finally bump setup_header version in arch/x86/boot/header.S.
-
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: ard.biesheuvel@linaro.org
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: dave.hansen@linux.intel.com
-Cc: eric.snowberg@oracle.com
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: kanth.ghatraju@oracle.com
-Cc: linux-doc@vger.kernel.org
-Cc: linux-efi <linux-efi@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: rdunlap@infradead.org
-Cc: ross.philipson@oracle.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: xen-devel@lists.xenproject.org
-Link: https://lkml.kernel.org/r/20191112134640.16035-4-daniel.kiper@oracle.com
----
- Documentation/x86/boot.rst             | 43 ++++++++++++++++++++++++-
- arch/x86/boot/compressed/kaslr.c       | 12 +++++++-
- arch/x86/boot/compressed/kernel_info.S |  2 +-
- arch/x86/boot/header.S                 |  2 +-
- arch/x86/include/uapi/asm/bootparam.h  | 16 +++++++--
- arch/x86/kernel/e820.c                 | 11 ++++++-
- arch/x86/kernel/kdebugfs.c             | 21 +++++++++---
- arch/x86/kernel/ksysfs.c               | 31 +++++++++++++-----
- arch/x86/kernel/setup.c                |  6 +++-
- arch/x86/mm/ioremap.c                  | 11 ++++++-
- 10 files changed, 138 insertions(+), 17 deletions(-)
-
-diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
-index 6cdd767..90bb8f5 100644
---- a/Documentation/x86/boot.rst
-+++ b/Documentation/x86/boot.rst
-@@ -827,6 +827,47 @@ Protocol:	2.09+
-   sure to consider the case where the linked list already contains
-   entries.
- 
-+  The setup_data is a bit awkward to use for extremely large data objects,
-+  both because the setup_data header has to be adjacent to the data object
-+  and because it has a 32-bit length field. However, it is important that
-+  intermediate stages of the boot process have a way to identify which
-+  chunks of memory are occupied by kernel data.
-+
-+  Thus setup_indirect struct and SETUP_INDIRECT type were introduced in
-+  protocol 2.15.
-+
-+  struct setup_indirect {
-+    __u32 type;
-+    __u32 reserved;  /* Reserved, must be set to zero. */
-+    __u64 len;
-+    __u64 addr;
-+  };
-+
-+  The type member is a SETUP_INDIRECT | SETUP_* type. However, it cannot be
-+  SETUP_INDIRECT itself since making the setup_indirect a tree structure
-+  could require a lot of stack space in something that needs to parse it
-+  and stack space can be limited in boot contexts.
-+
-+  Let's give an example how to point to SETUP_E820_EXT data using setup_indirect.
-+  In this case setup_data and setup_indirect will look like this:
-+
-+  struct setup_data {
-+    __u64 next = 0 or <addr_of_next_setup_data_struct>;
-+    __u32 type = SETUP_INDIRECT;
-+    __u32 len = sizeof(setup_data);
-+    __u8 data[sizeof(setup_indirect)] = struct setup_indirect {
-+      __u32 type = SETUP_INDIRECT | SETUP_E820_EXT;
-+      __u32 reserved = 0;
-+      __u64 len = <len_of_SETUP_E820_EXT_data>;
-+      __u64 addr = <addr_of_SETUP_E820_EXT_data>;
-+    }
-+  }
-+
-+.. note::
-+     SETUP_INDIRECT | SETUP_NONE objects cannot be properly distinguished
-+     from SETUP_INDIRECT itself. So, this kind of objects cannot be provided
-+     by the bootloaders.
-+
- ============	============
- Field name:	pref_address
- Type:		read (reloc)
-@@ -986,7 +1027,7 @@ Field name:	setup_type_max
- Offset/size:	0x000c/4
- ============	==============
- 
--  This field contains maximal allowed type for setup_data.
-+  This field contains maximal allowed type for setup_data and setup_indirect structs.
- 
- 
- The Image Checksum
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 2e53c05..bb9bfef 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -459,6 +459,18 @@ static bool mem_avoid_overlap(struct mem_vector *img,
- 			is_overlapping = true;
- 		}
- 
-+		if (ptr->type == SETUP_INDIRECT &&
-+		    ((struct setup_indirect *)ptr->data)->type != SETUP_INDIRECT) {
-+			avoid.start = ((struct setup_indirect *)ptr->data)->addr;
-+			avoid.size = ((struct setup_indirect *)ptr->data)->len;
-+
-+			if (mem_overlaps(img, &avoid) && (avoid.start < earliest)) {
-+				*overlap = avoid;
-+				earliest = overlap->start;
-+				is_overlapping = true;
-+			}
-+		}
-+
- 		ptr = (struct setup_data *)(unsigned long)ptr->next;
- 	}
- 
-diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
-index 018dacb..f818ee8 100644
---- a/arch/x86/boot/compressed/kernel_info.S
-+++ b/arch/x86/boot/compressed/kernel_info.S
-@@ -14,7 +14,7 @@ kernel_info:
- 	/* Size total. */
- 	.long	kernel_info_end - kernel_info
- 
--	/* Maximal allowed type for setup_data. */
-+	/* Maximal allowed type for setup_data and setup_indirect structs. */
- 	.long	SETUP_TYPE_MAX
- 
- kernel_info_var_len_data:
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index 22dceca..97d9b6d 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -300,7 +300,7 @@ _start:
- 	# Part 2 of the header, from the old setup.S
- 
- 		.ascii	"HdrS"		# header signature
--		.word	0x020d		# header version number (>= 0x0105)
-+		.word	0x020f		# header version number (>= 0x0105)
- 					# or else old loadlin-1.5 will fail)
- 		.globl realmode_swtch
- realmode_swtch:	.word	0, 0		# default_switch, SETUPSEG
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index dbb4112..949066b 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_X86_BOOTPARAM_H
- #define _ASM_X86_BOOTPARAM_H
- 
--/* setup_data types */
-+/* setup_data/setup_indirect types */
- #define SETUP_NONE			0
- #define SETUP_E820_EXT			1
- #define SETUP_DTB			2
-@@ -11,8 +11,10 @@
- #define SETUP_APPLE_PROPERTIES		5
- #define SETUP_JAILHOUSE			6
- 
--/* max(SETUP_*) */
--#define SETUP_TYPE_MAX			SETUP_JAILHOUSE
-+#define SETUP_INDIRECT			(1<<31)
-+
-+/* SETUP_INDIRECT | max(SETUP_*) */
-+#define SETUP_TYPE_MAX			(SETUP_INDIRECT | SETUP_JAILHOUSE)
- 
- /* ram_size flags */
- #define RAMDISK_IMAGE_START_MASK	0x07FF
-@@ -52,6 +54,14 @@ struct setup_data {
- 	__u8 data[0];
- };
- 
-+/* extensible setup indirect data node */
-+struct setup_indirect {
-+	__u32 type;
-+	__u32 reserved;  /* Reserved, must be set to zero. */
-+	__u64 len;
-+	__u64 addr;
-+};
-+
- struct setup_header {
- 	__u8	setup_sects;
- 	__u16	root_flags;
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 7da2bcd..0bfe9a6 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -999,6 +999,17 @@ void __init e820__reserve_setup_data(void)
- 		data = early_memremap(pa_data, sizeof(*data));
- 		e820__range_update(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
- 		e820__range_update_kexec(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
-+
-+		if (data->type == SETUP_INDIRECT &&
-+		    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT) {
-+			e820__range_update(((struct setup_indirect *)data->data)->addr,
-+					   ((struct setup_indirect *)data->data)->len,
-+					   E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
-+			e820__range_update_kexec(((struct setup_indirect *)data->data)->addr,
-+						 ((struct setup_indirect *)data->data)->len,
-+						 E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
-+		}
-+
- 		pa_data = data->next;
- 		early_memunmap(data, sizeof(*data));
- 	}
-diff --git a/arch/x86/kernel/kdebugfs.c b/arch/x86/kernel/kdebugfs.c
-index edaa30b..64b6da9 100644
---- a/arch/x86/kernel/kdebugfs.c
-+++ b/arch/x86/kernel/kdebugfs.c
-@@ -44,7 +44,12 @@ static ssize_t setup_data_read(struct file *file, char __user *user_buf,
- 	if (count > node->len - pos)
- 		count = node->len - pos;
- 
--	pa = node->paddr + sizeof(struct setup_data) + pos;
-+	pa = node->paddr + pos;
-+
-+	/* Is it direct data or invalid indirect one? */
-+	if (!(node->type & SETUP_INDIRECT) || node->type == SETUP_INDIRECT)
-+		pa += sizeof(struct setup_data);
-+
- 	p = memremap(pa, count, MEMREMAP_WB);
- 	if (!p)
- 		return -ENOMEM;
-@@ -108,9 +113,17 @@ static int __init create_setup_data_nodes(struct dentry *parent)
- 			goto err_dir;
- 		}
- 
--		node->paddr = pa_data;
--		node->type = data->type;
--		node->len = data->len;
-+		if (data->type == SETUP_INDIRECT &&
-+		    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT) {
-+			node->paddr = ((struct setup_indirect *)data->data)->addr;
-+			node->type  = ((struct setup_indirect *)data->data)->type;
-+			node->len   = ((struct setup_indirect *)data->data)->len;
-+		} else {
-+			node->paddr = pa_data;
-+			node->type  = data->type;
-+			node->len   = data->len;
-+		}
-+
- 		create_setup_data_node(d, no, node);
- 		pa_data = data->next;
- 
-diff --git a/arch/x86/kernel/ksysfs.c b/arch/x86/kernel/ksysfs.c
-index 7969da9..d0a1912 100644
---- a/arch/x86/kernel/ksysfs.c
-+++ b/arch/x86/kernel/ksysfs.c
-@@ -100,7 +100,12 @@ static int __init get_setup_data_size(int nr, size_t *size)
- 		if (!data)
- 			return -ENOMEM;
- 		if (nr == i) {
--			*size = data->len;
-+			if (data->type == SETUP_INDIRECT &&
-+			    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT)
-+				*size = ((struct setup_indirect *)data->data)->len;
-+			else
-+				*size = data->len;
-+
- 			memunmap(data);
- 			return 0;
- 		}
-@@ -130,7 +135,10 @@ static ssize_t type_show(struct kobject *kobj,
- 	if (!data)
- 		return -ENOMEM;
- 
--	ret = sprintf(buf, "0x%x\n", data->type);
-+	if (data->type == SETUP_INDIRECT)
-+		ret = sprintf(buf, "0x%x\n", ((struct setup_indirect *)data->data)->type);
-+	else
-+		ret = sprintf(buf, "0x%x\n", data->type);
- 	memunmap(data);
- 	return ret;
- }
-@@ -142,7 +150,7 @@ static ssize_t setup_data_data_read(struct file *fp,
- 				    loff_t off, size_t count)
- {
- 	int nr, ret = 0;
--	u64 paddr;
-+	u64 paddr, len;
- 	struct setup_data *data;
- 	void *p;
- 
-@@ -157,19 +165,28 @@ static ssize_t setup_data_data_read(struct file *fp,
- 	if (!data)
- 		return -ENOMEM;
- 
--	if (off > data->len) {
-+	if (data->type == SETUP_INDIRECT &&
-+	    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT) {
-+		paddr = ((struct setup_indirect *)data->data)->addr;
-+		len = ((struct setup_indirect *)data->data)->len;
-+	} else {
-+		paddr += sizeof(*data);
-+		len = data->len;
-+	}
-+
-+	if (off > len) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
--	if (count > data->len - off)
--		count = data->len - off;
-+	if (count > len - off)
-+		count = len - off;
- 
- 	if (!count)
- 		goto out;
- 
- 	ret = count;
--	p = memremap(paddr + sizeof(*data), data->len, MEMREMAP_WB);
-+	p = memremap(paddr, len, MEMREMAP_WB);
- 	if (!p) {
- 		ret = -ENOMEM;
- 		goto out;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 77ea96b..8f48bb8 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -438,6 +438,12 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- 	while (pa_data) {
- 		data = early_memremap(pa_data, sizeof(*data));
- 		memblock_reserve(pa_data, sizeof(*data) + data->len);
-+
-+		if (data->type == SETUP_INDIRECT &&
-+		    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT)
-+			memblock_reserve(((struct setup_indirect *)data->data)->addr,
-+					 ((struct setup_indirect *)data->data)->len);
-+
- 		pa_data = data->next;
- 		early_memunmap(data, sizeof(*data));
- 	}
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index a39dcdb..1ff9c20 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -626,6 +626,17 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
- 		paddr_next = data->next;
- 		len = data->len;
- 
-+		if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
-+			memunmap(data);
-+			return true;
-+		}
-+
-+		if (data->type == SETUP_INDIRECT &&
-+		    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT) {
-+			paddr = ((struct setup_indirect *)data->data)->addr;
-+			len = ((struct setup_indirect *)data->data)->len;
-+		}
-+
- 		memunmap(data);
- 
- 		if ((phys_addr > paddr) && (phys_addr < (paddr + len)))
+                Linus
