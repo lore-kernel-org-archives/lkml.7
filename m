@@ -2,207 +2,141 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CD0C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB886C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160A8222BD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IhePBCHP"
+	by mail.kernel.org (Postfix) with ESMTP id CBC9A20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfKLQY4 (ORCPT
+        id S1727354AbfKLQZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:24:56 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37968 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfKLQYz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:24:55 -0500
-Received: by mail-qt1-f195.google.com with SMTP id p20so20374680qtq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:24:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0a/sJJWyyFBbZkhKlYELP0090+55ZSiU8jLaE8NbD5U=;
-        b=IhePBCHP1xPWJCnc0fhVuvGX81sL2k6BScL+Bp+yw2KH1UDC3HLFXYBUATgLx+0u3v
-         3gpl92D1w8C8IuZpcc5/phnYVF2vimLZtVzNmmL/wOjbKhECk2jAoYWneZ8wLYEXskpx
-         zUdNO45Dpq1aJZ271qIBeemjihB+/nrs71YJRPkYTbYpEx0zRFXtV/KwCscC74+ruEmj
-         3MfrQbYRs9OTIoMoqQQy9qYXAZ2yMmPdsf5PUHTIwg1W3cnSfXXlOleyhBFUla1Dqq84
-         sW88XHmq+3ktVLYs1u9fENB0/RRJoUkltX3Go4MifZFej10ejfv9DlLSbtvIb1raLmKF
-         ox6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0a/sJJWyyFBbZkhKlYELP0090+55ZSiU8jLaE8NbD5U=;
-        b=AbGy2tVPzfGeNtMr0vsHKR49FQn0WOWnyHFg6K/c3urDEHqtc2lEUkp6IzYCx98vT9
-         MRglq7kFMaXkOhlUXU15MiBaCDf3dSiPOdGFunOa7N2Gn0lnm45MdP15T+LbRxWSCCaK
-         5xm64Ns1NOu7XzP+O+vfaXVJ/sCj1AfBw5JGCRp3Hnp7Ra4XgtolYEa4BZw1ALD04mnW
-         NTFSq9MWo5IzKpuzfn+6jY/tiHXztoNJhfWqb9DzjfEtIPv2WMa9LDYdx36Fu9F2TiK6
-         YVWrWccXaRIPazTDKm1UyPBq1Iief15EGuNXurKZzV5Z3ysYsj0wYd9E/re5cqJo0CMG
-         qVpw==
-X-Gm-Message-State: APjAAAXrI1bf/HmSSLbYhm4e7bIwhzaGN4/InFsU2oyjQSmfoCToyZDq
-        W7wGlHOxJLPI6gJ4FVnL+0OSsg==
-X-Google-Smtp-Source: APXvYqz+9z+j+VCCW6nt2U4oUrXjz30eoeX7U58SDkbPJV+nkekrKXRXSWXRfAcQWKcQxqzqxE0Dxg==
-X-Received: by 2002:ac8:2a42:: with SMTP id l2mr32711563qtl.64.1573575894401;
-        Tue, 12 Nov 2019 08:24:54 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 189sm9518840qki.10.2019.11.12.08.24.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 08:24:53 -0800 (PST)
-Message-ID: <1573575891.5937.118.camel@lca.pw>
-Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
-From:   Qian Cai <cai@lca.pw>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>, akpm@linux-foundation.org,
-        guro@fb.com, linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 12 Nov 2019 11:24:51 -0500
-In-Reply-To: <20191112161658.GF168812@cmpxchg.org>
-References: <20191108204407.1435-1-cai@lca.pw>
-         <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
-         <20191111130516.GA891635@chrisdown.name>
-         <20191111131427.GB891635@chrisdown.name>
-         <20191111132812.GK1396@dhcp22.suse.cz>
-         <20191112145942.GA168812@cmpxchg.org> <20191112152750.GA512@dhcp22.suse.cz>
-         <20191112161658.GF168812@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 12 Nov 2019 11:25:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46272 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726953AbfKLQZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:25:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4BA0CAC24;
+        Tue, 12 Nov 2019 16:25:13 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 17:25:13 +0100
+Message-ID: <s5hzhh1njti.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Henry Lin <henryl@nvidia.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb-audio: not submit urb for stopped endpoint
+In-Reply-To: <MN2PR12MB33897DF3AED495FCAF1F421AAC770@MN2PR12MB3389.namprd12.prod.outlook.com>
+References: <20191112065108.7766-1-henryl@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-12 at 11:16 -0500, Johannes Weiner wrote:
-> On Tue, Nov 12, 2019 at 04:27:50PM +0100, Michal Hocko wrote:
-> > On Tue 12-11-19 06:59:42, Johannes Weiner wrote:
-> > > Qian, thanks for the report and the fix.
-> > > 
-> > > On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
-> > > > On Mon 11-11-19 13:14:27, Chris Down wrote:
-> > > > > Chris Down writes:
-> > > > > > Ah, I just saw this in my local checkout and thought it was from my
-> > > > > > changes, until I saw it's also on clean mmots checkout. Thanks for the
-> > > > > > fixup!
-> > > > > 
-> > > > > Also, does this mean we should change callers that may pass through
-> > > > > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
-> > > > > remove this interim fixup? I'm worried otherwise we might paper over real
-> > > > > issues in future.
-> > > > 
-> > > > Yes, removing this special casing is reasonable. I am not sure
-> > > > MAX_NR_ZONES - 1 is a better choice though. It is error prone and
-> > > > zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
-> > > > be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
-> > > > outside of MM reclaim code AFAIK. It would be probably better to have
-> > > > MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
-> > > 
-> > > We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
-> > > "no zone restrictions" - get_scan_count() is the odd one out:
-> > > 
-> > > - mem_cgroup_shrink_node()
-> > > - try_to_free_mem_cgroup_pages()
-> > > - balance_pgdat()
-> > > - kswapd()
-> > > - shrink_all_memory()
+On Tue, 12 Nov 2019 17:13:37 +0100,
+Henry Lin wrote:
+> 
+> >On Tue, 12 Nov 2019 07:51:06 +0100,
+> >Henry Lin wrote:
+> >>
+> >> While output urb's snd_complete_urb() is executing, calling
+> >> prepare_outbound_urb() may cause endpoint stopped before
+> >> prepare_outbound_urb() returns and result in next urb submitted
+> >> to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+> >> the urb is still hold by usb stack.
+> >>
+> >> This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+> >> to let snd_complete_urb() know the endpoint already stopped and does not
+> >> submit next urb.
+> 
+> >OK, this part looks good and understandable.
+> 
+> 
+> >> We observed two scenario have this issue:
+> >> 1. While executing snd_complete_urb() to complete an output urb, calling
+> >>    prepare_outbound_urb() let deactive_urbs() get called to unlink all
+> >>    active urbs.
+> >>
+> >> [  268.097066] [<ffffffc000af7638>] deactivate_urbs+0xd4/0x108
+> >> [  268.102633] [<ffffffc000af87fc>] snd_usb_endpoint_stop+0x30/0x58
+> >> [  268.108636] [<ffffffc000b0272c>] snd_usb_substream_playback_trigger+0xa4/0xf4
+> >> [  268.115765] [<ffffffc000acdbd0>] snd_pcm_do_stop+0x4c/0x58
+> >> [  268.121245] [<ffffffc000acda24>] snd_pcm_action_single+0x40/0x88
+> >> [  268.127245] [<ffffffc000ace984>] snd_pcm_action+0x30/0xf0
+> >> [  268.132632] [<ffffffc000acea68>] snd_pcm_stop+0x24/0x2c
+> >> [  268.137851] [<ffffffc000ad5e14>] xrun+0x60/0x6c
+> >> [  268.142374] [<ffffffc000ad7a98>] snd_pcm_update_state+0xa8/0x10c
+> >> [  268.148374] [<ffffffc000ad7e24>] snd_pcm_update_hw_ptr0+0x328/0x344
+> >> [  268.154635] [<ffffffc000ad7ed8>] snd_pcm_period_elapsed+0x98/0xb0
+> >> [  268.160723] [<ffffffc000b02510>] prepare_playback_urb+0x46c/0x488
+> >> [  268.166810] [<ffffffc000af7d60>] prepare_outbound_urb+0x60/0x1d4
+> >> [  268.172805] [<ffffffc000af8d60>] snd_complete_urb+0x244/0x264
+> >> [  268.178548] [<ffffffc00081fb38>] __usb_hcd_giveback_urb+0x94/0x104
+> >> [  268.184721] [<ffffffc00081fbe4>] usb_hcd_giveback_urb+0x3c/0x114
+> >> [  268.190724] [<ffffffc00084d4b4>] handle_tx_event+0x1304/0x1434
+> >> [  268.196552] [<ffffffc00084dbc0>] xhci_handle_event+0x5dc/0x788
+> >> [  268.202378] [<ffffffc00084dee4>] xhci_irq+0x178/0x280
+> >>
+> >> 2. Userspace application stops playback from sound subsystem with below
+> >>    call stack:
+> >>
+> >> [   28.506477] CPU: 5 PID: 1274 Comm: AudioOut_25 Not tainted 4.4.38-tegra #31
+> >> [   28.513430] Hardware name: quill (DT)
+> >> [   28.517085] Call trace:
+> >> [   28.519531] [<ffffffc000089a84>] dump_backtrace+0x0/0xf8
+> >> [   28.524837] [<ffffffc000089c44>] show_stack+0x14/0x1c
+> >> [   28.529885] [<ffffffc000401c54>] dump_stack+0xac/0xe0
+> >> [   28.534931] [<ffffffc000b35f94>] deactivate_urbs+0x148/0x180
+> >> [   28.540578] [<ffffffc000b37160>] snd_usb_endpoint_stop+0x30/0x58
+> >> [   28.546571] [<ffffffc000b410d8>] snd_usb_substream_playback_trigger+0xa4/0xf4
+> >> [   28.553699] [<ffffffc000b0c160>] snd_pcm_do_stop+0x4c/0x58
+> >> [   28.559179] [<ffffffc000b0bfb4>] snd_pcm_action_single+0x40/0x88
+> >> [   28.565178] [<ffffffc000b0cf14>] snd_pcm_action+0x30/0xf0
+> >> [   28.570568] [<ffffffc000b0fbc8>] snd_pcm_drop+0xac/0x140
+> >> [   28.575873] [<ffffffc000b0fc84>] snd_pcm_release_substream+0x28/0xb0
+> >> [   28.582212] [<ffffffc000b0fd48>] snd_pcm_release+0x3c/0x98
+> >> [   28.587686] [<ffffffc0001e3210>] __fput+0xe0/0x1ac
+> >> [   28.592469] [<ffffffc0001e3334>] ____fput+0xc/0x14
+> >> [   28.597253] [<ffffffc0000c2904>] task_work_run+0xa0/0xc0
+> >> [   28.602558] [<ffffffc0000897bc>] do_notify_resume+0x48/0x60
+> >> [   28.608123] [<ffffffc000084ee8>] work_pending+0x1c/0x20
+> >>
+> >> In the call path, snd_pcm_stream spinlock has been acquired in
+> >> snd_pcm_drop(). If an output urb is completed between the spinlock
+> >> acquired and deactivate_urbs() clears EP_FLAG_RUNNING for the endpoint,
+> >> its executing of snd_complete_urb() will be blocked for acquiring
+> >> snd_pcm_stream spinlock in snd_pcm_period_elapsed() until the lock is
+> >> released in snd_pcm_drop(). When snd_complete_urb() continues, all jobs
+> >> for deactivate_urbs() are finished.
+> 
+> >... but this part is unclear to me.  Do you mean that we have a
+> >deadlock in these two concurrent calls without your patch?
+> Above describes two different cases that endpoint is stopped before prepare_outbound_urb() returns in details. Listed two call stacks belong to different cases. Without this patch, both two cases will result in below error messages afterwards:
+> 
+> [  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+> [  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
 
-There is also inactive_list_is_low(),
+Ah, I see.  Then you don't have to write up the full stack trace like
+the above.  It's confusing as if it were some kernel Oops or WARNING.
 
-if (trace)
-	trace_mm_vmscan_inactive_list_is_low(pgdat->node_id, sc->reclaim_idx,
-		lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
-		lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
-		inactive_ratio, file);
+BTW, with your patch, is the error in the first line ("timeout: still
+1 active urbs on EP #1") also fixed?
 
-> > > 
-> > > It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
-> > > subtle than handling both inclusive and exclusive range delimiters.
-> > > 
-> > > So I think the better fix would be this:
-> > 
-> > lruvec_lru_size is explicitly documented to use MAX_NR_ZONES for all
-> > LRUs and git grep says there are more instances outside of
-> > get_scan_count. So all of them have to be fixed.
-> 
-> Which ones?
-> 
-> [hannes@computer linux]$ git grep lruvec_lru_size
-> include/linux/mmzone.h:extern unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx);
-> mm/vmscan.c: * lruvec_lru_size -  Returns the number of pages on the given LRU list.
-> mm/vmscan.c:unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
-> mm/vmscan.c:    anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
-> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
-> mm/vmscan.c:    file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
-> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
-> mm/vmscan.c:            lruvec_size = lruvec_lru_size(lruvec, lru, sc->reclaim_idx);
-> [hannes@computer linux]$
-> 
-> The only other user already passes sc->reclaim_idx, which always
-> points to a valid zone, and is initialized to MAX_NR_ZONES - 1 in many
-> places.
-> 
-> > I still think that MAX_NR_ZONES - 1 is a very error prone and subtle
-> > construct IMHO and an alias would be better readable.
-> 
-> I wouldn't mind a follow-up patch that changes this pattern
-> comprehensively. As it stands, get_scan_count() is the odd one out.
-> 
-> The documentation bit is a good point, though. We should fix
-> that. Updated patch:
-> 
-> ---
-> 
-> From b1b6ce306010554aba6ebd7aac0abffc1576d71a Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Mon, 11 Nov 2019 13:46:25 -0800
-> Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
-> 
-> get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
-> beyond the range of valid zone indexes, but used to be handled before
-> the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
-> express "all zones, please", so do the same here.
-> 
-> Reported-by: Qian Cai <cai@lca.pw>
-> Reported-by: Chris Down <chris@chrisdown.name>
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  mm/vmscan.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index df859b1d583c..5eb96a63ad1e 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -323,7 +323,7 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
->   * lruvec_lru_size -  Returns the number of pages on the given LRU list.
->   * @lruvec: lru vector
->   * @lru: lru to use
-> - * @zone_idx: zones to consider (use MAX_NR_ZONES for the whole LRU list)
-> + * @zone_idx: index of the highest zone to include (use MAX_NR_ZONES - 1 for all)
->   */
->  unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
->  {
-> @@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
->  	 * anon in [0], file in [1]
->  	 */
->  
-> -	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
-> -		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
-> -	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
-> -		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
-> +	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
-> +		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
-> +	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
-> +		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
->  
->  	spin_lock_irq(&pgdat->lru_lock);
->  	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
+
+thanks,
+
+Takashi
