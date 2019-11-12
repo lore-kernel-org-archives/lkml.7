@@ -2,166 +2,121 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A641C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047B2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D4320693
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A72020693
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbsebpwZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NzayJEYI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfKLXxF (ORCPT
+        id S1727031AbfKLXzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:53:05 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39026 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfKLXxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:53:05 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 29so67957pgm.6;
-        Tue, 12 Nov 2019 15:53:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p2LxUnAGqeI9JkzPQsKtAeZ7u8WEu8+XUm7FluM6WT0=;
-        b=FbsebpwZZi+8TV9bme08nwJrSIyzRPVOepCUju1MwPRBNhm8zdaj/YA5NNtzZlUGvO
-         2Vy9wAkE1BZLktFSD98/7kVbrNuk/N3NN1NUWcEs2KPw3epq+krFCi3vmrunYP7HJPAN
-         aifbk6BBnD0LnhFFN0qAcxKlsgg4uIGuGSkRuG94bPG5nBE4XNPyiw1s5dTOlqLiDcNe
-         9p/eqHKMxIF9OIYDHxT55j9x+j9MHfBXzrzYk6Fiu5X0oRrtYV7v8scOp6si5H9mOXu5
-         r6jb/cu0SCBTQhQnGw8RwvXhkUCkwfPwJVuyANZOq/n/HThu1AALcAJUqq23MY6DNOTx
-         6AhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p2LxUnAGqeI9JkzPQsKtAeZ7u8WEu8+XUm7FluM6WT0=;
-        b=WPHhjgNcNc9REQp0FhDQLV8gh/hrVeBEbCxs1xPOS+cAYFsUK7o2Ue7FysDiPia58i
-         gn9BmY+7rYqctfshZjQ9GFQu5ZAwqvnTQzSg+AoVFaNKsPnrsY0ZEoFeJ3yXCfgkzddo
-         22PCxNJVlwN2+1jL8m3vZp531aF/tjuVZ95nu8xGaelcD5HqQfBAnpxH6bz35E+Fzp99
-         U5e5HS9unIHiwWNP7jeiW3eWmo/b2sUpvcpddubtNVDIRZw3IdhjqiItN0PBIaXNUb3Q
-         vfzpWxfEMezRbQ87a7bEdvm3JsTSc39UcJHah9VRdeIrkSs3hT+1nIwLLGLFFW1ERErm
-         atng==
-X-Gm-Message-State: APjAAAUVAfpokXx/w8gMjuZkS+E+cVEAAwzg7SjKTnvZtoEjRQjhvAbi
-        J25IZaThvfrlCBZmRkeDbbs=
-X-Google-Smtp-Source: APXvYqzMh6NMbQCYQH7yPsr9BBQCcb+/VQKC3BjHcZvB0dDmkzXhcAhIvaerzs8KWqKMmsG8VkYECg==
-X-Received: by 2002:a17:90b:d85:: with SMTP id bg5mr643676pjb.5.1573602784653;
-        Tue, 12 Nov 2019 15:53:04 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v10sm97216pfg.11.2019.11.12.15.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 15:53:04 -0800 (PST)
-Date:   Tue, 12 Nov 2019 15:53:02 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] Input: ili210x - do not retrieve/print chip
- firmware version
-Message-ID: <20191112235302.GG13374@dtor-ws>
-References: <20191112164429.11225-1-TheSven73@gmail.com>
+        Tue, 12 Nov 2019 18:55:49 -0500
+Received: from ozlabs.org ([203.11.71.1]:34825 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfKLXzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 18:55:49 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CPl63zYYz9sPc;
+        Wed, 13 Nov 2019 10:55:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573602946;
+        bh=9/oHQmWzkmZQ3Y2KBGMkjOb1W+95AIdAK19GVnSXqkY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NzayJEYIuIGxScvf8+F3XPHFGtTBYmnBK+Y2zSGWouuAh7e5JOzSnKxQ1WkEGsLtl
+         qo/Lq0oP2fMlmp5XZDxFkTUnxW61TksTEQat5VwFXa4JlJp7SkBpJrLsqqhB9fJ17V
+         5ChDk0j7B5IiWSsqQj6S8poUcLN1Svh1CANgDZqwku4wi8umAaP9q0zSg1i7fBcsqQ
+         x3bfX6t3cA1P3B1bR8GvL2fqEPDfmhQtJUQUxosidjpj+Zg8Bn9/CedWpRiBBlbGbK
+         TVLY/EmJF+RFMwEFnfLzW7wJmFcHrc6QciGojM28QBXfx7Ah8IxiT9jiSZrWLmUVvr
+         sO4OkwYgkoIMA==
+Date:   Wed, 13 Nov 2019 10:55:38 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Aya Levin <ayal@mellanox.com>, Jiri Pirko <jiri@mellanox.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20191113105527.17d825da@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112164429.11225-1-TheSven73@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/Kt0psQJsHnjo4Q6rmz3J/ke";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:44:27AM -0500, Sven Van Asbroeck wrote:
-> The driver's method to retrieve the firmware version on ili2117/
-> ili2118 chip flavours is incorrect. The firmware version register
-> address and layout are wrong.
-> 
-> The firmware version is not actually used anywhere inside or
-> outside this driver. There is a dev_dbg() print, but that is
-> only visible when the developer explicitly compiles in debug
-> support.
-> 
-> Don't make the code more complicated to preserve a feature that
-> no-one is using. Remove all code associated with chip firmware
-> version.
-> 
-> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
-> Cc: Marek Vasut <marex@denx.de>
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: <linux-kernel@vger.kernel.org>
-> Cc: linux-input@vger.kernel.org
-> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+--Sig_/Kt0psQJsHnjo4Q6rmz3J/ke
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thank you.
+Hi all,
 
-> ---
->  drivers/input/touchscreen/ili210x.c | 21 ---------------------
->  1 file changed, 21 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-> index 0ed6014af6d7..a6feae5ce887 100644
-> --- a/drivers/input/touchscreen/ili210x.c
-> +++ b/drivers/input/touchscreen/ili210x.c
-> @@ -21,15 +21,8 @@
->  /* Touchscreen commands */
->  #define REG_TOUCHDATA		0x10
->  #define REG_PANEL_INFO		0x20
-> -#define REG_FIRMWARE_VERSION	0x40
->  #define REG_CALIBRATE		0xcc
->  
-> -struct firmware_version {
-> -	u8 id;
-> -	u8 major;
-> -	u8 minor;
-> -} __packed;
-> -
->  struct ili2xxx_chip {
->  	int (*read_reg)(struct i2c_client *client, u8 reg,
->  			void *buf, size_t len);
-> @@ -342,7 +335,6 @@ static int ili210x_i2c_probe(struct i2c_client *client,
->  	struct ili210x *priv;
->  	struct gpio_desc *reset_gpio;
->  	struct input_dev *input;
-> -	struct firmware_version firmware;
->  	int error;
->  
->  	dev_dbg(dev, "Probing for ILI210X I2C Touschreen driver");
-> @@ -389,15 +381,6 @@ static int ili210x_i2c_probe(struct i2c_client *client,
->  	priv->chip = chip;
->  	i2c_set_clientdata(client, priv);
->  
-> -	/* Get firmware version */
-> -	error = chip->read_reg(client, REG_FIRMWARE_VERSION,
-> -			       &firmware, sizeof(firmware));
-> -	if (error) {
-> -		dev_err(dev, "Failed to get firmware version, err: %d\n",
-> -			error);
-> -		return error;
-> -	}
-> -
->  	/* Setup input device */
->  	input->name = "ILI210x Touchscreen";
->  	input->id.bustype = BUS_I2C;
-> @@ -439,10 +422,6 @@ static int ili210x_i2c_probe(struct i2c_client *client,
->  		return error;
->  	}
->  
-> -	dev_dbg(dev,
-> -		"ILI210x initialized (IRQ: %d), firmware version %d.%d.%d",
-> -		client->irq, firmware.id, firmware.major, firmware.minor);
-> -
->  	return 0;
->  }
->  
-> -- 
-> 2.17.1
-> 
+Today's linux-next merge of the net-next tree got a conflict in:
 
--- 
-Dmitry
+  include/uapi/linux/devlink.h
+
+between commit:
+
+  d279505b723c ("devlink: Add method for time-stamp on reporter's dump")
+
+from the net tree and commit:
+
+  070c63f20f6c ("net: devlink: allow to change namespaces during reload")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/uapi/linux/devlink.h
+index a8a2174db030,b558ea88b766..000000000000
+--- a/include/uapi/linux/devlink.h
++++ b/include/uapi/linux/devlink.h
+@@@ -421,7 -421,10 +421,12 @@@ enum devlink_attr=20
+ =20
+  	DEVLINK_ATTR_RELOAD_FAILED,			/* u8 0 or 1 */
+ =20
+ +	DEVLINK_ATTR_HEALTH_REPORTER_DUMP_TS_NS,	/* u64 */
+++
++ 	DEVLINK_ATTR_NETNS_FD,			/* u32 */
++ 	DEVLINK_ATTR_NETNS_PID,			/* u32 */
++ 	DEVLINK_ATTR_NETNS_ID,			/* u32 */
++=20
+  	/* add new attributes above here, update the policy in devlink.c */
+ =20
+  	__DEVLINK_ATTR_MAX,
+
+--Sig_/Kt0psQJsHnjo4Q6rmz3J/ke
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LRnoACgkQAVBC80lX
+0GxPcgf/Vdy7NSKAT0Xz5/H2uJI7SvvjKDoQYXOcTo7iPy0PWe4xskRv4D1Ha7oI
+3YKdlhRGi6ENWE19SJ5vJyKMbQpUTotDsTooL+3sM2oH5Y10k3RhvhWClNYBmWjb
+JLID+hjqSrhYHtb5rKKBfU9EkoLgJnKur/2g6zIe/oDCdV6lsJn5+LukfNPjuda8
+pCCqXSAs/0Ysu9VTtJbpLVB8rySc30+EK/HdOw2Mk0u2TegNe3PNttPNDvqApvZ9
+wmQ3/q50LDAC0L8xBRcSCQRqL5y8Mm3UXYk2c2ydLxarEHFMkcvzGO8WExUtiXJF
+Vu9K8aV3HB1Jm3GGTjxoeXZivVRj2g==
+=mGw+
+-----END PGP SIGNATURE-----
+
+--Sig_/Kt0psQJsHnjo4Q6rmz3J/ke--
