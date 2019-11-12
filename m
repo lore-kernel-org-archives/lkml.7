@@ -2,132 +2,141 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3B5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798AEC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0369721A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:23:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CeWVqyPz"
+	by mail.kernel.org (Postfix) with ESMTP id 4DDB4222CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573597468;
+	bh=CtCTGCjvAQEarrms2zb+0HcUcCEUZqvhzR3QZ6FlWpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NyoqfeIly1QJ+r6SAyzi68Lk+0LgHf/tR+E/hEFosWZrB6JrY74Tl0ixv0LG2u8Dg
+	 TjlBqvBEqLEZdxHaUGgHuJFEoRB1ctKlV73VlOsX15y5eVNyEeVVYERbZvIvzWLQKM
+	 1esG9KqUMkzJyxF8+ozOQWE+T1JFDoAIgw6j0cbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfKLWXV (ORCPT
+        id S1727065AbfKLWY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:23:21 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34394 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfKLWXU (ORCPT
+        Tue, 12 Nov 2019 17:24:26 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32997 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLWYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:23:20 -0500
-Received: by mail-io1-f66.google.com with SMTP id q83so198735iod.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 14:23:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kbZ0FLEIJqgDx32ZuWy0vmHvCIKwfGbPT6f4crP6il4=;
-        b=CeWVqyPzHeOhROoKK0J3Fdo/f76ed5+fmpKwaBgWiZqVDAbXxMQAHBc3Lfxh1AIiyM
-         lFLjI4oOwsKRwzX8bvRIYMTnj8UYpVCVYjvPJynCVVewHryQND+dBS3jEvMe1RjlsY0/
-         yPMQH9sjPQUBRYEdl24nXBlrj4Q5Q5SujTGHbgOQD8mhO5GJ+j/N9zffO7A1z/+25RJl
-         9OX4jcRNIuNaWo5wrV9aWpuLDKUGRZnRAqNfpv0/x23e4cwxKJ1ogN1wpi6RbyriQCop
-         a9HuGZZG7JzYy67xTdUTIVmhOtCoNvaQUd+Sv+zmTUGfTz/M1NYwcCdYWshj+QF489ON
-         TBsg==
+        Tue, 12 Nov 2019 17:24:25 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c184so113659pfb.0;
+        Tue, 12 Nov 2019 14:24:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kbZ0FLEIJqgDx32ZuWy0vmHvCIKwfGbPT6f4crP6il4=;
-        b=MH4BDudnkoOqXB2GNnYJtIeyOXrDzBY0QarWWQgUGk/24Md8uFGCIQDEVTohlGMvAZ
-         TULN7zDgN5yzMuaXHJxG+4HcXhNwGFbudeInFSqskjmyAQjM8YP1qXwvKGxOBKzw77L0
-         kT3i05I8TojyPZzCscJzo2MhJEMVHgRu7YtNiTSC1gpKwdGXa2o2/kJKRntI0yLC/m+w
-         Gn/8c2UE0A7BSRUn5N06h8fQOzE0kU1iLH3MGnqRnsZkqGmeE+oNtBnox3+M2C8I5zjR
-         eoWsJqK5WToHOdZZm2+2oZ2wtMi6fSfY+gti/BX/lG8d1CC/IrSWd6ori5RW2yOtsB2/
-         QBng==
-X-Gm-Message-State: APjAAAVakrmyfobpXPfSvtw/q1jnro4YJ+c+iZnYTVN1rRcgwSvLFlvb
-        Vsc53PTfVRG0iZF23N5qFoZoR4E9TFxbRPMaAxmGpQ==
-X-Google-Smtp-Source: APXvYqypWtcoEAVe1rmRQXFP0GxfFoIz/oTB3CdmlIdpAOChTwJSW+V8HVU26HCt6ORtpz9NYpp10toDfp0GJDhpUzI=
-X-Received: by 2002:a6b:c9ce:: with SMTP id z197mr315197iof.14.1573597398002;
- Tue, 12 Nov 2019 14:23:18 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ry7MlWHWsPiTlOdYnNj9Sx46aKAp4p8fIGij3YUbq4o=;
+        b=RTCM3YsuRrBW1rSeGPMHQg1g+lNT6bOGCkb3Q07RPmw6sh5OfeM386QRjVFgVu/kLi
+         oe7ucjtMpCMjw8BhzrZ9AM+8/+KUFtitMxXsG03P2p1hg74YHqnKVpRUxS9J5I19z0IA
+         w8IH9+5SaJUwCjJHnaIUeGwOwmW8C4vLFzIJnQUD89npc+soZcURMXAu7o4rwhlb8V1u
+         x0XMVTpxekcpRvezoBqC1noTgjCShaVbRzxGphO+GcYC6Lujv/gBL3pD6JXcdUJOQvQU
+         DujfpatjoFJ1wsu0sDCdCoebrr4CFGUZ3VYFVCP2BFTKqBK8K+OarHiLQOeR4hDDmYkG
+         PeNQ==
+X-Gm-Message-State: APjAAAVZ+0iNipGWuqD3ZZpdYKT13SXPwxED9f4J5HbAgqFWWqxbzNI/
+        4G43OlA0WDB/q2Mb7DtM+c4=
+X-Google-Smtp-Source: APXvYqyQjg0WJFTXJX4TDREGWX/l6oBydGPSLvZPR83Gb1S+0oI6F/VbuxNKlHHytBATO8Dg89NbeA==
+X-Received: by 2002:a63:d258:: with SMTP id t24mr37597711pgi.289.1573597465040;
+        Tue, 12 Nov 2019 14:24:25 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id c6sm20600076pfj.59.2019.11.12.14.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 14:24:23 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4625B403DC; Tue, 12 Nov 2019 22:24:23 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 22:24:23 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Juergen Gross <jgross@suse.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Tuowen Zhao <ztuowen@gmail.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Roman Gilg <subdiff@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Luis R. Rodriguez" <mcgrof@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and
+ ia64
+Message-ID: <20191112222423.GO11244@42.do-not-panic.com>
+References: <20191111192258.2234502-1-arnd@arndb.de>
+ <20191112105507.GA7122@lst.de>
+ <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com>
+ <20191112140631.GA10922@lst.de>
+ <CAKMK7uFaA607rOS6x_FWjXQ2+Qdm8dQ1dQ+Oi-9if_Qh_wHWPg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-3-brijesh.singh@amd.com>
-In-Reply-To: <20190710201244.25195-3-brijesh.singh@amd.com>
-From:   Peter Gonda <pgonda@google.com>
-Date:   Tue, 12 Nov 2019 14:23:06 -0800
-Message-ID: <CAMkAt6rrwWteTaA4zJO1D3qd12P+8Qa68hjwsSEb+0AVcsjk7A@mail.gmail.com>
-Subject: Re: [PATCH v3 02/11] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uFaA607rOS6x_FWjXQ2+Qdm8dQ1dQ+Oi-9if_Qh_wHWPg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 1:14 PM Singh, Brijesh <brijesh.singh@amd.com> wrote:
+On Tue, Nov 12, 2019 at 03:26:35PM +0100, Daniel Vetter wrote:
+> On Tue, Nov 12, 2019 at 3:06 PM Christoph Hellwig <hch@lst.de> wrote:
+> > On Tue, Nov 12, 2019 at 02:04:16PM +0100, Daniel Vetter wrote:
+> > > Wut ... Maybe I'm missing something, but from how we use mtrr in other
+> > > gpu drivers it's a) either you use MTRR because that's all you got or
+> > > b) you use pat. Mixing both sounds like a pretty bad idea, since if
+> > > you need MTRR for performance (because you dont have PAT) then you
+> > > can't fix the wc with the PAT-based ioremap_uc. And if you have PAT,
+> > > then you don't really need an MTRR to get wc.
+> > >
+> > > So I'd revert this patch from Luis and ...
+> >
+> > Sounds great to me..
+> >
+> > > ... apply this one. Since the same reasoning should apply to anything
+> > > that's running on any cpu with PAT.
+> >
+> > Can you take a look at "mfd: intel-lpss: Use devm_ioremap_uc for MMIO"
+> > in linux-next, which also looks rather fishy to me?  Can't we use
+> > the MTRR APIs to override the broken BIOS MTRR setup there as well?
+> 
+> Hm so that's way out of my knowledge, but I think mtrr_cleanup() was
+> supposed to fix up messy/broken MTRR setups by the bios. So maybe they
+> simply didn't enable that in their .config with CONFIG_MTRR_SANITIZER.
 
-> +static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +       struct sev_data_send_update_data *data;
-> +       struct kvm_sev_send_update_data params;
-> +       void *hdr = NULL, *trans_data = NULL;
-> +       struct page **guest_page = NULL;
-> +       unsigned long n;
-> +       int ret, offset;
-> +
-> +       if (!sev_guest(kvm))
-> +               return -ENOTTY;
-> +
-> +       if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-> +                       sizeof(struct kvm_sev_send_update_data)))
-> +               return -EFAULT;
-> +
-> +       data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       /* userspace wants to query either header or trans length */
-> +       if (!params.trans_len || !params.hdr_len)
-> +               goto cmd;
-> +
-> +       ret = -EINVAL;
-> +       if (!params.trans_uaddr || !params.guest_uaddr ||
-> +           !params.guest_len || !params.hdr_uaddr)
-> +               goto e_free;
-> +
-> +       /* Check if we are crossing the page boundry */
-> +       ret = -EINVAL;
-> +       offset = params.guest_uaddr & (PAGE_SIZE - 1);
-> +       if ((params.guest_len + offset > PAGE_SIZE))
-> +               goto e_free;
-> +
-> +       ret = -ENOMEM;
-> +       hdr = kmalloc(params.hdr_len, GFP_KERNEL);
-> +       if (!hdr)
-> +               goto e_free;
+I had originally suggested to just make the driver build on x86, but an
+atlternative was to provide the call for the missing architecture.
 
-Should we be checking params.hdr_len against SEV_FW_BLOB_MAX_SIZE?
+> An explicit cleanup is currently not possible for drivers, since the
+> only interface exported to drivers is arch_phys_wc_add/del (which
+> short-circuits if pat works since you don't need mtrr in that case).
 
-> +
-> +       data->hdr_address = __psp_pa(hdr);
-> +       data->hdr_len = params.hdr_len;
-> +
-> +       ret = -ENOMEM;
-> +       trans_data = kmalloc(params.trans_len, GFP_KERNEL);
-> +       if (!trans_data)
-> +               goto e_free;
+Right, the goal was to not call MTRR directly.
 
-Ditto, should we be checking params.hdr_len against SEV_FW_BLOB_MAX_SIZE?
+> Adding everyone from that commit, plus Luis. Drivers really shouldn't
+> assume/work around the bios setting up superflous/wrong MTRR.
+
+Such things are needed, otherwise some systems may not boot...
+
+> > With that we could kill ioremap_uc entirely.
+> 
+> So yeah removing that seems definitely like the right thing.
+
+I think this would be possible if we could flop ioremap_nocache() to UC
+instead of UC- on x86. Otherwise, I can't see how we can remove this by
+still not allowing direct MTRR calls.
+
+  Luis
