@@ -2,462 +2,854 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E59C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07917C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329F320840
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:13:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bTKCUgLp"
+	by mail.kernel.org (Postfix) with ESMTP id BD30B206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 04:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfKLEN6 (ORCPT
+        id S1726982AbfKLESy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 23:13:58 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40193 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfKLEN5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 23:13:57 -0500
-Received: by mail-pf1-f194.google.com with SMTP id r4so12370699pfl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 20:13:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CL1oYwCRCe1FFxAR4ElH+kBmzUBnxprhYijyLHdokpU=;
-        b=bTKCUgLpkgyIaDlwMWtuKuIVQpnIkI7PzYM5HL3b7UOSbhSz0gK8QdnmzBeydwmcOf
-         Fu5sAKqSmZBpDPj2wKbxvBUbF37g/fyJ7UR7Ojz63fY1UwY9uxtamW3LlLbEnKhBXPPJ
-         kEOIUiIG1uxDYI7safIMrNYLH1dWia/bHhA6wgu5Sej9VXoNbmqrZLdFDnds/hzHFvc0
-         ZHzf0HRE0KCJJ3s7IQHvPJ2Tkm+NFzBvTTA2NMrPt2W4eia3WjCiSph8vi4y1BP5jBvr
-         ugWnPeHRHSBLDWTS7YN8TRt3oK5nNgAK563U3w6QT+oBaAHpMM8mW1Fhp2jNIlsQlNnh
-         jAaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CL1oYwCRCe1FFxAR4ElH+kBmzUBnxprhYijyLHdokpU=;
-        b=lGy5FWjQU60qfAqqaNXQSqqaTVLTSs/rxlP2W9vNql9+V/L/3By6QrvAMPcusC7APj
-         /qSwf6pk91H8mun9ul7xV7G4ZaoP5XmatH9w3xuzCgFtQD3z1nsZcr0Gp0by+KSkrPS7
-         gIj6V3Xonm71V3r/ekNzEP8Vfua0ATr+7gpsuGSkrx+ChUUXdbfuPdWNiJVXChsheIMl
-         Sp5EtWi+j2lc7xX5zja8XrNn7DhsbD5Z3y9LtpZ4tKSXjGYXjIR73jlY8ar8PUvskqrv
-         NP4LWDBY1GBDFLcmucFc170wD347bV2PI2cRrtN9KVuSeyIC1juaaPvuRcgIusVY1HFt
-         k88Q==
-X-Gm-Message-State: APjAAAVlWHs/aKtWPsG3F98GRlacvvXgXVNMNCR+gDXKivR0BPAPVfhB
-        MdLkVDhJCSFI9lLvprwaOH3QKw==
-X-Google-Smtp-Source: APXvYqwY9ijyqr62TWLYIlosvDI2P3R33BIahnqHfI998inOBIkH55H0+DeRQYqOA1ymsWiQiBxBWg==
-X-Received: by 2002:a63:b047:: with SMTP id z7mr27293989pgo.224.1573532034764;
-        Mon, 11 Nov 2019 20:13:54 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id hi2sm791136pjb.22.2019.11.11.20.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 20:13:54 -0800 (PST)
-Date:   Mon, 11 Nov 2019 20:13:51 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        s-anna@ti.com
-Subject: Re: [PATCH 12/17] remoteproc/omap: Request a timer(s) for remoteproc
- usage
-Message-ID: <20191112041351.GN3108315@builder>
-References: <20191028124238.19224-1-t-kristo@ti.com>
- <20191028124238.19224-13-t-kristo@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028124238.19224-13-t-kristo@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 11 Nov 2019 23:18:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:55274 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfKLESy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 23:18:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F36831B;
+        Mon, 11 Nov 2019 20:18:52 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.187])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1A0383F52E;
+        Mon, 11 Nov 2019 20:18:27 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V9] mm/debug: Add tests validating architecture page table helpers
+Date:   Tue, 12 Nov 2019 09:48:46 +0530
+Message-Id: <1573532326-24084-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
+This adds tests which will validate architecture page table helpers and
+other accessors in their compliance with expected generic MM semantics.
+This will help various architectures in validating changes to existing
+page table helpers or addition of new ones.
 
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The remote processors in OMAP4+ SoCs are equipped with internal
-> timers, like the internal SysTick timer in a Cortex M3/M4 NVIC or
-> the CTM timer within Unicache in IPU & DSP. However, these timers
-> are gated when the processor subsystem clock is gated, making
-> them rather difficult to use as OS tick sources. They will not
-> be able to wakeup the processor from any processor-sleep induced
-> clock-gating states.
-> 
-> This can be avoided by using an external timer as the tick source,
-> which can be controlled independently by the OMAP remoteproc
-> driver code, but still allowing the processor subsystem clock to
-> be auto-gated when the remoteproc cores are idle.
-> 
-> This patch adds the support for OMAP remote processors to request
-> timer(s) to be used by the remoteproc. The timers are enabled and
-> disabled in line with the enabling/disabling of the remoteproc.
-> The timer data is not mandatory if the advanced device management
-> features are not required.
-> 
-> The core timer functionality is provided by the OMAP DMTimer
-> clocksource driver, which does not export any API. The logic is
-> implemented through the timer device's platform data ops. The OMAP
-> remoteproc driver mainly requires ops to request/free a dmtimer,
-> and to start/stop a timer. The split ops helps in controlling the
-> timer state without having to request and release a timer everytime
-> it needs to use the timer.
-> 
-> NOTE: If the gptimer is already in use by the time IPU and/or
-> DSP are loaded, the processors will fail to boot.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  drivers/remoteproc/omap_remoteproc.c | 258 +++++++++++++++++++++++++++
->  1 file changed, 258 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index 016d5beda195..8450dd79d391 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -27,6 +27,9 @@
->  #include <linux/regmap.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/reset.h>
-> +#include <clocksource/timer-ti-dm.h>
-> +
-> +#include <linux/platform_data/dmtimer-omap.h>
->  
->  #include "omap_remoteproc.h"
->  #include "remoteproc_internal.h"
-> @@ -61,6 +64,16 @@ struct omap_rproc_mem {
->  	size_t size;
->  };
->  
-> +/**
-> + * struct omap_rproc_timer - data structure for a timer used by a omap rproc
-> + * @odt: timer pointer
-> + * @timer_ops: OMAP dmtimer ops for @odt timer
-> + */
-> +struct omap_rproc_timer {
-> +	struct omap_dm_timer *odt;
-> +	const struct omap_dm_timer_ops *timer_ops;
-> +};
-> +
->  /**
->   * struct omap_rproc - omap remote processor state
->   * @mbox: mailbox channel handle
-> @@ -68,6 +81,8 @@ struct omap_rproc_mem {
->   * @boot_data: boot data structure for setting processor boot address
->   * @mem: internal memory regions data
->   * @num_mems: number of internal memory regions
-> + * @num_timers: number of rproc timer(s)
-> + * @timers: timer(s) info used by rproc
->   * @rproc: rproc handle
->   * @reset: reset handle
->   */
-> @@ -77,6 +92,8 @@ struct omap_rproc {
->  	struct omap_rproc_boot_data *boot_data;
->  	struct omap_rproc_mem *mem;
->  	int num_mems;
-> +	int num_timers;
-> +	struct omap_rproc_timer *timers;
->  	struct rproc *rproc;
->  	struct reset_control *reset;
->  };
-> @@ -91,6 +108,212 @@ struct omap_rproc_dev_data {
->  	const char *fw_name;
->  };
->  
-> +/**
-> + * omap_rproc_request_timer - request a timer for a remoteproc
+This test covers basic page table entry transformations including but not
+limited to old, young, dirty, clean, write, write protect etc at various
+level along with populating intermediate entries with next page table page
+and validating them.
 
-Add parenthesis on functions in kerneldoc.
+Test page table pages are allocated from system memory with required size
+and alignments. The mapped pfns at page table levels are derived from a
+real pfn representing a valid kernel text symbol. This test gets called
+right after page_alloc_init_late().
 
-> + * @np: device node pointer to the desired timer
-> + * @timer: handle to a struct omap_rproc_timer to return the timer handle
-> + *
-> + * This helper function is used primarily to request a timer associated with
-> + * a remoteproc. The returned handle is stored in the .odt field of the
-> + * @timer structure passed in, and is used to invoke other timer specific
-> + * ops (like starting a timer either during device initialization or during
-> + * a resume operation, or for stopping/freeing a timer).
-> + *
-> + * Returns 0 on success, otherwise an appropriate failure
-> + */
-> +static int omap_rproc_request_timer(struct device_node *np,
-> +				    struct omap_rproc_timer *timer)
-> +{
-> +	int ret = 0;
-> +
-> +	timer->odt = timer->timer_ops->request_by_node(np);
-> +	if (!timer->odt) {
-> +		pr_err("request for timer node %p failed\n", np);
-> +		return -EBUSY;
-> +	}
-> +
-> +	ret = timer->timer_ops->set_source(timer->odt, OMAP_TIMER_SRC_SYS_CLK);
-> +	if (ret) {
-> +		pr_err("error setting OMAP_TIMER_SRC_SYS_CLK as source for timer node %p\n",
-> +		       np);
+This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+arm64. Going forward, other architectures too can enable this after fixing
+build or runtime problems (if any) with their page table helpers.
 
-You could easily pass a struct device * from omap_rproc_enable_timers()
-to make this a more useful dev_err()
+Folks interested in making sure that a given platform's page table helpers
+conform to expected generic MM semantics should enable the above config
+which will just trigger this test during boot. Any non conformity here will
+be reported as an warning which would need to be fixed. This test will help
+catch any changes to the agreed upon semantics expected from generic MM and
+enable platforms to accommodate it thereafter.
 
-> +		timer->timer_ops->free(timer->odt);
-> +		return ret;
-> +	}
-> +
-> +	/* clean counter, remoteproc code will set the value */
-> +	timer->timer_ops->set_load(timer->odt, 0, 0);
-> +
-> +	return ret;
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Steven Price <Steven.Price@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sri Krishna chowdary <schowdary@nvidia.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-ret is 0 here, so return 0;
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
+Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This adds a test validation for architecture exported page table helpers.
+Patch adds basic transformation tests at various levels of the page table.
 
-> +}
-> +
-> +/**
-> + * omap_rproc_start_timer - start a timer for a remoteproc
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This helper function is used to start a timer associated with a remoteproc,
-> + * obtained using the request_timer ops. The helper function needs to be
-> + * invoked by the driver to start the timer (during device initialization)
-> + * or to just resume the timer.
-> + *
-> + * Returns 0 on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_start_timer(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->start(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_stop_timer - stop a timer for a remoteproc
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This helper function is used to disable a timer associated with a
-> + * remoteproc, and needs to be called either during a device shutdown
-> + * or suspend operation. The separate helper function allows the driver
-> + * to just stop a timer without having to release the timer during a
-> + * suspend operation.
-> + *
-> + * Returns 0 on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_stop_timer(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->stop(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_release_timer - release a timer for a remoteproc
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This helper function is used primarily to release a timer associated
-> + * with a remoteproc. The dmtimer will be available for other clients to
-> + * use once released.
-> + *
-> + * Returns 0 on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_release_timer(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->free(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_enable_timers - enable the timers for a remoteproc
-> + * @rproc: handle of a remote processor
-> + * @configure: boolean flag used to acquire and configure the timer handle
-> + *
-> + * This function is used primarily to enable the timers associated with
-> + * a remoteproc. The configure flag is provided to allow the driver to
-> + * to either acquire and start a timer (during device initialization) or
-> + * to just start a timer (during a resume operation).
-> + */
-> +static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
-> +{
-> +	int i;
-> +	int ret = 0;
-> +	struct platform_device *tpdev;
-> +	struct dmtimer_platform_data *tpdata;
-> +	const struct omap_dm_timer_ops *timer_ops;
-> +	struct omap_rproc *oproc = rproc->priv;
-> +	struct omap_rproc_timer *timers = oproc->timers;
-> +	struct device *dev = rproc->dev.parent;
-> +	struct device_node *np = NULL;
-> +
-> +	if (oproc->num_timers <= 0)
-> +		return 0;
-> +
-> +	if (!configure)
-> +		goto start_timers;
-> +
-> +	for (i = 0; i < oproc->num_timers; i++) {
-> +		np = of_parse_phandle(dev->of_node, "timers", i);
-> +		if (!np) {
-> +			ret = -ENXIO;
-> +			dev_err(dev, "device node lookup for timer at index %d failed: %d\n",
-> +				i, ret);
-> +			goto free_timers;
-> +		}
-> +
-> +		tpdev = of_find_device_by_node(np);
-> +		if (!tpdev) {
-> +			ret = -ENODEV;
-> +			dev_err(dev, "could not get timer platform device\n");
-> +			goto put_node;
-> +		}
-> +
-> +		tpdata = dev_get_platdata(&tpdev->dev);
-> +		put_device(&tpdev->dev);
-> +		if (!tpdata) {
-> +			ret = -EINVAL;
-> +			dev_err(dev, "dmtimer pdata structure NULL\n");
-> +			goto put_node;
-> +		}
-> +
-> +		timer_ops = tpdata->timer_ops;
-> +		if (!timer_ops || !timer_ops->request_by_node ||
-> +		    !timer_ops->set_source || !timer_ops->set_load ||
-> +		    !timer_ops->free || !timer_ops->start ||
-> +		    !timer_ops->stop) {
-> +			ret = -EINVAL;
-> +			dev_err(dev, "device does not have required timer ops\n");
-> +			goto put_node;
-> +		}
-> +
-> +		timers[i].timer_ops = timer_ops;
-> +		ret = omap_rproc_request_timer(np, &timers[i]);
-> +		if (ret) {
-> +			dev_err(dev, "request for timer %p failed: %d\n", np,
-> +				ret);
-> +			goto put_node;
-> +		}
-> +		of_node_put(np);
-> +	}
-> +
-> +start_timers:
-> +	for (i = 0; i < oproc->num_timers; i++)
-> +		omap_rproc_start_timer(&timers[i]);
-> +	return 0;
-> +
-> +put_node:
-> +	of_node_put(np);
-> +free_timers:
-> +	while (i--) {
-> +		omap_rproc_release_timer(&timers[i]);
-> +		timers[i].odt = NULL;
-> +		timers[i].timer_ops = NULL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * omap_rproc_disable_timers - disable the timers for a remoteproc
-> + * @rproc: handle of a remote processor
-> + * @configure: boolean flag used to release the timer handle
-> + *
-> + * This function is used primarily to disable the timers associated with
-> + * a remoteproc. The configure flag is provided to allow the driver to
-> + * to either stop and release a timer (during device shutdown) or to just
-> + * stop a timer (during a suspend operation).
-> + */
-> +static int omap_rproc_disable_timers(struct rproc *rproc, bool configure)
-> +{
-> +	int i;
-> +	struct omap_rproc *oproc = rproc->priv;
-> +	struct omap_rproc_timer *timers = oproc->timers;
-> +
-> +	if (oproc->num_timers <= 0)
-> +		return 0;
-> +
-> +	for (i = 0; i < oproc->num_timers; i++) {
-> +		omap_rproc_stop_timer(&timers[i]);
-> +		if (configure) {
-> +			omap_rproc_release_timer(&timers[i]);
-> +			timers[i].odt = NULL;
-> +			timers[i].timer_ops = NULL;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * omap_rproc_mbox_callback() - inbound mailbox message handler
->   * @client: mailbox client pointer used for requesting the mailbox channel
-> @@ -226,6 +449,12 @@ static int omap_rproc_start(struct rproc *rproc)
->  		goto put_mbox;
->  	}
->  
-> +	ret = omap_rproc_enable_timers(rproc, true);
-> +	if (ret) {
-> +		dev_err(dev, "omap_rproc_enable_timers failed: %d\n", ret);
-> +		goto put_mbox;
-> +	}
-> +
->  	reset_control_deassert(oproc->reset);
->  
->  	return 0;
-> @@ -239,9 +468,14 @@ static int omap_rproc_start(struct rproc *rproc)
->  static int omap_rproc_stop(struct rproc *rproc)
->  {
->  	struct omap_rproc *oproc = rproc->priv;
-> +	int ret;
->  
->  	reset_control_assert(oproc->reset);
->  
-> +	ret = omap_rproc_disable_timers(rproc, true);
-> +	if (ret)
-> +		return ret;
-> +
->  	mbox_free_channel(oproc->mbox);
->  
->  	return 0;
-> @@ -548,6 +782,30 @@ static int omap_rproc_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto free_rproc;
->  
-> +	/*
-> +	 * Timer nodes are directly used in client nodes as phandles, so
-> +	 * retrieve the count using appropriate size
-> +	 */
-> +	oproc->num_timers = of_property_count_elems_of_size(np, "timers",
+This test was originally suggested by Catalin during arm64 THP migration
+RFC discussion earlier. Going forward it can include more specific tests
+with respect to various generic MM functions like THP, HugeTLB etc and
+platform specific tests.
 
-Didn't this get a ti, prefix?
+https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
 
-And I think you should use of_count_phandle_with_args() instead.
+Needs to be applied on linux-next (next-20191025).
 
-Regards,
-Bjorn
+Changes in V9:
 
-> +							    sizeof(phandle));
-> +	if (oproc->num_timers <= 0) {
-> +		dev_dbg(&pdev->dev, "device does not have timers, status = %d\n",
-> +			oproc->num_timers);
-> +		oproc->num_timers = 0;
-> +	}
-> +
-> +	if (oproc->num_timers) {
-> +		oproc->timers = devm_kzalloc(&pdev->dev, sizeof(*oproc->timers)
-> +					     * oproc->num_timers, GFP_KERNEL);
-> +		if (!oproc->timers) {
-> +			ret = -ENOMEM;
-> +			goto free_rproc;
-> +		}
-> +
-> +		dev_dbg(&pdev->dev, "device has %d tick timers\n",
-> +			oproc->num_timers);
-> +	}
-> +
->  	ret = of_reserved_mem_device_init(&pdev->dev);
->  	if (ret) {
->  		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
-> -- 
-> 2.17.1
-> 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+- Changed feature support enumeration for powerpc platforms per Christophe
+- Changed config wrapper for basic_[pmd|pud]_tests() to enable ARC platform
+- Enabled the test on ARC platform
+
+Changes in V8: (https://patchwork.kernel.org/project/linux-mm/list/?series=194297)
+
+- Enabled ARCH_HAS_DEBUG_VM_PGTABLE on PPC32 platform per Christophe
+- Updated feature documentation as DEBUG_VM_PGTABLE is now enabled on PPC32 platform
+- Moved ARCH_HAS_DEBUG_VM_PGTABLE earlier to indent it with DEBUG_VM per Christophe
+- Added an information message in debug_vm_pgtable() per Christophe
+- Dropped random_vaddr boundary condition checks per Christophe and Qian
+- Replaced virt_addr_valid() check with pfn_valid() check in debug_vm_pgtable()
+- Slightly changed pr_fmt(fmt) information
+
+Changes in V7: (https://patchwork.kernel.org/project/linux-mm/list/?series=193051)
+
+- Memory allocation and free routines for mapped pages have been droped
+- Mapped pfns are derived from standard kernel text symbol per Matthew
+- Moved debug_vm_pgtaable() after page_alloc_init_late() per Michal and Qian 
+- Updated the commit message per Michal
+- Updated W=1 GCC warning problem on x86 per Qian Cai
+- Addition of new alloc_contig_pages() helper has been submitted separately
+
+Changes in V6: (https://patchwork.kernel.org/project/linux-mm/list/?series=187589)
+
+- Moved alloc_gigantic_page_order() into mm/page_alloc.c per Michal
+- Moved alloc_gigantic_page_order() within CONFIG_CONTIG_ALLOC in the test
+- Folded Andrew's include/asm-generic/pgtable.h fix into the test patch 2/2
+
+Changes in V5: (https://patchwork.kernel.org/project/linux-mm/list/?series=185991)
+
+- Redefined and moved X86 mm_p4d_folded() into a different header per Kirill/Ingo
+- Updated the config option comment per Ingo and dropped 'kernel module' reference
+- Updated the commit message and dropped 'kernel module' reference
+- Changed DEBUG_ARCH_PGTABLE_TEST into DEBUG_VM_PGTABLE per Ingo
+- Moved config option from mm/Kconfig.debug into lib/Kconfig.debug
+- Renamed core test function arch_pgtable_tests() as debug_vm_pgtable()
+- Renamed mm/arch_pgtable_test.c as mm/debug_vm_pgtable.c
+- debug_vm_pgtable() gets called from kernel_init_freeable() after init_mm_internals()
+- Added an entry in Documentation/features/debug/ per Ingo
+- Enabled the test on arm64 and x86 platforms for now
+
+Changes in V4: (https://patchwork.kernel.org/project/linux-mm/list/?series=183465)
+
+- Disable DEBUG_ARCH_PGTABLE_TEST for ARM and IA64 platforms
+
+Changes in V3: (https://lore.kernel.org/patchwork/project/lkml/list/?series=411216)
+
+- Changed test trigger from module format into late_initcall()
+- Marked all functions with __init to be freed after completion
+- Changed all __PGTABLE_PXX_FOLDED checks as mm_pxx_folded()
+- Folded in PPC32 fixes from Christophe
+
+Changes in V2:
+
+https://lore.kernel.org/linux-mm/1568268173-31302-1-git-send-email-anshuman.khandual@arm.com/T/#t
+
+- Fixed small typo error in MODULE_DESCRIPTION()
+- Fixed m64k build problems for lvalue concerns in pmd_xxx_tests()
+- Fixed dynamic page table level folding problems on x86 as per Kirril
+- Fixed second pointers during pxx_populate_tests() per Kirill and Gerald
+- Allocate and free pte table with pte_alloc_one/pte_free per Kirill
+- Modified pxx_clear_tests() to accommodate s390 lower 12 bits situation
+- Changed RANDOM_NZVALUE value from 0xbe to 0xff
+- Changed allocation, usage, free sequence for saved_ptep
+- Renamed VMA_FLAGS as VMFLAGS
+- Implemented a new method for random vaddr generation
+- Implemented some other cleanups
+- Dropped extern reference to mm_alloc()
+- Created and exported new alloc_gigantic_page_order()
+- Dropped the custom allocator and used new alloc_gigantic_page_order()
+
+Changes in V1:
+
+https://lore.kernel.org/linux-mm/1567497706-8649-1-git-send-email-anshuman.khandual@arm.com/
+
+- Added fallback mechanism for PMD aligned memory allocation failure
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-mm/1565335998-22553-1-git-send-email-anshuman.khandual@arm.com/T/#u
+
+- Moved test module and it's config from lib/ to mm/
+- Renamed config TEST_ARCH_PGTABLE as DEBUG_ARCH_PGTABLE_TEST
+- Renamed file from test_arch_pgtable.c to arch_pgtable_test.c
+- Added relevant MODULE_DESCRIPTION() and MODULE_AUTHOR() details
+- Dropped loadable module config option
+- Basic tests now use memory blocks with required size and alignment
+- PUD aligned memory block gets allocated with alloc_contig_range()
+- If PUD aligned memory could not be allocated it falls back on PMD aligned
+  memory block from page allocator and pud_* tests are skipped
+- Clear and populate tests now operate on real in memory page table entries
+- Dummy mm_struct gets allocated with mm_alloc()
+- Dummy page table entries get allocated with [pud|pmd|pte]_alloc_[map]()
+- Simplified [p4d|pgd]_basic_tests(), now has random values in the entries
+
+Original RFC V1:
+
+https://lore.kernel.org/linux-mm/1564037723-26676-1-git-send-email-anshuman.khandual@arm.com/
+
+ .../debug/debug-vm-pgtable/arch-support.txt   |  35 ++
+ arch/arm64/Kconfig                            |   1 +
+ arch/powerpc/Kconfig                          |   1 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/include/asm/pgtable_64.h             |   6 +
+ include/asm-generic/pgtable.h                 |   6 +
+ init/main.c                                   |   1 +
+ lib/Kconfig.debug                             |  21 +
+ mm/Makefile                                   |   1 +
+ mm/debug_vm_pgtable.c                         | 388 ++++++++++++++++++
+ 10 files changed, 461 insertions(+)
+ create mode 100644 Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+ create mode 100644 mm/debug_vm_pgtable.c
+
+diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+new file mode 100644
+index 000000000000..f3f8111edbe3
+--- /dev/null
++++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+@@ -0,0 +1,35 @@
++#
++# Feature name:          debug-vm-pgtable
++#         Kconfig:       ARCH_HAS_DEBUG_VM_PGTABLE
++#         description:   arch supports pgtable tests for semantics compliance
++#
++    -----------------------
++    |         arch |status|
++    -----------------------
++    |       alpha: | TODO |
++    |         arc: |  ok  |
++    |         arm: | TODO |
++    |       arm64: |  ok  |
++    |         c6x: | TODO |
++    |        csky: | TODO |
++    |       h8300: | TODO |
++    |     hexagon: | TODO |
++    |        ia64: | TODO |
++    |        m68k: | TODO |
++    |  microblaze: | TODO |
++    |        mips: | TODO |
++    |       nds32: | TODO |
++    |       nios2: | TODO |
++    |    openrisc: | TODO |
++    |      parisc: | TODO |
++    |  powerpc/32: |  ok  |
++    |  powerpc/64: | TODO |
++    |       riscv: | TODO |
++    |        s390: | TODO |
++    |          sh: | TODO |
++    |       sparc: | TODO |
++    |          um: | TODO |
++    |   unicore32: | TODO |
++    |         x86: |  ok  |
++    |      xtensa: | TODO |
++    -----------------------
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 50df79d4aa3b..ade454e9266f 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -11,6 +11,7 @@ config ARM64
+ 	select ACPI_PPTT if ACPI
+ 	select ARCH_CLOCKSOURCE_DATA
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_DMA_PREP_COHERENT
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE if ACPI
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 4c4a0fcd1674..27c5aa438587 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -120,6 +120,7 @@ config PPC
+ 	#
+ 	select ARCH_32BIT_OFF_T if PPC32
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE if PPC32
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FORTIFY_SOURCE
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4f71a8b33b2e..4db92314d5cd 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -61,6 +61,7 @@ config X86
+ 	select ARCH_CLOCKSOURCE_INIT
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FAST_MULTIPLIER
+diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+index 0b6c4042942a..fb0e76d254b3 100644
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -53,6 +53,12 @@ static inline void sync_initial_page_table(void) { }
+ 
+ struct mm_struct;
+ 
++#define mm_p4d_folded mm_p4d_folded
++static inline bool mm_p4d_folded(struct mm_struct *mm)
++{
++	return !pgtable_l5_enabled();
++}
++
+ void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
+ void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
+ 
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index b5d20e096e88..70fa1470b9bd 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1168,6 +1168,12 @@ static inline bool arch_has_pfn_modify_check(void)
+ # define PAGE_KERNEL_EXEC PAGE_KERNEL
+ #endif
+ 
++#ifdef CONFIG_DEBUG_VM_PGTABLE
++extern void debug_vm_pgtable(void);
++#else
++static inline void debug_vm_pgtable(void) { }
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #ifndef io_remap_pfn_range
+diff --git a/init/main.c b/init/main.c
+index 91f6ebb30ef0..af8379ed53dc 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1185,6 +1185,7 @@ static noinline void __init kernel_init_freeable(void)
+ 	sched_init_smp();
+ 
+ 	page_alloc_init_late();
++	debug_vm_pgtable();
+ 	/* Initialize page ext after all struct pages are initialized. */
+ 	page_ext_init();
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 63db31b8c908..91f39d6a6bc9 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -664,6 +664,12 @@ config SCHED_STACK_END_CHECK
+ 	  data corruption or a sporadic crash at a later stage once the region
+ 	  is examined. The runtime overhead introduced is minimal.
+ 
++config ARCH_HAS_DEBUG_VM_PGTABLE
++	bool
++	help
++	  An architecture should select this when it can successfully
++	  build and run DEBUG_VM_PGTABLE.
++
+ config DEBUG_VM
+ 	bool "Debug VM"
+ 	depends on DEBUG_KERNEL
+@@ -699,6 +705,21 @@ config DEBUG_VM_PGFLAGS
+ 
+ 	  If unsure, say N.
+ 
++config DEBUG_VM_PGTABLE
++	bool "Debug arch page table for semantics compliance"
++	depends on MMU
++	depends on DEBUG_VM
++	depends on ARCH_HAS_DEBUG_VM_PGTABLE
++	help
++	  This option provides a debug method which can be used to test
++	  architecture page table helper functions on various platforms in
++	  verifying if they comply with expected generic MM semantics. This
++	  will help architecture code in making sure that any changes or
++	  new additions of these helpers still conform to expected
++	  semantics of the generic MM.
++
++	  If unsure, say N.
++
+ config ARCH_HAS_DEBUG_VIRTUAL
+ 	bool
+ 
+diff --git a/mm/Makefile b/mm/Makefile
+index 41e6aa432781..79a0c1fe199d 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -86,6 +86,7 @@ obj-$(CONFIG_HWPOISON_INJECT) += hwpoison-inject.o
+ obj-$(CONFIG_DEBUG_KMEMLEAK) += kmemleak.o
+ obj-$(CONFIG_DEBUG_KMEMLEAK_TEST) += kmemleak-test.o
+ obj-$(CONFIG_DEBUG_RODATA_TEST) += rodata_test.o
++obj-$(CONFIG_DEBUG_VM_PGTABLE) += debug_vm_pgtable.o
+ obj-$(CONFIG_PAGE_OWNER) += page_owner.o
+ obj-$(CONFIG_CLEANCACHE) += cleancache.o
+ obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
+diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+new file mode 100644
+index 000000000000..99ebc7c2bf63
+--- /dev/null
++++ b/mm/debug_vm_pgtable.c
+@@ -0,0 +1,388 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * This kernel test validates architecture page table helpers and
++ * accessors and helps in verifying their continued compliance with
++ * expected generic MM semantics.
++ *
++ * Copyright (C) 2019 ARM Ltd.
++ *
++ * Author: Anshuman Khandual <anshuman.khandual@arm.com>
++ */
++#define pr_fmt(fmt) "debug_vm_pgtable: %s: " fmt, __func__
++
++#include <linux/gfp.h>
++#include <linux/highmem.h>
++#include <linux/hugetlb.h>
++#include <linux/kernel.h>
++#include <linux/kconfig.h>
++#include <linux/mm.h>
++#include <linux/mman.h>
++#include <linux/mm_types.h>
++#include <linux/module.h>
++#include <linux/pfn_t.h>
++#include <linux/printk.h>
++#include <linux/random.h>
++#include <linux/spinlock.h>
++#include <linux/swap.h>
++#include <linux/swapops.h>
++#include <linux/start_kernel.h>
++#include <linux/sched/mm.h>
++#include <asm/pgalloc.h>
++#include <asm/pgtable.h>
++
++/*
++ * Basic operations
++ *
++ * mkold(entry)			= An old and not a young entry
++ * mkyoung(entry)		= A young and not an old entry
++ * mkdirty(entry)		= A dirty and not a clean entry
++ * mkclean(entry)		= A clean and not a dirty entry
++ * mkwrite(entry)		= A write and not a write protected entry
++ * wrprotect(entry)		= A write protected and not a write entry
++ * pxx_bad(entry)		= A mapped and non-table entry
++ * pxx_same(entry1, entry2)	= Both entries hold the exact same value
++ */
++#define VMFLAGS	(VM_READ|VM_WRITE|VM_EXEC)
++
++/*
++ * On s390 platform, the lower 12 bits are used to identify given page table
++ * entry type and for other arch specific requirements. But these bits might
++ * affect the ability to clear entries with pxx_clear(). So while loading up
++ * the entries skip all lower 12 bits in order to accommodate s390 platform.
++ * It does not have affect any other platform.
++ */
++#define RANDOM_ORVALUE	(0xfffffffffffff000UL)
++#define RANDOM_NZVALUE	(0xff)
++
++static void __init pte_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pte_t pte = pfn_pte(pfn, prot);
++
++	WARN_ON(!pte_same(pte, pte));
++	WARN_ON(!pte_young(pte_mkyoung(pte)));
++	WARN_ON(!pte_dirty(pte_mkdirty(pte)));
++	WARN_ON(!pte_write(pte_mkwrite(pte)));
++	WARN_ON(pte_young(pte_mkold(pte)));
++	WARN_ON(pte_dirty(pte_mkclean(pte)));
++	WARN_ON(pte_write(pte_wrprotect(pte)));
++}
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pmd_t pmd = pfn_pmd(pfn, prot);
++
++	WARN_ON(!pmd_same(pmd, pmd));
++	WARN_ON(!pmd_young(pmd_mkyoung(pmd)));
++	WARN_ON(!pmd_dirty(pmd_mkdirty(pmd)));
++	WARN_ON(!pmd_write(pmd_mkwrite(pmd)));
++	WARN_ON(pmd_young(pmd_mkold(pmd)));
++	WARN_ON(pmd_dirty(pmd_mkclean(pmd)));
++	WARN_ON(pmd_write(pmd_wrprotect(pmd)));
++	/*
++	 * A huge page does not point to next level page table
++	 * entry. Hence this must qualify as pmd_bad().
++	 */
++	WARN_ON(!pmd_bad(pmd_mkhuge(pmd)));
++}
++
++#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
++static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pud_t pud = pfn_pud(pfn, prot);
++
++	WARN_ON(!pud_same(pud, pud));
++	WARN_ON(!pud_young(pud_mkyoung(pud)));
++	WARN_ON(!pud_write(pud_mkwrite(pud)));
++	WARN_ON(pud_write(pud_wrprotect(pud)));
++	WARN_ON(pud_young(pud_mkold(pud)));
++
++	if (mm_pmd_folded(mm) || __is_defined(ARCH_HAS_4LEVEL_HACK))
++		return;
++
++	/*
++	 * A huge page does not point to next level page table
++	 * entry. Hence this must qualify as pud_bad().
++	 */
++	WARN_ON(!pud_bad(pud_mkhuge(pud)));
++}
++#else
++static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
++#endif
++#else
++static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot) { }
++static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
++#endif
++
++static void __init p4d_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	p4d_t p4d;
++
++	memset(&p4d, RANDOM_NZVALUE, sizeof(p4d_t));
++	WARN_ON(!p4d_same(p4d, p4d));
++}
++
++static void __init pgd_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pgd_t pgd;
++
++	memset(&pgd, RANDOM_NZVALUE, sizeof(pgd_t));
++	WARN_ON(!pgd_same(pgd, pgd));
++}
++
++#ifndef __ARCH_HAS_4LEVEL_HACK
++static void __init pud_clear_tests(struct mm_struct *mm, pud_t *pudp)
++{
++	pud_t pud = READ_ONCE(*pudp);
++
++	if (mm_pmd_folded(mm))
++		return;
++
++	pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
++	WRITE_ONCE(*pudp, pud);
++	pud_clear(pudp);
++	pud = READ_ONCE(*pudp);
++	WARN_ON(!pud_none(pud));
++}
++
++static void __init pud_populate_tests(struct mm_struct *mm, pud_t *pudp,
++				      pmd_t *pmdp)
++{
++	pud_t pud;
++
++	if (mm_pmd_folded(mm))
++		return;
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as pud_bad().
++	 */
++	pmd_clear(pmdp);
++	pud_clear(pudp);
++	pud_populate(mm, pudp, pmdp);
++	pud = READ_ONCE(*pudp);
++	WARN_ON(pud_bad(pud));
++}
++#else
++static void __init pud_clear_tests(struct mm_struct *mm, pud_t *pudp) { }
++static void __init pud_populate_tests(struct mm_struct *mm, pud_t *pudp,
++				      pmd_t *pmdp)
++{
++}
++#endif
++
++#ifndef __ARCH_HAS_5LEVEL_HACK
++static void __init p4d_clear_tests(struct mm_struct *mm, p4d_t *p4dp)
++{
++	p4d_t p4d = READ_ONCE(*p4dp);
++
++	if (mm_pud_folded(mm))
++		return;
++
++	p4d = __p4d(p4d_val(p4d) | RANDOM_ORVALUE);
++	WRITE_ONCE(*p4dp, p4d);
++	p4d_clear(p4dp);
++	p4d = READ_ONCE(*p4dp);
++	WARN_ON(!p4d_none(p4d));
++}
++
++static void __init p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp,
++				      pud_t *pudp)
++{
++	p4d_t p4d;
++
++	if (mm_pud_folded(mm))
++		return;
++
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as p4d_bad().
++	 */
++	pud_clear(pudp);
++	p4d_clear(p4dp);
++	p4d_populate(mm, p4dp, pudp);
++	p4d = READ_ONCE(*p4dp);
++	WARN_ON(p4d_bad(p4d));
++}
++
++static void __init pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp)
++{
++	pgd_t pgd = READ_ONCE(*pgdp);
++
++	if (mm_p4d_folded(mm))
++		return;
++
++	pgd = __pgd(pgd_val(pgd) | RANDOM_ORVALUE);
++	WRITE_ONCE(*pgdp, pgd);
++	pgd_clear(pgdp);
++	pgd = READ_ONCE(*pgdp);
++	WARN_ON(!pgd_none(pgd));
++}
++
++static void __init pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp,
++				      p4d_t *p4dp)
++{
++	pgd_t pgd;
++
++	if (mm_p4d_folded(mm))
++		return;
++
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as pgd_bad().
++	 */
++	p4d_clear(p4dp);
++	pgd_clear(pgdp);
++	pgd_populate(mm, pgdp, p4dp);
++	pgd = READ_ONCE(*pgdp);
++	WARN_ON(pgd_bad(pgd));
++}
++#else
++static void __init p4d_clear_tests(struct mm_struct *mm, p4d_t *p4dp) { }
++static void __init pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp) { }
++static void __init p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp,
++				      pud_t *pudp)
++{
++}
++static void __init pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp,
++				      p4d_t *p4dp)
++{
++}
++#endif
++
++static void __init pte_clear_tests(struct mm_struct *mm, pte_t *ptep)
++{
++	pte_t pte = READ_ONCE(*ptep);
++
++	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
++	WRITE_ONCE(*ptep, pte);
++	pte_clear(mm, 0, ptep);
++	pte = READ_ONCE(*ptep);
++	WARN_ON(!pte_none(pte));
++}
++
++static void __init pmd_clear_tests(struct mm_struct *mm, pmd_t *pmdp)
++{
++	pmd_t pmd = READ_ONCE(*pmdp);
++
++	pmd = __pmd(pmd_val(pmd) | RANDOM_ORVALUE);
++	WRITE_ONCE(*pmdp, pmd);
++	pmd_clear(pmdp);
++	pmd = READ_ONCE(*pmdp);
++	WARN_ON(!pmd_none(pmd));
++}
++
++static void __init pmd_populate_tests(struct mm_struct *mm, pmd_t *pmdp,
++				      pgtable_t pgtable)
++{
++	pmd_t pmd;
++
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as pmd_bad().
++	 */
++	pmd_clear(pmdp);
++	pmd_populate(mm, pmdp, pgtable);
++	pmd = READ_ONCE(*pmdp);
++	WARN_ON(pmd_bad(pmd));
++}
++
++static unsigned long __init get_random_vaddr(void)
++{
++	unsigned long random_vaddr, random_pages, total_user_pages;
++
++	total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
++
++	random_pages = get_random_long() % total_user_pages;
++	random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
++
++	return random_vaddr;
++}
++
++void __init debug_vm_pgtable(void)
++{
++	struct mm_struct *mm;
++	pgd_t *pgdp;
++	p4d_t *p4dp, *saved_p4dp;
++	pud_t *pudp, *saved_pudp;
++	pmd_t *pmdp, *saved_pmdp, pmd;
++	pte_t *ptep;
++	pgtable_t saved_ptep;
++	pgprot_t prot;
++	phys_addr_t paddr;
++	unsigned long vaddr, pte_aligned, pmd_aligned;
++	unsigned long pud_aligned, p4d_aligned, pgd_aligned;
++
++	pr_info("Validating architecture page table helpers\n");
++	prot = vm_get_page_prot(VMFLAGS);
++	vaddr = get_random_vaddr();
++	mm = mm_alloc();
++	if (!mm) {
++		pr_err("mm_struct allocation failed\n");
++		return;
++	}
++
++	/*
++	 * PFN for mapping at PTE level is determined from a standard kernel
++	 * text symbol. But pfns for higher page table levels are derived by
++	 * masking lower bits of this real pfn. These derived pfns might not
++	 * exist on the platform but that does not really matter as pfn_pxx()
++	 * helpers will still create appropriate entries for the test. This
++	 * helps avoid large memory block allocations to be used for mapping
++	 * at higher page table levels.
++	 */
++	paddr = __pa(&start_kernel);
++
++	pte_aligned = (paddr & PAGE_MASK) >> PAGE_SHIFT;
++	pmd_aligned = (paddr & PMD_MASK) >> PAGE_SHIFT;
++	pud_aligned = (paddr & PUD_MASK) >> PAGE_SHIFT;
++	p4d_aligned = (paddr & P4D_MASK) >> PAGE_SHIFT;
++	pgd_aligned = (paddr & PGDIR_MASK) >> PAGE_SHIFT;
++	WARN_ON(!pfn_valid(pte_aligned));
++
++	pgdp = pgd_offset(mm, vaddr);
++	p4dp = p4d_alloc(mm, pgdp, vaddr);
++	pudp = pud_alloc(mm, p4dp, vaddr);
++	pmdp = pmd_alloc(mm, pudp, vaddr);
++	ptep = pte_alloc_map(mm, pmdp, vaddr);
++
++	/*
++	 * Save all the page table page addresses as the page table
++	 * entries will be used for testing with random or garbage
++	 * values. These saved addresses will be used for freeing
++	 * page table pages.
++	 */
++	pmd = READ_ONCE(*pmdp);
++	saved_p4dp = p4d_offset(pgdp, 0UL);
++	saved_pudp = pud_offset(p4dp, 0UL);
++	saved_pmdp = pmd_offset(pudp, 0UL);
++	saved_ptep = pmd_pgtable(pmd);
++
++	pte_basic_tests(pte_aligned, prot);
++	pmd_basic_tests(pmd_aligned, prot);
++	pud_basic_tests(pud_aligned, prot);
++	p4d_basic_tests(p4d_aligned, prot);
++	pgd_basic_tests(pgd_aligned, prot);
++
++	pte_clear_tests(mm, ptep);
++	pmd_clear_tests(mm, pmdp);
++	pud_clear_tests(mm, pudp);
++	p4d_clear_tests(mm, p4dp);
++	pgd_clear_tests(mm, pgdp);
++
++	pte_unmap(ptep);
++
++	pmd_populate_tests(mm, pmdp, saved_ptep);
++	pud_populate_tests(mm, pudp, saved_pmdp);
++	p4d_populate_tests(mm, p4dp, saved_pudp);
++	pgd_populate_tests(mm, pgdp, saved_p4dp);
++
++	p4d_free(mm, saved_p4dp);
++	pud_free(mm, saved_pudp);
++	pmd_free(mm, saved_pmdp);
++	pte_free(mm, saved_ptep);
++
++	mm_dec_nr_puds(mm);
++	mm_dec_nr_pmds(mm);
++	mm_dec_nr_ptes(mm);
++	__mmdrop(mm);
++}
+-- 
+2.20.1
+
