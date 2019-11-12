@@ -2,186 +2,97 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D25C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B45C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8338C206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J0z7Aw19"
+	by mail.kernel.org (Postfix) with ESMTP id 60E5A206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKLKmM (ORCPT
+        id S1727132AbfKLKmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:42:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31398 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725874AbfKLKmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:42:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573555329;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t5MdSNFaJUFMw+ktkmGSBraFfMN3xLO5MNDHuMIJ4YE=;
-        b=J0z7Aw19R2dDxbjBzZlO2+b+v1ba31nXAscqTOEF5HS/zTNzwBVZNvJYeLKWrJOnfnqTwX
-        GzKV9aJ3nQpSS+MyUUfOLT1fzey2Dj0M1bHLK8nTklL4ERP3ZlFH4JJ3sLvxZLH78oDH6F
-        M7bfWsbkQiPhhEdvlUoAg1uGFsSDPZw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-9P6D4fCEM-yI0V0r8nBI-w-1; Tue, 12 Nov 2019 05:42:06 -0500
-Received: by mail-wm1-f72.google.com with SMTP id v8so992143wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 02:42:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vUK3k3PYV7+WIhfZTJTf9V3GDfUQYxuDQUeG6IzQ6Bc=;
-        b=nUzXZVgwi/aq9feXsB3qxgljeUOrFGRPbMoiYZl/oqaIFTQRqzKrxlhlj8h6NP2RfB
-         Lb9/T/Vk/bPohYAKEao6NXCjilO1X8no73e8RbaIIR5gpeoCitLJDZZXW+NrejaNdRM8
-         exGQehVMqyQO3bu2Yz4VwBCbgLcjwvZezPsTRb1SlyTKCF4pK3JQsS8AdeB1PriCMKAT
-         2vHXG6DKXqE8G5h3tOoYuoi3tCr6gpPvzMheJ8JuPZGMf9nhwFkE6bhB6A0PZHAooNHN
-         MQ8l8i53edSERlkuHyv5KVlotusYl7hPRtmMNhlCaNumqAm2JxTGgXHT9tB/NxMVlXHa
-         dtig==
-X-Gm-Message-State: APjAAAXJroF80gRb/FCF7YTAzHwJMhLvuJaSBSwc1dOUvyksixvFrZsV
-        kCxeiapMhwXhcpxG3byFSPmO+BLH8j8jz2wAmdWLGRg2PWwHmNgrAxnuqfiL1M4H8XtGWjhPnkU
-        OAdKQYKZ1ID0s4PnKM1gokKsS
-X-Received: by 2002:adf:9e05:: with SMTP id u5mr19523224wre.239.1573555324981;
-        Tue, 12 Nov 2019 02:42:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwq/QTsf6eKeo9n5WelsN7V/SyybR7/jPKjiKjoknrXU4ymGTeF6cAW0Vus7tswMT5UtujQRw==
-X-Received: by 2002:adf:9e05:: with SMTP id u5mr19523199wre.239.1573555324672;
-        Tue, 12 Nov 2019 02:42:04 -0800 (PST)
-Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
-        by smtp.gmail.com with ESMTPSA id j11sm18787131wrq.26.2019.11.12.02.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 02:42:04 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:42:01 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jorgen Hansen <jhansen@vmware.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH net-next 12/14] vsock/vmci: register vmci_transport only
- when VMCI guest/host are active
-Message-ID: <20191112104201.abt7h37df24h3n7p@steredhat>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-13-sgarzare@redhat.com>
- <MWHPR05MB3376266BC6AE9E6E0B75F1A1DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
- <20191111173053.erwfzawioxje635o@steredhat>
- <MWHPR05MB33769FD52B833FC1C82F0A80DA770@MWHPR05MB3376.namprd05.prod.outlook.com>
+        Tue, 12 Nov 2019 05:42:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47140 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725874AbfKLKmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 05:42:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2A272AD22;
+        Tue, 12 Nov 2019 10:42:17 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 10:42:16 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Sage Weil <sage@newdream.net>, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <ukernel@gmail.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/2] ceph: safely use 'copy-from' Op on Octopus OSDs
+Message-ID: <20191112104216.GA2028@hermes.olymp>
+References: <20191108141555.31176-1-lhenriques@suse.com>
+ <CAOi1vP-sVQKvpiPLoZ=9s7Hy=c2eQRocxSs1nPrXAUCbbZUZ-g@mail.gmail.com>
+ <20191108164758.GA1760@hermes.olymp>
+ <alpine.DEB.2.21.1911081656320.10553@piezo.novalocal>
+ <20191108171616.GA2569@hermes.olymp>
+ <alpine.DEB.2.21.1911081721120.28682@piezo.novalocal>
+ <20191108173101.GA3300@hermes.olymp>
+ <20191111163036.GA20513@hermes.olymp>
+ <CAOi1vP-kFnu_mJaTERHbSjBxQRvfXhFWF=9_nCaaFbh7ACiVhg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <MWHPR05MB33769FD52B833FC1C82F0A80DA770@MWHPR05MB3376.namprd05.prod.outlook.com>
-X-MC-Unique: 9P6D4fCEM-yI0V0r8nBI-w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOi1vP-kFnu_mJaTERHbSjBxQRvfXhFWF=9_nCaaFbh7ACiVhg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:03:54AM +0000, Jorgen Hansen wrote:
-> > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> > Sent: Monday, November 11, 2019 6:31 PM
-> > On Mon, Nov 11, 2019 at 04:27:28PM +0000, Jorgen Hansen wrote:
-> > > > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> > > > Sent: Wednesday, October 23, 2019 11:56 AM
+On Mon, Nov 11, 2019 at 09:51:47PM +0100, Ilya Dryomov wrote:
+> On Mon, Nov 11, 2019 at 5:30 PM Luis Henriques <lhenriques@suse.com> wrote:
+> >
+> > On Fri, Nov 08, 2019 at 05:31:01PM +0000, Luis Henriques wrote:
+> > <snip>
+> > > > - You'll need to add it for both OSDMap::Incremental and OSDMap
+> > > > - You'll need to make the encoding condition by updating the block like
+> > > > the one below from OSDMap::encode()
 > > > >
-> > > > To allow other transports to be loaded with vmci_transport,
-> > > > we register the vmci_transport as G2H or H2G only when a VMCI guest
-> > > > or host is active.
+> > > >     uint8_t v = 9;
+> > > >     if (!HAVE_FEATURE(features, SERVER_LUMINOUS)) {
+> > > >       v = 3;
+> > > >     } else if (!HAVE_FEATURE(features, SERVER_MIMIC)) {
+> > > >       v = 6;
+> > > >     } else if (!HAVE_FEATURE(features, SERVER_NAUTILUS)) {
+> > > >       v = 7;
+> > > >     }
 > > > >
-> > > > To do that, this patch adds a callback registered in the vmci drive=
-r
-> > > > that will be called when a new host or guest become active.
-> > > > This callback will register the vmci_transport in the VSOCK core.
-> > > > If the transport is already registered, we ignore the error coming
-> > > > from vsock_core_register().
+> > > > to include a SERVER_OCTOPUS case too.  Same goes for Incremental::encode()
 > > >
-> > > So today this is mainly an issue for the VMCI vsock transport, becaus=
-e
-> > > VMCI autoloads with vsock (and with this solution it can continue to
-> > > do that, so none of our old products break due to changed behavior,
-> > > which is great).
-> >=20
-> > I tried to not break anything :-)
-> >=20
-> > >                  Shouldn't vhost behave similar, so that any module
-> > > that registers a h2g transport only does so if it is in active use?
-> > >
-> >=20
-> > The vhost-vsock module will load when the first hypervisor open
-> > /dev/vhost-vsock, so in theory, when there's at least one active user.
->=20
-> Ok, sounds good then.=20
->=20
-> >=20
-> > >
-> > > > --- a/drivers/misc/vmw_vmci/vmci_host.c
-> > > > +++ b/drivers/misc/vmw_vmci/vmci_host.c
-> > > > @@ -108,6 +108,11 @@ bool vmci_host_code_active(void)
-> > > >  =09     atomic_read(&vmci_host_active_users) > 0);
-> > > >  }
-> > > >
-> > > > +int vmci_host_users(void)
-> > > > +{
-> > > > +=09return atomic_read(&vmci_host_active_users);
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * Called on open of /dev/vmci.
-> > > >   */
-> > > > @@ -338,6 +343,8 @@ static int vmci_host_do_init_context(struct
-> > > > vmci_host_dev *vmci_host_dev,
-> > > >  =09vmci_host_dev->ct_type =3D VMCIOBJ_CONTEXT;
-> > > >  =09atomic_inc(&vmci_host_active_users);
-> > > >
-> > > > +=09vmci_call_vsock_callback(true);
-> > > > +
-> > >
-> > > Since we don't unregister the transport if user count drops back to 0=
-, we
-> > could
-> > > just call this the first time, a VM is powered on after the module is=
- loaded.
-> >=20
-> > Yes, make sense. can I use the 'vmci_host_active_users' or is better to
-> > add a new 'vmci_host_vsock_loaded'?
-> >=20
-> > My doubt is that vmci_host_active_users can return to 0, so when it ret=
-urns
-> > to 1, we call vmci_call_vsock_callback() again.
->=20
-> vmci_host_active_users can drop to 0 and then increase again, so having a=
- flag
-> indicating whether the callback has been invoked would ensure that it is =
-only
-> called once.
+> > > Awesome, thanks!  I'll give it a try, and test it with the appropriate
+> > > kernel client side changes to use this.
+> >
+> > Ok, I've got the patch bellow for the OSD code, which IIRC should do
+> > exactly what we want: duplicate the require_osd_release in the client
+> > side.
+> >
+> > Now, in order to quickly test this I've started adding flags to the
+> > CEPH_FEATURES_SUPPORTED_DEFAULT definition.  SERVER_MIMIC *seemed* to be
+> > Ok, but once I've added SERVER_NAUTILUS I've realized that we'll need to
+> > handle TYPE_MSGR2 address.  Which is a _big_ thing.  Is anyone already
+> > looking into adding support for msgr v2 to the kernel client?
+> 
+> It should be easy enough to hack around it for testing purposes.
+>
+> I made some initial steps and hope to be able to dedicate the 5.6 cycle
+> to it.
 
-I agree, I will use a dedicated flag, maybe in the
-vmci_call_vsock_callback(), since it can be called or during the
-vmci_host_do_init_context() or when the callback is registered.
+Yeah, I'll give that a try; adding support for that new address type
+shouldn't be a big deal.  I was just wondering if that wasn't already
+being handling by any new msgrv2 code under development.  Thanks, Ilya.
 
-Thanks,
-Stefano
-
+Cheers,
+--
+Luís
