@@ -2,137 +2,183 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36E0C17449
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF523C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754A2214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AA9206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AsvHvDs3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VOqiwERP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jzWfA6wI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfKLUow (ORCPT
+        id S1727275AbfKLUo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:44:52 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36060 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfKLUov (ORCPT
+        Tue, 12 Nov 2019 15:44:59 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:42212 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfKLUo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:44:51 -0500
-Received: by mail-qt1-f193.google.com with SMTP id y10so21319879qto.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:44:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XIC1APSxWrFcW1GblyShF0CTBN3WBCz4HlbvzX3i8nA=;
-        b=AsvHvDs3axCMUqe+N7mXppqZcG4z4QzjW7DgwuxQQSvowjzw09zSM8n30iqPxyhiVG
-         Xh8VyKwma0MzyaZ4I7in3iXleDEuEusIaoOY6nDlenNeAk67Wg5jNcvcitJtB14ouZSU
-         jEwtlMvkVKE/9wAQOETCpzIOvdkPz6MUeIKWQaYMSrFJbWX7VcVwtA5CNXlEKm0VsyqY
-         ifzvXwANYm60xkTRX8oLmVVhv+FGDqeTm28/AUUM6Qiw102m5SB7HZ3RG7baH2DiI3v+
-         pcZdlJkq9BzOBgC+D5ynKGUuwhq6rk47T2j6RjHfuuaJ84S/d0bRcfAl5P4tkZR1pUiM
-         WWGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XIC1APSxWrFcW1GblyShF0CTBN3WBCz4HlbvzX3i8nA=;
-        b=URvsTxRGMqi+dSePiwkbbqSTlIDnxAuQbakjJTdYG3Up3L/dbcACivpvaDqNebQNyF
-         e5IirtlMokMxmAffDBwnL3a0g2+vP7aJlaj/UNAL/ljLhqvhD7wzKs0L2rnMQ0VrY04W
-         hZNhUuctm1tK/Du4RWGRpbbWeqBCB3mitLFG0eAkNrxV0NIxRodMH3tlUetqstZ/KzF8
-         f2DWfxxXNC6J9r8Lk7TJJaAyABmiUDjjOvHmNN9Bu/UYdINOj71257xi3gjefG1b6hLi
-         iRn7B4xjYmql+JzPCl7RERDY4InPt1rydbBzxs8e59h5bUAyokTmB5A7itWb2w+631hg
-         A4Tw==
-X-Gm-Message-State: APjAAAX7Rp5j6mCjQtGxGGBhoDNoilSM+fmdnooi3qTDRP/QbdmQdwSz
-        gnwavDieN5FSE9elBjVPhkedAA==
-X-Google-Smtp-Source: APXvYqxT1AevYU83mBSAAzVL5cKCr9RO3QTTsZEZsQx1j+Xe2+nGL/UnUh0Po7qNt16fHJ031L5RZg==
-X-Received: by 2002:ac8:6641:: with SMTP id j1mr34362241qtp.48.1573591490500;
-        Tue, 12 Nov 2019 12:44:50 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id u67sm4906223qkf.115.2019.11.12.12.44.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 12:44:49 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iUd1t-00047P-Dy; Tue, 12 Nov 2019 16:44:49 -0400
-Date:   Tue, 12 Nov 2019 16:44:49 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 11/23] IB/{core,hw,umem}: set FOLL_PIN, FOLL_LONGTERM
- via pin_longterm_pages*()
-Message-ID: <20191112204449.GF5584@ziepe.ca>
-References: <20191112000700.3455038-1-jhubbard@nvidia.com>
- <20191112000700.3455038-12-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112000700.3455038-12-jhubbard@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 12 Nov 2019 15:44:57 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5D0F360B12; Tue, 12 Nov 2019 20:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591496;
+        bh=vsnXFE/lucznnDnKku4KoIPj3E87kYLTHEEgeZlZPyA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VOqiwERPVgUgyHzAPkYVpVxeCWCLs8AUGpbSGbk9QfLxb2o9It2Hf1saJ9n2MCB/O
+         DgX6TW4LTScHju393UyyXcFzJTT06yZfjIw6yAVPEv9ZuN+NZmq+fjpkuanlKiVMLy
+         fE6dW+SnfaigZQHk5cE5LGekuwj4cpzLnkxKbDaY=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 839ED60AD9;
+        Tue, 12 Nov 2019 20:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591495;
+        bh=vsnXFE/lucznnDnKku4KoIPj3E87kYLTHEEgeZlZPyA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jzWfA6wIwoAg04C02+aw2V18hJxfqBLDokDkAy5dj2dSa0ZHOwNoH9JMaUKgA26ZA
+         Ylu5WA0grdDmaAmS+deZG85nFMtwlwlA/j16hKAH/GCg8mQabLSKffSV7MUfdq/hzs
+         kRRQgL5Xm1m/quiIzr3AiVkuVt98jer3ejj00UdA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 839ED60AD9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v9 2/4] dt-bindings: clock: Convert qcom,mmcc to DT schema
+Date:   Tue, 12 Nov 2019 13:44:46 -0700
+Message-Id: <1573591486-15216-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
+References: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 04:06:48PM -0800, John Hubbard wrote:
-> @@ -542,7 +541,7 @@ static int ib_umem_odp_map_dma_single_page(
->  	}
->  
->  out:
-> -	put_user_page(page);
-> +	put_page(page);
->  
->  	if (remove_existing_mapping) {
->  		ib_umem_notifier_start_account(umem_odp);
-> @@ -639,13 +638,14 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
->  		/*
->  		 * Note: this might result in redundent page getting. We can
->  		 * avoid this by checking dma_list to be 0 before calling
-> -		 * get_user_pages. However, this make the code much more
-> -		 * complex (and doesn't gain us much performance in most use
-> -		 * cases).
-> +		 * get_user_pages. However, this makes the code much
-> +		 * more complex (and doesn't gain us much performance in most
-> +		 * use cases).
->  		 */
->  		npages = get_user_pages_remote(owning_process, owning_mm,
-> -				user_virt, gup_num_pages,
-> -				flags, local_page_list, NULL, NULL);
-> +					       user_virt, gup_num_pages,
-> +					       flags, local_page_list, NULL,
-> +					       NULL);
->  		up_read(&owning_mm->mmap_sem);
+Convert the qcom,mmcc-X clock controller binding to DT schema.  Add the
+protected-clocks property to the schema to show that is it explictly
+allowed, instead of relying on the generic, pre-schema binding.
 
-This is just whitespace churn? Drop it..
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,mmcc.txt        | 28 ----------
+ .../devicetree/bindings/clock/qcom,mmcc.yaml       | 59 ++++++++++++++++++++++
+ 2 files changed, 59 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
 
-Jason
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+deleted file mode 100644
+index 8b0f784..0000000
+--- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Qualcomm Multimedia Clock & Reset Controller Binding
+-----------------------------------------------------
+-
+-Required properties :
+-- compatible : shall contain only one of the following:
+-
+-			"qcom,mmcc-apq8064"
+-			"qcom,mmcc-apq8084"
+-			"qcom,mmcc-msm8660"
+-			"qcom,mmcc-msm8960"
+-			"qcom,mmcc-msm8974"
+-			"qcom,mmcc-msm8996"
+-
+-- reg : shall contain base register location and length
+-- #clock-cells : shall contain 1
+-- #reset-cells : shall contain 1
+-
+-Optional properties :
+-- #power-domain-cells : shall contain 1
+-
+-Example:
+-	clock-controller@4000000 {
+-		compatible = "qcom,mmcc-msm8960";
+-		reg = <0x4000000 0x1000>;
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-		#power-domain-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+new file mode 100644
+index 0000000..61ed4a2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,mmcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Multimedia Clock & Reset Controller Binding
++
++maintainers:
++  - Jeffrey Hugo <jhugo@codeaurora.org>
++
++description: |
++  Qualcomm multimedia clock control module which supports the clocks, resets and
++  power domains.
++
++properties:
++  compatible :
++    enum:
++       - qcom,mmcc-apq8064
++       - qcom,mmcc-apq8084
++       - qcom,mmcc-msm8660
++       - qcom,mmcc-msm8960
++       - qcom,mmcc-msm8974
++       - qcom,mmcc-msm8996
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++       Protected clock specifier list as per common clock binding
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  # Example for MMCC for MSM8960:
++  - |
++    clock-controller@4000000 {
++      compatible = "qcom,mmcc-msm8960";
++      reg = <0x4000000 0x1000>;
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+-- 
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+
