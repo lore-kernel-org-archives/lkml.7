@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8B2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD85C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF762196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C58B214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfKLXuw (ORCPT
+        id S1727343AbfKLXvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:50:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57450 "EHLO
+        Tue, 12 Nov 2019 18:51:08 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57434 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727113AbfKLXug (ORCPT
+        by vger.kernel.org with ESMTP id S1727080AbfKLXug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 18:50:36 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvf-0008JG-5d; Tue, 12 Nov 2019 23:50:35 +0000
+        id 1iUfvf-0008Im-0n; Tue, 12 Nov 2019 23:50:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-00058F-PM; Tue, 12 Nov 2019 23:50:33 +0000
+        id 1iUfvd-000586-HR; Tue, 12 Nov 2019 23:50:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nicolas Waisman" <nico@semmle.com>,
-        "Will Deacon" <will@kernel.org>,
-        "Johannes Berg" <johannes.berg@intel.com>,
-        "Kees Cook" <keescook@chromium.org>
-Date:   Tue, 12 Nov 2019 23:48:21 +0000
-Message-ID: <lsq.1573602477.420739353@decadent.org.uk>
+        "Ori Nimron" <orinimron123@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Tue, 12 Nov 2019 23:48:19 +0000
+Message-ID: <lsq.1573602477.81960370@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 24/25] cfg80211: wext: avoid copying malformed SSIDs
+Subject: [PATCH 3.16 22/25] mISDN: enforce CAP_NET_RAW for raw sockets
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,53 +56,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Will Deacon <will@kernel.org>
+From: Ori Nimron <orinimron123@gmail.com>
 
-commit 4ac2813cc867ae563a1ba5a9414bfb554e5796fa upstream.
+commit b91ee4aa2a2199ba4d4650706c272985a5a32d80 upstream.
 
-Ensure the SSID element is bounds-checked prior to invoking memcpy()
-with its length field, when copying to userspace.
+When creating a raw AF_ISDN socket, CAP_NET_RAW needs to be checked
+first.
 
-Cc: Kees Cook <keescook@chromium.org>
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20191004095132.15777-2-will@kernel.org
-[adjust commit log a bit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Ori Nimron <orinimron123@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/wireless/wext-sme.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/isdn/mISDN/socket.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/wireless/wext-sme.c
-+++ b/net/wireless/wext-sme.c
-@@ -225,6 +225,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
- 			       struct iw_point *data, char *ssid)
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
-+	int ret = 0;
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -763,6 +763,8 @@ base_sock_create(struct net *net, struct
  
- 	/* call only for station! */
- 	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
-@@ -242,7 +243,10 @@ int cfg80211_mgd_wext_giwessid(struct ne
- 		if (ie) {
- 			data->flags = 1;
- 			data->length = ie[1];
--			memcpy(ssid, ie + 2, data->length);
-+			if (data->length > IW_ESSID_MAX_SIZE)
-+				ret = -EINVAL;
-+			else
-+				memcpy(ssid, ie + 2, data->length);
- 		}
- 		rcu_read_unlock();
- 	} else if (wdev->wext.connect.ssid && wdev->wext.connect.ssid_len) {
-@@ -252,7 +256,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
- 	}
- 	wdev_unlock(wdev);
+ 	if (sock->type != SOCK_RAW)
+ 		return -ESOCKTNOSUPPORT;
++	if (!capable(CAP_NET_RAW))
++		return -EPERM;
  
--	return 0;
-+	return ret;
- }
- 
- int cfg80211_mgd_wext_siwap(struct net_device *dev,
+ 	sk = sk_alloc(net, PF_ISDN, GFP_KERNEL, &mISDN_proto);
+ 	if (!sk)
 
