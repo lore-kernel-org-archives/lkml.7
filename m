@@ -8,142 +8,124 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B015C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B432067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487B22067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:54:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OF0C4tId"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYzeDsKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfKLPwz (ORCPT
+        id S1727283AbfKLPyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:52:55 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35320 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfKLPwy (ORCPT
+        Tue, 12 Nov 2019 10:54:03 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46880 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfKLPyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:52:54 -0500
-Received: by mail-wr1-f65.google.com with SMTP id s5so7998961wrw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:52:53 -0800 (PST)
+        Tue, 12 Nov 2019 10:54:03 -0500
+Received: by mail-io1-f65.google.com with SMTP id i11so2414931iol.13;
+        Tue, 12 Nov 2019 07:54:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KlI/w4iGgmfxEIzjQGA0tOMY3tGzHSo0L7rc1WR4Tww=;
-        b=OF0C4tIdXYsl972TNJBl4pbhsNz/CCpB9n3zKmIKIeN4Agp0gIi0Mv93g/oEwmXfkt
-         yVNReAZorkkGUdzT4gksywjD3mO+XCdyVKKoNVSkEsyeqKHGwbYmmOMZ5sezTcgpN/iH
-         MFdtx75mctG3r6cEeQQcA0p6CAdnq5YDK16GMNrMoW/IUYAB29zgVz2Idm/toCecmgtu
-         EFOBTG8Niyhk6shHZg7yvfC0VkYAhz8nfhViYAFaXuYDBZT4eCdt5fM8RL9d5QzUYYHY
-         pU3eBwzub0BbvGGC23BM5QR9Iv/Ga6NsTscO0mHHNMhQILQapZsMm+GS9sXY37x2TQJN
-         AlrA==
+        bh=+1IEojNQRKaJ8R6eORbksbI7U86NwchAf1hHUgJqjpo=;
+        b=vYzeDsKt+LCERvwGBGKTwYAcLMKlX8aTKqabbg0JK21GrAPQcAhDLvykQYDpYPAfJD
+         YSLYQ/FE+wZZfSIQTQ/Yfl7Kw7kSvXi9QyWB6LnGZyemMZ6LiHXsf8SBT7XwYboj2/fu
+         Kc+wpOunu+fXCe3b7ri344w3kI5J9edQYl1tiVytFiYlbAwhRtaT0WXT5jCSWw716too
+         Q02zA9iTCBInKENJ51YRMfMNNCjJ5PauBVoxh0PBk6wdYk9bDhvS9ZKW0ilYrVAtX7W1
+         Yn6Rx7f6IU9i++q919E5gjvTNU0yqQ0AZ4FGOiMGZB4HJ2Iq9ooJBWBWz0aO7yYrfqu8
+         BgbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KlI/w4iGgmfxEIzjQGA0tOMY3tGzHSo0L7rc1WR4Tww=;
-        b=kM4jwCjfZ63lbqv2xUCQgyUzF/yfY/bvVMgjDa39/elT8TJy4UCdk7QXdyRsn2pgFQ
-         GpRTgSmo4qdDFe5XleQatXYvN+HA/S1g2r6pH2t5GWJh4SFb26kAy5uLZJl0/IjJV09S
-         n2u7XcrnjfpkyhZUH/GRid0D+MydALoOjEMNZEWy/R/rL9OW7dGog2kcP6EZ6RtnJJQJ
-         eMhfF/GMTS0SlxQHYfitoJEveQXhqDAFyqJqrRmkrRsjm+eSMFEKUHdVNYtAsOIlapKE
-         5Ce1q0PKNXtrHYIeIVcch+EXtz3tedtqBjahMfT8IdIsimG3GU34HypiwJ3vzCi3Vfj7
-         XKEA==
-X-Gm-Message-State: APjAAAW4HlKhC2UzT/NNgLJdEUbBEk882xaFFpzeAo+rCWyBc9+866q0
-        8lBC9WZjxusANIXPxIyGkGOu7DxWgigkl9hcqk9Z0A==
-X-Google-Smtp-Source: APXvYqyR51zNVFTxc2XNo24rGAzDgHRLqcTcjPjLyL0l3uVC46ncoQjb2rfwmQfKNuaS/+Pq9thzuxvlUF9ZNE0wh4I=
-X-Received: by 2002:adf:9d87:: with SMTP id p7mr25597794wre.11.1573573972656;
- Tue, 12 Nov 2019 07:52:52 -0800 (PST)
+        bh=+1IEojNQRKaJ8R6eORbksbI7U86NwchAf1hHUgJqjpo=;
+        b=QTH5g4tuxBVRrZyQR9e/hMRksN/4FDMzP0nsD+QejUdrhd1IZzNYTpiuTd83qDUcMB
+         2UT7cLVIumxDlyMeqdxvNGioSMfa9TOzpQmL0EDh/kQ2ih1izIguMEn5pd13P+5qBLzu
+         FyAVkXkMpDfVb/nwpRLAlReWPVR+MmB3y7srJQsU/EuYJLe8FBFIWxNJ4amCfCTUw07N
+         Kd/9sVs+CY6IdOyS9YMTEQoCVGJihNsMZ6sGy1Cw9fwHAoCEDy8PbCJ9t/BmIt8cyxHu
+         AabGWzFDdU5j3ZS1SCu0pWkeiSG7p3L2QZxyFl8oOTCWbaSJtm06Sz2PucvEoq70Gay/
+         ysXg==
+X-Gm-Message-State: APjAAAV+LjByOepCchutb13qyGV+oEtaN8y1UQ11Pr91dDaZ4ZwTwknO
+        9+5caMrzhypTUZdc7+XjVRV3iNm8Z4dU8LLgrAw=
+X-Google-Smtp-Source: APXvYqynO/p313AXOl/WdxEoymEYNA7twP36L4Z5wcKFago9vMAZVo1EBJvr39aEvnOSMtl/ae0Wh7uuhz+Vh0aPrHg=
+X-Received: by 2002:a5e:8a04:: with SMTP id d4mr31139489iok.42.1573574042003;
+ Tue, 12 Nov 2019 07:54:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20191109093538.23964-1-yuehaibing@huawei.com> <20191112021050.13128-1-yuehaibing@huawei.com>
-In-Reply-To: <20191112021050.13128-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 12 Nov 2019 10:52:40 -0500
-Message-ID: <CADnq5_Mj5vHSrXq-tkwoRQ+fejfosSnRpia54MpsTddvKzothA@mail.gmail.com>
-Subject: Re: [PATCH v2 -next] drm/amd/display: remove set but not used
- variable 'bpc'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Zhan Liu <Zhan.Liu@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191106234712.2380-1-jeffrey.l.hugo@gmail.com> <20191112090444.ak2xu67eawfgpdgb@netronome.com>
+In-Reply-To: <20191112090444.ak2xu67eawfgpdgb@netronome.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 12 Nov 2019 08:53:51 -0700
+Message-ID: <CAOCk7NoXv2-8GO=VYS8dNPJF6sj=S3RbkfqQGW0kvvVmR8V1kw@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: Handle "invalid" BDFs for msm8998 devices
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 3:13 AM YueHaibing <yuehaibing@huawei.com> wrote:
+On Tue, Nov 12, 2019 at 2:04 AM Simon Horman <simon.horman@netronome.com> wrote:
 >
-> Fixes gcc '-Wunused-but-set-variable' warning:
+> On Wed, Nov 06, 2019 at 03:47:12PM -0800, Jeffrey Hugo wrote:
+> > When the BDF download QMI message has the end field set to 1, it signals
+> > the end of the transfer, and triggers the firmware to do a CRC check.  The
+> > BDFs for msm8998 devices fail this check, yet the firmware is happy to
+> > still use the BDF.  It appears that this error is not caught by the
+> > downstream drive by concidence, therefore there are production devices
+> > in the field where this issue needs to be handled otherwise we cannot
+> > support wifi on them.  So, attempt to detect this scenario as best we can
+> > and treat it as non-fatal.
+> >
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >  drivers/net/wireless/ath/ath10k/qmi.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+> > index eb618a2652db..5ff8cfc93778 100644
+> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
+> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
+> > @@ -265,10 +265,13 @@ static int ath10k_qmi_bdf_dnld_send_sync(struct ath10k_qmi *qmi)
+> >                       goto out;
+> >
+> >               if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
+> > -                     ath10k_err(ar, "failed to download board data file: %d\n",
+> > -                                resp.resp.error);
+> > -                     ret = -EINVAL;
+> > -                     goto out;
+> > +                     if (!(req->end == 1 &&
+> > +                           resp.resp.result == QMI_ERR_MALFORMED_MSG_V01)) {
 >
-> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c: In function get_pbn_from_timing:
-> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2364:11: warning:
->  variable bpc set but not used [-Wunused-but-set-variable]
->
-> It is not used since commit e49f69363adf ("drm/amd/display: use
-> proper formula to calculate bandwidth from timing"), this also
-> remove get_color_depth(), which is only used here.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Would it make sense to combine the inner and outer condition,
+> something like this (completely untested) ?
 
-Applied.  Thanks!
+I guess, make sense from what perspective?  Looks like the assembly
+ends up being the same, so it would be down to "readability" which is
+subjective - I personally don't see a major advantage to one way or
+the other.  It does look like Kalle already picked up this patch, so
+I'm guessing that if folks feel your suggestion is superior, then it
+would need to be a follow on.
 
-Alex
-
-> ---
-> v2: also remove unused get_color_depth()
-> ---
->  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 15 ---------------
->  1 file changed, 15 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> index bdc8be3..1be4277 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> @@ -2638,28 +2638,13 @@ static struct fixed31_32 get_pbn_per_slot(struct dc_stream_state *stream)
->         return dc_fixpt_div_int(mbytes_per_sec, 54);
->  }
+>                 if (resp.resp.result != QMI_RESULT_SUCCESS_V01 &&
+>                     !(req->end == 1 &&
+>                       resp.resp.result == QMI_ERR_MALFORMED_MSG_V01)) {
 >
-> -static int get_color_depth(enum dc_color_depth color_depth)
-> -{
-> -       switch (color_depth) {
-> -       case COLOR_DEPTH_666: return 6;
-> -       case COLOR_DEPTH_888: return 8;
-> -       case COLOR_DEPTH_101010: return 10;
-> -       case COLOR_DEPTH_121212: return 12;
-> -       case COLOR_DEPTH_141414: return 14;
-> -       case COLOR_DEPTH_161616: return 16;
-> -       default: return 0;
-> -       }
-> -}
-> -
->  static struct fixed31_32 get_pbn_from_timing(struct pipe_ctx *pipe_ctx)
->  {
-> -       uint32_t bpc;
->         uint64_t kbps;
->         struct fixed31_32 peak_kbps;
->         uint32_t numerator;
->         uint32_t denominator;
->
-> -       bpc = get_color_depth(pipe_ctx->stream_res.pix_clk_params.color_depth);
->         kbps = dc_bandwidth_in_kbps_from_timing(&pipe_ctx->stream->timing);
->
->         /*
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > +                             ath10k_err(ar, "failed to download board data file: %d\n",
+> > +                                        resp.resp.error);
+> > +                             ret = -EINVAL;
+> > +                             goto out;
+> > +                     }
+> >               }
+> >
+> >               remaining -= req->data_len;
+> > --
+> > 2.17.1
+> >
