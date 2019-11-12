@@ -2,136 +2,219 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A02DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8905FC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A237F21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:38:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fzG3dTsU"
+	by mail.kernel.org (Postfix) with ESMTP id 642AC21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfKLJi5 (ORCPT
+        id S1727176AbfKLJj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:38:57 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:28223 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfKLJi5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:38:57 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191112093854epoutp04071a3403c50c52a64e56a54d9ae934af~WYMiZ-d4d1393013930epoutp04f
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:38:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191112093854epoutp04071a3403c50c52a64e56a54d9ae934af~WYMiZ-d4d1393013930epoutp04f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573551534;
-        bh=X2O1h1TEexJVjYglTtzxC098ShK/7RIE4Px5ZPPv+Co=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=fzG3dTsUIjLU30Iyq0nWsMdXy4yU3SB/Wy1LwCVzhEIIb0NzEF5zyWSk7VXkhXP6u
-         R4zayxs9O8P/LrX9NR/Ly4moTYV1PPefBTHQQHMROQSEW3lrm9JfQUOrHAwCvco8gz
-         3xMceFge/wXsjZIG9hU3FgUlT6cnIFVYg6DQ212A=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191112093853epcas1p29d44f964c28671b1e9da7de087517809~WYMhuTSvk2042620426epcas1p2r;
-        Tue, 12 Nov 2019 09:38:53 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47C2kM11HQzMqYkn; Tue, 12 Nov
-        2019 09:38:51 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9E.AC.04085.BAD7ACD5; Tue, 12 Nov 2019 18:38:51 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305~WYMepxctd2404024040epcas1p3A;
-        Tue, 12 Nov 2019 09:38:50 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191112093850epsmtrp196297a1f82c99ac9eff0e0beee61edf8~WYMepKMeD1364713647epsmtrp1a;
-        Tue, 12 Nov 2019 09:38:50 +0000 (GMT)
-X-AuditID: b6c32a37-e19ff70000000ff5-32-5dca7dab957b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        70.3F.24756.AAD7ACD5; Tue, 12 Nov 2019 18:38:50 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.222]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191112093850epsmtip24423fef9bb06c287a4daa1804d30f153~WYMecECIc2176721767epsmtip23;
-        Tue, 12 Nov 2019 09:38:50 +0000 (GMT)
-From:   Seung-Woo Kim <sw0312.kim@samsung.com>
-To:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        sumit.semwal@linaro.org, gustavo@padovan.org
-Cc:     sw0312.kim@samsung.com
-Subject: [PATCH] dma-buf/sw-sync: Use unsigned type for value of
- sync_timeline
-Date:   Tue, 12 Nov 2019 18:41:29 +0900
-Message-Id: <1573551689-23531-1-git-send-email-sw0312.kim@samsung.com>
-X-Mailer: git-send-email 1.7.4.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7bCmru7q2lOxBiua2C2ufH3PZrHzwS52
-        iy9XHjJZXN41h82iZ8NWVotTdz+zW8yY/JLNgd3jzrU9bB73u48zedz+95jZY+ekvUwefVtW
-        MXp83iQXwBaVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
-        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/18rQ
-        wMDIFKgwITtjUv8/poKlrBVTD0xiamBczNLFyMkhIWAi0X7lKpDNxSEksINR4sy6PewQzidG
-        iZnPHrBBON8YJdavXMnUxcgB1rLxgSVEfC+jxPLlt1ghnC+MEktvPGYHmcsmoCOxf8lvsISI
-        wAZGicYpzawgCWYBKYltS9ezgdjCAgES77ceYwaZyiKgKrFttilImFfATeLehkY2iPsUJBbc
-        ewt2hYTABDaJWW3bWCESLhIbmm9BPSEs8er4FnYIW0riZX8blF0tsX3CT3aI5g5GiZ72RqgG
-        Y4n9SyeDvcMsoCmxfpc+RFhRYufvuYwQd/JJvPvawwrxMa9ER5sQRImKxM6jk9ggwlISszYE
-        Q4Q9JN7uWcAEYgsJxEosbW5nn8AoOwth/gJGxlWMYqkFxbnpqcWGBcbIkbSJEZy8tMx3MG44
-        53OIUYCDUYmHlyHhZKwQa2JZcWXuIUYJDmYlEd4dFSdihXhTEiurUovy44tKc1KLDzGaAsNu
-        IrOUaHI+MLHmlcQbmhoZGxtbmBiamRoaKonzOi5fGiskkJ5YkpqdmlqQWgTTx8TBKdXAOHPR
-        tAexWbsuHVoz3df2hmBt9eQ3BnIxK/5M3br1y4xs3S+Hevltb9rdvBzkVvBH5fLrlsLWHb/m
-        vbp074q+6l7NFqeZbfrbEteqySfbSzqftrlRrxMx70fuvibV7/rBt4vU4pTeb3ivZBgtK3Wt
-        veV3voVCxB3W3vtKb9xKHhVJKG56HXdLW4mlOCPRUIu5qDgRAJ8BMqh0AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LZdlhJXndV7alYg96jEhZXvr5ns9j5YBe7
-        xZcrD5ksLu+aw2bRs2Erq8Wpu5/ZLWZMfsnmwO5x59oeNo/73ceZPG7/e8zssXPSXiaPvi2r
-        GD0+b5ILYIvisklJzcksSy3St0vgypjU/4+pYClrxdQDk5gaGBezdDFycEgImEhsfGDZxcjF
-        ISSwm1Fi3pnrrF2MnEBxKYm537YzQtQISxw+XAxR84lR4uv8iUwgNWwCOhL7l/xmBUmICGxj
-        lPgz/RwbSIIZqHnb0vVgtrCAn8SCFQtYQQaxCKhKbJttChLmFXCTuLehkQ1il4LEgntv2SYw
-        8ixgZFjFKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREcTFqaOxgvL4k/xCjAwajEw7si
-        9mSsEGtiWXFl7iFGCQ5mJRHeHRUnYoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5Y
-        kpqdmlqQWgSTZeLglGpgjLweOOlR89yWZvdD3q23HNWNn87dWc+2P7eQ9Z2u9S2ZSQ9M5K16
-        DuRU3Y7VYWre/zIx48Lk4v9PpHISnwTdUfmhNdnBpi2tY7JG9IVWCTeR1U9T+mdwvFg0/5PX
-        ydgl/G82qt6VM963+vabzWujJK6pfkmcl+jUPr/K2nOef0DgpljxBXI6SizFGYmGWsxFxYkA
-        zGURpCICAAA=
-X-CMS-MailID: 20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305
-References: <CGME20191112093850epcas1p31a1201fcc86997add355a7b5aeabf305@epcas1p3.samsung.com>
+        Tue, 12 Nov 2019 04:39:59 -0500
+Received: from mga02.intel.com ([134.134.136.20]:18473 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbfKLJj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:39:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 01:39:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,295,1569308400"; 
+   d="scan'208";a="214042274"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 12 Nov 2019 01:39:54 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 12 Nov 2019 11:39:53 +0200
+Date:   Tue, 12 Nov 2019 11:39:53 +0200
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Message-ID: <20191112093953.GD2644@lahna.fi.intel.com>
+References: <PS2P216MB07554FF63C34AFBCE04BD55D80780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PS2P216MB07554FF63C34AFBCE04BD55D80780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of sync_timeline is only incremented and all reference
-usage of it is unsigned. Use unsigned type for value of
-synctimeline.
+On Thu, Nov 07, 2019 at 01:50:57PM +0000, Nicholas Johnson wrote:
+> Currently, the kernel can sometimes assign the MMIO_PREF window
+> additional size into the MMIO window, resulting in extra MMIO additional
+> size, despite the MMIO_PREF additional size being assigned successfully
+> into the MMIO_PREF window.
+> 
+> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+> fails. In the next pass, because MMIO_PREF is already assigned, the
+> attempt to assign MMIO_PREF returns an error code instead of success
+> (nothing more to do, already allocated). Hence, the size which is
+> actually allocated, but thought to have failed, is placed in the MMIO
+> window.
+> 
+> Example of problem (more context can be found in the bug report URL):
+> 
+> Mainline kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+> 
+> Patched kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+> 
+> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+> with the same configuration, with a Ubuntu mainline kernel and a kernel
+> patched with this patch.
+> 
+> The bug results in the MMIO_PREF being added to the MMIO window, which
+> means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
+> the MMIO window will likely fail to be assigned altogether due to lack
+> of 32-bit address space.
+> 
+> Change find_free_bus_resource() to do the following:
+> - Return first unassigned resource of the correct type.
+> - If none of the above, return first assigned resource of the correct type.
+> - If none of the above, return NULL.
+> 
+> Returning an assigned resource of the correct type allows the caller to
+> distinguish between already assigned and no resource of the correct type.
+> 
+> Rename find_free_bus_resource to find_bus_resource_of_type().
+> 
+> Add checks in pbus_size_io() and pbus_size_mem() to return success if
+> resource returned from find_free_bus_resource() is already allocated.
+> 
+> This avoids pbus_size_io() and pbus_size_mem() returning error code to
+> __pci_bus_size_bridges() when a resource has been successfully assigned
+> in a previous pass. This fixes the existing behaviour where space for a
+> resource could be reserved multiple times in different parent bridge
+> windows.
+> 
+> Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+> 
+> Reported-by: Kit Chow <kchow@gigaio.com>
+> Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
----
- drivers/dma-buf/sync_debug.h |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-diff --git a/drivers/dma-buf/sync_debug.h b/drivers/dma-buf/sync_debug.h
-index 6176e52..ff07f0b 100644
---- a/drivers/dma-buf/sync_debug.h
-+++ b/drivers/dma-buf/sync_debug.h
-@@ -36,7 +36,7 @@ struct sync_timeline {
- 
- 	/* protected by lock */
- 	u64			context;
--	int			value;
-+	unsigned int		value;
- 
- 	struct rb_root		pt_tree;
- 	struct list_head	pt_list;
--- 
-1.7.4.1
+Minor nits below.
 
+> ---
+>  drivers/pci/setup-bus.c | 34 +++++++++++++++++++++++-----------
+>  1 file changed, 23 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index e7dbe2170..f97c36a1e 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+>  }
+>  
+>  /*
+> - * Helper function for sizing routines: find first available bus resource
+> - * of a given type.  Note: we intentionally skip the bus resources which
+> - * have already been assigned (that is, have non-NULL parent resource).
+> + * Helper function for sizing routines.
+> + * Assigned resources have non-NULL parent resource.
+> + *
+> + * Return first unassigned resource of the correct type.
+> + * If none of the above, return first assigned resource of the correct type.
+> + * If none of the above, return NULL.
+> + *
+> + * Returning an assigned resource of the correct type allows the caller to
+> + * distinguish between already assigned and no resource of the correct type.
+>   */
+> -static struct resource *find_free_bus_resource(struct pci_bus *bus,
+> -					       unsigned long type_mask,
+> -					       unsigned long type)
+> +static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
+> +						  unsigned long type_mask,
+> +						  unsigned long type)
+>  {
+>  	int i;
+> -	struct resource *r;
+> +	struct resource *r, *r_assigned = NULL;
+
+Maybe order them
+
+	struct resource *r, *r_assigned = NULL;
+ 	int i;
+
+>  
+>  	pci_bus_for_each_resource(bus, r, i) {
+>  		if (r == &ioport_resource || r == &iomem_resource)
+>  			continue;
+>  		if (r && (r->flags & type_mask) == type && !r->parent)
+>  			return r;
+> +		if (r && (r->flags & type_mask) == type && !r_assigned)
+> +			r_assigned = r;
+>  	}
+> -	return NULL;
+> +	return r_assigned;
+>  }
+>  
+>  static resource_size_t calculate_iosize(resource_size_t size,
+> @@ -866,14 +874,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+>  			 struct list_head *realloc_head)
+>  {
+>  	struct pci_dev *dev;
+> -	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
+> -							IORESOURCE_IO);
+> +	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
+> +								IORESOURCE_IO);
+>  	resource_size_t size = 0, size0 = 0, size1 = 0;
+>  	resource_size_t children_add_size = 0;
+>  	resource_size_t min_align, align;
+>  
+>  	if (!b_res)
+>  		return;
+
+I think it may be good to comment here that skip the resources that are
+assigned (->parent != NULL).
+
+> +	if (b_res->parent)
+> +		return;
+>  
+>  	min_align = window_alignment(bus, IORESOURCE_IO);
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+> @@ -978,7 +988,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  	resource_size_t min_align, align, size, size0, size1;
+>  	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
+>  	int order, max_order;
+> -	struct resource *b_res = find_free_bus_resource(bus,
+> +	struct resource *b_res = find_bus_resource_of_type(bus,
+>  					mask | IORESOURCE_PREFETCH, type);
+>  	resource_size_t children_add_size = 0;
+>  	resource_size_t children_add_align = 0;
+> @@ -986,6 +996,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  
+>  	if (!b_res)
+>  		return -ENOSPC;
+
+Ditto.
+
+> +	if (b_res->parent)
+> +		return 0;
+>  
+>  	memset(aligns, 0, sizeof(aligns));
+>  	max_order = 0;
+> -- 
+> 2.23.0
