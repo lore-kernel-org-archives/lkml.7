@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3413DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE80C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE0021E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7337B21E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfKLQzG (ORCPT
+        id S1727921AbfKLQzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:55:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35372 "EHLO mx1.suse.de"
+        Tue, 12 Nov 2019 11:55:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34744 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727544AbfKLQxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:53:54 -0500
+        id S1727611AbfKLQxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:47 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EFBA0AD72;
-        Tue, 12 Nov 2019 16:53:51 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 57F59B167;
+        Tue, 12 Nov 2019 16:53:44 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 25/33] powerpc/64s/exception: remove lite interrupt return
-Date:   Tue, 12 Nov 2019 17:52:23 +0100
-Message-Id: <b7166cac80cefc561e30a6c6c324384b973081b4.1573576649.git.msuchanek@suse.de>
+Subject: [PATCH 20/33] powerpc/64s/exception: only test KVM in SRR interrupts when PR KVM is supported
+Date:   Tue, 12 Nov 2019 17:52:18 +0100
+Message-Id: <3fabf68dbaaffed3a3737ab61a79f8f2b47c5ab1.1573576649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
 References: <cover.1573576649.git.msuchanek@suse.de>
@@ -81,127 +81,230 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-The difference between lite and regular returns is that the lite case
-restores all NVGPRs, whereas lite skips that. This is quite clumsy
-though, most interrupts want the NVGPRs saved for debugging, not to
-modify in the caller, so the NVGPRs restore is not necessary most of
-the time. Restore NVGPRs explicitly for one case that requires it,
-and move everything else over to avoiding the restore unless the
-interrupt return demands it (e.g., handling a signal).
+Apart from SRESET, MCE, and syscall (hcall variant), the SRR type
+interrupts are not escalated to hypervisor mode, so delivered to the OS.
+
+When running PR KVM, the OS is the hypervisor, and the guest runs with
+MSR[PR]=1, so these interrupts must test if a guest was running when
+interrupted. These tests are required at the real-mode entry points
+because the PR KVM host runs with LPCR[AIL]=0.
+
+In HV KVM and nested HV KVM, the guest always receives these interrupts,
+so there is no need for the host to make this test. So remove the tests
+if PR KVM is not configured.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/entry_64.S       |  4 ----
- arch/powerpc/kernel/exceptions-64s.S | 21 +++++++++++----------
- 2 files changed, 11 insertions(+), 14 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 65 ++++++++++++++++++++++++++--
+ 1 file changed, 62 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index b2e68f5ca8f7..00173cc904ef 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -452,10 +452,6 @@ _GLOBAL(fast_interrupt_return)
- 
- 	.balign IFETCH_ALIGN_BYTES
- _GLOBAL(interrupt_return)
--	REST_NVGPRS(r1)
--
--	.balign IFETCH_ALIGN_BYTES
--_GLOBAL(interrupt_return_lite)
- 	ld	r4,_MSR(r1)
- 	andi.	r0,r4,MSR_PR
- 	beq	kernel_interrupt_return
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 269edd1460be..1bccc869ebd3 100644
+index 2f50587392aa..38bc66b95516 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1507,7 +1507,7 @@ EXC_COMMON_BEGIN(hardware_interrupt_common)
- 	RUNLATCH_ON
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_IRQ
--	b	interrupt_return_lite
-+	b	interrupt_return
- 
- 	GEN_KVM hardware_interrupt
- 
-@@ -1694,7 +1694,7 @@ EXC_COMMON_BEGIN(decrementer_common)
- 	RUNLATCH_ON
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	timer_interrupt
--	b	interrupt_return_lite
-+	b	interrupt_return
- 
- 	GEN_KVM decrementer
- 
-@@ -1785,7 +1785,7 @@ EXC_COMMON_BEGIN(doorbell_super_common)
+@@ -214,9 +214,36 @@ do_define_int n
+ #ifdef CONFIG_KVM_BOOK3S_64_HANDLER
+ #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
+ /*
+- * If hv is possible, interrupts come into to the hv version
+- * of the kvmppc_interrupt code, which then jumps to the PR handler,
+- * kvmppc_interrupt_pr, if the guest is a PR guest.
++ * All interrupts which set HSRR registers, as well as SRESET and MCE and
++ * syscall when invoked with "sc 1" switch to MSR[HV]=1 (HVMODE) to be taken,
++ * so they all generally need to test whether they were taken in guest context.
++ *
++ * Note: SRESET and MCE may also be sent to the guest by the hypervisor, and be
++ * taken with MSR[HV]=0.
++ *
++ * Interrupts which set SRR registers (with the above exceptions) do not
++ * elevate to MSR[HV]=1 mode, though most can be taken when running with
++ * MSR[HV]=1  (e.g., bare metal kernel and userspace). So these interrupts do
++ * not need to test whether a guest is running because they get delivered to
++ * the guest directly, including nested HV KVM guests.
++ *
++ * The exception is PR KVM, where the guest runs with MSR[PR]=1 and the host
++ * runs with MSR[HV]=0, so the host takes all interrupts on behalf of the
++ * guest. PR KVM runs with LPCR[AIL]=0 which causes interrupts to always be
++ * delivered to the real-mode entry point, therefore such interrupts only test
++ * KVM in their real mode handlers, and only when PR KVM is possible.
++ *
++ * Interrupts that are taken in MSR[HV]=0 and escalate to MSR[HV]=1 are always
++ * delivered in real-mode when the MMU is in hash mode because the MMU
++ * registers are not set appropriately to translate host addresses. In nested
++ * radix mode these can be delivered in virt-mode as the host translations are
++ * used implicitly (see: effective LPID, effective PID).
++ */
++
++/*
++ * If an interrupt is taken while a guest is running, it is immediately routed
++ * to KVM to handle. If both HV and PR KVM arepossible, KVM interrupts go first
++ * to kvmppc_interrupt_hv, which handles the PR guest case.
+  */
+ #define kvmppc_interrupt kvmppc_interrupt_hv
  #else
- 	bl	unknown_exception
- #endif
--	b	interrupt_return_lite
-+	b	interrupt_return
+@@ -1258,8 +1285,10 @@ INT_DEFINE_BEGIN(data_access)
+ 	IVEC=0x300
+ 	IDAR=1
+ 	IDSISR=1
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_SKIP=1
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(data_access)
  
- 	GEN_KVM doorbell_super
+ EXC_REAL_BEGIN(data_access, 0x300, 0x80)
+@@ -1306,8 +1335,10 @@ INT_DEFINE_BEGIN(data_access_slb)
+ 	IAREA=PACA_EXSLB
+ 	IRECONCILE=0
+ 	IDAR=1
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_SKIP=1
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(data_access_slb)
  
-@@ -2183,7 +2183,7 @@ EXC_COMMON_BEGIN(h_doorbell_common)
- #else
- 	bl	unknown_exception
- #endif
--	b	interrupt_return_lite
-+	b	interrupt_return
+ EXC_REAL_BEGIN(data_access_slb, 0x380, 0x80)
+@@ -1357,7 +1388,9 @@ INT_DEFINE_BEGIN(instruction_access)
+ 	IISIDE=1
+ 	IDAR=1
+ 	IDSISR=1
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(instruction_access)
  
- 	GEN_KVM h_doorbell
+ EXC_REAL_BEGIN(instruction_access, 0x400, 0x80)
+@@ -1396,7 +1429,9 @@ INT_DEFINE_BEGIN(instruction_access_slb)
+ 	IRECONCILE=0
+ 	IISIDE=1
+ 	IDAR=1
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(instruction_access_slb)
  
-@@ -2213,7 +2213,7 @@ EXC_COMMON_BEGIN(h_virt_irq_common)
- 	RUNLATCH_ON
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_IRQ
--	b	interrupt_return_lite
-+	b	interrupt_return
+ EXC_REAL_BEGIN(instruction_access_slb, 0x480, 0x80)
+@@ -1488,7 +1523,9 @@ INT_DEFINE_BEGIN(alignment)
+ 	IVEC=0x600
+ 	IDAR=1
+ 	IDSISR=1
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(alignment)
  
- 	GEN_KVM h_virt_irq
+ EXC_REAL_BEGIN(alignment, 0x600, 0x100)
+@@ -1518,7 +1555,9 @@ EXC_COMMON_BEGIN(alignment_common)
+  */
+ INT_DEFINE_BEGIN(program_check)
+ 	IVEC=0x700
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(program_check)
  
-@@ -2260,7 +2260,7 @@ EXC_COMMON_BEGIN(performance_monitor_common)
- 	RUNLATCH_ON
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	performance_monitor_exception
--	b	interrupt_return_lite
-+	b	interrupt_return
+ EXC_REAL_BEGIN(program_check, 0x700, 0x100)
+@@ -1581,7 +1620,9 @@ EXC_COMMON_BEGIN(program_check_common)
+ INT_DEFINE_BEGIN(fp_unavailable)
+ 	IVEC=0x800
+ 	IRECONCILE=0
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(fp_unavailable)
  
- 	GEN_KVM performance_monitor
+ EXC_REAL_BEGIN(fp_unavailable, 0x800, 0x100)
+@@ -1643,7 +1684,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_TM)
+ INT_DEFINE_BEGIN(decrementer)
+ 	IVEC=0x900
+ 	IMASK=IRQS_DISABLED
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(decrementer)
  
-@@ -3013,7 +3013,7 @@ do_hash_page:
-         cmpdi	r3,0			/* see if __hash_page succeeded */
+ EXC_REAL_BEGIN(decrementer, 0x900, 0x80)
+@@ -1728,7 +1771,9 @@ EXC_COMMON_BEGIN(hdecrementer_common)
+ INT_DEFINE_BEGIN(doorbell_super)
+ 	IVEC=0xa00
+ 	IMASK=IRQS_DISABLED
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(doorbell_super)
  
- 	/* Success */
--	beq	interrupt_return_lite	/* Return from exception on success */
-+	beq	interrupt_return	/* Return from exception on success */
+ EXC_REAL_BEGIN(doorbell_super, 0xa00, 0x100)
+@@ -1919,7 +1964,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+  */
+ INT_DEFINE_BEGIN(single_step)
+ 	IVEC=0xd00
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(single_step)
  
- 	/* Error */
- 	blt-	13f
-@@ -3027,10 +3027,11 @@ do_hash_page:
- handle_page_fault:
- 11:	andis.  r0,r5,DSISR_DABRMATCH@h
- 	bne-    handle_dabr_fault
-+	bl	save_nvgprs
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_page_fault
- 	cmpdi	r3,0
--	beq+	interrupt_return_lite
-+	beq+	interrupt_return
- 	mr	r5,r3
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	ld	r4,_DAR(r1)
-@@ -3045,9 +3046,9 @@ handle_dabr_fault:
- 	bl      do_break
- 	/*
- 	 * do_break() may have changed the NV GPRS while handling a breakpoint.
--	 * If so, we need to restore them with their updated values. Don't use
--	 * interrupt_return_lite here.
-+	 * If so, we need to restore them with their updated values.
- 	 */
-+	REST_NVGPRS(r1)
- 	b       interrupt_return
+ EXC_REAL_BEGIN(single_step, 0xd00, 0x100)
+@@ -2208,7 +2255,9 @@ EXC_VIRT_NONE(0x4ee0, 0x20)
+ INT_DEFINE_BEGIN(performance_monitor)
+ 	IVEC=0xf00
+ 	IMASK=IRQS_PMI_DISABLED
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(performance_monitor)
  
+ EXC_REAL_BEGIN(performance_monitor, 0xf00, 0x20)
+@@ -2237,7 +2286,9 @@ EXC_COMMON_BEGIN(performance_monitor_common)
+ INT_DEFINE_BEGIN(altivec_unavailable)
+ 	IVEC=0xf20
+ 	IRECONCILE=0
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(altivec_unavailable)
  
+ EXC_REAL_BEGIN(altivec_unavailable, 0xf20, 0x20)
+@@ -2291,7 +2342,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ INT_DEFINE_BEGIN(vsx_unavailable)
+ 	IVEC=0xf40
+ 	IRECONCILE=0
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(vsx_unavailable)
+ 
+ EXC_REAL_BEGIN(vsx_unavailable, 0xf40, 0x20)
+@@ -2344,7 +2397,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX)
+  */
+ INT_DEFINE_BEGIN(facility_unavailable)
+ 	IVEC=0xf60
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(facility_unavailable)
+ 
+ EXC_REAL_BEGIN(facility_unavailable, 0xf60, 0x20)
+@@ -2434,8 +2489,10 @@ EXC_VIRT_NONE(0x5200, 0x100)
+ 
+ INT_DEFINE_BEGIN(instruction_breakpoint)
+ 	IVEC=0x1300
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_SKIP=1
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(instruction_breakpoint)
+ 
+ EXC_REAL_BEGIN(instruction_breakpoint, 0x1300, 0x100)
+@@ -2606,7 +2663,9 @@ EXC_VIRT_NONE(0x5600, 0x100)
+ 
+ INT_DEFINE_BEGIN(altivec_assist)
+ 	IVEC=0x1700
++#ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
+ 	IKVM_REAL=1
++#endif
+ INT_DEFINE_END(altivec_assist)
+ 
+ EXC_REAL_BEGIN(altivec_assist, 0x1700, 0x100)
 -- 
 2.23.0
 
