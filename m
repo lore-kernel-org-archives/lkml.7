@@ -2,62 +2,60 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D50C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05EEC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29402067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761942067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:52:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bdg0PrKB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rPFNKKKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfKLOu5 (ORCPT
+        id S1727671AbfKLOwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:50:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52466 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfKLOux (ORCPT
+        Tue, 12 Nov 2019 09:52:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43606 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfKLOu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:50:53 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEooSN097972;
-        Tue, 12 Nov 2019 08:50:50 -0600
+        Tue, 12 Nov 2019 09:50:58 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEoskZ052192;
+        Tue, 12 Nov 2019 08:50:54 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573570250;
-        bh=jCNYhX4gjfFcu98lRUHF4otbCqPzQQGrpV4jsyroTXU=;
+        s=ti-com-17Q1; t=1573570254;
+        bh=HGUos+luy2mHX2awq1qkiRaaCxsuIOrx5Abo8eh8ShI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=bdg0PrKBykfHNJZ3ts8VvT9z7aeezKmuIqGReDpts0Q16BRuPMH+msq2FcKKeKQdt
-         PrWUAXgjEQR0Y/m/iki7mdDmjeFBVeWa0nwEIN7uHD7wKKqvt7MR1fw9/NeBtxEdHv
-         A0O0VitiAIJDZyPB/sYFmWEnAVtBQkqmxIsV5ZN8=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEoojL054703
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:50:50 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+        b=rPFNKKKIi4j2ZsYC5jPLputGVXUTVxCF0Tqs5i9EDRNsBedyEYnHsGsUTjoFNaVGH
+         9xXhj3/vdVtHGeHFre9ToKqeTmEZVzlNM4k8UboAgO273Q89l9fmADQ+Uigr1RRM8e
+         /iNQssboxCsjd/i0jB3XMp7IO9bGA3vS55MnxCK8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEosCr070395;
+        Tue, 12 Nov 2019 08:50:54 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:50:32 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:50:54 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:50:49 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:50:36 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokeo068428;
-        Tue, 12 Nov 2019 08:50:49 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEoket068428;
+        Tue, 12 Nov 2019 08:50:54 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [RESEND Patch v3 04/20] media: ti-vpe: cal: Add per platform data support
-Date:   Tue, 12 Nov 2019 08:53:31 -0600
-Message-ID: <20191112145347.23519-5-bparrot@ti.com>
+Subject: [RESEND Patch v3 09/20] media: ti-vpe: cal: Fix ths_term/ths_settle parameters
+Date:   Tue, 12 Nov 2019 08:53:36 -0600
+Message-ID: <20191112145347.23519-10-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112145347.23519-1-bparrot@ti.com>
 References: <20191112145347.23519-1-bparrot@ti.com>
@@ -69,418 +67,260 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First this patch adds a method to access the CTRL_CORE_CAMERRX_CONTROL
-register to use the syscon mechanism. For backward compatibility we also
-handle using the existing camerrx_control "reg" entry if a syscon node
-is not found.
+The current method to calculate the ddr clk period is wrong.
+Therefore the ths_term calculation is incorrect.
+Also it was wrongly assumed that the ths_settle parameter
+was based on the control clock instead of the pixel clock.
 
-In addition the register bit layout for the CTRL_CORE_CAMERRX_CONTROL
-changes depending on the device. In order to support this we need to use
-a register access scheme based on data configuration instead of using
-static macro.
+Since the DPHY can tolerate quite a bit a of variation,
+capture was still mostly working with the 2 tested modes
+when the pixel clock was close to the control clock
+(i.e. 96 Mhz). But it would quickly stops working when
+using different modes or when customers used different
+sensors altogether.
 
-In this case we make use of the regmap facility and create data set
-based on the various device and phy available.
+Calculating the DDRClk period needs to take into account
+the pixel bit width and the number of active data lanes.
+
+Based on the latest technical reference manual these
+parameters should now be calculated as follows:
+
+THS_TERM: Programmed value = floor(20 ns/DDRClk period)
+THS_SETTLE: Programmed value = floor(105 ns/DDRClk period) + 4
+
+Also originally 'depth' was used to represent the number of
+bits a pixel would use once stored in memory (i.e. the
+container size). To accurately calculate the THS_* parameters
+we need to use the actual number of bits per pixels coming
+in from the sensor. So we are renaming 'depth' to 'bpp' (bits
+per pixels) and update the format table to show the actual
+number of bits per pixel being received.
+
+The "container" size will be derived from the "bpp" value.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 282 +++++++++++++++++++++-------
- 1 file changed, 209 insertions(+), 73 deletions(-)
+ drivers/media/platform/ti-vpe/cal.c | 98 +++++++++++++----------------
+ 1 file changed, 44 insertions(+), 54 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 223161f9c403..b4616d02a25a 100644
+index 3b04aff6c778..51edc7bc3135 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -14,6 +14,8 @@
- #include <linux/delay.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- #include <linux/videodev2.h>
- #include <linux/of_device.h>
- #include <linux/of_graph.h>
-@@ -220,20 +222,64 @@ struct cal_dmaqueue {
- 	int			ini_jiffies;
+@@ -73,8 +73,6 @@ static const struct v4l2_fract
+ #define CAL_NUM_INPUT 1
+ #define CAL_NUM_CONTEXT 2
+ 
+-#define bytes_per_line(pixel, bpp) (ALIGN(pixel * bpp, 16))
+-
+ #define reg_read(dev, offset) ioread32(dev->base + offset)
+ #define reg_write(dev, offset, val) iowrite32(val, dev->base + offset)
+ 
+@@ -93,102 +91,103 @@ static const struct v4l2_fract
+ struct cal_fmt {
+ 	u32	fourcc;
+ 	u32	code;
+-	u8	depth;
++	/* Bits per pixel */
++	u8	bpp;
  };
  
--struct cm_data {
-+struct cc_data {
- 	void __iomem		*base;
- 	struct resource		*res;
- 
--	unsigned int		camerrx_control;
--
- 	struct platform_device *pdev;
+ static struct cal_fmt cal_formats[] = {
+ 	{
+ 		.fourcc		= V4L2_PIX_FMT_YUYV,
+ 		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_UYVY,
+ 		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_YVYU,
+ 		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_VYUY,
+ 		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB565, /* gggbbbbb rrrrrggg */
+ 		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB565X, /* rrrrrggg gggbbbbb */
+ 		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB555, /* gggbbbbb arrrrrgg */
+ 		.code		= MEDIA_BUS_FMT_RGB555_2X8_PADHI_LE,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB555X, /* arrrrrgg gggbbbbb */
+ 		.code		= MEDIA_BUS_FMT_RGB555_2X8_PADHI_BE,
+-		.depth		= 16,
++		.bpp		= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB24, /* rgb */
+ 		.code		= MEDIA_BUS_FMT_RGB888_2X12_LE,
+-		.depth		= 24,
++		.bpp		= 24,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_BGR24, /* bgr */
+ 		.code		= MEDIA_BUS_FMT_RGB888_2X12_BE,
+-		.depth		= 24,
++		.bpp		= 24,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB32, /* argb */
+ 		.code		= MEDIA_BUS_FMT_ARGB8888_1X32,
+-		.depth		= 32,
++		.bpp		= 32,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SBGGR8,
+ 		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
+-		.depth		= 8,
++		.bpp		= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGBRG8,
+ 		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
+-		.depth		= 8,
++		.bpp		= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGRBG8,
+ 		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
+-		.depth		= 8,
++		.bpp		= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SRGGB8,
+ 		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
+-		.depth		= 8,
++		.bpp		= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SBGGR10,
+ 		.code		= MEDIA_BUS_FMT_SBGGR10_1X10,
+-		.depth		= 16,
++		.bpp		= 10,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGBRG10,
+ 		.code		= MEDIA_BUS_FMT_SGBRG10_1X10,
+-		.depth		= 16,
++		.bpp		= 10,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGRBG10,
+ 		.code		= MEDIA_BUS_FMT_SGRBG10_1X10,
+-		.depth		= 16,
++		.bpp		= 10,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SRGGB10,
+ 		.code		= MEDIA_BUS_FMT_SRGGB10_1X10,
+-		.depth		= 16,
++		.bpp		= 10,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SBGGR12,
+ 		.code		= MEDIA_BUS_FMT_SBGGR12_1X12,
+-		.depth		= 16,
++		.bpp		= 12,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGBRG12,
+ 		.code		= MEDIA_BUS_FMT_SGBRG12_1X12,
+-		.depth		= 16,
++		.bpp		= 12,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGRBG12,
+ 		.code		= MEDIA_BUS_FMT_SGRBG12_1X12,
+-		.depth		= 16,
++		.bpp		= 12,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SRGGB12,
+ 		.code		= MEDIA_BUS_FMT_SRGGB12_1X12,
+-		.depth		= 16,
++		.bpp		= 12,
+ 	},
  };
  
--struct cc_data {
--	void __iomem		*base;
--	struct resource		*res;
-+/* CTRL_CORE_CAMERRX_CONTROL register field id */
-+enum cal_camerarx_field {
-+	F_CTRLCLKEN,
-+	F_CAMMODE,
-+	F_LANEENABLE,
-+	F_CSI_MODE,
+@@ -870,41 +869,28 @@ static void cal_wr_dma_addr(struct cal_ctx *ctx, unsigned int dmaaddr)
+ #define TCLK_TERM	0
+ #define TCLK_MISS	1
+ #define TCLK_SETTLE	14
+-#define THS_SETTLE	15
  
--	struct platform_device *pdev;
-+	F_MAX_FIELDS,
-+};
-+
-+struct cal_csi2_phy {
-+	struct regmap_field *fields[F_MAX_FIELDS];
-+	struct reg_field *base_fields;
-+	const int num_lanes;
-+};
-+
-+struct cal_data {
-+	const int num_csi2_phy;
-+	struct cal_csi2_phy *csi2_phy_core;
-+
-+	const unsigned int flags;
-+};
-+
-+static struct reg_field dra72x_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 10, 10),
-+	[F_CAMMODE] = REG_FIELD(0, 11, 12),
-+	[F_LANEENABLE] = REG_FIELD(0, 13, 16),
-+	[F_CSI_MODE] = REG_FIELD(0, 17, 17),
-+};
-+
-+static struct reg_field dra72x_ctrl_core_csi1_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 0, 0),
-+	[F_CAMMODE] = REG_FIELD(0, 1, 2),
-+	[F_LANEENABLE] = REG_FIELD(0, 3, 4),
-+	[F_CSI_MODE] = REG_FIELD(0, 5, 5),
-+};
-+
-+static struct cal_csi2_phy dra72x_cal_csi_phy[] = {
-+	{
-+		.base_fields = dra72x_ctrl_core_csi0_reg_fields,
-+		.num_lanes = 4,
-+	},
-+	{
-+		.base_fields = dra72x_ctrl_core_csi1_reg_fields,
-+		.num_lanes = 2,
-+	},
-+};
-+
-+static const struct cal_data dra72x_cal_data = {
-+	.csi2_phy_core = dra72x_cal_csi_phy,
-+	.num_csi2_phy = ARRAY_SIZE(dra72x_cal_csi_phy),
- };
- 
- /*
-@@ -247,8 +293,15 @@ struct cal_dev {
- 	struct platform_device	*pdev;
- 	struct v4l2_device	v4l2_dev;
- 
-+	/* Controller flags for special cases */
-+	unsigned int		flags;
-+
-+	const struct cal_data	*data;
-+
- 	/* Control Module handle */
--	struct cm_data		*cm;
-+	struct regmap		*syscon_camerrx;
-+	u32			syscon_camerrx_offset;
-+
- 	/* Camera Core Module handle */
- 	struct cc_data		*cc[CAL_NUM_CSI2_PORTS];
- 
-@@ -359,73 +412,113 @@ static inline void set_field(u32 *valp, u32 field, u32 mask)
- 	*valp = val;
- }
- 
--/*
-- * Control Module block access
-- */
--static struct cm_data *cm_create(struct cal_dev *dev)
-+static u32 cal_data_get_phy_max_lanes(struct cal_ctx *ctx)
+ static void csi2_phy_config(struct cal_ctx *ctx)
  {
--	struct platform_device *pdev = dev->pdev;
--	struct cm_data *cm;
-+	struct cal_dev *dev = ctx->dev;
-+	u32 phy_id = ctx->csi2_port - 1;
+ 	unsigned int reg0, reg1;
+ 	unsigned int ths_term, ths_settle;
+-	unsigned int ddrclkperiod_us;
++	unsigned int csi2_ddrclk_khz;
++	struct v4l2_fwnode_bus_mipi_csi2 *mipi_csi2 =
++			&ctx->endpoint.bus.mipi_csi2;
++	u32 num_lanes = mipi_csi2->num_data_lanes;
  
--	cm = devm_kzalloc(&pdev->dev, sizeof(*cm), GFP_KERNEL);
--	if (!cm)
--		return ERR_PTR(-ENOMEM);
-+	return dev->data->csi2_phy_core[phy_id].num_lanes;
-+}
+-	/*
+-	 * THS_TERM: Programmed value = floor(20 ns/DDRClk period) - 2.
+-	 */
+-	ddrclkperiod_us = ctx->external_rate / 2000000;
+-	ddrclkperiod_us = 1000000 / ddrclkperiod_us;
+-	ctx_dbg(1, ctx, "ddrclkperiod_us: %d\n", ddrclkperiod_us);
++	/* DPHY timing configuration */
++	/* CSI-2 is DDR and we only count used lanes. */
++	csi2_ddrclk_khz = ctx->external_rate / 1000
++		/ (2 * num_lanes) * ctx->fmt->bpp;
++	ctx_dbg(1, ctx, "csi2_ddrclk_khz: %d\n", csi2_ddrclk_khz);
  
--	cm->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--						"camerrx_control");
--	cm->base = devm_ioremap_resource(&pdev->dev, cm->res);
--	if (IS_ERR(cm->base)) {
-+static u32 cal_data_get_num_csi2_phy(struct cal_dev *dev)
-+{
-+	return dev->data->num_csi2_phy;
-+}
-+
-+static int cal_camerarx_regmap_init(struct cal_dev *dev)
-+{
-+	struct reg_field *field;
-+	struct cal_csi2_phy *phy;
-+	int i, j;
-+
-+	if (!dev->data)
-+		return -EINVAL;
-+
-+	for (i = 0; i < cal_data_get_num_csi2_phy(dev); i++) {
-+		phy = &dev->data->csi2_phy_core[i];
-+		for (j = 0; j < F_MAX_FIELDS; j++) {
-+			field = &phy->base_fields[j];
-+			/*
-+			 * Here we update the reg offset with the
-+			 * value found in DT
-+			 */
-+			field->reg = dev->syscon_camerrx_offset;
-+			phy->fields[j] =
-+				devm_regmap_field_alloc(&dev->pdev->dev,
-+							dev->syscon_camerrx,
-+							*field);
-+			if (IS_ERR(phy->fields[j])) {
-+				cal_err(dev, "Unable to allocate regmap fields\n");
-+				return PTR_ERR(phy->fields[j]);
-+			}
-+		}
-+	}
-+	return 0;
-+}
-+
-+static const struct regmap_config cal_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static struct regmap *cal_get_camerarx_regmap(struct cal_dev *dev)
-+{
-+	struct platform_device *pdev = dev->pdev;
-+	struct regmap *regmap;
-+	void __iomem *base;
-+	u32 reg_io_width;
-+	struct regmap_config r_config = cal_regmap_config;
-+	struct resource *res;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "camerrx_control");
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base)) {
- 		cal_err(dev, "failed to ioremap\n");
--		return ERR_CAST(cm->base);
-+		return ERR_CAST(base);
- 	}
+-	ths_term = 20000 / ddrclkperiod_us;
+-	ths_term = (ths_term >= 2) ? ths_term - 2 : ths_term;
++	/* THS_TERM: Programmed value = floor(20 ns/DDRClk period) */
++	ths_term = 20 * csi2_ddrclk_khz / 1000000;
+ 	ctx_dbg(1, ctx, "ths_term: %d (0x%02x)\n", ths_term, ths_term);
  
- 	cal_dbg(1, dev, "ioresource %s at %pa - %pa\n",
--		cm->res->name, &cm->res->start, &cm->res->end);
-+		res->name, &res->start, &res->end);
+-	/*
+-	 * THS_SETTLE: Programmed value = floor(176.3 ns/CtrlClk period) - 1.
+-	 *	Since CtrlClk is fixed at 96Mhz then we get
+-	 *	ths_settle = floor(176.3 / 10.416) - 1 = 15
+-	 * If we ever switch to a dynamic clock then this code might be useful
+-	 *
+-	 * unsigned int ctrlclkperiod_us;
+-	 * ctrlclkperiod_us = 96000000 / 1000000;
+-	 * ctrlclkperiod_us = 1000000 / ctrlclkperiod_us;
+-	 * ctx_dbg(1, ctx, "ctrlclkperiod_us: %d\n", ctrlclkperiod_us);
+-
+-	 * ths_settle = 176300  / ctrlclkperiod_us;
+-	 * ths_settle = (ths_settle > 1) ? ths_settle - 1 : ths_settle;
+-	 */
+-
+-	ths_settle = THS_SETTLE;
++	/* THS_SETTLE: Programmed value = floor(105 ns/DDRClk period) + 4 */
++	ths_settle = (105 * csi2_ddrclk_khz / 1000000) + 4;
+ 	ctx_dbg(1, ctx, "ths_settle: %d (0x%02x)\n", ths_settle, ths_settle);
  
--	return cm;
-+	reg_io_width = 4;
-+	r_config.reg_stride = reg_io_width;
-+	r_config.val_bits = reg_io_width * 8;
-+	r_config.max_register = resource_size(res) - reg_io_width;
-+
-+	regmap = regmap_init_mmio(NULL, base, &r_config);
-+	if (IS_ERR(regmap))
-+		pr_err("regmap init failed\n");
-+
-+	return regmap;
- }
- 
-+/*
-+ * Control Module CAMERARX block access
-+ */
- static void camerarx_phy_enable(struct cal_ctx *ctx)
+ 	reg0 = reg_read(ctx->cc, CAL_CSI2_PHY_REG0);
+@@ -1116,6 +1102,8 @@ static int cal_calc_format_size(struct cal_ctx *ctx,
+ 				const struct cal_fmt *fmt,
+ 				struct v4l2_format *f)
  {
--	u32 val;
--
--	if (!ctx->dev->cm->base) {
--		ctx_err(ctx, "cm not mapped\n");
--		return;
--	}
--
--	val = reg_read(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL);
--	if (ctx->csi2_port == 1) {
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI0_CTRLCLKEN_MASK);
--		set_field(&val, 0, CM_CAMERRX_CTRL_CSI0_CAMMODE_MASK);
--		/* enable all lanes by default */
--		set_field(&val, 0xf, CM_CAMERRX_CTRL_CSI0_LANEENABLE_MASK);
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI0_MODE_MASK);
--	} else if (ctx->csi2_port == 2) {
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI1_CTRLCLKEN_MASK);
--		set_field(&val, 0, CM_CAMERRX_CTRL_CSI1_CAMMODE_MASK);
--		/* enable all lanes by default */
--		set_field(&val, 0x3, CM_CAMERRX_CTRL_CSI1_LANEENABLE_MASK);
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI1_MODE_MASK);
--	}
--	reg_write(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL, val);
-+	struct cal_csi2_phy *phy;
-+	u32 phy_id = ctx->csi2_port - 1;
-+	u32 max_lanes;
++	u32 bpl;
 +
-+	phy = &ctx->dev->data->csi2_phy_core[phy_id];
-+	regmap_field_write(phy->fields[F_CAMMODE], 0);
-+	/* Always enable all lanes at the phy control level */
-+	max_lanes = (1 << cal_data_get_phy_max_lanes(ctx)) - 1;
-+	regmap_field_write(phy->fields[F_LANEENABLE], max_lanes);
-+	regmap_field_write(phy->fields[F_CSI_MODE], 1);
-+	regmap_field_write(phy->fields[F_CTRLCLKEN], 1);
- }
+ 	if (!fmt) {
+ 		ctx_dbg(3, ctx, "No cal_fmt provided!\n");
+ 		return -EINVAL;
+@@ -1123,8 +1111,10 @@ static int cal_calc_format_size(struct cal_ctx *ctx,
  
- static void camerarx_phy_disable(struct cal_ctx *ctx)
- {
--	u32 val;
-+	struct cal_csi2_phy *phy;
-+	u32 phy_id = ctx->csi2_port - 1;
- 
--	if (!ctx->dev->cm->base) {
--		ctx_err(ctx, "cm not mapped\n");
--		return;
--	}
--
--	val = reg_read(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL);
--	if (ctx->csi2_port == 1)
--		set_field(&val, 0x0, CM_CAMERRX_CTRL_CSI0_CTRLCLKEN_MASK);
--	else if (ctx->csi2_port == 2)
--		set_field(&val, 0x0, CM_CAMERRX_CTRL_CSI1_CTRLCLKEN_MASK);
--	reg_write(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL, val);
-+	phy = &ctx->dev->data->csi2_phy_core[phy_id];
-+	regmap_field_write(phy->fields[F_CTRLCLKEN], 0);
- }
- 
- /*
-@@ -508,12 +601,6 @@ static void cal_quickdump_regs(struct cal_dev *dev)
- 			       resource_size(dev->ctx[1]->cc->res),
- 			       false);
- 	}
--
--	cal_info(dev, "CAMERRX_Control Registers @ %pa:\n",
--		 &dev->cm->res->start);
--	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_OFFSET, 16, 4,
--		       (__force const void *)dev->cm->base,
--		       resource_size(dev->cm->res), false);
- }
- 
- /*
-@@ -1804,10 +1891,15 @@ static struct cal_ctx *cal_create_instance(struct cal_dev *dev, int inst)
- 	return NULL;
- }
- 
-+static const struct of_device_id cal_of_match[];
+ 	v4l_bound_align_image(&f->fmt.pix.width, 48, MAX_WIDTH, 2,
+ 			      &f->fmt.pix.height, 32, MAX_HEIGHT, 0, 0);
+-	f->fmt.pix.bytesperline = bytes_per_line(f->fmt.pix.width,
+-						 fmt->depth >> 3);
 +
- static int cal_probe(struct platform_device *pdev)
- {
- 	struct cal_dev *dev;
- 	struct cal_ctx *ctx;
-+	struct device_node *parent = pdev->dev.of_node;
-+	struct regmap *syscon_camerrx = NULL;
-+	u32 syscon_camerrx_offset = 0;
- 	int ret;
- 	int irq;
- 	int i;
-@@ -1816,6 +1908,14 @@ static int cal_probe(struct platform_device *pdev)
- 	if (!dev)
- 		return -ENOMEM;
- 
-+	dev->data = of_device_get_match_data(&pdev->dev);
-+	if (!dev->data) {
-+		dev_err(&pdev->dev, "Could not get feature data based on compatible version\n");
-+		return -ENODEV;
-+	}
++	bpl = (f->fmt.pix.width * ALIGN(fmt->bpp, 8)) >> 3;
++	f->fmt.pix.bytesperline = ALIGN(bpl, 16);
 +
-+	dev->flags = dev->data->flags;
-+
- 	/* set pseudo v4l2 device name so we can use v4l2_printk */
- 	strscpy(dev->v4l2_dev.name, CAL_MODULE_NAME,
- 		sizeof(dev->v4l2_dev.name));
-@@ -1823,6 +1923,38 @@ static int cal_probe(struct platform_device *pdev)
- 	/* save pdev pointer */
- 	dev->pdev = pdev;
+ 	f->fmt.pix.sizeimage = f->fmt.pix.height *
+ 			       f->fmt.pix.bytesperline;
  
-+	syscon_camerrx = syscon_regmap_lookup_by_phandle(parent,
-+							 "ti,camerrx-control");
-+	ret = of_property_read_u32_index(parent, "ti,camerrx-control", 1,
-+					 &syscon_camerrx_offset);
-+	if (IS_ERR(syscon_camerrx))
-+		ret = PTR_ERR(syscon_camerrx);
-+	if (ret) {
-+		dev_warn(&pdev->dev, "failed to get ti,camerrx-control: %d\n",
-+			 ret);
-+
-+		/*
-+		 * Backward DTS compatibility.
-+		 * If syscon entry is not present then check if the
-+		 * camerrx_control resource is present.
-+		 */
-+		syscon_camerrx = cal_get_camerarx_regmap(dev);
-+		if (IS_ERR(syscon_camerrx)) {
-+			dev_err(&pdev->dev, "failed to get camerrx_control regmap\n");
-+			return PTR_ERR(syscon_camerrx);
-+		}
-+		/* In this case the base already point to the direct
-+		 * CM register so no need for an offset
-+		 */
-+		syscon_camerrx_offset = 0;
-+	}
-+
-+	dev->syscon_camerrx = syscon_camerrx;
-+	dev->syscon_camerrx_offset = syscon_camerrx_offset;
-+	ret = cal_camerarx_regmap_init(dev);
-+	if (ret)
-+		return ret;
-+
- 	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 						"cal_top");
- 	dev->base = devm_ioremap_resource(&pdev->dev, dev->res);
-@@ -1841,23 +1973,24 @@ static int cal_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, dev);
- 
--	dev->cm = cm_create(dev);
--	if (IS_ERR(dev->cm))
--		return PTR_ERR(dev->cm);
--
- 	dev->cc[0] = cc_create(dev, 0);
- 	if (IS_ERR(dev->cc[0]))
- 		return PTR_ERR(dev->cc[0]);
- 
--	dev->cc[1] = cc_create(dev, 1);
--	if (IS_ERR(dev->cc[1]))
--		return PTR_ERR(dev->cc[1]);
-+	if (cal_data_get_num_csi2_phy(dev) > 1) {
-+		dev->cc[1] = cc_create(dev, 1);
-+		if (IS_ERR(dev->cc[1]))
-+			return PTR_ERR(dev->cc[1]);
-+	} else {
-+		dev->cc[1] = NULL;
-+	}
- 
- 	dev->ctx[0] = NULL;
- 	dev->ctx[1] = NULL;
- 
- 	dev->ctx[0] = cal_create_instance(dev, 0);
--	dev->ctx[1] = cal_create_instance(dev, 1);
-+	if (cal_data_get_num_csi2_phy(dev) > 1)
-+		dev->ctx[1] = cal_create_instance(dev, 1);
- 	if (!dev->ctx[0] && !dev->ctx[1]) {
- 		cal_err(dev, "Neither port is configured, no point in staying up\n");
- 		return -ENODEV;
-@@ -1924,7 +2057,10 @@ static int cal_remove(struct platform_device *pdev)
- 
- #if defined(CONFIG_OF)
- static const struct of_device_id cal_of_match[] = {
--	{ .compatible = "ti,dra72-cal", },
-+	{
-+		.compatible = "ti,dra72-cal",
-+		.data = (void *)&dra72x_cal_data,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, cal_of_match);
 -- 
 2.17.1
 
