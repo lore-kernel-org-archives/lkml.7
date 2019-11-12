@@ -2,120 +2,102 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20D8C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93838C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66F920679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72AF820679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKLRHx (ORCPT
+        id S1727140AbfKLRIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:07:53 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6214 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726896AbfKLRHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:07:52 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5A1FB471603A22B30AD3;
-        Wed, 13 Nov 2019 01:07:50 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
- 01:07:43 +0800
-Date:   Tue, 12 Nov 2019 17:07:34 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Keith Busch <keith.busch@intel.com>, <jglisse@redhat.com>,
-        <linuxarm@huawei.com>, Andrew Morton <akpm@linux-foundation.org>,
-        "Dan Williams" <dan.j.williams@intel.com>, <will@kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
-Message-ID: <20191112170734.0000621a@huawei.com>
-In-Reply-To: <1768519.laKBN70clK@kreacher>
-References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
-        <1895971.7mY3IlW731@kreacher>
-        <20191018134656.00000f70@huawei.com>
-        <1768519.laKBN70clK@kreacher>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 12 Nov 2019 12:08:34 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35003 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLRIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:08:34 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iUZeW-00088p-Ox; Tue, 12 Nov 2019 18:08:29 +0100
+Date:   Tue, 12 Nov 2019 18:08:27 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch V2 06/16] x86/io: Speedup schedule out of I/O bitmap
+ user
+In-Reply-To: <CALCETrUcY_DhZC8CH0NhoRp_r6mh4v1Z2dmhsdErV8wx6FsLaw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1911121807260.1833@nanos.tec.linutronix.de>
+References: <20191111220314.519933535@linutronix.de> <20191111223052.086299881@linutronix.de> <CALCETrUcY_DhZC8CH0NhoRp_r6mh4v1Z2dmhsdErV8wx6FsLaw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 15:54:28 +0100
-"Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
-
-> On Friday, October 18, 2019 2:46:56 PM CET Jonathan Cameron wrote:
-> > On Fri, 18 Oct 2019 12:18:33 +0200
-> > "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
-> >   
-> > > On Friday, October 4, 2019 1:43:27 PM CEST Jonathan Cameron wrote:  
-> > > > Generic Initiators are a new ACPI concept that allows for the
-> > > > description of proximity domains that contain a device which
-> > > > performs memory access (such as a network card) but neither
-> > > > host CPU nor Memory.
-> > > > 
-> > > > This patch has the parsing code and provides the infrastructure
-> > > > for an architecture to associate these new domains with their
-> > > > nearest memory processing node.
-> > > > 
-> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>    
-> > > 
-> > > This depends on the series from Dan at:
-> > > 
-> > > https://lore.kernel.org/linux-acpi/CAPcyv4gBSX58CWH4HZ28w0_cZRzJrhgdEFHa2g8KDqyv8aFqZQ@mail.gmail.com/T/#m1acce3ae8f29f680c0d95fd1e840e703949fbc48
-> > >   
-> > Hi Rafael,
-> > 
-> > Yes. Cover letter mentions it was rebased on v4 of that series.
-> >   
-> > > AFAICS, so please respin when that one hits the Linus' tree.  
-> > 
-> > Sure, though that pushes it out another cycle and it's beginning to
-> > get a bit silly (just rebases since April).
-> > 
-> > I guess it can't be helped given the series hits several trees.  
+On Tue, 12 Nov 2019, Andy Lutomirski wrote:
+> On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > @@ -50,6 +48,11 @@ long ksys_ioperm(unsigned long from, uns
+> >                  * limit correct.
+> >                  */
+> >                 preempt_disable();
+> > +               t->io_bitmap_ptr = bitmap;
+> > +               set_thread_flag(TIF_IO_BITMAP);
+> > +               /* Make the bitmap base in the TSS valid */
+> > +               tss = this_cpu_ptr(&cpu_tss_rw);
+> > +               tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
+> >                 refresh_tss_limit();
+> >                 preempt_enable();
+> >         }
 > 
-> I've just applied the Dan's series and I can take patch [1/4] from this one,
-> but for the [2-3/4] I'd like to get some ACKs from the arm64 and x86 people
-> respectively.
-
-Thanks Rafael!
-
-Absolutely understood on the need for Acks.
-
-For ARM let us try a few more CCs
-
-+CC Will, Lorenzo, Hanjun.
-
-Also Ingo on basis of showing a passing interest in the x86 patch
-previously.  Otherwise I think we have the x86 people most like to
-comment already cc'd.
-
-https://patchwork.kernel.org/cover/11174247/ has the full series.
-
-I'd appreciate anyone who has time taking a look at these.  The
-actual actions in the architectures are very simple, but I may well
-be missing some subtlety.
-
+> It's not shown in the diff, but the very next line of code turns
+> preemption back off.  This means that we might schedule right here
+> with TIF_IO_BITMAP set, the base set to VALID, but the wrong data in
+> the bitmap.  I *think* this will actually end up being okay, but it
+> certainly makes understanding the code harder.  Can you adjust the
+> code so that preemption stays off?
 > 
-> Thanks!
+> More importantly, the code below this modifies the TSS copy in place
+> instead of writing a whole new copy.  But now that you've added your
+> optimization, the TSS copy might be *someone else's* IO bitmap.  So I
+> think you might end up with more io ports allowed than you intended.
+> For example:
 > 
-Thanks,
+> Task A uses ioperm() to enable all ports.
+> Switch to task B.  Now the TSS base is INVALID but all bitmap bits are still 0.
+> Task B calls ioperm().
+> 
+> The code will set the base to VALID and will correctly set up the
+> thread's copy of the bitmap, but I think the copy will only update the
+> bits 0 through whatever ioperm() touched and not the bits above that
+> in the TSS.
 
-Jonathan
+Yeah, you are right. Did not think about that. Will fix that up.
+ 
+> I would believe that this is fixed later in your patch set.  If so,
+> perhaps you should just memcpy() the whole thing without trying to
+> optimize in this patch and then let the changes later re-optimize it
+> as appropriate.  IOW change memcpy(tss->io_bitmap, t->io_bitmap_ptr,
+> bytes_updated); to memcpy(..., BYTES_PER_LONG * IO_BITMAP_LONGS) or
+> similar.
 
+Right.
 
+Thanks for spotting that!
+
+       tglx
