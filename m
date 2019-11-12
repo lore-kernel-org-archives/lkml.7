@@ -2,62 +2,131 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FBDC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F4FC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41997214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5CB20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:01:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLdc0Hgw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfKLVBJ (ORCPT
+        id S1727171AbfKLVBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:01:09 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:53247 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfKLVBJ (ORCPT
+        Tue, 12 Nov 2019 16:01:54 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43491 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfKLVBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:01:09 -0500
-Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xACL0gLr095467;
-        Wed, 13 Nov 2019 06:00:42 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp);
- Wed, 13 Nov 2019 06:00:42 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040052248.bbtec.net [126.40.52.248])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xACL0bKE095449
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 13 Nov 2019 06:00:41 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: WARNING in aa_sock_msg_perm (2)
-To:     syzbot <syzbot+e3b328542d4adc02a975@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <00000000000004471505972a9432@google.com>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     jmorris@namei.org, john.johansen@canonical.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com
-Message-ID: <f291704f-464d-72f2-b016-0073bc6a8ac3@I-love.SAKURA.ne.jp>
-Date:   Wed, 13 Nov 2019 06:00:32 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <00000000000004471505972a9432@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Nov 2019 16:01:54 -0500
+Received: by mail-qt1-f196.google.com with SMTP id l24so21330946qtp.10;
+        Tue, 12 Nov 2019 13:01:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2i1h3RTZew5EzwteIWhHEPu/LeGd/dQkP36HLoeGoB4=;
+        b=aLdc0HgwaayDctt+CpmfnklPni2iEqu6ZeAd5WQdIvq1d3cZ1bc9+Gd/HO2L9P2kD9
+         mpPWSpIlRz98whhm0fFQX0SGeOFeAeMigyUpzD8VaTgDUXXpzWerQrtjgO0xFpK0e+iH
+         SL1M1rjwvkW1uG+qLcFS01ZUETATS3+A8zx6d3bAUi5tFiDHwfdPn5Q3kp0p5a2keBbR
+         1h2et2tIN1qTUl+EqdU7JRT3h295kz2j4wLAThYG2hRNiwAtl9PVX0Chjg1cJAqjfmbb
+         y/1fYep/6ej6ZhxN8EwuZKvwXJEdXDqmc4GzKI4Psb0oElb4+UkzEqcE86CB6OTKDHQ1
+         5PDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2i1h3RTZew5EzwteIWhHEPu/LeGd/dQkP36HLoeGoB4=;
+        b=rD/b4bVsQ4niThHTERb2EYymtMLphpADG3/u2CpW54yXES4uBD6bFwAiRP20XBfPnD
+         S4V5QmiusaU9phgEEbEnz5cep99LkKC4JQqoSj2sgxD9FEPEDbxhpVhwjHU+ah3a4Sec
+         q/gsYx5HIS4A1aG0Gz/pyyL6sc3kzJKV+w41DC+XaG68ju9oGfNxhcHKpivkb4vGg7zg
+         2lripZV/F1RRT2rHKHTTpPvg3xcr+qzgYsIgAPd/XPGPSsD77V7sRSrbqzz1T7dhAPtu
+         NvCbRxhixycJ6qvmS6n165nIXEzqGhGO3VmVcQjbk1UQtTZpBxgbBPnVADqWhGv/UVr5
+         puCw==
+X-Gm-Message-State: APjAAAUO3Av5fFoQBTxVRIN4jdJ5vd+CV5zAnQhPnWu3+G/jrPhJ2x0n
+        a3GxpOZRXxOtF5710MXesSW+toED
+X-Google-Smtp-Source: APXvYqyW0+qv089yMwQdCsfbDP7TOzGd/jKcCJeOgj/SJiFbZIZMYol/dCtgE6fPF6TsBDUVGLxQmA==
+X-Received: by 2002:aed:3702:: with SMTP id i2mr31995202qtb.312.1573592512879;
+        Tue, 12 Nov 2019 13:01:52 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id 40sm1395635qtc.95.2019.11.12.13.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 13:01:52 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH v2 1/2] Input: ili210x - add resolution to chip operations structure
+Date:   Tue, 12 Nov 2019 16:01:47 -0500
+Message-Id: <20191112210148.3535-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-net/rxrpc/output.c:655 was previously reported as "#syz dup: KASAN: use-after-free Read in rxrpc_send_keepalive".
-Now reported as different subject?
+Optionally allow the touch screen resolution to be set by adding
+it to the chip operations structure. If it is omitted (left zero),
+the resolution defaults to 64K. Which is the previously hard-coded
+value.
 
-#syz dup: KMSAN: use-after-free in rxrpc_send_keepalive
+Set the ili2117 resolution to 2048, as indicated in its datasheet.
+
+Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
+Cc: Marek Vasut <marex@denx.de>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: linux-input@vger.kernel.org
+Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ drivers/input/touchscreen/ili210x.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+index a6feae5ce887..3b8e24815a1f 100644
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -31,6 +31,7 @@ struct ili2xxx_chip {
+ 				 unsigned int *x, unsigned int *y);
+ 	bool (*continue_polling)(const u8 *data, bool touch);
+ 	unsigned int max_touches;
++	unsigned int resolution;
+ };
+ 
+ struct ili210x {
+@@ -160,6 +161,7 @@ static const struct ili2xxx_chip ili211x_chip = {
+ 	.parse_touch_data	= ili211x_touchdata_to_coords,
+ 	.continue_polling	= ili211x_decline_polling,
+ 	.max_touches		= 10,
++	.resolution		= 2048,
+ };
+ 
+ static int ili251x_read_reg(struct i2c_client *client,
+@@ -336,6 +338,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 	struct gpio_desc *reset_gpio;
+ 	struct input_dev *input;
+ 	int error;
++	unsigned int max_xy;
+ 
+ 	dev_dbg(dev, "Probing for ILI210X I2C Touschreen driver");
+ 
+@@ -386,8 +389,9 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 	input->id.bustype = BUS_I2C;
+ 
+ 	/* Multi touch */
+-	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 0xffff, 0, 0);
+-	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 0xffff, 0, 0);
++	max_xy = (chip->resolution ?: SZ_64K) - 1;
++	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_xy, 0, 0);
++	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, max_xy, 0, 0);
+ 	touchscreen_parse_properties(input, true, &priv->prop);
+ 
+ 	error = input_mt_init_slots(input, priv->chip->max_touches,
+-- 
+2.17.1
 
