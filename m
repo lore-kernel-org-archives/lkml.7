@@ -2,125 +2,139 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6F0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABE9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65837206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573580595;
-	bh=2yd10KHYTLI5s6gMxqmI4NvWYQwboiddj2FXrknzmy8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C8K8VbyzoAzR020+RZex12AKAZrFZrthiXlJX082t87Jtg882c7FY8bGzkjwGav1d
-	 gTqp7ZlDZTZNmLAEVw3IEIV8KEH4Qif8r8nSI51f/dxUsG2qmfb4U4BfNsIA4IC7B6
-	 6guUBM5VXnpRgJZyeRjhjbmivZjzb1ze2McmI0UI=
+	by mail.kernel.org (Postfix) with ESMTP id 2E72F206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cNd0enXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKLRnO (ORCPT
+        id S1727134AbfKLRnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:43:14 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33090 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfKLRnN (ORCPT
+        Tue, 12 Nov 2019 12:43:19 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42089 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfKLRnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:43:13 -0500
-Received: by mail-lj1-f196.google.com with SMTP id t5so18805294ljk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:43:12 -0800 (PST)
+        Tue, 12 Nov 2019 12:43:18 -0500
+Received: by mail-pg1-f195.google.com with SMTP id q17so12302690pgt.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:43:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IBqefimeVs+AYlMba+nG3Ifymts3na+gdpNY2rCXiUk=;
-        b=diHQe+yBS1ptQml1pfafp+kWY2eFlTIw5aehrJHkBhZ8198TLnziuPuv+aWPbMESa4
-         ZLgW0hXjhFPDrgdFG9RXdXxqYD1Ejn46fc1vZ1auR9hlb58u47fldPax7D6iEk6grtjo
-         EpEWHP7zBGk+CKduo6ZBne9+0TPwuTpetW/Ec=
+        bh=w7MsKAbnhTOI/PwrqDE4qAaT5Rd571pVr2jNCX1vMLU=;
+        b=cNd0enXkHOlBT1RG/B0zjwD+dSmow8c5nRzzi8wByRqtyyGRqlP/90puPVUHT2bUvK
+         mQbcgkMcKJEggwR6BNgwUe1k3iHRcU9Nv+09wp+5mSHD85bbCwFpPmC1Bq/N6KycgvLc
+         ktBjH+xZqmnKF96hvkiWDDnKXCucxoU7OZ2iPuTzsZieGoXXvmVO8nkdSVmcKoQ0Sag5
+         1wb5p1gG2njNuZjWDs23kq4PuD0d3VD2P6xrsZEftYQbFuKC9dq5RM4h98lnbR6yHj+6
+         V3hTuXYKq51KvsQAjJmhlCEiu8IU0QIfTP+HvBkhjozUwwD6bX/8o2pKUCVaRPm4q9kZ
+         e6Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IBqefimeVs+AYlMba+nG3Ifymts3na+gdpNY2rCXiUk=;
-        b=bkCOh7q5tBEv1arraX2jR323zticS6zAE7tV7ErJ8xO1nG5do44zTFGiAQkWskUlFC
-         +hC1y8E/wRYsuHwco1Cx2OEU7mE/pujX3U1WOATGZ2w7Y7Vom1vqjmBADSMeVKzuuIHf
-         z2/yYNUmXcAszMJMIE3b0SREhxbkb8VUEVelalXjlCAWDBjzgChR79qKODegRiw19ncq
-         +enfGwe6WI2Xom1FNAxoNvIgmL5Ap3eOUD9Y9ZCeAZLAJ97lt0EMBjMZr62CtVnvJpBs
-         h1VvlZAiGW5uyKzbxD8053NP/24uaG2gtQ8gAzb7Lyx7gRN4igYh975IHjMssFWnxOtT
-         G73w==
-X-Gm-Message-State: APjAAAVBdtw70fjFPCIWMyz2iDCaVBKobcQlO9TS1IGw7wZ9GGykECtx
-        /1ubuSD4gJXwZkfEu/75Gw9WRRxt/i0=
-X-Google-Smtp-Source: APXvYqwExbn24tvd6TOpmzkWelEN2EDrv6/JMV1xSfdwQJg0De9lPc7wOyHGger2NYbqU2d1tC9ByA==
-X-Received: by 2002:a2e:898d:: with SMTP id c13mr21538374lji.54.1573580591500;
-        Tue, 12 Nov 2019 09:43:11 -0800 (PST)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id v6sm10300484ljd.15.2019.11.12.09.43.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 09:43:11 -0800 (PST)
-Received: by mail-lf1-f43.google.com with SMTP id y186so7758253lfa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:43:10 -0800 (PST)
-X-Received: by 2002:ac2:4c86:: with SMTP id d6mr20463115lfl.106.1573580217235;
- Tue, 12 Nov 2019 09:36:57 -0800 (PST)
+        bh=w7MsKAbnhTOI/PwrqDE4qAaT5Rd571pVr2jNCX1vMLU=;
+        b=A0ygOng5SveYuwvLcXdrtNK0szAH5VKADpjJ8/j6N21EHFYuAcY23UDCALbxD+h9Uj
+         jTurzHydjbGpH2Pyg2VQWLQmOdyt+7SD/FjoZZJM4HN/sD+/d92wi+32fM1UNCa7H4hD
+         Ns7iUIFuLzQNjw3ktGK3PGTfDhZvukJf9wlUaCTvZV5lMLuP+KMp5VRrMQNs76ZLdfUd
+         96NBNawHKrhdf4qHeIdyh7sQ3cblBA5Fjdt5Z2/XsgJ/w2VOLdNf4om6jq6GfZ6Paj5i
+         X5lCqkiuE6v09EK/Zz7clraPUFIvOSTtuL0yBejLzXYHHc38/kCndxmlMPZfeLyyLrmc
+         +bOA==
+X-Gm-Message-State: APjAAAU+LeN/CDmqMzXRpPXd2UgXn1g1svt+8CCxfvUcoEU4zXZ+Zpry
+        N7FRjA9sskrJApTZXDHR7/z9aEi7jpmQr/etkM953g==
+X-Google-Smtp-Source: APXvYqx+JS9StvmX4eZx5rKWcGRb9+ijR8E7BlPSw/fF4TuTW1nUyMaiKhwUBG/mh+SI5JEZV6dnXnwYygBOz5G6Css=
+X-Received: by 2002:a63:5a03:: with SMTP id o3mr36165069pgb.381.1573580597463;
+ Tue, 12 Nov 2019 09:43:17 -0800 (PST)
 MIME-Version: 1.0
-References: <CANpmjNMvTbMJa+NmfD286vGVNQrxAnsujQZqaodw0VVUYdNjPw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911111030410.12295-100000@netrider.rowland.org>
- <CAHk-=wjp6yR-gBNYXPzrHQHq+wX_t6WfwrF_S3EEUq9ccz3vng@mail.gmail.com>
- <CANn89i+OBZOq-q4GWAxKVRau6nHYMo3v4y-c1vUb_O8nvra1RQ@mail.gmail.com>
- <CAHk-=wg6Zaf09i0XNgCmOzKKWnoAPMfA7WX9OY1Ow1YtF0ZP3A@mail.gmail.com>
- <CANn89i+hRhweL2N=r1chMpWKU2ue8fiQO=dLxGs9sgLFbgHEWQ@mail.gmail.com>
- <CANn89iJiuOkKc2AVmccM8z9e_d4zbV61K-3z49ao1UwRDdFiHw@mail.gmail.com>
- <CAHk-=wgkwBjQWyDQi8mu06DXr_v_4zui+33fk3eK89rPof5b+A@mail.gmail.com>
- <CAHk-=whFejio0dC3T3a-5wuy9aum45unqacxkFpt5yo+-J502w@mail.gmail.com>
- <20191112165033.GA7905@deco.navytux.spb.ru> <CAHk-=witx+fY-no_UTNhsxXvZnOaFLM80Q8so6Mvm6hUTjZdGg@mail.gmail.com>
-In-Reply-To: <CAHk-=witx+fY-no_UTNhsxXvZnOaFLM80Q8so6Mvm6hUTjZdGg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 12 Nov 2019 09:36:41 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whPFjpOEfU5N4qz_gGC8_=NLh1VkBLm09K1S1Gcma5pzA@mail.gmail.com>
-Message-ID: <CAHk-=whPFjpOEfU5N4qz_gGC8_=NLh1VkBLm09K1S1Gcma5pzA@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+References: <20191110153043.111710-1-dima@golovin.in>
+In-Reply-To: <20191110153043.111710-1-dima@golovin.in>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 12 Nov 2019 09:43:05 -0800
+Message-ID: <CAKwvOdnwKP5gRVmvKou1UoqHn7Fi-uoGFeAMf2dWoaEy0fibzA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: kbuild: use correct nm executable
+To:     Dmitry Golovin <dima@golovin.in>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 9:23 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Sun, Nov 10, 2019 at 7:31 AM Dmitry Golovin <dima@golovin.in> wrote:
 >
-> Hmm. I thought we already then applied all the patches that marked
-> things that didn't use f_pos as FMODE_STREAM. Including pipes and
-> sockets etc.
+> Since $(NM) variable can be easily overridden for the whole build, it's
+> better to use it instead of $(CROSS_COMPILE)nm. The use of $(CROSS_COMPILE)
+> prefixed variables where their calculated equivalents can be used is
+> incorrect. This fixes issues with builds where $(NM) is set to llvm-nm.
 >
-> But if we didn't - and no, I didn't double-check now either - then
-> obviously that part of the patch can't be applied now.
+> Link: https://github.com/ClangBuiltLinux/linux/issues/766
+> Signed-off-by: Dmitry Golovin <dima@golovin.in>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Matthias Maennich <maennich@google.com>
 
-Ok, looking at it now.
+Thanks for the patch Dima.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+You should wait a week from when you first sent this patch, then
+submit it to rmk's patch queue:
+https://www.armlinux.org.uk/developer/patches/section.php?section=0
+You should create an account there.  On
+https://www.armlinux.org.uk/developer/patches/add.php,
 
-Yeah, commit c5bf68fe0c86 ("*: convert stream-like files from
-nonseekable_open -> stream_open") did the scripted thing, but it only
-did it for nonseekable_open, not for the more complicated cases.
+Summary -> first line from commit
+Kernel version -> base repo you wrote the patch against, see examples
+https://www.armlinux.org.uk/developer/patches/section.php?section=0
+Patch notes -> rest of commit body (with all these reviewed by tags added)
 
-So yup, you're right - we'd need to at least do the pipe/socket case too.
+More info: https://www.armlinux.org.uk/developer/
 
-What happens if the actual conversion part (nonseekable_open ->
-stream_open) is removed from the cocci script, and it's used to only
-find "read/write doesn't use f_pos" cases?
+> ---
+>  arch/arm/boot/compressed/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+> index 9219389bbe61..a1e883c5e5c4 100644
+> --- a/arch/arm/boot/compressed/Makefile
+> +++ b/arch/arm/boot/compressed/Makefile
+> @@ -121,7 +121,7 @@ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin -I$(obj)
+>  asflags-y := -DZIMAGE
+>
+>  # Supply kernel BSS size to the decompressor via a linker symbol.
+> -KBSS_SZ = $(shell echo $$(($$($(CROSS_COMPILE)nm $(obj)/../../../../vmlinux | \
+> +KBSS_SZ = $(shell echo $$(($$($(NM) $(obj)/../../../../vmlinux | \
+>                 sed -n -e 's/^\([^ ]*\) [AB] __bss_start$$/-0x\1/p' \
+>                        -e 's/^\([^ ]*\) [AB] __bss_stop$$/+0x\1/p') )) )
+>  LDFLAGS_vmlinux = --defsym _kernel_bss_size=$(KBSS_SZ)
+> @@ -165,7 +165,7 @@ $(obj)/bswapsdi2.S: $(srctree)/arch/$(SRCARCH)/lib/bswapsdi2.S
+>  # The .data section is already discarded by the linker script so no need
+>  # to bother about it here.
+>  check_for_bad_syms = \
+> -bad_syms=$$($(CROSS_COMPILE)nm $@ | sed -n 's/^.\{8\} [bc] \(.*\)/\1/p') && \
+> +bad_syms=$$($(NM) $@ | sed -n 's/^.\{8\} [bc] \(.*\)/\1/p') && \
+>  [ -z "$$bad_syms" ] || \
+>    ( echo "following symbols must have non local/private scope:" >&2; \
+>      echo "$$bad_syms" >&2; false )
+> --
+> 2.23.0
+>
 
-Or maybe trigger on '.llseek = no_llseek'?
 
-                 Linus
+-- 
+Thanks,
+~Nick Desaulniers
