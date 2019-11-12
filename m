@@ -2,131 +2,101 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C813C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4D6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F29520659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C410B20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNXrjKl+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhpS9BhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfKLVVm (ORCPT
+        id S1727128AbfKLVVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:21:42 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39793 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfKLVVm (ORCPT
+        Tue, 12 Nov 2019 16:21:45 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43703 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLVVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:21:42 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t26so4507908wmi.4;
-        Tue, 12 Nov 2019 13:21:40 -0800 (PST)
+        Tue, 12 Nov 2019 16:21:44 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n1so20125355wra.10;
+        Tue, 12 Nov 2019 13:21:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=dEhpPGqL2EnHvM+RMKgKzToY3FC78Q0MvKFrMXo/rVg=;
-        b=WNXrjKl+NzL/krxGUzhS16CUd+Jmzist2kq/sBXSoMZtW6q7/qk0LYsrJUjp6RaDSF
-         wU2j3rZDNhCBT5Hxma+ntzFVX9U/ojQsXSlFObe8jY2aANnAT7V30CUKIi9EC3x8StDO
-         Jx6TtutddTKB6mI81DjwmmdqECeKojN7giKo6++9/yUISdjlezNNnzxgviegpvJiCpec
-         WCrrFtrxJyoDbERz9Zmrl7kmOml5h30B+D+PDeXzbw2qa75qfKj0QwLMLduL8K4P129O
-         x5h+XEQTiV4+US7m+IE6OwiDruA9TGuxPIsVrJf8wqP3licqss6d3+EaR/W99bssTB+L
-         ggig==
+        h=sender:from:to:subject:date:message-id:in-reply-to:references;
+        bh=NSDF2mQeYak+83dw/wmPKuy5slDrlG6su9Tyo7wtlR8=;
+        b=XhpS9BhOVWB0COzdL0N3YwAHGyj1EUwQyhz44Dak67GDoQ7QY9BdznY2jUNusx9q5P
+         RlMzcO8s8cEVC2IOTCFYT70T5DmGkJ/REgeL8rXcQBAo9n6KhwPDzWf9SYLDW85xTQFu
+         RJg1KyQww26pFHWW28U30d96pu3MOPyPMS9cuAZr+zjhtfjKOLPhV8PpVJSjf1jkuiEu
+         m0vMEZevuUnje712M1bDca84KB8zl5f1/axuLuhcPl5USZx0Z3T3BFQIDkyQFWWeys4v
+         IAk0Z5neD8Y1BEUdB71oDnSAMI/e5b89HaH9W8FC/Uv9gX1IGmJ8NFNHDLRZ6tn3Enlm
+         GeOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=dEhpPGqL2EnHvM+RMKgKzToY3FC78Q0MvKFrMXo/rVg=;
-        b=p+C/kwHDv4lTvlfbT7fhAuZJ2ZtwvclkLHugsuxAbp640Z6sxqO3DncFKxHXWobuab
-         1kQxSLhnLZqJV9mcMXBjVXrFkHf/PJ5MU1G9eOgpzc4riHEH6UalEcaAHETRhGhFjEJq
-         noycLOJbTRGeLMKkIFmVX2lJZ1WMnSQmRZwzjDJ4iaBzHpJtgORgRsdF9zu/4pDuxbQH
-         WiecM0k77ZF68tHBcxKh/cMEy84zRC38+bhp7gMExM5Gcj/rxdNEzntD99BjgPiPYEdJ
-         uR8lesy1BVITJde09HfHgi0je2yBA36hxFNVuAYpcY906w1SFCB+665ysoJFhFqcQQ+h
-         P+Dg==
-X-Gm-Message-State: APjAAAUEmaiP9CHWDBVO4OkFcKHGkfmMu2N39uEMX/LXF+4alm1o4Cdg
-        DZdVfJrUcgO5wwZHtq/7TOQwmoNt
-X-Google-Smtp-Source: APXvYqyfh0JsBntGXcUehgQXwZOjx5Mf9XThvqTdrcx0A/dP4zfs7gcKSkSjtoN8J+eidPue1VdIDQ==
-X-Received: by 2002:a7b:cf35:: with SMTP id m21mr4156466wmg.141.1573593699205;
-        Tue, 12 Nov 2019 13:21:39 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:subject:date:message-id
+         :in-reply-to:references;
+        bh=NSDF2mQeYak+83dw/wmPKuy5slDrlG6su9Tyo7wtlR8=;
+        b=dAWFCJhmYAQYMGFAS/uIGoXTG7aKP6Ped3o4nAdOFX8wmfPCMOC+I7tkmUA17UiEHG
+         0qO+ugaWfFSHiISuFMU491TdK7h3Vc4UXZ+sH3Wq5jKnYgk8G8t3NfHZllU0Hw4pclvQ
+         Ko4GVcKIWsDviqXeFvDDgBGXyxgQYHDXs/YAzOdxDKKXxjVynIBhzIUKmW47QVnlo2B9
+         cELTJ37bUmo0J3ZbndS9GPKb2NNivnlEfHzaxmv4ZXN/iHbe0aK3UNszBdQDHznPB0NN
+         q0e/mZbuI8+mgcAaoNy0tyX/OBiyNVs7vrrbr3T94Q0FPw7oAEmlpq7vryxeyTRp6WPH
+         l24g==
+X-Gm-Message-State: APjAAAUbS2Wlr2PC0MqSgUFxw8e7nhxU+BOUzuAobIQHfmneUowhM5oM
+        DY+KPhTS5zBhb8KvX8Nr26MHxnbq
+X-Google-Smtp-Source: APXvYqwS0JaeVjNzcn3ESMD2RJdpgA2kVHEt65kMbnoNXokMjh/lPm31ydMaCyV6mPRFWH6uolvhBw==
+X-Received: by 2002:adf:b1cb:: with SMTP id r11mr1112334wra.246.1573593700701;
+        Tue, 12 Nov 2019 13:21:40 -0800 (PST)
 Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.38
+        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 13:21:38 -0800 (PST)
+        Tue, 12 Nov 2019 13:21:40 -0800 (PST)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
-Date:   Tue, 12 Nov 2019 22:21:30 +0100
-Message-Id: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 2/7] x86/cpu: Add Tremont to the cpu vulnerability whitelist
+Date:   Tue, 12 Nov 2019 22:21:32 +0100
+Message-Id: <1573593697-25061-3-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CVE-2018-12207 is a microarchitectural implementation issue
-that could allow an unprivileged local attacker to cause system wide
-denial-of-service condition.
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-Privileged software may change the page size (ex. 4KB, 2MB, 1GB) in the
-paging structures, without following such paging structure changes with
-invalidation of the TLB entries corresponding to the changed pages. In
-this case, the attacker could invoke instruction fetch, which will result
-in the processor hitting multiple TLB entries, reporting a machine check
-error exception, and ultimately hanging the system.
+Add the new cpu family ATOM_TREMONT_D to the cpu vunerability
+whitelist. ATOM_TREMONT_D is not affected by X86_BUG_ITLB_MULTIHIT.
 
-The attached patches mitigate the vulnerability by making huge pages
-non-executable. The processor will not be able to execute an instruction
-residing in a large page (ie. 2MB, 1GB, etc.) without causing a trap into
-the host kernel/hypervisor; KVM will then break the large page into 4KB
-pages and gives executable permission to 4KB pages.
+ATOM_TREMONT_D might have mitigations against other issues as well, but
+only the ITLB multihit mitigation is confirmed at this point.
 
-Thanks to everyone that was involved in the development of these patches,
-especially Junaid Shahid, who provided the first version of the code,
-and Thomas Gleixner.
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/cpu/common.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Paolo
-
-Gomez Iglesias, Antonio (1):
-  Documentation: Add ITLB_MULTIHIT documentation
-
-Junaid Shahid (2):
-  kvm: Add helper function for creating VM worker threads
-  kvm: x86: mmu: Recovery of shattered NX large pages
-
-Paolo Bonzini (1):
-  kvm: mmu: ITLB_MULTIHIT mitigation
-
-Pawan Gupta (1):
-  x86/cpu: Add Tremont to the cpu vulnerability whitelist
-
-Tyler Hicks (1):
-  cpu/speculation: Uninline and export CPU mitigations helpers
-
-Vineela Tummalapalli (1):
-  x86/bugs: Add ITLB_MULTIHIT bug infrastructure
-
- Documentation/ABI/testing/sysfs-devices-system-cpu |   1 +
- Documentation/admin-guide/hw-vuln/index.rst        |   1 +
- Documentation/admin-guide/hw-vuln/multihit.rst     | 163 +++++++++++++
- Documentation/admin-guide/kernel-parameters.txt    |  25 ++
- arch/x86/include/asm/cpufeatures.h                 |   1 +
- arch/x86/include/asm/kvm_host.h                    |   6 +
- arch/x86/include/asm/msr-index.h                   |   7 +
- arch/x86/kernel/cpu/bugs.c                         |  24 ++
- arch/x86/kernel/cpu/common.c                       |  67 ++---
- arch/x86/kvm/mmu.c                                 | 270 ++++++++++++++++++++-
- arch/x86/kvm/mmu.h                                 |   4 +
- arch/x86/kvm/paging_tmpl.h                         |  29 ++-
- arch/x86/kvm/x86.c                                 |  20 ++
- drivers/base/cpu.c                                 |   8 +
- include/linux/cpu.h                                |  27 +--
- include/linux/kvm_host.h                           |   6 +
- kernel/cpu.c                                       |  27 ++-
- virt/kvm/kvm_main.c                                | 112 +++++++++
- 18 files changed, 732 insertions(+), 66 deletions(-)
- create mode 100644 Documentation/admin-guide/hw-vuln/multihit.rst
-
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index d29b71ca3ca7..fffe21945374 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1074,6 +1074,8 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+ 	 * good enough for our purposes.
+ 	 */
+ 
++	VULNWL_INTEL(ATOM_TREMONT_D,		NO_ITLB_MULTIHIT),
++
+ 	/* AMD Family 0xf - 0x12 */
+ 	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
+ 	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
 -- 
 1.8.3.1
+
 
