@@ -2,178 +2,127 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E797EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA48C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB068206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C64206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nqdyOp8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfKLMGa convert rfc822-to-8bit (ORCPT
+        id S1727021AbfKLMG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:06:30 -0500
-Received: from 4.mo177.mail-out.ovh.net ([46.105.37.72]:48527 "EHLO
-        4.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfKLMGa (ORCPT
+        Tue, 12 Nov 2019 07:06:57 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57356 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725865AbfKLMG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:06:30 -0500
-X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Nov 2019 07:06:27 EST
-Received: from player157.ha.ovh.net (unknown [10.108.35.103])
-        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 9EC6E10DF26
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:01:23 +0100 (CET)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player157.ha.ovh.net (Postfix) with ESMTPSA id 406A9BF07148;
-        Tue, 12 Nov 2019 12:01:11 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 13:01:09 +0100
-From:   Greg Kurz <groug@kaod.org>
-To:     =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@kaod.org>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Lijun Pan <ljp@linux.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: PPC: Book3S HV: XIVE: Free previous EQ page when
- setting up a new one
-Message-ID: <20191112130109.4d7bcf05@bahia.lan>
-In-Reply-To: <3373a85a-09bb-3345-ef27-68177c360786@kaod.org>
-References: <157346576671.818016.10401178701091199969.stgit@bahia.lan>
-        <3373a85a-09bb-3345-ef27-68177c360786@kaod.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 12 Nov 2019 07:06:57 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACBqFLb028925;
+        Tue, 12 Nov 2019 13:06:28 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=VcswSaQgjwVPJKQoYkqU+reFn99J6VbQH4Gn2WoEbg4=;
+ b=nqdyOp8BwecEtygM50ctVa1kTGngR4LZh7LrEz4aLiILpLe82NxD1OXJOpocbyh+xuXO
+ 2Uy3JcfEh+f2BSEMEopjFfCegb0AGdWjp2c3Xz3WOO9DvFenzU6cv5JztYZRelOKKfXp
+ 24/Xr+5DX8kkionSrIx1nOIviQastISvp00rbqaZ563Twvc2HJBfbMOnsKvzTvuAYxug
+ v10DGjupCRFOnVE/auKzG6+/ptMKtldjgMu9z9xyQy7zClOSqcu70hXrplC6iH1uAiwb
+ w/EVOdAF20b/v95IcnJZgTuNMyf5NZNhjCbFHjO9dWsLsre99zrrmCUGwTIj5ZIC95w9 mg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w7pstsurk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 13:06:28 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 81D09100034;
+        Tue, 12 Nov 2019 13:06:27 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6199B2BA7DF;
+        Tue, 12 Nov 2019 13:06:27 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 12 Nov 2019 13:06:26
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <linux@armlinux.org.uk>, <tglx@linutronix.de>,
+        <gregkh@linuxfoundation.org>, <rmk+kernel@armlinux.org.uk>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] arm: kernel: initialize broadcast hrtimer based clock event device
+Date:   Tue, 12 Nov 2019 13:06:25 +0100
+Message-ID: <20191112120625.20173-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Ovh-Tracer-Id: 11462505477939566987
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedruddvledgfeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdqfffguegfifdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtgfesthhqredtredtjeenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrvdehfedrvddtkedrvdegkeenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrudehjedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehgrhhouhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-12_03:2019-11-11,2019-11-12 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 12:26:25 +0100
-Cédric Le Goater <clg@kaod.org> wrote:
+On platforms implementing CPU power management, the CPUidle subsystem
+can allow CPUs to enter idle states where local timers logic is lost on power
+down. To keep the software timers functional the kernel relies on an
+always-on broadcast timer to be present in the platform to relay the
+interrupt signalling the timer expiries.
 
-> On 11/11/2019 10:49, Greg Kurz wrote:
-> > The EQ page is allocated by the guest and then passed to the hypervisor
-> > with the H_INT_SET_QUEUE_CONFIG hcall. A reference is taken on the page
-> > before handing it over to the HW. This reference is dropped either when
-> > the guest issues the H_INT_RESET hcall or when the KVM device is released.
-> > But, the guest can legitimately call H_INT_SET_QUEUE_CONFIG several times
-> > to reset the EQ (vCPU hot unplug) or set a new EQ (guest reboot). In both
-> > cases the EQ page reference is leaked. This is especially visible when
-> > the guest memory is backed with huge pages: start a VM up to the guest
-> > userspace, either reboot it or unplug a vCPU, quit QEMU. The leak is
-> > observed by comparing the value of HugePages_Free in /proc/meminfo before
-> > and after the VM is run.
-> > 
-> > Note that the EQ reset path seems to be calling put_page() but this is
-> > done after xive_native_configure_queue() which clears the qpage field
-> > in the XIVE queue structure, ie. the put_page() block is a nop and the
-> > previous page pointer was just overwritten anyway. In the other case of
-> > configuring a new EQ page, nothing seems to be done to release the old
-> > one.
-> 
-> Yes. Nice catch. I think we should try to fix the problem differently. 
-> 
-> The routine xive_native_configure_queue() is only suited for XIVE 
-> drivers doing their own EQ page allocation: Linux PowerNV and the 
-> KVM XICS-over-XIVE device. The KVM XIVE device acts as a proxy for 
-> the guest OS doing the allocation and it has different needs.
-> 
+For platforms implementing CPU core gating that do not implement an always-on
+HW timer or implement it in a broken way, this patch adds code to initialize
+the kernel hrtimer based clock event device upon boot (which can be chosen as
+tick broadcast device by the kernel).
+It relies on a dynamically chosen CPU to be always powered-up. This CPU then
+relays the timer interrupt to CPUs in deep-idle states through its HW local
+timer device.
 
-Well xive_native_configure_queue() is at least partially suited for all three
-drivers since they use it to configure the EQ. But it doesn't address the page
-allocation/de-allocation which is indeed different.
+Having a CPU always-on has implications on power management platform
+capabilities and makes CPUidle suboptimal, since at least a CPU is kept
+always in a shallow idle state by the kernel to relay timer interrupts,
+but at least leaves the kernel with a functional system with some working
+power management capabilities.
 
-> Having a specific xive_native_configure_queue() for the KVM XIVE 
-> device seems overkill. May be, we could introduce a helper routine 
-> in KVM XIVE device calling xive_native_configure_queue() and handling 
-> the page reference how it should be ? That is to drop the previous
-> page reference in case of a change on q->qpage.
-> 
+The hrtimer based clock event device is unconditionally registered, but
+has the lowest possible rating such that any broadcast-capable HW clock
+event device present will be chosen in preference as the tick broadcast
+device.
 
-Yes, that seems better. I'll post a v2 with the helper you've mailed
-me.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+Note:
+- The same reasons lead to same patch than for arm64 so I have copy the
+  commit message from: 9358d755bd5c ("arm64: kernel: initialize broadcast
+  hrtimer based clock event device")
+ arch/arm/kernel/time.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
-> Also, we should try to preserve the previous setting until the whole 
-> configuration is in place. That seems possible up to the call to 
-> xive_native_configure_queue(). If kvmppc_xive_attach_escalation()
-> fails I think it is too late, as the HW has been configured by 
-> xive_native_configure_queue(), and we should just cleanup everything. 
-> 
-> Thanks,
-> 
-> C. 
-> 
-> 
-> > Fix both cases by always calling put_page() on the existing EQ page in
-> > kvmppc_xive_native_set_queue_config(). This is a seemless change for the
-> > EQ reset case. However this causes xive_native_configure_queue() to be
-> > called twice for the new EQ page case: one time to reset the EQ and another
-> > time to configure the new page. This is needed because we cannot release
-> > the EQ page before calling xive_native_configure_queue() since it may still
-> > be used by the HW. We cannot modify xive_native_configure_queue() to drop
-> > the reference either because this function is also used by the XICS-on-XIVE
-> > device which requires free_pages() instead of put_page(). This isn't a big
-> > deal anyway since H_INT_SET_QUEUE_CONFIG isn't a hot path.
-> > 
-> > Reported-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> > Cc: stable@vger.kernel.org # v5.2
-> > Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
-> > Signed-off-by: Greg Kurz <groug@kaod.org>
-> > ---
-> >  arch/powerpc/kvm/book3s_xive_native.c |   21 ++++++++++++---------
-> >  1 file changed, 12 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-> > index 34bd123fa024..8ab908d23dc2 100644
-> > --- a/arch/powerpc/kvm/book3s_xive_native.c
-> > +++ b/arch/powerpc/kvm/book3s_xive_native.c
-> > @@ -570,10 +570,12 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
-> >  		 __func__, server, priority, kvm_eq.flags,
-> >  		 kvm_eq.qshift, kvm_eq.qaddr, kvm_eq.qtoggle, kvm_eq.qindex);
-> >  
-> > -	/* reset queue and disable queueing */
-> > -	if (!kvm_eq.qshift) {
-> > -		q->guest_qaddr  = 0;
-> > -		q->guest_qshift = 0;
-> > +	/*
-> > +	 * Reset queue and disable queueing. It will be re-enabled
-> > +	 * later on if the guest is configuring a new EQ page.
-> > +	 */
-> > +	if (q->guest_qshift) {
-> > +		page = virt_to_page(q->qpage);
-> >  
-> >  		rc = xive_native_configure_queue(xc->vp_id, q, priority,
-> >  						 NULL, 0, true);
-> > @@ -583,12 +585,13 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
-> >  			return rc;
-> >  		}
-> >  
-> > -		if (q->qpage) {
-> > -			put_page(virt_to_page(q->qpage));
-> > -			q->qpage = NULL;
-> > -		}
-> > +		put_page(page);
-> >  
-> > -		return 0;
-> > +		if (!kvm_eq.qshift) {
-> > +			q->guest_qaddr  = 0;
-> > +			q->guest_qshift = 0;
-> > +			return 0;
-> > +		}
-> >  	}
-> >  
-> >  	/*
-> > 
-> 
+diff --git a/arch/arm/kernel/time.c b/arch/arm/kernel/time.c
+index b996b2cf0703..dddc7ebf4db4 100644
+--- a/arch/arm/kernel/time.c
++++ b/arch/arm/kernel/time.c
+@@ -9,6 +9,7 @@
+  *  reading the RTC at bootup, etc...
+  */
+ #include <linux/clk-provider.h>
++#include <linux/clockchips.h>
+ #include <linux/clocksource.h>
+ #include <linux/errno.h>
+ #include <linux/export.h>
+@@ -107,5 +108,6 @@ void __init time_init(void)
+ 		of_clk_init(NULL);
+ #endif
+ 		timer_probe();
++		tick_setup_hrtimer_broadcast();
+ 	}
+ }
+-- 
+2.15.0
 
