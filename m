@@ -2,128 +2,144 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6785AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D17C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E922067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA78F2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="HcnG05wn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VL+s3q4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKLTiE (ORCPT
+        id S1727153AbfKLTiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:38:04 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45594 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfKLTiD (ORCPT
+        Tue, 12 Nov 2019 14:38:15 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45501 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKLTiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:38:03 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 14so9941671oir.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:38:03 -0800 (PST)
+        Tue, 12 Nov 2019 14:38:15 -0500
+Received: by mail-pg1-f193.google.com with SMTP id w11so12488068pga.12;
+        Tue, 12 Nov 2019 11:38:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WimPYMY4ElLHUFFKax8XxzUf794g+9qy+ZcVmaVuAcA=;
-        b=HcnG05wnGXWAD3tJYg/lrbE1+BP8mZbcyUXiEhT/4H5cmFBXdm3LKznNrl7E06/RvD
-         nrMvD1V15i3JWo6K7vp/VRjIrRS2nSyFSCYI8nPTTeGkVucNiA6+ctSfIUzcIIvV6fb6
-         sDT8iHpdk7lXBXkPvyp7/GCIWbwBhDpNpfKVOvgcyOGje8Q4Yd0VyT7rd8EfPfmXIBp3
-         ULNNC9ad1rTHxaWTGUMdDaaqTftk8ZZxHfUFcU2bpQpTuDHusLrARE7GHzz5nhrUAKYH
-         C9yvDnR9ztR92XmKIaUbf3aKBrmVWX0DszAGA3L+zGW44LVsKSfSImwMdxaj4baUPBHh
-         uYWg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0La2CwEbsU0iGpHRN+E6CgdPEQt/LTHDnbCunj4lTb8=;
+        b=VL+s3q4JE6h3dgJv7/N9uNIKe2mR2SJGxXYbo+a1AB3kkBkuDmf9fbBhr3tDyAVwnT
+         OYORuGVOakJjTDiwQxel/n3/wsKYXljpRVC+j3B12ryXEwiu5/JrFQ+jqcxiVEo0olBG
+         MI25O+WLxcwdoLjicMSqAFH4wtKmDsxUiU+hD7lSOLcb7IZzbryzbaMOyRm5hP8lk1gd
+         zyk+zQNSHx/J4GOZZ5ZGeiYsX4WpFxg+Cc50JZu/LUT8sbXnwX72++euhDkVcTc8+hKK
+         AiW2Lv0hXclDEtlSUVI9NW8d8svDe2rAvVkYCWtTGKhR3Kr6zL2PdqTR8pNeya4T2ITg
+         zP3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WimPYMY4ElLHUFFKax8XxzUf794g+9qy+ZcVmaVuAcA=;
-        b=TVXBO0fBBL1FwONbJHISEhW5AWpPP5UNjQDka11GUNlXo/XNlEtx8o1fi+Xc/jUjZj
-         GaHmeH/9Gw0aUBHiamr4eLVx9vQdHa5JAHVip4RCA0TTCx58o6hgOmfl338LBqXGP0NO
-         yfS4vGTY7J3IpB71Aw7KUlOZ9jz1cbIIi3m09AezFkSA73RaHVKbzxnUniqGtzOMWYtV
-         AyoOgQDZ1kswXh5tyRSy1GGGSFRw3Zu3NU1aT8xdtH1URwMFnGuZERe6YBnjCDydiLWP
-         z2kM5rkrAeYgbasw02EsKHEUB0aLuMmHcVHUayTZlR4/gJsQ1uNajh8hSvIJ4rzw49K6
-         CuQg==
-X-Gm-Message-State: APjAAAUzWBqizodyHhfC6SVoXf0St7iLzjJn8osX30D7W+MxTN3OW1fw
-        Cx2bWl90U7+oF8UNJMLNz52PGvy4ws4cXh+oO/kadA==
-X-Google-Smtp-Source: APXvYqy4nVx5cqhvzWgLCkvoCxBoiErI2cm44tEsrTAKJ9s0rE6buD5AjAFCNien8s0flORShIZ0P4Y/eJ81VIPpwYo=
-X-Received: by 2002:aca:ad52:: with SMTP id w79mr550653oie.149.1573587482869;
- Tue, 12 Nov 2019 11:38:02 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0La2CwEbsU0iGpHRN+E6CgdPEQt/LTHDnbCunj4lTb8=;
+        b=np0P+iVsivdgJc5gtgMtsb9lyI6YkJxtztz/rakdRl8MeKa+p6RxZFTvQheoUWh7Mu
+         WZ8lQFtK1/jwxlNO/A6HMuFUCRlmkVGEWWt5TslbPYht8YkrWqckCCfLthUoWUwE7jTt
+         vyX4TOzEJIc0iTI9vCaRClTaHfdLUdTuL6j+rI4Daa3IeLXszSJHn0x+5ds5Ec8pY0Ek
+         NTj9CHNPXjvl61ntz8qxj+MaryFteOdhQ1krHaw2u87lYqdN9uPlJeOgVU0T9OJX1MG8
+         CBOpaE2bODOvvgaloIlzSjPt4FiHQNy8m9R3r6sYKxQhmFpw/DCVfU7QTgZgZXRZviP8
+         AQDA==
+X-Gm-Message-State: APjAAAV2mJZWfeqnaghrRT9nWcra2W8tPyEm1XmRaE0S8XTdcRrsiLvK
+        Ww8UvUkdayN1LGgojcX6RE8=
+X-Google-Smtp-Source: APXvYqxxR8hyTH24EqC9K4ZhJ2LqaamzTWY4SFMUk/Bz4VfqPPdNGTeLpZuYAcnL2e2qm2YDnWO7AQ==
+X-Received: by 2002:a17:90a:280e:: with SMTP id e14mr8720772pjd.135.1573587494177;
+        Tue, 12 Nov 2019 11:38:14 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 81sm23692014pfx.142.2019.11.12.11.38.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 11:38:13 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:38:11 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] Input: ili210x - optionally hide calibrate sysfs
+ attribute
+Message-ID: <20191112193811.GC13374@dtor-ws>
+References: <20191112164429.11225-1-TheSven73@gmail.com>
+ <20191112164429.11225-3-TheSven73@gmail.com>
 MIME-Version: 1.0
-References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
- <8736ettj60.fsf@linux.ibm.com>
-In-Reply-To: <8736ettj60.fsf@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Nov 2019 11:37:51 -0800
-Message-ID: <CAPcyv4iKE6x2uD0NUjivO8KFXQxcX_kWBysShXBf_p8PfFiMXA@mail.gmail.com>
-Subject: Re: [PATCH 00/16] Memory Hierarchy: Enable target node lookups for
- reserved memory
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        David Hildenbrand <david@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112164429.11225-3-TheSven73@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 3:43 AM Aneesh Kumar K.V
-<aneesh.kumar@linux.ibm.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > Yes, this patch series looks like a pile of boring libnvdimm cleanups,
-> > but buried at the end are some small gems that testing with libnvdimm
-> > uncovered. These gems will prove more valuable over time for Memory
-> > Hierarchy management as more platforms, via the ACPI HMAT and EFI
-> > Specific Purpose Memory, publish reserved or "soft-reserved" ranges to
-> > Linux. Linux system administrators will expect to be able to interact
-> > with those ranges with a unique numa node number when/if that memory is
-> > onlined via the dax_kmem driver [1].
-> >
-> > One configuration that currently fails to properly convey the target
-> > node for the resulting memory hotplug operation is persistent memory
-> > defined by the memmap=nn!ss parameter. For example, today if node1 is a
-> > memory only node, and all the memory from node1 is specified to
-> > memmap=nn!ss and subsequently onlined, it will end up being onlined as
-> > node0 memory. As it stands, memory_add_physaddr_to_nid() can only
-> > identify online nodes and since node1 in this example has no online cpus
-> > / memory the target node is initialized node0.
-> >
-> > The fix is to preserve rather than discard the numa_meminfo entries that
-> > are relevant for reserved memory ranges, and to uplevel the node
-> > distance helper for determining the "local" (closest) node relative to
-> > an initiator node.
-> >
-> > The first 12 patches are cleanups to make sure that all nvdimm devices
-> > and their children properly export a numa_node attribute. The switch to
-> > a device-type is less code and less error prone as a result.
->
->
-> Will this still allow leaf driver to have platform specific attribute
-> exposed via sysfs? Or do we want to still keep them in nvdimm core and
-> control the visibility via is_visible() callback?
+On Tue, Nov 12, 2019 at 11:44:29AM -0500, Sven Van Asbroeck wrote:
+> Only show the 'calibrate' sysfs attribute on chip flavours
+> which support calibration by writing to a calibration register.
+> 
+> Do this by adding a flag to the chip operations structure.
+> 
+> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
+> Cc: Marek Vasut <marex@denx.de>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: <linux-kernel@vger.kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  drivers/input/touchscreen/ili210x.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+> index 4321f0d676cc..810770ad02e2 100644
+> --- a/drivers/input/touchscreen/ili210x.c
+> +++ b/drivers/input/touchscreen/ili210x.c
+> @@ -32,6 +32,7 @@ struct ili2xxx_chip {
+>  	bool (*continue_polling)(const u8 *data, bool touch);
+>  	unsigned int max_touches;
+>  	unsigned int resolution;
+> +	bool no_calibrate_reg;
 
-The leaf driver can still have platform specific attributes, see:
+Please use positive logic and have chips opt-in into the calibration.
 
-    acpi_nfit_attribute_groups
-    acpi_nfit_dimm_attribute_groups
-    acpi_nfit_region_attribute_groups
+>  };
+>  
+>  struct ili210x {
+> @@ -162,6 +163,7 @@ static const struct ili2xxx_chip ili211x_chip = {
+>  	.continue_polling	= ili211x_decline_polling,
+>  	.max_touches		= 10,
+>  	.resolution		= 2048,
+> +	.no_calibrate_reg	= true,
+>  };
+>  
+>  static int ili251x_read_reg(struct i2c_client *client,
+> @@ -310,8 +312,19 @@ static struct attribute *ili210x_attributes[] = {
+>  	NULL,
+>  };
+>  
+> +static umode_t ili210x_calibrate_visible(struct kobject *kobj,
+> +					  struct attribute *attr, int index)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct ili210x *priv = i2c_get_clientdata(client);
+> +
+> +	return !priv->chip->no_calibrate_reg;
+> +}
+> +
+>  static const struct attribute_group ili210x_attr_group = {
+>  	.attrs = ili210x_attributes,
+> +	.is_visible = ili210x_calibrate_visible,
+>  };
+>  
+>  static void ili210x_power_down(void *data)
+> -- 
+> 2.17.1
+> 
 
-...that still exist after this conversion. This conversion simply
-arranges for those to passed in without making the leaf driver also be
-responsible for specifying the core attributes.
+-- 
+Dmitry
