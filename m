@@ -2,79 +2,99 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F056C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1F4C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA3B206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573580606;
-	bh=xwxtyC0AXj0ksCo8SmNdjblvoZqcxlf8VXMMfMSNIFk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wbx1CYsPZMQ9uLLdY8cfZ9QTA1q0cUZHYI6NlJbycxvnzHclOh43p7m4vqgYAhiWa
-	 Tnfmx0D9uevw8/2AsS5ju+Dq1DPMhilWfbJ4xg4UE2IPWiWbdkvbkb3OT2vjYZgvzh
-	 VPEsv7vXqG6g8m8qJLrhg+mbNnjPt9MBHKZ1Ndzw=
+	by mail.kernel.org (Postfix) with ESMTP id A455F21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AuhgNldH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfKLRnZ (ORCPT
+        id S1727168AbfKLRnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:43:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfKLRnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:43:25 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60599222C2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 17:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573580604;
-        bh=xwxtyC0AXj0ksCo8SmNdjblvoZqcxlf8VXMMfMSNIFk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WYXd01Csut0FMBhxjI8Pr9vS9FaLHU2s7H09ewvL5b2GJdTza5MAzhWZU+0LAIS0M
-         efVYQ0m9CP7asmxVpuEpE/lf4GjPMgDlbw+QIEYJaGPjrUqAalNhcMzXs2QuBluORg
-         waAAczd6GGesNyaDtc6nN1NeGQPfKLn1t6Z1njAI=
-Received: by mail-wr1-f41.google.com with SMTP id w9so12718933wrr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:43:24 -0800 (PST)
-X-Gm-Message-State: APjAAAVQCGyWanyyhjIef3XjHfSenGNjeEyjIROprVcBK7Ye6Yk0nkms
-        krgqRs9yn/7f4f5yZw0FMRm3/9Rad7e1v8zfiWkKgw==
-X-Google-Smtp-Source: APXvYqxF8nMeX4jg2o7yQ2IVWo8QTc9SYoxZNBeh7PxlVxrXgCbqSypO9QOFlCXMbDpiI8vIIv8ih/bmEZ2OLloYHQI=
-X-Received: by 2002:a5d:640b:: with SMTP id z11mr20907035wru.195.1573580602932;
- Tue, 12 Nov 2019 09:43:22 -0800 (PST)
+        Tue, 12 Nov 2019 12:43:37 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:58426 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLRnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:43:37 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 840AA20B7192;
+        Tue, 12 Nov 2019 09:43:36 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 840AA20B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573580616;
+        bh=gL4GwRpk0PWlTJzGrB0LKNSqKfDDLY5JhTDv2wWXNMA=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=AuhgNldHUcVqizdampYRLQUgbO6DPog4DHUBXWaX0gH+eRJQ99Qj4d49IqQ2RzHAi
+         e1xFa4p0QttxJ6T8q6E04jo/vkXCVCLPSUpYMm2MnE0cNrGZHyvfZtpI2J0ofXStZJ
+         CIftdHy5V2cIeqjLpdfRBEKky7AJoxxmt5qTc6oU=
+Subject: Re: [PATCH v5 02/10] IMA: Added keyrings= option in IMA policy to
+ only measure keys added to the specified keyrings.
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191111193303.12781-1-nramas@linux.microsoft.com>
+ <20191111193303.12781-3-nramas@linux.microsoft.com>
+ <1573578305.17949.42.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <1f940f9d-fb1b-a0a4-b5f4-3f3532dbc041@linux.microsoft.com>
+Date:   Tue, 12 Nov 2019 09:43:57 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191111220314.519933535@linutronix.de> <20191111223052.509914905@linutronix.de>
-In-Reply-To: <20191111223052.509914905@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 12 Nov 2019 09:43:11 -0800
-X-Gmail-Original-Message-ID: <CALCETrVggkQ1fstXB3+VKA2otOi9z0JTU0PH-fvfqM-kudNtdQ@mail.gmail.com>
-Message-ID: <CALCETrVggkQ1fstXB3+VKA2otOi9z0JTU0PH-fvfqM-kudNtdQ@mail.gmail.com>
-Subject: Re: [patch V2 10/16] x86/ioperm: Remove bitmap if all permissions dropped
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1573578305.17949.42.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 2:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> If ioperm() results in a bitmap with all bits set (no permissions to any
-> I/O port), then handling that bitmap on context switch and exit to user
-> mode is pointless. Drop it.
->
-> Move the bitmap exit handling to the ioport code and reuse it for both the
-> thread exit path and dropping it. This allows to reuse this code for the
-> upcoming iopl() emulation.
+On 11/12/2019 9:05 AM, Mimi Zohar wrote:
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+> The C maximum line length is 80 characters.  The subject line is even
+> less than that (~50).  The Subject line here could be "ima: add
+> support to limit measuring keys".
+I'll update the subject line for the patches - limit to max 50 chars.
+
+> 
+> On Mon, 2019-11-11 at 11:32 -0800, Lakshmi Ramasubramanian wrote:
+>> IMA policy needs to support measuring only those keys linked to
+>> a specific set of keyrings.
+> 
+> Patch descriptions should be written in the imperative.  For example,
+> "Limit measuring keys to those keys being loaded onto a specific
+> keyring."
+Will update.
+
+> 
+>>
+>> This patch defines a new IMA policy option namely "keyrings=" that
+>> can be used to specify a set of keyrings. If this option is specified
+>> in the policy for func=KEYRING_CHECK then only the keys linked to
+>> the keyrings given in "keyrings=" option are measured.
+> 
+> This description does not seem to match the code, which for some
+> reason isn't included in this patch, nor in 3/10.  Please
+> combine/squash patches 2 & 3.  Missing from the combined patch is the
+> keyring matching code in ima_match_rules().
+
+This patch defines "keyrings=" option in the IMA policy and adds the 
+related field in ima_rule_entry struct.
+
+The code for updating the new field in ima_rule_entry is in patch #4
+[PATCH v5 04/10] IMA: Updated IMA policy functions to return keyrings 
+option read from the policy
+
+I'll update the description for this patch (#2).
+
+  -lakshmi
