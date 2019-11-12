@@ -2,173 +2,76 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC7FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDD3C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB7E214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573580128;
-	bh=uilhuB6pLFzYoa0ifp+SX5cMRQawFop/uGE1jazPVS0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PZTjhem8QUx7jlTc4q8AJiyjg9qXGNt+HxtbgyUC+sDdATk5g9dbYDRvniQNMBRC6
-	 ZCqZYuTO+jJcuuBCJAHCu/dh/AyQQro+9HqjP6+De/58r8dQg9ZMNMMQQmblDkpYo0
-	 FqRSjsSfT6QWaMA7fX/zih7pu6BocSa6//NyxIgA=
+	by mail.kernel.org (Postfix) with ESMTP id 69136214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:37:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="U/rns4eb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfKLRf1 (ORCPT
+        id S1727047AbfKLRhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:35:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727478AbfKLRfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:35:20 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 382EC21872;
-        Tue, 12 Nov 2019 17:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573580119;
-        bh=uilhuB6pLFzYoa0ifp+SX5cMRQawFop/uGE1jazPVS0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HjFgMibQdjL4lsrM6HzQZ7V6cSenAdF6Ku1bbCyC2ilDUQNYR2siViKdYOAy29euZ
-         x1ZcEVWxH5++ZbP3Y3PuvFaFdphbFhFaZkoMt57LVk7yH3jPJAJqY8EarCf9j9A+2S
-         AUukj+YDOpMbFR3W/4clIoBWR57L8r2/vfxo6Cx0=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
-        linux-pci@vger.kernel.org,
-        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel@daenzer.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/3] drm: correct Transmit Margin masks
-Date:   Tue, 12 Nov 2019 11:35:02 -0600
-Message-Id: <20191112173503.176611-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191112173503.176611-1-helgaas@kernel.org>
-References: <20191112173503.176611-1-helgaas@kernel.org>
+        Tue, 12 Nov 2019 12:37:06 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:56106 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLRhG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:37:06 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 429E120B7192;
+        Tue, 12 Nov 2019 09:37:05 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 429E120B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573580225;
+        bh=AbHGTjnr1+XUMKOaFlFkqwntd1AbBfp5gYhZSRBVodI=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=U/rns4ebG+7yUqDs/+yzXw6P37LYIpWncSswT88joWHNO+4vkIW04lsS3Cy5nCh0m
+         wm1hByodfr7QBkdu6buiflDs6vsZeIimjzqovg1VMDLvxmRW6mgv8BLaVJ0Hx0h0/R
+         Z9RydnaRcKcQevWgwyJIdS0aNlHozTiH0IT6jngg=
+Subject: Re: [PATCH v5 01/10] IMA: Added KEYRING_CHECK func in IMA policy to
+ measure keys
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191111193303.12781-1-nramas@linux.microsoft.com>
+ <20191111193303.12781-2-nramas@linux.microsoft.com>
+ <1573578296.17949.41.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <19065ce4-ba91-634b-e2a2-4ae947188d9d@linux.microsoft.com>
+Date:   Tue, 12 Nov 2019 09:37:25 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <1573578296.17949.41.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On 11/12/2019 9:04 AM, Mimi Zohar wrote:
 
-Previously we masked PCIe Link Control 2 register values with "7 << 9",
-which was apparently intended to be the Transmit Margin field, but instead
-was the high order bit of Transmit Margin, the Enter Modified Compliance
-bit, and the Compliance SOS bit.
+> On Mon, 2019-11-11 at 11:32 -0800, Lakshmi Ramasubramanian wrote:
+>> IMA policy needs to support a func to enable measurement of
+>> asymmetric keys.
+>>
+>> This patch defines a new IMA policy func namely KEYRING_CHECK to
+>> measure asymmetric keys.
+> 
+> This new feature measures "keys" based on policy, not "keyrings".
+>   Please change the name to KEY_CHECK.
 
-Correct the mask to "7 << 7", which is the Transmit Margin field.
+Good point - I will change the func name to KEY_CHECK.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/gpu/drm/amd/amdgpu/cik.c | 8 ++++----
- drivers/gpu/drm/amd/amdgpu/si.c  | 8 ++++----
- drivers/gpu/drm/radeon/cik.c     | 8 ++++----
- drivers/gpu/drm/radeon/si.c      | 8 ++++----
- 4 files changed, 16 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
-index b81bb414fcb3..13a5696d2a6a 100644
---- a/drivers/gpu/drm/amd/amdgpu/cik.c
-+++ b/drivers/gpu/drm/amd/amdgpu/cik.c
-@@ -1498,13 +1498,13 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
- 
- 				/* linkctl2 */
- 				pci_read_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				tmp = RREG32_PCIE(ixPCIE_LC_CNTL4);
-diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
-index 493af42152f2..1e350172dc7b 100644
---- a/drivers/gpu/drm/amd/amdgpu/si.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si.c
-@@ -1737,13 +1737,13 @@ static void si_pcie_gen3_enable(struct amdgpu_device *adev)
- 				pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL, tmp16);
- 
- 				pci_read_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				tmp = RREG32_PCIE_PORT(PCIE_LC_CNTL4);
-diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
-index 62eab82a64f9..14cdfdf78bde 100644
---- a/drivers/gpu/drm/radeon/cik.c
-+++ b/drivers/gpu/drm/radeon/cik.c
-@@ -9619,13 +9619,13 @@ static void cik_pcie_gen3_enable(struct radeon_device *rdev)
- 
- 				/* linkctl2 */
- 				pci_read_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				pci_read_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				tmp = RREG32_PCIE_PORT(PCIE_LC_CNTL4);
-diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
-index 05894d198a79..9b7042d3ef1b 100644
---- a/drivers/gpu/drm/radeon/si.c
-+++ b/drivers/gpu/drm/radeon/si.c
-@@ -7202,13 +7202,13 @@ static void si_pcie_gen3_enable(struct radeon_device *rdev)
- 
- 				/* linkctl2 */
- 				pci_read_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				pci_read_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 9));
--				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 9)));
-+				tmp16 &= ~((1 << 4) | (7 << 7));
-+				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 7)));
- 				pci_write_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				tmp = RREG32_PCIE_PORT(PCIE_LC_CNTL4);
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+  -lakshmi
 
