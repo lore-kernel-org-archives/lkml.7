@@ -2,131 +2,117 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62169C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383E1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311C12084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A6821783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:46:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nezus2jc"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="HW0zuoAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfKLNpi (ORCPT
+        id S1727349AbfKLNql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:45:38 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33778 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfKLNph (ORCPT
+        Tue, 12 Nov 2019 08:46:41 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37685 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfKLNql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:45:37 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a17so2387491wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 05:45:36 -0800 (PST)
+        Tue, 12 Nov 2019 08:46:41 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t1so18599255wrv.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 05:46:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=D37ooG4hj3d1tXGJWLb9ByvS8fwj2I3PRg/Yzi41kaQ=;
-        b=nezus2jc7OyhXhqgc1ez0i9/RrmAQqe1UTXA3XYdV3hPCcxl10Ub3opRTLe1Q/DJMk
-         ggvq1y3VTxomrMPHYbRglK4AeFSRI3j4h2e/mntAd9XPDz6HnmH4uXFhduoHJtpremlG
-         r5yQy3F29PS0arfyr08JclHyCrgxj6UhjSnlNNBC1fOhIKSO//xl/Eg2/Ut+iGJFIQ/L
-         FqLhlw1rggaROADNv39rHm/CrJumzJi9EEFV0BcBtP0UdndMU0fNii5bH6YjRUbwghuF
-         EKecC48Z+vPctX6ZFqH0GPVY3fGRl1gXbHAwcyenvLhRt42AEq73nel1Bw+uQUtf4eZB
-         DXKg==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AGYm3Nys6XNVIKZhVZx5YWFiErVNUCXgDLyv4whlig8=;
+        b=HW0zuoArggOG6Z0bsLtd6adS4hfPVsBG21SBvDJOl3w0lsyPEnUnsBaoc4RPklkmnu
+         7evAnkiPn4npIts2eC0uYef6S4PHzTtwVHJ9JQynQV/VZRSfL1gUrsp16SUVrQHuFGIo
+         oGObSsSqHi86vE13Gm+1z7Xal8pUhm489jeJBGd++pMjg13qJXU0KQlbUQtEppt0XZF+
+         e8NFr0twVAI1Nux6P6nDTkuvQLUmSMKoKUKoRfyR9nxsb5crwu2130sQ8cCaHW46reQA
+         rHu8Z7r0z6B9ryaa30DZDNzxisg40MSVlDKwgwhVx7hOfnZ30NCDPbC2APjoxckNibUG
+         deyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=D37ooG4hj3d1tXGJWLb9ByvS8fwj2I3PRg/Yzi41kaQ=;
-        b=EM7kST9dMM3cnMhM7/lOnmzdEG3ymrb6CbEHYvu7pRYDJBJOCYCJOqhA27x4sNLjRV
-         2SMVUGbt2Cz9e2GHmdICgwWoFxvOmC683hfmorC9JbvguK2G0lmyJo6cIyy96gER5gEd
-         uK+oINIcCWv5H7bmkXfje4/amhWbQhpnHg7a4j8cWV8v2pSrSvQyaU3wiVeb1OrHohKz
-         OMPEG4n4grye9g+oWdLVA+hC8SlIH8t1LqJ09x/KPA2soa4F2gf5gfZI8mjsF/TALjKE
-         XjF05PJdpD6YZZEv/TJBT89fjLZOMREUwhNsLUCiZVzP+WFDQrD3aB+KxfILk4dZ30mJ
-         +SWA==
-X-Gm-Message-State: APjAAAUX/9iUXyK7TSYsDxCWPNHLlJyRKdGNo+aEO/5ZwAtuhY7r/O1h
-        0E5GZBATvV2kKHRRSD3bXd8=
-X-Google-Smtp-Source: APXvYqz2i/h9avAb+ybByAsrmIjD/sDcoNqg8/CdBsf/EOV0pRTOoSKacvVW2lvRpXvSUQi86uXqXg==
-X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr3842177wma.177.1573566335889;
-        Tue, 12 Nov 2019 05:45:35 -0800 (PST)
-Received: from localhost.localdomain ([2a02:a58:8166:7500:7146:58dd:6d5e:970])
-        by smtp.gmail.com with ESMTPSA id 4sm4496178wmd.33.2019.11.12.05.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 05:45:35 -0800 (PST)
-From:   Ilie Halip <ilie.halip@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Ilie Halip <ilie.halip@gmail.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] scripts/tools-support-relr.sh: un-quote variables
-Date:   Tue, 12 Nov 2019 15:45:20 +0200
-Message-Id: <20191112134522.12177-1-ilie.halip@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AGYm3Nys6XNVIKZhVZx5YWFiErVNUCXgDLyv4whlig8=;
+        b=A48t+da7/81nHju+bYuuq8I/DOjuRSt36qKi1VmGNv5t2szHmZwNSkXJ9ds6cfSeEK
+         BAHyuakBXFiILeYeQpPUW65tYa8sAoP+qWyNii4pgUlWpp0OglDKqbrN8sTygfl9PRaE
+         8zyesRHnAAh8XZ1eO9rF91Rtz/6H7ExsWCs7B4CllDz1M6rm2rsXCBes7knOwhiV1O2O
+         b3IyEdvnB3EykYnK8DWZSMBEEN4228eGZrWj7vXNO0QDDxLYImgevY5CspitEw2Uikd0
+         /s9xaezD20zwUlCrteHQh+QDCYZ7gYEaUO9RL9P1xK/X60zjBi5ZEvpluHkUI+nVWNxM
+         8/fg==
+X-Gm-Message-State: APjAAAVZ9S0pikpngNzr4wxcb4ucDosbU7CjjCTx9+yAl7CBWLQWQtgP
+        3cZqayv/rahgWJU0NyjkfpKQbQ==
+X-Google-Smtp-Source: APXvYqydFPlOcZbZIDcdPbW4STt5Cvv8h0V6pr+w0+76FV1R4AoslUCyN2wslw/wb2BYA/ph3+wQvw==
+X-Received: by 2002:adf:b1cb:: with SMTP id r11mr19329663wra.246.1573566397760;
+        Tue, 12 Nov 2019 05:46:37 -0800 (PST)
+Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
+        by smtp.gmail.com with ESMTPSA id 205sm5207269wmb.3.2019.11.12.05.46.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Nov 2019 05:46:37 -0800 (PST)
+Date:   Tue, 12 Nov 2019 14:46:36 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc:     Po Liu <po.liu@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: Re: [EXT] Re: [net-next, 1/2] enetc: Configure the Time-Aware
+ Scheduler via tc-taprio offload
+Message-ID: <20191112134635.qxcyf4bzyiwazdmn@netronome.com>
+References: <20191111042715.13444-1-Po.Liu@nxp.com>
+ <20191112094128.mbfil74gfdnkxigh@netronome.com>
+ <VE1PR04MB6496CE5A0DA25D7AF9FD666492770@VE1PR04MB6496.eurprd04.prod.outlook.com>
+ <VI1PR04MB4880B514857A147B2634B27896770@VI1PR04MB4880.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB4880B514857A147B2634B27896770@VI1PR04MB4880.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the CC variable contains quotes, e.g. when using
-ccache (make CC="ccache <compiler>"), this script always
-fails, so CONFIG_RELR is never enabled, even when the
-toolchain supports this feature. Removing the /dev/null
-redirect and invoking the script manually shows the issue:
+On Tue, Nov 12, 2019 at 11:54:29AM +0000, Claudiu Manoil wrote:
+> >-----Original Message-----
+> >From: Po Liu <po.liu@nxp.com>
+> [...]
+> >> -----Original Message-----
+> >> From: Simon Horman <simon.horman@netronome.com>
+> [...]
+> >> > +/* class 5, command 0 */
+> >> > +struct tgs_gcl_conf {
+> >> > +     u8      atc;    /* init gate value */
+> >> > +     u8      res[7];
+> >> > +     union {
+> >> > +             struct {
+> >> > +                     u8      res1[4];
+> >> > +                     __le16  acl_len;
+> >>
+> >> Given that u* types are used in this structure I think le16 would be more
+> >> appropriate than __le16.
+> >
+> >Here keep the same code style of this .h file. I think it is better to have
+> >another patch to fix them all. Do you agree?
+> >
+> 
+> I don't see why "le16" would be more appropriate than "__le16" in this context.
+> The "__leXX" types are widely used in kernel drivers and not only, to annotate the
+> endianess of the hardware.  These are generic types defined din "include/uapi/linux/types.h".
+> Whereas "leXX" are defined in "fs/ntfs/types.h", and there's no usage of these types
+> in other h/w device drivers (I didn't find any).  Am I missing anything?
 
-    $ CC='/usr/bin/ccache clang' ./scripts/tools-support-relr.sh
-    ./scripts/tools-support-relr.sh: 7: ./scripts/tools-support-relr.sh: /usr/bin/ccache clang: not found
-
-Fix this by un-quoting the variables.
-
-Before:
-    $ make ARCH=arm64 CC='/usr/bin/ccache clang' LD=ld.lld \
-        NM=llvm-nm OBJCOPY=llvm-objcopy defconfig
-    $ grep RELR .config
-    CONFIG_ARCH_HAS_RELR=y
-
-With this change:
-    $ make ARCH=arm64 CC='/usr/bin/ccache clang' LD=ld.lld \
-        NM=llvm-nm OBJCOPY=llvm-objcopy defconfig
-    $ grep RELR .config
-    CONFIG_TOOLS_SUPPORT_RELR=y
-    CONFIG_ARCH_HAS_RELR=y
-    CONFIG_RELR=y
-
-Fixes: 5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Link: https://github.com/ClangBuiltLinux/linux/issues/769
-Cc: Peter Collingbourne <pcc@google.com>
-Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
----
- scripts/tools-support-relr.sh | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/scripts/tools-support-relr.sh b/scripts/tools-support-relr.sh
-index 97a2c844a95e..45e8aa360b45 100755
---- a/scripts/tools-support-relr.sh
-+++ b/scripts/tools-support-relr.sh
-@@ -4,13 +4,13 @@
- tmp_file=$(mktemp)
- trap "rm -f $tmp_file.o $tmp_file $tmp_file.bin" EXIT
- 
--cat << "END" | "$CC" -c -x c - -o $tmp_file.o >/dev/null 2>&1
-+cat << "END" | $CC -c -x c - -o $tmp_file.o >/dev/null 2>&1
- void *p = &p;
- END
--"$LD" $tmp_file.o -shared -Bsymbolic --pack-dyn-relocs=relr -o $tmp_file
-+$LD $tmp_file.o -shared -Bsymbolic --pack-dyn-relocs=relr -o $tmp_file
- 
- # Despite printing an error message, GNU nm still exits with exit code 0 if it
- # sees a relr section. So we need to check that nothing is printed to stderr.
--test -z "$("$NM" $tmp_file 2>&1 >/dev/null)"
-+test -z "$($NM $tmp_file 2>&1 >/dev/null)"
- 
--"$OBJCOPY" -O binary $tmp_file $tmp_file.bin
-+$OBJCOPY -O binary $tmp_file $tmp_file.bin
--- 
-2.17.1
-
+My point is a cosmetic one:
+I think that __u8 goes with __le16, while u8 goes with le16.
