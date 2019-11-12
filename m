@@ -2,92 +2,129 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41197C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BB4C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B397222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1424F206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfKLOGn (ORCPT
+        id S1727461AbfKLOGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:06:43 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:46872 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726497AbfKLOGm (ORCPT
+        Tue, 12 Nov 2019 09:06:48 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:34843 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727312AbfKLOGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:06:42 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Thubem1_1573567598;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Thubem1_1573567598)
+        Tue, 12 Nov 2019 09:06:48 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Thubemo_1573567601;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Thubemo_1573567601)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Nov 2019 22:06:38 +0800
+          Tue, 12 Nov 2019 22:06:41 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     alex.shi@linux.alibaba.com, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
         daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com
-Subject: [PATCH v2 0/8] per lruvec lru_lock for memcg
-Date:   Tue, 12 Nov 2019 22:06:20 +0800
-Message-Id: <1573567588-47048-1-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 7/8] mm/lru: likely enhancement
+Date:   Tue, 12 Nov 2019 22:06:27 +0800
+Message-Id: <1573567588-47048-8-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1573567588-47048-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1573567588-47048-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Use likely() to remove speculations according to pagevec usage mode.
 
-This patchset move lru_lock into lruvec, give a lru_lock for each of
-lruvec, thus bring a lru_lock for each of memcg per node.
-
-According to Daniel Jordan's suggestion, I run 64 'dd' with on 32
-containers on my 2s* 8 core * HT box with the modefied case:
-  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
-
-With this change above lru_lock censitive testing improved 17% with multiple
-containers scenario. And no performance lose w/o mem_cgroup.
-
-Thanks Hugh Dickins and Konstantin Khlebnikov, they both bring the same idea
-7 years ago. I don't know why they didn't go further, but according to my 
-testing, and google internal usage. This feathre is clearly benefit
-multi-container user.
-
-So I like to introduce it here.
-
-v2: bypass a performance regression bug and fix some function issues
-
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Chris Down <chris@chrisdown.name>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
 ---
- Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +++------------
- Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +++---
- Documentation/trace/events-kmem.rst                |  2 +-
- Documentation/vm/unevictable-lru.rst               | 22 ++++++++--------------
- include/linux/memcontrol.h                         | 67 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mm_types.h                           |  2 +-
- include/linux/mmzone.h                             |  7 +++++--
- mm/compaction.c                                    | 62 ++++++++++++++++++++++++++++++++++++++++++--------------------
- mm/filemap.c                                       |  4 ++--
- mm/huge_memory.c                                   | 16 ++++++----------
- mm/memcontrol.c                                    | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++-------------
- mm/mlock.c                                         | 27 ++++++++++++++-------------
- mm/mmzone.c                                        |  1 +
- mm/page_alloc.c                                    |  1 -
- mm/page_idle.c                                     |  5 +++--
- mm/rmap.c                                          |  2 +-
- mm/swap.c                                          | 77 +++++++++++++++++++++++++++++++----------------------------------------------
- mm/vmscan.c                                        | 74 ++++++++++++++++++++++++++++++++++++++------------------------------------
- 18 files changed, 277 insertions(+), 177 deletions(-)
+ include/linux/memcontrol.h | 8 ++++----
+ mm/memcontrol.c            | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index f869897a68f0..2a6d7a503452 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1307,12 +1307,12 @@ static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
+ 	struct pglist_data *pgdat = page_pgdat(page);
+ 	struct lruvec *lruvec;
+ 
+-	if (!locked_lruvec)
++	if (unlikely(!locked_lruvec))
+ 		goto lock;
+ 
+ 	lruvec = mem_cgroup_page_lruvec(page, pgdat);
+ 
+-	if (locked_lruvec == lruvec)
++	if (likely(locked_lruvec == lruvec))
+ 		return lruvec;
+ 
+ 	spin_unlock_irq(&locked_lruvec->lru_lock);
+@@ -1329,12 +1329,12 @@ static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
+ 	struct pglist_data *pgdat = page_pgdat(page);
+ 	struct lruvec *lruvec;
+ 
+-	if (!locked_lruvec)
++	if (unlikely(!locked_lruvec))
+ 		goto lock;
+ 
+ 	lruvec = mem_cgroup_page_lruvec(page, pgdat);
+ 
+-	if (locked_lruvec == lruvec)
++	if (likely(locked_lruvec == lruvec))
+ 		return lruvec;
+ 
+ 	spin_unlock_irqrestore(&locked_lruvec->lru_lock, locked_lruvec->flags);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index d2539bac4677..d95adf49fae3 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1273,7 +1273,7 @@ struct lruvec *lock_page_lruvec_irq(struct page *page,
+ 	spin_lock_irq(&lruvec->lru_lock);
+ 
+ 	/* lruvec may changed in commit_charge() */
+-	if (lruvec != mem_cgroup_page_lruvec(page, pgdat)) {
++	if (unlikely(lruvec != mem_cgroup_page_lruvec(page, pgdat))) {
+ 		spin_unlock_irq(&lruvec->lru_lock);
+ 		goto again;
+ 	}
+@@ -1291,7 +1291,7 @@ struct lruvec *lock_page_lruvec_irqsave(struct page *page,
+ 	spin_lock_irqsave(&lruvec->lru_lock, lruvec->flags);
+ 
+ 	/* lruvec may changed in commit_charge() */
+-	if (lruvec != mem_cgroup_page_lruvec(page, pgdat)) {
++	if (unlikely(lruvec != mem_cgroup_page_lruvec(page, pgdat))) {
+ 		spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->flags);
+ 		goto again;
+ 	}
+-- 
+1.8.3.1
 
-[PATCH v2 1/8] mm/lru: add per lruvec lock for memcg
-[PATCH v2 2/8] mm/lruvec: add irqsave flags into lruvec struct
-[PATCH v2 3/8] mm/lru: replace pgdat lru_lock with lruvec lock
-[PATCH v2 4/8] mm/lru: only change the lru_lock iff page's lruvec is
-[PATCH v2 5/8] mm/pgdat: remove pgdat lru_lock
-[PATCH v2 6/8] mm/lru: remove rcu_read_lock to fix performance
-[PATCH v2 7/8] mm/lru: likely enhancement
-[PATCH v2 8/8] mm/lru: revise the comments of lru_lock
