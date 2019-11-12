@@ -6,306 +6,275 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B3AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599EFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6816F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 330AE222C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfKLPSx (ORCPT
+        id S1727388AbfKLPS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:18:53 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:36145 "EHLO
+        Tue, 12 Nov 2019 10:18:57 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:43659 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfKLPSw (ORCPT
+        with ESMTP id S1727137AbfKLPSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:18:52 -0500
+        Tue, 12 Nov 2019 10:18:55 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MvsMz-1heMlZ1bTr-00srMc; Tue, 12 Nov 2019 16:16:58 +0100
+ 1MtfRp-1hc9qB3Td1-00v4Hm; Tue, 12 Nov 2019 16:16:56 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>
 Cc:     Baolin Wang <baolin.wang7@gmail.com>, y2038@lists.linaro.org,
         linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v6 7/8] ALSA: move snd_pcm_ioctl_sync_ptr_compat into pcm_native.c
-Date:   Tue, 12 Nov 2019 16:16:41 +0100
-Message-Id: <20191112151642.680072-8-arnd@arndb.de>
+        Mark Brown <broonie@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v6 2/8] ALSA: Avoid using timespec for struct snd_timer_status
+Date:   Tue, 12 Nov 2019 16:16:36 +0100
+Message-Id: <20191112151642.680072-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191112151642.680072-1-arnd@arndb.de>
 References: <20191112151642.680072-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:dtqoaQwSKA1q63zq2NLtnzRRfdE4iOdCohvxz6SoA6GtAIprbQA
- QUkxbusXoMRs9YuevIRG06mGKr179ICD90ysX1I7kufOsgutVAajIKbMatzON5h+WEjI1mi
- 2ZlsS9yiCa8U853bBW2FL03aImgfAFOIKIwh8HFKG/537MkEos/GL/Vz7eOBNNVrVCx8dK8
- SWX+rnoEZnmslK9br4B8Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9b2k5ENw0xc=:nhmErBHh8bwn0ffdqcyE/g
- zu0F7nZ+WLIcXemXY8RTC8ibhVAw4HiH6LgfD7pYKW5Sm9R2bv92cE/O9lNH19Xt+/QYkFzd3
- megGMJCMdjjSZ3D1FENgq5mSlqK2jyFkOjhUmA/AAm1pMJvrWl+jprM7kIFA8AP2/ktoqh1/D
- 5ZJeksLRVCGs1KnknXitwJGIM5bztr3P9xItJGbjRSOk9YoLanMpsRkmolX4Z588Bb7HZ1DcT
- WarsQmITagCDgzOWZ2y8eCyjBGGiDY4WB2IKkq+/kFUpaskyYuDfuYo8xmiF30kEksh+zyzxb
- EZnX9eDH1FnbSw9ExWmBpDbWapFHqthnEKarFlg2S0u5wcB1I462xFXBmm3NdQzglCMjBvlWQ
- b3Uxqaopy3OS4PoaK99Vw+JFdVwp0EMdWMx4dn/jA9hhWt3eoufg6WEN7tWxfzgT0TNvnH4HJ
- zjXE3t/aJDCJZy3KMC6TkfehISPQ/SaET2GOOnRXk3TG48VB5CDOZwqPF2ojLrMXJc7rSwcCH
- 8ilTC9O+nkeAUCFPQwfISZdM6oDOSs8JLjL2NWORjuXtOAoPfJ190KC22T4JnBIHBMAtw5wmg
- wjOxkQU5zqYIgDjM59lH8vsyKUlr26KEiNNbVQokKkrBuORzRLpyVpMz3aKCVxURhdNHAgz8g
- P9HlrhAw0JMEM/DU260goiUcNlDWIew4caW9+A2YWW67SGDWb0vBeTzxX/0vMwpcdiOHKhkFT
- A4sJrPUMpvC0XFbqf/8vmPFORf+04bzYYs5OorAgTHjXO5EjdPkfcKIEVIekjmy4SGr+qfsFp
- oMEhuqdoJGBr8wcKqCjnYYtqSZCUefHUuboyG6TgpGiil5E153mRfRgvMDP7dPmUHRVPt7X3w
- DXo3l52tPUYKwqSWxyng==
+X-Provags-ID: V03:K1:u3zGZYSUP0mPAgM1xzr7VtvAdHVSHJvfYGEoRMDWeoYEsEXXSCB
+ 2a0XtIGPepntRjOYl5w4Uldg2inkkpHr7o6pFEbF5HT2hRsNg7aXA3oDJNmCaGwhGoL3t/+
+ lGn4c4O/jnzvkUwsfEbgxExa7aXDXwwP9a3V+wpaGSc+tQZ7WdA3ewmWhtXZ0FRKVeACN96
+ nJRGS96Mosu+p5pjnnX9A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0XEazvyASJg=:SlRb9zMUQw9OFLamESQKxP
+ 2TmH0aE8/RWYsoFgTzFlQQS3pH+9z+x3SZehXXxaNvj3GYpBNc+O6OcFPDcgeL0Gr61a9JkTC
+ HYQQ/TwBokGTfZ147wNjak5exIJA2RvU+6Qk0u+lsM/hHTVKG36ytF7vOx+sOeBJSSvqFZ/+u
+ CxybcpN5DiDVyLVZYxYoHz53HXxuRSoLLwqGjPEOgV62zMBMiHZ8LBvp/kSDDpYxbh4miTKrl
+ tsYss2hinqfrsqrNb94lQLxU47ULfqkk5yqVoIIKgRnA2ITPdSdnsx+XJf0NYyx9hvOq86c9+
+ FL9eBfolGHAYi2aP0YnPn8bcYuL/WzU3IFBJF7jst0CGKUJ935HR8x/L2N40wsSKv/bM/QFar
+ wsv1kvP9fns4sbdEa/XoToWzXV4s3lh9zfAqzQVwBKf1sJ35p2oiZkcTKbarnF49s9G0RwxRi
+ iAaen3Bw6MiPop4I6NmMAkzDZjDEl0YRL3ZDo8sSxVi1585jRY5QBH41fGfg70PiiXVbuW4dD
+ nvMsPbNGKM7ogdwwHrIqPH9wcDZGXXDhNVlSkR/DjCT4/j/dHK7trAKfrUTZkgPz59498uQV4
+ LgzrbIyipsphKjESiEIW3+yDphXaJnwwQsEfOrU3gKtTI2XZIKFrWEPVbaacX3qvTOathYqPr
+ jj4pOSZEPzeIrP7QjcCqRJn3ENsQogP0u1rsuUZ+E8Cb8Ipi6Gm6vDCdWKW3OislxSEU/qYQK
+ s3ZoXTKSDz99GsC773JSVv6MJZkkJzPrDWl7RXi4Tx+G6xsaue1Pe74OHsCpw1N/odwAeXc1I
+ lqBwPjPyH7Uwtmt5OlFgHIzWUJqmMS313hQ2v+8VjA/H9Hk4hw3e/xX4Mppw3xB3WqGVgq8NL
+ wneV/KLj/C5II6NQPFJQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a preparation patch, moving the compat handler for
-snd_pcm_ioctl_sync_ptr_compat from pcm_compat.c to pcm_native.c.
-No other changes are indented.
+From: Baolin Wang <baolin.wang@linaro.org>
+
+struct snd_timer_status uses 'timespec' type variables to record
+timestamp, which will be changed to an incompatible layout with
+updated user space using 64-bit time_t.
+
+To handle both the old and the new layout on 32-bit architectures,
+this patch introduces 'struct snd_timer_status32' and 'struct snd_timer_status64'
+to handle 32bit time_t and 64bit time_t in native mode and compat mode,
+which replaces timespec with s64 type.
+
+When glibc changes time_t to 64-bit, any recompiled program will issue
+ioctl commands that the kernel does not understand without this patch.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/core/pcm_compat.c |  98 --------------------------------------
- sound/core/pcm_native.c | 101 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 101 insertions(+), 98 deletions(-)
+ include/uapi/sound/asound.h |  2 ++
+ sound/core/timer.c          | 62 +++++++++++++++++++++++++++++++++----
+ sound/core/timer_compat.c   | 57 ++++------------------------------
+ 3 files changed, 64 insertions(+), 57 deletions(-)
 
-diff --git a/sound/core/pcm_compat.c b/sound/core/pcm_compat.c
-index 2671658442ea..6a2e5ea145e6 100644
---- a/sound/core/pcm_compat.c
-+++ b/sound/core/pcm_compat.c
-@@ -83,19 +83,6 @@ struct snd_pcm_sw_params32 {
- 	unsigned char reserved[56];
+diff --git a/include/uapi/sound/asound.h b/include/uapi/sound/asound.h
+index df1153cea0b7..930854f67fd3 100644
+--- a/include/uapi/sound/asound.h
++++ b/include/uapi/sound/asound.h
+@@ -761,6 +761,7 @@ struct snd_timer_params {
+ 	unsigned char reserved[60];	/* reserved */
  };
  
--/* recalcuate the boundary within 32bit */
--static snd_pcm_uframes_t recalculate_boundary(struct snd_pcm_runtime *runtime)
--{
--	snd_pcm_uframes_t boundary;
--
--	if (! runtime->buffer_size)
--		return 0;
--	boundary = runtime->buffer_size;
--	while (boundary * 2 <= 0x7fffffffUL - runtime->buffer_size)
--		boundary *= 2;
--	return boundary;
--}
--
- static int snd_pcm_ioctl_sw_params_compat(struct snd_pcm_substream *substream,
- 					  struct snd_pcm_sw_params32 __user *src)
- {
-@@ -388,91 +375,6 @@ static int snd_pcm_ioctl_xfern_compat(struct snd_pcm_substream *substream,
++#ifndef __KERNEL__
+ struct snd_timer_status {
+ 	struct timespec tstamp;		/* Timestamp - last update */
+ 	unsigned int resolution;	/* current period resolution in ns */
+@@ -769,6 +770,7 @@ struct snd_timer_status {
+ 	unsigned int queue;		/* used queue size */
+ 	unsigned char reserved[64];	/* reserved */
+ };
++#endif
+ 
+ #define SNDRV_TIMER_IOCTL_PVERSION	_IOR('T', 0x00, int)
+ #define SNDRV_TIMER_IOCTL_NEXT_DEVICE	_IOWR('T', 0x01, struct snd_timer_id)
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index 29b99cfb5215..921f4ae2f9bf 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -65,6 +65,30 @@ struct snd_timer_user {
+ 	struct mutex ioctl_lock;
+ };
+ 
++struct snd_timer_status32 {
++	s32 tstamp_sec;			/* Timestamp - last update */
++	s32 tstamp_nsec;
++	unsigned int resolution;	/* current period resolution in ns */
++	unsigned int lost;		/* counter of master tick lost */
++	unsigned int overrun;		/* count of read queue overruns */
++	unsigned int queue;		/* used queue size */
++	unsigned char reserved[64];	/* reserved */
++};
++
++#define SNDRV_TIMER_IOCTL_STATUS32	_IOR('T', 0x14, struct snd_timer_status32)
++
++struct snd_timer_status64 {
++	s64 tstamp_sec;			/* Timestamp - last update */
++	s64 tstamp_nsec;
++	unsigned int resolution;	/* current period resolution in ns */
++	unsigned int lost;		/* counter of master tick lost */
++	unsigned int overrun;		/* count of read queue overruns */
++	unsigned int queue;		/* used queue size */
++	unsigned char reserved[64];	/* reserved */
++};
++
++#define SNDRV_TIMER_IOCTL_STATUS64	_IOR('T', 0x14, struct snd_timer_status64)
++
+ /* list of timers */
+ static LIST_HEAD(snd_timer_list);
+ 
+@@ -1861,17 +1885,41 @@ static int snd_timer_user_params(struct file *file,
  	return err;
  }
  
--
--struct snd_pcm_mmap_status32 {
--	s32 state;
--	s32 pad1;
--	u32 hw_ptr;
--	struct compat_timespec tstamp;
--	s32 suspended_state;
--	struct compat_timespec audio_tstamp;
--} __attribute__((packed));
--
--struct snd_pcm_mmap_control32 {
--	u32 appl_ptr;
--	u32 avail_min;
--};
--
--struct snd_pcm_sync_ptr32 {
--	u32 flags;
--	union {
--		struct snd_pcm_mmap_status32 status;
--		unsigned char reserved[64];
--	} s;
--	union {
--		struct snd_pcm_mmap_control32 control;
--		unsigned char reserved[64];
--	} c;
--} __attribute__((packed));
--
--static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
--					 struct snd_pcm_sync_ptr32 __user *src)
--{
--	struct snd_pcm_runtime *runtime = substream->runtime;
--	volatile struct snd_pcm_mmap_status *status;
--	volatile struct snd_pcm_mmap_control *control;
--	u32 sflags;
--	struct snd_pcm_mmap_control scontrol;
--	struct snd_pcm_mmap_status sstatus;
--	snd_pcm_uframes_t boundary;
--	int err;
--
--	if (snd_BUG_ON(!runtime))
--		return -EINVAL;
--
--	if (get_user(sflags, &src->flags) ||
--	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    get_user(scontrol.avail_min, &src->c.control.avail_min))
--		return -EFAULT;
--	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
--		err = snd_pcm_hwsync(substream);
--		if (err < 0)
--			return err;
--	}
--	status = runtime->status;
--	control = runtime->control;
--	boundary = recalculate_boundary(runtime);
--	if (! boundary)
--		boundary = 0x7fffffff;
--	snd_pcm_stream_lock_irq(substream);
--	/* FIXME: we should consider the boundary for the sync from app */
--	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
--		control->appl_ptr = scontrol.appl_ptr;
--	else
--		scontrol.appl_ptr = control->appl_ptr % boundary;
--	if (!(sflags & SNDRV_PCM_SYNC_PTR_AVAIL_MIN))
--		control->avail_min = scontrol.avail_min;
--	else
--		scontrol.avail_min = control->avail_min;
--	sstatus.state = status->state;
--	sstatus.hw_ptr = status->hw_ptr % boundary;
--	sstatus.tstamp = status->tstamp;
--	sstatus.suspended_state = status->suspended_state;
--	sstatus.audio_tstamp = status->audio_tstamp;
--	snd_pcm_stream_unlock_irq(substream);
--	if (put_user(sstatus.state, &src->s.status.state) ||
--	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
--	    compat_put_timespec(&sstatus.tstamp, &src->s.status.tstamp) ||
--	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
--	    compat_put_timespec(&sstatus.audio_tstamp,
--		    &src->s.status.audio_tstamp) ||
--	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    put_user(scontrol.avail_min, &src->c.control.avail_min))
--		return -EFAULT;
--
--	return 0;
--}
--
- #ifdef CONFIG_X86_X32
- /* X32 ABI has 64bit timespec and 64bit alignment */
- struct snd_pcm_mmap_status_x32 {
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 2c8c9b91677a..cad90d9ce9da 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -4,6 +4,7 @@
-  *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
-  */
+-static int snd_timer_user_status(struct file *file,
+-				 struct snd_timer_status __user *_status)
++static int snd_timer_user_status32(struct file *file,
++				   struct snd_timer_status32 __user *_status)
++ {
++	struct snd_timer_user *tu;
++	struct snd_timer_status32 status;
++
++	tu = file->private_data;
++	if (!tu->timeri)
++		return -EBADFD;
++	memset(&status, 0, sizeof(status));
++	status.tstamp_sec = tu->tstamp.tv_sec;
++	status.tstamp_nsec = tu->tstamp.tv_nsec;
++	status.resolution = snd_timer_resolution(tu->timeri);
++	status.lost = tu->timeri->lost;
++	status.overrun = tu->overrun;
++	spin_lock_irq(&tu->qlock);
++	status.queue = tu->qused;
++	spin_unlock_irq(&tu->qlock);
++	if (copy_to_user(_status, &status, sizeof(status)))
++		return -EFAULT;
++	return 0;
++}
++
++static int snd_timer_user_status64(struct file *file,
++				   struct snd_timer_status64 __user *_status)
+ {
+ 	struct snd_timer_user *tu;
+-	struct snd_timer_status status;
++	struct snd_timer_status64 status;
  
-+#include <linux/compat.h>
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/file.h>
-@@ -2846,6 +2847,106 @@ static int snd_pcm_sync_ptr(struct snd_pcm_substream *substream,
+ 	tu = file->private_data;
+ 	if (!tu->timeri)
+ 		return -EBADFD;
+ 	memset(&status, 0, sizeof(status));
+-	status.tstamp = timespec64_to_timespec(tu->tstamp);
++	status.tstamp_sec = tu->tstamp.tv_sec;
++	status.tstamp_nsec = tu->tstamp.tv_nsec;
+ 	status.resolution = snd_timer_resolution(tu->timeri);
+ 	status.lost = tu->timeri->lost;
+ 	status.overrun = tu->overrun;
+@@ -1995,8 +2043,10 @@ static long __snd_timer_user_ioctl(struct file *file, unsigned int cmd,
+ 		return snd_timer_user_info(file, argp);
+ 	case SNDRV_TIMER_IOCTL_PARAMS:
+ 		return snd_timer_user_params(file, argp);
+-	case SNDRV_TIMER_IOCTL_STATUS:
+-		return snd_timer_user_status(file, argp);
++	case SNDRV_TIMER_IOCTL_STATUS32:
++		return snd_timer_user_status32(file, argp);
++	case SNDRV_TIMER_IOCTL_STATUS64:
++		return snd_timer_user_status64(file, argp);
+ 	case SNDRV_TIMER_IOCTL_START:
+ 	case SNDRV_TIMER_IOCTL_START_OLD:
+ 		return snd_timer_user_start(file);
+diff --git a/sound/core/timer_compat.c b/sound/core/timer_compat.c
+index bb6be484dfd3..20eef5bc304b 100644
+--- a/sound/core/timer_compat.c
++++ b/sound/core/timer_compat.c
+@@ -69,54 +69,11 @@ static int snd_timer_user_info_compat(struct file *file,
  	return 0;
  }
  
-+#ifdef CONFIG_COMPAT
-+struct snd_pcm_mmap_status32 {
-+	s32 state;
-+	s32 pad1;
-+	u32 hw_ptr;
-+	struct compat_timespec tstamp;
-+	s32 suspended_state;
-+	struct compat_timespec audio_tstamp;
-+} __attribute__((packed));
-+
-+struct snd_pcm_mmap_control32 {
-+	u32 appl_ptr;
-+	u32 avail_min;
-+};
-+
-+struct snd_pcm_sync_ptr32 {
-+	u32 flags;
-+	union {
-+		struct snd_pcm_mmap_status32 status;
-+		unsigned char reserved[64];
-+	} s;
-+	union {
-+		struct snd_pcm_mmap_control32 control;
-+		unsigned char reserved[64];
-+	} c;
-+} __attribute__((packed));
-+
-+/* recalcuate the boundary within 32bit */
-+static snd_pcm_uframes_t recalculate_boundary(struct snd_pcm_runtime *runtime)
-+{
-+	snd_pcm_uframes_t boundary;
-+
-+	if (! runtime->buffer_size)
-+		return 0;
-+	boundary = runtime->buffer_size;
-+	while (boundary * 2 <= 0x7fffffffUL - runtime->buffer_size)
-+		boundary *= 2;
-+	return boundary;
-+}
-+
-+static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
-+					 struct snd_pcm_sync_ptr32 __user *src)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	volatile struct snd_pcm_mmap_status *status;
-+	volatile struct snd_pcm_mmap_control *control;
-+	u32 sflags;
-+	struct snd_pcm_mmap_control scontrol;
-+	struct snd_pcm_mmap_status sstatus;
-+	snd_pcm_uframes_t boundary;
-+	int err;
-+
-+	if (snd_BUG_ON(!runtime))
-+		return -EINVAL;
-+
-+	if (get_user(sflags, &src->flags) ||
-+	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
-+	    get_user(scontrol.avail_min, &src->c.control.avail_min))
-+		return -EFAULT;
-+	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
-+		err = snd_pcm_hwsync(substream);
-+		if (err < 0)
-+			return err;
-+	}
-+	status = runtime->status;
-+	control = runtime->control;
-+	boundary = recalculate_boundary(runtime);
-+	if (! boundary)
-+		boundary = 0x7fffffff;
-+	snd_pcm_stream_lock_irq(substream);
-+	/* FIXME: we should consider the boundary for the sync from app */
-+	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
-+		control->appl_ptr = scontrol.appl_ptr;
-+	else
-+		scontrol.appl_ptr = control->appl_ptr % boundary;
-+	if (!(sflags & SNDRV_PCM_SYNC_PTR_AVAIL_MIN))
-+		control->avail_min = scontrol.avail_min;
-+	else
-+		scontrol.avail_min = control->avail_min;
-+	sstatus.state = status->state;
-+	sstatus.hw_ptr = status->hw_ptr % boundary;
-+	sstatus.tstamp = status->tstamp;
-+	sstatus.suspended_state = status->suspended_state;
-+	sstatus.audio_tstamp = status->audio_tstamp;
-+	snd_pcm_stream_unlock_irq(substream);
-+	if (put_user(sstatus.state, &src->s.status.state) ||
-+	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
-+	    compat_put_timespec(&sstatus.tstamp, &src->s.status.tstamp) ||
-+	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
-+	    compat_put_timespec(&sstatus.audio_tstamp,
-+				&src->s.status.audio_tstamp) ||
-+	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
-+	    put_user(scontrol.avail_min, &src->c.control.avail_min))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+#define __SNDRV_PCM_IOCTL_SYNC_PTR32 = _IOWR('A', 0x23, struct snd_pcm_sync_ptr32),
-+#endif
-+
- static int snd_pcm_tstamp(struct snd_pcm_substream *substream, int __user *_arg)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
+-struct snd_timer_status32 {
+-	struct compat_timespec tstamp;
+-	u32 resolution;
+-	u32 lost;
+-	u32 overrun;
+-	u32 queue;
+-	unsigned char reserved[64];
+-};
+-
+-static int snd_timer_user_status_compat(struct file *file,
+-					struct snd_timer_status32 __user *_status)
+-{
+-	struct snd_timer_user *tu;
+-	struct snd_timer_status32 status;
+-	
+-	tu = file->private_data;
+-	if (!tu->timeri)
+-		return -EBADFD;
+-	memset(&status, 0, sizeof(status));
+-	status.tstamp.tv_sec = tu->tstamp.tv_sec;
+-	status.tstamp.tv_nsec = tu->tstamp.tv_nsec;
+-	status.resolution = snd_timer_resolution(tu->timeri);
+-	status.lost = tu->timeri->lost;
+-	status.overrun = tu->overrun;
+-	spin_lock_irq(&tu->qlock);
+-	status.queue = tu->qused;
+-	spin_unlock_irq(&tu->qlock);
+-	if (copy_to_user(_status, &status, sizeof(status)))
+-		return -EFAULT;
+-	return 0;
+-}
+-
+-#ifdef CONFIG_X86_X32
+-/* X32 ABI has the same struct as x86-64 */
+-#define snd_timer_user_status_x32(file, s) \
+-	snd_timer_user_status(file, s)
+-#endif /* CONFIG_X86_X32 */
+-
+-/*
+- */
+-
+ enum {
+ 	SNDRV_TIMER_IOCTL_GPARAMS32 = _IOW('T', 0x04, struct snd_timer_gparams32),
+ 	SNDRV_TIMER_IOCTL_INFO32 = _IOR('T', 0x11, struct snd_timer_info32),
+-	SNDRV_TIMER_IOCTL_STATUS32 = _IOW('T', 0x14, struct snd_timer_status32),
+-#ifdef CONFIG_X86_X32
+-	SNDRV_TIMER_IOCTL_STATUS_X32 = _IOW('T', 0x14, struct snd_timer_status),
+-#endif /* CONFIG_X86_X32 */
++	SNDRV_TIMER_IOCTL_STATUS_COMPAT32 = _IOW('T', 0x14, struct snd_timer_status32),
++	SNDRV_TIMER_IOCTL_STATUS_COMPAT64 = _IOW('T', 0x14, struct snd_timer_status64),
+ };
+ 
+ static long __snd_timer_user_ioctl_compat(struct file *file, unsigned int cmd,
+@@ -145,12 +102,10 @@ static long __snd_timer_user_ioctl_compat(struct file *file, unsigned int cmd,
+ 		return snd_timer_user_gparams_compat(file, argp);
+ 	case SNDRV_TIMER_IOCTL_INFO32:
+ 		return snd_timer_user_info_compat(file, argp);
+-	case SNDRV_TIMER_IOCTL_STATUS32:
+-		return snd_timer_user_status_compat(file, argp);
+-#ifdef CONFIG_X86_X32
+-	case SNDRV_TIMER_IOCTL_STATUS_X32:
+-		return snd_timer_user_status_x32(file, argp);
+-#endif /* CONFIG_X86_X32 */
++	case SNDRV_TIMER_IOCTL_STATUS_COMPAT32:
++		return snd_timer_user_status32(file, argp);
++	case SNDRV_TIMER_IOCTL_STATUS_COMPAT64:
++		return snd_timer_user_status64(file, argp);
+ 	}
+ 	return -ENOIOCTLCMD;
+ }
 -- 
 2.20.0
 
