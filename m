@@ -2,105 +2,143 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7863C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81745C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B299521925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D332184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PMNCkg1d"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a92HKbAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfKLB0M (ORCPT
+        id S1727044AbfKLB1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:26:12 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58487 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbfKLB0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:26:10 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Bqnp5hdDz9sP4;
-        Tue, 12 Nov 2019 12:26:06 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573521967;
-        bh=W3s43Z88oXu9pIzwh9tpxWxTIX0x+AKU7y4WkOJAJLU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PMNCkg1dPaIOFB2udaVC1OEaTsXRpJArXHX0cZ06bnoX1VtGSzJQOkByoFk/hqlOg
-         +7/S9uONnUGWp4ik3Nq+YVXwSO7zymBCMUXSS+YPOa1QJdYIcIPZM+/q2+OXgKBRwc
-         ft+9v923TbQYHD448mj7X/Ok378ffQbeVMbLj670hMXCgNme6hRRgj1cf7NXm/mlqj
-         kcC52k1KnPONY7qQ+S/HasGmXeSoiFbOz7P9c4lUGmKCw0Ky2V35QYsck9zie9KfQS
-         YwkiupwJYQtTuaK32mZ5JM3mCrMZ/vOSbhjnG5kvNM8fffcn7CWydAUR69VtYTMppt
-         ztByroEfEWBOQ==
-Date:   Tue, 12 Nov 2019 12:26:00 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: linux-next: manual merge of the sound-asoc tree with the sound tree
-Message-ID: <20191112122600.44c88517@canb.auug.org.au>
+        Mon, 11 Nov 2019 20:27:02 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1829 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfKLB1B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 20:27:01 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dca0a260000>; Mon, 11 Nov 2019 17:25:58 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 11 Nov 2019 17:27:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 11 Nov 2019 17:27:00 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 01:27:00 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 12 Nov 2019 01:27:00 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dca0a640000>; Mon, 11 Nov 2019 17:27:00 -0800
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH v3] mm/debug: __dump_page() prints an extra line
+Date:   Mon, 11 Nov 2019 17:26:08 -0800
+Message-ID: <20191112012608.16926-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tbsT14jj.cYO1DXCXtXJWY+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573521959; bh=I5xB11rrp8fPbhCiJFAnSXNFj55ZuC8o7ZE2GAxtZGU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=a92HKbAOP3nKGfHbxIEuwLrOHWs8Hlk3ehHU09ssO3UNq7fvWj0ctZQ1u38Jt48HD
+         iyXj1ufarJCpvqJSO5x7VzEhSCMcOqknH/mkcjT8Z8dlWzBNqP8qNmafV/FExmrnVj
+         ctKkVyWh7Ri1VDOM6N+7zfIx9XdhLfVyXb9USW6AoOPVj5eHnYAq0WAth9+juBDIow
+         OB2tSvb5mMTxANORkmQoKDl+vA7Nq29PuPZQbPJR2Td4ue7zEFzavjTm2fvKpqF4Gx
+         B4sfryucVSJJP9K3PAPrxtZQSv7H6Q5+rc9SwRB/apauFlzbo783oOtwvHXM9QmxHQ
+         LBW6HkzAj7E3g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tbsT14jj.cYO1DXCXtXJWY+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When dumping struct page information, __dump_page() prints the page type
+with a trailing blank followed by the page flags on a separate line:
 
-Hi all,
+anon
+flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
 
-Today's linux-next merge of the sound-asoc tree got a conflict in:
+It looks like the intent was to use pr_cont() for printing "flags:"
+but pr_cont() usage is discouraged so fix this by extending the format
+to include the flags into a single line:
 
-  sound/soc/codecs/Kconfig
+anon flags: 0x100000000090034(uptodate|lru|active|head|swapbacked)
 
-between commit:
+If the page is file backed, the name might be long so use two lines:
 
-  82e8d723e9e6 ("sound: Fix Kconfig indentation")
+shmem_aops name:"dev/zero"
+flags: 0x10000000008000c(uptodate|dirty|swapbacked)
 
-from the sound tree and commit:
+Eliminate pr_conf() usage as well for appending compound_mapcount.
 
-  36da67630d31 ("ASoC: Add DA7213 audio codec as selectable option")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ mm/debug.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-from the sound-asoc tree.
-
-I fixed it up (I just used the latter version which also fixed the
-indentation) and can carry the fix as necessary. This is now fixed as
-far as linux-next is concerned, but any non trivial conflicts should be
-mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
+diff --git a/mm/debug.c b/mm/debug.c
+index 8345bb6e4769..772d4cf0691f 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -67,28 +67,31 @@ void __dump_page(struct page *page, const char *reason)
+ 	 */
+ 	mapcount =3D PageSlab(page) ? 0 : page_mapcount(page);
+=20
+-	pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx",
+-		  page, page_ref_count(page), mapcount,
+-		  page->mapping, page_to_pgoff(page));
+ 	if (PageCompound(page))
+-		pr_cont(" compound_mapcount: %d", compound_mapcount(page));
+-	pr_cont("\n");
++		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
++			"index:%#lx compound_mapcount: %d\n",
++			page, page_ref_count(page), mapcount,
++			page->mapping, page_to_pgoff(page),
++			compound_mapcount(page));
++	else
++		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
++			page, page_ref_count(page), mapcount,
++			page->mapping, page_to_pgoff(page));
+ 	if (PageAnon(page))
+-		pr_warn("anon ");
++		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
+ 	else if (PageKsm(page))
+-		pr_warn("ksm ");
++		pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
+ 	else if (mapping) {
+-		pr_warn("%ps ", mapping->a_ops);
+ 		if (mapping->host && mapping->host->i_dentry.first) {
+ 			struct dentry *dentry;
+ 			dentry =3D container_of(mapping->host->i_dentry.first, struct dentry, d=
+_u.d_alias);
+-			pr_warn("name:\"%pd\" ", dentry);
+-		}
++			pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
++		} else
++			pr_warn("%ps\n", mapping->a_ops);
++		pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+ 	}
+ 	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) !=3D __NR_PAGEFLAGS + 1);
+=20
+-	pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+-
+ hex_only:
+ 	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+ 			sizeof(unsigned long), page,
 --=20
-Cheers,
-Stephen Rothwell
+2.20.1
 
---Sig_/tbsT14jj.cYO1DXCXtXJWY+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3KCigACgkQAVBC80lX
-0GygNggAnqffmZmmQ79iQHL1v2XBl3A1VHEMikEKrQ/QDzTms1cGmqYjVaqj7RO8
-y+s1SYf5MOCDbIGJF2bp3TgA+RbWal6I/LpfNyXFPazCsNkOhwakwh9T/b+DNGZo
-vtBvZ/rit/iCqhXfVNceDk131FCbEPRsJc+rLfx2iB3R7JaLKM5dAfmxmUG6/djz
-PM9eFVd6fPmgQ2lDBciN6I8E+7ZkWFfLzhZt2Fhxwgaha24wyBoJqL9d58nE6r1A
-daMse50qNfLccFCl4n+hHqy9NrTs3Dvk5b4Jjue/mpQzSv4CHJAyRAxOkGsMHfp+
-hHqj0/YV6kAoReE3sanOdRTu2hhPJw==
-=r86P
------END PGP SIGNATURE-----
-
---Sig_/tbsT14jj.cYO1DXCXtXJWY+--
