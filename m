@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FD6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0555C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07BD222C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AED222C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rftOQK6M"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o3lCcoDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfKLO3N (ORCPT
+        id S1727355AbfKLO3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:29:13 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40894 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727632AbfKLO3J (ORCPT
+        Tue, 12 Nov 2019 09:29:17 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39130 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfKLO3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:29:09 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACET68E045479;
-        Tue, 12 Nov 2019 08:29:06 -0600
+        Tue, 12 Nov 2019 09:29:10 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACET8qo099235;
+        Tue, 12 Nov 2019 08:29:08 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573568946;
-        bh=HGUos+luy2mHX2awq1qkiRaaCxsuIOrx5Abo8eh8ShI=;
+        s=ti-com-17Q1; t=1573568948;
+        bh=0PtHIUxpyY1jlEBfi979qIc/rhOw+ysX8tp0y1r6ec0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=rftOQK6M3Lw4vxvw0vzWfEveplNBWOFekkA53ioZGXzfIqG7ByP0Cutm6H4N1u5Q7
-         PYrqZzAjELjgJ4NhrQLikM7HeqCS9Ub0wW3OYJEtVkNQ76ZdBHbBXwyKOaE9tya2Ip
-         dxE8InCt+70UXfdwdJy65qRxnnNBdIpa3J8Dh2mc=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACET64K027153
+        b=o3lCcoDdbk9pPU91HS4khYFPr+wLXsPLCgc1V8vOMcbxUfjln7r2KsFnN4pm/EjTg
+         Vf7xff3ZZHpE9SIUb6VdrXoDj40pAgq9B4ONqBcQfjeY0NFGQVMNS39DLNW9m4RLSc
+         J1unTb2CmH+VuzpURom0v0eUWMGYlNwWFFRz1SsQ=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACET8Fe019446
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:29:06 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:29:08 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:28:48 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:28:50 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:28:48 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:28:50 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriL044422;
-        Tue, 12 Nov 2019 08:29:05 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriN044422;
+        Tue, 12 Nov 2019 08:29:07 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 09/20] media: ti-vpe: cal: Fix ths_term/ths_settle parameters
-Date:   Tue, 12 Nov 2019 08:31:41 -0600
-Message-ID: <20191112143152.23176-10-bparrot@ti.com>
+Subject: [Patch v3 11/20] media: ti-vpe: cal: Align DPHY init sequence with docs
+Date:   Tue, 12 Nov 2019 08:31:43 -0600
+Message-ID: <20191112143152.23176-12-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112143152.23176-1-bparrot@ti.com>
 References: <20191112143152.23176-1-bparrot@ti.com>
@@ -67,260 +67,287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current method to calculate the ddr clk period is wrong.
-Therefore the ths_term calculation is incorrect.
-Also it was wrongly assumed that the ths_settle parameter
-was based on the control clock instead of the pixel clock.
+The current CSI2 DPHY initialization sequence although
+functional does not match with the documented sequence
+in the Technical Reference Manual.
 
-Since the DPHY can tolerate quite a bit a of variation,
-capture was still mostly working with the 2 tested modes
-when the pixel clock was close to the control clock
-(i.e. 96 Mhz). But it would quickly stops working when
-using different modes or when customers used different
-sensors altogether.
-
-Calculating the DDRClk period needs to take into account
-the pixel bit width and the number of active data lanes.
-
-Based on the latest technical reference manual these
-parameters should now be calculated as follows:
-
-THS_TERM: Programmed value = floor(20 ns/DDRClk period)
-THS_SETTLE: Programmed value = floor(105 ns/DDRClk period) + 4
-
-Also originally 'depth' was used to represent the number of
-bits a pixel would use once stored in memory (i.e. the
-container size). To accurately calculate the THS_* parameters
-we need to use the actual number of bits per pixels coming
-in from the sensor. So we are renaming 'depth' to 'bpp' (bits
-per pixels) and update the format table to show the actual
-number of bits per pixel being received.
-
-The "container" size will be derived from the "bpp" value.
+This may affect capture re-startability in stop/start
+situations.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 98 +++++++++++++----------------
- 1 file changed, 44 insertions(+), 54 deletions(-)
+ drivers/media/platform/ti-vpe/cal.c | 199 ++++++++++++++++++++++++----
+ 1 file changed, 172 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 3b04aff6c778..51edc7bc3135 100644
+index 1b4a74f0d751..8d9c1569c05a 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -73,8 +73,6 @@ static const struct v4l2_fract
- #define CAL_NUM_INPUT 1
- #define CAL_NUM_CONTEXT 2
+@@ -686,29 +686,76 @@ static void disable_irqs(struct cal_ctx *ctx)
+ 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
+ }
  
--#define bytes_per_line(pixel, bpp) (ALIGN(pixel * bpp, 16))
--
- #define reg_read(dev, offset) ioread32(dev->base + offset)
- #define reg_write(dev, offset, val) iowrite32(val, dev->base + offset)
- 
-@@ -93,102 +91,103 @@ static const struct v4l2_fract
- struct cal_fmt {
- 	u32	fourcc;
- 	u32	code;
--	u8	depth;
-+	/* Bits per pixel */
-+	u8	bpp;
- };
- 
- static struct cal_fmt cal_formats[] = {
- 	{
- 		.fourcc		= V4L2_PIX_FMT_YUYV,
- 		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_UYVY,
- 		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_YVYU,
- 		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_VYUY,
- 		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_RGB565, /* gggbbbbb rrrrrggg */
- 		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_RGB565X, /* rrrrrggg gggbbbbb */
- 		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_RGB555, /* gggbbbbb arrrrrgg */
- 		.code		= MEDIA_BUS_FMT_RGB555_2X8_PADHI_LE,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_RGB555X, /* arrrrrgg gggbbbbb */
- 		.code		= MEDIA_BUS_FMT_RGB555_2X8_PADHI_BE,
--		.depth		= 16,
-+		.bpp		= 16,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_RGB24, /* rgb */
- 		.code		= MEDIA_BUS_FMT_RGB888_2X12_LE,
--		.depth		= 24,
-+		.bpp		= 24,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_BGR24, /* bgr */
- 		.code		= MEDIA_BUS_FMT_RGB888_2X12_BE,
--		.depth		= 24,
-+		.bpp		= 24,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_RGB32, /* argb */
- 		.code		= MEDIA_BUS_FMT_ARGB8888_1X32,
--		.depth		= 32,
-+		.bpp		= 32,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SBGGR8,
- 		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
--		.depth		= 8,
-+		.bpp		= 8,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SGBRG8,
- 		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
--		.depth		= 8,
-+		.bpp		= 8,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SGRBG8,
- 		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
--		.depth		= 8,
-+		.bpp		= 8,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SRGGB8,
- 		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
--		.depth		= 8,
-+		.bpp		= 8,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SBGGR10,
- 		.code		= MEDIA_BUS_FMT_SBGGR10_1X10,
--		.depth		= 16,
-+		.bpp		= 10,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SGBRG10,
- 		.code		= MEDIA_BUS_FMT_SGBRG10_1X10,
--		.depth		= 16,
-+		.bpp		= 10,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SGRBG10,
- 		.code		= MEDIA_BUS_FMT_SGRBG10_1X10,
--		.depth		= 16,
-+		.bpp		= 10,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SRGGB10,
- 		.code		= MEDIA_BUS_FMT_SRGGB10_1X10,
--		.depth		= 16,
-+		.bpp		= 10,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SBGGR12,
- 		.code		= MEDIA_BUS_FMT_SBGGR12_1X12,
--		.depth		= 16,
-+		.bpp		= 12,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SGBRG12,
- 		.code		= MEDIA_BUS_FMT_SGBRG12_1X12,
--		.depth		= 16,
-+		.bpp		= 12,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SGRBG12,
- 		.code		= MEDIA_BUS_FMT_SGRBG12_1X12,
--		.depth		= 16,
-+		.bpp		= 12,
- 	}, {
- 		.fourcc		= V4L2_PIX_FMT_SRGGB12,
- 		.code		= MEDIA_BUS_FMT_SRGGB12_1X12,
--		.depth		= 16,
-+		.bpp		= 12,
- 	},
- };
- 
-@@ -870,41 +869,28 @@ static void cal_wr_dma_addr(struct cal_ctx *ctx, unsigned int dmaaddr)
- #define TCLK_TERM	0
- #define TCLK_MISS	1
- #define TCLK_SETTLE	14
--#define THS_SETTLE	15
- 
- static void csi2_phy_config(struct cal_ctx *ctx)
+-static void csi2_init(struct cal_ctx *ctx)
++static void csi2_phy_config(struct cal_ctx *ctx);
++
++static void csi2_phy_init(struct cal_ctx *ctx)
  {
- 	unsigned int reg0, reg1;
- 	unsigned int ths_term, ths_settle;
--	unsigned int ddrclkperiod_us;
-+	unsigned int csi2_ddrclk_khz;
-+	struct v4l2_fwnode_bus_mipi_csi2 *mipi_csi2 =
-+			&ctx->endpoint.bus.mipi_csi2;
-+	u32 num_lanes = mipi_csi2->num_data_lanes;
+ 	int i;
+ 	u32 val;
  
--	/*
--	 * THS_TERM: Programmed value = floor(20 ns/DDRClk period) - 2.
--	 */
--	ddrclkperiod_us = ctx->external_rate / 2000000;
--	ddrclkperiod_us = 1000000 / ddrclkperiod_us;
--	ctx_dbg(1, ctx, "ddrclkperiod_us: %d\n", ddrclkperiod_us);
-+	/* DPHY timing configuration */
-+	/* CSI-2 is DDR and we only count used lanes. */
-+	csi2_ddrclk_khz = ctx->external_rate / 1000
-+		/ (2 * num_lanes) * ctx->fmt->bpp;
-+	ctx_dbg(1, ctx, "csi2_ddrclk_khz: %d\n", csi2_ddrclk_khz);
++	/* Steps
++	 *  1. Configure D-PHY mode and enable required lanes
++	 *  2. Reset complex IO - Wait for completion of reset
++	 *          Note if the external sensor is not sending byte clock,
++	 *          the reset will timeout
++	 *  3 Program Stop States
++	 *      A. Program THS_TERM, THS_SETTLE, etc... Timings parameters
++	 *              in terms of DDR clock periods
++	 *      B. Enable stop state transition timeouts
++	 *  4.Force FORCERXMODE
++	 *      D. Enable pull down using pad control
++	 *      E. Power up PHY
++	 *      F. Wait for power up completion
++	 *      G. Wait for all enabled lane to reach stop state
++	 *      H. Disable pull down using pad control
++	 */
++
++	/* 1. Configure D-PHY mode and enable required lanes */
++	camerarx_phy_enable(ctx);
++
++	/* 2. Reset complex IO - Do not wait for reset completion */
++	val = reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port));
++	set_field(&val, CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_OPERATIONAL,
++		  CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_MASK);
++	reg_write(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port), val);
++	ctx_dbg(3, ctx, "CAL_CSI2_COMPLEXIO_CFG(%d) = 0x%08x De-assert Complex IO Reset\n",
++		ctx->csi2_port,
++		reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port)));
++
++	/* Dummy read to allow SCP to complete */
++	val = reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port));
++
++	/* 3.A. Program Phy Timing Parameters */
++	csi2_phy_config(ctx);
++
++	/* 3.B. Program Stop States */
+ 	val = reg_read(ctx->dev, CAL_CSI2_TIMING(ctx->csi2_port));
+-	set_field(&val, CAL_GEN_ENABLE,
+-		  CAL_CSI2_TIMING_FORCE_RX_MODE_IO1_MASK);
+ 	set_field(&val, CAL_GEN_ENABLE,
+ 		  CAL_CSI2_TIMING_STOP_STATE_X16_IO1_MASK);
+ 	set_field(&val, CAL_GEN_DISABLE,
+ 		  CAL_CSI2_TIMING_STOP_STATE_X4_IO1_MASK);
+ 	set_field(&val, 407, CAL_CSI2_TIMING_STOP_STATE_COUNTER_IO1_MASK);
+ 	reg_write(ctx->dev, CAL_CSI2_TIMING(ctx->csi2_port), val);
+-	ctx_dbg(3, ctx, "CAL_CSI2_TIMING(%d) = 0x%08x\n", ctx->csi2_port,
++	ctx_dbg(3, ctx, "CAL_CSI2_TIMING(%d) = 0x%08x Stop States\n",
++		ctx->csi2_port,
++		reg_read(ctx->dev, CAL_CSI2_TIMING(ctx->csi2_port)));
++
++	/* 4. Force FORCERXMODE */
++	val = reg_read(ctx->dev, CAL_CSI2_TIMING(ctx->csi2_port));
++	set_field(&val, CAL_GEN_ENABLE,
++		  CAL_CSI2_TIMING_FORCE_RX_MODE_IO1_MASK);
++	reg_write(ctx->dev, CAL_CSI2_TIMING(ctx->csi2_port), val);
++	ctx_dbg(3, ctx, "CAL_CSI2_TIMING(%d) = 0x%08x Force RXMODE\n",
++		ctx->csi2_port,
+ 		reg_read(ctx->dev, CAL_CSI2_TIMING(ctx->csi2_port)));
  
--	ths_term = 20000 / ddrclkperiod_us;
--	ths_term = (ths_term >= 2) ? ths_term - 2 : ths_term;
-+	/* THS_TERM: Programmed value = floor(20 ns/DDRClk period) */
-+	ths_term = 20 * csi2_ddrclk_khz / 1000000;
- 	ctx_dbg(1, ctx, "ths_term: %d (0x%02x)\n", ths_term, ths_term);
++	/* E. Power up the PHY using the complex IO */
+ 	val = reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port));
+-	set_field(&val, CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_OPERATIONAL,
+-		  CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_MASK);
+ 	set_field(&val, CAL_CSI2_COMPLEXIO_CFG_PWR_CMD_STATE_ON,
+ 		  CAL_CSI2_COMPLEXIO_CFG_PWR_CMD_MASK);
+ 	reg_write(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port), val);
++
++	/* F. Wait for power up completion */
+ 	for (i = 0; i < 10; i++) {
+ 		if (reg_read_field(ctx->dev,
+ 				   CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port),
+@@ -717,18 +764,104 @@ static void csi2_init(struct cal_ctx *ctx)
+ 			break;
+ 		usleep_range(1000, 1100);
+ 	}
+-	ctx_dbg(3, ctx, "CAL_CSI2_COMPLEXIO_CFG(%d) = 0x%08x\n", ctx->csi2_port,
+-		reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port)));
++	ctx_dbg(3, ctx, "CAL_CSI2_COMPLEXIO_CFG(%d) = 0x%08x Powered UP %s\n",
++		ctx->csi2_port,
++		reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port)),
++		(i >= 10) ? "(timeout)" : "");
++}
  
--	/*
--	 * THS_SETTLE: Programmed value = floor(176.3 ns/CtrlClk period) - 1.
--	 *	Since CtrlClk is fixed at 96Mhz then we get
--	 *	ths_settle = floor(176.3 / 10.416) - 1 = 15
--	 * If we ever switch to a dynamic clock then this code might be useful
--	 *
--	 * unsigned int ctrlclkperiod_us;
--	 * ctrlclkperiod_us = 96000000 / 1000000;
--	 * ctrlclkperiod_us = 1000000 / ctrlclkperiod_us;
--	 * ctx_dbg(1, ctx, "ctrlclkperiod_us: %d\n", ctrlclkperiod_us);
+-	val = reg_read(ctx->dev, CAL_CTRL);
+-	set_field(&val, CAL_CTRL_BURSTSIZE_BURST128, CAL_CTRL_BURSTSIZE_MASK);
+-	set_field(&val, 0xF, CAL_CTRL_TAGCNT_MASK);
+-	set_field(&val, CAL_CTRL_POSTED_WRITES_NONPOSTED,
+-		  CAL_CTRL_POSTED_WRITES_MASK);
+-	set_field(&val, 0xFF, CAL_CTRL_MFLAGL_MASK);
+-	set_field(&val, 0xFF, CAL_CTRL_MFLAGH_MASK);
+-	reg_write(ctx->dev, CAL_CTRL, val);
+-	ctx_dbg(3, ctx, "CAL_CTRL = 0x%08x\n", reg_read(ctx->dev, CAL_CTRL));
++static void csi2_wait_for_phy(struct cal_ctx *ctx)
++{
++	int i;
++
++	/* Steps
++	 *  2. Wait for completion of reset
++	 *          Note if the external sensor is not sending byte clock,
++	 *          the reset will timeout
++	 *  4.Force FORCERXMODE
++	 *      G. Wait for all enabled lane to reach stop state
++	 *      H. Disable pull down using pad control
++	 */
++
++	/* 2. Wait for reset completion */
++	for (i = 0; i < 250; i++) {
++		if (reg_read_field(ctx->dev,
++				   CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port),
++				   CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_MASK) ==
++		    CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_RESETCOMPLETED)
++			break;
++		usleep_range(1000, 1100);
++	}
++	ctx_dbg(3, ctx, "CAL_CSI2_COMPLEXIO_CFG(%d) = 0x%08x Complex IO Reset Done (%d) %s\n",
++		ctx->csi2_port,
++		reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port)), i,
++		(i >= 250) ? "(timeout)" : "");
++
++	/* 4. G. Wait for all enabled lane to reach stop state */
++	for (i = 0; i < 10; i++) {
++		if (reg_read_field(ctx->dev,
++				   CAL_CSI2_TIMING(ctx->csi2_port),
++				   CAL_CSI2_TIMING_FORCE_RX_MODE_IO1_MASK) ==
++		    CAL_GEN_DISABLE)
++			break;
++		usleep_range(1000, 1100);
++	}
++	ctx_dbg(3, ctx, "CAL_CSI2_TIMING(%d) = 0x%08x Stop State Reached %s\n",
++		ctx->csi2_port,
++		reg_read(ctx->dev, CAL_CSI2_TIMING(ctx->csi2_port)),
++		(i >= 10) ? "(timeout)" : "");
++
++	ctx_dbg(1, ctx, "CSI2_%d_REG1 = 0x%08x (Bit(31,28) should be set!)\n",
++		(ctx->csi2_port - 1), reg_read(ctx->cc, CAL_CSI2_PHY_REG1));
++}
++
++static void csi2_phy_deinit(struct cal_ctx *ctx)
++{
++	int i;
++	u32 val;
++
++	/* Power down the PHY using the complex IO */
++	val = reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port));
++	set_field(&val, CAL_CSI2_COMPLEXIO_CFG_PWR_CMD_STATE_OFF,
++		  CAL_CSI2_COMPLEXIO_CFG_PWR_CMD_MASK);
++	reg_write(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port), val);
++
++	/* Wait for power down completion */
++	for (i = 0; i < 10; i++) {
++		if (reg_read_field(ctx->dev,
++				   CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port),
++				   CAL_CSI2_COMPLEXIO_CFG_PWR_STATUS_MASK) ==
++		    CAL_CSI2_COMPLEXIO_CFG_PWR_STATUS_STATE_OFF)
++			break;
++		usleep_range(1000, 1100);
++	}
++	ctx_dbg(3, ctx, "CAL_CSI2_COMPLEXIO_CFG(%d) = 0x%08x Powered Down %s\n",
++		ctx->csi2_port,
++		reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port)),
++		(i >= 10) ? "(timeout)" : "");
++
++	/* Assert Comple IO Reset */
++	val = reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port));
++	set_field(&val, CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL,
++		  CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_MASK);
++	reg_write(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port), val);
++
++	/* Wait for power down completion */
++	for (i = 0; i < 10; i++) {
++		if (reg_read_field(ctx->dev,
++				   CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port),
++				   CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_MASK) ==
++		    CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_RESETONGOING)
++			break;
++		usleep_range(1000, 1100);
++	}
++	ctx_dbg(3, ctx, "CAL_CSI2_COMPLEXIO_CFG(%d) = 0x%08x Complex IO in Reset (%d) %s\n",
++		ctx->csi2_port,
++		reg_read(ctx->dev, CAL_CSI2_COMPLEXIO_CFG(ctx->csi2_port)), i,
++		(i >= 10) ? "(timeout)" : "");
++
++	/* Disable the phy */
++	camerarx_phy_disable(ctx);
+ }
+ 
+ static void csi2_lane_config(struct cal_ctx *ctx)
+@@ -891,6 +1024,16 @@ static void cal_wr_dma_config(struct cal_ctx *ctx,
+ 	reg_write(ctx->dev, CAL_WR_DMA_XSIZE(ctx->csi2_port), val);
+ 	ctx_dbg(3, ctx, "CAL_WR_DMA_XSIZE(%d) = 0x%08x\n", ctx->csi2_port,
+ 		reg_read(ctx->dev, CAL_WR_DMA_XSIZE(ctx->csi2_port)));
++
++	val = reg_read(ctx->dev, CAL_CTRL);
++	set_field(&val, CAL_CTRL_BURSTSIZE_BURST128, CAL_CTRL_BURSTSIZE_MASK);
++	set_field(&val, 0xF, CAL_CTRL_TAGCNT_MASK);
++	set_field(&val, CAL_CTRL_POSTED_WRITES_NONPOSTED,
++		  CAL_CTRL_POSTED_WRITES_MASK);
++	set_field(&val, 0xFF, CAL_CTRL_MFLAGL_MASK);
++	set_field(&val, 0xFF, CAL_CTRL_MFLAGH_MASK);
++	reg_write(ctx->dev, CAL_CTRL, val);
++	ctx_dbg(3, ctx, "CAL_CTRL = 0x%08x\n", reg_read(ctx->dev, CAL_CTRL));
+ }
+ 
+ static void cal_wr_dma_addr(struct cal_ctx *ctx, unsigned int dmaaddr)
+@@ -1463,17 +1606,14 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 
+ 	cal_runtime_get(ctx->dev);
+ 
+-	enable_irqs(ctx);
+-	camerarx_phy_enable(ctx);
+-	csi2_init(ctx);
+-	csi2_phy_config(ctx);
+-	csi2_lane_config(ctx);
+ 	csi2_ctx_config(ctx);
+ 	pix_proc_config(ctx);
+ 	cal_wr_dma_config(ctx, ctx->v_fmt.fmt.pix.bytesperline,
+ 			  ctx->v_fmt.fmt.pix.height);
+-	cal_wr_dma_addr(ctx, addr);
+-	csi2_ppi_enable(ctx);
++	csi2_lane_config(ctx);
++
++	enable_irqs(ctx);
++	csi2_phy_init(ctx);
+ 
+ 	ret = v4l2_subdev_call(ctx->sensor, video, s_stream, 1);
+ 	if (ret) {
+@@ -1482,6 +1622,10 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 		goto err;
+ 	}
+ 
++	csi2_wait_for_phy(ctx);
++	cal_wr_dma_addr(ctx, addr);
++	csi2_ppi_enable(ctx);
++
+ 	if (debug >= 4)
+ 		cal_quickdump_regs(ctx->dev);
+ 
+@@ -1502,11 +1646,12 @@ static void cal_stop_streaming(struct vb2_queue *vq)
+ 	struct cal_buffer *buf, *tmp;
+ 	unsigned long flags;
+ 
+-	if (v4l2_subdev_call(ctx->sensor, video, s_stream, 0))
+-		ctx_err(ctx, "stream off failed in subdev\n");
 -
--	 * ths_settle = 176300  / ctrlclkperiod_us;
--	 * ths_settle = (ths_settle > 1) ? ths_settle - 1 : ths_settle;
--	 */
--
--	ths_settle = THS_SETTLE;
-+	/* THS_SETTLE: Programmed value = floor(105 ns/DDRClk period) + 4 */
-+	ths_settle = (105 * csi2_ddrclk_khz / 1000000) + 4;
- 	ctx_dbg(1, ctx, "ths_settle: %d (0x%02x)\n", ths_settle, ths_settle);
- 
- 	reg0 = reg_read(ctx->cc, CAL_CSI2_PHY_REG0);
-@@ -1116,6 +1102,8 @@ static int cal_calc_format_size(struct cal_ctx *ctx,
- 				const struct cal_fmt *fmt,
- 				struct v4l2_format *f)
- {
-+	u32 bpl;
+ 	csi2_ppi_disable(ctx);
+ 	disable_irqs(ctx);
++	csi2_phy_deinit(ctx);
 +
- 	if (!fmt) {
- 		ctx_dbg(3, ctx, "No cal_fmt provided!\n");
- 		return -EINVAL;
-@@ -1123,8 +1111,10 @@ static int cal_calc_format_size(struct cal_ctx *ctx,
++	if (v4l2_subdev_call(ctx->sensor, video, s_stream, 0))
++		ctx_err(ctx, "stream off failed in subdev\n");
  
- 	v4l_bound_align_image(&f->fmt.pix.width, 48, MAX_WIDTH, 2,
- 			      &f->fmt.pix.height, 32, MAX_HEIGHT, 0, 0);
--	f->fmt.pix.bytesperline = bytes_per_line(f->fmt.pix.width,
--						 fmt->depth >> 3);
-+
-+	bpl = (f->fmt.pix.width * ALIGN(fmt->bpp, 8)) >> 3;
-+	f->fmt.pix.bytesperline = ALIGN(bpl, 16);
-+
- 	f->fmt.pix.sizeimage = f->fmt.pix.height *
- 			       f->fmt.pix.bytesperline;
- 
+ 	/* Release all active buffers */
+ 	spin_lock_irqsave(&ctx->slock, flags);
 -- 
 2.17.1
 
