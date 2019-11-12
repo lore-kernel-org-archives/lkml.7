@@ -2,215 +2,67 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC87C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E891C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47277214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573586076;
-	bh=oUFhFq6Qn6zil2UKbQi1fIesgVLVV+8iXjgE4EHhD6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uGQeRWLHda/0haxcPryM6dp19aksyxLGwLW/cT3O16EnN2MIpsUw7NvOs3RWHHZRZ
-	 IGx8vwn6rvxa9ioAzoM/0wBO40x8U9IhAyCIxJm61Ifg6Zfm42MaV8ACBPhPJANFxn
-	 YXqSKAvlFVu2c1KN/eYFt5d+b/D+Tr7vU17Yvins=
+	by mail.kernel.org (Postfix) with ESMTP id 4DCC3214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfKLTOf (ORCPT
+        id S1727205AbfKLTPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:14:35 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:47095 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbfKLTOe (ORCPT
+        Tue, 12 Nov 2019 14:15:03 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33341 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfKLTPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:14:34 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n14so15825197oie.13;
-        Tue, 12 Nov 2019 11:14:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4jNoA6cFjcLd8Z53yLVk6YcAHFrtV5MHTUw6k4vZhTQ=;
-        b=eR89vEMmT330rIDoOjp6whfp51Oj9kJQvJ7AZ6gZYKthgVsIWOdNjr6D32P+cy0J3g
-         aeqv4SZAZMEK1tq1K8iySvdoVTNWpfVWZcdP32XH1NSAjYUGBExCx2fM7x7TeVPGCcZi
-         GSzmcZicjFrDNEeN9SmLU0kaC7fLVu1yYEfxNp1S6XZYr8wPRZdKSlJ1G6KXaa0CjboY
-         kRVEB/Il2v7W/LAikpqPXEWh6R+c0BFOPDuToItWGW7jyobMbX9Q4SL62uibsZeioc/2
-         ADzamYCVY7XdAKKxFegdj6jMu954B7F5xOlwSgD2S0vrjYim5Ql3NcYcNZ61Thhe/1xt
-         u98w==
-X-Gm-Message-State: APjAAAXsxIzxDGyYt24koCDRzjbjEmzpT8H6pQ6AAMzKQGctNDciMCcl
-        T5zKh4funy+hPoOq8YNcgQ==
-X-Google-Smtp-Source: APXvYqyeiJf3elWT7EA3Mlwgnz6eRcQxdmuB70piwmSdAN5oGOPQdDeOw9o9KO+zCYpAbW4/PUCsqA==
-X-Received: by 2002:aca:6706:: with SMTP id z6mr428142oix.89.1573586073728;
-        Tue, 12 Nov 2019 11:14:33 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q3sm6190895oti.49.2019.11.12.11.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:14:33 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:14:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Message-ID: <20191112191432.GA19579@bogus>
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+        Tue, 12 Nov 2019 14:15:02 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iUbcz-00033W-6X; Tue, 12 Nov 2019 19:15:01 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: turris-mox-rwtm: fix indentation issue
+Date:   Tue, 12 Nov 2019 19:15:00 +0000
+Message-Id: <20191112191500.283071-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 06:11:30PM +0800, Rahul Tanwar wrote:
-> Add dt bindings document for pinmux & GPIO controller driver of
-> Intel Lightning Mountain SoC.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 98 ++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..d54a3bda1f4f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> @@ -0,0 +1,98 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+From: Colin Ian King <colin.king@canonical.com>
 
-For new bindings:
+There is a statement that is indented too deeply, remove
+the extraneous tab.
 
-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/firmware/turris-mox-rwtm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-> +
-> +maintainers:
-> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> +
-> +description: |
-> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
-> +  GPIO function selection & GPIO attributes configuration.
-> +
-> +  Please refer to [1] for details of the common pinctrl bindings used by the
-> +  client devices.
-> +
-> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +# Client device subnode's properties
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      function:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description:
-> +          A string containing the name of the function to mux to the group.
+diff --git a/drivers/firmware/turris-mox-rwtm.c b/drivers/firmware/turris-mox-rwtm.c
+index 72be58960e54..e27f68437b56 100644
+--- a/drivers/firmware/turris-mox-rwtm.c
++++ b/drivers/firmware/turris-mox-rwtm.c
+@@ -197,7 +197,7 @@ static int mox_get_board_info(struct mox_rwtm *rwtm)
+ 		rwtm->serial_number = reply->status[1];
+ 		rwtm->serial_number <<= 32;
+ 		rwtm->serial_number |= reply->status[0];
+-			rwtm->board_version = reply->status[2];
++		rwtm->board_version = reply->status[2];
+ 		rwtm->ram_size = reply->status[3];
+ 		reply_to_mac_addr(rwtm->mac_address1, reply->status[4],
+ 				  reply->status[5]);
+-- 
+2.20.1
 
-Possible strings should be listed out here.
-
-> +
-> +      groups:
-> +        $ref: /schemas/types.yaml#/definitions/string-array
-> +        description:
-> +          An array of strings identifying the list of groups.
-
-Possible strings should be listed out here.
-
-> +
-> +      pins:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          List of pins to select with this function.
-> +
-> +      pinmux:
-> +        description: The applicable mux group.
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-> +
-> +      bias-pull-up:
-> +        type: boolean
-> +      bias-pull-down:
-> +        type: boolean
-> +      drive-strength:
-> +        type: boolean
-
-Not a boolean. Need to define possible values.
-
-> +      slew-rate:
-> +        type: boolean
-
-Not a boolean. Need to define possible values.
-
-> +      drive-open-drain:
-> +        type: boolean
-> +      output-enable:
-> +        type: boolean
-> +
-> +    required:
-> +      - function
-> +      - groups
-
-For the -pins nodes too:
-
-       additionalProperties: false
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    pinctrl: pinctrl@e2880000 {
-> +          compatible = "intel,lgm-pinctrl";
-> +          reg = <0xe2880000 0x100000>;
-> +
-> +          # Client device subnode
-> +          uart0-pins: uart0 {
-
-This fails 'make dt_binding_check'. Please fix and run that.
-
-> +                pins = <64>, /* UART_RX0 */
-> +                       <65>; /* UART_TX0 */
-> +                function = "CONSOLE_UART0";
-> +                pinmux = <1>,
-> +                         <1>;
-> +                groups = "CONSOLE_UART0";
-> +          };
-> +    };
-> +
-> +...
-> -- 
-> 2.11.0
-> 
