@@ -6,43 +6,40 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630D5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EEDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BF8214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED2521925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfKLXvN (ORCPT
+        id S1727124AbfKLXug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:51:13 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57398 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727069AbfKLXug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 18:50:36 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57278 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726912AbfKLXue (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 18:50:34 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfve-0008IU-6d; Tue, 12 Nov 2019 23:50:34 +0000
+        id 1iUfvc-0008Hz-SO; Tue, 12 Nov 2019 23:50:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-00057q-Vu; Tue, 12 Nov 2019 23:50:32 +0000
+        id 1iUfvc-00056Q-CW; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ori Nimron" <orinimron123@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 12 Nov 2019 23:48:16 +0000
-Message-ID: <lsq.1573602477.499544425@decadent.org.uk>
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Tue, 12 Nov 2019 23:47:58 +0000
+Message-ID: <lsq.1573602477.270388076@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 19/25] ax25: enforce CAP_NET_RAW for raw sockets
+Subject: [PATCH 3.16 01/25] KVM: Introduce kvm_get_arch_capabilities()
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,30 +53,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-commit 0614e2b73768b502fc32a75349823356d98aae2c upstream.
+Extracted from commit 5b76a3cff011 "KVM: VMX: Tell the nested
+hypervisor to skip L1D flush on vmentry".  We will need this to let a
+nested hypervisor know that we have applied the mitigation for TAA.
 
-When creating a raw AF_AX25 socket, CAP_NET_RAW needs to be checked
-first.
-
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ax25/af_ax25.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/x86.c              | 13 +++++++++++--
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -853,6 +853,8 @@ static int ax25_create(struct net *net,
- 		break;
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1062,6 +1062,7 @@ int kvm_arch_interrupt_allowed(struct kv
+ int kvm_cpu_get_interrupt(struct kvm_vcpu *v);
+ void kvm_vcpu_reset(struct kvm_vcpu *vcpu);
  
- 	case SOCK_RAW:
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		break;
- 	default:
- 		return -ESOCKTNOSUPPORT;
++u64 kvm_get_arch_capabilities(void);
+ void kvm_define_shared_msr(unsigned index, u32 msr);
+ int kvm_set_shared_msr(unsigned index, u64 val, u64 mask);
+ 
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -911,6 +911,16 @@ static u32 emulated_msrs[] = {
+ 
+ static unsigned num_emulated_msrs;
+ 
++u64 kvm_get_arch_capabilities(void)
++{
++	u64 data;
++
++	rdmsrl_safe(MSR_IA32_ARCH_CAPABILITIES, &data);
++
++	return data;
++}
++EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
++
+ bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+ 	if (efer & efer_reserved_bits)
+@@ -6969,8 +6979,7 @@ int kvm_arch_vcpu_setup(struct kvm_vcpu
+ 	int r;
+ 
+ 	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
+-		rdmsrl(MSR_IA32_ARCH_CAPABILITIES,
+-		       vcpu->arch.arch_capabilities);
++		vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
+ 	vcpu->arch.mtrr_state.have_fixed = 1;
+ 	r = vcpu_load(vcpu);
+ 	if (r)
 
