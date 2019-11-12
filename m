@@ -2,111 +2,207 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75061C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CD0C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428B52084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160A8222BD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:24:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IhePBCHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfKLQYf (ORCPT
+        id S1727319AbfKLQY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:24:35 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2090 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726645AbfKLQYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:24:35 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 5885442030B8FF11AA90;
-        Tue, 12 Nov 2019 16:24:33 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 12 Nov 2019 16:24:32 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 12 Nov
- 2019 16:24:32 +0000
-Subject: Re: [PATCH] arm64: Kconfig: add a choice for endianess
-To:     Anders Roxell <anders.roxell@linaro.org>, <catalin.marinas@arm.com>
-CC:     <will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191112160144.8357-1-anders.roxell@linaro.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e44db1ec-e562-18c4-ca6f-96e4279564ed@huawei.com>
-Date:   Tue, 12 Nov 2019 16:24:31 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20191112160144.8357-1-anders.roxell@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Tue, 12 Nov 2019 11:24:56 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37968 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbfKLQYz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:24:55 -0500
+Received: by mail-qt1-f195.google.com with SMTP id p20so20374680qtq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:24:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0a/sJJWyyFBbZkhKlYELP0090+55ZSiU8jLaE8NbD5U=;
+        b=IhePBCHP1xPWJCnc0fhVuvGX81sL2k6BScL+Bp+yw2KH1UDC3HLFXYBUATgLx+0u3v
+         3gpl92D1w8C8IuZpcc5/phnYVF2vimLZtVzNmmL/wOjbKhECk2jAoYWneZ8wLYEXskpx
+         zUdNO45Dpq1aJZ271qIBeemjihB+/nrs71YJRPkYTbYpEx0zRFXtV/KwCscC74+ruEmj
+         3MfrQbYRs9OTIoMoqQQy9qYXAZ2yMmPdsf5PUHTIwg1W3cnSfXXlOleyhBFUla1Dqq84
+         sW88XHmq+3ktVLYs1u9fENB0/RRJoUkltX3Go4MifZFej10ejfv9DlLSbtvIb1raLmKF
+         ox6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0a/sJJWyyFBbZkhKlYELP0090+55ZSiU8jLaE8NbD5U=;
+        b=AbGy2tVPzfGeNtMr0vsHKR49FQn0WOWnyHFg6K/c3urDEHqtc2lEUkp6IzYCx98vT9
+         MRglq7kFMaXkOhlUXU15MiBaCDf3dSiPOdGFunOa7N2Gn0lnm45MdP15T+LbRxWSCCaK
+         5xm64Ns1NOu7XzP+O+vfaXVJ/sCj1AfBw5JGCRp3Hnp7Ra4XgtolYEa4BZw1ALD04mnW
+         NTFSq9MWo5IzKpuzfn+6jY/tiHXztoNJhfWqb9DzjfEtIPv2WMa9LDYdx36Fu9F2TiK6
+         YVWrWccXaRIPazTDKm1UyPBq1Iief15EGuNXurKZzV5Z3ysYsj0wYd9E/re5cqJo0CMG
+         qVpw==
+X-Gm-Message-State: APjAAAXrI1bf/HmSSLbYhm4e7bIwhzaGN4/InFsU2oyjQSmfoCToyZDq
+        W7wGlHOxJLPI6gJ4FVnL+0OSsg==
+X-Google-Smtp-Source: APXvYqz+9z+j+VCCW6nt2U4oUrXjz30eoeX7U58SDkbPJV+nkekrKXRXSWXRfAcQWKcQxqzqxE0Dxg==
+X-Received: by 2002:ac8:2a42:: with SMTP id l2mr32711563qtl.64.1573575894401;
+        Tue, 12 Nov 2019 08:24:54 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 189sm9518840qki.10.2019.11.12.08.24.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 08:24:53 -0800 (PST)
+Message-ID: <1573575891.5937.118.camel@lca.pw>
+Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
+From:   Qian Cai <cai@lca.pw>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Chris Down <chris@chrisdown.name>, akpm@linux-foundation.org,
+        guro@fb.com, linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 12 Nov 2019 11:24:51 -0500
+In-Reply-To: <20191112161658.GF168812@cmpxchg.org>
+References: <20191108204407.1435-1-cai@lca.pw>
+         <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
+         <20191111130516.GA891635@chrisdown.name>
+         <20191111131427.GB891635@chrisdown.name>
+         <20191111132812.GK1396@dhcp22.suse.cz>
+         <20191112145942.GA168812@cmpxchg.org> <20191112152750.GA512@dhcp22.suse.cz>
+         <20191112161658.GF168812@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 16:01, Anders Roxell wrote:
-> When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
-> CONFIG_CPU_BIG_ENDIAN gets enabled. Which tends not to be what most
-> people wants. Another concern that thas come up is that ACPI in't built
+On Tue, 2019-11-12 at 11:16 -0500, Johannes Weiner wrote:
+> On Tue, Nov 12, 2019 at 04:27:50PM +0100, Michal Hocko wrote:
+> > On Tue 12-11-19 06:59:42, Johannes Weiner wrote:
+> > > Qian, thanks for the report and the fix.
+> > > 
+> > > On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
+> > > > On Mon 11-11-19 13:14:27, Chris Down wrote:
+> > > > > Chris Down writes:
+> > > > > > Ah, I just saw this in my local checkout and thought it was from my
+> > > > > > changes, until I saw it's also on clean mmots checkout. Thanks for the
+> > > > > > fixup!
+> > > > > 
+> > > > > Also, does this mean we should change callers that may pass through
+> > > > > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
+> > > > > remove this interim fixup? I'm worried otherwise we might paper over real
+> > > > > issues in future.
+> > > > 
+> > > > Yes, removing this special casing is reasonable. I am not sure
+> > > > MAX_NR_ZONES - 1 is a better choice though. It is error prone and
+> > > > zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
+> > > > be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
+> > > > outside of MM reclaim code AFAIK. It would be probably better to have
+> > > > MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
+> > > 
+> > > We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
+> > > "no zone restrictions" - get_scan_count() is the odd one out:
+> > > 
+> > > - mem_cgroup_shrink_node()
+> > > - try_to_free_mem_cgroup_pages()
+> > > - balance_pgdat()
+> > > - kswapd()
+> > > - shrink_all_memory()
 
-/s/wants/want/, s/thas/has/, s/in't/isn't/
+There is also inactive_list_is_low(),
 
-> for an allmodconfig kernel today since that also depends on !CPU_BIG_ENDIAN.
+if (trace)
+	trace_mm_vmscan_inactive_list_is_low(pgdat->node_id, sc->reclaim_idx,
+		lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
+		lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
+		inactive_ratio, file);
+
+> > > 
+> > > It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
+> > > subtle than handling both inclusive and exclusive range delimiters.
+> > > 
+> > > So I think the better fix would be this:
+> > 
+> > lruvec_lru_size is explicitly documented to use MAX_NR_ZONES for all
+> > LRUs and git grep says there are more instances outside of
+> > get_scan_count. So all of them have to be fixed.
 > 
-> Rework so that we introduce a 'choice' and default the choice to
-> CPU_LITTLE_ENDIAN. That means that when we build an allmodconfig kernel
-> it will default to CPU_LITTLE_ENDIAN that most people tends to want.
+> Which ones?
 > 
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-
-FWIW, apart from spelling mistakes:
-
-Reviewed-by: John Garry <john.garry@huawei.com>
-
+> [hannes@computer linux]$ git grep lruvec_lru_size
+> include/linux/mmzone.h:extern unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx);
+> mm/vmscan.c: * lruvec_lru_size -  Returns the number of pages on the given LRU list.
+> mm/vmscan.c:unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+> mm/vmscan.c:    anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
+> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
+> mm/vmscan.c:    file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
+> mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
+> mm/vmscan.c:            lruvec_size = lruvec_lru_size(lruvec, lru, sc->reclaim_idx);
+> [hannes@computer linux]$
+> 
+> The only other user already passes sc->reclaim_idx, which always
+> points to a valid zone, and is initialized to MAX_NR_ZONES - 1 in many
+> places.
+> 
+> > I still think that MAX_NR_ZONES - 1 is a very error prone and subtle
+> > construct IMHO and an alias would be better readable.
+> 
+> I wouldn't mind a follow-up patch that changes this pattern
+> comprehensively. As it stands, get_scan_count() is the odd one out.
+> 
+> The documentation bit is a good point, though. We should fix
+> that. Updated patch:
+> 
 > ---
->   arch/arm64/Kconfig | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 64764ca92fca..62f83c234a61 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -877,11 +877,24 @@ config ARM64_PA_BITS
->   	default 48 if ARM64_PA_BITS_48
->   	default 52 if ARM64_PA_BITS_52
->   
-> +choice
-> +	prompt "Endianess"
-
-Should this be "Endianness"?
-
-> +	default CPU_LITTLE_ENDIAN
-> +	help
-> +	  Choose what mode you plan on running your kernel in.
-> +
->   config CPU_BIG_ENDIAN
->          bool "Build big-endian kernel"
->          help
->            Say Y if you plan on running a kernel in big-endian mode.
->   
-> +config CPU_LITTLE_ENDIAN
-> +	bool "Build little-endian kernel"
-> +	help
-> +	  Say Y if you plan on running a kernel in little-endian mode.
-> +
-> +endchoice
-> +
->   config SCHED_MC
->   	bool "Multi-core scheduler support"
->   	help
+> From b1b6ce306010554aba6ebd7aac0abffc1576d71a Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Mon, 11 Nov 2019 13:46:25 -0800
+> Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
 > 
-
+> get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
+> beyond the range of valid zone indexes, but used to be handled before
+> the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
+> express "all zones, please", so do the same here.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Reported-by: Chris Down <chris@chrisdown.name>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/vmscan.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index df859b1d583c..5eb96a63ad1e 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -323,7 +323,7 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
+>   * lruvec_lru_size -  Returns the number of pages on the given LRU list.
+>   * @lruvec: lru vector
+>   * @lru: lru to use
+> - * @zone_idx: zones to consider (use MAX_NR_ZONES for the whole LRU list)
+> + * @zone_idx: index of the highest zone to include (use MAX_NR_ZONES - 1 for all)
+>   */
+>  unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+>  {
+> @@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+>  	 * anon in [0], file in [1]
+>  	 */
+>  
+> -	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
+> -		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
+> -	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
+> -		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
+> +	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
+> +		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
+> +	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
+> +		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
+>  
+>  	spin_lock_irq(&pgdat->lru_lock);
+>  	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
