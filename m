@@ -2,124 +2,139 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAEDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ECDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD3A2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4929C21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:30:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="fMX9kSxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKLMXU (ORCPT
+        id S1726953AbfKLMaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:23:20 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51606 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725865AbfKLMXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:23:20 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACCELoO132483;
-        Tue, 12 Nov 2019 07:23:09 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7t3nedgv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 07:23:08 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xACCMPLf022829;
-        Tue, 12 Nov 2019 12:23:11 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01wdc.us.ibm.com with ESMTP id 2w5n36ef95-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 12:23:11 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACCN67P49480032
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 12:23:06 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25B2E6A04F;
-        Tue, 12 Nov 2019 12:23:06 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45AB26A054;
-        Tue, 12 Nov 2019 12:23:02 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.199.45.124])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 12:23:01 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Oscar Salvador <osalvador@suse.de>,
-        "mike.kravetz\@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge() check
-In-Reply-To: <20191021070046.GA8782@hori.linux.bs1.fc.nec.co.jp>
-References: <20191017142123.24245-1-osalvador@suse.de> <20191017142123.24245-2-osalvador@suse.de> <20191018114832.GK5017@dhcp22.suse.cz> <20191021070046.GA8782@hori.linux.bs1.fc.nec.co.jp>
-Date:   Tue, 12 Nov 2019 17:52:58 +0530
-Message-ID: <87d0dxs2ql.fsf@linux.ibm.com>
+        Tue, 12 Nov 2019 07:30:08 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:50542 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbfKLMaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:30:07 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id E0DDC1B2040B; Tue, 12 Nov 2019 15:30:02 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru E0DDC1B2040B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1573561802; bh=y+poxO2Ldk6JRTijn6d4ySFca2Q5uu2iel3YyP+n0u4=;
+        h=From:To:Cc:Subject:Date;
+        b=fMX9kSxsirhfC5mud2Vt6+rqynMkHeHMmXMb+34I3dVkNKNIpkzQdL6jlgV2eyc/x
+         zNp7kC44ndULICgJtgaSO0DYAB46RbuUMOe1BgvL0DwTEfidYroGpRRDrxKxvqMjmr
+         TyvlgOI4621cRDRGJf3O84KKHzUZsOj+6rGv3kw4=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id A7EF21B2031C;
+        Tue, 12 Nov 2019 15:29:52 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru A7EF21B2031C
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 6B2B41B2265B;
+        Tue, 12 Nov 2019 15:29:51 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Tue, 12 Nov 2019 15:29:51 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Edward Cree <ecree@solarflare.com>, Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Alexander Lobakin <alobakin@dlink.ru>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: core: allow fast GRO for skbs with Ethernet header in head
+Date:   Tue, 12 Nov 2019 15:28:43 +0300
+Message-Id: <20191112122843.30636-1-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120110
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naoya Horiguchi <n-horiguchi@ah.jp.nec.com> writes:
+Commit 78d3fd0b7de8 ("gro: Only use skb_gro_header for completely
+non-linear packets") back in May'09 (2.6.31-rc1) has changed the
+original condition '!skb_headlen(skb)' to the current
+'skb_mac_header(skb) == skb_tail_pointer(skb)' in gro_reset_offset()
+saying: "Since the drivers that need this optimisation all provide
+completely non-linear packets".
 
-> On Fri, Oct 18, 2019 at 01:48:32PM +0200, Michal Hocko wrote:
->> On Thu 17-10-19 16:21:08, Oscar Salvador wrote:
->> > From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->> > 
->> > Drop the PageHuge check since memory_failure forks into memory_failure_hugetlb()
->> > for hugetlb pages.
->> > 
->> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
->> > Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->> 
->> s-o-b chain is reversed.
->> 
->> The code is a bit confusing. Doesn't this check aim for THP?
->
-> No, PageHuge() is false for thp, so this if branch is just dead code.
+For now, we have the following rough statistics for 5.4-rc7:
+1) napi_gro_frags: 14
+2) napi_gro_receive with skb->head containing (most of) payload: 83
+3) napi_gro_receive with skb->head containing all the headers: 20
+4) napi_gro_receive with skb->head containing only Ethernet header: 2
 
-memory_failure()
-{
+With the current condition, fast GRO with the usage of
+NAPI_GRO_CB(skb)->frag0 is available only in the [1] case.
+Packets pushed by [2] and [3] go through the 'slow' path, but
+it's not a problem for them as they already contains all the needed
+headers in skb->head, so pskb_may_pull() only moves skb->data.
 
-	if (PageTransHuge(hpage)) {
-		lock_page(p);
-		if (!PageAnon(p) || unlikely(split_huge_page(p))) {
-			unlock_page(p);
-			if (!PageAnon(p))
-				pr_err("Memory failure: %#lx: non anonymous thp\n",
-					pfn);
-			else
-				pr_err("Memory failure: %#lx: thp split failed\n",
-					pfn);
-			if (TestClearPageHWPoison(p))
-				num_poisoned_pages_dec();
-			put_hwpoison_page(p);
-			return -EBUSY;
-		}
-		unlock_page(p);
-		VM_BUG_ON_PAGE(!page_count(p), p);
-		hpage = compound_head(p);
-	}
+The layout of skbs in the fourth [4] case at the moment of
+dev_gro_receive() is identical to skbs that have come through [1],
+as napi_frags_skb() pulls Ethernet header to skb->head. The only
+difference is that the mentioned condition is always false for them,
+because skb_put() and friends irreversibly alter the tail pointer.
+They also go though the 'slow' path, but now every single
+pskb_may_pull() in every single .gro_receive() will call the *really*
+slow __pskb_pull_tail() to pull headers to head. This significantly
+decreases the overall performance for no visible reasons.
 
-}
+The only two users of method [4] is:
+* drivers/staging/qlge
+* drivers/net/wireless/iwlwifi (all three variants: dvm, mvm, mvm-mq)
 
-Do we need that hpage = compund_head(p) conversion there? We should just
-be able to say hpage = p, or even better after this change use p
-directly instead of hpage in the code following?
+Note that in case with wireless drivers we can't use [1]
+(napi_gro_frags()) at least for now and mac80211 stack always
+performs pushes and pulls anyways, so performance hit is inavoidable.
 
--aneesh
+We can simply change the condition in gro_reset_offset() to allow
+skbs from [4] go through 'fast' path just like in case [1].
+
+This was tested on a custom driver and this patch gave boosts up to
+40 Mbps to method [4] in both directions comparing to net-next, which
+made overall performance relatively close to [1] (without it, [4] is
+the slowest).
+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+---
+ net/core/dev.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 1c799d486623..da78a433c10c 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5611,8 +5611,7 @@ static void skb_gro_reset_offset(struct sk_buff *skb)
+ 	NAPI_GRO_CB(skb)->frag0 = NULL;
+ 	NAPI_GRO_CB(skb)->frag0_len = 0;
+ 
+-	if (skb_mac_header(skb) == skb_tail_pointer(skb) &&
+-	    pinfo->nr_frags &&
++	if (!skb_headlen(skb) && pinfo->nr_frags &&
+ 	    !PageHighMem(skb_frag_page(frag0))) {
+ 		NAPI_GRO_CB(skb)->frag0 = skb_frag_address(frag0);
+ 		NAPI_GRO_CB(skb)->frag0_len = min_t(unsigned int,
+-- 
+2.24.0
+
