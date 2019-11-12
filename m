@@ -2,111 +2,116 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A725EC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85996C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2782196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573597214;
-	bh=b1dnES5jgk7yk1lCvITSroRU4oC3E0VLXE/Pf6QOSIg=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=DkC5K4OlPYS4mTb4cJpzJqoDXtcN337HXoDNOG+v5/p65mJhuPDSROH9gjhoDomp+
-	 XkVRVT3UGDBmUwO0/lVWcgZGS5Zy7uBwlTF/4cGch9aTD+WaGuqSQxVOzqBHwALtUI
-	 WxE3Mz8fGWZ6AxNqM1JhIPhCMDga0pU4ULbtJbYQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5D65321A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:21:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n3+rgoO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKLWUN (ORCPT
+        id S1727080AbfKLWVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:20:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbfKLWUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:20:13 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157CC20674;
-        Tue, 12 Nov 2019 22:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573597212;
-        bh=b1dnES5jgk7yk1lCvITSroRU4oC3E0VLXE/Pf6QOSIg=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=biolw4qTw3IGUYY/x72iCkR6o7cUXTdm1dZ1W5261DfUErbGMW8NzaVlZnLwbgNxT
-         g9dI9yML7RoVbl2JSa2i+akWfdqpgUyh+osRqCR5NqHvKmiCnFlWZiyEuXzEBTW0b5
-         4si4rFOEMWlRBga2uBLGTiHsHEb+zaledkIahE1c=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 12 Nov 2019 17:21:23 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14448 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLWVW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 17:21:22 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcb30620000>; Tue, 12 Nov 2019 14:21:22 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 14:21:22 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 14:21:22 -0800
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Nov
+ 2019 22:21:19 +0000
+Subject: Re: [PATCH v4 1/2] mm/hmm: make full use of walk_page_range()
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Shuah Khan <shuah@kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+References: <20191104222141.5173-1-rcampbell@nvidia.com>
+ <20191104222141.5173-2-rcampbell@nvidia.com> <20191112151856.GB12550@lst.de>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <3e2da09f-a305-14b7-c116-77e4d1b9e3f2@nvidia.com>
+Date:   Tue, 12 Nov 2019 14:21:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191112151526.txl5rwpuiwjpopzx@earth.universe>
-References: <20191108170135.9053-1-sebastian.reichel@collabora.com> <20191108175329.GH216543@piout.net> <20191108223415.dio3pwkf24jfs5o4@earth.universe> <20191109002449.534B6207FA@mail.kernel.org> <20191109014151.yd2untpgnuinermj@earth.universe> <20191109065334.64A03214E0@mail.kernel.org> <20191112151526.txl5rwpuiwjpopzx@earth.universe>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [RFCv1] rtc: m41t80: disable clock provider support
-User-Agent: alot/0.8.1
-Date:   Tue, 12 Nov 2019 14:20:11 -0800
-Message-Id: <20191112222012.157CC20674@mail.kernel.org>
+In-Reply-To: <20191112151856.GB12550@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573597282; bh=Mjsgzq4tTY1ttPXWj4o1nKG2G54sIpqkFXsKMyN1ai4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=n3+rgoO7Cosk1b8j0LFmjpqfy8vh/1vgXoyo1ZFsHWrDwoNjbxshEcMMFtJooukY+
+         T7fDLY+vAopGHZ/4qpGFIhxkA194rJAuMM41B4/euZtC0I/pznU+Ne28KxNiQIcFK3
+         Faf6R0IaXpEGuTlifVRQBbuUAKsUmrmUDs7OSQOnPR1KyJI5m+wBQBetYH6lUuXlDa
+         nC68T3zwoJ2tzJq6kUVOW/4U2KMqyYcHufw9VRZOIX60Um0xspk9k3555KmBo+KGar
+         speu/qs92JpbwFBiJYqP5q+w7GIbTcxVibLgBIOdtJsy1GoVW6I9WqRRBVh/dmnQlV
+         bzOKy1bGxsOSQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sebastian Reichel (2019-11-12 07:15:26)
-> Hi,
->=20
-> On Fri, Nov 08, 2019 at 10:53:33PM -0800, Stephen Boyd wrote:
-> > Quoting Sebastian Reichel (2019-11-08 17:41:51)
-> > > On Fri, Nov 08, 2019 at 04:24:48PM -0800, Stephen Boyd wrote:
-> > > >=20
-> > > > Is this the chicken-egg scenario? I read this thread but I can't fo=
-llow
-> > > > along with what the problem is. Sorry.
-> > >=20
-> > > Yes. The board has an I2C based RTC (m41t62), which provides a progra=
-mmable 1
-> > > Hz to 32 kHz square wave (SQW) output defaulting to 32 kHz. The board=
- designers
-> > > connected the RTC's SQW output to the i.MX6 CKIL clock input instead =
-of adding
-> > > another oscillator. The i.MX6 CCM acquires that clock in imx6q_clocks=
-_init()
-> > > (and assumes it is a fixed clock):
-> > >=20
-> > > hws[IMX6QDL_CLK_CKIL] =3D imx6q_obtain_fixed_clk_hw(ccm_node, "ckil",=
- 0);
-> >=20
-> > Who uses the IMX6QDL_CLK_CKIL though? Grep on kernel sources shows me
-> > nothing.
->=20
-> The manual specifies, that CKIL is synchronized with the main system
-> clock. The resulting clock is used by all kind of IP cores inside
-> the i.MX6, for example the SNVS RTC and watchdog. I couldn't find
-> any registers to configure the CKIL pipeline and CKIL input is
-> usually a fixed clock, so current implementation might be "broken"
-> without anyone noticing. Checking a running i.MX6 system, that
-> actually seems to be the case :(
->=20
-> $ cat /sys/kernel/debug/clk/ckil/clk_rate        =20
-> 32768
-> $ cat /sys/kernel/debug/clk/ckil/clk_enable_count=20
-> 0
-> $ cat /sys/kernel/debug/clk/ckil/clk_prepare_count=20
-> 0
-> $ cat /sys/kernel/debug/clk/ckil/clk_flags        =20
-> CLK_IS_BASIC
->=20
-> I suppose an easy fix would be to mark that clock as critical and
-> that would also keep the parent clocks enabled?
 
-Yes. It sounds like some sort of low frequency timer clk. It probably
-should always be left enabled with CLK_IS_CRITICAL then.
+On 11/12/19 7:18 AM, Christoph Hellwig wrote:
+> Looks good,
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> Although we could clean this up a tidbit more by removing the start
+> variable:
+> 
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index d4984a08ed9b..b5b1ed646c2f 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -667,10 +667,9 @@ static const struct mm_walk_ops hmm_walk_ops = {
+>    */
+>   long hmm_range_fault(struct hmm_range *range, unsigned int flags)
+>   {
+> -	unsigned long start = range->start;
+>   	struct hmm_vma_walk hmm_vma_walk = {
+>   		.range = range,
+> -		.last = start,
+> +		.last = range->start,
+>   		.flags = flags,
+>   	};
+>   	struct mm_struct *mm = range->notifier->mm;
+> @@ -682,9 +681,8 @@ long hmm_range_fault(struct hmm_range *range, unsigned int flags)
+>   		/* If range is no longer valid force retry. */
+>   		if (mmu_range_check_retry(range->notifier, range->notifier_seq))
+>   			return -EBUSY;
+> -		ret = walk_page_range(mm, start, range->end, &hmm_walk_ops,
+> -				      &hmm_vma_walk);
+> -		start = hmm_vma_walk.last;
+> +		ret = walk_page_range(mm, hmm_vma_walk.last, range->end,
+> +				      &hmm_walk_ops, &hmm_vma_walk);
+>   	} while (ret == -EBUSY);
+>   
+>   	if (ret)
+> 
 
+Thanks for the review.
+I'll add this to patch 1 since I need to send a v5 for patch 2.
