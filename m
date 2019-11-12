@@ -2,143 +2,120 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607DBC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F0FC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3415021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313A421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573586184;
-	bh=1IW8UUMmQ1aplMh8cmJEkKKNsjASki0Ab44VZOslaPk=;
+	s=default; t=1573586251;
+	bh=Wt3rFYctydOjbIfuhPKesLt74dXSwwsHPoiS7XNLSqw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WPHoK5n2pZEgO4nbMqEAIbEsSSxi9rmPTN+4bdrmndRx8J74rgiBh3Z8kvSsg96KN
-	 XpE/c64Na443GCQnGt+vIpc1aajuQ8x2gU+VM52B9+w1aqHg/LWGRUcwqgTtT/FgWL
-	 mHjLkmsDCQZWeWmN+KjRVXmvAwP8rwP5gWqwW8M0=
+	b=A5k7uWzwcEnOVS6CtYynLzABEWNFrM+xCJRluiUKOrdXwesATY2KHc65u9LvelcU0
+	 mlx0FWzrmoBkziuVOQ8347SLpF3y1Xisz2Y+SjSGNMCaMIiaJ9XPY56O37mC1gWSlP
+	 azxi6Y2gxD49ZOayksWzpOMpkUhXroYRi1WY+uK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKLTQX (ORCPT
+        id S1727149AbfKLTRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:16:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfKLTQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:16:22 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E189D20818;
-        Tue, 12 Nov 2019 19:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573586181;
-        bh=1IW8UUMmQ1aplMh8cmJEkKKNsjASki0Ab44VZOslaPk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rL470w9j47ztbIN8itCRbCXBV+CYT0FjVIdVe/g+CYnW8SJ7yi+ynGw67CJ03Cpw8
-         bQ66XQbLq/LZeMR2BxY9RH4v1Kq7cZUA0MvpkY+Z42A9VldZK/dVOsE6koLlvTlDWm
-         IOinDXU7oult1Vdrdk+foCXekQfEG2ybYOTuUEoM=
-Date:   Tue, 12 Nov 2019 20:16:18 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Tian Yunhao <t123yh@outlook.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH] clk: sunxi-ng: v3s: Fix incorrect number of hw_clks.
-Message-ID: <20191112191618.GC4345@gilmour.lan>
-References: <BN8PR08MB57792366D78997180A698AF8897A0@BN8PR08MB5779.namprd08.prod.outlook.com>
- <20191111123936.GM4345@gilmour.lan>
- <1FA73EE3-CED2-4241-839D-51C8C02531F5@aosc.io>
+        Tue, 12 Nov 2019 14:17:30 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39296 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfKLTRa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 14:17:30 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v138so15866565oif.6;
+        Tue, 12 Nov 2019 11:17:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DOxaXG+TZhstIZVYqS22mLzGBLiEMvGN3yM+TwStSBM=;
+        b=JiAQGmiW3P+CAzmp5YZu1/e3wXw1Gt9DXKKdMD8R309/6Q/BP0o/EodtSdMiRab/J+
+         iCNuW2z4/V9Ex7IXPkxDWbNP8rtKmrnX/uaTcVPctqd6Mze845afVR0G0ixzEvHfOK+d
+         hDPBf/vCnDNNU1mHAmgL2eJDVFU4cnetEg5/ZifM6eZwVUclO34lz1F7spAqbygKmtak
+         eJt8BiUeo6F9S9tRUsocETjmpgeZUdb7k/fWZYqFiv2XEFWJ2LRbwU68ESWsp5/GWozI
+         WL95wJ9rWFDxhS3Vit1T/DnjMvTK6CpSgvJpEicx/JHw9KEfY72WA39b0fMcseCMWhiA
+         Rs7w==
+X-Gm-Message-State: APjAAAXmo3Cx0lLPMtLfeg/Xz1cS+1eLQEmu5r9DLo/RjI4xpNTVawTt
+        Jk4o+aIgMikGop84abEk2Q==
+X-Google-Smtp-Source: APXvYqwB55rTeoE/9VgMp/1/IaxWGe0DHNYKNm7RGK1FZv/6GHDEAhjinAxPJdRKz5XEmcQISuEpSw==
+X-Received: by 2002:aca:edd8:: with SMTP id l207mr484171oih.102.1573586248860;
+        Tue, 12 Nov 2019 11:17:28 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j2sm1557043otn.20.2019.11.12.11.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 11:17:28 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:17:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v5 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+Message-ID: <20191112191727.GA31422@bogus>
+References: <cover.1572950559.git.eswara.kota@linux.intel.com>
+ <73655e49e80ac08826ad2d470e1387ba1b662d83.1572950559.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="alCHniwhwUTljuKz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1FA73EE3-CED2-4241-839D-51C8C02531F5@aosc.io>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <73655e49e80ac08826ad2d470e1387ba1b662d83.1572950559.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 06, 2019 at 11:44:01AM +0800, Dilip Kota wrote:
+> Add YAML schemas for PCIe RC controller on Intel Gateway SoCs
+> which is Synopsys DesignWare based PCIe core.
+> 
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> ---
+> Changes on v5:
+> 	Add Reviewed-by Andrew Murray.
+> 	Add possible values and default value for max-link-speed.
+> 	Remove $ref and add maximum and default for reset-assert-ms.
+> 	Set true flag for linux,pci-domain.
+> 	Define maxItems for ranges and clock.
+> 	Define maximum for num-lanes.
+> 	Update required list:
+> 	  Add #address-cells, #size-cells, #interrupt-cells.
+> 	  Remove num-lanes and linux,pci-domain.
+> 	Add required header files in example.
+> 	Remove status entry in example.
+> 
+> changes on v4:
+> 	Add "snps,dw-pcie" compatible.
+> 	Rename phy-names property value to pcie.
+> 	And maximum and minimum values to num-lanes.
+> 	Add ref for reset-assert-ms entry and update the
+> 	 description for easy understanding.
+> 	Remove PCIe core interrupt entry.
+> 
+> changes on v3:
+>         Add the appropriate License-Identifier
+>         Rename intel,rst-interval to 'reset-assert-us'
+>         Add additionalProperties: false
+>         Rename phy-names to 'pciephy'
+>         Remove the dtsi node split of SoC and board in the example
+>         Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>         Name yaml file with compatible name
+> 
+>  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 +++++++++++++++++++++
+>  1 file changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
 
---alCHniwhwUTljuKz
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm working on a common PCI schema which will shrink this, but in the 
+meantime:
 
-On Tue, Nov 12, 2019 at 08:59:56PM +0800, Icenowy Zheng wrote:
->
->
-> =E4=BA=8E 2019=E5=B9=B411=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=888:39:36, Maxime Ripard <mripard@kernel.org> =E5=86=99=E5=88=B0:
-> >Hi,
-> >
-> >Thanks for your patch
-> >
-> >On Sat, Nov 09, 2019 at 03:19:09PM +0000, Tian Yunhao wrote:
-> >> The hws field of sun8i_v3s_hw_clks has only 74
-> >> members. However, the number specified by CLK_NUMBER
-> >> is 77 (=3D CLK_I2S0 + 1). This leads to runtime segmentation
-> >> fault that is not always reproducible.
-> >>
-> >> This patch adds a protective field [CLK_NUMBER] which ensures
-> >> ARRAY_SIZE(.hws) is always greater than .num, thus eliminates
-> >> this error.
-> >>
-> >> Signed-off-by: Yunhao Tian <t123yh@outlook.com>
-> >> ---
-> >>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >>
-> >> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> >b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> >> index 5c779eec454b..de7fce7f32e6 100644
-> >> --- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> >> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> >> @@ -617,6 +617,7 @@ static struct clk_hw_onecell_data
-> >sun8i_v3s_hw_clks =3D {
-> >>  		[CLK_AVS]		=3D &avs_clk.common.hw,
-> >>  		[CLK_MBUS]		=3D &mbus_clk.common.hw,
-> >>  		[CLK_MIPI_CSI]		=3D &mipi_csi_clk.common.hw,
-> >> +		[CLK_NUMBER]    =3D NULL,
-> >>  	},
-> >>  	.num	=3D CLK_NUMBER,
-> >>  };
-> >> @@ -699,6 +700,7 @@ static struct clk_hw_onecell_data
-> >sun8i_v3_hw_clks =3D {
-> >>  		[CLK_AVS]		=3D &avs_clk.common.hw,
-> >>  		[CLK_MBUS]		=3D &mbus_clk.common.hw,
-> >>  		[CLK_MIPI_CSI]		=3D &mipi_csi_clk.common.hw,
-> >> +		[CLK_NUMBER]    =3D NULL,
-> >>  	},
-> >>  	.num	=3D CLK_NUMBER,
-> >
-> >I'd rather have the number of clocks (.num) being properly set.
->
-> However the maximum clock indices number is different on V3s and V3, beca=
-use
-> on V3s the last clock is missing.
->
-> Should we define CLK_NUMBER_V3S here?
-
-That, or we can just reference the last clock, we're not using
-CLK_NUMBER anywhere else.
-
-Maxime
---alCHniwhwUTljuKz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcsFAgAKCRDj7w1vZxhR
-xRGMAQCLdf1+S5MiugOG811D1O+TID2K8oHSTiGL0ebwb1WnzQD/RoJSiEPXRiwL
-00DWv7QWDbWvFN/sZUAK3pqmsgjjZwA=
-=jeP6
------END PGP SIGNATURE-----
-
---alCHniwhwUTljuKz--
+Reviewed-by: Rob Herring <robh@kernel.org>
