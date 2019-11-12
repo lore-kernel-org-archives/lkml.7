@@ -2,117 +2,141 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383E1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C04C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A6821783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3E72084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="HW0zuoAr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsC3PmoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfKLNql (ORCPT
+        id S1727380AbfKLNrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:46:41 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37685 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfKLNql (ORCPT
+        Tue, 12 Nov 2019 08:47:07 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40362 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfKLNrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:46:41 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t1so18599255wrv.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 05:46:38 -0800 (PST)
+        Tue, 12 Nov 2019 08:47:06 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 15so11875953pgt.7;
+        Tue, 12 Nov 2019 05:47:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AGYm3Nys6XNVIKZhVZx5YWFiErVNUCXgDLyv4whlig8=;
-        b=HW0zuoArggOG6Z0bsLtd6adS4hfPVsBG21SBvDJOl3w0lsyPEnUnsBaoc4RPklkmnu
-         7evAnkiPn4npIts2eC0uYef6S4PHzTtwVHJ9JQynQV/VZRSfL1gUrsp16SUVrQHuFGIo
-         oGObSsSqHi86vE13Gm+1z7Xal8pUhm489jeJBGd++pMjg13qJXU0KQlbUQtEppt0XZF+
-         e8NFr0twVAI1Nux6P6nDTkuvQLUmSMKoKUKoRfyR9nxsb5crwu2130sQ8cCaHW46reQA
-         rHu8Z7r0z6B9ryaa30DZDNzxisg40MSVlDKwgwhVx7hOfnZ30NCDPbC2APjoxckNibUG
-         deyA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nbTKl7Y1bBMki5n9d7cr5r/s5MMepoc3ySY5hIEeh8E=;
+        b=JsC3PmoMFimkZKGX3RAKlUpul6TsVS7JJG0wdvhG8MU7QtwRwvRI4w05oTUkQ9EH5+
+         RT6AthZzJaskMmP4SOUbxmGJR38QaZ7K247F4eqboKdfNJ4uqqtQCm+hJyVH6sfIOA4K
+         2QZrGuQD0rmKVEKon/Jurfo+D8n7/vlL0a1Fpn8Y/QtYP9RgowKc+Ig1sK1mq/CeFCPR
+         eULUgJQyJih0WOe4tOzQAKV9MUUKFanZWVrso6VinWpMKNOdvpdpco3wvahP6giekQAR
+         eQk6p1UyhetpVpcSOZOqSTR0RLyVkgvLGCIC7vRZIid9m6xtV3nbMQe+OuU6DJb4GGA0
+         2i4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AGYm3Nys6XNVIKZhVZx5YWFiErVNUCXgDLyv4whlig8=;
-        b=A48t+da7/81nHju+bYuuq8I/DOjuRSt36qKi1VmGNv5t2szHmZwNSkXJ9ds6cfSeEK
-         BAHyuakBXFiILeYeQpPUW65tYa8sAoP+qWyNii4pgUlWpp0OglDKqbrN8sTygfl9PRaE
-         8zyesRHnAAh8XZ1eO9rF91Rtz/6H7ExsWCs7B4CllDz1M6rm2rsXCBes7knOwhiV1O2O
-         b3IyEdvnB3EykYnK8DWZSMBEEN4228eGZrWj7vXNO0QDDxLYImgevY5CspitEw2Uikd0
-         /s9xaezD20zwUlCrteHQh+QDCYZ7gYEaUO9RL9P1xK/X60zjBi5ZEvpluHkUI+nVWNxM
-         8/fg==
-X-Gm-Message-State: APjAAAVZ9S0pikpngNzr4wxcb4ucDosbU7CjjCTx9+yAl7CBWLQWQtgP
-        3cZqayv/rahgWJU0NyjkfpKQbQ==
-X-Google-Smtp-Source: APXvYqydFPlOcZbZIDcdPbW4STt5Cvv8h0V6pr+w0+76FV1R4AoslUCyN2wslw/wb2BYA/ph3+wQvw==
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr19329663wra.246.1573566397760;
-        Tue, 12 Nov 2019 05:46:37 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id 205sm5207269wmb.3.2019.11.12.05.46.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 05:46:37 -0800 (PST)
-Date:   Tue, 12 Nov 2019 14:46:36 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc:     Po Liu <po.liu@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [EXT] Re: [net-next, 1/2] enetc: Configure the Time-Aware
- Scheduler via tc-taprio offload
-Message-ID: <20191112134635.qxcyf4bzyiwazdmn@netronome.com>
-References: <20191111042715.13444-1-Po.Liu@nxp.com>
- <20191112094128.mbfil74gfdnkxigh@netronome.com>
- <VE1PR04MB6496CE5A0DA25D7AF9FD666492770@VE1PR04MB6496.eurprd04.prod.outlook.com>
- <VI1PR04MB4880B514857A147B2634B27896770@VI1PR04MB4880.eurprd04.prod.outlook.com>
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nbTKl7Y1bBMki5n9d7cr5r/s5MMepoc3ySY5hIEeh8E=;
+        b=hT21ZdPPwswwxnV3BJnmL95grniz31WwtgBOKyEsWwuDFQxChEVJy2z8jXqb1kOndJ
+         i9Ur7E3tWtbQpJfeBM3y3Bhp6YeeaMmoyVnDtjHzD/DRg6KWVpydZwPMW6q7Pgr+SXPM
+         bGRaVwI5zhgkMtsa9k67+2K+EtCEnCPUdT1G64OCn+w3suIYX10PT9YLDTm1hwiYZs4C
+         ttlBGBBIh7CTGs3opZf/oiY6XW9OIEd54efHhuyxTAj0qQXNdZT2jG7+/AZT44n1o9xm
+         mjcpfeMcx9RhnzGbwf9GZIoPoRk+C0klfTiPmmXZMnKKlj5y17LOl8sfAqAx6Wd2mF5c
+         A8GQ==
+X-Gm-Message-State: APjAAAXa1DgRPwWdhwHlR7AaDON/+UEId4OYw1W3tt3GoWuQE0DacGRk
+        wIKoKbfoytMf1M6mNM2hCXOlIUMX
+X-Google-Smtp-Source: APXvYqwbSI8pGLvGNXDQd4tRH7lluE7SbRFxEHFU+95NxxspJ5IdxgGPzQF6M74rrnLG4YgCPPvShw==
+X-Received: by 2002:a62:140d:: with SMTP id 13mr35021203pfu.79.1573566425094;
+        Tue, 12 Nov 2019 05:47:05 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z10sm10156870pgg.39.2019.11.12.05.47.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 05:47:04 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
+To:     Eugen.Hristev@microchip.com, robh+dt@kernel.org,
+        wim@linux-watchdog.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <e34df163-60f5-35c6-05c6-845d70143fd9@roeck-us.net>
+Date:   Tue, 12 Nov 2019 05:47:03 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB4880B514857A147B2634B27896770@VI1PR04MB4880.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:54:29AM +0000, Claudiu Manoil wrote:
-> >-----Original Message-----
-> >From: Po Liu <po.liu@nxp.com>
-> [...]
-> >> -----Original Message-----
-> >> From: Simon Horman <simon.horman@netronome.com>
-> [...]
-> >> > +/* class 5, command 0 */
-> >> > +struct tgs_gcl_conf {
-> >> > +     u8      atc;    /* init gate value */
-> >> > +     u8      res[7];
-> >> > +     union {
-> >> > +             struct {
-> >> > +                     u8      res1[4];
-> >> > +                     __le16  acl_len;
-> >>
-> >> Given that u* types are used in this structure I think le16 would be more
-> >> appropriate than __le16.
-> >
-> >Here keep the same code style of this .h file. I think it is better to have
-> >another patch to fix them all. Do you agree?
-> >
+On 11/11/19 4:13 AM, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
 > 
-> I don't see why "le16" would be more appropriate than "__le16" in this context.
-> The "__leXX" types are widely used in kernel drivers and not only, to annotate the
-> endianess of the hardware.  These are generic types defined din "include/uapi/linux/types.h".
-> Whereas "leXX" are defined in "fs/ntfs/types.h", and there's no usage of these types
-> in other h/w device drivers (I didn't find any).  Am I missing anything?
+> Cleanup the macro definitions to use BIT and align with two spaces.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
+> Changes in v3:
+> - new patch as requested from review on ML
+> 
+>   drivers/watchdog/at91sam9_wdt.h | 30 +++++++++++++++---------------
+>   1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
+> index 390941c..2ca5fc5 100644
+> --- a/drivers/watchdog/at91sam9_wdt.h
+> +++ b/drivers/watchdog/at91sam9_wdt.h
+> @@ -14,23 +14,23 @@
+>   #define AT91_WDT_H
+>   
+>   #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
+> -#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
+> -#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
+> +#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
 
-My point is a cosmetic one:
-I think that __u8 goes with __le16, while u8 goes with le16.
+Using BIT() requires including linux/bits.h.
+
+> +#define  AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
+>   
+>   #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+> -#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+> -#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> -#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
+> -#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
+> -#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
+> -#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
+> -#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+> -#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+> -#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
+> -#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
+> +#define  AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+> +#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> +#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
+> +#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
+> +#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
+> +#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
+> +#define  AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+> +#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+> +#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
+> +#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
+>   
+> -#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
+> -#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
+> -#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
+> +#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
+> +#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
+> +#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
+>   
+>   #endif
+> 
+
