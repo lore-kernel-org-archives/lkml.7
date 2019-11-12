@@ -2,99 +2,147 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3CBC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6A4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D905021925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D48621925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mxqrCZSu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5yUTYdu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfKLU3a (ORCPT
+        id S1727002AbfKLU3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:29:30 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40996 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLU3a (ORCPT
+        Tue, 12 Nov 2019 15:29:37 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40882 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfKLU3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:29:30 -0500
-Received: by mail-qk1-f194.google.com with SMTP id m125so15688787qkd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:29:29 -0800 (PST)
+        Tue, 12 Nov 2019 15:29:37 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 22so16097341oip.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:29:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9/CN/xP6vJqOjvUwGr7WARnQnaIU03x9y+ycG42MQ4c=;
-        b=mxqrCZSuJup/O7Tk9nbjCrAXv/I6y2Zo1A01a5hwNRvS5TKq103j4QuuhMx1TgbiKk
-         TcToD98p3B/LkXcivRs143K922H29/EXiF4+WtML/koRgsoGaP9oNQstLSZZm1bD9exs
-         1cHorb8PN0z2CV7n+aeUGymLfLZn+MuvJntXBJRGPUHsnS2WZXJ4z9mnbwdEDCFmPPUr
-         zdAgEfZevh5Zr+vJwZHpWYsKmmW9YyHXXFRC0YlNVqSl54PMnxfnt5NDZO9d3P/oFw6v
-         yMrA8ToPd5oCC0kTplCIvx8XTzt2MoQrQKuYRdLMH60olFuU80IXYkNA5X1z1QNM25zB
-         l/xQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=nuSxtpboCRFRoH7ONR/ButKqpEu2VWZcgPYrZ3xx478=;
+        b=c5yUTYduIUiho00H0b3vhjtRjB+ajbeo7u2wmpJPSMI0+GG55FNytcQPRmRnWnyFj1
+         m432tYV8/llpTRhPJfog/sSGDxnrAMUqkwR9Zqq+MNfLAtXO56t75b8042lQmynQEPUQ
+         P66WVNVMDWdc5oalPToJYo0bl83h34bPblu7b9DkYCExgOHck3JuCFrqAIJm5P/otTux
+         Uus+Bili5xOtFHdymFj7uqdzv/GtqofxZY5yfPdUTg/eg8NRGUZD9t5M+O/2ST7Pfqiy
+         Wd6X4pUb8PBIxJoVziUV1cNNzAp49YvHBtA/neT73vXlgc9I9FOL2Znm/AbvtWgo0S+K
+         jScw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9/CN/xP6vJqOjvUwGr7WARnQnaIU03x9y+ycG42MQ4c=;
-        b=etPVojrZYYNOKReThVgAWHmcPdiRvmd+dqk7ai/XXIJPRqSgGXHVyoSBcY9uTstuu1
-         bOkQubqtoDcqWDagYlGGkjZm7eHgOlLeKaXa75Lxd09YVDdWacF4P3w6RKVUy9HpcXY6
-         XAR/c9GhUulmVI0OsP/Q9LSA3QL0lF0d6QOYgI7YmjDPOp3l16mt1voT09DNafUgQayl
-         bQDfQ8DHTf2ttra1c+EUOvaXh4mi/0DoStHIyaWjLXx9YXCz0f2EDw87XbHil0dZK381
-         YvRBHikAaZJBrDEKsh7U3SCCBUujqlH8zc1wETjLR1CmvM8WklK5heGO+ew7dKmYme9v
-         RAxA==
-X-Gm-Message-State: APjAAAXh7SmvPFhrEv7s89lYc3QKF5QEc18cokEnixTmwNMtHc/2hggG
-        CFqFcB/q8cZzXzKNOtkOszFW9+BmIW8=
-X-Google-Smtp-Source: APXvYqybg5mSANeuBHPAwtpiQwrkuaJ3qSnOCohvuRuZIB0NupFTAxDLE6ppr/vcONzFQpVTRL7HrA==
-X-Received: by 2002:a37:424a:: with SMTP id p71mr7621409qka.194.1573590568857;
-        Tue, 12 Nov 2019 12:29:28 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id o3sm18630496qtf.84.2019.11.12.12.29.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 12:29:28 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iUcn1-0003pu-NI; Tue, 12 Nov 2019 16:29:27 -0400
-Date:   Tue, 12 Nov 2019 16:29:27 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] IB/umem: use get_user_pages_fast() to pin DMA pages
-Message-ID: <20191112202927.GC5584@ziepe.ca>
-References: <20191109020434.389855-1-jhubbard@nvidia.com>
- <20191109020434.389855-2-jhubbard@nvidia.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=nuSxtpboCRFRoH7ONR/ButKqpEu2VWZcgPYrZ3xx478=;
+        b=pt/PuIErGAADXhJBYim+MQ/tM3oFZm/Zsih296Eg/W9pLHRwEWcecrtsLwRb3I2N5j
+         M5LOHz90DW1yOtD6sQ3WNgvSH3ElYXnxWoXqWPcPqMn/UVY7XZVPve6ywitSuTQeZm3J
+         7OQ2ablXJv92Nso4ZLkZazIgscdDW/2L+Ggtj8B1sVC6xSYGTxUcWvw68ZbcgBT4csHp
+         0x3YXrzEh2jYrg4BdO0v1JUKz34YzADjWUOBlFbErFXIy1fHDTVWI9NRxSRx/spBCMz+
+         3Iz0JOwjJnQMuLuzjYeWHeIlAQ2MLCZ3T0fA9sncaCvsnfASIktrDW1jUod4L2uTtvkO
+         izZA==
+X-Gm-Message-State: APjAAAWEgBMlRNdIMKkeABZ/Cm2//IFVYPBOPJeQ9qcmiE48g+4c04lL
+        2HJZvEuIipbBH+ZS4d0DlQ==
+X-Google-Smtp-Source: APXvYqzkAt+1k/8BZCXeyArXDOhGImLjCdeMesIH8HcGa0Km475jeAHh7ADW67WFyJhYu8RqDGgvZQ==
+X-Received: by 2002:a05:6808:181:: with SMTP id w1mr751465oic.109.1573590575994;
+        Tue, 12 Nov 2019 12:29:35 -0800 (PST)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id k6sm2775908otr.35.2019.11.12.12.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 12:29:35 -0800 (PST)
+Received: from minyard.net (unknown [192.168.27.180])
+        by serve.minyard.net (Postfix) with ESMTPSA id 4A03118016D;
+        Tue, 12 Nov 2019 20:29:33 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 14:29:32 -0600
+From:   Corey Minyard <minyard@acm.org>
+To:     Vijay Khemka <vijaykhemka@fb.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cminyard@mvista.com" <cminyard@mvista.com>,
+        "asmaa@mellanox.com" <asmaa@mellanox.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: Re: [PATCH 2/2] drivers: ipmi: Modify max length of IPMB packet
+Message-ID: <20191112202932.GJ2882@minyard.net>
+Reply-To: minyard@acm.org
+References: <20191112023610.3644314-1-vijaykhemka@fb.com>
+ <20191112023610.3644314-2-vijaykhemka@fb.com>
+ <20191112124845.GE2882@minyard.net>
+ <7BC487D6-6ACA-46CE-A751-8367FEDEE647@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191109020434.389855-2-jhubbard@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7BC487D6-6ACA-46CE-A751-8367FEDEE647@fb.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 06:04:34PM -0800, John Hubbard wrote:
-> And get rid of the mmap_sem calls, as part of that. Note
-> that get_user_pages_fast() will, if necessary, fall back to
-> __gup_longterm_unlocked(), which takes the mmap_sem as needed.
+On Tue, Nov 12, 2019 at 07:56:34PM +0000, Vijay Khemka wrote:
 > 
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/infiniband/core/umem.c | 17 ++++++-----------
->  1 file changed, 6 insertions(+), 11 deletions(-)
+> 
+> ﻿On 11/12/19, 4:48 AM, "Corey Minyard" <tcminyard@gmail.com on behalf of minyard@acm.org> wrote:
+> 
+>     On Mon, Nov 11, 2019 at 06:36:10PM -0800, Vijay Khemka wrote:
+>     > As per IPMB specification, maximum packet size supported is 255,
+>     > modified Max length to 240 from 128 to accommodate more data.
+>     
+>     I couldn't find this in the IPMB specification.
+>     
+>     IIRC, the maximum on I2C is 32 byts, and table 6-9 in the IPMI spec,
+>     under "IPMB Output" states: The IPMB standard message length is
+>     specified as 32 bytes, maximum, including slave address.
+> 
+> We are using IPMI OEM messages and our response size is around 150 bytes
+> For some of responses. That's why I had set it to 240 bytes.
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Hmm.  Well, that is a pretty significant violation of the spec, but
+there's nothing hard in the protocol that prohibits it, I guess.
 
-This can go through Andrew's tree if he takes this larger series,
-otherwise I'll grab it
+If Asmaa is ok with this, I'm ok with it, too.
 
-Thanks,
-Jason
+-corey
+
+>     
+>     I'm not sure where 128 came from, but maybe it should be reduced to 31.
+>     
+>     -corey
+>     
+>     > 
+>     > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+>     > ---
+>     >  drivers/char/ipmi/ipmb_dev_int.c | 2 +-
+>     >  1 file changed, 1 insertion(+), 1 deletion(-)
+>     > 
+>     > diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
+>     > index 2419b9a928b2..7f9198bbce96 100644
+>     > --- a/drivers/char/ipmi/ipmb_dev_int.c
+>     > +++ b/drivers/char/ipmi/ipmb_dev_int.c
+>     > @@ -19,7 +19,7 @@
+>     >  #include <linux/spinlock.h>
+>     >  #include <linux/wait.h>
+>     >  
+>     > -#define MAX_MSG_LEN		128
+>     > +#define MAX_MSG_LEN		240
+>     >  #define IPMB_REQUEST_LEN_MIN	7
+>     >  #define NETFN_RSP_BIT_MASK	0x4
+>     >  #define REQUEST_QUEUE_MAX_LEN	256
+>     > -- 
+>     > 2.17.1
+>     > 
+>     
+> 
