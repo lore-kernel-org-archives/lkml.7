@@ -2,198 +2,118 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018C9C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89D5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0892196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88B121872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 00:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PVm/Dskz"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="FS2Q29vM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfKLAUF (ORCPT
+        id S1727201AbfKLAVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:20:05 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45104 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfKLAUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:20:03 -0500
-Received: by mail-pf1-f196.google.com with SMTP id z4so11930742pfn.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 16:20:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qcCI16g4dO/Qrfro0uo1Fa9EI3/y1R2NeWHuFFGKbTs=;
-        b=PVm/DskzvIOtIK+GQa0comOTWHhuqkF4T7Kxr4lb1uzHf/pjNtvYKE6GmhvZf+uAdp
-         ZU6z0A7hraMCVUE5jHz1MjQXbYEeD8xrFFPTeUIBlIR0WXe6xVIz8UbMkHD4+K0i7aD+
-         Fygs01VY/bqT9SoHvfFvxEoG7UF7UMrao0xmQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qcCI16g4dO/Qrfro0uo1Fa9EI3/y1R2NeWHuFFGKbTs=;
-        b=SZJAJQXgmfh92e5+IU8BUNc7ospLxlk/GyaqgzTctgN17B81tUjBWGaQEbtydgYfs6
-         rxFnIKuI/LqyWiOopWdquBgSl4+x38R5kj7kFurUEmyii+HDYjOepkCcya4jt0nDsvn9
-         JQ0V2HK/Jka3tYd4dSKX3IAKiH81nSNrHQE7jnIqDWtPRGjLBddVgE7zeBEcrX2av5Xm
-         Vwqc889Nul5qIdEKHZMt7oWHFmysD/0aIGS8PK/50Je4g5GT4aHuwq+Mc1uue0aYFMVf
-         TbxJ4zaYBIFTYrV57K3k6BXXj4CYECJuNslPW2jriJ1JSDgfyxGq4vfzWMEi1UTt1BDQ
-         MbZw==
-X-Gm-Message-State: APjAAAUhMlSohUbJSUWh3AI8SIB06JrExEClZ3JRLF1pXMegfwZMuBKv
-        XyFUrZvxPMM44OWSwBoxgmKKuizJxHM=
-X-Google-Smtp-Source: APXvYqzWJ5i//nOANUZ8fd/LNc3QpHTPDBT+xrc6ozPqoPx25+RYtknJgZAjECFrz+PZ4keyk2zMaQ==
-X-Received: by 2002:a63:1a51:: with SMTP id a17mr30972921pgm.449.1573518001020;
-        Mon, 11 Nov 2019 16:20:01 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id h23sm8430898pgg.58.2019.11.11.16.20.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 16:20:00 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] Bluetooth: hci_bcm: Disallow set_baudrate for BCM4354
-Date:   Mon, 11 Nov 2019 16:19:46 -0800
-Message-Id: <20191112001949.136377-2-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191112001949.136377-1-abhishekpandit@chromium.org>
-References: <20191112001949.136377-1-abhishekpandit@chromium.org>
+        Mon, 11 Nov 2019 19:21:12 -0500
+Received: from mail-eopbgr690078.outbound.protection.outlook.com ([40.107.69.78]:20779
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbfKLAVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:21:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bfTR+DPqFfqc8HzHzSqrgnF+Azgfw5fnAL0KFqnKE7dnoCk6MblDVCN1/9GktJjIqaIDbIaSAS0qoNht88IiiTWV2bp8ywa83u5hYToZdRB8c1VDVeAOidJ+aGXRpoOoKjrtFVtv1hX6dPcNtxOZTqdql+CE59gUEchcZ26wzl1uK9h3xIyJv+WPGcfFDqk/oFu0gE5Er/EH/2U29NCjK3kaFS+GhdE+575CEq/4s7pqbsl2cHjWJYJ4k7W/AX8AZ6uFRWK+iA8MDAu1EvG3ftdOELxEQ4dpf7z3MfQbE7zYQ2tX0nq7dkwJUVCZYH3FjTGR+lE4KqavoC2i6wGvJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zgETscEaz3Q6S7+ulLMPv5SV5CZf51s5BfO68Li8t8A=;
+ b=LX5JYYMoXD6h2UbTHOYxkzhLmL3kvcnzvHiUzU+oD0EZpfA7otAmQ5p+ZJ96n1hcNvTkIqOZ+f3llV0jo6DSQ+xzT+UKfJhHtsJmGKp3ELO8rquUVPKRv66/NS/8VN1KrfKuM32lfFzy5dcjy4jHKD/+twlhOO2S9jR/w2dJ4CpFu41HmaT7kFHYpIotkYsXERlYg7ArcKFGv1sp7GRw+QLp2mdsv6Ex0kLfjBlnUVmLCR23Bw2cuTh23Wmy/QK78DwBfzHjaTjnz57Tn3E+Tj+o502dgcano96kOihJ9VmayUjTeP3u9IZk1EAX6Vw+opyw8A1gxnUwqkjdpFaAHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zgETscEaz3Q6S7+ulLMPv5SV5CZf51s5BfO68Li8t8A=;
+ b=FS2Q29vMXuwvafTS6MAEFgsCGmQYbjwJnlUpvJCoDfikKg4aIFROe7aaLa1N5zkX5nHfEqNlM5nwIW0JAWpuWIdgEi7/NASX4rrNEgxiaj5GVNqCvGiNbh48cwuyl7EipNxyp7bNeawARgF+sOGv2ITL9YNAxRBA6BqDarOWbAs=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB5524.namprd08.prod.outlook.com (20.176.29.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Tue, 12 Nov 2019 00:21:09 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285%6]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 00:21:09 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "pedrom.sousa@synopsys.com" <pedrom.sousa@synopsys.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [RESEND PATCH v1 0/2] Two small patches for UFS
+Thread-Topic: [RESEND PATCH v1 0/2] Two small patches for UFS
+Thread-Index: AdWY7wB4UlFJaqPmSsGCWRpPuD+RWQ==
+Date:   Tue, 12 Nov 2019 00:21:08 +0000
+Message-ID: <BN7PR08MB56840512CEBCDD2A1194F7F5DB770@BN7PR08MB5684.namprd08.prod.outlook.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTUwODFmMzliLTA0ZTItMTFlYS04Yjg1LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFw1MDgxZjM5Yy0wNGUyLTExZWEtOGI4NS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjU2NiIgdD0iMTMyMTc5OTE2NjU4ODk5Mjg3IiBoPSJjZGRSOHQwMXgvaWMzSWM0bkt5MWZLc3JvZVE9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.96]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f02f48c4-406b-40eb-0cb3-08d767063747
+x-ms-traffictypediagnostic: BN7PR08MB5524:|BN7PR08MB5524:|BN7PR08MB5524:|BN7PR08MB5524:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN7PR08MB552426732D95A20CA439EA8CDB770@BN7PR08MB5524.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2000;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(366004)(396003)(376002)(199004)(189003)(71190400001)(71200400001)(26005)(186003)(66066001)(6116002)(3846002)(2906002)(66476007)(476003)(9686003)(102836004)(52536014)(74316002)(7696005)(55236004)(486006)(45080400002)(6506007)(7416002)(33656002)(2201001)(4326008)(99286004)(55016002)(14454004)(478600001)(2501003)(86362001)(76116006)(66946007)(305945005)(8936002)(316002)(66446008)(8676002)(7736002)(6436002)(110136005)(54906003)(4744005)(5660300002)(64756008)(66556008)(14444005)(256004)(81166006)(81156014)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB5524;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pQYS1VcSrSQz7xjkMZYgcofJYXw4bzFu6mKuZzFgKkcL+SkNObgW2D7FD9oBoNY2VB21rzRNZ7to063TpPeLA5AZyDXs9eop5pquIswwWEG5c3PL2rqLq+yIMTcVP4N7Z23iF52H9pg7irZ/UBfv6Ro2Y9BlEnzJwtY6w7H8fke8bivFVrlmeBp5HolJE6h2cF7GaUk9yF7QQ+LTSm+My1aB/q8svw0qNFUbnug42GkPheNMEcJirSxhjYFDO1W7qkMWn02dvmCW1FmH0agnaQEuO5qmvasMV9jkrcYbIivFYL/vL91jQvKa0/ndBso73/FFVzkilPkZt1X8gkFHD9Up18U3v2AXsQ8VFU77TQjuaP4v9OHnWLcK8rXV4on/gWj+YC6e0DMjIuk02gbuJ/BE5zMQUptBoK+hnOGFvN/ZS3dF5MC6QIdUeKC08XjO
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f02f48c4-406b-40eb-0cb3-08d767063747
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 00:21:08.8557
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MDvvg/GbVJXSBYbav3QWgkZFacPWOHdzWnqQs+aPMs/1KgMXaa4IuSX1oqs58i/P88YhUPJz/xFFAeftM0Fvhw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB5524
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without updating the patchram, the BCM4354 does not support a higher
-operating speed. The normal bcm_setup follows the correct order
-(init_speed, patchram and then oper_speed) but the serdev driver will
-set the operating speed before calling the hu->setup function. Thus,
-for the BCM4354, disallow setting the operating speed before patchram.
-If set_baudrate is called before setup, it will return -EBUSY.
+Bean Huo <beanhuo@micron.com>
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
+Resend since ver.kernel.org rejected @outlook.com.
+Hi,
+Here are two small patches, one is to fix a potential bug which could
+chase system hang-up, second one is to add more helpful debug hint.
 
-Changes in v3: None
-Changes in v2: None
+Bean Huo (2):
+  scsi: ufs: print helpful hint when response size exceed buffer size
+  scsi: ufs: fix potential bug which ends in system hang-up
 
- drivers/bluetooth/hci_bcm.c | 37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 0f851c0dde7f..6134bff58748 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -47,6 +47,14 @@
- 
- #define BCM_NUM_SUPPLIES 2
- 
-+/**
-+ * struct bcm_device_data - device specific data
-+ * @no_early_set_baudrate: Disallow set baudrate before driver setup()
-+ */
-+struct bcm_device_data {
-+	bool	no_early_set_baudrate;
-+};
-+
- /**
-  * struct bcm_device - device driver resources
-  * @serdev_hu: HCI UART controller struct
-@@ -79,6 +87,7 @@
-  * @hu: pointer to HCI UART controller struct,
-  *	used to disable flow control during runtime suspend and system sleep
-  * @is_suspended: whether flow control is currently disabled
-+ * @disallow_set_baudrate: don't allow set_baudrate
-  */
- struct bcm_device {
- 	/* Must be the first member, hci_serdev.c expects this. */
-@@ -112,6 +121,7 @@ struct bcm_device {
- 	struct hci_uart		*hu;
- 	bool			is_suspended;
- #endif
-+	bool			disallow_set_baudrate;
- };
- 
- /* generic bcm uart resources */
-@@ -141,9 +151,13 @@ static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
- static int bcm_set_baudrate(struct hci_uart *hu, unsigned int speed)
- {
- 	struct hci_dev *hdev = hu->hdev;
-+	struct bcm_data *bcm = hu->priv;
- 	struct sk_buff *skb;
- 	struct bcm_update_uart_baud_rate param;
- 
-+	if (bcm && bcm->dev && bcm->dev->disallow_set_baudrate)
-+		return -EBUSY;
-+
- 	if (speed > 3000000) {
- 		struct bcm_write_uart_clock_setting clock;
- 
-@@ -551,6 +565,12 @@ static int bcm_setup(struct hci_uart *hu)
- 		goto finalize;
- 	}
- 
-+	/* If we disallow early set baudrate, we can re-enable it now that
-+	 * patchram is done
-+	 */
-+	if (bcm->dev && bcm->dev->disallow_set_baudrate)
-+		bcm->dev->disallow_set_baudrate = false;
-+
- 	/* Init speed if any */
- 	if (hu->init_speed)
- 		speed = hu->init_speed;
-@@ -1371,6 +1391,15 @@ static struct platform_driver bcm_driver = {
- 	},
- };
- 
-+static void bcm_configure_device_data(struct bcm_device *bdev)
-+{
-+	const struct bcm_device_data *data = device_get_match_data(bdev->dev);
-+
-+	if (data) {
-+		bdev->disallow_set_baudrate = data->no_early_set_baudrate;
-+	}
-+}
-+
- static int bcm_serdev_probe(struct serdev_device *serdev)
- {
- 	struct bcm_device *bcmdev;
-@@ -1408,6 +1437,8 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
- 	if (err)
- 		dev_err(&serdev->dev, "Failed to power down\n");
- 
-+	bcm_configure_device_data(bcmdev);
-+
- 	return hci_uart_register_device(&bcmdev->serdev_hu, &bcm_proto);
- }
- 
-@@ -1419,12 +1450,16 @@ static void bcm_serdev_remove(struct serdev_device *serdev)
- }
- 
- #ifdef CONFIG_OF
-+struct bcm_device_data bcm4354_device_data = {
-+	.no_early_set_baudrate = true,
-+};
-+
- static const struct of_device_id bcm_bluetooth_of_match[] = {
- 	{ .compatible = "brcm,bcm20702a1" },
- 	{ .compatible = "brcm,bcm4345c5" },
- 	{ .compatible = "brcm,bcm4330-bt" },
- 	{ .compatible = "brcm,bcm43438-bt" },
--	{ .compatible = "brcm,bcm43540-bt" },
-+	{ .compatible = "brcm,bcm43540-bt", .data = &bcm4354_device_data },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, bcm_bluetooth_of_match);
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
-
+--
+2.17.1
