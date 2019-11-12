@@ -2,164 +2,88 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A8CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00675C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4903620659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vWoXjYFm"
+	by mail.kernel.org (Postfix) with ESMTP id C0AFC20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573579159;
+	bh=85dgABjfLst0EJiLfQ6UppL83HD41+jlwGeYc+PJi5s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=OqIRqAx6cxmrF/64W2Pvo7zsacoUU605A+falD7eVXjdcsKgJ2khqPPTabP4J/i5i
+	 NRXZh1DgBf372DeNllxvVgpREVVdED4L23k8nEPuu9wXI5w5M7HnCMk4X3hQNkiE1c
+	 ynfPKo4Fk96SwjBltq7qyY9ueX6qZSpvt0l25jno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfKLRRk (ORCPT
+        id S1727411AbfKLRTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:17:40 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46855 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLRRj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:17:39 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 193so13783605pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=GAxdQVxMEKhKhuZoX/VBOrcEuUfwMEWl5fY0HVG6jDE=;
-        b=vWoXjYFmjOttZKwONjxJ81J/VCuN2XQRhnCSkqlhdQq9oK5QFka4Kd5xp3DT3VV3oY
-         zYlVuUuTw6pNdbRM0U88rhr9+IvK8p7V3byHtvvE2T222Ja6mvVJ1M3uPdl0vDtIMEJR
-         VuiojmGjxZGBlcczfLdrEsLa9LNOLsBJ8PcjE04J1euiQzsaVxJUrFmR1vGuJ1bLEFPV
-         5cf1Z7HXzlfFMFXqM6cJ049jXvSmW6Ze1gIk+LZ/9T80z3mMw9EGqPDudOtNhZrpx8Pf
-         CIE4bl5kz22UTrI9bVe5BSve8TehRyoQGGzTsDlNJkWMlMzjGPgqClFTZFgMOMRJhXR/
-         6hkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=GAxdQVxMEKhKhuZoX/VBOrcEuUfwMEWl5fY0HVG6jDE=;
-        b=U5vTujDoSP3XSlypU09el+YY++uA8b7i/v8P4LuDRgFIuxoHIg9XlyL0SrvqyocPjO
-         RTfSf6Xm7F13bpUEN+5f+w+kUaYiRSYRbRnXUP7BFNrdra560ngO6uzDZUZgN2rTjXrX
-         mOlGY4RxCZXdkmksLkGpcJd2ZCNIvN9HGEwFDseF9MIbNjIDipJDNuL6/SUKDPgX+7OO
-         /Fncqr2J8WBoGjwgfvpeCMjdw/DBUp+mWWymuJoePIXOmGdp9RRX/oL8rC03YZPpQWUO
-         ZIRBdais3FZpQGSZtkQBhVr4Iygpdi1IhfKIxB4e3yG+WrnJmbf12SFy1kEJn0KoVFjn
-         s98A==
-X-Gm-Message-State: APjAAAXPc+6qxCyUcdsAhTRml6wglV1hO9ACzONOg6bm8MhQD8dIdaRT
-        MbgKlsjwdJHCnW8rdvznP2gp
-X-Google-Smtp-Source: APXvYqwtTdqQJZNRF2wCGHv2Dne2JxqgG/WDm44w3rTdj757M0nHUk5Wv2dL7mF3wT7UkK72qdkqSg==
-X-Received: by 2002:a17:90a:b394:: with SMTP id e20mr2437267pjr.130.1573579058856;
-        Tue, 12 Nov 2019 09:17:38 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:6488:b1d2:4134:76b9:cbea:403])
-        by smtp.gmail.com with ESMTPSA id p16sm20720040pfn.171.2019.11.12.09.17.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 09:17:37 -0800 (PST)
-Date:   Tue, 12 Nov 2019 22:47:29 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Kever Yang <kever.yang@rock-chips.com>
-Cc:     heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Akash Gajjar <akash@openedev.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        daniel.lezcano@linaro.org
-Subject: Re: [PATCH 2/3] arm64: dts: rk3399-rock960: add vdd_log
-Message-ID: <20191112171726.GA18622@Mani-XPS-13-9360>
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-2-kever.yang@rock-chips.com>
- <20191111052232.GA2842@Mani-XPS-13-9360>
- <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
+        Tue, 12 Nov 2019 12:19:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfKLRTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:19:18 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C2520659;
+        Tue, 12 Nov 2019 17:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573579158;
+        bh=85dgABjfLst0EJiLfQ6UppL83HD41+jlwGeYc+PJi5s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=xdL+G1zDFE46caLzbkDRg0br9X96M7qfTympBm/tlAae7Dosfy8oNmO241YvCY3ot
+         o/AK0tQcwpY1drq9ZXLTRTg83BCM/T44eZYlb5MREr/qYT9bAmbRggcZgaxXabvtMW
+         jK+xizZQdMqOiW5ALdmPKCHortPXcRVIeEtOVC2I=
+Date:   Tue, 12 Nov 2019 11:19:15 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Frederick Lawler <fred@fredlawl.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: Re: [PATCH 1/2] drm: replace incorrect Compliance/Margin magic
+ numbers with PCI_EXP_LNKCTL2 definitions
+Message-ID: <20191112171915.GA167243@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6d86246e-504a-b762-aff8-0449dd6f3d31@daenzer.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:10:17PM +0800, Kever Yang wrote:
-> 
-> On 2019/11/11 下午1:22, Manivannan Sadhasivam wrote:
-> > Hi Kever,
+On Tue, Nov 12, 2019 at 05:45:15PM +0100, Michel D�nzer wrote:
+> On 2019-11-11 8:29 p.m., Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > On Mon, Nov 11, 2019 at 08:51:57AM +0800, Kever Yang wrote:
-> > > Add vdd_log node according to rock960 schematic V13.
-> > > 
-> > > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> > > ---
-> > > 
-> > >   arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ++++++++++++
-> > >   1 file changed, 12 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > index c7d48d41e184..73afee257115 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > @@ -76,6 +76,18 @@
-> > >   		regulator-always-on;
-> > >   		vin-supply = <&vcc5v0_sys>;
-> > >   	};
-> > > +
-> > > +	vdd_log: vdd-log {
-> > > +		compatible = "pwm-regulator";
-> > > +		pwms = <&pwm2 0 25000 1>;
-> > > +		regulator-name = "vdd_log";
-> > > +		regulator-always-on;
-> > > +		regulator-boot-on;
-> > > +		regulator-min-microvolt = <800000>;
-> > > +		regulator-max-microvolt = <1400000>;
-> > > +		regulator-init-microvolt = <950000>;
-> > The default value seems to be 0.9v as per both Rock960 and Ficus schematics.
+> > Add definitions for these PCIe Link Control 2 register fields:
+> > 
+> >   Enter Compliance
+> >   Transmit Margin
+> > 
+> > and use them in amdgpu and radeon.
+> > 
+> > NOTE: This is a functional change because "7 << 9" was apparently a typo.
+> > That mask included the high order bit of Transmit Margin, the Enter
+> > Modified Compliance bit, and the Compliance SOS bit, but I think what
+> > was intended was the 3-bit Transmit Margin field at bits 9:7.
 > 
-> 
-> The default value is 0.9V when pwm-regulator is not enabled, and this
-> 'init-microvolt' suppose to set the
-> 
-> init value when pwm-regulator is enabled. I set this to 950mV because Peter
-> report that he experience
-> 
-> the system hang during Fedora boot  up, and update the vdd_log to 950mV can
-> fix the issue due to
-> 
-> engineer measure on another rk3399 board puma-Q7.
-> 
+> Can you split out the functional change into a separate patch 1? That
+> could make things easier for anyone who bisects the functional change
+> for whatever reason.
 
-okay. Previously we had post-boot hang issue on Rock960 Model A boards when the
-performance governor was set as default. So the vdd_log node was removed from
-the devicetree. Have you tested that case also?
+Great idea, thanks!  Wish I'd thought of that.
 
-Here is the commit:
-13682e524167 ("arm64: dts: rockchip: remove vdd_log from rock960 to fix a stability issues")
-
-thanks,
-Mani
-> 
-> Thanks,
-> 
-> - Kever
-> 
-> > 
-> > Other than that,
-> > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > +		vin-supply = <&vcc_sys>;
-> > > +	};
-> > >   };
-> > >   &cpu_l0 {
-> > > -- 
-> > > 2.17.1
-> > > 
-> 
-> 
+While fixing that, I also noticed I missed one case in
+amdgpu/si.c.  I'll post a v3.
