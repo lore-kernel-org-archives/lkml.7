@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04285C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCB8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87CE2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9132196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfKLXva (ORCPT
+        id S1727433AbfKLXvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:51:30 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57340 "EHLO
+        Tue, 12 Nov 2019 18:51:33 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57356 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727002AbfKLXug (ORCPT
+        by vger.kernel.org with ESMTP id S1727020AbfKLXug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 18:50:36 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvd-0008IH-WD; Tue, 12 Nov 2019 23:50:34 +0000
+        id 1iUfvd-0008IO-WB; Tue, 12 Nov 2019 23:50:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iUfvc-00057N-P1; Tue, 12 Nov 2019 23:50:32 +0000
+        id 1iUfvc-00057h-Tn; Tue, 12 Nov 2019 23:50:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
-        "Vineela Tummalapalli" <vineela.tummalapalli@intel.com>
-Date:   Tue, 12 Nov 2019 23:48:10 +0000
-Message-ID: <lsq.1573602477.877097849@decadent.org.uk>
+        "Vandana BN" <bnvandana@gmail.com>,
+        syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
+Date:   Tue, 12 Nov 2019 23:48:14 +0000
+Message-ID: <lsq.1573602477.179773981@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 13/25] x86/bugs: Add ITLB_MULTIHIT bug infrastructure
+Subject: [PATCH 3.16 17/25] media: usb:zr364xx:Fix KASAN:null-ptr-deref
+ Read in zr364xx_vidioc_querycap
 In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,258 +58,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
+From: Vandana BN <bnvandana@gmail.com>
 
-commit db4d30fbb71b47e4ecb11c4efa5d8aad4b03dfae upstream.
+commit 5d2e73a5f80a5b5aff3caf1ec6d39b5b3f54b26e upstream.
 
-Some processors may incur a machine check error possibly resulting in an
-unrecoverable CPU lockup when an instruction fetch encounters a TLB
-multi-hit in the instruction TLB. This can occur when the page size is
-changed along with either the physical address or cache type. The relevant
-erratum can be found here:
+SyzKaller hit the null pointer deref while reading from uninitialized
+udev->product in zr364xx_vidioc_querycap().
 
-   https://bugzilla.kernel.org/show_bug.cgi?id=205195
+==================================================================
+BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
+include/linux/compiler.h:274
+Read of size 1 at addr 0000000000000000 by task v4l_id/5287
 
-There are other processors affected for which the erratum does not fully
-disclose the impact.
+CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
+  read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
+  strscpy+0x8a/0x280 lib/string.c:207
+  zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
+  v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
+  __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
+  video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
+  v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
+  ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f3b56d8b347
+Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
+ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
+ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
+RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
+RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
+R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
+==================================================================
 
-This issue affects both bare-metal x86 page tables and EPT.
+For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
 
-It can be mitigated by either eliminating the use of large pages or by
-using careful TLB invalidations when changing the page size in the page
-tables.
+The fix is to check for NULL before strscpy() and copy empty string, if
+product is NULL
 
-Just like Spectre, Meltdown, L1TF and MDS, a new bit has been allocated in
-MSR_IA32_ARCH_CAPABILITIES (PSCHANGE_MC_NO) and will be set on CPUs which
-are mitigated against this issue.
-
-Signed-off-by: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
-Co-developed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-[bwh: Backported to 3.16:
- - Use next available X86_BUG bit
- - Don't use BIT() in msr-index.h because it's a UAPI header
- - No support for X86_VENDOR_HYGON, ATOM_AIRMONT_NP
- - Adjust filename, context, indentation]
+Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- .../ABI/testing/sysfs-devices-system-cpu      |  1 +
- arch/x86/include/asm/cpufeatures.h            |  1 +
- arch/x86/include/uapi/asm/msr-index.h         |  7 +++
- arch/x86/kernel/cpu/bugs.c                    | 13 ++++
- arch/x86/kernel/cpu/common.c                  | 61 ++++++++++---------
- drivers/base/cpu.c                            |  8 +++
- include/linux/cpu.h                           |  2 +
- 7 files changed, 65 insertions(+), 28 deletions(-)
+ drivers/media/usb/zr364xx/zr364xx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -233,6 +233,7 @@ What:		/sys/devices/system/cpu/vulnerabi
- 		/sys/devices/system/cpu/vulnerabilities/l1tf
- 		/sys/devices/system/cpu/vulnerabilities/mds
- 		/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
-+		/sys/devices/system/cpu/vulnerabilities/itlb_multihit
- Date:		January 2018
- Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
- Description:	Information about CPU vulnerabilities
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -280,5 +280,6 @@
- #define X86_BUG_MSBDS_ONLY	X86_BUG(11) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
- #define X86_BUG_SWAPGS		X86_BUG(12) /* CPU is affected by speculation through SWAPGS */
- #define X86_BUG_TAA		X86_BUG(13) /* CPU is affected by TSX Async Abort(TAA) */
-+#define X86_BUG_ITLB_MULTIHIT	X86_BUG(14) /* CPU may incur MCE during certain page attribute changes */
+--- a/drivers/media/usb/zr364xx/zr364xx.c
++++ b/drivers/media/usb/zr364xx/zr364xx.c
+@@ -712,7 +712,8 @@ static int zr364xx_vidioc_querycap(struc
+ 	struct zr364xx_camera *cam = video_drvdata(file);
  
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/include/uapi/asm/msr-index.h
-+++ b/arch/x86/include/uapi/asm/msr-index.h
-@@ -70,6 +70,13 @@
- 						    * Microarchitectural Data
- 						    * Sampling (MDS) vulnerabilities.
- 						    */
-+#define ARCH_CAP_PSCHANGE_MC_NO		(1UL << 6) /*
-+						    * The processor is not susceptible to a
-+						    * machine check error due to modifying the
-+						    * code page size along with either the
-+						    * physical address or cache type
-+						    * without TLB invalidation.
-+						    */
- #define ARCH_CAP_TSX_CTRL_MSR		(1UL << 7) /* MSR for TSX control is available. */
- #define ARCH_CAP_TAA_NO			(1UL << 8) /*
- 						   * Not susceptible to
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1342,6 +1342,11 @@ static void __init l1tf_select_mitigatio
- 
- #ifdef CONFIG_SYSFS
- 
-+static ssize_t itlb_multihit_show_state(char *buf)
-+{
-+	return sprintf(buf, "Processor vulnerable\n");
-+}
-+
- static ssize_t mds_show_state(char *buf)
- {
- #ifdef CONFIG_HYPERVISOR_GUEST
-@@ -1444,6 +1449,9 @@ static ssize_t cpu_show_common(struct de
- 	case X86_BUG_TAA:
- 		return tsx_async_abort_show_state(buf);
- 
-+	case X86_BUG_ITLB_MULTIHIT:
-+		return itlb_multihit_show_state(buf);
-+
- 	default:
- 		break;
- 	}
-@@ -1485,4 +1493,9 @@ ssize_t cpu_show_tsx_async_abort(struct
- {
- 	return cpu_show_common(dev, attr, buf, X86_BUG_TAA);
- }
-+
-+ssize_t cpu_show_itlb_multihit(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return cpu_show_common(dev, attr, buf, X86_BUG_ITLB_MULTIHIT);
-+}
- #endif
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -807,13 +807,14 @@ static void identify_cpu_without_cpuid(s
- #endif
- }
- 
--#define NO_SPECULATION	BIT(0)
--#define NO_MELTDOWN	BIT(1)
--#define NO_SSB		BIT(2)
--#define NO_L1TF		BIT(3)
--#define NO_MDS		BIT(4)
--#define MSBDS_ONLY	BIT(5)
--#define NO_SWAPGS	BIT(6)
-+#define NO_SPECULATION		BIT(0)
-+#define NO_MELTDOWN		BIT(1)
-+#define NO_SSB			BIT(2)
-+#define NO_L1TF			BIT(3)
-+#define NO_MDS			BIT(4)
-+#define MSBDS_ONLY		BIT(5)
-+#define NO_SWAPGS		BIT(6)
-+#define NO_ITLB_MULTIHIT	BIT(7)
- 
- #define VULNWL(_vendor, _family, _model, _whitelist)	\
- 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-@@ -831,26 +832,26 @@ static const __initconst struct x86_cpu_
- 	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
- 
- 	/* Intel Family 6 */
--	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
--	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
--
--	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
- 
--	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
--	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	/*
- 	 * Technically, swapgs isn't serializing on AMD (despite it previously
-@@ -861,13 +862,13 @@ static const __initconst struct x86_cpu_
- 	 */
- 
- 	/* AMD Family 0xf - 0x12 */
--	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
--	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 	{}
- };
- 
-@@ -892,6 +893,10 @@ static void __init cpu_set_bug_bits(stru
- {
- 	u64 ia32_cap = x86_read_arch_cap_msr();
- 
-+	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
-+	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
-+		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
-+
- 	if (cpu_matches(NO_SPECULATION))
- 		return;
- 
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -463,6 +463,12 @@ ssize_t __weak cpu_show_tsx_async_abort(
- 	return sprintf(buf, "Not affected\n");
- }
- 
-+ssize_t __weak cpu_show_itlb_multihit(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "Not affected\n");
-+}
-+
- static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
- static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
- static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
-@@ -470,6 +476,7 @@ static DEVICE_ATTR(spec_store_bypass, 04
- static DEVICE_ATTR(l1tf, 0444, cpu_show_l1tf, NULL);
- static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
- static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
-+static DEVICE_ATTR(itlb_multihit, 0444, cpu_show_itlb_multihit, NULL);
- 
- static struct attribute *cpu_root_vulnerabilities_attrs[] = {
- 	&dev_attr_meltdown.attr,
-@@ -479,6 +486,7 @@ static struct attribute *cpu_root_vulner
- 	&dev_attr_l1tf.attr,
- 	&dev_attr_mds.attr,
- 	&dev_attr_tsx_async_abort.attr,
-+	&dev_attr_itlb_multihit.attr,
- 	NULL
- };
- 
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -54,6 +54,8 @@ extern ssize_t cpu_show_mds(struct devic
- extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
- 					struct device_attribute *attr,
- 					char *buf);
-+extern ssize_t cpu_show_itlb_multihit(struct device *dev,
-+				      struct device_attribute *attr, char *buf);
- 
- #ifdef CONFIG_HOTPLUG_CPU
- extern void unregister_cpu(struct cpu *cpu);
+ 	strlcpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
+-	strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
++	if (cam->udev->product)
++		strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
+ 	strlcpy(cap->bus_info, dev_name(&cam->udev->dev),
+ 		sizeof(cap->bus_info));
+ 	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
 
