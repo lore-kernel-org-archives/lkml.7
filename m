@@ -2,109 +2,91 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E952C17448
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50D1C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A572067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QcMaLS2g"
+	by mail.kernel.org (Postfix) with ESMTP id 9E398206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfKLHY3 (ORCPT
+        id S1727001AbfKLHYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:24:29 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60552 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfKLHY3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:24:29 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC7OLls037267;
-        Tue, 12 Nov 2019 01:24:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573543461;
-        bh=9ZjEggkK3tYtTfvVyv4LxqBOLJcpeT8JiS+RxzIUC7I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QcMaLS2gpVQKfVjYt3+Pr40c87QkE10hjw6CtAoXzDYohl5rT3zKu1DCZbHNbB9u6
-         NUQDbUctWfRnd/2xcL2F/P5CAILp10Zh94rxHybOYz51g802mD9lsVjXqjBbsuRyiC
-         B6H8Vzvg10kZWBVNETmTPG5mFxxCmhz8szpl1zD4=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAC7OLOM028549
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 01:24:21 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 01:24:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 01:24:03 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC7OHG7089194;
-        Tue, 12 Nov 2019 01:24:17 -0600
-Subject: Re: [PATCH v4 15/15] dmaengine: ti: k3-udma: Add glue layer for non
- DMAengine users
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        Tue, 12 Nov 2019 02:24:51 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6638 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725283AbfKLHYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 02:24:51 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 74FF4DEB7E58E6416410;
+        Tue, 12 Nov 2019 15:24:29 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 12 Nov 2019 15:24:18 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxime Ripard <mripard@kernel.org>,
+        "Chen-Yu Tsai" <wens@csie.org>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-crypto@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-16-peter.ujfalusi@ti.com>
- <20191111061258.GS952516@vkoul-mobl>
- <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
- <20191112053714.GX952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <b6b38b97-216f-c297-a414-e3c1f5703a68@ti.com>
-Date:   Tue, 12 Nov 2019 09:25:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH v2 -next] crypto: sun8i-ce - Fix memdup.cocci warnings
+Date:   Tue, 12 Nov 2019 07:23:14 +0000
+Message-ID: <20191112072314.145064-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191109024403.47106-1-yuehaibing@huawei.com>
+References: <20191109024403.47106-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191112053714.GX952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use kmemdup rather than duplicating its implementation
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: fix patch title 'sun8i-ss' -> 'sun8i-ce'
+---
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index f0e7c1e12da6..b6e7c346c3ae 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -396,10 +396,9 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		kfree(op->key);
+ 	}
+ 	op->keylen = keylen;
+-	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
++	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+ 	if (!op->key)
+ 		return -ENOMEM;
+-	memcpy(op->key, key, keylen);
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+@@ -422,10 +421,9 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		kfree(op->key);
+ 	}
+ 	op->keylen = keylen;
+-	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
++	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+ 	if (!op->key)
+ 		return -ENOMEM;
+-	memcpy(op->key, key, keylen);
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
 
 
-On 12/11/2019 7.37, Vinod Koul wrote:
-> On 11-11-19, 12:31, Peter Ujfalusi wrote:
->>
->>
->> On 11/11/2019 8.12, Vinod Koul wrote:
->>> On 01-11-19, 10:41, Peter Ujfalusi wrote:
->>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>
->>>> Certain users can not use right now the DMAengine API due to missing
->>>> features in the core. Prime example is Networking.
->>>>
->>>> These users can use the glue layer interface to avoid misuse of DMAengine
->>>> API and when the core gains the needed features they can be converted to
->>>> use generic API.
->>>
->>> Can you add some notes on what all features does this layer implement..
->>
->> In the commit message or in the code?
-> 
-> commit here so that we know what to expect.
 
-Can you check the v5 commit message if it is sufficient? If not, I can
-make it more verbose for v6.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
