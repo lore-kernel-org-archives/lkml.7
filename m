@@ -2,122 +2,225 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E783EC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3873AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF58214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573573731;
-	bh=nZhsRm0k3VVog8JuQCgVzGbPj01+PKzaMhAx1jxUhjc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=IQYEvOI+qQtuotQMYnhstZKaoXdUb111wgAs8uT316XMN0a/r7pVh2xPAs59k+z9S
-	 pdtLqoyNbDzelillkqgjVqNCmBRAsATCDn1uudc6w2zs+bhcdbR/N3e4oGf7Q4RbCI
-	 Loahw6RyX/MTiiunbNY0HZk9QJbMm/9uJ46xuEVE=
+	by mail.kernel.org (Postfix) with ESMTP id 0AFAF2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfKLPsu (ORCPT
+        id S1726964AbfKLPuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:48:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfKLPsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:48:50 -0500
-Received: from [192.168.1.25] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BD22214E0;
-        Tue, 12 Nov 2019 15:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573573728;
-        bh=nZhsRm0k3VVog8JuQCgVzGbPj01+PKzaMhAx1jxUhjc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Apej9Fv2AXp7xE2PDzwhxr86/86ICkC1jjgiX63dlsXcfyleEf+9Afntyy51PzVbo
-         VU8H//tx8/kDEAy6booh4Re4TYjNUY/aanyWz6ASlOsv77o54+062nxlG4YdDX5rxN
-         cqLxd2bjbn3PMi8qhUoAJ4N0BCtcbDOT4GmkrufQ=
-Subject: Re: [PATCH 0/2] Enable System Manager on Agilex
-To:     thor.thayer@linux.intel.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     richard.gong@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <9c1cddbf-8b5a-319c-3577-22fb2c092450@kernel.org>
-Date:   Tue, 12 Nov 2019 09:48:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 10:50:16 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58337 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLPuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:50:15 -0500
+X-Originating-IP: 86.206.246.123
+Received: from aptenodytes (lfbn-tou-1-421-123.w86-206.abo.wanadoo.fr [86.206.246.123])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 908FDC0022;
+        Tue, 12 Nov 2019 15:50:12 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 16:50:12 +0100
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        James Hilliard <james.hilliard1@gmail.com>
+Subject: Re: [PATCH] drm/gma500: Fixup fbdev stolen size usage evaluation
+Message-ID: <20191112155012.GE4506@aptenodytes>
+References: <20191107153048.843881-1-paul.kocialkowski@bootlin.com>
+ <CAMeQTsYG+YvXqQqvJvsxT1h0z5zZJbdCtc5wPjUossvwidV=cA@mail.gmail.com>
+ <20191112151157.GD4506@aptenodytes>
 MIME-Version: 1.0
-In-Reply-To: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Il7n/DHsA0sMLmDu"
+Content-Disposition: inline
+In-Reply-To: <20191112151157.GD4506@aptenodytes>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--Il7n/DHsA0sMLmDu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 11/8/19 4:40 PM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> This patchset enables the ARM64 System Manager driver
-> for Agilex.
-> 
-> Thor Thayer (2):
->   arm64: dts: agilex: Add SysMgr compatible
->   arm64: dts: agilex: Add SysMgr to Ethernet nodes
-> 
->  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+Hi,
 
-Applied!
+On Tue 12 Nov 19, 16:11, Paul Kocialkowski wrote:
+> Hi,
+>=20
+> On Tue 12 Nov 19, 11:20, Patrik Jakobsson wrote:
+> > On Thu, Nov 7, 2019 at 4:30 PM Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> > >
+> > > psbfb_probe performs an evaluation of the required size from the stol=
+en
+> > > GTT memory, but gets it wrong in two distinct ways:
+> > > - The resulting size must be page-size-aligned;
+> > > - The size to allocate is derived from the surface dimensions, not th=
+e fb
+> > >   dimensions.
+> > >
+> > > When two connectors are connected with different modes, the smallest =
+will
+> > > be stored in the fb dimensions, but the size that needs to be allocat=
+ed must
+> > > match the largest (surface) dimensions. This is what is used in the a=
+ctual
+> > > allocation code.
+> > >
+> > > Fix this by correcting the evaluation to conform to the two points ab=
+ove.
+> > > It allows correctly switching to 16bpp when one connector is e.g. 192=
+0x1080
+> > > and the other is 1024x768.
+> > >
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > ---
+> > >  drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
+> > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/g=
+ma500/framebuffer.c
+> > > index 218f3bb15276..90237abee088 100644
+> > > --- a/drivers/gpu/drm/gma500/framebuffer.c
+> > > +++ b/drivers/gpu/drm/gma500/framebuffer.c
+> > > @@ -462,6 +462,7 @@ static int psbfb_probe(struct drm_fb_helper *help=
+er,
+> > >                 container_of(helper, struct psb_fbdev, psb_fb_helper);
+> > >         struct drm_device *dev =3D psb_fbdev->psb_fb_helper.dev;
+> > >         struct drm_psb_private *dev_priv =3D dev->dev_private;
+> > > +       unsigned int fb_size;
+> > >         int bytespp;
+> > >
+> > >         bytespp =3D sizes->surface_bpp / 8;
+> > > @@ -471,8 +472,11 @@ static int psbfb_probe(struct drm_fb_helper *hel=
+per,
+> > >         /* If the mode will not fit in 32bit then switch to 16bit to =
+get
+> > >            a console on full resolution. The X mode setting server wi=
+ll
+> > >            allocate its own 32bit GEM framebuffer */
+> > > -       if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
+> > > -                       dev_priv->vram_stolen_size) {
+> > > +       fb_size =3D ALIGN(sizes->surface_width * bytespp, 64) *
+> > > +                 sizes->surface_height;
+> > > +       fb_size =3D ALIGN(fb_size, PAGE_SIZE);
+> > > +
+> > > +       if (fb_size > dev_priv->vram_stolen_size) {
+> >=20
+> > psb_gtt_alloc_range() already aligns by PAGE_SIZE for us. Looks like
+> > we align a couple of times extra for luck. This needs cleaning up
+> > instead of adding even more aligns.
+>=20
+> I'm not sure this is really for luck. As far as I can see, we need to do =
+it
+> properly for this size estimation since it's the final size that will be
+> allocated (and thus needs to be available in whole).
+>=20
+> For the other times there is explicit alignment, they seem justified too:
+> - in psb_gem_create: it is common to pass the aligned size when creating =
+the
+>   associated GEM object with drm_gem_object_init, even though it's probab=
+ly not
+>   crucial given that this is not where allocation actually happens;
+> - in psbfb_create: the full size is apparently only really used to memset=
+ 0
+>   the allocated buffer. I think this makes sense for security reasons (an=
+d not
+>   leak previous contents in the additional space required for alignment).
+>=20
+> What strikes me however is that each call to psb_gtt_alloc_range takes the
+> alignment as a parameter when it's really always PAGE_SIZE, so it should
+> probably just be hardcoded in the call to allocate_resource.
+>=20
+> What do you think?
+>=20
+> > Your size calculation looks correct and indeed makes my 1024x600 +
+> > 1920x1080 setup actually display something, but for some reason I get
+> > an incorrect panning on the smaller screen and stale data on the
+> > surface only visible by the larger CRTC. Any idea what's going on?
+>=20
+> I'm not seeing this immediately, but I definitely have something strange
+> after having printed more lines than the smallest display can handle or
+> scrolling, where more than the actual size of the fb is used.
+>=20
+> Maybe this is related to using the PowerVR-accelerated fb ops, that aren't
+> quite ready for this use case?
+>=20
+> I'll give it a try with psbfb_roll_ops and psbfb_unaccel_ops instead to s=
+ee
+> if it changes something for me. Maybe it would help for you too?
 
-Dinh
+Some quick feedback about that:
+- psbfb_unaccel_ops gives a correct result where the scrolling area is bound
+  to the smallest display;
+- psbfb_roll_ops gives a working scrolling but bound to the largest display
+  (so the current shell line becomes invisible on the smallest one eventual=
+ly);
+- psbfb_ops gives the same issue as above and seems to add artifacts on top.
+
+There's probably limited interest in working on that aspect on our side tho=
+ugh.
+I'd be interested to know if it affects the issue you're seeing though.
+
+Cheers,
+
+Paul
+
+> I suspect that the generic implementation is already bullet-proof for the=
+se
+> kinds of use case.
+>=20
+> Cheers and thanks for the feedback,
+>=20
+> Paul
+>=20
+> >=20
+> > >                  sizes->surface_bpp =3D 16;
+> > >                  sizes->surface_depth =3D 16;
+> > >          }
+> > > --
+> > > 2.23.0
+> > >
+>=20
+> --=20
+> Paul Kocialkowski, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
+
+
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--Il7n/DHsA0sMLmDu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3K1LQACgkQ3cLmz3+f
+v9FCEwf/XEWwxAYDxZCEg77vGI++OJiygsuiXp3KNDxCAdUxBSgECx4fku772WZG
+E4j/DBf1RFmUfoBAh9NMtm0+ruWu4SMKCnWKCz4o+Yt15gZocG8T2n/u6gDMQIEj
+4ajkRXZ9snM0IDXd5WjmPfktayxETGIs9I3IuMSighuvWUUTrIyUm3kXDQZao10h
+MJZvhmCrzUhXG2V1VS+wSdlzFZtLgDbjvk6X7A6SGF2ONFgDIuEK7N3JEzbvFY6a
+SOnq1DunTL62uURGJ8Xtio9XN/OycXSXZGrp7C+Bg146gLpSfZqR1FqBrQ1JyW7K
+ItMdJAD/rjjcJ61DAagf7H4D9npMwQ==
+=6YLs
+-----END PGP SIGNATURE-----
+
+--Il7n/DHsA0sMLmDu--
