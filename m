@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAFAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C4BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB1120656
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DD420659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+oOa8iY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1B8BrrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfKLVVv (ORCPT
+        id S1727206AbfKLVVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:21:51 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54527 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfKLVVt (ORCPT
+        Tue, 12 Nov 2019 16:21:50 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35234 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbfKLVVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:21:49 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z26so4811249wmi.4;
-        Tue, 12 Nov 2019 13:21:48 -0800 (PST)
+        Tue, 12 Nov 2019 16:21:48 -0500
+Received: by mail-wm1-f68.google.com with SMTP id 8so4541962wmo.0;
+        Tue, 12 Nov 2019 13:21:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:subject:date:message-id:in-reply-to:references;
-        bh=k7yjor2EMmJZynb3fnq6oXvNP7d6yGjg6jAPuIWUBQA=;
-        b=m+oOa8iY9vkUipOOVBW8a/KkGz0+sl7M7RCLKx9YRks1w99Pg+PhC66jBRgHSYhZMU
-         /54GEGSuQ2s49sujJZnXK6svyTjfyHbXmzi8lAyPgbhnWQNNo7l+U7miBRs+vlpZBGBJ
-         Xcsgly3Hm9V0Ih8Lamu1rQuh5xBti/7I8UEyLUMLHXVXCBrP936oCaL1xze22mSjoZvh
-         nL+qao1mlSjESUK6KUcA28A6gfsLqTTnPA2bhHmIi6YHUHvL62ib7im/OLzFEe5DFKcE
-         MZnHcjb9qZV4k9QI5Z1zRMhb/A5c9s3kHzg42CQLf8hNz0IwR+i36qhhVqVP4nSb646M
-         2BpA==
+        bh=5SLyH1nDWOPlnVhDgIdXQ2ND4eWF21LKVjlVwt+jC+8=;
+        b=L1B8BrrAkRaYgvqgzKNslsy/tmTX2z+NCLVKjRV6elm1lfHbuCfIQoDe2eu4veWWS7
+         Necyca1bmAaSEbZMgrwA492jfUSI3aPhqBCQOuXofbVegkUnIE+fvURCfgI1bt86wLbO
+         iza8UI1SpmdeGX+EUSTq0XAZ96gcxrxIcIol/oziFhKcSl4+5Bw5Zpe/a2LqwpNVt8t5
+         WSCVoU7Hdq6FjgekXfndMI8Ta549qCAAjEq4G0FRmg9WcrCq7obF7C5n1WtMbB+7IJPZ
+         hsvgw0QjWhfrUvcDavkrz7M2OXCA+BvtE+Ksh5bnYWQ3Pjdizi8jFmcFs7qVQA63/6oL
+         FAHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:subject:date:message-id
          :in-reply-to:references;
-        bh=k7yjor2EMmJZynb3fnq6oXvNP7d6yGjg6jAPuIWUBQA=;
-        b=tvbxNkpafoZQ8CjuIjfqDvlMGtf6H/2IO3h/HEm4nMn5E1dQp9h3bA6CSqG5mzRvOa
-         kCu1PS7IpKUzTLkNLI8ESy/13e39knWLZ3LSyB7AeSxQAaKuxh2xoWNuY4Htd4jrtyp1
-         mAHuytUTuCQBntHHrGdDX1QMrPmoirjqwYlMS4DB374zsjLXCRBZ2NHvyhCyhTbb433Z
-         7ZV42abl2KUTPmjrzFwtxxm35eLnFYgXkNOXJQz4ulahvmf71Oovrh3p+7zkK+YvM4cO
-         qPQpgTkdeYEmNUO4I2x+CsJQF728iMRmxgZhQq3qHWFvgXQnLYQSta7vgoYGBJo5fHMw
-         7Wbg==
-X-Gm-Message-State: APjAAAWCllmP6mNDa3jmB/jLhDEHBiBD+ZDaty25PIZednLSQqf37Lc3
-        Wm/JJwr3Dpnezm7T/VieDiFFOOoo
-X-Google-Smtp-Source: APXvYqxg078+SAqmn/bGZVCAlerv1pjs2W8Dcb4Aj17XpkQvcrVJdgM5hOo37Pyn7JQ7lTkUUMC6Xw==
-X-Received: by 2002:a1c:4d11:: with SMTP id o17mr5851918wmh.170.1573593706792;
-        Tue, 12 Nov 2019 13:21:46 -0800 (PST)
+        bh=5SLyH1nDWOPlnVhDgIdXQ2ND4eWF21LKVjlVwt+jC+8=;
+        b=iRISTCjC1xmx9QVVjhrOGtMFxqW15qCJVMmnVWYIq/2j7fr6b8eRwdPr/ckScL3djP
+         7J1/crDViOPvj4lIgnWdDDbyzVNOffZkQj4uxJt2QddYqiyE4so2dCRwlVhRTRlm9h9m
+         tgtZlLVOvXNWnkDe1X+l5N8FVRU67br6lVq9mD51wwa1yIBWW5uKbsOTrhVq4ccZwpLf
+         zrQLdhvR0XCu6tprRlUdN9pCjXnhzu0FzC1yJ/jlJtOggz5qV//yRz8hJ2gMQXA7PGVu
+         JTfa1WQ2dCIPWnPzojqdG1MQX47SIqyN2NVT8a/wMonBLgss6UwUXxVKzv+oIbEpwkIs
+         FIgQ==
+X-Gm-Message-State: APjAAAXgxjAlZXZ5Iw+/eEYXvnk9+4ub7Lcg2qzDUSCFraNwDsot/s9U
+        tTQtbOqG52IBLVQnzicsjEKhBgT+
+X-Google-Smtp-Source: APXvYqwC156ld0vXOWC7AXdT2zIcV1I4HDFNqh3IdHCI+fy+UGAPfAUjqOKuQk9cuzgvNXislw6KHg==
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr6147544wmj.84.1573593705210;
+        Tue, 12 Nov 2019 13:21:45 -0800 (PST)
 Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.46
+        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 13:21:46 -0800 (PST)
+        Tue, 12 Nov 2019 13:21:43 -0800 (PST)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 7/7] Documentation: Add ITLB_MULTIHIT documentation
-Date:   Tue, 12 Nov 2019 22:21:37 +0100
-Message-Id: <1573593697-25061-8-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 5/7] kvm: Add helper function for creating VM worker threads
+Date:   Tue, 12 Nov 2019 22:21:35 +0100
+Message-Id: <1573593697-25061-6-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
 References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
@@ -68,200 +68,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>
+From: Junaid Shahid <junaids@google.com>
 
-Add the initial ITLB_MULTIHIT documentation.
+Add a function to create a kernel thread associated with a given VM. In
+particular, it ensures that the worker thread inherits the priority and
+cgroups of the calling thread.
 
-[ tglx: Add it to the index so it gets actually built. ]
-
-Signed-off-by: Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>
-Signed-off-by: Nelson D'Souza <nelson.dsouza@linux.intel.com>
+Signed-off-by: Junaid Shahid <junaids@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- Documentation/admin-guide/hw-vuln/index.rst    |   1 +
- Documentation/admin-guide/hw-vuln/multihit.rst | 163 +++++++++++++++++++++++++
- 2 files changed, 164 insertions(+)
- create mode 100644 Documentation/admin-guide/hw-vuln/multihit.rst
+ include/linux/kvm_host.h |  6 ++++
+ virt/kvm/kvm_main.c      | 84 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
 
-diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
-index 0802b1c67452..0795e3c2643f 100644
---- a/Documentation/admin-guide/hw-vuln/index.rst
-+++ b/Documentation/admin-guide/hw-vuln/index.rst
-@@ -13,3 +13,4 @@ are configurable at compile, boot or run time.
-    l1tf
-    mds
-    tsx_async_abort
-+   multihit.rst
-diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
-new file mode 100644
-index 000000000000..ba9988d8bce5
---- /dev/null
-+++ b/Documentation/admin-guide/hw-vuln/multihit.rst
-@@ -0,0 +1,163 @@
-+iTLB multihit
-+=============
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 719fc3e15ea4..52ed5f66e8f9 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1382,4 +1382,10 @@ static inline int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
+ }
+ #endif /* CONFIG_HAVE_KVM_VCPU_RUN_PID_CHANGE */
+ 
++typedef int (*kvm_vm_thread_fn_t)(struct kvm *kvm, uintptr_t data);
 +
-+iTLB multihit is an erratum where some processors may incur a machine check
-+error, possibly resulting in an unrecoverable CPU lockup, when an
-+instruction fetch hits multiple entries in the instruction TLB. This can
-+occur when the page size is changed along with either the physical address
-+or cache type. A malicious guest running on a virtualized system can
-+exploit this erratum to perform a denial of service attack.
++int kvm_vm_create_worker_thread(struct kvm *kvm, kvm_vm_thread_fn_t thread_fn,
++				uintptr_t data, const char *name,
++				struct task_struct **thread_ptr);
 +
+ #endif
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index d6f0696d98ef..8aed32b604d9 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -50,6 +50,7 @@
+ #include <linux/bsearch.h>
+ #include <linux/io.h>
+ #include <linux/lockdep.h>
++#include <linux/kthread.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/ioctl.h>
+@@ -4371,3 +4372,86 @@ void kvm_exit(void)
+ 	kvm_vfio_ops_exit();
+ }
+ EXPORT_SYMBOL_GPL(kvm_exit);
 +
-+Affected processors
-+-------------------
++struct kvm_vm_worker_thread_context {
++	struct kvm *kvm;
++	struct task_struct *parent;
++	struct completion init_done;
++	kvm_vm_thread_fn_t thread_fn;
++	uintptr_t data;
++	int err;
++};
 +
-+Variations of this erratum are present on most Intel Core and Xeon processor
-+models. The erratum is not present on:
++static int kvm_vm_worker_thread(void *context)
++{
++	/*
++	 * The init_context is allocated on the stack of the parent thread, so
++	 * we have to locally copy anything that is needed beyond initialization
++	 */
++	struct kvm_vm_worker_thread_context *init_context = context;
++	struct kvm *kvm = init_context->kvm;
++	kvm_vm_thread_fn_t thread_fn = init_context->thread_fn;
++	uintptr_t data = init_context->data;
++	int err;
 +
-+   - non-Intel processors
++	err = kthread_park(current);
++	/* kthread_park(current) is never supposed to return an error */
++	WARN_ON(err != 0);
++	if (err)
++		goto init_complete;
 +
-+   - Some Atoms (Airmont, Bonnell, Goldmont, GoldmontPlus, Saltwell, Silvermont)
++	err = cgroup_attach_task_all(init_context->parent, current);
++	if (err) {
++		kvm_err("%s: cgroup_attach_task_all failed with err %d\n",
++			__func__, err);
++		goto init_complete;
++	}
 +
-+   - Intel processors that have the PSCHANGE_MC_NO bit set in the
-+     IA32_ARCH_CAPABILITIES MSR.
++	set_user_nice(current, task_nice(init_context->parent));
 +
++init_complete:
++	init_context->err = err;
++	complete(&init_context->init_done);
++	init_context = NULL;
 +
-+Related CVEs
-+------------
++	if (err)
++		return err;
 +
-+The following CVE entry is related to this issue:
++	/* Wait to be woken up by the spawner before proceeding. */
++	kthread_parkme();
 +
-+   ==============  =================================================
-+   CVE-2018-12207  Machine Check Error Avoidance on Page Size Change
-+   ==============  =================================================
++	if (!kthread_should_stop())
++		err = thread_fn(kvm, data);
 +
++	return err;
++}
 +
-+Problem
-+-------
++int kvm_vm_create_worker_thread(struct kvm *kvm, kvm_vm_thread_fn_t thread_fn,
++				uintptr_t data, const char *name,
++				struct task_struct **thread_ptr)
++{
++	struct kvm_vm_worker_thread_context init_context = {};
++	struct task_struct *thread;
 +
-+Privileged software, including OS and virtual machine managers (VMM), are in
-+charge of memory management. A key component in memory management is the control
-+of the page tables. Modern processors use virtual memory, a technique that creates
-+the illusion of a very large memory for processors. This virtual space is split
-+into pages of a given size. Page tables translate virtual addresses to physical
-+addresses.
++	*thread_ptr = NULL;
++	init_context.kvm = kvm;
++	init_context.parent = current;
++	init_context.thread_fn = thread_fn;
++	init_context.data = data;
++	init_completion(&init_context.init_done);
 +
-+To reduce latency when performing a virtual to physical address translation,
-+processors include a structure, called TLB, that caches recent translations.
-+There are separate TLBs for instruction (iTLB) and data (dTLB).
++	thread = kthread_run(kvm_vm_worker_thread, &init_context,
++			     "%s-%d", name, task_pid_nr(current));
++	if (IS_ERR(thread))
++		return PTR_ERR(thread);
 +
-+Under this errata, instructions are fetched from a linear address translated
-+using a 4 KB translation cached in the iTLB. Privileged software modifies the
-+paging structure so that the same linear address using large page size (2 MB, 4
-+MB, 1 GB) with a different physical address or memory type.  After the page
-+structure modification but before the software invalidates any iTLB entries for
-+the linear address, a code fetch that happens on the same linear address may
-+cause a machine-check error which can result in a system hang or shutdown.
++	/* kthread_run is never supposed to return NULL */
++	WARN_ON(thread == NULL);
 +
++	wait_for_completion(&init_context.init_done);
 +
-+Attack scenarios
-+----------------
++	if (!init_context.err)
++		*thread_ptr = thread;
 +
-+Attacks against the iTLB multihit erratum can be mounted from malicious
-+guests in a virtualized system.
-+
-+
-+iTLB multihit system information
-+--------------------------------
-+
-+The Linux kernel provides a sysfs interface to enumerate the current iTLB
-+multihit status of the system:whether the system is vulnerable and which
-+mitigations are active. The relevant sysfs file is:
-+
-+/sys/devices/system/cpu/vulnerabilities/itlb_multihit
-+
-+The possible values in this file are:
-+
-+.. list-table::
-+
-+     * - Not affected
-+       - The processor is not vulnerable.
-+     * - KVM: Mitigation: Split huge pages
-+       - Software changes mitigate this issue.
-+     * - KVM: Vulnerable
-+       - The processor is vulnerable, but no mitigation enabled
-+
-+
-+Enumeration of the erratum
-+--------------------------------
-+
-+A new bit has been allocated in the IA32_ARCH_CAPABILITIES (PSCHANGE_MC_NO) msr
-+and will be set on CPU's which are mitigated against this issue.
-+
-+   =======================================   ===========   ===============================
-+   IA32_ARCH_CAPABILITIES MSR                Not present   Possibly vulnerable,check model
-+   IA32_ARCH_CAPABILITIES[PSCHANGE_MC_NO]    '0'           Likely vulnerable,check model
-+   IA32_ARCH_CAPABILITIES[PSCHANGE_MC_NO]    '1'           Not vulnerable
-+   =======================================   ===========   ===============================
-+
-+
-+Mitigation mechanism
-+-------------------------
-+
-+This erratum can be mitigated by restricting the use of large page sizes to
-+non-executable pages.  This forces all iTLB entries to be 4K, and removes
-+the possibility of multiple hits.
-+
-+In order to mitigate the vulnerability, KVM initially marks all huge pages
-+as non-executable. If the guest attempts to execute in one of those pages,
-+the page is broken down into 4K pages, which are then marked executable.
-+
-+If EPT is disabled or not available on the host, KVM is in control of TLB
-+flushes and the problematic situation cannot happen.  However, the shadow
-+EPT paging mechanism used by nested virtualization is vulnerable, because
-+the nested guest can trigger multiple iTLB hits by modifying its own
-+(non-nested) page tables.  For simplicity, KVM will make large pages
-+non-executable in all shadow paging modes.
-+
-+Mitigation control on the kernel command line and KVM - module parameter
-+------------------------------------------------------------------------
-+
-+The KVM hypervisor mitigation mechanism for marking huge pages as
-+non-executable can be controlled with a module parameter "nx_huge_pages=".
-+The kernel command line allows to control the iTLB multihit mitigations at
-+boot time with the option "kvm.nx_huge_pages=".
-+
-+The valid arguments for these options are:
-+
-+  ==========  ================================================================
-+  force       Mitigation is enabled. In this case, the mitigation implements
-+              non-executable huge pages in Linux kernel KVM module. All huge
-+              pages in the EPT are marked as non-executable.
-+              If a guest attempts to execute in one of those pages, the page is
-+              broken down into 4K pages, which are then marked executable.
-+
-+  off	      Mitigation is disabled.
-+
-+  auto        Enable mitigation only if the platform is affected and the kernel
-+              was not booted with the "mitigations=off" command line parameter.
-+	      This is the default option.
-+  ==========  ================================================================
-+
-+
-+Mitigation selection guide
-+--------------------------
-+
-+1. No virtualization in use
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+   The system is protected by the kernel unconditionally and no further
-+   action is required.
-+
-+2. Virtualization with trusted guests
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+   If the guest comes from a trusted source, you may assume that the guest will
-+   not attempt to maliciously exploit these errata and no further action is
-+   required.
-+
-+3. Virtualization with untrusted guests
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+   If the guest comes from an untrusted source, the guest host kernel will need
-+   to apply iTLB multihit mitigation via the kernel command line or kvm
-+   module parameter.
++	return init_context.err;
++}
 -- 
 1.8.3.1
+
 
