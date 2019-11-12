@@ -2,116 +2,90 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9683FC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8B8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DA421872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4789C2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfKLU1j (ORCPT
+        id S1727124AbfKLU2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:27:39 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15672 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726388AbfKLU1j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:27:39 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACKQcJY111776;
-        Tue, 12 Nov 2019 15:27:35 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w82qsa1k1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 15:27:34 -0500
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xACKQmAE112557;
-        Tue, 12 Nov 2019 15:27:32 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w82qsa1jj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 15:27:32 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xACKQO0Y023436;
-        Tue, 12 Nov 2019 20:27:31 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma05wdc.us.ibm.com with ESMTP id 2w5n369w0t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 20:27:31 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACKRUnQ48366078
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 20:27:30 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DFA2136051;
-        Tue, 12 Nov 2019 20:27:30 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1FB0E136053;
-        Tue, 12 Nov 2019 20:27:29 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 20:27:29 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, jsnitsel@redhat.com,
-        jarkko.sakkinen@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH] tpm_tis: Move setting of TPM_CHIP_FLAG_IRQ into tpm_tis_probe_irq_single
-Date:   Tue, 12 Nov 2019 15:27:25 -0500
-Message-Id: <20191112202725.3009814-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120174
+        Tue, 12 Nov 2019 15:28:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38868 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726388AbfKLU2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 15:28:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4CDE7ACEC;
+        Tue, 12 Nov 2019 20:28:06 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 21:28:06 +0100
+Message-ID: <s5hlfsk7sbt.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v6 2/8] ALSA: Avoid using timespec for struct snd_timer_status
+In-Reply-To: <CAK8P3a1fsC+05i-i77g2aR3bkzprnhbhROLkMPcy=UFfsV3GMw@mail.gmail.com>
+References: <20191112151642.680072-1-arnd@arndb.de>
+        <20191112151642.680072-3-arnd@arndb.de>
+        <s5hblthp0di.wl-tiwai@suse.de>
+        <CAK8P3a1fsC+05i-i77g2aR3bkzprnhbhROLkMPcy=UFfsV3GMw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+On Tue, 12 Nov 2019 21:08:17 +0100,
+Arnd Bergmann wrote:
+> 
+> On Tue, Nov 12, 2019 at 4:42 PM Takashi Iwai <tiwai@suse.de> wrote:
+> 
+> > > @@ -761,6 +761,7 @@ struct snd_timer_params {
+> > >       unsigned char reserved[60];     /* reserved */
+> > >  };
+> > >
+> > > +#ifndef __KERNEL__
+> > >  struct snd_timer_status {
+> > >       struct timespec tstamp;         /* Timestamp - last update */
+> > >       unsigned int resolution;        /* current period resolution in ns */
+> >
+> > Do we need this ifndef?  Is it for stopping the reference of struct
+> > snd_timer_status from the kernel code but only 32 and 64 variants?
+> 
+> Well spotted, this is indeed a very recent change I did to the patch.
+> The idea here is to hide any use of 'time_t', 'timespec' and 'timeval'
+> from kernel compilation. These types are now defined in an incompatible
+> way by libc, so we have to remove them from the kernel's uapi headers.
+> I would prefer to remove them completely from the kernel (rather than
+> moving them from uapi to internal headers) to make it harder to write
+> y2038-incompatible code, and with the 90 patches I sent this week,
+> all users are gone from the kernel (this series was the last part).
 
-Move the setting of the TPM_CHIP_FLAG_IRQ for irq probing into
-tpm_tis_probe_irq_single before calling tpm_tis_gen_interrupt.
-This move handles error conditions better that may arise if anything
-before fails in tpm_tis_probe_irq_single.
+Could you put this trick in the changelog, too?
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Suggested-by: Jerry Snitselaar <jsnitsel@redhat.com>
----
- drivers/char/tpm/tpm_tis_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Interestingly, hiding snd_timer_status from the drivers /also/ caught
+> a but in a file when I had missed a reference that needed to be converted
+> to snd_timer_status64.
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index 8af2cee1a762..6b6605890c7d 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -790,6 +790,7 @@ static int tpm_tis_probe_irq_single(struct tpm_chip *chip, u32 intmask,
- 		return rc;
- 
- 	priv->irq_tested = false;
-+	chip->flags |= TPM_CHIP_FLAG_IRQ;
- 
- 	/* Generate an interrupt by having the core call through to
- 	 * tpm_tis_send
-@@ -1060,7 +1061,6 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
- 		}
- 
- 		tpm_chip_start(chip);
--		chip->flags |= TPM_CHIP_FLAG_IRQ;
- 		if (irq) {
- 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
- 						 irq);
--- 
-2.14.5
+Heh, that's no surprising, proving the usefulness :)
 
+
+thanks,
+
+Takashi
