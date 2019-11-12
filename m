@@ -2,352 +2,253 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A964AC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABD0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB63214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:45:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bfZhSA/0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pEmT681A"
+	by mail.kernel.org (Postfix) with ESMTP id 5EC5F206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfKLUpV (ORCPT
+        id S1727334AbfKLUpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:45:21 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:42944 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfKLUpV (ORCPT
+        Tue, 12 Nov 2019 15:45:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42675 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLUpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:45:21 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 065E160591; Tue, 12 Nov 2019 20:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573591520;
-        bh=HcsWyKxLbddnmzEeAur9rRQ0coSDhcTWM8ccpY98p94=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bfZhSA/01vOMIihQh/tkkNW1xk8tWdkDa46/EacUVgIPy00/7B4xWuArcpCMzq/65
-         Vr32MycPEINjPK2rQLGJNH+rx8ecDFpnIB5CxeX/52i/dZj3tyzTu/NIjZwso3hXCF
-         zRRKKbhPqBwE1uar9NKGUrF8U3xM00vFC/hItwFw=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CC16D60CED;
-        Tue, 12 Nov 2019 20:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573591518;
-        bh=HcsWyKxLbddnmzEeAur9rRQ0coSDhcTWM8ccpY98p94=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEmT681AMxReL0V7OgWkP9uNEBq8cn6mg4p3uSAdWhdr9l7jmqF21SPIbmU52MBli
-         +IXx9p1WqKNymCqxAh1PaAcf1UIVxHDmj3a+4KnhXR0faaxMnBJBOSyPrO2mylDcwS
-         t3zKTG3pQA+uVDi6hOZMTcCudF77KANRN5mVuysk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CC16D60CED
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v9 3/4] dt-bindings: clock: Add support for the MSM8998 mmcc
-Date:   Tue, 12 Nov 2019 13:45:08 -0700
-Message-Id: <1573591508-15280-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
-References: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
+        Tue, 12 Nov 2019 15:45:33 -0500
+Received: by mail-ot1-f67.google.com with SMTP id b16so15549664otk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:45:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qp7qCKznyn9kzrOI/DVJJyUZ22We1ef8DoOVvNKUl/E=;
+        b=gjREWoMdNeB+x8bKC4cefMQ4HUE2uJmwn60dXAluI4bwxIG79Sid9DRtHEUEZcT8vB
+         JpvHs//8usykmP5V3Izq9MqTeQY+qU86djzmT0MUQFLhjadubrqvyHOS1Jz6KPdVUEIG
+         2OKZTxgbocrznPO6NHBVpKdcxrRdzHbtt9BlbtSBqvnNXZi5D2yAXknKW0brEH9lJifx
+         6LBBiZTjcBdGoLIKi+r8IzDJ/d3kObHGiOa6IFCGdEV7oVMhiPaRcO2g9dL2rZ9erPMD
+         GJJxYMA9nmboXZWZX2KxdU49id3WjIzEPnaFnQ5PqE9GIMxFqWeKbHw15oxJWvCYv5Rn
+         NZuQ==
+X-Gm-Message-State: APjAAAWy7u7evv2R3keVZpmSQmmfUu3KuTofyQr99Wub8iYIheWay31y
+        xUnOXUMlxVoTITXPGKkwK/1SQNPU
+X-Google-Smtp-Source: APXvYqyNCZwpCdtVPH7MngcFqeUZl137d8xx0Q9C7PLGO8PCh0NCAX7+aekEjSuJsDrDDZaMt+uxMg==
+X-Received: by 2002:a05:6830:1e53:: with SMTP id e19mr27723674otj.161.1573591530174;
+        Tue, 12 Nov 2019 12:45:30 -0800 (PST)
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
+        by smtp.gmail.com with ESMTPSA id n5sm4430753oie.16.2019.11.12.12.45.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 12:45:29 -0800 (PST)
+Received: by mail-oi1-f174.google.com with SMTP id n14so16089277oie.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:45:29 -0800 (PST)
+X-Received: by 2002:aca:4891:: with SMTP id v139mr748524oia.175.1573591528822;
+ Tue, 12 Nov 2019 12:45:28 -0800 (PST)
+MIME-Version: 1.0
+References: <20191108130123.6839-1-linux@rasmusvillemoes.dk> <CADRPPNSeEvFnVzGeZW6RPo_LP8mq14G2ZmmDAuwNdC3hT8Ekcg@mail.gmail.com>
+In-Reply-To: <CADRPPNSeEvFnVzGeZW6RPo_LP8mq14G2ZmmDAuwNdC3hT8Ekcg@mail.gmail.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 12 Nov 2019 14:45:17 -0600
+X-Gmail-Original-Message-ID: <CADRPPNQFiPMvRcSkVgM8p2_AxhqBOVFus=cX5UC-8NYYUvf+0A@mail.gmail.com>
+Message-ID: <CADRPPNQFiPMvRcSkVgM8p2_AxhqBOVFus=cX5UC-8NYYUvf+0A@mail.gmail.com>
+Subject: Re: [PATCH v4 00/47] QUICC Engine support on ARM and ARM64
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        David Miller <davem@davemloft.net>,
+        Scott Wood <oss@buserror.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Timur Tabi <timur@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the multimedia clock controller found on MSM8998.
+On Mon, Nov 11, 2019 at 5:39 PM Li Yang <leoyang.li@nxp.com> wrote:
+>
+> On Fri, Nov 8, 2019 at 7:05 AM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+> >
+>
+> I'm generally ok with these enhencements and cleanups.  But as the
+> whole patch series touched multiple subsystems, I would like to
+> collect the Acked-by from Scott, Greg and David if we want the whole
+> series to go through the fsl/soc tree.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/clock/qcom,mmcc.yaml       |  36 ++++
- include/dt-bindings/clock/qcom,mmcc-msm8998.h      | 210 +++++++++++++++++++++
- 2 files changed, 246 insertions(+)
- create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+Rasmus,
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-index 61ed4a2..520d4e0 100644
---- a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-@@ -22,6 +22,31 @@ properties:
-        - qcom,mmcc-msm8960
-        - qcom,mmcc-msm8974
-        - qcom,mmcc-msm8996
-+       - qcom,mmcc-msm8998
-+
-+  clocks:
-+    items:
-+      - description: Board XO source
-+      - description: Global PLL 0 clock
-+      - description: DSI phy instance 0 dsi clock
-+      - description: DSI phy instance 0 byte clock
-+      - description: DSI phy instance 1 dsi clock
-+      - description: DSI phy instance 1 byte clock
-+      - description: HDMI phy PLL clock
-+      - description: DisplayPort phy PLL vco clock
-+      - description: DisplayPort phy PLL link clock
-+
-+  clock-names:
-+    items:
-+      - const: xo
-+      - const: gpll0
-+      - const: dsi0dsi
-+      - const: dsi0byte
-+      - const: dsi1dsi
-+      - const: dsi1byte
-+      - const: hdmipll
-+      - const: dpvco
-+      - const: dplink
- 
-   '#clock-cells':
-     const: 1
-@@ -46,6 +71,17 @@ required:
-   - '#reset-cells'
-   - '#power-domain-cells'
- 
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: qcom,mmcc-msm8998
-+
-+then:
-+  required:
-+    - clocks
-+    - clock-names
-+
- examples:
-   # Example for MMCC for MSM8960:
-   - |
-diff --git a/include/dt-bindings/clock/qcom,mmcc-msm8998.h b/include/dt-bindings/clock/qcom,mmcc-msm8998.h
-new file mode 100644
-index 0000000..ecbafdb
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,mmcc-msm8998.h
-@@ -0,0 +1,210 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_MSM_MMCC_8998_H
-+#define _DT_BINDINGS_CLK_MSM_MMCC_8998_H
-+
-+#define MMPLL0						0
-+#define MMPLL0_OUT_EVEN					1
-+#define MMPLL1						2
-+#define MMPLL1_OUT_EVEN					3
-+#define MMPLL3						4
-+#define MMPLL3_OUT_EVEN					5
-+#define MMPLL4						6
-+#define MMPLL4_OUT_EVEN					7
-+#define MMPLL5						8
-+#define MMPLL5_OUT_EVEN					9
-+#define MMPLL6						10
-+#define MMPLL6_OUT_EVEN					11
-+#define MMPLL7						12
-+#define MMPLL7_OUT_EVEN					13
-+#define MMPLL10						14
-+#define MMPLL10_OUT_EVEN				15
-+#define BYTE0_CLK_SRC					16
-+#define BYTE1_CLK_SRC					17
-+#define CCI_CLK_SRC					18
-+#define CPP_CLK_SRC					19
-+#define CSI0_CLK_SRC					20
-+#define CSI1_CLK_SRC					21
-+#define CSI2_CLK_SRC					22
-+#define CSI3_CLK_SRC					23
-+#define CSIPHY_CLK_SRC					24
-+#define CSI0PHYTIMER_CLK_SRC				25
-+#define CSI1PHYTIMER_CLK_SRC				26
-+#define CSI2PHYTIMER_CLK_SRC				27
-+#define DP_AUX_CLK_SRC					28
-+#define DP_CRYPTO_CLK_SRC				29
-+#define DP_LINK_CLK_SRC					30
-+#define DP_PIXEL_CLK_SRC				31
-+#define ESC0_CLK_SRC					32
-+#define ESC1_CLK_SRC					33
-+#define EXTPCLK_CLK_SRC					34
-+#define FD_CORE_CLK_SRC					35
-+#define HDMI_CLK_SRC					36
-+#define JPEG0_CLK_SRC					37
-+#define MAXI_CLK_SRC					38
-+#define MCLK0_CLK_SRC					39
-+#define MCLK1_CLK_SRC					40
-+#define MCLK2_CLK_SRC					41
-+#define MCLK3_CLK_SRC					42
-+#define MDP_CLK_SRC					43
-+#define VSYNC_CLK_SRC					44
-+#define AHB_CLK_SRC					45
-+#define AXI_CLK_SRC					46
-+#define PCLK0_CLK_SRC					47
-+#define PCLK1_CLK_SRC					48
-+#define ROT_CLK_SRC					49
-+#define VIDEO_CORE_CLK_SRC				50
-+#define VIDEO_SUBCORE0_CLK_SRC				51
-+#define VIDEO_SUBCORE1_CLK_SRC				52
-+#define VFE0_CLK_SRC					53
-+#define VFE1_CLK_SRC					54
-+#define MISC_AHB_CLK					55
-+#define VIDEO_CORE_CLK					56
-+#define VIDEO_AHB_CLK					57
-+#define VIDEO_AXI_CLK					58
-+#define VIDEO_MAXI_CLK					59
-+#define VIDEO_SUBCORE0_CLK				60
-+#define VIDEO_SUBCORE1_CLK				61
-+#define MDSS_AHB_CLK					62
-+#define MDSS_HDMI_DP_AHB_CLK				63
-+#define MDSS_AXI_CLK					64
-+#define MDSS_PCLK0_CLK					65
-+#define MDSS_PCLK1_CLK					66
-+#define MDSS_MDP_CLK					67
-+#define MDSS_MDP_LUT_CLK				68
-+#define MDSS_EXTPCLK_CLK				69
-+#define MDSS_VSYNC_CLK					70
-+#define MDSS_HDMI_CLK					71
-+#define MDSS_BYTE0_CLK					72
-+#define MDSS_BYTE1_CLK					73
-+#define MDSS_ESC0_CLK					74
-+#define MDSS_ESC1_CLK					75
-+#define MDSS_ROT_CLK					76
-+#define MDSS_DP_LINK_CLK				77
-+#define MDSS_DP_LINK_INTF_CLK				78
-+#define MDSS_DP_CRYPTO_CLK				79
-+#define MDSS_DP_PIXEL_CLK				80
-+#define MDSS_DP_AUX_CLK					81
-+#define MDSS_BYTE0_INTF_CLK				82
-+#define MDSS_BYTE1_INTF_CLK				83
-+#define CAMSS_CSI0PHYTIMER_CLK				84
-+#define CAMSS_CSI1PHYTIMER_CLK				85
-+#define CAMSS_CSI2PHYTIMER_CLK				86
-+#define CAMSS_CSI0_CLK					87
-+#define CAMSS_CSI0_AHB_CLK				88
-+#define CAMSS_CSI0RDI_CLK				89
-+#define CAMSS_CSI0PIX_CLK				90
-+#define CAMSS_CSI1_CLK					91
-+#define CAMSS_CSI1_AHB_CLK				92
-+#define CAMSS_CSI1RDI_CLK				93
-+#define CAMSS_CSI1PIX_CLK				94
-+#define CAMSS_CSI2_CLK					95
-+#define CAMSS_CSI2_AHB_CLK				96
-+#define CAMSS_CSI2RDI_CLK				97
-+#define CAMSS_CSI2PIX_CLK				98
-+#define CAMSS_CSI3_CLK					99
-+#define CAMSS_CSI3_AHB_CLK				100
-+#define CAMSS_CSI3RDI_CLK				101
-+#define CAMSS_CSI3PIX_CLK				102
-+#define CAMSS_ISPIF_AHB_CLK				103
-+#define CAMSS_CCI_CLK					104
-+#define CAMSS_CCI_AHB_CLK				105
-+#define CAMSS_MCLK0_CLK					106
-+#define CAMSS_MCLK1_CLK					107
-+#define CAMSS_MCLK2_CLK					108
-+#define CAMSS_MCLK3_CLK					109
-+#define CAMSS_TOP_AHB_CLK				110
-+#define CAMSS_AHB_CLK					111
-+#define CAMSS_MICRO_AHB_CLK				112
-+#define CAMSS_JPEG0_CLK					113
-+#define CAMSS_JPEG_AHB_CLK				114
-+#define CAMSS_JPEG_AXI_CLK				115
-+#define CAMSS_VFE0_AHB_CLK				116
-+#define CAMSS_VFE1_AHB_CLK				117
-+#define CAMSS_VFE0_CLK					118
-+#define CAMSS_VFE1_CLK					119
-+#define CAMSS_CPP_CLK					120
-+#define CAMSS_CPP_AHB_CLK				121
-+#define CAMSS_VFE_VBIF_AHB_CLK				122
-+#define CAMSS_VFE_VBIF_AXI_CLK				123
-+#define CAMSS_CPP_AXI_CLK				124
-+#define CAMSS_CPP_VBIF_AHB_CLK				125
-+#define CAMSS_CSI_VFE0_CLK				126
-+#define CAMSS_CSI_VFE1_CLK				127
-+#define CAMSS_VFE0_STREAM_CLK				128
-+#define CAMSS_VFE1_STREAM_CLK				129
-+#define CAMSS_CPHY_CSID0_CLK				130
-+#define CAMSS_CPHY_CSID1_CLK				131
-+#define CAMSS_CPHY_CSID2_CLK				132
-+#define CAMSS_CPHY_CSID3_CLK				133
-+#define CAMSS_CSIPHY0_CLK				134
-+#define CAMSS_CSIPHY1_CLK				135
-+#define CAMSS_CSIPHY2_CLK				136
-+#define FD_CORE_CLK					137
-+#define FD_CORE_UAR_CLK					138
-+#define FD_AHB_CLK					139
-+#define MNOC_AHB_CLK					140
-+#define BIMC_SMMU_AHB_CLK				141
-+#define BIMC_SMMU_AXI_CLK				142
-+#define MNOC_MAXI_CLK					143
-+#define VMEM_MAXI_CLK					144
-+#define VMEM_AHB_CLK					145
-+
-+#define SPDM_BCR					0
-+#define SPDM_RM_BCR					1
-+#define MISC_BCR					2
-+#define VIDEO_TOP_BCR					3
-+#define THROTTLE_VIDEO_BCR				4
-+#define MDSS_BCR					5
-+#define THROTTLE_MDSS_BCR				6
-+#define CAMSS_PHY0_BCR					7
-+#define CAMSS_PHY1_BCR					8
-+#define CAMSS_PHY2_BCR					9
-+#define CAMSS_CSI0_BCR					10
-+#define CAMSS_CSI0RDI_BCR				11
-+#define CAMSS_CSI0PIX_BCR				12
-+#define CAMSS_CSI1_BCR					13
-+#define CAMSS_CSI1RDI_BCR				14
-+#define CAMSS_CSI1PIX_BCR				15
-+#define CAMSS_CSI2_BCR					16
-+#define CAMSS_CSI2RDI_BCR				17
-+#define CAMSS_CSI2PIX_BCR				18
-+#define CAMSS_CSI3_BCR					19
-+#define CAMSS_CSI3RDI_BCR				20
-+#define CAMSS_CSI3PIX_BCR				21
-+#define CAMSS_ISPIF_BCR					22
-+#define CAMSS_CCI_BCR					23
-+#define CAMSS_TOP_BCR					24
-+#define CAMSS_AHB_BCR					25
-+#define CAMSS_MICRO_BCR					26
-+#define CAMSS_JPEG_BCR					27
-+#define CAMSS_VFE0_BCR					28
-+#define CAMSS_VFE1_BCR					29
-+#define CAMSS_VFE_VBIF_BCR				30
-+#define CAMSS_CPP_TOP_BCR				31
-+#define CAMSS_CPP_BCR					32
-+#define CAMSS_CSI_VFE0_BCR				33
-+#define CAMSS_CSI_VFE1_BCR				34
-+#define CAMSS_FD_BCR					35
-+#define THROTTLE_CAMSS_BCR				36
-+#define MNOCAHB_BCR					37
-+#define MNOCAXI_BCR					38
-+#define BMIC_SMMU_BCR					39
-+#define MNOC_MAXI_BCR					40
-+#define VMEM_BCR					41
-+#define BTO_BCR						42
-+
-+#define VIDEO_TOP_GDSC		1
-+#define VIDEO_SUBCORE0_GDSC	2
-+#define VIDEO_SUBCORE1_GDSC	3
-+#define MDSS_GDSC		4
-+#define CAMSS_TOP_GDSC		5
-+#define CAMSS_VFE0_GDSC		6
-+#define CAMSS_VFE1_GDSC		7
-+#define CAMSS_CPP_GDSC		8
-+#define BIMC_SMMU_GDSC		9
-+
-+#endif
--- 
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Since the patches also touched net and serial subsystem.  Can you also
+repost these patches(maybe just related ones) onto netdev and
+linux-serial mailing list?
 
+Regards,
+Leo
+>
+> Also Qiang, can you help to test the latest version and provide you
+> Tested-by?  Thanks.
+>
+> > There have been several attempts in the past few years to allow
+> > building the QUICC engine drivers for platforms other than PPC. This
+> > is yet another attempt.
+> >
+> > v3 can be found here: https://lore.kernel.org/lkml/20191101124210.14510-1-linux@rasmusvillemoes.dk/
+> >
+> > v4 adds a some patches to fix (ab)use of IS_ERR_VALUE which fails when
+> > sizeof(u32) != sizeof(long), i.e. on 64-bit platforms. Freescale
+> > drivers are some of the last holdouts using that macro (outside of
+> > arch/ and core mm code), so I decided trying to simply get rid of it
+> > instead of papering over it by using a temporary long to store the
+> > result in. Doing that I stumbled on some other things that should be
+> > fixed. These are the new patches 34-45.
+> >
+> > Patch 35 from v3 (which added a PPC32 dependency to FSL_UCC_HDLC) is
+> > gone from this version, so that that driver can indeed now be built
+> > for arm and arm64.
+> >
+> > 1-5 are about replacing in_be32 etc. in the core QE code (drivers/soc/fsl/qe).
+> >
+> > 6-8 handle miscellaneous other ppcisms.
+> >
+> > 9-21 deal with qe_ic: Simplifying the driver significantly by removing
+> > unused code, and removing the platform-specific initialization from
+> > arch/powerpc/.
+> >
+> > 22-25 deal with raw access to devicetree properties in native endianness.
+> >
+> > 26-33 makes drivers/tty/serial/ucc_uart.c (CONFIG_SERIAL_QE) ready to build on arm.
+> >
+> > 34-45 deal with IS_ERR_VALUE() and some other things found while
+> > digging around that part of the code.
+> >
+> > 46 adds a PPC32 dependency to UCC_GETH - it has some of the same
+> > issues that have been fixed in the ucc_uart and ucc_hdlc cases. Nobody
+> > has requested that I allow that driver to be built for arm{,64}, so
+> > instead of growing this series even bigger, I kept that addition. It's
+> > trivial to remove if somebody cares enough to fix the build
+> > errors/warnings and actually has a platform to test the result on.
+> >
+> > Finally patch 47 lifts the PPC32 restriction from QUICC_ENGINE. At the
+> > request of Li Yang, it doesn't remove the PPC32 dependency but instead
+> > changes it to PPC32 || ARM || ARM64 (or COMPILE_TEST), i.e. listing
+> > the platforms that may have a QE.
+> >
+> > The series has been built and booted on both an mpc8309-based platform
+> > (ppc) as well as an ls1021a-based platform (arm). The core QE code is
+> > exercised on both, while I could only test the ucc_uart on arm, since
+> > the uarts are not wired up on our mpc8309 board. Qiang Zhao reports
+> > that the ucc_hdlc driver does indeed work on a ls1043ardb (arm64)
+> > board, I hope he'll formally add a Tested-by: to the relevant patches
+> > since I don't have any arm64 board with QE.
+> >
+> > Rasmus Villemoes (47):
+> >   soc: fsl: qe: remove space-before-tab
+> >   soc: fsl: qe: drop volatile qualifier of struct qe_ic::regs
+> >   soc: fsl: qe: rename qe_(clr/set/clrset)bit* helpers
+> >   soc: fsl: qe: introduce qe_io{read,write}* wrappers
+> >   soc: fsl: qe: avoid ppc-specific io accessors
+> >   soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
+> >   soc: fsl: qe: qe.c: guard use of pvr_version_is() with CONFIG_PPC32
+> >   soc: fsl: qe: drop unneeded #includes
+> >   soc: fsl: qe: drop assign-only high_active in qe_ic_init
+> >   soc: fsl: qe: remove pointless sysfs registration in qe_ic.c
+> >   soc: fsl: qe: use qe_ic_cascade_{low,high}_mpic also on 83xx
+> >   soc: fsl: qe: move calls of qe_ic_init out of arch/powerpc/
+> >   powerpc/83xx: remove mpc83xx_ipic_and_qe_init_IRQ
+> >   powerpc/85xx: remove mostly pointless mpc85xx_qe_init()
+>
+> Scott,
+> What do you think about the PPC changes?
+>
+> >   soc: fsl: qe: move qe_ic_cascade_* functions to qe_ic.c
+> >   soc: fsl: qe: rename qe_ic_cascade_low_mpic -> qe_ic_cascade_low
+> >   soc: fsl: qe: remove unused qe_ic_set_* functions
+> >   soc: fsl: qe: don't use NO_IRQ in qe_ic.c
+> >   soc: fsl: qe: make qe_ic_get_{low,high}_irq static
+> >   soc: fsl: qe: simplify qe_ic_init()
+> >   soc: fsl: qe: merge qe_ic.h headers into qe_ic.c
+> >   soc: fsl: qe: qe.c: use of_property_read_* helpers
+> >   soc: fsl: qe: qe_io.c: don't open-code of_parse_phandle()
+> >   soc: fsl: qe: qe_io.c: access device tree property using be32_to_cpu
+> >   soc: fsl: qe: qe_io.c: use of_property_read_u32() in par_io_init()
+> >   soc: fsl: move cpm.h from powerpc/include/asm to include/soc/fsl
+> >   soc/fsl/qe/qe.h: update include path for cpm.h
+> >   serial: ucc_uart: explicitly include soc/fsl/cpm.h
+> >   serial: ucc_uart: replace ppc-specific IO accessors
+> >   serial: ucc_uart: factor out soft_uart initialization
+> >   serial: ucc_uart: stub out soft_uart_init for !CONFIG_PPC32
+> >   serial: ucc_uart: use of_property_read_u32() in ucc_uart_probe()
+> >   serial: ucc_uart: access __be32 field using be32_to_cpu
+>
+> Greg and Timur,
+> What do you think about these serial changes.
+>
+> >   soc: fsl: qe: change return type of cpm_muram_alloc() to s32
+> >   soc: fsl: qe: make cpm_muram_free() return void
+> >   soc: fsl: qe: make cpm_muram_free() ignore a negative offset
+> >   soc: fsl: qe: drop broken lazy call of cpm_muram_init()
+> >   soc: fsl: qe: refactor cpm_muram_alloc_common to prevent BUG on error
+> >     path
+> >   soc: fsl: qe: avoid IS_ERR_VALUE in ucc_slow.c
+> >   soc: fsl: qe: drop use of IS_ERR_VALUE in qe_sdma_init()
+> >   soc: fsl: qe: drop pointless check in qe_sdma_init()
+> >   soc: fsl: qe: avoid IS_ERR_VALUE in ucc_fast.c
+> >   net/wan/fsl_ucc_hdlc: avoid use of IS_ERR_VALUE()
+> >   net/wan/fsl_ucc_hdlc: fix reading of __be16 registers
+> >   net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
+> >   net: ethernet: freescale: make UCC_GETH explicitly depend on PPC32
+>
+> David and Qiang,
+> What do you think of the net changes?
+>
+> >   soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
+> >
+> >  arch/powerpc/include/asm/cpm.h                | 172 +-------
+> >  arch/powerpc/platforms/83xx/km83xx.c          |   3 +-
+> >  arch/powerpc/platforms/83xx/misc.c            |  23 --
+> >  arch/powerpc/platforms/83xx/mpc832x_mds.c     |   3 +-
+> >  arch/powerpc/platforms/83xx/mpc832x_rdb.c     |   3 +-
+> >  arch/powerpc/platforms/83xx/mpc836x_mds.c     |   3 +-
+> >  arch/powerpc/platforms/83xx/mpc836x_rdk.c     |   3 +-
+> >  arch/powerpc/platforms/83xx/mpc83xx.h         |   7 -
+> >  arch/powerpc/platforms/85xx/common.c          |  23 --
+> >  arch/powerpc/platforms/85xx/corenet_generic.c |  12 -
+> >  arch/powerpc/platforms/85xx/mpc85xx.h         |   2 -
+> >  arch/powerpc/platforms/85xx/mpc85xx_mds.c     |  28 --
+> >  arch/powerpc/platforms/85xx/mpc85xx_rdb.c     |  18 -
+> >  arch/powerpc/platforms/85xx/twr_p102x.c       |  16 -
+> >  drivers/net/ethernet/freescale/Kconfig        |   2 +-
+> >  drivers/net/wan/fsl_ucc_hdlc.c                |  23 +-
+> >  drivers/net/wan/fsl_ucc_hdlc.h                |   2 +-
+> >  drivers/soc/fsl/qe/Kconfig                    |   3 +-
+> >  drivers/soc/fsl/qe/gpio.c                     |  34 +-
+> >  drivers/soc/fsl/qe/qe.c                       | 104 ++---
+> >  drivers/soc/fsl/qe/qe_common.c                |  50 +--
+> >  drivers/soc/fsl/qe/qe_ic.c                    | 285 ++++++-------
+> >  drivers/soc/fsl/qe/qe_ic.h                    |  99 -----
+> >  drivers/soc/fsl/qe/qe_io.c                    |  70 ++--
+> >  drivers/soc/fsl/qe/qe_tdm.c                   |   8 +-
+> >  drivers/soc/fsl/qe/ucc.c                      |  26 +-
+> >  drivers/soc/fsl/qe/ucc_fast.c                 |  86 ++--
+> >  drivers/soc/fsl/qe/ucc_slow.c                 |  60 ++-
+> >  drivers/soc/fsl/qe/usb.c                      |   2 +-
+> >  drivers/tty/serial/ucc_uart.c                 | 383 +++++++++---------
+> >  include/soc/fsl/cpm.h                         | 171 ++++++++
+> >  include/soc/fsl/qe/qe.h                       |  59 ++-
+> >  include/soc/fsl/qe/qe_ic.h                    | 135 ------
+> >  include/soc/fsl/qe/ucc_fast.h                 |   4 +-
+> >  include/soc/fsl/qe/ucc_slow.h                 |   6 +-
+> >  35 files changed, 770 insertions(+), 1158 deletions(-)
+> >  delete mode 100644 drivers/soc/fsl/qe/qe_ic.h
+> >  create mode 100644 include/soc/fsl/cpm.h
+> >  delete mode 100644 include/soc/fsl/qe/qe_ic.h
+> >
+> > --
+> > 2.23.0
+> >
