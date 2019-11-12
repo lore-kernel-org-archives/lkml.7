@@ -2,159 +2,120 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8584C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E0EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B21E20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:23:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3piHuow"
+	by mail.kernel.org (Postfix) with ESMTP id D1B3E206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKLQXu (ORCPT
+        id S1727189AbfKLQXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:23:50 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:37192 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfKLQXu (ORCPT
+        Tue, 12 Nov 2019 11:23:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50972 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727069AbfKLQXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:23:50 -0500
-Received: by mail-yw1-f66.google.com with SMTP id v84so6618881ywc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:23:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Q1cQSXXccuUTN1Ss9zMJqdgVizhYDIhjY92yJUaC6I=;
-        b=O3piHuow5ELlk8jDb5ZoGxiSQ5RhIR/9v5R0S9tcVkF625c5F2WV4F0L4GHHgmeuQX
-         Dm/0PuHlzjay/3EnbTB9HSxsYCV7Y2DFFhRqoItbnp6Ri8b/o1S2+kGiv4RoYFqiuA+w
-         daYR3Rdl48LwhuyDQaE6i/GQq4kiXnFbOJAJcFhU69XFgtntpty6+29BfM9yTPc53OGB
-         bMWqXc7+OqQFhkXWaewAHJ1GkKeyRvLDYptaf+LgAqGmtiyX97tsjlE5rOStoGLeBbUg
-         RDn3Z1j147Et2O3iPQ1h+aK6IR1ESrYQhHSJvQxT59Ay0ToeqJ3vPxV585mKB6RV77zI
-         MioA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Q1cQSXXccuUTN1Ss9zMJqdgVizhYDIhjY92yJUaC6I=;
-        b=X5anxE/4bqWyBGPUoCX0St2sT1/8JjDxoyJR1lh1Gvb2YAIsQqVeVP+6EvMb7FsxPq
-         9pxw9kcIwn1nZLQWTcqVuPDbn8NM5a+7neIu2mASvDqm9qDWrjQM95a47tdKLGSlQPcx
-         6vyu7FMSBhZ+CDZYOUIq18TLCg5sXsT162EwpZr7TSqG1sc4DElJ2EPXbb/5mphze8+f
-         1W7nn6i+SjgaF8jpx5MW0QpoDlxZOJ0PtfFlfxeesl3XM/nhGuZnBn5F6a3vFBry25Zo
-         +ZNfFX49eRLQ++Nd6CTClqGcaQHhRg8YWiIVIVbamodXxG8glRNmG1nlvOixI4R515Yd
-         T2gQ==
-X-Gm-Message-State: APjAAAWrTyhMGdYfOTu6hYM7xrDIYuJIPCyBqyNkxAAiiKf1ZD077wFL
-        e/rBZRKo4SnuXn04aO67GBTDhkTdq7+jUPcXhHA=
-X-Google-Smtp-Source: APXvYqzHQVZzOwk+ZXxtjpuNnuKivOPZNwCB1YjbeiRnIyYtvIT4zVdcLGWSNiSNBM0w0xEsxpb1ewBn8T3ZRtc31rA=
-X-Received: by 2002:a81:ad60:: with SMTP id l32mr21343115ywk.388.1573575829291;
- Tue, 12 Nov 2019 08:23:49 -0800 (PST)
+        Tue, 12 Nov 2019 11:23:54 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACGJW7S144210
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:23:53 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7ya62vus-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 11:23:53 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
+        Tue, 12 Nov 2019 16:23:51 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Nov 2019 16:23:49 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACGNmEJ61276290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 16:23:48 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 325244203F;
+        Tue, 12 Nov 2019 16:23:48 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3F334204C;
+        Tue, 12 Nov 2019 16:23:41 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.34.195])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 16:23:41 +0000 (GMT)
+Subject: Re: [PATCH] fs: ext4: remove unused variable warning in
+ parse_options()
+To:     Olof Johansson <olof@lixom.net>, tytso@mit.edu,
+        adilger.kernel@dilger.ca
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>
+References: <20191111022523.34256-1-olof@lixom.net>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Tue, 12 Nov 2019 21:53:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20191108004448.5386-1-jcmvbkbc@gmail.com> <20191112094917.fl57dhtennwo2tlz@pathway.suse.cz>
-In-Reply-To: <20191112094917.fl57dhtennwo2tlz@pathway.suse.cz>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Tue, 12 Nov 2019 08:23:38 -0800
-Message-ID: <CAMo8Bf+Q5-8qBJSkvwa9xoh07eDUDD45suD+uZObuxDJ3uPLWg@mail.gmail.com>
-Subject: Re: [PATCH v2] xtensa: improve stack dumping
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Chris Zankel <chris@zankel.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <dima@arista.com>, Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191111022523.34256-1-olof@lixom.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111216-0020-0000-0000-0000038594D2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111216-0021-0000-0000-000021DB9F79
+Message-Id: <20191112162341.E3F334204C@d06av24.portsmouth.uk.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 1:49 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Thu 2019-11-07 16:44:48, Max Filippov wrote:
-> > Calculate printable stack size and use print_hex_dump instead of
-> > opencoding it.
-> > Make size of stack dump configurable.
-> > Drop extra newline output in show_trace as its output format does not
-> > depend on CONFIG_KALLSYMS.
->
-> > diff --git a/arch/xtensa/Kconfig.debug b/arch/xtensa/Kconfig.debug
-> > index 39de98e20018..83cc8d12fa0e 100644
-> > --- a/arch/xtensa/Kconfig.debug
-> > +++ b/arch/xtensa/Kconfig.debug
-> > @@ -31,3 +31,10 @@ config S32C1I_SELFTEST
-> >         It is easy to make wrong hardware configuration, this test should catch it early.
-> >
-> >         Say 'N' on stable hardware.
-> > +
-> > +config PRINT_STACK_DEPTH
-> > +     int "Stack depth to print" if DEBUG_KERNEL
-> > +     default 64
-> > +     help
-> > +       This option allows you to set the stack depth that the kernel
-> > +       prints in stack traces.
->
-> I would split this into separate patch.
 
-Sure, I'll split it out.
 
-> > diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
-> > index 4a6c495ce9b6..fe090ab1cab8 100644
-> > --- a/arch/xtensa/kernel/traps.c
-> > +++ b/arch/xtensa/kernel/traps.c
-> > @@ -491,32 +491,24 @@ void show_trace(struct task_struct *task, unsigned long *sp)
-> >
-> >       pr_info("Call Trace:\n");
-> >       walk_stackframe(sp, show_trace_cb, NULL);
-> > -#ifndef CONFIG_KALLSYMS
-> > -     pr_cont("\n");
-> > -#endif
-> >  }
-> >
-> > -static int kstack_depth_to_print = 24;
-> > +static int kstack_depth_to_print = CONFIG_PRINT_STACK_DEPTH;
-> >
-> >  void show_stack(struct task_struct *task, unsigned long *sp)
-> >  {
-> > -     int i = 0;
-> > -     unsigned long *stack;
-> > +     size_t len;
-> >
-> >       if (!sp)
-> >               sp = stack_pointer(task);
-> > -     stack = sp;
-> >
-> > -     pr_info("Stack:\n");
-> > +     len = min((-(unsigned long)sp) & (THREAD_SIZE - 4),
-> > +               kstack_depth_to_print * 4ul);
->
-> I would replace the hardcoded 4 with sizeof(void *).
+On 11/11/19 7:55 AM, Olof Johansson wrote:
+> Commit c33fbe8f673c5 ("ext4: Enable blocksize < pagesize for
+> dioread_nolock") removed the only user of 'sbi' outside of the ifdef,
+> so it caused a new warning:
+> 
+> fs/ext4/super.c:2068:23: warning: unused variable 'sbi' [-Wunused-variable]
+> 
+> Fixes: c33fbe8f673c5 ("ext4: Enable blocksize < pagesize for dioread_nolock")
+> Signed-off-by: Olof Johansson <olof@lixom.net>
 
-It's not necessarily pointers, more like register-wide entries
-on the stack. Ok, I guess I'll give it a name.
+hmm, I see that I had CONFIG_QUOTA enabled, so missed this.
+Thanks for the patch.
 
-> > -     for (i = 0; i < kstack_depth_to_print; i++) {
-> > -             if (kstack_end(sp))
-> > -                     break;
-> > -             pr_cont(" %08lx", *sp++);
-> > -             if (i % 8 == 7)
-> > -                     pr_cont("\n");
-> > -     }
-> > -     show_trace(task, stack);
-> > +     pr_info("Stack:\n");
-> > +     print_hex_dump(KERN_INFO, " ", DUMP_PREFIX_NONE, 32, 4,
-> > +                    sp, len, false);
-> > +     show_trace(task, sp);
-> >  }
->
-> The conversion looks fine to me. It is up to you (as a maintainer)
-> what you do with the above proposal for two cosmetic changes ;-)
-> Either way, feel free to use:
->
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+You may add:
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
 
-Thanks for the review.
+> ---
+>   fs/ext4/super.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index f3279210f0ba9..ee8c42d8a04f0 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -2065,7 +2065,7 @@ static int parse_options(char *options, struct super_block *sb,
+>   			 unsigned int *journal_ioprio,
+>   			 int is_remount)
+>   {
+> -	struct ext4_sb_info *sbi = EXT4_SB(sb);
+> +	struct ext4_sb_info __maybe_unused *sbi = EXT4_SB(sb);
+>   	char *p, __maybe_unused *usr_qf_name, __maybe_unused *grp_qf_name;
+>   	substring_t args[MAX_OPT_ARGS];
+>   	int token;
+> 
 
--- Max
