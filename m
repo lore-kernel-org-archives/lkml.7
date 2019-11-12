@@ -2,112 +2,128 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91095C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBCBC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B9D21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3521E21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5PeEuZk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4HijsXE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKLXAT (ORCPT
+        id S1726936AbfKLXBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:00:19 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:36804 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKLXAS (ORCPT
+        Tue, 12 Nov 2019 18:01:30 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33433 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfKLXB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:00:18 -0500
-Received: by mail-yb1-f195.google.com with SMTP id v2so42613ybo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:00:17 -0800 (PST)
+        Tue, 12 Nov 2019 18:01:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay6so179707plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:01:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YqcrXvyrUhEeGGCBTq1/xcdd+m/MFp2jfaMUakDcF9E=;
-        b=L5PeEuZk/YnUneg+xRE3pQop1ItlOqsY/HUOGV3RnDGEIqfDSW1NZGYHQsZsnC7JF1
-         PtdH/5NC4prhjbRrQ+NU0rNcW6Bq55KWOq6NNRLIXMBm8Nc4A8PgnS308VY7m2ohdu1L
-         IB0KKqRvg6kBMAcmyMMKbxPrOzOV5ia8w7cv2U8aaWLLKbjyMXIc3M3h/s1HJ6GBpvUS
-         Z+U60/Vv19GAezky7tW4zEcTF/xxr2tH31nA3gr6Qs1nAKxnIUwxTZyy0dXBhAdNzWDw
-         oQvlMN+8ifSVFAgGHfBs5/MlviSuehxi2tIxJsw7B5qlpTvddhQaRXAWOFCz57uApXCF
-         DF7g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nExhpa8NtyhyvUyh20F6httON+9jpHubOC8X4R1/1QI=;
+        b=c4HijsXEjZGJqE7HF/OLTdBXGVnY9qLmNBULMzMpbSwMDUdlWMyYkBAj7Jv9KvJQq9
+         uQ/fhhX6CbwBVqkc6vhI0J9bVR6S+eypweTAwvYsABomRnDDk1wGcU2hJ/fV4/K6uu+1
+         c9+G8zkVxO8gfkNV8xNJ/wUCIdP5veO1BJPEs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=YqcrXvyrUhEeGGCBTq1/xcdd+m/MFp2jfaMUakDcF9E=;
-        b=MjiAEPuUix5yVoBdIt9/rDD+1BL1uRYBb4k7F5oFt4i81CGFTbV1v7t8SvmL6iDRuR
-         Py0nbdtBdirZAMCK8eIhfwTNWE6hezs5/s+aR5NCwyAtvkSDHVWlPSGsFHPHPJ+mPYgP
-         C5w87UEIEIxcEBd5VTooUbBW6tmzCc/uv88gk1oitQFcOZ8uEaNxgv3XfwlERIus3bfW
-         3U5w5V7AeRBLUsze0DydAivRTRs4ihAWWhlcvUyaonXMmTiMESMccw3uLpP1vP0BDlN0
-         BZnVYgSBS1Qxbip50k8Tlg7WFayijEiBgkCbSRF8asDkfo6o8L+JKj2b/cdnMk/J07aC
-         PZ4Q==
-X-Gm-Message-State: APjAAAW+DgkSEC7oksI/smcyG38qdCFhPwKBuQukUNmHXdvoQXz5ctqq
-        17seUE5LS+qeJWiv1nhQ/8Q=
-X-Google-Smtp-Source: APXvYqzousErKZ8TL6DAgYgmgPeA/h/8ureGLm48RIrBZdjBtTMZTPttrRHzw315GjhO3lfvgIpf3g==
-X-Received: by 2002:a25:3d83:: with SMTP id k125mr380091yba.226.1573599616522;
-        Tue, 12 Nov 2019 15:00:16 -0800 (PST)
-Received: from gmail.com ([196.247.56.44])
-        by smtp.gmail.com with ESMTPSA id h138sm122994ywa.68.2019.11.12.15.00.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nExhpa8NtyhyvUyh20F6httON+9jpHubOC8X4R1/1QI=;
+        b=qe3K2SiS0Z29MKRSZifdS0IqJPFsq0lnteh7Pko2hR+1+h786QZvFN/3lJfEtdNZEa
+         pkDoDblDHp0BH+iI2yvv6wpYIbrIy53Ob9MrhWsmvs0vqRKKFwsmmPPThnT5pdmW2F9y
+         wfkSEwNrq+DqKbwQZfjJ8I/s3MG8qpf3bCxIvu1+dDS1Rua8lanoiBqKvCQCAruL6Kt3
+         0TyNHeRF5iXKUYU7StrCa1GwLw5tYd9C4EUJEcXYZhSIYwGPm5yR5S0lOO5fWvhix9ZZ
+         +a+4kvnhRljlMp4do7yXEdX8A1epZq1jbcVt31zhAVgoyAqPmrtw8lfNdVQASk1kQR9O
+         YKgA==
+X-Gm-Message-State: APjAAAWN5OdkOeA0HzDbJTOuTkjW9HfiIoISLoC24lIYkjog884lC4hV
+        ycosz6FmunnsF4deHaQK/Q4tLA==
+X-Google-Smtp-Source: APXvYqy/dNw+1S0sgv4o54+xgQ9m/sDAbXJguDm6De1m1sF3Ucjez84Z50LDqlIQCV97XGMiY2eUjw==
+X-Received: by 2002:a17:902:b282:: with SMTP id u2mr266015plr.301.1573599688858;
+        Tue, 12 Nov 2019 15:01:28 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id em16sm159840pjb.21.2019.11.12.15.01.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 15:00:15 -0800 (PST)
-Date:   Tue, 12 Nov 2019 18:00:12 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-Subject: Re: [Outreachy kernel] Re: [PATCH 7/9] staging: rtl8723bs: Fix
- incorrect type in argument warnings
-Message-ID: <20191112230012.rl7z3sbde5vtahcm@gmail.com>
-Mail-Followup-To: Joe Perches <joe@perches.com>, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-References: <cover.1573577309.git.jarias.linux@gmail.com>
- <637726782ce6c6ed3d68b5e595481857916bbc56.1573577309.git.jarias.linux@gmail.com>
- <c243860eeabf9406d166deb6204a69255c51867d.camel@perches.com>
+        Tue, 12 Nov 2019 15:01:27 -0800 (PST)
+Date:   Tue, 12 Nov 2019 15:01:26 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 0/9] open: introduce openat2(2) syscall
+Message-ID: <201911121457.7D02692@keescook>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c243860eeabf9406d166deb6204a69255c51867d.camel@perches.com>
+In-Reply-To: <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 09:11:42AM -0800, Joe Perches wrote:
-> On Tue, 2019-11-12 at 11:55 -0500, Javier F. Arias wrote:
-> > Fix incorrect type in declarations to solve the 'incorrect
-> > type in argument 3' warnings in the rtw_get_ie function calls.
-> > Issue found by Sparse.
-> []
-> > diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> []
-> > @@ -83,7 +83,7 @@ static char *translate_scan(struct adapter *padapter,
-> >  {
-> >  	struct iw_event iwe;
-> >  	u16 cap;
-> > -	u32 ht_ielen = 0;
-> > +	sint ht_ielen = 0;
+On Tue, Nov 12, 2019 at 12:24:04AM +1100, Aleksa Sarai wrote:
+> On 2019-11-05, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > This patchset is being developed here:
+> >   <https://github.com/cyphar/linux/tree/openat2/master>
+> > 
+> > Patch changelog:
+> >  v15:
+> >   * Fix code style for LOOKUP_IN_ROOT handling in path_init(). [Linus Torvalds]
+> >   * Split out patches for each individual LOOKUP flag.
+> >   * Reword commit messages to give more background information about the
+> >     series, as well as mention the semantics of each flag in more detail.
+> > [...]
 > 
-> more likely the rtw_get_ie function should used u32
-> and not sint.
+> Ping -- this patch hasn't been touched for a week. Thanks.
 
-Thanks for your feedback. I'll update the patchset and CC you as
-I can't send anything else to the Outreachy maillist.
+If I've been following correctly, everyone is happy with this series.
+(i.e. Linus's comment appear to have been addressed.)
 
-> one day a sed of 's/\bsint\b/int/g' would be good too.
+Perhaps the next question is should this go via a pull request by you to
+Linus directly during the v5.5 merge window, via akpm, via akpm, via
+Christian, or some other path? Besides Linus, it's not been clear who
+should "claim" this series. :)
 
-I'll probably do this on a couple of involved files.
-
-> 
-> 
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/c243860eeabf9406d166deb6204a69255c51867d.camel%40perches.com.
+-- 
+Kees Cook
