@@ -2,69 +2,96 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9E7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A320C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D390C2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422CD2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbfKLHQp (ORCPT
+        id S1726954AbfKLHRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:16:45 -0500
-Received: from verein.lst.de ([213.95.11.211]:54099 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfKLHQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:16:45 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5E6C968B05; Tue, 12 Nov 2019 08:16:40 +0100 (CET)
-Date:   Tue, 12 Nov 2019 08:16:40 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v5 02/10] iommu/vt-d: Use per-device dma_ops
-Message-ID: <20191112071640.GA3343@lst.de>
-References: <20190725031717.32317-1-baolu.lu@linux.intel.com> <20190725031717.32317-3-baolu.lu@linux.intel.com> <20190725054413.GC24527@lst.de> <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com> <20190725114348.GA30957@lst.de> <a098359a-0f89-6028-68df-9f83718df256@linux.intel.com>
+        Tue, 12 Nov 2019 02:17:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60924 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfKLHRA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 02:17:00 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iUQQ3-0005Vk-HK; Tue, 12 Nov 2019 08:16:55 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AEB471C0084;
+        Tue, 12 Nov 2019 08:16:54 +0100 (CET)
+Date:   Tue, 12 Nov 2019 07:16:54 -0000
+From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] ntp/y2038: Remove incorrect time_t truncation
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191108203435.112759-2-arnd@arndb.de>
+References: <20191108203435.112759-2-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a098359a-0f89-6028-68df-9f83718df256@linux.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Message-ID: <157354301429.29376.9889491292971482073.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 09:56:51AM +0800, Lu Baolu wrote:
-> I think current code doesn't do the right thing. The user asks the iommu
-> driver to use identity domain for a device, but the driver force it back
-> to DMA domain because of the device address capability.
->
->> expensive.  I don't think that this change is a good idea, and even if
->> we decide that this is a good idea after all that should be done in a
->> separate prep patch that explains the rationale.
->
-> Yes. Make sense.
+The following commit has been merged into the timers/urgent branch of tip:
 
-Now that the bounce code has landed it might be good time to revisit
-this patch in isolation and with a better explanation.
+Commit-ID:     2f5841349df281ecf8f81cc82d869b8476f0db0b
+Gitweb:        https://git.kernel.org/tip/2f5841349df281ecf8f81cc82d869b8476f0db0b
+Author:        Arnd Bergmann <arnd@arndb.de>
+AuthorDate:    Fri, 08 Nov 2019 21:34:24 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 12 Nov 2019 08:13:44 +01:00
+
+ntp/y2038: Remove incorrect time_t truncation
+
+A cast to 'time_t' was accidentally left in place during the
+conversion of __do_adjtimex() to 64-bit timestamps, so the
+resulting value is incorrectly truncated.
+
+Remove the cast so the 64-bit time gets propagated correctly.
+
+Fixes: ead25417f82e ("timex: use __kernel_timex internally")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191108203435.112759-2-arnd@arndb.de
+
+---
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 65eb796..069ca78 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -771,7 +771,7 @@ int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
+ 	/* fill PPS status fields */
+ 	pps_fill_timex(txc);
+ 
+-	txc->time.tv_sec = (time_t)ts->tv_sec;
++	txc->time.tv_sec = ts->tv_sec;
+ 	txc->time.tv_usec = ts->tv_nsec;
+ 	if (!(time_status & STA_NANO))
+ 		txc->time.tv_usec = ts->tv_nsec / NSEC_PER_USEC;
