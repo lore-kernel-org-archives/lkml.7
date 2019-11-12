@@ -2,95 +2,169 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE0DC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307A6C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF5A2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A8521A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:38:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9hrElsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfKLPif (ORCPT
+        id S1727451AbfKLPik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:38:35 -0500
-Received: from muru.com ([72.249.23.125]:41848 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbfKLPie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:38:34 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8C41A80F3;
-        Tue, 12 Nov 2019 15:39:10 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 07:38:31 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v3 09/10] arm64: dts: k3-am65-main Add CAL node
-Message-ID: <20191112153831.GI5610@atomide.com>
-References: <20191112142753.22976-1-bparrot@ti.com>
- <20191112142753.22976-10-bparrot@ti.com>
+        Tue, 12 Nov 2019 10:38:40 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44417 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbfKLPij (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:38:39 -0500
+Received: by mail-il1-f196.google.com with SMTP id i6so15899070ilr.11;
+        Tue, 12 Nov 2019 07:38:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yr6BI4I1G58Q9ppVoxfKvd4slmiaD/nL3ZVF0pbXsZk=;
+        b=K9hrElsX99SWt5Ednn+QUE5MOS8fc8J3NVvLl7BRMQGWsS1fWdA9JEElCCtyaeOk9n
+         Io6irpQ8lqfrQ5ej5SHkFxlDC+/tPTimgZL3QYj6H9VVVgEhiSQYjBNVBWqz7fS/fCQx
+         CkmdQuNF5C+PARJ/o/pArFQmurRyHmyN4dhKNjg9xgdnQ6+1th6bMRPtDzSvZbGDP9/k
+         q45SLHsr+TjPHEuC/Ygaypa72od6jdz06x5VY0PBRJUDB+h/bGqPG11W1xHVuqiL1M2y
+         TDfAOzuog9vUJQGrqcSXcSe/kmVyRlax5KENFMFBxrC11kCZ5FcAaMl1uHR5idIMNx68
+         x7AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yr6BI4I1G58Q9ppVoxfKvd4slmiaD/nL3ZVF0pbXsZk=;
+        b=rMqx4vona6SScM20m2EV/gN5BAJeuYS5fp0gtJuVG42e6gSmHa3XhXq6q3HTBo9EEV
+         ChvwycLW7NZaUQfHExOfz3yj1Y9uq2T+LFt2EVFwNAFNIqVoCbFUgKctUWsicRe2tP9B
+         IwUzJEk2byJjHHTpNM/PEOxrterrb4w5Ojs6WnsJICYpTMdo3qwKPk3Vbqbwy6W/Y1aI
+         xWjFVWbIFEEtO2amE/WQ9CAl699X5ZimS6RuNSj5OSZmhehobp/bNdbgrbAzBZHHDA61
+         6TUUhddiw3oimKU417oyDhy0OpyJ/nzHnrAAr7stbiUF1tRtj/I+76pWu8gEXBhziuwI
+         tfGQ==
+X-Gm-Message-State: APjAAAVyWfFHq6b9gO0mwCGdm2Fif/KS1Ohck5IvuJvz+/tyv3HxshRV
+        nbAJomZ1amJieGRBXopeFGh04oLypdehcJJtvPA=
+X-Google-Smtp-Source: APXvYqySAuW+prOeEBX4YzE0FVWFfe7dV+Mh0+pdW6Q0AWECKwn+x1wFimNSpWPY+i3JTrNJuDQ0Sa1W+XdOoMMdiD8=
+X-Received: by 2002:a92:b60e:: with SMTP id s14mr36796565ili.178.1573573118182;
+ Tue, 12 Nov 2019 07:38:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112142753.22976-10-bparrot@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191112104854.20850-1-masneyb@onstation.org>
+In-Reply-To: <20191112104854.20850-1-masneyb@onstation.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 12 Nov 2019 08:38:27 -0700
+Message-ID: <CAOCk7NosRhRp3vZxg2Nx8106PQ0ryo5b68cUv605XUzCm6gYPA@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/mdp5: enable autocommit
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [191112 14:25]:
-> Add CAL dtsi node for AM654 device. Including proper power-domains and
-> clock properties.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+On Tue, Nov 12, 2019 at 3:49 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
+> support"), command-mode panels began throwing the following errors:
+>
+>     msm fd900000.mdss: pp done time out, lm=0
+>
+> Let's fix this by enabling the autorefresh feature that's available in
+> the MDP starting at version 1.0. This will cause the MDP to
+> automatically send a frame to the panel every time the panel invokes
+> the TE signal, which will trigger the PP_DONE IRQ. This requires not
+> sending a START signal for command-mode panels.
+>
+> This fixes the error and gives us a counter for command-mode panels that
+> we can use to implement async commit support for the MDP5 in a follow up
+> patch.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 > ---
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index 799c75fa7981..4c65ed445e8b 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -516,4 +516,27 @@
->  		dma-coherent;
->  		interrupts = <GIC_SPI 355 IRQ_TYPE_EDGE_RISING>;
->  	};
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 15 ++++++++++++++-
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  |  9 +--------
+>  2 files changed, 15 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> index 05cc04f729d6..539348cb6331 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> @@ -456,6 +456,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+>  {
+>         struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
+>         struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
+> +       struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
+>         struct mdp5_kms *mdp5_kms = get_kms(crtc);
+>         struct device *dev = &mdp5_kms->pdev->dev;
+>
+> @@ -493,9 +494,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+>
+>         mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
+>
+> -       if (mdp5_cstate->cmd_mode)
+> +       if (mdp5_cstate->cmd_mode) {
+>                 mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
+>
+> +               /*
+> +                * Enable autorefresh so we get regular ping/pong IRQs.
+> +                * - Bit 31 is the enable bit
+> +                * - Bits 0-15 represent the frame count, specifically how many
+> +                *   TE events before the MDP sends a frame.
+> +                */
+> +               mdp5_write(mdp5_kms,
+> +                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
+> +                          BIT(31) | BIT(0));
+> +               crtc_flush_all(crtc);
+> +       }
 > +
-> +	cal: cal@6f03000 {
-> +		compatible = "ti,am654-cal";
-> +		reg = <0x0 0x06f03000 0x0 0x400>,
-> +		      <0x0 0x06f03800 0x0 0x40>;
-> +		reg-names = "cal_top",
-> +			    "cal_rx_core0";
-> +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
-> +		ti,camerrx-control = <&scm_conf 0x40c0>;
-> +		clock-names = "fck";
-> +		clocks = <&k3_clks 2 0>;
-> +		power-domains = <&k3_pds 2 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			csi2_0: port@0 {
-> +				reg = <0>;
-> +			};
-> +		};
-> +	};
->  };
+>         mdp5_crtc->enabled = true;
+>  }
+>
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> index 030279d7b64b..aee295abada3 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> @@ -187,14 +187,7 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
+>         if (!ctl->encoder_enabled)
+>                 return false;
+>
+> -       switch (intf->type) {
+> -       case INTF_WB:
+> -               return true;
+> -       case INTF_DSI:
+> -               return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
+> -       default:
+> -               return false;
+> -       }
+> +       return intf->type == INTF_WB;
+>  }
 
-Here too just drop the status = "disabled" line. For reference, see commit
-12afc0cf8121 ("ARM: dts: Drop pointless status changing for am3 musb")
-in Linux next where we remove about 450 lines of pointless back and forth
-noise from status = "disabled" to various board specific files setting
-musb components back to status = "okay".
+I don't think this fully works.
 
-Regards,
+The whole "flush" thing exists because the configuration is double
+buffered.  You write to the flush register to tell the hardware to
+pickup the new configuration, but it doesn't do that automatically.
+It only picks up the new config on the next "vsync".  When you have a
+video mode panel, you have the timing engine running, which drives
+that.  With a command mode panel, you have either the start signal, or
+the auto refresh to do the same, but you have a bit of a chicken and
+egg situation where if you are programming the hardware from scratch,
+autorefresh isn't already enabled to then pickup the config to enable
+autorefresh. In this case, you'll need a single start to kick
+everything off.  However, if say the bootloader already configured
+things and has autorefresh running, then you need to not do that start
+because you'll overload the DSI like you saw.
 
-Tony
+Nothing is simple, is it?  :)
