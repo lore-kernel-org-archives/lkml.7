@@ -2,104 +2,145 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CA1C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECF0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAE420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DA820679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UEP+wHey";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ki3rrQA/"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="QK1rwIVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKLQHT (ORCPT
+        id S1727063AbfKLQIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:07:19 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:52512 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfKLQHT (ORCPT
+        Tue, 12 Nov 2019 11:08:24 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40432 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLQIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:07:19 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9198060D5A; Tue, 12 Nov 2019 16:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573574838;
-        bh=LtdKcCfVo09bqodGRKYu7E6Q5R2Ji4qgLnYieGU7L6A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UEP+wHeyrWuVdLonKfdbdzmWmJ9yCEDkzMYyakEYGPVh5hRNkUn3l0CDilTj2Pj19
-         wjt07eyuavu6cbXlaC0aEv5pqIm9u5OtOCmrNkqvfEzfdV7Ud+kb93pKFNzXtuunQI
-         m5mAgKl/Ubt9TmPZons5Iq1fDehmae40iDVjVUSk=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E653C601A3;
-        Tue, 12 Nov 2019 16:07:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573574837;
-        bh=LtdKcCfVo09bqodGRKYu7E6Q5R2Ji4qgLnYieGU7L6A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ki3rrQA/x0Par42iQQdjt9YYMo8co5xQwgIJ4DTs8HEVdYt7TnRUCc1QKP2PE9yI2
-         YjpK6y1ONdpJTu3k1mYW3bMLiBe5BNYskHsgT2PCcWN6oXUFCfHc1+HQ89wWyljFoB
-         p5oGDbyx/JChLIRrkMJepWfTkppEoXaWeyC7UR48=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E653C601A3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v8 3/4] dt-bindings: clock: Add support for the MSM8998
- mmcc
-To:     Rob Herring <robh@kernel.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
- <1573255068-10400-1-git-send-email-jhugo@codeaurora.org>
- <20191112005527.GA7038@bogus>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <b759445d-211e-b002-f193-a0dfcaaca449@codeaurora.org>
-Date:   Tue, 12 Nov 2019 09:07:15 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 11:08:24 -0500
+Received: by mail-qt1-f193.google.com with SMTP id o49so20298913qta.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:08:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ElBAh19h76fNw1WL7LmYDraY77y8dXIFpVkCkHJ9aiM=;
+        b=QK1rwIVJNbc09PoprNMmCK3WHkH1jHk1qrWN7F1bsm/Yrqj92VGD5NsvIhvWD0BlM4
+         8LHLZLm1SQoGQRGHM5DS7WcUlWv9B3cO91liUr/VuuL6ifwmASEH604H9Xo6WH1AvBB5
+         awlcMhO/6dnueYIu/Eg2gvQV+Y2NXK67SUgNGzJboP7hOJhxjOqLOmGCCI/CWsFEAWFT
+         b4xwL2Nl0rgERIAGoUMNoh1Fq+07eQ4vLjWVa0kZalpWPnRuSVnLKEUTCRUg2XCylMjZ
+         d5NhXCEwGpQt0OvfTxGglZptMb8UwH7xf4kW962uIR4XOBlxC9yQ7SktKA7XqgcOom/t
+         IOYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ElBAh19h76fNw1WL7LmYDraY77y8dXIFpVkCkHJ9aiM=;
+        b=pH1wUT58XX0wjYhmnVOI/sYrFfGioYOODlavmextT2e6bbEjwRCeaArv0MJVP4jAcK
+         JiYN+rsZ6hZC6yFDLFX40+qF0QG4M2aYyQTtCSP87pKpAzaQg3a9m1ooya0Dj5et2Rtg
+         3lZa9TYRqwnvFGsZp7mNZk3XRimUHPR2VP+GfjjQera6xlBhCcGvn1MPY3kwM8QkWJll
+         bWHKx+lBlzZGfNeZxi8xHlTV90Sb/rNFowgrT5kLhkMvIY0fJ3sM4asZ+pqDcTOCSXgu
+         emaKriEo53aX1R/L5hfW19MlRtmcilFwt2fILd4kFduYDKuf8kiMbuZOBByGMHj4wKYp
+         goMQ==
+X-Gm-Message-State: APjAAAXuXk5VRX3Nq3m3Tn5JZYaOULN5cj7hVSpmnE9UA1XovQLzPuuI
+        Evr1cyyAhQJkL5OeOrtf+ZuGGpCBoLPwDw==
+X-Google-Smtp-Source: APXvYqyKGAAq4JHv1jF2aRio6iyGex1cD+JQn3i2pjmUMJ5ENrlq26r1J+HNufGMjPTo9ouE0IQ7hw==
+X-Received: by 2002:ac8:6ec4:: with SMTP id f4mr32489946qtv.271.1573574903089;
+        Tue, 12 Nov 2019 08:08:23 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::aa8c])
+        by smtp.gmail.com with ESMTPSA id n66sm9462775qkb.72.2019.11.12.08.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 08:08:22 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:08:21 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     tim <xiejingfeng@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH] psi:fix divide by zero in psi_update_stats
+Message-ID: <20191112160821.GE168812@cmpxchg.org>
+References: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
+ <20191112154144.GC168812@cmpxchg.org>
+ <20191112154844.GD168812@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20191112005527.GA7038@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112154844.GD168812@cmpxchg.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/2019 5:55 PM, Rob Herring wrote:
-> On Fri,  8 Nov 2019 16:17:48 -0700, Jeffrey Hugo wrote:
->> Document the multimedia clock controller found on MSM8998.
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,mmcc.yaml       |  36 ++++
->>   include/dt-bindings/clock/qcom,mmcc-msm8998.h      | 210 +++++++++++++++++++++
->>   2 files changed, 246 insertions(+)
->>   create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
->>
+On Tue, Nov 12, 2019 at 10:48:46AM -0500, Johannes Weiner wrote:
+> On Tue, Nov 12, 2019 at 10:41:46AM -0500, Johannes Weiner wrote:
+> > On Fri, Nov 08, 2019 at 03:33:24PM +0800, tim wrote:
+> > > In psi_update_stats, it is possible that period has value like
+> > > 0xXXXXXXXX00000000 where the lower 32 bit is 0, then it calls div_u64 which
+> > > truncates u64 period to u32, results in zero divisor.
+> > > Use div64_u64() instead of div_u64()  if the divisor is u64 to avoid
+> > > truncation to 32-bit on 64-bit platforms.
+> > > 
+> > > Signed-off-by: xiejingfeng <xiejingfeng@linux.alibaba.com>
+> > 
+> > This is legit. When we stop the periodic averaging worker due to an
+> > idle CPU, the period after restart can be much longer than the ~4 sec
+> > in the lower 32 bits. See the missed_periods logic in update_averages.
 > 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+> Argh, that's not right. Of course I notice right after hitting send.
 > 
-> If a tag was not added on purpose, please state why and what changed.
+> missed_periods are subtracted out of the difference between now and
+> the last update, so period should be not much bigger than 2s.
 > 
+> Something else is going on here.
 
-Ya know, normally you are right about this, as I did something stupid, 
-but in this case I did mention in the cover letter that tags were 
-dropped because the bindings were re-written in yaml (ie no one had 
-reviewed the new code).
+Tim, does this happen right after boot? I wonder if it's because we're
+not initializing avg_last_update, and the initial delta between the
+last update (0) and the first scheduled update (sched_clock() + 2s)
+ends up bigger than 4 seconds somehow. Later on, the delta between the
+last and the scheduled update should always be ~2s. But for that to
+happen, it would require a pretty slow boot, or a sched_clock() that
+does not start at 0.
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Tim, if you have a coredump, can you extract the value of the other
+variables printed in the following patch?
+
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 84af7aa158bf..1b6836d23091 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -374,6 +374,10 @@ static u64 update_averages(struct psi_group *group, u64 now)
+ 	 */
+ 	avg_next_update = expires + ((1 + missed_periods) * psi_period);
+ 	period = now - (group->avg_last_update + (missed_periods * psi_period));
++
++	WARN(period >> 32, "period=%ld now=%ld expires=%ld last=%ld missed=%ld\n",
++	     period, now, expires, group->avg_last_update, missed_periods);
++
+ 	group->avg_last_update = now;
+ 
+ 	for (s = 0; s < NR_PSI_STATES - 1; s++) {
+
+And we may need something like this to make the tick initialization
+more robust regardless of the reported bug here:
+
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 84af7aa158bf..ce8f6748678a 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -185,7 +185,8 @@ static void group_init(struct psi_group *group)
+ 
+ 	for_each_possible_cpu(cpu)
+ 		seqcount_init(&per_cpu_ptr(group->pcpu, cpu)->seq);
+-	group->avg_next_update = sched_clock() + psi_period;
++	group->avg_last_update = sched_clock();
++	group->avg_next_update = group->avg_last_update + psi_period;
+ 	INIT_DELAYED_WORK(&group->avgs_work, psi_avgs_work);
+ 	mutex_init(&group->avgs_lock);
+ 	/* Init trigger-related members */
