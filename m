@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9822DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B78CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E4421D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360BC20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQTnayFh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6heNSUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfKLVVs (ORCPT
+        id S1727348AbfKLVWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:21:48 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36214 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbfKLVVq (ORCPT
+        Tue, 12 Nov 2019 16:22:20 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40246 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbfKLVVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:21:46 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c22so4530546wmd.1;
-        Tue, 12 Nov 2019 13:21:44 -0800 (PST)
+        Tue, 12 Nov 2019 16:21:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f3so4508810wmc.5;
+        Tue, 12 Nov 2019 13:21:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:subject:date:message-id:in-reply-to:references;
-        bh=a/fp3yIiecFEwiSwSQjkImzwKxVhK2zo5Gvj/r09nJY=;
-        b=mQTnayFh5C7BmNlcfJPLtYQDp3w+P2VcxeG6rb5QcE537EA1FcvaqDb+iQtqFQuJhx
-         QKf/CUefWfdIu1eYQXcXoz808eKigw0k37yDv4UHW0ViCOCGvuq3UzJQAaBEgRDhnuF2
-         RnmEovp2ajcwXrn0G9MFzX/Ot38ZEUuvL5dfXqEFqLCb0xW5rJKfnwVLPUXyzyeyoeqQ
-         /uNBXxY55mvRMfOvlHOTbLiarcO3HDDEMM2AKd1znwoa2xhb/+fH8oXzmUMY5yHX4Jdl
-         AgtEvKM18hxFECJjUfOoyrDanAS3kkmTZPXAB/MRDJW0WKji7xaaNnkPF170n2cRrxgm
-         OPjw==
+        bh=JnYn9uI3yxG6VZUb0pRxgCquzXyinIAZQISEMZhmypI=;
+        b=c6heNSUxxH0oSCrrZxfbuO1+iBKrdMQPa1BgSH2jEDX7jL30fU/j2fySQZZC0bUpUG
+         yurhMl/qRZbzE41t/pGuNSf1a/5mDIJ3F3eSS1CE5Ot5O/ytZcweG+wArghZ6CdhKVnu
+         IAMfek98DzNDTKQOon6AYCm4CvPqf8dTaKtMibKJowETWqmxxHDVbvNVayirLLnkgTmV
+         jOBJNttUDt5PH0Sn20pgeWsKF/NlTB8df7FpAK6C2p7N0cYO9RnePFrdEEzvNUwXfs7g
+         DR7XSmN45gZs1HTCfVWrq1guTQXt3+ygY8rJOYZoLdPw+gbm0kjoZMEsLNFb7UkiS/T7
+         Adxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:subject:date:message-id
          :in-reply-to:references;
-        bh=a/fp3yIiecFEwiSwSQjkImzwKxVhK2zo5Gvj/r09nJY=;
-        b=eGMmK3wQjMAJerPFhbUXa4Apvl7CjWtBd8XzQZ1ARHdUM7DUqaIs4mwrI/gFRAKFeE
-         mKJoLa+sEOjyn0XkeBJB/HRHm8wKnP+Kx1iJOe9GS2X+SpNVhcyBuyGAIwKfeQWND3Jv
-         jqB220CS3Dk9D4tGNy1CadWgS6kvVcYGXl2u4QnovzLb7jDaZG+G/p8JuWe7DIbhcmPd
-         dkmp+VR3CyQpdxI/6eK6KdKSTgMQ9r1eLS42NfgTCQ0SePEY697fs9DXIVyWTsFORc2D
-         aKsOHGpNwlyKVBq5d9QT5k3IJS32ixeHXydwCDkZJUaupsln7N+yYhlwR2gfb/pv7fpV
-         zYBQ==
-X-Gm-Message-State: APjAAAXJ2+yZSrUk+xtCVR08QxMZbtkM1nIpveb+3cRBfdWaaqV1d2KP
-        g3mcVQWQzx7WsnQJUGrOV2nXi9+F
-X-Google-Smtp-Source: APXvYqwR5ZPlPj7BLFraOslBnxRHvlHpsxa6AGcIqKyGLJq6nLiKSy2dUl63xhCMALgT2t/z9XnmVg==
-X-Received: by 2002:a1c:b404:: with SMTP id d4mr6284702wmf.9.1573593702780;
-        Tue, 12 Nov 2019 13:21:42 -0800 (PST)
+        bh=JnYn9uI3yxG6VZUb0pRxgCquzXyinIAZQISEMZhmypI=;
+        b=UnMukUBbIKwf926K9c7X1prKzXb4GZ60LnwhoL0FnoQIuHmr9c5OEaUguBaLRQf6ex
+         S8e4KOs+w5q+DYGtuuh8q3eaDZM4skFRCOu2JYWFZ7h091QKstOPUqooge1n/4Eq/YZR
+         FmI+o8PILEbMyN1oc3bTw5fzzyQzLuPNzn6HfRt93+lbtACDQnF85yZ6C8Nhft4E2YKb
+         355Y6g53sGgxvBE/HXwzKUXz1tTTw3xh7PEsP1oYQR5N5AgFveJtfR04E7xVGYS/YTqM
+         MlD9w83i1kbQ8St28BY+9r6C3FVOUcPnxDHgxAlHxmB+GM/k6VUHSYEMLECCOrpvuEpo
+         cn9g==
+X-Gm-Message-State: APjAAAU8k36VLFrNwfQHXM+iBpSEVvuoEhgmIXTA7K63InfWiPxElxMk
+        qMlpbl84E9AuFk3KVbnV7Xt7XXkw
+X-Google-Smtp-Source: APXvYqyflfP/bbvqcVZbOtkbkEMjU2ik2y3Bch5Qkw8SHzU2Rj4s0FcAH8rXTDMj2FRJY5Y+jNf82A==
+X-Received: by 2002:a05:600c:299:: with SMTP id 25mr6265599wmk.50.1573593699937;
+        Tue, 12 Nov 2019 13:21:39 -0800 (PST)
 Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.41
+        by smtp.gmail.com with ESMTPSA id q25sm198664wra.3.2019.11.12.13.21.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 13:21:41 -0800 (PST)
+        Tue, 12 Nov 2019 13:21:39 -0800 (PST)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 4/7] kvm: mmu: ITLB_MULTIHIT mitigation
-Date:   Tue, 12 Nov 2019 22:21:34 +0100
-Message-Id: <1573593697-25061-5-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 1/7] x86/bugs: Add ITLB_MULTIHIT bug infrastructure
+Date:   Tue, 12 Nov 2019 22:21:31 +0100
+Message-Id: <1573593697-25061-2-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
 References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
@@ -68,502 +68,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With some Intel processors, putting the same virtual address in the TLB
-as both a 4 KiB and 2 MiB page can confuse the instruction fetch unit
-and cause the processor to issue a machine check resulting in a CPU lockup.
+From: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
 
-Unfortunately when EPT page tables use huge pages, it is possible for a
-malicious guest to cause this situation.
+Some processors may incur a machine check error possibly resulting in an
+unrecoverable CPU lockup when an instruction fetch encounters a TLB
+multi-hit in the instruction TLB. This can occur when the page size is
+changed along with either the physical address or cache type. The relevant
+erratum can be found here:
 
-Add a knob to mark huge pages as non-executable. When the nx_huge_pages
-parameter is enabled (and we are using EPT), all huge pages are marked as
-NX. If the guest attempts to execute in one of those pages, the page is
-broken down into 4K pages, which are then marked executable.
+   https://bugzilla.kernel.org/show_bug.cgi?id=205195
 
-This is not an issue for shadow paging (except nested EPT), because then
-the host is in control of TLB flushes and the problematic situation cannot
-happen.  With nested EPT, again the nested guest can cause problems shadow
-and direct EPT is treated in the same way.
+There are other processors affected for which the erratum does not fully
+disclose the impact.
 
-[ tglx: Fixup default to auto and massage wording a bit ]
+This issue affects both bare-metal x86 page tables and EPT.
 
-Originally-by: Junaid Shahid <junaids@google.com>
+It can be mitigated by either eliminating the use of large pages or by
+using careful TLB invalidations when changing the page size in the page
+tables.
+
+Just like Spectre, Meltdown, L1TF and MDS, a new bit has been allocated in
+MSR_IA32_ARCH_CAPABILITIES (PSCHANGE_MC_NO) and will be set on CPUs which
+are mitigated against this issue.
+
+Signed-off-by: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
+Co-developed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  19 ++++
- arch/x86/include/asm/kvm_host.h                 |   2 +
- arch/x86/kernel/cpu/bugs.c                      |  13 ++-
- arch/x86/kvm/mmu.c                              | 141 +++++++++++++++++++++++-
- arch/x86/kvm/paging_tmpl.h                      |  29 ++++-
- arch/x86/kvm/x86.c                              |   9 ++
- 6 files changed, 200 insertions(+), 13 deletions(-)
+ Documentation/ABI/testing/sysfs-devices-system-cpu |  1 +
+ arch/x86/include/asm/cpufeatures.h                 |  1 +
+ arch/x86/include/asm/msr-index.h                   |  7 +++
+ arch/x86/kernel/cpu/bugs.c                         | 13 +++++
+ arch/x86/kernel/cpu/common.c                       | 65 ++++++++++++----------
+ drivers/base/cpu.c                                 |  8 +++
+ include/linux/cpu.h                                |  2 +
+ 7 files changed, 67 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fa8f03ddff24..9d5f123cc218 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2055,6 +2055,19 @@
- 			KVM MMU at runtime.
- 			Default is 0 (off)
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index 0e77569bd5e0..fc20cde63d1e 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -487,6 +487,7 @@ What:		/sys/devices/system/cpu/vulnerabilities
+ 		/sys/devices/system/cpu/vulnerabilities/l1tf
+ 		/sys/devices/system/cpu/vulnerabilities/mds
+ 		/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
++		/sys/devices/system/cpu/vulnerabilities/itlb_multihit
+ Date:		January 2018
+ Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+ Description:	Information about CPU vulnerabilities
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 989e03544f18..c4fbe379cc0b 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -400,5 +400,6 @@
+ #define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
+ #define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
+ #define X86_BUG_TAA			X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
++#define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
  
-+	kvm.nx_huge_pages=
-+			[KVM] Controls the software workaround for the
-+			X86_BUG_ITLB_MULTIHIT bug.
-+			force	: Always deploy workaround.
-+			off	: Never deploy workaround.
-+			auto    : Deploy workaround based on the presence of
-+				  X86_BUG_ITLB_MULTIHIT.
-+
-+			Default is 'auto'.
-+
-+			If the software workaround is enabled for the host,
-+			guests do need not to enable it for nested guests.
-+
- 	kvm-amd.nested=	[KVM,AMD] Allow nested virtualization in KVM/SVM.
- 			Default is 1 (enabled)
- 
-@@ -2637,6 +2650,12 @@
- 					       l1tf=off [X86]
- 					       mds=off [X86]
- 					       tsx_async_abort=off [X86]
-+					       kvm.nx_huge_pages=off [X86]
-+
-+				Exceptions:
-+					       This does not have any effect on
-+					       kvm.nx_huge_pages when
-+					       kvm.nx_huge_pages=force.
- 
- 			auto (default)
- 				Mitigate all CPU vulnerabilities, but leave SMT
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 24d6598dea29..a37b03483b66 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -315,6 +315,7 @@ struct kvm_mmu_page {
- 	bool unsync;
- 	u8 mmu_valid_gen;
- 	bool mmio_cached;
-+	bool lpage_disallowed; /* Can't be replaced by an equiv large page */
- 
- 	/*
- 	 * The following two entries are used to key the shadow page in the
-@@ -946,6 +947,7 @@ struct kvm_vm_stat {
- 	ulong mmu_unsync;
- 	ulong remote_tlb_flush;
- 	ulong lpages;
-+	ulong nx_lpage_splits;
- 	ulong max_mmu_page_hash_collisions;
- };
- 
+ #endif /* _ASM_X86_CPUFEATURES_H */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index b3a8bb2af0b6..6a3124664289 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -93,6 +93,13 @@
+ 						  * Microarchitectural Data
+ 						  * Sampling (MDS) vulnerabilities.
+ 						  */
++#define ARCH_CAP_PSCHANGE_MC_NO		BIT(6)	 /*
++						  * The processor is not susceptible to a
++						  * machine check error due to modifying the
++						  * code page size along with either the
++						  * physical address or cache type
++						  * without TLB invalidation.
++						  */
+ #define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
+ #define ARCH_CAP_TAA_NO			BIT(8)	/*
+ 						 * Not susceptible to
 diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 5364beda8c61..850005590167 100644
+index 43c647e19439..5364beda8c61 100644
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1257,6 +1257,9 @@ void x86_spec_ctrl_setup_ap(void)
- 		x86_amd_ssb_disable();
+@@ -1419,6 +1419,11 @@ static ssize_t l1tf_show_state(char *buf)
  }
+ #endif
  
-+bool itlb_multihit_kvm_mitigation;
-+EXPORT_SYMBOL_GPL(itlb_multihit_kvm_mitigation);
-+
- #undef pr_fmt
- #define pr_fmt(fmt)	"L1TF: " fmt
- 
-@@ -1412,17 +1415,25 @@ static ssize_t l1tf_show_state(char *buf)
- 		       l1tf_vmx_states[l1tf_vmx_mitigation],
- 		       sched_smt_active() ? "vulnerable" : "disabled");
- }
-+
 +static ssize_t itlb_multihit_show_state(char *buf)
 +{
-+	if (itlb_multihit_kvm_mitigation)
-+		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
-+	else
-+		return sprintf(buf, "KVM: Vulnerable\n");
++	return sprintf(buf, "Processor vulnerable\n");
 +}
- #else
- static ssize_t l1tf_show_state(char *buf)
- {
- 	return sprintf(buf, "%s\n", L1TF_DEFAULT_MSG);
- }
--#endif
- 
- static ssize_t itlb_multihit_show_state(char *buf)
- {
- 	return sprintf(buf, "Processor vulnerable\n");
- }
-+#endif
- 
++
  static ssize_t mds_show_state(char *buf)
  {
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 24c23c66b226..bedf6864b092 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -47,6 +47,20 @@
- #include <asm/kvm_page_track.h>
- #include "trace.h"
+ 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+@@ -1524,6 +1529,9 @@ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr
+ 	case X86_BUG_TAA:
+ 		return tsx_async_abort_show_state(buf);
  
-+extern bool itlb_multihit_kvm_mitigation;
++	case X86_BUG_ITLB_MULTIHIT:
++		return itlb_multihit_show_state(buf);
 +
-+static int __read_mostly nx_huge_pages = -1;
-+
-+static int set_nx_huge_pages(const char *val, const struct kernel_param *kp);
-+
-+static struct kernel_param_ops nx_huge_pages_ops = {
-+	.set = set_nx_huge_pages,
-+	.get = param_get_bool,
-+};
-+
-+module_param_cb(nx_huge_pages, &nx_huge_pages_ops, &nx_huge_pages, 0644);
-+__MODULE_PARM_TYPE(nx_huge_pages, "bool");
-+
- /*
-  * When setting this variable to true it enables Two-Dimensional-Paging
-  * where the hardware walks 2 page tables:
-@@ -352,6 +366,11 @@ static inline bool spte_ad_need_write_protect(u64 spte)
- 	return (spte & SPTE_SPECIAL_MASK) != SPTE_AD_ENABLED_MASK;
- }
- 
-+static bool is_nx_huge_page_enabled(void)
-+{
-+	return READ_ONCE(nx_huge_pages);
-+}
-+
- static inline u64 spte_shadow_accessed_mask(u64 spte)
- {
- 	MMU_WARN_ON(is_mmio_spte(spte));
-@@ -1190,6 +1209,15 @@ static void account_shadowed(struct kvm *kvm, struct kvm_mmu_page *sp)
- 	kvm_mmu_gfn_disallow_lpage(slot, gfn);
- }
- 
-+static void account_huge_nx_page(struct kvm *kvm, struct kvm_mmu_page *sp)
-+{
-+	if (sp->lpage_disallowed)
-+		return;
-+
-+	++kvm->stat.nx_lpage_splits;
-+	sp->lpage_disallowed = true;
-+}
-+
- static void unaccount_shadowed(struct kvm *kvm, struct kvm_mmu_page *sp)
- {
- 	struct kvm_memslots *slots;
-@@ -1207,6 +1235,12 @@ static void unaccount_shadowed(struct kvm *kvm, struct kvm_mmu_page *sp)
- 	kvm_mmu_gfn_allow_lpage(slot, gfn);
- }
- 
-+static void unaccount_huge_nx_page(struct kvm *kvm, struct kvm_mmu_page *sp)
-+{
-+	--kvm->stat.nx_lpage_splits;
-+	sp->lpage_disallowed = false;
-+}
-+
- static bool __mmu_gfn_lpage_is_disallowed(gfn_t gfn, int level,
- 					  struct kvm_memory_slot *slot)
- {
-@@ -2792,6 +2826,9 @@ static bool __kvm_mmu_prepare_zap_page(struct kvm *kvm,
- 			kvm_reload_remote_mmus(kvm);
+ 	default:
+ 		break;
  	}
- 
-+	if (sp->lpage_disallowed)
-+		unaccount_huge_nx_page(kvm, sp);
-+
- 	sp->role.invalid = 1;
- 	return list_unstable;
+@@ -1565,4 +1573,9 @@ ssize_t cpu_show_tsx_async_abort(struct device *dev, struct device_attribute *at
+ {
+ 	return cpu_show_common(dev, attr, buf, X86_BUG_TAA);
  }
-@@ -3013,6 +3050,11 @@ static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 	if (!speculative)
- 		spte |= spte_shadow_accessed_mask(spte);
- 
-+	if (level > PT_PAGE_TABLE_LEVEL && (pte_access & ACC_EXEC_MASK) &&
-+	    is_nx_huge_page_enabled()) {
-+		pte_access &= ~ACC_EXEC_MASK;
-+	}
 +
- 	if (pte_access & ACC_EXEC_MASK)
- 		spte |= shadow_x_mask;
- 	else
-@@ -3233,9 +3275,32 @@ static void direct_pte_prefetch(struct kvm_vcpu *vcpu, u64 *sptep)
- 	__direct_pte_prefetch(vcpu, sp, sptep);
++ssize_t cpu_show_itlb_multihit(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_common(dev, attr, buf, X86_BUG_ITLB_MULTIHIT);
++}
+ #endif
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index f8b8afc8f5b5..d29b71ca3ca7 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1016,13 +1016,14 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+ #endif
  }
  
-+static void disallowed_hugepage_adjust(struct kvm_shadow_walk_iterator it,
-+				       gfn_t gfn, kvm_pfn_t *pfnp, int *levelp)
-+{
-+	int level = *levelp;
-+	u64 spte = *it.sptep;
+-#define NO_SPECULATION	BIT(0)
+-#define NO_MELTDOWN	BIT(1)
+-#define NO_SSB		BIT(2)
+-#define NO_L1TF		BIT(3)
+-#define NO_MDS		BIT(4)
+-#define MSBDS_ONLY	BIT(5)
+-#define NO_SWAPGS	BIT(6)
++#define NO_SPECULATION		BIT(0)
++#define NO_MELTDOWN		BIT(1)
++#define NO_SSB			BIT(2)
++#define NO_L1TF			BIT(3)
++#define NO_MDS			BIT(4)
++#define MSBDS_ONLY		BIT(5)
++#define NO_SWAPGS		BIT(6)
++#define NO_ITLB_MULTIHIT	BIT(7)
+ 
+ #define VULNWL(_vendor, _family, _model, _whitelist)	\
+ 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
+@@ -1043,27 +1044,27 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+ 	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
+ 
+ 	/* Intel Family 6 */
+-	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
+-	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
+-	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
+-	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
+-	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
+-
+-	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+-	VULNWL_INTEL(ATOM_SILVERMONT_D,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+-	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+-	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+-	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+-	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
 +
-+	if (it.level == level && level > PT_PAGE_TABLE_LEVEL &&
-+	    is_nx_huge_page_enabled() &&
-+	    is_shadow_present_pte(spte) &&
-+	    !is_large_pte(spte)) {
-+		/*
-+		 * A small SPTE exists for this pfn, but FNAME(fetch)
-+		 * and __direct_map would like to create a large PTE
-+		 * instead: just force them to go down another level,
-+		 * patching back for them into pfn the next 9 bits of
-+		 * the address.
-+		 */
-+		u64 page_mask = KVM_PAGES_PER_HPAGE(level) - KVM_PAGES_PER_HPAGE(level - 1);
-+		*pfnp |= gfn & page_mask;
-+		(*levelp)--;
-+	}
-+}
-+
- static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
- 			int map_writable, int level, kvm_pfn_t pfn,
--			bool prefault)
-+			bool prefault, bool lpage_disallowed)
- {
- 	struct kvm_shadow_walk_iterator it;
- 	struct kvm_mmu_page *sp;
-@@ -3248,6 +3313,12 @@ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
++	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_SILVERMONT_D,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
  
- 	trace_kvm_mmu_spte_requested(gpa, level, pfn);
- 	for_each_shadow_entry(vcpu, gpa, it) {
-+		/*
-+		 * We cannot overwrite existing page tables with an NX
-+		 * large page, as the leaf could be executable.
-+		 */
-+		disallowed_hugepage_adjust(it, gfn, &pfn, &level);
-+
- 		base_gfn = gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
- 		if (it.level == level)
- 			break;
-@@ -3258,6 +3329,8 @@ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
- 					      it.level - 1, true, ACC_ALL);
+ 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
  
- 			link_shadow_page(vcpu, it.sptep, sp);
-+			if (lpage_disallowed)
-+				account_huge_nx_page(vcpu->kvm, sp);
- 		}
- 	}
+-	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+-	VULNWL_INTEL(ATOM_AIRMONT_NP,		NO_L1TF | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_AIRMONT_NP,		NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
  
-@@ -3550,11 +3623,14 @@ static int nonpaging_map(struct kvm_vcpu *vcpu, gva_t v, u32 error_code,
- {
- 	int r;
- 	int level;
--	bool force_pt_level = false;
-+	bool force_pt_level;
- 	kvm_pfn_t pfn;
- 	unsigned long mmu_seq;
- 	bool map_writable, write = error_code & PFERR_WRITE_MASK;
-+	bool lpage_disallowed = (error_code & PFERR_FETCH_MASK) &&
-+				is_nx_huge_page_enabled();
- 
-+	force_pt_level = lpage_disallowed;
- 	level = mapping_level(vcpu, gfn, &force_pt_level);
- 	if (likely(!force_pt_level)) {
- 		/*
-@@ -3588,7 +3664,8 @@ static int nonpaging_map(struct kvm_vcpu *vcpu, gva_t v, u32 error_code,
- 		goto out_unlock;
- 	if (likely(!force_pt_level))
- 		transparent_hugepage_adjust(vcpu, gfn, &pfn, &level);
--	r = __direct_map(vcpu, v, write, map_writable, level, pfn, prefault);
-+	r = __direct_map(vcpu, v, write, map_writable, level, pfn,
-+			 prefault, false);
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
-@@ -4174,6 +4251,8 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gva_t gpa, u32 error_code,
- 	unsigned long mmu_seq;
- 	int write = error_code & PFERR_WRITE_MASK;
- 	bool map_writable;
-+	bool lpage_disallowed = (error_code & PFERR_FETCH_MASK) &&
-+				is_nx_huge_page_enabled();
- 
- 	MMU_WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa));
- 
-@@ -4184,8 +4263,9 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gva_t gpa, u32 error_code,
- 	if (r)
- 		return r;
- 
--	force_pt_level = !check_hugepage_cache_consistency(vcpu, gfn,
--							   PT_DIRECTORY_LEVEL);
-+	force_pt_level =
-+		lpage_disallowed ||
-+		!check_hugepage_cache_consistency(vcpu, gfn, PT_DIRECTORY_LEVEL);
- 	level = mapping_level(vcpu, gfn, &force_pt_level);
- 	if (likely(!force_pt_level)) {
- 		if (level > PT_DIRECTORY_LEVEL &&
-@@ -4214,7 +4294,8 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gva_t gpa, u32 error_code,
- 		goto out_unlock;
- 	if (likely(!force_pt_level))
- 		transparent_hugepage_adjust(vcpu, gfn, &pfn, &level);
--	r = __direct_map(vcpu, gpa, write, map_writable, level, pfn, prefault);
-+	r = __direct_map(vcpu, gpa, write, map_writable, level, pfn,
-+			 prefault, lpage_disallowed);
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
-@@ -6155,10 +6236,58 @@ static void kvm_set_mmio_spte_mask(void)
- 	kvm_mmu_set_mmio_spte_mask(mask, mask, ACC_WRITE_MASK | ACC_USER_MASK);
- }
- 
-+static bool get_nx_auto_mode(void)
-+{
-+	/* Return true when CPU has the bug, and mitigations are ON */
-+	return boot_cpu_has_bug(X86_BUG_ITLB_MULTIHIT) && !cpu_mitigations_off();
-+}
-+
-+static void __set_nx_huge_pages(bool val)
-+{
-+	nx_huge_pages = itlb_multihit_kvm_mitigation = val;
-+}
-+
-+static int set_nx_huge_pages(const char *val, const struct kernel_param *kp)
-+{
-+	bool old_val = nx_huge_pages;
-+	bool new_val;
-+
-+	/* In "auto" mode deploy workaround only if CPU has the bug. */
-+	if (sysfs_streq(val, "off"))
-+		new_val = 0;
-+	else if (sysfs_streq(val, "force"))
-+		new_val = 1;
-+	else if (sysfs_streq(val, "auto"))
-+		new_val = get_nx_auto_mode();
-+	else if (strtobool(val, &new_val) < 0)
-+		return -EINVAL;
-+
-+	__set_nx_huge_pages(new_val);
-+
-+	if (new_val != old_val) {
-+		struct kvm *kvm;
-+		int idx;
-+
-+		mutex_lock(&kvm_lock);
-+
-+		list_for_each_entry(kvm, &vm_list, vm_list) {
-+			idx = srcu_read_lock(&kvm->srcu);
-+			kvm_mmu_zap_all_fast(kvm);
-+			srcu_read_unlock(&kvm->srcu, idx);
-+		}
-+		mutex_unlock(&kvm_lock);
-+	}
-+
-+	return 0;
-+}
-+
- int kvm_mmu_module_init(void)
- {
- 	int ret = -ENOMEM;
- 
-+	if (nx_huge_pages == -1)
-+		__set_nx_huge_pages(get_nx_auto_mode());
-+
- 	/*
- 	 * MMU roles use union aliasing which is, generally speaking, an
- 	 * undefined behavior. However, we supposedly know how compilers behave
-diff --git a/arch/x86/kvm/paging_tmpl.h b/arch/x86/kvm/paging_tmpl.h
-index 7d5cdb3af594..97b21e7fd013 100644
---- a/arch/x86/kvm/paging_tmpl.h
-+++ b/arch/x86/kvm/paging_tmpl.h
-@@ -614,13 +614,14 @@ static void FNAME(pte_prefetch)(struct kvm_vcpu *vcpu, struct guest_walker *gw,
- static int FNAME(fetch)(struct kvm_vcpu *vcpu, gva_t addr,
- 			 struct guest_walker *gw,
- 			 int write_fault, int hlevel,
--			 kvm_pfn_t pfn, bool map_writable, bool prefault)
-+			 kvm_pfn_t pfn, bool map_writable, bool prefault,
-+			 bool lpage_disallowed)
- {
- 	struct kvm_mmu_page *sp = NULL;
- 	struct kvm_shadow_walk_iterator it;
- 	unsigned direct_access, access = gw->pt_access;
- 	int top_level, ret;
--	gfn_t base_gfn;
-+	gfn_t gfn, base_gfn;
- 
- 	direct_access = gw->pte_access;
- 
-@@ -665,13 +666,25 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gva_t addr,
- 			link_shadow_page(vcpu, it.sptep, sp);
- 	}
- 
--	base_gfn = gw->gfn;
-+	/*
-+	 * FNAME(page_fault) might have clobbered the bottom bits of
-+	 * gw->gfn, restore them from the virtual address.
-+	 */
-+	gfn = gw->gfn | ((addr & PT_LVL_OFFSET_MASK(gw->level)) >> PAGE_SHIFT);
-+	base_gfn = gfn;
- 
- 	trace_kvm_mmu_spte_requested(addr, gw->level, pfn);
- 
- 	for (; shadow_walk_okay(&it); shadow_walk_next(&it)) {
- 		clear_sp_write_flooding_count(it.sptep);
--		base_gfn = gw->gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
-+
-+		/*
-+		 * We cannot overwrite existing page tables with an NX
-+		 * large page, as the leaf could be executable.
-+		 */
-+		disallowed_hugepage_adjust(it, gfn, &pfn, &hlevel);
-+
-+		base_gfn = gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
- 		if (it.level == hlevel)
- 			break;
- 
-@@ -683,6 +696,8 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gva_t addr,
- 			sp = kvm_mmu_get_page(vcpu, base_gfn, addr,
- 					      it.level - 1, true, direct_access);
- 			link_shadow_page(vcpu, it.sptep, sp);
-+			if (lpage_disallowed)
-+				account_huge_nx_page(vcpu->kvm, sp);
- 		}
- 	}
- 
-@@ -759,9 +774,11 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gva_t addr, u32 error_code,
- 	int r;
- 	kvm_pfn_t pfn;
- 	int level = PT_PAGE_TABLE_LEVEL;
--	bool force_pt_level = false;
- 	unsigned long mmu_seq;
- 	bool map_writable, is_self_change_mapping;
-+	bool lpage_disallowed = (error_code & PFERR_FETCH_MASK) &&
-+				is_nx_huge_page_enabled();
-+	bool force_pt_level = lpage_disallowed;
- 
- 	pgprintk("%s: addr %lx err %x\n", __func__, addr, error_code);
- 
-@@ -851,7 +868,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gva_t addr, u32 error_code,
- 	if (!force_pt_level)
- 		transparent_hugepage_adjust(vcpu, walker.gfn, &pfn, &level);
- 	r = FNAME(fetch)(vcpu, addr, &walker, write_fault,
--			 level, pfn, map_writable, prefault);
-+			 level, pfn, map_writable, prefault, lpage_disallowed);
- 	kvm_mmu_audit(vcpu, AUDIT_POST_PAGE_FAULT);
- 
- out_unlock:
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 32d70ca2a7fd..b087d178a774 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -213,6 +213,7 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
- 	{ "mmu_unsync", VM_STAT(mmu_unsync) },
- 	{ "remote_tlb_flush", VM_STAT(remote_tlb_flush) },
- 	{ "largepages", VM_STAT(lpages, .mode = 0444) },
-+	{ "nx_largepages_splitted", VM_STAT(nx_lpage_splits, .mode = 0444) },
- 	{ "max_mmu_page_hash_collisions",
- 		VM_STAT(max_mmu_page_hash_collisions) },
- 	{ NULL }
-@@ -1280,6 +1281,14 @@ static u64 kvm_get_arch_capabilities(void)
- 		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, data);
+-	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
+-	VULNWL_INTEL(ATOM_GOLDMONT_D,		NO_MDS | NO_L1TF | NO_SWAPGS),
+-	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_GOLDMONT_D,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
  
  	/*
-+	 * If nx_huge_pages is enabled, KVM's shadow paging will ensure that
-+	 * the nested hypervisor runs with NX huge pages.  If it is not,
-+	 * L1 is anyway vulnerable to ITLB_MULTIHIT explots from other
-+	 * L1 guests, so it need not worry about its own (L2) guests.
-+	 */
-+	data |= ARCH_CAP_PSCHANGE_MC_NO;
+ 	 * Technically, swapgs isn't serializing on AMD (despite it previously
+@@ -1074,14 +1075,14 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+ 	 */
+ 
+ 	/* AMD Family 0xf - 0x12 */
+-	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
+-	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
+-	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
+-	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
++	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
+ 
+ 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+-	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
+-	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
++	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
++	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
+ 	{}
+ };
+ 
+@@ -1106,6 +1107,10 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
+ {
+ 	u64 ia32_cap = x86_read_arch_cap_msr();
+ 
++	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
++	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
++		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
 +
-+	/*
- 	 * If we're doing cache flushes (either "always" or "cond")
- 	 * we will do one whenever the guest does a vmlaunch/vmresume.
- 	 * If an outer hypervisor is doing the cache flush for us
+ 	if (cpu_matches(NO_SPECULATION))
+ 		return;
+ 
+diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+index 0fccd8c0312e..6265871a4af2 100644
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -561,6 +561,12 @@ ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
+ 	return sprintf(buf, "Not affected\n");
+ }
+ 
++ssize_t __weak cpu_show_itlb_multihit(struct device *dev,
++			    struct device_attribute *attr, char *buf)
++{
++	return sprintf(buf, "Not affected\n");
++}
++
+ static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
+ static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
+ static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
+@@ -568,6 +574,7 @@ ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
+ static DEVICE_ATTR(l1tf, 0444, cpu_show_l1tf, NULL);
+ static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
+ static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
++static DEVICE_ATTR(itlb_multihit, 0444, cpu_show_itlb_multihit, NULL);
+ 
+ static struct attribute *cpu_root_vulnerabilities_attrs[] = {
+ 	&dev_attr_meltdown.attr,
+@@ -577,6 +584,7 @@ ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
+ 	&dev_attr_l1tf.attr,
+ 	&dev_attr_mds.attr,
+ 	&dev_attr_tsx_async_abort.attr,
++	&dev_attr_itlb_multihit.attr,
+ 	NULL
+ };
+ 
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index f35369f79771..2a093434e975 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -62,6 +62,8 @@ extern ssize_t cpu_show_mds(struct device *dev,
+ extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
+ 					struct device_attribute *attr,
+ 					char *buf);
++extern ssize_t cpu_show_itlb_multihit(struct device *dev,
++				      struct device_attribute *attr, char *buf);
+ 
+ extern __printf(4, 5)
+ struct device *cpu_device_create(struct device *parent, void *drvdata,
 -- 
 1.8.3.1
 
