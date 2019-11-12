@@ -2,111 +2,116 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43DAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45E8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A821621872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B654421872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 22:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcrokoyI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="PhH8e4EB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfKLWor (ORCPT
+        id S1727152AbfKLWpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 17:44:47 -0500
-Received: from mail-pf1-f177.google.com ([209.85.210.177]:43539 "EHLO
-        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfKLWor (ORCPT
+        Tue, 12 Nov 2019 17:45:08 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:12229 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfKLWpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:44:47 -0500
-Received: by mail-pf1-f177.google.com with SMTP id 3so116740pfb.10;
-        Tue, 12 Nov 2019 14:44:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YP6HXQfqzmkkZWDyrOvnEJK7kISWvdIhSDIzf9Us7t8=;
-        b=OcrokoyIrP6/2K/P/cPaAzNyafqPVWJGbTOeNMu4v5ASYwpfwhvhkehljA61C9f6GY
-         XyNZ2lffsKCNHYu9LGAJCsSyg/Y/v8fyiKntIqItHyY9sVZLZKhGFTk+beOxYshM7iEm
-         kmA76t5UG4F43tVYAYE6rljD5L+S1BGpml/gQ51PrjrrAVUgyaQ5SQGjlixMnrfrywKz
-         Qa5Z1XIA2tqQGH2i6fYipScsVBYBMY/75ILLWSX0ggD5jDCN8h1tiYEHZ5O/7a2C3Ag+
-         Y+zjruCVPl1sNPcPKmestiVm9vRZOCaV7TJ4Pd9M9jtVWz2I211E0c3vps5vwy/4ewhL
-         ZDEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YP6HXQfqzmkkZWDyrOvnEJK7kISWvdIhSDIzf9Us7t8=;
-        b=kaeE+CcI7yDQ/BjLslpUpzCTWsJH7WExfVaAx4WEUHE2B+TuyZEcmDueR+jpbuIX9W
-         WwO0kgchqdA2DW6BHvFMNpaRvnvFWRoTvi3zQYEToRFRC/9yCTjhz3ZrmP2rFfzu3QR3
-         YXOXKyPAQ43hP6laN9tlsg5oOUNDFDGQremkYG6x6Hq2uB/ge9k+41D9qng8kJ9+AvyU
-         +uy7ygPSmZIoXmuW8BfW92PEslX2orYIfzGoZT0G4UKZCXrZLlpFn/iEFQ7Dz973uDBz
-         J9FHgQ/S8TpkGBhzO04zydrTkcfhzy4+h4CGO3wWLG1EcfqVUdoE4fex7YZ8ZXIS7kRG
-         I4ag==
-X-Gm-Message-State: APjAAAUoUaNrBFV6pxXIzhVfa+V5nQlhruO3ms7x7YxzjCvcTV1XXl91
-        7frgGXwYiDYyGw//Pr6Th/8LLzti
-X-Google-Smtp-Source: APXvYqweYCXNIbkVwq3Q28iNQJZLxJJhGWqlAFjHUjBOAF460Nj3e6jQLicpl8NTi7QmbU6q49jY2g==
-X-Received: by 2002:a63:d851:: with SMTP id k17mr7856562pgj.161.1573598685627;
-        Tue, 12 Nov 2019 14:44:45 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:e001])
-        by smtp.gmail.com with ESMTPSA id i32sm20900pgl.73.2019.11.12.14.44.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 14:44:44 -0800 (PST)
-Date:   Tue, 12 Nov 2019 14:44:43 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-Message-ID: <20191112224441.2kxmt727qy4l4ncb@ast-mbp.dhcp.thefacebook.com>
-References: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
- <Pine.LNX.4.44L0.1911121639540.1567-100000@iolanthe.rowland.org>
- <CANn89iKjWH86kChzPiVtCgVpt3GookwGk2x1YCTMeBSPpKU+Ww@mail.gmail.com>
+        Tue, 12 Nov 2019 17:45:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573598704;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=DImeky0BTUCha4r7Uhw0UC1AKgaF3x/DYPNkEbHElSo=;
+        b=PhH8e4EBsOgwYqrm0QN6vPaXiYgGDtYXNWWIuKOGWldojLsfmAFpEDtMTZpWag7RQO
+        62d0kxK0xXzPTS49QO6U9gZQX9AzdAGIekX80XXXTrD2w5YPBgJfoXa+sVT5xUwGhvzh
+        +hJKxQqnT1le8vLAVKtH0gVLUed9Ah5uxMJkCQ9RiLXkNeWa4mSozpsLRbJi47zpWS/S
+        mNrGQkDtpYzz6p8TSl3K4IZNShOP2VQOI6N9IqnVez3Cp5sNpgbqkBR8OpELOPL0bvkP
+        bFb4gsccXhZ5XDiSp/7Y86Vep03P8nAtNluMc4ESGE3IhHZvh9fD0oXYSrOV+LFNkSK+
+        nNZw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
+        with ESMTPSA id N09a57vACMhj9yq
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 12 Nov 2019 23:43:45 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v24 00/12] /dev/random - a new approach with full SP800-90B compliance
+Date:   Tue, 12 Nov 2019 23:43:42 +0100
+Message-ID: <5603724.uI2RiKDNrm@positron.chronox.de>
+In-Reply-To: <875zjpfcu9.fsf@mid.deneb.enyo.de>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <875zjpfcu9.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iKjWH86kChzPiVtCgVpt3GookwGk2x1YCTMeBSPpKU+Ww@mail.gmail.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 02:07:03PM -0800, Eric Dumazet wrote:
-> 
-> I would prefer some kind of explicit marking, instead of a comment.
-> 
-> Even if we prefer having a sane compiler, having these clearly
-> annotated can help
-> code readability quite a lot.
+Am Dienstag, 12. November 2019, 14:23:10 CET schrieb Florian Weimer:
 
-Annotating every line where tsk->min_flt is used with a comment
-or explicit macro seems like a lot of churn.
-How about adding an attribute to a field ?
-Or an attribute to a type?
+Hi Florian,
 
-clang attributes can be easily exteneded. We add bpf specific attributes
-that are known to clang only when 'clang -target bpf' is used.
-There could be x86 or generic attributes.
-Then one can do:
-typedef unsigned long __attribute__((ignore_data_race)) racy_u64;
-struct task_struct { 
-   racy_u64 min_flt;
-};
+> * Stephan M=FCller:
+> > * support deactivation of TRNG (i.e. blocking behavior of /dev/random)
+> >=20
+> >   at compile time. If deactivated, /dev/random behaves like
+> >   getrandom(2).
+>=20
+> I don't quite understand this comment.  Doesn't getrandom with the
+> GRND_RANDOM always behave like /dev/random?  Presumably, without the
+> TRNG tap, the GRND_RANDOM flag for getrandom is ignored, and reading
+> from /dev/random behaves like reading from /dev/urandom.
 
-Hopefully less churn and clear signal to clang.
+Absolutely. Apologies for the imprecision here. I will correct that.
+
+The idea is that the constant blocking behavior of /dev/random and GRND_RAN=
+DOM=20
+is replaced with the blocking behavior of getrandom(2) without the GRND_RAN=
+DOM=20
+flag (i.e. the interface waits until the LRNG thinks it is completely seede=
+d=20
+before it provides ulimited data).
+>=20
+> Anyway, reading the accompanying PDF, this looks rather impressive:
+> the userspace bootstrapping problem is gone (the issue where waiting
+> for more entropy prevents the collection of more entropy), *and* we
+> can still make the standards people happy.
+>=20
+> (Replying from my other account due to mail issues, sorry.)
+
+
+Ciao
+Stephan
+
 
