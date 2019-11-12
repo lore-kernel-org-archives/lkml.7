@@ -2,245 +2,395 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907E8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537AEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB9621A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1606021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 08:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="GZNdnDzM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JdRaaRw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfKLIht (ORCPT
+        id S1727413AbfKLIiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:37:49 -0500
-Received: from mail-eopbgr750084.outbound.protection.outlook.com ([40.107.75.84]:3814
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbfKLIhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:37:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FW9/LNvmcX+C1TRJ1jeJ54VdSpl0s/9efgqviw8oJvNI78Ld/zVjL8qoEWzv+YhlKE5ghUiI6JA9yIKN4UdLWw6JRsT+MRgI0ahDbjgD1Vb1KHG4E3QW2Rnv78LzTYeL5KXdjBtTPkY5MHEQV1JH/UucTllEfRCOKWHUYGUUQgQ8QokXWSWbaGYISu0XUbKzh6yodyRP4MqBWF9izmsJWk+BZyRNygc4qoCbgWoc6n6Jw+GcTDACHbrU77zW3bhOx/U0AKR93NxLlnHKl6RDQVXE6zicRCfEx8+fIGac2ciuccA4GNOOC4UsR0x6chGQmp5r9Nd19AapYuSHZ9TfPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CnonpDgdGcrSnWv3TiSOaA/ryLf5VJjthY7se3QdMDA=;
- b=TJ50xxEU0Spxyrcdc1D/NAcLPPpEzpdFhsHrEm1SSBe8VcW4e7PDygti6yWidxvaArP7LbEd8b/PMgnNbMaE67qGgbn1SdKPCeqGzb1K9Dc6iO7jys8dIpx526qx80CB/W2XvQba/Zdh3YKr/cuzGqyvcuJKKFKrLOEunA4xRfkyTHwMdaSaPuiuADGHKvJK9yOt0BUmmd2+UNvHzMo6YNCY2647tr/K8QngP0Opv5fRvVkXpTRNehVV821PpPNOgoWm6dQTAj/C4AZRyhDncWG2Pwk7K+piuxr6AAyNzmaskA9O91cOJ0EGLv+LOxqlzpyS6eJtdFajgyaOK9tUPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CnonpDgdGcrSnWv3TiSOaA/ryLf5VJjthY7se3QdMDA=;
- b=GZNdnDzMCLqMPlhY9YIYZXdkZwkyDtJ3f717hXYWjvv1hhNj2vAaDYGmydP98C5EJMhCurkQvKGA8z5PWu5j6cemnDozD41UkUHZZt+209sax+DANbYz8le7ZZRp6bhyebR7AlMUCjswpI5gEwAxN2SqoGm+JdMxJ8xUFJ5vp2Y=
-Received: from BN6PR02CA0027.namprd02.prod.outlook.com (2603:10b6:404:5f::13)
- by BYAPR02MB5095.namprd02.prod.outlook.com (2603:10b6:a03:70::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.25; Tue, 12 Nov
- 2019 08:37:42 +0000
-Received: from BL2NAM02FT046.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::206) by BN6PR02CA0027.outlook.office365.com
- (2603:10b6:404:5f::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22 via Frontend
- Transport; Tue, 12 Nov 2019 08:37:42 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT046.mail.protection.outlook.com (10.152.76.118) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2430.20
- via Frontend Transport; Tue, 12 Nov 2019 08:37:42 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iURgD-00012N-MS; Tue, 12 Nov 2019 00:37:41 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iURg8-00052T-Ky; Tue, 12 Nov 2019 00:37:36 -0800
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAC8bUbh011974;
-        Tue, 12 Nov 2019 00:37:30 -0800
-Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iURg2-000528-BJ; Tue, 12 Nov 2019 00:37:30 -0800
-From:   Rajan Vaja <rajan.vaja@xilinx.com>
-To:     michal.simek@xilinx.com, jolly.shah@xilinx.com,
-        nava.manne@xilinx.com, ravi.patel@xilinx.com,
-        tejas.patel@xilinx.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rajan Vaja <rajan.vaja@xilinx.com>
-Subject: [PATCH] drivers: firmware: xilinx: Add support for feature check
-Date:   Tue, 12 Nov 2019 00:35:55 -0800
-Message-Id: <1573547755-4779-1-git-send-email-rajan.vaja@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(39860400002)(189003)(199004)(6636002)(47776003)(2906002)(478600001)(50466002)(356004)(6666004)(476003)(126002)(4326008)(2616005)(486006)(426003)(44832011)(107886003)(26005)(7696005)(14444005)(51416003)(48376002)(186003)(336012)(36756003)(81166006)(70206006)(70586007)(81156014)(305945005)(8936002)(106002)(36386004)(8676002)(316002)(50226002)(5660300002)(16586007)(9786002)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5095;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        Tue, 12 Nov 2019 03:38:04 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56164 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfKLIiD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 03:38:03 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC8c01F112888;
+        Tue, 12 Nov 2019 02:38:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573547880;
+        bh=RBU6T2Nh2+ByLEEG4MJg4kaoUQLdytcGJ4khenbTWao=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JdRaaRw0vvZbDpoHkdTyw2icPLcx7j8Cz20zpKDPpwOD4TgvDRqV0uVkL2PBzH14x
+         Wm5j9IueQdaezGwcUpPbrSyj3cvY0WygFzbRXHMYbSbD2vwTdnAUa+0HIafIE6yseL
+         sRvn0lClh8o8fghVkz1laLLCCkU8RSuwElEcq7Uc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAC8c0i6004370
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 02:38:00 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 02:37:42 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 02:37:42 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC8bvTh085771;
+        Tue, 12 Nov 2019 02:37:58 -0600
+Subject: Re: [PATCH 08/17] remoteproc/omap: Add support for DRA7xx remote
+ processors
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-9-t-kristo@ti.com> <20191111233707.GJ3108315@builder>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <0d26759a-8a48-e573-cbf6-721c6e5367c1@ti.com>
+Date:   Tue, 12 Nov 2019 10:37:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: be06afd6-3616-480d-f7a4-08d7674b9584
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5095:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB509564C3129AEFA9B23CA3BAB7770@BYAPR02MB5095.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 021975AE46
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0Q1KRvmj2mvIOvrx0IvAaiVxiyCDzxmDBDkuXaWcwVCjPM5TuDHYwhTY1zWgS7yVwhTSPD5Jfe3eEMADsXYxZWYpIJaB6w0EheXYu+f43XPgtLXB2U0afYGitUuXeDCrn9O7zbEXzjzq0+wMb0WvYEnbXHsXZHi8UEMEWOI0YErs5l+1EkoD+PX6I1chUYVcWyJvgVYHO6bRZOezpvBjxrqBUz50CmTPktQHi/vkoAvO932Fzrr55bKGVjZoSXQgtPA2cFDJjBJmTf3mKxXBKH2sw086i/tlDvLyJwQ60qynu6MgDt1G4XkejczUf+s/rxUN9llCztozVe15yDrJ94J/p2Jf1Q1gz9KiMsMHcx27t9JoXpgFlP53WBIFsW8gYvHatPaj6fl6VnzWAg5utXl+fmV5gSmA1JJcSnf0UyW6epD/klQURtOqh3hPaiXw
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2019 08:37:42.2540
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: be06afd6-3616-480d-f7a4-08d7674b9584
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5095
+In-Reply-To: <20191111233707.GJ3108315@builder>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Patel <ravi.patel@xilinx.com>
+On 12/11/2019 01:37, Bjorn Andersson wrote:
+> On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
+> 
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> DRA7xx/AM57xx SoCs have two IPU and up to two DSP processor subsystems
+>> for offloading different computation algorithms. The IPU processor
+>> subsystem contains dual-core ARM Cortex-M4 processors, and is very
+>> similar to those on OMAP5. The DSP processor subsystem is based on
+>> the TI's standard TMS320C66x DSP CorePac core.
+>>
+>> Support has been added to the OMAP remoteproc driver through new
+>> DRA7xx specific compatibles for properly probing and booting the
+>> all the different processor subsystem instances on DRA7xx/AM57xx
+>> SoCs - IPU1, IPU2, DSP1 & DSP2. A build dependency with SOC_DRA7XX
+>> is added to enable the driver to be built in DRA7xx-only configuration.
+>>
+>> The DSP boot address programming needed enhancement for DRA7xx as the
+>> boot register fields are different on DRA7 compared to OMAP4 and OMAP5
+>> SoCs. The register on DRA7xx contains additional fields within the
+>> register and the boot address bit-field is right-shifted by 10 bits.
+>> The internal memory parsing logic has also been updated to compute
+>> the device addresses for the L2 RAM for DSP devices using relative
+>> addressing logic, and to parse two additional RAMs at L1 level - L1P
+>> and L1D. This allows the remoteproc driver to support loading into
+>> these regions for a small subset of firmware images requiring as
+>> such. The most common usage would be to use the L1 programmable
+>> RAMs as L1 Caches.
+>>
+>> The firmware lookup logic also has to be adjusted for DRA7xx as
+>> there are (can be) more than one instance of both the IPU and DSP
+>> remote processors for the first time in OMAP4+ SoCs.
+>>
+>> The names for the firmware images are fixed for each processor and
+>> are expected to be as follows:
+>> 	IPU1: dra7-ipu1-fw.xem4
+>> 	IPU2: dra7-ipu2-fw.xem4
+>> 	DSP1: dra7-dsp1-fw.xe66
+>> 	DSP2: dra7-dsp2-fw.xe66
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo@ti.com: fixed l4_offset calculation logic]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/remoteproc/Kconfig           |   2 +-
+>>   drivers/remoteproc/omap_remoteproc.c | 103 ++++++++++++++++++++++++---
+>>   2 files changed, 96 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>> index 94afdde4bc9f..d6450d7fcf92 100644
+>> --- a/drivers/remoteproc/Kconfig
+>> +++ b/drivers/remoteproc/Kconfig
+>> @@ -25,7 +25,7 @@ config IMX_REMOTEPROC
+>>   
+>>   config OMAP_REMOTEPROC
+>>   	tristate "OMAP remoteproc support"
+>> -	depends on ARCH_OMAP4 || SOC_OMAP5
+>> +	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
+>>   	depends on OMAP_IOMMU
+>>   	select MAILBOX
+>>   	select OMAP2PLUS_MBOX
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index 0b80570effee..e46bb4c790d7 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -17,6 +17,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/err.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/of_address.h>
+>>   #include <linux/of_reserved_mem.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/dma-mapping.h>
+>> @@ -30,16 +31,20 @@
+>>   #include "omap_remoteproc.h"
+>>   #include "remoteproc_internal.h"
+>>   
+>> +#define OMAP_RPROC_DSP_LOCAL_MEM_OFFSET		(0x00800000)
+>>   #define OMAP_RPROC_IPU_L2RAM_DEV_ADDR		(0x20000000)
+>>   
+>>   /**
+>>    * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+>>    * @syscon: regmap handle for the system control configuration module
+>>    * @boot_reg: boot register offset within the @syscon regmap
+>> + * @boot_reg_shift: bit-field shift required for the boot address value in
+>> + *		    @boot_reg
+>>    */
+>>   struct omap_rproc_boot_data {
+>>   	struct regmap *syscon;
+>>   	unsigned int boot_reg;
+>> +	unsigned int boot_reg_shift;
+>>   };
+>>   
+>>   /*
+>> @@ -151,14 +156,19 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+>>   	struct omap_rproc *oproc = rproc->priv;
+>>   	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+>>   	u32 offset = bdata->boot_reg;
+>> +	unsigned int value = rproc->bootaddr;
+>> +	unsigned int mask = ~(SZ_1K - 1);
+>>   
+>> -	if (rproc->bootaddr & (SZ_1K - 1)) {
+>> +	if (value & (SZ_1K - 1)) {
+> 
+> I would prefer if you keep this as it was.
+> 
+>>   		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
+>> -			rproc->bootaddr);
+>> +			value);
+> 
+> Ditto.
+> 
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> -	regmap_write(bdata->syscon, offset, rproc->bootaddr);
+>> +	value >>= bdata->boot_reg_shift;
+>> +	mask >>= bdata->boot_reg_shift;
+> 
+> And then
+> 
+> value = rproc->bootaddr >> bdata->boot_reg_shift;
+> mask = ~((SZ_1K - 1) >> bdata->boot_reg_shift);
+> 
+> Note though that this would make the upper boot_reg_shift bits 1, while
+> in your case they are 0s.
 
-Query for corresponding feature before calling EEMI API
-from the driver.
+Ok let me revamp this a bit.
 
-Signed-off-by: Ravi Patel <ravi.patel@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
----
- drivers/firmware/xilinx/zynqmp.c     | 43 ++++++++++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  7 ++++++
- 2 files changed, 50 insertions(+)
+> 
+>> +
+>> +	regmap_update_bits(bdata->syscon, offset, mask, value);
+>>   
+>>   	return 0;
+>>   }
+>> @@ -292,6 +302,28 @@ static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>>   	.fw_name	= "omap5-ipu-fw.xem4",
+>>   };
+>>   
+>> +static const struct omap_rproc_dev_data dra7_rproc_dev_data[] = {
+>> +	{
+>> +		.device_name	= "40800000.dsp",
+>> +		.fw_name	= "dra7-dsp1-fw.xe66",
+>> +	},
+>> +	{
+>> +		.device_name	= "41000000.dsp",
+>> +		.fw_name	= "dra7-dsp2-fw.xe66",
+>> +	},
+>> +	{
+>> +		.device_name	= "55020000.ipu",
+>> +		.fw_name	= "dra7-ipu2-fw.xem4",
+>> +	},
+>> +	{
+>> +		.device_name	= "58820000.ipu",
+>> +		.fw_name	= "dra7-ipu1-fw.xem4",
+>> +	},
+>> +	{
+>> +		/* sentinel */
+>> +	},
+>> +};
+>> +
+>>   static const struct of_device_id omap_rproc_of_match[] = {
+>>   	{
+>>   		.compatible     = "ti,omap4-dsp",
+>> @@ -309,6 +341,14 @@ static const struct of_device_id omap_rproc_of_match[] = {
+>>   		.compatible     = "ti,omap5-ipu",
+>>   		.data           = &omap5_ipu_dev_data,
+>>   	},
+>> +	{
+>> +		.compatible     = "ti,dra7-dsp",
+>> +		.data           = dra7_rproc_dev_data,
+>> +	},
+>> +	{
+>> +		.compatible     = "ti,dra7-ipu",
+>> +		.data           = dra7_rproc_dev_data,
+>> +	},
+>>   	{
+>>   		/* end */
+>>   	},
+>> @@ -317,13 +357,23 @@ MODULE_DEVICE_TABLE(of, omap_rproc_of_match);
+>>   
+>>   static const char *omap_rproc_get_firmware(struct platform_device *pdev)
+>>   {
+>> +	struct device_node *np = pdev->dev.of_node;
+>>   	const struct omap_rproc_dev_data *data;
+>>   
+>>   	data = of_device_get_match_data(&pdev->dev);
+>>   	if (!data)
+>>   		return ERR_PTR(-ENODEV);
+>>   
+>> -	return data->fw_name;
+>> +	if (!of_device_is_compatible(np, "ti,dra7-dsp") &&
+>> +	    !of_device_is_compatible(np, "ti,dra7-ipu"))
+>> +		return data->fw_name;
+>> +
+>> +	for (; data && data->device_name; data++) {
+>> +		if (!strcmp(dev_name(&pdev->dev), data->device_name))
+> 
+> I don't fancy the reliance on node names in devicetree, is this well
+> defined in the binding?
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 74d9f13..ecc339d 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -26,6 +26,9 @@
- 
- static const struct zynqmp_eemi_ops *eemi_ops_tbl;
- 
-+static bool feature_check_enabled;
-+static u32 zynqmp_pm_features[PM_API_MAX];
-+
- static const struct mfd_cell firmware_devs[] = {
- 	{
- 		.name = "zynqmp_power_controller",
-@@ -44,6 +47,8 @@ static int zynqmp_pm_ret_code(u32 ret_status)
- 	case XST_PM_SUCCESS:
- 	case XST_PM_DOUBLE_REQ:
- 		return 0;
-+	case XST_PM_NO_FEATURE:
-+		return -ENOTSUPP;
- 	case XST_PM_NO_ACCESS:
- 		return -EACCES;
- 	case XST_PM_ABORT_SUSPEND:
-@@ -129,6 +134,39 @@ static noinline int do_fw_call_hvc(u64 arg0, u64 arg1, u64 arg2,
- }
- 
- /**
-+ * zynqmp_pm_feature() - Check weather given feature is supported or not
-+ * @api_id:		API ID to check
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_feature(u32 api_id)
-+{
-+	int ret;
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	u64 smc_arg[2];
-+
-+	if (!feature_check_enabled)
-+		return 0;
-+
-+	/* Return value if feature is already checked */
-+	if (zynqmp_pm_features[api_id] != PM_FEATURE_UNCHECKED)
-+		return zynqmp_pm_features[api_id];
-+
-+	smc_arg[0] = PM_SIP_SVC | PM_FEATURE_CHECK;
-+	smc_arg[1] = api_id;
-+
-+	ret = do_fw_call(smc_arg[0], smc_arg[1], 0, ret_payload);
-+	if (ret) {
-+		zynqmp_pm_features[api_id] = PM_FEATURE_INVALID;
-+		return PM_FEATURE_INVALID;
-+	}
-+
-+	zynqmp_pm_features[api_id] = ret_payload[1];
-+
-+	return zynqmp_pm_features[api_id];
-+}
-+
-+/**
-  * zynqmp_pm_invoke_fn() - Invoke the system-level platform management layer
-  *			   caller function depending on the configuration
-  * @pm_api_id:		Requested PM-API call
-@@ -162,6 +200,9 @@ int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
- 	 */
- 	u64 smc_arg[4];
- 
-+	if (zynqmp_pm_feature(pm_api_id) == PM_FEATURE_INVALID)
-+		return -ENOTSUPP;
-+
- 	smc_arg[0] = PM_SIP_SVC | pm_api_id;
- 	smc_arg[1] = ((u64)arg1 << 32) | arg0;
- 	smc_arg[2] = ((u64)arg3 << 32) | arg2;
-@@ -717,6 +758,8 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
- 		np = of_find_compatible_node(NULL, NULL, "xlnx,versal");
- 		if (!np)
- 			return 0;
-+
-+		feature_check_enabled = true;
- 	}
- 	of_node_put(np);
- 
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 74d710d..f0d4558 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -48,6 +48,10 @@
- #define	ZYNQMP_PM_CAPABILITY_WAKEUP	0x4U
- #define	ZYNQMP_PM_CAPABILITY_UNUSABLE	0x8U
- 
-+/* Feature check status */
-+#define PM_FEATURE_INVALID		-1
-+#define PM_FEATURE_UNCHECKED		0
-+
- /*
-  * Firmware FPGA Manager flags
-  * XILINX_ZYNQMP_PM_FPGA_FULL:	FPGA full reconfiguration
-@@ -78,11 +82,14 @@ enum pm_api_id {
- 	PM_CLOCK_GETRATE,
- 	PM_CLOCK_SETPARENT,
- 	PM_CLOCK_GETPARENT,
-+	PM_FEATURE_CHECK = 63,
-+	PM_API_MAX,
- };
- 
- /* PMU-FW return status codes */
- enum pm_ret_status {
- 	XST_PM_SUCCESS = 0,
-+	XST_PM_NO_FEATURE = 19,
- 	XST_PM_INTERNAL = 2000,
- 	XST_PM_CONFLICT,
- 	XST_PM_NO_ACCESS,
--- 
-2.7.4
+I don't think it is.... So, would it be better to just replace the 
+compatible strings for dra7 remoteprocs to be like ti,dra7-dsp1 / 
+ti,dra7-dsp2 etc.? I think that would clean up the code also quite a bit.
 
+> 
+>> +			return data->fw_name;
+>> +	}
+>> +
+>> +	return ERR_PTR(-ENOENT);
+>>   }
+>>   
+>>   static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>> @@ -334,7 +384,8 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>>   	int ret;
+>>   
+>>   	if (!of_device_is_compatible(np, "ti,omap4-dsp") &&
+>> -	    !of_device_is_compatible(np, "ti,omap5-dsp"))
+>> +	    !of_device_is_compatible(np, "ti,omap5-dsp") &&
+>> +	    !of_device_is_compatible(np, "ti,dra7-dsp"))
+>>   		return 0;
+>>   
+>>   	oproc->boot_data = devm_kzalloc(&pdev->dev, sizeof(*oproc->boot_data),
+>> @@ -360,18 +411,27 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> +	if (of_device_is_compatible(np, "ti,dra7-dsp"))
+>> +		oproc->boot_data->boot_reg_shift = 10;
+> 
+> Put this in omap_rproc_dev_data.
+
+Yeah.
+
+> 
+>> +
+>>   	return 0;
+>>   }
+>>   
+>>   static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+>>   					       struct rproc *rproc)
+>>   {
+>> -	static const char * const mem_names[] = {"l2ram"};
+>> +	static const char * const ipu_mem_names[] = {"l2ram"};
+>> +	static const char * const dra7_dsp_mem_names[] = {"l2ram", "l1pram",
+>> +								"l1dram"};
+>>   	struct device_node *np = pdev->dev.of_node;
+>>   	struct omap_rproc *oproc = rproc->priv;
+>>   	struct device *dev = &pdev->dev;
+>> +	const char * const *mem_names;
+>>   	struct resource *res;
+>>   	int num_mems;
+>> +	const __be32 *addrp;
+>> +	u32 l4_offset = 0;
+>> +	u64 size;
+>>   	int i;
+>>   
+>>   	/* OMAP4 and OMAP5 DSPs do not have support for flat SRAM */
+>> @@ -379,7 +439,15 @@ static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+>>   	    of_device_is_compatible(np, "ti,omap5-dsp"))
+>>   		return 0;
+>>   
+>> -	num_mems = ARRAY_SIZE(mem_names);
+>> +	/* DRA7 DSPs have two additional SRAMs at L1 level */
+>> +	if (of_device_is_compatible(np, "ti,dra7-dsp")) {
+>> +		mem_names = dra7_dsp_mem_names;
+>> +		num_mems = ARRAY_SIZE(dra7_dsp_mem_names);
+>> +	} else {
+>> +		mem_names = ipu_mem_names;
+>> +		num_mems = ARRAY_SIZE(ipu_mem_names);
+>> +	}
+>> +
+>>   	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+>>   				  GFP_KERNEL);
+>>   	if (!oproc->mem)
+>> @@ -395,7 +463,26 @@ static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+>>   			return PTR_ERR(oproc->mem[i].cpu_addr);
+>>   		}
+>>   		oproc->mem[i].bus_addr = res->start;
+>> -		oproc->mem[i].dev_addr = OMAP_RPROC_IPU_L2RAM_DEV_ADDR;
+>> +
+>> +		/*
+>> +		 * The DSPs have the internal memories starting at a fixed
+>> +		 * offset of 0x800000 from address 0, and this corresponds to
+>> +		 * L2RAM. The L3 address view has the L2RAM bus address as the
+>> +		 * starting address for the IP, so the L2RAM memory region needs
+>> +		 * to be processed first, and the device addresses for each
+>> +		 * memory region can be computed using the relative offset
+>> +		 * from this base address.
+>> +		 */
+>> +		if (of_device_is_compatible(np, "ti,dra7-dsp") &&
+> 
+> Please don't use a ternary operator repeatedly, it makes the code hard
+> to follow.
+
+Yeah this parts looks somewhat messy, let me try to fix that.
+
+-Tero
+
+> 
+> Regards,
+> Bjorn
+> 
+>> +		    !strcmp(mem_names[i], "l2ram")) {
+>> +			addrp = of_get_address(dev->of_node, i, &size, NULL);
+>> +			l4_offset = of_translate_address(dev->of_node, addrp);
+>> +		}
+>> +		oproc->mem[i].dev_addr =
+>> +			of_device_is_compatible(np, "ti,dra7-dsp") ?
+>> +				res->start - l4_offset +
+>> +				OMAP_RPROC_DSP_LOCAL_MEM_OFFSET :
+>> +				OMAP_RPROC_IPU_L2RAM_DEV_ADDR;
+>>   		oproc->mem[i].size = resource_size(res);
+>>   
+>>   		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
