@@ -2,150 +2,125 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D955BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F71DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD75021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="YZ+8M0RH"
+	by mail.kernel.org (Postfix) with ESMTP id 6AB65206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKLBjG (ORCPT
+        id S1726965AbfKLBpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:39:06 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39905 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfKLBjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:39:06 -0500
-Received: by mail-wr1-f66.google.com with SMTP id l7so5117871wrp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 17:39:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=lp+rjsn167C3lmtCe6z3qS3tIVfXOT/rrM9f7kFPRTI=;
-        b=YZ+8M0RHIzmdHlAGYOAvTxZOoeDVpZHRgZ89hVxKT4t6R+2JdLlah32oH0wl93yfV8
-         R1Rh/dsZc3emYfh4rUjbLHZ/fT5RBbcATgEZ7xSF43idD22qCiLJ/QB4AbK02gTMB7fw
-         cbpFZv2o1nsZAKhyxlaaGxfnYnXFQgW5C6SrrTZS2QQC5g4n6kgoHAaSg0I50hXEcaYG
-         mGNootWCuWZ87DWA9w0B2bLMBryq6UraGt27gmTtKNWkQDYSirLad2jx041GIeQ19jiG
-         nyHHe/PYQvB/Ks73mmlvubBSrwlsUIiuIhlw4Ae+93e2VJfBHZTDEHRiW8S/5g4spmxW
-         1IBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=lp+rjsn167C3lmtCe6z3qS3tIVfXOT/rrM9f7kFPRTI=;
-        b=fnmmic0MVJ8OLctuYWjJ2EZ3KLiL7rcbov1r4elO/NHxhAC9Uj0sv3bwaLrF+RYpiq
-         6e1REKt8PSJ5vQqzqkELwAvTuLHPZS/fnXpGUHyJyhttmYQc9mXP+TUVQ6PR30tigXWr
-         VDm6EE6M+BqBC9VZBargRHQbxaSgAK45E03u/q+Yzn6I5SmMmN1dm8LI0WIUUE53sfnw
-         HNuyxxDN3Ghytfxzrq3UJOCcpfMW8P2yIVS/eBvX1D7e/ZubkG2/yKZ2TF+IzrLkZHOI
-         0+zVTXLol6oacxFe/mKPruoRGHVy1EIkKJUsJ1JwgVt3098h+kT1QIfB0ZwTHqYzHTxs
-         jq+g==
-X-Gm-Message-State: APjAAAVadrn2n82lBK8bwrrh6d2HsBKMOvlEJkk5w2YRO2d4CzaeEFt1
-        Vcx4UrC/jrMKscOWuxkLgfCR/vR0MJiC2w==
-X-Google-Smtp-Source: APXvYqx5IKJpOyjgqwQIy8+eEzp96ylq9hr4vtUpzWTCHYSiEC/zyz/yKZBSPz5utCMo4QzDLzo6eA==
-X-Received: by 2002:adf:de0a:: with SMTP id b10mr2161236wrm.268.1573522742552;
-        Mon, 11 Nov 2019 17:39:02 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a7sm18766652wrr.89.2019.11.11.17.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 17:39:02 -0800 (PST)
-Message-ID: <5dca0d36.1c69fb81.9d3b3.bf52@mx.google.com>
-Date:   Mon, 11 Nov 2019 17:39:02 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 11 Nov 2019 20:45:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56230 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726793AbfKLBpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 20:45:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EF631AC68;
+        Tue, 12 Nov 2019 01:45:17 +0000 (UTC)
+Message-ID: <84ccea513e4ff21bdd374af01574e4bf04946bb6.camel@suse.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+From:   Dario Faggioli <dfaggioli@suse.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Phil Auld <pauld@redhat.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Date:   Tue, 12 Nov 2019 02:45:13 +0100
+In-Reply-To: <CANaguZCqHnR8b_68SSA_rfdkinVg8vLH66jQ_GhMsdOjuUHe3g@mail.gmail.com>
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+         <20191031184236.GE5738@pauld.bos.csb>
+         <CANaguZCqHnR8b_68SSA_rfdkinVg8vLH66jQ_GhMsdOjuUHe3g@mail.gmail.com>
+Organization: SUSE
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ZsTu4C/KBLte9v9VjR6R"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.4.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.4.200-44-g92b9901ba23d
-In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
-References: <20191111181246.772983347@linuxfoundation.org>
-Subject: Re: [PATCH 4.4 00/43] 4.4.201-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.4.y boot: 84 boots: 7 failed, 68 passed with 7 offline, 2=
- conflicts (v4.4.200-44-g92b9901ba23d)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.4.y/kernel/v4.4.200-44-g92b9901ba23d/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
-/kernel/v4.4.200-44-g92b9901ba23d/
+--=-ZsTu4C/KBLte9v9VjR6R
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tree: stable-rc
-Branch: linux-4.4.y
-Git Describe: v4.4.200-44-g92b9901ba23d
-Git Commit: 92b9901ba23dbd26e916a393e557a5ffec117124
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 42 unique boards, 17 SoC families, 13 builds out of 190
+On Fri, 2019-11-01 at 10:03 -0400, Vineeth Remanan Pillai wrote:
+> Hi Phil,
+>=20
+> > Unless I'm mistaken 7 of the first 8 of these went into sched/core
+> > and are now in linux (from v5.4-rc1). It may make sense to rebase
+> > on
+> > that and simplify the series.
+> >=20
+> Thanks a lot for pointing this out. We shall test on a rebased 5.4 RC
+> and post the changes soon, if the tests goes well. For v3, while
+> rebasing
+> to an RC kernel, we saw perf regressions and hence did not check the
+> RC kernel this time. You are absolutely right that we can simplify
+> the
+> patch series with 5.4 RC.
+>=20
+And, in case it's useful to anybody, here's a rebase of this series on
+top of 5.4-rc7:
 
-Boot Failures Detected:
+https://github.com/dfaggioli/linux/tree/wip/sched/v5.4-rc7-coresched
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            exynos4412-odroidx2: 1 failed lab
-            exynos5422-odroidxu3: 2 failed labs
-            rk3288-rock2-square: 1 failed lab
-            rk3288-veyron-jaq: 1 failed lab
-            tegra124-jetson-tk1: 1 failed lab
-            tegra124-nyan-big: 1 failed lab
+This also includes Tim's patch (this one
+<5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>) and is, for
+now, *only* compile tested.
 
-Offline Platforms:
+Regards
+--=20
+Dario Faggioli, Ph.D
+http://about.me/dario.faggioli
+Virtualization Software Engineer
+SUSE Labs, SUSE https://www.suse.com/
+-------------------------------------------------------------------
+<<This happens because _I_ choose it to happen!>> (Raistlin Majere)
 
-arm:
 
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
+--=-ZsTu4C/KBLte9v9VjR6R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
+-----BEGIN PGP SIGNATURE-----
 
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
+iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAl3KDqkACgkQFkJ4iaW4
+c+7m5w//aGiX4TRS2rKI4xA7E32sBx9oS/QbqVtLBwVL2fB4lWDMCcRcI2r2q040
+dboG+MDJAX226GEK8+o5YZLBaxuVo4tO50CnQq9W7CfjWVCBfO86kSIbHwx6zaKl
+cDDXf+mRko+OD3izrKCAdFki1S8BcRCNUNs86QjiCk0yarEgoO8kPeNYTYpmK54g
+9zne3J3lzzI43MNK25dS5sf+xWn1F8Oa+TI8g4fodYA4+hAhCEphkc2nQMcxsxr2
+IImAa+RQv0ubKZ2suMRnbaPYYjLq8YSAxtywuoqpxc30jbb8HQdH4Q2Titj/AI25
+HpacQn5yrMHvdHFX+0jzt8uBjLUOvSTN5Ja2PktGcLY/AJcmP+iiM3EUiT8i+TU/
+Xc0OdKoTB9TgKNDD242S5J6x6wag0GT/C9RndqNL5hKpLapU4ibNTRmbxYI0CfFl
+LRkitfDUyZo9FRasMLUCvKY8psH6Qn/GK9EDomZNY5HyV21q4N7KuDtKAKuD1BMi
+gSPiICZVAxd1DvUgkwS3xBv05EhZDoWXvj3YId7GYn2XdKijw+kvP3iEwc7yJMFZ
+wL69uN1uG8ij3bYQuXsywBvrU0spfV+kRfwJTsKcY5kE0OmYsLyYjT9cHFCufz/y
+AMcY5pSTUPnlz/Kur1Y2716ts0xz5wHCqlZYn3urRUjKCPBSANE=
+=Ohgt
+-----END PGP SIGNATURE-----
 
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
+--=-ZsTu4C/KBLte9v9VjR6R--
 
-Conflicting Boot Failures Detected: (These likely are not failures as other=
- labs are reporting PASS. Needs review.)
-
-arm:
-    multi_v7_defconfig:
-        exynos5800-peach-pi:
-            lab-collabora: FAIL (gcc-8)
-            lab-baylibre-seattle: PASS (gcc-8)
-
-x86_64:
-    x86_64_defconfig:
-        qemu_x86_64:
-            lab-collabora: PASS (gcc-8)
-            lab-baylibre: FAIL (gcc-8)
-
----
-For more info write to <info@kernelci.org>
