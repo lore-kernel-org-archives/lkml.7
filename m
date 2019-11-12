@@ -2,250 +2,189 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09E6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD07C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B052321925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="k6e/sw/1"
+	by mail.kernel.org (Postfix) with ESMTP id 328342196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573601668;
+	bh=avE5ryt0LyUf1wbwCO+LKq0mIuRLC8Qq65aG1tM/7ek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QEgb+UVzREGr/+TciOMU+lzDp8tZoiw9BuNl7Ue5B/rZ1yARgHajPvMBYboMOD50U
+	 m+pD9npXg/U+rjI0IBmayK/F8gfSC5lCRIL5SHeVqpOYWEGrHno9VyVHf3XaY+M4Yp
+	 kK/QO1ciV27/lgjQ4HDzgpc1qkWXrAp0nGBfUfGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKLX1u (ORCPT
+        id S1727032AbfKLXe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:27:50 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:25896 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKLX1u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:27:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573601266;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=iqzxLkf9K+HSS4DGB5MgITWBOt1JRX4SRIPlx34+8UM=;
-        b=k6e/sw/1717upMa3Mi3YWXjrstgYixIoVGQcJkw4UQRMySjYMOCdAAPgaqPIzEvlG2
-        0LZGYpQ9w+2PdU+ySS68gKfxDXFEOQrqZL1HmsBRpIUSpQpHZER72XvKBB2UNqHnyClf
-        BNK+4Dp2BzvexL/e4cPJrkLhXcKOhrDGcYWZGHhTnR+A0i+MTzm27Xf1vwh10UYsOZv+
-        xQuqXyGTs2B8GOKKCY+pBfBNfdbVMzqUQuz/8hH8lh2EclHbu7F5uTtwSenHKDentodE
-        Cn5kd1J8gWcCs8g0d6hmykJFvwcvY9DEBIou4El6jEXahhViuv0OtwSKcZoUr3hJPiqw
-        Bgyg==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id N09a57vACNQaA5M
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 13 Nov 2019 00:26:36 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v24 00/12] /dev/random - a new approach with full SP800-90B compliance
-Date:   Wed, 13 Nov 2019 00:26:34 +0100
-Message-ID: <1708605.HZ0Ruzqnhc@positron.chronox.de>
-In-Reply-To: <3282061.iY3hP4IT6m@positron.chronox.de>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <CALCETrVBzuOsDfaz5y3V4v+6xmeWufOYsOGnpZrRju6Pfsi6gg@mail.gmail.com> <3282061.iY3hP4IT6m@positron.chronox.de>
+        Tue, 12 Nov 2019 18:34:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfKLXe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 18:34:26 -0500
+Received: from earth.universe (unknown [185.216.33.116])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D7A421783;
+        Tue, 12 Nov 2019 23:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573601665;
+        bh=avE5ryt0LyUf1wbwCO+LKq0mIuRLC8Qq65aG1tM/7ek=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sRlyFDfSfw1CnA1sHjNB/4oYlWPh/vWv41/IAzMqWTJt7LrYicdpJQXvee0Tykm9I
+         oyR7c3Uqg3VzyC2JBJnkek0dalC12wvkmdHgAckbuc6bpDtliEevIWzT8s7VGeY1k5
+         p1vr72EJZgT9TBVYQU0dqpQCuWodTc+dask0Qit8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 3276E3C0C78; Wed, 13 Nov 2019 00:34:21 +0100 (CET)
+Date:   Wed, 13 Nov 2019 00:34:21 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] Input: ili210x - do not retrieve/print chip
+ firmware version
+Message-ID: <20191112233421.eh44mv6ji2tk6ki2@earth.universe>
+References: <20191112164429.11225-1-TheSven73@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tynyp4nbd7ljgtf3"
+Content-Disposition: inline
+In-Reply-To: <20191112164429.11225-1-TheSven73@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 13. November 2019, 00:03:47 CET schrieb Stephan M=FCller:
 
-Hi Stephan,
+--tynyp4nbd7ljgtf3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Am Dienstag, 12. November 2019, 16:33:59 CET schrieb Andy Lutomirski:
->=20
-> Hi Andy,
->=20
-> > On Mon, Nov 11, 2019 at 11:13 AM Stephan M=FCller <smueller@chronox.de>=
-=20
-wrote:
-> > > The following patch set provides a different approach to /dev/random
-> > > which
-> > > is called Linux Random Number Generator (LRNG) to collect entropy wit=
-hin
-> > > the Linux kernel. The main improvements compared to the existing
-> > > /dev/random is to provide sufficient entropy during boot time as well=
- as
-> > > in virtual environments and when using SSDs. A secondary design goal =
-is
-> > > to limit the impact of the entropy collection on massive parallel
-> > > systems
-> > > and also allow the use accelerated cryptographic primitives. Also, all
-> > > steps of the entropic data processing are testable.
-> >=20
-> > This is very nice!
-> >=20
-> > > The LRNG patch set allows a user to select use of the existing
-> > > /dev/random
-> > > or the LRNG during compile time. As the LRNG provides API and ABI
-> > > compatible interfaces to the existing /dev/random implementation, the
-> > > user can freely chose the RNG implementation without affecting kernel=
- or
-> > > user space operations.
-> > >=20
-> > > This patch set provides early boot-time entropy which implies that no
-> > > additional flags to the getrandom(2) system call discussed recently on
-> > > the LKML is considered to be necessary.
-> >=20
-> > I'm uneasy about this.  I fully believe that, *on x86*, this works.
-> > But on embedded systems with in-order CPUs, a single clock, and very
-> > lightweight boot processes, most or all of boot might be too
-> > deterministic for this to work.
->=20
-> I agree that in such cases, my LRNG getrandom(2) would also block until t=
-he
-> LRNG thinks it collected 256 bits of entropy. However, I am under the
-> impression that the LRNG collects that entropy faster that the existing
-> /dev/ random implementation, even in this case.
->=20
-> Nicolai is copied on this thread. He promised to have the LRNG tested on
-> such a minimalistic system that you describe. I hope he could contribute
-> some numbers from that test helping us to understand how much of a problem
-> we face.
-> > I have a somewhat competing patch set here:
-> >=20
-> > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=
-=3Drand
-> > om /kill-it
-> >=20
-> > (Ignore the "horrible test hack" and the debugfs part.)
-> >=20
-> > The basic summary is that I change /dev/random so that it becomes
-> > functionally identical to getrandom(..., 0) -- in other words, it
-> > blocks until the CRNG is initialized but is then identical to
-> > /dev/urandom.
->=20
-> This would be equal to the LRNG code without compiling the TRNG.
->=20
-> > And I add getrandom(...., GRND_INSECURE) that is
-> > functionally identical to the existing /dev/urandom: it always returns
-> > *something* immediately, but it may or may not actually be
-> > cryptographically random or even random at all depending on system
-> > details.
->=20
-> Ok, if it is suggested that getrandom(2) should also have a mode to behave
-> exactly like /dev/urandom by not waiting until it is fully seeded, I am
-> happy to add that.
->=20
-> > In other words, my series simplifies the ABI that we support.  Right
-> > now, we have three ways to ask for random numbers with different
-> > semantics and we need to have to RNGs in the kernel at all time.  With
-> > my changes, we have only two ways to ask for random numbers, and the
-> > /dev/random pool is entirely gone.
->=20
-> Again, I do not want to stand in the way of changing the ABI if this is t=
-he
-> agreed way. All I want to say is that the LRNG seemingly is initialized m=
-uch
-> faster than the existing /dev/random. If this is not fast enough for some
-> embedded environments, I would not want to stand in the way to make their
-> life easier.
->=20
-> > Would you be amenable to merging this into your series (i.e. either
-> > merging the code or just the ideas)?
->=20
-> Absolutely. I would be happy to do that.
->=20
-> Allow me to pull your code (I am currently behind a slow line) and review=
- it
-> to see how best to integrate it.
->=20
-> > This would let you get rid of
-> > things like the compile-time selection of the blocking TRNG, since the
-> > blocking TRNG would be entirely gone.
->=20
-> Hm, I am not so sure we should do that.
->=20
-> Allow me to explain: I am also collaborating on the European side with the
-> German BSI. They love /dev/random as it is a "NTG.1" RNG based on their A=
-IS
-> 31 standard.
->=20
-> In order to seed a deterministic RNG (like OpenSSL, GnuTLS, etc. which are
-> all defined to be "DRG.3" or "DRG.2"), BSI mandates that the seed source =
-is
-> an NTG.1.
->=20
-> By getting rid of the TRNG entirely and having /dev/random entirely behav=
-ing
-> like /dev/urandom or getrandom(2) without the GRND_RANDOM flag, the kernel
-> would "only" provide a "DRG.3" type RNG. This type of RNG would be
-> disallowed to seed another "DRG.3" or "DRG.2".
->=20
-> In plain English that means that for BSI's requirements, if the TRNG is g=
-one
-> there would be no native seed source on Linux any more that can satisfy t=
-he
-> requirement. This is the ultimate reason why I made the TRNG compile-time
-> selectable: to support embedded systems but also support use cases like t=
-he
-> BSI case.
->=20
-> Please consider that I maintain a study over the last years for BSI trying
-> to ensure that the NTG.1 property is always met [1] [2]. The sole purpose
-> of that study is around this NTG.1.
->=20
-> > Or do you think that a kernel-provided blocking TRNG is a genuinely
-> > useful thing to keep around?
->=20
-> Yes, as I hope I explained it appropriately above, there are standardizat=
-ion
-> requirements that need the TRNG.
->=20
-> PS: When I was forwarding Linus' email on eliminating the blocking_pool to
-> BSI, I saw unhappy faces. :-)
->=20
-> I would like to help both sides here.
->=20
-> [1]
-> https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Studies/
-> LinuxRNG/NTG1_Kerneltabelle_EN.pdf?__blob=3DpublicationFile&v=3D3
->=20
-> [2]
-> https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Studies/
-> LinuxRNG/NTG1_Kerneltabelle_EN.pdf?__blob=3DpublicationFile&v=3D3
+Hi,
 
-Sorry, the copy did not work:
-
-[2] https://bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Studies/
-LinuxRNG/LinuxRNG_EN.pdf?__blob=3DpublicationFile&v=3D16
+On Tue, Nov 12, 2019 at 11:44:27AM -0500, Sven Van Asbroeck wrote:
+> The driver's method to retrieve the firmware version on ili2117/
+> ili2118 chip flavours is incorrect. The firmware version register
+> address and layout are wrong.
 >=20
-> Ciao
-> Stephan
+> The firmware version is not actually used anywhere inside or
+> outside this driver. There is a dev_dbg() print, but that is
+> only visible when the developer explicitly compiles in debug
+> support.
+>=20
+> Don't make the code more complicated to preserve a feature that
+> no-one is using. Remove all code associated with chip firmware
+> version.
+>=20
+> Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
+> Cc: Marek Vasut <marex@denx.de>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: <linux-kernel@vger.kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/=
+?h=3Dnext
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
 
+The firmware version check does one relevant thing: It tests
+the I2C communication, which tends to be useful for board
+bringup and development boards (which often allow to disconnect
+(touch-)screens).
 
-Ciao
-Stephan
+-- Sebastian
 
+>  drivers/input/touchscreen/ili210x.c | 21 ---------------------
+>  1 file changed, 21 deletions(-)
+>=20
+> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscr=
+een/ili210x.c
+> index 0ed6014af6d7..a6feae5ce887 100644
+> --- a/drivers/input/touchscreen/ili210x.c
+> +++ b/drivers/input/touchscreen/ili210x.c
+> @@ -21,15 +21,8 @@
+>  /* Touchscreen commands */
+>  #define REG_TOUCHDATA		0x10
+>  #define REG_PANEL_INFO		0x20
+> -#define REG_FIRMWARE_VERSION	0x40
+>  #define REG_CALIBRATE		0xcc
+> =20
+> -struct firmware_version {
+> -	u8 id;
+> -	u8 major;
+> -	u8 minor;
+> -} __packed;
+> -
+>  struct ili2xxx_chip {
+>  	int (*read_reg)(struct i2c_client *client, u8 reg,
+>  			void *buf, size_t len);
+> @@ -342,7 +335,6 @@ static int ili210x_i2c_probe(struct i2c_client *clien=
+t,
+>  	struct ili210x *priv;
+>  	struct gpio_desc *reset_gpio;
+>  	struct input_dev *input;
+> -	struct firmware_version firmware;
+>  	int error;
+> =20
+>  	dev_dbg(dev, "Probing for ILI210X I2C Touschreen driver");
+> @@ -389,15 +381,6 @@ static int ili210x_i2c_probe(struct i2c_client *clie=
+nt,
+>  	priv->chip =3D chip;
+>  	i2c_set_clientdata(client, priv);
+> =20
+> -	/* Get firmware version */
+> -	error =3D chip->read_reg(client, REG_FIRMWARE_VERSION,
+> -			       &firmware, sizeof(firmware));
+> -	if (error) {
+> -		dev_err(dev, "Failed to get firmware version, err: %d\n",
+> -			error);
+> -		return error;
+> -	}
+> -
+>  	/* Setup input device */
+>  	input->name =3D "ILI210x Touchscreen";
+>  	input->id.bustype =3D BUS_I2C;
+> @@ -439,10 +422,6 @@ static int ili210x_i2c_probe(struct i2c_client *clie=
+nt,
+>  		return error;
+>  	}
+> =20
+> -	dev_dbg(dev,
+> -		"ILI210x initialized (IRQ: %d), firmware version %d.%d.%d",
+> -		client->irq, firmware.id, firmware.major, firmware.minor);
+> -
+>  	return 0;
+>  }
+> =20
+> --=20
+> 2.17.1
+>=20
 
+--tynyp4nbd7ljgtf3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3LQXkACgkQ2O7X88g7
++poBmQ//VE9RLaWgxqVEsAsPFyMI3C7gIlrbz8SWYVC+TegFkXdGvuNaoOema632
+O+hp247bYjdIHbUWFiJCaDZ0t7mcjPwfMyu1CYKxDQCaQldBTG6IED/TSufqoPwB
+KdGq1GGRPLpuzkDq4n4uP3wtWYhiphlCXOO0hymPP8iZ3Ul/LLOZ9dys8W3gUw1v
+XyTBMm02g17yqI2S6EwFNmf4DkfuL66/Rs42fscXjTkly0rkk4JFb6JsXHtUDOrA
+j2OQBg1gEzrIWkkor1DK4HXZBpb+o7U56WoQA2VTi61CkqoGJ8snN/+AzONClCTL
+Lfswv+a4RQBsQUu5oS6ePXcemdfsPYqBSp8/8mDnzOcF7/plNxawqIdWBdzq3awx
+JdbQo5AWxe8iW+DeEs9rz7aHKetnXomU+uH18vPpmrZtPibcQaVaa7eNB6XUdXzG
+ET/OUNVsZIVIMAoDnwOz74pvjmrCTeWVIusOk2kE5240TWuAom19tNPtvNfwhGJ5
+uZoVs11lBU0bAvD4+bVZPFX7zde8dXpoh66k0VTdIiy8fM07L2EIodvmo1QTo2yJ
+g+VF9GBiKl7ayydNQ7tz77R/aFKOBzQAyL8+XlBBM+3BxhPj71kJg9eOzSDLM2ty
+N04jGiDauA5eeciRQTaiplnTwm7aLfTO12Tinzg1OBuqSTFNJn0=
+=k1bX
+-----END PGP SIGNATURE-----
+
+--tynyp4nbd7ljgtf3--
