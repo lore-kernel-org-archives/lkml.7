@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFF5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACBDC17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15982248B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5327522490
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfKLLSW (ORCPT
+        id S1727497AbfKLLSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:18:22 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33741 "EHLO
+        Tue, 12 Nov 2019 06:18:25 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33791 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727401AbfKLLSS (ORCPT
+        with ESMTP id S1727417AbfKLLSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:18:18 -0500
+        Tue, 12 Nov 2019 06:18:20 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBa-0000bP-AJ; Tue, 12 Nov 2019 12:18:14 +0100
+        id 1iUUBZ-0000Wg-Rh; Tue, 12 Nov 2019 12:18:14 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E86521C0357;
-        Tue, 12 Nov 2019 12:18:09 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:18:09 -0000
-From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EAAB81C0084;
+        Tue, 12 Nov 2019 12:18:05 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:05 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf probe: Fix to list probe event with correct line number
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/core] perf map: Allow map__next() to receive a NULL arg
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <157199321227.8075.14655572419136993015.stgit@devnote2>
-References: <157199321227.8075.14655572419136993015.stgit@devnote2>
+In-Reply-To: <tip-pbde2ucn49khnrebclys9pny@git.kernel.org>
+References: <tip-pbde2ucn49khnrebclys9pny@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157355748948.29376.12970359374833546705.tip-bot2@tip-bot2>
+Message-ID: <157355748556.29376.11680687534918838530.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,77 +59,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     3895534dd78f0fd4d3f9e05ee52b9cdd444a743e
-Gitweb:        https://git.kernel.org/tip/3895534dd78f0fd4d3f9e05ee52b9cdd444a743e
-Author:        Masami Hiramatsu <mhiramat@kernel.org>
-AuthorDate:    Fri, 25 Oct 2019 17:46:52 +09:00
+Commit-ID:     20419d3a5bc0a278ed7e2ee54943674004411933
+Gitweb:        https://git.kernel.org/tip/20419d3a5bc0a278ed7e2ee54943674004411933
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 28 Oct 2019 11:50:12 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Wed, 06 Nov 2019 15:43:06 -03:00
 
-perf probe: Fix to list probe event with correct line number
+perf map: Allow map__next() to receive a NULL arg
 
-Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
-entry address of the function on which a probe is, it will fail when the
-function DIE has only ranges attribute.
+Just like free(), return NULL in that case, will simplify the
+for_each_entry_safe() iterators.
 
-To fix this issue, use die_entrypc() instead of dwarf_entrypc().
-
-Without this fix, perf probe -l shows incorrect offset:
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
-
-With this:
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
+Link: https://lkml.kernel.org/n/tip-pbde2ucn49khnrebclys9pny@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/map.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 2fa932b..88e17a4 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1566,7 +1566,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		/* Get function entry information */
- 		func = basefunc = dwarf_diename(&spdie);
- 		if (!func ||
--		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
-+		    die_entrypc(&spdie, &baseaddr) != 0 ||
- 		    dwarf_decl_line(&spdie, &baseline) != 0) {
- 			lineno = 0;
- 			goto post;
-@@ -1583,7 +1583,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
- 						&indie)) {
- 			/* There is an inline function */
--			if (dwarf_entrypc(&indie, &_addr) == 0 &&
-+			if (die_entrypc(&indie, &_addr) == 0 &&
- 			    _addr == addr) {
- 				/*
- 				 * addr is at an inline function entry.
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index c9ba495..86d8d18 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -1007,7 +1007,7 @@ struct map *maps__first(struct maps *maps)
+ 	return NULL;
+ }
+ 
+-struct map *map__next(struct map *map)
++static struct map *__map__next(struct map *map)
+ {
+ 	struct rb_node *next = rb_next(&map->rb_node);
+ 
+@@ -1016,6 +1016,11 @@ struct map *map__next(struct map *map)
+ 	return NULL;
+ }
+ 
++struct map *map__next(struct map *map)
++{
++	return map ? __map__next(map) : NULL;
++}
++
+ struct kmap *__map__kmap(struct map *map)
+ {
+ 	if (!map->dso || !map->dso->kernel)
