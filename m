@@ -2,128 +2,113 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBCBC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016CBC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3521E21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91E820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 23:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4HijsXE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bNxjrx04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfKLXBa (ORCPT
+        id S1727021AbfKLXDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:01:30 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33433 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfKLXB3 (ORCPT
+        Tue, 12 Nov 2019 18:03:30 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41832 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKLXDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 18:01:29 -0500
-Received: by mail-pl1-f196.google.com with SMTP id ay6so179707plb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:01:29 -0800 (PST)
+        Tue, 12 Nov 2019 18:03:30 -0500
+Received: by mail-pg1-f195.google.com with SMTP id h4so12840626pgv.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 15:03:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=nExhpa8NtyhyvUyh20F6httON+9jpHubOC8X4R1/1QI=;
-        b=c4HijsXEjZGJqE7HF/OLTdBXGVnY9qLmNBULMzMpbSwMDUdlWMyYkBAj7Jv9KvJQq9
-         uQ/fhhX6CbwBVqkc6vhI0J9bVR6S+eypweTAwvYsABomRnDDk1wGcU2hJ/fV4/K6uu+1
-         c9+G8zkVxO8gfkNV8xNJ/wUCIdP5veO1BJPEs=
+        bh=soAK6mR7/nlH57wscE6Anu+LxHtbszZd20gXy3dqtds=;
+        b=bNxjrx04Kt52AdGurWf++izr0TcUWE+iYJy7xJCbvM+w+E/MiddxwrF5h3mu5PeZKw
+         DHa4bg/tfGyMpe1pGUgEUT8A6iMzek4x5HopvI+08asWwi2Rb65z1gdA8Q9/z6PVbQaq
+         iRhFfpwdXXcp981sv9EZnSPA4rEl9wDxUloj0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nExhpa8NtyhyvUyh20F6httON+9jpHubOC8X4R1/1QI=;
-        b=qe3K2SiS0Z29MKRSZifdS0IqJPFsq0lnteh7Pko2hR+1+h786QZvFN/3lJfEtdNZEa
-         pkDoDblDHp0BH+iI2yvv6wpYIbrIy53Ob9MrhWsmvs0vqRKKFwsmmPPThnT5pdmW2F9y
-         wfkSEwNrq+DqKbwQZfjJ8I/s3MG8qpf3bCxIvu1+dDS1Rua8lanoiBqKvCQCAruL6Kt3
-         0TyNHeRF5iXKUYU7StrCa1GwLw5tYd9C4EUJEcXYZhSIYwGPm5yR5S0lOO5fWvhix9ZZ
-         +a+4kvnhRljlMp4do7yXEdX8A1epZq1jbcVt31zhAVgoyAqPmrtw8lfNdVQASk1kQR9O
-         YKgA==
-X-Gm-Message-State: APjAAAWN5OdkOeA0HzDbJTOuTkjW9HfiIoISLoC24lIYkjog884lC4hV
-        ycosz6FmunnsF4deHaQK/Q4tLA==
-X-Google-Smtp-Source: APXvYqy/dNw+1S0sgv4o54+xgQ9m/sDAbXJguDm6De1m1sF3Ucjez84Z50LDqlIQCV97XGMiY2eUjw==
-X-Received: by 2002:a17:902:b282:: with SMTP id u2mr266015plr.301.1573599688858;
-        Tue, 12 Nov 2019 15:01:28 -0800 (PST)
+        bh=soAK6mR7/nlH57wscE6Anu+LxHtbszZd20gXy3dqtds=;
+        b=EFT8oR6w9bzM+AO1kUyYLmbIzbmt2Ywl5XtafSJ3lhxBpzZzLGPHtBZwJXwUZiWciP
+         Sm2MWoVzE8WXDmyrPzlZOMEme73/ID9VFtM7KF3qUYL+VCcNLc0V5NCbavvhjrV8Dj/T
+         YiqYiwuIUNr9wNbqV6GyHtD6XNmN6Erv31PF/9nZEEIWI47FgTLMmkQPrtsKQQinwAby
+         p6jlUQnvoF/ZVphQ1teJQnpKuH1Un2KoypIxdmcvKfK9Ou2B6k0vvU57pFeSEFQUOBwA
+         csk3KraqJsR9rQd5j14GK5EmQg2BKw+CjiIMukmYSrfPt8Srsaqd7xC6TAvWLFaNadTk
+         Dv3Q==
+X-Gm-Message-State: APjAAAV3COR2dG/kNF+vfn6ukkFcgPsNGBHd93PNXU7Qgc+EJfiQ+X6h
+        MuASIkGqXd7z10oF6KlKCfTgOA==
+X-Google-Smtp-Source: APXvYqyTTxwcPuc1qZNwB4971E9nj9vEsULrk0Nc2D0CgwZfZ4ItP+YMjk1mY+/0xAfOV9FfqS32+A==
+X-Received: by 2002:a63:3cd:: with SMTP id 196mr31871pgd.150.1573599809214;
+        Tue, 12 Nov 2019 15:03:29 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id em16sm159840pjb.21.2019.11.12.15.01.27
+        by smtp.gmail.com with ESMTPSA id r22sm33477pfg.54.2019.11.12.15.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 15:01:27 -0800 (PST)
-Date:   Tue, 12 Nov 2019 15:01:26 -0800
+        Tue, 12 Nov 2019 15:03:28 -0800 (PST)
+Date:   Tue, 12 Nov 2019 15:03:27 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+To:     Jann Horn <jannh@google.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fweimer@redhat.com>,
         Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 0/9] open: introduce openat2(2) syscall
-Message-ID: <201911121457.7D02692@keescook>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ingo Molnar <mingo@elte.hu>
+Subject: Re: For review: documentation of clone3() system call
+Message-ID: <201911121502.3CADFBE3@keescook>
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+ <20191107151941.dw4gtul5lrtax4se@wittgenstein>
+ <2eb2ab4c-b177-29aa-cdc4-420b24cfd7b3@gmail.com>
+ <CAG48ez2of684J6suPZpko7JFV6hg5KQsrP0KAn8B8-C3PM9OfQ@mail.gmail.com>
+ <20191111165800.GD7017@mit.edu>
+ <CAG48ez3K6g7NSFmeuw-4paqPQTDYmNkZ-nVvufk25EB+Us850w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
+In-Reply-To: <CAG48ez3K6g7NSFmeuw-4paqPQTDYmNkZ-nVvufk25EB+Us850w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 12:24:04AM +1100, Aleksa Sarai wrote:
-> On 2019-11-05, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > This patchset is being developed here:
-> >   <https://github.com/cyphar/linux/tree/openat2/master>
-> > 
-> > Patch changelog:
-> >  v15:
-> >   * Fix code style for LOOKUP_IN_ROOT handling in path_init(). [Linus Torvalds]
-> >   * Split out patches for each individual LOOKUP flag.
-> >   * Reword commit messages to give more background information about the
-> >     series, as well as mention the semantics of each flag in more detail.
-> > [...]
+On Mon, Nov 11, 2019 at 09:24:33PM +0100, Jann Horn wrote:
+> On Mon, Nov 11, 2019 at 5:58 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> > On Mon, Nov 11, 2019 at 03:55:35PM +0100, Jann Horn wrote:
+> > > Not on Linux, but on OpenBSD, they do use MAP_STACK now AFAIK; this
+> > > was announced here:
+> > > <http://openbsd-archive.7691.n7.nabble.com/stack-register-checking-td338238.html>.
+> > > Basically they periodically check whether the userspace stack pointer
+> > > points into a MAP_STACK region, and if not, they kill the process. So
+> > > even if it's a no-op on Linux...
+> >
+> > Hmm, is that something we should do in Linux?  Even if we only check
+> > on syscall entry, which should be pretty inexpensive, it seems like it
+> > would be very effective in protecting various ROP techniques.
 > 
-> Ping -- this patch hasn't been touched for a week. Thanks.
+> I'm not a big fan, especially if that would only happen on syscall
+> entry; at the point where you have enough control to perform syscalls,
+> it probably isn't too difficult to move your ROP stack over to a
+> legitimate stack.
 
-If I've been following correctly, everyone is happy with this series.
-(i.e. Linus's comment appear to have been addressed.)
-
-Perhaps the next question is should this go via a pull request by you to
-Linus directly during the v5.5 merge window, via akpm, via akpm, via
-Christian, or some other path? Besides Linus, it's not been clear who
-should "claim" this series. :)
+It does have "your process is doing something unexpected" checking,
+though, if we want to declare (and enforce) the expected behavior of
+userspace stack usage. (i.e. not strictly as a ROP defense.)
 
 -- 
 Kees Cook
