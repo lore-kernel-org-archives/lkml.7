@@ -2,426 +2,211 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243EDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74606C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37062084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2138E214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:58:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HIJPPV87";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GktB6i1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKLR4q convert rfc822-to-8bit (ORCPT
+        id S1727128AbfKLR6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:56:46 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2091 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725997AbfKLR4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:56:46 -0500
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 79329346A0164073D0EC;
-        Tue, 12 Nov 2019 17:56:44 +0000 (GMT)
-Received: from lhreml709-chm.china.huawei.com (10.201.108.58) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 12 Nov 2019 17:56:44 +0000
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml709-chm.china.huawei.com (10.201.108.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 12 Nov 2019 17:56:43 +0000
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.1713.004; Tue, 12 Nov 2019 17:56:43 +0000
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Auger Eric <eric.auger@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Tue, 12 Nov 2019 12:58:02 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:64432 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726738AbfKLR6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:58:01 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACHtfLM008787;
+        Tue, 12 Nov 2019 09:57:29 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=y7Z/L/5qUToT3MXjtU/rPe58p//hhDwZEO6mvniyG1c=;
+ b=HIJPPV87iRCalgywp5S6ENBVC4mxXF0c0+7Qwdl8oAnzKil6Gw366jrSSM1g5FrZMuNA
+ aoU8ttMJdnKUcXntWHjFtSvc+CJDbSDsn2QChzuoM9bwortJXv8L2f90ssTkM5j9zlsC
+ 44U3h+O69cDzRQy0b+ns6qgE4fVQfehct6g= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2w7prjb6bj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 12 Nov 2019 09:57:28 -0800
+Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 12 Nov 2019 09:57:27 -0800
+Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
+ ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 12 Nov 2019 09:57:27 -0800
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 12 Nov 2019 09:57:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jDO5JBCbs7g7/XYzpmlnxwFPvyazKf3IYkbktA70yRxKbZ062Ie4kFJeN8wRVeHYGpjdfNhLu6kWG1XViW+dmaw8cWXQi2R9w01nZhelSvH1Dm0nm1cBQkUTMzfArzucnITAIuGVetChqH+KJo6Pav9jFSEz7LMM0JlekJt4gX2jAbs3Q7b30SSyCHZXH8bOY7G4MjPaLqyX49E0tBoGJO2smFE/NfkqhhBQJpJC/oelGvNDk10uJzlwAzoqQkEkPyWXwEwopNnzoDAzLuPwp2p2KWkzVVFTLJMWUELitcKTuOSgPU7AFDszhm5OUHp5hHo/HqPp7pTb/eNYwIvx2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7Z/L/5qUToT3MXjtU/rPe58p//hhDwZEO6mvniyG1c=;
+ b=OMTOM6BA3z73Tp6nznrLH9zpf3ywPa6KrQIUcam+Ga88UrAOaNjBZ9NJhkBtib78IvbqwkIYut3AwUyuSZi1WCBmOLC76AdQo35wsYdAYPzWc2NcvNjVojEPYEoBUgbDWrwbRO5jCzfsvt6l5QPc9nKEiSgn46S64OjhNMZJzISRKljhHQVRKQ2W6VxwtJt3Rb1GnwCHrZCCFJNmagubIqogZbH+oWTddCjvW7L4SGQ6E56unH3gdBC0bTDXHC+t/IfyRFtM3k7Zj4yumP/W3iEyIIMDrKsqtW9nS5evuiHozPPUrfsagkV378KzGHpfnE46yzuDFi0GvJ9YvEMNXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7Z/L/5qUToT3MXjtU/rPe58p//hhDwZEO6mvniyG1c=;
+ b=GktB6i1R30dlH46JcePtOwDb+nHrgBDNHtWLUHKFeSrIDFeFRjZ0qZ/rfW+13GRaXs0eLnEX7cAg/WatkCUK6IYFkXop/7ppo5kks7U5SmRyEv5Uh1EnShWoNNohkJbrUzQtYhREXub4BrwhYX/PfrCLKkQYM2l6k4sc7UVNkF8=
+Received: from BY5PR15MB3636.namprd15.prod.outlook.com (52.133.252.91) by
+ BY5PR15MB3617.namprd15.prod.outlook.com (52.133.253.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Tue, 12 Nov 2019 17:57:25 +0000
+Received: from BY5PR15MB3636.namprd15.prod.outlook.com
+ ([fe80::71db:9d2a:500c:d92b]) by BY5PR15MB3636.namprd15.prod.outlook.com
+ ([fe80::71db:9d2a:500c:d92b%4]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 17:57:25 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     "minyard@acm.org" <minyard@acm.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-CC:     "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "vincent.stehle@arm.com" <vincent.stehle@arm.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "tina.zhang@intel.com" <tina.zhang@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@huawei.com>
-Subject: RE: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-Thread-Topic: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-Thread-Index: AQHVN/CfwyE8ogH9wk6QxsmMIq08eqeIHQ3QgAALuICAABiYUIAABvsAgAAPlwCAADsPwA==
-Date:   Tue, 12 Nov 2019 17:56:43 +0000
-Message-ID: <9f0a9d341b01419eb566731339b3fbd2@huawei.com>
-References: <20190711135625.20684-1-eric.auger@redhat.com>
- <f5b4b97b197d4bab8f3703eba2e966c4@huawei.com>
- <ebaded3e-8a5c-73dd-b3f7-7533a6e80146@redhat.com>
- <76d9dc0274414887b04e11b9b6bda257@huawei.com>
- <b0a9f107-2e89-1418-d6f4-3e6f5ac0b330@redhat.com> 
-Accept-Language: en-GB, en-US
+        "cminyard@mvista.com" <cminyard@mvista.com>,
+        "asmaa@mellanox.com" <asmaa@mellanox.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: Re: [PATCH 1/2] drivers: ipmi: Support raw i2c packet in IPMB
+Thread-Topic: [PATCH 1/2] drivers: ipmi: Support raw i2c packet in IPMB
+Thread-Index: AQHVmQJfp1K9cdweJkCb8BSV+019/aeHeXcA///TrgA=
+Date:   Tue, 12 Nov 2019 17:57:25 +0000
+Message-ID: <493C2E64-2E41-47FF-BDA6-6EA1DA758016@fb.com>
+References: <20191112023610.3644314-1-vijaykhemka@fb.com>
+ <20191112123602.GD2882@minyard.net>
+In-Reply-To: <20191112123602.GD2882@minyard.net>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.227.237]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+x-originating-ip: [2620:10d:c090:200::1:8011]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2f1038c5-5af2-47ce-a74a-08d76799c6ba
+x-ms-traffictypediagnostic: BY5PR15MB3617:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR15MB361767D1F34FEC48ECDC30B3DD770@BY5PR15MB3617.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(136003)(376002)(396003)(346002)(189003)(199004)(6506007)(81156014)(14454004)(81166006)(256004)(14444005)(6246003)(8936002)(1730700003)(5660300002)(7736002)(8676002)(102836004)(71200400001)(71190400001)(4326008)(76176011)(478600001)(6512007)(33656002)(2906002)(186003)(305945005)(5640700003)(54906003)(2501003)(446003)(6436002)(2616005)(476003)(6916009)(6486002)(76116006)(11346002)(486006)(229853002)(46003)(316002)(66946007)(86362001)(99286004)(64756008)(2351001)(6116002)(25786009)(66556008)(66476007)(36756003)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR15MB3617;H:BY5PR15MB3636.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U4KhLL4zVeag239FIosaet4beT9oI8tSOqtLuTpkYO8o1V2WMFCJG73I6DeVUjWudZTDUlHXTMqaM6z5jJz31k7WIQ0300yvWgljw81RNzOi082bzwezDypFCX3rbKej9BBQpGcQG1ExK6rXRx7LY0+HZpgdISRiI0gFA8hfGxtcXszEoFoTWPHekJQnlt8xzJyvDd6pXKt48ib4idkxmHVC2mHWmdwBc/SVms6GrSv4PA87RIXCEVRgd8h6JMvol7KruskWpZegYHOjCM4OcZuutNjMzIapMDqy7Iw9JsauPyPjXMSz6Krs2PUGhEAbmUpN75NCPPl+46hiHCyii+Cjm/lgLRl8WOOjt8LyY2JRoMbLt87KaK17v/BmILPwxzc3KqKnaDfOvAprpMtnN8X6D2ntw8CJ80ypWMaS+lvGq6Uu1Z/OzZOO7Z5iG0+D
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4C4327AA6ABB274AB511DC63CE0319AD@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f1038c5-5af2-47ce-a74a-08d76799c6ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 17:57:25.6084
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wY3xC2QYDsQ/Mt+QJ4qPzxZ4merIwyeemmaaIRV4lbK/ANDRsQMWR6OAHb1/XxSRohxtN1b52ieTjSHuf8HQmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3617
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-12_06:2019-11-11,2019-11-12 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911120154
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
-
-> -----Original Message-----
-> From: Shameerali Kolothum Thodi
-> Sent: 12 November 2019 14:21
-> To: 'Auger Eric' <eric.auger@redhat.com>; eric.auger.pro@gmail.com;
-> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
-> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; joro@8bytes.org;
-> alex.williamson@redhat.com; jacob.jun.pan@linux.intel.com;
-> yi.l.liu@intel.com; jean-philippe.brucker@arm.com; will.deacon@arm.com;
-> robin.murphy@arm.com
-> Cc: kevin.tian@intel.com; vincent.stehle@arm.com; ashok.raj@intel.com;
-> marc.zyngier@arm.com; tina.zhang@intel.com; Linuxarm
-> <linuxarm@huawei.com>; xuwei (O) <xuwei5@huawei.com>
-> Subject: RE: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-> 
-[...]
-> > >>> I am trying to get this running on one of our platform that has smmuv3
-> dual
-> > >>> stage support. I am seeing some issues with this when an ixgbe vf dev is
-> > >>> made pass-through and is behind a vSMMUv3 in Guest.
-> > >>>
-> > >>> Kernel used : https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
-> > >>> Qemu: https://github.com/eauger/qemu/tree/v4.1.0-rc0-2stage-rfcv5
-> > >>>
-> > >>> And this is my Qemu cmd line,
-> > >>>
-> > >>> ./qemu-system-aarch64
-> > >>> -machine virt,kernel_irqchip=on,gic-version=3,iommu=smmuv3 -cpu host
-> \
-> > >>> -kernel Image \
-> > >>> -drive if=none,file=ubuntu,id=fs \
-> > >>> -device virtio-blk-device,drive=fs \
-> > >>> -device vfio-pci,host=0000:01:10.1 \
-> > >>> -bios QEMU_EFI.fd \
-> > >>> -net none \
-> > >>> -m 4G \
-> > >>> -nographic -D -d -enable-kvm \
-> > >>> -append "console=ttyAMA0 root=/dev/vda rw acpi=force"
-> > >>>
-> > >>> The basic ping from Guest works fine,
-> > >>> root@ubuntu:~# ping 10.202.225.185
-> > >>> PING 10.202.225.185 (10.202.225.185) 56(84) bytes of data.
-> > >>> 64 bytes from 10.202.225.185: icmp_seq=2 ttl=64 time=0.207 ms
-> > >>> 64 bytes from 10.202.225.185: icmp_seq=3 ttl=64 time=0.203 ms
-> > >>> ...
-> > >>>
-> > >>> But if I increase ping packet size,
-> > >>>
-> > >>> root@ubuntu:~# ping -s 1024 10.202.225.185
-> > >>> PING 10.202.225.185 (10.202.225.185) 1024(1052) bytes of data.
-> > >>> 1032 bytes from 10.202.225.185: icmp_seq=22 ttl=64 time=0.292 ms
-> > >>> 1032 bytes from 10.202.225.185: icmp_seq=23 ttl=64 time=0.207 ms
-> > >>> From 10.202.225.169 icmp_seq=66 Destination Host Unreachable
-> > >>> From 10.202.225.169 icmp_seq=67 Destination Host Unreachable
-> > >>> From 10.202.225.169 icmp_seq=68 Destination Host Unreachable
-> > >>> From 10.202.225.169 icmp_seq=69 Destination Host Unreachable
-> > >>>
-> > >>> And from Host kernel I get,
-> > >>> [  819.970742] ixgbe 0000:01:00.1 enp1s0f1: 3 Spoofed packets
-> detected
-> > >>> [  824.002707] ixgbe 0000:01:00.1 enp1s0f1: 1 Spoofed packets
-> detected
-> > >>> [  828.034683] ixgbe 0000:01:00.1 enp1s0f1: 1 Spoofed packets
-> detected
-> > >>> [  830.050673] ixgbe 0000:01:00.1 enp1s0f1: 4 Spoofed packets
-> detected
-> > >>> [  832.066659] ixgbe 0000:01:00.1 enp1s0f1: 1 Spoofed packets
-> detected
-> > >>> [  834.082640] ixgbe 0000:01:00.1 enp1s0f1: 3 Spoofed packets
-> detected
-> > >>>
-> > >>> Also noted that iperf cannot work as it fails to establish the connection
-> > with
-> > >> iperf
-> > >>> server.
-> > >>>
-> > >>> Please find attached the trace logs(vfio*, smmuv3*) from Qemu for your
-> > >> reference.
-> > >>> I haven't debugged this further yet and thought of checking with you if
-> this
-> > is
-> > >>> something you have seen already or not. Or maybe I am missing
-> something
-> > >> here?
-> > >>
-> > >> Please can you try to edit and modify hw/vfio/common.c, function
-> > >> vfio_iommu_unmap_notify
-> > >>
-> > >>
-> > >> /*
-> > >>     if (size <= 0x10000) {
-> > >>         ustruct.info.cache = IOMMU_CACHE_INV_TYPE_IOTLB;
-> > >>         ustruct.info.granularity = IOMMU_INV_GRANU_ADDR;
-> > >>         ustruct.info.addr_info.flags =
-> > IOMMU_INV_ADDR_FLAGS_ARCHID;
-> > >>         if (iotlb->leaf) {
-> > >>             ustruct.info.addr_info.flags |=
-> > >> IOMMU_INV_ADDR_FLAGS_LEAF;
-> > >>         }
-> > >>         ustruct.info.addr_info.archid = iotlb->arch_id;
-> > >>         ustruct.info.addr_info.addr = start;
-> > >>         ustruct.info.addr_info.granule_size = size;
-> > >>         ustruct.info.addr_info.nb_granules = 1;
-> > >>         trace_vfio_iommu_addr_inv_iotlb(iotlb->arch_id, start, size, 1,
-> > >>                                         iotlb->leaf);
-> > >>     } else {
-> > >> */
-> > >>         ustruct.info.cache = IOMMU_CACHE_INV_TYPE_IOTLB;
-> > >>         ustruct.info.granularity = IOMMU_INV_GRANU_PASID;
-> > >>         ustruct.info.pasid_info.archid = iotlb->arch_id;
-> > >>         ustruct.info.pasid_info.flags =
-> > IOMMU_INV_PASID_FLAGS_ARCHID;
-> > >>         trace_vfio_iommu_asid_inv_iotlb(iotlb->arch_id);
-> > >> //    }
-> > >>
-> > >> This modification leads to invalidate the whole asid each time we get a
-> > >> guest TLBI instead of invalidating the single IOVA (TLBI). On my end, I
-> > >> saw this was the cause of such kind of issues. Please let me know if it
-> > >> fixes your perf issues
-> > >
-> > > Yes, this seems to fix the issue.
-> > >
-> > > root@ubuntu:~# iperf -c 10.202.225.185
-> > > ------------------------------------------------------------
-> > > Client connecting to 10.202.225.185, TCP port 5001
-> > > TCP window size: 85.0 KByte (default)
-> > > ------------------------------------------------------------
-> > > [  3] local 10.202.225.169 port 47996 connected with 10.202.225.185 port
-> > 5001
-> > > [ ID] Interval       Transfer     Bandwidth
-> > > [  3]  0.0-10.0 sec  2.27 GBytes  1.95 Gbits/sec
-> > > root@ubuntu:~#
-> > >
-> > > But the performance seems to be very poor as this is a 10Gbps interface(Of
-> > course
-> > > invalidating the whole asid may not be very helpful). It is interesting that
-> why
-> > the
-> > > single iova invalidation is not working.
-> > >
-> > >  and then we may discuss further about the test
-> > >> configuration.
-> > >
-> > > Sure. Please let me know.
-> >
-> > I reported that issue earlier on the ML. I have not been able to find
-> > any integration issue in the kernel/qemu code but maybe I am too blind
-> > now as I wrote it ;-) When I get a guest stage1 TLBI I cascade it down
-> > to the physical IOMMU. I also pass the LEAF flag.
-> 
-> Ok.
-> 
-> > As you are an expert of the SMMUv3 PMU, if your implementation has any
-> > and you have cycles to look at this, it would be helpful to run it and
-> > see if something weird gets highlighted.
-> 
-> :). Sure. I will give it a try and report back if anything suspicious.
-
-I just noted that CMDQ_OP_TLBI_NH_VA is missing the vmid filed which seems
-to be the cause for single IOVA TLBI not working properly.
-
-I had this fix in arm-smmuv3.c,
-
-@@ -947,6 +947,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
-		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
-		break;
-	case CMDQ_OP_TLBI_NH_VA:
-+		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
-		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
-		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
-		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
-
-
-With this, your original qemu branch is working. 
-
-root@ubuntu:~# iperf -c 10.202.225.185
-------------------------------------------------------------
-Client connecting to 10.202.225.185, TCP port 5001 TCP window size: 85.0 KByte (default)
-------------------------------------------------------------
-[  3] local 10.202.225.169 port 44894 connected with 10.202.225.185 port 5001
-[ ID] Interval       Transfer     Bandwidth
-[  3]  0.0-10.0 sec  3.21 GBytes  2.76 Gbits/sec
-
-Could you please check this...
-
-I also have a rebase of your patches on top of 5.4-rc5. This has some optimizations
-From Will such as batched TLBI inv. Please find it here,
-
-https://github.com/hisilicon/kernel-dev/tree/private-vSMMUv3-v9-v5.4-rc5
-
-This gives me a better performance with iperf,
-
-root@ubuntu:~# iperf -c 10.202.225.185
-------------------------------------------------------------
-Client connecting to 10.202.225.185, TCP port 5001 TCP window size: 85.0 KByte (default)
-------------------------------------------------------------
-[  3] local 10.202.225.169 port 55450 connected with 10.202.225.185 port 5001
-[ ID] Interval       Transfer     Bandwidth
-[  3]  0.0-10.0 sec  4.91 GBytes  4.22 Gbits/sec root@ubuntu:~#
-
-If possible please check this branch as well.
-
-Thanks,
-Shameer
-
-> Thanks,
-> Shameer
-> 
-> 
-> > Thanks
-> >
-> > Eric
-> > >
-> > > Cheers,
-> > > Shameer
-> > >
-> > >> Thanks
-> > >>
-> > >> Eric
-> > >>
-> > >>
-> > >>
-> > >>>
-> > >>> Please let me know.
-> > >>>
-> > >>> Thanks,
-> > >>> Shameer
-> > >>>
-> > >>>> Best Regards
-> > >>>>
-> > >>>> Eric
-> > >>>>
-> > >>>> This series can be found at:
-> > >>>> https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
-> > >>>>
-> > >>>> It series includes Tina's patch steming from
-> > >>>> [1] "[RFC PATCH v2 1/3] vfio: Use capability chains to handle device
-> > >>>> specific irq" plus patches originally contributed by Yi.
-> > >>>>
-> > >>>> History:
-> > >>>>
-> > >>>> v8 -> v9:
-> > >>>> - introduce specific irq framework
-> > >>>> - single fault region
-> > >>>> - iommu_unregister_device_fault_handler failure case not handled
-> > >>>>   yet.
-> > >>>>
-> > >>>> v7 -> v8:
-> > >>>> - rebase on top of v5.2-rc1 and especially
-> > >>>>   8be39a1a04c1  iommu/arm-smmu-v3: Add a master->domain
-> pointer
-> > >>>> - dynamic alloc of s1_cfg/s2_cfg
-> > >>>> - __arm_smmu_tlb_inv_asid/s1_range_nosync
-> > >>>> - check there is no HW MSI regions
-> > >>>> - asid invalidation using pasid extended struct (change in the uapi)
-> > >>>> - add s1_live/s2_live checks
-> > >>>> - move check about support of nested stages in domain finalise
-> > >>>> - fixes in error reporting according to the discussion with Robin
-> > >>>> - reordered the patches to have first iommu/smmuv3 patches and then
-> > >>>>   VFIO patches
-> > >>>>
-> > >>>> v6 -> v7:
-> > >>>> - removed device handle from bind/unbind_guest_msi
-> > >>>> - added "iommu/smmuv3: Nested mode single MSI doorbell per domain
-> > >>>>   enforcement"
-> > >>>> - added few uapi comments as suggested by Jean, Jacop and Alex
-> > >>>>
-> > >>>> v5 -> v6:
-> > >>>> - Fix compilation issue when CONFIG_IOMMU_API is unset
-> > >>>>
-> > >>>> v4 -> v5:
-> > >>>> - fix bug reported by Vincent: fault handler unregistration now happens
-> in
-> > >>>>   vfio_pci_release
-> > >>>> - IOMMU_FAULT_PERM_* moved outside of struct definition + small
-> > >>>>   uapi changes suggested by Kean-Philippe (except fetch_addr)
-> > >>>> - iommu: introduce device fault report API: removed the PRI part.
-> > >>>> - see individual logs for more details
-> > >>>> - reset the ste abort flag on detach
-> > >>>>
-> > >>>> v3 -> v4:
-> > >>>> - took into account Alex, jean-Philippe and Robin's comments on v3
-> > >>>> - rework of the smmuv3 driver integration
-> > >>>> - add tear down ops for msi binding and PASID table binding
-> > >>>> - fix S1 fault propagation
-> > >>>> - put fault reporting patches at the beginning of the series following
-> > >>>>   Jean-Philippe's request
-> > >>>> - update of the cache invalidate and fault API uapis
-> > >>>> - VFIO fault reporting rework with 2 separate regions and one
-> mmappable
-> > >>>>   segment for the fault queue
-> > >>>> - moved to PATCH
-> > >>>>
-> > >>>> v2 -> v3:
-> > >>>> - When registering the S1 MSI binding we now store the device handle.
-> > This
-> > >>>>   addresses Robin's comment about discimination of devices beonging
-> > to
-> > >>>>   different S1 groups and using different physical MSI doorbells.
-> > >>>> - Change the fault reporting API: use
-> VFIO_PCI_DMA_FAULT_IRQ_INDEX
-> > to
-> > >>>>   set the eventfd and expose the faults through an mmappable fault
-> > region
-> > >>>>
-> > >>>> v1 -> v2:
-> > >>>> - Added the fault reporting capability
-> > >>>> - asid properly passed on invalidation (fix assignment of multiple
-> > >>>>   devices)
-> > >>>> - see individual change logs for more info
-> > >>>>
-> > >>>>
-> > >>>> Eric Auger (8):
-> > >>>>   vfio: VFIO_IOMMU_SET_MSI_BINDING
-> > >>>>   vfio/pci: Add VFIO_REGION_TYPE_NESTED region type
-> > >>>>   vfio/pci: Register an iommu fault handler
-> > >>>>   vfio/pci: Allow to mmap the fault queue
-> > >>>>   vfio: Add new IRQ for DMA fault reporting
-> > >>>>   vfio/pci: Add framework for custom interrupt indices
-> > >>>>   vfio/pci: Register and allow DMA FAULT IRQ signaling
-> > >>>>   vfio: Document nested stage control
-> > >>>>
-> > >>>> Liu, Yi L (2):
-> > >>>>   vfio: VFIO_IOMMU_SET_PASID_TABLE
-> > >>>>   vfio: VFIO_IOMMU_CACHE_INVALIDATE
-> > >>>>
-> > >>>> Tina Zhang (1):
-> > >>>>   vfio: Use capability chains to handle device specific irq
-> > >>>>
-> > >>>>  Documentation/vfio.txt              |  77 ++++++++
-> > >>>>  drivers/vfio/pci/vfio_pci.c         | 283
-> > >> ++++++++++++++++++++++++++--
-> > >>>>  drivers/vfio/pci/vfio_pci_intrs.c   |  62 ++++++
-> > >>>>  drivers/vfio/pci/vfio_pci_private.h |  24 +++
-> > >>>>  drivers/vfio/pci/vfio_pci_rdwr.c    |  45 +++++
-> > >>>>  drivers/vfio/vfio_iommu_type1.c     | 166 ++++++++++++++++
-> > >>>>  include/uapi/linux/vfio.h           | 109 ++++++++++-
-> > >>>>  7 files changed, 747 insertions(+), 19 deletions(-)
-> > >>>>
-> > >>>> --
-> > >>>> 2.20.1
-> > >>>>
-> > >>>> _______________________________________________
-> > >>>> kvmarm mailing list
-> > >>>> kvmarm@lists.cs.columbia.edu
-> > >>>> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
-> > >
-
+DQoNCu+7v09uIDExLzEyLzE5LCA0OjM2IEFNLCAiQ29yZXkgTWlueWFyZCIgPHRjbWlueWFyZEBn
+bWFpbC5jb20gb24gYmVoYWxmIG9mIG1pbnlhcmRAYWNtLm9yZz4gd3JvdGU6DQoNCiAgICBPbiBN
+b24sIE5vdiAxMSwgMjAxOSBhdCAwNjozNjowOVBNIC0wODAwLCBWaWpheSBLaGVta2Egd3JvdGU6
+DQogICAgPiBNYW55IElQTUIgZGV2aWNlcyBkb2Vzbid0IHN1cHBvcnQgc21idXMgcHJvdG9jb2wg
+YW5kIGN1cnJlbnQgZHJpdmVyDQogICAgPiBzdXBwb3J0IG9ubHkgc21idXMgZGV2aWNlcy4gU28g
+YWRkZWQgc3VwcG9ydCBmb3IgcmF3IGkyYyBwYWNrZXRzLg0KICAgIA0KICAgIEkgaGF2ZW4ndCBy
+ZXZpZXdlZCB0aGlzLCByZWFsbHksIGJlY2F1c2UgSSBoYXZlIGEgbW9yZSBnZW5lcmFsDQogICAg
+Y29uY2Vybi4uLg0KICAgIA0KICAgIElzIGl0IHBvc3NpYmxlIHRvIG5vdCBkbyB0aGlzIHdpdGgg
+YSBjb25maWcgaXRlbT8gIENhbiB5b3UgYWRkIHNvbWV0aGluZw0KICAgIHRvIHRoZSBkZXZpY2Ug
+dHJlZSBhbmQvb3IgdmlhIGFuIGlvY3RsIHRvIG1ha2UgdGhpcyBkeW5hbWljYWxseQ0KICAgIGNv
+bmZpZ3VyYWJsZT8gIFRoYXQncyBtb3JlIGZsZXhpYmxlIChpdCBjYW4gc3VwcG9ydCBtaXhlZCBk
+ZXZpY2VzKSBhbmQNCiAgICBpcyBmcmllbmRsaWVyIHRvIHVzZXJzIChkb24ndCBoYXZlIHRvIGdl
+dCB0aGUgY29uZmlnIHJpZ2h0KS4NCkkgYWdyZWUgd2l0aCB5b3UsIEkgd2FzIGFsc28gbm90IGNv
+bWZvcnRhYmxlIHVzaW5nIGNvbmZpZyBhbmQgY291bGRuJ3QgZmluZCBvdGhlciANCk9wdGlvbnMs
+IEkgd2lsbCBsb29rIGludG8gbW9yZSBvcHRpb24gbm93IGFuZCB1cGRhdGUgcGF0Y2guDQogICAg
+DQogICAgQ29uZmlnIGl0ZW1zIGZvciBhZGRpbmcgbmV3IGZ1bmN0aW9uYWxpdHkgYXJlIGdlbmVy
+YWxseSBvay4gIENvbmZpZw0KICAgIGl0ZW1zIGZvciBjaG9vc2luZyBiZXR3ZWVuIHR3byBtdXR1
+YWxseSBleGNsdXNpdmUgY2hvaWNlcyBhcmUNCiAgICBnZW5lcmFsbHkgbm90Lg0KICAgIA0KICAg
+IC1jb3JleQ0KICAgIA0KICAgID4gDQogICAgPiBTaWduZWQtb2ZmLWJ5OiBWaWpheSBLaGVta2Eg
+PHZpamF5a2hlbWthQGZiLmNvbT4NCiAgICA+IC0tLQ0KICAgID4gIGRyaXZlcnMvY2hhci9pcG1p
+L0tjb25maWcgICAgICAgIHwgIDYgKysrKysrDQogICAgPiAgZHJpdmVycy9jaGFyL2lwbWkvaXBt
+Yl9kZXZfaW50LmMgfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiAgICA+ICAy
+IGZpbGVzIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykNCiAgICA+IA0KICAgID4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvY2hhci9pcG1pL0tjb25maWcgYi9kcml2ZXJzL2NoYXIvaXBtaS9LY29uZmln
+DQogICAgPiBpbmRleCBhOWNmZTRjMDVlNjQuLmU1MjY4NDQzYjQ3OCAxMDA2NDQNCiAgICA+IC0t
+LSBhL2RyaXZlcnMvY2hhci9pcG1pL0tjb25maWcNCiAgICA+ICsrKyBiL2RyaXZlcnMvY2hhci9p
+cG1pL0tjb25maWcNCiAgICA+IEBAIC0xMzksMyArMTM5LDkgQEAgY29uZmlnIElQTUJfREVWSUNF
+X0lOVEVSRkFDRQ0KICAgID4gIAkgIFByb3ZpZGVzIGEgZHJpdmVyIGZvciBhIGRldmljZSAoU2F0
+ZWxsaXRlIE1DKSB0bw0KICAgID4gIAkgIHJlY2VpdmUgcmVxdWVzdHMgYW5kIHNlbmQgcmVzcG9u
+c2VzIGJhY2sgdG8gdGhlIEJNQyB2aWENCiAgICA+ICAJICB0aGUgSVBNQiBpbnRlcmZhY2UuIFRo
+aXMgbW9kdWxlIHJlcXVpcmVzIEkyQyBzdXBwb3J0Lg0KICAgID4gKw0KICAgID4gK2NvbmZpZyBJ
+UE1CX1NNQlVTX0RJU0FCTEUNCiAgICA+ICsJYm9vbCAnRGlzYWJsZSBTTUJVUyBwcm90b2NvbCBm
+b3Igc2VuZGluZyBwYWNrZXQgdG8gSVBNQiBkZXZpY2UnDQogICAgPiArCWRlcGVuZHMgb24gSVBN
+Ql9ERVZJQ0VfSU5URVJGQUNFDQogICAgPiArCWhlbHANCiAgICA+ICsJICBwcm92aWRlcyBmdW5j
+dGlvbmFsaXR5IG9mIHNlbmRpbmcgcmF3IGkyYyBwYWNrZXRzIHRvIElQTUIgZGV2aWNlLg0KICAg
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2hhci9pcG1pL2lwbWJfZGV2X2ludC5jIGIvZHJpdmVy
+cy9jaGFyL2lwbWkvaXBtYl9kZXZfaW50LmMNCiAgICA+IGluZGV4IGFlM2JmYmEyNzUyNi4uMjQx
+OWI5YTkyOGIyIDEwMDY0NA0KICAgID4gLS0tIGEvZHJpdmVycy9jaGFyL2lwbWkvaXBtYl9kZXZf
+aW50LmMNCiAgICA+ICsrKyBiL2RyaXZlcnMvY2hhci9pcG1pL2lwbWJfZGV2X2ludC5jDQogICAg
+PiBAQCAtMTE4LDYgKzExOCwxMCBAQCBzdGF0aWMgc3NpemVfdCBpcG1iX3dyaXRlKHN0cnVjdCBm
+aWxlICpmaWxlLCBjb25zdCBjaGFyIF9fdXNlciAqYnVmLA0KICAgID4gIAlzdHJ1Y3QgaXBtYl9k
+ZXYgKmlwbWJfZGV2ID0gdG9faXBtYl9kZXYoZmlsZSk7DQogICAgPiAgCXU4IHJxX3NhLCBuZXRm
+X3JxX2x1biwgbXNnX2xlbjsNCiAgICA+ICAJdW5pb24gaTJjX3NtYnVzX2RhdGEgZGF0YTsNCiAg
+ICA+ICsjaWZkZWYgQ09ORklHX0lQTUJfU01CVVNfRElTQUJMRQ0KICAgID4gKwl1bnNpZ25lZCBj
+aGFyICppMmNfYnVmOw0KICAgID4gKwlzdHJ1Y3QgaTJjX21zZyBpMmNfbXNnOw0KICAgID4gKyNl
+bmRpZg0KICAgID4gIAl1OCBtc2dbTUFYX01TR19MRU5dOw0KICAgID4gIAlzc2l6ZV90IHJldDsN
+CiAgICA+ICANCiAgICA+IEBAIC0xMzMsNiArMTM3LDMxIEBAIHN0YXRpYyBzc2l6ZV90IGlwbWJf
+d3JpdGUoc3RydWN0IGZpbGUgKmZpbGUsIGNvbnN0IGNoYXIgX191c2VyICpidWYsDQogICAgPiAg
+CXJxX3NhID0gR0VUXzdCSVRfQUREUihtc2dbUlFfU0FfOEJJVF9JRFhdKTsNCiAgICA+ICAJbmV0
+Zl9ycV9sdW4gPSBtc2dbTkVURk5fTFVOX0lEWF07DQogICAgPiAgDQogICAgPiArI2lmZGVmIENP
+TkZJR19JUE1CX1NNQlVTX0RJU0FCTEUNCiAgICA+ICsJLyoNCiAgICA+ICsJICogc3VidHJhY3Qg
+MSBieXRlIChycV9zYSkgZnJvbSB0aGUgbGVuZ3RoIG9mIHRoZSBtc2cgcGFzc2VkIHRvDQogICAg
+PiArCSAqIHJhdyBpMmNfdHJhbnNmZXINCiAgICA+ICsJICovDQogICAgPiArCW1zZ19sZW4gPSBt
+c2dbSVBNQl9NU0dfTEVOX0lEWF0gLSAxOw0KICAgID4gKw0KICAgID4gKwlpMmNfYnVmID0ga3ph
+bGxvYyhtc2dfbGVuLCBHRlBfS0VSTkVMKTsNCiAgICA+ICsJaWYgKCFpMmNfYnVmKQ0KICAgID4g
+KwkJcmV0dXJuIC1FRkFVTFQ7DQogICAgPiArDQogICAgPiArCS8qIENvcHkgbWVzc2FnZSB0byBi
+dWZmZXIgZXhjZXB0IGZpcnN0IDIgYnl0ZXMgKGxlbmd0aCBhbmQgYWRkcmVzcykgKi8NCiAgICA+
+ICsJbWVtY3B5KGkyY19idWYsIG1zZysyLCBtc2dfbGVuKTsNCiAgICA+ICsNCiAgICA+ICsJaTJj
+X21zZy5hZGRyID0gcnFfc2E7DQogICAgPiArCWkyY19tc2cuZmxhZ3MgPSBpcG1iX2Rldi0+Y2xp
+ZW50LT5mbGFncyAmDQogICAgPiArCQkJKEkyQ19NX1RFTiB8IEkyQ19DTElFTlRfUEVDIHwgSTJD
+X0NMSUVOVF9TQ0NCKTsNCiAgICA+ICsJaTJjX21zZy5sZW4gPSBtc2dfbGVuOw0KICAgID4gKwlp
+MmNfbXNnLmJ1ZiA9IGkyY19idWY7DQogICAgPiArDQogICAgPiArCXJldCA9IGkyY190cmFuc2Zl
+cihpcG1iX2Rldi0+Y2xpZW50LT5hZGFwdGVyLCAmaTJjX21zZywgMSk7DQogICAgPiArCWtmcmVl
+KGkyY19idWYpOw0KICAgID4gKw0KICAgID4gKwlyZXR1cm4gKHJldCA9PSAxKSA/IGNvdW50IDog
+cmV0Ow0KICAgID4gKyNlbHNlDQogICAgPiAgCS8qDQogICAgPiAgCSAqIHN1YnRyYWN0IHJxX3Nh
+IGFuZCBuZXRmX3JxX2x1biBmcm9tIHRoZSBsZW5ndGggb2YgdGhlIG1zZyBwYXNzZWQgdG8NCiAg
+ICA+ICAJICogaTJjX3NtYnVzX3hmZXINCiAgICA+IEBAIC0xNDksNiArMTc4LDcgQEAgc3RhdGlj
+IHNzaXplX3QgaXBtYl93cml0ZShzdHJ1Y3QgZmlsZSAqZmlsZSwgY29uc3QgY2hhciBfX3VzZXIg
+KmJ1ZiwNCiAgICA+ICAJCQkgICAgIEkyQ19TTUJVU19CTE9DS19EQVRBLCAmZGF0YSk7DQogICAg
+PiAgDQogICAgPiAgCXJldHVybiByZXQgPyA6IGNvdW50Ow0KICAgID4gKyNlbmRpZg0KICAgID4g
+IH0NCiAgICA+ICANCiAgICA+ICBzdGF0aWMgdW5zaWduZWQgaW50IGlwbWJfcG9sbChzdHJ1Y3Qg
+ZmlsZSAqZmlsZSwgcG9sbF90YWJsZSAqd2FpdCkNCiAgICA+IC0tIA0KICAgID4gMi4xNy4xDQog
+ICAgPiANCiAgICANCg0K
