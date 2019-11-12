@@ -2,92 +2,169 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC07C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452D5C17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B642067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA542067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 07:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="odHLQ2L6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ml6kIdY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKLHUx (ORCPT
+        id S1727049AbfKLHVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:20:53 -0500
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:45449 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfKLHUx (ORCPT
+        Tue, 12 Nov 2019 02:21:48 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56730 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfKLHVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 02:20:53 -0500
-Received: by mail-lf1-f53.google.com with SMTP id v8so11898825lfa.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 23:20:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Du/YNqhL0+IJPhD1R9mUXMVQ5rI34kWUejTlm7RxC2Y=;
-        b=odHLQ2L6iOrh0QwukNjVBfVVGZ/n4B8uRPrvCWk2O2Z5vF99bJ66cjXCjDxQvu6k14
-         r4jJM0qib49mhyLZDsH7PiqcIT4Zp48ocracmA9l5z/HFdMfJzVJJv+cv+dKJOheR21s
-         9lYjBS/W7Rx/jZZBIYkGmxhPreP+sJI1INQsgB2xBI/3fcbtQBHD5VUkn67+oJswcYsU
-         QvHpmIPiJO4ym52VvAsSNII3XjP33dt6kSO84i8+HdlLJhrBbYiCaHCDiRirrh7McZbA
-         oeReL6QmQ05xeR+cNIXDe3CStrqzY1b59YsjhhPdr34d+pWIJQM+UAVpwainOmeGNE7m
-         7x8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Du/YNqhL0+IJPhD1R9mUXMVQ5rI34kWUejTlm7RxC2Y=;
-        b=cuJNV5ZVsDmT202shu0jiqoID44P3NUWR0DuRMKCNDdAptbzlAheaisW8czmoIt4du
-         KuS6yP2M5dmeskrF2rh/MQ0zZvCVxMiqfnw5BK53B/NekjyIsEmt5AWTDXofrnzx29ho
-         HRxjPutbWZE06xjM2Ntx4rKc73Fnv8oKWQR7wgBoNGF0erSd2bV73lTUufiTpxACOaKS
-         Z4/JGb89sXCLCt6ISlhbLYhhRgeofReEbnOpwCEQoBSPXrFXkCci+K5LwJYB2uIVFVF4
-         e+SzsV9PrnA0lmCDOFLe3fmLVYe+SiBIg4lvNcFl3kjFg5RjbW9GaJPJCfUUh9VCe32t
-         fDiQ==
-X-Gm-Message-State: APjAAAUrEHfMrPhTeiIKWtCLKSlAKiNk8lk/pwQS0MdOYYqlVSNqfJ2v
-        IWHyYqKGMZM4mZEwKQPCtMPVX6y9gywLNtp1SGAXttDR
-X-Google-Smtp-Source: APXvYqz7UXqx1DK6mjR0LTQCmCq2MfZDcMGBksjhYpF6K+8RB0fRGYJs616TYhZBGckjr0OxZHTrFm7iH74q63GAOHI=
-X-Received: by 2002:a19:791a:: with SMTP id u26mr2211087lfc.192.1573543251070;
- Mon, 11 Nov 2019 23:20:51 -0800 (PST)
+        Tue, 12 Nov 2019 02:21:47 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC7LVf2088839;
+        Tue, 12 Nov 2019 01:21:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573543291;
+        bh=woQZTsKk2OYK92qovCWNbbXV0PHk/eUYSwCK3xC7AAY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ml6kIdY/D3Pk57pR/ISnCy1mReqQOqi/pEuYbG7qD94Wmf6BTfezl8lghQ0smAYrN
+         CPdQqerXhDgQdCwg//Rlg5l52uiSeEoHvEuBD1Ly8rcCtyvF61TKIGxl5GY8Dys4Yv
+         OAR52Hnz9jlDy054X9haVvAyLupTvrNNi3XF/eOw=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC7LVhj046541;
+        Tue, 12 Nov 2019 01:21:31 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 01:21:13 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 01:21:13 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC7LRRS015248;
+        Tue, 12 Nov 2019 01:21:27 -0600
+Subject: Re: [PATCH v4 10/15] dmaengine: ti: New driver for K3 UDMA - split#2:
+ probe/remove, xlate and filter_fn
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-11-peter.ujfalusi@ti.com>
+ <20191111053301.GO952516@vkoul-mobl>
+ <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
+ <20191112053440.GV952516@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <faa0f80d-ab8f-effc-07da-f1328a3d9c01@ti.com>
+Date:   Tue, 12 Nov 2019 09:22:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <0100016e5ae0878e-7b9d1bef-b3be-4350-8823-440929ca4a81-000000@email.amazonses.com>
- <CA+G9fYt=+ymENJg1-m=F3BF8dn7mzxvt5Di34Jw5qFLBHXA5bA@mail.gmail.com>
- <20191111183059.GA1140707@kroah.com> <CAEUSe7-d35WPJnx1hduji80_aym53ztQi-EkCkvu7Kf3S0Wjwg@mail.gmail.com>
- <20191112051713.GB1160519@kroah.com>
-In-Reply-To: <20191112051713.GB1160519@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 12 Nov 2019 12:50:39 +0530
-Message-ID: <CA+G9fYubrM2Qc9JxnfWkt1n=wYk1hbVL9UGEvQcXtB9kK=C7gg@mail.gmail.com>
-Subject: Re: stable-rc 4.14.154-rc1/0d12dcf336c6: regressions detected in
- project stable v.4.14.y on OE - sanity
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
-        Dan Rue <dan.rue@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191112053440.GV952516@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 11:02, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> > > Any chance you can bisect?
-> >
-> > Reverting 61dbb1f20417 ("mm, meminit: recalculate pcpu batch and high
-> > limits after init completes") got the system working again.
->
-> Yeah, I messed that one up :(
->
-> I'm pushing out a -rc2 now to hopefully fix this up, thanks!
 
-The -rc2 boot pass.
-Full functional testing is in progress.
 
-- Naresh
+On 12/11/2019 7.34, Vinod Koul wrote:
+> On 11-11-19, 11:16, Peter Ujfalusi wrote:
+>>
+>>
+>> On 11/11/2019 7.33, Vinod Koul wrote:
+>>> On 01-11-19, 10:41, Peter Ujfalusi wrote:
+>>>
+>>>> +static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
+>>>> +{
+>>>> +	struct psil_endpoint_config *ep_config;
+>>>> +	struct udma_chan *uc;
+>>>> +	struct udma_dev *ud;
+>>>> +	u32 *args;
+>>>> +
+>>>> +	if (chan->device->dev->driver != &udma_driver.driver)
+>>>> +		return false;
+>>>> +
+>>>> +	uc = to_udma_chan(chan);
+>>>> +	ud = uc->ud;
+>>>> +	args = param;
+>>>> +	uc->remote_thread_id = args[0];
+>>>> +
+>>>> +	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
+>>>> +		uc->dir = DMA_MEM_TO_DEV;
+>>>> +	else
+>>>> +		uc->dir = DMA_DEV_TO_MEM;
+>>>
+>>> Can you explain this a bit?
+>>
+>> The UDMAP in K3 works between two PSI-L endpoint. The source and
+>> destination needs to be paired to allow data flow.
+>> Source thread IDs are in range of 0x0000 - 0x7fff, while destination
+>> thread IDs are 0x8000 - 0xffff.
+>>
+>> If the remote thread ID have the bit 31 set (0x8000) then the transfer
+>> is MEM_TO_DEV and I need to pick one unused tchan for it. If the remote
+>> is the source then it can be handled by rchan.
+>>
+>> dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
+>> dma-names = "tx", "rx";
+>>
+>> 0xc400 is a destination thread ID, so it is MEM_TO_DEV
+>> 0x4400 is a source thread ID, so it is DEV_TO_MEM
+>>
+>> Even in MEM_TO_MEM case I need to pair two UDMAP channels:
+>> UDMAP source threads are starting at offset 0x1000, UDMAP destination
+>> threads are 0x9000+
+> 
+> Okay so a channel is set for a direction until teardown. Also this and
+> other patch comments are quite useful, can we add them here?
+
+The direction checks in the prep callbacks do print the reason why the
+transfer is rejected when it comes to not matching direction.
+
+Having said that, I can add comment to the udma_alloc_chan_resources()
+function about this restriction, or better a dev_dbg() to say that the
+given channel is allocated for a given direction.
+
+>> Changing direction runtime is hardly possible as it would involve
+>> tearing down the channel, removing interrupts, destroying rings,
+>> removing the PSI-L pairing and redoing everything.
+> 
+> okay I would expect the prep_ to check for direction and reject the call
+> if direction is different.
+
+They do check, udma_prep_slave_sg() and udma_prep_dma_cyclic():
+if (dir != uc->dir) {
+	dev_err(chan->device->dev,
+		"%s: chan%d is for %s, not supporting %s\n",
+		__func__, uc->id, udma_get_dir_text(uc->dir),
+		udma_get_dir_text(dir));
+	return NULL;
+}
+
+udma_prep_dma_memcpy():
+if (uc->dir != DMA_MEM_TO_MEM) {
+	dev_err(chan->device->dev,
+		"%s: chan%d is for %s, not supporting %s\n",
+		__func__, uc->id, udma_get_dir_text(uc->dir),
+		udma_get_dir_text(DMA_MEM_TO_MEM));
+	return NULL;
+}
+
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
