@@ -2,92 +2,133 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3EEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BD4C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6D12084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA2B2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:49:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="dWQQ90/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKLKsb (ORCPT
+        id S1727068AbfKLKtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:48:31 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:33644 "EHLO inva020.nxp.com"
+        Tue, 12 Nov 2019 05:49:07 -0500
+Received: from onstation.org ([52.200.56.107]:48212 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfKLKsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:48:30 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 078211A06E6;
-        Tue, 12 Nov 2019 11:48:29 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 124321A0324;
-        Tue, 12 Nov 2019 11:48:26 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6DF254024E;
-        Tue, 12 Nov 2019 18:48:22 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "ASoC: soc-pcm: check symmetry after hw_params"
-Date:   Tue, 12 Nov 2019 18:46:42 +0800
-Message-Id: <1573555602-5403-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725957AbfKLKtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 05:49:07 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 50CD63E994;
+        Tue, 12 Nov 2019 10:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1573555746;
+        bh=56ifQmgIzk3QXd4ORBHCD/aXCQu1OaqK5LRDM7xRI0s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dWQQ90/o3DxsIwd6loRXS354139AX5Nqm5dr5Wlf342PS5ZdeV40xWKrb1AX1emWj
+         vQidP1SbtQaohvBFo+ZiVZAbbbRstbVrK+LDNH3oreZ9w8bnYByy4gAuGvX4bM0QNS
+         CBW2SxH0TXfba7EY8xTgeh86q6Yd1pYfvGuRO6d4=
+From:   Brian Masney <masneyb@onstation.org>
+To:     jeffrey.l.hugo@gmail.com, robdclark@chromium.org,
+        robdclark@gmail.com
+Cc:     freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        sean@poorly.run
+Subject: [PATCH] drm/msm/mdp5: enable autocommit
+Date:   Tue, 12 Nov 2019 05:48:54 -0500
+Message-Id: <20191112104854.20850-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 957ce0c6b8a1f26559864507ae0bfcba29d924ad.
+Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
+support"), command-mode panels began throwing the following errors:
 
-That commit cause soc_pcm_params_symmetry can't take effect.
-cpu_dai->rate, cpu_dai->channels and cpu_dai->sample_bits
-are updated in the middle of soc_pcm_hw_params, so move
-soc_pcm_params_symmetry to the end of soc_pcm_hw_params is
-not a good solution, for judgement of symmetry in the function
-is always true.
+    msm fd900000.mdss: pp done time out, lm=0
 
-FIXME:
-According to the comments of that commit, I think the case
-described in the commit should disable symmetric_rates
-in Back-End, rather than changing the position of
-soc_pcm_params_symmetry.
+Let's fix this by enabling the autorefresh feature that's available in
+the MDP starting at version 1.0. This will cause the MDP to
+automatically send a frame to the panel every time the panel invokes
+the TE signal, which will trigger the PP_DONE IRQ. This requires not
+sending a START signal for command-mode panels.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+This fixes the error and gives us a counter for command-mode panels that
+we can use to implement async commit support for the MDP5 in a follow up
+patch.
+
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- sound/soc/soc-pcm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 15 ++++++++++++++-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  |  9 +--------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 8655df6a6089..b7800c95327a 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -861,6 +861,11 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
- 	int i, ret = 0;
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+index 05cc04f729d6..539348cb6331 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+@@ -456,6 +456,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+ {
+ 	struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
+ 	struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
++	struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
+ 	struct mdp5_kms *mdp5_kms = get_kms(crtc);
+ 	struct device *dev = &mdp5_kms->pdev->dev;
  
- 	mutex_lock_nested(&rtd->card->pcm_mutex, rtd->card->pcm_subclass);
-+
-+	ret = soc_pcm_params_symmetry(substream, params);
-+	if (ret)
-+		goto out;
-+
- 	if (rtd->dai_link->ops->hw_params) {
- 		ret = rtd->dai_link->ops->hw_params(substream, params);
- 		if (ret < 0) {
-@@ -940,9 +945,6 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
- 	}
- 	component = NULL;
+@@ -493,9 +494,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
  
--	ret = soc_pcm_params_symmetry(substream, params);
--        if (ret)
--		goto component_err;
- out:
- 	mutex_unlock(&rtd->card->pcm_mutex);
- 	return ret;
+ 	mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
+ 
+-	if (mdp5_cstate->cmd_mode)
++	if (mdp5_cstate->cmd_mode) {
+ 		mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
+ 
++		/*
++		 * Enable autorefresh so we get regular ping/pong IRQs.
++		 * - Bit 31 is the enable bit
++		 * - Bits 0-15 represent the frame count, specifically how many
++		 *   TE events before the MDP sends a frame.
++		 */
++		mdp5_write(mdp5_kms,
++			   REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
++			   BIT(31) | BIT(0));
++		crtc_flush_all(crtc);
++	}
++
+ 	mdp5_crtc->enabled = true;
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+index 030279d7b64b..aee295abada3 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+@@ -187,14 +187,7 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
+ 	if (!ctl->encoder_enabled)
+ 		return false;
+ 
+-	switch (intf->type) {
+-	case INTF_WB:
+-		return true;
+-	case INTF_DSI:
+-		return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
+-	default:
+-		return false;
+-	}
++	return intf->type == INTF_WB;
+ }
+ 
+ /*
 -- 
 2.21.0
 
