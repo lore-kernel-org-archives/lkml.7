@@ -2,122 +2,94 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC1AC17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E838C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5471C21D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA48D21D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHsdxoQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKLSSu (ORCPT
+        id S1727220AbfKLSS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:18:50 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35328 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKLSSu (ORCPT
+        Tue, 12 Nov 2019 13:18:59 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38047 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbfKLSS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:18:50 -0500
-Received: by mail-ot1-f68.google.com with SMTP id z6so15177076otb.2;
-        Tue, 12 Nov 2019 10:18:49 -0800 (PST)
+        Tue, 12 Nov 2019 13:18:58 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 15so12387820pgh.5;
+        Tue, 12 Nov 2019 10:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=a2ALGpNR46GQXLJRqvyvMcnFF85whvW4nf2mcwTjj4c=;
+        b=pHsdxoQ24WxJD5pQGKckCJjtMqn9Di4iT+GZ+vw4PrrMfZGhCWVv2OSiT3XtaZmkZh
+         gaL/b9vsRv9PQi75f2VCNU1MqjajBndQcfAXIYNE1FQLtpyvLUL1BMrTHG+9ex4Ac+KP
+         7+Y8CZo+oTQYNcCtZcFqdNtjB/t95MtK6TidWy/2W1vgoNid5Ktq4ie64c08t9dqUlaO
+         tL5zc3qyEB2NDSFLN1vykbqQfFURumHOzEgLi6PZh18fnWLUBVWR8njkPStKWR09B8JA
+         JoibYiu7JHB0Qrkc/AZ9eL0GGezIa1tYCsxSNYhoxwQDmZgb/kISK+wVdM12Mcj+Y3iI
+         rMqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XTjrI15sJKpXt7dvewwDXHz0pV+jFPaIY5CBR1+M5B8=;
-        b=RXZsxcyWXB5gzaKeez4c9288OBzj9Zo01HOIeoOMvveHruIEyNKkVi+9s6I1vQd8iF
-         i+dYIsoMTxEf8JcovkcVJTcIYRT+ycop9cdVLSjM6TlecGlUN4I0w8t0Ie1evCREs5XA
-         Fu4XhD6TUw7Hzb0bJ42ImFdOXc5KyjeTQgpiE5qhAfHsOP/5XG2Fz8iV2nBHahEhOsmd
-         Wf4wX9dTfKzWZ0yL22MnPeXcKMDrneO8QMmX7Jxqdd3LOHKeUhHRVbRsP7Dfl+nAxBU3
-         DSlv2NSKKU9luRve65jltlqT6iaoDL94BF1P7CoAJfOxUnjxb9yCqqkSzYbLg1ZazllQ
-         37MA==
-X-Gm-Message-State: APjAAAVT9bCfAHvG7Zphvf40s3IPeB+abFPkC06lFrNgOStTkf9v/yJk
-        vSYpvJcyiobg/f7SS99tA8Ir65o9g7nRVOlXya0=
-X-Google-Smtp-Source: APXvYqzD+0NmN816zDyFVW7CaZTRm/xP/54mEwEWwWhYEoQSfE5Y17LnYKLFTjDPUOLhknTl9poWdDu1inn62pEqTEM=
-X-Received: by 2002:a9d:5511:: with SMTP id l17mr2705329oth.145.1573582728911;
- Tue, 12 Nov 2019 10:18:48 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a2ALGpNR46GQXLJRqvyvMcnFF85whvW4nf2mcwTjj4c=;
+        b=Y1QLXZNZxJq0DLydwuKGzbTmVl0ANZlAt0hUsdDe7dhuFlO+Vz3MEK7g0HbrMxt2Ms
+         4maQOR3dRxtGJ0dFWXNJFnJ1HKUmE9DSoEXUWT2c7owBZFdqvFN4z/rxzj8bNiqEF2nH
+         JuuQdhbAiGsn7QKn/egpG2chkfGTDqQ20bC99xLVHm/wegr8gCvHjN96btozNEbqMw8U
+         tY+uMNfnqMZdiyo4MgF0kvbZY9WFyQK8OatKwaLyg0PemXE+sSpZZfEZVL1foxOLmO5P
+         N7Slb0+5ZqvkQ3seIvUxhlxK0QYGuI5tKbaSMy6E4GvEqW2hzlAZgHs0Rrs+nc3KqUrs
+         7f0A==
+X-Gm-Message-State: APjAAAXQyCLd/f+73nbY2AxApsKgRa9OpgnT2KhawZDwnNwTLWzGWImH
+        5Q8aHEkgfAgG433At0T0fdk=
+X-Google-Smtp-Source: APXvYqw5iiM0fB94L2sc+wuf8WXMkoiSR2vleMwgYFfok5PUN3HIbXCc94HVv892N6JM9JCPAPLCSg==
+X-Received: by 2002:aa7:9618:: with SMTP id q24mr9979123pfg.229.1573582737886;
+        Tue, 12 Nov 2019 10:18:57 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id hi2sm2896575pjb.22.2019.11.12.10.18.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Nov 2019 10:18:57 -0800 (PST)
+Date:   Tue, 12 Nov 2019 10:18:56 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/43] 4.4.201-stable review
+Message-ID: <20191112181856.GB30127@roeck-us.net>
+References: <20191111181246.772983347@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20191112141819.GA22076@localhost.localdomain>
-In-Reply-To: <20191112141819.GA22076@localhost.localdomain>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 Nov 2019 19:18:37 +0100
-Message-ID: <CAMuHMdW2aXF1dcs74joHu4q9xDoPAGmNFwUuVtPVSfFx9EgMmA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: Use new GPIO_LINE_DIRECTION
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org, linux-oxnas@groups.io,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111181246.772983347@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 3:18 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
-> Use newly added GPIO defines GPIO_LINE_DIRECTION_IN and
-> GPIO_LINE_DIRECTION_OUT instead of using hard-coded 1 and 0.
->
-> Main benefit is to make it easier to see which values mean IN and which
-> OUT. As a side effect this helps GPIO framework to change the direction
-> defines to something else if ever needed.
->
-> Please note that return value from get_direction call on
-> pinctrl-axp209 driver was changed. Previously pinctrl-axp209 might have
-> returned value 2 for direction INPUT.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+On Mon, Nov 11, 2019 at 07:28:14PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.201 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 13 Nov 2019 18:08:44 +0000.
+> Anything received after that time might be too late.
+> 
 
-For:
+For -rc2:
 
->  drivers/pinctrl/pinctrl-rza1.c                |  5 ++++-
->  drivers/pinctrl/pinctrl-rza2.c                |  6 +++---
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 324 pass: 324 fail: 0
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Guenter
