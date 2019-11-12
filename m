@@ -2,259 +2,191 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2984BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B8BC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA202084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852852084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:48:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BlgpjxZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfKLKrb (ORCPT
+        id S1727010AbfKLKsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:47:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52744 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725834AbfKLKra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:47:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 729FEAB89;
-        Tue, 12 Nov 2019 10:47:27 +0000 (UTC)
-Subject: Sense of soc bus? (was: [PATCH] base: soc: Export
- soc_device_to_device() helper)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-realtek-soc@lists.infradead.org,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>, linux-omap@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
-        boot-architecture@lists.linaro.org
-References: <20191103013645.9856-3-afaerber@suse.de>
- <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
- <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
- <20191111064040.GA3502217@kroah.com>
- <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
- <20191112052347.GA1197504@kroah.com>
- <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
-Date:   Tue, 12 Nov 2019 11:47:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 12 Nov 2019 05:48:12 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58673 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfKLKsM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 05:48:12 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191112104810euoutp021d2db7bc38d90bbc090f442260308d55~WZJAzeAdx2627026270euoutp02C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 10:48:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191112104810euoutp021d2db7bc38d90bbc090f442260308d55~WZJAzeAdx2627026270euoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573555690;
+        bh=t8KznA7MRgrnEYRKvcDPTJukI3s+wjik+zG/HLqSrhE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=BlgpjxZKPvpQKov/BRNZTTGrQDQ/CALe4BJGUnP3HTCYxMKdLHCewMcSErYgC7OhK
+         lkxA2rAZIPzoEB1kPj3sIEYGaFOg10RTRl3CKjPsUcD9PZWDi4gV4nB1eQ98D3Qz9O
+         4rT2wDiBSye7x6Z9UM8jNICJA8NRPyKKsHLMLK2I=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191112104810eucas1p268ae9639c29066621d052902a18533e7~WZJAgxx0h3014730147eucas1p2J;
+        Tue, 12 Nov 2019 10:48:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id D8.55.04374.9ED8ACD5; Tue, 12
+        Nov 2019 10:48:09 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191112104809eucas1p14d5d364021a359861788472b513e43e5~WZJAKlszV0983309833eucas1p1o;
+        Tue, 12 Nov 2019 10:48:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191112104809eusmtrp2d07a4e70cace8fc02e31669927b654b4~WZJAJ9p_90713307133eusmtrp2l;
+        Tue, 12 Nov 2019 10:48:09 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-27-5dca8de999f1
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F4.36.04117.9ED8ACD5; Tue, 12
+        Nov 2019 10:48:09 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191112104809eusmtip288c305a2268c9a86e11a8b17ad1701fc~WZI-t-Z1V2537125371eusmtip2w;
+        Tue, 12 Nov 2019 10:48:09 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH] PM / devfreq: Add missing locking while setting
+ suspend_freq
+Date:   Tue, 12 Nov 2019 11:47:34 +0100
+Message-Id: <20191112104734.31074-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsWy7djPc7ove0/FGmxdYG2xccZ6VovrX56z
+        Wpw/v4HdYsXdj6wWl3fNYbP43HuE0WLG+X1MFmuP3GW3+LzhMaPF7cYVbA5cHrMbLrJ4bFrV
+        yeax8d0OJo++LasYPT5vkgtgjeKySUnNySxLLdK3S+DKaPyQWDBXpuLdqh72BsYzEl2MnBwS
+        AiYSFy8/Y+li5OIQEljBKLF59hd2COcLo8SVX3+ZIJzPjBKrDn1igmmZfvwVVMtyRomtL36z
+        wLXMODoPrIpNwFCi620XWxcjB4eIQLzE+q9WIDXMAluYJM7/7mUEqREW8Jd4+vkDO4jNIqAq
+        0TW/iRXE5hWwlVh99wgzxDZ5idUbDjCDNEsIvGaT+L1tK9QZLhLz5hxggbCFJV4d38IOYctI
+        /N85nwmioZlR4uG5tewQTg+jxOWmGYwQVdYSh49fZAU5j1lAU2L9Ln2IsKPE+tu7wMISAnwS
+        N94KgoSZgcxJ26YzQ4R5JTrahCCq1SRmHV8Ht/bghUtQJR4S1z7qgoSFBGIl2s9sZZ3AKDcL
+        YdUCRsZVjOKppcW56anFxnmp5XrFibnFpXnpesn5uZsYgYni9L/jX3cw7vuTdIhRgINRiYeX
+        IeFkrBBrYllxZe4hRgkOZiUR3h0VJ2KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ81YzPIgWEkhP
+        LEnNTk0tSC2CyTJxcEo1MLYqnhfqe3DOSLh4skPjhYWuB+LvbXOQrmGYqGbq9f12gPnUrvCj
+        SVde3Kv4/Dwxmj97wcMZb2ZVXupy6PtheGrL1QZBFfEu+9QnXMaHnk3/Lrjv9nwrL8YSdof5
+        IRuqe/Zw+W/zkT29vfrx5Ck8Ly5Efrp+cta9gqn7jN6s/Pe56YVry6ajvJFKLMUZiYZazEXF
+        iQBl2CUnEAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsVy+t/xe7ove0/FGkw8qmKxccZ6VovrX56z
+        Wpw/v4HdYsXdj6wWl3fNYbP43HuE0WLG+X1MFmuP3GW3+LzhMaPF7cYVbA5cHrMbLrJ4bFrV
+        yeax8d0OJo++LasYPT5vkgtgjdKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV
+        0rezSUnNySxLLdK3S9DLaPyQWDBXpuLdqh72BsYzEl2MnBwSAiYS04+/Yuli5OIQEljKKLHh
+        2D42iISMxMlpDawQtrDEn2tdYHEhgU+MEreWu4PYbAKGEl1vIeIiAokSD3qes4MMYhbYwSTx
+        be1ydpCEsICvxJzmN2BFLAKqEl3zm8CG8grYSqy+e4QZYoG8xOoNB5gnMPIsYGRYxSiSWlqc
+        m55bbKRXnJhbXJqXrpecn7uJERig24793LKDsetd8CFGAQ5GJR5ehoSTsUKsiWXFlbmHGCU4
+        mJVEeHdUnIgV4k1JrKxKLcqPLyrNSS0+xGgKtHwis5Rocj4wevJK4g1NDc0tLA3Njc2NzSyU
+        xHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTAy3Jt5/1oqQ0vT6/z+VK8nN1rLFYNC920JmLd0
+        /rwJ+yX2Nt3jyWKWYA/aue6eh/eiRkVV53MsSmsMH6adk/kQNCGFv61t/Z1P3a9cDz0IK5F8
+        G67M/3f5tL+VizZE+T8NaPh63HmneKBsC+vRsxI7CrYuPJwVYbqrydGa2UZ4szqrtPMBI0Ul
+        luKMREMt5qLiRAD23Ue2ZgIAAA==
+X-CMS-MailID: 20191112104809eucas1p14d5d364021a359861788472b513e43e5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191112104809eucas1p14d5d364021a359861788472b513e43e5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191112104809eucas1p14d5d364021a359861788472b513e43e5
+References: <CGME20191112104809eucas1p14d5d364021a359861788472b513e43e5@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 12.11.19 um 08:29 schrieb Uwe Kleine-König:
-> On Tue, Nov 12, 2019 at 06:23:47AM +0100, Greg Kroah-Hartman wrote:
->> On Mon, Nov 11, 2019 at 09:10:41PM +0100, Andreas Färber wrote:
->>> Am 11.11.19 um 07:40 schrieb Greg Kroah-Hartman:
->>>> On Mon, Nov 11, 2019 at 06:42:05AM +0100, Andreas Färber wrote:
->>>>> Am 11.11.19 um 06:27 schrieb Greg Kroah-Hartman:
->>>>>> On Mon, Nov 11, 2019 at 05:56:09AM +0100, Andreas Färber wrote:
->>>>>>> Use of soc_device_to_device() in driver modules causes a build failure.
->>>>>>> Given that the helper is nicely documented in include/linux/sys_soc.h,
->>>>>>> let's export it as GPL symbol.
->>>>>>
->>>>>> I thought we were fixing the soc drivers to not need this.  What
->>>>>> happened to that effort?  I thought I had patches in my tree (or
->>>>>> someone's tree) that did some of this work already, such that this
->>>>>> symbol isn't needed anymore.
->>>>>
->>>>> I do still see this function used in next-20191108 in drivers/soc/.
->>>>>
->>>>> I'll be happy to adjust my RFC driver if someone points me to how!
->>>>
->>>> Look at c31e73121f4c ("base: soc: Handle custom soc information sysfs
->>>> entries") for how you can just use the default attributes for the soc to
->>>> create the needed sysfs files, instead of having to do it "by hand"
->>>> which is racy and incorrect.
->>>
->>> Unrelated.
->>>
->>>>> Given the current struct layout, a type cast might work (but ugly).
->>>>> Or if we stay with my current RFC driver design, we could use the
->>>>> platform_device instead of the soc_device (which would clutter the
->>>>> screen more than "soc soc0:") or resort to pr_info() w/o device.
->>>>
->>>> Ick, no, don't cast blindly.  What do you need the pointer for?  Is this
->>>> for in-tree code?
->>>
->>> No, an RFC patchset: https://patchwork.kernel.org/cover/11224261/
->>>
->>> As I indicated above, I used it for a dev_info(), which I can easily
->>> avoid by using pr_info() instead:
->>>
->>> diff --git a/drivers/soc/realtek/chip.c b/drivers/soc/realtek/chip.c
->>> index e5078c6731fd..f9380e831659 100644
->>> --- a/drivers/soc/realtek/chip.c
->>> +++ b/drivers/soc/realtek/chip.c
->>> @@ -178,8 +178,7 @@ static int rtd_soc_probe(struct platform_device *pdev)
->>>
->>>         platform_set_drvdata(pdev, soc_dev);
->>>
->>> -       dev_info(soc_device_to_device(soc_dev),
->>> -               "%s %s (0x%08x) rev %s (0x%08x) detected\n",
->>> +       pr_info("%s %s (0x%08x) rev %s (0x%08x) detected\n",
->>>                 soc_dev_attr->family, soc_dev_attr->soc_id, chip_id,
->>>                 soc_dev_attr->revision, chip_rev);
->>
->> First off, the driver should not be spitting out noise for when all goes
->> well like this :)
-> 
-> I didn't follow the discussion closely, but I think I want to object
-> here a bit. While I agree that each driver emitting some stuff to the
-> log buffer is hardly helpful, seeing the exact SoC details is indeed
-> useful at times. With my Debian kernel team member hat on, I'd say
-> keep this information. This way the SoC details make it into kernel bug
-> reports without effort on our side.
+Commit 2abb0d5268ae ("PM / devfreq: Lock devfreq in trans_stat_show")
+revealed a missing locking while calling devfreq_update_status() function
+during suspend/resume cycle.
 
-Seconded. For example, RTD1295 will support LSADC only from revision B00
-on (and it's not the first time I'm seeing such things in the industry).
-So if a user complains, it will be helpful to see that information.
+Code analysis revealed that devfreq_set_target() function was called
+without needed locks held for setting device specific suspend_freq if such
+has been defined. This patch fixes that by adding the needed locking, what
+fixes following kernel warning on Exynos4412-based OdroidU3 board during
+system suspend:
 
-Referencing your Amlogic review, with all due respect for its authors,
-the common framework here just lets that information evaporate into the
-deeps of sysfs. People who know can check /sys/bus/soc/devices/soc0, but
-ordinary users will at most upload dmesg output to a Bugzilla ticket.
+PM: suspend entry (deep)
+Filesystems sync: 0.002 seconds
+Freezing user space processes ... (elapsed 0.001 seconds) done.
+OOM killer disabled.
+Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+------------[ cut here ]------------
+WARNING: CPU: 2 PID: 1385 at drivers/devfreq/devfreq.c:204 devfreq_update_status+0xc0/0x188
+Modules linked in:
+CPU: 2 PID: 1385 Comm: rtcwake Not tainted 5.4.0-rc6-next-20191111 #6848
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+[<c0112588>] (unwind_backtrace) from [<c010e070>] (show_stack+0x10/0x14)
+[<c010e070>] (show_stack) from [<c0afb010>] (dump_stack+0xb4/0xe0)
+[<c0afb010>] (dump_stack) from [<c01272e0>] (__warn+0xf4/0x10c)
+[<c01272e0>] (__warn) from [<c01273a8>] (warn_slowpath_fmt+0xb0/0xb8)
+[<c01273a8>] (warn_slowpath_fmt) from [<c07d105c>] (devfreq_update_status+0xc0/0x188)
+[<c07d105c>] (devfreq_update_status) from [<c07d2d70>] (devfreq_set_target+0xb0/0x15c)
+[<c07d2d70>] (devfreq_set_target) from [<c07d3598>] (devfreq_suspend+0x2c/0x64)
+[<c07d3598>] (devfreq_suspend) from [<c05de0b0>] (dpm_suspend+0xa4/0x57c)
+[<c05de0b0>] (dpm_suspend) from [<c05def74>] (dpm_suspend_start+0x98/0xa0)
+[<c05def74>] (dpm_suspend_start) from [<c0195b58>] (suspend_devices_and_enter+0xec/0xc74)
+[<c0195b58>] (suspend_devices_and_enter) from [<c0196a20>] (pm_suspend+0x340/0x410)
+[<c0196a20>] (pm_suspend) from [<c019480c>] (state_store+0x6c/0xc8)
+[<c019480c>] (state_store) from [<c033fc50>] (kernfs_fop_write+0x10c/0x228)
+[<c033fc50>] (kernfs_fop_write) from [<c02a6d3c>] (__vfs_write+0x30/0x1d0)
+[<c02a6d3c>] (__vfs_write) from [<c02a9afc>] (vfs_write+0xa4/0x180)
+[<c02a9afc>] (vfs_write) from [<c02a9d58>] (ksys_write+0x60/0xd8)
+[<c02a9d58>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xed3d7fa8 to 0xed3d7ff0)
+...
+irq event stamp: 9667
+hardirqs last  enabled at (9679): [<c0b1e7c4>] _raw_spin_unlock_irq+0x20/0x58
+hardirqs last disabled at (9698): [<c0b16a20>] __schedule+0xd8/0x818
+softirqs last  enabled at (9694): [<c01026fc>] __do_softirq+0x4fc/0x5fc
+softirqs last disabled at (9719): [<c012fe68>] irq_exit+0x16c/0x170
+---[ end trace 41ac5b57d046bdbc ]---
+------------[ cut here ]------------
 
-And it was precisely info-level boot output from the Amlogic GX driver
-that made me aware of this common framework and inspired me to later
-contribute such a driver elsewhere myself. That's not a bad effect. ;)
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/devfreq/devfreq.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-So if anything, we should standardize that output and move it into
-soc_device_register(): "<family> <soc_id> [rev <revision>] detected"
-with suitable NULL checks? (what I did above for Realtek, minus hex)
-
-The info level seems correct to me - it allows people to use a different
-log_level if they only care about warnings or errors on the console;
-it's not debug info for that driver, except in my case the accompanying
-hex numbers that I'd be happy to drop in favor of standardization.
-
-Another aspect here is that the overall amount of soc_device_register()
-users is just an estimated one third above the analysis shared before.
-In particular server platforms, be it arm64 or x86_64, that potentially
-have more than one SoC integrated in a multi-socket configuration, don't
-feed into this soc bus at all! Therefore my comment that
-dev_info()-printed "soc soc0:" is kind of useless if there's only one
-SoC on those boards. I'm not aware of any tool or a more common file
-aggregating this information, certainly not /proc/cpuinfo and I'm not
-aware of any special "lssoc" tool either. And if there's no ACPI/DMI
-driver feeding support-relevant information into this framework to be
-generally useful, I don't expect the big distros to spend time on
-improving its usability.
-
-So if we move info output into base/soc.c, we could continue using
-dev_info() with "soc"-grep'able prefix in the hopes that someday we'll
-have more than one soc device on the bus and will need to distinguish;
-otherwise yes, pr_info() would change the output format for Amlogic (and
-so would a harmonization of the text), but does anyone really care in
-practice? Tools shouldn't be relying on its output format, and humans
-will understand equally either way.
-
-Finally, arch/arm seems unique in that it has the machine_desc mechanism
-that allows individual SoCs to force creating their soc_device early and
-using it as parent for further DT-created platform_devices. With arm64
-we've lost that ability, and nios2 is not using it either.
-A bad side effect (with SUSE hat on) is that this parent design pattern
-does not allow to build such drivers as modules, which means that distro
-configs using arm's multi-platform, e.g., CONFIG_ARCH_MULTI_V7 will get
-unnecessary code creep as new platforms get added over time (beyond the
-basic clk, pinctrl, tty and maybe timer).
-Even if it were possible to call into a driver module that early, using
-it as parent would seem to imply that all the references by its children
-would not allow to unload the module, which I'd consider a flawed design
-for such an "optional" read-once driver. If we want the device hierarchy
-to have a soc root then most DT based platforms will have a /soc DT node
-anyway (although no device_type = "soc") that we probably could have a
-device registered for in common code rather than each SoC platform
-handling that differently? That might then make soc_register_device()
-not the creator of the device (if pre-existent) but the supplier of data
-to that core device, which should then allow to unload the data provider
-with just the sysfs data disappearing until re-inserted (speeding up the
-develop-and-test cycle on say not-so-resource-constrained platforms).
-
-On the other hand, one might argue that such information should just be
-parsed by EBBR-conformant bootloaders and be passed to the kernel via
-standard UEFI interfaces and DMI tables. But I'm not aware of Barebox
-having implemented any of that yet, and even for U-Boot (e.g., Realtek
-based consumer devices...) not everyone has the GPL sources or tools to
-update their bootloader. So, having the kernel we control gather
-information relevant to kernel developers does make some sense to me.
-
-Thoughts?
-
-Regards,
-Andreas
-
-P.S. Sorry that a seemingly trivial one-line 0-day fix derailed into
-this fundamental use case discussion.
-
-arch/arm/mach-ep93xx/core.c:    soc_dev = soc_device_register(soc_dev_attr);
-arch/arm/mach-imx/cpu.c:        soc_dev = soc_device_register(soc_dev_attr);
-arch/arm/mach-mvebu/mvebu-soc-id.c:     soc_dev =
-soc_device_register(soc_dev_attr);
-arch/arm/mach-mxs/mach-mxs.c:   soc_dev = soc_device_register(soc_dev_attr);
-arch/arm/mach-omap2/id.c:       soc_dev = soc_device_register(soc_dev_attr);
-arch/arm/mach-tegra/tegra.c:    struct device *parent =
-tegra_soc_device_register();
-arch/arm/mach-zynq/common.c:    soc_dev = soc_device_register(soc_dev_attr);
-arch/nios2/platform/platform.c:         soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/amlogic/meson-gx-socinfo.c: soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/amlogic/meson-mx-socinfo.c: soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/atmel/soc.c:        soc_dev = soc_device_register(soc_dev_attr);
-drivers/soc/bcm/brcmstb/common.c:       soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/fsl/guts.c: soc_dev = soc_device_register(&soc_dev_attr);
-drivers/soc/imx/soc-imx-scu.c:  soc_dev = soc_device_register(soc_dev_attr);
-drivers/soc/imx/soc-imx8.c:     soc_dev = soc_device_register(soc_dev_attr);
-drivers/soc/qcom/socinfo.c:     qs->soc_dev =
-soc_device_register(&qs->attr);
-drivers/soc/realtek/chip.c:     soc_dev = soc_device_register(soc_dev_attr);
-drivers/soc/renesas/renesas-soc.c:      soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/samsung/exynos-chipid.c:    soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/tegra/fuse/fuse-tegra.c:    dev = soc_device_register(attr);
-drivers/soc/ux500/ux500-soc-id.c:       soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/versatile/soc-integrator.c: soc_dev =
-soc_device_register(soc_dev_attr);
-drivers/soc/versatile/soc-realview.c:   soc_dev =
-soc_device_register(soc_dev_attr);
-
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 94fb8e821e12..65a4b6cf3fa5 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -957,7 +957,9 @@ int devfreq_suspend_device(struct devfreq *devfreq)
+ 	}
+ 
+ 	if (devfreq->suspend_freq) {
++		mutex_lock(&devfreq->lock);
+ 		ret = devfreq_set_target(devfreq, devfreq->suspend_freq, 0);
++		mutex_unlock(&devfreq->lock);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -985,7 +987,9 @@ int devfreq_resume_device(struct devfreq *devfreq)
+ 		return 0;
+ 
+ 	if (devfreq->resume_freq) {
++		mutex_lock(&devfreq->lock);
+ 		ret = devfreq_set_target(devfreq, devfreq->resume_freq, 0);
++		mutex_unlock(&devfreq->lock);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.17.1
+
