@@ -2,73 +2,71 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7812C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03FFC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBE4206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD19C21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Us+JxrYy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ax7gbBbq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfKLUbh (ORCPT
+        id S1727296AbfKLUbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:31:37 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38615 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLUbg (ORCPT
+        Tue, 12 Nov 2019 15:31:41 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45261 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfKLUbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:31:36 -0500
-Received: by mail-pf1-f196.google.com with SMTP id c13so14159550pfp.5;
-        Tue, 12 Nov 2019 12:31:36 -0800 (PST)
+        Tue, 12 Nov 2019 15:31:40 -0500
+Received: by mail-pg1-f194.google.com with SMTP id w11so12576648pga.12;
+        Tue, 12 Nov 2019 12:31:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2WU8r6NpH8n/CAS7MCMpaG3QRhluQOgBbEqgwxXZR2E=;
-        b=Us+JxrYyd+rY75W/J9AIM4yuTXlc0JbmG5DVkC1peMShddlgvcBQ+TtsEwwQreFGei
-         Akp3nnqEhYSZ8Pd3qpGb7GnNfaISvZQGlq5ZoE84GzeytmLnXQngF7NX4/maqFkRg3TU
-         sSJooTtqEPzyjeABXL9Gip+xaSbzM8StiPMP/Y/5ebEBjyhk2ia4l7IZ5h1v4wv9dD25
-         U/QM4DjQaR3H+eQDxi7LxoWgOi4R3Fe2IzIYYXiRq4zqO51ahBVbcOu/1fSF9m1eg66N
-         jjve6icUXHklXyJqpWp8u7AiCQBElHtjuLx1uFtfevhego5TE/tJ1xhpJTkdgACtOpHR
-         Vc1g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6mlu28jucR3FhUlKEOLugpYNISyaantEq1qNa01r0ZE=;
+        b=ax7gbBbqGn/nSwxQS8lZLXMRIG8M/VjKChYXSGCcl6dD/kCer39gy70PU/p6Me/hrI
+         le/83kDm+i9GrS2I6b5eUkFf/kKbXpaLuavjSXl31pglyUK41Dcrl3pqsSvy0EggN/WM
+         l3Qdr5ZnoFQZtmZAzaenh8XQqnfMtqsIisGSf+vqgr1+gRWj6fX0M3esaTl0a0P7fCvU
+         5k/qwrt5tgHltjO0AhTBdPkjRLQTbxFmimysQKZR9uKaFJjHsvYid3b0JLA1cZ55H356
+         rlCMjPrHA4YZGZKVPlOjv9/ddUZj1q043uCH7yZMINzhwyW8oXe/RS6qulvlU17wit3W
+         Wj2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2WU8r6NpH8n/CAS7MCMpaG3QRhluQOgBbEqgwxXZR2E=;
-        b=H9NOxzblVmmrgeie+zzIQ50aOX6bl1bLbgZqXWpAMfzKEktcXNlXViVkDuCizzI+T9
-         ya69mwU4VRisWpFj2r/cEbG5k6FNlHNQ0rtxnP2MA2uv4LMyqtLNXD2oyU5ZAE2gN8gM
-         3BalD8nKUIboOfg7HeqmY7rsp7ws0ulRT86z0Ia+DpcT7E/np4aoVSbhZKOfRURuoDrs
-         keX0ZdxYhm9yxAebrErAOU+TH9VE5TcWvQVAac9cQY8aQv0j94UU1ZNDIbuEE4G13s2s
-         eB0yS5+98NU/W2YD6zo9qrDe+OFHGT3SewHtmctImviVH/R2ycg+yEZwuSTyKcGvH23B
-         8Ljw==
-X-Gm-Message-State: APjAAAV6Ol5CRen7oJ3AZUXYVRLzdibLx2u+j9+MguYg6KGr2FGHyP1n
-        LXvlBvDi8FIun6MHdtwN4kg=
-X-Google-Smtp-Source: APXvYqzVLDHrf3+auWD9Zfwn7HuZakoXwALGy5b2yZuKAYku2zY5xND/HTO7WI3MKhV1doF14qehEA==
-X-Received: by 2002:a62:7c52:: with SMTP id x79mr38241350pfc.18.1573590695493;
-        Tue, 12 Nov 2019 12:31:35 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6mlu28jucR3FhUlKEOLugpYNISyaantEq1qNa01r0ZE=;
+        b=rnVWy4CMD0qTsjbzzlTYMh5yr7gOf9lOvgMyPwssi981em40WvtcsWlB8zVW/fj5Pb
+         k9yXY2rZpyvwEN2PnBUbR0xYXCbM1LgtZ/qK9b5aS03+rhQvfrCQxSwnaLzvfqfC0iN3
+         hjzPSOx6NynQWXjOgxkNt2S2ocsrg0qSLyaCvvcwnTG+0efuF9Ap7jXMdkWWfs3kmCYv
+         ChTfxbhmB7plsukogmjlkhL7cj+yrfYnzsALtgPrmwYWuhPoDi9oiiOy8bruTfNEd1Zt
+         cwrK+ZlJ8Ukwvqaj7vZ/azjq9jILOpaE+NsDr8KmoFtbuFjogmDV6hUVPnxsxED4X2pq
+         M5qQ==
+X-Gm-Message-State: APjAAAUN8Q1R0Qplw4n6/Epxvlrz8TpnM/H7anziygFtNX+vueOrfoAH
+        v0N75qlVOorx0qlRc0Wxu9w=
+X-Google-Smtp-Source: APXvYqwpgKjpkHDXU54TfXMHHDvFO38zrJRNs0wsCdohYBSt2gsIQc6XdipvCdyjk5m7M0Talrpu2A==
+X-Received: by 2002:a65:6208:: with SMTP id d8mr20277265pgv.167.1573590699040;
+        Tue, 12 Nov 2019 12:31:39 -0800 (PST)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h13sm23264084pfr.98.2019.11.12.12.31.34
+        by smtp.gmail.com with ESMTPSA id h13sm23264084pfr.98.2019.11.12.12.31.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 12:31:34 -0800 (PST)
+        Tue, 12 Nov 2019 12:31:37 -0800 (PST)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Wolfram Sang <wsa@the-dreams.de>
 Cc:     linux-iio@vger.kernel.orgi, Luca Ceresoli <luca@lucaceresoli.net>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH v3 0/3] Use void pointers instead of char in I2C transfer APIs
-Date:   Tue, 12 Nov 2019 12:31:29 -0800
-Message-Id: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/3] i2c: smbus: use get/put_unaligned_le16 when working with word data
+Date:   Tue, 12 Nov 2019 12:31:31 -0800
+Message-Id: <20191112203132.163306-3-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+In-Reply-To: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,34 +74,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While we indeed often deal with a stream of bytes when executing a
-transfer, at the higher layers we usually work with more structured
-data, and there is not really a reason to require casts to u8 * form the
-callers. These series change I2C APIs to accept [const] void pointers,
-and also adjust SMBUS implementation to use get/put_unaligned_16() and
-memcpy() for moving data around.
+It is potentially more performant, and also shows intent more clearly,
+to use get_unaligned_le16() and put_unaligned_le16() when working with
+word data.
+
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+---
 
 Changes in v3:
-- addressed Luca's comments
-- added Jonathan's Acked-by
 - split put_unaligned_le16 into a separate patch
 - more call sites converted to get/put_unaligned_le16
-- new patch using memcpy() for moving data around
 
-Changes in v2:
-- adjusted max1363 to the new i2c_master_send/recv signatures
+ drivers/i2c/i2c-core-smbus.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Dmitry Torokhov (3):
-  i2c: use void pointers for supplying data for reads and writes
-  i2c: smbus: use get/put_unaligned_le16 when working with word data
-  i2c: smbus: switch from loops to memcpy
-
- drivers/i2c/i2c-core-base.c  |  2 +-
- drivers/i2c/i2c-core-smbus.c | 40 +++++++++++++++---------------------
- drivers/iio/adc/max1363.c    | 14 +++++++------
- include/linux/i2c.h          | 28 +++++++++++++------------
- 4 files changed, 41 insertions(+), 43 deletions(-)
-
+diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+index f8708409b4dbc..7b4e2270eeda1 100644
+--- a/drivers/i2c/i2c-core-smbus.c
++++ b/drivers/i2c/i2c-core-smbus.c
+@@ -15,6 +15,7 @@
+ #include <linux/i2c.h>
+ #include <linux/i2c-smbus.h>
+ #include <linux/slab.h>
++#include <asm/unaligned.h>
+ 
+ #include "i2c-core.h"
+ 
+@@ -370,8 +371,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+ 			msg[1].len = 2;
+ 		else {
+ 			msg[0].len = 3;
+-			msgbuf0[1] = data->word & 0xff;
+-			msgbuf0[2] = data->word >> 8;
++			put_unaligned_le16(data->word, msgbuf0 + 1);
+ 		}
+ 		break;
+ 	case I2C_SMBUS_PROC_CALL:
+@@ -379,8 +379,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+ 		read_write = I2C_SMBUS_READ;
+ 		msg[0].len = 3;
+ 		msg[1].len = 2;
+-		msgbuf0[1] = data->word & 0xff;
+-		msgbuf0[2] = data->word >> 8;
++		put_unaligned_le16(data->word, msgbuf0 + 1);
+ 		break;
+ 	case I2C_SMBUS_BLOCK_DATA:
+ 		if (read_write == I2C_SMBUS_READ) {
+@@ -487,7 +486,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+ 			break;
+ 		case I2C_SMBUS_WORD_DATA:
+ 		case I2C_SMBUS_PROC_CALL:
+-			data->word = msgbuf1[0] | (msgbuf1[1] << 8);
++			data->word = get_unaligned_le16(msgbuf1);
+ 			break;
+ 		case I2C_SMBUS_I2C_BLOCK_DATA:
+ 			for (i = 0; i < data->block[0]; i++)
+@@ -648,8 +647,7 @@ s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
+ 			status = i2c_smbus_read_word_data(client, command + i);
+ 			if (status < 0)
+ 				return status;
+-			bytes[i] = status & 0xff;
+-			bytes[i + 1] = status >> 8;
++			put_unaligned_le16(status, values + i);
+ 			i += 2;
+ 		}
+ 	}
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
