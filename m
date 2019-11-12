@@ -2,234 +2,122 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0340C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58EDC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDA320674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB912084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHlfBAY+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TBIXURzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfKLOcG (ORCPT
+        id S1727798AbfKLOcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:32:06 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33453 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfKLOcE (ORCPT
+        Tue, 12 Nov 2019 09:32:07 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50230 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfKLOcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 09:32:04 -0500
-Received: by mail-qt1-f195.google.com with SMTP id y39so19975830qty.0;
-        Tue, 12 Nov 2019 06:32:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5xYHsMtb8TdKkbG1pGsYDiYVpDA8pyjT2i5ZSSG8UYQ=;
-        b=eHlfBAY+ZtVfdPfWBntgpJSs2CV5yaDPo6KyM2lRKcY6R4kfKybXfcWwkiBvkc4j09
-         gqxHEnU/5PMAV7s3wbEEx76wEqfZyB3NbNDzO/hTpr1XNU7LT2SSRYK8e6P40Z63hsal
-         xMBxmU5+e0fV+0ZamKreo/1j7+Tfq5Lr+8PCgohehoBpYDgUMHrSgkTXeZWBiww8NyQC
-         DLRo5w7w1tGVoXSDdNDxgNx0HUcVK4UuboNdgNKqvCo3b1Z6+/Pmf0DBh6y0emeIsmoO
-         gPZ6OAzzA1npbvqKjgdvXtGrz0X8FBxpMskwvjnUOHje2yscoZG4uuyb+4TGZUfiwP26
-         QVvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5xYHsMtb8TdKkbG1pGsYDiYVpDA8pyjT2i5ZSSG8UYQ=;
-        b=HhQ4SBU880pei0yphMMSmY1924WaM2Eojr+vBg8+oK+mTlWcXJTXLixJ3VTOZjO3Tz
-         FHjlNRtcCNSxn7rS2RDRv9q6zEwFL4ARqUKoCfbBTTpnFhl8Mq8f4+Wa5th2Zpu950HO
-         p8Cu7sps2fT9jkdap5peb+78IQMd97XjKHat447PvK+ds7vufEWBJfPBlEA7Bu5+IwRw
-         eHKmY4XQDqGrxZv1VczPiBYCFRdzX5j2/U2JBJ0p/g3yHFrpKdNycPmWKxmC6S2doqyr
-         pkAQiM2hbgJU5qAnz/uPUcouGZntpUGfiviCBJWRWSYpnqhK3A2Pxkmy2hHo3fSi5P/p
-         Ec2w==
-X-Gm-Message-State: APjAAAU/zGoQwyBdZ1rkVch+D1LTe9o+rhW1ILo69aNEAALzSl/arz5x
-        V4IrlteUMw45w+m8TptWhJ8=
-X-Google-Smtp-Source: APXvYqyUWCeqRMSmhPQBv8T1kvY2fBUXii3IFinsfNGlbgWGcUwGOtdMgTDX9+3IsrpPkRifSyM2kQ==
-X-Received: by 2002:ac8:1c5a:: with SMTP id j26mr30842971qtk.351.1573569122819;
-        Tue, 12 Nov 2019 06:32:02 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id i14sm9408153qke.102.2019.11.12.06.31.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 06:32:02 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
-        rfontana@redhat.com, kstewart@linuxfoundation.org,
-        tglx@linutronix.de
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: dvb_dummy_fe: Fix long lines
-Date:   Tue, 12 Nov 2019 11:24:36 -0300
-Message-Id: <20191112142436.1406-1-dwlsalmeida@gmail.com>
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEVtvo092592;
+        Tue, 12 Nov 2019 08:31:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573569115;
+        bh=5q4Ba0jsg2rMOeuTdNLUdhoNWg94JZlddVCnrc1IWtY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TBIXURzm5gVAQcPU582rpWzRaJY/VJN9JTEqTmFSfFVyLWIWSjD3p54XTkkYsN762
+         K/nDAgfjAaJg+XFre+mAtNeJd1rtmQt44Pt+46QpN7gu2aPhyqwrZbaDJg3BU+S9E0
+         pm77F+v/kcPHuNUlHPcrpm2vVeCW53gynwDd5LG0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEVtnb024423
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 08:31:55 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 08:31:38 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 08:31:55 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEVjUL050451;
+        Tue, 12 Nov 2019 08:31:52 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <t-kristo@ti.com>, <nm@ti.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/9] arm64: dts: ti: k3-am65-main: Move secure proxy under cbass_main_navss
+Date:   Tue, 12 Nov 2019 16:32:54 +0200
+Message-ID: <20191112143301.3168-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191112143301.3168-1-peter.ujfalusi@ti.com>
+References: <20191112143301.3168-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Secure proxy (NAVSS0_SEC_PROXY0) is part of the Navigator Subsystem.
 
-Break long lines into smaller ones to improve readability.
-
-WARNING: line over 80 characters
-+	memcpy(&state->frontend.ops, &dvb_dummy_fe_ofdm_ops, sizeof(struct dvb_frontend_ops));
-
-WARNING: line over 80 characters
-+	memcpy(&state->frontend.ops, &dvb_dummy_fe_qpsk_ops, sizeof(struct dvb_frontend_ops));
-WARNING: line over 80 characters
-+	memcpy(&state->frontend.ops, &dvb_dummy_fe_qam_ops, sizeof(struct dvb_frontend_ops));
-
-WARNING: line over 80 characters
-+				FE_CAN_FEC_4_5 | FE_CAN_FEC_5_6 | FE_CAN_FEC_6_7 |
-
-WARNING: line over 80 characters
-+				FE_CAN_FEC_7_8 | FE_CAN_FEC_8_9 | FE_CAN_FEC_AUTO |
-
-WARNING: line over 80 characters
-+				FE_CAN_QAM_16 | FE_CAN_QAM_64 | FE_CAN_QAM_AUTO |
-
-WARNING: line over 80 characters
-+		.symbol_rate_min	= (57840000 / 2) / 6
-
-Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/media/dvb-frontends/dvb_dummy_fe.c | 62 ++++++++++++++++------
- 1 file changed, 45 insertions(+), 17 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
-index 4db679cb70ad..f41c1e0dc8eb 100644
---- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
-+++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
-@@ -37,7 +37,8 @@ static int dvb_dummy_fe_read_ber(struct dvb_frontend* fe, u32* ber)
- 	return 0;
- }
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index e40f7acbec42..a125d66dd552 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -51,17 +51,6 @@ gic_its: gic-its@1820000 {
+ 		};
+ 	};
  
--static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
-+static int
-+dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
- {
- 	*strength = 0;
- 	return 0;
-@@ -102,6 +103,7 @@ static int dvb_dummy_fe_set_voltage(struct dvb_frontend *fe,
- static void dvb_dummy_fe_release(struct dvb_frontend* fe)
- {
- 	struct dvb_dummy_fe_state* state = fe->demodulator_priv;
+-	secure_proxy_main: mailbox@32c00000 {
+-		compatible = "ti,am654-secure-proxy";
+-		#mbox-cells = <1>;
+-		reg-names = "target_data", "rt", "scfg";
+-		reg = <0x00 0x32c00000 0x00 0x100000>,
+-		      <0x00 0x32400000 0x00 0x100000>,
+-		      <0x00 0x32800000 0x00 0x100000>;
+-		interrupt-names = "rx_011";
+-		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-	};
+-
+ 	serdes0: serdes@900000 {
+ 		compatible = "ti,phy-am654-serdes";
+ 		reg = <0x0 0x900000 0x0 0x2000>;
+@@ -414,6 +403,17 @@ inta_main_udmass: interrupt-controller@33d00000 {
+ 			ti,sci-rm-range-global-event = <0x1>;
+ 		};
+ 
++		secure_proxy_main: mailbox@32c00000 {
++			compatible = "ti,am654-secure-proxy";
++			#mbox-cells = <1>;
++			reg-names = "target_data", "rt", "scfg";
++			reg = <0x00 0x32c00000 0x00 0x100000>,
++			      <0x00 0x32400000 0x00 0x100000>,
++			      <0x00 0x32800000 0x00 0x100000>;
++			interrupt-names = "rx_011";
++			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++		};
 +
- 	kfree(state);
- }
- 
-@@ -117,7 +119,10 @@ struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
- 		return NULL;
- 
- 	/* create dvb_frontend */
--	memcpy(&state->frontend.ops, &dvb_dummy_fe_ofdm_ops, sizeof(struct dvb_frontend_ops));
-+	memcpy(&state->frontend.ops,
-+	       &dvb_dummy_fe_ofdm_ops,
-+	       sizeof(struct dvb_frontend_ops));
-+
- 	state->frontend.demodulator_priv = state;
- 	return &state->frontend;
- }
-@@ -134,7 +139,10 @@ struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
- 		return NULL;
- 
- 	/* create dvb_frontend */
--	memcpy(&state->frontend.ops, &dvb_dummy_fe_qpsk_ops, sizeof(struct dvb_frontend_ops));
-+	memcpy(&state->frontend.ops,
-+	       &dvb_dummy_fe_qpsk_ops,
-+	       sizeof(struct dvb_frontend_ops));
-+
- 	state->frontend.demodulator_priv = state;
- 	return &state->frontend;
- }
-@@ -151,7 +159,10 @@ struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
- 		return NULL;
- 
- 	/* create dvb_frontend */
--	memcpy(&state->frontend.ops, &dvb_dummy_fe_qam_ops, sizeof(struct dvb_frontend_ops));
-+	memcpy(&state->frontend.ops,
-+	       &dvb_dummy_fe_qam_ops,
-+	       sizeof(struct dvb_frontend_ops));
-+
- 	state->frontend.demodulator_priv = state;
- 	return &state->frontend;
- }
-@@ -163,13 +174,21 @@ static const struct dvb_frontend_ops dvb_dummy_fe_ofdm_ops = {
- 		.frequency_min_hz	= 0,
- 		.frequency_max_hz	= 863250 * kHz,
- 		.frequency_stepsize_hz	= 62500,
--		.caps = FE_CAN_FEC_1_2 | FE_CAN_FEC_2_3 | FE_CAN_FEC_3_4 |
--				FE_CAN_FEC_4_5 | FE_CAN_FEC_5_6 | FE_CAN_FEC_6_7 |
--				FE_CAN_FEC_7_8 | FE_CAN_FEC_8_9 | FE_CAN_FEC_AUTO |
--				FE_CAN_QAM_16 | FE_CAN_QAM_64 | FE_CAN_QAM_AUTO |
--				FE_CAN_TRANSMISSION_MODE_AUTO |
--				FE_CAN_GUARD_INTERVAL_AUTO |
--				FE_CAN_HIERARCHY_AUTO,
-+		.caps = FE_CAN_FEC_1_2 |
-+			FE_CAN_FEC_2_3 |
-+			FE_CAN_FEC_3_4 |
-+			FE_CAN_FEC_4_5 |
-+			FE_CAN_FEC_5_6 |
-+			FE_CAN_FEC_6_7 |
-+			FE_CAN_FEC_7_8 |
-+			FE_CAN_FEC_8_9 |
-+			FE_CAN_FEC_AUTO |
-+			FE_CAN_QAM_16 |
-+			FE_CAN_QAM_64 |
-+			FE_CAN_QAM_AUTO |
-+			FE_CAN_TRANSMISSION_MODE_AUTO |
-+			FE_CAN_GUARD_INTERVAL_AUTO |
-+			FE_CAN_HIERARCHY_AUTO,
- 	},
- 
- 	.release = dvb_dummy_fe_release,
-@@ -194,11 +213,16 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qam_ops = {
- 		.frequency_min_hz	=  51 * MHz,
- 		.frequency_max_hz	= 858 * MHz,
- 		.frequency_stepsize_hz	= 62500,
--		.symbol_rate_min	= (57840000 / 2) / 64,  /* SACLK/64 == (XIN/2)/64 */
-+		/* symbol_rate_min: SACLK/64 == (XIN/2)/64 */
-+		.symbol_rate_min	= (57840000 / 2) / 64,
- 		.symbol_rate_max	= (57840000 / 2) / 4,   /* SACLK/4 */
--		.caps = FE_CAN_QAM_16 | FE_CAN_QAM_32 | FE_CAN_QAM_64 |
--			FE_CAN_QAM_128 | FE_CAN_QAM_256 |
--			FE_CAN_FEC_AUTO | FE_CAN_INVERSION_AUTO
-+		.caps = FE_CAN_QAM_16 |
-+			FE_CAN_QAM_32 |
-+			FE_CAN_QAM_64 |
-+			FE_CAN_QAM_128 |
-+			FE_CAN_QAM_256 |
-+			FE_CAN_FEC_AUTO |
-+			FE_CAN_INVERSION_AUTO
- 	},
- 
- 	.release = dvb_dummy_fe_release,
-@@ -227,8 +251,12 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qpsk_ops = {
- 		.symbol_rate_min	= 1000000,
- 		.symbol_rate_max	= 45000000,
- 		.caps = FE_CAN_INVERSION_AUTO |
--			FE_CAN_FEC_1_2 | FE_CAN_FEC_2_3 | FE_CAN_FEC_3_4 |
--			FE_CAN_FEC_5_6 | FE_CAN_FEC_7_8 | FE_CAN_FEC_AUTO |
-+			FE_CAN_FEC_1_2 |
-+			FE_CAN_FEC_2_3 |
-+			FE_CAN_FEC_3_4 |
-+			FE_CAN_FEC_5_6 |
-+			FE_CAN_FEC_7_8 |
-+			FE_CAN_FEC_AUTO |
- 			FE_CAN_QPSK
- 	},
- 
+ 		hwspinlock: spinlock@30e00000 {
+ 			compatible = "ti,am654-hwspinlock";
+ 			reg = <0x00 0x30e00000 0x00 0x1000>;
 -- 
-2.24.0
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
