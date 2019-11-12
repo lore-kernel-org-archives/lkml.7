@@ -2,61 +2,61 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9F7C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27BFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88AA6222C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996A320818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U+tvYrna"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xl2baX29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfKLOvC (ORCPT
+        id S1727399AbfKLOvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:51:02 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52512 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfKLOvA (ORCPT
+        Tue, 12 Nov 2019 09:51:08 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43640 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727336AbfKLOvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:51:00 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEowbu098030;
-        Tue, 12 Nov 2019 08:50:58 -0600
+        Tue, 12 Nov 2019 09:51:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEp2ao052222;
+        Tue, 12 Nov 2019 08:51:02 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573570258;
-        bh=3afVrSmjTL4CyEPRTamBo0N3qnu4sRsruT5eMjfEjYc=;
+        s=ti-com-17Q1; t=1573570262;
+        bh=cWIhxaWfs1VKoPfhzGdI1lG2Bp+nNVmsDFTtssjDckQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=U+tvYrnagsI0ahEjQ8+aSPNEJBnEtL5Poy8oj3Jzopc+Pm3kInQaZX/1JJ0ZkyskY
-         7zPluxw6hjxCFvQHG2Yp0B+Yyy0RSoENh22R84ZKZHgEeVsv5IhbeH+303el/RZTpv
-         u6YcJJcx4cQ4eYdHPVuNOQD5ILMtPahtFiQLrY48=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEoweB070469;
-        Tue, 12 Nov 2019 08:50:58 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        b=xl2baX29/lrLgqb6uwRAFwhtjuHYvrxH/RlOb85LpVieXfytEM+j6brs2Gehd1b2y
+         nbXqKCHS+hCjzeknwt+TehSLoptL33EnvaidfYMhd462SmA8GObnxWYrpdRNka5Jdw
+         cyyTNfG1uqEy7YF7eCugHE9ewtIPEcwytOXF5qe8=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEp1So054959
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 08:51:01 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:50:40 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:51:01 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:50:40 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:51:01 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokex068428;
-        Tue, 12 Nov 2019 08:50:57 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokf2068428;
+        Tue, 12 Nov 2019 08:51:01 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [RESEND Patch v3 13/20] media: ti-vpe: cal: Add DRA76x support
-Date:   Tue, 12 Nov 2019 08:53:40 -0600
-Message-ID: <20191112145347.23519-14-bparrot@ti.com>
+Subject: [RESEND Patch v3 16/20] media: ti-vpe: cal: Add subdev s_power hooks
+Date:   Tue, 12 Nov 2019 08:53:43 -0600
+Message-ID: <20191112145347.23519-17-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112145347.23519-1-bparrot@ti.com>
 References: <20191112145347.23519-1-bparrot@ti.com>
@@ -68,66 +68,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the needed control module register bit layout to support
-the DRA76x family of devices.
+Because V4L2 still uses a specific way to manage power state of devices
+that predates runtime PM, bridge driver should power on and off sub
+device explicitly.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 34 +++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/media/platform/ti-vpe/cal.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 8d9c1569c05a..0ed517b3c00d 100644
+index 58d2edc087fb..5b5ff32b6120 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -287,6 +287,36 @@ static const struct cal_data dra72x_es1_cal_data = {
- 	.flags = DRA72_CAL_PRE_ES2_LDO_DISABLE,
- };
+@@ -1654,6 +1654,12 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	if (ret < 0)
+ 		goto err;
  
-+static struct reg_field dra76x_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 8, 8),
-+	[F_CAMMODE] = REG_FIELD(0, 9, 10),
-+	[F_CSI_MODE] = REG_FIELD(0, 11, 11),
-+	[F_LANEENABLE] = REG_FIELD(0, 27, 31),
-+};
++	ret = v4l2_subdev_call(ctx->sensor, core, s_power, 1);
++	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV) {
++		ctx_err(ctx, "power on failed in subdev\n");
++		goto err;
++	}
 +
-+static struct reg_field dra76x_ctrl_core_csi1_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 0, 0),
-+	[F_CAMMODE] = REG_FIELD(0, 1, 2),
-+	[F_CSI_MODE] = REG_FIELD(0, 3, 3),
-+	[F_LANEENABLE] = REG_FIELD(0, 24, 26),
-+};
+ 	cal_runtime_get(ctx->dev);
+ 
+ 	csi2_ctx_config(ctx);
+@@ -1667,6 +1673,7 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 
+ 	ret = v4l2_subdev_call(ctx->sensor, video, s_stream, 1);
+ 	if (ret) {
++		v4l2_subdev_call(ctx->sensor, core, s_power, 0);
+ 		ctx_err(ctx, "stream on failed in subdev\n");
+ 		cal_runtime_put(ctx->dev);
+ 		goto err;
+@@ -1695,6 +1702,7 @@ static void cal_stop_streaming(struct vb2_queue *vq)
+ 	struct cal_dmaqueue *dma_q = &ctx->vidq;
+ 	struct cal_buffer *buf, *tmp;
+ 	unsigned long flags;
++	int ret;
+ 
+ 	csi2_ppi_disable(ctx);
+ 	disable_irqs(ctx);
+@@ -1703,6 +1711,10 @@ static void cal_stop_streaming(struct vb2_queue *vq)
+ 	if (v4l2_subdev_call(ctx->sensor, video, s_stream, 0))
+ 		ctx_err(ctx, "stream off failed in subdev\n");
+ 
++	ret = v4l2_subdev_call(ctx->sensor, core, s_power, 0);
++	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV)
++		ctx_err(ctx, "power off failed in subdev\n");
 +
-+static struct cal_csi2_phy dra76x_cal_csi_phy[] = {
-+	{
-+		.base_fields = dra76x_ctrl_core_csi0_reg_fields,
-+		.num_lanes = 5,
-+	},
-+	{
-+		.base_fields = dra76x_ctrl_core_csi1_reg_fields,
-+		.num_lanes = 3,
-+	},
-+};
-+
-+static const struct cal_data dra76x_cal_data = {
-+	.csi2_phy_core = dra76x_cal_csi_phy,
-+	.num_csi2_phy = ARRAY_SIZE(dra76x_cal_csi_phy),
-+};
-+
- /*
-  * there is one cal_dev structure in the driver, it is shared by
-  * all instances.
-@@ -2287,6 +2317,10 @@ static const struct of_device_id cal_of_match[] = {
- 		.compatible = "ti,dra72-pre-es2-cal",
- 		.data = (void *)&dra72x_es1_cal_data,
- 	},
-+	{
-+		.compatible = "ti,dra76-cal",
-+		.data = (void *)&dra76x_cal_data,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, cal_of_match);
+ 	/* Release all active buffers */
+ 	spin_lock_irqsave(&ctx->slock, flags);
+ 	list_for_each_entry_safe(buf, tmp, &dma_q->active, list) {
 -- 
 2.17.1
 
