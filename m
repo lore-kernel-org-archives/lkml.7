@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837A4C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B0AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6004222469
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1880D2246F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 11:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfKLLVL (ORCPT
+        id S1727433AbfKLLVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:21:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33771 "EHLO
+        Tue, 12 Nov 2019 06:21:16 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33740 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727345AbfKLLSU (ORCPT
+        with ESMTP id S1727290AbfKLLSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:18:20 -0500
+        Tue, 12 Nov 2019 06:18:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUUBb-0000be-J0; Tue, 12 Nov 2019 12:18:15 +0100
+        id 1iUUBU-0000VP-A1; Tue, 12 Nov 2019 12:18:08 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6DC5F1C04CB;
-        Tue, 12 Nov 2019 12:18:10 +0100 (CET)
-Date:   Tue, 12 Nov 2019 11:18:10 -0000
-From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ABB3D1C04C9;
+        Tue, 12 Nov 2019 12:18:04 +0100 (CET)
+Date:   Tue, 12 Nov 2019 11:18:04 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf probe: Fix to probe an inline function which
- has no entry pc
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/core] perf map_groups: Introduce for_each_entry() and
+ for_each_entry_safe() iterators
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <157199320336.8075.16189530425277588587.stgit@devnote2>
-References: <157199320336.8075.16189530425277588587.stgit@devnote2>
+In-Reply-To: <tip-gc3go6fmdn30twusg91t2q56@git.kernel.org>
+References: <tip-gc3go6fmdn30twusg91t2q56@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157355749001.29376.15203627561616568745.tip-bot2@tip-bot2>
+Message-ID: <157355748426.29376.10807971722624153496.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,71 +60,171 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     eb6933b29d20bf2c3053883d409a53f462c1a3ac
-Gitweb:        https://git.kernel.org/tip/eb6933b29d20bf2c3053883d409a53f462c1a3ac
-Author:        Masami Hiramatsu <mhiramat@kernel.org>
-AuthorDate:    Fri, 25 Oct 2019 17:46:43 +09:00
+Commit-ID:     50481461cfe937289724643691a752fa15a600c9
+Gitweb:        https://git.kernel.org/tip/50481461cfe937289724643691a752fa15a600c9
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 28 Oct 2019 11:55:28 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 06 Nov 2019 15:43:06 -03:00
+CommitterDate: Wed, 06 Nov 2019 15:49:39 -03:00
 
-perf probe: Fix to probe an inline function which has no entry pc
+perf map_groups: Introduce for_each_entry() and for_each_entry_safe() iterators
 
-Fix perf probe to probe an inlne function which has no entry pc
-or low pc but only has ranges attribute.
+To reduce boilerplate, providing a more compact form to iterate over the
+maps in a map_group.
 
-This seems very rare case, but I could find a few examples, as
-same as probe_point_search_cb(), use die_entrypc() to get the
-entry address in probe_point_inline_cb() too.
-
-Without this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-
-With this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints _text+33789
-  [root@quaco ~]#
-
-Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
+Link: https://lkml.kernel.org/n/tip-gc3go6fmdn30twusg91t2q56@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/map_groups.c |  9 ++++-----
+ tools/perf/util/map_groups.h  |  9 ++++-----
+ tools/perf/util/symbol.c      | 24 ++++--------------------
+ tools/perf/util/vdso.c        |  4 ++--
+ 4 files changed, 14 insertions(+), 32 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 71633f5..2fa932b 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -930,7 +930,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
- 		ret = find_probe_point_lazy(in_die, pf);
- 	else {
- 		/* Get probe address */
--		if (dwarf_entrypc(in_die, &addr) != 0) {
-+		if (die_entrypc(in_die, &addr) != 0) {
- 			pr_warning("Failed to get entry address of %s.\n",
- 				   dwarf_diename(in_die));
- 			return -ENOENT;
+diff --git a/tools/perf/tests/map_groups.c b/tools/perf/tests/map_groups.c
+index 594fdac..b52adad 100644
+--- a/tools/perf/tests/map_groups.c
++++ b/tools/perf/tests/map_groups.c
+@@ -18,17 +18,16 @@ static int check_maps(struct map_def *merged, unsigned int size, struct map_grou
+ 	struct map *map;
+ 	unsigned int i = 0;
+ 
+-	map = map_groups__first(mg);
+-	while (map) {
++	map_groups__for_each_entry(mg, map) {
++		if (i > 0)
++			TEST_ASSERT_VAL("less maps expected", (map && i < size) || (!map && i == size));
++
+ 		TEST_ASSERT_VAL("wrong map start",  map->start == merged[i].start);
+ 		TEST_ASSERT_VAL("wrong map end",    map->end == merged[i].end);
+ 		TEST_ASSERT_VAL("wrong map name",  !strcmp(map->dso->name, merged[i].name));
+ 		TEST_ASSERT_VAL("wrong map refcnt", refcount_read(&map->refcnt) == 2);
+ 
+ 		i++;
+-		map = map_groups__next(map);
+-
+-		TEST_ASSERT_VAL("less maps expected", (map && i < size) || (!map && i == size));
+ 	}
+ 
+ 	return TEST_OK;
+diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/map_groups.h
+index ce3ade3..bfbdbf5 100644
+--- a/tools/perf/util/map_groups.h
++++ b/tools/perf/util/map_groups.h
+@@ -89,12 +89,11 @@ static inline struct map *map_groups__find(struct map_groups *mg, u64 addr)
+ 	return maps__find(&mg->maps, addr);
+ }
+ 
+-struct map *map_groups__first(struct map_groups *mg);
++#define map_groups__for_each_entry(mg, map) \
++	for (map = maps__first(&mg->maps); map; map = map__next(map))
+ 
+-static inline struct map *map_groups__next(struct map *map)
+-{
+-	return map__next(map);
+-}
++#define map_groups__for_each_entry_safe(mg, map, next) \
++	for (map = maps__first(&mg->maps), next = map__next(map); map; map = next, next = map__next(map))
+ 
+ struct symbol *map_groups__find_symbol(struct map_groups *mg, u64 addr, struct map **mapp);
+ struct symbol *map_groups__find_symbol_by_name(struct map_groups *mg, const char *name, struct map **mapp);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 042140f..a4bd61c 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1049,11 +1049,6 @@ out_delete_from:
+ 	return ret;
+ }
+ 
+-struct map *map_groups__first(struct map_groups *mg)
+-{
+-	return maps__first(&mg->maps);
+-}
+-
+ static int do_validate_kcore_modules(const char *filename,
+ 				  struct map_groups *kmaps)
+ {
+@@ -1065,13 +1060,10 @@ static int do_validate_kcore_modules(const char *filename,
+ 	if (err)
+ 		return err;
+ 
+-	old_map = map_groups__first(kmaps);
+-	while (old_map) {
+-		struct map *next = map_groups__next(old_map);
++	map_groups__for_each_entry(kmaps, old_map) {
+ 		struct module_info *mi;
+ 
+ 		if (!__map__is_kmodule(old_map)) {
+-			old_map = next;
+ 			continue;
+ 		}
+ 
+@@ -1081,8 +1073,6 @@ static int do_validate_kcore_modules(const char *filename,
+ 			err = -EINVAL;
+ 			goto out;
+ 		}
+-
+-		old_map = next;
+ 	}
+ out:
+ 	delete_modules(&modules);
+@@ -1185,9 +1175,7 @@ int map_groups__merge_in(struct map_groups *kmaps, struct map *new_map)
+ 	struct map *old_map;
+ 	LIST_HEAD(merged);
+ 
+-	for (old_map = map_groups__first(kmaps); old_map;
+-	     old_map = map_groups__next(old_map)) {
+-
++	map_groups__for_each_entry(kmaps, old_map) {
+ 		/* no overload with this one */
+ 		if (new_map->end < old_map->start ||
+ 		    new_map->start >= old_map->end)
+@@ -1260,7 +1248,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ {
+ 	struct map_groups *kmaps = map__kmaps(map);
+ 	struct kcore_mapfn_data md;
+-	struct map *old_map, *new_map, *replacement_map = NULL;
++	struct map *old_map, *new_map, *replacement_map = NULL, *next;
+ 	struct machine *machine;
+ 	bool is_64_bit;
+ 	int err, fd;
+@@ -1307,10 +1295,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	}
+ 
+ 	/* Remove old maps */
+-	old_map = map_groups__first(kmaps);
+-	while (old_map) {
+-		struct map *next = map_groups__next(old_map);
+-
++	map_groups__for_each_entry_safe(kmaps, old_map, next) {
+ 		/*
+ 		 * We need to preserve eBPF maps even if they are
+ 		 * covered by kcore, because we need to access
+@@ -1318,7 +1303,6 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 		 */
+ 		if (old_map != map && !__map__is_bpf_prog(old_map))
+ 			map_groups__remove(kmaps, old_map);
+-		old_map = next;
+ 	}
+ 	machine->trampolines_mapped = false;
+ 
+diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
+index ba4b439..6e00793 100644
+--- a/tools/perf/util/vdso.c
++++ b/tools/perf/util/vdso.c
+@@ -142,9 +142,9 @@ static enum dso_type machine__thread_dso_type(struct machine *machine,
+ 					      struct thread *thread)
+ {
+ 	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
+-	struct map *map = map_groups__first(thread->mg);
++	struct map *map;
+ 
+-	for (; map ; map = map_groups__next(map)) {
++	map_groups__for_each_entry(thread->mg, map) {
+ 		struct dso *dso = map->dso;
+ 		if (!dso || dso->long_name[0] != '/')
+ 			continue;
