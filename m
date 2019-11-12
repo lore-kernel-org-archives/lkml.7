@@ -2,535 +2,398 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD56C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F85C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7112084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="QswbLHbD"
+	by mail.kernel.org (Postfix) with ESMTP id B2D102084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKLCTS (ORCPT
+        id S1727053AbfKLCUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 21:19:18 -0500
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:42744 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfKLCTS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 21:19:18 -0500
-Received: by mail-wr1-f42.google.com with SMTP id a15so16730301wrf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 18:19:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=N2pB7A1+M/tGMIJX4WLJD4oMISZoZphK8KZOxQiOHCM=;
-        b=QswbLHbDv0JYvzGPviCBuVltYWyR5tx6WaeKn/aHqJGHESaPXqtJcldrNjBXztNeN4
-         h77o+yY19AsRkM9Df8FAidJRS3epsn7bzsX5cQzG5gXsxbUhiIArg+fEKfnh4/gCGADT
-         FFw+MTeJTgcM4lJwk9La8xymVnRzYeb+JJ5W+dnYNNmqOjxxZDJ1ifMNJYoIpFvIYVvH
-         DM6VKFi3mG5TmNuNTozKnfiopAPIzRa9Djm3rI8wHCPN54sKtT9vUnygvAy+HWRgT1QY
-         1zsvxKPX8n1alKBz/OaMinsee4eFzlq6h2hMiYmqIPoeWn5rU5zN1guaup79UudEs/eM
-         tZ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=N2pB7A1+M/tGMIJX4WLJD4oMISZoZphK8KZOxQiOHCM=;
-        b=e2LCEqOE8uRRvpCTi0AJL6Hl3o7yvbJfDtmwC8PF+eZ1uQ+A/2kAaGqb4rI5TwfRnl
-         g+EunXFbKNpgY3K/Be8lNrkDfzj4iIlpSxeu4f9cxlpsn6f02cF96dRSWaN8jb6PUO5C
-         lkEvBq6AFHURsf2TnGaUUZKRGattDUxpDjzXWLHRkzWatKyGAOg37bbmdo2H/sRKosTK
-         mLVSQVwwUqvtuR9HwFSBNgEnj++qnUeO3Ozn4DaUeuiffNdA+6ITpWh25xrJMQVTLZh0
-         6VqYUpJysQfS7PqdMvWVeEpWfff3VqH+Gt02RGpxcWPHouX2/dQupKuTe/g0kEd3MGtm
-         PPaw==
-X-Gm-Message-State: APjAAAX5qQdT0EoKAT4WTRnQfjh3HSo0ebo4XjtB1RhhT6GiYXfII+r1
-        B5Hj6dVvI3XJk/N+rRSZ8cocmg==
-X-Google-Smtp-Source: APXvYqwc1ikWLln78aHMda+87Sj+x7QsNTVnMWo2UD5O26Hq2lMVlDsDVFn/tMpj+cBh27XAIUaL4g==
-X-Received: by 2002:adf:8b09:: with SMTP id n9mr21958469wra.95.1573525152975;
-        Mon, 11 Nov 2019 18:19:12 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id j3sm16282536wrs.70.2019.11.11.18.19.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 18:19:12 -0800 (PST)
-Message-ID: <5dca16a0.1c69fb81.35eb7.dbb1@mx.google.com>
-Date:   Mon, 11 Nov 2019 18:19:12 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 11 Nov 2019 21:20:04 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33726 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726928AbfKLCUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 21:20:04 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 45266A2B6B784E9BDB1F;
+        Tue, 12 Nov 2019 10:20:02 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.212) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 12 Nov 2019
+ 10:19:55 +0800
+Subject: Re: [RFC PATCH v2] arm64: cpufeatures: add support for tlbi range
+ instructions
+To:     Olof Johansson <olof@lixom.net>
+References: <5DC960EB.9050503@huawei.com>
+ <CAOesGMiEV_m32MRvN_-YmMmdL-8bm3DH95gnnCK5oAeyV1WqwA@mail.gmail.com>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, <tangnianyao@huawei.com>,
+        <xiexiangyou@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ARM-SoC Maintainers <arm@kernel.org>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <5DCA16CA.7060600@huawei.com>
+Date:   Tue, 12 Nov 2019 10:19:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.14.153-106-ga46a2b6a665b
-In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
-References: <20191111181421.390326245@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 000/105] 4.14.154-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+In-Reply-To: <CAOesGMiEV_m32MRvN_-YmMmdL-8bm3DH95gnnCK5oAeyV1WqwA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.223.212]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 112 boots: 104 failed, 0 passed with 8 offline=
- (v4.14.153-106-ga46a2b6a665b)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.153-106-ga46a2b6a665b/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.153-106-ga46a2b6a665b/
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.153-106-ga46a2b6a665b
-Git Commit: a46a2b6a665bee1f0e231d13d5c04472bafec941
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 61 unique boards, 21 SoC families, 13 builds out of 201
+On 2019/11/12 0:32, Olof Johansson wrote:
+> On Mon, Nov 11, 2019 at 5:24 AM Zhenyu Ye <yezhenyu2@huawei.com> wrote:
+>>
+>> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+>> range of input addresses. This patch adds support for this feature.
+>> This is the second version of the patch.
+>>
+>> I traced the __flush_tlb_range() for a minute and get some statistical
+>> data as below:
+>>
+>>         PAGENUM         COUNT
+>>         1               34944
+>>         2               5683
+>>         3               1343
+>>         4               7857
+>>         5               838
+>>         9               339
+>>         16              933
+>>         19              427
+>>         20              5821
+>>         23              279
+>>         41              338
+>>         141             279
+>>         512             428
+>>         1668            120
+>>         2038            100
+>>
+>> Those data are based on kernel-5.4.0, where PAGENUM = end - start, COUNT
+>> shows number of calls to the __flush_tlb_range() in a minute. There only
+>> shows the data which COUNT >= 100. The kernel is started normally, and
+>> transparent hugepage is opened. As we can see, though most user TLBI
+>> ranges were 1 pages long, the num of long-range can not be ignored.
+>>
+>> The new feature of TLB range can improve lots of performance compared to
+>> the current implementation. As an example, flush 512 ranges needs only 1
+>> instruction as opposed to 512 instructions using current implementation.
+> 
+> But there's no indication whether this performs better or not in reality.
+> 
+> A perf report indicating, for example, cycles spent in TLBI on the two
+> versions would be a lot more valuable.
+> 
 
-Boot Regressions Detected:
+We don't have a performance test environment supporting TLBI range right
+now, so there is only some theoretical analysis. Anyway, above data shows
+there are application scenarios of wide pages range.
 
-arm:
+>> And for a new hardware feature, support is better than not.
+> 
+> This is blatantly untrue. Complexity is added, and if there's no
+> evidence of benefit of said complexity, it is not something we want to
+> add.
+> 
 
-    bcm2835_defconfig:
-        gcc-8:
-          bcm2835-rpi-b:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          bcm2836-rpi-2-b:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
+You are right. I will do some benchmarks when conditions permit. Data is
+the most convincing. And I will modify my code according to your advice
+below.
 
-    davinci_all_defconfig:
-        gcc-8:
-          da850-evm:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          dm365evm,legacy:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
+When the benchmark data is ready, I will send a new version of this patch.
 
-    exynos_defconfig:
-        gcc-8:
-          exynos4412-odroidx2:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          exynos5250-arndale:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          exynos5420-arndale-octa:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          exynos5800-peach-pi:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
 
-    imx_v6_v7_defconfig:
-        gcc-8:
-          imx6dl-wandboard_dual:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          imx6dl-wandboard_solo:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          imx6q-wandboard:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          imx7s-warp:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          vf610-colibri-eval-v3:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
+>> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+>> ---
+>> ChangeLog v1 -> v2:
+>> - Change the main implementation of this feature.
+>> - Add some comments.
+>>
+>> ---
+>>  arch/arm64/include/asm/cpucaps.h  |  3 +-
+>>  arch/arm64/include/asm/sysreg.h   |  4 ++
+>>  arch/arm64/include/asm/tlbflush.h | 99 ++++++++++++++++++++++++++++++-
+>>  arch/arm64/kernel/cpufeature.c    | 10 ++++
+>>  4 files changed, 112 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+>> index ac1dbca3d0cd..5b5230060e5b 100644
+>> --- a/arch/arm64/include/asm/cpucaps.h
+>> +++ b/arch/arm64/include/asm/cpucaps.h
+>> @@ -54,7 +54,8 @@
+>>  #define ARM64_WORKAROUND_1463225               44
+>>  #define ARM64_WORKAROUND_CAVIUM_TX2_219_TVM    45
+>>  #define ARM64_WORKAROUND_CAVIUM_TX2_219_PRFM   46
+>> +#define ARM64_HAS_TLBI_RANGE                   47
+>>
+>> -#define ARM64_NCAPS                            47
+>> +#define ARM64_NCAPS                            48
+>>
+>>  #endif /* __ASM_CPUCAPS_H */
+>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>> index 6e919fafb43d..a6abbf2b067d 100644
+>> --- a/arch/arm64/include/asm/sysreg.h
+>> +++ b/arch/arm64/include/asm/sysreg.h
+>> @@ -539,6 +539,7 @@
+>>                          ENDIAN_SET_EL1 | SCTLR_EL1_UCI  | SCTLR_EL1_RES1)
+>>
+>>  /* id_aa64isar0 */
+>> +#define ID_AA64ISAR0_TLB_SHIFT         56
+>>  #define ID_AA64ISAR0_TS_SHIFT          52
+>>  #define ID_AA64ISAR0_FHM_SHIFT         48
+>>  #define ID_AA64ISAR0_DP_SHIFT          44
+>> @@ -552,6 +553,9 @@
+>>  #define ID_AA64ISAR0_SHA1_SHIFT                8
+>>  #define ID_AA64ISAR0_AES_SHIFT         4
+>>
+>> +#define ID_AA64ISAR0_TLB_NI            0x0
+>> +#define ID_AA64ISAR0_TLB_RANGE         0x2
+>> +
+>>  /* id_aa64isar1 */
+>>  #define ID_AA64ISAR1_SB_SHIFT          36
+>>  #define ID_AA64ISAR1_FRINTTS_SHIFT     32
+>> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+>> index bc3949064725..f49bed7ecb68 100644
+>> --- a/arch/arm64/include/asm/tlbflush.h
+>> +++ b/arch/arm64/include/asm/tlbflush.h
+>> @@ -59,6 +59,33 @@
+>>                 __ta;                                           \
+>>         })
+>>
+>> +/*
+>> + * This macro creates a properly formatted VA operand for the TLBI RANGE.
+>> + * The value bit assignments are:
+>> + *
+>> + * +----------+------+-------+-------+-------+----------------------+
+>> + * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
+>> + * +-----------------+-------+-------+-------+----------------------+
+>> + * |63      48|47  46|45   44|43   39|38   37|36                   0|
+>> + *
+>> + * The address range is determined by below formula:
+>> + * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
+>> + *
+>> + */
+>> +#define __TLBI_VADDR_RANGE(addr, asid, tg, scale, num, ttl)    \
+>> +       ({                                                      \
+>> +               unsigned long __ta = (addr) >> PAGE_SHIFT;      \
+>> +               __ta |= (unsigned long)(ttl) << 37;             \
+>> +               __ta |= (unsigned long)(num) << 39;             \
+>> +               __ta |= (unsigned long)(scale) << 44;           \
+>> +               __ta |= (unsigned long)(tg) << 46;              \
+>> +               __ta |= (unsigned long)(asid) << 48;            \
+>> +               __ta;                                           \
+>> +       })
+>> +
+>> +#define TLB_RANGE_MASK_SHIFT 5
+>> +#define TLB_RANGE_MASK GENMASK_ULL(TLB_RANGE_MASK_SHIFT, 0)
+>> +
+>>  /*
+>>   *     TLB Invalidation
+>>   *     ================
+>> @@ -177,9 +204,9 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
+>>   */
+>>  #define MAX_TLBI_OPS   PTRS_PER_PTE
+>>
+>> -static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>> -                                    unsigned long start, unsigned long end,
+>> -                                    unsigned long stride, bool last_level)
+>> +static inline void __flush_tlb_range_old(struct vm_area_struct *vma,
+>> +                                        unsigned long start, unsigned long end,
+>> +                                        unsigned long stride, bool last_level)
+> 
+> "old" and "new" are not very descriptive.
+> 
 
-    multi_v7_defconfig:
-        gcc-8:
-          alpine-db:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          am335x-boneblack:
-              lab-baylibre: failing since 1 day (last pass: v4.14.151 - fir=
-st fail: v4.14.153-68-g0d12dcf336c6)
-          armada-xp-openblocks-ax3-4:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          bcm2836-rpi-2-b:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          exynos4412-odroidx2:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          exynos5250-arndale:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          exynos5420-arndale-octa:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          exynos5800-peach-pi:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          imx6dl-wandboard_dual:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          imx6dl-wandboard_solo:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          imx6q-sabrelite:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          imx6q-wandboard:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          imx7s-warp:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          meson8b-odroidc1:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          mt7623n-bananapi-bpi-r2:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          omap3-beagle:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          omap3-beagle-xm:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          omap4-panda:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          qcom-apq8064-cm-qs600:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          rk3288-rock2-square:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          rk3288-veyron-jaq:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          socfpga_cyclone5_de0_sockit:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          stih410-b2120:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          sun4i-a10-cubieboard:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          sun5i-a13-olinuxino-micro:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          sun5i-r8-chip:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          sun7i-a20-bananapi:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          sun7i-a20-cubieboard2:
-              lab-clabbe: failing since 1 day (last pass: v4.14.153 - first=
- fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          sun8i-a83t-bananapi-m3:
-              lab-clabbe: failing since 1 day (last pass: v4.14.153 - first=
- fail: v4.14.153-40-gf7fb2676f8a6)
-          sun8i-h2-plus-orangepi-zero:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          tegra124-jetson-tk1:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          tegra124-nyan-big:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          tegra20-iris-512:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          tegra30-beaver:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          vf610-colibri-eval-v3:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          zynq-zc702:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
+I will change these.
 
-    mvebu_v7_defconfig:
-        gcc-8:
-          armada-xp-openblocks-ax3-4:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
+>>  {
+>>         unsigned long asid = ASID(vma->vm_mm);
+>>         unsigned long addr;
+>> @@ -211,6 +238,72 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>>         dsb(ish);
+>>  }
+>>
+>> +static inline void __flush_tlb_range_new(struct vm_area_struct *vma,
+>> +                                        unsigned long start, unsigned long end,
+>> +                                        unsigned long stride, bool last_level)
+>> +{
+>> +       int num = 0;
+>> +       int scale = 0;
+>> +       int ttl = 0;
+>> +       int tg = (PAGE_SHIFT - 12) / 2 + 1;
+> 
+> This is a constant, and shouldn't need to be a variable. You can push
+> it down to the addr generator macro.
+> 
 
-    omap2plus_defconfig:
-        gcc-8:
-          am335x-boneblack:
-              lab-baylibre: failing since 1 day (last pass: v4.14.151 - fir=
-st fail: v4.14.153-68-g0d12dcf336c6)
-          omap3-beagle:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          omap3-beagle-xm:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          omap4-panda:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
+OK.
 
-    sunxi_defconfig:
-        gcc-8:
-          sun4i-a10-cubieboard:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          sun5i-a13-olinuxino-micro:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          sun5i-r8-chip:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          sun7i-a20-bananapi:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          sun7i-a20-cubieboard2:
-              lab-clabbe: failing since 1 day (last pass: v4.14.153 - first=
- fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          sun8i-a33-olinuxino:
-              lab-clabbe: failing since 1 day (last pass: v4.14.153 - first=
- fail: v4.14.153-40-gf7fb2676f8a6)
-          sun8i-a83t-bananapi-m3:
-              lab-clabbe: failing since 1 day (last pass: v4.14.153 - first=
- fail: v4.14.153-40-gf7fb2676f8a6)
-          sun8i-h2-plus-orangepi-zero:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
+>> +       unsigned long asid = ASID(vma->vm_mm);
+>> +       unsigned long addr = 0;
+>> +       unsigned long offset = (end - start) >> PAGE_SHIFT;
+> 
+> "offset" confused me a lot here -- I think this variable really
+> describes number of pages to flush?
+> 
 
-    tegra_defconfig:
-        gcc-8:
-          tegra124-jetson-tk1:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          tegra124-nyan-big:
-              lab-collabora: failing since 1 day (last pass: v4.14.153 - fi=
-rst fail: v4.14.153-40-gf7fb2676f8a6)
-          tegra20-iris-512:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          tegra30-beaver:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
+Yes. I will use round_down and round_up here.
 
-arm64:
+> And, if so, you're probably off-by-one here: you need to round up
+> partial pages. As a matter of fact, you probably need to deal with
+> partial pages at both beginning and end.
+> 
+>> +       if (offset > (1UL << 21)) {
+>> +               flush_tlb_mm(vma->vm_mm);
+>> +               return;
+>> +       }
+> 
+> There's a comment that this limitation on iterative flushes is
+> arbitrary, and selected to not trigger soft lockups. At the very
+> least, you need a similar comment here as to why this code is needed.
+> 
 
-    defconfig:
-        gcc-8:
-          bcm2837-rpi-3-b:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          juno-r2:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          meson-gxbb-p200:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          meson-gxl-s905x-khadas-vim:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          meson-gxl-s905x-libretech-cc:
-              lab-clabbe: failing since 1 day (last pass: v4.14.153 - first=
- fail: v4.14.153-40-gf7fb2676f8a6)
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          meson-gxl-s905x-nexbox-a95x:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          meson-gxm-nexbox-a1:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          mt7622-rfb1:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
-          r8a7795-salvator-x:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          r8a7796-m3ulcb:
-              lab-baylibre: failing since 1 day (last pass: v4.14.153 - fir=
-st fail: v4.14.153-40-gf7fb2676f8a6)
-          sun50i-a64-bananapi-m64:
-              lab-clabbe: failing since 1 day (last pass: v4.14.153 - first=
- fail: v4.14.153-40-gf7fb2676f8a6)
-          sun50i-a64-pine64-plus:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
-53 - first fail: v4.14.153-40-gf7fb2676f8a6)
+This is the biggest range of TLBI range instruction supported, which
+is equal to (2^5 - 1 + 1) * (2^(3 * 5 + 1)).  There needs up to 4
+instructions and may not trigger soft lockups.  Maybe I should add
+some comments here.
 
-Boot Failures Detected:
+>> +       dsb(ishst);
+>> +
+>> +       /*
+>> +        * The minimum size of TLB RANGE is 2 PAGE;
+>> +        * Use normal TLB instruction to handle odd PAGEs
+>> +        */
+>> +       if (offset % 2 == 1) {
+>> +               addr = __TLBI_VADDR(start, asid);
+>> +               if (last_level) {
+>> +                       __tlbi(vale1is, addr);
+>> +                       __tlbi_user(vale1is, addr);
+>> +               } else {
+>> +                       __tlbi(vae1is, addr);
+>> +                       __tlbi_user(vae1is, addr);
+>> +               }
+>> +               start += 1 << PAGE_SHIFT;
+>> +               offset -= 1;
+>> +       }
+>> +
+>> +       while (offset > 0) {
+>> +               num = (offset & TLB_RANGE_MASK) - 1;
+>> +               if (num >= 0) {
+>> +                       addr = __TLBI_VADDR_RANGE(start, asid, tg,
+>> +                                                 scale, num, ttl);
+>> +                       if (last_level) {
+>> +                               __tlbi(rvale1is, addr);
+>> +                               __tlbi_user(rvale1is, addr);
+>> +                       } else {
+>> +                               __tlbi(rvae1is, addr);
+>> +                               __tlbi_user(rvae1is, addr);
+>> +                       }
+>> +                       start += (num + 1) << (5 * scale + 1) << PAGE_SHIFT;
+>> +               }
+>> +               scale++;
+> 
+> This is an odd way of doing the loop, by looping over the base and
+> linearly increasing the exponent.
+> 
+> Wouldn't it be easier to start with as high 'num' as possible as long
+> as the range ("offset" in your code) is larger than 2^5, and then do a
+> few iterations at the end for the smaller ranges?
+> 
 
-i386:
-    i386_defconfig:
-        gcc-8:
-            qemu_i386: 2 failed labs
+As the above data shows, most of the range are small, so I decide to do
+the flush from small to high. If we do from high to small, there may need
+some additional judgment, which will add software side overhead. So I think
+it's better to do this from small to high.
 
-arm:
-    tegra_defconfig:
-        gcc-8:
-            tegra124-jetson-tk1: 1 failed lab
-            tegra124-nyan-big: 1 failed lab
-            tegra20-iris-512: 1 failed lab
-            tegra30-beaver: 1 failed lab
+>> +               offset >>= TLB_RANGE_MASK_SHIFT;
+>> +       }
+>> +       dsb(ish);
+>> +}
+> 
+> The inner pieces of this loop, the special case at the beginning, and
+> the old implementation are all the same.
+> 
+> The main difference between now and before are:
+> 
+> 1) How much you step forward on each iteration
+> 2) How you calculate the address argument
+> 
+> Would it be better to just refactor the old code? You can calculate
+> the ranges the same way but just loop over them for non-8.4-TLBI
+> platforms.
+> 
 
-    multi_v7_defconfig:
-        gcc-8:
-            alpine-db: 1 failed lab
-            am335x-boneblack: 1 failed lab
-            armada-xp-openblocks-ax3-4: 1 failed lab
-            bcm2836-rpi-2-b: 1 failed lab
-            exynos4412-odroidx2: 1 failed lab
-            exynos5250-arndale: 1 failed lab
-            exynos5420-arndale-octa: 1 failed lab
-            exynos5422-odroidxu3: 2 failed labs
-            exynos5800-peach-pi: 2 failed labs
-            imx6dl-wandboard_dual: 1 failed lab
-            imx6dl-wandboard_solo: 1 failed lab
-            imx6q-sabrelite: 2 failed labs
-            imx6q-wandboard: 1 failed lab
-            imx7s-warp: 1 failed lab
-            meson8b-odroidc1: 2 failed labs
-            mt7623n-bananapi-bpi-r2: 1 failed lab
-            omap3-beagle: 1 failed lab
-            omap4-panda: 3 failed labs
-            qemu_arm-virt-gicv2: 2 failed labs
-            qemu_arm-virt-gicv3: 2 failed labs
-            rk3288-rock2-square: 1 failed lab
-            rk3288-veyron-jaq: 1 failed lab
-            socfpga_cyclone5_de0_sockit: 1 failed lab
-            stih410-b2120: 1 failed lab
-            sun4i-a10-cubieboard: 1 failed lab
-            sun5i-a13-olinuxino-micro: 1 failed lab
-            sun7i-a20-cubieboard2: 2 failed labs
-            sun8i-a33-olinuxino: 1 failed lab
-            sun8i-a83t-bananapi-m3: 1 failed lab
-            sun8i-h2-plus-orangepi-zero: 1 failed lab
-            tegra124-jetson-tk1: 1 failed lab
-            tegra124-nyan-big: 1 failed lab
-            tegra20-iris-512: 1 failed lab
-            tegra30-beaver: 1 failed lab
-            vf610-colibri-eval-v3: 1 failed lab
-            zynq-zc702: 1 failed lab
+However, they just look similar but actually different. There are some small
+differences between now and before, such as,
 
-    davinci_all_defconfig:
-        gcc-8:
-            da850-evm: 1 failed lab
+	 __TLBI_VADDR(start, asid);
+	 __TLBI_VADDR_RANGE(start, start, asid, tg, scale, num, ttl);
 
-    sunxi_defconfig:
-        gcc-8:
-            sun4i-a10-cubieboard: 1 failed lab
-            sun5i-a13-olinuxino-micro: 1 failed lab
-            sun7i-a20-cubieboard2: 2 failed labs
-            sun8i-a33-olinuxino: 1 failed lab
-            sun8i-a83t-bananapi-m3: 1 failed lab
-            sun8i-h2-plus-orangepi-zero: 1 failed lab
+	__tlbi(rvale1is, addr);
+	__tlbi(vale1is, addr);
 
-    imx_v6_v7_defconfig:
-        gcc-8:
-            imx6dl-wandboard_dual: 1 failed lab
-            imx6dl-wandboard_solo: 1 failed lab
-            imx6q-wandboard: 1 failed lab
-            imx7s-warp: 1 failed lab
-            vf610-colibri-eval-v3: 1 failed lab
+So I think it's not worth to refactor the old code.
 
-    exynos_defconfig:
-        gcc-8:
-            exynos4412-odroidx2: 1 failed lab
-            exynos5250-arndale: 1 failed lab
-            exynos5420-arndale-octa: 1 failed lab
-            exynos5422-odroidxu3: 2 failed labs
-            exynos5800-peach-pi: 2 failed labs
+> No matter what, we really want some benchmarks and numbers to motivate
+> these changes. TLB operations tend to get on critical paths where
+> single cycles matter.
+> 
 
-    bcm2835_defconfig:
-        gcc-8:
-            bcm2835-rpi-b: 1 failed lab
-            bcm2836-rpi-2-b: 1 failed lab
-            bcm2837-rpi-3-b: 1 failed lab
+I can understand your concern. When the benchmark data is ready,
+I will send a new version of this patch.
 
-    omap2plus_defconfig:
-        gcc-8:
-            am335x-boneblack: 1 failed lab
-            omap3-beagle: 1 failed lab
-            omap3-beagle-xm: 1 failed lab
-            omap4-panda: 3 failed labs
+>> +static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>> +                                    unsigned long start, unsigned long end,
+>> +                                    unsigned long stride, bool last_level)
+>> +{
+>> +       if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE))
+>> +               __flush_tlb_range_new(vma, start, end, stride, last_level);
+>> +       else
+>> +               __flush_tlb_range_old(vma, start, end, stride, last_level);
+>> +}
+>> +
+>>  static inline void flush_tlb_range(struct vm_area_struct *vma,
+>>                                    unsigned long start, unsigned long end)
+>>  {
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 80f459ad0190..bdefd8a34729 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -1566,6 +1566,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>>                 .min_field_value = 1,
+>>         },
+>>  #endif
+>> +       {
+>> +               .desc = "TLB range maintenance instruction",
+>> +               .capability = ARM64_HAS_TLBI_RANGE,
+>> +               .type = ARM64_CPUCAP_SYSTEM_FEATURE,
+>> +               .matches = has_cpuid_feature,
+>> +               .sys_reg = SYS_ID_AA64ISAR0_EL1,
+>> +               .field_pos = ID_AA64ISAR0_TLB_SHIFT,
+>> +               .sign = FTR_UNSIGNED,
+>> +               .min_field_value = ID_AA64ISAR0_TLB_RANGE,
+>> +       },
+>>         {},
+>>  };
+>>
+>> --
+>> 2.19.1
+>>
+>>
+> 
+> .
+> 
 
-    mvebu_v7_defconfig:
-        gcc-8:
-            armada-xp-openblocks-ax3-4: 1 failed lab
-
-x86_64:
-    x86_64_defconfig:
-        gcc-8:
-            minnowboard-turbot-E3826: 1 failed lab
-            qemu_x86_64: 2 failed labs
-
-arm64:
-    defconfig:
-        gcc-8:
-            bcm2837-rpi-3-b: 1 failed lab
-            juno-r2: 1 failed lab
-            meson-gxbb-p200: 1 failed lab
-            meson-gxl-s905x-khadas-vim: 1 failed lab
-            meson-gxl-s905x-libretech-cc: 3 failed labs
-            meson-gxl-s905x-nexbox-a95x: 1 failed lab
-            meson-gxm-nexbox-a1: 1 failed lab
-            mt7622-rfb1: 1 failed lab
-            qemu_arm64-virt-gicv2: 2 failed labs
-            qemu_arm64-virt-gicv3: 2 failed labs
-            r8a7795-salvator-x: 1 failed lab
-            r8a7796-m3ulcb: 2 failed labs
-            rk3399-gru-kevin: 1 failed lab
-            sun50i-a64-bananapi-m64: 1 failed lab
-            sun50i-a64-pine64-plus: 1 failed lab
-
-Offline Platforms:
-
-arm:
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            omap3-beagle-xm: 1 offline lab
-            qcom-apq8064-cm-qs600: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
