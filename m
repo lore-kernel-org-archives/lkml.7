@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3CDC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823F9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471A9214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5F821A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfKLQxT (ORCPT
+        id S1727417AbfKLQxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:53:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33058 "EHLO mx1.suse.de"
+        Tue, 12 Nov 2019 11:53:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33242 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727069AbfKLQxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:53:18 -0500
+        id S1727069AbfKLQxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:21 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B6092B109;
-        Tue, 12 Nov 2019 16:53:15 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id BD8BDB2BF;
+        Tue, 12 Nov 2019 16:53:18 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 01/33] powerpc/64s/exception: Introduce INT_DEFINE parameter block for code generation
-Date:   Tue, 12 Nov 2019 17:51:59 +0100
-Message-Id: <854059454c690c6f63957a2130aa04e2cd501af2.1573576649.git.msuchanek@suse.de>
+Subject: [PATCH 03/33] powerpc/64s/exception: Add GEN_KVM macro that uses INT_DEFINE parameters
+Date:   Tue, 12 Nov 2019 17:52:01 +0100
+Message-Id: <a1db07f5611057f5acc13a393de6017e9a410116.1573576649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
 References: <cover.1573576649.git.msuchanek@suse.de>
@@ -81,143 +81,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-The code generation macro arguments are difficult to read, and
-defaults can't easily be used.
-
-This introduces a block where parameters can be set for interrupt
-handler code generation by the subsequent macros, and adds the first
-generation macro for interrupt entry.
-
-One interrupt handler is converted to the new macros to demonstrate
-the change, the rest will be coverted all at once.
-
 No generated code change.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 77 ++++++++++++++++++++++++++--
- 1 file changed, 73 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index d0018dd17e0a..e6ad6e6cf65e 100644
+index 591ae2a73e18..0e39e98ef719 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -193,6 +193,61 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
- 	mtctr	reg;							\
- 	bctr
- 
-+/*
-+ * Interrupt code generation macros
-+ */
-+#define IVEC		.L_IVEC_\name\()
-+#define IHSRR		.L_IHSRR_\name\()
-+#define IAREA		.L_IAREA_\name\()
-+#define IDAR		.L_IDAR_\name\()
-+#define IDSISR		.L_IDSISR_\name\()
-+#define ISET_RI		.L_ISET_RI_\name\()
-+#define IEARLY		.L_IEARLY_\name\()
-+#define IMASK		.L_IMASK_\name\()
-+#define IKVM_REAL	.L_IKVM_REAL_\name\()
-+#define IKVM_VIRT	.L_IKVM_VIRT_\name\()
-+
-+#define INT_DEFINE_BEGIN(n)						\
-+.macro int_define_ ## n name
-+
-+#define INT_DEFINE_END(n)						\
-+.endm ;									\
-+int_define_ ## n n ;							\
-+do_define_int n
-+
-+.macro do_define_int name
-+	.ifndef IVEC
-+		.error "IVEC not defined"
+@@ -204,6 +204,7 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
+ #define ISET_RI		.L_ISET_RI_\name\()
+ #define IEARLY		.L_IEARLY_\name\()
+ #define IMASK		.L_IMASK_\name\()
++#define IKVM_SKIP	.L_IKVM_SKIP_\name\()
+ #define IKVM_REAL	.L_IKVM_REAL_\name\()
+ #define IKVM_VIRT	.L_IKVM_VIRT_\name\()
+ #define ISTACK		.L_ISTACK_\name\()
+@@ -243,6 +244,9 @@ do_define_int n
+ 	.ifndef IMASK
+ 		IMASK=0
+ 	.endif
++	.ifndef IKVM_SKIP
++		IKVM_SKIP=0
 +	.endif
-+	.ifndef IHSRR
-+		IHSRR=EXC_STD
-+	.endif
-+	.ifndef IAREA
-+		IAREA=PACA_EXGEN
-+	.endif
-+	.ifndef IDAR
-+		IDAR=0
-+	.endif
-+	.ifndef IDSISR
-+		IDSISR=0
-+	.endif
-+	.ifndef ISET_RI
-+		ISET_RI=1
-+	.endif
-+	.ifndef IEARLY
-+		IEARLY=0
-+	.endif
-+	.ifndef IMASK
-+		IMASK=0
-+	.endif
-+	.ifndef IKVM_REAL
-+		IKVM_REAL=0
-+	.endif
-+	.ifndef IKVM_VIRT
-+		IKVM_VIRT=0
-+	.endif
-+.endm
-+
- .macro INT_KVM_HANDLER name, vec, hsrr, area, skip
- 	TRAMP_KVM_BEGIN(\name\()_kvm)
+ 	.ifndef IKVM_REAL
+ 		IKVM_REAL=0
+ 	.endif
+@@ -265,6 +269,10 @@ do_define_int n
  	KVM_HANDLER \vec, \hsrr, \area, \skip
-@@ -474,7 +529,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	 */
- 	GET_SCRATCH0(r10)
- 	std	r10,\area\()+EX_R13(r13)
--	.if \dar
-+	.if \dar == 1
- 	.if \hsrr
- 	mfspr	r10,SPRN_HDAR
- 	.else
-@@ -482,7 +537,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	.endif
- 	std	r10,\area\()+EX_DAR(r13)
- 	.endif
--	.if \dsisr
-+	.if \dsisr == 1
- 	.if \hsrr
- 	mfspr	r10,SPRN_HDSISR
- 	.else
-@@ -506,6 +561,14 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	.endif
  .endm
  
-+.macro GEN_INT_ENTRY name, virt, ool=0
-+	.if ! \virt
-+		INT_HANDLER \name, IVEC, \ool, IEARLY, \virt, IHSRR, IAREA, ISET_RI, IDAR, IDSISR, IMASK, IKVM_REAL
-+	.else
-+		INT_HANDLER \name, IVEC, \ool, IEARLY, \virt, IHSRR, IAREA, ISET_RI, IDAR, IDSISR, IMASK, IKVM_VIRT
-+	.endif
++.macro GEN_KVM name
++	KVM_HANDLER IVEC, IHSRR, IAREA, IKVM_SKIP
 +.endm
 +
+ #ifdef CONFIG_KVM_BOOK3S_64_HANDLER
+ #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
  /*
-  * On entry r13 points to the paca, r9-r13 are saved in the paca,
-  * r9 contains the saved CR, r11 and r12 contain the saved SRR0 and
-@@ -1143,12 +1206,18 @@ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
- 	bl	unrecoverable_exception
- 	b	.
+@@ -1226,6 +1234,7 @@ INT_DEFINE_BEGIN(data_access)
+ 	IVEC=0x300
+ 	IDAR=1
+ 	IDSISR=1
++	IKVM_SKIP=1
+ 	IKVM_REAL=1
+ INT_DEFINE_END(data_access)
  
-+INT_DEFINE_BEGIN(data_access)
-+	IVEC=0x300
-+	IDAR=1
-+	IDSISR=1
-+	IKVM_REAL=1
-+INT_DEFINE_END(data_access)
- 
- EXC_REAL_BEGIN(data_access, 0x300, 0x80)
--	INT_HANDLER data_access, 0x300, ool=1, dar=1, dsisr=1, kvm=1
-+	GEN_INT_ENTRY data_access, virt=0, ool=1
- EXC_REAL_END(data_access, 0x300, 0x80)
+@@ -1235,7 +1244,8 @@ EXC_REAL_END(data_access, 0x300, 0x80)
  EXC_VIRT_BEGIN(data_access, 0x4300, 0x80)
--	INT_HANDLER data_access, 0x300, virt=1, dar=1, dsisr=1
-+	GEN_INT_ENTRY data_access, virt=1
+ 	GEN_INT_ENTRY data_access, virt=1
  EXC_VIRT_END(data_access, 0x4300, 0x80)
- INT_KVM_HANDLER data_access, 0x300, EXC_STD, PACA_EXGEN, 1
+-INT_KVM_HANDLER data_access, 0x300, EXC_STD, PACA_EXGEN, 1
++TRAMP_KVM_BEGIN(data_access_kvm)
++	GEN_KVM data_access
  EXC_COMMON_BEGIN(data_access_common)
+ 	GEN_COMMON data_access
+ 	ld	r4,_DAR(r1)
 -- 
 2.23.0
 
