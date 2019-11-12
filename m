@@ -2,91 +2,103 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5F4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2382EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0688320818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0EN90sfG"
+	by mail.kernel.org (Postfix) with ESMTP id 01CCC20818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 09:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfKLJXY (ORCPT
+        id S1727151AbfKLJY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:23:24 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:50320 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfKLJXX (ORCPT
+        Tue, 12 Nov 2019 04:24:28 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbfKLJY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:23:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uLDCiGjFhshkCUgBk2CbnkCh1QAYDS9WMt7qrIQMXl0=; b=0EN90sfGIR7vTqdZAgpFff+te
-        8ObbiL0FcYUbXTNDN/Ix/xdCgrlcrGQ56GLLQC8In3M3iqaT/fFy83wyRssXcgt4T90RwAZoJaZfO
-        ds6gCn/t6B8Nwc3C6/kXG/ywIENkbeupFRYK9TIj1cEmYK1bOlWlomGDMU1TZ99eyPENsd9zAhuVC
-        lplIrYrTOCIKbmvDIXA0cKelksqlEqK/F2bTmZEsFGL87WC4E98uY2WXLM0pYF2M2Ry0NmjkPPY+7
-        I/QZDttycwK/VioFBxD1XAobWgPY6PAo+ECAjsnpZXyfqUgnD2YUbonocofxmbVAndRQmZ5raXtba
-        K4ajxbijw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUSNt-0005WS-Vn; Tue, 12 Nov 2019 09:22:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7D0E230018B;
-        Tue, 12 Nov 2019 10:21:39 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 17BA229BC818E; Tue, 12 Nov 2019 10:22:46 +0100 (CET)
-Date:   Tue, 12 Nov 2019 10:22:46 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [patch V2 08/16] x86/ioperm: Add bitmap sequence number
-Message-ID: <20191112092246.GY4131@hirez.programming.kicks-ass.net>
-References: <20191111220314.519933535@linutronix.de>
- <20191111223052.292300453@linutronix.de>
+        Tue, 12 Nov 2019 04:24:27 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAC9JvJu082519;
+        Tue, 12 Nov 2019 04:23:10 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7t0xg43u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 04:23:10 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xAC9LeD9095924;
+        Tue, 12 Nov 2019 04:23:10 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7t0xg42a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 04:23:10 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAC9FTUx023573;
+        Tue, 12 Nov 2019 09:22:25 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02wdc.us.ibm.com with ESMTP id 2w5n35wa82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 09:22:25 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAC9MO9E52756968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 09:22:24 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5BEBBBE054;
+        Tue, 12 Nov 2019 09:22:24 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C347BE04F;
+        Tue, 12 Nov 2019 09:22:18 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.199.37.154])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 09:22:17 +0000 (GMT)
+X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Vishal Verma <vishal.l.verma@intel.com>, peterz@infradead.org,
+        dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 04/16] libnvdimm: Move nd_numa_attribute_group to device_type
+In-Reply-To: <157309901655.1582359.18126990555058555754.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com> <157309901655.1582359.18126990555058555754.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 12 Nov 2019 14:52:14 +0530
+Message-ID: <87h839tpo9.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111223052.292300453@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 11:03:22PM +0100, Thomas Gleixner wrote:
-> Add a globally unique sequence number which is incremented when ioperm() is
-> changing the I/O bitmap of a task. Store the new sequence number in the
-> io_bitmap structure and compare it along with the actual struct pointer
-> with the one which was last loaded on a CPU. Only update the bitmap if
-> either of the two changes. That should further reduce the overhead of I/O
-> bitmap scheduling when there are only a few I/O bitmap users on the system.
+Dan Williams <dan.j.williams@intel.com> writes:
 
-> +	/* Update the sequence number to force an update in switch_to() */
-> +	iobm->sequence = atomic64_add_return(1, &io_bitmap_sequence);
+> A 'struct device_type' instance can carry default attributes for the
+> device. Use this facility to remove the export of
+> nd_numa_attribute_group and put the responsibility on the core rather
+> than leaf implementations to define this attribute.
+>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-> +		if (tss->last_bitmap != iobm ||
-> +		    tss->last_sequence != iobm->sequence)
-> +			switch_to_update_io_bitmap(tss, iobm);
 
-Initially I wondered why we need a globally unique sequence number if we
-already check the struct iobitmap pointer. That ought to make the
-sequence number per-object.
+can we also expose target_node in a similar way? This allows application
+to better understand the node locality of the SCM device.
 
-However, that breaks for memory re-use. So yes, we need that thing to be
-global.
+-aneesh
