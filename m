@@ -2,84 +2,172 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9401C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E1CC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71543206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573590836;
-	bh=Mnvf0QMRCj4tI0M1jvvA/Cd6q+zg1D2YAk4ccvhV8aQ=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=jI/As8GtlSb+75XcR+8heUFt3Njnk20waKgMU3kRMOs6TJ8vdmKkjXvVqzZQDzXQI
-	 AwAuylaa/gBxmwRoppUipS4REHsvV5hSMiAMH8cKI15cFgLO23ZwSnI6AQDBvIwt6l
-	 6kp0Bg/fIyekaasuPaqd1JRNORooqodYVQLGCCsU=
+	by mail.kernel.org (Postfix) with ESMTP id A7CBD21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 20:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nIfBYYpx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfKLUdz (ORCPT
+        id S1727002AbfKLUeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:33:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfKLUdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 15:33:55 -0500
-Received: from localhost (unknown [8.46.76.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43D24206A3;
-        Tue, 12 Nov 2019 20:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573590832;
-        bh=Mnvf0QMRCj4tI0M1jvvA/Cd6q+zg1D2YAk4ccvhV8aQ=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=RQzt25HxE4MPL9H3xgO0Hu7OIaUSat5u0D+HttH0Y3AqB+W2OS+1h3ieDUKhQFeC6
-         tqu9JeoGJ29UjtkkjWFu7WY3BrTov29jq6zd4Ckf4wvqRhQyW51lpfIzlhppixl28x
-         j+dc4iv0RB7wxAfv7IbOMh2quB9XMD4C3HIiz1Pw=
-Date:   Tue, 12 Nov 2019 21:33:43 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-Subject: Re: [PATCH 7/9] staging: rtl8723bs: Fix incorrect type in argument
- warnings
-Message-ID: <20191112203343.GA1833645@kroah.com>
-References: <cover.1573577309.git.jarias.linux@gmail.com>
- <637726782ce6c6ed3d68b5e595481857916bbc56.1573577309.git.jarias.linux@gmail.com>
+        Tue, 12 Nov 2019 15:34:17 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32981 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfKLUeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 15:34:17 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a17so3219452wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:34:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w2HWZCYTuyG/iiIWgucV3SL/wKiXCiXBU5oRVlG/JoY=;
+        b=nIfBYYpx2BPy8Ny2KgYnvusMIUoId7JvzJVuq3x4uT3Ce5l33QonIgnPodqpzgfLnk
+         KwUjAuYZyyC504ndkw8KH/zz1rB8QWChYirmO4TSeQRJ6uW970ne8kuJ64kiTf0mP6tZ
+         9ZZS1D4Xr29niL4OXMBJhIWVbzrtBr4f5Gfee8T9zAZSGa+P8TpFWxnmeZbIMKgJCZ30
+         +1tG1fXzk837jA0obwmLORJ95JlTbdlhD4AAy0UG/RNvvw71D1IifjG6atHbmC0HWnxf
+         bjCtQ/mXtEzj3NNFH/q/nufeqZqdwQMDoM+7iXWW0rH2UrGK1DgF9QP5YIrOobEwuu7e
+         uzuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w2HWZCYTuyG/iiIWgucV3SL/wKiXCiXBU5oRVlG/JoY=;
+        b=Jm49P93VYWi5aSZ4rDyCMjC7S2vT1sT8AqqVMZnzXJwMVzK2znYDGf5gV2dAiWqxSS
+         XLdmrt5y2FdLoMPIlAWybsqcvgTMrSkwz7cdKigHZ+FlAVbCxZzLWWNF3oXVagsvRe4w
+         lKm6Yco06Gk2wics72n1etq9b/qrFTN3OG3W1N0YbNyw4qK3MpoH+bUqS5mC8CUzqR2I
+         +PcrHWvLG+efGDKDibZJu7o7ywKE9SXnFrNOQ9lCX8gXdita3zdr6nz46OjfH/cM7UF6
+         pgjnx7oAIEklNEG+M8RyZStwB299gXtpVUsD0A20w5nefNuu1QQXHoGaP3bICR1d+NQk
+         j0Rw==
+X-Gm-Message-State: APjAAAWUJMqDfHBxpWyuiqhiru5yflMErAm6iH7eZUcjZD64KKIFNIrG
+        GRuKbVY28G6Ggs3gFPls/A1r/GpArLdt1VAj+7zkpQ==
+X-Google-Smtp-Source: APXvYqzdm1vE6Jn2Mh+18qqFj1F/ivuD1zl/RbxZQOJ5F83vkznTI6U6nlIC66zByigw9coumwdcaYjoCrBFyy6cb7M=
+X-Received: by 2002:a1c:8055:: with SMTP id b82mr5959862wmd.176.1573590854911;
+ Tue, 12 Nov 2019 12:34:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <637726782ce6c6ed3d68b5e595481857916bbc56.1573577309.git.jarias.linux@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-4-hannes@cmpxchg.org>
+ <CAJuCfpHSTr8Vt+Tj-Hj4OBYHq1ucw7_B1VoVWKEHQVPHaMhUdA@mail.gmail.com>
+ <20191112180019.GB178331@cmpxchg.org> <CAJuCfpFJ-tzqc6Ng-6ntQn46iatgOdLF5PY6WAcOHVvGSQGwMg@mail.gmail.com>
+In-Reply-To: <CAJuCfpFJ-tzqc6Ng-6ntQn46iatgOdLF5PY6WAcOHVvGSQGwMg@mail.gmail.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Tue, 12 Nov 2019 12:34:03 -0800
+Message-ID: <CAJuCfpFtJcp8Ry7eC=1SbQwn2rgxvKO1Ej_QjxBxEPY_dYsjBg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] mm: vmscan: enforce inactive:active ratio at the
+ reclaim root
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
+        cgroups mailinglist <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:55:27AM -0500, Javier F. Arias wrote:
-> Fix incorrect type in declarations to solve the 'incorrect
-> type in argument 3' warnings in the rtw_get_ie function calls.
-> Issue found by Sparse.
-> 
-> Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> index db6528a01229..bb63295e8d4e 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> @@ -83,7 +83,7 @@ static char *translate_scan(struct adapter *padapter,
->  {
->  	struct iw_event iwe;
->  	u16 cap;
-> -	u32 ht_ielen = 0;
-> +	sint ht_ielen = 0;
+On Tue, Nov 12, 2019 at 11:13 AM Suren Baghdasaryan <surenb@google.com> wrote:
+>
+> On Tue, Nov 12, 2019 at 10:00 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Sun, Nov 10, 2019 at 06:15:50PM -0800, Suren Baghdasaryan wrote:
+> > > On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > > > @@ -2758,7 +2775,17 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> > > >                         total_high_wmark += high_wmark_pages(zone);
+> > > >                 }
+> > > >
+> > > > -               sc->file_is_tiny = file + free <= total_high_wmark;
+> > > > +               /*
+> > > > +                * Consider anon: if that's low too, this isn't a
+> > > > +                * runaway file reclaim problem, but rather just
+> > > > +                * extreme pressure. Reclaim as per usual then.
+> > > > +                */
+> > > > +               anon = node_page_state(pgdat, NR_INACTIVE_ANON);
+> > > > +
+> > > > +               sc->file_is_tiny =
+> > > > +                       file + free <= total_high_wmark &&
+> > > > +                       !(sc->may_deactivate & DEACTIVATE_ANON) &&
+> > > > +                       anon >> sc->priority;
+> > >
+> > > The name of file_is_tiny flag seems to not correspond with its actual
+> > > semantics anymore. Maybe rename it into "skip_file"?
+> >
+> > I'm not a fan of file_is_tiny, but I also don't like skip_file. IMO
+> > it's better to have it describe a situation instead of an action, in
+> > case we later want to take additional action for that situation.
+> >
+> > Any other ideas? ;)
+>
+> All other ideas still yield verbs (like sc->prefer_anon). Maybe then
+> add some comment at the file_is_tiny declaration that it represents
+> not only the fact that the file LRU is too small to reclaim but also
+> that there are easily reclaimable anon pages?
+>
+> >
+> > > I'm confused about why !(sc->may_deactivate & DEACTIVATE_ANON) should
+> > > be a prerequisite for skipping file LRU reclaim. IIUC this means we
+> > > will skip reclaiming from file LRU only when anonymous page
+> > > deactivation is not allowed. Could you please add a comment explaining
+> > > this?
+> >
+> > The comment above this check tries to explain it: the definition of
+> > file being "tiny" is dependent on the availability of anon. It's a
+> > relative comparison.
+> >
+> > If file only has a few pages, and anon is easily reclaimable (does not
+> > require deactivation to reclaim pages), then file is "tiny" and we
+> > should go after the more plentiful anon pages.
+>
+> Your above explanation is much clearer to me than the one in the comment :)
+>
+> >
+> > If anon is under duress, too, this preference doesn't make sense and
+> > we should just reclaim both lists equally, as per usual.
+> >
+> > Note that I'm not introducing this constraint, I'm just changing how
+> > it's implemented. From the patch:
+> >
+> > > >         /*
+> > > >          * If the system is almost out of file pages, force-scan anon.
+> > > > -        * But only if there are enough inactive anonymous pages on
+> > > > -        * the LRU. Otherwise, the small LRU gets thrashed.
+> > > >          */
+> > > > -       if (sc->file_is_tiny &&
+> > > > -           !inactive_list_is_low(lruvec, false, sc, false) &&
+> > > > -           lruvec_lru_size(lruvec, LRU_INACTIVE_ANON,
+> > > > -                           sc->reclaim_idx) >> sc->priority) {
+> > > > +       if (sc->file_is_tiny) {
+> > > >                 scan_balance = SCAN_ANON;
+> > > >                 goto out;
+> > > >         }
+> >
+> > So it's always been checking whether reclaim would deactivate anon,
+> > and whether inactive_anon has sufficient pages for this priority.
+>
+> I didn't realize !inactive_list_is_low(lruvec, false, sc, false) is
+> effectively the same as !(sc->may_deactivate & DEACTIVATE_ANON) but
+> after re-reading the patch that makes sense... Except when
+> force_deactivate==true, in which case shouldn't you consider
+> NR_ACTIVE_ANON as easily reclaimable too? IOW should it be smth like
+> this:
+>
+> anon = node_page_state(pgdat, NR_INACTIVE_ANON) +
+> (sc->force_deactivate ? node_page_state(pgdat, NR_ACTIVE_ANON) : 0);
+>
+> ?
 
-sint?  Ick, try fixing up the function call itself please.
+On second thought that proposal would not be correct since
+deactivation is not the same as reclaim... So the way it is now looks
+correct.
 
-thanks,
-
-greg k-h
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
