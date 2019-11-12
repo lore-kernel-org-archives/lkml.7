@@ -2,60 +2,60 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4260C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D08FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3C920650
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE8320650
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wlRHM3yW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mk9welJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfKLO27 (ORCPT
+        id S1727577AbfKLO3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:28:59 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39090 "EHLO
+        Tue, 12 Nov 2019 09:29:05 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39104 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbfKLO26 (ORCPT
+        with ESMTP id S1727535AbfKLO3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:28:58 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACESvZr099195;
-        Tue, 12 Nov 2019 08:28:57 -0600
+        Tue, 12 Nov 2019 09:29:03 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACET1LP099202;
+        Tue, 12 Nov 2019 08:29:01 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573568937;
-        bh=TsBneoZKzB5CGJwt7jeP9UzozJx7lt2k4GHROFzZFr4=;
+        s=ti-com-17Q1; t=1573568941;
+        bh=gTI5YK82BxqNycsiZSNV3hZe7AZRvc2Jij+6yrpnzLQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wlRHM3yWHL0rFtBAk6uDypIdACh9ZLDgvbPgdkg13Hcn+r6MUdiidiOqxuGpwm9tM
-         qCZ6k+MQGl51wGA+q610eJaBTw3j2lgXFLbNxjjQtq45NNH4gOHop2wJJtfEYPmCOJ
-         bfwiNpDWmZUi3vxHOZ5RKKHTNJBbrPsCDcbFqvNM=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACESvwA018187
+        b=Mk9welJadKjqoGBi1lk+LlmTZmwRqGnGkRxIUkRpnConBr5NVxeuagjeU8jrxdJpK
+         +Ex9bf85pTDUF30NqmvyIDeywGKGgtuyu64jL7mDaiyGGI1/pjG23kIy0xahEadXpH
+         wBIIQge0q9D/0gSJ/+aljVbiYqSsPKjsqp1vYbXY=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACET1Rc026721
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:28:57 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:29:01 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:28:39 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:29:00 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:28:39 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:28:43 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriE044422;
-        Tue, 12 Nov 2019 08:28:56 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriF044422;
+        Tue, 12 Nov 2019 08:29:00 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 02/20] dt-bindings: media: cal: update binding example
-Date:   Tue, 12 Nov 2019 08:31:34 -0600
-Message-ID: <20191112143152.23176-3-bparrot@ti.com>
+Subject: [Patch v3 03/20] media: ti-vpe: cal: switch BIT_MASK to BIT
+Date:   Tue, 12 Nov 2019 08:31:35 -0600
+Message-ID: <20191112143152.23176-4-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112143152.23176-1-bparrot@ti.com>
 References: <20191112143152.23176-1-bparrot@ti.com>
@@ -67,71 +67,378 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update binding example to show proper endpoint properties and linkage.
+Looks like the preferred macro to define a single bit mask is BIT() and
+not BIT_MASK().
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- .../devicetree/bindings/media/ti-cal.txt      | 31 ++++++++++---------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/media/platform/ti-vpe/cal_regs.h | 194 +++++++++++------------
+ 1 file changed, 97 insertions(+), 97 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-index 93096d924786..7e960cf26e23 100644
---- a/Documentation/devicetree/bindings/media/ti-cal.txt
-+++ b/Documentation/devicetree/bindings/media/ti-cal.txt
-@@ -27,7 +27,6 @@ Documentation/devicetree/bindings/media/video-interfaces.txt.
- Example:
- 	cal: cal@4845b000 {
- 		compatible = "ti,dra72-cal";
--		ti,hwmods = "cal";
- 		reg = <0x4845B000 0x400>,
- 		      <0x4845B800 0x40>,
- 		      <0x4845B900 0x40>;
-@@ -45,9 +44,10 @@ Example:
+diff --git a/drivers/media/platform/ti-vpe/cal_regs.h b/drivers/media/platform/ti-vpe/cal_regs.h
+index 68cfc922b422..9e6afd0770c8 100644
+--- a/drivers/media/platform/ti-vpe/cal_regs.h
++++ b/drivers/media/platform/ti-vpe/cal_regs.h
+@@ -110,7 +110,7 @@
+ #define CAL_HL_HWINFO_NPPI_CONTEXTS_EIGHT		2
+ #define CAL_HL_HWINFO_NPPI_CONTEXTS_RESERVED		3
  
- 			csi2_0: port@0 {
- 				reg = <0>;
--				endpoint {
--					slave-mode;
--					remote-endpoint = <&ar0330_1>;
-+				csi2_phy0: endpoint {
-+					remote-endpoint = <&csi2_cam0>;
-+					clock-lanes = <0>;
-+					data-lanes = <1 2>;
- 				};
- 			};
- 			csi2_1: port@1 {
-@@ -57,19 +57,20 @@ Example:
- 	};
+-#define CAL_HL_SYSCONFIG_SOFTRESET_MASK		BIT_MASK(0)
++#define CAL_HL_SYSCONFIG_SOFTRESET_MASK		BIT(0)
+ #define CAL_HL_SYSCONFIG_SOFTRESET_DONE			0x0
+ #define CAL_HL_SYSCONFIG_SOFTRESET_PENDING		0x1
+ #define CAL_HL_SYSCONFIG_SOFTRESET_NOACTION		0x0
+@@ -121,11 +121,11 @@
+ #define CAL_HL_SYSCONFIG_IDLEMODE_SMART1		2
+ #define CAL_HL_SYSCONFIG_IDLEMODE_SMART2		3
  
- 	i2c5: i2c@4807c000 {
--		ar0330@10 {
--			compatible = "ti,ar0330";
--			reg = <0x10>;
-+		clock-frequency = <400000>;
+-#define CAL_HL_IRQ_EOI_LINE_NUMBER_MASK		BIT_MASK(0)
++#define CAL_HL_IRQ_EOI_LINE_NUMBER_MASK		BIT(0)
+ #define CAL_HL_IRQ_EOI_LINE_NUMBER_READ0		0
+ #define CAL_HL_IRQ_EOI_LINE_NUMBER_EOI0			0
  
--			port {
--				#address-cells = <1>;
--				#size-cells = <0>;
-+		camera-sensor@3c {
-+			compatible = "ovti,ov5640";
-+			reg = <0x3c>;
+-#define CAL_HL_IRQ_MASK(m)			BIT_MASK(m-1)
++#define CAL_HL_IRQ_MASK(m)			BIT(m-1)
+ #define CAL_HL_IRQ_NOACTION				0x0
+ #define CAL_HL_IRQ_ENABLE				0x1
+ #define CAL_HL_IRQ_CLEAR				0x1
+@@ -133,7 +133,7 @@
+ #define CAL_HL_IRQ_ENABLED				0x1
+ #define CAL_HL_IRQ_PENDING				0x1
+ 
+-#define CAL_PIX_PROC_EN_MASK			BIT_MASK(0)
++#define CAL_PIX_PROC_EN_MASK			BIT(0)
+ #define CAL_PIX_PROC_EXTRACT_MASK		GENMASK(4, 1)
+ #define CAL_PIX_PROC_EXTRACT_B6				0x0
+ #define CAL_PIX_PROC_EXTRACT_B7				0x1
+@@ -179,7 +179,7 @@
+ #define CAL_PIX_PROC_PACK_ARGB				0x6
+ #define CAL_PIX_PROC_CPORT_MASK			GENMASK(23, 19)
+ 
+-#define CAL_CTRL_POSTED_WRITES_MASK		BIT_MASK(0)
++#define CAL_CTRL_POSTED_WRITES_MASK		BIT(0)
+ #define CAL_CTRL_POSTED_WRITES_NONPOSTED		0
+ #define CAL_CTRL_POSTED_WRITES				1
+ #define CAL_CTRL_TAGCNT_MASK			GENMASK(4, 1)
+@@ -190,10 +190,10 @@
+ #define CAL_CTRL_BURSTSIZE_BURST128			0x3
+ #define CAL_CTRL_LL_FORCE_STATE_MASK		GENMASK(12, 7)
+ #define CAL_CTRL_MFLAGL_MASK			GENMASK(20, 13)
+-#define CAL_CTRL_PWRSCPCLK_MASK			BIT_MASK(21)
++#define CAL_CTRL_PWRSCPCLK_MASK			BIT(21)
+ #define CAL_CTRL_PWRSCPCLK_AUTO				0
+ #define CAL_CTRL_PWRSCPCLK_FORCE			1
+-#define CAL_CTRL_RD_DMA_STALL_MASK		BIT_MASK(22)
++#define CAL_CTRL_RD_DMA_STALL_MASK		BIT(22)
+ #define CAL_CTRL_MFLAGH_MASK			GENMASK(31, 24)
+ 
+ #define CAL_CTRL1_PPI_GROUPING_MASK		GENMASK(1, 0)
+@@ -218,18 +218,18 @@
+ #define CAL_VPORT_CTRL1_PCLK_MASK		GENMASK(16, 0)
+ #define CAL_VPORT_CTRL1_XBLK_MASK		GENMASK(24, 17)
+ #define CAL_VPORT_CTRL1_YBLK_MASK		GENMASK(30, 25)
+-#define CAL_VPORT_CTRL1_WIDTH_MASK		BIT_MASK(31)
++#define CAL_VPORT_CTRL1_WIDTH_MASK		BIT(31)
+ #define CAL_VPORT_CTRL1_WIDTH_ONE			0
+ #define CAL_VPORT_CTRL1_WIDTH_TWO			1
+ 
+ #define CAL_VPORT_CTRL2_CPORT_MASK		GENMASK(4, 0)
+-#define CAL_VPORT_CTRL2_FREERUNNING_MASK	BIT_MASK(15)
++#define CAL_VPORT_CTRL2_FREERUNNING_MASK	BIT(15)
+ #define CAL_VPORT_CTRL2_FREERUNNING_GATED		0
+ #define CAL_VPORT_CTRL2_FREERUNNING_FREE		1
+-#define CAL_VPORT_CTRL2_FS_RESETS_MASK		BIT_MASK(16)
++#define CAL_VPORT_CTRL2_FS_RESETS_MASK		BIT(16)
+ #define CAL_VPORT_CTRL2_FS_RESETS_NO			0
+ #define CAL_VPORT_CTRL2_FS_RESETS_YES			1
+-#define CAL_VPORT_CTRL2_FSM_RESET_MASK		BIT_MASK(17)
++#define CAL_VPORT_CTRL2_FSM_RESET_MASK		BIT(17)
+ #define CAL_VPORT_CTRL2_FSM_RESET_NOEFFECT		0
+ #define CAL_VPORT_CTRL2_FSM_RESET			1
+ #define CAL_VPORT_CTRL2_RDY_THR_MASK		GENMASK(31, 18)
+@@ -237,23 +237,23 @@
+ #define CAL_BYS_CTRL1_PCLK_MASK			GENMASK(16, 0)
+ #define CAL_BYS_CTRL1_XBLK_MASK			GENMASK(24, 17)
+ #define CAL_BYS_CTRL1_YBLK_MASK			GENMASK(30, 25)
+-#define CAL_BYS_CTRL1_BYSINEN_MASK		BIT_MASK(31)
++#define CAL_BYS_CTRL1_BYSINEN_MASK		BIT(31)
+ 
+ #define CAL_BYS_CTRL2_CPORTIN_MASK		GENMASK(4, 0)
+ #define CAL_BYS_CTRL2_CPORTOUT_MASK		GENMASK(9, 5)
+-#define CAL_BYS_CTRL2_DUPLICATEDDATA_MASK	BIT_MASK(10)
++#define CAL_BYS_CTRL2_DUPLICATEDDATA_MASK	BIT(10)
+ #define CAL_BYS_CTRL2_DUPLICATEDDATA_NO			0
+ #define CAL_BYS_CTRL2_DUPLICATEDDATA_YES		1
+-#define CAL_BYS_CTRL2_FREERUNNING_MASK		BIT_MASK(11)
++#define CAL_BYS_CTRL2_FREERUNNING_MASK		BIT(11)
+ #define CAL_BYS_CTRL2_FREERUNNING_NO			0
+ #define CAL_BYS_CTRL2_FREERUNNING_YES			1
+ 
+-#define CAL_RD_DMA_CTRL_GO_MASK			BIT_MASK(0)
++#define CAL_RD_DMA_CTRL_GO_MASK			BIT(0)
+ #define CAL_RD_DMA_CTRL_GO_DIS				0
+ #define CAL_RD_DMA_CTRL_GO_EN				1
+ #define CAL_RD_DMA_CTRL_GO_IDLE				0
+ #define CAL_RD_DMA_CTRL_GO_BUSY				1
+-#define CAL_RD_DMA_CTRL_INIT_MASK		BIT_MASK(1)
++#define CAL_RD_DMA_CTRL_INIT_MASK		BIT(1)
+ #define CAL_RD_DMA_CTRL_BW_LIMITER_MASK		GENMASK(10, 2)
+ #define CAL_RD_DMA_CTRL_OCP_TAG_CNT_MASK	GENMASK(14, 11)
+ #define CAL_RD_DMA_CTRL_PCLK_MASK		GENMASK(31, 15)
+@@ -277,13 +277,13 @@
+ #define CAL_RD_DMA_CTRL2_CIRC_MODE_SIXTEEN		3
+ #define CAL_RD_DMA_CTRL2_CIRC_MODE_SIXTYFOUR		4
+ #define CAL_RD_DMA_CTRL2_CIRC_MODE_RESERVED		5
+-#define CAL_RD_DMA_CTRL2_ICM_CSTART_MASK	BIT_MASK(3)
++#define CAL_RD_DMA_CTRL2_ICM_CSTART_MASK	BIT(3)
+ #define CAL_RD_DMA_CTRL2_PATTERN_MASK		GENMASK(5, 4)
+ #define CAL_RD_DMA_CTRL2_PATTERN_LINEAR			0
+ #define CAL_RD_DMA_CTRL2_PATTERN_YUV420			1
+ #define CAL_RD_DMA_CTRL2_PATTERN_RD2SKIP2		2
+ #define CAL_RD_DMA_CTRL2_PATTERN_RD2SKIP4		3
+-#define CAL_RD_DMA_CTRL2_BYSOUT_LE_WAIT_MASK	BIT_MASK(6)
++#define CAL_RD_DMA_CTRL2_BYSOUT_LE_WAIT_MASK	BIT(6)
+ #define CAL_RD_DMA_CTRL2_BYSOUT_LE_WAIT_FREERUNNING	0
+ #define CAL_RD_DMA_CTRL2_BYSOUT_LE_WAIT_WAITFORBYSOUT	1
+ #define CAL_RD_DMA_CTRL2_CIRC_SIZE_MASK		GENMASK(29, 16)
+@@ -300,7 +300,7 @@
+ #define CAL_WR_DMA_CTRL_PATTERN_WR2SKIP2		2
+ #define CAL_WR_DMA_CTRL_PATTERN_WR2SKIP4		3
+ #define CAL_WR_DMA_CTRL_PATTERN_RESERVED		1
+-#define CAL_WR_DMA_CTRL_ICM_PSTART_MASK		BIT_MASK(5)
++#define CAL_WR_DMA_CTRL_ICM_PSTART_MASK		BIT(5)
+ #define CAL_WR_DMA_CTRL_DTAG_MASK		GENMASK(8, 6)
+ #define CAL_WR_DMA_CTRL_DTAG_ATT_HDR			0
+ #define CAL_WR_DMA_CTRL_DTAG_ATT_DAT			1
+@@ -311,7 +311,7 @@
+ #define CAL_WR_DMA_CTRL_DTAG_D6				6
+ #define CAL_WR_DMA_CTRL_DTAG_D7				7
+ #define CAL_WR_DMA_CTRL_CPORT_MASK		GENMASK(13, 9)
+-#define CAL_WR_DMA_CTRL_STALL_RD_MASK		BIT_MASK(14)
++#define CAL_WR_DMA_CTRL_STALL_RD_MASK		BIT(14)
+ #define CAL_WR_DMA_CTRL_YSIZE_MASK		GENMASK(31, 18)
+ 
+ #define CAL_WR_DMA_ADDR_MASK			GENMASK(31, 4)
+@@ -327,9 +327,9 @@
+ #define CAL_WR_DMA_XSIZE_XSKIP_MASK		GENMASK(15, 3)
+ #define CAL_WR_DMA_XSIZE_MASK			GENMASK(31, 19)
+ 
+-#define CAL_CSI2_PPI_CTRL_IF_EN_MASK		BIT_MASK(0)
+-#define CAL_CSI2_PPI_CTRL_ECC_EN_MASK		BIT_MASK(2)
+-#define CAL_CSI2_PPI_CTRL_FRAME_MASK		BIT_MASK(3)
++#define CAL_CSI2_PPI_CTRL_IF_EN_MASK		BIT(0)
++#define CAL_CSI2_PPI_CTRL_ECC_EN_MASK		BIT(2)
++#define CAL_CSI2_PPI_CTRL_FRAME_MASK		BIT(3)
+ #define CAL_CSI2_PPI_CTRL_FRAME_IMMEDIATE		0
+ #define CAL_CSI2_PPI_CTRL_FRAME				1
+ 
+@@ -340,18 +340,18 @@
+ #define CAL_CSI2_COMPLEXIO_CFG_POSITION_2			2
+ #define CAL_CSI2_COMPLEXIO_CFG_POSITION_1			1
+ #define CAL_CSI2_COMPLEXIO_CFG_POSITION_NOT_USED		0
+-#define CAL_CSI2_COMPLEXIO_CFG_CLOCK_POL_MASK		BIT_MASK(3)
++#define CAL_CSI2_COMPLEXIO_CFG_CLOCK_POL_MASK		BIT(3)
+ #define CAL_CSI2_COMPLEXIO_CFG_POL_PLUSMINUS			0
+ #define CAL_CSI2_COMPLEXIO_CFG_POL_MINUSPLUS			1
+ #define CAL_CSI2_COMPLEXIO_CFG_DATA1_POSITION_MASK	GENMASK(6, 4)
+-#define CAL_CSI2_COMPLEXIO_CFG_DATA1_POL_MASK		BIT_MASK(7)
++#define CAL_CSI2_COMPLEXIO_CFG_DATA1_POL_MASK		BIT(7)
+ #define CAL_CSI2_COMPLEXIO_CFG_DATA2_POSITION_MASK	GENMASK(10, 8)
+-#define CAL_CSI2_COMPLEXIO_CFG_DATA2_POL_MASK		BIT_MASK(11)
++#define CAL_CSI2_COMPLEXIO_CFG_DATA2_POL_MASK		BIT(11)
+ #define CAL_CSI2_COMPLEXIO_CFG_DATA3_POSITION_MASK	GENMASK(14, 12)
+-#define CAL_CSI2_COMPLEXIO_CFG_DATA3_POL_MASK		BIT_MASK(15)
++#define CAL_CSI2_COMPLEXIO_CFG_DATA3_POL_MASK		BIT(15)
+ #define CAL_CSI2_COMPLEXIO_CFG_DATA4_POSITION_MASK	GENMASK(18, 16)
+-#define CAL_CSI2_COMPLEXIO_CFG_DATA4_POL_MASK		BIT_MASK(19)
+-#define CAL_CSI2_COMPLEXIO_CFG_PWR_AUTO_MASK		BIT_MASK(24)
++#define CAL_CSI2_COMPLEXIO_CFG_DATA4_POL_MASK		BIT(19)
++#define CAL_CSI2_COMPLEXIO_CFG_PWR_AUTO_MASK		BIT(24)
+ #define CAL_CSI2_COMPLEXIO_CFG_PWR_STATUS_MASK		GENMASK(26, 25)
+ #define CAL_CSI2_COMPLEXIO_CFG_PWR_STATUS_STATE_OFF		0
+ #define CAL_CSI2_COMPLEXIO_CFG_PWR_STATUS_STATE_ON		1
+@@ -360,83 +360,83 @@
+ #define CAL_CSI2_COMPLEXIO_CFG_PWR_CMD_STATE_OFF		0
+ #define CAL_CSI2_COMPLEXIO_CFG_PWR_CMD_STATE_ON			1
+ #define CAL_CSI2_COMPLEXIO_CFG_PWR_CMD_STATE_ULP		2
+-#define CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_MASK		BIT_MASK(29)
++#define CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_MASK		BIT(29)
+ #define CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_RESETCOMPLETED	1
+ #define CAL_CSI2_COMPLEXIO_CFG_RESET_DONE_RESETONGOING		0
+-#define CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_MASK		BIT_MASK(30)
++#define CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_MASK		BIT(30)
+ #define CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL			0
+ #define CAL_CSI2_COMPLEXIO_CFG_RESET_CTRL_OPERATIONAL		1
+ 
+ #define CAL_CSI2_SHORT_PACKET_MASK	GENMASK(23, 0)
+ 
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS1_MASK		BIT_MASK(0)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS2_MASK		BIT_MASK(1)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS3_MASK		BIT_MASK(2)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS4_MASK		BIT_MASK(3)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS5_MASK		BIT_MASK(4)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS1_MASK	BIT_MASK(5)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS2_MASK	BIT_MASK(6)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS3_MASK	BIT_MASK(7)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS4_MASK	BIT_MASK(8)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS5_MASK	BIT_MASK(9)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC1_MASK		BIT_MASK(10)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC2_MASK		BIT_MASK(11)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC3_MASK		BIT_MASK(12)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC4_MASK		BIT_MASK(13)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC5_MASK		BIT_MASK(14)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL1_MASK		BIT_MASK(15)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL2_MASK		BIT_MASK(16)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL3_MASK		BIT_MASK(17)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL4_MASK		BIT_MASK(18)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL5_MASK		BIT_MASK(19)
+-#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM1_MASK		BIT_MASK(20)
+-#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM2_MASK		BIT_MASK(21)
+-#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM3_MASK		BIT_MASK(22)
+-#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM4_MASK		BIT_MASK(23)
+-#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM5_MASK		BIT_MASK(24)
+-#define CAL_CSI2_COMPLEXIO_IRQ_STATEALLULPMENTER_MASK	BIT_MASK(25)
+-#define CAL_CSI2_COMPLEXIO_IRQ_STATEALLULPMEXIT_MASK	BIT_MASK(26)
+-#define CAL_CSI2_COMPLEXIO_IRQ_FIFO_OVR_MASK		BIT_MASK(27)
+-#define CAL_CSI2_COMPLEXIO_IRQ_SHORT_PACKET_MASK	BIT_MASK(28)
+-#define CAL_CSI2_COMPLEXIO_IRQ_ECC_NO_CORRECTION_MASK	BIT_MASK(30)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS1_MASK		BIT(0)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS2_MASK		BIT(1)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS3_MASK		BIT(2)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS4_MASK		BIT(3)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTHS5_MASK		BIT(4)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS1_MASK	BIT(5)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS2_MASK	BIT(6)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS3_MASK	BIT(7)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS4_MASK	BIT(8)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRSOTSYNCHS5_MASK	BIT(9)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC1_MASK		BIT(10)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC2_MASK		BIT(11)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC3_MASK		BIT(12)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC4_MASK		BIT(13)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRESC5_MASK		BIT(14)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL1_MASK		BIT(15)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL2_MASK		BIT(16)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL3_MASK		BIT(17)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL4_MASK		BIT(18)
++#define CAL_CSI2_COMPLEXIO_IRQ_ERRCONTROL5_MASK		BIT(19)
++#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM1_MASK		BIT(20)
++#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM2_MASK		BIT(21)
++#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM3_MASK		BIT(22)
++#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM4_MASK		BIT(23)
++#define CAL_CSI2_COMPLEXIO_IRQ_STATEULPM5_MASK		BIT(24)
++#define CAL_CSI2_COMPLEXIO_IRQ_STATEALLULPMENTER_MASK	BIT(25)
++#define CAL_CSI2_COMPLEXIO_IRQ_STATEALLULPMEXIT_MASK	BIT(26)
++#define CAL_CSI2_COMPLEXIO_IRQ_FIFO_OVR_MASK		BIT(27)
++#define CAL_CSI2_COMPLEXIO_IRQ_SHORT_PACKET_MASK	BIT(28)
++#define CAL_CSI2_COMPLEXIO_IRQ_ECC_NO_CORRECTION_MASK	BIT(30)
+ 
+ #define CAL_CSI2_TIMING_STOP_STATE_COUNTER_IO1_MASK	GENMASK(12, 0)
+-#define CAL_CSI2_TIMING_STOP_STATE_X4_IO1_MASK		BIT_MASK(13)
+-#define CAL_CSI2_TIMING_STOP_STATE_X16_IO1_MASK		BIT_MASK(14)
+-#define CAL_CSI2_TIMING_FORCE_RX_MODE_IO1_MASK		BIT_MASK(15)
+-
+-#define CAL_CSI2_VC_IRQ_FS_IRQ_0_MASK			BIT_MASK(0)
+-#define CAL_CSI2_VC_IRQ_FE_IRQ_0_MASK			BIT_MASK(1)
+-#define CAL_CSI2_VC_IRQ_LS_IRQ_0_MASK			BIT_MASK(2)
+-#define CAL_CSI2_VC_IRQ_LE_IRQ_0_MASK			BIT_MASK(3)
+-#define CAL_CSI2_VC_IRQ_CS_IRQ_0_MASK			BIT_MASK(4)
+-#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_0_MASK	BIT_MASK(5)
+-#define CAL_CSI2_VC_IRQ_FS_IRQ_1_MASK			BIT_MASK(8)
+-#define CAL_CSI2_VC_IRQ_FE_IRQ_1_MASK			BIT_MASK(9)
+-#define CAL_CSI2_VC_IRQ_LS_IRQ_1_MASK			BIT_MASK(10)
+-#define CAL_CSI2_VC_IRQ_LE_IRQ_1_MASK			BIT_MASK(11)
+-#define CAL_CSI2_VC_IRQ_CS_IRQ_1_MASK			BIT_MASK(12)
+-#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_1_MASK	BIT_MASK(13)
+-#define CAL_CSI2_VC_IRQ_FS_IRQ_2_MASK			BIT_MASK(16)
+-#define CAL_CSI2_VC_IRQ_FE_IRQ_2_MASK			BIT_MASK(17)
+-#define CAL_CSI2_VC_IRQ_LS_IRQ_2_MASK			BIT_MASK(18)
+-#define CAL_CSI2_VC_IRQ_LE_IRQ_2_MASK			BIT_MASK(19)
+-#define CAL_CSI2_VC_IRQ_CS_IRQ_2_MASK			BIT_MASK(20)
+-#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_2_MASK	BIT_MASK(21)
+-#define CAL_CSI2_VC_IRQ_FS_IRQ_3_MASK			BIT_MASK(24)
+-#define CAL_CSI2_VC_IRQ_FE_IRQ_3_MASK			BIT_MASK(25)
+-#define CAL_CSI2_VC_IRQ_LS_IRQ_3_MASK			BIT_MASK(26)
+-#define CAL_CSI2_VC_IRQ_LE_IRQ_3_MASK			BIT_MASK(27)
+-#define CAL_CSI2_VC_IRQ_CS_IRQ_3_MASK			BIT_MASK(28)
+-#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_3_MASK	BIT_MASK(29)
++#define CAL_CSI2_TIMING_STOP_STATE_X4_IO1_MASK		BIT(13)
++#define CAL_CSI2_TIMING_STOP_STATE_X16_IO1_MASK		BIT(14)
++#define CAL_CSI2_TIMING_FORCE_RX_MODE_IO1_MASK		BIT(15)
 +
-+			clocks = <&clk_fixed>;
-+			clock-names = "xclk";
++#define CAL_CSI2_VC_IRQ_FS_IRQ_0_MASK			BIT(0)
++#define CAL_CSI2_VC_IRQ_FE_IRQ_0_MASK			BIT(1)
++#define CAL_CSI2_VC_IRQ_LS_IRQ_0_MASK			BIT(2)
++#define CAL_CSI2_VC_IRQ_LE_IRQ_0_MASK			BIT(3)
++#define CAL_CSI2_VC_IRQ_CS_IRQ_0_MASK			BIT(4)
++#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_0_MASK	BIT(5)
++#define CAL_CSI2_VC_IRQ_FS_IRQ_1_MASK			BIT(8)
++#define CAL_CSI2_VC_IRQ_FE_IRQ_1_MASK			BIT(9)
++#define CAL_CSI2_VC_IRQ_LS_IRQ_1_MASK			BIT(10)
++#define CAL_CSI2_VC_IRQ_LE_IRQ_1_MASK			BIT(11)
++#define CAL_CSI2_VC_IRQ_CS_IRQ_1_MASK			BIT(12)
++#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_1_MASK	BIT(13)
++#define CAL_CSI2_VC_IRQ_FS_IRQ_2_MASK			BIT(16)
++#define CAL_CSI2_VC_IRQ_FE_IRQ_2_MASK			BIT(17)
++#define CAL_CSI2_VC_IRQ_LS_IRQ_2_MASK			BIT(18)
++#define CAL_CSI2_VC_IRQ_LE_IRQ_2_MASK			BIT(19)
++#define CAL_CSI2_VC_IRQ_CS_IRQ_2_MASK			BIT(20)
++#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_2_MASK	BIT(21)
++#define CAL_CSI2_VC_IRQ_FS_IRQ_3_MASK			BIT(24)
++#define CAL_CSI2_VC_IRQ_FE_IRQ_3_MASK			BIT(25)
++#define CAL_CSI2_VC_IRQ_LS_IRQ_3_MASK			BIT(26)
++#define CAL_CSI2_VC_IRQ_LE_IRQ_3_MASK			BIT(27)
++#define CAL_CSI2_VC_IRQ_CS_IRQ_3_MASK			BIT(28)
++#define CAL_CSI2_VC_IRQ_ECC_CORRECTION0_IRQ_3_MASK	BIT(29)
  
--				ar0330_1: endpoint {
--					reg = <0>;
--					clock-lanes = <1>;
--					data-lanes = <0 2 3 4>;
--					remote-endpoint = <&csi2_0>;
-+			port {
-+				csi2_cam0: endpoint {
-+					remote-endpoint = <&csi2_phy0>;
-+					clock-lanes = <0>;
-+					data-lanes = <1 2>;
- 				};
- 			};
- 		};
+ #define CAL_CSI2_CTX_DT_MASK		GENMASK(5, 0)
+ #define CAL_CSI2_CTX_VC_MASK		GENMASK(7, 6)
+ #define CAL_CSI2_CTX_CPORT_MASK		GENMASK(12, 8)
+-#define CAL_CSI2_CTX_ATT_MASK		BIT_MASK(13)
++#define CAL_CSI2_CTX_ATT_MASK		BIT(13)
+ #define CAL_CSI2_CTX_ATT_PIX			0
+ #define CAL_CSI2_CTX_ATT			1
+-#define CAL_CSI2_CTX_PACK_MODE_MASK	BIT_MASK(14)
++#define CAL_CSI2_CTX_PACK_MODE_MASK	BIT(14)
+ #define CAL_CSI2_CTX_PACK_MODE_LINE		0
+ #define CAL_CSI2_CTX_PACK_MODE_FRAME		1
+ #define CAL_CSI2_CTX_LINES_MASK		GENMASK(29, 16)
+@@ -445,7 +445,7 @@
+ 
+ #define CAL_CSI2_PHY_REG0_THS_SETTLE_MASK	GENMASK(7, 0)
+ #define CAL_CSI2_PHY_REG0_THS_TERM_MASK		GENMASK(15, 8)
+-#define CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_MASK	BIT_MASK(24)
++#define CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_MASK	BIT(24)
+ #define CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_DISABLE		1
+ #define CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_ENABLE		0
+ 
+@@ -453,7 +453,7 @@
+ #define CAL_CSI2_PHY_REG1_CTRLCLK_DIV_FACTOR_MASK		GENMASK(9, 8)
+ #define CAL_CSI2_PHY_REG1_DPHY_HS_SYNC_PATTERN_MASK		GENMASK(17, 10)
+ #define CAL_CSI2_PHY_REG1_TCLK_TERM_MASK			GENMASK(24, 18)
+-#define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_MASK	BIT_MASK(25)
++#define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_MASK	BIT(25)
+ #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_ERROR		1
+ #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_SUCCESS		0
+ #define CAL_CSI2_PHY_REG1_RESET_DONE_STATUS_MASK		GENMASK(29, 28)
+@@ -464,13 +464,13 @@
+ #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC1_MASK		GENMASK(29, 28)
+ #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC0_MASK		GENMASK(31, 30)
+ 
+-#define CM_CAMERRX_CTRL_CSI1_CTRLCLKEN_MASK			BIT_MASK(0)
++#define CM_CAMERRX_CTRL_CSI1_CTRLCLKEN_MASK			BIT(0)
+ #define CM_CAMERRX_CTRL_CSI1_CAMMODE_MASK			GENMASK(2, 1)
+ #define CM_CAMERRX_CTRL_CSI1_LANEENABLE_MASK			GENMASK(4, 3)
+-#define CM_CAMERRX_CTRL_CSI1_MODE_MASK				BIT_MASK(5)
+-#define CM_CAMERRX_CTRL_CSI0_CTRLCLKEN_MASK			BIT_MASK(10)
++#define CM_CAMERRX_CTRL_CSI1_MODE_MASK				BIT(5)
++#define CM_CAMERRX_CTRL_CSI0_CTRLCLKEN_MASK			BIT(10)
+ #define CM_CAMERRX_CTRL_CSI0_CAMMODE_MASK			GENMASK(12, 11)
+ #define CM_CAMERRX_CTRL_CSI0_LANEENABLE_MASK			GENMASK(16, 13)
+-#define CM_CAMERRX_CTRL_CSI0_MODE_MASK				BIT_MASK(17)
++#define CM_CAMERRX_CTRL_CSI0_MODE_MASK				BIT(17)
+ 
+ #endif
 -- 
 2.17.1
 
