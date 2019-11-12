@@ -2,96 +2,124 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163B6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F7CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F9221872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B70C20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ky3ORpha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKLPRi (ORCPT
+        id S1727112AbfKLPSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:17:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34724 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfKLPRi (ORCPT
+        Tue, 12 Nov 2019 10:18:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26315 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726008AbfKLPSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:17:38 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUXvC-0005SK-TQ; Tue, 12 Nov 2019 16:17:34 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6CAB71C0084;
-        Tue, 12 Nov 2019 16:17:34 +0100 (CET)
-Date:   Tue, 12 Nov 2019 15:17:34 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] hrtimer: Remove the comment about not used HRTIMER_SOFTIRQ
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191107091924.13410-1-bigeasy@linutronix.de>
-References: <20191107091924.13410-1-bigeasy@linutronix.de>
+        Tue, 12 Nov 2019 10:18:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573571886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eZ/w3v+fPJjhA64sYOvAJQuD2CMUO2/OwSEb5d125yo=;
+        b=Ky3ORpha/scxSYq7RqAcrc9y42QHgs1smT0z4yMSPPz0yQF0ZSLHmmG8KkjJxY/kezYe4F
+        KjGq4XLtxZ1eKH4se3MOnmcXOWG2yd2YNxiY6v2IIB8hQ2VrL2IkQd6f5XGAlYxEjkw+Om
+        2kK7bzXqSwrAU+jOR93kfHm+zSy7blM=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-KZYLgQepPK6ipXQI-p5rfA-1; Tue, 12 Nov 2019 10:18:03 -0500
+Received: by mail-qk1-f199.google.com with SMTP id p68so10406941qkf.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:18:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eZ/w3v+fPJjhA64sYOvAJQuD2CMUO2/OwSEb5d125yo=;
+        b=MkiRyCqSshgmfVb46HF3S+n4Ta1jy2ICzYUCDXw2MNwoT2gioyM3piEKanWWt3SK5m
+         +mk3Ntpm8OYk3slBfFpN1q9sxmPZ1iE1+dfjpGqiFsZk97HJx7ulmlzMx54a9RsfnvAA
+         Rdm4PsyDsgxoaOP8CHDYjZd5JaSErhKgpRsfadVOxRtf4zs7h5ViDq8YIMt1Pc0pPki4
+         JVuo4irIRuLcJnnWK93dWFBk7Jw7yfxjzEb2AVoYgfRuif2mMp4GjulX+ODLPbnU5gOs
+         4mlZP23JtNlN6nPJ4RMj/u1R8Pa784caQd5WS6FNpKailtQRQ01jkhXsbHdrDQdM8MsZ
+         wVUQ==
+X-Gm-Message-State: APjAAAXJs5qKIqnCz579kjhvo8VWAcni6LOsmszr1663PcVQFRRUun7e
+        XesvYzN7Pd3+5trrK5rNpwg6z+6kJwLbYtR0+42eis4HyFEOWFUmWuILdLckp3bX0EKEjTQZQ+0
+        83zzF63JkDkBRV2FTlTyzGvQ6K48h0rUJBxbTBkKx
+X-Received: by 2002:aed:36a1:: with SMTP id f30mr31845819qtb.154.1573571883379;
+        Tue, 12 Nov 2019 07:18:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx7AbbV1sBdcbkwhkfsRZEBGRTP+DLdA6rmDz1e1+QvpJX8xRc4WuS8rs8usu0+cQAGd2L1t3PkGc0c/ma7Qx8=
+X-Received: by 2002:aed:36a1:: with SMTP id f30mr31845786qtb.154.1573571883103;
+ Tue, 12 Nov 2019 07:18:03 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157357185402.29376.4868944065416761801.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20191022142139.16789-1-candlesea@gmail.com> <nycvar.YFH.7.76.1911121457050.1799@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1911121457050.1799@cbobk.fhfr.pm>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Tue, 12 Nov 2019 16:17:51 +0100
+Message-ID: <CAO-hwJKO5u6xUrBe_ne0OqFAHM9dpwtTOWtYW+3z-LxSFT6VWQ@mail.gmail.com>
+Subject: Re: [PATCH v4] HID: core: check whether Usage Page item is after
+ Usage ID items
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Candle Sun <candlesea@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        =?UTF-8?B?57+f5LqsIChPcnNvbiBaaGFpKQ==?= <orson.zhai@unisoc.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+X-MC-Unique: KZYLgQepPK6ipXQI-p5rfA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+Hi all,
 
-Commit-ID:     3bbc53f4ae1686b501d92d4a5fd400f4958c8a98
-Gitweb:        https://git.kernel.org/tip/3bbc53f4ae1686b501d92d4a5fd400f4958c8a98
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Thu, 07 Nov 2019 10:19:24 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 Nov 2019 16:15:57 +01:00
+On Tue, Nov 12, 2019 at 2:57 PM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Tue, 22 Oct 2019, Candle Sun wrote:
+>
+> > From: Candle Sun <candle.sun@unisoc.com>
+> >
+> > Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+> > to Main item") adds support for Usage Page item after Usage ID items
+> > (such as keyboards manufactured by Primax).
+> [ ... snip ... ]
+>
+> Benjamin,
+>
+> are you planning to run this through your testsuite against regressions?
+>
+> I believe that's the last missing step, otherwise I'd be fine merging
+> this.
 
-hrtimer: Remove the comment about not used HRTIMER_SOFTIRQ
+Sorry I had to deal with family issues 2 weeks ago, and now RHEL is
+coming back at me and eating all my time.
 
-The softirq `HRTIMER_SOFTIRQ' was not used since commit c6eb3f70d448
-("hrtimer: Get rid of hrtimer softirq").
+The kernel patch is now OK, so we can grab it now (either you take it
+Jiri, and add my acked-by or I'll push it later...)
 
-But it got used again, beginning with commit 5da70160462e ("hrtimer:
-Implement support for softirq based hrtimers"), which did not remove the
-comment. Remove it now.
+Candle, can you rework
+https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/58 so
+that it mirrors the kernel code (and get rid of the
+self.local.usage_page_last logic)?
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191107091924.13410-1-bigeasy@linutronix.de
+Cheers,
+Benjamin
 
----
- include/linux/interrupt.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> Thanks,
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 89fc59d..963c3c6 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -520,8 +520,7 @@ enum
- 	IRQ_POLL_SOFTIRQ,
- 	TASKLET_SOFTIRQ,
- 	SCHED_SOFTIRQ,
--	HRTIMER_SOFTIRQ, /* Unused, but kept as tools rely on the
--			    numbering. Sigh! */
-+	HRTIMER_SOFTIRQ,
- 	RCU_SOFTIRQ,    /* Preferable RCU should always be the last softirq */
- 
- 	NR_SOFTIRQS
