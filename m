@@ -2,73 +2,69 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630A0C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4558CC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F5E2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDFA20818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 13:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMDFx86g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwVaclUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKLNM6 (ORCPT
+        id S1727002AbfKLNPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:12:58 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44718 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfKLNM5 (ORCPT
+        Tue, 12 Nov 2019 08:15:54 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42375 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfKLNPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:12:57 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q26so13300009pfn.11;
-        Tue, 12 Nov 2019 05:12:57 -0800 (PST)
+        Tue, 12 Nov 2019 08:15:53 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q17so11812948pgt.9;
+        Tue, 12 Nov 2019 05:15:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UqWk9HRRlTClA1MgDNYI9u/VISdgynDYV5PkFkVS83Y=;
-        b=rMDFx86gjGk706pqeth2lXyBiuVnZfy+JTWZBlR31rkLhCOuBjOeOmqSBXO0pMEO9T
-         07rmOSJJPeqyxLUjDB/iS5o8JqzcrvOtv9RBLAJTh6OqmRE9W8+jmOmZE23e/Jg2e046
-         0jnueaNst1H+XCj2FiaZZbanUhcbaI3q1moqjvQNjMI8WwvhZAZyDl5sxTkwNb2DFQ6Z
-         6Mhl7MADRWcF0M4YKrP5/SZchJAob0fK/I9YSaI/uSsBrtQLGGXhB4RNUW6RPE6G1WnG
-         YJsBCTJVeNliprdjdIPV0eS9LIBmljhR3ZcEVkLOfSBFYauUVXPSUkHMukXYmBlqpO2r
-         0fqw==
+        bh=R1jPyVFp0N7pp4NXQfMci1reb78Exkm5u781mQ3ROYQ=;
+        b=RwVaclUD7WBK6AFovr1Aw+p4Xo8Aiq1mQHf3YYODx7kogUpGdgpr/0Z0FWBUke4h3h
+         o2+oaOo5OCpxCAYPGFdR8oo2b97g1hELWXaAki53cv9rH0AFLEwGgJljRUuxEE7EjYmJ
+         Q6m7cvJ+EgKfeHyOkyCst9xAr2PlPF7kU4u9dLAAbty/7ZqeAURTjReUhum2EvpD5Mvl
+         Hce4YKdwoKEdWgfQmb8C1ro7OrvEtEETfw3zufI4TGpEeiDxyVAVfds5Fi2PWhnkMf/m
+         xwTWbTlWES/Din8GQmmjTyj5JW51gm4KKiGhEiIyJtQB4Iwimu04cnrAzuNMrNf63cgJ
+         1aSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=UqWk9HRRlTClA1MgDNYI9u/VISdgynDYV5PkFkVS83Y=;
-        b=AvmAAsKdbNso8Vn/jbMegiSmy52LUdAG3mft8inY5CLoHDd73PNeA+M+eN+rRYAMDH
-         CVP0aX9DOTHAlqWjNuchcgzviRvyGbrLFcMCrZrhS86NP3z65wU9S10KdYZRN8aPxity
-         Pt40wUvF0OHGDshZNnzRqk8ZGWWZ2njL8FRAwiI2A/O/nbK5PTFXuvB/HKOm94OwbCrF
-         IhkIlGb2N693UEvIoavffCbpNjc7Wgx8vlxZSt/QAciydzosmOeomHgku/0AForJ0IiO
-         NsxJb5Hqh8PT3FLavAROCZqQL1BJl1aUHAbM8n1hSpLCWCxEnocscSkfk2+1kPYkJ6GZ
-         z58w==
-X-Gm-Message-State: APjAAAXsaVzASS6dmQofESXZlRfnS1OyQ4rXrKw/OH1lmX9K7IK3He3P
-        zkM2DXk1OJZTNeYMgb5FFQXoqSYDDM8=
-X-Google-Smtp-Source: APXvYqxBiE5tNL6hjc/l9z34iA6lzx87hr6sA0evjl+ItykyOnK3sGo47p6hx0jEI+yWq7Ex6aQZrQ==
-X-Received: by 2002:a62:6884:: with SMTP id d126mr35249486pfc.109.1573564376230;
-        Tue, 12 Nov 2019 05:12:56 -0800 (PST)
+        bh=R1jPyVFp0N7pp4NXQfMci1reb78Exkm5u781mQ3ROYQ=;
+        b=O7V29F+zkMvaE2XV9D1X+G0uSFmFelvbgIJqAue4eYQPAniRKv+OrotaQ9p+c53ekq
+         Dzvwd6Dcot4vTffuXP25fyIVPhaJZlfBrNhQHTsjC5wXJe/2JZPYlmzlAz6HZCuCijhk
+         s8wy+KpSLdo+o3vmb1wpUUJWjCqSoMRMQq7zosZNfRtGWlrHIRoFTgEJnHXCVJoL/6ym
+         RFX78Njzt23Ahk04t83gXcaVR0R4X3Nk0aoaUtAkQ6phSrKLdESSwsyyDZby8xFUE0mf
+         AyBIV+wNQGaKsIsWyOXq7AMRXRQpaoX4K6QPglp3HLwT95bKEOyi07HkvfWnGyp+7XP+
+         Dl3g==
+X-Gm-Message-State: APjAAAVSshmiayzi4Q+ri50cjRB0kgivO0JfyUXZxYZK962qg8ks7Uhg
+        4i6noNrAb8K8DCKj+aq1JdA=
+X-Google-Smtp-Source: APXvYqzOuEw0ZDZUAO3EaLKg6SGCpjleKkVGpPWzyRlHmw2hIeV3XUYW2t48trvESFVc3w52pFmZmQ==
+X-Received: by 2002:a63:7210:: with SMTP id n16mr33472126pgc.397.1573564550656;
+        Tue, 12 Nov 2019 05:15:50 -0800 (PST)
 Received: from ziggy.stardust ([37.223.138.214])
-        by smtp.gmail.com with ESMTPSA id 82sm19760816pfa.115.2019.11.12.05.12.53
+        by smtp.gmail.com with ESMTPSA id y138sm19776601pfb.174.2019.11.12.05.15.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 05:12:54 -0800 (PST)
-Subject: Re: [PATCH v4 11/11] arm64: dts: mt2712: use non-empty ranges for
- usb-phy
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
- <1573547796-29566-11-git-send-email-chunfeng.yun@mediatek.com>
+        Tue, 12 Nov 2019 05:15:49 -0800 (PST)
+Subject: Re: [PATCH v2] soc: mediatek: add SMC fid table for SIP interface
+To:     Eason Yen <eason.yen@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+References: <1573439402-16249-1-git-send-email-eason.yen@mediatek.com>
+ <71b9cfcc-bd4f-75de-0057-d64c5dc49e92@gmail.com>
+ <1573545601.14232.8.camel@mtkswgap22>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -143,12 +139,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  Y1aFdU79pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlI
  FZ6fsEKIAN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+
  r2JwH1CJjrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <c23531cd-432d-1857-1e99-48d87956338e@gmail.com>
-Date:   Tue, 12 Nov 2019 14:12:51 +0100
+Message-ID: <785d0fc2-d334-5efd-783f-35fc47acfb1c@gmail.com>
+Date:   Tue, 12 Nov 2019 14:15:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <1573547796-29566-11-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1573545601.14232.8.camel@mtkswgap22>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -159,115 +155,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 12/11/2019 09:36, Chunfeng Yun wrote:
-> Use non-empty ranges for usb-phy to make the layout of
-> its registers clearer;
-> Replace deprecated compatible by generic
+On 12/11/2019 09:00, Eason Yen wrote:
+> Hi Matthias,
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v3~v4: no changes
 > 
-> v2: use generic compatible
-> ---
->  arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 42 ++++++++++++-----------
->  1 file changed, 22 insertions(+), 20 deletions(-)
+> I will upstream mt6779 sound card driver on Mark's ASoC repo:
+> http://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> index 43307bad3f0d..e24f2f2f6004 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -697,30 +697,31 @@
->  	};
->  
->  	u3phy0: usb-phy@11290000 {
-> -		compatible = "mediatek,mt2712-u3phy";
-> -		#address-cells = <2>;
-> -		#size-cells = <2>;
-> -		ranges;
-> +		compatible = "mediatek,mt2712-tphy",
-> +			     "mediatek,generic-tphy-v2";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
+> But it is still under internal reviewing and not yet upstream.
 
-At a first glance I don't understand why you change address and size cells.
-Commit message doesn't explain it and AFAIS it's not part of the binding changes.
+Got it, thanks for the explanation. Then please add this patch to the series you
+are working on for the sound card driver. Two reasons to do so. First this way
+we make sure no not-used files will land in the kernel. Second, Mark will need
+to apply this patch to his local tree if he tries to do some compile testing. If
+it's not part of the series he will have to search for it in my repo or the
+mailinglist.
 
-Can you explain why we need that, and update the commit message accordingly?
-
-Regrads,
+Regards,
 Matthias
 
-> +		ranges = <0 0 0x11290000 0x9000>;
->  		status = "okay";
->  
-> -		u2port0: usb-phy@11290000 {
-> -			reg = <0 0x11290000 0 0x700>;
-> +		u2port0: usb-phy@0 {
-> +			reg = <0x0 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
->  		};
->  
-> -		u2port1: usb-phy@11298000 {
-> -			reg = <0 0x11298000 0 0x700>;
-> +		u2port1: usb-phy@8000 {
-> +			reg = <0x8000 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
->  		};
->  
-> -		u3port0: usb-phy@11298700 {
-> -			reg = <0 0x11298700 0 0x900>;
-> +		u3port0: usb-phy@8700 {
-> +			reg = <0x8700 0x900>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
-> @@ -760,30 +761,31 @@
->  	};
->  
->  	u3phy1: usb-phy@112e0000 {
-> -		compatible = "mediatek,mt2712-u3phy";
-> -		#address-cells = <2>;
-> -		#size-cells = <2>;
-> -		ranges;
-> +		compatible = "mediatek,mt2712-tphy",
-> +			     "mediatek,generic-tphy-v2";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0x112e0000 0x9000>;
->  		status = "okay";
->  
-> -		u2port2: usb-phy@112e0000 {
-> -			reg = <0 0x112e0000 0 0x700>;
-> +		u2port2: usb-phy@0 {
-> +			reg = <0x0 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
->  		};
->  
-> -		u2port3: usb-phy@112e8000 {
-> -			reg = <0 0x112e8000 0 0x700>;
-> +		u2port3: usb-phy@8000 {
-> +			reg = <0x8000 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
->  		};
->  
-> -		u3port1: usb-phy@112e8700 {
-> -			reg = <0 0x112e8700 0 0x900>;
-> +		u3port1: usb-phy@8700 {
-> +			reg = <0x8700 0x900>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
+> So, I think that this patch could be upstream first.
+> 
+> Maybe, other mtk sip clients can use this header and add their's
+> specific MTSK_SIP_* ID.
+> 
+> Regards,
+> Eason
+> 
+> 
+> On Mon, 2019-11-11 at 16:17 +0100, Matthias Brugger wrote:
+>>
+>> On 11/11/2019 03:30, Eason Yen wrote:
+>>> soc: mediatek: add SMC fid table for SIP interface
+>>>
+>>> 1. Add a header file to provide SIP interface to ATF
+>>>    for clients, please define MTK_SIP_XXX  with specific ID
+>>>
+>>> 2. Add AUDIO SMC fid
+>>>    mtk sip call example:
+>>>    arm_smccc_smc(MTK_SIP_AUDIO_CONTROL,
+>>>                  MTK_AUDIO_SMC_OP_DRAM_REQUEST,
+>>>                  0, 0, 0, 0, 0, 0, &res)
+>>
+>> Are you planning to upstream a driver consuming this interface?
+>> If so, I propose to add this patch to the submission of the driver. Sounds good?
+>>
+>> Regards,
+>> Matthias
+>>
+>>>
+>>>
+>>> Eason Yen (1):
+>>>   soc: mediatek: add SMC fid table for SIP interface
+>>>
+>>>  include/linux/soc/mediatek/mtk_sip_svc.h |   28 ++++++++++++++++++++++++++++
+>>>  1 file changed, 28 insertions(+)
+>>>  create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+>>>
 > 
