@@ -2,117 +2,117 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D250C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57029C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625E92067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE4821925
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgVidAD9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kang/UmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfKLPNS (ORCPT
+        id S1727153AbfKLPN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:13:18 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35888 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfKLPNR (ORCPT
+        Tue, 12 Nov 2019 10:13:26 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40759 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfKLPNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:13:17 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c22so3363117wmd.1;
-        Tue, 12 Nov 2019 07:13:15 -0800 (PST)
+        Tue, 12 Nov 2019 10:13:25 -0500
+Received: by mail-wr1-f65.google.com with SMTP id i10so18927889wrs.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 07:13:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0nEF0qKikqTlAnpShS2FcIHrm5l9Lahx1quofGqUiOc=;
-        b=EgVidAD9FDkC5A71SMsUj1pakbjPpt3A/2Q1n5qjAbODshf40xWRhDdrsUJoJHjAr0
-         +UhiZgkzyKKnuxsPFq8kYOVzyc1khRQzMJPRWiuTvDcX9487pTXVVgWHYWE0lluShNWu
-         Yw7PD7tl/xkFciCFd1trYCvO+m/6xI3EKsc6ts4IjeYDB9ZzLdey6oSp06zTWOtASiu3
-         pPzH4relz4TNi1EpCYa2/fkl8pLuh+K5AzPWfZgh62jDIYJQcY9Lsb8HWKtjl2Qe823z
-         8ZLhY5vm7bwyjqFAvfULM6Lx0P0EViVo7a8f8Ro5qEPIekagNpjdsAWZ4y5kXZWbLPDM
-         AB+g==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aL0fbv6KeJNvtxT5CdrQViagZLp9s9K8vsOn0Xh8q30=;
+        b=Kang/UmVVO1JPRhaQOEq1cOuhtLfxV7mH+vBGpXjJRl9ZL8f3tEldO5gzgYeyiJSjY
+         UaLVwbBlddvt0CMDMLjBK/QBO7tu8AdXOV2FkyPOTucPuRiQ9aRarfocg7NobZXOg6cs
+         g2OZmqGNhrr4i1olFfKwJrx/6+kWtMbNOjkU9ja8lnp3drrEdN00+6w1jQjL1uRDDwn+
+         /SabzP7k9yE+4TO2nPJcytl5xc6q6NOls2FQTDalkBv9PHB1pLFAQ/ttcZEe+ii2YcmT
+         5kcqQjzJdYmpY8zLndyuvAubs2z7N7Z84tBAA/Zn7tsdU1mSPQvU/Pq9cdd/eygrWgOy
+         4F4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0nEF0qKikqTlAnpShS2FcIHrm5l9Lahx1quofGqUiOc=;
-        b=syZYPEsncqZKWWzpiEsvo0BH/JVi55Hg8+1f4W1YEw1d/YKivGiIqVz5MPhsWybzZI
-         hnjuZuzYQRtsygYaKX4gqRrUHIsNsqp42aG0Bk6a5NeMjQGdXeh8rjGNhek69mhQlLcN
-         fvanKc1isMITbG88z6j/oQfU+65GRCUOCuJ1UcedM057JsADrVUn/FiA3Vv2IgTDiXHy
-         8+Xa02VeX2Bo+V8OJM0jDwxsOXAmtWk4XH0osTIxVevNxeOkMxcJe+M1zCneW2xxqR91
-         PGzGjWV4cqZ3ClLAXBvEjvRaI9iAZTvj7TdFZ9rLBf/uwaseuwKUOL1wRF4da6lLWkV4
-         F33Q==
-X-Gm-Message-State: APjAAAXBdwZEjcsFfkZ9g6Orta77nVGlbFOiVac+CbfukyDdOkw/lFDO
-        hQe9krVpc/nonvp5hvYCMTqsr1XcNrG580BsP6w=
-X-Google-Smtp-Source: APXvYqygK/Wn08Lde96j8W82CJ7mCPvYekJ3iLPSCP9mv3A9JKDTOoslxsRolBUoRE8YMai1/STgMSKB3+EnwLuPt6U=
-X-Received: by 2002:a1c:e308:: with SMTP id a8mr4389172wmh.55.1573571594299;
- Tue, 12 Nov 2019 07:13:14 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aL0fbv6KeJNvtxT5CdrQViagZLp9s9K8vsOn0Xh8q30=;
+        b=IGZkpeHs+iv9Mtt2ngrVcLMdLj7whHoEMDHiU6XnXP1Q2QUCqTa5EnhEEHbLjkBeuw
+         zUlABv0SsfYvI4/DMMaLHfOlKyvHb0r1I97sS4+Cb2tKTICQuE/U6PlncSwqNZ3EOSYq
+         3fxMazi5qSlFDfO0+2Z4UGV8QHL6yjGRBQiwktqHb1ylNd5lm47AOEhSKPsBAiVvii/5
+         6wnxjH9PjIOjyjfn9OPn8Fjalzn3+0H5BZ1xe+igApXYHtWrEAubMIrr3enHP6dK3a0l
+         tilF6h5Olxb51+pP21wRja59ti7SgkOCb/cgZ46iuYqGk8pqEXtL0P860h/52zICUwl+
+         iKnQ==
+X-Gm-Message-State: APjAAAVRHDtvydftC7Vowvwp9LKvkmgn4ZLJtq+Zv0YGB4BVX/cgs4ZW
+        ALn4jvd+CQCRuMt791EMK4odng==
+X-Google-Smtp-Source: APXvYqyKSz7ayM+LSOBrTbwWxWGYkGmnqdkIZGg0N25K4y3R0Fy9sYBrP0Oa7gkHA4qtDs81NyGe+g==
+X-Received: by 2002:adf:edc5:: with SMTP id v5mr3166501wro.322.1573571603419;
+        Tue, 12 Nov 2019 07:13:23 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id b3sm3107126wmj.44.2019.11.12.07.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 07:13:22 -0800 (PST)
+Date:   Tue, 12 Nov 2019 15:13:19 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] thermal: power_allocator: Fix Kconfig warning
+Message-ID: <20191112151319.GA239065@google.com>
+References: <20191112145114.36580-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20191029162916.26579-1-andrew.smirnov@gmail.com>
- <226f5a669c2199408abcdec0ccddc9ff05672631.camel@pengutronix.de>
- <CAHQ1cqF3BgberQMMY3sKH5iabG3oN6-H=o-y00Q710zrB7KNgw@mail.gmail.com> <20191108151948.ojn6ga3preh66utl@gondor.apana.org.au>
-In-Reply-To: <20191108151948.ojn6ga3preh66utl@gondor.apana.org.au>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 12 Nov 2019 07:13:02 -0800
-Message-ID: <CAHQ1cqGAtw5UVqGbr-05Tg0V9bXRRyP6SjqrXCiuwmLbgRrOBA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] enable CAAM's HWRNG as default
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Chris Healy <cphealy@gmail.com>,
-        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112145114.36580-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 7:19 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Tue, Oct 29, 2019 at 12:58:24PM -0700, Andrey Smirnov wrote:
-> >
-> > > I'm not sure if we can ever use the job based RNG interface to hook it
-> > > up to the Linux HWRNG interface. After all the job based RNG interface
-> > > is always a DRNG, which only gets seeded by the TRNG. The reseed
-> > > interval is given in number of clock cycles, so there is no clear
-> > > correlation between really true random input bits and the number of
-> > > DRNG output bits.
-> >
-> > Doesn't enabling prediction resistance gives us that correlation? E.g.
-> > that every time new random data is generated, DRNG is reseeded? I am
-> > assuming even if this is true we'd have to significantly limit
-> > generated data length (< seed length?), so maybe what you propose
-> > below is still simpler.
->
-> Prediction resistance should be sufficient in general.  However,
-> is the prediction resistance reseeding done in real time?
->
+On Tuesday 12 Nov 2019 at 22:51:14 (+0800), YueHaibing wrote:
+> When do randbuiding, we got this:
+> 
+> WARNING: unmet direct dependencies detected for THERMAL_GOV_POWER_ALLOCATOR
+>   Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+>   Selected by [y]:
+>   - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
 
-If I am reading the datasheet right reseeding should be done every
-time CAAM is asked to generated random data.
+This will not cause run-time problems, but I guess the warning is
+annoying so ...
 
-> > > I've hacked up some proof of concept code which uses the TRNG access in
-> > > the control interface to get the raw TRNG random bits. This seems to
-> > > yield about 6400 bit/s of true entropy. It may be better to use this
-> > > interface to hook up to the Linux HWRNG framework.
-> >
-> > OK, I'll take a look into that and send out a v2 with results.
->
-> I've backed out the patch-set for now but if we can clarify the
-> prediction resistance implementation details then I'm happy to
-> put it back in.
+> Make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR also depends on ENERGY_MODEL.
+>  
+> Fixes: a4e893e802e6 ("thermal: cpu_cooling: Migrate to using the EM framework")
 
-Even if prediction resistance is an acceptable approach, would it be
-better to expose underlying TRNG and downgrade current CAAM hwrng code
-to crypto rng API? If that's the best path forward, I am more than
-happy to go that way in v2.
+Daniel: can we rely on this sha1 ? Or is this branch force-pushed ?
+
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/thermal/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 59b79fc..5e9e038 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -108,6 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
+>  
+>  config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+>  	bool "power_allocator"
+> +	depends on ENERGY_MODEL
+>  	select THERMAL_GOV_POWER_ALLOCATOR
+>  	help
+>  	  Select this if you want to control temperature based on
+> -- 
+> 2.7.4
 
 Thanks,
-Andrey Smirnov
+Quentin
