@@ -4,95 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD030C17447
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62C7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABAE7206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970BC206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfKLCLI (ORCPT
+        id S1727348AbfKLCMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 21:11:08 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:45782 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727202AbfKLCLH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 21:11:07 -0500
-Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xAC2B6Os028502
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:11:06 -0500
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xAC2B1AE006874
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 21:11:06 -0500
-Received: by mail-qt1-f198.google.com with SMTP id h39so19139285qth.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Nov 2019 18:11:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=CcYLAh/UyTxqCQmL3RjWyYe/kNKV5YS8PJV7/eSFSes=;
-        b=hxYL9qvbaER6n6PDIN1tI6AsMytzRYD5cMDPoGyOMMRTiUwMj3A9oN0oRKAN2J6ix3
-         OgM1Aw2iqFJFHMASkpzK+v3615YkI5Ioxe8M4d1lfJdNv8hKcOB0/a28TUCK1jaVQEcw
-         CjTkWBXguatWmaBdTNNhgnwvtrGOCDAlvoNoXPBtSl/O9OynAS4Ji68kIbYn4i3OEc8o
-         SEIN5IdPeJum4FBgDyyu0W9ctn41kJ1Mrp/2Y74LJ4KkDHw5pXeyC53Xo45KyuNPy5CR
-         RrTabj/5qxL0jBy9uFBYpKg5L789gHNZ6AFmGQUi2VEkOJztuIp8v2/roa/6nPIOwGvq
-         AFJw==
-X-Gm-Message-State: APjAAAXFiXFU3lLCcYecRkjQV5xcOVaY1Iy/+NqQeTgu9X6gfk4/btsr
-        XNxQHKYCvkLRph4CVzhZ0ktzjkcEp1NKgB+0W8ukjjMMUrT+vkpafQECt5wT0PEAwYSlzpi8xYF
-        zPti7CTdU9lF7dreRvrZusYVuffkL4HKWOmk=
-X-Received: by 2002:a37:782:: with SMTP id 124mr13629140qkh.142.1573524660754;
-        Mon, 11 Nov 2019 18:11:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxZYuxGedyB7a+wA/llda6YOy1P21HsSw35yYTNEbYtMJL30UKBF+x5CPddS8qesmICNXkDXw==
-X-Received: by 2002:a37:782:: with SMTP id 124mr13629129qkh.142.1573524660504;
-        Mon, 11 Nov 2019 18:11:00 -0800 (PST)
-Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id o195sm8004767qke.35.2019.11.11.18.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 18:10:58 -0800 (PST)
-From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
-X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
-To:     gregkh@linuxfoundation.org
-Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] staging: exfat: Correct return code
-Date:   Mon, 11 Nov 2019 21:09:57 -0500
-Message-Id: <20191112021000.42091-10-Valdis.Kletnieks@vt.edu>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191112021000.42091-1-Valdis.Kletnieks@vt.edu>
-References: <20191112021000.42091-1-Valdis.Kletnieks@vt.edu>
+        Mon, 11 Nov 2019 21:12:02 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5766 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727316AbfKLCMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 21:12:02 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7A28C9AFCD83B5867FBA;
+        Tue, 12 Nov 2019 10:12:00 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 12 Nov 2019
+ 10:11:50 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Bhawanpreet.Lakha@amd.com>, <Jun.Lei@amd.com>,
+        <Anthony.Koo@amd.com>, <Zhan.Liu@amd.com>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] drm/amd/display: remove set but not used variable 'bpc'
+Date:   Tue, 12 Nov 2019 10:10:50 +0800
+Message-ID: <20191112021050.13128-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20191109093538.23964-1-yuehaibing@huawei.com>
+References: <20191109093538.23964-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use -ENOTEMPTY rather than -EEXIST for attempting to remove
-a directory that still has files in it.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c: In function get_pbn_from_timing:
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2364:11: warning:
+ variable bpc set but not used [-Wunused-but-set-variable]
+
+It is not used since commit e49f69363adf ("drm/amd/display: use
+proper formula to calculate bandwidth from timing"), this also
+remove get_color_depth(), which is only used here.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/staging/exfat/exfat_super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: also remove unused get_color_depth()
+---
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index a97a61a60517..e2254d45ef6e 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -2167,7 +2167,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
- 	clu_to_free.flags = fid->flags;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index bdc8be3..1be4277 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -2638,28 +2638,13 @@ static struct fixed31_32 get_pbn_per_slot(struct dc_stream_state *stream)
+ 	return dc_fixpt_div_int(mbytes_per_sec, 54);
+ }
  
- 	if (!is_dir_empty(sb, &clu_to_free)) {
--		ret = -EEXIST;
-+		ret = -ENOTEMPTY;
- 		goto out;
- 	}
+-static int get_color_depth(enum dc_color_depth color_depth)
+-{
+-	switch (color_depth) {
+-	case COLOR_DEPTH_666: return 6;
+-	case COLOR_DEPTH_888: return 8;
+-	case COLOR_DEPTH_101010: return 10;
+-	case COLOR_DEPTH_121212: return 12;
+-	case COLOR_DEPTH_141414: return 14;
+-	case COLOR_DEPTH_161616: return 16;
+-	default: return 0;
+-	}
+-}
+-
+ static struct fixed31_32 get_pbn_from_timing(struct pipe_ctx *pipe_ctx)
+ {
+-	uint32_t bpc;
+ 	uint64_t kbps;
+ 	struct fixed31_32 peak_kbps;
+ 	uint32_t numerator;
+ 	uint32_t denominator;
  
+-	bpc = get_color_depth(pipe_ctx->stream_res.pix_clk_params.color_depth);
+ 	kbps = dc_bandwidth_in_kbps_from_timing(&pipe_ctx->stream->timing);
+ 
+ 	/*
 -- 
-2.24.0
+2.7.4
+
 
