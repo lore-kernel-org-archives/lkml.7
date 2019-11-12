@@ -2,105 +2,152 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDB3C17447
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE0CC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 03:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71A12084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 02:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a5bftMQs"
+	by mail.kernel.org (Postfix) with ESMTP id 6E38021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 03:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573528475;
+	bh=K+7i6guXBy7OBTeC/GC0hvXhm7wVbU21bA+ugJ43buc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1Rqu4kMYxHvPl5wYfog+xL+WYoVPbwzB2qqkpUjzvVlqYMdZXhjkjHO8tM2K11LdJ
+	 hXWln5V6RBWXJ3MLpvYvadICG0CFTDuFjhfye/zXhdqFe0efyfr2Kk+nYdqNo9CzEi
+	 XU4eJXInoAnChf8vfmOVxCgLh+iTIj09qmphFMDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfKLC5s (ORCPT
+        id S1726995AbfKLDOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 21:57:48 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35791 "EHLO ozlabs.org"
+        Mon, 11 Nov 2019 22:14:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726932AbfKLC5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 21:57:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726924AbfKLDOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 22:14:20 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47BsqY32qqz9sPJ;
-        Tue, 12 Nov 2019 13:57:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573527466;
-        bh=GiUIGs9K7/JCmbdQD5QCRprmABl3h2/wJKsaeUEccDk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=a5bftMQsShdhy2V+e8C959+3p/9k9dhB6pjA15+mCH5B23t+17hZjoOZuQU1SEuIv
-         8LlyxVk5gPNIOm2isSgPq8qexDseWY/KkonZ0zfZJ+v9BxDW83IvjtAbPoYavbYwrP
-         hm4IZygp8AhX/AdFZsEIkVM2KBfNBeWwBfFrCLN45cBFWbazjKXzWdr/2WN97li8RT
-         k66U757pldJYtehBBj7voIZrz119io28efBbV3c3pa8xBkLg0F1QEVB8hLTXRd5KB2
-         POl9JY8DdS9dCkoJUppMy7WgQ3QLqJtBSyOWnafai2ciey065ftY3BHla29PbNeAB3
-         rzQ5l3Di7Bzow==
-Date:   Tue, 12 Nov 2019 13:57:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: linux-next: manual merge of the devicetree tree with Linus' tree
-Message-ID: <20191112135744.75251303@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id E960820818;
+        Tue, 12 Nov 2019 03:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573528459;
+        bh=K+7i6guXBy7OBTeC/GC0hvXhm7wVbU21bA+ugJ43buc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rXFM8O9vPBY6G0GJvTuhFspzQ/W5ijyRj7IS9GusKAab/a3UU6CRrOg8i0Tt0Gz5K
+         1avftcRqHrT0vtlbpNgzTeGRgyFevCyr4vONxCwHeowa8bbF5ipvzVmdB4YFfYCRGC
+         R74XdwLIMA6oLqzEgYvb1mz+7e+Vq5eolfJDIvHQ=
+Date:   Mon, 11 Nov 2019 19:14:17 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@lsc.ic.unicamp.br>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v4 3/8] crypto: x86/camellia: Use new glue function macros
+Message-ID: <20191112031417.GB1433@sol.localdomain>
+Mail-Followup-To: Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>,
+        Kees Cook <keescook@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@lsc.ic.unicamp.br>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+References: <20191111214552.36717-1-keescook@chromium.org>
+ <20191111214552.36717-4-keescook@chromium.org>
+ <3059417.7DhL3USBNQ@positron.chronox.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SZbub5V7NxRSuzC5s6UPM+Y";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3059417.7DhL3USBNQ@positron.chronox.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SZbub5V7NxRSuzC5s6UPM+Y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Nov 12, 2019 at 03:41:52AM +0100, Stephan Müller wrote:
+> Am Montag, 11. November 2019, 22:45:47 CET schrieb Kees Cook:
+> 
+> Hi Kees,
+> 
+> > Convert to function declaration macros from function prototype casts
+> > to avoid triggering Control-Flow Integrity checks during indirect function
+> > calls.
+> > 
+> > Co-developed-by: João Moreira <joao.moreira@lsc.ic.unicamp.br>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/crypto/camellia_aesni_avx2_glue.c | 73 +++++++++-------------
+> >  arch/x86/crypto/camellia_aesni_avx_glue.c  | 63 +++++++------------
+> >  arch/x86/crypto/camellia_glue.c            | 29 +++------
+> >  arch/x86/include/asm/crypto/camellia.h     | 58 ++++-------------
+> >  4 files changed, 74 insertions(+), 149 deletions(-)
+> > 
+> > diff --git a/arch/x86/crypto/camellia_aesni_avx2_glue.c
+> > b/arch/x86/crypto/camellia_aesni_avx2_glue.c index
+> > a4f00128ea55..e32b4ded3b4e 100644
+> > --- a/arch/x86/crypto/camellia_aesni_avx2_glue.c
+> > +++ b/arch/x86/crypto/camellia_aesni_avx2_glue.c
+> > @@ -19,20 +19,12 @@
+> >  #define CAMELLIA_AESNI_AVX2_PARALLEL_BLOCKS 32
+> > 
+> >  /* 32-way AVX2/AES-NI parallel cipher functions */
+> > -asmlinkage void camellia_ecb_enc_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src);
+> > -asmlinkage void camellia_ecb_dec_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src);
+> > -
+> > -asmlinkage void camellia_cbc_dec_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src);
+> 
+> Could you please help me understand the following: the CBC (and other) macros 
+> use an u128 pointer. This (and other) existing function prototypes however use 
+> u8 pointers. With the existing code, a caller may use an u8 pointer. By using 
+> the new macro, there is now an implicit cast from u8 to u128 pointers.
+> 
+> So, in theory the current use cases of these functions could use data pointers 
+> that may not be aligned to 128 bit boundaries.
+> 
+> How did you conclude that the now implicit casting from u8 to u128 is correct 
+> in all use cases for all modified function prototypes?
+> 
+> Thanks a lot.
+> 
+> > -asmlinkage void camellia_ctr_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				   const u8 *src, le128 *iv);
+> > -
+> > -asmlinkage void camellia_xts_enc_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src, le128 *iv);
+> > -asmlinkage void camellia_xts_dec_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src, le128 *iv);
+> > +CRYPTO_FUNC(camellia_ecb_enc_32way);
+> > +CRYPTO_FUNC(camellia_ecb_dec_32way);
+> > +CRYPTO_FUNC_CBC(camellia_cbc_dec_32way);
+> > +CRYPTO_FUNC_CTR(camellia_ctr_32way);
+> > +CRYPTO_FUNC_XTS(camellia_xts_enc_32way);
+> > +CRYPTO_FUNC_XTS(camellia_xts_dec_32way);
 
-Hi all,
+None of the x86 crypto algorithms except gcm(aes) set an alignmask, so there's
+no alignment guarantee at all.  So the types really should be u8, not u128.  Can
+you please keep the types as u8?  You can just change the types of the
+common_glue*_t functions to take u8, and add the needed u8 casts in
+glue_helper.c.  (glue_helper.c really shouldn't be using u128 pointers itself
+either, but that can be fixed later.)
 
-Today's linux-next merge of the devicetree tree got a conflict in:
+Also, I don't see the point of the macros, other than to obfuscate things.  To
+keep things straightforward, I think we should keep the explicit function
+prototypes for each algorithm.
 
-  Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+Also, the CBC function wrapping is unneeded if the types are all made u8.
 
-between commit:
-
-  976392650a00 ("bindings: rename links to mason USB2/USB3 DT files")
-
-from Linus' tree and commit:
-
-  6aec97513a8c ("dt-bindings: usb: dwc3: Move Amlogic G12A DWC3 Glue Bindin=
-gs to YAML schemas")
-
-from the devicetree tree.
-
-I fixed it up (the latter removed the lines updated by the former) and
-can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SZbub5V7NxRSuzC5s6UPM+Y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3KH6gACgkQAVBC80lX
-0GwwZwf/X5Xb1IZKYgPDcRLnzzwcKGWjqq5IQAHTUMsgRisP9+7WfpwAJJvBipDJ
-h+w6rXvIYiyFZj22G0DG+4DBMuzFXVe5t/n47QwAW4d1a5RSj5dj2eecFYoYjudT
-h4PV0jKVdXPQPtGR9eF4SKGcT7LPPAs0s8VNi4EbPPrbyZF+5h9BLfMNcfl8P1Wm
-Guz9k2UcU5HY785kZGQccuUJs+Gb6/YAbCh0PPFHVVxFPXXJQqRsnmK+gN3XvDF+
-h5SKQekHvmhbHWAC1uCLKMSO454VhZBLjsV3dPfFM/GbU9DKQ4+ynMEyUK49gHv+
-1ZYAVEe872g/3xkc2zev0bNahjsxUg==
-=6Vr9
------END PGP SIGNATURE-----
-
---Sig_/SZbub5V7NxRSuzC5s6UPM+Y--
+- Eric
