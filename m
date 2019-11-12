@@ -2,123 +2,119 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B38BC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ACDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1B12196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3299B2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfKLRF0 (ORCPT
+        id S1727504AbfKLRFb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:05:26 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727221AbfKLRFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:05:25 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACGvrHC001412
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:05:24 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7yn7u2vd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 12:05:23 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 12 Nov 2019 17:05:22 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Nov 2019 17:05:18 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACH5H5J59441202
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 17:05:17 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B294B4C044;
-        Tue, 12 Nov 2019 17:05:17 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AD624C050;
-        Tue, 12 Nov 2019 17:05:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.194.252])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 17:05:16 +0000 (GMT)
-Subject: Re: [PATCH v5 04/10] IMA: Updated IMA policy functions to return
- keyrings option read from the policy
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 12 Nov 2019 12:05:16 -0500
-In-Reply-To: <20191111193303.12781-5-nramas@linux.microsoft.com>
-References: <20191111193303.12781-1-nramas@linux.microsoft.com>
-         <20191111193303.12781-5-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111217-0028-0000-0000-000003B64CE5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111217-0029-0000-0000-000024795188
-Message-Id: <1573578316.17949.43.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120145
+        Tue, 12 Nov 2019 12:05:31 -0500
+Received: from mga06.intel.com ([134.134.136.31]:41387 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727298AbfKLRFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:05:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 09:05:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,297,1569308400"; 
+   d="scan'208";a="287602412"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga001.jf.intel.com with ESMTP; 12 Nov 2019 09:05:28 -0800
+Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 12 Nov 2019 09:05:28 -0800
+Received: from crsmsx101.amr.corp.intel.com ([169.254.1.94]) by
+ CRSMSX103.amr.corp.intel.com ([169.254.4.168]) with mapi id 14.03.0439.000;
+ Tue, 12 Nov 2019 11:05:26 -0600
+From:   "Weiny, Ira" <ira.weiny@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>
+Subject: RE: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
+Thread-Topic: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
+Thread-Index: AQHVmPEJn03RPDacYEWb7WKbk7sMtKeHFw8AgACtkeA=
+Date:   Tue, 12 Nov 2019 17:05:25 +0000
+Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E92BB4EBE@CRSMSX101.amr.corp.intel.com>
+References: <20191112003452.4756-1-ira.weiny@intel.com>
+        <20191112003452.4756-3-ira.weiny@intel.com>
+ <20191111164320.80f814161469055b14f27045@linux-foundation.org>
+In-Reply-To: <20191111164320.80f814161469055b14f27045@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTM4NDllYjMtZWQxZS00MTQ3LWIzNzgtMTdmZmQwOTcxOGVhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiN3FwcGdWcUNHd0IrWmkwYnd0YWZoTHNTTmx4OTNaaklldUZFb05tZWQ0aHJ1UlwvRktzb1RlV3JGRUNlZFBqNGMifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.18.205.10]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-11-11 at 11:32 -0800, Lakshmi Ramasubramanian wrote:
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 1aee3c8b9cf6..d1889eee9287 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -481,6 +481,7 @@ static int get_subaction(struct ima_rule_entry *rule, enum ima_hooks func)
->   * @mask: requested action (MAY_READ | MAY_WRITE | MAY_APPEND | MAY_EXEC)
->   * @pcr: set the pcr to extend
->   * @template_desc: the template that should be used for this rule
-> + * @keyrings: set the keyrings for this rule, if specified
->   *
->   * Measure decision based on func/mask/fsmagic and LSM(subj/obj/type)
->   * conditions.
-> @@ -491,7 +492,8 @@ static int get_subaction(struct ima_rule_entry *rule, enum ima_hooks func)
->   */
->  int ima_match_policy(struct inode *inode, const struct cred *cred, u32 secid,
->  		     enum ima_hooks func, int mask, int flags, int *pcr,
-> -		     struct ima_template_desc **template_desc)
-> +		     struct ima_template_desc **template_desc,
-> +		     char **keyrings)
->  {
->  	struct ima_rule_entry *entry;
->  	int action = 0, actmask = flags | (flags << 1);
-> @@ -527,6 +529,9 @@ int ima_match_policy(struct inode *inode, const struct cred *cred, u32 secid,
->  		if ((pcr) && (entry->flags & IMA_PCR))
->  			*pcr = entry->pcr;
->  
-> +		if ((keyrings) && (entry->flags & IMA_KEYRINGS))
-> +			*keyrings = entry->keyrings;
+> 
+> On Mon, 11 Nov 2019 16:34:52 -0800 ira.weiny@intel.com wrote:
+> 
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > swap_activate() and swap_deactivate() have nothing to do with address
+> > spaces.  We want to eventually make the address space operations
+> > dynamic to switch inode flags on the fly.
+> 
+> What does this mean?
+> 
+> >  So to simplify this code as
+> > well as properly track these operations we move these functions to the
+> > file_operations vector.
+> >
+> > This has been tested with XFS but not NFS, f2fs, or btrfs.
+> >
+> > Also note f2fs and xfs have simple moves of their functions to
+> > facilitate compilation.  No functional changes are contained within
+> > those functions.
+> >
+> > ...
+> >
+> > --- a/fs/btrfs/inode.c
+> > +++ b/fs/btrfs/inode.c
+> > @@ -11002,6 +11002,8 @@ static const struct file_operations
+> > btrfs_dir_file_operations = {  #endif
+> >  	.release        = btrfs_release_file,
+> >  	.fsync		= btrfs_sync_file,
+> > +	.swap_activate	= btrfs_swap_activate,
+> > +	.swap_deactivate = btrfs_swap_deactivate,
+> >  };
+> 
+> Shouldn't this be btrfs_file_operations?
+> 
 
-ima_match_rules() determines whether the rule is in policy or not. It
-returns true on rule match, false on failure.  There's no need to
-return the list of keyrings.
+Shoot...  yes it should and I even thought that as I was moving it and must have still made the mistake...
 
-Mimi 
-
-> +
->  		if (template_desc && entry->template)
->  			*template_desc = entry->template;
->  
-
+Sorry, I'll update.
+Ira
