@@ -2,67 +2,132 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD86C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9983C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7C1206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28F121783
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 10:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573555198;
+	bh=b4WMMkvRkImRLDoMsQKNzUFF3wEIW6Af2ngHCdd2yRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kSD0JbBfDfonZnf4JIl8GQ2U6aDYmORj43cqu6Ah7OwNc53cw5zJNMQPxa+iCuVZb
+	 Rpu/O7UmMDFescEfhcw3G2sCGqnEcTxX/oN9aTUo8WDpioXZ/xUvyDkfv6sLrFhji+
+	 8+quW3jyqLmL04FjXGatcdT8KbF3DZXT6OIMnQQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKLKjP (ORCPT
+        id S1727276AbfKLKj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:39:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33244 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfKLKjP (ORCPT
+        Tue, 12 Nov 2019 05:39:58 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34923 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfKLKj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:39:15 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iUTZm-0007zU-0Z; Tue, 12 Nov 2019 11:39:10 +0100
-Date:   Tue, 12 Nov 2019 11:39:09 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 06/12] riscv: add support for MMIO access to the timer
- registers
-In-Reply-To: <20191028121043.22934-7-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.1911121138580.1833@nanos.tec.linutronix.de>
-References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-7-hch@lst.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 12 Nov 2019 05:39:57 -0500
+Received: by mail-lf1-f66.google.com with SMTP id i26so1356135lfl.2;
+        Tue, 12 Nov 2019 02:39:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XWXqgjsblbcyWM0h2meBDVZ+XPFRuLEW2MPm0S54S/s=;
+        b=CTVAyYnT5d6NFMoTSwruMSYLoQz31YwMh9f1b2imH4VEgUZqDunjh4OAZ0qiGkpMU4
+         2yyYvSmP/mCBvvzXw6+syV4fitEOKf6Xv29FqALV9M+3YnhzKPOTM5NjSPKaMvmlZJOl
+         H1OVAk3AggiVh8sNvwPUP5fcBb/SCxxC+L1AlFCYp1lMnLMJsa2fZ7HMIaodqMGq8x1R
+         d9mXNlWJXeWyv20bvSUJewbMbg1TnYDJCoo4oz1b21dfWaFvROuCVZF5wXZ5sZ8IQXbH
+         60XoAVLZoVF/zmJ6ohHK7uFPzhP4N5Cq88cl4vPaMVq3Iz31e3vyFdSosmFZz9UHKLM+
+         DFIA==
+X-Gm-Message-State: APjAAAXYPD1CN/dYvjmx9RDiixBwB8WCvp6aiseDojWCHXAgbc9lJZlu
+        4Sz7/vHAlzl8pCjcACPineI=
+X-Google-Smtp-Source: APXvYqxbw5J+tzBKcx+QigjOviaP1PWngnIR6FhtuOsFfYfySEHZWhgInymsNuVEPwxpwVY/mq8xpg==
+X-Received: by 2002:a05:6512:21e:: with SMTP id a30mr8849014lfo.76.1573555194825;
+        Tue, 12 Nov 2019 02:39:54 -0800 (PST)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id d24sm3344144ljg.73.2019.11.12.02.39.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 02:39:54 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iUTab-0000IZ-1b; Tue, 12 Nov 2019 11:40:01 +0100
+Date:   Tue, 12 Nov 2019 11:40:01 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>
+Subject: Re: [PATCH 1/4] drm/msm: fix memleak on release
+Message-ID: <20191112104001.GP11035@localhost>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010131333.23635-2-johan@kernel.org>
+ <20191030100146.GC4691@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030100146.GC4691@localhost>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019, Christoph Hellwig wrote:
-
-> When running in M-mode we can't use the SBI to set the timer, and
-> don't have access to the time CSR as that usually is emulated by
-> M-mode.  Instead provide code that directly accesses the MMIO for
-> the timer.
+On Wed, Oct 30, 2019 at 11:01:46AM +0100, Johan Hovold wrote:
+> On Thu, Oct 10, 2019 at 03:13:30PM +0200, Johan Hovold wrote:
+> > If a process is interrupted while accessing the "gpu" debugfs file and
+> > the drm device struct_mutex is contended, release() could return early
+> > and fail to free related resources.
+> > 
+> > Note that the return value from release() is ignored.
+> > 
+> > Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
+> > Cc: stable <stable@vger.kernel.org>     # 4.18
+> > Cc: Jordan Crouse <jcrouse@codeaurora.org>
+> > Cc: Rob Clark <robdclark@gmail.com>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > ---
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
-> ---
->  arch/riscv/include/asm/sbi.h      |  3 ++-
->  arch/riscv/include/asm/timex.h    | 19 +++++++++++++++++--
->  drivers/clocksource/timer-riscv.c | 21 +++++++++++++++++----
+> Rob, Sean,
+> 
+> Sending a reminder about this one, which is not yet in linux-next.
+> 
+> Perhaps Daniel can pick it up otherwise?
 
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Another two weeks, another reminder. This one is still not in -next.
+
+Johan
+
+> >  drivers/gpu/drm/msm/msm_debugfs.c | 6 +-----
+> >  1 file changed, 1 insertion(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+> > index 6be879578140..1c74381a4fc9 100644
+> > --- a/drivers/gpu/drm/msm/msm_debugfs.c
+> > +++ b/drivers/gpu/drm/msm/msm_debugfs.c
+> > @@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode *inode, struct file *file)
+> >  	struct msm_gpu_show_priv *show_priv = m->private;
+> >  	struct msm_drm_private *priv = show_priv->dev->dev_private;
+> >  	struct msm_gpu *gpu = priv->gpu;
+> > -	int ret;
+> > -
+> > -	ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
+> > -	if (ret)
+> > -		return ret;
+> >  
+> > +	mutex_lock(&show_priv->dev->struct_mutex);
+> >  	gpu->funcs->gpu_state_put(show_priv->state);
+> >  	mutex_unlock(&show_priv->dev->struct_mutex);
