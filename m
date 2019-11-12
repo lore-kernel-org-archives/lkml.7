@@ -2,61 +2,63 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAB1C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035CAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573F020578
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9052084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sJuIshYz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nuhL/PCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfKLOcA (ORCPT
+        id S1727666AbfKLOcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:32:00 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37710 "EHLO
+        Tue, 12 Nov 2019 09:32:03 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37726 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfKLOcA (ORCPT
+        with ESMTP id S1727417AbfKLOcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 09:32:00 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEVn6X014751;
-        Tue, 12 Nov 2019 08:31:49 -0600
+        Tue, 12 Nov 2019 09:32:01 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEVqO5014766;
+        Tue, 12 Nov 2019 08:31:52 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573569109;
-        bh=eqDXkdRx3Q6H+gxxdh7mbTefYiQt+16uNQd/29L6a4I=;
-        h=From:To:CC:Subject:Date;
-        b=sJuIshYzqq2XN/e/aiIRPZF7ZyxYeryYwBVtp9dJtLL4qGOELhSmzajvQ9QASzgl6
-         DFy8i6P1AdviQFf7/W8Vz5gXg8zyVheDN3hPnxYbVZMzz9o0RpaO4pffWpO4SoNY2j
-         8vGFJKwHLsmnWHaz9144VGrub2Gy6U7xQNag48Wg=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEVnMf127633
+        s=ti-com-17Q1; t=1573569112;
+        bh=SrEGW4i7yjeGxteEupp6hdS4iZlr2G083XuAg3UxTfQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=nuhL/PCiQq3uOJaLoB2frJBxIA0/jtcoKl+wknqk142e4Pj8tj2JnRnAkm73j+z0d
+         NoIdnJmgS/pXiBTCC+w8O84uUflFQjjWpEd4/UNpTTvggGnsura3RYBdtSOtsGxdbd
+         J4YDdcpd9/niKABf2HL9Jx6Uh5MhH/ma52Frh7iA=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEVqvj031423
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:31:49 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:31:52 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:31:31 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:31:34 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:31:31 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:31:34 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEVjUJ050451;
-        Tue, 12 Nov 2019 08:31:46 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEVjUK050451;
+        Tue, 12 Nov 2019 08:31:49 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <t-kristo@ti.com>, <nm@ti.com>
 CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/9] arm64: dts: ti: UDMAP and McASP support
-Date:   Tue, 12 Nov 2019 16:32:52 +0200
-Message-ID: <20191112143301.3168-1-peter.ujfalusi@ti.com>
+Subject: [PATCH 1/9] arm64: dts: ti: k3-am65-main: Correct main NAVSS representation
+Date:   Tue, 12 Nov 2019 16:32:53 +0200
+Message-ID: <20191112143301.3168-2-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191112143301.3168-1-peter.ujfalusi@ti.com>
+References: <20191112143301.3168-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,45 +68,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+NAVSS is a subsystem containing different IPs, it is not really a bus.
+Change the compatible from "simple-bus" to "simple-mfd" to reflect that.
 
-This series will enable DMA and adds the McASP nodes for am654 and j721e.
-
-The DT bindings for DMA is not expected to change much anymore:
-v5 of the UDMAP bindings patch is:
-https://lore.kernel.org/lkml/20191111135330.8235-9-peter.ujfalusi@ti.com/
-
-While adding the DMA support I have noticed few issues which is also fixed by
-this series.
-
-I have included the McASP nodes as well to have examples for other peripherals
-on how he binding should be used.
-
-I have been using this set on top of linux-next (the series is generated on top
-of next-20191112) with audio on am654-evm and j721e evm + ivi card.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (9):
-  arm64: dts: ti: k3-am65-main: Correct main NAVSS representation
-  arm64: dts: ti: k3-am65-main: Move secure proxy under cbass_main_navss
-  arm64: dts: ti: k3-am65: DMA support
-  arm64: dts: ti: k3-am654-main: Add McASP nodes
-  arm64: dts: ti: k3-j721e: Correct the address for MAIN NAVSS
-  arm64: dts: ti: k3-j721e-main: Correct main NAVSS representation
-  arm64: dts: ti: k3-j721e-main: Move secure proxy and smmu under
-    main_navss
-  arm64: dts: ti: k3-j721e: DMA support
-  arm64: dts: ti: k3-j721e-main: Add McASP nodes
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 122 ++++++-
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  46 +++
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 312 ++++++++++++++++--
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  45 +++
- arch/arm64/boot/dts/ti/k3-j721e.dtsi          |   2 +-
- 5 files changed, 491 insertions(+), 36 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index efb24579922c..e40f7acbec42 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -385,8 +385,8 @@ intr_main_gpio: interrupt-controller0 {
+ 		ti,sci-rm-range-girq = <0x1>;
+ 	};
+ 
+-	cbass_main_navss: interconnect0 {
+-		compatible = "simple-bus";
++	cbass_main_navss: navss@30800000 {
++		compatible = "simple-mfd";
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
 -- 
 Peter
 
