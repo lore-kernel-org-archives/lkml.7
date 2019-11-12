@@ -2,333 +2,141 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A75C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C93C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBEAB21D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB932196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aukESM/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfKLBAb (ORCPT
+        id S1727050AbfKLBBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:00:31 -0500
-Received: from mga02.intel.com ([134.134.136.20]:43027 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbfKLA7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:59:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 16:59:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,294,1569308400"; 
-   d="scan'208";a="405418145"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga006.fm.intel.com with ESMTP; 11 Nov 2019 16:59:43 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id F2A60301A83; Mon, 11 Nov 2019 16:59:42 -0800 (PST)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     jolsa@kernel.org
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v6 01/12] perf pmu: Use file system cache to optimize sysfs access
-Date:   Mon, 11 Nov 2019 16:59:30 -0800
-Message-Id: <20191112005941.649137-2-andi@firstfloor.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191112005941.649137-1-andi@firstfloor.org>
-References: <20191112005941.649137-1-andi@firstfloor.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 11 Nov 2019 20:01:06 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:30986 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfKLBBF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Nov 2019 20:01:05 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191112010102epoutp039d18e1c7bb3f3465c01be90b667880c5~WRIYTMdPn1722917229epoutp039
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 01:01:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191112010102epoutp039d18e1c7bb3f3465c01be90b667880c5~WRIYTMdPn1722917229epoutp039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573520462;
+        bh=6mPNO6wZj4Xve7dNHOM4i8D7vL7fYOS/SIGOyAurkyU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=aukESM/ikGEjAubnuWb8WWc/btvgKEMP/6PYtTmkcLMT9IS4ua7X/OTosqcfZBczP
+         /QHrv+Cft9bUGkO2DNNHSHkl5Xc3hMkt6MeatFnW1xbvYXsf9HkZwAQwi/QTFr6oQi
+         T368NiY4dEhvkK1dPXdKRfrEcOA2uPT6v6JS8j6I=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191112010101epcas1p2cae3693bc918f29e41047287fc2d55ec~WRIXgtczJ0682106821epcas1p2Z;
+        Tue, 12 Nov 2019 01:01:01 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.155]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47BqDM2DDyzMqYlm; Tue, 12 Nov
+        2019 01:00:35 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        59.F4.04144.7D30ACD5; Tue, 12 Nov 2019 09:59:03 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d~WRGoY9V6B2013820138epcas1p2O;
+        Tue, 12 Nov 2019 00:59:02 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191112005902epsmtrp1bcaa1af3e66645907b62c947f4e32e24~WRGoYOwCn2188321883epsmtrp16;
+        Tue, 12 Nov 2019 00:59:02 +0000 (GMT)
+X-AuditID: b6c32a35-2dfff70000001030-83-5dca03d76c61
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3A.15.24756.6D30ACD5; Tue, 12 Nov 2019 09:59:02 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.222]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191112005902epsmtip1d75fb9d6eda70d25a77759d98613f160~WRGoNALhQ0613306133epsmtip1v;
+        Tue, 12 Nov 2019 00:59:02 +0000 (GMT)
+From:   Seung-Woo Kim <sw0312.kim@samsung.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com
+Cc:     sw0312.kim@samsung.com, sungguk.na@samsung.com
+Subject: [PATCH] arm64: perf: Report arm pc registers for compat perf
+Date:   Tue, 12 Nov 2019 10:01:41 +0900
+Message-Id: <1573520501-29195-1-git-send-email-sw0312.kim@samsung.com>
+X-Mailer: git-send-email 1.7.4.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJKsWRmVeSWpSXmKPExsWy7bCmge515lOxBpcesVu8X9bDaLHp8TVW
+        i8u75rBZLL1+kclix7yDjBYzJr9ks2i5Y+rA7rFm3hpGj02rOtk8Ni+p9+jbsorR4/MmuQDW
+        qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKAjlBTK
+        EnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFlgV6xYm5xaV56XrJ+blWhgYGRqZAhQnZ
+        GXuWT2QuaOGo2HemkbmBcT9bFyMnh4SAicTjxzfYuxi5OIQEdjBKPGnbwAjhfGKUWL7qKCuE
+        841R4sSZRUBlHGAtW2+kQMT3Mkp8XXQLqugLkPP1JiPIXDYBHYn9S36DJUQEOhgl9vyfwwjS
+        zSxgJPH2OjNIjbCAq8SJS0/YQWwWAVWJLZ07weK8Am4SHxbOZYK4T0Fiwb23bCBzJAQ62CSe
+        bfjDDpFwkfj7YTULhC0s8er4Fqi4lMTL/jYou1pi+4Sf7FDNjBI97Y1QDcYS+5dOZoI4SFNi
+        /S59iLCixM7fc8EeYBbgk3j3tYcV4mNeiY42IYgSFYmdRyexQYSlJGZtCIYIe0gsO7gErFpI
+        IFbiw1btCYyysxDGL2BkXMUollpQnJueWmxYYIgcR5sYwclKy3QH45RzPocYBTgYlXh4GRJO
+        xgqxJpYVV+YeYpTgYFYS4d1RcSJWiDclsbIqtSg/vqg0J7X4EKMpMOwmMkuJJucDE2leSbyh
+        qZGxsbGFiaGZqaGhkjiv4/KlsUIC6YklqdmpqQWpRTB9TBycUg2ME+LZf93h2FJ+2rL1qMXq
+        4EXtxnyTHvxT224usnzSb9XNiZ93dLP8Fay+eYn9YdiJCLHLNj8XnyjXqwn5LBtZfqpbruCG
+        S9aeuXP3uLGJxezZb/FgncFM1678d17H3jwpqJ/H5TSvcefB6SoZXzYU3HnEG/f4psgxMy23
+        7uP7P2zjSJuqF+t4TYmlOCPRUIu5qDgRAA5At4VsAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgluLIzCtJLcpLzFFi42LZdlhJTvca86lYg2cdPBbvl/UwWmx6fI3V
+        4vKuOWwWS69fZLLYMe8go8WMyS/ZLFrumDqwe6yZt4bRY9OqTjaPzUvqPfq2rGL0+LxJLoA1
+        issmJTUnsyy1SN8ugStjz/KJzAUtHBX7zjQyNzDuZ+ti5OCQEDCR2HojpYuRi0NIYDejxP5X
+        /1i6GDmB4lISc79tZ4SoEZY4fLgYJCwk8IlR4uVVExCbTUBHYv+S36wgvSICfYwSb85uYAVJ
+        MAPNfHtyLzuILSzgKnHi0hMwm0VAVWJL505mEJtXwE3iw8K5TBC7FCQW3HvLNoGRZwEjwypG
+        ydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjODw0dLcwXh5SfwhRgEORiUe3hWxJ2OFWBPL
+        iitzDzFKcDArifDuqDgRK8SbklhZlVqUH19UmpNafIhRmoNFSZz3ad6xSCGB9MSS1OzU1ILU
+        IpgsEwenVANjIXPLnyl1qfWhvj/OW7y563LB9HhJuUidTc0Xg9KJu7P29OvKmnFMO9D2+9Wq
+        jUz1mrHd3NEaRb1Fi9t0ld7srdbgvdwrYbw/8uXH9f6Z8p4n3dxLN+abr+TOuLNLOE2jxFZ7
+        yrN/sXet4zxbex4+nx3xhims6g3LWqbZNXt31q+ZePjzqQ9KLMUZiYZazEXFiQC0WWFzGwIA
+        AA==
+X-CMS-MailID: 20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d
+References: <CGME20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+If perf is built as arm 32-bit, it only reads 15 registers as arm
+32-bit register map and this breaks dwarf call-chain in compat
+perf because pc register information is not filled.
+Report arm pc registers for 32-bit compat perf.
 
-pmu.c does a lot of redundant /sys accesses while parsing aliases
-and probing for PMUs. On large systems with a lot of PMUs this
-can get expensive (>2s):
+Without this, arm 32-bit perf dwarf call-graph shows below
+verbose message:
+  unwind: reg 15, val 0
+  unwind: reg 13, val ffbc6360
+  unwind: no map for 0
 
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
- 27.25    1.227847           8    160888     16976 openat
- 26.42    1.190481           7    164224    164077 stat
-
-Add a cache to remember if specific file names exist or don't
-exist, which eliminates most of this overhead.
-
-Also optimize some stat() calls to be slightly cheaper access()
-
-Resulting in:
-
-  0.18    0.004166           2      1851       305 open
-  0.08    0.001970           2       829       622 access
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
 ---
+ arch/arm64/kernel/perf_regs.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-v2: Use single lookup function as API (Jiri)
----
- tools/perf/util/Build     |  1 +
- tools/perf/util/fncache.c | 63 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/fncache.h |  7 +++++
- tools/perf/util/pmu.c     | 34 +++++++--------------
- tools/perf/util/srccode.c |  9 +-----
- 5 files changed, 83 insertions(+), 31 deletions(-)
- create mode 100644 tools/perf/util/fncache.c
- create mode 100644 tools/perf/util/fncache.h
-
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 39814b1806a6..2c1504fe924c 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -48,6 +48,7 @@ perf-y += header.o
- perf-y += callchain.o
- perf-y += values.o
- perf-y += debug.o
-+perf-y += fncache.o
- perf-y += machine.o
- perf-y += map.o
- perf-y += pstack.o
-diff --git a/tools/perf/util/fncache.c b/tools/perf/util/fncache.c
-new file mode 100644
-index 000000000000..5afcd7edbe7a
---- /dev/null
-+++ b/tools/perf/util/fncache.c
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Manage a cache of file names' existence */
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <linux/list.h>
-+#include "fncache.h"
-+
-+struct fncache {
-+	struct hlist_node nd;
-+	bool res;
-+	char name[];
-+};
-+
-+#define FNHSIZE 61
-+
-+static struct hlist_head fncache_hash[FNHSIZE];
-+
-+unsigned shash(const unsigned char *s)
-+{
-+	unsigned h = 0;
-+	while (*s)
-+		h = 65599 * h + *s++;
-+	return h ^ (h >> 16);
-+}
-+
-+static bool lookup_fncache(const char *name, bool *res)
-+{
-+	int h = shash((const unsigned char *)name) % FNHSIZE;
-+	struct fncache *n;
-+
-+	hlist_for_each_entry (n, &fncache_hash[h], nd) {
-+		if (!strcmp(n->name, name)) {
-+			*res = n->res;
-+			return true;
-+		}
-+	}
-+	return false;
-+}
-+
-+static void update_fncache(const char *name, bool res)
-+{
-+	struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
-+	int h = shash((const unsigned char *)name) % FNHSIZE;
-+
-+	if (!n)
-+		return;
-+	strcpy(n->name, name);
-+	n->res = res;
-+	hlist_add_head(&n->nd, &fncache_hash[h]);
-+}
-+
-+/* No LRU, only use when bounded in some other way. */
-+bool file_available(const char *name)
-+{
-+	bool res;
-+
-+	if (lookup_fncache(name, &res))
-+		return res;
-+	res = access(name, R_OK) == 0;
-+	update_fncache(name, res);
-+	return res;
-+}
-diff --git a/tools/perf/util/fncache.h b/tools/perf/util/fncache.h
-new file mode 100644
-index 000000000000..fe020beaefb1
---- /dev/null
-+++ b/tools/perf/util/fncache.h
-@@ -0,0 +1,7 @@
-+#ifndef _FCACHE_H
-+#define _FCACHE_H 1
-+
-+unsigned shash(const unsigned char *s);
-+bool file_available(const char *name);
-+
-+#endif
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index adbe97e941dd..81357cc3d59a 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -24,6 +24,7 @@
- #include "pmu-events/pmu-events.h"
- #include "string2.h"
- #include "strbuf.h"
-+#include "fncache.h"
+diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
+index 0bbac61..d4172e7 100644
+--- a/arch/arm64/kernel/perf_regs.c
++++ b/arch/arm64/kernel/perf_regs.c
+@@ -24,6 +24,8 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 			return regs->compat_sp;
+ 		if ((u32)idx == PERF_REG_ARM64_LR)
+ 			return regs->compat_lr;
++		if ((u32)idx == 15) /* PERF_REG_ARM_PC */
++			return regs->pc;
+ 	}
  
- struct perf_pmu_format {
- 	char *name;
-@@ -82,7 +83,6 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
-  */
- static int pmu_format(const char *name, struct list_head *format)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -92,8 +92,8 @@ static int pmu_format(const char *name, struct list_head *format)
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
- 
--	if (stat(path, &st) < 0)
--		return 0;	/* no error if format does not exist */
-+	if (!file_available(path))
-+		return 0;
- 
- 	if (perf_pmu__format_parse(path, format))
- 		return -1;
-@@ -475,7 +475,6 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
-  */
- static int pmu_aliases(const char *name, struct list_head *head)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -485,8 +484,8 @@ static int pmu_aliases(const char *name, struct list_head *head)
- 	snprintf(path, PATH_MAX,
- 		 "%s/bus/event_source/devices/%s/events", sysfs, name);
- 
--	if (stat(path, &st) < 0)
--		return 0;	 /* no error if 'events' does not exist */
-+	if (!file_available(path))
-+		return 0;
- 
- 	if (pmu_aliases_parse(path, head))
- 		return -1;
-@@ -525,7 +524,6 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
-  */
- static int pmu_type(const char *name, __u32 *type)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	FILE *file;
- 	int ret = 0;
-@@ -537,7 +535,7 @@ static int pmu_type(const char *name, __u32 *type)
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
- 
--	if (stat(path, &st) < 0)
-+	if (access(path, R_OK) < 0)
- 		return -1;
- 
- 	file = fopen(path, "r");
-@@ -628,14 +626,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
- static bool pmu_is_uncore(const char *name)
- {
- 	char path[PATH_MAX];
--	struct perf_cpu_map *cpus;
--	const char *sysfs = sysfs__mountpoint();
-+	const char *sysfs;
- 
-+	sysfs = sysfs__mountpoint();
- 	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
--	cpus = __pmu_cpumask(path);
--	perf_cpu_map__put(cpus);
--
--	return !!cpus;
-+	return file_available(path);
- }
- 
- /*
-@@ -645,7 +640,6 @@ static bool pmu_is_uncore(const char *name)
-  */
- static int is_arm_pmu_core(const char *name)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -655,10 +649,7 @@ static int is_arm_pmu_core(const char *name)
- 	/* Look for cpu sysfs (specific to arm) */
- 	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
- 				sysfs, name);
--	if (stat(path, &st) == 0)
--		return 1;
--
--	return 0;
-+	return file_available(path);
- }
- 
- static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
-@@ -1528,7 +1519,6 @@ bool pmu_have_event(const char *pname, const char *name)
- 
- static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs;
- 
-@@ -1538,10 +1528,8 @@ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
- 
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
--
--	if (stat(path, &st) < 0)
-+	if (!file_available(path))
- 		return NULL;
--
- 	return fopen(path, "r");
- }
- 
-diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
-index d84ed8b6caaa..c29edaaca863 100644
---- a/tools/perf/util/srccode.c
-+++ b/tools/perf/util/srccode.c
-@@ -16,6 +16,7 @@
- #include "srccode.h"
- #include "debug.h"
- #include <internal/lib.h> // page_size
-+#include "fncache.h"
- 
- #define MAXSRCCACHE (32*1024*1024)
- #define MAXSRCFILES     64
-@@ -36,14 +37,6 @@ static LIST_HEAD(srcfile_list);
- static long map_total_sz;
- static int num_srcfiles;
- 
--static unsigned shash(unsigned char *s)
--{
--	unsigned h = 0;
--	while (*s)
--		h = 65599 * h + *s++;
--	return h ^ (h >> 16);
--}
--
- static int countlines(char *map, int maplen)
- {
- 	int numl;
+ 	if ((u32)idx == PERF_REG_ARM64_SP)
 -- 
-2.23.0
+1.7.4.1
 
