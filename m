@@ -2,121 +2,142 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7597EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55155C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4805B206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CAA206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpotNEY2"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hhAwl8Vu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKLMst (ORCPT
+        id S1727166AbfKLMvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:48:49 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46461 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfKLMst (ORCPT
+        Tue, 12 Nov 2019 07:51:19 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:53981 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfKLMvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:48:49 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so14600025oie.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 04:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jzm7986JS/rnjdFEfFSppu8t4BpdNBEDWXZlt0QkzRM=;
-        b=hpotNEY2jP9EbNNf1lY01Z4p8VZIHhK5Uf/xk9kM4m5UjiTl2tVwaeqotaFn/MYzSM
-         uJ4Mq0BTFkLcY129vsyTy4KaTMfLeqYAmhTOUMsz+471cQqdWkLsqYn13ePb5PP3GQAl
-         FIJr/Gs+mx892sKJSAmXY3hBRAXniQmqOLy/dfvlvbfaChxaLoslE362YzCtXxlio1rV
-         4Mplt/KjTVhRNHDLvKzPgCRAPXynQi8sS51oPWq6D3eze9ddnVYHt2/DWrYg8aFEhDuU
-         +hV6wWmnaSnWGSqbavzyD+Q+DnsFLOzGeACwqjE0oNyz7ptTjDepUQo8AZgkSrhp54sm
-         vKYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=Jzm7986JS/rnjdFEfFSppu8t4BpdNBEDWXZlt0QkzRM=;
-        b=Za1xkfw79sTPrdllnYdkZUA1IwgOZNVEn5zN6mpHOed1nXHXB32tmqRyv0Xu/OnzPw
-         CfoR1qKJWu7Ykj8OiRnrWCkb51CsDXvd0N16lzNx7BrzvAPpU3MUWHfhmWdZ4zvntt40
-         WqZMlGSKGUrbfxe73KKNJLP/hXe7Y583oKWDkofQheKlag8MqIgrS7odXygfd4vnF7q4
-         5zUkOmXXVE0gVm1/Ruiaind3bKlCkAw6dQ9mV1fNzhg1QoGRkhpWG1vg5ggdgNu8cW53
-         SfeE+kU0bjj3sqJfY3aXj8fTafYtTIGcID12t8+wTMGV7VFXfQxiE7McrbDt5mzYdAQZ
-         ESJw==
-X-Gm-Message-State: APjAAAVq6ssIQgnGhb5YrGd2r0YgUPhXwTMOCH5ADzKbPyXTajPS6Z9+
-        nv7SgcBa1XcslBHxE6gYGw==
-X-Google-Smtp-Source: APXvYqxtYYaMppT1AsUoDPjRx/kCU171B9mYR9+ekZc1K7T40+2H65m90zVCtGZFXPwcrcaNpUGmew==
-X-Received: by 2002:aca:58d6:: with SMTP id m205mr3771826oib.32.1573562927956;
-        Tue, 12 Nov 2019 04:48:47 -0800 (PST)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id l32sm6193445otl.74.2019.11.12.04.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 04:48:47 -0800 (PST)
-Received: from minyard.net (unknown [192.168.27.180])
-        by serve.minyard.net (Postfix) with ESMTPSA id B47A6180046;
-        Tue, 12 Nov 2019 12:48:46 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 06:48:45 -0600
-From:   Corey Minyard <minyard@acm.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, cminyard@mvista.com,
-        asmaa@mellanox.com, joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
-        sdasari@fb.com
-Subject: Re: [PATCH 2/2] drivers: ipmi: Modify max length of IPMB packet
-Message-ID: <20191112124845.GE2882@minyard.net>
-Reply-To: minyard@acm.org
-References: <20191112023610.3644314-1-vijaykhemka@fb.com>
- <20191112023610.3644314-2-vijaykhemka@fb.com>
+        Tue, 12 Nov 2019 07:51:18 -0500
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id xACCp8Kp030082;
+        Tue, 12 Nov 2019 21:51:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xACCp8Kp030082
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573563069;
+        bh=pERbu/D6TsAoFYrJhhErJt2I5IFldM4FmNpzx6W3OhY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hhAwl8VuQ3Yd0T/pN6/IlaZnHDDCkMvn4AkJaBnukC253y9L8B9fG++arcrdl5Z5R
+         /9rD9bJPmjSLxO4qwDHCLEV1+DZeFXxu3i2pTz9FzfFEuMpTsZ5NY1K3MvQBvltwM+
+         EuM3IMQqTzCGj/Cgeds+eBcPGUtyWxj1+j8IMM6wFlWw7ZidfuOGGAdUtCZdA13bf2
+         fdxUCJHu4eK/2YdS1rZHCeYr3wjmX6o/CROPeuUQ5kq1iFGodfCrbDdgRtuMyikDuj
+         hNfP1Bi0zXdRSJR15wzOsmWUxaF0G47IS5Fzkm3WNVYy3T96Ijn7eqyHXvZN29ek67
+         XKVfuzxXV1s+Q==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id c25so10695270vsp.0;
+        Tue, 12 Nov 2019 04:51:08 -0800 (PST)
+X-Gm-Message-State: APjAAAUBMt2tRJdM3Qw3Hl3Xo3ar2p6dmK6gXkvCDmY08DTjdi3o0AQC
+        ULTuaWkZHeVyN1rAEOyfryjjnCVnXWwyT4/HC84=
+X-Google-Smtp-Source: APXvYqyKv1Pax9ObNkX0Q8oo8KGbX362oyxIELZQWqG9wmUAWx11VYikJ/OkCb3aLcrg3/hvdZodvoJImefldmOkHNE=
+X-Received: by 2002:a05:6102:726:: with SMTP id u6mr21481694vsg.179.1573563067515;
+ Tue, 12 Nov 2019 04:51:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112023610.3644314-2-vijaykhemka@fb.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com> <20191112123125.GD17835@willie-the-truck>
+In-Reply-To: <20191112123125.GD17835@willie-the-truck>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 12 Nov 2019 21:50:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+Message-ID: <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Will Deacon <will@kernel.org>
+Cc:     Xiao Yang <ice_yangxiao@163.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 06:36:10PM -0800, Vijay Khemka wrote:
-> As per IPMB specification, maximum packet size supported is 255,
-> modified Max length to 240 from 128 to accommodate more data.
+On Tue, Nov 12, 2019 at 9:31 PM Will Deacon <will@kernel.org> wrote:
+>
+> [+lkml, Masahiro, Alexei and Daniel]
+>
+> On Tue, Nov 12, 2019 at 04:56:39PM +0800, Xiao Yang wrote:
+> > With your patch[1], I alway get the following error when building
+> > tools/bpf:
+>
+> In case people want to reproduce this, my branch is here:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=lto
+>
+> > ----------------------------------------------------------------------------------
+> >
+> > make -C tools/bpf/
+> > make: Entering directory
+> > '/usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/tools/bpf'
+> >
+> > Auto-detecting system features:
+> > ... libbfd: [ on ]
+> > ... disassembler-four-args: [ OFF ]
+> >
+> > CC bpf_jit_disasm.o
+> > CC bpf_dbg.o
+> > In file included from
+> > /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/include/uapi/linux/filter.h:9:0,
+> > from
+> > /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/tools/bpf/bpf_dbg.c:41:
+> > /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/include/linux/compiler.h:247:24:
+> > fatal error: asm/rwonce.h: No such file or directory
+> > #include <asm/rwonce.h>
+> > ^
+> > compilation terminated.
+> > Makefile:61: recipe for target 'bpf_dbg.o' failed
+> > make: *** [bpf_dbg.o] Error 1
+> > make: *** Waiting for unfinished jobs....
+> > make: Leaving directory
+> >
+> > ----------------------------------------------------------------------------------
+> >
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/commit/?h=lto&id=642a312d47ceb54603630d9d04f5052f3b46d9a3
+> >
+> > It seems that include/linux/compiler.h cannot find the asm/rwonce.h because
+> > tools/bpf/Makefile doesn't include arch/*/include/generated/asm/rwonce.h.
+>
+> The problem with referring to the generated files is that they don't exist
+> unless you've configured the main source directory. The real problem here
+> seems to be that tools/bpf/ refers directly to header files in the kernel
+> sources without any understanding of kbuild, and therefore mandatory-y
+> headers simply don't exist when it goes looking for them.
 
-I couldn't find this in the IPMB specification.
+Please note tools/ is out of scope of Kbuild.
+The tools/ created a completely different build system.
 
-IIRC, the maximum on I2C is 32 byts, and table 6-9 in the IPMI spec,
-under "IPMB Output" states: The IPMB standard message length is
-specified as 32 bytes, maximum, including slave address.
 
-I'm not sure where 128 came from, but maybe it should be reduced to 31.
+tools/bpf/ looks like a host program.
+Does it include a kernel-space header
+of the target architecture?
 
--corey
+I see a lots of header duplication in tools/include/,
+but I am not sure if
+tools/include/linux/filter.h is the correct header
+to include.
 
-> 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->  drivers/char/ipmi/ipmb_dev_int.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
-> index 2419b9a928b2..7f9198bbce96 100644
-> --- a/drivers/char/ipmi/ipmb_dev_int.c
-> +++ b/drivers/char/ipmi/ipmb_dev_int.c
-> @@ -19,7 +19,7 @@
->  #include <linux/spinlock.h>
->  #include <linux/wait.h>
->  
-> -#define MAX_MSG_LEN		128
-> +#define MAX_MSG_LEN		240
->  #define IPMB_REQUEST_LEN_MIN	7
->  #define NETFN_RSP_BIT_MASK	0x4
->  #define REQUEST_QUEUE_MAX_LEN	256
-> -- 
-> 2.17.1
-> 
+
+
+>
+> Perhaps it's possible to introduce a dependency on a top-level "make
+> asm-generic" so that we can reference the generated headers from the arch
+> directly. Thoughts?
+>
+> Will
+
+
+-- 
+Best Regards
+Masahiro Yamada
