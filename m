@@ -2,104 +2,124 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8F5C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E32C17448
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1612084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E71521A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 05:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573536842;
-	bh=sbnFXAjpbcwJnf2+mH5IsFebJvwzJN37XivvkMyt/50=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IgnPkhOZnkiEq0xUxXk7kDeebcLmv2bg/E4qZLyvSlXsHFTKNoHe4DHaHqpl+IxSq
-	 RrVCQ3TqY2gN4F/rikFH2b3Tpg6vLZIBsxMyy0MRsRutA4hhdkLnjB+rsG+TNa2fbU
-	 TQkoJajFytgVle6tjb2hLo0A0d/6O8SUcey4J6L4=
+	s=default; t=1573536889;
+	bh=Jb7dYixP6yIjsrokC6NTgrZ/74+6EVtRM48rK5FZNvY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0m3Mf/KkN0eeqH56m9dLU2bJujp2ytmalLzpbGhBNMiCydjdX8m+iwoS4AWa7dJwU
+	 /ySVgKOgh6g8vI1WssoXWMxEhyr60yXmzgrNXya3/e1jwgmbD+SzgjreeGih6Xm4o1
+	 ffPsQzKS2nZZmNJiQFU4oddQo+LkY2BKZzkZMwg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKLFeB (ORCPT
+        id S1726958AbfKLFes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 00:34:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60760 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 00:34:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfKLFeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:34:00 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725775AbfKLFes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:34:48 -0500
+Received: from localhost (unknown [122.167.70.123])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 879C12084F;
-        Tue, 12 Nov 2019 05:33:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D8D2084F;
+        Tue, 12 Nov 2019 05:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573536840;
-        bh=sbnFXAjpbcwJnf2+mH5IsFebJvwzJN37XivvkMyt/50=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rrw9OoBoJJsfH217xuK/dIynZd/Lg3JslxJZPFFOu+cHhG9k+6kIM0nBggDw4x4G0
-         cRUqK3qLEBrT44fRfisxQOXG8+2cSiGBD+8JHqN6tT7EhpPwCfqnia3993/K2k8qKR
-         Nw05FMp4nIvID6V0U5M+CJ/5OXz/Z+jJcBv5Xg44=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.14 061/105] ARM: dts: dra7: Disable USB metastability workaround for USB2
-Date:   Mon, 11 Nov 2019 19:28:31 +0100
-Message-Id: <20191111181444.963730015@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191111181421.390326245@linuxfoundation.org>
-References: <20191111181421.390326245@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1573536887;
+        bh=Jb7dYixP6yIjsrokC6NTgrZ/74+6EVtRM48rK5FZNvY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=swnFRxTopGg49WadsvYOwM4ZljN75NOKNOp1Z9e5BW0FyYQHYvejgIuS/T6ZaeS+f
+         gxIT4lF0hqOk50dDZyDJJSafiZ3bZ8R9mleb8cOsMrZAepP86BKYPsfg0wzquvM826
+         YuIVlpKmlK7CHZSlLwZbDQfxBtffsMv1FmSgU/Ak=
+Date:   Tue, 12 Nov 2019 11:04:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+Subject: Re: [PATCH v4 10/15] dmaengine: ti: New driver for K3 UDMA -
+ split#2: probe/remove, xlate and filter_fn
+Message-ID: <20191112053440.GV952516@vkoul-mobl>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-11-peter.ujfalusi@ti.com>
+ <20191111053301.GO952516@vkoul-mobl>
+ <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+On 11-11-19, 11:16, Peter Ujfalusi wrote:
+> 
+> 
+> On 11/11/2019 7.33, Vinod Koul wrote:
+> > On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> > 
+> >> +static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
+> >> +{
+> >> +	struct psil_endpoint_config *ep_config;
+> >> +	struct udma_chan *uc;
+> >> +	struct udma_dev *ud;
+> >> +	u32 *args;
+> >> +
+> >> +	if (chan->device->dev->driver != &udma_driver.driver)
+> >> +		return false;
+> >> +
+> >> +	uc = to_udma_chan(chan);
+> >> +	ud = uc->ud;
+> >> +	args = param;
+> >> +	uc->remote_thread_id = args[0];
+> >> +
+> >> +	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
+> >> +		uc->dir = DMA_MEM_TO_DEV;
+> >> +	else
+> >> +		uc->dir = DMA_DEV_TO_MEM;
+> > 
+> > Can you explain this a bit?
+> 
+> The UDMAP in K3 works between two PSI-L endpoint. The source and
+> destination needs to be paired to allow data flow.
+> Source thread IDs are in range of 0x0000 - 0x7fff, while destination
+> thread IDs are 0x8000 - 0xffff.
+> 
+> If the remote thread ID have the bit 31 set (0x8000) then the transfer
+> is MEM_TO_DEV and I need to pick one unused tchan for it. If the remote
+> is the source then it can be handled by rchan.
+> 
+> dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
+> dma-names = "tx", "rx";
+> 
+> 0xc400 is a destination thread ID, so it is MEM_TO_DEV
+> 0x4400 is a source thread ID, so it is DEV_TO_MEM
+> 
+> Even in MEM_TO_MEM case I need to pair two UDMAP channels:
+> UDMAP source threads are starting at offset 0x1000, UDMAP destination
+> threads are 0x9000+
 
-commit b8c9c6fa2002b8fd4a9710f76f80f99c6046d48c upstream.
+Okay so a channel is set for a direction until teardown. Also this and
+other patch comments are quite useful, can we add them here?
 
-The metastability workaround causes Erratic errors [1]
-on the HighSpeed USB PHY which can cause upto 2 seconds
-delay in enumerating to a USB host while in Gadget mode.
+> Changing direction runtime is hardly possible as it would involve
+> tearing down the channel, removing interrupts, destroying rings,
+> removing the PSI-L pairing and redoing everything.
 
-Disable the Run/Stop metastability workaround to avoid this
-ill effect. We are aware that this opens up the opportunity
-for Run/Stop metastability, however this issue has never been
-observed in TI releases so we think that Run/Stop metastability
-is a lesser evil than the PHY Erratic errors. So disable it.
+okay I would expect the prep_ to check for direction and reject the call
+if direction is different.
 
-[1] USB controller trace during gadget enumeration
-    irq/90-dwc3-969   [000] d...    52.323145: dwc3_event: event
-    (00000901): Erratic Error [U0]
-    irq/90-dwc3-969   [000] d...    52.560646: dwc3_event: event
-    (00000901): Erratic Error [U0]
-    irq/90-dwc3-969   [000] d...    52.798144: dwc3_event: event
-    (00000901): Erratic Error [U0]
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Acked-by: Felipe Balbi <felipe.balbi@linux/intel.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/boot/dts/dra7.dtsi |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1540,6 +1540,7 @@
- 				dr_mode = "otg";
- 				snps,dis_u3_susphy_quirk;
- 				snps,dis_u2_susphy_quirk;
-+				snps,dis_metastability_quirk;
- 			};
- 		};
- 
-
-
+-- 
+~Vinod
