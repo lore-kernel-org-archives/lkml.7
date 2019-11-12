@@ -2,202 +2,280 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EEBC17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF6CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7483221E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5E5kI4K"
+	by mail.kernel.org (Postfix) with ESMTP id 7252521E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfKLQyR (ORCPT
+        id S1727812AbfKLQyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:54:17 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35135 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727735AbfKLQyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:54:16 -0500
-Received: by mail-qk1-f195.google.com with SMTP id i19so15086367qki.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:54:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wG5UQ9vx6z43wtxl5hxyDe54J635a/DBHWdcC32k+Zo=;
-        b=X5E5kI4KhOJ73HWhDn4VfheiAw2kMsi4ydAcR/oRqNFcDFMIFh5QmTXUVPv09/R15D
-         FtldyKmzmIrpv0LF0Qgpf5qxpHxMcO0BVGiaV6AyGciyO3EJ76jUrnxT5CMFh9h4jOz/
-         RE2WcPPk7W2oDOv2HzedD8GM69syqOTA0vOK3oRlkiNDAbJBKkFRzZ4MrQgJ4FhqJide
-         pari72IlUzIpfrhzQuMXYlQrn8T4/R2vkw2F2JmqsDKauNfVaHAhGPhSdG3AX5gAvP6N
-         iYyitpuwYiwD4TOVuO82tFF7ScVA8kYtRzWCfjII/gbpDyadseO7G6dGYCgr9ptECXzd
-         pFSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=wG5UQ9vx6z43wtxl5hxyDe54J635a/DBHWdcC32k+Zo=;
-        b=iKY3uPMgwQTAZ2NH8yeiIplOjiKIAOIE+yMJzEwJ1XjWo5Q6I+bW38c1efgwDY0S1R
-         R8p6e/01aos2Rx1B2oPly9itwAvkc0jfd9TA1WYbO9rPHL6Mj8ZYMFgwzzhRZ1v3aDLB
-         HSiAWBGoIxhGSWYOirEydNhhzdp07S85PQQs08diEfGzkrSg1IsiBcRfJpKJxjzXzQib
-         mKBhoxj7v1ae0D+AUT1JTUsLIxBpPg9eBZ2nwsNO4M8rLXjZypbuGXcwvMOgp8A56DDJ
-         4b25QzM/x2QgqLS3u1XoyDcFKtgvVizJWM/Ua3W+EBADStvUmIBhg0xJzgs/VhPEzGpj
-         DmRQ==
-X-Gm-Message-State: APjAAAU/QzClFUCDfS1nWHQJlDC26hTkPeDl3KLMpDYdPaeX6heegld5
-        B5vT8qUM9Jtluhpo1GabqqE=
-X-Google-Smtp-Source: APXvYqwa96tQKYAwG1lDCLfXMXgO8m6xB/Wpg91A68gn5/0qLIBlX+sgvovm7aXzWqTXKyC1bYjTIQ==
-X-Received: by 2002:a37:a387:: with SMTP id m129mr16272830qke.70.1573577654621;
-        Tue, 12 Nov 2019 08:54:14 -0800 (PST)
-Received: from gmail.com (dynamic-186-154-98-65.dynamic.etb.net.co. [186.154.98.65])
-        by smtp.gmail.com with ESMTPSA id q34sm8145541qte.50.2019.11.12.08.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 08:54:14 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:54:11 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-Subject: [PATCH 4/9] staging: rtl8723bs: Remove unnecessary braces
-Message-ID: <041503946a1c58111e69579838b184359745d8c1.1573577309.git.jarias.linux@gmail.com>
-Mail-Followup-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-References: <cover.1573577309.git.jarias.linux@gmail.com>
+        Tue, 12 Nov 2019 11:54:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35672 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727727AbfKLQyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:54:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA2B6B211;
+        Tue, 12 Nov 2019 16:54:00 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Breno Leitao <leitao@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 31/33] powerpc/64: make buildable without CONFIG_COMPAT
+Date:   Tue, 12 Nov 2019 17:52:29 +0100
+Message-Id: <13fa324dc879a7f325290bf2e131b87eb491cd7b.1573576649.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
+References: <cover.1573576649.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1573577309.git.jarias.linux@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes unnecessary braces on single statement blocks or
-that aren't necessary in any arm of the statement.
-Issue found by Checkpatch.
+There are numerous references to 32bit functions in generic and 64bit
+code so ifdef them out.
 
-Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 33 +++++++++--------------
- 1 file changed, 12 insertions(+), 21 deletions(-)
+v2:
+- fix 32bit ifdef condition in signal.c
+- simplify the compat ifdef condition in vdso.c - 64bit is redundant
+- simplify the compat ifdef condition in callchain.c - 64bit is redundant
+v3:
+- use IS_ENABLED and maybe_unused where possible
+- do not ifdef declarations
+- clean up Makefile
+v4:
+- further makefile cleanup
+- simplify is_32bit_task conditions
+- avoid ifdef in condition by using return
+v5:
+- avoid unreachable code on 32bit
+- make is_current_64bit constant on !COMPAT
+- add stub perf_callchain_user_32 to avoid some ifdefs
+v6:
+- consolidate current_is_64bit
+v7:
+- remove leftover perf_callchain_user_32 stub from previous series version
+v8:
+- fix build again - too trigger-happy with stub removal
+- remove a vdso.c hunk that causes warning according to kbuild test robot
+v9:
+- removed current_is_64bit in previous patch
+v10:
+- rebase on top of 70ed86f4de5bd
+---
+ arch/powerpc/include/asm/thread_info.h | 4 ++--
+ arch/powerpc/kernel/Makefile           | 6 +++---
+ arch/powerpc/kernel/entry_64.S         | 2 ++
+ arch/powerpc/kernel/signal.c           | 3 +--
+ arch/powerpc/kernel/syscall_64.c       | 6 ++----
+ arch/powerpc/kernel/vdso.c             | 3 ++-
+ arch/powerpc/perf/callchain.c          | 8 +++++++-
+ 7 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 60e639690fc3..fdb585ff5925 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -253,9 +253,8 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter)
- 		goto exit;
- 	rtw_init_hwxmits(pxmitpriv->hwxmits, pxmitpriv->hwxmit_entry);
- 
--	for (i = 0; i < 4; i++) {
-+	for (i = 0; i < 4; i++)
- 		pxmitpriv->wmm_para_seq[i] = i;
--	}
- 
- 	pxmitpriv->ack_tx = false;
- 	mutex_init(&pxmitpriv->ack_tx_mutex);
-@@ -316,9 +315,8 @@ void _rtw_free_xmit_priv(struct xmit_priv *pxmitpriv)
- 		pxmitbuf++;
- 	}
- 
--	if (pxmitpriv->pallocated_xmit_extbuf) {
-+	if (pxmitpriv->pallocated_xmit_extbuf)
- 		vfree(pxmitpriv->pallocated_xmit_extbuf);
--	}
- 
- 	for (i = 0; i < CMDBUF_MAX; i++) {
- 		pxmitbuf = &pxmitpriv->pcmd_xmitbuf[i];
-@@ -834,15 +832,13 @@ static s32 xmitframe_addmic(struct adapter *padapter, struct xmit_frame *pxmitfr
- 			pframe = pxmitframe->buf_addr + hw_hdr_offset;
- 
- 			if (bmcst) {
--				if (!memcmp(psecuritypriv->dot118021XGrptxmickey[psecuritypriv->dot118021XGrpKeyid].skey, null_key, 16)) {
-+				if (!memcmp(psecuritypriv->dot118021XGrptxmickey[psecuritypriv->dot118021XGrpKeyid].skey, null_key, 16))
- 					return _FAIL;
--				}
- 				/* start to calculate the mic code */
- 				rtw_secmicsetkey(&micdata, psecuritypriv->dot118021XGrptxmickey[psecuritypriv->dot118021XGrpKeyid].skey);
- 			} else {
--				if (!memcmp(&pattrib->dot11tkiptxmickey.skey[0], null_key, 16)) {
-+				if (!memcmp(&pattrib->dot11tkiptxmickey.skey[0], null_key, 16))
- 					return _FAIL;
--				}
- 				/* start to calculate the mic code */
- 				rtw_secmicsetkey(&micdata, &pattrib->dot11tkiptxmickey.skey[0]);
- 			}
-@@ -1180,9 +1176,8 @@ s32 rtw_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit_fram
- 			mpdu_len -= llc_sz;
- 		}
- 
--		if ((pattrib->icv_len > 0) && (pattrib->bswenc)) {
-+		if ((pattrib->icv_len > 0) && (pattrib->bswenc))
- 			mpdu_len -= pattrib->icv_len;
--		}
- 
- 		if (bmcst) {
- 			/*  don't do fragment to broadcat/multicast packets */
-@@ -1979,9 +1974,8 @@ s32 rtw_xmit_classifier(struct adapter *padapter, struct xmit_frame *pxmitframe)
- 
- 	ptxservq = rtw_get_sta_pending(padapter, psta, pattrib->priority, (u8 *)(&ac_index));
- 
--	if (list_empty(&ptxservq->tx_pending)) {
-+	if (list_empty(&ptxservq->tx_pending))
- 		list_add_tail(&ptxservq->tx_pending, get_list_head(phwxmits[ac_index].sta_queue));
--	}
- 
- 	list_add_tail(&pxmitframe->list, get_list_head(&ptxservq->sta_pending));
- 	ptxservq->qcnt++;
-@@ -2043,9 +2037,8 @@ void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry)
- {
- 	sint i;
- 
--	for (i = 0; i < entry; i++, phwxmit++) {
-+	for (i = 0; i < entry; i++, phwxmit++)
- 		phwxmit->accnt = 0;
--	}
+diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
+index 8e1d0195ac36..c128d8a48ea3 100644
+--- a/arch/powerpc/include/asm/thread_info.h
++++ b/arch/powerpc/include/asm/thread_info.h
+@@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
+ 	return (ti->local_flags & flags) != 0;
  }
  
- u32 rtw_get_ff_hwaddr(struct xmit_frame *pxmitframe)
-@@ -2253,11 +2246,10 @@ sint xmitframe_enqueue_for_sleeping_sta(struct adapter *padapter, struct xmit_fr
- 			pstapriv->tim_bitmap |= BIT(0);
- 			pstapriv->sta_dz_bitmap |= BIT(0);
+-#ifdef CONFIG_PPC64
++#ifdef CONFIG_COMPAT
+ #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
+ #else
+-#define is_32bit_task()	(1)
++#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
+ #endif
  
--			if (update_tim) {
-+			if (update_tim)
- 				update_beacon(padapter, _TIM_IE_, NULL, true);
--			} else {
-+			else
- 				chk_bmc_sleepq_cmd(padapter);
--			}
+ #if defined(CONFIG_PPC64)
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index 45f1d5e54671..35874119b398 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -44,16 +44,16 @@ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
+ endif
  
- 			ret = true;
+ obj-y				:= cputable.o ptrace.o syscalls.o \
+-				   irq.o align.o signal_32.o pmc.o vdso.o \
++				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
+ 				   process.o systbl.o idle.o \
+ 				   signal.o sysfs.o cacheinfo.o time.o \
+ 				   prom.o traps.o setup-common.o \
+ 				   udbg.o misc.o io.o misc_$(BITS).o \
+ 				   of_platform.o prom_parse.o
+-obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
+-				   signal_64.o ptrace32.o \
++obj-$(CONFIG_PPC64)		+= setup_64.o \
+ 				   paca.o nvram_64.o firmware.o note.o \
+ 				   syscall_64.o
++obj-$(CONFIG_COMPAT)		+= sys_ppc32.o ptrace32.o signal_32.o
+ obj-$(CONFIG_VDSO32)		+= vdso32/
+ obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 00173cc904ef..c339a984958f 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -52,8 +52,10 @@
+ SYS_CALL_TABLE:
+ 	.tc sys_call_table[TC],sys_call_table
  
-@@ -2464,9 +2456,8 @@ void wakeup_sta_to_xmit(struct adapter *padapter, struct sta_info *psta)
++#ifdef CONFIG_COMPAT
+ COMPAT_SYS_CALL_TABLE:
+ 	.tc compat_sys_call_table[TC],compat_sys_call_table
++#endif
+ 
+ /* This value is used to mark exception frames on the stack. */
+ exception_marker:
+diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+index 60436432399f..61678cb0e6a1 100644
+--- a/arch/powerpc/kernel/signal.c
++++ b/arch/powerpc/kernel/signal.c
+@@ -247,7 +247,6 @@ static void do_signal(struct task_struct *tsk)
+ 	sigset_t *oldset = sigmask_to_save();
+ 	struct ksignal ksig = { .sig = 0 };
+ 	int ret;
+-	int is32 = is_32bit_task();
+ 
+ 	BUG_ON(tsk != current);
+ 
+@@ -277,7 +276,7 @@ static void do_signal(struct task_struct *tsk)
+ 
+ 	rseq_signal_deliver(&ksig, tsk->thread.regs);
+ 
+-	if (is32) {
++	if (is_32bit_task()) {
+         	if (ksig.ka.sa.sa_flags & SA_SIGINFO)
+ 			ret = handle_rt_signal32(&ksig, oldset, tsk);
+ 		else
+diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
+index d00cfc4a39a9..319ebd4f494d 100644
+--- a/arch/powerpc/kernel/syscall_64.c
++++ b/arch/powerpc/kernel/syscall_64.c
+@@ -17,7 +17,6 @@ typedef long (*syscall_fn)(long, long, long, long, long, long);
+ 
+ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs)
+ {
+-	unsigned long ti_flags;
+ 	syscall_fn f;
+ 
+ 	if (IS_ENABLED(CONFIG_PPC_BOOK3S))
+@@ -64,8 +63,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
+ 
+ 	__hard_irq_enable();
+ 
+-	ti_flags = current_thread_info()->flags;
+-	if (unlikely(ti_flags & _TIF_SYSCALL_DOTRACE)) {
++	if (unlikely(current_thread_info()->flags & _TIF_SYSCALL_DOTRACE)) {
+ 		/*
+ 		 * We use the return value of do_syscall_trace_enter() as the
+ 		 * syscall number. If the syscall was rejected for any reason
+@@ -81,7 +79,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
+ 	/* May be faster to do array_index_nospec? */
+ 	barrier_nospec();
+ 
+-	if (unlikely(ti_flags & _TIF_32BIT)) {
++	if (unlikely(is_32bit_task())) {
+ 		f = (void *)compat_sys_call_table[r0];
+ 
+ 		r3 &= 0x00000000ffffffffULL;
+diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+index eae9ddaecbcf..daa95c1f6d57 100644
+--- a/arch/powerpc/kernel/vdso.c
++++ b/arch/powerpc/kernel/vdso.c
+@@ -656,7 +656,8 @@ static void __init vdso_setup_syscall_map(void)
+ 		if (sys_call_table[i] != sys_ni_syscall)
+ 			vdso_data->syscall_map_64[i >> 5] |=
+ 				0x80000000UL >> (i & 0x1f);
+-		if (compat_sys_call_table[i] != sys_ni_syscall)
++		if (IS_ENABLED(CONFIG_COMPAT) &&
++		    compat_sys_call_table[i] != sys_ni_syscall)
+ 			vdso_data->syscall_map_32[i >> 5] |=
+ 				0x80000000UL >> (i & 0x1f);
+ #else /* CONFIG_PPC64 */
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index fbf76cb01026..d6ab1a734a6a 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -15,7 +15,7 @@
+ #include <asm/sigcontext.h>
+ #include <asm/ucontext.h>
+ #include <asm/vdso.h>
+-#ifdef CONFIG_PPC64
++#ifdef CONFIG_COMPAT
+ #include "../kernel/ppc32.h"
+ #endif
+ #include <asm/pte-walk.h>
+@@ -294,6 +294,7 @@ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry
+ 
+ #endif /* CONFIG_PPC64 */
+ 
++#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+ /*
+  * On 32-bit we just access the address and let hash_page create a
+  * HPTE if necessary, so there is no need to fall back to reading
+@@ -458,6 +459,11 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+ 		sp = next_sp;
  	}
+ }
++#else /* 32bit */
++static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
++				   struct pt_regs *regs)
++{}
++#endif /* 32bit */
  
- 	if (psta->sleepq_len == 0) {
--		if (pstapriv->tim_bitmap & BIT(psta->aid)) {
-+		if (pstapriv->tim_bitmap & BIT(psta->aid))
- 			update_mask = BIT(0);
--		}
- 
- 		pstapriv->tim_bitmap &= ~BIT(psta->aid);
- 
-@@ -2508,9 +2499,9 @@ void wakeup_sta_to_xmit(struct adapter *padapter, struct sta_info *psta)
- 		}
- 
- 		if (psta_bmc->sleepq_len == 0) {
--			if (pstapriv->tim_bitmap & BIT(0)) {
-+			if (pstapriv->tim_bitmap & BIT(0))
- 				update_mask |= BIT(1);
--			}
-+
- 			pstapriv->tim_bitmap &= ~BIT(0);
- 			pstapriv->sta_dz_bitmap &= ~BIT(0);
- 		}
+ void
+ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
 -- 
-2.20.1
+2.23.0
 
