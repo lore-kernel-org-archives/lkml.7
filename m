@@ -2,98 +2,96 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7FBC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD0FC17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCAA214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573581275;
-	bh=Ua9UrxbuWpTREDVckC9mOPVVtqvHEOjNV1brqlRg7JY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qux4OAlm+n44Rggc83fGfh+QvWgN0PRlNcIuU4pzSf/KdtkVpAgfR7Rj7P4n4DYLB
-	 D7E5mKYBgBjj8HWuqtn+1qJc1bmrbO9hTVwEMbA+wm/uFe4T65MgqWi11iJqR278wv
-	 jv3xNW6zyETvwpvCQWzD/wrW1ZXARmWI2sScX8PA=
+	by mail.kernel.org (Postfix) with ESMTP id A5EB22084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 17:55:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="C+ntd6G4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfKLRyd (ORCPT
+        id S1727161AbfKLRz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:54:33 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45913 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfKLRy2 (ORCPT
+        Tue, 12 Nov 2019 12:55:29 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34108 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfKLRz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:54:28 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n21so18829044ljg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:54:27 -0800 (PST)
+        Tue, 12 Nov 2019 12:55:29 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 5so1264776otk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:55:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=C9/3cBw+s1St4spxQYIlofga3jANKje6wVfYU7Z8I14=;
-        b=XArryZV/v4RmtTO4Uz8dg1dXkxZB1fxbh+wisjfXATawAXtZq8WaEDH0Xo5G0TfMHC
-         GpvFN/7I4mKoAqw8+MhDIyW+CxF8fSw7n3q6QTJsVFKwHaHAuMEbhXUmfpTnaN/xr2Pe
-         /LxmamUpQTbHpSF6mu+lfYlInTwgYktnh3+xc=
+        bh=tCv2FQBw3uAaqPVc/dzQiuHcwn8UohPz3qZnrpSfyuQ=;
+        b=C+ntd6G4tkppkODd3gwiKjTQhhK2l2MZf3wR6Ptp0PyuFytkzu6QfE584Sbbdf/D3C
+         yEeUylkvPlmS2sqFDsYOJ6hojpwGhB/SwDLTgTptnW6SPofVq6cI8TYWq0TFz3/Gf5KZ
+         Dmh4JNcd33JvDQL7r5MsR4qfWI/O+roq5EeK93V+zBhhxZhgcoBPokBVtbsie8dhqURP
+         6rgFDIsdc0JuIGcv+vBuYng3/8q75nmwIVr85qIvJArIFkCh6iZzr+70xHsWDLyqlg/e
+         KsvIrL37fUeH9X3hcGFQcN7V8aimc7HVOeNG6PF5EqdnJg3zvHFXVqOgQdJIaPrr6Ptl
+         Up3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=C9/3cBw+s1St4spxQYIlofga3jANKje6wVfYU7Z8I14=;
-        b=dcCRMG1vlPYWj+Q3pTqmOvKYs6bNjDLeZFA7bjPjyDUtGEoExeVYidp3GHQvWe2LOr
-         r3Sk7W6pJiA2nVQI/kHeI1ccuUTCaY2MFm/a+kDUhuLcZfgVsh161HZvHa6lCDpgtOjU
-         0aA7UP08sWC8WGhB2wqTpDTDrTPqeju8POW0Z9+SWsLafmj78aycDYnW/ziewdDnAyP4
-         /MaIcYPGCTXZfN+p74ZRxHBj0b0oyMypEjP9zej5O1cVFO5gSBOl324skM2wKioFazDw
-         M8uqmTTPf/Jg7WfAzpcX55hV0uAUPxj41GXXuPYEXPOv03rDxf135euHWQx5K6M6Jc4E
-         /ukw==
-X-Gm-Message-State: APjAAAVDKllQfPJIVhOJD3UstmcDXXKngYBZIpM3al1d5Xdm+O+BkHu9
-        7RpkB8Yz0C1k6qvQI+jR28KQQSrJvX8=
-X-Google-Smtp-Source: APXvYqzUoLxQFA3wxhiNP53eFHPr8ZCTmOxCW3OpG+slBi26EQXS0UrgMzEkZO9ME9QwaUON6XFOkw==
-X-Received: by 2002:a2e:b5d0:: with SMTP id g16mr21464831ljn.88.1573581265274;
-        Tue, 12 Nov 2019 09:54:25 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id d24sm3781723ljg.73.2019.11.12.09.54.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 09:54:24 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id n21so18828901ljg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 09:54:24 -0800 (PST)
-X-Received: by 2002:a05:651c:331:: with SMTP id b17mr21291645ljp.133.1573581263488;
- Tue, 12 Nov 2019 09:54:23 -0800 (PST)
+        bh=tCv2FQBw3uAaqPVc/dzQiuHcwn8UohPz3qZnrpSfyuQ=;
+        b=rGdzVLeFSlkC+wgwn5+w/jotTQNLtD2TqfiyGj3ciezLpyN5kYnaRtwzb3X3fwJJAc
+         VJgk00a4Gkl/ebpdVmNW7SHcWxZeSBU5eVQZVXM5UXUOuLfJOc1Dsg2lu8yRN9xyrthf
+         igcUerDGXSQR2T4mycMc6E4KoodoQe4wffoV9MUzyh0MXsAC7NrGp+nBIB7qIZmk47g0
+         YcPTSVqM719VJQLIehOj45AlHd6fJskwpHdhsf3gv+XfXRdRwLM0mq0S5BjmP8L152gs
+         bXpcO03MDHwYH9S6hvbeDXMTXn4AQLsSJ1+KMp8/D5TO5coQ1EIsH8g+ZFU8BCwhUgI1
+         R1xQ==
+X-Gm-Message-State: APjAAAWtIBLIdn9lronuUjOM19RiRu07ThryBCMEXnli3MOv9rPOao9b
+        V+jpeSOQZbZjzr1/xrGGJQazdLFBqW0hIXG3lz4Ykg==
+X-Google-Smtp-Source: APXvYqzejJzlhvFyHrEWCARW40GL40VL1ngc5hPC/CkFTIvPmZvq8BBGIVD/77UhBUvFLaBGC0UJsY82ebD4LRLlsDI=
+X-Received: by 2002:a05:6830:1b70:: with SMTP id d16mr13052039ote.71.1573581328478;
+ Tue, 12 Nov 2019 09:55:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20191112130244.16630-1-vincent.whitchurch@axis.com> <20191112160855.GA22025@arrakis.emea.arm.com>
-In-Reply-To: <20191112160855.GA22025@arrakis.emea.arm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 12 Nov 2019 09:54:07 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi=LHkmw9SS066X_00TszjWzj-5t4F3ODua8W_tagVb=w@mail.gmail.com>
-Message-ID: <CAHk-=wi=LHkmw9SS066X_00TszjWzj-5t4F3ODua8W_tagVb=w@mail.gmail.com>
-Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read hazard
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com> <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 12 Nov 2019 09:55:17 -0800
+Message-ID: <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
+Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Vincent Whitchurch <rabinv@axis.com>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>
+        X86 ML <x86@kernel.org>, Keith Busch <keith.busch@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linuxarm <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tao Xu <tao3.xu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 8:09 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+[ add Tao Xu ]
+
+On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
 >
-> While you can add some barrier here, there may be other cases where this
-> can go wrong.
+> Generic Initiators are a new ACPI concept that allows for the
+> description of proximity domains that contain a device which
+> performs memory access (such as a network card) but neither
+> host CPU nor Memory.
+>
+> This patch has the parsing code and provides the infrastructure
+> for an architecture to associate these new domains with their
+> nearest memory processing node.
 
-Yeah, that patch isn't going to be accepted. We don't add random arch
-workarounds to core header files like that - particularly when it's
-not at all clear that there aren't hundreds of other cases where that
-cpu errata can trigger..
+Thanks for this Jonathan. May I ask how this was tested? Tao has been
+working on qemu support for HMAT [1]. I have not checked if it already
+supports generic initiator entries, but it would be helpful to include
+an example of how the kernel sees these configurations in practice.
 
-                Linus
+[1]: http://patchwork.ozlabs.org/cover/1096737/
