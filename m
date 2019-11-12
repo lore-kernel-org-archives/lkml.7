@@ -2,122 +2,108 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0436BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F3AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB29421925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39F5206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 06:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VnYSPsxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKLGwh (ORCPT
+        id S1727448AbfKLGwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 01:52:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:56522 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbfKLGwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 01:52:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 741C81FB;
-        Mon, 11 Nov 2019 22:52:33 -0800 (PST)
-Received: from [10.163.1.187] (unknown [10.163.1.187])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BA6A3F52E;
-        Mon, 11 Nov 2019 22:55:07 -0800 (PST)
-Subject: Re: [PATCH V9] mm/debug: Add tests validating architecture page table
- helpers
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1573532326-24084-1-git-send-email-anshuman.khandual@arm.com>
- <20191112062951.GA100264@gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <fe6b8140-1017-d081-570c-62213fe39624@arm.com>
-Date:   Tue, 12 Nov 2019 12:22:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 12 Nov 2019 01:52:42 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46767 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727399AbfKLGwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 01:52:40 -0500
+X-UUID: 439fdc93992e43a185682234bedcf843-20191112
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fpTL98U4b/v1HNY+Y+iXuq8J1+9vr5r56XPVXNnrAb0=;
+        b=VnYSPsxVd/gamjH3TDTou/U/Ai6gPKq04vlDzIiMufiClJgQJmyY9ToeaurRI6b1ic3YkgBzZLdusEiuL9cDxCC+tJ+zK18Y3/qxeBZBQNJL6eMCpbwywuKtpBvjJs/PoEDessOh/sFZj6asrJ/z6Dq3Y0TgcWiqIhXOsrsSKGM=;
+X-UUID: 439fdc93992e43a185682234bedcf843-20191112
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1975560603; Tue, 12 Nov 2019 14:52:35 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 12 Nov 2019 14:52:27 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 12 Nov 2019 14:52:25 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>
+CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, Bin Liu <b-liu@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v2 13/13] usb: gadget: udc: s3c2410_udc: create debugfs directory under usb root
+Date:   Tue, 12 Nov 2019 14:51:59 +0800
+Message-ID: <1573541519-28488-13-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20191112062951.GA100264@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tm93IHRoZSBVU0IgZ2FkZ2V0IHN1YnN5c3RlbSBjYW4gdXNlIHRoZSBVU0IgZGVidWdmcyByb290
+IGRpcmVjdG9yeSwNCnNvIG1vdmUgaXQncyBkaXJlY3RvcnkgZnJvbSB0aGUgcm9vdCBvZiB0aGUg
+ZGVidWdmcyBmaWxlc3lzdGVtIGludG8NCnRoZSByb290IG9mIHVzYg0KDQpTaWduZWQtb2ZmLWJ5
+OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQotLS0NCnYyOg0KICAx
+LiBhYmFuZG9uIG5ldyBBUEkgdXNiX2RlYnVnZnNfY3JlYXRlX2RpcigpLCBhbmQgdXNlIHVzYl9k
+ZWJ1Z19yb290DQotLS0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL3MzYzI0MTBfdWRjLmMgfCAz
+ICsrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCg0K
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvczNjMjQxMF91ZGMuYyBiL2RyaXZl
+cnMvdXNiL2dhZGdldC91ZGMvczNjMjQxMF91ZGMuYw0KaW5kZXggZjgyMjA4ZmJjMjQ5Li4wNTA3
+YTJjYTBmNTUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL3MzYzI0MTBfdWRj
+LmMNCisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvczNjMjQxMF91ZGMuYw0KQEAgLTE5Nzgs
+NyArMTk3OCw4IEBAIHN0YXRpYyBpbnQgX19pbml0IHVkY19pbml0KHZvaWQpDQogDQogCWRwcmlu
+dGsoREVCVUdfTk9STUFMLCAiJXNcbiIsIGdhZGdldF9uYW1lKTsNCiANCi0JczNjMjQxMF91ZGNf
+ZGVidWdmc19yb290ID0gZGVidWdmc19jcmVhdGVfZGlyKGdhZGdldF9uYW1lLCBOVUxMKTsNCisJ
+czNjMjQxMF91ZGNfZGVidWdmc19yb290ID0gZGVidWdmc19jcmVhdGVfZGlyKGdhZGdldF9uYW1l
+LA0KKwkJCQkJCSAgICAgIHVzYl9kZWJ1Z19yb290KTsNCiANCiAJcmV0dmFsID0gcGxhdGZvcm1f
+ZHJpdmVyX3JlZ2lzdGVyKCZ1ZGNfZHJpdmVyXzI0eDApOw0KIAlpZiAocmV0dmFsKQ0KLS0gDQoy
+LjIzLjANCg==
 
-
-On 11/12/2019 11:59 AM, Ingo Molnar wrote:
-> 
-> * Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
->> +config DEBUG_VM_PGTABLE
->> +	bool "Debug arch page table for semantics compliance"
->> +	depends on MMU
->> +	depends on DEBUG_VM
->> +	depends on ARCH_HAS_DEBUG_VM_PGTABLE
->> +	help
->> +	  This option provides a debug method which can be used to test
->> +	  architecture page table helper functions on various platforms in
->> +	  verifying if they comply with expected generic MM semantics. This
->> +	  will help architecture code in making sure that any changes or
->> +	  new additions of these helpers still conform to expected
->> +	  semantics of the generic MM.
->> +
->> +	  If unsure, say N.
-> 
-> Since CONFIG_DEBUG_VM is generally disabled in distro kernel packages, 
-> why not make this 'default y' to maximize testing coverage? The code size 
-> increase should be minimal, and DEBUG_VM increases size anyway.
-
-Sure, will do.
-
-> 
-> Other than that this looks good to me:
-> 
->   Reviewed-by: Ingo Molnar <mingo@kernel.org>
-
-Thank you.
-
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
