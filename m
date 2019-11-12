@@ -2,121 +2,206 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF37CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3413DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94B421E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpmujUOK"
+	by mail.kernel.org (Postfix) with ESMTP id 0AE0021E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfKLQzA (ORCPT
+        id S1727910AbfKLQzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:55:00 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:35721 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfKLQy6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:54:58 -0500
-Received: by mail-qv1-f68.google.com with SMTP id y18so6663976qve.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:54:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2tZEjGn9AWJuu90IGU4ZcEA4pxCT88LgEy8kCZaNDsM=;
-        b=DpmujUOK6jq6CWVSZcXbA1KzGl36fGH709fFYkJ/eBAPnT8MlWyCi8sShA060UTer0
-         fAZjVVHYP7z3r+OfzlgF23woZcPQsQtQ7bcd0iFp8zd7X9RY416oHa4YbLUiwFS5ZTEC
-         2aRgeErFHr+ELCMFiHkjpx4WMn3WzRz1Ui9JhCuuq7reGHSgYm92rPzl6PYBehny08FH
-         RaV3IA4e1LcWS2PFlCIbbR9HVdvtLLt/yNIt/cqWT8VRhnXIvlX4nY5kymXrSSYHw5q4
-         XfQamktekRtTMUc/NU18F8jdMotNZeIKm7CxYRZbbX2boSmN5N69kRzsNE9pDODr9w/x
-         wgtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=2tZEjGn9AWJuu90IGU4ZcEA4pxCT88LgEy8kCZaNDsM=;
-        b=Urur0tt5VAZjzrow+dabkx6cF9Xt+N75DeGurONjKs4gMzx2sU/ZJ31K21JB+n+kpF
-         6LlcNIDsDOwzZmLUJPsbwPqW6K5+GGwMYV4NzoIKCR7IZP5Q2ALk7TXjOg4IROmmAErJ
-         EFZ2mwFqCT03FjJHgznv4NS+NYKDP/YWSAbyVv1c79a4Or5h12BUpr+8fpitdrkKbcQF
-         CUxDCmxOv2JjlL/QjaW/4ySY38KYOLgNgV+F2vzzlFlioGl/zq+E8a72Nn7EQ2ba03ca
-         FbVqtNdFUqdztS9tonTAQXPIH4ChYmSoyngFC+Ocx1Z+PedrwdN2wL356vlNEzI7uX5x
-         RKSw==
-X-Gm-Message-State: APjAAAVWmtG02h6tm/uYnZVPr/13NCO8mlyhU5xcLyhBtDdZG4hkCeDs
-        IFkUJOOiy/0hfBU4GZgSJCc=
-X-Google-Smtp-Source: APXvYqwoScy0WlqRfDjc+A4Rw+iksAsbuM+AN5MqsXH2pBWhJ8mS9zYTGh7iR3Y2Uzau1X+j+hqnOA==
-X-Received: by 2002:a0c:b064:: with SMTP id l33mr30129564qvc.34.1573577697611;
-        Tue, 12 Nov 2019 08:54:57 -0800 (PST)
-Received: from gmail.com (dynamic-186-154-98-65.dynamic.etb.net.co. [186.154.98.65])
-        by smtp.gmail.com with ESMTPSA id h44sm14231832qtc.1.2019.11.12.08.54.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 08:54:57 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:54:55 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-Subject: [PATCH 6/9] staging: rtl8723bs: Fix unbalanced braces
-Message-ID: <d208c4db5ed51f94e61f67891dcf1c102c5501d9.1573577309.git.jarias.linux@gmail.com>
-Mail-Followup-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-References: <cover.1573577309.git.jarias.linux@gmail.com>
+        Tue, 12 Nov 2019 11:55:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35372 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727544AbfKLQxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:53:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EFBA0AD72;
+        Tue, 12 Nov 2019 16:53:51 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Breno Leitao <leitao@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 25/33] powerpc/64s/exception: remove lite interrupt return
+Date:   Tue, 12 Nov 2019 17:52:23 +0100
+Message-Id: <b7166cac80cefc561e30a6c6c324384b973081b4.1573576649.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1573576649.git.msuchanek@suse.de>
+References: <cover.1573576649.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1573577309.git.jarias.linux@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes unbalanced braces around else statements. It also
-removes an empty else block.
-Issue found by Checkpatch.
+From: Nicholas Piggin <npiggin@gmail.com>
 
-Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
+The difference between lite and regular returns is that the lite case
+restores all NVGPRs, whereas lite skips that. This is quite clumsy
+though, most interrupts want the NVGPRs saved for debugging, not to
+modify in the caller, so the NVGPRs restore is not necessary most of
+the time. Restore NVGPRs explicitly for one case that requires it,
+and move everything else over to avoiding the restore unless the
+interrupt return demands it (e.g., handling a signal).
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/entry_64.S       |  4 ----
+ arch/powerpc/kernel/exceptions-64s.S | 21 +++++++++++----------
+ 2 files changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 42bd5d8362fa..be0d83280e1c 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -372,8 +372,7 @@ static void update_attrib_vcs_info(struct adapter *padapter, struct xmit_frame *
- 	if (pmlmeext->cur_wireless_mode < WIRELESS_11_24N  || padapter->registrypriv.wifi_spec) {
- 		if (sz > padapter->registrypriv.rts_thresh) {
- 			pattrib->vcs_mode = RTS_CTS;
--		}
--		else {
-+		} else {
- 			if (pattrib->rtsen)
- 				pattrib->vcs_mode = RTS_CTS;
- 			else if (pattrib->cts2self)
-@@ -1453,8 +1452,7 @@ void rtw_update_protection(struct adapter *padapter, u8 *ie, uint ie_len)
- 		perp = rtw_get_ie(ie, _ERPINFO_IE_, &erp_len, ie_len);
- 		if (!perp) {
- 			pxmitpriv->vcs = NONE_VCS;
--		}
--		else {
-+		} else {
- 			protection = (*(perp + 2)) & BIT(1);
- 			if (protection) {
- 				if (pregistrypriv->vcs_type == RTS_CTS)
-@@ -1847,8 +1845,6 @@ s32 rtw_free_xmitframe(struct xmit_priv *pxmitpriv, struct xmit_frame *pxmitfram
- 		queue = &pxmitpriv->free_xmit_queue;
- 	else if (pxmitframe->ext_tag == 1)
- 		queue = &pxmitpriv->free_xframe_ext_queue;
--	else {
--	}
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index b2e68f5ca8f7..00173cc904ef 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -452,10 +452,6 @@ _GLOBAL(fast_interrupt_return)
  
- 	spin_lock_bh(&queue->lock);
+ 	.balign IFETCH_ALIGN_BYTES
+ _GLOBAL(interrupt_return)
+-	REST_NVGPRS(r1)
+-
+-	.balign IFETCH_ALIGN_BYTES
+-_GLOBAL(interrupt_return_lite)
+ 	ld	r4,_MSR(r1)
+ 	andi.	r0,r4,MSR_PR
+ 	beq	kernel_interrupt_return
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index 269edd1460be..1bccc869ebd3 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -1507,7 +1507,7 @@ EXC_COMMON_BEGIN(hardware_interrupt_common)
+ 	RUNLATCH_ON
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	do_IRQ
+-	b	interrupt_return_lite
++	b	interrupt_return
+ 
+ 	GEN_KVM hardware_interrupt
+ 
+@@ -1694,7 +1694,7 @@ EXC_COMMON_BEGIN(decrementer_common)
+ 	RUNLATCH_ON
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	timer_interrupt
+-	b	interrupt_return_lite
++	b	interrupt_return
+ 
+ 	GEN_KVM decrementer
+ 
+@@ -1785,7 +1785,7 @@ EXC_COMMON_BEGIN(doorbell_super_common)
+ #else
+ 	bl	unknown_exception
+ #endif
+-	b	interrupt_return_lite
++	b	interrupt_return
+ 
+ 	GEN_KVM doorbell_super
+ 
+@@ -2183,7 +2183,7 @@ EXC_COMMON_BEGIN(h_doorbell_common)
+ #else
+ 	bl	unknown_exception
+ #endif
+-	b	interrupt_return_lite
++	b	interrupt_return
+ 
+ 	GEN_KVM h_doorbell
+ 
+@@ -2213,7 +2213,7 @@ EXC_COMMON_BEGIN(h_virt_irq_common)
+ 	RUNLATCH_ON
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	do_IRQ
+-	b	interrupt_return_lite
++	b	interrupt_return
+ 
+ 	GEN_KVM h_virt_irq
+ 
+@@ -2260,7 +2260,7 @@ EXC_COMMON_BEGIN(performance_monitor_common)
+ 	RUNLATCH_ON
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	performance_monitor_exception
+-	b	interrupt_return_lite
++	b	interrupt_return
+ 
+ 	GEN_KVM performance_monitor
+ 
+@@ -3013,7 +3013,7 @@ do_hash_page:
+         cmpdi	r3,0			/* see if __hash_page succeeded */
+ 
+ 	/* Success */
+-	beq	interrupt_return_lite	/* Return from exception on success */
++	beq	interrupt_return	/* Return from exception on success */
+ 
+ 	/* Error */
+ 	blt-	13f
+@@ -3027,10 +3027,11 @@ do_hash_page:
+ handle_page_fault:
+ 11:	andis.  r0,r5,DSISR_DABRMATCH@h
+ 	bne-    handle_dabr_fault
++	bl	save_nvgprs
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	do_page_fault
+ 	cmpdi	r3,0
+-	beq+	interrupt_return_lite
++	beq+	interrupt_return
+ 	mr	r5,r3
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	ld	r4,_DAR(r1)
+@@ -3045,9 +3046,9 @@ handle_dabr_fault:
+ 	bl      do_break
+ 	/*
+ 	 * do_break() may have changed the NV GPRS while handling a breakpoint.
+-	 * If so, we need to restore them with their updated values. Don't use
+-	 * interrupt_return_lite here.
++	 * If so, we need to restore them with their updated values.
+ 	 */
++	REST_NVGPRS(r1)
+ 	b       interrupt_return
+ 
  
 -- 
-2.20.1
+2.23.0
 
