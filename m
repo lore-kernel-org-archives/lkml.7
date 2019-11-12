@@ -2,141 +2,109 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C93C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CFAC17447
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB932196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06C6206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 01:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aukESM/i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rroV+ecl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKLBBG (ORCPT
+        id S1726955AbfKLBIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:01:06 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:30986 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfKLBBF (ORCPT
+        Mon, 11 Nov 2019 20:08:05 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33223 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfKLBIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:01:05 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191112010102epoutp039d18e1c7bb3f3465c01be90b667880c5~WRIYTMdPn1722917229epoutp039
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 01:01:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191112010102epoutp039d18e1c7bb3f3465c01be90b667880c5~WRIYTMdPn1722917229epoutp039
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573520462;
-        bh=6mPNO6wZj4Xve7dNHOM4i8D7vL7fYOS/SIGOyAurkyU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=aukESM/ikGEjAubnuWb8WWc/btvgKEMP/6PYtTmkcLMT9IS4ua7X/OTosqcfZBczP
-         /QHrv+Cft9bUGkO2DNNHSHkl5Xc3hMkt6MeatFnW1xbvYXsf9HkZwAQwi/QTFr6oQi
-         T368NiY4dEhvkK1dPXdKRfrEcOA2uPT6v6JS8j6I=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191112010101epcas1p2cae3693bc918f29e41047287fc2d55ec~WRIXgtczJ0682106821epcas1p2Z;
-        Tue, 12 Nov 2019 01:01:01 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.155]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47BqDM2DDyzMqYlm; Tue, 12 Nov
-        2019 01:00:35 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        59.F4.04144.7D30ACD5; Tue, 12 Nov 2019 09:59:03 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d~WRGoY9V6B2013820138epcas1p2O;
-        Tue, 12 Nov 2019 00:59:02 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191112005902epsmtrp1bcaa1af3e66645907b62c947f4e32e24~WRGoYOwCn2188321883epsmtrp16;
-        Tue, 12 Nov 2019 00:59:02 +0000 (GMT)
-X-AuditID: b6c32a35-2dfff70000001030-83-5dca03d76c61
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3A.15.24756.6D30ACD5; Tue, 12 Nov 2019 09:59:02 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.222]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191112005902epsmtip1d75fb9d6eda70d25a77759d98613f160~WRGoNALhQ0613306133epsmtip1v;
-        Tue, 12 Nov 2019 00:59:02 +0000 (GMT)
-From:   Seung-Woo Kim <sw0312.kim@samsung.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com
-Cc:     sw0312.kim@samsung.com, sungguk.na@samsung.com
-Subject: [PATCH] arm64: perf: Report arm pc registers for compat perf
-Date:   Tue, 12 Nov 2019 10:01:41 +0900
-Message-Id: <1573520501-29195-1-git-send-email-sw0312.kim@samsung.com>
-X-Mailer: git-send-email 1.7.4.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJKsWRmVeSWpSXmKPExsWy7bCmge515lOxBpcesVu8X9bDaLHp8TVW
-        i8u75rBZLL1+kclix7yDjBYzJr9ks2i5Y+rA7rFm3hpGj02rOtk8Ni+p9+jbsorR4/MmuQDW
-        qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKAjlBTK
-        EnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFlgV6xYm5xaV56XrJ+blWhgYGRqZAhQnZ
-        GXuWT2QuaOGo2HemkbmBcT9bFyMnh4SAicTjxzfYuxi5OIQEdjBKPGnbwAjhfGKUWL7qKCuE
-        841R4sSZRUBlHGAtW2+kQMT3Mkp8XXQLqugLkPP1JiPIXDYBHYn9S36DJUQEOhgl9vyfwwjS
-        zSxgJPH2OjNIjbCAq8SJS0/YQWwWAVWJLZ07weK8Am4SHxbOZYK4T0Fiwb23bCBzJAQ62CSe
-        bfjDDpFwkfj7YTULhC0s8er4Fqi4lMTL/jYou1pi+4Sf7FDNjBI97Y1QDcYS+5dOZoI4SFNi
-        /S59iLCixM7fc8EeYBbgk3j3tYcV4mNeiY42IYgSFYmdRyexQYSlJGZtCIYIe0gsO7gErFpI
-        IFbiw1btCYyysxDGL2BkXMUollpQnJueWmxYYIgcR5sYwclKy3QH45RzPocYBTgYlXh4GRJO
-        xgqxJpYVV+YeYpTgYFYS4d1RcSJWiDclsbIqtSg/vqg0J7X4EKMpMOwmMkuJJucDE2leSbyh
-        qZGxsbGFiaGZqaGhkjiv4/KlsUIC6YklqdmpqQWpRTB9TBycUg2ME+LZf93h2FJ+2rL1qMXq
-        4EXtxnyTHvxT224usnzSb9XNiZ93dLP8Fay+eYn9YdiJCLHLNj8XnyjXqwn5LBtZfqpbruCG
-        S9aeuXP3uLGJxezZb/FgncFM1678d17H3jwpqJ/H5TSvcefB6SoZXzYU3HnEG/f4psgxMy23
-        7uP7P2zjSJuqF+t4TYmlOCPRUIu5qDgRAA5At4VsAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgluLIzCtJLcpLzFFi42LZdlhJTvca86lYg2cdPBbvl/UwWmx6fI3V
-        4vKuOWwWS69fZLLYMe8go8WMyS/ZLFrumDqwe6yZt4bRY9OqTjaPzUvqPfq2rGL0+LxJLoA1
-        issmJTUnsyy1SN8ugStjz/KJzAUtHBX7zjQyNzDuZ+ti5OCQEDCR2HojpYuRi0NIYDejxP5X
-        /1i6GDmB4lISc79tZ4SoEZY4fLgYJCwk8IlR4uVVExCbTUBHYv+S36wgvSICfYwSb85uYAVJ
-        MAPNfHtyLzuILSzgKnHi0hMwm0VAVWJL505mEJtXwE3iw8K5TBC7FCQW3HvLNoGRZwEjwypG
-        ydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjODw0dLcwXh5SfwhRgEORiUe3hWxJ2OFWBPL
-        iitzDzFKcDArifDuqDgRK8SbklhZlVqUH19UmpNafIhRmoNFSZz3ad6xSCGB9MSS1OzU1ILU
-        IpgsEwenVANjIXPLnyl1qfWhvj/OW7y563LB9HhJuUidTc0Xg9KJu7P29OvKmnFMO9D2+9Wq
-        jUz1mrHd3NEaRb1Fi9t0ld7srdbgvdwrYbw/8uXH9f6Z8p4n3dxLN+abr+TOuLNLOE2jxFZ7
-        yrN/sXet4zxbex4+nx3xhims6g3LWqbZNXt31q+ZePjzqQ9KLMUZiYZazEXFiQC0WWFzGwIA
-        AA==
-X-CMS-MailID: 20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d
-References: <CGME20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d@epcas1p2.samsung.com>
+        Mon, 11 Nov 2019 20:08:04 -0500
+Received: by mail-il1-f194.google.com with SMTP id m5so13988142ilq.0;
+        Mon, 11 Nov 2019 17:08:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IC9ayxLDS2fylW4K+8GP3+8qi+D0oVuUCRrXm2+nZNY=;
+        b=rroV+ecl5sM+RCaQSfhRMmte4ZG8Ug6KGF3hOvd7b6j6UpOXPJptOjGciTX1ymruQk
+         lAaxBgjRa9yyqw87XYELKn9m1tj84GAURzbX1vGvti0uQrwPZCq48/zmXUyD+BxDP97l
+         vGVMpU3ITB/S4yS7Z9m4xwwiWltruasGawP4YW3W8bwt80o2DeB9SakEbXGLRFsGiZlA
+         pD+1UvKWN3mD/rGDhCew5u6K8Upd9sGREpxkUwfgWB3UdPV+o8pMVTQizGZuqHE6O3cQ
+         pe2/OeGZ64GdmTq+XFL5ftDGm7OrK28H3D/VlwjxTdboDsif/fUxZhurNPQbM+a2Nd6l
+         EQSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IC9ayxLDS2fylW4K+8GP3+8qi+D0oVuUCRrXm2+nZNY=;
+        b=bPy7QN7/WZPY+ofxrJ9y3Wt6JiB6AViSG+Ahd3iewxXY/zV199FdZY8YAL/BGOxybO
+         ELGsv0uNpCav1DTHJkjH4Bk5kYGcjrrY8YYxTvH8GXkcKWkOakjTLBqtCglWJjXpW6Vl
+         y5Nns6qbkAJpb6oYf52aTIzH5nwI99ShRhe7/wM/5l319e55y5DqABDlkeOeVXPIM9Ks
+         q55Pm21df1kAGdorpaWtUsSxyzrL+4yotZn5JBDmS55hxoDoBluAHumROmY6/rg2OT+F
+         CTO4JoM4sW1ApKcUMUEs6skP3hpJPzWJYoDzqXKBDY5vZFM1FVndXRIL0nPG8rfp4TMT
+         LtRA==
+X-Gm-Message-State: APjAAAUiEFqVCvF4RGEhdvwkrAfC+PkkoZaJgO15GenN3k8nMXC1/BBD
+        /gUGz3fx6g7pWcaxik5ZLzRGGkWqNtEi59sLL77uUg==
+X-Google-Smtp-Source: APXvYqzl5hT3aUqRJCJnIVXehX99G3T3Akb+SYNDVYFOFytvELLAVB9ThBhwrsy6L9WTc09HtYxYCvgciO/j/N0WVCw=
+X-Received: by 2002:a92:16d4:: with SMTP id 81mr34044620ilw.198.1573520883421;
+ Mon, 11 Nov 2019 17:08:03 -0800 (PST)
+MIME-Version: 1.0
+References: <BN7PR08MB56840512CEBCDD2A1194F7F5DB770@BN7PR08MB5684.namprd08.prod.outlook.com>
+In-Reply-To: <BN7PR08MB56840512CEBCDD2A1194F7F5DB770@BN7PR08MB5684.namprd08.prod.outlook.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Tue, 12 Nov 2019 06:37:27 +0530
+Message-ID: <CAGOxZ53VowHTr4vubs4_GQE0drCTkf2iht=xt7dbeSKYGwdtHg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1 0/2] Two small patches for UFS
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "pedrom.sousa@synopsys.com" <pedrom.sousa@synopsys.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If perf is built as arm 32-bit, it only reads 15 registers as arm
-32-bit register map and this breaks dwarf call-chain in compat
-perf because pc register information is not filled.
-Report arm pc registers for 32-bit compat perf.
+Hi Bean
 
-Without this, arm 32-bit perf dwarf call-graph shows below
-verbose message:
-  unwind: reg 15, val 0
-  unwind: reg 13, val ffbc6360
-  unwind: no map for 0
+On Tue, Nov 12, 2019 at 5:53 AM Bean Huo (beanhuo) <beanhuo@micron.com> wrote:
+>
+> Bean Huo <beanhuo@micron.com>
+>
+> Resend since ver.kernel.org rejected @outlook.com.
+> Hi,
+> Here are two small patches, one is to fix a potential bug which could
+> chase system hang-up, second one is to add more helpful debug hint.
+>
+> Bean Huo (2):
+>   scsi: ufs: print helpful hint when response size exceed buffer size
+>   scsi: ufs: fix potential bug which ends in system hang-up
+>
+This series looks good to me, feel free to add
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
----
- arch/arm64/kernel/perf_regs.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+Thanks,
 
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 0bbac61..d4172e7 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -24,6 +24,8 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 			return regs->compat_sp;
- 		if ((u32)idx == PERF_REG_ARM64_LR)
- 			return regs->compat_lr;
-+		if ((u32)idx == 15) /* PERF_REG_ARM_PC */
-+			return regs->pc;
- 	}
- 
- 	if ((u32)idx == PERF_REG_ARM64_SP)
+>  drivers/scsi/ufs/ufshcd.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> --
+> 2.17.1
+
+
+
 -- 
-1.7.4.1
-
+Regards,
+Alim
