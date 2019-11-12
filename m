@@ -2,90 +2,106 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25EEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3197FC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E0C2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573573878;
-	bh=cZh3J8eO17TfjkQs4HF4Pi5ohfBkslaJixtihKan7z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=owCfX0+xmPNrR0hTDZe6K0c3pt8Mxeljh+0NlAE+X4wNnGhouFw78ZIBd5Ai85+NO
-	 B4WX+TWrsIfk7bdzm/aF4AnwETz2YmbBsoaY7naL+H+v6INOFAAM/FJSNrqLV+bHEX
-	 5/IZcbMqUIxTc0vq3hifDKa4HOQ012qlrUvUDRS4=
+	by mail.kernel.org (Postfix) with ESMTP id 03EDF2196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 15:51:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsE9lrNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKLPvR (ORCPT
+        id S1727186AbfKLPvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:51:17 -0500
-Received: from mail-qt1-f181.google.com ([209.85.160.181]:37690 "EHLO
-        mail-qt1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfKLPvR (ORCPT
+        Tue, 12 Nov 2019 10:51:41 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44174 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLPvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:51:17 -0500
-Received: by mail-qt1-f181.google.com with SMTP id g50so20228914qtb.4;
-        Tue, 12 Nov 2019 07:51:16 -0800 (PST)
+        Tue, 12 Nov 2019 10:51:41 -0500
+Received: by mail-qt1-f193.google.com with SMTP id o11so20195010qtr.11;
+        Tue, 12 Nov 2019 07:51:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rIVoNOz4T7j7fSaGQI1Ha0h4ohKX0AGKJfytZEHxESg=;
-        b=ZNPttLUmJUEbIG2K/YbRhC/Z7rYwyz9P92jlUaFydZKGLbX6+HsM7LimBSZqqCYqhb
-         pYlmXL/tMccVeT08++KILqaPrN2fJxvS+XEsi/RZSvJlJJDuYtsd8w8NjSWVexMJQJvr
-         SCzmFhiXL6du2CYTWsOWOTRLaCvbr6P+n0W858JFXSF9iIVREf66fjuwFoTLvsBtX+81
-         CcaSPZJ4VMhwhvR0DdywQnv1Ru5LW7BRRLbk0Qf+S33Nf6jBIx/p2xDtplYQKX0PxDO5
-         wh6TW07Yjvs17D5M4Ab3OOLXWm7UnokqPlv0dYCPO4bVJMzkYQ05HJZ/OZ/+BReSS3t8
-         xWcg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LQBXaQZ8sYLX3FvyToEo9vTTZBjJQsr8E1LEgLzRPXs=;
+        b=RsE9lrNVKHVIjj4mLDlw3H/mypAihdMOWqmZd+CTUbTTAjq0/uplgxGeoxMwaJtIU8
+         JSxXfXBrRZtwLtJQBpO/wtp+ER6o35mC+oW16bJleR6ygLAc0ps7Z7PYt0zU14i3wtF2
+         CUhXzZkHnbnUtfjy+gfeX2iL5kE1bErsZS0DSx5nck/gJ7OlhzV8zgP/IoNJGTxz+kd3
+         ib98Gio8uq13GOr1ylMTj0i6YxTDDaPpqUtMCpVqbW2KuwgT677J8zkoCZW/qieBgJNs
+         K9xNmiY9uibdCWd+69izfCe4yNKpWjml7LQ7zUw4TNljpcqQOrsL2dNGI0Zq87SOlgsG
+         /TCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rIVoNOz4T7j7fSaGQI1Ha0h4ohKX0AGKJfytZEHxESg=;
-        b=VCEFZddlKA1J/aE8bNEmNtoxEma48GvmCyKDkD4tNNMscsQ1072acoNHFsuBphUaAu
-         FV5FBnTWjFgfAbspA7b0roLT2BTjPTmvMC3VMbQVxGf+lQw6+tZyt1MfdIQuUb+fvg+W
-         ai5+n5mXTnimyggC/v3NoEEjc+oBzuZ1A3AzCmMPYVZLspgZGqUdciAFEUl1SIujZwyY
-         xOtzXiQrr9fAJzpK2tTAxmTWYXOvbYRH8qf5uiFEhNmj6ZwQf61J7Wt8zSoi3z4DZ1Mr
-         dyoVR+YRbjsuSLOlaarJtBM5BlLoIhs/zMiA9ADDaJQRBrZtiQly+Xsvap7vRjWXzBUn
-         wENg==
-X-Gm-Message-State: APjAAAXTEaLB7dtnXkB1A9hbA729hCiwU0jqXxqLzrVcziooSlE1TOth
-        vu6g+vgA6snJRGd/qus+DYA=
-X-Google-Smtp-Source: APXvYqwFawfeWm6fRBnuZBGHaUnUoeXceuXbsribbvIXwB4WMdL8jLUfv7JHrluf25OhRAZinwumzg==
-X-Received: by 2002:aed:34c6:: with SMTP id x64mr31848120qtd.324.1573573876017;
-        Tue, 12 Nov 2019 07:51:16 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::3:f36a])
-        by smtp.gmail.com with ESMTPSA id g45sm11316870qtb.48.2019.11.12.07.51.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 07:51:15 -0800 (PST)
-Date:   Tue, 12 Nov 2019 07:51:14 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
-        namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net
-Subject: Re: [PATCHSET cgroup/for-5.5] kernfs,cgroup: support 64bit inos and
- unify cgroup IDs
-Message-ID: <20191112155114.GF4163745@devbig004.ftw2.facebook.com>
-References: <20191104235944.3470866-1-tj@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LQBXaQZ8sYLX3FvyToEo9vTTZBjJQsr8E1LEgLzRPXs=;
+        b=JZ0BbjV5+Wzi3o69GSQ2DCZKefoYNlskilEegjYI5MaqOjWIGIaJVJdRVOhlSHDYbj
+         UrJzT3Im9tMHPkMlg+3eBSM2ZFNhTsFbGSeYOIwd4L1tZqt6BL4chvg0mQFeoKOlSIES
+         uGEiBpGSonAujh8pYlZ1yEVU6tIhQ/ZmyinWWzhP418wMvc7FpxN3nIyllgdIvp3OcK4
+         dN0wKYxQzSMx7+zr6dnrbjVe6rVgIVpbMf5TJub7mpzsm1gRAWHbPyfTmuZ1FXnN6rmE
+         q6Uc1ecloC4YreHH4XLPn1Ddq2V8A2Uf6EEVHmy88EtomPHLFzYckD0o3ZxZSU5igy4q
+         BxqQ==
+X-Gm-Message-State: APjAAAV02XtIebtXpkrU2hn9en/gVpHW8ZFxrHz4WXOCFgiORdPFAkmY
+        /43AfXUTOVQULSMJ8Q3WhEQKCnC7VcIJ+lvdJrMkyg==
+X-Google-Smtp-Source: APXvYqw2USUknyNH12Zul6mHL6lqDlsWSFY9lTdDbwPKg2Pz6XlR6gnfvP35zB3LnBBhMSCqM3nWOFtORufpMc4G9HU=
+X-Received: by 2002:ac8:293a:: with SMTP id y55mr32569355qty.118.1573573899944;
+ Tue, 12 Nov 2019 07:51:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104235944.3470866-1-tj@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20191106231650.1580-1-jeffrey.l.hugo@gmail.com> <20191112084225.casuncbo7z54vu4g@netronome.com>
+In-Reply-To: <20191112084225.casuncbo7z54vu4g@netronome.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 12 Nov 2019 08:51:28 -0700
+Message-ID: <CAOCk7NpNgtTSus2KtBMe=jGLFyBumVfRVxKxtHoEDUEt2-6tqQ@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: Fix qmi init error handling
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Greg.
+On Tue, Nov 12, 2019 at 1:42 AM Simon Horman <simon.horman@netronome.com> wrote:
+>
+> On Wed, Nov 06, 2019 at 03:16:50PM -0800, Jeffrey Hugo wrote:
+> > When ath10k_qmi_init() fails, the error handling does not free the irq
+> > resources, which causes an issue if we EPROBE_DEFER as we'll attempt to
+> > (re-)register irqs which are already registered.
+> >
+> > Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >  drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+> > index fc15a0037f0e..f2a0b7aaad3b 100644
+> > --- a/drivers/net/wireless/ath/ath10k/snoc.c
+> > +++ b/drivers/net/wireless/ath/ath10k/snoc.c
+> > @@ -1729,7 +1729,7 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
+> >       ret = ath10k_qmi_init(ar, msa_size);
+> >       if (ret) {
+> >               ath10k_warn(ar, "failed to register wlfw qmi client: %d\n", ret);
+> > -             goto err_core_destroy;
+> > +             goto err_free_irq;
+> >       }
+>
+> From a casual examination of the code this seems like a step in the right
+> direction. But does this error path also need to call ath10k_hw_power_off() ?
 
-A gentle ping.  I can route these through cgroup/for-5.5 if you're
-okay with the patch series.
-
-Thanks.
-
--- 
-tejun
+It probably should.  I don't see any fatal errors from the step being
+skipped, although it might silence some regulator warnings about being
+left on.  Unlikely to be observed by most folks as I was initing the
+driver pretty early to debug some things.  Looks like Kalle already
+picked up this patch though, so I guess your suggestion would need to
+be a follow up.
