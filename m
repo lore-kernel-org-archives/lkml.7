@@ -2,147 +2,125 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871A2C17440
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D17EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B352067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508B12067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 19:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="G6YWJ97R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuzbeNQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKLTgk (ORCPT
+        id S1727116AbfKLTg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:36:40 -0500
-Received: from mail-eopbgr770049.outbound.protection.outlook.com ([40.107.77.49]:26190
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726958AbfKLTgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 14:36:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OsBKFD+sAy3bPvVqvkolxyVuIa/v+Eyhe6Aort0fSC2FZhjFWPeKfN1/EqOSMwRtwIIGicNT0+3HBY8/kKJwHhtCGAn3UgnheqSmfDzhG1NI9Gd1nVYkBedPZEM4RPyPOQtJQsSw2XvBa4ZaymLvdz5hXwSyw0TxMHhdTOU72gcoG0z0rGmPBgW0QJTy0wo04TC5LpzHRVWHjdstFsp5vEOSvLnz0H93VkG3Uv53//TKiBhLhyobwBdzsUGCmt5ksbpVoIrzv7bFJxJtVC+idRqOJt9j6o68HsMeuHELwLw0QaCmBbKganxAmzD69vSbJAF+045SaddTwqpKOMStbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqsVVvCVkMF0yLSlwjPK1g1jT+fROvxco5phdwiToNg=;
- b=of/ZCuA7HEdbUKkjWJ8aiImdNlJrsTP2pLtB2qxOyQD8qKPoopfOUgve3a2uL9GuqXAV2vzl1nikjhSabFyDZ4MMb9n3/cSNja4U3V6sLfsa9MjIek3x6unxzK7NDA1cl4xf1ldd5zXcac7qxN2TOBLwGDcwkZOC6memMGDgWY86Bj91wQc4xJc0PomnmuEGemN2dW0F+AuVeVpmB8BcajN6a906mAmTkZLmuVULCqeedSVu63/h1SVeTTUvw9c+st4mG29fwAI27DyckZpE4a7VmwBJeeK8aL/qWdpzoYJpFZmUM8SWKXfPDX3MpBrvZnZSXaw45PaM9xLJwSPW+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 12 Nov 2019 14:36:57 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47069 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKLTg4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 14:36:56 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r18so12478031pgu.13;
+        Tue, 12 Nov 2019 11:36:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqsVVvCVkMF0yLSlwjPK1g1jT+fROvxco5phdwiToNg=;
- b=G6YWJ97RYWLnwxVSygSW/H5IXcN70QKa0+15nDpqmr/W+0gS473YhHuGfIStdqWY0FXO+fT6watyvTev6vudUS9YF/1XawzNRZSN41qhqefMjvObHdCeSMEeVU1Ij7EV3vOT1sKNRU0MP4iI+DDEXtGou6px4P7gXcrTYn2irzM=
-Received: from CY4PR12MB1813.namprd12.prod.outlook.com (10.175.80.21) by
- CY4PR12MB1574.namprd12.prod.outlook.com (10.172.71.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Tue, 12 Nov 2019 19:35:53 +0000
-Received: from CY4PR12MB1813.namprd12.prod.outlook.com
- ([fe80::dc23:193b:9619:a4fc]) by CY4PR12MB1813.namprd12.prod.outlook.com
- ([fe80::dc23:193b:9619:a4fc%4]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 19:35:53 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     Frederick Lawler <fred@fredlawl.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        =?utf-8?B?TWljaGVsIETDpG56ZXI=?= <michel@daenzer.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>
-Subject: RE: [PATCH V3 0/3] drm: replace magic numbers
-Thread-Topic: [PATCH V3 0/3] drm: replace magic numbers
-Thread-Index: AQHVmX+P/VesZSUYzEukXJ1kWVAn66eH7YsQ
-Date:   Tue, 12 Nov 2019 19:35:53 +0000
-Message-ID: <CY4PR12MB1813200B2297DB19D1921A83F7770@CY4PR12MB1813.namprd12.prod.outlook.com>
-References: <20191112173503.176611-1-helgaas@kernel.org>
-In-Reply-To: <20191112173503.176611-1-helgaas@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alexander.Deucher@amd.com; 
-x-originating-ip: [71.219.59.120]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 57f4b58d-d386-477a-6321-08d767a78825
-x-ms-traffictypediagnostic: CY4PR12MB1574:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR12MB157403C28F16D633DC229680F7770@CY4PR12MB1574.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(13464003)(189003)(199004)(8676002)(86362001)(8936002)(76176011)(2906002)(81156014)(26005)(81166006)(446003)(11346002)(33656002)(6506007)(7696005)(55016002)(14454004)(71200400001)(71190400001)(53546011)(478600001)(66946007)(52536014)(6306002)(64756008)(99286004)(6436002)(966005)(229853002)(316002)(66476007)(102836004)(74316002)(66556008)(66446008)(76116006)(7736002)(305945005)(186003)(110136005)(486006)(256004)(25786009)(66066001)(4326008)(6246003)(54906003)(476003)(3846002)(6116002)(7416002)(5660300002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1574;H:CY4PR12MB1813.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VnAj99oyUDxsqzuximnex1DOwRtnhr0DnvGyVjv2GfQYwKzwFxKeHnhU99mzNMqIWiO4S518vwwqrVy/TbaA9pN++8HhIQs/uyHqI4J+T+6b3cKAgYvkuG1TwgX/slGfiwWOk0D88xQzZFGv2UV9XJh6dWmRW+5YpKMiRFxiWvxD4eVzH9ynPuNtcas45iJs5x4InobTRk1nuwxyJNUj8A0wWGqJ/iBq8Xo4ISi2bsIgGtphqS8fcD4QbL9xdyEEO0mNMoZBjOA584id1xGzRXWCye84FOCsswkt2IJSkRqmhXUqW7Firxu9H0MCNL6amGaiaJym5WPU60tPWdvyKaacFGQ9aHAoAHGrv5f65zEbH+uCepQrATZintw8u6/Abh3jW202KNU/ffL5e2MiUfKp5AkNILgWsxm6inSKfHd1AKKoLOloQy+EnNMlltHL6nQacp4uY/H/hqFBaKBeEl6VMw2MzqfYim2LfuoKdoI=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+1dTgLU8V2gPUJMDs5EGQtQwfTApnkprfC/+aKilzwY=;
+        b=CuzbeNQQG3AwYDek9KhARHCvyYAMmNx8O5hxsZ3M/H5ueuVzHucOFo9LAeZYMhgZuG
+         aJ43LJzjLFuGJ3ou5WMOwv4hwl4Jn69BIBhJUjPI0f33cKS6l5kAcE/wnrhKqdW2vy4s
+         dA5pRetFGcoNBxubMmfktqz2CNUBHLoak0k1w6+5a5eKXwctNzsfDjxzYHjpiYPlG1Wn
+         yIHSAA3iXNP8OyqAo4ZkfJymxFXnyEuyX5/V4YCCk+r3fJW25MG4KDIjgi3eIAACONwu
+         FnAAkRTk8Hv8Vc8hOaDwGYMsqtcGzIA1VUhcV/DPUZcrNNq2hJnyZx4Tw4GShayZ9iu9
+         A8PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+1dTgLU8V2gPUJMDs5EGQtQwfTApnkprfC/+aKilzwY=;
+        b=FPdUBu7ugipzSbE1S0DXFRdccgGT546PRAoINEME1WRClR8rHUtkeVr5/YazgcM4Uc
+         mEfsq0MqdejjQ4ixenFKysBDNoqAXx4QlN6/0364vmWCzhG+yy99nt1Tm5G8752APesr
+         Vz/RAfh21eMLsBEnh5XnTt6o/GMDtvCZt1mlETKiLXEkgUOwBRPwqYsjWGYA51Z3Mpr9
+         ccEtAsF9rPpdbf2+u9esMlX/xg7htpcnXj3d6skBnjeiT1/uE2/odNq+sNO3X1tYjJPq
+         FontIzYt6072+t/SgruDwKPcR2o3PYmia11/tO1NJjN/BaKOcdIwf7ary74G/4blBI3c
+         v2ew==
+X-Gm-Message-State: APjAAAUa2FHhMGzI2gctc5uMKH1vTybJhYD8AJN60iC5p/YYfKKNOxQ5
+        9kIoY34TPu++YBt53DScNjU=
+X-Google-Smtp-Source: APXvYqwzmAo4XyJWd+jODvfeIfuwtnC+T2Iok6kDQb4qyr14s922L+cDyn5b05cgADryqeUP3+KRRA==
+X-Received: by 2002:a63:6483:: with SMTP id y125mr37445468pgb.444.1573587415684;
+        Tue, 12 Nov 2019 11:36:55 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id g3sm19003956pfo.82.2019.11.12.11.36.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 11:36:55 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:36:53 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+Message-ID: <20191112193653.GB13374@dtor-ws>
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com>
+ <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws>
+ <20191112191547.GK5195@sirena.co.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57f4b58d-d386-477a-6321-08d767a78825
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 19:35:53.5886
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EF79sfQIdifUxVp9sJ6Oyvq0McWDGq9wqqe9FuIfa9hZtBVWU7+gAcA3Sh1qTNZ1CFI7HKyq3JtfwOig9SEaag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1574
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112191547.GK5195@sirena.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBhbWQtZ2Z4IDxhbWQtZ2Z4LWJv
-dW5jZXNAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPiBPbiBCZWhhbGYgT2YNCj4gQmpvcm4gSGVsZ2Fh
-cw0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAxMiwgMjAxOSAxMjozNSBQTQ0KPiBUbzogRGV1
-Y2hlciwgQWxleGFuZGVyIDxBbGV4YW5kZXIuRGV1Y2hlckBhbWQuY29tPjsgS29lbmlnLCBDaHJp
-c3RpYW4NCj4gPENocmlzdGlhbi5Lb2VuaWdAYW1kLmNvbT47IFpob3UsIERhdmlkKENodW5NaW5n
-KQ0KPiA8RGF2aWQxLlpob3VAYW1kLmNvbT47IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5p
-ZT47IERhbmllbCBWZXR0ZXINCj4gPGRhbmllbEBmZndsbC5jaD4NCj4gQ2M6IEZyZWRlcmljayBM
-YXdsZXIgPGZyZWRAZnJlZGxhd2wuY29tPjsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4g
-TWljaGVsIETDpG56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD47IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGRyaS0NCj4gZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBhbWQtZ2Z4QGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZzsgQmpvcm4gSGVsZ2Fhcw0KPiA8YmhlbGdhYXNAZ29vZ2xlLmNv
-bT47IElsaWEgTWlya2luIDxpbWlya2luQGFsdW0ubWl0LmVkdT4NCj4gU3ViamVjdDogW1BBVENI
-IFYzIDAvM10gZHJtOiByZXBsYWNlIG1hZ2ljIG51bWJlcnMNCj4gDQo+IEZyb206IEJqb3JuIEhl
-bGdhYXMgPGJoZWxnYWFzQGdvb2dsZS5jb20+DQo+IA0KPiBhbWRncHUgYW5kIHJhZGVvbiBkbyBh
-IGJpdCBvZiBtdWNraW5nIHdpdGggdGhlIFBDSWUgTGluayBDb250cm9sIDIgcmVnaXN0ZXIsDQo+
-IHNvbWUgb2YgaXQgdXNpbmcgaGFyZC1jb2RlZCBtYWdpYyBudW1iZXJzLiAgVGhlIGlkZWEgaGVy
-ZSBpcyB0byByZXBsYWNlDQo+IHRob3NlIHdpdGggI2RlZmluZXMuDQo+IA0KPiBTaW5jZSB2MjoN
-Cj4gICAtIEZpeCBhIGdwdV9jZmcyIGNhc2UgaW4gYW1kZ3B1L3NpLmMgdGhhdCBJIGhhZCBtaXNz
-ZWQNCj4gICAtIFNlcGFyYXRlIG91dCB0aGUgZnVuY3Rpb25hbCBjaGFuZ2VzIGZvciBiZXR0ZXIg
-YmlzZWN0aW9uICh0aGFua3MsDQo+ICAgICBNaWNoZWwhKQ0KPiAgIC0gQWRkICNkZWZpbmVzIGlu
-IGEgcGF0Y2ggYnkgdGhlbXNlbHZlcyAoc28gYSBHUFUgcmV2ZXJ0IHdvdWxkbid0IGJyZWFrDQo+
-ICAgICBvdGhlciBwb3RlbnRpYWwgdXNlcnMpDQo+ICAgLSBTcXVhc2ggYWxsIHRoZSBtYWdpYyBu
-dW1iZXIgLT4gI2RlZmluZSBjaGFuZ2VzIGludG8gb25lIHBhdGNoDQo+IA0KPiBTaW5jZSB2MToN
-Cj4gICAtIEFkZCBteSBzaWduZWQtb2ZmLWJ5IGFuZCBBbGV4J3MgcmV2aWV3ZWQtYnkuDQo+IA0K
-DQpTZXJpZXMgaXM6DQpSZXZpZXdlZC1ieTogQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hl
-ckBhbWQuY29tPg0KDQpJJ20gaGFwcHkgdG8gaGF2ZSBpdCBnbyB0aHJvdWdoIHdoYXRldmVyIHRy
-ZWUgaXMgZWFzaWVzdCBmb3IgeW91Lg0KDQpUaGFua3MsDQoNCkFsZXgNCg0KPiBCam9ybiBIZWxn
-YWFzICgzKToNCj4gICBQQ0k6IEFkZCAjZGVmaW5lcyBmb3IgRW50ZXIgQ29tcGxpYW5jZSwgVHJh
-bnNtaXQgTWFyZ2luDQo+ICAgZHJtOiBjb3JyZWN0IFRyYW5zbWl0IE1hcmdpbiBtYXNrcw0KPiAg
-IGRybTogcmVwbGFjZSBudW1iZXJzIHdpdGggUENJX0VYUF9MTktDVEwyIGRlZmluaXRpb25zDQo+
-IA0KPiAgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvY2lrLmMgfCAyMiArKysrKysrKysrKysr
-Ky0tLS0tLS0tDQo+IGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L3NpLmMgIHwgMjIgKysrKysr
-KysrKysrKystLS0tLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9jaWsuYyAgICAgfCAy
-MiArKysrKysrKysrKysrKy0tLS0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vcmFkZW9uL3NpLmMg
-ICAgICB8IDIyICsrKysrKysrKysrKysrLS0tLS0tLS0NCj4gIGluY2x1ZGUvdWFwaS9saW51eC9w
-Y2lfcmVncy5oICAgIHwgIDIgKysNCj4gIDUgZmlsZXMgY2hhbmdlZCwgNTggaW5zZXJ0aW9ucygr
-KSwgMzIgZGVsZXRpb25zKC0pDQo+IA0KPiAtLQ0KPiAyLjI0LjAucmMxLjM2My5nYjFiY2NkM2Uz
-ZC1nb29nDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXw0KPiBhbWQtZ2Z4IG1haWxpbmcgbGlzdA0KPiBhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZw0KPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ft
-ZC1nZngNCg==
+On Tue, Nov 12, 2019 at 07:15:47PM +0000, Mark Brown wrote:
+> On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
+> > On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
+> > > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
+> 
+> > > > +      interrupts:
+> > > > +        items:
+> > > > +          - description: main interrupt (attention) line.
+> > > > +          - description: dedicated wakeup interrupt.
+> > > > +        minItems: 1 # The wakeup interrupt is optional.
+> 
+> > > > +      interrupt-names:
+> > > > +        items:
+> > > > +          - const: irq
+> > > > +          - const: wakeup
+> > > > +        minItems: 1
+> 
+> > > How will this interact with a SPI device that defines interrupts at the
+> > > device level, possibly more than one of them?  Especially if the device
+> > > has its own idea what the interrupts should be called.
+> 
+> > My understanding that individual drivers should be able to override
+> > whatever the default behavior core has configured, and the device can
+> > establish their own mapping. We have this in I2C and I believe this
+> > works well.
+> 
+> > Is the concern about the device tree scheme or SPI core handling?
+> 
+> Both really.
+
+So as I mentioned, the driver is not forced to use the interrupt
+supplied by the SPI core, and the worst thing is that the core
+configures the main IRQ as wakeirq and driver would need to call
+dev_pm_clear_wake_irq() before switching to correct one. I expect there
+will be just a few drivers needing that and many more would benefit from
+the default behavior and not needing to repeat the same boilerplate
+code.
+
+As far as scheme goes - I hope that Rob could confirm that we can
+override number of interrupts and names in consumers of the binding, as
+needed.
+
+-- 
+Dmitry
