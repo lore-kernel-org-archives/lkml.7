@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE21C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31016C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743F620818
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0982121872
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 18:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573583936;
-	bh=p4W3epR6DXJhz9ZvcgdUpg51+8RaTMiuVkncy6GbUuE=;
+	s=default; t=1573583945;
+	bh=uFc1QOcfcC5upocJ+L5CTB117u3aYYC/uWiThFDlE78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DlLs3M9mNbuGalenTB3poS4YY430M5djGcJ+6dNkIt6kwJD+kFBe/q9raoKw1VPCw
-	 HHAKhS61Z6QaoTeNp6RgnJis4uTdKVxJdOjH6CTlcZ6VHGQ77Q+jJOHtH5FdB76znY
-	 9igaX+tLK7CeSivoQ2gry4dn3yALcYpXyKOL9qzQ=
+	b=JfiqQ/wlazP0f3cGHcrl3HEzocJLRDg3ZEisK9+5IxHviwKlcCaPvo+ozQXegwsCU
+	 gT9ZwwUHDbNkTcixM0kSlSVpe/h3B4zC/EUEPAh5c9/WX/Z/QefFCIFWPSSaDI6VyU
+	 lGEfDdzrO+FDt51QgTLNdua7iDtIaLPWoAo+1/jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfKLSiz (ORCPT
+        id S1727516AbfKLSjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:38:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 13:39:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfKLSix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:38:53 -0500
+        id S1727049AbfKLSjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:39:03 -0500
 Received: from quaco.ghostprotocols.net (unknown [177.195.211.83])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DBF21783;
-        Tue, 12 Nov 2019 18:38:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF4B214E0;
+        Tue, 12 Nov 2019 18:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573583932;
-        bh=p4W3epR6DXJhz9ZvcgdUpg51+8RaTMiuVkncy6GbUuE=;
+        s=default; t=1573583942;
+        bh=uFc1QOcfcC5upocJ+L5CTB117u3aYYC/uWiThFDlE78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=faX+VzeXIsx0Ep46SRbRO/iiGixl4GblZ0GqhijLQrcGetvRRYW4hU8zQIAJNzOUU
-         CN2zWOvxXBQ17zszysnZEJ9vynVXIU8jz2E7+0HE7+ylccKbSy0IoGXQD3MlYtxpu1
-         7DRnin6RNHx8g3wzUabCmZtW8xK5HduY7WX3Bd5o=
+        b=b0Mpsg6MRzW6cgVDFwpsdn142XXQthvgj6vatZSclLvRFwvkbX1CEHNEroTL7vRJ4
+         u32OIWs/YWbZ2IIDbMX7R2WQ1gyres/w16prUHz+H0lKhR4WLtqL+3DEiXa2U0hzA/
+         aFu9RgP89oZAi06pLhM+JCorrrBj6lGopgMzha3Y=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 11/15] perf annotate: Stop using map->groups, use map_symbol->mg instead
-Date:   Tue, 12 Nov 2019 15:37:53 -0300
-Message-Id: <20191112183757.28660-12-acme@kernel.org>
+Subject: [PATCH 12/15] perf map: Combine maps__fixup_overlappings with its only use
+Date:   Tue, 12 Nov 2019 15:37:54 -0300
+Message-Id: <20191112183757.28660-13-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191112183757.28660-1-acme@kernel.org>
 References: <20191112183757.28660-1-acme@kernel.org>
@@ -63,76 +63,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-These were the last uses of map->groups, next cset will nuke it.
+In the process we can kill some of the struct map->groups usage, trying
+to get rid of this per-full struct map fields getting in the way of
+sharing a map across father/parent processes.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-n3g0foos7l7uxq9nar0zo0vj@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-e50eqtqw3za24vmbjnqmmcs6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/annotate/instructions.c | 2 +-
- tools/perf/ui/browsers/annotate.c            | 1 +
- tools/perf/util/annotate.c                   | 6 +++---
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/util/map.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index bdd7ab34ce4f..2a6662e42f89 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -38,7 +38,7 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
- 		return -1;
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 6c59f55026c1..27d8508f8a44 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -752,8 +752,9 @@ static void __map_groups__insert(struct map_groups *mg, struct map *map)
+ 	map->groups = mg;
+ }
  
--	if (map_groups__find_ams(map->groups, &target) == 0 &&
-+	if (map_groups__find_ams(ms->mg, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
+-static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
++int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp)
+ {
++	struct maps *maps = &mg->maps;
+ 	struct rb_root *root;
+ 	struct rb_node *next, *first;
+ 	int err = 0;
+@@ -818,7 +819,7 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 			}
  
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index ad1fe5b6d0cd..992705c78bd0 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -430,6 +430,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 		return true;
- 	}
+ 			before->end = map->start;
+-			__map_groups__insert(pos->groups, before);
++			__map_groups__insert(mg, before);
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(before, fp);
+ 			map__put(before);
+@@ -835,7 +836,7 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 			after->start = map->end;
+ 			after->pgoff += map->end - pos->start;
+ 			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
+-			__map_groups__insert(pos->groups, after);
++			__map_groups__insert(mg, after);
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(after, fp);
+ 			map__put(after);
+@@ -853,12 +854,6 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 	return err;
+ }
  
-+	target_ms.mg  = ms->mg;
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
- 	pthread_mutex_unlock(&notes->lock);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e0a9e9e49bb1..5ea9a4534848 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -271,7 +271,7 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- find_target:
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
- 
--	if (map_groups__find_ams(map->groups, &target) == 0 &&
-+	if (map_groups__find_ams(ms->mg, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-@@ -391,7 +391,7 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- 	 * Actual navigation will come next, with further understanding of how
- 	 * the symbol searching and disassembly should be done.
- 	 */
--	if (map_groups__find_ams(map->groups, &target) == 0 &&
-+	if (map_groups__find_ams(ms->mg, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-@@ -1545,7 +1545,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
- 			.ms = { .map = map, },
- 		};
- 
--		if (!map_groups__find_ams(map->groups, &target) &&
-+		if (!map_groups__find_ams(args->ms.mg, &target) &&
- 		    target.ms.sym->start == target.al_addr)
- 			dl->ops.target.sym = target.ms.sym;
- 	}
+-int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map,
+-				   FILE *fp)
+-{
+-	return maps__fixup_overlappings(&mg->maps, map, fp);
+-}
+-
+ /*
+  * XXX This should not really _copy_ te maps, but refcount them.
+  */
 -- 
 2.21.0
 
