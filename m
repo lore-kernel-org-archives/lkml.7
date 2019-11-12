@@ -2,299 +2,132 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959E5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AA2C17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6954C21A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5869420818
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 21:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573593245;
+	bh=otp6BH91f1j1iYKXCkCEPVuG0Yq2lJz8IEkdivgWJPM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=auWfdmTguKVxnwXW1fgGYr5zAQj9bpeE7LhEV9IR02UmSkSnf5x3d/bMhyADv50xh
+	 N5WvMTnoILhFvYI1EOA2W/aqwH33DzdYJW661n3p9u42083etbyOb6ntKs3UJHTb7k
+	 cMI9Z684ET5EHYgqLT5k1rywqrceKaugM7IL9V5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfKLVN7 (ORCPT
+        id S1727568AbfKLVOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:13:59 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:44518 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727530AbfKLVNy (ORCPT
+        Tue, 12 Nov 2019 16:14:04 -0500
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:36564 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727542AbfKLVN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:13:54 -0500
-Received: from mr1.cc.vt.edu (junk.cc.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xACLDqj6012847
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:52 -0500
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xACLDl53021662
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:13:52 -0500
-Received: by mail-qv1-f72.google.com with SMTP id bz8so7471017qvb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:13:52 -0800 (PST)
+        Tue, 12 Nov 2019 16:13:58 -0500
+Received: by mail-lj1-f179.google.com with SMTP id k15so59951lja.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:13:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P9XIZS7SU3RS49LRENl5SM7lOZ7kZM4P3ixT/QNzhdE=;
+        b=UwY9cZA3V5T0vyNv2V661JB/VTL10yx6gFYc1xtgKQgONfocJfi8ojlq33WVjM/r+L
+         cwAON8sR7dBpJMPq9/fq/cuIi8qLzAUszVs0iJ7LDN8D1o4e199T+fOpPSZOiTetQnuj
+         Y+nhBGmk1z4MO+7U+QjWjCyy2lbljWp+V5Ag8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=wN3d2kdOZvUd019MrkFxf+wV1r/QbnQ8i3gbsIy65Ko=;
-        b=mdmdRiV7wn2jTG0uzWdM5NvWfUor4+cfUcpw9ge8ybYggZJJfQxB2vfsjDFb5opFSW
-         SPFk8uo8OxsKbUT8mbAcc0bu7i5zDiZWXOpGHTg63hyIsC8K3a/0lXZs/X812gNMctoW
-         NszjI1pIeeWiblO27ph7h6o7FhO1bZC3Nt7RT4N5c4cRdf8bby++oAkkRV/EnspBIM2Q
-         Y00v1r5f0k0wDpx9Ujx2je9NA4zdJ9a/rXenOYUkObgRDCGW7ObHxnVmEHK7XZp1tp86
-         e/TCj/2HGFALTYsme+Omhyhz9uBp6BbAsIRCzL04eI7pzf8ummd4joS02Zkni9DgOrJF
-         T60w==
-X-Gm-Message-State: APjAAAUJmb+pDrUFqxIEMMVG3NHgpeQxlAKxUvzXNSMxWbqgLE+Nd9PE
-        Sd+bpx+2hql0+wfnvDb2Wwd6+CedQBhLO82ditB0gE4XCrferd8tt5pYWEpcHnLBlAwHjgj+0IJ
-        fkSZ935AVoftPJU45WEoeaatDc+D2IkrMNms=
-X-Received: by 2002:ac8:7948:: with SMTP id r8mr30671912qtt.91.1573593227568;
-        Tue, 12 Nov 2019 13:13:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwmCzOqCxP74DHU8hfkkqnBRILROjpy5RY655uzzcyNQR3UJouQiu943RxUjpFtf3PhN9woJQ==
-X-Received: by 2002:ac8:7948:: with SMTP id r8mr30671872qtt.91.1573593227202;
-        Tue, 12 Nov 2019 13:13:47 -0800 (PST)
-Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id 130sm9674214qkd.33.2019.11.12.13.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 13:13:46 -0800 (PST)
-From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
-X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
-Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 09/12] staging: exfat: Clean up the namespace pollution part 5
-Date:   Tue, 12 Nov 2019 16:12:35 -0500
-Message-Id: <20191112211238.156490-10-Valdis.Kletnieks@vt.edu>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
-References: <20191112211238.156490-1-Valdis.Kletnieks@vt.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P9XIZS7SU3RS49LRENl5SM7lOZ7kZM4P3ixT/QNzhdE=;
+        b=ereqeFUnITbU36JiZzbppJI+G5C9CYwglfeAxCUf8Vrcsy9UewU0HNLZbPrrnkYF6I
+         CyaVF7k42BRImZUrQOGMGireYE9CSZeSuSlVXXcbTdyJJfepGzBe082OKl+POjffMwrO
+         w8xsZwVbubR5ZNn1zW5KLQpGSyw1xvkUKL6y+h6UyN2Og1XONhd5+VEg4E4f5rpkkBwh
+         j/NZ6T2niDgY200oVWwkCj1VtkUWtVc5yj4Vp9ecaEvEh7hAA3b0zKS1pFPHN5Eoatxa
+         L6xvEAwK8cPyq6+ToDKDZaYzbbUgFEjlq6e+Z2aEKzEQ0eOaVHV/27Wy2X4PBxEJklFy
+         aWug==
+X-Gm-Message-State: APjAAAXQg6x1e51/0EKWLQOC5zdGZBGL1kY5x7Z8E81c0d7BYz0WaEHk
+        VTdcQDgL0EWef/SzfwoyotDU4Q9C2vo=
+X-Google-Smtp-Source: APXvYqwM15OwHyxJACviqhG9NBz6lQMjqQcV5zqhN84WwOkp2rUX6EWInMTZlmYHnvJVUer+iPICxA==
+X-Received: by 2002:a2e:9dd5:: with SMTP id x21mr21593132ljj.232.1573593235300;
+        Tue, 12 Nov 2019 13:13:55 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id g23sm11525202ljn.63.2019.11.12.13.13.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 13:13:52 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id y23so21624ljh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 13:13:52 -0800 (PST)
+X-Received: by 2002:a2e:22c1:: with SMTP id i184mr21906891lji.1.1573593232214;
+ Tue, 12 Nov 2019 13:13:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <CAHk-=wjGd0Ce2xadkiErPWxVBT2mhyeZ4TKyih2sJwyE3ohdHw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911121515400.1567-100000@iolanthe.rowland.org> <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
+In-Reply-To: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 12 Nov 2019 13:13:35 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wg9yCKVdenys6FfcpAc9KSxVMOTT2DddVcj-Ofu1MYNhQ@mail.gmail.com>
+Message-ID: <CAHk-=wg9yCKVdenys6FfcpAc9KSxVMOTT2DddVcj-Ofu1MYNhQ@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some more functions that can be moved and made static
+On Tue, Nov 12, 2019 at 12:58 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Honestly, my preferred model would have been to just add a comment,
+> and have the reporting tool know to then just ignore it. So something
+> like
+>
+> +               // Benign data-race on min_flt
+>                 tsk->min_flt++;
+>                 perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+>
+> for the case that Eric mentioned - the tool would trigger on
+> "data-race", and the rest of the comment could/should be for humans.
+> Without making the code uglier, but giving the potential for a nice
+> leghibl.e explanation instead of a completely illegible "let's
+> randomly use WRITE_ONCE() here" or something like that.
 
-Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
----
- drivers/staging/exfat/exfat.h      |   3 -
- drivers/staging/exfat/exfat_core.c | 182 ++++++++++++++---------------
- 2 files changed, 91 insertions(+), 94 deletions(-)
+Hmm. Looking at the practicality of this, it actually doesn't look
+*too* horrible.
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 48267dd11e9d..c41fc3ec9f29 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -764,9 +764,6 @@ void exfat_chain_cont_cluster(struct super_block *sb, u32 chain, s32 len);
- /* allocation bitmap management functions */
- s32 load_alloc_bitmap(struct super_block *sb);
- void free_alloc_bitmap(struct super_block *sb);
--s32 set_alloc_bitmap(struct super_block *sb, u32 clu);
--s32 clr_alloc_bitmap(struct super_block *sb, u32 clu);
--u32 test_alloc_bitmap(struct super_block *sb, u32 clu);
- void sync_alloc_bitmap(struct super_block *sb);
- 
- /* upcase table management functions */
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 24700b251acb..8d38f70c9726 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -156,6 +156,97 @@ static s32 clear_cluster(struct super_block *sb, u32 clu)
- 	return ret;
- }
- 
-+static s32 set_alloc_bitmap(struct super_block *sb, u32 clu)
-+{
-+	int i, b;
-+	sector_t sector;
-+	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-+	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-+
-+	i = clu >> (p_bd->sector_size_bits + 3);
-+	b = clu & ((p_bd->sector_size << 3) - 1);
-+
-+	sector = START_SECTOR(p_fs->map_clu) + i;
-+
-+	exfat_bitmap_set((u8 *)p_fs->vol_amap[i]->b_data, b);
-+
-+	return sector_write(sb, sector, p_fs->vol_amap[i], 0);
-+}
-+
-+static s32 clr_alloc_bitmap(struct super_block *sb, u32 clu)
-+{
-+	int i, b;
-+	sector_t sector;
-+#ifdef CONFIG_EXFAT_DISCARD
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	struct exfat_mount_options *opts = &sbi->options;
-+	int ret;
-+#endif /* CONFIG_EXFAT_DISCARD */
-+	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-+	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-+
-+	i = clu >> (p_bd->sector_size_bits + 3);
-+	b = clu & ((p_bd->sector_size << 3) - 1);
-+
-+	sector = START_SECTOR(p_fs->map_clu) + i;
-+
-+	exfat_bitmap_clear((u8 *)p_fs->vol_amap[i]->b_data, b);
-+
-+	return sector_write(sb, sector, p_fs->vol_amap[i], 0);
-+
-+#ifdef CONFIG_EXFAT_DISCARD
-+	if (opts->discard) {
-+		ret = sb_issue_discard(sb, START_SECTOR(clu),
-+				       (1 << p_fs->sectors_per_clu_bits),
-+				       GFP_NOFS, 0);
-+		if (ret == -EOPNOTSUPP) {
-+			pr_warn("discard not supported by device, disabling");
-+			opts->discard = 0;
-+		}
-+	}
-+#endif /* CONFIG_EXFAT_DISCARD */
-+}
-+
-+static u32 test_alloc_bitmap(struct super_block *sb, u32 clu)
-+{
-+	int i, map_i, map_b;
-+	u32 clu_base, clu_free;
-+	u8 k, clu_mask;
-+	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-+	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-+
-+	clu_base = (clu & ~(0x7)) + 2;
-+	clu_mask = (1 << (clu - clu_base + 2)) - 1;
-+
-+	map_i = clu >> (p_bd->sector_size_bits + 3);
-+	map_b = (clu >> 3) & p_bd->sector_size_mask;
-+
-+	for (i = 2; i < p_fs->num_clusters; i += 8) {
-+		k = *(((u8 *)p_fs->vol_amap[map_i]->b_data) + map_b);
-+		if (clu_mask > 0) {
-+			k |= clu_mask;
-+			clu_mask = 0;
-+		}
-+		if (k < 0xFF) {
-+			clu_free = clu_base + free_bit[k];
-+			if (clu_free < p_fs->num_clusters)
-+				return clu_free;
-+		}
-+		clu_base += 8;
-+
-+		if (((++map_b) >= p_bd->sector_size) ||
-+		    (clu_base >= p_fs->num_clusters)) {
-+			if ((++map_i) >= p_fs->map_sectors) {
-+				clu_base = 2;
-+				map_i = 0;
-+			}
-+			map_b = 0;
-+		}
-+	}
-+
-+	return CLUSTER_32(~0);
-+}
-+
- static s32 exfat_alloc_cluster(struct super_block *sb, s32 num_alloc,
- 			struct chain_t *p_chain)
- {
-@@ -468,97 +559,6 @@ void free_alloc_bitmap(struct super_block *sb)
- 	p_fs->vol_amap = NULL;
- }
- 
--s32 set_alloc_bitmap(struct super_block *sb, u32 clu)
--{
--	int i, b;
--	sector_t sector;
--	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
--	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
--
--	i = clu >> (p_bd->sector_size_bits + 3);
--	b = clu & ((p_bd->sector_size << 3) - 1);
--
--	sector = START_SECTOR(p_fs->map_clu) + i;
--
--	exfat_bitmap_set((u8 *)p_fs->vol_amap[i]->b_data, b);
--
--	return sector_write(sb, sector, p_fs->vol_amap[i], 0);
--}
--
--s32 clr_alloc_bitmap(struct super_block *sb, u32 clu)
--{
--	int i, b;
--	sector_t sector;
--#ifdef CONFIG_EXFAT_DISCARD
--	struct exfat_sb_info *sbi = EXFAT_SB(sb);
--	struct exfat_mount_options *opts = &sbi->options;
--	int ret;
--#endif /* CONFIG_EXFAT_DISCARD */
--	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
--	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
--
--	i = clu >> (p_bd->sector_size_bits + 3);
--	b = clu & ((p_bd->sector_size << 3) - 1);
--
--	sector = START_SECTOR(p_fs->map_clu) + i;
--
--	exfat_bitmap_clear((u8 *)p_fs->vol_amap[i]->b_data, b);
--
--	return sector_write(sb, sector, p_fs->vol_amap[i], 0);
--
--#ifdef CONFIG_EXFAT_DISCARD
--	if (opts->discard) {
--		ret = sb_issue_discard(sb, START_SECTOR(clu),
--				       (1 << p_fs->sectors_per_clu_bits),
--				       GFP_NOFS, 0);
--		if (ret == -EOPNOTSUPP) {
--			pr_warn("discard not supported by device, disabling");
--			opts->discard = 0;
--		}
--	}
--#endif /* CONFIG_EXFAT_DISCARD */
--}
--
--u32 test_alloc_bitmap(struct super_block *sb, u32 clu)
--{
--	int i, map_i, map_b;
--	u32 clu_base, clu_free;
--	u8 k, clu_mask;
--	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
--	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
--
--	clu_base = (clu & ~(0x7)) + 2;
--	clu_mask = (1 << (clu - clu_base + 2)) - 1;
--
--	map_i = clu >> (p_bd->sector_size_bits + 3);
--	map_b = (clu >> 3) & p_bd->sector_size_mask;
--
--	for (i = 2; i < p_fs->num_clusters; i += 8) {
--		k = *(((u8 *)p_fs->vol_amap[map_i]->b_data) + map_b);
--		if (clu_mask > 0) {
--			k |= clu_mask;
--			clu_mask = 0;
--		}
--		if (k < 0xFF) {
--			clu_free = clu_base + free_bit[k];
--			if (clu_free < p_fs->num_clusters)
--				return clu_free;
--		}
--		clu_base += 8;
--
--		if (((++map_b) >= p_bd->sector_size) ||
--		    (clu_base >= p_fs->num_clusters)) {
--			if ((++map_i) >= p_fs->map_sectors) {
--				clu_base = 2;
--				map_i = 0;
--			}
--			map_b = 0;
--		}
--	}
--
--	return CLUSTER_32(~0);
--}
--
- void sync_alloc_bitmap(struct super_block *sb)
- {
- 	int i;
--- 
-2.24.0
+I note that at least clang already has a "--blacklist" ability. I
+didn't find a list of complete syntax for that, and it looks like it
+might be just "whole functions" or "whole source files", but maybe the
+clang people would be willing to add "file and line ranges" to the
+blacklists?
 
+Then you could generate the blacklist with that trivial grep before
+you start the build, and -fsanitize=thread would automatically simply
+not look at those lines.
+
+For a simple first case, maybe the rule could be that the comment has
+to be on the line. A bit less legible for humans, but it could be
+
+-               tsk->min_flt++;
++               // Benign race min_flt - statistics only
++               tsk->min_flt++; // data-race
+
+instead.
+
+Wouldn't that be a much better annotation than having to add code?
+
+               Linus
