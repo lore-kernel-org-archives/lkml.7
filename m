@@ -2,186 +2,139 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D58C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F914C17441
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4059621925
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:00:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="KDSXGZKG"
+	by mail.kernel.org (Postfix) with ESMTP id 110F9206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 12:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfKLMAq (ORCPT
+        id S1727148AbfKLMA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:00:46 -0500
-Received: from mail-eopbgr750057.outbound.protection.outlook.com ([40.107.75.57]:41347
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        Tue, 12 Nov 2019 07:00:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41488 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725881AbfKLMAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:00:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ldW5sKamKKQRFNl1w4Qz7FHuHCWhmR9OBLvh3DzpUlascgS3UBUbw4o6cc7FJx/WV2aCzf6qCPvt5zE1g/mtLTVLyUiLsUCISnhcRk0zh5uT/zVuIH9/FB38YaU1rRUG2dF0Lmp3FnSOoIOPYTZ7BbnXKKzlHiXE+ZTFxjLr51xDzvKPR8fV+3tMM+rBHYjcGeWXstD/c6+N9MWW4Q9+4ctYCbX4jW89l1M+WdqzrAORE3TYkFdq80oQzPyMHyPTW1k36yGnlhtDoQkliA5/fX3p1cxnYh9ldpu7OnPETjF7tmnrT1XfsxaeUNyvv8RRYgYB5mVzix7JoL5SNS1bJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q1+7gyRxhEnE4qxsHprLpzlPlByhhAXEDCN0jjjjZNU=;
- b=YurbK4LZbo1vsKlSnp2c6t7xHyd086RByPGFhkJwKzOe4jvZPXiJZkGSGLldDoT5y0TUP161zFSLIQ7Hv8UJKXE5RKGnzj8rBF9nucw819NUNThFjDw0HGO5wQB8Fc/Ha59yKAotXQ5Eo29+0p94KipDaxk4r775Tpbt8a1v7ZM3m/zTzABmS2QupxJUXjAPs73KubOGwNaMfWdoPXt613v4oM8YjGib8qMgKSLITFQk9Xxzsm35zvSGClSVnJHn/o0JlMXcgTlJoTbWZvw46TVV0XhFHAvK9yXqR56jH8TfNH6jUA6qFcNhXcuBv51klKrCez56oXvNAhMsSfoIJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q1+7gyRxhEnE4qxsHprLpzlPlByhhAXEDCN0jjjjZNU=;
- b=KDSXGZKG9tMOT15G4LdUxsjRetI6ZuZQwBO/u++BBGTzpL3Vi7nKFnJuO9Cqf0qh2Q3v9JPtEcaO0LtZOgsuMg2pP+d3x2pHvvrJFY93KXUTmndrh7FwZvObIgTv0WfQYcRPcM3hL0sjv3CKCF82vLtMutZSHRpyiiot8WLarCU=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4144.namprd11.prod.outlook.com (20.179.150.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.23; Tue, 12 Nov 2019 12:00:41 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::90bc:abcd:689a:944]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::90bc:abcd:689a:944%7]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 12:00:41 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-CC:     Jules Irenge <jbi.octave@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "Boqun.Feng@microsoft.com" <Boqun.Feng@microsoft.com>
-Subject: Re: [PATCH] staging: wfx: add gcc extension __force cast
-Thread-Topic: [PATCH] staging: wfx: add gcc extension __force cast
-Thread-Index: AQHVlo2vxeA9owBuRU69L3+4vyY0cqeCkGWAgANwwICAAG8CAIAALvmAgADVXwA=
-Date:   Tue, 12 Nov 2019 12:00:41 +0000
-Message-ID: <1714567.V28SpQSAGH@pc-42>
-References: <20191108233837.33378-1-jbi.octave@gmail.com>
- <20191111202852.GX26530@ZenIV.linux.org.uk>
- <20191111231659.GA22837@ZenIV.linux.org.uk>
-In-Reply-To: <20191111231659.GA22837@ZenIV.linux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ed489764-9f02-4e90-362a-08d76767f0a6
-x-ms-traffictypediagnostic: MN2PR11MB4144:
-x-microsoft-antispam-prvs: <MN2PR11MB41442313873E27D0D5DFEA9693770@MN2PR11MB4144.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(136003)(39850400004)(366004)(346002)(376002)(396003)(189003)(199004)(14444005)(71190400001)(5660300002)(6246003)(71200400001)(478600001)(9686003)(486006)(446003)(91956017)(11346002)(6512007)(76176011)(476003)(81156014)(81166006)(4326008)(256004)(8936002)(305945005)(7736002)(229853002)(14454004)(6486002)(8676002)(6916009)(66556008)(66574012)(6436002)(316002)(6116002)(66446008)(3846002)(64756008)(5024004)(33716001)(76116006)(66476007)(2906002)(86362001)(54906003)(99286004)(66066001)(6506007)(66946007)(102836004)(26005)(186003)(25786009)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4144;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YP3Dwj8jzPUmmg34ys7f5wIxL5oAoSHDDIzW7ZAGfEZ1+NRtDC48R5n5VNTBf1GRJr5VXPpc/08WkdbE+a4sTgtuqoLM/gJoni68u4uop6bZocJLwo5svh9ti6PgLYjPGbEqRpG62WDx5SpFJktQJb7m0aLhmM+zOwWtph4HwT7SIvGDMAZVdHq2Mrhrq2BdcgpVcDXvDbYYbvuVnjeMykz0eVm41eoRR5E1350qXD9DIMFTX/qQag1aGVc6EzsKZM8JqY6DsrSCJoKYlHOXBYIojSmSwDxq24Qr780OG2rcnwVBbjApWIv5fWeYvxZBD1j51wd8Y1CKV6hWwkmoWf1a+vgjUglwHuue/wfb8ZX7r+eId8v1aNeTRouDhN8YkyX9Ilu0jcjcFjeQoVQ36bpOgejM7oNsORPllBUuqGZilH4096bnvCTzAAQBSZuR
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <CE57DFF83C429145BD4595E5B90CA18B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1725865AbfKLMA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:00:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8DD9AF9F;
+        Tue, 12 Nov 2019 12:00:53 +0000 (UTC)
+Subject: Re: [PATCH 2/2] fs: Move swap_[de]activate to file_operations
+To:     Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+References: <20191112003452.4756-1-ira.weiny@intel.com>
+ <20191112003452.4756-3-ira.weiny@intel.com>
+ <20191111164320.80f814161469055b14f27045@linux-foundation.org>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4fc3c3cf-fa23-db8c-f236-026716f77913@suse.com>
+Date:   Tue, 12 Nov 2019 14:00:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed489764-9f02-4e90-362a-08d76767f0a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 12:00:41.2072
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 68ruFczmvw7MYr46eyIkCYLPdEqJSb6rcwwRjKYkpkfrMW1DL1UtuldTteSDTHP2TqyALFu+BnTAJsK3jzutMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4144
+In-Reply-To: <20191111164320.80f814161469055b14f27045@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 12 November 2019 00:16:59 CET Al Viro wrote:
-[...]
-> More fun:
-> int hif_read_mib(struct wfx_dev *wdev, int vif_id, u16 mib_id, void *val,=
- size_t val_len)
-> {
->         int ret;
->         struct hif_msg *hif;
->         int buf_len =3D sizeof(struct hif_cnf_read_mib) + val_len;
->         struct hif_req_read_mib *body =3D wfx_alloc_hif(sizeof(*body), &h=
-if);
->         struct hif_cnf_read_mib *reply =3D kmalloc(buf_len, GFP_KERNEL);
->=20
-> OK, allocated request and reply buffers, by the look of it; request one
-> being struct hif_msg with struct hif_req_read_mib for payload
-> and reply - struct hif_cnf_read_mib {
->         uint32_t   status;
->         uint16_t   mib_id;
->         uint16_t   length;
->         uint8_t    mib_data[];
-> } with val_len bytes in mib_data.
->=20
->         body->mib_id =3D cpu_to_le16(mib_id);
->         wfx_fill_header(hif, vif_id, HIF_REQ_ID_READ_MIB, sizeof(*body));
->=20
-> Filled request, {.len =3D cpu_to_le16(4 + 4),
->                  .id =3D HIF_REQ_ID_READ_MIB,
->                  .interface =3D vif_id,
->                  .body =3D {
->                         .mib_id =3D cpu_to_le16(mib_id)
->                 }
->         }
-> Note that mib_id is host-endian here; what we send is little-endian.
->=20
->         ret =3D wfx_cmd_send(wdev, hif, reply, buf_len, false);
-> send it, get reply
->=20
->         if (!ret && mib_id !=3D reply->mib_id) {
-> Wha...?  Now we are comparing two bytes at offset 4 into reply with a hos=
-t-endian
-> value?  Oh, well...
 
-Agree.
 
->=20
->                 dev_warn(wdev->dev, "%s: confirmation mismatch request\n"=
-, __func__);
->                 ret =3D -EIO;
->         }
->         if (ret =3D=3D -ENOMEM)
->                 dev_err(wdev->dev, "buffer is too small to receive %s (%z=
-u < %d)\n",
->                         get_mib_name(mib_id), val_len, reply->length);
->         if (!ret)
->                 memcpy(val, &reply->mib_data, reply->length);
-> What.  The.  Hell?
->=20
-> We are copying data from the reply.  Into caller-supplied object.
-> With length taken from the same reply and no validation even
-> attempted?  Not even "um, maybe we shouldn't copy more than the caller
-> told us to copy, especially since that's as much as there is in the
-> source of that memcpy"?
+On 12.11.19 г. 2:43 ч., Andrew Morton wrote:
+> On Mon, 11 Nov 2019 16:34:52 -0800 ira.weiny@intel.com wrote:
+> 
+>> From: Ira Weiny <ira.weiny@intel.com>
+>>
+>> swap_activate() and swap_deactivate() have nothing to do with
+>> address spaces.  We want to eventually make the address space operations
+>> dynamic to switch inode flags on the fly.
+> 
+> What does this mean?
+> 
+>>  So to simplify this code as
+>> well as properly track these operations we move these functions to the
+>> file_operations vector.
+>>
+>> This has been tested with XFS but not NFS, f2fs, or btrfs.
+>>
+>> Also note f2fs and xfs have simple moves of their functions to
+>> facilitate compilation.  No functional changes are contained within
+>> those functions.
+>>
+>> ...
+>>
+>> --- a/fs/btrfs/inode.c
+>> +++ b/fs/btrfs/inode.c
+>> @@ -11002,6 +11002,8 @@ static const struct file_operations btrfs_dir_file_operations = {
+>>  #endif
+>>  	.release        = btrfs_release_file,
+>>  	.fsync		= btrfs_sync_file,
+>> +	.swap_activate	= btrfs_swap_activate,
+>> +	.swap_deactivate = btrfs_swap_deactivate,
+>>  };
+> 
+> Shouldn't this be btrfs_file_operations?
 
-In fact, hif_generic_confirm() check that data from hardware is smaller
-than "buf_len". If it is not the case, ret will contains -ENOMEM. But
-indeed, if size of data is correct but reply->length is corrupted, we
-will have big trouble.
+INdeed, having swap activate on a directory doesn't make much sense.
 
-(In add, I am not sure that -ENOMEM is well chosen for this case)
-
-> And that's besides the endianness questions.  Note that getting the
-> endianness wrong here is just about certain to blow up - small value
-> will be misinterpreted by factor of 256.
->=20
-> In any case, even if this is talking to firmware on a card, that's
-> an unhealthy degree of trust, especially since the same function
-> does consider the possibility of bogus replies.
-
-It is obvious that the errors paths have not been sufficiently checked.
-If you continue to search, I think you will find many similar problems.
-
-I will update the TODO list attached to the driver.
-
---=20
-J=E9r=F4me Pouiller
-
+> 
+> 
