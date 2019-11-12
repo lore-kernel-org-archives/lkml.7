@@ -2,129 +2,199 @@ Return-Path: <SRS0=WT+Y=ZE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821B1C17441
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB8DC17440
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58974206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9DE222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Nov 2019 16:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NVDLY1pr"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="wOJG7TKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfKLQQj (ORCPT
+        id S1727145AbfKLQRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:16:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52379 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726994AbfKLQQi (ORCPT
+        Tue, 12 Nov 2019 11:17:03 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35752 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbfKLQRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:16:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573575397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=til87Hw17HKI7TEgbgUhu2Gk+tx9OhdI8SUQLLm8NMQ=;
-        b=NVDLY1pr5WvoG6V3EzQCkt+FfuHpvmiRqWQjDz6kM2+2zucg0MaJJhLJeXmMzXrVXaju/n
-        1kyTZQ+LWRgAlRlIxgAGEZ3oYD9aTmm7mMjfS02rlFCcTB+QyqfDmX01ujwUvNIzXvaHCx
-        khnmAQXluUzSOhJhYmdaAnHl8eE9bw8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-4pd-lHFHON-uapLGkhrGKQ-1; Tue, 12 Nov 2019 11:16:34 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1FE91800D63;
-        Tue, 12 Nov 2019 16:16:32 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1EA7E67E40;
-        Tue, 12 Nov 2019 16:16:30 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id xACGGTZK018091;
-        Tue, 12 Nov 2019 11:16:29 -0500
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id xACGGTeA018087;
-        Tue, 12 Nov 2019 11:16:29 -0500
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 12 Nov 2019 11:16:29 -0500 (EST)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     tglx@linutronix.de, linux-rt-users@vger.kernel.org
-cc:     Mike Snitzer <msnitzer@redhat.com>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Scott Wood <swood@redhat.com>,
-        Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH RT 2/2 v2] list_bl: avoid BUG when the list is not locked
-Message-ID: <alpine.LRH.2.02.1911121110430.12815@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Tue, 12 Nov 2019 11:17:02 -0500
+Received: by mail-qt1-f193.google.com with SMTP id n4so15718302qte.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 08:17:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=twt8kJzhtPFZcAO1BhdHJtV6MHvkk/INbWMflmbiAcs=;
+        b=wOJG7TKZxJq4CpTPsx5BBiOVlFuqacNBz9W6xm0qACo/wundYrFHiI0ekBHcU+WcLW
+         0T9Dxdd/2RVxSjtTw3wgLA9Jj54sD1igfoXfVt4ArPEHkPRgdxcedv0G6T9xusV04IOg
+         RX4muJAyIWzmgRS+D8J1xPyY3yxJgaSS+nf7HgsHNAz83ChbKjYS/W/wai49fs0hKxyY
+         Lg667V1xFa+C2jeV2Dt/miS158NRuX3nDBQAqtQ/hYtjq7JES/R7BV76jHKNjPOrLJVz
+         MbpydXjQrDmqeq7BhMOdhQViCt1nzM6u86VU4s/s5OLqaOwJjFhY5KC8x/eib7GMDP2K
+         qFFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=twt8kJzhtPFZcAO1BhdHJtV6MHvkk/INbWMflmbiAcs=;
+        b=qe/EGrgOeqUpWKUkmEPvoFQw4/Hovr0sTx3u4VywYg7ITP24//lh9o56A4O4fYSv4G
+         KK1jy9PYNpSFk7ePJ/qSZHQeZZfRLgJ8yvCUH6w/EpoHhufgp2tcwS+duRGbD5plp5ZX
+         LRKac/fuhXoaz1eoWLBP4PfDbFQtapkIaSI8bz08XieOtCSjrCqybkVW5zPkLD1Znbzm
+         IMf/PIggVtxoYVzE2BWIzQ3IgxptZUVaS6kzKZzxpk0NJhLemxVtNDEwbC/ewwuRLxKI
+         yTwjtcqvNNZFyCxUFM6hHJAaGW9+M0UNtG9+4EWE9N67M+P2j+RUVJRM57XZMedi/eqb
+         7dPw==
+X-Gm-Message-State: APjAAAVqwvS73Sy9X43UvmjJJDIJ+HOk7C/MAXT1hQ1NBilqFCWBAu06
+        lSEfQdAQUfCBDjwJ+dIvnQJTSw==
+X-Google-Smtp-Source: APXvYqy5KJiW7cPw9ukstX7WWyRgfEKk9uJb84K1GhrWATzGZmzo1iLD7FFRft6n2cPa6jAJir+f8g==
+X-Received: by 2002:ac8:2361:: with SMTP id b30mr31934126qtb.322.1573575420020;
+        Tue, 12 Nov 2019 08:17:00 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::aa8c])
+        by smtp.gmail.com with ESMTPSA id v186sm8821612qkb.42.2019.11.12.08.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 08:16:59 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:16:58 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Chris Down <chris@chrisdown.name>, Qian Cai <cai@lca.pw>,
+        akpm@linux-foundation.org, guro@fb.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
+Message-ID: <20191112161658.GF168812@cmpxchg.org>
+References: <20191108204407.1435-1-cai@lca.pw>
+ <64E60F6F-7582-427B-8DD5-EF97B1656F5A@lca.pw>
+ <20191111130516.GA891635@chrisdown.name>
+ <20191111131427.GB891635@chrisdown.name>
+ <20191111132812.GK1396@dhcp22.suse.cz>
+ <20191112145942.GA168812@cmpxchg.org>
+ <20191112152750.GA512@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 4pd-lHFHON-uapLGkhrGKQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: TEXT/PLAIN; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112152750.GA512@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_bl would crash with BUG() if we used it without locking. dm-snapshot=
-=20
-uses its own locking on realtime kernels (it can't use list_bl because=20
-list_bl uses raw spinlock and dm-snapshot takes other non-raw spinlocks=20
-while holding bl_lock).
+On Tue, Nov 12, 2019 at 04:27:50PM +0100, Michal Hocko wrote:
+> On Tue 12-11-19 06:59:42, Johannes Weiner wrote:
+> > Qian, thanks for the report and the fix.
+> > 
+> > On Mon, Nov 11, 2019 at 02:28:12PM +0100, Michal Hocko wrote:
+> > > On Mon 11-11-19 13:14:27, Chris Down wrote:
+> > > > Chris Down writes:
+> > > > > Ah, I just saw this in my local checkout and thought it was from my
+> > > > > changes, until I saw it's also on clean mmots checkout. Thanks for the
+> > > > > fixup!
+> > > > 
+> > > > Also, does this mean we should change callers that may pass through
+> > > > zone_idx=MAX_NR_ZONES to become MAX_NR_ZONES-1 in a separate commit, then
+> > > > remove this interim fixup? I'm worried otherwise we might paper over real
+> > > > issues in future.
+> > > 
+> > > Yes, removing this special casing is reasonable. I am not sure
+> > > MAX_NR_ZONES - 1 is a better choice though. It is error prone and
+> > > zone_idx is the highest zone we should consider and MAX_NR_ZONES - 1
+> > > be ZONE_DEVICE if it is configured. But ZONE_DEVICE is really standing
+> > > outside of MM reclaim code AFAIK. It would be probably better to have
+> > > MAX_LRU_ZONE (equal to MOVABLE) and use it instead.
+> > 
+> > We already use MAX_NR_ZONES - 1 everywhere else in vmscan.c to mean
+> > "no zone restrictions" - get_scan_count() is the odd one out:
+> > 
+> > - mem_cgroup_shrink_node()
+> > - try_to_free_mem_cgroup_pages()
+> > - balance_pgdat()
+> > - kswapd()
+> > - shrink_all_memory()
+> > 
+> > It's a little odd that it points to ZONE_DEVICE, but it's MUCH less
+> > subtle than handling both inclusive and exclusive range delimiters.
+> > 
+> > So I think the better fix would be this:
+> 
+> lruvec_lru_size is explicitly documented to use MAX_NR_ZONES for all
+> LRUs and git grep says there are more instances outside of
+> get_scan_count. So all of them have to be fixed.
 
-To avoid this BUG, we must set LIST_BL_LOCKMASK =3D 0.
+Which ones?
 
-This patch is intended only for the realtime kernel patchset, not for the=
-=20
-upstream kernel.
+[hannes@computer linux]$ git grep lruvec_lru_size
+include/linux/mmzone.h:extern unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx);
+mm/vmscan.c: * lruvec_lru_size -  Returns the number of pages on the given LRU list.
+mm/vmscan.c:unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+mm/vmscan.c:    anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
+mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
+mm/vmscan.c:    file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
+mm/vmscan.c:            lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
+mm/vmscan.c:            lruvec_size = lruvec_lru_size(lruvec, lru, sc->reclaim_idx);
+[hannes@computer linux]$
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+The only other user already passes sc->reclaim_idx, which always
+points to a valid zone, and is initialized to MAX_NR_ZONES - 1 in many
+places.
 
-Index: linux-rt-devel/include/linux/list_bl.h
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
---- linux-rt-devel.orig/include/linux/list_bl.h=092019-11-07 14:01:51.00000=
-0000 +0100
-+++ linux-rt-devel/include/linux/list_bl.h=092019-11-08 10:12:49.000000000 =
-+0100
-@@ -19,7 +19,7 @@
-  * some fast and compact auxiliary data.
+> I still think that MAX_NR_ZONES - 1 is a very error prone and subtle
+> construct IMHO and an alias would be better readable.
+
+I wouldn't mind a follow-up patch that changes this pattern
+comprehensively. As it stands, get_scan_count() is the odd one out.
+
+The documentation bit is a good point, though. We should fix
+that. Updated patch:
+
+---
+
+From b1b6ce306010554aba6ebd7aac0abffc1576d71a Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Mon, 11 Nov 2019 13:46:25 -0800
+Subject: [PATCH] mm: vmscan: simplify lruvec_lru_size() fix
+
+get_scan_count() passes MAX_NR_ZONES for the reclaim index, which is
+beyond the range of valid zone indexes, but used to be handled before
+the patch. Every other callsite in vmscan.c passes MAX_NR_ZONES - 1 to
+express "all zones, please", so do the same here.
+
+Reported-by: Qian Cai <cai@lca.pw>
+Reported-by: Chris Down <chris@chrisdown.name>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/vmscan.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index df859b1d583c..5eb96a63ad1e 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -323,7 +323,7 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
+  * lruvec_lru_size -  Returns the number of pages on the given LRU list.
+  * @lruvec: lru vector
+  * @lru: lru to use
+- * @zone_idx: zones to consider (use MAX_NR_ZONES for the whole LRU list)
++ * @zone_idx: index of the highest zone to include (use MAX_NR_ZONES - 1 for all)
   */
-=20
--#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
-+#if (defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)) && !defined(CO=
-NFIG_PREEMPT_RT_BASE)
- #define LIST_BL_LOCKMASK=091UL
- #else
- #define LIST_BL_LOCKMASK=090UL
-@@ -161,9 +161,6 @@ static inline void hlist_bl_lock(struct
- =09bit_spin_lock(0, (unsigned long *)b);
- #else
- =09raw_spin_lock(&b->lock);
--#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
--=09__set_bit(0, (unsigned long *)b);
--#endif
- #endif
- }
-=20
-@@ -172,9 +169,6 @@ static inline void hlist_bl_unlock(struc
- #ifndef CONFIG_PREEMPT_RT_BASE
- =09__bit_spin_unlock(0, (unsigned long *)b);
- #else
--#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
--=09__clear_bit(0, (unsigned long *)b);
--#endif
- =09raw_spin_unlock(&b->lock);
- #endif
- }
+ unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+ {
+@@ -2322,10 +2322,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 	 * anon in [0], file in [1]
+ 	 */
+ 
+-	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
+-		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
+-	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
+-		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
++	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES - 1) +
++		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES - 1);
++	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES - 1) +
++		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES - 1);
+ 
+ 	spin_lock_irq(&pgdat->lru_lock);
+ 	if (unlikely(reclaim_stat->recent_scanned[0] > anon / 4)) {
+-- 
+2.24.0
 
