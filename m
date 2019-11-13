@@ -2,171 +2,154 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B4CC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB5CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BB5206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F42206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuLdIKvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKMRtG (ORCPT
+        id S1727555AbfKMRul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:49:06 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41490 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727176AbfKMRtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:49:06 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0E36FCA2DD50C4DA1289;
-        Thu, 14 Nov 2019 01:49:03 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 01:48:53 +0800
-Date:   Wed, 13 Nov 2019 17:48:45 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Tao Xu <tao3.xu@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, "Keith Busch" <keith.busch@intel.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linuxarm <linuxarm@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
-Message-ID: <20191113174845.000009d3@huawei.com>
-In-Reply-To: <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
-References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
-        <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
-        <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
-        <20191113094742.00000dc4@huawei.com>
-        <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 13 Nov 2019 12:50:41 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53215 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfKMRul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:50:41 -0500
+Received: by mail-wm1-f68.google.com with SMTP id l1so2955144wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:50:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=XtZ5+hurRglr2Zec63tSlfjqtuoBsXpGgI+k5kdQDcU=;
+        b=QuLdIKvOrPdm9jUB2Y3bTEmV76qPaTwnuZ2n/kzC+Pw6MXe1N4HV1EZNRLJghkAhXU
+         goHShHGpbQkNngKCZylqHOEnNL0SvIgSfF/5LqoCIPr4zbdY3yCLA0rcGWjdqtOXHiQ9
+         ebCfGFWOzHaqD8WI0UnFdMzT8grOKeXdEfWX9kPLFW/+Ud/2ouVzUhlQc7SVPKiUAA3C
+         v1kHT8uYWHsAmRDQGJqfKvF/tU/ht6qPaQPgWeFfEEySzgO345SedMr5p25ncrZLeHQm
+         BPi3QMvjcCj1OKZwBiWckNcKSbUm41swEvu4hiJxee55vL/yhuiXGTocJ1bVZGp5ac4a
+         8GRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=XtZ5+hurRglr2Zec63tSlfjqtuoBsXpGgI+k5kdQDcU=;
+        b=YzKwCzJKWnJ4xurFJCNRZjmPXQfUSGztxQApf0lCgcw+Iqks52F+xswgaFeFdIXHlS
+         DxgCyTU7rs21ngE74JshYX6cdgqjhSKLUGHMCSEeix8TqceBg8R4MkvptXdXGXfzvgpg
+         RekUHWALPZMRrG2nZYDU1MnhLcNCH/RYEY+AZa3igBnJKJs20MctcbGK2ZTPHpWYDQ4L
+         vbT1QVu9aQSdxsfvYAdA/tqCS767FZnSgNm0f5xYkRN+Ffk8M42pX18mF5Nn3tgWjcgf
+         at0TVV+4Os543vhe5e1PQnJog3jOQK2zSXMD37I58QYps0lzCHKMJvPYHfIjSSmlXjl2
+         VioQ==
+X-Gm-Message-State: APjAAAWA5dk7r4NlhmMedKXV+VAmOKXRvaWQ/J6GNmzTaRXps4pdddtF
+        CtJOYqzQKPsQNqSSN5AIY1JxeQ==
+X-Google-Smtp-Source: APXvYqwOVazO2F4zD8CghNWIMLBqPeDM2BvHp40pB/noJ1PV95xa2h4VO4iA6aANqurH7qMZLVQGng==
+X-Received: by 2002:a7b:c347:: with SMTP id l7mr4047027wmj.48.1573667439032;
+        Wed, 13 Nov 2019 09:50:39 -0800 (PST)
+Received: from linaro.org ([2a01:e0a:f:6020:bdd0:28e6:f0d9:a18c])
+        by smtp.gmail.com with ESMTPSA id u1sm2854689wmc.3.2019.11.13.09.50.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 09:50:37 -0800 (PST)
+Date:   Wed, 13 Nov 2019 18:50:35 +0100
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
+Message-ID: <20191113175035.GA8553@linaro.org>
+References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
+ <20191112150544.GA3664@linaro.org>
+ <3b8cafb7-894d-c302-e6c6-b5844b1298b5@arm.com>
+ <CAKfTPtBMNnM2tTfb72VtufDpwBvqu6Ttj3dnLgoNOZ--Q6qo+Q@mail.gmail.com>
+ <bcba52bc-6780-1efc-6ef4-1a75f1cef33d@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bcba52bc-6780-1efc-6ef4-1a75f1cef33d@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 21:57:24 +0800
-Tao Xu <tao3.xu@intel.com> wrote:
-
-> On 11/13/2019 5:47 PM, Jonathan Cameron wrote:
-> > On Tue, 12 Nov 2019 09:55:17 -0800
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> >> [ add Tao Xu ]
+Le Wednesday 13 Nov 2019 à 15:09:47 (+0100), Dietmar Eggemann a écrit :
+> On 13.11.19 14:30, Vincent Guittot wrote:
+> > On Wed, 13 Nov 2019 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
 > >>
-> >> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
-> >> <Jonathan.Cameron@huawei.com> wrote:  
-> >>>
-> >>> Generic Initiators are a new ACPI concept that allows for the
-> >>> description of proximity domains that contain a device which
-> >>> performs memory access (such as a network card) but neither
-> >>> host CPU nor Memory.
-> >>>
-> >>> This patch has the parsing code and provides the infrastructure
-> >>> for an architecture to associate these new domains with their
-> >>> nearest memory processing node.  
-> >>
-> >> Thanks for this Jonathan. May I ask how this was tested? Tao has been
-> >> working on qemu support for HMAT [1]. I have not checked if it already
-> >> supports generic initiator entries, but it would be helpful to include
-> >> an example of how the kernel sees these configurations in practice.
-> >>
-> >> [1]: http://patchwork.ozlabs.org/cover/1096737/  
-> > 
-> > Tested against qemu with SRAT and SLIT table overrides from an
-> > initrd to actually create the node and give it distances
-> > (those all turn up correctly in the normal places).  DSDT override
-> > used to move an emulated network card into the GI numa node.  That
-> > currently requires the PCI patch referred to in the cover letter.
-> > On arm64 tested both on qemu and real hardware (overrides on tables
-> > even for real hardware as I can't persuade our BIOS team to implement
-> > Generic Initiators until an OS is actually using them.)
-> > 
-> > Main real requirement is memory allocations then occur from one of
-> > the nodes at the minimal distance when you are do a devm_ allocation
-> > from a device assigned. Also need to be able to query the distances
-> > to allow load balancing etc.  All that works as expected.
-> > 
-> > It only has a fairly tangential connection to HMAT in that HMAT
-> > can provide information on GI nodes.  Given HMAT code is quite happy
-> > with memoryless nodes anyway it should work.  QEMU doesn't currently
-> > have support to create GI SRAT entries let alone HMAT using them.
-> > 
-> > Whilst I could look at adding such support to QEMU, it's not
-> > exactly high priority to emulate something we can test easily
-> > by overriding the tables before the kernel reads them.
-> > 
-> > I'll look at how hard it is to build an HMAT tables for my test
-> > configs based on the ones I used to test your HMAT patches a while
-> > back.  Should be easy if tedious.
-> > 
-> > Jonathan
-> >   
-> Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU 
-> only can emulate a node with cpu and memory, or memory-only. Even if we 
-> assign a node with cpu only, qemu will raise error. Considering 
-> compatibility, there are lots of work to do for QEMU if we change NUMA 
-> or SRAT table.
+> >> On 12.11.19 16:05, Vincent Guittot wrote:
+> >>> Le Tuesday 12 Nov 2019 à 15:48:13 (+0100), Vincent Guittot a écrit :
 > 
+> [...]
+> 
+> >>>> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
+> >>>>       * that RT, DL and IRQ signals have been updated before updating CFS.
+> >>>>       */
+> >>>>      curr_class = rq->curr->sched_class;
+> >>>> -    update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> >>>> -    update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> >>>> -    update_irq_load_avg(rq, 0);
+> >>>> +    decayed |= update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> >>>> +    decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> >>>> +    decayed |= update_irq_load_avg(rq, 0);
+> >>
+> >> Why not 'decayed  = update_cfs_rq_load_avg()' like in the
+> >> !CONFIG_FAIR_GROUP_SCHED case?
+> > 
+> > Because it is handled by the update_load_avg() in
+> > for_each_leaf_cfs_rq_safe() loop
+> > 
+> > This means that we can have 2 calls to cpufreq_update_util in
+> > update_blocked_average() but at least the values will be up to date in
+> > both calls unlike previously.
+> > 
+> > I'm going to prepare an additional patch to remove this useless call.
+> > I have also seen some possible further optimization that i need to
+> > study a bit more before preparing a patch
+> 
+> I see. The update_load_avg() call for the taskgroup skeleton se
+> (cfs_rq->tg->se[cpu]). But what happens to the cpu which only has the
+> root cfs_rq i the list? It doesn't have a skeleton se.
 
-I faked up a quick HMAT table.
+you're right. I have to add the following to make sure it will be called
 
-Used a configuration with 3x CPU and memory nodes, 1x memory only node
-and 1x GI node.  Two test cases, one where the GI initiator is further than
-the CPU containing nodes from the memory only node (realistic case for
-existing hardware). That behaves as expected and there are no
-/sys/node/bus/nodeX/access0 entries for the GI node
-+ appropriate ones for the memory only node as normal.
-
-The other case is more interesting we have the memory only node nearer
-to the GI node than to any of the CPUs.  In that case for x86 at least
-the HMAT code is happy to put an access0 directory GI in the GI node
-with empty access0/initiators and the memory node under access0/targets
-
-The memory only node is node4 and the GI node node3.
-
-So relevant dirs under /sys/bus/nodes/devices
-
-node3/access0/initators/ Empty
-node3/access0/targets/node4
-
-node4/access0/initators/[node3 read_bandwidth write_bandwith etc]
-node4/access0/targets/ Empty
-
-So the result current (I think - the HMAT interface still confuses
-me :) is that a GI node is treated like a CPU node.  This might mean
-there is no useful information available if you want to figure out
-which CPU containing node is nearest to Memory when the GI node is
-nearer still.
-
-Is this a problem?  I'm not sure...  
-
-If we don't want to include GI nodes then we can possibly
-use the node_state(N_CPU, x) method to check before considering
-them, or I guess parse SRAT to extract that info directly. 
-
-I tried this and it seems to work so can add patch doing this
-next version if we think this is the 'right' thing to do.
-
-So what do you think 'should' happen? 
-
-Jonathan
-
-
-
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 2eb1aa8..9fc077c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7604,9 +7604,13 @@ static void update_blocked_averages(int cpu)
+                        cpu,
+                        cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
+ 
+-               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
++               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
+                        update_tg_load_avg(cfs_rq, 0);
+ 
++                       if (cfs_rq == &rq->cfs)
++                               decayed = 1;
++               }
++
+                trace_sched_load_contrib_blocked(cpu,
+                        &cfs_rq->avg,
+                        cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
 
 
