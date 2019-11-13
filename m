@@ -2,145 +2,188 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DEAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8A0C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00272206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n1t9MMHi"
+	by mail.kernel.org (Postfix) with ESMTP id 2BA89206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:23:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKMUWi (ORCPT
+        id S1726910AbfKMUXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:22:38 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3801 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKMUWh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:22:37 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcc660b0000>; Wed, 13 Nov 2019 12:22:35 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 13 Nov 2019 12:22:36 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 13 Nov 2019 12:22:36 -0800
-Received: from [10.2.160.107] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
- 2019 20:22:35 +0000
-Subject: Re: [PATCH v4 08/23] vfio, mm: fix get_user_pages_remote() and
- FOLL_LONGTERM
-To:     Ira Weiny <ira.weiny@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191113042710.3997854-1-jhubbard@nvidia.com>
- <20191113042710.3997854-9-jhubbard@nvidia.com>
- <20191113130202.GA26068@ziepe.ca>
- <20191113191705.GE12947@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <290ba4aa-247e-6570-9eff-ccf2087e1120@nvidia.com>
-Date:   Wed, 13 Nov 2019 12:19:50 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 15:23:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfKMUXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:23:21 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A19FA206EC;
+        Wed, 13 Nov 2019 20:23:19 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 15:23:17 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, mingo@redhat.com,
+        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
+        daidavid1@codeaurora.org, okukatla@codeaurora.org,
+        evgreen@chromium.org, mka@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] interconnect: Add basic tracepoints
+Message-ID: <20191113152317.00318ad8@gandalf.local.home>
+In-Reply-To: <20191101130031.27996-4-georgi.djakov@linaro.org>
+References: <20191101130031.27996-1-georgi.djakov@linaro.org>
+        <20191101130031.27996-4-georgi.djakov@linaro.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191113191705.GE12947@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573676555; bh=FW0krwPwWqciO/Z2LS4wGz5Cikl4rg4mIFXWQ1mXpqU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=n1t9MMHier43EuFZpftpwQVDKG8oSo9TdOvV+OMzrOIN0Kprv6dkR4Jpu6/PqCqXm
-         /jCxLMJDxPPXF7oklQ45MeW/Fl3jyAJJ4cfyLvk1YJ3ZXQloakTUN/6QsjTZ2e8wLd
-         Vi5ItQz0+ykvg9G6LEUGgX0gLMaFmq2awJU2Kk5qVpihlMSAmAuGK9LjnFEEtlsHOE
-         JOaWrzJR8vtoHRO1QeIa0YnKmF32io8xAGlhrbiuGj5eUhM/rh5jJ0AdTIvnBhqGbA
-         tSsPrYCj4XsKBHj/d5S4XMsaWdBoBg5n+7WnTPKexUFAUitbBsugmf2TNoS/6cs3Dr
-         dZibHSHNj0z1Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 11:17 AM, Ira Weiny wrote:
-...
->>> @@ -348,33 +347,13 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
->>>   		flags |= FOLL_WRITE;
->>>   
->>>   	down_read(&mm->mmap_sem);
->>> -	if (mm == current->mm) {
->>> -		ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
->>> -				     vmas);
->>> -	} else {
->>> -		ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
->>> -					    vmas, NULL);
->>> -		/*
->>> -		 * The lifetime of a vaddr_get_pfn() page pin is
->>> -		 * userspace-controlled. In the fs-dax case this could
->>> -		 * lead to indefinite stalls in filesystem operations.
->>> -		 * Disallow attempts to pin fs-dax pages via this
->>> -		 * interface.
->>> -		 */
->>> -		if (ret > 0 && vma_is_fsdax(vmas[0])) {
->>> -			ret = -EOPNOTSUPP;
->>> -			put_page(page[0]);
->>> -		}
->>> -	}
->>> -	up_read(&mm->mmap_sem);
->>> -
->>> +	ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
->>> +				    page, NULL, NULL);
->>>   	if (ret == 1) {
->>>   		*pfn = page_to_pfn(page[0]);
->>>   		return 0;
->>
->> Mind the return with the lock held this needs some goto unwind
-> 
-> Ah yea...  retract my reviewed by...  :-(
-> 
+On Fri,  1 Nov 2019 15:00:31 +0200
+Georgi Djakov <georgi.djakov@linaro.org> wrote:
 
-ooops, embarrassed that I missed that, good catch. Will repost with it fixed.
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index df44ef713db5..15e11e22ddf7 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -26,6 +26,9 @@ static LIST_HEAD(icc_providers);
+>  static DEFINE_MUTEX(icc_lock);
+>  static struct dentry *icc_debugfs_dir;
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/interconnect.h>
+> +
+>  static void icc_summary_show_one(struct seq_file *s, struct icc_node *n)
+>  {
+>  	if (!n)
+> @@ -435,6 +438,8 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  
+>  		/* aggregate requests for this node */
+>  		aggregate_requests(node);
+> +
+> +		trace_icc_set_bw(path, node, i, avg_bw, peak_bw);
+>  	}
+>  
+>  	ret = apply_constraints(path);
+> @@ -453,6 +458,8 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  
+>  	mutex_unlock(&icc_lock);
+>  
+> +	trace_icc_set_bw_end(path, ret);
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(icc_set_bw);
+> diff --git a/include/trace/events/interconnect.h b/include/trace/events/interconnect.h
+> new file mode 100644
+> index 000000000000..64b646aa7bd3
+> --- /dev/null
+> +++ b/include/trace/events/interconnect.h
+> @@ -0,0 +1,81 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019, Linaro Ltd.
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
+> +
+> +#if !defined(_TRACE_INTERCONNECT_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_INTERCONNECT_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM interconnect
+> +
+> +#include "../../../drivers/interconnect/internal.h"
+
+Ug.
+
+I would recommend placing this file in with drivers/interconnect, and
+call it simply trace.h, or interconnect_trace.h. Then you can include
+"internal.h" nicely.
+
+To do so, you need to add to drivers/interconnect/Makefile:
+
+ CFLAGS_core.o := -I$(src)
+
+To have core.c include this file.
+
+Rest looks fine.
+
+-- Steve
 
 
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+> +
+> +TRACE_EVENT(icc_set_bw,
+> +
+> +	TP_PROTO(struct icc_path *p, struct icc_node *n, int i,
+> +		 u32 avg_bw, u32 peak_bw),
+> +
+> +	TP_ARGS(p, n, i, avg_bw, peak_bw),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(path_name, p->name)
+> +		__string(dev, dev_name(p->reqs[i].dev))
+> +		__string(node_name, n->name)
+> +		__field(u32, avg_bw)
+> +		__field(u32, peak_bw)
+> +		__field(u32, node_avg_bw)
+> +		__field(u32, node_peak_bw)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(path_name, p->name);
+> +		__assign_str(dev, dev_name(p->reqs[i].dev));
+> +		__assign_str(node_name, n->name);
+> +		__entry->avg_bw = avg_bw;
+> +		__entry->peak_bw = peak_bw;
+> +		__entry->node_avg_bw = n->avg_bw;
+> +		__entry->node_peak_bw = n->peak_bw;
+> +	),
+> +
+> +	TP_printk("path=%s dev=%s node=%s avg_bw=%u peak_bw=%u agg_avg=%u agg_peak=%u",
+> +		  __get_str(path_name),
+> +		  __get_str(dev),
+> +		  __get_str(node_name),
+> +		  __entry->avg_bw,
+> +		  __entry->peak_bw,
+> +		  __entry->node_avg_bw,
+> +		  __entry->node_peak_bw)
+> +);
+> +
+> +TRACE_EVENT(icc_set_bw_end,
+> +
+> +	TP_PROTO(struct icc_path *p, int ret),
+> +
+> +	TP_ARGS(p, ret),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(path_name, p->name)
+> +		__string(dev, dev_name(p->reqs[0].dev))
+> +		__field(int, ret)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(path_name, p->name);
+> +		__assign_str(dev, dev_name(p->reqs[0].dev));
+> +		__entry->ret = ret;
+> +	),
+> +
+> +	TP_printk("path=%s dev=%s ret=%d",
+> +		  __get_str(path_name),
+> +		  __get_str(dev),
+> +		  __entry->ret)
+> +);
+> +
+> +#endif /* _TRACE_INTERCONNECT_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
 
