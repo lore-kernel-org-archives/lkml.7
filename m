@@ -2,227 +2,169 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728B6C33C9A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4B9C47410
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78ACC233CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391392255C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="cyuf7T9i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaXcyDxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfKMP5R (ORCPT
+        id S1728088AbfKMPnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:57:17 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:21788 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfKMP5R (ORCPT
+        Wed, 13 Nov 2019 10:43:37 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44493 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfKMPng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:57:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573660634;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=/LGnKiYy7wgg2UQ6QDBC/em5eo8m26dky6ZlAzfrAsc=;
-        b=cyuf7T9i12p7uQf9BiRFWm9pDXkuuF3wpZ5PVtdyTo8ANoAJYOHxkzzeZJ1ZHiYg9u
-        Dh6Dat1TVQEoTzm9KhHqaxj9lH5h1Tu1vW6QW6TmwRyuOigpUJavGV4yud98/t4GE0Ea
-        v8vzNfVMJ+HwQ8C6FxnRSjhWVmwnXhrsJxrdyDbuEB+IsgZ7uzhKZQPKMmNAtxbKfVWQ
-        XaJ/FWFaavSjiDCII08nL2jYxd8UGn4rf5Ah672+8lXv+wAqur3WkuLPcI2qAfXy5oEM
-        uzUJhFJTpjvHSB6vh6rDGIeySER0WGNdciy64oyvOyK1CcTR1HdkVrLCJBFkinMlYkDO
-        cSag==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS325Pjw=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id 20735bvADFsBGfU
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 13 Nov 2019 16:54:11 +0100 (CET)
-From:   Olaf Hering <olaf@aepfle.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Olaf Hering <olaf@aepfle.de>
-Subject: [PATCH v2] tools/hv: async name resolution in kvp_daemon
-Date:   Wed, 13 Nov 2019 16:54:00 +0100
-Message-Id: <20191113155400.25456-1-olaf@aepfle.de>
-X-Mailer: git-send-email 2.16.4
+        Wed, 13 Nov 2019 10:43:36 -0500
+Received: by mail-ua1-f66.google.com with SMTP id r22so793434uam.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 07:43:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/Vi/nAUFrYq+Z81VivMqWJ6fhk9sFE6uoRaEGSyG7LY=;
+        b=eaXcyDxzW5Wq4bEa2mTFE+456S59OzhTQYiZPfJETT/aHklwJKeLmekruQ2WAfteKc
+         lmJYTJpHyTE5zmZ/adbDYCJg57zdTiwi2vmgSfSoZH5EjqfKfOgCQnf/SrBb0+RTPDTN
+         4LgJWW2fe/2Rn+2bpAx6Vz7xHx1S2Xmn98gKFhpEX+7WpXY08hANvj3PL2lHeJW63yCu
+         35Ef6Z1hxneuZTwcrd6Jaycuc/DDXkuWiOM5qkcRUBmWjTksUHMS43G5aao+gWCn5LWP
+         ooKIrc4c3CzmDKD2K2SFi/ikfdWfhM/wBQjJWui2L/IQqicpiy8LUCxXMhNKcOOqAJPD
+         JrMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/Vi/nAUFrYq+Z81VivMqWJ6fhk9sFE6uoRaEGSyG7LY=;
+        b=rtD0HLq1yJJmZTaobKWEa2TZw6gIutAHGclQQEXaGZnfG2EtLfjrdnY/M4p2lEe8te
+         rZbjrnNG83EA6iNlWhpdEzoljpeinoRA0HqotAdvw3FWC0mCCEtWZj77VQLFqo18OHW/
+         eAE7PMTW82H5hMcD3lFdyQew5kUai3Qyu4moE4zGmsbICOrdne77gM+rW+6AqBzTV3CH
+         WlhykfI30tfjzipTY/xYhk01k7zS4l+SbZwmcabYmj3ssuuTmsN0VBZkN2VYa0cfG9JO
+         ujbc3Rk1fIm/e23uOpMfzEy0C4vMQXDnSJuU6PakE7j099FIWRToTcxw8ts65Dm+Shoy
+         if6g==
+X-Gm-Message-State: APjAAAUDkd0lSZXVQOHqxCNcvbiFsHOQTl77XAW0W0V3yhmPS6yQBL+q
+        f2c+bPKJuTs/I7JeS6ivDGtC9r8vC4NfVZ4mFI8=
+X-Google-Smtp-Source: APXvYqyWd8hfrLRPwCngx48jvavKfYDtnbc3w9HChvejMMB4srKR3Nc94lmckPsm/62oZMiU7s0R6Oi/Qu5dSFVFGGc=
+X-Received: by 2002:ab0:14e8:: with SMTP id f37mr2198362uae.64.1573659815058;
+ Wed, 13 Nov 2019 07:43:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191106163031.808061-1-adrian.ratiu@collabora.com> <20191106163031.808061-4-adrian.ratiu@collabora.com>
+In-Reply-To: <20191106163031.808061-4-adrian.ratiu@collabora.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Wed, 13 Nov 2019 15:43:08 +0000
+Message-ID: <CACvgo50xc9NKgNn2uzGFbW1TwBDFRPmC3geCSC_63P-OXbm6DA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm: imx: Add i.MX 6 MIPI DSI host driver
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     LAKML <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip <linux-rockchip@lists.infradead.org>,
+        kernel@collabora.com,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hostname is resolved just once since commit 58125210ab3b ("Tools:
-hv: cache FQDN in kvp_daemon to avoid timeouts") to make sure the VM
-responds within the timeout limits to requests from the host.
+On Wed, 6 Nov 2019 at 16:31, Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+>
+> This adds support for the Synopsis DesignWare MIPI DSI v1.01 host
+> controller which is embedded in i.MX 6 SoCs.
+>
+> Based on following patches, but updated/extended to work with existing
+> support found in the kernel:
+>
+> - drm: imx: Support Synopsys DesignWare MIPI DSI host controller
+>   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+>
+> - ARM: dtsi: imx6qdl: Add support for MIPI DSI host controller
+>   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+With the const nitpick below, the patch is:
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
 
-If for some reason getaddrinfo fails, the string returned by the
-"FullyQualifiedDomainName" request contains some error string, which is
-then used by tools on the host side.
+Aside, for the future consider having a change log in the patch itself.
+What I tend to do is:
+ - v2: Keep DW version specifics in dw-mipi-dsi.c (Emil)
 
-Adjust the code to resolve the current hostname in a separate thread.
-This thread loops until getaddrinfo returns success. During this time
-all "FullyQualifiedDomainName" requests will be answered with an empty
-string.
+<snip>
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
----
+> +static struct dw_mipi_dsi_variant dw_mipi_dsi_v101_layout = {
 
-v2:
-- link with -pthread instead of -lpthread
-- consider some errors from getaddrinfo fatal, log them via syslog
-- update also hostname in the loop
+Nit: make this a const.
 
- tools/hv/Makefile        |  2 ++
- tools/hv/hv_kvp_daemon.c | 83 ++++++++++++++++++++++++++++++++++--------------
- 2 files changed, 62 insertions(+), 23 deletions(-)
 
-diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-index b57143d9459c..9bbab96ac06d 100644
---- a/tools/hv/Makefile
-+++ b/tools/hv/Makefile
-@@ -22,6 +22,8 @@ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
- 
-+$(OUTPUT)hv_kvp_daemon: LDFLAGS += -pthread
-+
- all: $(ALL_PROGRAMS)
- 
- export srctree OUTPUT CC LD CFLAGS
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index e9ef4ca6a655..b930506a9632 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -41,6 +41,7 @@
- #include <net/if.h>
- #include <limits.h>
- #include <getopt.h>
-+#include <pthread.h>
- 
- /*
-  * KVP protocol: The user mode component first registers with the
-@@ -85,7 +86,7 @@ static char *processor_arch;
- static char *os_build;
- static char *os_version;
- static char *lic_version = "Unknown version";
--static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
-+static char *full_domain_name;
- static struct utsname uts_buf;
- 
- /*
-@@ -1327,27 +1328,67 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- 	return error;
- }
- 
--
--static void
--kvp_get_domain_name(char *buffer, int length)
-+/*
-+ * Async retrival of Fully Qualified Domain Name because getaddrinfo takes an
-+ * unpredictable amount of time to finish.
-+ */
-+static void *kvp_getaddrinfo(void *p)
- {
--	struct addrinfo	hints, *info ;
--	int error = 0;
-+	char *tmp, **str_ptr = (char **)p;
-+	char hostname[HOST_NAME_MAX + 1];
-+	struct addrinfo	*info, hints = {
-+		.ai_family = AF_INET, /* Get only ipv4 addrinfo. */
-+		.ai_socktype = SOCK_STREAM,
-+		.ai_flags = AI_CANONNAME,
-+	};
-+	int ret;
- 
--	gethostname(buffer, length);
--	memset(&hints, 0, sizeof(hints));
--	hints.ai_family = AF_INET; /*Get only ipv4 addrinfo. */
--	hints.ai_socktype = SOCK_STREAM;
--	hints.ai_flags = AI_CANONNAME;
-+	do {
-+		if (gethostname(hostname, sizeof(hostname) - 1) < 0)
-+			goto out;
- 
--	error = getaddrinfo(buffer, NULL, &hints, &info);
--	if (error != 0) {
--		snprintf(buffer, length, "getaddrinfo failed: 0x%x %s",
--			error, gai_strerror(error));
-+		ret = getaddrinfo(hostname, NULL, &hints, &info);
-+		switch (ret) {
-+		case 0:
-+			break;
-+		case EAI_BADFLAGS:
-+		case EAI_MEMORY:
-+		case EAI_OVERFLOW:
-+		case EAI_SOCKTYPE:
-+		case EAI_SYSTEM:
-+			/* Permanent failure */
-+			syslog(LOG_ERR, "getaddrinfo failed: %d %s",
-+				ret, gai_strerror(ret));
-+			goto out;
-+		default:
-+			/* Temporary failure, aim for success. */
-+			sleep(1);
-+		}
-+	} while (ret);
-+
-+	ret = asprintf(&tmp, "%s", info->ai_canonname);
-+	freeaddrinfo(info);
-+	if (ret <= 0)
-+		goto out;
-+
-+	if (ret > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)
-+		tmp[HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1] = '\0';
-+	*str_ptr = tmp;
-+
-+out:
-+	pthread_exit(NULL);
-+}
-+
-+static void kvp_obtain_domain_name(char **str_ptr)
-+{
-+	pthread_t t;
-+
-+	if (pthread_create(&t, NULL, kvp_getaddrinfo, str_ptr)) {
-+		syslog(LOG_ERR, "pthread_create failed; error: %d %s",
-+			errno, strerror(errno));
- 		return;
- 	}
--	snprintf(buffer, length, "%s", info->ai_canonname);
--	freeaddrinfo(info);
-+	pthread_detach(t);
- }
- 
- void print_usage(char *argv[])
-@@ -1412,11 +1453,7 @@ int main(int argc, char *argv[])
- 	 * Retrieve OS release information.
- 	 */
- 	kvp_get_os_info();
--	/*
--	 * Cache Fully Qualified Domain Name because getaddrinfo takes an
--	 * unpredictable amount of time to finish.
--	 */
--	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
-+	kvp_obtain_domain_name(&full_domain_name);
- 
- 	if (kvp_file_init()) {
- 		syslog(LOG_ERR, "Failed to initialize the pools");
-@@ -1571,7 +1608,7 @@ int main(int argc, char *argv[])
- 
- 		switch (hv_msg->body.kvp_enum_data.index) {
- 		case FullyQualifiedDomainName:
--			strcpy(key_value, full_domain_name);
-+			strcpy(key_value, full_domain_name ? : "");
- 			strcpy(key_name, "FullyQualifiedDomainName");
- 			break;
- 		case IntegrationServicesVersion:
+> +       .cfg_dpi_vid =                  REG_FIELD(DSI_DPI_CFG, 0, 1),
+> +       .cfg_dpi_color_coding =         REG_FIELD(DSI_DPI_CFG, 2, 4),
+> +       .cfg_dpi_18loosely_en =         REG_FIELD(DSI_DPI_CFG, 10, 10),
+> +       .cfg_dpi_vsync_active_low =     REG_FIELD(DSI_DPI_CFG, 6, 6),
+> +       .cfg_dpi_hsync_active_low =     REG_FIELD(DSI_DPI_CFG, 7, 7),
+> +       .cfg_cmd_mode_en =              REG_FIELD(DSI_CMD_MODE_CFG_V101, 0, 0),
+> +       .cfg_cmd_mode_all_lp_en =       REG_FIELD(DSI_CMD_MODE_CFG_V101, 1, 12),
+> +       .cfg_cmd_mode_ack_rqst_en =     REG_FIELD(DSI_CMD_MODE_CFG_V101, 13, 13),
+> +       .cfg_cmd_pkt_status =           REG_FIELD(DSI_CMD_PKT_STATUS_V101, 0, 14),
+> +       .cfg_vid_mode_en =              REG_FIELD(DSI_VID_MODE_CFG_V101, 0, 0),
+> +       .cfg_vid_mode_type =            REG_FIELD(DSI_VID_MODE_CFG_V101, 1, 2),
+> +       .cfg_vid_mode_low_power =       REG_FIELD(DSI_VID_MODE_CFG_V101, 3, 8),
+> +       .cfg_vid_pkt_size =             REG_FIELD(DSI_VID_PKT_CFG, 0, 10),
+> +       .cfg_vid_hsa_time =             REG_FIELD(DSI_TMR_LINE_CFG, 0, 8),
+> +       .cfg_vid_hbp_time =             REG_FIELD(DSI_TMR_LINE_CFG, 9, 17),
+> +       .cfg_vid_hline_time =           REG_FIELD(DSI_TMR_LINE_CFG, 18, 31),
+> +       .cfg_vid_vsa_time =             REG_FIELD(DSI_VTIMING_CFG, 0, 3),
+> +       .cfg_vid_vbp_time =             REG_FIELD(DSI_VTIMING_CFG, 4, 9),
+> +       .cfg_vid_vfp_time =             REG_FIELD(DSI_VTIMING_CFG, 10, 15),
+> +       .cfg_vid_vactive_time =         REG_FIELD(DSI_VTIMING_CFG, 16, 26),
+> +       .cfg_phy_txrequestclkhs =       REG_FIELD(DSI_PHY_IF_CTRL, 0, 0),
+> +       .cfg_phy_bta_time =             REG_FIELD(DSI_PHY_TMR_CFG_V101, 0, 11),
+> +       .cfg_phy_lp2hs_time =           REG_FIELD(DSI_PHY_TMR_CFG_V101, 12, 19),
+> +       .cfg_phy_hs2lp_time =           REG_FIELD(DSI_PHY_TMR_CFG_V101, 20, 27),
+> +       .cfg_phy_testclr =              REG_FIELD(DSI_PHY_TST_CTRL0_V101, 0, 0),
+> +       .cfg_phy_unshutdownz =          REG_FIELD(DSI_PHY_RSTZ_V101, 0, 0),
+> +       .cfg_phy_unrstz =               REG_FIELD(DSI_PHY_RSTZ_V101, 1, 1),
+> +       .cfg_phy_enableclk =            REG_FIELD(DSI_PHY_RSTZ_V101, 2, 2),
+> +       .cfg_phy_nlanes =               REG_FIELD(DSI_PHY_IF_CFG_V101, 0, 1),
+> +       .cfg_phy_stop_wait_time =       REG_FIELD(DSI_PHY_IF_CFG_V101, 2, 9),
+> +       .cfg_phy_status =               REG_FIELD(DSI_PHY_STATUS_V101, 0, 0),
+> +       .cfg_pckhdl_cfg =               REG_FIELD(DSI_PCKHDL_CFG_V101, 0, 4),
+> +       .cfg_hstx_timeout_counter =     REG_FIELD(DSI_TO_CNT_CFG_V101, 0, 15),
+> +       .cfg_lprx_timeout_counter =     REG_FIELD(DSI_TO_CNT_CFG_V101, 16, 31),
+> +       .cfg_int_stat0 =                REG_FIELD(DSI_ERROR_ST0_V101, 0, 20),
+> +       .cfg_int_stat1 =                REG_FIELD(DSI_ERROR_ST1_V101, 0, 17),
+> +       .cfg_int_mask0 =                REG_FIELD(DSI_ERROR_MSK0_V101, 0, 20),
+> +       .cfg_int_mask1 =                REG_FIELD(DSI_ERROR_MSK1_V101, 0, 17),
+> +       .cfg_gen_hdr =                  REG_FIELD(DSI_GEN_HDR_V101, 0, 31),
+> +       .cfg_gen_payload =              REG_FIELD(DSI_GEN_PLD_DATA_V101, 0, 31),
+> +};
+if we start getting a lot of these, one way to keep things brief is to
+reuse the GEN._FEATURES approach in gpu/drm/i915/i915_pci.c
+
+Namely:
+#define 100_FEATURES \
+ .foo = ... \
+ .bar = ...
+
+.... v100_layout = {
+100_FEATURES,
+};
+... v101_layout = {
+100_FEATURES,
+// extra 101 changes
+.foo = ...101, \
+.bar = ...101
+};
+
+But that for another day.
+
+HTH
+-Emil
