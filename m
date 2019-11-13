@@ -2,88 +2,144 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4AEC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C0EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DD220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A43122466
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFfHbsP8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BVU7rtLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfKMBEs (ORCPT
+        id S1727196AbfKMBIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:04:48 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40735 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfKMBEr (ORCPT
+        Tue, 12 Nov 2019 20:08:14 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9626 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbfKMBIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:04:47 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 15so184276pgt.7;
-        Tue, 12 Nov 2019 17:04:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o7cxUzmwPBP3GfeXd0lbVC86zzrm1gxQxSACBgamOj4=;
-        b=nFfHbsP8K9lTmnhw6WxnDKwUJlvx0twKrHvPuZfEx+Ey2OhAEw7OQli9obPawgFaRc
-         JMqH/g1ZPs6DZHxKsLUK968jPMG9fP4YzUdxpztBAZ1R/OQsDi5AZ6KTBJSU46TD/mbg
-         QeLaeur1ghwtbyMkCW8YqMLdKgdh2Dl38uwzOnbiWQiWg+8Yru9hdivJq1JJ18g2NQAJ
-         r7adZhreAlag6CCCeSy3KDkO/405fRO5IbpJ8B5SgaJLEMV+Rx6Z/eQF6LnHkEesUCJ8
-         NGpOg2EbZydRythz6EWbW/eI0hfFxvsxLfgZB+mqThAGdMbQG2mw2huB6XYRiDCphCIR
-         UhoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o7cxUzmwPBP3GfeXd0lbVC86zzrm1gxQxSACBgamOj4=;
-        b=bd4V/b6eSwhUGdbX4jUppqsoeJ/zYZFMCRZ+k+J/ef0BMZ7QM9u+89xdOOEO5X1Kd6
-         vEDmfAkAsUDa5WlJOo6MgFNJIUIQyXb2zStP8DMuwJ4Pj8OfYNPp5B6KK1u0luajqDKa
-         HeGRfHh6b8i3dBYb3wBVwpN2Wc+04KAY5ZQsbIUR7EXGTOKvY2bURXTgYa2XnX6wZq2f
-         mtnSfh/viMw0ypQfLHCkRbxyIP3zgUpXuWafo3DwgCpiVYomcP7HESUsX1Lzm23WP8n4
-         x4Whac5JDZ+QpuvPzjIpT3Vld88Rgr+n2DSApJzn142CEqmk/DTD8B2tXK0zNaN1qK/e
-         /1Iw==
-X-Gm-Message-State: APjAAAWWZVHBdLibGHJCb79ZV5EOIJX6kVip8Hrw/LpGCgQsyClaW85L
-        y1qVEDYXwUaSmheCgTaXSEI=
-X-Google-Smtp-Source: APXvYqy2zJuNJ2hnpCZwLCUYZdaPeyCBI0UjeVi4HJuv71ode0KwQvcEAFJH1MaTJfIgBGUjoHe6qA==
-X-Received: by 2002:a62:1b4a:: with SMTP id b71mr993072pfb.167.1573607086838;
-        Tue, 12 Nov 2019 17:04:46 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id hi2sm281267pjb.22.2019.11.12.17.04.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 17:04:45 -0800 (PST)
-Date:   Tue, 12 Nov 2019 17:04:43 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Pan Bian <bianpan2016@163.com>
-Cc:     Ferruh Yigit <fery@cypress.com>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: cyttsp4_core: fix use after free bug
-Message-ID: <20191113010443.GM13374@dtor-ws>
-References: <1572936379-6423-1-git-send-email-bianpan2016@163.com>
+        Tue, 12 Nov 2019 20:08:13 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcb577a0001>; Tue, 12 Nov 2019 17:08:11 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 17:08:08 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 17:08:08 -0800
+Received: from MacBook-Pro-10.local (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 01:08:07 +0000
+Subject: Re: [PATCH v3 08/23] vfio, mm: fix get_user_pages_remote() and
+ FOLL_LONGTERM
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191112000700.3455038-1-jhubbard@nvidia.com>
+ <20191112000700.3455038-9-jhubbard@nvidia.com>
+ <20191112204338.GE5584@ziepe.ca>
+ <0db36e86-b779-01af-77e7-469af2a2e19c@nvidia.com>
+ <CAPcyv4hAEgw6ySNS+EFRS4yNRVGz9A3Fu1vOk=XtpjYC64kQJw@mail.gmail.com>
+ <20191112234250.GA19615@ziepe.ca>
+ <CAPcyv4hwFKmsQpp04rS6diCmZwGtbnriCjfY2ofWV485qT9kzg@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <28355eb0-4ee5-3418-b430-59302d15b478@nvidia.com>
+Date:   Tue, 12 Nov 2019 17:08:07 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572936379-6423-1-git-send-email-bianpan2016@163.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPcyv4hwFKmsQpp04rS6diCmZwGtbnriCjfY2ofWV485qT9kzg@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573607291; bh=wl9HqaOmiz62D7VoXo7FjyMU54D3XRSGYP3F6kh9mOM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BVU7rtLSKH40gEcG6jSN5CiYgtuH0Fsti8jOVN/t2cAsa7Lm+CfaOZ/cPBpKb/4pw
+         t2vrd447reb2cZaNtW1CrBBDCDSmRKvz10axjxdYouKdjIwayolxMRUvbWVZvRVnkG
+         svn8sgOn4uKeOQZMstm5QEuB1y1OABbj5Qg0iRg3RASWgUP54Ma2UJ/YLgr8iKpjqC
+         Mji+oXkSdbgJiidbxXQS/C9y8AEU32Ewa2NYrZGcfO6vFwup2ff4CZ6OIxWxJdqYtM
+         ZNX94L/R/d+iS0MKljVZcNT6wxULepfnHo9F4Q3KqGJu8/w+Vf+0hpqV8JvGKGhjvb
+         RkKNrnEIsYK7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:46:19PM +0800, Pan Bian wrote:
-> The device md->input is used after it is released. Setting the device
-> data to NULL is unnecessary as the device is never used again. Instead,
-> md->input should be assigned NULL to avoid accessing the freed memory
-> accidently.
+On 11/12/19 4:58 PM, Dan Williams wrote:
+...
+>>> It's not redundant relative to upstream which does not do anything the
+>>> FOLL_LONGTERM in the gup-slow path... but I have not looked at patches
+>>> 1-7 to see if something there made it redundant.
+>>
+>> Oh, the hunk John had below for get_user_pages_remote() also needs to
+>> call __gup_longterm_locked() when FOLL_LONGTERM is specified, then
+>> that calls check_dax_vmas() which duplicates the vma_is_fsdax() check
+>> above.
+> 
+> Oh true, good eye. It is redundant if it does additionally call
+> __gup_longterm_locked(), and it needs to do that otherwises it undoes
+> the CMA migration magic that Aneesh added.
+> 
 
-No, we are tearing up the device anyway, I'd leave it as it was, so I'll
-drop this chunk and apply the rest.
+OK. So just to be clear, I'll be removing this from the patch:
 
-Thank you.
+	/*
+	 * The lifetime of a vaddr_get_pfn() page pin is
+	 * userspace-controlled. In the fs-dax case this could
+	 * lead to indefinite stalls in filesystem operations.
+	 * Disallow attempts to pin fs-dax pages via this
+	 * interface.
+	 */
+	if (ret > 0 && vma_is_fsdax(vmas[0])) {
+		ret = -EOPNOTSUPP;
+		put_page(page[0]);
+  	}
 
+(and the declaration of "vmas", as well).
+
+thanks,
 -- 
-Dmitry
+John Hubbard
+NVIDIA
