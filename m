@@ -2,155 +2,171 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5423C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8115CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC90C21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CAC921872
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:51:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i1oPPqm4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U292mIpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKMAuy (ORCPT
+        id S1727159AbfKMAvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:50:54 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57373 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfKMAuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:50:54 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CQyd69NLz9sPh;
-        Wed, 13 Nov 2019 11:50:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573606250;
-        bh=y2HIDRUkrrIBeYigQEgKBF8prcyYDSmPm3oxZWimhMQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=i1oPPqm4j9T7JQDA4WK7kCy+Ocfj14lfeA7k5C669xsEz32G8v74JeNvXrd4fuc2H
-         5TwTLKwyHGsRRLVNO8q/pZWwdNFG+uligsMOFZl2mcROEVhME1gA8WD/r+H8UV7k2F
-         yG/k3em8XRX5QvT1DynPpHaLDQ6njjVYnJGX/raz3e1H4U/ebdaurazBtxlfDDhHjv
-         6EJZ1h6452J6yh14eh4cCR5XuI+dPJXefpKxAo8syUGp2hDC7j24Bj+trfw1LopOUj
-         ujnZNFQTu9P6kwp8oDgyLkU5z67dVVhhd0WI5WEi7AlUNz+KFkh/ces7gYwBKLB7jZ
-         EK881bIuBebbw==
-Date:   Wed, 13 Nov 2019 11:50:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Imre Deak <imre.deak@intel.com>,
-        Jon Bloomfield <jon.bloomfield@intel.com>,
-        Andi Shyti <andi@etezian.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the drm tree with Linus' tree
-Message-ID: <20191113115049.2d30b88c@canb.auug.org.au>
+        Tue, 12 Nov 2019 19:51:20 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46412 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfKMAvT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:51:19 -0500
+Received: by mail-ot1-f68.google.com with SMTP id n23so91867otr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:51:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=8BT6daCO7rWCmxUPquIuhlDA7Ogbr/3u1F/qsZuINIo=;
+        b=U292mIpZOTOrebmfuZAF/2lMOkCrJRrkLdXZ1tmiH7m/mk2GlwbOq0vR64NgIvMTtQ
+         ZQsuIFP1FTZIZf3eBk81/NYNy6u8k7Sp4is/qdMyizw2MRhgqQ5E3TmViDybX8gyGCfj
+         6NFYl5zx3pxnDOXpIVtfdWDyA2MyTUp1vQkZJyaMXUyNPKKnuQI6KBavRXzjOzBiyRI3
+         5EX4qzvXbhvai3oRJDDEqS80d84jsd3MmdH21h+7Jbi04sHfv2bfqHXJMcvOsFucYRTR
+         MvY7BGgSn3jAeoEr8uIOlFVHCfD2MoOl59V6GWtWQ8h579SSUdM8bh18nXi4OKKymOAN
+         q+UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=8BT6daCO7rWCmxUPquIuhlDA7Ogbr/3u1F/qsZuINIo=;
+        b=KxKg2iOiK1a7FPwxd9KGi1wo0cyE650LDVJfNGVUG9+42lPtjdXNwbITCjcl28ynmw
+         UPohdtDHkGdFcC3XdhaFYkGWvoCDzZ8lonkDc5HeOHD4QAoX8ME2RL45S84rRga+YF10
+         Av7W1vEMpK007R2dTaGnj/txWMJhMq6XwapTYxtq75eBEePw2nGLUxJA1udOxvirfl9q
+         qiHBF8zLHscd6MCK8062GWogWsm2JcGqGLK3XYGe6Cf5uwvPe+dGCDNMkE18OQP5lNMk
+         LecfV0A51OP7Cz+RvAvs5o64R186IEKwRSmoF+IOo364barRKF7A350x4NUzC420Lhro
+         5wUg==
+X-Gm-Message-State: APjAAAWKgxgpvO9tZj+JtjkT1JaIpB1m0beenK59PeJMFmV3ZE6HKZ98
+        Cy6jP0a0pmG6ldnevr/7Zw==
+X-Google-Smtp-Source: APXvYqzHnt4GBogMEYRcGGdCUfNH4wDXRQjRowWJDj84lzygvhQMHEOPOtbJqUUjn/hVNd5VS/OmHQ==
+X-Received: by 2002:a9d:12a3:: with SMTP id g32mr332590otg.61.1573606277516;
+        Tue, 12 Nov 2019 16:51:17 -0800 (PST)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id q4sm177478otl.79.2019.11.12.16.51.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 16:51:17 -0800 (PST)
+Received: from minyard.net (unknown [192.168.27.180])
+        by serve.minyard.net (Postfix) with ESMTPSA id 947A618016D;
+        Wed, 13 Nov 2019 00:51:16 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 18:51:15 -0600
+From:   Corey Minyard <minyard@acm.org>
+To:     Asmaa Mnebhi <Asmaa@mellanox.com>
+Cc:     Vijay Khemka <vijaykhemka@fb.com>,
+        "cminyard@mvista.com" <cminyard@mvista.com>,
+        Sai Dasari <sdasari@fb.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>
+Subject: Re: [Openipmi-developer] [PATCH 2/2] drivers: ipmi: Modify max
+ length of IPMB packet
+Message-ID: <20191113005115.GK2882@minyard.net>
+Reply-To: minyard@acm.org
+References: <20191112023610.3644314-1-vijaykhemka@fb.com>
+ <20191112023610.3644314-2-vijaykhemka@fb.com>
+ <20191112124845.GE2882@minyard.net>
+ <7BC487D6-6ACA-46CE-A751-8367FEDEE647@fb.com>
+ <20191112202932.GJ2882@minyard.net>
+ <DB6PR0501MB27127CF534336BDEB5D005FFDA770@DB6PR0501MB2712.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fhU9Km009fVWjlMp34IeRum";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB6PR0501MB27127CF534336BDEB5D005FFDA770@DB6PR0501MB2712.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fhU9Km009fVWjlMp34IeRum
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Nov 12, 2019 at 10:06:00PM +0000, Asmaa Mnebhi wrote:
+> Also, let me clarify one thing. It doesn't matter how big the response is. In my testing, I also had some responses that are over 128 bytes, and this driver still works. It is the user space program which determines the last bytes received. The 128 bytes is the max number of bytes handled by your i2c/smbus driver at each i2c transaction. My i2c driver can only transmit 128 bytes at a time. So just like Corey pointed out, it would be better to pass this through ACPI/device tree.
 
-Hi all,
+Yeah, I would really prefer device tree.  That's what it's designed for,
+really.  ioctls are not really what you want for this.  sysfs is a
+better choice as a backup for device tree (so you can change it if it's
+wrong).
 
-Today's linux-next merge of the drm tree got a conflict in:
+-corey
 
-  drivers/gpu/drm/i915/gt/intel_gt_pm.c
-
-between commit:
-
-  7e34f4e4aad3 ("drm/i915/gen8+: Add RC6 CTX corruption WA")
-
-from Linus' tree and commit:
-
-  3e7abf814193 ("drm/i915: Extract GT render power state management")
-
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/gt/intel_gt_pm.c
-index fac75afed35b,060a27d9af34..000000000000
---- a/drivers/gpu/drm/i915/gt/intel_gt_pm.c
-+++ b/drivers/gpu/drm/i915/gt/intel_gt_pm.c
-@@@ -38,20 -61,10 +61,13 @@@ static int __gt_unpark(struct intel_wak
-  	gt->awake =3D intel_display_power_get(i915, POWER_DOMAIN_GT_IRQ);
-  	GEM_BUG_ON(!gt->awake);
- =20
- +	if (NEEDS_RC6_CTX_CORRUPTION_WA(i915))
- +		intel_uncore_forcewake_get(&i915->uncore, FORCEWAKE_ALL);
- +
-- 	intel_enable_gt_powersave(i915);
--=20
-- 	i915_update_gfx_val(i915);
-- 	if (INTEL_GEN(i915) >=3D 6)
-- 		gen6_rps_busy(i915);
--=20
-+ 	intel_rps_unpark(&gt->rps);
-  	i915_pmu_gt_unparked(i915);
- =20
-- 	intel_gt_queue_hangcheck(gt);
--=20
-- 	pm_notify(i915, INTEL_GT_UNPARK);
-+ 	intel_gt_unpark_requests(gt);
- =20
-  	return 0;
-  }
-@@@ -64,17 -77,12 +80,17 @@@ static int __gt_park(struct intel_waker
- =20
-  	GEM_TRACE("\n");
- =20
-- 	pm_notify(i915, INTEL_GT_PARK);
-+ 	intel_gt_park_requests(gt);
- =20
-+ 	i915_vma_parked(gt);
-  	i915_pmu_gt_parked(i915);
-- 	if (INTEL_GEN(i915) >=3D 6)
-- 		gen6_rps_idle(i915);
-+ 	intel_rps_park(&gt->rps);
- =20
- +	if (NEEDS_RC6_CTX_CORRUPTION_WA(i915)) {
- +		i915_rc6_ctx_wa_check(i915);
- +		intel_uncore_forcewake_put(&i915->uncore, FORCEWAKE_ALL);
- +	}
- +
-  	/* Everything switched off, flush any residual interrupt just in case */
-  	intel_synchronize_irq(i915);
- =20
-
---Sig_/fhU9Km009fVWjlMp34IeRum
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LU2kACgkQAVBC80lX
-0Gy6twf+PunW6hUvgwu55PeWS0uopLjp0iX14SVwP3Ia/i5RVgeXyeB2HGzFGVyp
-jTFePWNcH26MsNm7RLWCtbisuqqYaiugEVAAX1chrv3KonvbaUlbUnrDnDSe0ZOb
-qfL/s4XzpV5db042rQXwsQFHLIANKLoxC6ybmZ09n0B6JwfmTj0Xim5NX5rsCKAn
-AwtpBc/p2mX4daBkmKLh/+qp8cUsTgSPBVJHSw+ee0AnEt/so0S4T2LHrzDq3qFS
-dGR4weleYo5ddnrap6EHpPddxZAaUbm1ILhrgE5LKm4hUgXEZ5LU1Jxxb4pRUePm
-IVCAPN00QAa4ftOzDmJ09bLer/iErg==
-=hNS8
------END PGP SIGNATURE-----
-
---Sig_/fhU9Km009fVWjlMp34IeRum--
+> 
+> -----Original Message-----
+> From: Corey Minyard <tcminyard@gmail.com> On Behalf Of Corey Minyard
+> Sent: Tuesday, November 12, 2019 3:30 PM
+> To: Vijay Khemka <vijaykhemka@fb.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>; openipmi-developer@lists.sourceforge.net; linux-kernel@vger.kernel.org; cminyard@mvista.com; Asmaa Mnebhi <Asmaa@mellanox.com>; joel@jms.id.au; linux-aspeed@lists.ozlabs.org; Sai Dasari <sdasari@fb.com>
+> Subject: Re: [PATCH 2/2] drivers: ipmi: Modify max length of IPMB packet
+> 
+> On Tue, Nov 12, 2019 at 07:56:34PM +0000, Vijay Khemka wrote:
+> > 
+> > 
+> > ﻿On 11/12/19, 4:48 AM, "Corey Minyard" <tcminyard@gmail.com on behalf of minyard@acm.org> wrote:
+> > 
+> >     On Mon, Nov 11, 2019 at 06:36:10PM -0800, Vijay Khemka wrote:
+> >     > As per IPMB specification, maximum packet size supported is 255,
+> >     > modified Max length to 240 from 128 to accommodate more data.
+> >     
+> >     I couldn't find this in the IPMB specification.
+> >     
+> >     IIRC, the maximum on I2C is 32 byts, and table 6-9 in the IPMI spec,
+> >     under "IPMB Output" states: The IPMB standard message length is
+> >     specified as 32 bytes, maximum, including slave address.
+> > 
+> > We are using IPMI OEM messages and our response size is around 150 
+> > bytes For some of responses. That's why I had set it to 240 bytes.
+> 
+> Hmm.  Well, that is a pretty significant violation of the spec, but there's nothing hard in the protocol that prohibits it, I guess.
+> 
+> If Asmaa is ok with this, I'm ok with it, too.
+> 
+> -corey
+> 
+> >     
+> >     I'm not sure where 128 came from, but maybe it should be reduced to 31.
+> >     
+> >     -corey
+> >     
+> >     > 
+> >     > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> >     > ---
+> >     >  drivers/char/ipmi/ipmb_dev_int.c | 2 +-
+> >     >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >     > 
+> >     > diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
+> >     > index 2419b9a928b2..7f9198bbce96 100644
+> >     > --- a/drivers/char/ipmi/ipmb_dev_int.c
+> >     > +++ b/drivers/char/ipmi/ipmb_dev_int.c
+> >     > @@ -19,7 +19,7 @@
+> >     >  #include <linux/spinlock.h>
+> >     >  #include <linux/wait.h>
+> >     >  
+> >     > -#define MAX_MSG_LEN		128
+> >     > +#define MAX_MSG_LEN		240
+> >     >  #define IPMB_REQUEST_LEN_MIN	7
+> >     >  #define NETFN_RSP_BIT_MASK	0x4
+> >     >  #define REQUEST_QUEUE_MAX_LEN	256
+> >     > -- 
+> >     > 2.17.1
+> >     >
+> >     
+> > 
+> 
+> _______________________________________________
+> Openipmi-developer mailing list
+> Openipmi-developer@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/openipmi-developer
