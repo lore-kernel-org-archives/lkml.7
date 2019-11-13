@@ -2,61 +2,63 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00111C17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10497C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5AFD22459
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E7A222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pXlv7oIm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ksFivVFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfKMMqb (ORCPT
+        id S1727032AbfKMMqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:46:31 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54212 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfKMMqb (ORCPT
+        Wed, 13 Nov 2019 07:46:34 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36726 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfKMMqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:46:31 -0500
+        Wed, 13 Nov 2019 07:46:33 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADCkLiL119767;
-        Wed, 13 Nov 2019 06:46:21 -0600
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADCkOMl013610;
+        Wed, 13 Nov 2019 06:46:24 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573649181;
-        bh=pRF7p8v054t/HDVdz8KBBBRwhrT3OT3e+Ov7Dq3EyOQ=;
-        h=From:To:CC:Subject:Date;
-        b=pXlv7oImuE/C6oRnXLibrgZFjh1nXHEIkiEAQ6Pa48LXx2dMfrclCs1fsA3rd7wfH
-         lmM/k+fk0ZjymJCgHEStLTL/CS8+pfeuO8GaU4OvCZoWCbeVVFRlWwirJmt0cJj+RK
-         STVY1nwmY/c6JHRsmpSiP2YVmVs9UFoa3AEbwF0c=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADCkLed115017
+        s=ti-com-17Q1; t=1573649184;
+        bh=8aQ8N44hvS+8dZKUfv1GLSveBB3IfB2708I6w+E/VzA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ksFivVFHjffDLgFQK0dN/YY0iep7idsI/DJK/M/3mk93CKCkhIgEQqNhoLzsn2gjK
+         Ps3l0mE/gdj4EamWZiPCU0Xuh0pqqyW9WuYgxsoWPWZ0ePUGOatN+mXBLGcwYVbF44
+         JJaGT1SdVkbAH/+HKxEVhflAyfKwSGxJdgZcETg4=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADCkNK4115042
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 06:46:21 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 13 Nov 2019 06:46:23 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 06:46:03 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 06:46:05 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 06:46:03 -0600
+ Frontend Transport; Wed, 13 Nov 2019 06:46:06 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADCkIGE127078;
-        Wed, 13 Nov 2019 06:46:19 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADCkIGF127078;
+        Wed, 13 Nov 2019 06:46:21 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <broonie@kernel.org>, <lgirdwood@gmail.com>
 CC:     <alsa-devel@alsa-project.org>, <kuninori.morimoto.gx@renesas.com>,
         <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] ASoC: pcm3168a: Poor man's RST gpio handling
-Date:   Wed, 13 Nov 2019 14:47:32 +0200
-Message-ID: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+Subject: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
+Date:   Wed, 13 Nov 2019 14:47:33 +0200
+Message-ID: <20191113124734.27984-2-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,33 +68,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On boards where the RST line is not pulled up, but it is connected to a
+GPIO line this property must present in order to be able to enable the
+codec.
 
-when the codec RST input is connected to a GPIO it needs to be pulled high in
-order to take the pcm3168a out from reset and to make it respond to register
-accesses via i2c.
-
-I have a board where one GPIO line is connected to two pcm3168a codec so runtime
-handling of the RST gpio is not possible (one codec would place the other codec
-to reset as well).
-
-The only possible solution is to request the gpio with
-GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, ask it to be high initially and never touch
-it again.
-
-If the optinal GPIO is not described then issue the reset as the driver did.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (2):
-  bindings: sound: pcm3168a: Document optional RST gpio
-  ASoC: pcm3168a: Add support for optional RST gpio handling
+ Documentation/devicetree/bindings/sound/ti,pcm3168a.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- .../devicetree/bindings/sound/ti,pcm3168a.txt |  7 ++++
- sound/soc/codecs/pcm3168a.c                   | 38 +++++++++++++++++--
- 2 files changed, 41 insertions(+), 4 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
+index 5d9cb84c661d..f30aebc7603a 100644
+--- a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
++++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
+@@ -25,6 +25,12 @@ Required properties:
+ 
+ For required properties on SPI/I2C, consult SPI/I2C device tree documentation
+ 
++Optional properties:
++
++  - rst-gpios : Optional RST gpio line for the codec
++		RST = low: device power-down
++		RST = high: device is enabled
++
+ Examples:
+ 
+ i2c0: i2c0@0 {
+@@ -34,6 +40,7 @@ i2c0: i2c0@0 {
+ 	pcm3168a: audio-codec@44 {
+ 		compatible = "ti,pcm3168a";
+ 		reg = <0x44>;
++		rst-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+ 		clocks = <&clk_core CLK_AUDIO>;
+ 		clock-names = "scki";
+ 		VDD1-supply = <&supply3v3>;
 -- 
 Peter
 
