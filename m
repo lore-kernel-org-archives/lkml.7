@@ -2,121 +2,114 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C017DC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11743C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF74207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74E92245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfKMN6s (ORCPT
+        id S1727617AbfKMOBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:58:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38104 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726186AbfKMN6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:58:48 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5799BB12C;
-        Wed, 13 Nov 2019 13:58:46 +0000 (UTC)
-Subject: Re: [PATCH RFC 2/5] blk-mq: rename BLK_MQ_F_TAG_SHARED as
- BLK_MQ_F_TAG_QUEUE_SHARED
-To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
-        jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, ming.lei@redhat.com, hare@suse.com,
-        bvanassche@acm.org, chenxiang66@hisilicon.com
-References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
- <1573652209-163505-3-git-send-email-john.garry@huawei.com>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <32995d48-1306-8e51-9f61-0d3e59a8ecdb@suse.de>
-Date:   Wed, 13 Nov 2019 14:58:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 13 Nov 2019 09:01:03 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35330 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfKMOBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 09:01:02 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 09863290CD8
+Message-ID: <58ed179388b6f9d6caddd91dc03e411ca714157d.camel@collabora.com>
+Subject: Re: [PATCH 4/5] media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org
+Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com
+Date:   Wed, 13 Nov 2019 11:00:35 -0300
+In-Reply-To: <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+         <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <1573652209-163505-3-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 2:36 PM, John Garry wrote:
-> From: Ming Lei <ming.lei@redhat.com>
+Hi Mirela,
+
+Thanks for the patch. It's nice to see support for i.MX8!
+
+On Wed, 2019-11-06 at 17:20 +0200, Mirela Rabulea wrote:
+> V4L2 driver for the JPEG encoder/decoder from i.MX8QXP/i.MX8QM application
+> processors.
+> The multi-planar buffers API is used.
 > 
-> BLK_MQ_F_TAG_SHARED actually means that tags is shared among request
-> queues, all of which should belong to LUNs attached to same HBA.
+> Baseline and extended sequential jpeg decoding is supported.
+> Progressive jpeg decoding is not supported by the IP.
+> Supports encode and decode of various formats:
+>      YUV444, YUV422, YUV420, RGB, ARGB, Gray
+> YUV420 is the only multi-planar format supported.
+> Minimum resolution is 64 x 64, maximum 8192 x 8192.
+> The alignment requirements for the resolution depend on the format,
+> multiple of 16 resolutions should work for all formats.
 > 
-> So rename it to make the point explicitly.
-> 
-> Suggested-by: Bart Van Assche <bvanassche@acm.org>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 > ---
->  block/blk-mq-debugfs.c |  2 +-
->  block/blk-mq-tag.c     |  2 +-
->  block/blk-mq-tag.h     |  4 ++--
->  block/blk-mq.c         | 20 ++++++++++----------
->  include/linux/blk-mq.h |  2 +-
->  5 files changed, 15 insertions(+), 15 deletions(-)
+>  drivers/media/platform/Kconfig                |    2 +
+>  drivers/media/platform/Makefile               |    1 +
+>  drivers/media/platform/imx-jpeg/Kconfig       |   10 +
+>  drivers/media/platform/imx-jpeg/Makefile      |    3 +
+>  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c |  168 ++
+>  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h |  140 ++
+>  drivers/media/platform/imx-jpeg/mxc-jpeg.c    | 2266 +++++++++++++++++++++++++
+>  drivers/media/platform/imx-jpeg/mxc-jpeg.h    |  187 ++
+>  8 files changed, 2777 insertions(+)
+>  create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
+>  create mode 100644 drivers/media/platform/imx-jpeg/Makefile
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> [..]
 
-Cheers,
+> +};
+> +
+> +/*
+> + * default configuration stream, 64x64 yuv422
+> + * split by JPEG marker, so it's easier to modify & use
+> + */
+> +static const unsigned char jpeg_soi[] = {0xFF, 0xD8};
+> +static const unsigned char jpeg_app0[] = {0xFF, 0xE0,
 
-Hannes
--- 
-Dr. Hannes Reinecke		      Teamlead Storage & Networking
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 247165 (AG München), GF: Felix Imendörffer
+I think it's time to re-consider creating some common code
+for drivers that deal with JPEG parsing. I don't know
+exactly how this should be done, but it's worth a try.
+
+Having been there, it might sound unfair to request you to
+take such action. However, someone has to do these kinds
+of cleanups and improvements, sooner or later, if we want
+to keep a clean codebase.
+
+Hope this makes sense.
+
+Regards,
+Ezequiel
+
