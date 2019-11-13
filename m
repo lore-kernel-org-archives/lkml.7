@@ -2,122 +2,136 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C67C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA28C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302E9214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BC0214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2+1bnPxq"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="c9rgbgPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfKMIyQ (ORCPT
+        id S1727334AbfKMIzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:54:16 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:35386 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfKMIyP (ORCPT
+        Wed, 13 Nov 2019 03:55:12 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:40465 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfKMIzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:54:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RaCx47cvCZ3gcezdlD/Dad0dV4W4cXz9wXVsioplrco=; b=2+1bnPxqWfCh7UXKKlS+DkuKJ
-        HFjbw/MgjtvPnbICzMza/x6ejytciGFsiTL/ZoC5mUCxpky2a1TxKLpkHEQ7KFty74RRyJWlpEexc
-        0Wbae5iCgRUAAMSIES1Acnh55KQa92E3pRvnfuq+qAxgxMmYkoRJKLr1n65XvsknJR+Ow/PLrQ+rt
-        fEml2S2uDQjbm31H61Qq9QkZd8B/wVQJz378iOem16ap6tVrYLzfGBbxWpDxk93oFJgFYYXBobE0L
-        LPBpa7GCXE1bztGAWAptn2RweJ2WrAOWPGsL/J6zM2gtLySJrqJNi5pGcCrzjpRYxaTJxK5t05JIM
-        R79/V9LSg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUoPU-00074f-KW; Wed, 13 Nov 2019 08:53:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7414830018B;
-        Wed, 13 Nov 2019 09:52:47 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 954212997AAC8; Wed, 13 Nov 2019 09:53:54 +0100 (CET)
-Date:   Wed, 13 Nov 2019 09:53:54 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        alexei.starovoitov@gmail.com
-Subject: Re: [PATCH -v5 05/17] x86/ftrace: Use text_poke()
-Message-ID: <20191113085354.GE4131@hirez.programming.kicks-ass.net>
-References: <20191111131252.921588318@infradead.org>
- <20191111132457.761255803@infradead.org>
- <20191112132536.28ac1b32@gandalf.local.home>
- <20191112222413.GB4131@hirez.programming.kicks-ass.net>
+        Wed, 13 Nov 2019 03:55:12 -0500
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id xAD8sw0x010874;
+        Wed, 13 Nov 2019 17:54:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xAD8sw0x010874
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573635299;
+        bh=49PDDQD/ue4Zb18aoWupvO71syxxVqQlzugNNXWXyuE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c9rgbgPjooG/pyLS1VftU9lKNrTrGgLBOA5vCtxCcexKm7MOM3V7DVJLBWt/ac76u
+         D//vz4KYzmrE/9I8AwIuj4vpOcPoB0qGQA/fBlmgjkz7vAdyBVO29ecfvtzBM2j5Dc
+         LzUuqKbi3BJg2XGuTf6VsOPTn/PQTi9ZkH1VceWBBLo6Eyi4g6ZchstDHPP7xV/NZf
+         Q6NQHnCh8XHY8sVFrIzKPjOuwPMqFjPrz5NOgjpX37Ez2iD+IPok0EbO+TjTYetvEp
+         6snKFvzeKze0ZIfmKOOoz1H2cTrXNXX4jdbQXtwN3KwJH1Kj6jN0oP6O9kGc5emtSM
+         qFXwAVd5uFQTw==
+X-Nifty-SrcIP: [209.85.217.43]
+Received: by mail-vs1-f43.google.com with SMTP id u6so849144vsp.4;
+        Wed, 13 Nov 2019 00:54:58 -0800 (PST)
+X-Gm-Message-State: APjAAAXAhM5Liw/pzpAiLCaEuHN2TLSgaPBwImgHaL7ZvnZUZFUZ5AwZ
+        7pSrWNusMTpoHqv9tCYd+uvLqWAfNKuNSnEB9RQ=
+X-Google-Smtp-Source: APXvYqx6DUkYDV8ZVWSi8B9AQeo8+uox1PuYDjZmjZQ+KLmakGfYqVeoEP3k28Lz93Bf7IzvoILCAkyXaS8qNwjUdBg=
+X-Received: by 2002:a05:6102:726:: with SMTP id u6mr515745vsg.179.1573635297488;
+ Wed, 13 Nov 2019 00:54:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112222413.GB4131@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com> <20191112123125.GD17835@willie-the-truck>
+ <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+ <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net> <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
+ <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com> <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
+ <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com> <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
+ <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
+In-Reply-To: <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 13 Nov 2019 17:54:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
+Message-ID: <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Xiao Yang <ice_yangxiao@163.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:24:13PM +0100, Peter Zijlstra wrote:
-> On Tue, Nov 12, 2019 at 01:25:36PM -0500, Steven Rostedt wrote:
-> > On Mon, 11 Nov 2019 14:12:57 +0100
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > >  int ftrace_arch_code_modify_post_process(void)
-> > >      __releases(&text_mutex)
-> > >  {
-> > > -	set_all_modules_text_ro();
-> > > -	set_kernel_text_ro();
-> > > +	text_poke_finish();
-> > 
-> > Why is the text_poke_finish() needed here? Can we add a comment about
-> > why?
-> 
-> I think this is because of the text_poke_queue() in
-> ftrace_modify_code_direct(). I seem to have forgotten the code-flow
-> between the core and arch parts of ftrace again.
-> 
-> But sure, I can try and dig that out again and write a comment.
+On Wed, Nov 13, 2019 at 5:36 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+>
+> On 11/13/19 3:53 PM, Masahiro Yamada wrote:
+> > On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+> >> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
+> >>> Sorry, I really do not understand what you are doing.
+> >>>
+> >>> include/linux/compiler.h is only for kernel-space.
+> >>> Shrug if a user-land program includes it.
+> >> Hi Masahiro,
+> >>
+> >> For building tools/bpf, it is good to fix the compiler error by Daniel's
+> >> patch(i.e. use linux/filter from linux header).
+> >>
+> >> linux/compiler.h may be used by other code in kernel.  Is it possible to
+> >> trigger the same error when the other code
+> >>
+> >> including linux/compiler.h is built? Is this kind of code able to find
+> >> the location of <asm/rwonce.h>?
+> >
+> > <asm/rwonce.h> is also kernel-only header.
+> >
+> > The kernel code can find <asm/rwonce.h>, but user-land code cannot.
+>
+> Hi Masahiro,
+>
+> Sorry, I am not familar with it.
+>
+> Thanks a lot for your explanation and I have seen the LINUXINCLUDE
+> variable in Makefile.
+>
+> I will try to send a patch as Daniel suggested.
+>
+> Best Regards,
+>
+> Xiao Yang
+>
 
-These are the two callgraphs:
-
-  ftrace_module_enable()
-    ftrace_arch_code_modify_prepare()
-      do_for_each_ftrace_rec()
-	__ftrace_replace_code()
-	  ftrace_make_{call,nop}()
-	    ftrace_modify_code_direct()
-	      text_poke_queue()
-
-    ftrace_arch_code_modify_post_process()
-      text_poke_finish();
-
-
-  ftrace_run_update_code()
-    ftrace_arch_code_modify_prepare()
-    arch_ftrace_update_code()
-      ftrace_modify_all_code()
-	ftrace_replace_code()
-	  for_ftrace_rec_iter()
-	    text_poke_queue()
-	  text_poke_finish()
-    ftrace_arch_code_modify_post_process()
-      text_poke_finish()
+Hmm, digging into the git history,
+this include path was added by the following commit:
 
 
-So while it is superfluous for ftrace_run_update_code() it is required
-for ftrace_module_enable(), and, as I said, pairs with the
-text_poke_queue() in ftrace_modify_code_direct().
+commit d7475de58575c904818efa369c82e88c6648ce2e
+Author: Kamal Mostafa <kamal@canonical.com>
+Date:   Wed Nov 11 14:24:27 2015 -0800
 
-I'll stick in a comment.
+    tools/net: Use include/uapi with __EXPORTED_HEADERS__
+
+    Use the local uapi headers to keep in sync with "recently" added #define's
+    (e.g. SKF_AD_VLAN_TPID).  Refactored CFLAGS, and bpf_asm doesn't need -I.
+
+    Fixes: 3f356385e8a4 ("filter: bpf_asm: add minimal bpf asm tool")
+    Signed-off-by: Kamal Mostafa <kamal@canonical.com>
+    Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+
+
+I am not sure how big a deal it is,
+but it could be a problem on old distros??
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
